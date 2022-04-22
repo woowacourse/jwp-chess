@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 @TestConfiguration
-class A {
+class TestConfig {
     @Bean
     public RoomRepository roomRepository() {
         return new FakeRoomRepository();
@@ -28,7 +28,7 @@ class A {
 }
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(A.class)
+@Import(TestConfig.class)
 class SpringChessControllerTest {
 
     @LocalServerPort
@@ -44,7 +44,7 @@ class SpringChessControllerTest {
 
     @DisplayName("유효한 이름을 받으면 게임방 입장")
     @Test
-    void createroom() {
+    void createRoom() {
         final String name = "summer";
 
         RestAssured.given().log().all()
@@ -52,7 +52,7 @@ class SpringChessControllerTest {
                 .when().post("/board")
                 .then().log().all()
                 .statusCode(HttpStatus.FOUND.value())
-                .header("Location", containsString("/board?roomId="));
+                .header("Location", containsString("/rooms/"));
     }
 
     @DisplayName("부적절한 이름이 입력되면 400 에러 발생")

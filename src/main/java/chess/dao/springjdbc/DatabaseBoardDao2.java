@@ -1,20 +1,28 @@
-package chess.dao;
+package chess.dao.springjdbc;
 
-import chess.dao.jdbcutil.JdbcUtil;
-import chess.dao.jdbcutil.StatementExecutor;
+import chess.dao.BoardDao;
+import chess.dao.jdbc.jdbcutil.JdbcUtil;
+import chess.dao.jdbc.jdbcutil.StatementExecutor;
 import chess.service.dto.BoardDto;
 import chess.service.dto.PieceWithSquareDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class DatabaseBoardDao implements BoardDao {
+public class DatabaseBoardDao2 implements BoardDao {
 
     private static final String PIECE_COLOR = "piece_color";
     private static final String PIECE_TYPE = "piece_type";
     private static final String SQUARE = "square";
+
+    private JdbcTemplate jdbcTemplate;
+
+    public DatabaseBoardDao2(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public void initBoard(int gameId) {

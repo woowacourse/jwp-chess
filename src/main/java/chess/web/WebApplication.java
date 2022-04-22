@@ -3,8 +3,8 @@ package chess.web;
 import static spark.Spark.port;
 import static spark.Spark.staticFileLocation;
 
-import chess.dao.DatabaseBoardDao;
-import chess.dao.DatabaseGameDao;
+import chess.dao.jdbc.DatabaseBoardDao;
+import chess.dao.jdbc.DatabaseGameDao;
 import chess.service.ChessService;
 import chess.web.controller.WebChessController;
 

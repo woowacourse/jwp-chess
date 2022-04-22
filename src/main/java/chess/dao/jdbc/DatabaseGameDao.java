@@ -1,7 +1,8 @@
-package chess.dao;
+package chess.dao.jdbc;
 
-import chess.dao.jdbcutil.JdbcUtil;
-import chess.dao.jdbcutil.StatementExecutor;
+import chess.dao.GameDao;
+import chess.dao.jdbc.jdbcutil.JdbcUtil;
+import chess.dao.jdbc.jdbcutil.StatementExecutor;
 import chess.service.dto.ChessGameDto;
 import chess.service.dto.GamesDto;
 import chess.service.dto.StatusDto;
@@ -10,7 +11,6 @@ import java.sql.SQLException;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public class DatabaseGameDao implements GameDao {
 
     private static final String ID = "id";

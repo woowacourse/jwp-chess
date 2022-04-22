@@ -50,7 +50,7 @@ public class WebChessController {
     }
 
     private String renderIndex(Request req, Response res) {
-        return render(new ModelAndView(service.getAllGames(), "index.html"));
+        return render(new ModelAndView(service.getAllGames(), "index.hbs"));
     }
 
     private String render(ModelAndView modelAndView) {
@@ -63,7 +63,7 @@ public class WebChessController {
         if (board == null) {
             res.redirect("/status/" + gameId);
         }
-        return render(new ModelAndView(board, "board.html"));
+        return render(new ModelAndView(board, "board.hbs"));
     }
 
     private BoardDto getRunningBoard(int gameId) {
@@ -111,7 +111,7 @@ public class WebChessController {
     private String renderException(Request req, Response res) {
         try {
             String exception = URLDecoder.decode(req.params(MESSAGE), ENCODING);
-            return render(new ModelAndView(exception, "exception.html"));
+            return render(new ModelAndView(exception, "exception.hbs"));
         } catch (UnsupportedEncodingException e) {
             res.status(SERVER_ERROR);
             return FAIL;

@@ -1,8 +1,8 @@
 package chess.console;
 
 import chess.console.controller.ConsoleChessController;
-import chess.dao.DatabaseBoardDao;
-import chess.dao.DatabaseGameDao;
+import chess.dao.jdbc.DatabaseBoardDao;
+import chess.dao.jdbc.DatabaseGameDao;
 import chess.service.ChessService;
 
 public class Main {

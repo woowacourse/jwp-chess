@@ -1,4 +1,4 @@
-package chess.dao.jdbcutil;
+package chess.dao.jdbc.jdbcutil;
 
 import java.sql.SQLException;
 

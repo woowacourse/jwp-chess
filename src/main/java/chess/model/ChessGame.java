@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ChessGame {
-    private Board board;
+    private final Board board;
     private Color turn;
     private Status status;
 

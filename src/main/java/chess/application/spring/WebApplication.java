@@ -60,7 +60,18 @@ public class WebApplication {
     @PostMapping(path = "/game")
     public String movePiece(@RequestParam("command") String requestBody) {
         state = state.proceed(requestBody);
-        return "redirect:game";
+        if (state.isRunning()) {
+            return "redirect:game";
+        }
+        return "redirect:finish";
+    }
+
+    @GetMapping(path = "/finish")
+    public ModelAndView printFinishedChess() {
+        ModelAndView modelAndView = new ModelAndView("finished");
+        modelAndView.addObject("squares", showChessBoard(state.getBoard()));
+        modelAndView.addObject("player", playerName(state.getPlayer()));
+        return modelAndView;
     }
 
     private List<Square> showChessBoard(final Map<Position, Piece> board) {

@@ -27,14 +27,14 @@ public final class ChessService {
         this.movementDAO = movementDAO;
     }
 
-    public String addChessGame(final String gameName) throws SQLException {
+    public String addChessGame(final String gameName) {
         ChessGame chessGame = new ChessGame(new ChessBoardGenerator());
         chessGame.setName(gameName);
 
         return chessGameDAO.addGame(chessGame);
     }
 
-    public ChessGame getChessGamePlayed(final String gameId) throws SQLException {
+    public ChessGame getChessGamePlayed(final String gameId) {
         List<Movement> movementByGameId = movementDAO.findMovementByGameId(gameId);
         ChessGame chessGame = ChessGame.initChessGame();
         for (Movement movement : movementByGameId) {
@@ -61,7 +61,7 @@ public final class ChessService {
         }
     }
 
-    private void move(final ChessGame chessGame, final Movement movement, final Team team) throws SQLException {
+    private void move(final ChessGame chessGame, final Movement movement, final Team team) {
         chessGame.execute(movement);
         movement.setGameId(chessGame.getId());
         movement.setTeam(team);
@@ -79,7 +79,7 @@ public final class ChessService {
         return model;
     }
 
-    public List<ChessGameRoomInfoDTO> getGames() throws SQLException {
+    public List<ChessGameRoomInfoDTO> getGames() {
         return chessGameDAO.findActiveGames();
     }
 
@@ -87,7 +87,7 @@ public final class ChessService {
         return chessGameDAO.findGameById(id);
     }
 
-    public Map<String, Object> getResult(ChessGame chessGame) throws SQLException {
+    public Map<String, Object> getResult(ChessGame chessGame) {
         final Map<String, Object> model = new HashMap<>();
         chessGameDAO.updateGameEnd(chessGame.getId());
         model.put("gameResult", result(chessGame));

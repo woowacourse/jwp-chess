@@ -25,13 +25,13 @@ public class ChessGameController {
     }
 
     @GetMapping("/")
-    public String showRooms(Model model) throws SQLException {
+    public String showRooms(Model model) {
         model.addAttribute("games", chessService.getGames());
         return "lobby";
     }
 
     @PostMapping("/chess/new")
-    public String createGame(@RequestParam String gameName) throws SQLException {
+    public String createGame(@RequestParam String gameName) {
         String gameId = chessService.addChessGame(gameName);
         return "redirect:/chess/game/" + gameId;
     }
@@ -45,7 +45,7 @@ public class ChessGameController {
 
     @GetMapping("/chess/game/{id}/board")
     @ResponseBody
-    public ResponseEntity<BoardDTO> createBoard(@PathVariable String id) throws SQLException {
+    public ResponseEntity<BoardDTO> createBoard(@PathVariable String id) {
         ChessGame chessGame = chessService.getChessGamePlayed(id);
         return ResponseEntity.ok(new BoardDTO(chessGame));
     }

@@ -30,7 +30,6 @@ public class ChessGameDAO {
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
             statement.setString(1, chessGame.getName());
-            statement.executeUpdate();
             return statement;
         }, keyHolder);
         return String.valueOf(keyHolder.getKey().longValue());

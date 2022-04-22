@@ -58,6 +58,11 @@ public class SpringChessController {
         return ResponseEntity.ok(gameService.gameStateAndPieces(boardId));
     }
 
+    @GetMapping("/result")
+    public ResponseEntity result(@RequestParam int boardId) {
+        return ResponseEntity.ok(gameService.gameResult(boardId));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity handleBadRequest(IllegalArgumentException exception) {
         return ResponseEntity.badRequest().body(Map.of("message", exception.getMessage()));

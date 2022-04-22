@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,29 +28,7 @@ public class SpringJdbcGameDao implements GameDao {
     private final JdbcTemplate jdbcTemplate;
     private final PieceDao pieceDao;
     private final MemberDao memberDao;
-
     private final RowMapper<ChessGame> gameRowMapper = (resultSet, rowNumber) -> makeChessGame(resultSet);
-
-    private ChessGame makeChessGame(ResultSet resultSet) throws SQLException {
-        final Member white = memberDao.findById(resultSet.getLong("white_member_id"))
-                .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
-        final Member black = memberDao.findById(resultSet.getLong("black_member_id"))
-                .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
-        final Long id = resultSet.getLong("id");
-        final String rawTurn = resultSet.getString("turn");
-        return new ChessGame(id, pieceDao.findBoardByGameId(id), Team.valueOf(rawTurn),
-                new Participant(white, black));
-    }
-
-    private final RowMapper<List<ChessGame>> gamesRowMapper = (resultSet, rowNumber) -> makeAllChessGame(resultSet);
-
-    private List<ChessGame> makeAllChessGame(final ResultSet resultSet) throws SQLException {
-        final List<ChessGame> games = new ArrayList<>();
-        while (resultSet.next()) {
-            games.add(makeChessGame(resultSet));
-        }
-        return games;
-    }
 
     @Autowired
     public SpringJdbcGameDao(final JdbcTemplate jdbcTemplate, final PieceDao pieceDao, final MemberDao memberDao) {
@@ -94,10 +71,21 @@ public class SpringJdbcGameDao implements GameDao {
         return Optional.ofNullable(game);
     }
 
+    private ChessGame makeChessGame(ResultSet resultSet) throws SQLException {
+        final Member white = memberDao.findById(resultSet.getLong("white_member_id"))
+                .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
+        final Member black = memberDao.findById(resultSet.getLong("black_member_id"))
+                .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
+        final Long id = resultSet.getLong("id");
+        final String rawTurn = resultSet.getString("turn");
+        return new ChessGame(id, pieceDao.findBoardByGameId(id), Team.valueOf(rawTurn),
+                new Participant(white, black));
+    }
+
     @Override
     public List<ChessGame> findAll() {
         final String sql = "select id, turn, white_member_id, black_member_id from Game";
-        return jdbcTemplate.queryForObject(sql, gamesRowMapper);
+        return jdbcTemplate.query(sql, gameRowMapper);
     }
 
     @Override

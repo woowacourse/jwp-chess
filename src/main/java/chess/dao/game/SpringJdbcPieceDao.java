@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,25 +21,7 @@ import org.springframework.stereotype.Repository;
 public class SpringJdbcPieceDao implements PieceDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Board> boardRowMapper = (resultSet, rowNumber) -> createBoard(resultSet);
     private final RowMapper<Piece> pieceRowMapper = (resultSet, rowNumber) -> serializePiece(resultSet);
-
-
-    private Board createBoard(ResultSet resultSet) throws SQLException {
-        final Map<Square, Piece> board = new HashMap<>();
-
-        while (!resultSet.isAfterLast()) {
-            final String rawSquare = resultSet.getString("square_file") + resultSet.getString("square_rank");
-            final Square square = Square.from(rawSquare);
-            final PieceType pieceType = PieceType.valueOf(resultSet.getString("piece_type"));
-            final Team team = Team.valueOf(resultSet.getString("team"));
-            final Piece piece = PieceFactory.createPiece(pieceType, team, square);
-            board.put(square, piece);
-            resultSet.next();
-        }
-
-        return new Board(board);
-    }
 
     @Autowired
     public SpringJdbcPieceDao(final JdbcTemplate jdbcTemplate) {
@@ -79,7 +62,13 @@ public class SpringJdbcPieceDao implements PieceDao {
                 + "from Piece "
                 + "where game_id = ?";
 
-        return jdbcTemplate.queryForObject(sql, boardRowMapper, gameId);
+        final List<Piece> pieces = jdbcTemplate.query(sql, pieceRowMapper, gameId);
+        final Map<Square, Piece> board = new HashMap<>();
+        for (Piece piece : pieces) {
+            board.put(piece.getSquare(), piece);
+        }
+
+        return new Board(board);
     }
 
     @Override

@@ -1,8 +1,7 @@
 package chess.controller.spring;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.*;
 
 import chess.domain.ChessGame;
 import chess.domain.piece.Piece;
@@ -13,8 +12,8 @@ import chess.dto.MoveRequestDto;
 import chess.service.GameService;
 import chess.service.MemberService;
 import io.restassured.RestAssured;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +38,7 @@ class GameControllerTest {
         RestAssured.port = port;
     }
 
+    @DisplayName("게임에 정상적인 기물 이동 요청이 오면 DB에 이동된 기물이 반영된다.")
     @Test
     void movePiece() {
         final Long member1Id = memberService.addMember("알렉스");
@@ -60,6 +60,7 @@ class GameControllerTest {
         assertThat(pawn.getPieceType()).isSameAs(PieceType.PAWN);
     }
 
+    @DisplayName("게임의 점수를 요청하면 blackScore와 whiteScore를 응답한다.")
     @Test
     void getGameScore() {
         final Long member1Id = memberService.addMember("알렉스");
@@ -75,6 +76,7 @@ class GameControllerTest {
                 .body("whiteScore", notNullValue());
     }
 
+    @DisplayName("게임에 강제종료 요청을 하면 해당 게임이 종료된다.")
     @Test
     void terminateGame() {
         final Long member1Id = memberService.addMember("알렉스");
@@ -91,6 +93,7 @@ class GameControllerTest {
         assertThat(game.isEnd()).isTrue();
     }
 
+    @DisplayName("멤버 id를 두 개 주면서 게임 생성을 요청하면 해당 멤버들이 참가하는 게임이 생성된다.")
     @Test
     void createGame() {
         final Long member1Id = memberService.addMember("알렉스");

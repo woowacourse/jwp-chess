@@ -1,15 +1,14 @@
 package chess.controller.spring;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.*;
 
 import chess.domain.Member;
 import chess.service.MemberService;
 import io.restassured.RestAssured;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +30,7 @@ class MemberControllerTest {
         RestAssured.port = port;
     }
 
+    @DisplayName("멤버의 이름을 담아서 멤버 생성을 요청하면 멤버가 생성된다.")
     @Test
     void addMember() {
         final Member member = new Member("알렉스");
@@ -42,6 +42,7 @@ class MemberControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("멤버의 아이디로 멤버를 요청하면 해당 멤버의 id와 이름을 응답한다.")
     @Test
     void getMember() {
         final Long memberId = memberService.addMember("알렉스");
@@ -55,6 +56,7 @@ class MemberControllerTest {
                 .body("name", notNullValue());
     }
 
+    @DisplayName("멤버 id를 주면서 멤버 삭제를 요청하면 해당 멤버가 삭제된다.")
     @Test
     void deleteMember() {
         final Long memberId = memberService.addMember("알렉스");

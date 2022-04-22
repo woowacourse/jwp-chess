@@ -19,8 +19,9 @@ public class BoardDao {
     }
 
     public void save(final List<BoardEntity> boardEntities) {
-        String insertSql = "insert into board (name, position_column_value, position_row_value, piece_name, piece_team_value)"
-                + " values (:name, :positionColumnValue, :positionRowValue, :pieceName, :pieceTeamValue)";
+        String insertSql =
+                "insert into board (name, position_column_value, position_row_value, piece_name, piece_team_value)"
+                        + " values (:name, :positionColumnValue, :positionRowValue, :pieceName, :pieceTeamValue)";
         for (BoardEntity boardEntity : boardEntities) {
             SqlParameterSource source = new BeanPropertySqlParameterSource(boardEntity);
             namedParameterJdbcTemplate.update(insertSql, source);
@@ -60,7 +61,8 @@ public class BoardDao {
     }
 
     public void updatePiece(final BoardEntity boardEntity) {
-        String updateSql = "update board set piece_name=:pieceName, piece_team_value=:pieceTeamValue where name=:name and position_column_value=:positionColumnValue and position_row_value=:positionRowValue";
+        String updateSql = "update board set piece_name=:pieceName, piece_team_value=:pieceTeamValue"
+                + " where name=:name and position_column_value=:positionColumnValue and position_row_value=:positionRowValue";
         SqlParameterSource source = new BeanPropertySqlParameterSource(boardEntity);
         namedParameterJdbcTemplate.update(updateSql, source);
     }

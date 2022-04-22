@@ -42,8 +42,7 @@ public class ChessGameDao {
 
     public List<ChessGameEntity> loadAll() {
         String loadAllSql = "select * from chess_game";
-        return namedParameterJdbcTemplate.query(loadAllSql,
-                getChessGameEntityRowMapper());
+        return namedParameterJdbcTemplate.query(loadAllSql, getChessGameEntityRowMapper());
     }
 
     private RowMapper<ChessGameEntity> getChessGameEntityRowMapper() {

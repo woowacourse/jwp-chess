@@ -25,6 +25,7 @@ public class BoardDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+
     @BeforeEach
     void setUp() {
         boardDao = new BoardDao(namedParameterJdbcTemplate);
@@ -65,10 +66,8 @@ public class BoardDaoTest {
     @Test
     @DisplayName("name 을 이용해서 board 를 삭제한다")
     void delete() {
-        jdbcTemplate.execute(
-                "insert into board(name, position_column_value, position_row_value, piece_name, piece_team_value)"
-                        + " values ('other', 'b', 3, 'QUEEN', 'WHITE')"
-        );
+        BoardEntity newBoardEntity = new BoardEntity("other", "c", 4, "ROOK", "BLACK");
+        boardDao.save(List.of(newBoardEntity));
 
         boardDao.delete(SAVED_NAME);
 

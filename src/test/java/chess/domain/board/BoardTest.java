@@ -5,11 +5,14 @@ import static chess.domain.board.position.Rank.ONE;
 import static chess.domain.board.position.Rank.SEVEN;
 import static chess.domain.board.position.Rank.SIX;
 import static chess.domain.board.position.Rank.TWO;
+import static chess.domain.piece.Team.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.board.position.Position;
+import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,6 +44,30 @@ class BoardTest {
         assertThatThrownBy(() -> board.movePiece(blackTeamSourcePosition, targetPosition))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("다른 팀 기물은 이동시킬 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("")
+    void move() {
+        final Board board = new Board();
+        final Board movedBoard = board.movePiece(Position.from("a2"), Position.from("a4"));
+        final Map<Position, Piece> pieces = movedBoard.getPieces();
+        final Piece piece = pieces.get(Position.from("a4"));
+        final boolean actual = piece.isPawn();
+        assertThat(actual).isTrue();
+    }
+
+    @Test
+    @DisplayName("")
+    void moveAttack() {
+        Board board = new Board();
+        board = board.movePiece(Position.from("a2"), Position.from("a4"));
+        board = board.movePiece(Position.from("b7"), Position.from("b5"));
+        board = board.movePiece(Position.from("a4"), Position.from("b5"));
+        final Map<Position, Piece> pieces = board.getPieces();
+        final Piece piece = pieces.get(Position.from("b5"));
+        final boolean actual = piece.isTeamOf(WHITE);
+        assertThat(actual).isTrue();
     }
 
     @ParameterizedTest

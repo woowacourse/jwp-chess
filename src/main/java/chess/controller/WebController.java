@@ -4,7 +4,6 @@ import static chess.view.webview.Converter.convertToWebViewPiece;
 
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
-import chess.dto.PieceDto;
 import chess.dto.ScoreDto;
 import chess.service.ChessGameService;
 import java.util.Map;
@@ -15,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class WebController {

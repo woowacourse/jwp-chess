@@ -5,6 +5,7 @@ import static chess.domain.piece.Team.WHITE;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,9 +33,10 @@ public class Board {
         validateSameTeamTargetPositionPiece(sourcePiece, targetPosition);
         validateMovement(sourcePosition, targetPosition);
 
-        pieces.remove(sourcePosition);
-        pieces.put(targetPosition, sourcePiece);
-        return new Board(pieces, currentTurnTeam.turnToNext());
+        Map<Position, Piece> movedPieces = new HashMap<>(pieces);
+        movedPieces.remove(sourcePosition);
+        movedPieces.put(targetPosition, sourcePiece);
+        return new Board(movedPieces, currentTurnTeam.turnToNext());
     }
 
     private void validateMovement(final Position sourcePosition, final Position targetPosition) {

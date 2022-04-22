@@ -18,8 +18,8 @@ import chess.domain.piece.Team;
 import chess.dto.PieceDto;
 import chess.dto.ScoreDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import org.springframework.stereotype.Service;
 
@@ -72,11 +72,14 @@ public class ChessGameService {
         checkPlayingGame();
         Board board = getSavedBoard();
         final Board movedBoard = board.movePiece(Position.from(sourcePosition), Position.from(targetPosition));
+        final Piece piece = movedBoard.getPieces().get(Position.from(targetPosition));
 
-        pieceDao.saveAllPieces(movedBoard.getPieces());
+        pieceDao.removePieceByPosition(sourcePosition);
+        pieceDao.removePieceByPosition(targetPosition);
+        pieceDao.savePiece(targetPosition, piece);
         final Team turn = movedBoard.getTurn();
         gameStateDao.saveTurn(turn.name());
-        return board.getPieces();
+        return movedBoard.getPieces();
     }
 
     private void checkPlayingGame() {
@@ -93,16 +96,14 @@ public class ChessGameService {
     }
 
     private Map<Position, Piece> convertToPiecesByPosition() {
-        final Map<String, PieceDto> savedPieces = pieceDao.findAllPieces();
+        final List<PieceDto> allPieces = pieceDao.findAllPieces();
         final Map<Position, Piece> pieces = new HashMap<>();
 
-        for (Entry<String, PieceDto> entry : savedPieces.entrySet()) {
-            final Position position = Position.from(entry.getKey());
-            final PieceDto pieceDto = entry.getValue();
-            final String name = pieceDto.getName();
-
-            final Team team = TEAM_CREATION_STRATEGY.get(pieceDto.getTeam());
-            final Piece piece = PIECE_CREATION_STRATEGY_BY_NAME.get(name)
+        for (PieceDto pieceDto : allPieces) {
+            Position position = Position.from(pieceDto.getPosition());
+            Team team = TEAM_CREATION_STRATEGY.get(pieceDto.getTeam());
+            String name = pieceDto.getName();
+            Piece piece = PIECE_CREATION_STRATEGY_BY_NAME.get(name)
                     .apply(team);
             pieces.put(position, piece);
         }

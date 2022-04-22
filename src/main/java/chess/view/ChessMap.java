@@ -67,4 +67,8 @@ public class ChessMap {
     public char[][] getChessMap() {
         return chessMap;
     }
+
+    public boolean getIsRunning() {
+        return isRunning;
+    }
 }

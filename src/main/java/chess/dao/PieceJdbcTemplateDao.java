@@ -38,17 +38,22 @@ public class PieceJdbcTemplateDao implements PieceDao{
         final String sql = "select position, type, color from piece where board_id = 1";
         Map<Position, Piece>  board = new TreeMap<>();
 
+        final List<Pair> query = executeLoad(sql);
+
+        for (Pair pair : query) {
+            board.put(pair.getPosition(), pair.getPiece());
+        }
+        return board;
+    }
+
+    private List<Pair> executeLoad(String sql) {
         final List<Pair> query = jdbcTemplate.query(sql, (res, rowNum) -> {
             final Position position = Position.from(res.getString("position"));
             final Type type = Type.from(res.getString("type"));
             final Piece piece = type.makePiece(Color.from(res.getString("color")));
             return new Pair(position, piece);
         });
-
-        for (Pair pair : query) {
-            board.put(pair.getPosition(), pair.getPiece());
-        }
-        return board;
+        return query;
     }
 
     @Override
@@ -66,14 +71,18 @@ public class PieceJdbcTemplateDao implements PieceDao{
 
     @Override
     public void updatePosition(String source, String target) {
-        final String getTypeFromSourceSql = "select type from piece where position = ? and board_id = 1";
-        final String getColorFromSourceSql = "select color from piece where position = ? and board_id = 1";
+        final String type = getFromSource("type", source);
+        final String color = getFromSource("color", source);
+
         final String updateSourceSql = "update piece set type = '.', color = 'NONE' where position = ? and board_id = 1";
         final String updateTargetSql = "update piece set type = ?, color = ? where position = ? and board_id = 1";
-        final String type = jdbcTemplate.queryForObject(getTypeFromSourceSql, String.class, source);
-        final String color = jdbcTemplate.queryForObject(getColorFromSourceSql, String.class, source);
 
         jdbcTemplate.update(updateSourceSql, source);
         jdbcTemplate.update(updateTargetSql, type, color, target);
+    }
+
+    private String getFromSource(String column, String source){
+        final String getFromSourceSql = "select "+ column+ " from piece where position = ? and board_id = 1";
+        return jdbcTemplate.queryForObject(getFromSourceSql, String.class, source);
     }
 }

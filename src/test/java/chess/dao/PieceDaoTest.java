@@ -2,6 +2,7 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.ChessBoard;
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
@@ -43,9 +44,8 @@ class PieceDaoTest {
 		pieceDao.savePieces(Map.of(Position.of('a', '1'), new Piece(1L, Color.WHITE, new King()),
 				Position.of('a', '2'), new Piece(1L, Color.BLACK, new King())));
 
-		Map<Position, Piece> pieces = pieceDao.findAllPieces();
-		assertThat(pieces).hasSize(2);
-		System.out.println();
+		ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(1L);
+		assertThat(chessBoard.getPieces()).hasSize(2);
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.ChessBoard;
 import chess.domain.Color;
 import chess.domain.PieceConverter;
 import chess.domain.Position;
@@ -32,12 +33,12 @@ public class PieceDao {
 		return count;
 	}
 
-	public Map<Position, Piece> findAllPieces() {
-		String sql = "select * from piece";
-		return jdbcTemplate.query(sql, this::piecesRowMapper);
+	public ChessBoard findChessBoardByChessGameId(long chessGameId) {
+		String sql = "select * from piece where chess_game_id = ?";
+		return jdbcTemplate.query(sql, this::chessBoardRowMapper, chessGameId);
 	}
 
-	private Map<Position, Piece> piecesRowMapper(ResultSet resultSet) throws SQLException {
+	private ChessBoard chessBoardRowMapper(ResultSet resultSet) throws SQLException {
 		Map<Position, Piece> pieces = new HashMap<>();
 		while (resultSet.next()) {
 			Long chessGameId = resultSet.getLong("chess_game_id");
@@ -50,7 +51,7 @@ public class PieceDao {
 			Color color = Color.valueOf(colorName);
 			pieces.put(position, PieceConverter.parseToPiece(type, chessGameId, color));
 		}
-		return pieces;
+		return new ChessBoard(pieces);
 	}
 
 	public int updatePiecePosition(Position source, Position target) {

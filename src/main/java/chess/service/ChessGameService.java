@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
+import chess.domain.ChessBoard;
 import chess.domain.piece.PieceFactory;
 import chess.domain.state.Turn;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,13 @@ public class ChessGameService {
 		this.chessGameDao = chessGameDao;
 	}
 
-	public long createNewChessGame(){
+	public long createNewChessGame() {
 		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
 		pieceDao.savePieces(PieceFactory.createNewChessBoard(chessGameId));
 		return chessGameId;
+	}
+
+	public ChessBoard findChessBoard(long chessGameId) {
+		return pieceDao.findChessBoardByChessGameId(chessGameId);
 	}
 }

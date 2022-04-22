@@ -59,16 +59,6 @@ public class FakePieceRepository implements PieceRepository {
         findId.ifPresent(database::remove);
     }
 
-    @Override
-    public void deleteAll(int boardId) {
-        List<Integer> keys = database.keySet().stream()
-                .filter(key -> database.get(key).getBoardId() == boardId)
-                .collect(Collectors.toList());
-        for (int key : keys) {
-            database.remove(key);
-        }
-    }
-
     private static class PieceData {
         private final int boardId;
         private final String position;

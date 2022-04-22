@@ -37,7 +37,7 @@ public class FakeBoardRepository implements BoardRepository {
     }
 
     @Override
-    public void update(int boardId, GameStateDto gameStateDto) {
+    public void updateTurn(int boardId, GameStateDto gameStateDto) {
         BoardData board = database.get(boardId);
         database.put(boardId, new BoardData(board.getroomId(), gameStateDto.getTurn()));
     }

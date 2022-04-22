@@ -128,17 +128,4 @@ public class PieceDao implements PieceRepository {
         }
     }
 
-    @Override
-    public void deleteAll(int boardId) {
-        final String sql = "delete from piece where board_id = ?";
-
-        try (final Connection connection = DBConnector.getConnection();
-             final PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, boardId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(ERROR_DB_FAILED);
-        }
-    }
-
 }

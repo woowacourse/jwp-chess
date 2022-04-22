@@ -71,7 +71,7 @@ public class BoardDao implements BoardRepository {
     }
 
     @Override
-    public void update(int boardId, GameStateDto gameStateDto) {
+    public void updateTurn(int boardId, GameStateDto gameStateDto) {
         final String sql = "update board set turn = ? where id = ?";
 
         try (final Connection connection = DBConnector.getConnection();

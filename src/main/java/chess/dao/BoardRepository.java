@@ -10,7 +10,7 @@ public interface BoardRepository {
 
     int getBoardIdByRoom(int roomId);
 
-    void update(int boardId, GameStateDto gameStateDto);
+    void updateTurn(int boardId, GameStateDto gameStateDto);
 
     void deleteByRoom(int roomId);
 }

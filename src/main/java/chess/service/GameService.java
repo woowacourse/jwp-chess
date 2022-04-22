@@ -84,7 +84,7 @@ public class GameService {
     }
 
     private void updateGameState(Board board, int boardId) {
-        boardRepository.update(boardId, getGameStateDto(board));
+        boardRepository.updateTurn(boardId, getGameStateDto(board));
     }
 
     private Board loadBoard(int boardId) {

@@ -19,6 +19,4 @@ public interface PieceRepository {
     void updateOne(int boardId, String position, PieceDto pieceDto);
 
     void deleteOne(int boardId, String position);
-
-    void deleteAll(int boardId);
 }

@@ -3,7 +3,6 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.web.dto.RoomDto;
-import java.util.Optional;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

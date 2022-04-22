@@ -1,10 +1,13 @@
 package chess;
 
 import chess.dto.BoardDto;
+import chess.dto.MoveDto;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -40,5 +43,12 @@ public class ChessSpringController {
     @ResponseBody
     public BoardDto load(@RequestParam(value = "name") String name) {
         return chessService.load(name);
+    }
+
+    @PostMapping("/move")
+    @ResponseBody
+    public BoardDto move(@RequestParam(value = "name") String name,
+                         @RequestBody MoveDto moveDto) {
+        return chessService.move(name, moveDto);
     }
 }

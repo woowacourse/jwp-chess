@@ -2,6 +2,7 @@ package chess.repository.spring;
 
 import chess.repository.entity.BoardEntity;
 import java.util.List;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -34,16 +35,21 @@ public class BoardDao {
     public List<BoardEntity> load(final String name) {
         String selectSql = "select * from board where name=:name";
         SqlParameterSource source = new MapSqlParameterSource("name", name);
-        List<BoardEntity> boardEntities = namedParameterJdbcTemplate.query(selectSql, source, (rs, rn) ->
+        List<BoardEntity> boardEntities =
+                namedParameterJdbcTemplate.query(selectSql, source, getBoardEntityRowMapper());
+        validateBoardExist(boardEntities);
+        return boardEntities;
+    }
+
+    private RowMapper<BoardEntity> getBoardEntityRowMapper() {
+        return (rs, rn) ->
                 new BoardEntity(
                         rs.getString("name"),
                         rs.getString("position_column_value"),
                         rs.getInt("position_row_value"),
                         rs.getString("piece_name"),
                         rs.getString("piece_team_value")
-                ));
-        validateBoardExist(boardEntities);
-        return boardEntities;
+                );
     }
 
     private void validateBoardExist(final List<BoardEntity> boardEntities) {

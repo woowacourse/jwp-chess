@@ -3,6 +3,7 @@ package chess.repository.spring;
 import chess.repository.entity.ChessGameEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -39,21 +40,20 @@ public class ChessGameDao {
         return namedParameterJdbcTemplate.queryForObject(
                 selectSql,
                 source,
-                (rs, rn) -> new ChessGameEntity(
-                        rs.getString("name"),
-                        rs.getBoolean("is_on"),
-                        rs.getString("team_value_of_turn"
-                        )
-                ));
+                getChessGameEntityRowMapper());
     }
 
     public List<ChessGameEntity> loadAll() {
         String loadAllSql = "select * from chess_game";
         return namedParameterJdbcTemplate.query(loadAllSql,
-                (rs, rn) -> new ChessGameEntity(
-                        rs.getString("name"),
-                        rs.getBoolean("is_on"),
-                        rs.getString("team_value_of_turn")
-                ));
+                getChessGameEntityRowMapper());
+    }
+
+    private RowMapper<ChessGameEntity> getChessGameEntityRowMapper() {
+        return (rs, rn) -> new ChessGameEntity(
+                rs.getString("name"),
+                rs.getBoolean("is_on"),
+                rs.getString("team_value_of_turn")
+        );
     }
 }

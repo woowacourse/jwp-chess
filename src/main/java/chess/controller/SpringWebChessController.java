@@ -30,9 +30,16 @@ public class SpringWebChessController {
 
     @PostMapping("/start")
     public ResponseEntity<ResponseDto1> start() {
-        return ResponseEntity
-                .ok()
-                .body(chessService.start());
+    public ResponseEntity<ResponseDto> start() {
+        try {
+            chessService.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ResponseDto("정상적으로 시작되지 않았습니다."));
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/play")

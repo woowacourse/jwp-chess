@@ -36,17 +36,13 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public ResponseDto1 start() {
-        try {
-            int lastGameId = gameDao.findLastGameId();
-            if (isNotSaved(lastGameId)) {
-                return makeNewGame();
-            }
-            loadLastGame(lastGameId);
-        } catch (IllegalArgumentException e) {
-            return new ResponseDto1(500, e.getMessage());
+    public void start() {
+        int lastGameId = gameDao.findLastGameId();
+        if (isNotSaved(lastGameId)) {
+            makeNewGame();
+            return;
         }
-        return new ResponseDto1(200, null);
+        loadLastGame(lastGameId);
     }
 
     private boolean isNotSaved(int lastGameId) {

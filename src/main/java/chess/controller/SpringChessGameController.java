@@ -1,15 +1,13 @@
 package chess.controller;
 
+import chess.dto.ErrorMessageDto;
 import chess.dto.MoveDto;
 import chess.dto.ResultDto;
 import chess.dto.ScoreDto;
 import chess.service.ChessService;
 import chess.view.ChessMap;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SpringChessGameController {
@@ -46,5 +44,11 @@ public class SpringChessGameController {
         final ResultDto resultDto = chessService.getResult();
         chessService.initializeGame();
         return ResponseEntity.ok(resultDto);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorMessageDto> handle(Exception e) {
+        ErrorMessageDto errorMessageDto = new ErrorMessageDto(e.getMessage());
+        return ResponseEntity.badRequest().body(errorMessageDto);
     }
 }

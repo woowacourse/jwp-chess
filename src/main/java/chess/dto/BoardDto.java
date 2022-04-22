@@ -12,4 +12,12 @@ public class BoardDto {
         this.pieces = pieces;
         this.team = team;
     }
+
+    public List<PieceDto> getPieces() {
+        return pieces;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
 }

@@ -178,7 +178,6 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-
     @Nested
     @DisplayName("기존 게임 입장을 위해 입력한 비밀번호가 ")
     class EnterGameTest {
@@ -275,7 +274,5 @@ class ChessControllerTest {
                     .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .extract();
         }
-
-
     }
 }

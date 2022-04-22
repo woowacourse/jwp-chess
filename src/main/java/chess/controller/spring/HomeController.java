@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class SpringWebController {
+public class HomeController {
 
     private final GameService gameService;
     private final MemberService memberService;
 
-    public SpringWebController(final GameService gameService, final MemberService memberService) {
+    public HomeController(final GameService gameService, final MemberService memberService) {
         this.gameService = gameService;
         this.memberService = memberService;
     }

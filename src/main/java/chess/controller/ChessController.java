@@ -21,7 +21,7 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 public class ChessController {
 
     private static final String STATIC_FILE_LOCATION = "/static";
-    private static final String VIEW_NAME = "index.html";
+    private static final String VIEW_NAME = "spark.html";
 
     private final ChessService chessService;
     private final HandlebarsTemplateEngine templateEngine;

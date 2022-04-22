@@ -8,7 +8,7 @@ function getChess() {
         type: 'get',
         success(data) {
             clearPieces();
-            let obj = JSON.parse(data);
+            let obj = parseToJSON(data);
             if (obj.status === "finished") {
                 end();
             } else {
@@ -63,7 +63,7 @@ function start() {
         type: 'get',
         success(data) {
             clearPieces();
-            let obj = JSON.parse(data);
+            let obj = parseToJSON(data);
             setGameStatus(obj.status);
             setButton(obj.status);
             setPieces(obj.pieces);
@@ -98,7 +98,7 @@ function move(position) {
             target: targetPosition
         },
         success(data) {
-            let obj = JSON.parse(data);
+            let obj = parseToJSON(data);
             if (obj.status === "finished") {
                 end();
             }
@@ -118,7 +118,7 @@ function showScore() {
         url: "/chess-game/score",
         type: 'get',
         success(data) {
-            let score = JSON.parse(data);
+            let score = parseToJSON(data);
             var message = "";
             $.each(score.scores, function (idx, score) {
                 message += score.name + " : " + score.score + "점\n";
@@ -142,7 +142,7 @@ function end() {
         url: "/chess-game/end",
         type: 'post',
         success(data) {
-            let status = JSON.parse(data);
+            let status = parseToJSON(data);
             var message = "게임 종료 !!!\n♟ 게임 결과 ♟\n";
             $.each(status.scores, function (idx, score) {
                 message += score.name + " : " + score.score + "점\n";
@@ -161,4 +161,11 @@ function end() {
             alert(obj.message);
         }
     });
+}
+
+function parseToJSON(data) {
+    if (typeof data == "string") {
+        data = JSON.parse(data);
+    }
+    return data;
 }

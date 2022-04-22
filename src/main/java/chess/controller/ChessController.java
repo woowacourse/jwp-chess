@@ -112,5 +112,10 @@ public class ChessController {
         return chessService.createOrLoadGame(gameId);
 >>>>>>> feat: 게임 정보를 불러오는 api 기능과 URL 매핑 완료
     }
+
+    @GetMapping("/start/{gameId}")
+    public ChessGameResponse startGame(@PathVariable long gameId) {
+        return chessService.startGame(gameId);
+    }
 }
 

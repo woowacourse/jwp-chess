@@ -21,5 +21,10 @@ public class ChessController {
     public ChessGameResponse loadGame(@PathVariable long gameId) {
         return chessService.createOrLoadGame(gameId);
     }
+
+    @GetMapping("/start/{gameId}")
+    public ChessGameResponse startGame(@PathVariable long gameId) {
+        return chessService.startGame(gameId);
+    }
 }
 

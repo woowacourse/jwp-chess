@@ -104,6 +104,11 @@ public class SpringController {
         return modelAndView;
     }
 
+    @GetMapping("/error")
+    public String error() {
+        return "error";
+    }
+
     private String makeCommand(String from, String to) {
         return "move " + from + " " + to;
     }

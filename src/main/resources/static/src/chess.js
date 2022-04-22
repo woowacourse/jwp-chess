@@ -4,7 +4,7 @@ window.onload = function () {
 
 function getChess() {
     $.ajax({
-        url: "/chess",
+        url: "/chess-game/load",
         type: 'get',
         success(data) {
             clearPieces();
@@ -59,7 +59,7 @@ function setPieces(pieces) {
 
 function start() {
     $.ajax({
-        url: "/start",
+        url: "/chess-game/start",
         type: 'get',
         success(data) {
             clearPieces();
@@ -90,7 +90,7 @@ function move(position) {
     let sourcePosition = positions[0];
     let targetPosition = positions[1];
     $.ajax({
-        url: "/move",
+        url: "/chess-game/move",
         type: 'post',
         traditional: true,
         data: {
@@ -115,7 +115,7 @@ function move(position) {
 
 function showScore() {
     $.ajax({
-        url: "/score",
+        url: "/chess-game/score",
         type: 'get',
         success(data) {
             let score = JSON.parse(data);
@@ -139,7 +139,7 @@ function showScore() {
 
 function end() {
     $.ajax({
-        url: "/end",
+        url: "/chess-game/end",
         type: 'post',
         success(data) {
             let status = JSON.parse(data);

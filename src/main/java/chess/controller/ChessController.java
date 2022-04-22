@@ -1,5 +1,10 @@
 package chess.controller;
 
+import static spark.Spark.exception;
+import static spark.Spark.get;
+import static spark.Spark.post;
+import static spark.Spark.staticFileLocation;
+
 import chess.dao.GameDaoImpl;
 import chess.dao.PieceDaoImpl;
 import chess.db.DBConnector;
@@ -7,14 +12,11 @@ import chess.domain.command.MoveCommand;
 import chess.dto.ErrorResponseDto;
 import chess.serviece.ChessService;
 import com.google.gson.Gson;
+import java.util.HashMap;
+import java.util.Map;
 import spark.ModelAndView;
 import spark.Request;
 import spark.template.handlebars.HandlebarsTemplateEngine;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static spark.Spark.*;
 
 public class ChessController {
 
@@ -34,17 +36,17 @@ public class ChessController {
         final Gson gson = new Gson();
         staticFileLocation(STATIC_FILE_LOCATION);
 
-        get("/", (req, res) -> render(new HashMap<>()));
+        get("/chess-game", (req, res) -> render(new HashMap<>()));
 
-        get("/start", (req, res) -> gson.toJson(chessService.initializeGame()));
+        get("/chess-game/start", (req, res) -> gson.toJson(chessService.initializeGame()));
 
-        get("/chess", (req, res) -> gson.toJson(chessService.getChess()));
+        get("/chess-game/load", (req, res) -> gson.toJson(chessService.getChess()));
 
-        post("/move", (req, res) -> gson.toJson(chessService.movePiece(parseToMoveCommand(req))));
+        post("/chess-game/move", (req, res) -> gson.toJson(chessService.movePiece(parseToMoveCommand(req))));
 
-        get("/score", (req, res) -> gson.toJson(chessService.getScore()));
+        get("/chess-game/score", (req, res) -> gson.toJson(chessService.getScore()));
 
-        post("/end", (req, res) -> gson.toJson(chessService.finishGame()));
+        post("/chess-game/end", (req, res) -> gson.toJson(chessService.finishGame()));
 
         exception(Exception.class, (exception, request, response) -> {
             System.out.println(exception.getMessage());

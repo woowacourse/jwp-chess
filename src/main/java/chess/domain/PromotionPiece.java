@@ -31,4 +31,8 @@ public enum PromotionPiece {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException("불가능한 프로모션 기물 이름입니다."));
     }
+
+    public PieceRule pieceRule() {
+        return pieceRule;
+    }
 }

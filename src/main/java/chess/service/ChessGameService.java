@@ -4,6 +4,7 @@ import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessBoard;
 import chess.domain.Position;
+import chess.domain.PromotionPiece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.state.ChessGameState;
 import chess.domain.state.Turn;
@@ -36,6 +37,14 @@ public class ChessGameService {
 
 		pieceDao.delete(target);
 		pieceDao.updatePiecePosition(source, target);
+		chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
+	}
+
+	public void promotion(long chessGameId, PromotionPiece promotionPiece) {
+		ChessGameState chessGameState = findChessGameState(chessGameId);
+		Position position = chessGameState.promotion(promotionPiece);
+
+		pieceDao.updatePieceRule(position, promotionPiece.pieceRule());
 		chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
 	}
 

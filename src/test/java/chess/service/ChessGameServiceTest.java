@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.Position;
+import chess.domain.PromotionPiece;
 import chess.domain.piece.Piece;
 import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.single.Knight;
@@ -80,6 +81,28 @@ class ChessGameServiceTest {
 		// then
 		assertAll(
 				() -> assertThat(piece.name()).isEqualTo("pawn"),
+				() -> assertThat(piece.color()).isEqualTo(WHITE)
+		);
+	}
+
+	@Test
+	@DisplayName("pawn 프로모션")
+	void promotion() {
+		// given
+		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+		Position source = Position.of('a', '8');
+		pieceDao.savePieces(chessGameId, Map.of(
+				source, new Piece(chessGameId, WHITE, new Pawn(WHITE))
+		));
+
+		// when
+		chessGameService.promotion(chessGameId, PromotionPiece.BISHOP);
+		Piece piece = pieceDao.findChessBoardByChessGameId(chessGameId).getPieces()
+				.get(source);
+
+		// then
+		assertAll(
+				() -> assertThat(piece.name()).isEqualTo("bishop"),
 				() -> assertThat(piece.color()).isEqualTo(WHITE)
 		);
 	}

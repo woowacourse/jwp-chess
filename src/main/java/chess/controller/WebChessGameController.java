@@ -28,7 +28,7 @@ public class WebChessGameController {
         final ChessService chessService = new ChessService();
 
         get("/", (req, res) ->
-                render(new HashMap<>(), "/index.html")
+                render(new HashMap<>(), "/index.hbs")
         );
 
         get("/start", (req, res) -> {

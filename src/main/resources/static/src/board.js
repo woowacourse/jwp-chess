@@ -19,7 +19,7 @@ async function startChess() {
 }
 
 async function endChess() {
-    let board = await fetch("/end", {
+    let board = await fetch("/game/end", {
         method: "POST",
     });
     board = await board.json();
@@ -27,7 +27,7 @@ async function endChess() {
 }
 
 async function loadChess() {
-    let board = await fetch("/load");
+    let board = await fetch("/game/load");
     board = await board.json();
     putPieceInSquare(board);
 }
@@ -70,7 +70,7 @@ function clickPosition(position) {
 }
 
 async function movePiece(source, target) {
-     let board = await fetch("/move", {
+     let board = await fetch("/game/move", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -85,7 +85,7 @@ async function movePiece(source, target) {
 }
 
 async function printResult() {
-    let board = await fetch("/status");
+    let board = await fetch("/game/status");
     board = await board.json();
     let session = document.getElementById("result-session");
     const whiteScore = document.createElement("div");

@@ -24,4 +24,20 @@ public class StatusDto {
         final String blackPlayerResult = blackPlayer.getPlayerResult();
         return new StatusDto(whitePlayerScore, blackPlayerScore, whitePlayerResult, blackPlayerResult);
     }
+
+    public double getWhitePlayerScore() {
+        return whitePlayerScore;
+    }
+
+    public double getBlackPlayerScore() {
+        return blackPlayerScore;
+    }
+
+    public String getWhitePlayerResult() {
+        return whitePlayerResult;
+    }
+
+    public String getBlackPlayerResult() {
+        return blackPlayerResult;
+    }
 }

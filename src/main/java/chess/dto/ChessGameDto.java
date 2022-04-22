@@ -3,6 +3,7 @@ package chess.dto;
 import chess.domain.ChessGame;
 import chess.domain.ChessMap;
 import chess.domain.player.Team;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ChessGameDto {
 
@@ -23,5 +24,21 @@ public class ChessGameDto {
         final Team turn = chessGame.getTurn();
         final boolean isRunning = chessGame.isRunning();
         return new ChessGameDto(gameName, chessMap.getChessMap(), turn.getName(), isRunning);
+    }
+
+    public String getGameName() {
+        return gameName;
+    }
+
+    public char[][] getChessMap() {
+        return chessMap;
+    }
+
+    public String getTurn() {
+        return turn;
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 }

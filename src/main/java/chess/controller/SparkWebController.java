@@ -14,12 +14,12 @@ import java.util.Map;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
 
-public class WebChessGameController {
+public class SparkWebController {
 
     private final ChessGameService chessGameService;
     private final Gson gson;
 
-    public WebChessGameController(ChessGameService chessGameService) {
+    public SparkWebController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
         this.gson = new Gson();
     }
@@ -56,7 +56,7 @@ public class WebChessGameController {
             return gson.toJson(chessGameService.move(chessGameName, current, destination));
         });
 
-        post("/load", (request, response) -> {
+        get("/load", (request, response) -> {
             try {
                 final JsonElement jsonElement = JsonParser.parseString(request.body());
                 final String gameName = jsonElement.getAsJsonObject().get("gameName").getAsString();

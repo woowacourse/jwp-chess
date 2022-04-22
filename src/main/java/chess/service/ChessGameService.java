@@ -12,7 +12,9 @@ import chess.dto.ChessGameDto;
 import chess.dto.ChessGameUpdateDto;
 import chess.dto.StatusDto;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessGameService {
 
     private final ChessGameDao chessGameDao;

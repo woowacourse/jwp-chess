@@ -1,7 +1,6 @@
 package chess.service;
 
 import chess.dao.game.GameDao;
-import chess.dao.game.PieceDao;
 import chess.dao.member.MemberDao;
 import chess.domain.Board;
 import chess.domain.BoardInitializer;

@@ -61,11 +61,8 @@ public class DatabaseGameDao2 implements GameDao {
 
     @Override
     public void updateStatus(StatusDto statusDto, int id) {
-        String sql = "update game set status = ? where id = ?";
-        new StatementExecutor(JdbcUtil.getConnection(), sql)
-            .setString(statusDto.getStatus())
-            .setInt(id)
-            .executeUpdate();
+        String sql = "UPDATE game SET status = ? WHERE id = ?";
+        jdbcTemplate.update(sql, statusDto.getStatus(), id);
     }
 
     @Override

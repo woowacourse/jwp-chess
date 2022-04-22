@@ -33,16 +33,14 @@ public class DatabaseBoardDao2 implements BoardDao {
 
     @Override
     public BoardDto getBoardByGameId(int id) {
-        String sql = "select piece_type, piece_color, square from board where game_id = ?";
+        String sql = "SELECT piece_type, piece_color, square FROM board WHERE game_id = ?";
         return new BoardDto(jdbcTemplate.query(sql, pieceRowMapper, id));
     }
 
     @Override
     public void remove(int id) {
-        String sql = "delete from board where game_id = ?";
-        new StatementExecutor(JdbcUtil.getConnection(), sql)
-                .setInt(id)
-                .executeUpdate();
+        String sql = "DELETE FROM board WHERE game_id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
     @Override

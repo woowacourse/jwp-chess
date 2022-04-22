@@ -1,10 +1,12 @@
-package chess.application.web;
+package chess.application.web.spark;
 
 import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.Spark.staticFileLocation;
 
+import chess.application.web.JsonTransformer;
+import chess.application.web.WebGameController;
 import java.util.Map;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;

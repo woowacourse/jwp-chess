@@ -1,4 +1,4 @@
-package chess;
+package chess.application.web.spring;
 
 import chess.application.web.JsonTransformer;
 import chess.application.web.WebGameController;

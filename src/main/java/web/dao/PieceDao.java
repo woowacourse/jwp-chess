@@ -1,4 +1,4 @@
-package web.spark.dao;
+package web.dao;
 
 import static chess.position.File.A;
 import static chess.position.File.B;
@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import web.spark.dto.PieceDto;
-import web.spark.dto.PieceType;
+import web.dto.PieceDto;
+import web.dto.PieceType;
 
 @Repository
 public class PieceDao {

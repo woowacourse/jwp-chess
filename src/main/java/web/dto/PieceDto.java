@@ -1,4 +1,4 @@
-package web.spark.dto;
+package web.dto;
 
 import chess.piece.Color;
 import chess.piece.Piece;

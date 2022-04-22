@@ -1,4 +1,4 @@
-package web.spark.controller;
+package web.controller;
 
 import static chess.position.File.A;
 import static chess.position.File.B;

@@ -1,4 +1,4 @@
-package web.spark.controller;
+package web.controller;
 
 import chess.Score;
 import chess.piece.Color;
@@ -8,8 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import web.spark.dao.ChessGameDao;
-import web.spark.dto.GameStatus;
+import web.dao.ChessGameDao;
+import web.dto.GameStatus;
+
 
 @Controller
 public class LobbyController {

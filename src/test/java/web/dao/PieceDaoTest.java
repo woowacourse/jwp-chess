@@ -1,4 +1,4 @@
-package web.spark.dao;
+package web.dao;
 
 import static chess.position.File.A;
 import static chess.position.File.B;
@@ -20,9 +20,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import web.spark.dto.GameStatus;
-import web.spark.dto.PieceDto;
-import web.spark.dto.PieceType;
+import web.dto.GameStatus;
+import web.dto.PieceDto;
+import web.dto.PieceType;
 
 @JdbcTest
 class PieceDaoTest {

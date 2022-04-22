@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.exception.ChessGameException;
 import chess.piece.Bishop;
 import chess.piece.Color;
 import chess.piece.King;
@@ -48,7 +49,7 @@ class ChessBoardTest {
                         new Position(E, SEVEN), new King(Color.BLACK)), Color.WHITE);
 
         assertThatThrownBy(() -> chessBoard.move(new Position(D, FIVE), new Position(F, SIX)))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ChessGameException.class);
     }
 
     @Test
@@ -60,7 +61,7 @@ class ChessBoardTest {
                         new Position(A, SEVEN), new Pawn(Color.BLACK)), Color.BLACK);
 
         assertThatThrownBy(() -> chessBoard.move(new Position(A, SEVEN), new Position(A, SEVEN)))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ChessGameException.class);
     }
 
     @Test
@@ -72,7 +73,7 @@ class ChessBoardTest {
                         new Position(A, SEVEN), new Pawn(Color.BLACK)), Color.BLACK);
 
         assertThatThrownBy(() -> chessBoard.move(new Position(A, SEVEN), new Position(B, SEVEN)))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ChessGameException.class);
     }
 
     @Test
@@ -86,7 +87,7 @@ class ChessBoardTest {
 
         assertAll(() -> {
             assertThatThrownBy(() -> chessBoard.move(new Position(E, SIX), new Position(E, FIVE)))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(ChessGameException.class);
             assertThat(chessBoard.getBoard()).isEqualTo(
                     Map.of(new Position(E, SIX), new King(Color.WHITE),
                             new Position(B, FIVE), new King(Color.BLACK)));
@@ -119,7 +120,7 @@ class ChessBoardTest {
 
         assertAll(() -> {
             assertThatThrownBy(() -> chessBoard.move(new Position(E, FIVE), new Position(E, SIX)))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(ChessGameException.class);
             assertThat(chessBoard.getBoard()).isEqualTo(
                     Map.of(new Position(E, FIVE), new King(Color.WHITE),
                             new Position(E, SEVEN), new King(Color.BLACK),
@@ -140,7 +141,7 @@ class ChessBoardTest {
 
         assertAll(() -> {
             assertThatThrownBy(() -> chessBoard.move(from, to))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(ChessGameException.class);
             assertThat(chessBoard.getBoard()).isEqualTo(
                     Map.of(new Position(H, FIVE), new King(Color.WHITE),
                             new Position(H, SEVEN), new King(Color.BLACK),
@@ -236,7 +237,7 @@ class ChessBoardTest {
                         new Position(D, FIVE), new Pawn(Color.BLACK)), Color.WHITE);
 
         assertThatThrownBy(() -> chessBoard.move(new Position(D, FOUR), new Position(D, FIVE)))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ChessGameException.class);
     }
 
     @Test
@@ -250,7 +251,7 @@ class ChessBoardTest {
                         new Position(D, FIVE), new Pawn(Color.BLACK)), Color.WHITE);
 
         assertThatThrownBy(() -> chessBoard.move(new Position(D, FOUR), new Position(C, FIVE)))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ChessGameException.class);
     }
 
     @Test
@@ -322,17 +323,7 @@ class ChessBoardTest {
         chessBoard.move(new Position(D, FOUR), new Position(D, FIVE));
 
         assertThatThrownBy(() -> chessBoard.move(new Position(D, FIVE), new Position(D, SIX)))
-                .isInstanceOf(IllegalStateException.class);
-    }
-
-    @Test
-    @DisplayName("동일한 위치의 기물이 있는 경우 예외 발생")
-    void throwExceptionWhenHasSamePositionPieces() {
-        assertThatThrownBy(() ->
-                new ChessBoard(Map.of(
-                        new Position(D, FOUR), new King(Color.WHITE),
-                        new Position(D, FOUR), new King(Color.BLACK)), Color.WHITE))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ChessGameException.class);
     }
 
     @Test
@@ -341,7 +332,7 @@ class ChessBoardTest {
         assertThatThrownBy(() ->
                 new ChessBoard(Map.of(
                         new Position(D, FOUR), new King(Color.WHITE)), Color.WHITE))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ChessGameException.class);
     }
 
     @Test
@@ -354,6 +345,6 @@ class ChessBoardTest {
         );
 
         assertThatThrownBy(chessBoard::getWinner)
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(ChessGameException.class);
     }
 }

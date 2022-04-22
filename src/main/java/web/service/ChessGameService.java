@@ -1,4 +1,4 @@
-package web.spark.service;
+package web.service;
 
 import static chess.position.File.A;
 import static chess.position.File.B;
@@ -31,13 +31,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import web.spark.controller.Movement;
-import web.spark.dao.ChessGameDao;
-import web.spark.dao.PieceDao;
-import web.spark.dto.ChessGameDto;
-import web.spark.dto.GameStatus;
-import web.spark.dto.PieceDto;
+import web.controller.Movement;
+import web.dao.ChessGameDao;
+import web.dao.PieceDao;
+import web.dto.ChessGameDto;
+import web.dto.GameStatus;
+import web.dto.PieceDto;
 
 @Service
 public class ChessGameService {

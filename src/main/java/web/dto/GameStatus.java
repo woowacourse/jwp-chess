@@ -1,4 +1,4 @@
-package web.spark.dto;
+package web.dto;
 
 public enum GameStatus {
     READY,

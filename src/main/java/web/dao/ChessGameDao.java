@@ -1,15 +1,19 @@
-package web.spark.dao;
+package web.dao;
 
 import chess.Score;
 import chess.piece.Color;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import web.spark.dto.ChessGameDto;
-import web.spark.dto.GameStatus;
+import web.dto.ChessGameDto;
+import web.dto.GameStatus;
 
 @Repository
 public class ChessGameDao {
@@ -43,11 +47,20 @@ public class ChessGameDao {
                 this::createChessGameDto, id);
     }
 
-    public void saveChessGame(String name, GameStatus status, Color currentColor, Score blackScore, Score whiteScore) {
+    public int saveChessGame(String name, GameStatus status, Color currentColor, Score blackScore, Score whiteScore) {
+        String sql = "INSERT INTO chess_game(name, status, current_color, black_score, white_score) VALUES(?, ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-                "INSERT INTO chess_game(name, status, current_color, black_score, white_score) VALUES(?, ?, ?, ?, ?)",
-                name, status.name(), currentColor.name(),
-                blackScore.getValue().toPlainString(), whiteScore.getValue().toPlainString());
+                connection -> {
+                    PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+                    ps.setString(1, name);
+                    ps.setString(2, status.name());
+                    ps.setString(3, currentColor.name());
+                    ps.setString(4, blackScore.getValue().toPlainString());
+                    ps.setString(5, whiteScore.getValue().toPlainString());
+                    return ps;
+                }, keyHolder);
+        return keyHolder.getKey().intValue();
     }
 
     public void updateChessGame(ChessGameDto chessGameDto) {

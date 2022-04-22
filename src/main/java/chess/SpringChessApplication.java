@@ -51,6 +51,13 @@ public class SpringChessApplication {
         return controller.move(id, split[1]);
     }
 
+    @PostMapping("/room/{roomId}/end")
+    public String endGame(@PathVariable("roomId") int id, Model model) {
+        model.addAttribute("result", controller.status(id));
+        controller.end(id);
+        return "result";
+    }
+
     @ResponseBody
     @GetMapping("/room/{roomId}/status")
     public StatusDto showStatus(@PathVariable("roomId") int id) {

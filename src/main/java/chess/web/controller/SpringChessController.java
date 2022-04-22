@@ -30,7 +30,7 @@ public class SpringChessController {
     public String renderBoard(@PathVariable int gameId, Model model) {
         BoardDto board = getRunningBoard(gameId);
         if (board == null) {
-            return "redirect:status/" + gameId;
+            return "redirect:../status/" + gameId;
         }
         model.addAttribute("board", board);
         return "board";

@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.ChessGameScoreResponse;
 import chess.controller.dto.PieceMoveRequest;
 import chess.controller.dto.PieceResponse;
 import chess.controller.dto.PromotionRequest;
@@ -55,5 +56,15 @@ public class ChessGameController {
 											   @RequestBody PromotionRequest promotionRequest) {
 		chessGameService.promotion(chessGameId, promotionRequest.toPromotionPiece());
 		return ResponseEntity.noContent().build();
+	}
+	
+	@GetMapping("/{chessGameId}/score")
+	public ResponseEntity<List<ChessGameScoreResponse>> calculateScore(@PathVariable long chessGameId) {
+		List<ChessGameScoreResponse> chessGameScoreResponses = chessGameService.currentScore(chessGameId)
+				.entrySet()
+				.stream()
+				.map(ChessGameScoreResponse::from)
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(chessGameScoreResponses);
 	}
 }

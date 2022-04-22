@@ -3,11 +3,13 @@ package chess.service;
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessBoard;
+import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.PromotionPiece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.state.ChessGameState;
 import chess.domain.state.Turn;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,6 +48,11 @@ public class ChessGameService {
 
 		pieceDao.updatePieceRule(position, promotionPiece.pieceRule());
 		chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
+	}
+
+	public Map<Color, Double> currentScore(long chessGameId) {
+		ChessGameState chessGameState = findChessGameState(chessGameId);
+		return chessGameState.currentScore();
 	}
 
 	private ChessGameState findChessGameState(long chessGameId) {

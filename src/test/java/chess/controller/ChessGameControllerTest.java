@@ -83,4 +83,16 @@ class ChessGameControllerTest {
 				.then().log().all()
 				.statusCode(HttpStatus.NO_CONTENT.value());
 	}
+
+	@Test
+	@DisplayName("체스 점수 반환")
+	void calculateScore() {
+		createNewGame();
+
+		RestAssured.given().log().all()
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.when().get("chessgames/1/score")
+				.then().log().all()
+				.statusCode(HttpStatus.OK.value());
+	}
 }

@@ -49,3 +49,16 @@
 - RunningBlackTurn
 - RunningWhiteTurn
 - Finished
+
+## 웹 체스 요구사항
+
+## dao
+- BoardDao
+- CommonDao
+- StateDao
+
+## 컨트롤러
+- webChessController
+
+## 서비스
+- webChessGame

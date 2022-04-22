@@ -8,15 +8,14 @@ import chess.domain.position.Position;
 import chess.web.PieceFactory;
 import chess.web.dao.BoardRepository;
 import chess.web.dao.PieceRepository;
+import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
 import chess.web.dto.GameStateDto;
 import chess.web.dto.PieceDto;
 import chess.web.dto.ResultDto;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class GameService {
 
@@ -28,7 +27,7 @@ public class GameService {
         this.boardRepository = boardRepository;
     }
 
-    public Map<String, Object> startNewGame(int roomId) {
+    public BoardDto startNewGame(int roomId) {
         Board board = new Board(new RegularRuleSetup());
 
         boardRepository.deleteByroom(roomId);
@@ -44,40 +43,31 @@ public class GameService {
         Board board = loadBoard(boardId);
         board.move(source, target);
 
-        Optional<PieceDto> pickedPiece = pieceRepository.findOne(boardId, source);
+        PieceDto pieceDto = pieceRepository.findOne(boardId, source)
+                .orElseThrow(IllegalArgumentException::new);
         deleteMovedPieceFromSource(boardId, source);
-        updateMovedPieceToTarget(boardId, target, pickedPiece.get());
+        updateMovedPieceToTarget(boardId, target, pieceDto);
         updateGameState(board, boardId);
     }
 
-    public Map<String, Object> loadGame(int roomId) {
+    public BoardDto loadGame(int roomId) {
         int boardId = boardRepository.getBoardIdByroom(roomId);
         Board board = loadBoard(boardId);
         board.loadTurn(boardRepository.getTurn(boardId));
         return gameStateAndPieces(boardId);
     }
 
-    public Map<String, Object> gameStateAndPieces(int boardId) {
+    public BoardDto gameStateAndPieces(int boardId) {
         Board board = loadBoard(boardId);
-        Map<String, Object> data = new HashMap<>();
-        data.put("boardId", boardId);
-        data.put("state", getGameStateDto(board));
-        data.put("pieces", getPieceDtos(board));
-        return data;
+        return new BoardDto(boardId, board);
     }
 
-    public Map<String, Object> gameResult(int boardId) {
-        Board board = loadBoard(boardId);
-        Map<String, Object> data = new HashMap<>();
-        data.put("result", getResultDto(board));
-        return data;
+    public ResultDto gameResult(int boardId) {
+        return getResultDto(loadBoard(boardId));
     }
 
-    public Map<String, Object> gameFinalResult(int boardId) {
-        Board board = loadBoard(boardId);
-        Map<String, Object> data = new HashMap<>();
-        data.put("result", getFinalResultDto(board));
-        return data;
+    public ResultDto gameFinalResult(int boardId) {
+        return getFinalResultDto(loadBoard(boardId));
     }
 
     private void updateMovedPieceToTarget(int boardId, String target, PieceDto pickedPieceDto) {
@@ -113,13 +103,6 @@ public class GameService {
 
     private GameStateDto getGameStateDto(Board board) {
         return GameStateDto.from(board);
-    }
-
-    private List<PieceDto> getPieceDtos(Board board) {
-        Map<Position, chess.domain.piece.Piece> pieces = board.getPieces();
-        return pieces.keySet().stream()
-                .map(position -> PieceDto.from(position, pieces.get(position)))
-                .collect(Collectors.toList());
     }
 
     private ResultDto getResultDto(Board board) {

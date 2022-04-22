@@ -2,8 +2,8 @@ package chess.web.dto;
 
 public class RoomDto {
 
-    private long id;
-    private String name;
+    private final long id;
+    private final String name;
 
     public RoomDto(long id, String name) {
         this.id = id;

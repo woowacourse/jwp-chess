@@ -258,7 +258,7 @@ function fetchResult() {
         },
     })
         .then(res => res.json())
-        .then(res => updateResult(res.result));
+        .then(res => updateResult(res));
 }
 
 function fetchFinalResult() {
@@ -272,6 +272,6 @@ function fetchFinalResult() {
         .then(res => res.json())
         .then(res => {
             disableLoadGame();
-            showFinalResult(res.result);
+            showFinalResult(res);
         });
 }

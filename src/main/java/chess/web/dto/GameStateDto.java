@@ -5,8 +5,8 @@ import chess.domain.board.Board;
 
 public class GameStateDto {
 
-    private String end;
-    private String turn;
+    private final String end;
+    private final String turn;
 
     private GameStateDto(boolean end, Color turn) {
         this.end = String.valueOf(end);

@@ -5,9 +5,9 @@ import chess.domain.position.Position;
 
 public class PieceDto {
 
-    private String position;
-    private String color;
-    private String role;
+    private final String position;
+    private final String color;
+    private final String role;
 
     public PieceDto(String position, String color, String symbol) {
         this.position = position.toLowerCase();

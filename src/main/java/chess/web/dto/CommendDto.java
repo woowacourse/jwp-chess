@@ -2,8 +2,8 @@ package chess.web.dto;
 
 public class CommendDto {
 
-    private String source;
-    private String target;
+    private final String source;
+    private final String target;
 
     public CommendDto(String source, String target) {
         this.source = source;

@@ -6,9 +6,9 @@ import java.util.Map;
 
 public class ResultDto {
 
-    private int whiteScore;
-    private int blackScore;
-    private String winner;
+    private final int whiteScore;
+    private final int blackScore;
+    private final String winner;
 
     public ResultDto(int whiteScore, int blackScore, Map<Result, Color> result) {
         this.whiteScore = whiteScore;

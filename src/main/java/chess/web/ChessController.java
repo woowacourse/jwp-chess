@@ -7,6 +7,7 @@ import static spark.Spark.post;
 import chess.web.dao.BoardDao;
 import chess.web.dao.PieceDao;
 import chess.web.dao.RoomDao;
+import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
 import chess.web.dto.RoomDto;
 import chess.web.service.GameService;
@@ -21,9 +22,9 @@ import spark.template.handlebars.HandlebarsTemplateEngine;
 
 public class ChessController {
 
-    private Gson gson = new Gson();
-    private GameService gameService = new GameService(new PieceDao(), new BoardDao());
-    private RoomService roomService = new RoomService(new RoomDao());
+    private final Gson gson = new Gson();
+    private final GameService gameService = new GameService(new PieceDao(), new BoardDao());
+    private final RoomService roomService = new RoomService(new RoomDao());
 
     public ChessController() {
         port(8080);
@@ -73,7 +74,10 @@ public class ChessController {
                 res.status(400);
                 model.put("message", e.getMessage());
             }
-            model.putAll(gameService.gameStateAndPieces(boardId));
+            BoardDto boardDto = gameService.gameStateAndPieces(boardId);
+            model.put("boardId", boardDto.getBoardId());
+            model.put("state", boardDto.getState());
+            model.put("pieces", boardDto.getPieces());
             return gson.toJson(model);
         });
 

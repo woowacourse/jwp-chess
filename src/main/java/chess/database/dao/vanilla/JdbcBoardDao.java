@@ -3,13 +3,11 @@ package chess.database.dao.vanilla;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Repository;
-
+import chess.database.dao.BoardDao;
 import chess.database.dto.BoardDto;
 import chess.database.dto.PieceDto;
 import chess.database.dto.PointDto;
 import chess.database.dto.RouteDto;
-import chess.database.dao.BoardDao;
 
 public class JdbcBoardDao implements BoardDao {
 
@@ -81,7 +79,7 @@ public class JdbcBoardDao implements BoardDao {
 
     @Override
     public void removeBoard(String roomName) {
-            JdbcConnector.query("DELETE FROM board WHERE room_name = ?")
+        JdbcConnector.query("DELETE FROM board WHERE room_name = ?")
             .parameters(roomName)
             .executeUpdate();
     }

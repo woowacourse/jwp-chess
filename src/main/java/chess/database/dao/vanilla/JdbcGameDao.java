@@ -2,12 +2,9 @@ package chess.database.dao.vanilla;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.stereotype.Repository;
-
-import chess.database.dto.GameStateDto;
 import chess.database.dao.GameDao;
+import chess.database.dto.GameStateDto;
 
 public class JdbcGameDao implements GameDao {
 

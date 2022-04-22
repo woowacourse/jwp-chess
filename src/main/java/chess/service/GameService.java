@@ -38,7 +38,7 @@ public class GameService {
 
     private void validateDistinctGame(String roomName) {
         List<String> stateAndColor = gameDao.readStateAndColor(roomName);
-        if(!stateAndColor.isEmpty()){
+        if (!stateAndColor.isEmpty()) {
             throw new IllegalArgumentException(String.format("[ERROR] %s 이름의 방이 이미 존재합니다.", roomName));
         }
     }
@@ -65,7 +65,7 @@ public class GameService {
     private void validateExistGame(List<String> stateAndColor, String roomName) {
         if (stateAndColor.isEmpty()) {
             throw new IllegalArgumentException(
-                    String.format("[ERROR] %s 이름에 해당하는 방이 없습니다.", roomName)
+                String.format("[ERROR] %s 이름에 해당하는 방이 없습니다.", roomName)
             );
         }
     }

@@ -2,14 +2,12 @@ package chess.database.dao.spring;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import chess.database.dao.GameDao;
-import chess.database.dao.vanilla.JdbcConnector;
 import chess.database.dto.GameStateDto;
 
 @Repository

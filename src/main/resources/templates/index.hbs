@@ -8,14 +8,14 @@
             crossorigin="anonymous"></script>
     <link href="/css/chess.css" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>화분 꺠먹는 말썽쟁이의 체스</title>
+    <title>화분 깨먹는 말썽쟁이의 체스</title>
 </head>
 <body>
 <div class="chess-header">
     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createGame">
         게임 생성
     </button>
-    <button class="btn btn-dark" onclick="location.href='/member-management'">멤버 관리</button>
+    <button class="btn btn-dark" onclick="location.href='/members/management'">멤버 관리</button>
 </div>
 <div class="container" style="flex-direction: column;">
     {{#games}}
@@ -23,7 +23,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{id}} 번째 게임</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
-                <a href="/play/{{id}}" class="btn btn-dark">입장</a>
+                <a href="/games/{{id}}/play" class="btn btn-dark">입장</a>
             </div>
         </div>
     {{/games}}
@@ -64,7 +64,7 @@
     const createGame = () => {
         let whiteId = document.getElementById("white").value;
         let blackId = document.getElementById("black").value;
-        fetch("/chessGame", {
+        fetch("/games", {
             method: "POST",
             body: JSON.stringify({whiteId: whiteId, blackId: blackId}),
             headers: {

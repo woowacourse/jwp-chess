@@ -63,7 +63,7 @@
 
 <script>
     const getScoreData = async () => {
-        let response = await fetch("/score/{{gameId}}");
+        let response = await fetch("/games/{{gameId}}/score");
         let data = await response.json();
         alert(`백팀 : ${data.whiteScore} \n흑팀 : ${data.blackScore}`);
     }
@@ -80,7 +80,7 @@
             return;
         }
 
-        fetch("/move/{{gameId}}", {
+        fetch("/games/{{gameId}}/move", {
             method: "PUT",
             body: JSON.stringify({source: startPosition, target: position}),
             headers: {
@@ -97,7 +97,7 @@
     }
 
     const terminate = () => {
-        fetch("/terminate/{{gameId}}", {
+        fetch("/games/{{gameId}}/terminate", {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',

@@ -23,7 +23,8 @@
             <div class="card-body">
                 <h5 class="card-title">{{name}} </h5>
                 <h6 class="card-subtitle mb-2 text-muted">id: {{id}} </h6>
-                <button type="button" class="btn btn-info" onclick="location.href = '/history/{{id}}'">게임 기록</button>
+                <button type="button" class="btn btn-info" onclick="location.href = '/members/{{id}}/history'">게임 기록
+                </button>
                 <button id="{{id}}" type="button" class="btn btn-danger" onclick="deleteMember(this)">멤버 삭제</button>
             </div>
         </div>
@@ -52,7 +53,7 @@
 <script>
     const addMember = () => {
         let memberName = document.getElementById("memberName").value;
-        fetch("/member", {
+        fetch("/members", {
             method: "POST",
             body: JSON.stringify({name: memberName}),
             headers: {
@@ -70,7 +71,7 @@
 
     const deleteMember = (target) => {
         let memberId = target.id;
-        fetch(`/member/${memberId}`, {
+        fetch(`/members/${memberId}`, {
             method: "DELETE"
         }).then(response => {
             if (response.ok) {

@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.spark;
 
 import static spark.Spark.delete;
 import static spark.Spark.get;

@@ -1,6 +1,6 @@
 package chess;
 
-import chess.controller.SparkWebController;
+import chess.controller.spark.SparkWebController;
 import chess.dao.SqlExecutor;
 import chess.dao.game.JdbcGameDao;
 import chess.dao.game.JdbcPieceDao;

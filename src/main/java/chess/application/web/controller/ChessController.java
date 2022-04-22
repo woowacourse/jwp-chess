@@ -1,5 +1,6 @@
-package chess.application.spring;
+package chess.application.web.controller;
 
+import chess.application.web.dao.CommandDao;
 import chess.chessboard.position.Position;
 import chess.game.Player;
 import chess.piece.Piece;
@@ -8,8 +9,6 @@ import chess.state.State;
 import chess.state.Status;
 import chess.view.Square;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,18 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootApplication
 @Controller
-public class WebApplication {
+public class ChessController {
 
     @Autowired
     private CommandDao commandDao;
 
     private State state;
-
-    public static void main(String[] args) {
-        SpringApplication.run(WebApplication.class, args);
-    }
 
     @GetMapping("/")
     public ModelAndView index() {

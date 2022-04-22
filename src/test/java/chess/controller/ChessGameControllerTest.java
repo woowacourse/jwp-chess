@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.PieceMoveRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,5 +43,18 @@ class ChessGameControllerTest {
 				.when().get("chessgames/1")
 				.then().log().all()
 				.statusCode(HttpStatus.OK.value());
+	}
+
+	@Test
+	@DisplayName("체스 기물 이동")
+	void movePiece() {
+		createNewGame();
+
+		RestAssured.given().log().all()
+				.body(new PieceMoveRequest("a2", "a4"))
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.when().post("chessgames/1/move")
+				.then().log().all()
+				.statusCode(HttpStatus.NO_CONTENT.value());
 	}
 }

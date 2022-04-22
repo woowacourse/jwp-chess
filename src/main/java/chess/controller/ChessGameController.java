@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.PieceMoveRequest;
 import chess.controller.dto.PieceResponse;
 import chess.domain.ChessBoard;
 import chess.service.ChessGameService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,5 +40,11 @@ public class ChessGameController {
 				.map(PieceResponse::from)
 				.collect(Collectors.toList());
 		return ResponseEntity.ok(pieceResponses);
+	}
+
+	@PostMapping("/{chessGameId}/move")
+	public ResponseEntity<Void> movePiece(@PathVariable long chessGameId, @RequestBody PieceMoveRequest pieceMoveRequest) {
+		chessGameService.move(chessGameId, pieceMoveRequest.toSourcePosition(), pieceMoveRequest.toTargetPosition());
+		return ResponseEntity.noContent().build();
 	}
 }

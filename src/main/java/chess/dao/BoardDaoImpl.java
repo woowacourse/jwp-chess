@@ -1,5 +1,12 @@
 package chess.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceType;
@@ -11,19 +18,14 @@ import chess.dto.request.DeletePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.BoardDto;
 import chess.exception.DatabaseException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BoardDaoImpl extends Dao implements BoardDao {
     private static final String TABLE_NAME = "board";
 
+    // TODO: 반환 형태를 Dto -> Domain으로 분리 고려
     public BoardDto getBoard(String gameId) {
         String query = String.format("SELECT x_axis, y_axis, piece_type, piece_color FROM %s WHERE game_id = ?",
-                TABLE_NAME);
+            TABLE_NAME);
 
         try (Connection connection = getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -48,8 +50,8 @@ public class BoardDaoImpl extends Dao implements BoardDao {
 
     public void createPiece(CreatePieceDto createPieceDto) {
         String query = String.format(
-                "INSERT INTO %s(game_id, x_axis, y_axis, piece_type, piece_color) VALUES(?, ?, ?, ?, ?)",
-                TABLE_NAME);
+            "INSERT INTO %s(game_id, x_axis, y_axis, piece_type, piece_color) VALUES(?, ?, ?, ?, ?)",
+            TABLE_NAME);
 
         try (Connection connection = getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -66,7 +68,7 @@ public class BoardDaoImpl extends Dao implements BoardDao {
 
     public void deletePiece(DeletePieceDto deletePieceDto) {
         String query = String.format(
-                "DELETE FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
+            "DELETE FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
 
         try (Connection connection = getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -81,7 +83,7 @@ public class BoardDaoImpl extends Dao implements BoardDao {
 
     public void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto) {
         String query = String.format(
-                "UPDATE %s SET x_axis = ?, y_axis = ? WHERE x_axis = ? AND y_axis = ? AND game_id = ?", TABLE_NAME);
+            "UPDATE %s SET x_axis = ?, y_axis = ? WHERE x_axis = ? AND y_axis = ? AND game_id = ?", TABLE_NAME);
 
         try (Connection connection = getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);

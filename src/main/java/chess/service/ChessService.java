@@ -1,5 +1,10 @@
 package chess.service;
 
+import java.util.Map.Entry;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import chess.dao.BoardDao;
 import chess.dao.GameDao;
 import chess.domain.board.Board;
@@ -13,19 +18,16 @@ import chess.dto.response.BoardDto;
 import chess.dto.response.ChessGameDto;
 import chess.dto.response.PieceColorDto;
 import chess.dto.response.ScoreResultDto;
-import java.util.Map.Entry;
 
+@Service
 public class ChessService {
     private final GameDao gameDao;
     private final BoardDao boardDao;
 
-    private ChessService(GameDao gameDao, BoardDao boardDao) {
+    @Autowired
+    public ChessService(GameDao gameDao, BoardDao boardDao) {
         this.gameDao = gameDao;
         this.boardDao = boardDao;
-    }
-
-    public static ChessService of(GameDao gameDao, BoardDao boardDao) {
-        return new ChessService(gameDao, boardDao);
     }
 
     public void initializeGame(String gameId) {
@@ -97,8 +99,8 @@ public class ChessService {
     @Override
     public String toString() {
         return "ChessService{" +
-                "gameDao=" + gameDao +
-                ", boardDao=" + boardDao +
-                '}';
+            "gameDao=" + gameDao +
+            ", boardDao=" + boardDao +
+            '}';
     }
 }

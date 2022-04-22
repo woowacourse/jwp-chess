@@ -1,7 +1,8 @@
 package chess.controller;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
+import static spark.Spark.*;
+
+import java.util.Map;
 
 import chess.dao.BoardDaoImpl;
 import chess.dao.GameDaoImpl;
@@ -13,7 +14,6 @@ import chess.dto.response.ScoreResultDto;
 import chess.service.ChessService;
 import chess.util.BodyParser;
 import chess.util.JsonMapper;
-import java.util.Map;
 import spark.Request;
 
 public class WebController {
@@ -23,7 +23,7 @@ public class WebController {
     private final ChessService chessService;
 
     public WebController() {
-        this.chessService = ChessService.of(new GameDaoImpl(), new BoardDaoImpl());
+        this.chessService = new ChessService(new GameDaoImpl(), new BoardDaoImpl());
     }
 
     public void run() {

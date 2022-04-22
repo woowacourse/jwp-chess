@@ -1,13 +1,12 @@
 package chess.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import chess.dao.BoardDaoImpl;
-import chess.dao.GameDaoImpl;
 import chess.dto.request.MovePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.BoardDto;
@@ -23,8 +22,9 @@ public class WebSpringController {
 
     private final ChessService chessService;
 
-    public WebSpringController() {
-        this.chessService = ChessService.of(new GameDaoImpl(), new BoardDaoImpl());
+    @Autowired
+    public WebSpringController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
     @GetMapping("/board")

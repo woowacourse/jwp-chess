@@ -4,10 +4,12 @@ import chess.dao.GameDaoImpl;
 import chess.dao.PieceDaoImpl;
 import chess.db.DBConnector;
 import chess.dto.ChessResponseDto;
+import chess.dto.ScoresDto;
 import chess.serviece.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -29,5 +31,15 @@ public class SpringChessController {
     @GetMapping("/load")
     public ResponseEntity<ChessResponseDto> load() {
         return ResponseEntity.ok().body(chessService.getChess());
+    }
+
+    @GetMapping("/start")
+    public ResponseEntity<ChessResponseDto> start() {
+        return ResponseEntity.ok().body(chessService.initializeGame());
+    }
+
+    @PostMapping("/end")
+    public ResponseEntity<ScoresDto> end() {
+        return ResponseEntity.ok().body(chessService.finishGame());
     }
 }

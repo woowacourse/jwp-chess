@@ -40,6 +40,9 @@ public final class ChessService {
         final ChessGame chessGame = getChessGamePlayed(gameId);
         validateCurrentTurn(chessGame, team);
         move(chessGame, new Movement(Position.of(source), Position.of(target)), team);
+        if (chessGame.isGameSet()){
+            CHESS_GAME_DAO.updateGameEnd(gameId);
+        }
         return chessGame;
     }
 

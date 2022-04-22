@@ -1,7 +1,5 @@
 package chess.domain.piece.property;
 
-import java.net.ProtocolFamily;
-
 public enum Team {
 
     BLACK,

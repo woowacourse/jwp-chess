@@ -1,6 +1,7 @@
 package chess.dto;
 
-import chess.domain.board.ChessBoard;
+import chess.dao.ChessGame;
+import chess.domain.piece.property.Team;
 import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;
 import java.util.HashMap;
@@ -8,14 +9,26 @@ import java.util.Map;
 
 public final class BoardDTO {
 
-    private Map<String, Object> result = new HashMap<>();
+    private Map<String, Object> board = new HashMap<>();
+    private Team currentTurn;
+    private double blackScore;
+    private double whiteScore;
+    private boolean isGameSet = Boolean.FALSE;
+    private String winner = "";
 
-    public BoardDTO(final ChessBoard chessBoard) {
-        Map<Position, Piece> board = chessBoard.getBoard();
+    public BoardDTO(final ChessGame chessGame) {
+        Map<Position, Piece> board = chessGame.getChessBoard().getBoard();
         for (Position position : board.keySet()) {
             Piece piece = board.get(position);
             String symbol = convertPieceSymbol(piece);
-            result.put(position.toString(), symbol);
+            this.board.put(position.toString(), symbol);
+        }
+        this.currentTurn = chessGame.getChessBoard().getCurrentTurn();
+        this.blackScore = GameStatus.calculateTeamScore(chessGame.getChessBoard().getBoard(), Team.BLACK);
+        this.whiteScore = GameStatus.calculateTeamScore(chessGame.getChessBoard().getBoard(), Team.WHITE);
+        if (chessGame.isGameSet()){
+            isGameSet = Boolean.TRUE;
+            this.winner = chessGame.getChessBoard().calculateWhoWinner().toString();
         }
     }
 
@@ -27,7 +40,27 @@ public final class BoardDTO {
         return symbol;
     }
 
-    public Map<String, Object> getResult() {
-        return result;
+    public Map<String, Object> getBoard() {
+        return board;
+    }
+
+    public Team getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public double getBlackScore() {
+        return blackScore;
+    }
+
+    public double getWhiteScore() {
+        return whiteScore;
+    }
+
+    public boolean isGameSet() {
+        return isGameSet;
+    }
+
+    public String getWinner() {
+        return winner;
     }
 }

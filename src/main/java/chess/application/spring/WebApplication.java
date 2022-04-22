@@ -5,6 +5,7 @@ import chess.game.Player;
 import chess.piece.Piece;
 import chess.state.Start;
 import chess.state.State;
+import chess.state.Status;
 import chess.view.Square;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +75,24 @@ public class WebApplication {
         modelAndView.addObject("player", playerName(state.getPlayer()));
         return modelAndView;
     }
+
+    @PostMapping(path = "/result")
+    public String result() {
+        state = state.proceed("status");
+        return "redirect:result";
+    }
+
+    @GetMapping(path = "/result")
+    public ModelAndView printResult() {
+        ModelAndView modelAndView = new ModelAndView("status");
+        Status status = (Status) state;
+        HashMap<Player, Double> results = status.calculateScore();
+        modelAndView.addObject("squares", showChessBoard(state.getBoard()));
+        modelAndView.addObject("whiteScore", results.get(Player.WHITE));
+        modelAndView.addObject("blackScore", results.get(Player.BLACK));
+        return modelAndView;
+    }
+
 
     private List<Square> showChessBoard(final Map<Position, Piece> board) {
         final List<Square> squares = new ArrayList<>();

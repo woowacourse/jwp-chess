@@ -1,6 +1,5 @@
 package chess.controller;
 
-<<<<<<< HEAD
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.controller.dto.request.GameAccessRequest;
@@ -18,18 +17,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-=======
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
->>>>>>> feat: 게임 정보를 불러오는 api 기능과 URL 매핑 완료
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-<<<<<<< HEAD
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ChessControllerTest {
@@ -282,32 +278,4 @@ class ChessControllerTest {
 
 
     }
-
-
-
-=======
-import org.springframework.transaction.annotation.Transactional;
-
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Transactional
-class ChessControllerTest {
-
-    @LocalServerPort
-    int port;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
-
-    @DisplayName("GET - load api 테스트")
-    @Test
-    void load() {
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/load/99999999")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
-    }
->>>>>>> feat: 게임 정보를 불러오는 api 기능과 URL 매핑 완료
 }

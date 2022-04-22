@@ -49,4 +49,19 @@ public class ChessController {
                             @RequestBody final MoveRequestDto moveRequestDto) {
         return chessService.move(roomName, moveRequestDto);
     }
+
+    @GetMapping("/{roomName}/scores")
+    public String findScore(@PathVariable("roomName") final String roomName) {
+        return chessService.findScore(roomName);
+    }
+
+    @GetMapping("/{roomName}/turn")
+    public String findTurn(@PathVariable("roomName") final String roomName) {
+        return roomService.findCurrentTurn(roomName);
+    }
+
+    @GetMapping("/{roomName}/result")
+    public String findResult(@PathVariable("roomName") final String roomName) {
+        return chessService.result(roomName);
+    }
 }

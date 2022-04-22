@@ -14,12 +14,14 @@ import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.dto.*;
 import chess.view.ChessMap;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessService {
 
     private final PieceDao pieceDao;

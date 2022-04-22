@@ -9,14 +9,16 @@ function start() {
             'Accept': 'application/json',
         },
         body: JSON.stringify(null)
-    }).then(response => response.json())
-        .then(response => {
-            if (parseInt(response.status) !== 200) {
-                alert(response.message);
-                location.replace("/");
-            }
-            location.replace("/play");
-        });
+    }).then(response => {
+        debugger;
+        if (!response.ok) {
+            response.json()
+                .then(body => alert(body.message));
+            location.replace("/")
+            return;
+        }
+        location.replace("/play");
+    });
 }
 
 function end() {

@@ -15,5 +15,19 @@
 - 새로운 게임을 생성할 수 있다.
 - 현재 게임 상태를 반환 할 수 있다.
 
+### api
 
-
+- 새로운 체스 게임을 생성 
+  - POST "/chessgames"
+- 체스 게임 로딩
+  - GET "/chessgames/{id}"
+- 피스 이동
+  - POST "/chessgames/{id}/move"
+- 피스 프로모션
+  - POST "/chessgames/{id}/promotion"
+- 체스 게임 스코어 계산
+  - GET "/chessgames/{id}/score"
+- 체스 게임 종료 여부
+  - GET "/chessgames/{id}/status"
+- 체스 게임 우승자 판별
+  - GET "/chessgames/{id}/winner"

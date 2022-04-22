@@ -5,7 +5,9 @@ import static chess.util.JdbcConnector.getConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class GameStateDaoImpl implements GameStateDao {
 
     private static final GameStateDaoImpl INSTANCE = new GameStateDaoImpl();
@@ -16,7 +18,7 @@ public class GameStateDaoImpl implements GameStateDao {
         return INSTANCE;
     }
 
-    private GameStateDaoImpl() {
+    public GameStateDaoImpl() {
     }
 
     @Override

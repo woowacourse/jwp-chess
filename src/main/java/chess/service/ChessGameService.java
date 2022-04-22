@@ -21,7 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessGameService {
 
     private static final String EMPTY_GAME_STATE = "nothing";

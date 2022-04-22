@@ -11,6 +11,14 @@ public class ScoreDto {
         this.blackScore = blackScore;
     }
 
+    public double getWhiteScore() {
+        return whiteScore;
+    }
+
+    public double getBlackScore() {
+        return blackScore;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

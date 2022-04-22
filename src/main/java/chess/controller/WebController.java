@@ -1,66 +1,64 @@
 package chess.controller;
 
 import static chess.view.webview.Converter.convertToWebViewPiece;
-import static spark.Spark.get;
-import static spark.Spark.post;
 
-import chess.dao.GameStateDaoImpl;
-import chess.dao.PieceDaoImpl;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
+import chess.dto.PieceDto;
+import chess.dto.ScoreDto;
 import chess.service.ChessGameService;
 import java.util.Map;
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+@Controller
 public class WebController {
 
-    public void run() {
-        ChessGameService chessGameService = new ChessGameService(
-                PieceDaoImpl.getInstance(), GameStateDaoImpl.getInstance());
-        ready(chessGameService);
-        start(chessGameService);
-        move(chessGameService);
-        status(chessGameService);
-        end(chessGameService);
+    private final ChessGameService chessGameService;
+
+    public WebController(final ChessGameService chessGameService) {
+        this.chessGameService = chessGameService;
     }
 
-    private void ready(final ChessGameService chessGameService) {
-        get("/", (req, res) -> {
-            final Map<Position, Piece> pieces = chessGameService.getPieces();
-            return render(convertToWebViewPiece(pieces));
-        });
+    @GetMapping(path = "/")
+    public String index(final Model model) {
+        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.getPieces());
+        model.addAllAttributes(pieces);
+        return "index";
     }
 
-    private void start(final ChessGameService chessGameService) {
-        get("/start", (req, res) -> {
-            final Map<Position, Piece> pieces = chessGameService.start();
-            return render(convertToWebViewPiece(pieces));
-        });
+    @GetMapping(path = "/start")
+    public String start(final Model model) {
+        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.start());
+        model.addAllAttributes(pieces);
+        return "index";
     }
 
-    private void move(final ChessGameService chessGameService) {
-        post("/move", ((req, res) -> {
-            final Map<Position, Piece> pieces = chessGameService
-                    .move(req.queryParams("source"), req.queryParams("target"));
-            return render(convertToWebViewPiece(pieces));
-        }));
+    @PostMapping(path = "/move")
+    public String move(final Model model,
+                     @RequestParam("source") String source,
+                     @RequestParam("target") String target) {
+        final Map<Position, Piece> pieces = chessGameService.move(source, target);
+        model.addAllAttributes(convertToWebViewPiece(pieces));
+        return "index";
     }
 
-    private void status(final ChessGameService chessGameService) {
-        final JsonTransformer jsonTransformer = new JsonTransformer();
-        get("/status", ((req, res) ->
-                jsonTransformer.render(chessGameService.getScore())));
+    @GetMapping(path="/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ScoreDto> status() {
+        final ScoreDto score = chessGameService.getScore();
+        return ResponseEntity.ok(score);
     }
 
-    private void end(final ChessGameService chessGameService) {
-        get("/end", ((req, res) -> {
-            final Map<Position, Piece> pieces = chessGameService.end();
-            return render(convertToWebViewPiece(pieces));
-        }));
-    }
-
-    private String render(final Map<String, Object> model) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, "index.html"));
+    @GetMapping(path = "/end")
+    public String end(final Model model) {
+        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.end());
+        model.addAllAttributes(pieces);
+        return "index";
     }
 }

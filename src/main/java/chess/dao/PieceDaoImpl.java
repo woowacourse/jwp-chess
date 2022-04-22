@@ -11,7 +11,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class PieceDaoImpl implements PieceDao {
 
     private static final PieceDaoImpl INSTANCE = new PieceDaoImpl();
@@ -20,7 +22,7 @@ public class PieceDaoImpl implements PieceDao {
         return INSTANCE;
     }
 
-    private PieceDaoImpl() {
+    public PieceDaoImpl() {
     }
 
     @Override

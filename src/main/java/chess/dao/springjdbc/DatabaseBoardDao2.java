@@ -5,19 +5,12 @@ import chess.dao.jdbc.jdbcutil.JdbcUtil;
 import chess.dao.jdbc.jdbcutil.StatementExecutor;
 import chess.service.dto.BoardDto;
 import chess.service.dto.PieceWithSquareDto;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class DatabaseBoardDao2 implements BoardDao {
-
-    private static final String PIECE_COLOR = "piece_color";
-    private static final String PIECE_TYPE = "piece_type";
-    private static final String SQUARE = "square";
 
     private JdbcTemplate jdbcTemplate;
     private final RowMapper<PieceWithSquareDto> pieceRowMapper = (resultSet, rowNum) ->
@@ -54,12 +47,7 @@ public class DatabaseBoardDao2 implements BoardDao {
 
     @Override
     public void update(PieceWithSquareDto piece, int gameId) {
-        String sql = "update board set piece_type = ?, piece_color = ? where square = ? and game_id = ?";
-        new StatementExecutor(JdbcUtil.getConnection(), sql)
-                .setString(piece.getType())
-                .setString(piece.getColor())
-                .setString(piece.getSquare())
-                .setInt(gameId)
-                .executeUpdate();
+        String sql = "UPDATE board SET piece_type = ?, piece_color = ? WHERE square = ? AND game_id = ?";
+        jdbcTemplate.update(sql, piece.getType(), piece.getColor(), piece.getSquare(), gameId);
     }
 }

@@ -3,13 +3,11 @@ package chess.dao.springjdbc;
 import chess.dao.GameDao;
 import chess.dao.jdbc.jdbcutil.JdbcUtil;
 import chess.dao.jdbc.jdbcutil.StatementExecutor;
-import chess.model.ChessGame;
 import chess.service.dto.ChessGameDto;
 import chess.service.dto.GamesDto;
 import chess.service.dto.StatusDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -39,18 +37,18 @@ public class DatabaseGameDao2 implements GameDao {
     public void update(ChessGameDto dto) {
         String sql = "update game set status = ?, turn = ? where id = ?";
         new StatementExecutor(JdbcUtil.getConnection(), sql)
-                .setString(dto.getStatus())
-                .setString(dto.getTurn())
-                .setInt(dto.getId())
-                .executeUpdate();
+            .setString(dto.getStatus())
+            .setString(dto.getTurn())
+            .setInt(dto.getId())
+            .executeUpdate();
     }
 
     @Override
     public ChessGameDto findById(int id) {
         String sql = "select id, name, status, turn from game where id = ?";
         return new StatementExecutor(JdbcUtil.getConnection(), sql)
-                .setInt(id)
-                .findFirst(this::getChessGameDto);
+            .setInt(id)
+            .findFirst(this::getChessGameDto);
     }
 
     private ChessGameDto getChessGameDto(ResultSet resultSet) throws SQLException {
@@ -65,9 +63,9 @@ public class DatabaseGameDao2 implements GameDao {
     public void updateStatus(StatusDto statusDto, int id) {
         String sql = "update game set status = ? where id = ?";
         new StatementExecutor(JdbcUtil.getConnection(), sql)
-                .setString(statusDto.getStatus())
-                .setInt(id)
-                .executeUpdate();
+            .setString(statusDto.getStatus())
+            .setInt(id)
+            .executeUpdate();
     }
 
     @Override
@@ -78,9 +76,7 @@ public class DatabaseGameDao2 implements GameDao {
 
     @Override
     public void createGame(String name) {
-        String sql = "insert into game set name = ?";
-        new StatementExecutor(JdbcUtil.getConnection(), sql)
-                .setString(name)
-                .executeUpdate();
+        String sql = "INSERT INTO game SET name = ?";
+        jdbcTemplate.update(sql, name);
     }
 }

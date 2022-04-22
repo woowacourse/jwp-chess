@@ -8,4 +8,12 @@ public class ScoreDto {
         this.whiteScore = whiteScore;
         this.blackScore = blackScore;
     }
+
+    public float getWhiteScore() {
+        return whiteScore;
+    }
+
+    public float getBlackScore() {
+        return blackScore;
+    }
 }

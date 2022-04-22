@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.dao.BoardDao;
-import chess.dao.RoomDao;
+import chess.dao.BoardSparkDaoImpl;
+import chess.dao.RoomSparkDaoImpl;
 import chess.domain.Score;
 import chess.domain.Team;
 import chess.domain.piece.Blank;
@@ -18,11 +18,14 @@ import java.util.stream.Collectors;
 
 public class ChessService {
     private GameState gameState;
-    BoardDao boardDao = new BoardDao();
-    RoomDao roomDao = new RoomDao();
+    BoardSparkDaoImpl boardSparkDaoImpl = new BoardSparkDaoImpl();
+    RoomSparkDaoImpl roomSparkDaoImpl = new RoomSparkDaoImpl();
 
-    public BoardDto getInitialBoard(int roomId) {
-        gameState = getGameState(roomId);
+    public ChessService(int roomId) {
+        this.gameState = getGameState(roomId);
+    }
+
+    public BoardDto getInitialBoard() {
         Map<String, String> board = getBoardPieces();
         List<PieceDto> pieces = board.entrySet()
                 .stream()
@@ -32,22 +35,22 @@ public class ChessService {
     }
 
     private GameState getGameState(int roomId) {
-        RoomDto room = roomDao.findById(roomId);
+        RoomDto room = roomSparkDaoImpl.findById(roomId);
         if (room == null) {
             return createGameState(roomId);
         }
         return getGameState(room);
     }
 
-    private WhiteTurn createGameState(int roomId) {
-        roomDao.save(roomId, Team.WHITE);
+    private WhiteTurn createGameState(long roomId) {
+        roomSparkDaoImpl.save(roomId, Team.WHITE);
         Map<Position, Piece> board = BoardInitialize.create();
-        boardDao.saveAll(board);
+        boardSparkDaoImpl.saveAll(board, roomId);
         return new WhiteTurn(board);
     }
 
     private Playing getGameState(RoomDto room) {
-        List<PieceDto> pieces = boardDao.findAll(room.getId());
+        List<PieceDto> pieces = boardSparkDaoImpl.findAll(room.getId());
         Map<Position, Piece> board = new HashMap<>();
         for (PieceDto pieceOfPieces :pieces) {
             Piece piece = PieceFactory.create(pieceOfPieces.getSymbol());
@@ -61,7 +64,7 @@ public class ChessService {
         return new BlackTurn(board);
     }
 
-    public GameStateDto move(MoveDto moveDTO, int roomId) {
+    public GameStateDto move(MoveDto moveDTO, long roomId) {
         String source = moveDTO.getSource();
         String destination = moveDTO.getDestination();
 
@@ -71,19 +74,19 @@ public class ChessService {
         return new GameStateDto(team, gameState.isRunning());
     }
 
-    private void updateMove(int roomId, String source, String destination) {
+    private void updateMove(long roomId, String source, String destination) {
         Map<Position, Piece> board = gameState.getBoard();
         Piece sourcePiece = board.get(Position.from(source));
         gameState = gameState.move(source, destination);
 
-        boardDao.updatePosition(source, Blank.SYMBOL);
-        boardDao.updatePosition(destination, sourcePiece.getSymbol());
+        boardSparkDaoImpl.updatePosition(source, Blank.SYMBOL);
+        boardSparkDaoImpl.updatePosition(destination, sourcePiece.getSymbol());
 
         if (!gameState.isRunning()) {
             deleteAll(roomId);
             return;
         }
-        roomDao.updateStatus(gameState.getTeam(), roomId);
+        roomSparkDaoImpl.updateStatus(gameState.getTeam(), roomId);
     }
 
     public ScoreDto getStatus() {
@@ -91,7 +94,7 @@ public class ChessService {
         return new ScoreDto(score.getTotalScoreWhiteTeam(), score.getTotalScoreBlackTeam());
     }
 
-    public BoardDto resetBoard(int roomId) {
+    public BoardDto resetBoard(long roomId) {
         deleteAll(roomId);
         gameState = createGameState(roomId);
         Map<String, String> board = getBoardPieces();
@@ -112,12 +115,12 @@ public class ChessService {
         return board;
     }
 
-    private void deleteAll(int roomId) {
-        boardDao.delete(roomId);
-        roomDao.delete(roomId);
+    private void deleteAll(long roomId) {
+        boardSparkDaoImpl.delete(roomId);
+        roomSparkDaoImpl.delete(roomId);
     }
 
-    public GameStateDto end(int roomId) {
+    public GameStateDto end(long roomId) {
         gameState = new Finished(gameState.getTeam(), gameState.getBoard());
         deleteAll(roomId);
         Score score = new Score(gameState.getBoard());

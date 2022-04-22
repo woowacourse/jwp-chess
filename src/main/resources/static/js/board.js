@@ -1,18 +1,19 @@
 function setBoard() {
     $.ajax({
         url: "/board",
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
         type: "get",
         success: function (data) {
-            let board = JSON.parse(data);
-            const team = board.team;
-            const pieces = board.pieces;
+            const pieces = data.pieces;
+            const team = data.team;
             document.getElementById("turn").innerText = team + " Turn";
             $.each(pieces, function(index, piece) {
                 findById(piece.position, piece.symbol);
             })
         },
         error: function (data){
-            alert(data);
+            alert(data)
         }
     })
 }
@@ -42,10 +43,11 @@ function reset() {
     $.ajax({
         url: "/reset",
         type: "POST",
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            let board = JSON.parse(data);
-            const team = board.team;
-            const pieces = board.pieces;
+            const team = data.team;
+            const pieces = data.pieces;
             document.getElementById("turn").innerText = team + " Turn";
             location.reload()
             $.each(pieces, function(index, piece) {
@@ -62,10 +64,11 @@ function end() {
     $.ajax({
         url: "/end",
         type: "POST",
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            const result = JSON.parse(data);
-            if (result.isRunning === false) {
-                const winningTeam = result.gameState;
+            if (data.isRunning === false) {
+                const winningTeam = data.gameState;
                 alert("게임이 종료되었습니다." + "우승자는 "+ winningTeam);
             }
         },

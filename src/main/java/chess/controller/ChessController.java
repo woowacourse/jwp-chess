@@ -9,12 +9,12 @@ import static spark.Spark.*;
 public class ChessController {
     private static final int roomId = 1;
 
-    private final ChessService chessService = new ChessService();
+    private final ChessService chessService = new ChessService(roomId);
 
     public void run() {
         Gson gson = new Gson();
 
-        get("/board", (req, res) -> gson.toJson(chessService.getInitialBoard(roomId)));
+        get("/board", (req, res) -> gson.toJson(chessService.getInitialBoard()));
 
         post("/move", (req, res) -> {
             MoveDto moveDTO = gson.fromJson(req.body(), MoveDto.class);

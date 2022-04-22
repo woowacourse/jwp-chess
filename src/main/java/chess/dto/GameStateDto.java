@@ -10,4 +10,12 @@ public class GameStateDto {
         this.gameState = gameState;
         this.isRunning = isFinished;
     }
+
+    public Team getGameState() {
+        return gameState;
+    }
+
+    public boolean isRunning() {
+        return isRunning;
+    }
 }

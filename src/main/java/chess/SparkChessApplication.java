@@ -7,7 +7,7 @@ import static spark.Spark.*;
 public class SparkChessApplication {
     public static void main(String[] args) {
         port(8080);
-        staticFileLocation("templates");
+        staticFileLocation("static");
         ChessController chessController = new ChessController();
         chessController.run();
     }

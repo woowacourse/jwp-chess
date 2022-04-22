@@ -19,9 +19,11 @@ function movePiece(object, position) {
     $.ajax({
         url: "/move",
         type: "POST",
+        accept: 'application/json; charset=utf-8',
+        contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(object),
         success(data) {
-            const result = JSON.parse(data);
+            let result = JSON.parse(data);
             printGameState(result);
             changePiece(position);
         },

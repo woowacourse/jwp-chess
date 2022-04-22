@@ -1,6 +1,9 @@
 package chess.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.controller.dto.request.MoveRequest;
+import chess.domain.GameState;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -102,5 +105,20 @@ class ChessControllerTest {
                 .when().get("/api/status/" + testGameId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("GET - end api 테스트")
+    @Test
+    void end() {
+        chessService.createOrLoadGame(testGameId);
+        chessService.startGame(testGameId);
+
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/end/" + testGameId)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+        assertThat(chessService.loadGame(testGameId).getGameState()).isEqualTo(GameState.FINISHED);
     }
 }

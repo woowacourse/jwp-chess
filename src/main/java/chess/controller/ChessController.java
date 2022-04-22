@@ -45,5 +45,10 @@ public class ChessController {
     public StatusResponse status(@PathVariable long gameId) {
         return chessService.status(gameId);
     }
+
+    @GetMapping("/end/{gameId}")
+    public ChessGameResponse endGame(@PathVariable long gameId) {
+        return chessService.end(gameId);
+    }
 }
 

@@ -307,4 +307,19 @@ class ChessControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
+
+    @DisplayName("GET - end api 테스트")
+    @Test
+    void end() {
+        chessService.createOrLoadGame(testGameId);
+        chessService.startGame(testGameId);
+
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/end/" + testGameId)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+
+        assertThat(chessService.loadGame(testGameId).getGameState()).isEqualTo(GameState.FINISHED);
+    }
 }

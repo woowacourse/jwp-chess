@@ -4,7 +4,7 @@ public class MoveDto {
     private final String from;
     private final String to;
 
-    MoveDto(){
+    MoveDto() {
         from = null;
         to = null;
     }

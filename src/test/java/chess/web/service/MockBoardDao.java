@@ -13,7 +13,7 @@ import java.util.Optional;
 public class MockBoardDao implements BoardDao {
     private final Map<Long, String> mockDb = new HashMap<>();
 
-    public MockBoardDao(){
+    public MockBoardDao() {
         mockDb.put(1L, "white");
     }
 

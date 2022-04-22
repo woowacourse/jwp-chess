@@ -2,34 +2,53 @@ package chess.web.dao;
 
 import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@JdbcTest
 class PieceDaoTest {
 
-    private final PieceDao pieceDao = new PieceDaoImpl();
-    private final BoardDao boardDao = new BoardDaoImpl(new JdbcTemplate());
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private PieceDao pieceDao;
+    private BoardDao boardDao;
     private Long boardId;
     private Pieces pieces;
 
     @BeforeEach
     void setUp() {
+        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
+        jdbcTemplate.execute("DROP TABLE board IF EXISTS");
+
+        jdbcTemplate.execute("CREATE TABLE board (" +
+                " id   INT(10) not null AUTO_INCREMENT," +
+                " turn VARCHAR (5) not null," +
+                " primary key (id))");
+
+        jdbcTemplate.execute("CREATE TABLE piece (" +
+                " id       INT(10) not null AUTO_INCREMENT," +
+                " board_id INT(10)," +
+                " position CHAR(2)," +
+                " type     VARCHAR (20) not null," +
+                " team     VARCHAR (10) not null," +
+                " foreign key (board_id) references board (id) ON DELETE CASCADE ," +
+                " primary key (id))");
+
+        pieceDao = new PieceDaoImpl(jdbcTemplate);
+        boardDao = new BoardDaoImpl(jdbcTemplate);
+
         pieces = Pieces.createInit();
         boardId = boardDao.save();
         pieceDao.save(pieces.getPieces(), boardId);
-    }
-
-    @AfterEach
-    void tearDown(){
-        boardDao.deleteById(boardId);
-        pieceDao.deleteByBoardId(boardId);
     }
 
     @Test

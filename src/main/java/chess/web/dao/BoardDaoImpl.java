@@ -3,11 +3,7 @@ package chess.web.dao;
 import chess.board.Board;
 import chess.board.Team;
 import chess.board.Turn;
-import chess.board.piece.Piece;
-import chess.board.piece.PieceFactory;
 import chess.board.piece.Pieces;
-import chess.web.utils.JdbcConnector;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,9 +11,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +25,7 @@ public class BoardDaoImpl implements BoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Board> boardRowMapper = (resultSet, rowNum) ->{
+    private final RowMapper<Board> boardRowMapper = (resultSet, rowNum) -> {
         Team team = Team.from(resultSet.getString("turn"));
         return Board.create(
                 Pieces.from(new ArrayList<>()),

@@ -2,13 +2,9 @@ package chess;
 
 import chess.web.controller.ChessWebController;
 import chess.web.service.ChessService;
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static spark.Spark.*;
+import static spark.Spark.port;
+import static spark.Spark.staticFileLocation;
 
 public class SparkChessApplication {
     public static void main(String[] args) {

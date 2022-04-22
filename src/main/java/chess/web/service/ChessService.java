@@ -24,7 +24,7 @@ public class ChessService {
 
     public ChessService() {
         boardDao = new BoardDaoImpl(new JdbcTemplate());
-        pieceDao = new PieceDaoImpl();
+        pieceDao = new PieceDaoImpl(new JdbcTemplate());
     }
 
     public ChessService(BoardDao boardDao, PieceDao pieceDao) {

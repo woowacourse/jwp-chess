@@ -93,10 +93,13 @@ function move(position) {
         url: "/chess-game/move",
         type: 'post',
         traditional: true,
-        data: {
+        beforeSend: function (xhr) {
+             xhr.setRequestHeader("Content-type","application/json");
+        },
+        data: JSON.stringify({
             source: sourcePosition,
             target: targetPosition
-        },
+        }),
         success(data) {
             let obj = parseToJSON(data);
             if (obj.status === "finished") {

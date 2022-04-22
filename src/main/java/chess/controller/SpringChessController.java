@@ -35,8 +35,7 @@ public class SpringChessController {
 
     @GetMapping("/rooms")
     public ResponseEntity<RoomsResponseDto> findRooms() {
-        final RoomsResponseDto rooms = chessService.findRooms();
-        return ResponseEntity.ok(rooms);
+        return ResponseEntity.ok(chessService.findRooms());
     }
 
     @GetMapping("/rooms/{id}")
@@ -54,5 +53,10 @@ public class SpringChessController {
     public ResponseEntity<GameResponseDto> movePiece(@PathVariable Long id,
                                                      @RequestBody MoveRequestDto moveRequestDto) {
         return ResponseEntity.ok(chessService.move(id, moveRequestDto));
+    }
+
+    @GetMapping("/rooms/{id}/status")
+    public ResponseEntity<StatusDto> calculateStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(chessService.createStatus(id));
     }
 }

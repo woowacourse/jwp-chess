@@ -26,4 +26,4 @@
     - [x] 방 하나 입장 - get api/chess/rooms/{id}
     - [x] 방 종료 및 결과계산 - delete api/chess/rooms/{id}
     - [x] 말 움직이기 - post api/chess/rooms/{id}/move
-    - [ ] 현재 상태 출력하기 - get api/chess/rooms/{id}/status
+    - [x] 현재 상태 출력하기 - get api/chess/rooms/{id}/status

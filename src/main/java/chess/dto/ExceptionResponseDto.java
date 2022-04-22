@@ -7,4 +7,8 @@ public class ExceptionResponseDto {
     public ExceptionResponseDto(String message) {
         this.message = message;
     }
+
+    public String getMessage() {
+        return message;
+    }
 }

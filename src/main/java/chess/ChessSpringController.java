@@ -2,10 +2,13 @@ package chess;
 
 import chess.domain.Status;
 import chess.dto.BoardDto;
+import chess.dto.ExceptionResponseDto;
 import chess.dto.MoveDto;
 import chess.service.ChessService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,5 +60,11 @@ public class ChessSpringController {
     @ResponseBody
     public Status status(@RequestParam(value = "name") String name) {
         return chessService.status(name);
+    }
+
+    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})
+    public ResponseEntity<ExceptionResponseDto> handle(RuntimeException exception) {
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponseDto(exception.getMessage()));
     }
 }

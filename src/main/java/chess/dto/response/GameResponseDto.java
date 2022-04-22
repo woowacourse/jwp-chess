@@ -29,6 +29,10 @@ public class GameResponseDto {
         return team;
     }
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
     public BoardsDto getBoard() {
         return board;
     }

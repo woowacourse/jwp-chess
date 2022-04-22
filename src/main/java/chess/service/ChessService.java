@@ -5,10 +5,12 @@ import chess.domain.board.BoardFactory;
 import chess.domain.board.PieceFactory;
 import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
+import chess.domain.game.Score;
 import chess.domain.game.Turn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.dto.BoardsDto;
+import chess.dto.StatusDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
 import chess.dto.response.GameResponseDto;
@@ -106,6 +108,11 @@ public class ChessService {
         final RoomEntity room = roomRepository.findById(id);
         validateGameOver(room);
         roomRepository.updateGameOver(id);
+    }
+
+    public StatusDto createStatus(final Long id) {
+        final Board board = toBoard(boardRepository.findBoardByRoomId(id));
+        return StatusDto.of(new Score(board.getBoard()));
     }
 
     private void validateGameOver(final RoomEntity room) {

@@ -21,9 +21,9 @@
     - [x] 게임 종료 - 방을 game over로 변경한다
 
 - controller
-    - [ ] 방 생성 - post api/chess/rooms
-    - [ ] 방 전체조회 - get api/chess/rooms
-    - [ ] 방 하나 입장 - get api/chess/rooms/{id}
-    - [ ] 방 종료 - delete api/chess/rooms/{id}
+    - [x] 방 생성 - post api/chess/rooms
+    - [x] 방 전체조회 - get api/chess/rooms
+    - [x] 방 하나 입장 - get api/chess/rooms/{id}
+    - [x] 방 종료 및 결과계산 - delete api/chess/rooms/{id}
     - [ ] 말 움직이기 - post api/chess/rooms/{id}/move
     - [ ] 현재 상태 출력하기 - get api/chess/rooms/{id}/status

@@ -1,10 +1,16 @@
 package chess.controller;
 
+import chess.dto.StatusDto;
 import chess.dto.request.RoomRequestDto;
+import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
+import chess.dto.response.RoomsResponseDto;
 import chess.service.ChessService;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +28,26 @@ public class SpringChessController {
 
     @PostMapping("/rooms")
     public ResponseEntity<?> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
+        System.out.printf(roomRequestDto.getName());
         final RoomResponseDto room = chessService.createRoom(roomRequestDto);
         return ResponseEntity.created(URI.create("/api/chess/rooms/" + room.getId())).build();
+    }
+
+    @GetMapping("/rooms")
+    public ResponseEntity<RoomsResponseDto> findRooms() {
+        final RoomsResponseDto rooms = chessService.findRooms();
+        return ResponseEntity.ok(rooms);
+    }
+
+    @GetMapping("/rooms/{id}")
+    public ResponseEntity<GameResponseDto> enterRoom(@PathVariable() Long id) {
+        return ResponseEntity.ok(chessService.enterRoom(id));
+    }
+
+    @DeleteMapping("/rooms/{id}")
+    public ResponseEntity<StatusDto> finishGame(@PathVariable Long id) {
+        chessService.endRoom(id);
+        return ResponseEntity.ok(chessService.createStatus(id));
     }
 
 }

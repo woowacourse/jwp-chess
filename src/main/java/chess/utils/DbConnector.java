@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DbConnector {
 
-    private static final String URL = "jdbc:mysql://localhost:13306/chess";
+    private static final String URL = "jdbc:mysql://localhost:23306/chess";
     private static final String USER = "user";
     private static final String PASSWORD = "password";
 

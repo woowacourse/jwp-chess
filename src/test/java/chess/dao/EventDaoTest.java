@@ -5,35 +5,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.domain.event.Event;
 import chess.domain.event.MoveEvent;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-@JdbcTest
+@SpringBootTest
+@Transactional
 class EventDaoTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
     private EventDao dao;
-
-    @BeforeEach
-    void setUp() {
-        dao = new EventDao(namedParameterJdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE event IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE event(game_id  BIGINT NOT NULL, "
-                + "type VARCHAR(20) NOT NULL, description VARCHAR(20))");
-
-        jdbcTemplate.execute("INSERT INTO event (game_id, type, description) "
-                + "VALUES (1, 'MOVE', 'a2 a4'), (1, 'MOVE', 'a7 a5'), (2, 'MOVE', 'a2 a3')");
-    }
 
     @Test
     void findAllByGameId_메서드는_특정_gameId에_해당되는_모든_이벤트를_조회한다() {

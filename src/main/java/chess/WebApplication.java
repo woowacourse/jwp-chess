@@ -1,22 +1,16 @@
 package chess;
 
 import chess.controller.WebChessController;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Controller;
 
 import static spark.Spark.staticFiles;
 
+@SpringBootApplication
+@Controller
 public class WebApplication {
     public static void main(String[] args) {
-        staticFiles.location("/static");
-        WebChessController webChessController = new WebChessController();
-
-        webChessController.inputGameID();
-        webChessController.preprocess();
-        webChessController.backwardToPreprocess();
-        webChessController.readyGame();
-        webChessController.backwardToReady();
-        webChessController.runTurn();
-        webChessController.backwardToMove();
-        webChessController.saveGame();
-        webChessController.terminateGame();
+        SpringApplication.run(WebApplication.class, args);
     }
 }

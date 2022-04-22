@@ -11,141 +11,157 @@ import chess.domain.state.State;
 import chess.web.BoardDTO;
 import chess.web.RequestParser;
 import chess.web.WebChessGame;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
-import spark.template.handlebars.HandlebarsTemplateEngine;
 
+import java.util.NoSuchElementException;
+import java.util.Set;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
 public class WebChessController {
 
     private final BoardDTO boardDTO = BoardDTO.buildModel();
     private final WebChessGame webChessGame = new WebChessGame();
 
-    public void inputGameID() {
-        get("/", (req, res) ->
-                        new ModelAndView(Map.of("users", new StateDAO().findAllUsers()), "index.html"),
-                new HandlebarsTemplateEngine());
+    @GetMapping("/")
+    public String inputGameID(Model model) {
+        model.addAttribute("users", new StateDAO().findAllUsers());
+        return "index";
     }
 
-    public void preprocess() {
-        post("/preprocess", (req, res) -> {
-            try {
-                String roomId = RequestParser.from(req.body())
-                        .getRoomID();
-                return searchSavedGame(roomId);
-            } catch (IllegalArgumentException exception) {
-                return new ModelAndView(Map.of("exception", exception.getMessage()), "index_exception.html");
+    @PostMapping("/preprocess")
+    public String preprocess(@RequestBody String command, Model model) {
+        try {
+            String roomId = RequestParser.from(command).getRoomID();
+            webChessGame.searchSavedGame(roomId, boardDTO);
+            if (webChessGame.isSaved()) {
+
+                Set<String> keys = boardDTO.getData().keySet();
+                for (String key : keys) {
+                    model.addAttribute(key, boardDTO.getData().get(key));
+                }
+
+                Color savedColor = webChessGame.getColor();
+                if (savedColor == Color.WHITE) {
+                    return "white";
+                }
+
+                return "black";
             }
-        }, new HandlebarsTemplateEngine());
-    }
-
-    private ModelAndView searchSavedGame(String roomId) {
-        webChessGame.searchSavedGame(roomId, boardDTO);
-        if (webChessGame.isSaved()) {
-            return loadFromSave(webChessGame.getColor());
+            return "new_game";
+        } catch (IllegalArgumentException exception) {
+            model.addAttribute("exception", exception.getMessage());
+            return "index_exception";
         }
-        return new ModelAndView(Map.of(), "new_game.html");
     }
 
-    private ModelAndView loadFromSave(Color color) {
-        if (color == Color.WHITE) {
-            return new ModelAndView(boardDTO.getData(), "white.html");
-        }
-        return new ModelAndView(boardDTO.getData(), "black.html");
-    }
-
-    public void readyGame() {
-        post("/ready", (req, res) -> {
-            try {
-                return initializeGame(req);
-            } catch (IllegalArgumentException | IllegalStateException | NoSuchElementException exception) {
-                return new ModelAndView(Map.of("exception", exception.getMessage()), "ready_exception.html");
+    @PostMapping("/ready")
+    public String readyGame(@RequestBody String command, Model model) {
+        try {
+            State now = State.create();
+            State next = now.proceed(CommandConverter.convertCommand(RequestParser.from(command).getCommand()));
+            webChessGame.initializeGame(boardDTO, next);
+            if (webChessGame.isSaved()) {
+                Set<String> keys = boardDTO.getData().keySet();
+                for (String key : keys) {
+                    model.addAttribute(key, boardDTO.getData().get(key));
+                }
+                return "white";
             }
-        }, new HandlebarsTemplateEngine());
-    }
-
-    private ModelAndView initializeGame(Request req) {
-        State now = State.create();
-        State next = now.proceed(CommandConverter.convertCommand(RequestParser.from(req.body()).getCommand()));
-        webChessGame.initializeGame(boardDTO, next);
-        if (webChessGame.isSaved()) {
-            return new ModelAndView(boardDTO.getData(), "white.html");
+            return"finished_before_start";
         }
-        return new ModelAndView(Map.of(), "finished_before_start.html");
+        catch (IllegalArgumentException | IllegalStateException | NoSuchElementException exception) {
+            model.addAttribute("exception", exception.getMessage());
+            return "ready_exception";
+        }
     }
 
-    public void runTurn() {
-        post("/move", (req, res) -> {
-            State now = webChessGame.getState();
-            try {
-                Command command = CommandConverter.convertCommand(RequestParser.from(req.body()).getCommand());
-                State next = webChessGame.executeOneTurn(command, boardDTO);
-                return executeOneTurn(res, command, next);
-            } catch (IllegalArgumentException | IllegalStateException | NoSuchElementException exception) {
-                return handleRunningException(now, exception.getMessage());
-            }
-        }, new HandlebarsTemplateEngine());
+    @PostMapping("/move")
+    public String runTurn(@RequestBody String command, Model model) {
+        State now = webChessGame.getState();
+        try {
+            Command parsedCommand = CommandConverter.convertCommand(RequestParser.from(command).getCommand());
+            State next = webChessGame.executeOneTurn(parsedCommand, boardDTO);
+            return executeOneTurn(parsedCommand, next, model);
+        }
+        catch (IllegalArgumentException | IllegalStateException | NoSuchElementException exception) {
+            return handleRunningException(now, exception.getMessage(), model);
+        }
     }
 
-    private ModelAndView executeOneTurn(Response res, Command command, State next) {
+    private String executeOneTurn(Command command, State next, Model model) {
         if (next.isFinished()) {
-            res.redirect("/finished");
-            return null;
+            return "redirect:/finished";
+        }
+        Set<String> keys = boardDTO.getData().keySet();
+        for (String key : keys) {
+            model.addAttribute(key, boardDTO.getData().get(key));
         }
         if (command.isStatus()) {
-            return continueToStatus();
+            return "status";
         }
-        return endTurn(next);
-    }
-
-    private ModelAndView continueToStatus() {
-        return new ModelAndView(boardDTO.getData(), "status.html");
-    }
-
-    private ModelAndView endTurn(State next) {
         if (!next.isWhite()) {
-            return new ModelAndView(boardDTO.getData(), "black.html");
+            return "black";
         }
-        return new ModelAndView(boardDTO.getData(), "white.html");
+        return "white";
     }
 
-    private ModelAndView handleRunningException(State now, String message) {
-        boardDTO.updateWithMessage(now.getBoard(), message);
+    private String handleRunningException(State now, String message, Model model) {
+        Set<String> keys = boardDTO.getData().keySet();
+        for (String key : keys) {
+            model.addAttribute(key, boardDTO.getData().get(key));
+        }
+        model.addAttribute("exception", message);
         if (now.isWhite()) {
-            return new ModelAndView(boardDTO.getData(), "white_exception.html");
+            return "white_exception";
         }
-        return new ModelAndView(boardDTO.getData(), "black_exception.html");
+        return "black_exception";
     }
 
-    public void backwardToMove() {
-        post("/backwardToMove", (req, res) -> {
-            State now = webChessGame.getState();
-            if (now.isWhite()) {
-                return new ModelAndView(boardDTO.getData(), "white.html");
-            }
-            return new ModelAndView(boardDTO.getData(), "black.html");
-        }, new HandlebarsTemplateEngine());
+    @PostMapping("/backwardToMove")
+    public String backwardToMove(Model model) {
+        State now = webChessGame.getState();
+        Set<String> keys = boardDTO.getData().keySet();
+        for (String key : keys) {
+            model.addAttribute(key, boardDTO.getData().get(key));
+        }
+        if (now.isWhite()) {
+            return "white";
+        }
+        return "black";
     }
 
-    public void backwardToReady() {
-        post("/backwardToReady", (req, res) ->
-                        new ModelAndView(boardDTO.getData(), "new_game.html"),
-                new HandlebarsTemplateEngine());
+    @PostMapping("/backwardToReady")
+    public String backwardToReady(Model model) {
+        Set<String> keys = boardDTO.getData().keySet();
+        for (String key : keys) {
+            model.addAttribute(key, boardDTO.getData().get(key));
+        }
+        return "new_game";
     }
 
-    public void backwardToPreprocess() {
-        post("/backwardToPreprocess", (req, res) ->
-                        new ModelAndView(Map.of(), "index.html"),
-                new HandlebarsTemplateEngine());
+    @PostMapping("/backwardToPreprocess")
+    public String backwardToPreprocess() {
+        return "index";
     }
 
-    public void saveGame() {
-        post("/saved", (req, res) -> new ModelAndView(boardDTO.getData(), "saved.html"), new HandlebarsTemplateEngine());
+    @PostMapping("/saved")
+    public String saveGame(Model model) {
+        Set<String> keys = boardDTO.getData().keySet();
+        for (String key : keys) {
+            model.addAttribute(key, boardDTO.getData().get(key));
+        }
+        return "saved";
     }
 
-    public void terminateGame() {
-        get("/finished", (req, res) -> new ModelAndView(boardDTO.getData(), "finished.html"), new HandlebarsTemplateEngine());
+    @GetMapping("/finished")
+    public String terminateGame(Model model) {
+        Set<String> keys = boardDTO.getData().keySet();
+        for (String key : keys) {
+            model.addAttribute(key, boardDTO.getData().get(key));
+        }
+        return "finished";
     }
 }

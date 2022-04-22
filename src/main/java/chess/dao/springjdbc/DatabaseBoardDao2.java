@@ -1,8 +1,6 @@
 package chess.dao.springjdbc;
 
 import chess.dao.BoardDao;
-import chess.dao.jdbc.jdbcutil.JdbcUtil;
-import chess.dao.jdbc.jdbcutil.StatementExecutor;
 import chess.service.dto.BoardDto;
 import chess.service.dto.PieceWithSquareDto;
 import org.springframework.jdbc.core.JdbcTemplate;

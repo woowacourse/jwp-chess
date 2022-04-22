@@ -35,20 +35,14 @@ public class DatabaseGameDao2 implements GameDao {
 
     @Override
     public void update(ChessGameDto dto) {
-        String sql = "update game set status = ?, turn = ? where id = ?";
-        new StatementExecutor(JdbcUtil.getConnection(), sql)
-            .setString(dto.getStatus())
-            .setString(dto.getTurn())
-            .setInt(dto.getId())
-            .executeUpdate();
+        String sql = "UPDATE game SET status = ?, turn = ? WHERE id = ?";
+        jdbcTemplate.update(sql, dto.getStatus(), dto.getTurn(), dto.getId());
     }
 
     @Override
     public ChessGameDto findById(int id) {
-        String sql = "select id, name, status, turn from game where id = ?";
-        return new StatementExecutor(JdbcUtil.getConnection(), sql)
-            .setInt(id)
-            .findFirst(this::getChessGameDto);
+        String sql = "SELECT id, name, status, turn FROM game WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, chessGameDtoRowMapper, id);
     }
 
     private ChessGameDto getChessGameDto(ResultSet resultSet) throws SQLException {

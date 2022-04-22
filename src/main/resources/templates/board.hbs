@@ -228,8 +228,11 @@
         document.getElementById("error").innerText = "";
         const pathName = window.location.pathname;
         await fetch(`${pathName}/pieces`, {
+            headers: {
+              'Content-Type': 'application/json'
+            },
             method: "PUT",
-            body: `{\"from\": ${from}, \"to\": ${to}}`
+            body: JSON.stringify({from: `${from}`, to: `${to}`})
         })
             .then(res => res.json())
             .then(dto => {

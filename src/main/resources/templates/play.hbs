@@ -86,13 +86,12 @@
             headers: {
                 'Content-Type': 'application/json',
             }
-        }).then(response => {
-            response.json().then(data => {
-                if (data.statusCode === 400) {
-                    alert(data.message);
-                }
-                location.reload();
-            });
+        }).then(async response => {
+            if (response.status === 400) {
+                let errorMessage = await response.text();
+                alert(errorMessage);
+            }
+            location.reload();
         }).catch(error => alert(error));
     }
 

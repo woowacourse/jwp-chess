@@ -2,7 +2,6 @@ package chess.controller;
 
 import chess.domain.dto.MoveRequestDto;
 import chess.domain.dto.ResponseDto;
-import chess.domain.dto.ResponseDto1;
 import chess.domain.game.Status;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.SQLException;
 
@@ -29,7 +30,6 @@ public class SpringWebChessController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<ResponseDto1> start() {
     public ResponseEntity<ResponseDto> start() {
         try {
             chessService.start();
@@ -45,7 +45,7 @@ public class SpringWebChessController {
     @GetMapping("/play")
     public String play(Model model) {
         if (chessService.checkStatus(Status.END)) {
-            return "redirect:game";
+            return "redirect:result";
         }
         model.addAttribute("play", true);
         model.addAttribute("board", chessService.currentBoardForUI());
@@ -66,6 +66,7 @@ public class SpringWebChessController {
         }
         return new ResponseEntity(HttpStatus.OK);
     }
+
     @GetMapping("/status")
     public String status(Model model) {
         if (chessService.checkStatus(Status.PLAYING)) {
@@ -84,6 +85,7 @@ public class SpringWebChessController {
         }
         return "redirect:/play";
     }
+
     @GetMapping("/end")
     public ResponseEntity<ResponseDto> end() {
         try {
@@ -94,5 +96,15 @@ public class SpringWebChessController {
                     .body(new ResponseDto(e.getMessage()));
         }
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/result")
+    public String result(Model model) throws SQLException {
+        chessService.end();
+        model.addAttribute("play", true);
+        model.addAttribute("status", chessService.status());
+        model.addAttribute("board", chessService.currentBoardForUI());
+        model.addAttribute("winner", chessService.findWinner());
+        return "game";
     }
 }

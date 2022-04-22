@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class ChessService {
 
     private static final int EMPTY_RESULT = 0;
- // private final GameRawJdbcDao gameDao;
+    // private final GameRawJdbcDao gameDao;
 
     private final BoardJdbcTemplateDao boardDao;
     private final GameJdbcTemplateDao gameDao;
@@ -49,12 +49,9 @@ public class ChessService {
         return lastGameId == EMPTY_RESULT;
     }
 
-    private ResponseDto1 makeNewGame() {
+    private void makeNewGame() {
         chessBoard = ChessBoardFactory.initBoard();
         chessBoard.changeStatus(new Playing());
-        return new ResponseDto1(200, null);
-    }
-
     }
 
     public void save() {

@@ -121,7 +121,7 @@
 //    private void end() {
 //        get("/end", (req, res) -> {
 //            ResponseDto response= chessService.end();
-//            return convertToJson(response.convertToString());
+//            return convertToJson(res.convertToString());
 //        });
 //    }
 //

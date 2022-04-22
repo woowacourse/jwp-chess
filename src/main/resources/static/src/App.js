@@ -23,12 +23,13 @@ function start() {
 
 function end() {
     fetch('/end')
-        .then(response => response.json())
         .then(response => {
-            if (parseInt(response.status) !== 200) {
-                alert(response.message);
+            debugger;
+            if (response.ok) {
+                response.json()
+                    .then(body => alert(body.message));
+                location.replace("/")
             }
-            location.replace("/");
         });
 }
 

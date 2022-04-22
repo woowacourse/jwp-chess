@@ -30,7 +30,8 @@ public class GameJdbcTemplateDao {
         final String sql = "insert into Game (status, turn) values( ?, ?)";
         try {
             // jdbcTemplate.update(sql, ++gameId, chessBoard.compareStatus(Status.PLAYING), chessBoard.getCurrentTurn().name());
-            return jdbcTemplate.update(sql, chessBoard.compareStatus(Status.PLAYING), chessBoard.getCurrentTurn().name());
+            jdbcTemplate.update(sql, chessBoard.compareStatus(Status.PLAYING), chessBoard.getCurrentTurn().name());
+            return findLastGameId();
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");

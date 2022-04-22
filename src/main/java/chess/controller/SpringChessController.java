@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.StatusDto;
+import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
 import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
@@ -28,7 +29,6 @@ public class SpringChessController {
 
     @PostMapping("/rooms")
     public ResponseEntity<?> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
-        System.out.printf(roomRequestDto.getName());
         final RoomResponseDto room = chessService.createRoom(roomRequestDto);
         return ResponseEntity.created(URI.create("/api/chess/rooms/" + room.getId())).build();
     }
@@ -50,4 +50,9 @@ public class SpringChessController {
         return ResponseEntity.ok(chessService.createStatus(id));
     }
 
+    @PostMapping("/rooms/{id}/move")
+    public ResponseEntity<GameResponseDto> movePiece(@PathVariable Long id,
+                                                     @RequestBody MoveRequestDto moveRequestDto) {
+        return ResponseEntity.ok(chessService.move(id, moveRequestDto));
+    }
 }

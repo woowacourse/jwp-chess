@@ -6,7 +6,6 @@ import chess.domain.Position;
 import chess.domain.PromotionPiece;
 import chess.domain.piece.Piece;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class RunningState implements ChessGameState {
 
@@ -40,8 +39,8 @@ public class RunningState implements ChessGameState {
     }
 
     @Override
-    public Entry<Position, Piece> promotion(PromotionPiece promotionPiece) {
-        return chessBoard.promotion(promotionPiece, color);
+    public Position promotion(PromotionPiece promotionPiece) {
+        return chessBoard.promotionPosition(color);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class RunningState implements ChessGameState {
 
     @Override
     public Map<Color, Double> currentScore() {
-        return chessBoard.calcualteScoreStatus();
+        return chessBoard.calculateScoreStatus();
     }
 
     @Override

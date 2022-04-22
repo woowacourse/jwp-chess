@@ -37,7 +37,7 @@ class KnightTest {
     @DisplayName("나이트의 빈곳 이동 가능 여부 확인")
     void isMovableToEmptyPosition(char col, char row) {
         Position target = Position.of(col, row);
-        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(new Knight())));
+        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(1L, new Knight())));
 
         assertThatThrownBy(() -> knight.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)
@@ -49,8 +49,8 @@ class KnightTest {
     void isMovableToDifferentPiecePosition() {
         Position target = Position.of('b', '3');
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(new Knight()),
-                target, createBlackPiece(new Knight())
+                source, createWhitePiece(1L, new Knight()),
+                target, createBlackPiece(1L, new Knight())
         ));
 
         assertThat(knight.move(source, target, chessBoard)).isInstanceOf(Knight.class);

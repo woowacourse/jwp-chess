@@ -1,10 +1,8 @@
 package chess.domain;
 
-import static chess.domain.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.domain.piece.Piece;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,14 +32,5 @@ class PromotionPieceTest {
     void createPromotionPiece() {
         PromotionPiece promotionPiece = PromotionPiece.createPromotionPiece("N");
         assertThat(promotionPiece).isEqualTo(PromotionPiece.KNIGHT);
-    }
-
-    @Test
-    @DisplayName("색상을 받아 piece 생성")
-    void createPiece() {
-        PromotionPiece promotionPiece = PromotionPiece.createPromotionPiece("N");
-        Piece piece = promotionPiece.createPiece(WHITE);
-
-        assertThat(piece).isInstanceOf(Piece.class);
     }
 }

@@ -31,8 +31,8 @@ class PieceDaoTest {
 
 	@Test
 	void savePieces() {
-		Map<Position, Piece> pieces = Map.of(Position.of('a', '1'), new Piece(Color.WHITE, new King()),
-				Position.of('a', '2'), new Piece(Color.BLACK, new King()));
+		Map<Position, Piece> pieces = Map.of(Position.of('a', '1'), new Piece(1L, Color.WHITE, new King()),
+				Position.of('a', '2'), new Piece(1L, Color.BLACK, new King()));
 
 		assertThat(pieceDao.savePieces(pieces)).isEqualTo(2);
 	}
@@ -40,8 +40,8 @@ class PieceDaoTest {
 	@Test
 	@DisplayName("전체 피스 조회")
 	void findAllPieces() {
-		pieceDao.savePieces(Map.of(Position.of('a', '1'), new Piece(Color.WHITE, new King()),
-				Position.of('a', '2'), new Piece(Color.BLACK, new King())));
+		pieceDao.savePieces(Map.of(Position.of('a', '1'), new Piece(1L, Color.WHITE, new King()),
+				Position.of('a', '2'), new Piece(1L, Color.BLACK, new King())));
 
 		Map<Position, Piece> pieces = pieceDao.findAllPieces();
 		assertThat(pieces).hasSize(2);
@@ -53,7 +53,7 @@ class PieceDaoTest {
 	void updatePiecePosition() {
 		Position source = Position.from("a1");
 		Position target = Position.from("a2");
-		pieceDao.savePieces(Map.of(source, new Piece(Color.WHITE, new King())));
+		pieceDao.savePieces(Map.of(source, new Piece(1L, Color.WHITE, new King())));
 
 		assertThat(pieceDao.updatePiecePosition(source, target)).isEqualTo(1);
 	}
@@ -62,7 +62,7 @@ class PieceDaoTest {
 	@DisplayName("피스 이동 규칙 업데이트")
 	void updatePieceRule() {
 		Position source = Position.from("a1");
-		pieceDao.savePieces(Map.of(source, new Piece(Color.WHITE, new Pawn(Color.WHITE))));
+		pieceDao.savePieces(Map.of(source, new Piece(1L, Color.WHITE, new Pawn(Color.WHITE))));
 
 		assertThat(pieceDao.updatePieceRule(source, new Knight())).isEqualTo(1);
 	}
@@ -71,7 +71,7 @@ class PieceDaoTest {
 	@DisplayName("피스 삭제")
 	void deletePiece() {
 		Position source = Position.from("a1");
-		pieceDao.savePieces(Map.of(source, new Piece(Color.WHITE, new Pawn(Color.WHITE))));
+		pieceDao.savePieces(Map.of(source, new Piece(1L, Color.WHITE, new Pawn(Color.WHITE))));
 
 		assertThat(pieceDao.delete(source)).isEqualTo(1);
 	}

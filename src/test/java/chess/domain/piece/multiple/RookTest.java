@@ -37,7 +37,7 @@ class RookTest {
     @DisplayName("목표 지점이 이동 가능 경로를 벗어나면 예외 발생")
     void emptyDirection(char col, char row) {
         Position target = Position.of(col, row);
-        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(new Rook())));
+        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(1L, new Rook())));
 
         assertThatThrownBy(() -> rook.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)
@@ -49,8 +49,8 @@ class RookTest {
     void isMovableToNotClearEmptyPosition() {
         Position target = Position.of('d', '8');
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(new Rook()),
-                Position.of('d', '7'), createBlackPiece(new Rook())));
+                source, createWhitePiece(1L, new Rook()),
+                Position.of('d', '7'), createBlackPiece(1L, new Rook())));
 
         assertThatThrownBy(() -> rook.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)
@@ -62,9 +62,9 @@ class RookTest {
     void isMovableToNotClearPiecePosition() {
         Position target = Position.of('d', '8');
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(new Rook()),
-                Position.of('d', '7'), createBlackPiece(new Rook()),
-                target, createBlackPiece(new Rook())));
+                source, createWhitePiece(1L, new Rook()),
+                Position.of('d', '7'), createBlackPiece(1L, new Rook()),
+                target, createBlackPiece(1L, new Rook())));
 
         assertThatThrownBy(() -> rook.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)

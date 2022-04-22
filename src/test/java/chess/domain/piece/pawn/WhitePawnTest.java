@@ -36,7 +36,7 @@ class WhitePawnTest {
     @DisplayName("폰의 빈곳 전진 가능 여부 확인")
     void isMovableToEmptyPosition(char col, char row) {
         Position target = Position.of(col, row);
-        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(new Pawn(WHITE))));
+        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(1L, new Pawn(WHITE))));
 
         assertThatThrownBy(() -> pawn.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)
@@ -48,7 +48,7 @@ class WhitePawnTest {
     @DisplayName("기물이 가로막을 경우의 전진 불가능")
     void cannotMoveToPiecePosition(Position target, Piece piece) {
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(new Pawn(WHITE)),
+                source, createWhitePiece(1L, new Pawn(WHITE)),
                 target, piece));
 
         assertThatThrownBy(() -> pawn.move(source, target, chessBoard))
@@ -58,8 +58,8 @@ class WhitePawnTest {
 
     private static Stream<Arguments> cannotMoveToPiecePosition() {
         return Stream.of(
-                Arguments.of(Position.of('b', '4'), createWhitePiece(new Pawn(WHITE))),
-                Arguments.of(Position.of('b', '4'), createBlackPiece(new Pawn(BLACK)))
+                Arguments.of(Position.of('b', '4'), createWhitePiece(1L, new Pawn(WHITE))),
+                Arguments.of(Position.of('b', '4'), createBlackPiece(1L, new Pawn(BLACK)))
         );
     }
 
@@ -68,7 +68,7 @@ class WhitePawnTest {
     @DisplayName("대각선 방향에 적이 있으면 전진 가능")
     void canMoveToEnemyPiecePosition(Position target, Piece piece) {
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(new Pawn(WHITE)),
+                source, createWhitePiece(1L, new Pawn(WHITE)),
                 target, piece));
 
         assertThat(pawn.move(source, target, chessBoard)).isInstanceOf(Pawn.class);
@@ -76,8 +76,8 @@ class WhitePawnTest {
 
     private static Stream<Arguments> canMoveToEnemyPiecePosition() {
         return Stream.of(
-                Arguments.of(Position.of('a', '4'), createBlackPiece(new Pawn(BLACK))),
-                Arguments.of(Position.of('c', '4'), createBlackPiece(new Pawn(BLACK)))
+                Arguments.of(Position.of('a', '4'), createBlackPiece(1L, new Pawn(BLACK))),
+                Arguments.of(Position.of('c', '4'), createBlackPiece(1L, new Pawn(BLACK)))
         );
     }
 

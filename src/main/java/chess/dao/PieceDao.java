@@ -40,6 +40,7 @@ public class PieceDao {
 	private Map<Position, Piece> piecesRowMapper(ResultSet resultSet) throws SQLException {
 		Map<Position, Piece> pieces = new HashMap<>();
 		while (resultSet.next()) {
+			Long chessGameId = resultSet.getLong("chess_game_id");
 			String type = resultSet.getString("type");
 			String colorName = resultSet.getString("color");
 			char column = resultSet.getString("position_col").charAt(0);
@@ -47,7 +48,7 @@ public class PieceDao {
 
 			Position position = Position.of(column, row);
 			Color color = Color.valueOf(colorName);
-			pieces.put(position, PieceConverter.parseToPiece(type, color));
+			pieces.put(position, PieceConverter.parseToPiece(type, chessGameId, color));
 		}
 		return pieces;
 	}

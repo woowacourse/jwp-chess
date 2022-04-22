@@ -10,6 +10,6 @@ class PieceFactoryTest {
     @Test
     @DisplayName("새로운 기물 목록 생성")
     void createNewPieces() {
-        assertThat(PieceFactory.createNewChessBoard()).hasSize(32);
+        assertThat(PieceFactory.createNewChessBoard(1L)).hasSize(32);
     }
 }

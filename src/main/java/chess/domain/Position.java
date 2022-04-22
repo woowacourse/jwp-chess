@@ -12,7 +12,7 @@ public class Position {
     private static final char MAX_ROW = '8';
 
     private static final char WHITE_PAWN_INITIAL_ROW = '2';
-    private static final char BLACK_PAWN_INiTIAL_ROW = '7';
+    private static final char BLACK_PAWN_INITIAL_ROW = '7';
 
     private static final int POSITION_FORMAT_LENGTH = 2;
 
@@ -109,7 +109,7 @@ public class Position {
         if (color.isWhite()) {
             return row == WHITE_PAWN_INITIAL_ROW;
         }
-        return row == BLACK_PAWN_INiTIAL_ROW;
+        return row == BLACK_PAWN_INITIAL_ROW;
     }
 
     public char column() {

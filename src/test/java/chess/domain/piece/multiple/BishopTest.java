@@ -37,7 +37,7 @@ class BishopTest {
     @DisplayName("목표 지점이 이동 가능 경로를 벗어나면 예외 발생")
     void emptyDirection(char col, char row) {
         Position target = Position.of(col, row);
-        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(new Bishop())));
+        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(1L, new Bishop())));
 
         assertThatThrownBy(() -> bishop.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)
@@ -49,8 +49,8 @@ class BishopTest {
     void isMovableToNotClearEmptyPosition() {
         Position target = Position.of('b', '6');
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(new Bishop()),
-                Position.of('c', '5'), createBlackPiece(new Bishop())));
+                source, createWhitePiece(1L, new Bishop()),
+                Position.of('c', '5'), createBlackPiece(1L, new Bishop())));
 
         assertThatThrownBy(() -> bishop.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)
@@ -62,9 +62,9 @@ class BishopTest {
     void isMovableToNotClearPiecePosition() {
         Position target = Position.of('b', '6');
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(new Bishop()),
-                Position.of('c', '5'), createBlackPiece(new Bishop()),
-                target, createBlackPiece(new Bishop())));
+                source, createWhitePiece(1L, new Bishop()),
+                Position.of('c', '5'), createBlackPiece(1L, new Bishop()),
+                target, createBlackPiece(1L, new Bishop())));
 
         assertThatThrownBy(() -> bishop.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)

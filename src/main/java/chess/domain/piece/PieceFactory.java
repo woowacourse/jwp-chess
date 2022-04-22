@@ -21,43 +21,43 @@ public class PieceFactory {
         throw new AssertionError();
     }
 
-    public static Map<Position, Piece> createNewChessBoard() {
+    public static Map<Position, Piece> createNewChessBoard(long chessGameId) {
         Map<Position, Piece> pieces = new HashMap<>();
-        pieces.putAll(createNewBlackPieces());
-        pieces.putAll(createNewWhitePieces());
+        pieces.putAll(createNewBlackPieces(chessGameId));
+        pieces.putAll(createNewWhitePieces(chessGameId));
         return pieces;
     }
 
-    private static Map<Position, Piece> createNewBlackPieces() {
+    private static Map<Position, Piece> createNewBlackPieces(long chessGameId) {
         Map<Position, Piece> blackPieces = new HashMap<>(Map.of(
-                Position.of('a', '8'), createBlackPiece(new Rook()),
-                Position.of('b', '8'), createBlackPiece(new Knight()),
-                Position.of('c', '8'), createBlackPiece(new Bishop()),
-                Position.of('d', '8'), createBlackPiece(new Queen()),
-                Position.of('e', '8'), createBlackPiece(new King()),
-                Position.of('f', '8'), createBlackPiece(new Bishop()),
-                Position.of('g', '8'), createBlackPiece(new Knight()),
-                Position.of('h', '8'), createBlackPiece(new Rook())
+                Position.of('a', '8'), createBlackPiece(chessGameId, new Rook()),
+                Position.of('b', '8'), createBlackPiece(chessGameId, new Knight()),
+                Position.of('c', '8'), createBlackPiece(chessGameId, new Bishop()),
+                Position.of('d', '8'), createBlackPiece(chessGameId, new Queen()),
+                Position.of('e', '8'), createBlackPiece(chessGameId, new King()),
+                Position.of('f', '8'), createBlackPiece(chessGameId, new Bishop()),
+                Position.of('g', '8'), createBlackPiece(chessGameId, new Knight()),
+                Position.of('h', '8'), createBlackPiece(chessGameId, new Rook())
         ));
         for (char i = 0; i < 8; i++) {
-            blackPieces.put(Position.of((char) ('a' + i), '7'), createBlackPiece(new Pawn(BLACK)));
+            blackPieces.put(Position.of((char) ('a' + i), '7'), createBlackPiece(chessGameId, new Pawn(BLACK)));
         }
         return blackPieces;
     }
 
-    private static Map<Position, Piece> createNewWhitePieces() {
+    private static Map<Position, Piece> createNewWhitePieces(long chessGameId) {
         Map<Position, Piece> whitePieces = new HashMap<>(Map.of(
-                Position.of('a', '1'), createWhitePiece(new Rook()),
-                Position.of('b', '1'), createWhitePiece(new Knight()),
-                Position.of('c', '1'), createWhitePiece(new Bishop()),
-                Position.of('d', '1'), createWhitePiece(new Queen()),
-                Position.of('e', '1'), createWhitePiece(new King()),
-                Position.of('f', '1'), createWhitePiece(new Bishop()),
-                Position.of('g', '1'), createWhitePiece(new Knight()),
-                Position.of('h', '1'), createWhitePiece(new Rook())
+                Position.of('a', '1'), createWhitePiece(chessGameId, new Rook()),
+                Position.of('b', '1'), createWhitePiece(chessGameId, new Knight()),
+                Position.of('c', '1'), createWhitePiece(chessGameId, new Bishop()),
+                Position.of('d', '1'), createWhitePiece(chessGameId, new Queen()),
+                Position.of('e', '1'), createWhitePiece(chessGameId, new King()),
+                Position.of('f', '1'), createWhitePiece(chessGameId, new Bishop()),
+                Position.of('g', '1'), createWhitePiece(chessGameId, new Knight()),
+                Position.of('h', '1'), createWhitePiece(chessGameId, new Rook())
         ));
         for (char i = 0; i < 8; i++) {
-            whitePieces.put(Position.of((char) ('a' + i), '2'), createWhitePiece(new Pawn(WHITE)));
+            whitePieces.put(Position.of((char) ('a' + i), '2'), createWhitePiece(chessGameId, new Pawn(WHITE)));
         }
         return whitePieces;
     }

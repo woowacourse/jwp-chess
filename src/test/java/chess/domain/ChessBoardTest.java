@@ -39,7 +39,7 @@ class ChessBoardTest {
     @Test
     @DisplayName("새로운 기본 체스판 생성")
     void createNewChessBoard() {
-        ChessBoard chessBoard = new ChessBoard(PieceFactory.createNewChessBoard());
+        ChessBoard chessBoard = new ChessBoard(PieceFactory.createNewChessBoard(1L));
         assertThat(chessBoard.getPieces()).hasSize(32);
     }
 
@@ -48,7 +48,7 @@ class ChessBoardTest {
     void movePieceException() {
         Position position = Position.of('a', '1');
         Position target = Position.of('a', '2');
-        ChessBoard chessBoard = new ChessBoard(Map.of(position, createWhitePiece(new King())));
+        ChessBoard chessBoard = new ChessBoard(Map.of(position, createWhitePiece(1L, new King())));
 
         assertThatThrownBy(() -> chessBoard.movePiece(position, target, WHITE))
                 .isInstanceOf(IllegalStateException.class)
@@ -60,8 +60,8 @@ class ChessBoardTest {
     void moveOtherTeamPieceException() {
         Position position = Position.of('a', '1');
         Position target = Position.of('a', '2');
-        ChessBoard chessBoard = new ChessBoard(Map.of(position, createWhitePiece(new King()),
-                Position.of('e', '8'), createBlackPiece(new King())));
+        ChessBoard chessBoard = new ChessBoard(Map.of(position, createWhitePiece(1L, new King()),
+                Position.of('e', '8'), createBlackPiece(1L, new King())));
 
         assertThatThrownBy(() -> chessBoard.movePiece(position, target, BLACK))
                 .isInstanceOf(IllegalStateException.class)
@@ -74,8 +74,8 @@ class ChessBoardTest {
         Position position = Position.of('a', '1');
         Position target = Position.of('a', '2');
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                position, createWhitePiece(new Pawn(WHITE)),
-                target, createWhitePiece(new Pawn(WHITE))
+                position, createWhitePiece(1L, new Pawn(WHITE)),
+                target, createWhitePiece(1L, new Pawn(WHITE))
         ));
 
         assertThatThrownBy(() -> chessBoard.movePiece(position, target, WHITE))
@@ -86,8 +86,8 @@ class ChessBoardTest {
     @Test
     @DisplayName("프로모션이 불가능할 때 예외발생")
     void promotionExceptionByStatus() {
-        ChessBoard chessBoard = new ChessBoard(Map.of(Position.of('a', '2'), createWhitePiece(new Pawn(WHITE))));
-        assertThatThrownBy(() -> chessBoard.promotion(PromotionPiece.QUEEN, WHITE))
+        ChessBoard chessBoard = new ChessBoard(Map.of(Position.of('a', '2'), createWhitePiece(1L, new Pawn(WHITE))));
+        assertThatThrownBy(() -> chessBoard.promotionPosition(WHITE))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("프로모션 프로모션 가능한 기물이 없습니다.");
     }
@@ -96,8 +96,8 @@ class ChessBoardTest {
     @DisplayName("프로모션 진행")
     void promotion() {
         Position position = Position.of('a', '8');
-        ChessBoard chessBoard = new ChessBoard(Map.of(position, createWhitePiece(new Pawn(WHITE))));
-        chessBoard.promotion(PromotionPiece.QUEEN, WHITE);
+        ChessBoard chessBoard = new ChessBoard(Map.of(position, createWhitePiece(1L, new Pawn(WHITE))));
+        chessBoard.promotionPosition(WHITE);
     }
 
     @ParameterizedTest
@@ -105,7 +105,7 @@ class ChessBoardTest {
     @DisplayName("해당 위치가 비어있는지 확인")
     void isPositionEmpty(char col, char row, boolean expected) {
         Position position = Position.of('a', '1');
-        Piece piece = createWhitePiece(new Knight());
+        Piece piece = createWhitePiece(1L, new Knight());
         ChessBoard chessBoard = new ChessBoard(Map.of(position, piece));
 
         assertThat(chessBoard.isPositionEmpty(Position.of(col, row))).isEqualTo(expected);
@@ -126,7 +126,7 @@ class ChessBoardTest {
     @DisplayName("입력 위치에 기물 반환")
     void pieceByPosition() {
         Position position = Position.of('a', '1');
-        Piece piece = createWhitePiece(new Knight());
+        Piece piece = createWhitePiece(1L, new Knight());
         ChessBoard chessBoard = new ChessBoard(Map.of(position, piece));
 
         assertThat(chessBoard.pieceByPosition(position)).isEqualTo(piece);
@@ -136,21 +136,21 @@ class ChessBoardTest {
     @DisplayName("각 플레이어의 점수 반환")
     void calcualteScoreStaus() {
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                Position.of('a', '2'), createWhitePiece(new Pawn(WHITE)),
-                Position.of('a', '3'), createWhitePiece(new Pawn(WHITE)),
-                Position.of('c', '3'), createWhitePiece(new Pawn(WHITE)),
-                Position.of('b', '1'), createWhitePiece(new Knight()),
-                Position.of('d', '1'), createWhitePiece(new Queen()),
-                Position.of('e', '1'), createWhitePiece(new King()),
+                Position.of('a', '2'), createWhitePiece(1L, new Pawn(WHITE)),
+                Position.of('a', '3'), createWhitePiece(1L, new Pawn(WHITE)),
+                Position.of('c', '3'), createWhitePiece(1L, new Pawn(WHITE)),
+                Position.of('b', '1'), createWhitePiece(1L, new Knight()),
+                Position.of('d', '1'), createWhitePiece(1L, new Queen()),
+                Position.of('e', '1'), createWhitePiece(1L, new King()),
 
-                Position.of('a', '7'), createBlackPiece(new Pawn(BLACK)),
-                Position.of('c', '8'), createBlackPiece(new Bishop()),
-                Position.of('h', '8'), createBlackPiece(new Rook()),
-                Position.of('e', '8'), createBlackPiece(new King())
+                Position.of('a', '7'), createBlackPiece(1L, new Pawn(BLACK)),
+                Position.of('c', '8'), createBlackPiece(1L, new Bishop()),
+                Position.of('h', '8'), createBlackPiece(1L, new Rook()),
+                Position.of('e', '8'), createBlackPiece(1L, new King())
         ));
         Map<Color, Double> expected = Map.of(WHITE, 13.5, BLACK, 9.0);
 
-        assertThat(chessBoard.calcualteScoreStatus()).isEqualTo(expected);
+        assertThat(chessBoard.calculateScoreStatus()).isEqualTo(expected);
     }
 
     @ParameterizedTest
@@ -164,10 +164,10 @@ class ChessBoardTest {
         return Stream.of(
                 Arguments.of(
                         new ChessBoard(Map.of(
-                                Position.of('e', '1'), createWhitePiece(new King()),
-                                Position.of('e', '8'), createBlackPiece(new King()))), false),
+                                Position.of('e', '1'), createWhitePiece(1L, new King()),
+                                Position.of('e', '8'), createBlackPiece(1L, new King()))), false),
                 Arguments.of(
-                        new ChessBoard(Map.of(Position.of('e', '1'), createWhitePiece(new King()))), true)
+                        new ChessBoard(Map.of(Position.of('e', '1'), createWhitePiece(1L, new King()))), true)
         );
     }
 
@@ -175,14 +175,14 @@ class ChessBoardTest {
     @CsvSource(value = {"a,8,WHITE,true", "a,7,WHITE,false", "a,8,BLACK,false"})
     @DisplayName("프로모션 상태 여부 확인")
     void isPromotionStatus(char column, char row, Color color, boolean expected) {
-        ChessBoard chessBoard = new ChessBoard(Map.of(Position.of(column, row), createWhitePiece(new Pawn(WHITE))));
+        ChessBoard chessBoard = new ChessBoard(Map.of(Position.of(column, row), createWhitePiece(1L, new Pawn(WHITE))));
         assertThat(chessBoard.isPromotionStatus(color)).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("종료되지 않은 게임의 우승자 반환 시 예외발생")
     void winnerExceptionByNotFinishedGame() {
-        ChessBoard chessBoard = new ChessBoard(PieceFactory.createNewChessBoard());
+        ChessBoard chessBoard = new ChessBoard(PieceFactory.createNewChessBoard(1L));
 
         assertThatThrownBy(() -> chessBoard.winner())
                 .isInstanceOf(IllegalStateException.class)
@@ -192,7 +192,7 @@ class ChessBoardTest {
     @Test
     @DisplayName("우승자 반환")
     void winner() {
-        ChessBoard chessBoard = new ChessBoard(Map.of(Position.of('e', '1'), createWhitePiece(new King())));
+        ChessBoard chessBoard = new ChessBoard(Map.of(Position.of('e', '1'), createWhitePiece(1L, new King())));
         assertThat(chessBoard.winner()).isEqualTo(WHITE);
     }
 }

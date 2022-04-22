@@ -8,7 +8,6 @@ import chess.domain.Position;
 import chess.domain.PromotionPiece;
 import chess.domain.piece.Piece;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public class EndState implements ChessGameState {
 
@@ -34,7 +33,7 @@ public class EndState implements ChessGameState {
     }
 
     @Override
-    public Entry<Position, Piece> promotion(PromotionPiece promotionPiece) {
+    public Position promotion(PromotionPiece promotionPiece) {
         throw new IllegalStateException("종료된 게임은 promotion할 수 없습니다.");
     }
 

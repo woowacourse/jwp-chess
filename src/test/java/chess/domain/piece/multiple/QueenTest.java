@@ -37,7 +37,7 @@ class QueenTest {
     @DisplayName("목표 지점이 이동 가능 경로를 벗어나면 예외 발생")
     void emptyDirection(char col, char row) {
         Position target = Position.of(col, row);
-        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(new Queen())));
+        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(1L, new Queen())));
 
         assertThatThrownBy(() -> queen.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)
@@ -49,8 +49,8 @@ class QueenTest {
     void isMovableToNotClearEmptyPosition() {
         Position target = Position.of('d', '8');
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(new Queen()),
-                Position.of('d', '7'), createWhitePiece(new Queen())));
+                source, createWhitePiece(1L, new Queen()),
+                Position.of('d', '7'), createWhitePiece(1L, new Queen())));
 
         assertThatThrownBy(() -> queen.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)
@@ -62,9 +62,9 @@ class QueenTest {
     void isMovableToNotClearPiecePosition() {
         Position target = Position.of('d', '8');
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(new Queen()),
-                Position.of('d', '7'), createBlackPiece(new Queen()),
-                target, createBlackPiece(new Queen())));
+                source, createWhitePiece(1L, new Queen()),
+                Position.of('d', '7'), createBlackPiece(1L, new Queen()),
+                target, createBlackPiece(1L, new Queen())));
 
         assertThatThrownBy(() -> queen.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)

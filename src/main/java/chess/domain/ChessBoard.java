@@ -1,7 +1,6 @@
 package chess.domain;
 
 import chess.domain.piece.Piece;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,16 +48,13 @@ public class ChessBoard {
         }
     }
 
-    public Entry<Position, Piece> promotion(PromotionPiece promotionPiece, Color color) {
-        Position position = pieces.entrySet()
+    public Position promotionPosition(Color color) {
+        return pieces.entrySet()
                 .stream()
                 .filter(entry -> isPromotionPositionPawn(entry.getKey(), entry.getValue(), color))
                 .map(Entry::getKey)
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("프로모션 프로모션 가능한 기물이 없습니다."));
-        Piece piece = promotionPiece.createPiece(color);
-        pieces.put(position, piece);
-        return new SimpleEntry<>(position, piece);
     }
 
     public boolean isPositionEmpty(Position position) {
@@ -72,7 +68,7 @@ public class ChessBoard {
         return pieces.get(position);
     }
 
-    public Map<Color, Double> calcualteScoreStatus() {
+    public Map<Color, Double> calculateScoreStatus() {
         Map<Color, Double> result = new EnumMap<>(Color.class);
 
         for (Color color : Color.values()) {

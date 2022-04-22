@@ -37,7 +37,7 @@ class KingTest {
     @DisplayName("목표 지점이 이동 가능 경로를 벗어나면 예외 발생")
     void isMovableToEmptyPosition(char col, char row) {
         Position target = Position.of(col, row);
-        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(new King())));
+        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(1L, new King())));
 
         assertThatThrownBy(() -> king.move(source, target, chessBoard))
                 .isInstanceOf(IllegalStateException.class)
@@ -49,8 +49,8 @@ class KingTest {
     void isMovableToDifferentPiecePosition() {
         Position target = Position.of('a', '2');
         ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(new King()),
-                target, createBlackPiece(new King())
+                source, createWhitePiece(1L, new King()),
+                target, createBlackPiece(1L, new King())
         ));
 
         assertThat(king.move(source, target, chessBoard)).isInstanceOf(King.class);

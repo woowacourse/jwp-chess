@@ -13,7 +13,7 @@ class PieceConverterTest {
     @Test
     @DisplayName("name이 null이 들어오면 예외발생")
     void parseToPieceExceptionByNullName() {
-        assertThatThrownBy(() -> PieceConverter.parseToPiece(null, WHITE))
+        assertThatThrownBy(() -> PieceConverter.parseToPiece(null, 1L, WHITE))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("name은 null이 들어올 수 없습니다.");
     }
@@ -21,7 +21,7 @@ class PieceConverterTest {
     @Test
     @DisplayName("이름과 color를 받아 Piece를 생성")
     void parseToPiece() {
-        Piece piece = PieceConverter.parseToPiece("king", WHITE);
+        Piece piece = PieceConverter.parseToPiece("king", 1L, WHITE);
         assertThat(piece).isInstanceOf(Piece.class);
     }
 }

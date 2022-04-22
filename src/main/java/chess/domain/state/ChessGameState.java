@@ -5,7 +5,6 @@ import chess.domain.Position;
 import chess.domain.PromotionPiece;
 import chess.domain.piece.Piece;
 import java.util.Map;
-import java.util.Map.Entry;
 
 public interface ChessGameState {
 
@@ -15,7 +14,7 @@ public interface ChessGameState {
 
     void movePiece(Position source, Position target);
 
-    Entry<Position, Piece> promotion(PromotionPiece promotionPiece);
+    Position promotion(PromotionPiece promotionPiece);
 
     boolean isEnd();
 

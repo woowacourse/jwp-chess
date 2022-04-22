@@ -8,6 +8,7 @@ import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -120,5 +121,19 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
 
         assertThat(chessService.loadGame(testGameId).getGameState()).isEqualTo(GameState.FINISHED);
+    }
+
+    @DisplayName("Exception handle 테스트")
+    @Test
+    void handle_Exception() {
+        chessService.createOrLoadGame(testGameId);
+        chessService.startGame(testGameId);
+
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/api/start/" + testGameId)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", Matchers.equalTo("현재 실행할 수 없는 명령입니다."));
     }
 }

@@ -41,10 +41,9 @@ public class GameJdbcTemplateDao {
         final String sql = "SELECT id FROM Game ORDER BY id DESC LIMIT 1";
         try {
             Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
-            if (result == null) {
-                return EMPTY_RESULT;
-            }
             return result;
+        } catch (EmptyResultDataAccessException exception) {
+            return EMPTY_RESULT;
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");

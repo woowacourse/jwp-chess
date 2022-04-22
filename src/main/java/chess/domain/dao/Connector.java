@@ -1,6 +1,5 @@
 package chess.domain.dao;
 
-import chess.domain.dto.ResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -4,7 +4,7 @@ import chess.domain.dao.BoardJdbcTemplateDao;
 import chess.domain.dao.GameJdbcTemplateDao;
 import chess.domain.dto.GameDto;
 import chess.domain.dto.PieceDto;
-import chess.domain.dto.ResponseDto;
+import chess.domain.dto.ResponseDto1;
 import chess.domain.game.Color;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
@@ -26,6 +26,7 @@ public class ChessService {
 
     private static final int EMPTY_RESULT = 0;
  // private final GameRawJdbcDao gameDao;
+
     private final BoardJdbcTemplateDao boardDao;
     private final GameJdbcTemplateDao gameDao;
     private ChessBoard chessBoard = null;
@@ -35,12 +36,7 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-/*    public ChessService(GameRawJdbcDao gameDao, BoardDao boardDao) {
-        this.gameDao = gameDao;
-        this.boardDao = boardDao;
-    }*/
-
-    public ResponseDto start() {
+    public ResponseDto1 start() {
         try {
             int lastGameId = gameDao.findLastGameId();
             if (isNotSaved(lastGameId)) {
@@ -48,22 +44,22 @@ public class ChessService {
             }
             loadLastGame(lastGameId);
         } catch (IllegalArgumentException e) {
-            return new ResponseDto(500, e.getMessage());
+            return new ResponseDto1(500, e.getMessage());
         }
-        return new ResponseDto(200, null);
+        return new ResponseDto1(200, null);
     }
 
     private boolean isNotSaved(int lastGameId) {
         return lastGameId == EMPTY_RESULT;
     }
 
-    private ResponseDto makeNewGame() {
+    private ResponseDto1 makeNewGame() {
         chessBoard = ChessBoardFactory.initBoard();
         chessBoard.changeStatus(new Playing());
-        return new ResponseDto(200, null);
+        return new ResponseDto1(200, null);
     }
 
-    public ResponseDto save() {
+    public ResponseDto1 save() {
         try{
             int gameId = gameDao.save(chessBoard);
             for (Map.Entry<String, ChessPiece> entry : chessBoard.convertToMap().entrySet()) {
@@ -74,9 +70,9 @@ public class ChessService {
                         getColor(entry));
             }
         } catch (IllegalArgumentException e){
-            return new ResponseDto(500, e.getMessage());
+            return new ResponseDto1(500, e.getMessage());
         }
-        return new ResponseDto(200, null);
+        return new ResponseDto1(200, null);
     }
 
     private String getPosition(Map.Entry<String, ChessPiece> entry) {
@@ -109,15 +105,10 @@ public class ChessService {
         return Color.from(pieceDto.getColor());
     }
 
-    public ResponseDto move(String source, String target) {
-        try {
-            if (chessBoard.compareStatus(Status.PLAYING)) {
-                chessBoard.move(new Position(source), new Position(target));
-            }
-        } catch (IllegalArgumentException e) {
-            return new ResponseDto(500, e.getMessage());
+    public void move(String source, String target) {
+        if (chessBoard.compareStatus(Status.PLAYING)) {
+            chessBoard.move(new Position(source), new Position(target));
         }
-        return new ResponseDto(200, null);
     }
 
     public Map<String, Double> status() {
@@ -125,15 +116,15 @@ public class ChessService {
                 .collect(Collectors.toMap(m -> m.getKey().name(), Map.Entry::getValue));
     }
 
-    public ResponseDto end() throws SQLException {
+    public ResponseDto1 end() throws SQLException {
         try{
             chessBoard.changeStatus(new End());
             boardDao.delete(gameDao.findLastGameId());
             gameDao.delete();
         } catch (IllegalArgumentException e){
-            return new ResponseDto(500, e.getMessage());
+            return new ResponseDto1(500, e.getMessage());
         }
-        return new ResponseDto(200, null);
+        return new ResponseDto1(200, null);
     }
 
     public String findWinner() {

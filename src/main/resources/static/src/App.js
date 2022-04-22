@@ -10,13 +10,13 @@ function start() {
         },
         body: JSON.stringify(null)
     }).then(response => response.json())
-    .then(response => {
-        if (parseInt(response.status) !== 200) {
-            alert(response.message);
-            location.replace("/");
-        }
-        location.replace("/play");
-    });
+        .then(response => {
+            if (parseInt(response.status) !== 200) {
+                alert(response.message);
+                location.replace("/");
+            }
+            location.replace("/play");
+        });
 }
 
 function end() {
@@ -54,12 +54,14 @@ function move(source, target) {
             'Accept': 'application/json',
         },
         body: JSON.stringify(request)
-    }).then(response => response.json())
+    })
         .then(response => {
-            if (response.status !== 200) {
-                alert(response.message);
+            if (!response.ok) {
+                response.json()
+                    .then(body => alert(body.message));
+                return;
             }
-            location.replace("/play")
+            location.replace("/play");
         });
 }
 

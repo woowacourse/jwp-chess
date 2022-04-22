@@ -26,5 +26,10 @@ public class ChessController {
     public ChessGameResponse startGame(@PathVariable long gameId) {
         return chessService.startGame(gameId);
     }
+
+    @GetMapping("/restart/{gameId}")
+    public ChessGameResponse restartGame(@PathVariable long gameId) {
+        return chessService.restartGame(gameId);
+    }
 }
 

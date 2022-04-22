@@ -18,10 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class ChessService {
 
     private static final int ROW_INDEX = 0;
@@ -121,6 +119,10 @@ public class ChessService {
         chessGame.end();
         gameDao.updateState(gameId, chessGame.getGameState());
         return new ChessGameResponse(chessGame);
+    }
+
+    public void deleteGame(long gameId) {
+        gameDao.delete(gameId);
     }
 
     private Position parseStringToPosition(final String rawPosition) {

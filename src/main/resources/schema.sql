@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS movement;
+DROP TABLE IF EXISTS chess_game;
+
 CREATE TABLE chess_game
 (
     id         BIGINT AUTO_INCREMENT PRIMARY KEY,

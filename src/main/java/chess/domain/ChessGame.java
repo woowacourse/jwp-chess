@@ -47,6 +47,7 @@ public class ChessGame {
         this.gameName = gameName;
         this.state = State.getState(turn);
         this.chessBoard = new ChessBoard(cells);
+        Collections.sort(positions);
     }
 
     public boolean isExistKing() {

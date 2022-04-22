@@ -1,10 +1,11 @@
 package chess.controller;
 
-import chess.domain.event.MoveRoute;
 import chess.domain.event.MoveEvent;
+import chess.domain.event.MoveRoute;
 import chess.dto.CreateGameDto;
 import chess.dto.GameDto;
 import chess.service.ChessService;
+import chess.util.ResponseUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class GameController {
 
     private static final String HTML_TEMPLATE_PATH = "game";
-    private static final String RESPONSE_MODEL_KEY = "response";
 
     private final ChessService chessService;
 
@@ -33,22 +33,15 @@ public class GameController {
 
     @GetMapping("/{id}")
     public ModelAndView findGame(@PathVariable int id) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameDto gameDto = chessService.findGame(id);
-        modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
-        return modelAndView;
+        return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
     }
 
     @PostMapping("/{id}")
-    private ModelAndView playGame(@PathVariable int id,
-                                  @RequestBody MoveRoute moveRoute) {
+    public ModelAndView playGame(@PathVariable int id,
+                                 @RequestBody MoveRoute moveRoute) {
         chessService.playGame(id, new MoveEvent(moveRoute));
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameDto gameDto = chessService.findGame(id);
-        modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
-        return modelAndView;
+        return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
     }
 }

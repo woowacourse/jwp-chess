@@ -3,6 +3,7 @@ package chess.controller;
 import chess.dto.GameCountDto;
 import chess.dto.SearchResultDto;
 import chess.service.ChessService;
+import chess.util.ResponseUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class SearchController {
 
     private static final String HTML_TEMPLATE_PATH = "search";
-    private static final String RESPONSE_MODEL_KEY = "response";
 
     private final ChessService chessService;
 
@@ -25,11 +25,8 @@ public class SearchController {
 
     @GetMapping
     public ModelAndView render() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameCountDto gameCountDto = chessService.countGames();
-        modelAndView.addObject(RESPONSE_MODEL_KEY, gameCountDto);
-        return modelAndView;
+        return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameCountDto);
     }
 
     @PostMapping

@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.dto.GameCountDto;
 import chess.service.ChessService;
+import chess.util.ResponseUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -10,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomeController {
 
     private static final String HTML_TEMPLATE_PATH = "home";
-    private static final String RESPONSE_MODEL_KEY = "response";
 
     private final ChessService chessService;
 
@@ -20,10 +20,7 @@ public class HomeController {
 
     @GetMapping
     public ModelAndView home() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameCountDto gameCountDto = chessService.countGames();
-        modelAndView.addObject(RESPONSE_MODEL_KEY, gameCountDto);
-        return modelAndView;
+        return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameCountDto);
     }
 }

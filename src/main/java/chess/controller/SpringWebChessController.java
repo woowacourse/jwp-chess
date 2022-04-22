@@ -39,4 +39,10 @@ public class SpringWebChessController {
     public ResultDto status() {
         return gameService.status();
     }
+
+    @ResponseBody
+    @GetMapping("/load")
+    public BoardDto load() {
+        return gameService.load();
+    }
 }

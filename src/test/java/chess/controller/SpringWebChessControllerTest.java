@@ -55,4 +55,16 @@ class SpringWebChessControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("score.size()", is(2));
     }
+
+    @DisplayName("저장 되어 있는 체스 게임을 불러온다.")
+    @Test
+    void load() {
+        start();
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/game/load")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("values.size()", is(64));
+    }
 }

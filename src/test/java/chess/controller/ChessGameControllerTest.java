@@ -107,4 +107,17 @@ class ChessGameControllerTest {
 				.then().log().all()
 				.statusCode(HttpStatus.OK.value());
 	}
+
+	@Test
+	@DisplayName("게임 우승자 반환")
+	void chessGameWinner() {
+		createNewGame();
+		pieceDao.delete(Position.from("e8"));
+
+		RestAssured.given().log().all()
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.when().get("chessgames/1/winner")
+				.then().log().all()
+				.statusCode(HttpStatus.OK.value());
+	}
 }

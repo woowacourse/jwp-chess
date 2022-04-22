@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.controller.dto.ChessGameScoreResponse;
 import chess.controller.dto.ChessGameStatusResponse;
+import chess.controller.dto.ChessGameWinnerResponse;
 import chess.controller.dto.PieceMoveRequest;
 import chess.controller.dto.PieceResponse;
 import chess.controller.dto.PromotionRequest;
@@ -71,8 +72,11 @@ public class ChessGameController {
 
 	@GetMapping("/{chessGameId}/status")
 	public ResponseEntity<ChessGameStatusResponse> chessGameStatus(@PathVariable long chessGameId) {
-		ChessGameStatusResponse chessGameStatusResponse
-				= new ChessGameStatusResponse(chessGameService.isEndGame(chessGameId));
-		return ResponseEntity.ok(chessGameStatusResponse);
+		return ResponseEntity.ok(new ChessGameStatusResponse(chessGameService.isEndGame(chessGameId)));
+	}
+
+	@GetMapping("/{chessGameId}/winner")
+	public ResponseEntity<ChessGameWinnerResponse> chessGameWinner(@PathVariable long chessGameId) {
+		return ResponseEntity.ok(ChessGameWinnerResponse.from(chessGameService.winner(chessGameId)));
 	}
 }

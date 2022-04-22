@@ -60,6 +60,11 @@ public class ChessGameService {
 		return currentTurn.isEnd();
 	}
 
+	public Color winner(long chessGameId) {
+		ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);
+		return chessBoard.winner();
+	}
+
 	private ChessGameState findChessGameState(long chessGameId) {
 		Turn currentTurn = findChessGameTurn(chessGameId);
 		ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);

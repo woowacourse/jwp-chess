@@ -2,7 +2,6 @@ package chess.dto.board;
 
 import chess.domain.board.piece.Color;
 import chess.domain.board.piece.Piece;
-import chess.util.PieceDisplayUtil;
 import java.util.Objects;
 
 public class SquareDto {
@@ -20,8 +19,7 @@ public class SquareDto {
     }
 
     public static SquareDto ofOccupied(Piece piece) {
-        String pieceDisplay = PieceDisplayUtil.toDisplay(piece);
-        return new SquareDto(pieceDisplay, toPieceColorIfWhite(piece));
+        return new SquareDto(piece.toSign(), toPieceColorIfWhite(piece));
     }
 
     public static SquareDto ofEmpty() {

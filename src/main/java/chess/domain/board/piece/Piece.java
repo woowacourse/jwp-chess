@@ -43,6 +43,10 @@ public abstract class Piece {
         return type.getScore();
     }
 
+    public final String toSign() {
+        return type.getSign();
+    }
+
     @Override
     public String toString() {
         return "Piece{" + color + " " + type + '}';

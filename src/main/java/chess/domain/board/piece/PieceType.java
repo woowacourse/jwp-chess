@@ -6,12 +6,12 @@ import java.util.function.BiPredicate;
 
 public enum PieceType {
 
-    PAWN(PieceType::isPawnMovable, 1),
-    KNIGHT(PieceType::isKnightMovable, 2.5),
-    BISHOP(PositionUtil::isDiagonal, 3),
-    ROOK(PositionUtil::isHorizontalOrVertical, 5),
-    QUEEN(PositionUtil::isStraightPath, 9),
-    KING(PieceType::isKingMovable, 0);
+    PAWN(PieceType::isPawnMovable, 1, "♟"),
+    KNIGHT(PieceType::isKnightMovable, 2.5, "♞"),
+    BISHOP(PositionUtil::isDiagonal, 3, "♝"),
+    ROOK(PositionUtil::isHorizontalOrVertical, 5, "♜"),
+    QUEEN(PositionUtil::isStraightPath, 9, "♛"),
+    KING(PieceType::isKingMovable, 0, "♚");
 
     private static final int KNIGHT_TOTAL_MOVE_DIFF = 3;
     private static final int KNIGHT_MAIN_MOVE_DIFF = 2;
@@ -22,10 +22,12 @@ public enum PieceType {
 
     private final BiPredicate<Position, Position> routeChecker;
     private final double score;
+    private final String sign;
 
-    PieceType(BiPredicate<Position, Position> routeChecker, double score ) {
+    PieceType(BiPredicate<Position, Position> routeChecker, double score, String sign) {
         this.routeChecker = routeChecker;
         this.score = score;
+        this.sign = sign;
     }
 
     public boolean isMovable(Position from, Position to) {
@@ -58,5 +60,9 @@ public enum PieceType {
 
     public double getScore() {
         return score;
+    }
+
+    public String getSign() {
+        return sign;
     }
 }

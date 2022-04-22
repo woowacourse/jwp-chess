@@ -13,6 +13,7 @@ import chess.dto.GameResultDto;
 import chess.dto.SearchResultDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessService {
@@ -34,6 +35,7 @@ public class ChessService {
         return new GameCountDto(totalCount, runningCount);
     }
 
+    @Transactional
     public CreateGameDto initGame() {
         int gameId = gameDao.saveAndGetGeneratedId();
         eventDao.save(gameId, new InitEvent());
@@ -49,6 +51,7 @@ public class ChessService {
         return game.toDtoOf(gameId);
     }
 
+    @Transactional
     public GameDto playGame(int gameId, Event moveEvent) {
         Game game = currentSnapShotOf(gameId).play(moveEvent);
 

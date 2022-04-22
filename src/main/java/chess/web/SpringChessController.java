@@ -2,14 +2,17 @@ package chess.web;
 
 import chess.web.dao.BoardDao;
 import chess.web.dao.PieceDao;
+import chess.web.dto.CommendDto;
 import chess.web.dto.RoomDto;
 import chess.web.service.GameService;
 import chess.web.service.RoomService;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -49,8 +52,14 @@ public class SpringChessController {
         return ResponseEntity.ok(gameService.loadGame(roomId));
     }
 
+    @PostMapping("/move")
+    public ResponseEntity movePiece(@RequestParam int boardId, @RequestBody CommendDto commendDto) {
+        gameService.move(boardId, commendDto);
+        return ResponseEntity.ok(gameService.gameStateAndPieces(boardId));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity validateName() {
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity handleBadRequest(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest().body(Map.of("message", exception.getMessage()));
     }
 }

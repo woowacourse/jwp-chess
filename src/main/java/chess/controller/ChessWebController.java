@@ -28,6 +28,6 @@ public class ChessWebController {
             return "redirect:/";
         }
 
-        return roomName;
+        return "board";
     }
 }

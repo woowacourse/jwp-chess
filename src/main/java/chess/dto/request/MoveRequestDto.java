@@ -5,6 +5,9 @@ public class MoveRequestDto {
     private String source;
     private String target;
 
+    private MoveRequestDto() {
+    }
+
     public MoveRequestDto(final String source, final String target) {
         this.source = source;
         this.target = target;

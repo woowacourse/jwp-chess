@@ -3,7 +3,7 @@ package chess.dto.request;
 public class RoomRequestDto {
     private String name;
 
-    public RoomRequestDto() {
+    private RoomRequestDto() {
     }
 
     public RoomRequestDto(final String name) {

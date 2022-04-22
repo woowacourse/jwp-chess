@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/chess")
+@RequestMapping("/api/chess/rooms")
 public class SpringChessController {
 
     private final ChessService chessService;
@@ -27,35 +27,35 @@ public class SpringChessController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/rooms")
+    @PostMapping
     public ResponseEntity<?> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
         final RoomResponseDto room = chessService.createRoom(roomRequestDto);
         return ResponseEntity.created(URI.create("/api/chess/rooms/" + room.getId())).build();
     }
 
-    @GetMapping("/rooms")
+    @GetMapping
     public ResponseEntity<RoomsResponseDto> findRooms() {
         return ResponseEntity.ok(chessService.findRooms());
     }
 
-    @GetMapping("/rooms/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<GameResponseDto> enterRoom(@PathVariable() Long id) {
         return ResponseEntity.ok(chessService.enterRoom(id));
     }
 
-    @DeleteMapping("/rooms/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<StatusDto> finishGame(@PathVariable Long id) {
         chessService.endRoom(id);
         return ResponseEntity.ok(chessService.createStatus(id));
     }
 
-    @PostMapping("/rooms/{id}/move")
+    @PostMapping("/{id}/move")
     public ResponseEntity<GameResponseDto> movePiece(@PathVariable Long id,
                                                      @RequestBody MoveRequestDto moveRequestDto) {
         return ResponseEntity.ok(chessService.move(id, moveRequestDto));
     }
 
-    @GetMapping("/rooms/{id}/status")
+    @GetMapping("/{id}/status")
     public ResponseEntity<StatusDto> calculateStatus(@PathVariable Long id) {
         return ResponseEntity.ok(chessService.createStatus(id));
     }

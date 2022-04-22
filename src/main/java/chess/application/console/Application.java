@@ -1,6 +1,5 @@
-package chess;
+package chess.application.console;
 
-import chess.game.ChessGame;
 import chess.view.InputView;
 import chess.view.OutputView;
 

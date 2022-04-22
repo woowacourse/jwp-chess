@@ -1,9 +1,18 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>모두의 체스</title>
+    <meta charset="UTF-8">
+    <title>체스 게임: 시작</title>
 </head>
 <body>
-<h1>Hello World</h1>
+<h1> 체스게임 </h1>
+{{this.message}}
+<form action="/start" method="post">
+    <input type="submit" value="새로 하기">
+</form>
+<form action="/reload" method="post">
+    <input type="submit" value="이어 하기">
+</form>
+
 </body>
 </html>

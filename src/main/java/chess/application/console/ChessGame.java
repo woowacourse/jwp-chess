@@ -1,4 +1,4 @@
-package chess.game;
+package chess.application.console;
 
 import chess.state.Start;
 import chess.state.State;

@@ -1,6 +1,6 @@
-package chess;
+package chess.application.spark;
 
-import chess.game.WebChessGame;
+import chess.application.spark.WebChessGame;
 
 import static spark.Spark.port;
 import static spark.Spark.staticFileLocation;

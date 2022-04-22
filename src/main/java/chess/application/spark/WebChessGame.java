@@ -1,7 +1,8 @@
-package chess.game;
+package chess.application.spark;
 
 import chess.chessboard.position.Position;
 import chess.dao.CommandDao;
+import chess.game.Player;
 import chess.piece.Piece;
 import chess.state.Start;
 import chess.state.State;
@@ -27,7 +28,7 @@ public class WebChessGame {
         CommandDao commandDao = new CommandDao();
         get("/", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            return render(model, "start.html");
+            return render(model, "index.html");
         });
 
         post("/start", (req, res) -> gameStart(commandDao));
@@ -83,7 +84,7 @@ public class WebChessGame {
     private String backInitialPage(final String message) {
         final Map<String, Object> model = new HashMap<>();
         model.put("message", message);
-        return render(model, "start.html");
+        return render(model, "index.html");
     }
 
     private List<Square> showChessBoard(final Map<Position, Piece> board) {

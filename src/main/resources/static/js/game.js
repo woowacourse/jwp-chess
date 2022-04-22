@@ -19,6 +19,7 @@ function gameId() {
 function onClickSquare(e) {
     if (sourceId === null) {
         sourceId = e.target.id;
+        document.getElementById(sourceId).style.backgroundColor = 'green';
         return;
     }
     move(sourceId, e.target.id, turn)

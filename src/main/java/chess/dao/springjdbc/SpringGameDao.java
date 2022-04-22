@@ -1,24 +1,15 @@
 package chess.dao.springjdbc;
 
 import chess.dao.GameDao;
-import chess.dao.jdbc.jdbcutil.JdbcUtil;
-import chess.dao.jdbc.jdbcutil.StatementExecutor;
 import chess.service.dto.ChessGameDto;
 import chess.service.dto.GamesDto;
 import chess.service.dto.StatusDto;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class SpringGameDao implements GameDao {
-
-    private static final String ID = "id";
-    private static final String NAME = "name";
-    private static final String STATUS = "status";
-    private static final String TURN = "turn";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -43,14 +34,6 @@ public class SpringGameDao implements GameDao {
     public ChessGameDto findById(int id) {
         String sql = "SELECT id, name, status, turn FROM game WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, chessGameDtoRowMapper, id);
-    }
-
-    private ChessGameDto getChessGameDto(ResultSet resultSet) throws SQLException {
-        int id = resultSet.getInt(ID);
-        String name = resultSet.getString(NAME);
-        String status = resultSet.getString(STATUS);
-        String turn = resultSet.getString(TURN);
-        return new ChessGameDto(id, name, status, turn);
     }
 
     @Override

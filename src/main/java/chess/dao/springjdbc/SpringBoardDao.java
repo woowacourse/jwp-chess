@@ -10,13 +10,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SpringBoardDao implements BoardDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private final RowMapper<PieceWithSquareDto> pieceRowMapper = (resultSet, rowNum) ->
             new PieceWithSquareDto(
                     resultSet.getString("square"),
                     resultSet.getString("piece_type"),
                     resultSet.getString("piece_color")
             );
+
     public SpringBoardDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

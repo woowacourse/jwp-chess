@@ -1,7 +1,12 @@
 package chess.dao;
 
+import chess.domain.Color;
+import chess.domain.PieceConverter;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -24,5 +29,25 @@ public class PieceDao {
 			count++;
 		}
 		return count;
+	}
+
+	public Map<Position, Piece> findAllPieces() {
+		String sql = "select * from piece";
+		return jdbcTemplate.query(sql, this::piecesRowMapper);
+	}
+
+	private Map<Position, Piece> piecesRowMapper(ResultSet resultSet) throws SQLException {
+		Map<Position, Piece> pieces = new HashMap<>();
+		while (resultSet.next()) {
+			String type = resultSet.getString("type");
+			String colorName = resultSet.getString("color");
+			char column = resultSet.getString("position_col").charAt(0);
+			char row = resultSet.getString("position_row").charAt(0);
+
+			Position position = Position.of(column, row);
+			Color color = Color.valueOf(colorName);
+			pieces.put(position, PieceConverter.parseToPiece(type, color));
+		}
+		return pieces;
 	}
 }

@@ -57,7 +57,7 @@ public class ChessSpringController {
         }
         return ResponseEntity.ok().body(scoreDto);
     }
-    
+
     @ResponseBody
     @GetMapping("/end")
     public ResponseEntity end() {

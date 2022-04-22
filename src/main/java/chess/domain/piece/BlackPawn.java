@@ -4,7 +4,7 @@ import static chess.domain.piece.Direction.NORTH_NORTH;
 import static chess.domain.piece.Direction.SOUTH;
 import static chess.domain.piece.Direction.SOUTH_SOUTH;
 import static chess.domain.piece.Direction.pullSouthDirections;
-import static chess.domain.piece.Team.*;
+import static chess.domain.piece.Team.BLACK;
 
 import chess.domain.position.Position;
 import chess.domain.position.Row;

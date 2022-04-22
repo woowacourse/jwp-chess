@@ -1,6 +1,7 @@
 package chess.dao;
 
-import static chess.dao.JdbcGameStatusDao.*;
+import static chess.dao.JdbcGameStatusDao.PARAMETER_FIRST_INDEX;
+import static chess.dao.JdbcGameStatusDao.PARAMETER_SECOND_INDEX;
 
 import chess.util.JdbcConnector;
 import java.sql.Connection;
@@ -16,7 +17,7 @@ public class JdbcBoardDao implements BoardDao {
     private final Connection connection = JdbcConnector.getConnection();
 
     @Override
-    public void init(Map<String,String> board) {
+    public void init(Map<String, String> board) {
         final String sql = "insert into board (position, piece) values (?,?)";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

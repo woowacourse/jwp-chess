@@ -6,7 +6,6 @@ import chess.domain.board.Result;
 import chess.domain.piece.Bishop;
 import chess.domain.piece.BlackPawn;
 import chess.domain.piece.Knight;
-
 import chess.domain.piece.Piece;
 import chess.domain.piece.Rook;
 import chess.domain.piece.Team;

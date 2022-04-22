@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.dao.jdbctemplate.JdbcTemplateBoardDao;
 import chess.domain.board.Board;
-import chess.domain.board.strategy.BasicBoardStrategy;
 import chess.domain.board.strategy.WebBasicBoardStrategy;
 import chess.domain.piece.Blank;
 import chess.domain.piece.WhitePawn;

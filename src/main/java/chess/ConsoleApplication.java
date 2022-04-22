@@ -1,9 +1,9 @@
 package chess;
 
 import chess.controller.ChessController;
-import chess.domain.ChessGame;
 import chess.controller.menu.Menu;
 import chess.controller.menu.MenuType;
+import chess.domain.ChessGame;
 import chess.view.InputView;
 import chess.view.OutputView;
 

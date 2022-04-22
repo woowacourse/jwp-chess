@@ -1,6 +1,7 @@
 package chess.dao;
 
-import static chess.dao.JdbcGameStatusDao.*;
+import static chess.dao.JdbcGameStatusDao.PARAMETER_FIRST_INDEX;
+import static chess.dao.JdbcGameStatusDao.PARAMETER_SECOND_INDEX;
 
 import chess.domain.piece.Team;
 import chess.util.JdbcConnector;

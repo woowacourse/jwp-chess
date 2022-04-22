@@ -4,13 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.domain.ChessGame;
-import chess.domain.board.strategy.BasicBoardStrategy;
-
 import chess.board.boardGenerator.CheckmateBoardStrategy;
 import chess.board.boardGenerator.NotCheckmateBoardStrategy;
 import chess.board.boardGenerator.TestBoardStrategy;
 import chess.board.boardGenerator.WhiteCheckBoardStrategy;
+import chess.domain.ChessGame;
+import chess.domain.board.strategy.BasicBoardStrategy;
 import chess.domain.piece.BlackPawn;
 import chess.domain.piece.King;
 import chess.domain.piece.Team;

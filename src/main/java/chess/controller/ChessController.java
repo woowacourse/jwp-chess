@@ -15,7 +15,7 @@ public class ChessController {
     }
 
     public boolean isContinue() {
-        if(chessGame.getGameStatus().isEnd()){
+        if (chessGame.getGameStatus().isEnd()) {
             return false;
         }
         if (chessGame.isCheck()) {

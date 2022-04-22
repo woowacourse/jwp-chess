@@ -1,6 +1,6 @@
 package chess.domain.piece;
 
-import static chess.domain.piece.Direction.*;
+import static chess.domain.piece.Direction.pullStraightDirections;
 
 public class Rook extends Piece {
 

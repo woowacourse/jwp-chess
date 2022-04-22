@@ -6,8 +6,8 @@ import static chess.domain.GameStatus.PLAYING;
 import static chess.domain.GameStatus.READY;
 
 import chess.domain.board.Board;
-import chess.domain.board.strategy.BoardGenerationStrategy;
 import chess.domain.board.Result;
+import chess.domain.board.strategy.BoardGenerationStrategy;
 import chess.domain.piece.Direction;
 import chess.domain.piece.King;
 import chess.domain.piece.Piece;
@@ -46,7 +46,6 @@ public class ChessGame {
         validateNowTurn(fromPiece);
         fromPiece.movable(from, to, toPiece);
         validatePath(from, to, fromPiece.findDirection(from, to));
-
 
         tryMove(from, to, fromPiece);
     }

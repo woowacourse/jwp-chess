@@ -38,6 +38,11 @@ public class SpringChessController {
         return ResponseEntity.ok().body(chessService.initializeGame());
     }
 
+    @GetMapping("/score")
+    public ResponseEntity<ScoresDto> score() {
+        return ResponseEntity.ok().body(chessService.getScore());
+    }
+
     @PostMapping("/end")
     public ResponseEntity<ScoresDto> end() {
         return ResponseEntity.ok().body(chessService.finishGame());

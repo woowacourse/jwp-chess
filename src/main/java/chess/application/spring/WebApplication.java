@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -21,41 +22,62 @@ import java.util.Map;
 @Controller
 public class WebApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WebApplication.class, args);
-	}
+    private State state;
 
-	@GetMapping("/")
-	public ModelAndView index() {
-		ModelAndView modelAndView = new ModelAndView("index");
-		return modelAndView;
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WebApplication.class, args);
+    }
 
-	@PostMapping("/start")
-	public ModelAndView start() {
-		ModelAndView modelAndView = new ModelAndView("game");
-		State state = Start.of();
-		modelAndView.addObject("squares", showChessBoard(state.getBoard()));
-		modelAndView.addObject("player", playerName(state.getPlayer()));
-		modelAndView.addObject("message", "게임을 시작합니다.");
-		return modelAndView;
-	}
+    @GetMapping("/")
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView("index");
+        return modelAndView;
+    }
 
-	private List<Square> showChessBoard(final Map<Position, Piece> board) {
-		final List<Square> squares = new ArrayList<>();
-		for (final Position position : board.keySet()) {
-			addPiece(position, board.get(position), squares);
-		}
-		return squares;
-	}
+    @PostMapping("/start")
+    public String startChessGame() {
+        state = Start.of();
+        return "redirect:start";
+    }
 
-	private void addPiece(final Position position, final Piece piece, final List<Square> squares) {
-		if (!piece.isBlank()) {
-			squares.add(new Square(piece.getImageName(), position.getPosition()));
-		}
-	}
+    @GetMapping(path = "/start")
+    public ModelAndView printInitBoard() {
+        ModelAndView modelAndView = new ModelAndView("game");
+        modelAndView.addObject("squares", showChessBoard(state.getBoard()));
+        modelAndView.addObject("player", playerName(state.getPlayer()));
+        modelAndView.addObject("message", "게임을 시작합니다.");
+        return modelAndView;
+    }
 
-	private String playerName(final Player player) {
-		return player.getName();
-	}
+    @GetMapping(path = "/game")
+    public ModelAndView printCurrentBoard() {
+        ModelAndView modelAndView = new ModelAndView("game");
+        modelAndView.addObject("squares", showChessBoard(state.getBoard()));
+        modelAndView.addObject("player", playerName(state.getPlayer()));
+        return modelAndView;
+    }
+
+    @PostMapping(path = "/game")
+    public String movePiece(@RequestParam("command") String requestBody) {
+        state = state.proceed(requestBody);
+        return "redirect:game";
+    }
+
+    private List<Square> showChessBoard(final Map<Position, Piece> board) {
+        final List<Square> squares = new ArrayList<>();
+        for (final Position position : board.keySet()) {
+            addPiece(position, board.get(position), squares);
+        }
+        return squares;
+    }
+
+    private void addPiece(final Position position, final Piece piece, final List<Square> squares) {
+        if (!piece.isBlank()) {
+            squares.add(new Square(piece.getImageName(), position.getPosition()));
+        }
+    }
+
+    private String playerName(final Player player) {
+        return player.getName();
+    }
 }

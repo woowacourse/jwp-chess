@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class SearchController {
 
     private static final String HTML_TEMPLATE_PATH = "search";
-    private static final String RESPONSE = "response";
+    private static final String RESPONSE_MODEL_KEY = "response";
 
     private final ChessService chessService;
 
@@ -28,7 +28,7 @@ public class SearchController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameCountDto gameCountDto = chessService.countGames();
-        modelAndView.addObject(RESPONSE, gameCountDto);
+        modelAndView.addObject(RESPONSE_MODEL_KEY, gameCountDto);
         return modelAndView;
     }
 

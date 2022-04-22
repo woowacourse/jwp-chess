@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko">
-{{#response}}
 <head>
     <meta charset="UTF-8"/>
     <title>게임 {{id}} | 체스 시뮬레이터</title>
@@ -8,6 +7,7 @@
     <link rel="icon" type="image/x-icon" href="/images/favicon.png">
 </head>
 <body>
+{{#response}}
 <section class="header__container">
     <h1>체스 시뮬레이터</h1>
     <div class="game_info__container">
@@ -39,7 +39,7 @@
         <a href="/result/{{game.id}}">게임결과 보러 가기!</a>
     </div>
 </section>
+{{/response}}
 <script src="/scripts/update-game.js"></script>
 </body>
-{{/response}}
 </html>

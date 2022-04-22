@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class ResultController {
 
     private static final String HTML_TEMPLATE_PATH = "result";
+    private static final String RESPONSE_MODEL_KEY = "response";
 
     private final ChessService chessService;
 
@@ -25,7 +26,7 @@ public class ResultController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameResultDto gameResultDto = chessService.findGameResult(id);
-        modelAndView.addObject("response", gameResultDto);
+        modelAndView.addObject(RESPONSE_MODEL_KEY, gameResultDto);
         return modelAndView;
     }
 }

@@ -30,7 +30,7 @@ public class ChessSpringController {
     }
 
     @GetMapping("/room")
-    public String room(@RequestParam(value = "name") String name,
+    public String room(@RequestParam String name,
                        Model model) {
         chessService.createRoom(name);
         model.addAttribute("name", name);
@@ -39,26 +39,26 @@ public class ChessSpringController {
 
     @GetMapping("/start")
     @ResponseBody
-    public BoardDto start(@RequestParam(value = "name") String name) {
+    public BoardDto start(@RequestParam String name) {
         return chessService.startNewGame(name);
     }
 
     @GetMapping("/load")
     @ResponseBody
-    public BoardDto load(@RequestParam(value = "name") String name) {
+    public BoardDto load(@RequestParam String name) {
         return chessService.load(name);
     }
 
     @PostMapping("/move")
     @ResponseBody
-    public BoardDto move(@RequestParam(value = "name") String name,
+    public BoardDto move(@RequestParam String name,
                          @RequestBody MoveDto moveDto) {
         return chessService.move(name, moveDto);
     }
 
     @GetMapping("/status")
     @ResponseBody
-    public Status status(@RequestParam(value = "name") String name) {
+    public Status status(@RequestParam String name) {
         return chessService.status(name);
     }
 

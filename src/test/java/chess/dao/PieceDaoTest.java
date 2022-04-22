@@ -43,5 +43,16 @@ class PieceDaoTest {
 
 		Map<Position, Piece> pieces = pieceDao.findAllPieces();
 		assertThat(pieces).hasSize(2);
+		System.out.println();
+	}
+
+	@Test
+	@DisplayName("피스 위치 업데이트")
+	void updatePiecePosition() {
+		Position source = Position.from("a1");
+		Position target = Position.from("a2");
+		pieceDao.savePieces(Map.of(source, new Piece(Color.WHITE, new King())));
+
+		assertThat(pieceDao.updatePiece(source, target)).isEqualTo(1);
 	}
 }

@@ -50,4 +50,11 @@ public class PieceDao {
 		}
 		return pieces;
 	}
+
+	public int updatePiece(Position source, Position target) {
+		String sql = "update piece set position_col = ?, position_row = ? "
+				+ "where position_col = ? and position_row = ?";
+
+		return jdbcTemplate.update(sql, target.column(), target.row(), source.column(), source.row());
+	}
 }

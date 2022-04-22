@@ -66,4 +66,15 @@ public class SpringWebChessController {
         }
         return new ResponseEntity(HttpStatus.OK);
     }
+    @GetMapping("/status")
+    public String status(Model model) {
+        if (chessService.checkStatus(Status.PLAYING)) {
+            model.addAttribute("play", true);
+            model.addAttribute("status", chessService.status());
+            model.addAttribute("board", chessService.currentBoardForUI());
+            return "game";
+        }
+        return "redirect:/end";
+    }
+
 }

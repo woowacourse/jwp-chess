@@ -119,5 +119,10 @@ public class ChessController {
     public ChessGameResponse endGame(@PathVariable long gameId) {
         return chessService.end(gameId);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleError(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+    }
 }
 

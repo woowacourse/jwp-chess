@@ -74,6 +74,15 @@ class ChessServiceTest {
         );
     }
 
+    @DisplayName("현재 방의 체스 게임을 종료한다.")
+    @Test
+    void end() {
+        final Long id = createTestRoom("체스 초보만").getId();
+        chessService.endRoom(id);
+        final RoomsResponseDto rooms = chessService.findRooms();
+        assertThat(rooms.getRoomResponseDtos()).hasSize(0);
+    }
+
     private RoomResponseDto createTestRoom(final String roomName) {
         final RoomRequestDto roomRequestDto = new RoomRequestDto(roomName);
         return chessService.createRoom(roomRequestDto);

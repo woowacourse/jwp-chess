@@ -97,4 +97,13 @@ public class ChessService {
         final List<RoomEntity> rooms = roomRepository.findRooms();
         return RoomsResponseDto.of(rooms);
     }
+
+    public void endRoom(final Long id) {
+        final RoomEntity room = roomRepository.findById(id);
+
+        if (room.isGameOver()) {
+            throw new IllegalArgumentException("[ERROR] 이미 종료된 게임입니다.");
+        }
+        roomRepository.updateGameOver(id);
+    }
 }

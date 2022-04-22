@@ -29,6 +29,7 @@ public class ChessService {
             chessGame = loadSavedChessGame(gameID, gameTurn);
         } catch (RuntimeException e) {
             chessGame = loadNewChessGame();
+            startGame(gameID, chessGame);
         }
         return chessGame;
     }

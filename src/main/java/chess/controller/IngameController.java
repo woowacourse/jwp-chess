@@ -22,10 +22,9 @@ public class IngameController {
 
     @GetMapping(value = "/ingame", params = "gameID")
     public String runGame(@RequestParam String gameID, Model model) {
-        ChessGame chessGame = DBService.loadGame(gameID);
-        DBService.startGame(gameID, chessGame);
-        DBService.loadPieces(gameID);
-        GameResult gameResult = DBService.getGameResult(gameID);
+        ChessGame chessGame = chessService.loadGame(gameID);
+        chessService.loadPieces(gameID);
+        GameResult gameResult = chessService.getGameResult(gameID);
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
 

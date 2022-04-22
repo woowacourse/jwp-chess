@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.controller.dto.PieceMoveRequest;
 import chess.controller.dto.PieceResponse;
+import chess.controller.dto.PromotionRequest;
 import chess.domain.ChessBoard;
 import chess.service.ChessGameService;
 import java.net.URI;
@@ -43,8 +44,16 @@ public class ChessGameController {
 	}
 
 	@PostMapping("/{chessGameId}/move")
-	public ResponseEntity<Void> movePiece(@PathVariable long chessGameId, @RequestBody PieceMoveRequest pieceMoveRequest) {
+	public ResponseEntity<Void> movePiece(@PathVariable long chessGameId,
+										  @RequestBody PieceMoveRequest pieceMoveRequest) {
 		chessGameService.move(chessGameId, pieceMoveRequest.toSourcePosition(), pieceMoveRequest.toTargetPosition());
+		return ResponseEntity.noContent().build();
+	}
+
+	@PostMapping("/{chessGameId}/promotion")
+	public ResponseEntity<Void> promotionPiece(@PathVariable long chessGameId,
+											   @RequestBody PromotionRequest promotionRequest) {
+		chessGameService.promotion(chessGameId, promotionRequest.toPromotionPiece());
 		return ResponseEntity.noContent().build();
 	}
 }

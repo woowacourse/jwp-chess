@@ -1,18 +1,27 @@
 package chess.controller;
 
 import chess.controller.dto.PieceMoveRequest;
+import chess.controller.dto.PromotionRequest;
+import chess.dao.PieceDao;
+import chess.domain.Position;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ChessGameControllerTest {
+
+	@Autowired
+	private PieceDao pieceDao;
 
 	@LocalServerPort
 	private int port;
@@ -54,6 +63,23 @@ class ChessGameControllerTest {
 				.body(new PieceMoveRequest("a2", "a4"))
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.when().post("chessgames/1/move")
+				.then().log().all()
+				.statusCode(HttpStatus.NO_CONTENT.value());
+	}
+
+	@Test
+	@DisplayName("체스 기물 프로모션")
+	void promotionPiece() {
+		createNewGame();
+		Position source = Position.from("a2");
+		Position target = Position.from("a8");
+		pieceDao.delete(target);
+		pieceDao.updatePiecePosition(source, target);
+
+		RestAssured.given().log().all()
+				.body(new PromotionRequest("Q"))
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.when().post("chessgames/1/promotion")
 				.then().log().all()
 				.statusCode(HttpStatus.NO_CONTENT.value());
 	}

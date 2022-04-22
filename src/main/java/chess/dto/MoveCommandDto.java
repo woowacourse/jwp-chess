@@ -1,9 +1,11 @@
 package chess.dto;
 
 public class MoveCommandDto {
+    private String source;
+    private String target;
 
-    private final String source;
-    private final String target;
+    public MoveCommandDto(){
+    }
 
     public MoveCommandDto(String source, String target) {
         this.source = source;

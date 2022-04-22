@@ -9,7 +9,9 @@ import chess.model.position.Position;
 import chess.model.state.State;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class GameRepositoryImpl implements GameRepository {
 
     private final SquareDao squareDao;

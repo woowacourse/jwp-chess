@@ -11,7 +11,7 @@ async function startChess() {
     while (session.hasChildNodes()) {
         session.removeChild(session.firstChild);
     }
-    let board = await fetch("/start", {
+    let board = await fetch("/game/start", {
         method: "POST",
     });
     board = await board.json();

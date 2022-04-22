@@ -8,7 +8,9 @@ import chess.model.state.State;
 import chess.model.state.finished.Status;
 import chess.model.state.running.WhiteTurn;
 import chess.repository.GameRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class GameService {
 
     private final GameRepository gameRepository;

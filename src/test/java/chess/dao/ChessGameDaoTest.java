@@ -30,4 +30,13 @@ class ChessGameDaoTest {
 
 		assertThat(chessGameDao.createChessGame(turn)).isEqualTo(1L);
 	}
+
+	@Test
+	@DisplayName("현재 게임 상태 반환")
+	void findChessGame() {
+		Turn turn = Turn.WHITE_TURN;
+		long id = chessGameDao.createChessGame(turn);
+
+		assertThat(chessGameDao.findChessGame(id)).isEqualTo(turn);
+	}
 }

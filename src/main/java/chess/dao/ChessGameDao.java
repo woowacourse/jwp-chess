@@ -28,4 +28,10 @@ public class ChessGameDao {
 				keyHolder);
 		return Objects.requireNonNull(keyHolder.getKey()).longValue();
 	}
+
+	public Turn findChessGame(long id) {
+		String sql = "select turn from chess_game where id = ?";
+
+		return jdbcTemplate.queryForObject(sql, Turn.class, id);
+	}
 }

@@ -1,9 +1,12 @@
 package chess.controller;
 
+import chess.model.dto.MoveDto;
 import chess.model.dto.WebBoardDto;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
@@ -29,4 +32,23 @@ public class ChessController {
         WebBoardDto board = chessService.start();
         return board.getWebBoard();
     }
+
+    @PostMapping("/move")
+    @ResponseBody
+    public Map<String, String> move(@RequestBody MoveDto moveCommand) {
+        WebBoardDto board = chessService.move(moveCommand);
+        return board.getWebBoard();
+    }
+
+    @GetMapping("/turn")
+    @ResponseBody
+    public String turn() {
+        return chessService.getTurn();
+    }
+
+//        get("/turn", (req, res) -> {
+//            String turn = chessService.getTurn();
+//
+//            return gson.toJson(turn);
+//        });
 }

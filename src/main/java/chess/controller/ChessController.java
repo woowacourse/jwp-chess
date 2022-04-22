@@ -109,5 +109,10 @@ public class ChessController {
     public ChessGameResponse movePiece(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {
         return chessService.move(gameId, moveRequest);
     }
+
+    @GetMapping("/status/{gameId}")
+    public StatusResponse status(@PathVariable long gameId) {
+        return chessService.status(gameId);
+    }
 }
 

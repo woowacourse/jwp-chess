@@ -5,7 +5,7 @@ import chess.domain.board.piece.Color;
 import chess.domain.board.piece.PieceType;
 import chess.domain.board.position.Position;
 import chess.domain.event.Event;
-import chess.domain.command.MoveRoute;
+import chess.domain.event.MoveRoute;
 import chess.domain.game.statistics.GameResult;
 
 abstract class Running extends Started {

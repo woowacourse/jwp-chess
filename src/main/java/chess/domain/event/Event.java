@@ -1,7 +1,5 @@
 package chess.domain.event;
 
-import chess.domain.command.MoveRoute;
-
 public abstract class Event {
 
     public static Event of(String type, String description) {

@@ -2,43 +2,22 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-@JdbcTest
+@SpringBootTest
+@Transactional
 class GameDaoTest {
-
-    private static final String TEST_TABLE = "game_test";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
     private GameDao dao;
-
-    @BeforeEach
-    void setUp() {
-        dao = new GameDao(namedParameterJdbcTemplate) {
-            @Override
-            protected String addTable(String sql) {
-                return String.format(sql, TEST_TABLE);
-            }
-        };
-        jdbcTemplate.execute("DROP TABLE game_test IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE game_test("
-                + "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
-                + "state ENUM('RUNNING', 'OVER') NOT NULL)");
-
-        jdbcTemplate.execute("INSERT INTO game_test (id, state) "
-                + "VALUES (1, 'RUNNING'), (2, 'OVER')");
-    }
 
     @Test
     void saveAndGetGeneratedId_메서드는_저장한_데이터의_id값_반환() {
@@ -48,13 +27,13 @@ class GameDaoTest {
     }
 
     @Test
-    void finishGame_메서드로_게임의_상태를_OVER로_변경가능() {
+    void finishGame_메서드로_게임을_종료된_상태로_변경가능() {
         dao.finishGame(1);
 
-        String actual = jdbcTemplate.queryForObject(
-                "SELECT state FROM game_test WHERE id = 1", String.class);
+        boolean actual = jdbcTemplate.queryForObject(
+                "SELECT running FROM game WHERE id = 1", Boolean.class);
 
-        assertThat(actual).isEqualTo("OVER");
+        assertThat(actual).isFalse();
     }
 
     @Test
@@ -79,8 +58,8 @@ class GameDaoTest {
     }
 
     @Test
-    void countByState_메서드로_특정_state에_해당되는_데이터의_개수_조회가능() {
-        int actual = dao.countByState(GameState.OVER);
+    void countRunningGames_메서드로_running값이_참인_데이터의_개수_조회가능() {
+        int actual = dao.countRunningGames();
 
         assertThat(actual).isEqualTo(1);
     }

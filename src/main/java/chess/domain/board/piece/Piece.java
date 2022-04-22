@@ -2,7 +2,6 @@ package chess.domain.board.piece;
 
 import chess.domain.board.position.Position;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class Piece {
@@ -51,13 +50,14 @@ public abstract class Piece {
 
     private static class PieceCache {
 
-        static Map<List<?>, Piece> pieceCache = new HashMap<>();
+        static Map<String, Piece> pieceCache = new HashMap<>();
+
         static Piece getCache(Color color, PieceType pieceType) {
             return pieceCache.computeIfAbsent(toKey(color, pieceType), (unused) -> initCacheOf(color, pieceType));
         }
 
-        private static List<Object> toKey(Color color, PieceType pieceType) {
-            return List.of(color, pieceType, 1);
+        static String toKey(Color color, PieceType pieceType) {
+            return color.name() + pieceType.name();
         }
 
         static Piece initCacheOf(Color color, PieceType type) {

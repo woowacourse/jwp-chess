@@ -1,11 +1,10 @@
 package chess.controller;
 
-import chess.domain.command.MoveRoute;
+import chess.domain.event.MoveRoute;
 import chess.domain.event.MoveEvent;
+import chess.dto.CreateGameDto;
 import chess.dto.GameDto;
 import chess.service.ChessService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class GameController {
 
     private static final String HTML_TEMPLATE_PATH = "game";
+    private static final String RESPONSE_MODEL_KEY = "response";
 
     private final ChessService chessService;
 
@@ -26,12 +26,17 @@ public class GameController {
         this.chessService = chessService;
     }
 
+    @PostMapping("/new")
+    public CreateGameDto createGame() {
+        return chessService.initGame();
+    }
+
     @GetMapping("/{id}")
     public ModelAndView findGame(@PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameDto gameDto = chessService.findGame(id);
-        modelAndView.addObject("response", gameDto);
+        modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
         return modelAndView;
     }
 
@@ -43,12 +48,7 @@ public class GameController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameDto gameDto = chessService.findGame(id);
-        modelAndView.addObject("response", gameDto);
+        modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
         return modelAndView;
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

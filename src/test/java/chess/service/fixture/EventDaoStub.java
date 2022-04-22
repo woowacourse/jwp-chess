@@ -12,8 +12,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class EventDaoStub extends EventDao {
 
-    private static final String DATABASE_ACCESS_ATTEMPT_EXCEPTION_MESSAGE = "테스트 더블에서 event 테이블에 접근시도하였습니다.";
-
     private final Map<Integer, List<Event>> repository = new HashMap<>() {{
         put(1, new ArrayList<>(List.of(new InitEvent(), new MoveEvent("e2 e4"),
                 new MoveEvent("d7 d5"), new MoveEvent("f1 b5"))));
@@ -44,10 +42,5 @@ public class EventDaoStub extends EventDao {
             return;
         }
         repository.put(gameId, new ArrayList<>(List.of(event)));
-    }
-
-    @Override
-    protected String addTable(String sql) {
-        throw new UnsupportedOperationException(DATABASE_ACCESS_ATTEMPT_EXCEPTION_MESSAGE);
     }
 }

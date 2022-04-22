@@ -20,7 +20,7 @@ public class SquareDto {
     }
 
     public static SquareDto ofOccupied(Piece piece) {
-        String pieceDisplay = PieceDisplayUtil.toWebDisplay(piece);
+        String pieceDisplay = PieceDisplayUtil.toDisplay(piece);
         return new SquareDto(pieceDisplay, toPieceColorIfWhite(piece));
     }
 

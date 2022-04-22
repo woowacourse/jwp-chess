@@ -1,9 +1,8 @@
-package chess;
+package chess.controller;
 
-import chess.domain.ChessGame;
 import chess.domain.GameResult;
 import chess.domain.piece.Color;
-import chess.service.DBService;
+import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ResultController {
-    private final chess.service.DBService DBService;
+    private final ChessService DBService;
 
-    public ResultController() {
-        this.DBService = new DBService();
+    public ResultController(final ChessService chessService) {
+        this.DBService = chessService;
     }
 
     @GetMapping("/status")

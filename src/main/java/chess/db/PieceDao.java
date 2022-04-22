@@ -7,6 +7,7 @@ import chess.domain.position.Column;
 import chess.domain.position.Row;
 import chess.domain.position.Square;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,20 +17,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Repository
 public class PieceDao {
     private static final String ERROR_MESSAGE_NO_SAVED_GAME = "헉.. 저장 안한거 아냐? 그런 게임은 없어!";
-    private final static String DRIVER = "com.mysql.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://localhost:3306/chess";
-    private static final String USER = "user";
-    private static final String PASSWORD = "password";
-    private org.springframework.jdbc.datasource.DriverManagerDataSource dataSource;
+
     private JdbcTemplate jdbcTemplate;
 
-    public PieceDao() {
-        dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource(URL, USER, PASSWORD);
-        dataSource.setDriverClassName(DRIVER);
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    public PieceDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void save(String gameID) {

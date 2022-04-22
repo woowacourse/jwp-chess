@@ -9,14 +9,16 @@ import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.board.SavedBoardGenerator;
 import chess.domain.position.Square;
+import org.springframework.stereotype.Service;
 
-public class DBService {
+@Service
+public class ChessService {
     private final ChessGameDao chessGameDao;
     private final PieceDao pieceDao;
 
-    public DBService() {
-        this.chessGameDao = new ChessGameDao();
-        this.pieceDao = new PieceDao();
+    public ChessService(final ChessGameDao chessGameDao, final PieceDao pieceDao) {
+        this.chessGameDao = chessGameDao;
+        this.pieceDao = pieceDao;
     }
 
     public ChessGame loadGame(String gameID) {

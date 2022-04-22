@@ -37,6 +37,7 @@ import web.dao.PieceDao;
 import web.dto.ChessGameDto;
 import web.dto.GameStatus;
 import web.dto.PieceDto;
+import web.exception.ChessGameException;
 
 @Service
 public class ChessGameService {
@@ -53,7 +54,7 @@ public class ChessGameService {
         List<PieceDto> pieces = pieceDao.findPieces(chessGameId);
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
         ChessBoard chessBoard = createChessBoard(pieces, chessGameDto);
-        chessBoard.move(movement.getFrom(), movement.getTo());
+        movePiece(chessGameId, movement, chessBoard);
         return updateChessBoard(chessBoard, movement, chessGameDto);
     }
 
@@ -64,6 +65,14 @@ public class ChessGameService {
     private Map<Position, Piece> createBoard(List<PieceDto> pieces) {
         return pieces.stream()
                 .collect(toMap(PieceDto::getPosition, PieceDto::createPiece));
+    }
+
+    private void movePiece(int chessGameId, Movement movement, ChessBoard chessBoard) {
+        try {
+            chessBoard.move(movement.getFrom(), movement.getTo());
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            throw new ChessGameException(chessGameId, e.getMessage());
+        }
     }
 
     private ChessGameDto updateChessBoard(ChessBoard chessBoard, Movement movement, ChessGameDto chessGameDto) {

@@ -1,6 +1,5 @@
 package chess;
 
-import chess.exception.ChessGameException;
 import chess.piece.Color;
 import chess.piece.King;
 import chess.piece.Piece;
@@ -16,7 +15,7 @@ public class ChessBoard {
 
     public ChessBoard(Map<Position, Piece> board, Color currentColor) {
         if (!hasKingEachColor(board)) {
-            throw new ChessGameException("각 색깔 별로 King이 필요합니다.");
+            throw new IllegalArgumentException("각 색깔 별로 King이 필요합니다.");
         }
         this.board = new HashMap<>(board);
         this.currentColor = currentColor;
@@ -34,13 +33,13 @@ public class ChessBoard {
 
     public void move(Position from, Position to) {
         if (isFinished()) {
-            throw new ChessGameException("체스 게임이 종료되었습니다.");
+            throw new IllegalStateException("체스 게임이 종료되었습니다.");
         }
         if (!isCurrentColorPiece(from)) {
-            throw new ChessGameException(String.format("%s 색깔의 기물을 움직일 수 있습니다.", currentColor));
+            throw new IllegalArgumentException(String.format("%s 색깔의 기물을 움직일 수 있습니다.", currentColor));
         }
         if (isSameMovementPosition(from, to) || !isPossibleMovement(from, to) || hasSameColorTargetPiece(from, to)) {
-            throw new ChessGameException(String.format("기물을 %s에서 %s로 이동할 수 없습니다.", from, to));
+            throw new IllegalArgumentException(String.format("기물을 %s에서 %s로 이동할 수 없습니다.", from, to));
         }
         movePickedPiece(from, to);
     }
@@ -56,7 +55,7 @@ public class ChessBoard {
 
     private Piece findPieceByPosition(Position position) {
         if (!board.containsKey(position)) {
-            throw new ChessGameException(String.format("%s에는 기물이 없습니다.", position));
+            throw new IllegalArgumentException(String.format("%s에는 기물이 없습니다.", position));
         }
         return board.get(position);
     }
@@ -105,7 +104,7 @@ public class ChessBoard {
 
     public Color getWinner() {
         if (!isFinished()) {
-            throw new ChessGameException("체스 게임이 종료되지 않았습니다.");
+            throw new IllegalStateException("체스 게임이 종료되지 않았습니다.");
         }
         if (hasKingByColor(getBoard(), Color.WHITE)) {
             return Color.WHITE;

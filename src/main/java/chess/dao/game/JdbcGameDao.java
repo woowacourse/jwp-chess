@@ -55,8 +55,15 @@ public class JdbcGameDao implements GameDao {
             final PreparedStatement statement = connection.prepareStatement(sql);
             statement.setLong(1, id);
             return statement;
-        }, resultSet -> makeChessGame(id, resultSet));
+        }, resultSet -> loadChessGame(id, resultSet));
         return Optional.ofNullable(game);
+    }
+
+    private ChessGame loadChessGame(final Long id, final ResultSet resultSet) throws SQLException {
+        if (!resultSet.next()) {
+            return null;
+        }
+        return makeChessGame(id, resultSet);
     }
 
     @Override
@@ -113,10 +120,6 @@ public class JdbcGameDao implements GameDao {
     }
 
     private ChessGame makeChessGame(final Long id, final ResultSet resultSet) throws SQLException {
-        if (!resultSet.next()) {
-            return null;
-        }
-
         final Member white = memberDao.findById(resultSet.getLong("white_member_id"))
                 .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
         final Member black = memberDao.findById(resultSet.getLong("black_member_id"))

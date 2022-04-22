@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import web.spark.controller.Movement;
 import web.spark.dao.ChessGameDao;
 import web.spark.dao.PieceDao;
@@ -37,6 +39,7 @@ import web.spark.dto.ChessGameDto;
 import web.spark.dto.GameStatus;
 import web.spark.dto.PieceDto;
 
+@Service
 public class ChessGameService {
 
     private final PieceDao pieceDao;

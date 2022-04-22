@@ -61,4 +61,10 @@ public class ChessGameDao {
     public void deleteAll() {
         jdbcTemplate.update("DELETE FROM chess_game");
     }
+
+    public boolean existByName(String name) {
+        int count = jdbcTemplate.queryForObject("SELECT count(*) FROM chess_game WHERE name = ?",
+                Integer.class, name);
+        return count != 0;
+    }
 }

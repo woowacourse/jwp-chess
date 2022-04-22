@@ -3,14 +3,15 @@ package web.spark.controller;
 import chess.Score;
 import chess.piece.Color;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import web.spark.dao.ChessGameDao;
 import web.spark.dto.GameStatus;
 
+@Controller
 public class LobbyController {
 
     private final ChessGameDao chessGameDao;
@@ -19,17 +20,16 @@ public class LobbyController {
         this.chessGameDao = chessGameDao;
     }
 
-    public ModelAndView lobby(Request req, Response res) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("chess-games", chessGameDao.findAll());
-        return new ModelAndView(model, "index.html");
+    @GetMapping("/")
+    public String lobby(Model model) {
+        model.addAttribute("chess-games", chessGameDao.findAll());
+        return "index";
     }
 
-    public ModelAndView createChessGame(Request req, Response res) {
-        String name = req.queryParams("name");
+    @PostMapping("/create-chess-game")
+    public String createChessGame(@RequestParam String name) {
         Score initialScore = new Score(new BigDecimal("38.0"));
         chessGameDao.saveChessGame(name, GameStatus.READY, Color.WHITE, initialScore, initialScore);
-        res.redirect("/");
-        return null;
+        return "redirect:/";
     }
 }

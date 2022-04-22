@@ -27,9 +27,6 @@ public class WebApplication {
         port(8080);
         staticFileLocation("/static");
 
-        get("/", (req, res) -> render(lobbyController.lobby(req, res)));
-        post("/create-chess-game", (req, res) -> render(lobbyController.createChessGame(req, res)));
-
         get("/chess-game", (req, res) -> render(chessGameController.chessGame(req, res)));
         post("/chess-game/move", (req, res) -> render(chessGameController.move(req, res)));
     }

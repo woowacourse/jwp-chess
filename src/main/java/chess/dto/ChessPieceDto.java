@@ -1,7 +1,5 @@
 package chess.dto;
 
-import chess.domain.chesspiece.ChessPiece;
-import chess.domain.position.Position;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -25,11 +23,15 @@ public class ChessPieceDto {
         );
     }
 
-    public Position getPosition() {
-        return Position.from(position);
+    public String getPosition() {
+        return position;
     }
 
-    public ChessPiece getChessPiece() {
-        return ChessPieceMapper.toChessPiece(pieceType, color);
+    public String getPieceType() {
+        return pieceType;
+    }
+
+    public String getColor() {
+        return color;
     }
 }

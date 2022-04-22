@@ -60,4 +60,12 @@ public class Score {
         }
         return whiteScore;
     }
+
+    public double getWhiteScore() {
+        return whiteScore;
+    }
+
+    public double getBlackScore() {
+        return blackScore;
+    }
 }

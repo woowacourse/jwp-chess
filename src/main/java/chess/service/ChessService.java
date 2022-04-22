@@ -11,13 +11,13 @@ import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
 import chess.dto.ChessPieceDto;
+import chess.dto.ChessPieceMapper;
 import chess.dto.CurrentTurnDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.RoomStatusDto;
 import chess.result.EndResult;
 import chess.result.MoveResult;
 import chess.result.StartResult;
-import com.google.gson.Gson;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -29,18 +29,15 @@ public class ChessService {
 
     private final ChessPieceDao chessPieceDao;
     private final RoomDao roomDao;
-    private final Gson gson;
 
     public ChessService(final ChessPieceDao chessPieceDao, final RoomDao roomDao) {
         this.chessPieceDao = chessPieceDao;
         this.roomDao = roomDao;
-        this.gson = new Gson();
     }
 
-    public String findAllPiece(final String roomName) {
+    public List<ChessPieceDto> findAllPiece(final String roomName) {
         checkRoomExist(roomName);
-        final List<ChessPieceDto> allByRoomName = chessPieceDao.findAllByRoomName(roomName);
-        return gson.toJson(allByRoomName);
+        return chessPieceDao.findAllByRoomName(roomName);
     }
 
     public void initPiece(final String roomName) {
@@ -52,7 +49,7 @@ public class ChessService {
         updateRoomStatusTo(roomName, GameStatus.PLAYING);
     }
 
-    public String move(final String roomName, MoveRequestDto requestDto) {
+    public MoveResult move(final String roomName, MoveRequestDto requestDto) {
         checkRoomExist(roomName);
         final ChessGame chessGame = findGameByRoomName(roomName);
         final Position from = requestDto.getFrom();
@@ -62,7 +59,7 @@ public class ChessService {
         updatePosition(roomName, from, to);
         updateRoom(roomName, moveResult.getGameStatus(), moveResult.getCurrentTurn());
 
-        return gson.toJson(moveResult);
+        return moveResult;
     }
 
     private void updatePosition(final String roomName, final Position from, final Position to) {
@@ -70,23 +67,21 @@ public class ChessService {
         chessPieceDao.update(roomName, from, to);
     }
 
-    public String findScore(final String roomName) {
+    public Score findScore(final String roomName) {
         checkRoomExist(roomName);
         final ChessGame chessGame = findGameByRoomName(roomName);
 
-        final Score score = chessGame.calculateScore();
-
-        return gson.toJson(score);
+        return chessGame.calculateScore();
     }
 
-    public String result(final String roomName) {
+    public EndResult result(final String roomName) {
         checkRoomExist(roomName);
         final ChessGame chessGame = findGameByRoomName(roomName);
 
         final EndResult result = chessGame.end();
         updateRoomStatusTo(roomName, GameStatus.END);
 
-        return gson.toJson(result);
+        return result;
     }
 
     private void checkRoomExist(final String roomName) {
@@ -108,10 +103,13 @@ public class ChessService {
         if (dtos.isEmpty()) {
             return ChessBoardFactory.createInitPieceByPosition();
         }
+
         return dtos.stream()
                 .collect(Collectors.toMap(
-                        ChessPieceDto::getPosition,
-                        ChessPieceDto::getChessPiece));
+                        chessPieceDto -> Position.from(chessPieceDto.getPosition()),
+                        chessPieceDto -> ChessPieceMapper.toChessPiece(chessPieceDto.getPieceType(),
+                                chessPieceDto.getColor())
+                ));
     }
 
     private Color initCurrentTurn(final String roomName) {

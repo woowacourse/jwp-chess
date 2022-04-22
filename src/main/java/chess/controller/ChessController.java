@@ -1,8 +1,14 @@
 package chess.controller;
 
+import chess.domain.Score;
+import chess.dto.ChessPieceDto;
 import chess.dto.MoveRequestDto;
+import chess.result.EndResult;
+import chess.result.MoveResult;
 import chess.service.ChessService;
 import chess.service.RoomService;
+import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,8 +41,9 @@ public class ChessController {
     }
 
     @GetMapping("/{roomName}/pieces")
-    public String findPieces(@PathVariable("roomName") final String roomName) {
-        return chessService.findAllPiece(roomName);
+    public ResponseEntity<List<ChessPieceDto>> findPieces(@PathVariable("roomName") final String roomName) {
+        final List<ChessPieceDto> chessPieces = chessService.findAllPiece(roomName);
+        return ResponseEntity.ok(chessPieces);
     }
 
     @PostMapping("/{roomName}/pieces")
@@ -45,14 +52,16 @@ public class ChessController {
     }
 
     @PutMapping("/{roomName}/pieces")
-    public String movePiece(@PathVariable("roomName") final String roomName,
-                            @RequestBody final MoveRequestDto moveRequestDto) {
-        return chessService.move(roomName, moveRequestDto);
+    public ResponseEntity<MoveResult> movePiece(@PathVariable("roomName") final String roomName,
+                                                @RequestBody final MoveRequestDto moveRequestDto) {
+        final MoveResult moveResult = chessService.move(roomName, moveRequestDto);
+        return ResponseEntity.ok(moveResult);
     }
 
     @GetMapping("/{roomName}/scores")
-    public String findScore(@PathVariable("roomName") final String roomName) {
-        return chessService.findScore(roomName);
+    public ResponseEntity<Score> findScore(@PathVariable("roomName") final String roomName) {
+        final Score score = chessService.findScore(roomName);
+        return ResponseEntity.ok(score);
     }
 
     @GetMapping("/{roomName}/turn")
@@ -61,7 +70,8 @@ public class ChessController {
     }
 
     @GetMapping("/{roomName}/result")
-    public String findResult(@PathVariable("roomName") final String roomName) {
-        return chessService.result(roomName);
+    public ResponseEntity<EndResult> findResult(@PathVariable("roomName") final String roomName) {
+        final EndResult endResult = chessService.result(roomName);
+        return ResponseEntity.ok(endResult);
     }
 }

@@ -1,5 +1,6 @@
 package chess;
 
+import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
 import chess.service.ChessService;
@@ -50,5 +51,11 @@ public class ChessSpringController {
     public BoardDto move(@RequestParam(value = "name") String name,
                          @RequestBody MoveDto moveDto) {
         return chessService.move(name, moveDto);
+    }
+
+    @GetMapping("/status")
+    @ResponseBody
+    public Status status(@RequestParam(value = "name") String name) {
+        return chessService.status(name);
     }
 }

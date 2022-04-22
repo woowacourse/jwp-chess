@@ -9,4 +9,12 @@ public class Status {
         this.whiteScore = whiteScore;
         this.blackScore = blackScore;
     }
+
+    public double getWhiteScore() {
+        return whiteScore;
+    }
+
+    public double getBlackScore() {
+        return blackScore;
+    }
 }

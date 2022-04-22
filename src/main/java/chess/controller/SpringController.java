@@ -70,6 +70,23 @@ public class SpringController {
         return modelAndView;
     }
 
+    @GetMapping("/save")
+    public ModelAndView save() {
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+            chessService.save();
+        } catch (IllegalStateException e) {
+            modelAndView.setViewName("redirect:/end");
+            return modelAndView;
+        }
+
+        List<String> chessBoard = chessService.getCurrentChessBoard();
+        modelAndView.addObject("chessboard", chessBoard);
+        modelAndView.setViewName("chess");
+
+        return modelAndView;
+    }
+
     private String makeCommand(String from, String to) {
         return "move " + from + " " + to;
     }

@@ -1,6 +1,7 @@
 let currentClickPosition = '';
 let currentPiece = '';
 let destinationClickPosition = '';
+let isRun = false;
 
 const initMapEvent = () => {
     for (let file = 0; file < 8; file++) {
@@ -104,24 +105,34 @@ const checkEndGame = (isRunning) => {
 }
 
 const load = async () => {
+    isRun = true;
     let chessMap = await fetch('/load');
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
 }
 
 const restartChess = async () => {
+    isRun = true;
     let chessMap = await fetch('/start');
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
 }
 
 const showStatus = async () => {
+    if (!isRun) {
+        alert('먼저 게임을 시작하거나 이어해주세요.');
+        return;
+    }
     let status = await fetch('/status');
     status = await status.json();
     alert(status.scoreStatus);
 }
 
 const showResult = async () => {
+    if (!isRun) {
+        alert('먼저 게임을 시작하거나 이어해주세요.');
+        return;
+    }
     let result = await fetch('/end');
     result = await result.json();
     alert(result.result);

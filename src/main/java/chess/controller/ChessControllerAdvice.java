@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ChessControllerAdvice {
 
     @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
+    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(value = IllegalStateException.class)
+    public ResponseEntity<ErrorResponseDto> handleIllegalStateException(IllegalStateException e) {
         return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
     }
 }

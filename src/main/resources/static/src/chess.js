@@ -7,6 +7,7 @@ let target = "";
 startButton.addEventListener('click', async function () {
     if (startButton.textContent === "Start") {
         let board = startGame();
+        console.log(board)
         await initializeBoard(board);
         startButton.textContent = "End";
         return
@@ -19,32 +20,32 @@ startButton.addEventListener('click', async function () {
 })
 
 async function startGame() {
-    let savedBoard = await fetch("/start")
+    let savedBoard = await fetch("/api/chess/rooms/33")
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         });
     savedBoard = await savedBoard.json();
     gameOver = savedBoard.gameOver;
-    return savedBoard.board;
+    return savedBoard.board.boards;
 }
 
 async function endGame() {
     await getScore()
-    let savedBoard = await fetch("/end")
+    let savedBoard = await fetch("/api/chess/rooms/33")
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         });
     savedBoard = await savedBoard.json();
     gameOver = savedBoard.gameOver;
-    return savedBoard.board;
+    return savedBoard.board.boards;
 }
 
 async function initializeBoard(board) {
-    board.then(res => Object.keys(res).forEach(function (value) {
-        let eachDiv = document.querySelector("#" + value);
-        putPiece(eachDiv, res, value);
+    board.then(res => Object.values(res).forEach(function (value) {
+        let eachDiv = document.querySelector("#" + value.position);
+        putPiece(eachDiv, res, value.piece);
     }))
 }
 
@@ -57,7 +58,7 @@ function putPiece(eachDiv, board, value) {
     img.style.height = '40px';
     img.style.display = 'block';
     img.style.margin = 'auto';
-    img.src = "/images/" + board[value] + ".png";
+    img.src = "/images/" + value + ".png";
     eachDiv.appendChild(img);
 }
 
@@ -83,14 +84,14 @@ function clickMovePosition(e) {
 
 async function movePiece(source, target) {
     const board = await sendMoveInformation(source, target);
-    await updateBoard(board.board);
+    await updateBoard(board.board.boards);
     await checkGameOver(board.gameOver);
 }
 
 async function updateBoard(board) {
-    Object.keys(board).forEach(function (value) {
-        let eachDiv = document.querySelector("#" + value);
-        putPiece(eachDiv, board, value);
+    Object.values(board).forEach(function (value) {
+        let eachDiv = document.querySelector("#" + value.position);
+        putPiece(eachDiv, board, value.piece);
     })
 }
 
@@ -100,7 +101,7 @@ async function sendMoveInformation(source, target) {
         target: target
     }
 
-    let movedBoard = await fetch("/move", {
+    let movedBoard = await fetch("/api/chess/rooms/33/move", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -130,7 +131,7 @@ async function getScore() {
         alert("게임이 시작되지 않아 선택 불가");
         return;
     }
-    let score = await fetch("/status")
+    let score = await fetch("/api/chess/rooms/33/status")
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
@@ -143,6 +144,7 @@ async function getScore() {
 async function handleErrors(response) {
     if (!response.ok) {
         let message = await response.json();
+        console.log(response)
         throw Error(message.errorMessage);
     }
     return response;

@@ -10,7 +10,7 @@
 - [x] Spring MVC gradle 설정
 - [x] Spring JDBC gradle 설정
 - [x] 기존 Spark 환경을 Spring으로 변경
-- [ ] JDBC 템플릿으로 변경
+- [x] JDBC 템플릿으로 변경
 
 ### 질문할 내용
 - ChessService.movePiece 메서드에 DTO를 적용해야할까? 

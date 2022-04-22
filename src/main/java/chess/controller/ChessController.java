@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.model.GameResult;
 import chess.model.dto.MoveDto;
 import chess.model.dto.WebBoardDto;
 import chess.service.ChessService;
@@ -50,5 +51,11 @@ public class ChessController {
     @ResponseBody
     public boolean kingDead() {
         return chessService.isKingDead();
+    }
+
+    @GetMapping("/status")
+    @ResponseBody
+    public GameResult status() {
+        return chessService.getResult();
     }
 }

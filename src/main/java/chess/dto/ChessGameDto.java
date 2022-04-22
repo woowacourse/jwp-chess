@@ -3,7 +3,6 @@ package chess.dto;
 import chess.domain.ChessGame;
 import chess.domain.ChessMap;
 import chess.domain.player.Team;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ChessGameDto {
 

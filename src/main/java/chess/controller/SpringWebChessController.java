@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.BoardDto;
+import chess.dto.ResultDto;
 import chess.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,5 +32,11 @@ public class SpringWebChessController {
     @PostMapping("/end")
     public BoardDto end() {
         return gameService.end();
+    }
+
+    @ResponseBody
+    @GetMapping("/status")
+    public ResultDto status() {
+        return gameService.status();
     }
 }

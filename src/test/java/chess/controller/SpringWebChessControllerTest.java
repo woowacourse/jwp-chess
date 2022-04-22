@@ -44,4 +44,15 @@ class SpringWebChessControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("values.size()", is(64));
     }
+
+    @DisplayName("체스 게임 중 간에 게임점수 데이터가 전송된다.")
+    @Test
+    void status() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/game/status")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("score.size()", is(2));
+    }
 }

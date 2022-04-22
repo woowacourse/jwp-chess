@@ -40,8 +40,8 @@ public class ChessController {
     }
 
     @PostMapping("/{roomName}/pieces")
-    public String createPieces(@PathVariable("roomName") final String roomName) {
-        return chessService.initPiece(roomName);
+    public void createPieces(@PathVariable("roomName") final String roomName) {
+        chessService.initPiece(roomName);
     }
 
     @PutMapping("/{roomName}/pieces")

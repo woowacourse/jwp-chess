@@ -1,13 +1,10 @@
 package chess.service;
 
-import chess.controller.StatusCode;
 import chess.dao.RoomDao;
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.CurrentTurnDto;
-import chess.dto.ErrorResponseDto;
 import chess.dto.RoomStatusDto;
-import chess.exception.SQLQueryException;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
@@ -26,36 +23,23 @@ public class RoomService {
         return roomDao.isExistName(roomName);
     }
 
-    public String createRoom(final String roomName) {
+    public void createRoom(final String roomName) {
         roomDao.save(roomName, GameStatus.READY, Color.WHITE);
-        return null;
     }
 
-    public String deleteRoom(final String roomName) {
-        try {
-            checkRoomExist(roomName);
+    public void deleteRoom(final String roomName) {
+        checkRoomExist(roomName);
 
-            final RoomStatusDto dto = roomDao.findStatusByName(roomName);
-            if (dto.getGameStatus().isEnd()) {
-                roomDao.delete(roomName);
-            }
-
-            return null;
-        } catch (IllegalArgumentException | SQLQueryException e) {
-            final ErrorResponseDto dto = ErrorResponseDto.of(e, StatusCode.BAD_REQUEST);
-            return gson.toJson(dto);
+        final RoomStatusDto dto = roomDao.findStatusByName(roomName);
+        if (dto.getGameStatus().isEnd()) {
+            roomDao.delete(roomName);
         }
     }
 
     public String findCurrentTurn(final String roomName) {
-        try {
-            checkRoomExist(roomName);
-            final CurrentTurnDto dto = roomDao.findCurrentTurnByName(roomName);
-            return gson.toJson(dto);
-        } catch (IllegalArgumentException | SQLQueryException e) {
-            final ErrorResponseDto dto = ErrorResponseDto.of(e, StatusCode.BAD_REQUEST);
-            return gson.toJson(dto);
-        }
+        checkRoomExist(roomName);
+        final CurrentTurnDto dto = roomDao.findCurrentTurnByName(roomName);
+        return gson.toJson(dto);
     }
 
     private void checkRoomExist(final String roomName) {

@@ -1,6 +1,5 @@
 package chess.service;
 
-import chess.controller.StatusCode;
 import chess.dao.ChessPieceDao;
 import chess.dao.RoomDao;
 import chess.domain.ChessGame;
@@ -13,10 +12,8 @@ import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
 import chess.dto.ChessPieceDto;
 import chess.dto.CurrentTurnDto;
-import chess.dto.ErrorResponseDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.RoomStatusDto;
-import chess.exception.SQLQueryException;
 import chess.result.EndResult;
 import chess.result.MoveResult;
 import chess.result.StartResult;
@@ -41,48 +38,31 @@ public class ChessService {
     }
 
     public String findAllPiece(final String roomName) {
-        try {
-            checkRoomExist(roomName);
-            final List<ChessPieceDto> allByRoomName = chessPieceDao.findAllByRoomName(roomName);
-            return gson.toJson(allByRoomName);
-        } catch (IllegalArgumentException | SQLQueryException e) {
-            final ErrorResponseDto dto = ErrorResponseDto.of(e, StatusCode.NOT_FOUND);
-            return gson.toJson(dto);
-        }
+        checkRoomExist(roomName);
+        final List<ChessPieceDto> allByRoomName = chessPieceDao.findAllByRoomName(roomName);
+        return gson.toJson(allByRoomName);
     }
 
-    public String initPiece(final String roomName) {
-        try {
-            checkRoomExist(roomName);
-            final ChessGame chessGame = findGameByRoomName(roomName);
+    public void initPiece(final String roomName) {
+        checkRoomExist(roomName);
+        final ChessGame chessGame = findGameByRoomName(roomName);
 
-            final StartResult startResult = chessGame.start();
-            updateChessPiece(roomName, startResult.getPieceByPosition());
-            updateRoomStatusTo(roomName, GameStatus.PLAYING);
-
-            return null;
-        } catch (IllegalArgumentException | SQLQueryException e) {
-            final ErrorResponseDto dto = ErrorResponseDto.of(e, StatusCode.NOT_FOUND);
-            return gson.toJson(dto);
-        }
+        final StartResult startResult = chessGame.start();
+        updateChessPiece(roomName, startResult.getPieceByPosition());
+        updateRoomStatusTo(roomName, GameStatus.PLAYING);
     }
 
     public String move(final String roomName, MoveRequestDto requestDto) {
-        try {
-            checkRoomExist(roomName);
-            final ChessGame chessGame = findGameByRoomName(roomName);
-            final Position from = requestDto.getFrom();
-            final Position to = requestDto.getTo();
+        checkRoomExist(roomName);
+        final ChessGame chessGame = findGameByRoomName(roomName);
+        final Position from = requestDto.getFrom();
+        final Position to = requestDto.getTo();
 
-            final MoveResult moveResult = chessGame.move(from, to);
-            updatePosition(roomName, from, to);
-            updateRoom(roomName, moveResult.getGameStatus(), moveResult.getCurrentTurn());
+        final MoveResult moveResult = chessGame.move(from, to);
+        updatePosition(roomName, from, to);
+        updateRoom(roomName, moveResult.getGameStatus(), moveResult.getCurrentTurn());
 
-            return gson.toJson(moveResult);
-        } catch (IllegalArgumentException | SQLQueryException e) {
-            final ErrorResponseDto dto = ErrorResponseDto.of(e, StatusCode.BAD_REQUEST);
-            return gson.toJson(dto);
-        }
+        return gson.toJson(moveResult);
     }
 
     private void updatePosition(final String roomName, final Position from, final Position to) {
@@ -91,32 +71,22 @@ public class ChessService {
     }
 
     public String findScore(final String roomName) {
-        try {
-            checkRoomExist(roomName);
-            final ChessGame chessGame = findGameByRoomName(roomName);
+        checkRoomExist(roomName);
+        final ChessGame chessGame = findGameByRoomName(roomName);
 
-            final Score score = chessGame.calculateScore();
+        final Score score = chessGame.calculateScore();
 
-            return gson.toJson(score);
-        } catch (IllegalArgumentException | SQLQueryException e) {
-            final ErrorResponseDto dto = ErrorResponseDto.of(e, StatusCode.BAD_REQUEST);
-            return gson.toJson(dto);
-        }
+        return gson.toJson(score);
     }
 
     public String result(final String roomName) {
-        try {
-            checkRoomExist(roomName);
-            final ChessGame chessGame = findGameByRoomName(roomName);
+        checkRoomExist(roomName);
+        final ChessGame chessGame = findGameByRoomName(roomName);
 
-            final EndResult result = chessGame.end();
-            updateRoomStatusTo(roomName, GameStatus.END);
+        final EndResult result = chessGame.end();
+        updateRoomStatusTo(roomName, GameStatus.END);
 
-            return gson.toJson(result);
-        } catch (IllegalArgumentException | SQLQueryException e) {
-            final ErrorResponseDto dto = ErrorResponseDto.of(e, StatusCode.BAD_REQUEST);
-            return gson.toJson(dto);
-        }
+        return gson.toJson(result);
     }
 
     private void checkRoomExist(final String roomName) {

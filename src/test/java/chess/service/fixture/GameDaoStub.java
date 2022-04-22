@@ -7,8 +7,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class GameDaoStub extends GameDao {
 
-    private static final String DATABASE_ACCESS_ATTEMPT_EXCEPTION_MESSAGE = "테스트 더블에서 game 테이블에 접근시도하였습니다.";
-
     private int autoIncrementId = 3;
     private final Map<Integer, Boolean> repository = new HashMap<>() {{
         put(1, true);
@@ -48,10 +46,5 @@ public class GameDaoStub extends GameDao {
                 .stream()
                 .filter(value -> value)
                 .count();
-    }
-
-    @Override
-    protected String addTable(String sql) {
-        throw new UnsupportedOperationException(DATABASE_ACCESS_ATTEMPT_EXCEPTION_MESSAGE);
     }
 }

@@ -16,8 +16,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @JdbcTest
 class EventDaoTest {
 
-    private static final String TEST_TABLE = "event_test";
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -28,17 +26,12 @@ class EventDaoTest {
 
     @BeforeEach
     void setUp() {
-        dao = new EventDao(namedParameterJdbcTemplate) {
-            @Override
-            protected String addTable(String sql) {
-                return String.format(sql, TEST_TABLE);
-            }
-        };
-        jdbcTemplate.execute("DROP TABLE event_test IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE event_test(game_id  BIGINT NOT NULL, "
+        dao = new EventDao(namedParameterJdbcTemplate);
+        jdbcTemplate.execute("DROP TABLE event IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE event(game_id  BIGINT NOT NULL, "
                 + "type VARCHAR(20) NOT NULL, description VARCHAR(20))");
 
-        jdbcTemplate.execute("INSERT INTO event_test (game_id, type, description) "
+        jdbcTemplate.execute("INSERT INTO event (game_id, type, description) "
                 + "VALUES (1, 'MOVE', 'a2 a4'), (1, 'MOVE', 'a7 a5'), (2, 'MOVE', 'a2 a3')");
     }
 

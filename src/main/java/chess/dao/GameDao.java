@@ -10,8 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GameDao {
 
-    private static final String TABLE_NAME = "game";
-
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public GameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -19,14 +17,14 @@ public class GameDao {
     }
 
     public int saveAndGetGeneratedId() {
-        final String sql = addTable("INSERT INTO %s VALUES ()");
+        final String sql = "INSERT INTO game VALUES ()";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(sql, new EmptySqlParameterSource(), keyHolder);
         return keyHolder.getKey().intValue();
     }
 
     public void finishGame(int gameId) {
-        final String sql = addTable("UPDATE %s SET running = false WHERE id = :game_id");
+        final String sql = "UPDATE game SET running = false WHERE id = :game_id";
         MapSqlParameterSource paramSource = new MapSqlParameterSource();
         paramSource.addValue("game_id", gameId);
 
@@ -34,7 +32,7 @@ public class GameDao {
     }
 
     public boolean checkById(int gameId) {
-        final String sql = addTable("SELECT COUNT(*) FROM %s WHERE id = :game_id");
+        final String sql = "SELECT COUNT(*) FROM game WHERE id = :game_id";
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
         int existingGameCount = namedParameterJdbcTemplate.queryForObject(sql, paramSource, Integer.class);
@@ -42,16 +40,12 @@ public class GameDao {
     }
 
     public int countAll() {
-        final String sql = addTable("SELECT COUNT(*) FROM %s");
+        final String sql = "SELECT COUNT(*) FROM game";
         return namedParameterJdbcTemplate.queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
     }
 
     public int countRunningGames() {
-        final String sql = addTable("SELECT COUNT(*) FROM %s WHERE running = true");
+        final String sql = "SELECT COUNT(*) FROM game WHERE running = true";
         return namedParameterJdbcTemplate.queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
-    }
-
-    protected String addTable(String sql) {
-        return String.format(sql, TABLE_NAME);
     }
 }

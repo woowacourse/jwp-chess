@@ -13,8 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @JdbcTest
 class GameDaoTest {
 
-    private static final String TEST_TABLE = "game_test";
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -25,18 +23,14 @@ class GameDaoTest {
 
     @BeforeEach
     void setUp() {
-        dao = new GameDao(namedParameterJdbcTemplate) {
-            @Override
-            protected String addTable(String sql) {
-                return String.format(sql, TEST_TABLE);
-            }
-        };
-        jdbcTemplate.execute("DROP TABLE game_test IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE game_test("
+        dao = new GameDao(namedParameterJdbcTemplate);
+
+        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE game("
                 + "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
                 + "running BOOLEAN NOT NULL DEFAULT true)");
 
-        jdbcTemplate.execute("INSERT INTO game_test (id, running) "
+        jdbcTemplate.execute("INSERT INTO game (id, running) "
                 + "VALUES (1, true), (2, false)");
     }
 
@@ -52,7 +46,7 @@ class GameDaoTest {
         dao.finishGame(1);
 
         boolean actual = jdbcTemplate.queryForObject(
-                "SELECT running FROM game_test WHERE id = 1", Boolean.class);
+                "SELECT running FROM game WHERE id = 1", Boolean.class);
 
         assertThat(actual).isFalse();
     }

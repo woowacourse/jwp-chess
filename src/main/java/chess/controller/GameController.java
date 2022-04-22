@@ -5,8 +5,6 @@ import chess.domain.event.MoveEvent;
 import chess.dto.CreateGameDto;
 import chess.dto.GameDto;
 import chess.service.ChessService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,10 +50,5 @@ public class GameController {
         GameDto gameDto = chessService.findGame(id);
         modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
         return modelAndView;
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

@@ -13,12 +13,12 @@ public class MoveDto {
         return source;
     }
 
-    public void setSource(String source) {
-        this.source = source;
-    }
-
     public String getTarget() {
         return target;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public void setTarget(String target) {

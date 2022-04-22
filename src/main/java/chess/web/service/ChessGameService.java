@@ -76,13 +76,13 @@ public class ChessGameService {
             chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
             removeAll();
             if (isChessGameEnd(chessGame)) {
-                moveResultDto.setGameOver(true);
+                moveResultDto.setIsGameOver(true);
                 moveResultDto.setWinner(turn);
                 return moveResultDto;
             }
             saveAll(chessGame);
         } catch (IllegalArgumentException e) {
-            moveResultDto.setCanMove(false);
+            moveResultDto.setIsMovable(false);
         }
 
         return moveResultDto;

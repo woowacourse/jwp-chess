@@ -14,20 +14,20 @@ public class MoveResultDto {
         return isMovable;
     }
 
-    public void setCanMove(boolean canMove) {
-        this.isMovable = canMove;
-    }
-
     public boolean getIsGameOver() {
         return isGameOver;
     }
 
-    public void setGameOver(boolean gameOver) {
-        isGameOver = gameOver;
-    }
-
     public String getWinner() {
         return winner;
+    }
+
+    public void setIsMovable(boolean isMovable) {
+        this.isMovable = isMovable;
+    }
+
+    public void setIsGameOver(boolean gameOver) {
+        isGameOver = gameOver;
     }
 
     public void setWinner(String winner) {

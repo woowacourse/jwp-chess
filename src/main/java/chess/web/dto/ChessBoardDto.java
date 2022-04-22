@@ -13,12 +13,12 @@ public class ChessBoardDto {
         return position;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
     public String getPiece() {
         return piece;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public void setPiece(String piece) {

@@ -1,19 +1,16 @@
 package chess.dao;
 
+import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-import java.util.Map;
-import org.springframework.stereotype.Repository;
 
 public interface SquareDao {
 
-    void save(Position position, Piece piece);
+    void insert(Position position, Piece piece);
 
-    void insert2(Position position, Piece piece);
+    Board createBoard();
 
-    Map<String, String> find();
+    int delete();
 
-    Piece find(Position position);
-
-    void delete();
+    int update(Position position, Piece piece);
 }

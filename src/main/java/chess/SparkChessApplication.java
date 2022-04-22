@@ -19,7 +19,7 @@ public class SparkChessApplication {
         DataSource dataSource = initConnectionInfo();
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         GameService gameService = new GameService(
-                new GameRepositoryImpl(new SquareDaoImpl(dataSource, jdbcTemplate), new StateDaoImpl(dataSource)));
+                new GameRepositoryImpl(new SquareDaoImpl(jdbcTemplate), new StateDaoImpl(jdbcTemplate)));
         WebChessController webChessController = new WebChessController(gameService);
         webChessController.run();
     }

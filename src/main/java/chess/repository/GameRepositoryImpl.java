@@ -21,19 +21,22 @@ public class GameRepositoryImpl implements GameRepository {
     }
 
     public void initGameData(State state) {
-        stateDao.save(state);
-        fromBoard(state.getBoard());
+        deleteGameData();
+        stateDao.insert(state);
+        insertBoard(state.getBoard());
     }
 
     public void saveGameData(State nextState, MoveDto moveDto) {
-        stateDao.save(nextState);
+        Board board = squareDao.createBoard();
+        State nowState = stateDao.find(board);
+        stateDao.update(nowState, nextState);
 
         String source = moveDto.getSource();
         String target = moveDto.getTarget();
         Map<Position, Piece> squares = nextState.getBoard();
 
-        squareDao.save(Position.from(source), squares.get(Position.from(source)));
-        squareDao.save(Position.from(target), squares.get(Position.from(target)));
+        squareDao.update(Position.from(source), squares.get(Position.from(source)));
+        squareDao.update(Position.from(target), squares.get(Position.from(target)));
     }
 
     public void deleteGameData() {
@@ -42,24 +45,16 @@ public class GameRepositoryImpl implements GameRepository {
     }
 
     public Board getBoard() {
-        return toBoard(squareDao.find());
+        return squareDao.createBoard();
     }
 
     public State getState() {
-        Board board = toBoard(squareDao.find());
+        Board board = squareDao.createBoard();
         return stateDao.find(board);
     }
 
-    private void fromBoard(Map<Position, Piece> board) {
+    private void insertBoard(Map<Position, Piece> board) {
         board.keySet()
-                .forEach(position -> squareDao.save(position, board.get(position)));
-    }
-
-    private Board toBoard(Map<String, String> squares) {
-        Map<Position, Piece> board = new HashMap<>();
-        for (String key : squares.keySet()) {
-            board.put(Position.from(key), Piece.getPiece(squares.get(key)));
-        }
-        return Board.from(board);
+                .forEach(position -> squareDao.insert(position, board.get(position)));
     }
 }

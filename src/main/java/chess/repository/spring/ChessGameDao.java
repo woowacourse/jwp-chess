@@ -2,7 +2,6 @@ package chess.repository.spring;
 
 import chess.repository.entity.ChessGameEntity;
 import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,12 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ChessGameDao {
 
-    private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ChessGameDao(JdbcTemplate jdbcTemplate,
-                        NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ChessGameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 

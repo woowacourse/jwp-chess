@@ -1,13 +1,13 @@
 package chess.service;
 
-import chess.repository.spring.BoardDao;
-import chess.repository.spring.ChessGameDao;
-import chess.repository.entity.BoardEntity;
-import chess.repository.entity.ChessGameEntity;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameSwitch;
 import chess.domain.game.Turn;
 import chess.domain.piece.Team;
+import chess.repository.entity.BoardEntity;
+import chess.repository.entity.ChessGameEntity;
+import chess.repository.spring.BoardDao;
+import chess.repository.spring.ChessGameDao;
 import chess.service.util.BoardEntitiesToBoardConvertor;
 import java.util.ArrayList;
 import java.util.List;

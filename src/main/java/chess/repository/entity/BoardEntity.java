@@ -38,7 +38,6 @@ public class BoardEntity {
         pieceTeamValue = piece.getTeam().getValue();
     }
 
-
     public static List<BoardEntity> generateBoardEntities(final String name, final Map<Position, Piece> board) {
         List<BoardEntity> boardEntities = new ArrayList<>();
         for (Position position : board.keySet()) {

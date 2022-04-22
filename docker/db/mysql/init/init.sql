@@ -4,7 +4,7 @@ create table chess.chess_game
     name               varchar(20) not null unique,
     is_on              bool        not null,
     team_value_of_turn varchar(20) not null
-);
+)
 
 create table chess.board
 (

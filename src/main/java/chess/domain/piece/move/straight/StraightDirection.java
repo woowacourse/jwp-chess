@@ -65,7 +65,7 @@ public enum StraightDirection implements Direction {
     }
 
     public static List<StraightDirection> getDiagonal() {
-        return List.of(NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHEAST);
+        return List.of(NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST);
     }
 
     public static List<StraightDirection> getAll() {

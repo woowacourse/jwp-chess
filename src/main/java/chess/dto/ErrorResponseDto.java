@@ -1,18 +1,14 @@
 package chess.dto;
 
-import chess.controller.StatusCode;
-
 public class ErrorResponseDto {
 
-    private final String errorMessage;
-    private final StatusCode statusCode;
+    private final String message;
 
-    private ErrorResponseDto(final String errorMessage, final StatusCode statusCode) {
-        this.errorMessage = errorMessage;
-        this.statusCode = statusCode;
+    public ErrorResponseDto(final String message) {
+        this.message = message;
     }
 
-    public static ErrorResponseDto of(final Exception e, final StatusCode statusCode) {
-        return new ErrorResponseDto(e.getMessage(), statusCode);
+    public String getMessage() {
+        return message;
     }
 }

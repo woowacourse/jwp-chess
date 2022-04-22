@@ -229,17 +229,17 @@
         const pathName = window.location.pathname;
         await fetch(`${pathName}/pieces`, {
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             method: "PUT",
             body: JSON.stringify({from: `${from}`, to: `${to}`})
         })
-            .then(res => res.json())
-            .then(dto => {
-                if (dto.error !== undefined) {
-                    document.getElementById("error").innerText = dto.error;
-                }
-            });
+                .then(res => {
+                    if (!res.ok) {
+                        res.json()
+                        .then(dto => document.getElementById("error").innerText = dto.message);
+                    }
+                });
 
         fetchPieces();
         fetchScores();
@@ -250,26 +250,29 @@
         const pathName = window.location.pathname;
 
         fetch(`${pathName}/result`)
-            .then(res => res.json())
-            .then(dto => {
-                if (dto.error !== undefined) {
-                    document.getElementById("error").innerText = dto.error;
-                    return;
-                }
-                let winColor = "";
-                if (dto.score.whiteScore > dto.score.blackScore) {
-                    winColor = "white";
-                } else if (dto.score.whiteScore < dto.score.blackScore) {
-                    winColor = "black";
-                } else {
-                    winColor = "draw";
-                }
-                let element = document.getElementById(winColor);
-                if (winColor !== "draw") {
-                    element = document.getElementById(winColor + "_win");
-                }
-                element.style.visibility = "visible";
-            })
+                .then(res => {
+                    if (!res.ok) {
+                        res.json()
+                                .then(dto => document.getElementById("error").innerText = dto.message);
+                        return;
+                    }
+                    return res.json();
+                })
+                .then(dto => {
+                    let winColor = "";
+                    if (dto.score.whiteScore > dto.score.blackScore) {
+                        winColor = "white";
+                    } else if (dto.score.whiteScore < dto.score.blackScore) {
+                        winColor = "black";
+                    } else {
+                        winColor = "draw";
+                    }
+                    let element = document.getElementById(winColor);
+                    if (winColor !== "draw") {
+                        element = document.getElementById(winColor + "_win");
+                    }
+                    element.style.visibility = "visible";
+                });
     }
 
     function exitRoom() {
@@ -283,11 +286,11 @@
         clearBoard();
 
         fetch(`${pathName}/pieces`)
-            .then(res => res.json())
-            .then(dtos => dtos.forEach(dto => {
-                const element = document.getElementById(dto.position);
-                element.innerHTML = `<img src=/images/${dto.pieceType}_${dto.color.toLocaleLowerCase()}.png id=${dto.position} alt="piece" height="80px" width="80px" style="padding: 5px"/>`;
-            }));
+                .then(res => res.json())
+                .then(dtos => dtos.forEach(dto => {
+                    const element = document.getElementById(dto.position);
+                    element.innerHTML = `<img src=/images/${dto.pieceType}_${dto.color.toLocaleLowerCase()}.png id=${dto.position} alt="piece" height="80px" width="80px" style="padding: 5px"/>`;
+                }));
     }
 
 
@@ -295,30 +298,33 @@
         const pathName = window.location.pathname;
 
         fetch(`${pathName}/scores`)
-            .then(res => res.json())
-            .then(dto => {
-                if (dto.error !== undefined) {
-                    document.getElementById("error").innerText = dto.error;
-                    return;
-                }
-                document.getElementById('whiteScore').innerText = `WHITE 점수 : ${dto.whiteScore}`;
-                document.getElementById('blackScore').innerText = `BLACK 점수 : ${dto.blackScore}`;
-            })
+                .then(res => {
+                    if (!res.ok) {
+                        res.json()
+                                .then(dto => document.getElementById("error").innerText = dto.message);
+                        return;
+                    }
+                    return res.json()
+                })
+                .then(dto => {
+                    document.getElementById('whiteScore').innerText = `WHITE 점수 : ${dto.whiteScore}`;
+                    document.getElementById('blackScore').innerText = `BLACK 점수 : ${dto.blackScore}`;
+                })
     }
 
     function fetchTurn() {
         const pathName = window.location.pathname;
 
         fetch(`${pathName}/turn`)
-            .then(res => res.json())
-            .then(res => {
-                const turns = document.getElementById("turn");
-                for (let i = 0; i < 2; i++) {
-                    turns.children[i].style.boxShadow = "none";
-                }
-                const currentTurn = document.getElementById(res.currentTurn.toLowerCase() + "_turn");
-                currentTurn.style.boxShadow = "0 0 10px 2px darkred";
-            });
+                .then(res => res.json())
+                .then(res => {
+                    const turns = document.getElementById("turn");
+                    for (let i = 0; i < 2; i++) {
+                        turns.children[i].style.boxShadow = "none";
+                    }
+                    const currentTurn = document.getElementById(res.currentTurn.toLowerCase() + "_turn");
+                    currentTurn.style.boxShadow = "0 0 10px 2px darkred";
+                });
     }
 
     function clearBoard() {

@@ -3,14 +3,19 @@ package chess.controller;
 import chess.domain.Score;
 import chess.dto.ChessPieceDto;
 import chess.dto.CurrentTurnDto;
+import chess.dto.ErrorResponseDto;
 import chess.dto.MoveRequestDto;
 import chess.result.EndResult;
 import chess.result.MoveResult;
 import chess.service.ChessService;
 import chess.service.RoomService;
 import java.util.List;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,5 +80,10 @@ public class ChessController {
     public ResponseEntity<EndResult> findResult(@PathVariable("roomName") final String roomName) {
         final EndResult endResult = chessService.result(roomName);
         return ResponseEntity.ok(endResult);
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class, DataAccessException.class, InvalidResultSetAccessException.class})
+    public ResponseEntity<ErrorResponseDto> handle(final Exception e) {
+        return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
     }
 }

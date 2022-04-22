@@ -1,6 +1,6 @@
-package chess.dao.spark;
+package chess.repository.spark;
 
-import chess.dao.entity.ChessGameEntity;
+import chess.repository.entity.ChessGameEntity;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +15,7 @@ public class ChessGameDao {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
             insertStatement.setString(1, chessGameEntity.getName());
-            insertStatement.setBoolean(2, chessGameEntity.isOn());
+            insertStatement.setBoolean(2, chessGameEntity.getIsOn());
             insertStatement.setString(3, chessGameEntity.getTeamValueOfTurn());
             insertStatement.executeUpdate();
         } catch (SQLException e) {

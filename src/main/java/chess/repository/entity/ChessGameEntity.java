@@ -1,4 +1,4 @@
-package chess.dao.entity;
+package chess.repository.entity;
 
 import chess.domain.game.ChessGame;
 
@@ -24,7 +24,7 @@ public class ChessGameEntity {
         return name;
     }
 
-    public boolean isOn() {
+    public boolean getIsOn() {
         return isOn;
     }
 

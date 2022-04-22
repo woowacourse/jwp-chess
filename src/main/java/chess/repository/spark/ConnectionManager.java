@@ -1,4 +1,4 @@
-package chess.dao.spark;
+package chess.repository.spark;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

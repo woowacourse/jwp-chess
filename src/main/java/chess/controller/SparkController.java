@@ -6,6 +6,8 @@ import static spark.Spark.post;
 import static spark.Spark.staticFileLocation;
 
 import chess.domain.piece.Piece;
+import chess.repository.spring.BoardDao;
+import chess.repository.spring.ChessGameDao;
 import chess.service.ChessService;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,15 +22,15 @@ public class SparkController {
     private static final int ROW_INDEX = 1;
 
     public void run() {
-        staticFileLocation("/static");
-        ChessService chessService = new ChessService();
-        getIndexPage(chessService);
-        createChessGame(chessService);
-        deleteChessGame(chessService);
-        getChessGamePage(chessService);
-        movePiece(chessService);
-        resetChessGame(chessService);
-        getException();
+//        staticFileLocation("/static");
+//        ChessService chessService = new ChessService();
+//        getIndexPage(chessService);
+//        createChessGame(chessService);
+//        deleteChessGame(chessService);
+//        getChessGamePage(chessService);
+//        movePiece(chessService);
+//        resetChessGame(chessService);
+//        getException();
     }
 
     private void getIndexPage(final ChessService chessService) {

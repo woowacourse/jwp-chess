@@ -1,6 +1,6 @@
-package chess.dao.spark;
+package chess.repository.spark;
 
-import chess.dao.entity.BoardEntity;
+import chess.repository.entity.BoardEntity;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,10 +16,10 @@ public class BoardDao {
              PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
             for (BoardEntity boardEntity : boardEntities) {
                 insertStatement.setString(1, boardEntity.getName());
-                insertStatement.setString(2, boardEntity.getPosition_column_value());
-                insertStatement.setInt(3, boardEntity.getPosition_row_value());
-                insertStatement.setString(4, boardEntity.getPiece_name());
-                insertStatement.setString(5, boardEntity.getPiece_team_value());
+                insertStatement.setString(2, boardEntity.getPositionColumnValue());
+                insertStatement.setInt(3, boardEntity.getPositionRowValue());
+                insertStatement.setString(4, boardEntity.getPieceName());
+                insertStatement.setString(5, boardEntity.getPieceTeamValue());
                 insertStatement.executeUpdate();
             }
         } catch (SQLException e) {

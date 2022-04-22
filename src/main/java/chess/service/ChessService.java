@@ -1,9 +1,9 @@
 package chess.service;
 
-import chess.dao.spark.BoardDao;
-import chess.dao.spark.ChessGameDao;
-import chess.dao.entity.BoardEntity;
-import chess.dao.entity.ChessGameEntity;
+import chess.repository.spring.BoardDao;
+import chess.repository.spring.ChessGameDao;
+import chess.repository.entity.BoardEntity;
+import chess.repository.entity.ChessGameEntity;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameSwitch;
 import chess.domain.game.Turn;
@@ -16,8 +16,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessService {
 
-    private final ChessGameDao chessGameDao = new ChessGameDao();
-    private final BoardDao boardDao = new BoardDao();
+    private final ChessGameDao chessGameDao;
+    private final BoardDao boardDao;
+
+    public ChessService(ChessGameDao chessGameDao, BoardDao boardDao) {
+        this.chessGameDao = chessGameDao;
+        this.boardDao = boardDao;
+    }
 
     public void createChessGame(final String name) {
         ChessGame chessGame = ChessGame.createBasic(name);
@@ -37,7 +42,7 @@ public class ChessService {
         return new ChessGame(
                 chessGameEntity.getName(),
                 BoardEntitiesToBoardConvertor.convert(boardDao.load(name)),
-                new GameSwitch(chessGameEntity.isOn()),
+                new GameSwitch(chessGameEntity.getIsOn()),
                 new Turn(Team.of(chessGameEntity.getTeamValueOfTurn()))
         );
     }
@@ -49,7 +54,7 @@ public class ChessService {
             ChessGame chessGame = new ChessGame(
                     chessGameEntity.getName(),
                     BoardEntitiesToBoardConvertor.convert(boardDao.load(chessGameEntity.getName())),
-                    new GameSwitch(chessGameEntity.isOn()),
+                    new GameSwitch(chessGameEntity.getIsOn()),
                     new Turn(Team.of(chessGameEntity.getTeamValueOfTurn()))
             );
             chessGames.add(chessGame);

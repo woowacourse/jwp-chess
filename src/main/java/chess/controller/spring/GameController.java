@@ -48,6 +48,18 @@ public class GameController {
         return new ModelAndView("play", model);
     }
 
+    @GetMapping("/{gameId}/result")
+    public ModelAndView renderGameResult(@PathVariable("gameId") final Long gameId) {
+        final ChessGame chessGame = gameService.findByGameId(gameId);
+        final Result result = chessGame.createResult();
+
+        final Map<String, Object> model = new HashMap<>();
+        model.put("winner", result.getWinner().name());
+        model.put("whiteScore", result.getWhiteScore());
+        model.put("blackScore", result.getBlackScore());
+        return new ModelAndView("result", model);
+    }
+
     @PutMapping("/{gameId}/move")
     public ResponseEntity<Long> movePiece(@PathVariable final Long gameId,
                                           @RequestBody final MoveRequestDto moveRequestDto) {
@@ -63,18 +75,6 @@ public class GameController {
             ranks.add(RankDto.toDto(pieces, i));
         }
         return ranks;
-    }
-
-    @GetMapping("/{gameId}/result")
-    public ModelAndView renderGameResult(@PathVariable("gameId") final Long gameId) {
-        final ChessGame chessGame = gameService.findByGameId(gameId);
-        final Result result = chessGame.createResult();
-
-        final Map<String, Object> model = new HashMap<>();
-        model.put("winner", result.getWinner().name());
-        model.put("whiteScore", result.getWhiteScore());
-        model.put("blackScore", result.getBlackScore());
-        return new ModelAndView("result", model);
     }
 
     @GetMapping("/{gameId}/score")

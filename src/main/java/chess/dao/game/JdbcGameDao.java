@@ -48,6 +48,13 @@ public class JdbcGameDao implements GameDao {
         });
     }
 
+    private void savePieces(final Long gameId, final Board board) {
+        final List<Piece> pieces = board.getPieces();
+        for (final Piece piece : pieces) {
+            pieceDao.save(gameId, piece);
+        }
+    }
+
     @Override
     public Optional<ChessGame> findById(final Long id) {
         final String sql = "select id, turn, white_member_id, black_member_id from Game where id = ?";
@@ -81,38 +88,6 @@ public class JdbcGameDao implements GameDao {
         return games;
     }
 
-    @Override
-    public List<ChessGame> findHistoriesByMemberId(final Long memberId) {
-        return findAll().stream()
-                .filter(ChessGame::isEnd)
-                .filter(game -> Objects.equals(game.getBlackId(), memberId)
-                        || Objects.equals(game.getWhiteId(), memberId))
-                .collect(Collectors.toList());
-    }
-
-    private void updateGame(final ChessGame game) {
-        final String sql = "update Game set turn = ? where id = ?";
-        executor.update(connection -> {
-            final PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, game.getTurn().name());
-            statement.setLong(2, game.getId());
-            return statement;
-        });
-        savePieces(game.getId(), game.getBoard());
-    }
-
-    private void movePieces(final ChessGame game) {
-        pieceDao.deletePiecesByGameId(game.getId());
-        savePieces(game.getId(), game.getBoard());
-    }
-
-    private void savePieces(final Long gameId, final Board board) {
-        final List<Piece> pieces = board.getPieces();
-        for (final Piece piece : pieces) {
-            pieceDao.save(gameId, piece);
-        }
-    }
-
     private ChessGame makeChessGame(final Long id, final ResultSet resultSet) throws SQLException {
         final Member white = memberDao.findById(resultSet.getLong("white_member_id"))
                 .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
@@ -121,6 +96,15 @@ public class JdbcGameDao implements GameDao {
         final String rawTurn = resultSet.getString("turn");
         return new ChessGame(id, pieceDao.findBoardByGameId(id), Team.valueOf(rawTurn),
                 new Participant(white, black));
+    }
+
+    @Override
+    public List<ChessGame> findHistoriesByMemberId(final Long memberId) {
+        return findAll().stream()
+                .filter(ChessGame::isEnd)
+                .filter(game -> Objects.equals(game.getBlackId(), memberId)
+                        || Objects.equals(game.getWhiteId(), memberId))
+                .collect(Collectors.toList());
     }
 
     @Override

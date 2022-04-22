@@ -33,16 +33,6 @@ public class JdbcPieceDao implements PieceDao {
         });
     }
 
-    @Override
-    public void deletePiecesByGameId(final Long gameId) {
-        final String deleteSql = "delete from Piece where game_id = ?";
-        executor.delete(connection -> {
-            final PreparedStatement statement = connection.prepareStatement(deleteSql);
-            statement.setLong(1, gameId);
-            return statement;
-        });
-    }
-
     private void setPieceSaveParams(Long gameId,
                                     Piece piece,
                                     PreparedStatement statement) throws SQLException {
@@ -51,6 +41,16 @@ public class JdbcPieceDao implements PieceDao {
         statement.setString(3, piece.getTeam().name());
         statement.setString(4, piece.getPieceType().name());
         statement.setLong(5, gameId);
+    }
+
+    @Override
+    public void deletePiecesByGameId(final Long gameId) {
+        final String deleteSql = "delete from Piece where game_id = ?";
+        executor.delete(connection -> {
+            final PreparedStatement statement = connection.prepareStatement(deleteSql);
+            statement.setLong(1, gameId);
+            return statement;
+        });
     }
 
     @Override
@@ -86,39 +86,6 @@ public class JdbcPieceDao implements PieceDao {
         initBlank(gameId, rawFrom);
     }
 
-    private void initBlank(final Long gameId, final String rawFrom) {
-        final String sql = "update Piece "
-                + "set piece_type = ?, team = ? "
-                + "where game_id = ? and square_file = ? and square_rank = ?";
-
-        final Square from = Square.from(rawFrom);
-        executor.update(connection -> {
-            final PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, PieceType.BLANK.name());
-            statement.setString(2, Team.NONE.name());
-            statement.setLong(3, gameId);
-            statement.setString(4, String.valueOf(from.getFile().getValue()));
-            statement.setString(5, String.valueOf(from.getRank().getValue()));
-            return statement;
-        });
-    }
-
-    private void moveSource(final Long gameId, final Piece source, final String rawTo) {
-        final String sql = "update Piece "
-                + "set piece_type = ?, team = ? "
-                + "where game_id = ? and square_file = ? and square_rank = ?";
-        final Square to = Square.from(rawTo);
-        executor.update(connection -> {
-            final PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, source.getPieceType().name());
-            statement.setString(2, source.getTeam().name());
-            statement.setLong(3, gameId);
-            statement.setString(4, String.valueOf(to.getFile().getValue()));
-            statement.setString(5, String.valueOf(to.getRank().getValue()));
-            return statement;
-        });
-    }
-
     private Piece findPieceByGameIdAndSquare(final Long gameId, final String rawFrom) {
         final String sql = "select square_file, square_rank, team, piece_type "
                 + "from Piece "
@@ -138,6 +105,39 @@ public class JdbcPieceDao implements PieceDao {
             return null;
         }
         return serializePiece(resultSet);
+    }
+
+    private void moveSource(final Long gameId, final Piece source, final String rawTo) {
+        final String sql = "update Piece "
+                + "set piece_type = ?, team = ? "
+                + "where game_id = ? and square_file = ? and square_rank = ?";
+        final Square to = Square.from(rawTo);
+        executor.update(connection -> {
+            final PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, source.getPieceType().name());
+            statement.setString(2, source.getTeam().name());
+            statement.setLong(3, gameId);
+            statement.setString(4, String.valueOf(to.getFile().getValue()));
+            statement.setString(5, String.valueOf(to.getRank().getValue()));
+            return statement;
+        });
+    }
+
+    private void initBlank(final Long gameId, final String rawFrom) {
+        final String sql = "update Piece "
+                + "set piece_type = ?, team = ? "
+                + "where game_id = ? and square_file = ? and square_rank = ?";
+
+        final Square from = Square.from(rawFrom);
+        executor.update(connection -> {
+            final PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, PieceType.BLANK.name());
+            statement.setString(2, Team.NONE.name());
+            statement.setLong(3, gameId);
+            statement.setString(4, String.valueOf(from.getFile().getValue()));
+            statement.setString(5, String.valueOf(from.getRank().getValue()));
+            return statement;
+        });
     }
 
     private Piece serializePiece(final ResultSet resultSet) throws SQLException {

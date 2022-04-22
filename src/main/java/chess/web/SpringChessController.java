@@ -1,11 +1,11 @@
 package chess.web;
 
-import chess.web.dao.BoardDao;
-import chess.web.dao.PieceDao;
+import chess.dao.BoardDao;
+import chess.dao.PieceDao;
 import chess.web.dto.CommendDto;
 import chess.web.dto.RoomDto;
-import chess.web.service.GameService;
-import chess.web.service.RoomService;
+import chess.service.GameService;
+import chess.service.RoomService;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SpringChessController {
 
-    private RoomService roomService;
-    private GameService gameService;
+    private final RoomService roomService;
+    private final GameService gameService;
 
     public SpringChessController(RoomService roomService) {
         this.roomService = roomService;

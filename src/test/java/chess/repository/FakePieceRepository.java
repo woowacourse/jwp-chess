@@ -2,7 +2,7 @@ package chess.repository;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.web.dao.PieceRepository;
+import chess.dao.PieceRepository;
 import chess.web.dto.PieceDto;
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package chess.web.service;
+package chess.service;
 
 import chess.domain.Color;
 import chess.domain.Result;
@@ -6,8 +6,8 @@ import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
 import chess.domain.position.Position;
 import chess.web.PieceFactory;
-import chess.web.dao.BoardRepository;
-import chess.web.dao.PieceRepository;
+import chess.dao.BoardRepository;
+import chess.dao.PieceRepository;
 import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
 import chess.web.dto.GameStateDto;
@@ -30,7 +30,7 @@ public class GameService {
     public BoardDto startNewGame(int roomId) {
         Board board = new Board(new RegularRuleSetup());
 
-        boardRepository.deleteByroom(roomId);
+        boardRepository.deleteByRoom(roomId);
 
         int boardId = boardRepository.save(roomId, getGameStateDto(board));
         saveNewPieces(board, boardId);
@@ -51,7 +51,7 @@ public class GameService {
     }
 
     public BoardDto loadGame(int roomId) {
-        int boardId = boardRepository.getBoardIdByroom(roomId);
+        int boardId = boardRepository.getBoardIdByRoom(roomId);
         Board board = loadBoard(boardId);
         board.loadTurn(boardRepository.getTurn(boardId));
         return gameStateAndPieces(boardId);

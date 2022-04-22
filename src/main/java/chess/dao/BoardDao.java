@@ -1,4 +1,4 @@
-package chess.web.dao;
+package chess.dao;
 
 import chess.domain.Color;
 import chess.web.DBConnector;
@@ -14,12 +14,12 @@ public class BoardDao implements BoardRepository {
     private static final String ERROR_DB_FAILED = "[ERROR] DB 연결에 문제가 발생했습니다.";
 
     @Override
-    public int save(int userId, GameStateDto gameStateDto) {
+    public int save(int roomId, GameStateDto gameStateDto) {
         final String sql = "insert into board (room_id, turn) values (?, ?)";
 
         try (final Connection connection = DBConnector.getConnection();
              final PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setInt(1, userId);
+            statement.setInt(1, roomId);
             statement.setString(2, gameStateDto.getTurn());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
@@ -52,7 +52,7 @@ public class BoardDao implements BoardRepository {
     }
 
     @Override
-    public int getBoardIdByroom(int roomId) {
+    public int getBoardIdByRoom(int roomId) {
         final String sql = "select id from board where room_id = ?";
         int id = 0;
 
@@ -85,7 +85,7 @@ public class BoardDao implements BoardRepository {
     }
 
     @Override
-    public void deleteByroom(int roomId) {
+    public void deleteByRoom(int roomId) {
         final String sql = "delete from board where room_id = ?";
 
         try (final Connection connection = DBConnector.getConnection();

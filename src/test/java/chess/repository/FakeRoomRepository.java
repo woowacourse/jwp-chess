@@ -1,6 +1,6 @@
 package chess.repository;
 
-import chess.web.dao.RoomRepository;
+import chess.dao.RoomRepository;
 import chess.web.dto.RoomDto;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +12,10 @@ public class FakeRoomRepository implements RoomRepository {
     private int autoIncrementId = 0;
 
     @Override
-    public void save(String name) {
+    public int save(String name) {
         autoIncrementId++;
         database.put(autoIncrementId, name);
+        return autoIncrementId;
     }
 
     @Override

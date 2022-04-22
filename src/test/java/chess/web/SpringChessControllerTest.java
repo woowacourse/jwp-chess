@@ -3,7 +3,7 @@ package chess.web;
 import static org.hamcrest.core.StringContains.containsString;
 
 import chess.repository.FakeRoomRepository;
-import chess.web.dao.RoomRepository;
+import chess.dao.RoomRepository;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

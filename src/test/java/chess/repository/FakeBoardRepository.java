@@ -1,7 +1,7 @@
 package chess.repository;
 
 import chess.domain.Color;
-import chess.web.dao.BoardRepository;
+import chess.dao.BoardRepository;
 import chess.web.dto.GameStateDto;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,9 +13,9 @@ public class FakeBoardRepository implements BoardRepository {
     private int autoIncrementId = 0;
 
     @Override
-    public int save(int userId, GameStateDto gameStateDto) {
+    public int save(int roomId, GameStateDto gameStateDto) {
         autoIncrementId++;
-        database.put(autoIncrementId, new BoardData(userId, gameStateDto.getTurn()));
+        database.put(autoIncrementId, new BoardData(roomId, gameStateDto.getTurn()));
         return autoIncrementId;
     }
 
@@ -25,7 +25,7 @@ public class FakeBoardRepository implements BoardRepository {
     }
 
     @Override
-    public int getBoardIdByroom(int roomId) {
+    public int getBoardIdByRoom(int roomId) {
         return findBoardId(roomId)
                 .orElseThrow(IllegalArgumentException::new);
     }
@@ -43,7 +43,7 @@ public class FakeBoardRepository implements BoardRepository {
     }
 
     @Override
-    public void deleteByroom(int roomId) {
+    public void deleteByRoom(int roomId) {
         findBoardId(roomId).ifPresent(database::remove);
     }
 

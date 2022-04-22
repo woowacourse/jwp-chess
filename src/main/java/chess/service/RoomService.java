@@ -1,6 +1,6 @@
-package chess.web.service;
+package chess.service;
 
-import chess.web.dao.RoomRepository;
+import chess.dao.RoomRepository;
 import chess.web.dto.RoomDto;
 import java.util.Optional;
 import org.springframework.stereotype.Service;

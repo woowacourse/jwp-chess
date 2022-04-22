@@ -1,6 +1,7 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.dto.request.MoveRequestDto;
@@ -60,6 +61,17 @@ class ChessServiceTest {
         );
     }
 
+    @DisplayName("종료된 방에 입장을 요청하여 에러가 발생한다.")
+    @Test
+    void enterRoomException() {
+        final Long id = createTestRoom("체스 초보만").getId();
+        chessService.endRoom(id);
+
+        assertThatThrownBy(() -> chessService.enterRoom(id))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("[ERROR] 이미 종료된 게임입니다.");
+    }
+
     @DisplayName("a2의 기물을 a4로 이동한다.")
     @Test
     void move() {
@@ -74,6 +86,17 @@ class ChessServiceTest {
         );
     }
 
+    @DisplayName("종료된 방에 이동을 요청하여 에러가 발생한다.")
+    @Test
+    void moveException() {
+        final Long id = createTestRoom("체스 초보만").getId();
+        chessService.endRoom(id);
+
+        assertThatThrownBy(() -> chessService.move(id, new MoveRequestDto("a2", "a4")))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("[ERROR] 이미 종료된 게임입니다.");
+    }
+
     @DisplayName("현재 방의 체스 게임을 종료한다.")
     @Test
     void end() {
@@ -81,6 +104,17 @@ class ChessServiceTest {
         chessService.endRoom(id);
         final RoomsResponseDto rooms = chessService.findRooms();
         assertThat(rooms.getRoomResponseDtos()).hasSize(0);
+    }
+
+    @DisplayName("종료된 방에 다시 종료를 요청하여 에러가 발생한다.")
+    @Test
+    void endException() {
+        final Long id = createTestRoom("체스 초보만").getId();
+        chessService.endRoom(id);
+
+        assertThatThrownBy(() -> chessService.endRoom(id))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }
 
     private RoomResponseDto createTestRoom(final String roomName) {

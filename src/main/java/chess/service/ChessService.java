@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ChessService {
 
@@ -52,12 +54,14 @@ public class ChessService {
 
     public GameResponseDto enterRoom(final Long roomId) {
         final RoomEntity room = roomRepository.findById(roomId);
+        validateGameOver(room);
         final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
         return GameResponseDto.of(room, BoardsDto.of(boards));
     }
 
     public GameResponseDto move(final Long id, final MoveRequestDto moveRequestDto) {
         final RoomEntity room = roomRepository.findById(id);
+        validateGameOver(room);
         final List<BoardEntity> boardEntity = boardRepository.findBoardByRoomId(id);
 
         final ChessGame chessGame = new ChessGame(toBoard(boardEntity), new Turn(Team.of(room.getTeam())));
@@ -74,11 +78,11 @@ public class ChessService {
 
         final String turnAfterMove = chessGame.getCurrentTurn().getValue();
         roomRepository.updateTeam(id, turnAfterMove);
-        checkGameOver(id, chessGame);
+        updateGameOver(id, chessGame);
         return GameResponseDto.of(roomRepository.findById(id), BoardsDto.of(boardRepository.findBoardByRoomId(id)));
     }
 
-    private void checkGameOver(final Long id, final ChessGame chessGame) {
+    private void updateGameOver(final Long id, final ChessGame chessGame) {
         if (!chessGame.isOn()) {
             roomRepository.updateGameOver(id);
         }
@@ -92,7 +96,7 @@ public class ChessService {
         return new Board(board);
     }
 
-
+    @Transactional(readOnly = true)
     public RoomsResponseDto findRooms() {
         final List<RoomEntity> rooms = roomRepository.findRooms();
         return RoomsResponseDto.of(rooms);
@@ -100,10 +104,13 @@ public class ChessService {
 
     public void endRoom(final Long id) {
         final RoomEntity room = roomRepository.findById(id);
+        validateGameOver(room);
+        roomRepository.updateGameOver(id);
+    }
 
+    private void validateGameOver(final RoomEntity room) {
         if (room.isGameOver()) {
             throw new IllegalArgumentException("[ERROR] 이미 종료된 게임입니다.");
         }
-        roomRepository.updateGameOver(id);
     }
 }

@@ -82,7 +82,10 @@
 
         fetch("/move/{{gameId}}", {
             method: "POST",
-            body: `${startPosition},${position}`
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `rawFrom=${startPosition}&rawTo=${position}`
         }).then(response => {
             response.json().then(data => {
                 if (data.statusCode === 400) {

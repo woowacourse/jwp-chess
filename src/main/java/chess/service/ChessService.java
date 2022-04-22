@@ -31,9 +31,9 @@ public class ChessService {
     private final RoomDao roomDao;
     private final Gson gson;
 
-    public ChessService(final ChessPieceDao chessPieceDao) {
+    public ChessService(final ChessPieceDao chessPieceDao, final RoomDao roomDao) {
         this.chessPieceDao = chessPieceDao;
-        this.roomDao = new RoomDao();
+        this.roomDao = roomDao;
         this.gson = new Gson();
     }
 

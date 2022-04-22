@@ -14,8 +14,8 @@ public class RoomService {
     private final RoomDao roomDao;
     private final Gson gson;
 
-    public RoomService() {
-        this.roomDao = new RoomDao();
+    public RoomService(final RoomDao roomDao) {
+        this.roomDao = roomDao;
         this.gson = new Gson();
     }
 

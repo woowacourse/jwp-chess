@@ -1,4 +1,4 @@
-package chess.controller.dto;
+package chess.controller.dto.request;
 
 import chess.domain.Position;
 

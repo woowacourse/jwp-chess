@@ -1,11 +1,11 @@
 package chess.controller;
 
-import chess.controller.dto.ChessGameScoreResponse;
-import chess.controller.dto.ChessGameStatusResponse;
-import chess.controller.dto.ChessGameWinnerResponse;
-import chess.controller.dto.PieceMoveRequest;
-import chess.controller.dto.PieceResponse;
-import chess.controller.dto.PromotionRequest;
+import chess.controller.dto.request.PieceMoveRequest;
+import chess.controller.dto.request.PromotionRequest;
+import chess.controller.dto.response.ChessGameScoreResponse;
+import chess.controller.dto.response.ChessGameStatusResponse;
+import chess.controller.dto.response.ChessGameWinnerResponse;
+import chess.controller.dto.response.PieceResponse;
 import chess.service.ChessGameService;
 import java.net.URI;
 import java.util.List;

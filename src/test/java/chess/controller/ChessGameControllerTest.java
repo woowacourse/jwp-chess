@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.controller.dto.PieceMoveRequest;
-import chess.controller.dto.PromotionRequest;
+import chess.controller.dto.request.PieceMoveRequest;
+import chess.controller.dto.request.PromotionRequest;
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.Position;

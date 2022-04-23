@@ -2,7 +2,7 @@ package chess.controller;
 
 import static org.hamcrest.core.Is.is;
 
-import chess.controller.dto.PieceMoveRequest;
+import chess.controller.dto.request.PieceMoveRequest;
 import chess.dao.ChessGameDao;
 import chess.domain.state.Turn;
 import io.restassured.RestAssured;

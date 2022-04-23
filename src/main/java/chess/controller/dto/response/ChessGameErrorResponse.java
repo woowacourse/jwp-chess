@@ -1,4 +1,4 @@
-package chess.controller.dto;
+package chess.controller.dto.response;
 
 public class ChessGameErrorResponse {
 
@@ -7,7 +7,7 @@ public class ChessGameErrorResponse {
 	private ChessGameErrorResponse() {
 	}
 
-	public ChessGameErrorResponse(String message) {
+	private ChessGameErrorResponse(String message) {
 		this.message = message;
 	}
 

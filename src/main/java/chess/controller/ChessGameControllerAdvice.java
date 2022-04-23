@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.controller.dto.ChessGameErrorResponse;
+import chess.controller.dto.response.ChessGameErrorResponse;
 import java.util.NoSuchElementException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;

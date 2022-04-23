@@ -60,7 +60,7 @@ class PieceDaoTest {
 		Position target = Position.from("a2");
 		pieceDao.savePieces(chessGameId, Map.of(source, new Piece(chessGameId, Color.WHITE, new King())));
 
-		assertThat(pieceDao.updatePiecePosition(source, target)).isEqualTo(1);
+		assertThat(pieceDao.updatePiecePosition(chessGameId, source, target)).isEqualTo(1);
 	}
 
 	@Test
@@ -69,7 +69,7 @@ class PieceDaoTest {
 		Position source = Position.from("a1");
 		pieceDao.savePieces(chessGameId, Map.of(source, new Piece(chessGameId, Color.WHITE, new Pawn(Color.WHITE))));
 
-		assertThat(pieceDao.updatePieceRule(source, new Knight())).isEqualTo(1);
+		assertThat(pieceDao.updatePieceRule(chessGameId, source, new Knight())).isEqualTo(1);
 	}
 
 	@Test
@@ -78,6 +78,6 @@ class PieceDaoTest {
 		Position source = Position.from("a1");
 		pieceDao.savePieces(chessGameId, Map.of(source, new Piece(chessGameId, Color.WHITE, new Pawn(Color.WHITE))));
 
-		assertThat(pieceDao.delete(source)).isEqualTo(1);
+		assertThat(pieceDao.delete(chessGameId, source)).isEqualTo(1);
 	}
 }

@@ -38,8 +38,8 @@ public class ChessGameService {
 		ChessGameState chessGameState = findChessGameState(chessGameId);
 		chessGameState.movePiece(source, target);
 
-		pieceDao.delete(target);
-		pieceDao.updatePiecePosition(source, target);
+		pieceDao.delete(chessGameId, target);
+		pieceDao.updatePiecePosition(chessGameId, source, target);
 		chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
 	}
 
@@ -47,7 +47,7 @@ public class ChessGameService {
 		ChessGameState chessGameState = findChessGameState(chessGameId);
 		Position position = chessGameState.promotion(promotionPiece);
 
-		pieceDao.updatePieceRule(position, promotionPiece.pieceRule());
+		pieceDao.updatePieceRule(chessGameId, position, promotionPiece.pieceRule());
 		chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
 	}
 

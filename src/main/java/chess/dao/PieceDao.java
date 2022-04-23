@@ -54,23 +54,23 @@ public class PieceDao {
 		return new ChessBoard(pieces);
 	}
 
-	public int updatePiecePosition(Position source, Position target) {
+	public int updatePiecePosition(long chessGameId, Position source, Position target) {
 		String sql = "update piece set position_col = ?, position_row = ? "
-				+ "where position_col = ? and position_row = ?";
+				+ "where position_col = ? and position_row = ? and chess_game_id = ?";
 
-		return jdbcTemplate.update(sql, target.column(), target.row(), source.column(), source.row());
+		return jdbcTemplate.update(sql, target.column(), target.row(), source.column(), source.row(), chessGameId);
 	}
 
-	public int updatePieceRule(Position source, PieceRule pieceRule) {
+	public int updatePieceRule(long chessGameId, Position source, PieceRule pieceRule) {
 		String sql = "update piece set type = ? "
-				+ "where position_col = ? and position_row = ?";
+				+ "where position_col = ? and position_row = ? and chess_game_id = ?";
 
-		return jdbcTemplate.update(sql, pieceRule.name(), source.column(), source.row());
+		return jdbcTemplate.update(sql, pieceRule.name(), source.column(), source.row(), chessGameId);
 	}
 
-	public int delete(Position source) {
-		String sql = "delete from piece where position_col = ? and position_row = ?";
+	public int delete(long chessGameId, Position source) {
+		String sql = "delete from piece where position_col = ? and position_row = ? and chess_game_id = ?";
 
-		return jdbcTemplate.update(sql, source.column(), source.row());
+		return jdbcTemplate.update(sql, source.column(), source.row(), chessGameId);
 	}
 }

@@ -8,45 +8,42 @@ import chess.domain.position.Position;
 import chess.dto.ChessGameUpdateDto;
 import chess.dto.PieceDto;
 import chess.exception.ExecuteQueryException;
-import chess.utils.SQLConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ChessGameDao {
 
-    private final Connection connection;
+    private JdbcTemplate jdbcTemplate;
 
-    public ChessGameDao() {
-        this.connection = SQLConnection.getConnection();
+    public ChessGameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<Integer> findChessGameIdByName(final String gameName) {
+    public int findChessGameIdByName(final String gameName) {
         final String sql = "select id from chess_game where name = (?)";
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, gameName);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return Optional.of(resultSet.getInt("id"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return jdbcTemplate.queryForObject(sql, Integer.class, gameName);
+        } catch (DataAccessException e) {
             throw new ExecuteQueryException("체스 게임 정보 불러오는데 실패했습니다.");
         }
-        return Optional.empty();
+    }
+
+    public boolean isDuplicateGameName(final String gameName) {
+        final String sql = "select id from chess_game where name = (?)";
+        try {
+            jdbcTemplate.queryForObject(sql, Integer.class, gameName);
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
     public void createNewChessGame(final ChessGame chessGame, final String gameName) {
         saveChessGame(gameName, chessGame.getTurn());
-        final int chessGameId = findChessGameIdByName(gameName)
-                .orElseThrow(() -> new IllegalArgumentException("해당 이름의 게임이 존재하지 않습니다."));
+        final int chessGameId = findChessGameIdByName(gameName);
         savePieces(chessGame.getCurrentPlayer(), chessGameId);
         savePieces(chessGame.getOpponentPlayer(), chessGameId);
     }
@@ -54,12 +51,8 @@ public class ChessGameDao {
     private void saveChessGame(final String gameName, final Team turn) {
         final String sql = "insert into chess_game (name, turn) values (?, ?)";
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, gameName);
-            preparedStatement.setString(2, turn.getName());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            jdbcTemplate.update(sql, gameName, turn.getName());
+        } catch (DataAccessException e) {
             throw new ExecuteQueryException("게임을 저장할 수 없습니다.");
         }
     }
@@ -67,23 +60,13 @@ public class ChessGameDao {
     public void savePieces(final Player player, final int chessGameId) {
         final String sql = "insert into piece (position, name, team, chess_game_id) values (?, ?, ?, ?)";
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
             final List<Piece> pieces = player.findAll();
-            saveEachPiece(player, preparedStatement, pieces, chessGameId);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            for (Piece piece : pieces) {
+                jdbcTemplate.update(sql, toPositionString(piece.getPosition()), String.valueOf(piece.getName()),
+                        player.getTeamName(), chessGameId);
+            }
+        } catch (DataAccessException e) {
             throw new ExecuteQueryException("체스말 저장에 실패했습니다.");
-        }
-    }
-
-    private void saveEachPiece(final Player player, final PreparedStatement preparedStatement, final List<Piece> pieces,
-            int chessGameId) throws SQLException {
-        for (Piece piece : pieces) {
-            preparedStatement.setString(1, toPositionString(piece.getPosition()));
-            preparedStatement.setString(2, String.valueOf(piece.getName()));
-            preparedStatement.setString(3, player.getTeamName());
-            preparedStatement.setInt(4, chessGameId);
-            preparedStatement.executeUpdate();
         }
     }
 
@@ -94,57 +77,39 @@ public class ChessGameDao {
     }
 
     public ChessGameUpdateDto findChessGame(final int chessGameId) {
-        final String turn = findCurrentTurn(chessGameId)
-                .orElseThrow(() -> new IllegalArgumentException("현재 턴을 확인할 수 없습니다."));
+        final String turn = findCurrentTurn(chessGameId);
         final List<PieceDto> whitePieces = findAllPieceByIdAndTeam(chessGameId, Team.WHITE.getName());
         final List<PieceDto> blackPieces = findAllPieceByIdAndTeam(chessGameId, Team.BLACK.getName());
         return new ChessGameUpdateDto(turn, whitePieces, blackPieces);
     }
 
-    public List<PieceDto> findAllPieceByIdAndTeam(final int chessGameId, final String team) {
-        final String sql = "select * from piece where chess_game_id = (?) and team = (?)";
-        final List<PieceDto> pieces = new ArrayList<>();
-        try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, chessGameId);
-            preparedStatement.setString(2, team);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                final String position = resultSet.getString("position");
-                final String name = resultSet.getString("name");
-                pieces.add(new PieceDto(position, name));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new ExecuteQueryException("체스말 불러오기가 실패했습니다.");
-        }
-        return pieces;
-    }
-
-    private Optional<String> findCurrentTurn(final int chessGameId) {
+    private String findCurrentTurn(final int chessGameId) {
         final String sql = "select turn from chess_game where id = (?)";
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, chessGameId);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                return Optional.ofNullable(resultSet.getString("turn"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return jdbcTemplate.queryForObject(sql, String.class, chessGameId);
+        } catch (DataAccessException e) {
             throw new ExecuteQueryException("현재 턴 정보 불러오기가 실패했습니다.");
         }
-        return Optional.empty();
+    }
+
+    public List<PieceDto> findAllPieceByIdAndTeam(final int chessGameId, final String team) {
+        final String sql = "select * from piece where chess_game_id = (?) and team = (?)";
+        try {
+            return jdbcTemplate.query(sql,
+                    (resultSet, count) -> new PieceDto(
+                            resultSet.getString("position"),
+                            resultSet.getString("name")
+                    ), chessGameId, team);
+        } catch (DataAccessException e) {
+            throw new ExecuteQueryException("체스말 불러오기가 실패했습니다.");
+        }
     }
 
     public void deletePieces(final int chessGameId) {
         final String sql = "delete from piece where chess_game_id = (?)";
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, chessGameId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            jdbcTemplate.update(sql, chessGameId);
+        } catch (DataAccessException e) {
             throw new ExecuteQueryException("체스말을 삭제할 수 없습니다.");
         }
     }
@@ -152,11 +117,8 @@ public class ChessGameDao {
     public void deleteChessGame(final int chessGameId) {
         final String sql = "delete from chess_game where id = (?)";
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, chessGameId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            jdbcTemplate.update(sql, chessGameId);
+        } catch (DataAccessException e) {
             throw new ExecuteQueryException("게임을 삭제할 수 없습니다.");
         }
     }
@@ -164,12 +126,8 @@ public class ChessGameDao {
     public void updateGameTurn(final int gameId, final Team nextTurn) {
         final String sql = "update chess_game set turn = (?) where id = (?)";
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, nextTurn.getName());
-            preparedStatement.setInt(2, gameId);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            jdbcTemplate.update(sql, nextTurn.getName(), gameId);
+        } catch (DataAccessException e) {
             throw new ExecuteQueryException("턴 정보 업데이트에 실패했습니다.");
         }
     }
@@ -183,13 +141,8 @@ public class ChessGameDao {
     private void deletePieceByGameIdAndPositionAndTeam(final int gameId, final String position, final String team) {
         final String sql = "delete from piece where chess_game_id = (?) and position = (?) and team = (?)";
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, gameId);
-            preparedStatement.setString(2, position);
-            preparedStatement.setString(3, team);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            jdbcTemplate.update(sql, gameId, position, team);
+        } catch (DataAccessException e) {
             throw new ExecuteQueryException("해당 위치의 체스말을 삭제할 수 없습니다.");
         }
     }
@@ -198,14 +151,8 @@ public class ChessGameDao {
             final String team) {
         final String sql = "update piece set position = (?) where chess_game_id = (?) and position = (?) and team = (?)";
         try {
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, destination);
-            preparedStatement.setInt(2, gameId);
-            preparedStatement.setString(3, current);
-            preparedStatement.setString(4, team);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            jdbcTemplate.update(sql, destination, gameId, current, team);
+        } catch (DataAccessException e) {
             throw new ExecuteQueryException("체스말 위치 업데이트에 실패했습니다.");
         }
     }

@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-public class SpringWebController {
+public class ChessGameController {
 
     private final ChessGameService chessGameService;
 
-    public SpringWebController(ChessGameService chessGameService) {
+    public ChessGameController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 

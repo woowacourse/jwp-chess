@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dao.SpringChessGameDao;
+import chess.dao.ChessGameDao;
 import chess.domain.ChessGame;
 import chess.domain.GameResult;
 import chess.domain.generator.BlackGenerator;
@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessGameService {
 
-    private final SpringChessGameDao chessGameDao;
+    private final ChessGameDao chessGameDao;
 
-    public ChessGameService(SpringChessGameDao chessGameDao) {
+    public ChessGameService(ChessGameDao chessGameDao) {
         this.chessGameDao = chessGameDao;
     }
 

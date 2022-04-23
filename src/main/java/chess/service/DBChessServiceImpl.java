@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.dao.ChessDao;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
@@ -11,7 +12,9 @@ import chess.dto.PositionDto;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DBChessServiceImpl implements ChessService {
     private final ChessDao chessDao;
 
@@ -41,7 +44,7 @@ public class DBChessServiceImpl implements ChessService {
 
     private Board findBoardByGameId(String gameId) {
         final Map<String, String> boardByGameId = chessDao.getBoardByGameId(gameId);
-        final Color color = Color.fromInt(chessDao.getTurnByGameId(gameId));
+        final Color color = Color.from(chessDao.getTurnByGameId(gameId));
         return BoardFactory.newInstance(boardByGameId, color);
     }
 

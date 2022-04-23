@@ -239,7 +239,7 @@ public class ChessBoardTest {
             ));
             ChessBoard chessBoard = new ChessBoard(() -> pieces);
 
-            assertThatThrownBy(() ->chessBoard.move(new GameCommand("move", "d2", toPosition)))
+            assertThatThrownBy(() -> chessBoard.move(new GameCommand("move", "d2", toPosition)))
                     .isInstanceOf(IllegalStateException.class)
                     .hasMessage(NOT_MOVABLE_EXCEPTION_MESSAGE);
         }

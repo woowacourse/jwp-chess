@@ -32,7 +32,7 @@ public class GameCommandTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 타입의 커맨드는 인자가 하나여야합니다.");
     }
-    
+
     @Test
     @DisplayName("Move 커맨드는 인자가 3개여야합니다.")
     void constructMoveCommandThrowExceptionByArgumentLength() {

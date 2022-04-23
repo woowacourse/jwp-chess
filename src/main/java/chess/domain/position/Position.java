@@ -58,7 +58,7 @@ public class Position {
     private static int parseRowStringToInt(String value) {
         try {
             return Integer.parseInt(getRowString(value));
-        } catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new IllegalArgumentException("행은 숫자가 와야합니다.");
         }
     }

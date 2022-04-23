@@ -1,10 +1,10 @@
 package chess.controller;
 
+import chess.dto.response.ErrorDto;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,11 +65,10 @@ public class ChessController {
         try {
             chessService.movePiece(
                 UpdatePiecePositionDto.of(GAME_ID, movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition()));
+            return CommandResultDto.createSuccess();
         } catch (IllegalStateException e) {
-            return CommandResultDto.of(false, e.getMessage());
+            return CommandResultDto.createFail(e.getMessage());
         }
-
-        return CommandResultDto.of(true, "성공하였습니다.");
     }
 
     // TODO: Exception 으로 catch 하면 안됨
@@ -78,15 +77,15 @@ public class ChessController {
     public CommandResultDto initialize() {
         try {
             chessService.initializeGame(GAME_ID);
+            return CommandResultDto.createSuccess();
         } catch (Exception e) {
-            return CommandResultDto.of(false, e.getMessage());
+            return CommandResultDto.createFail(e.getMessage());
         }
-        return CommandResultDto.of(true, "성공하였습니다.");
     }
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-    public ResponseEntity<String> handle(RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ErrorDto handleException(RuntimeException e) {
+        return new ErrorDto(e.getMessage());
     }
 
     private Map<String, String> boardDtoToRaw(BoardDto boardDto) {

@@ -26,14 +26,14 @@ public class GameDao {
 
     // TODO: implement pagination
     public List<GameEntity> findAll() {
-        final String sql = "SELECT id, name, running FROM game2";
+        final String sql = "SELECT id, name, running FROM game";
 
         List<GameEntity> games = jdbcTemplate.query(sql, new EmptySqlParameterSource(), rowMapper);
         return Collections.unmodifiableList(games);
     }
 
     public GameEntity findById(int gameId) {
-        final String sql = "SELECT id, name, running FROM game2 WHERE id = :game_id";
+        final String sql = "SELECT id, name, running FROM game WHERE id = :game_id";
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
         return getFoundGame(jdbcTemplate.query(sql, paramSource, rowMapper));
@@ -47,7 +47,7 @@ public class GameDao {
     }
 
     public boolean checkById(int gameId) {
-        final String sql = "SELECT COUNT(*) FROM game2 WHERE id = :game_id";
+        final String sql = "SELECT COUNT(*) FROM game WHERE id = :game_id";
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
         int existingGameCount = jdbcTemplate.queryForObject(sql, paramSource, Integer.class);
@@ -55,17 +55,17 @@ public class GameDao {
     }
 
     public int countAll() {
-        final String sql = "SELECT COUNT(*) FROM game2";
+        final String sql = "SELECT COUNT(*) FROM game";
         return jdbcTemplate.queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
     }
 
     public int countRunningGames() {
-        final String sql = "SELECT COUNT(*) FROM game2 WHERE running = true";
+        final String sql = "SELECT COUNT(*) FROM game WHERE running = true";
         return jdbcTemplate.queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
     }
 
     public int saveAndGetGeneratedId(EncryptedAuthCredentials authCredentials) {
-        final String sql = "INSERT INTO game2(name, password) VALUES (:name, :password)";
+        final String sql = "INSERT INTO game(name, password) VALUES (:name, :password)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
@@ -77,7 +77,7 @@ public class GameDao {
     }
 
     public void finishGame(int gameId) {
-        final String sql = "UPDATE game2 SET running = false WHERE id = :game_id";
+        final String sql = "UPDATE game SET running = false WHERE id = :game_id";
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource();
         paramSource.addValue("game_id", gameId);
@@ -85,7 +85,7 @@ public class GameDao {
     }
 
     public void deleteGame(EncryptedAuthCredentials authCredentials) {
-        final String sql = "DELETE FROM game2 WHERE name = :name "
+        final String sql = "DELETE FROM game WHERE name = :name "
                 + "AND password = :password AND running = false";
 
         SqlParameterSource paramSource = new BeanPropertySqlParameterSource(authCredentials);

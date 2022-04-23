@@ -113,7 +113,7 @@ class GameDaoTest {
         dao.finishGame(1);
 
         boolean actual = jdbcTemplate.queryForObject(
-                "SELECT running FROM game2 WHERE id = 1", Boolean.class);
+                "SELECT running FROM game WHERE id = 1", Boolean.class);
 
         assertThat(actual).isFalse();
     }
@@ -127,7 +127,7 @@ class GameDaoTest {
             dao.deleteGame(new EncryptedAuthCredentials("종료된_게임", "encrypted2"));
 
             boolean exists = jdbcTemplate.queryForObject(
-                    "SELECT COUNT(*) FROM game2 WHERE id = 2", Integer.class) > 0;
+                    "SELECT COUNT(*) FROM game WHERE id = 2", Integer.class) > 0;
 
             assertThat(exists).isFalse();
         }

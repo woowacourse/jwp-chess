@@ -97,5 +97,4 @@ public class GameDao {
             throw new RuntimeException(e.getMessage());
         }
     }
-
 }

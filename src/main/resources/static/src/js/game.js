@@ -1,45 +1,43 @@
 const startButton = document.querySelector("#startButton");
+let gameId = new URLSearchParams(window.location.search).get("id")
+
 let gameOver = "";
 
 let source = "";
 let target = "";
 
-startButton.addEventListener('click', async function () {
-    if (startButton.textContent === "Start") {
-        let board = startGame();
-        console.log(board)
-        await initializeBoard(board);
-        startButton.textContent = "End";
-        return
-    }
+window.onload= async function () {
+    let board = startGame();
+    await initializeBoard(board);
+    startButton.textContent = "End";
+}
 
+startButton.addEventListener('click', async function () {
     let board = endGame();
     await initializeBoard(board);
-    startButton.textContent = "Start";
-
+    startButton.disabled = true;
 })
 
 async function startGame() {
-    let savedBoard = await fetch("/api/chess/rooms/33")
+    let savedBoard = await fetch("/api/chess/rooms/" + gameId)
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         });
     savedBoard = await savedBoard.json();
     gameOver = savedBoard.gameOver;
+    document.getElementById("roomName").innerText = "방 제목 : " + savedBoard.name
     return savedBoard.board.boards;
 }
 
 async function endGame() {
     await getScore()
-    let savedBoard = await fetch("/api/chess/rooms/33")
+    let savedBoard = await fetch("/api/chess/rooms/" + gameId,{ method:"DELETE"})
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         });
-    savedBoard = await savedBoard.json();
-    gameOver = savedBoard.gameOver;
-    return savedBoard.board.boards;
+    window.location.href="http://localhost:8080/index.html"
 }
 
 async function initializeBoard(board) {
@@ -101,7 +99,7 @@ async function sendMoveInformation(source, target) {
         target: target
     }
 
-    let movedBoard = await fetch("/api/chess/rooms/33/move", {
+    let movedBoard = await fetch("/api/chess/rooms/" + gameId + "/move", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -131,7 +129,7 @@ async function getScore() {
         alert("게임이 시작되지 않아 선택 불가");
         return;
     }
-    let score = await fetch("/api/chess/rooms/33/status")
+    let score = await fetch("/api/chess/rooms/" + gameId + "/status")
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);

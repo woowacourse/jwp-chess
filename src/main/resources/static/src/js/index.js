@@ -134,7 +134,7 @@ async function handleErrors(response) {
 
 async function enterRoom(id) {
     //  GET 요청 -> 받다보니, 결국엔 roomId도 같이내려와야할 듯 (현재 안내려오는 중)
-    let game = await fetch("/api/chess/rooms/enter?id=" + id)
+    let game = await fetch("/api/chess/rooms/" + id)
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);

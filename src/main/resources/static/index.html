@@ -72,36 +72,36 @@
 
                     <!--room list -->
                     <ul class="class-list">
-                        {{#rooms}}
-                        <!--first room -->
-                        <li class="class-card">
-                            <!--room image-->
-                            <img alt="room" class="class-image"
-                                 src="images/room.jpg"/>
-                            <!--room content-->
-                            <div class="class-container">
-                                <!--room id +  수정/삭제 -->
-                                <div class="class-skill">
-                                    <div class="class-type">{{id}}번방</div>
+<!--                        {{#rooms}}-->
+<!--                        &lt;!&ndash;first room &ndash;&gt;-->
+<!--                        <li class="class-card">-->
+<!--                            &lt;!&ndash;room image&ndash;&gt;-->
+<!--                            <img alt="room" class="class-image"-->
+<!--                                 src="images/room.jpg"/>-->
+<!--                            &lt;!&ndash;room content&ndash;&gt;-->
+<!--                            <div class="class-container">-->
+<!--                                &lt;!&ndash;room id +  수정/삭제 &ndash;&gt;-->
+<!--                                <div class="class-skill">-->
+<!--                                    <div class="class-type">{{id}}번방</div>-->
 
-                                    <div class="class-update" onclick="updateRoomName('{{id}}');">수정</div>
-                                    <div class="class-delete" onclick="deleteRoom('{{id}}');">삭제</div>
+<!--                                    <div class="class-update" onclick="updateRoomName('{{id}}');">수정</div>-->
+<!--                                    <div class="class-delete" onclick="deleteRoom('{{id}}');">삭제</div>-->
 
-                                </div>
-                                <!--room title + enter-->
-                                <div class="class-title-container">
-                                    <div class="class-title">{{name}}</div>
-                                    {{#if canJoin}}
-                                    <div class="class-join" onclick="enterRoom('{{id}}');">입 장</div>
-                                    {{else}}
-                                    <div class="class-cant-join">종료(입장 불가)</div>
-                                    {{/if}}
-                                </div>
-                            </div>
+<!--                                </div>-->
+<!--                                &lt;!&ndash;room title + enter&ndash;&gt;-->
+<!--                                <div class="class-title-container">-->
+<!--                                    <div class="class-title">{{name}}</div>-->
+<!--                                    {{#if canJoin}}-->
+<!--                                    <div class="class-join" onclick="enterRoom('{{id}}');">입 장</div>-->
+<!--                                    {{else}}-->
+<!--                                    <div class="class-cant-join">종료(입장 불가)</div>-->
+<!--                                    {{/if}}-->
+<!--                                </div>-->
+<!--                            </div>-->
 
-                        </li>
-                        {{/rooms}}
-                        <!-- 2nd room -->
+<!--                        </li>-->
+<!--                        {{/rooms}}-->
+<!--                        &lt;!&ndash; 2nd room &ndash;&gt;-->
                     </ul>
 
                 </div>

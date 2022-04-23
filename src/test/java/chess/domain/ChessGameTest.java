@@ -1,8 +1,5 @@
 package chess.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import chess.domain.generator.BlackGenerator;
 import chess.domain.generator.CustomGenerator;
 import chess.domain.piece.Piece;
@@ -10,10 +7,14 @@ import chess.domain.piece.Rook;
 import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ChessGameTest {
 

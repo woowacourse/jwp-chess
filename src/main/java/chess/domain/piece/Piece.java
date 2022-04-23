@@ -1,8 +1,9 @@
 package chess.domain.piece;
 
+import chess.domain.player.Team;
 import chess.domain.position.File;
 import chess.domain.position.Position;
-import chess.domain.player.Team;
+
 import java.util.Objects;
 
 public abstract class Piece {

@@ -1,7 +1,8 @@
 package chess.domain.player;
 
-import chess.domain.position.File;
 import chess.domain.piece.Piece;
+import chess.domain.position.File;
+
 import java.util.List;
 
 public class Score {

@@ -13,8 +13,9 @@ import chess.dto.ChessGameDto;
 import chess.dto.ChessGameUpdateDto;
 import chess.dto.PieceDto;
 import chess.dto.StatusDto;
-import java.util.List;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ChessGameService {
@@ -91,7 +92,7 @@ public class ChessGameService {
         return ChessGame.of(gameUpdateDto);
     }
 
-    public ChessGameUpdateDto findChessGame(final int chessGameId) {
+    private ChessGameUpdateDto findChessGame(final int chessGameId) {
         final String turn = chessGameDao.findCurrentTurn(chessGameId);
         final List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(chessGameId, Team.WHITE.getName());
         final List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(chessGameId, Team.BLACK.getName());

@@ -3,6 +3,7 @@ package chess.domain.piece;
 import chess.domain.player.Team;
 import chess.domain.position.MoveChecker;
 import chess.domain.position.Position;
+
 import java.util.Set;
 
 public class Pawn extends Piece {

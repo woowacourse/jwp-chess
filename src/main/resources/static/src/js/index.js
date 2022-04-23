@@ -25,28 +25,20 @@ async function onloadIndexBody() {
             alert(error.message);
         })
     rooms = await rooms.json();
-    // console.log(rooms.roomResponseDtos);
     let roomSpace = document.querySelector("ul.class-list");
     Object.values(rooms.roomResponseDtos).forEach(function (value) {
 
-        // console.log(value.name);
-        //li-시작------------------------------------------------
         const li = document.createElement("li");
         li.className = "class-card";
-        // li.textContent = value.name
 
-        //li-img
         const img = document.createElement("img");
         img.className = "class-image";
         img.setAttribute("src", "images/room.jpg");
         li.appendChild(img);
 
-        //li-div.class-container - 시작-------------------
         const div = document.createElement("div");
         div.className = "class-container";
 
-
-        //li-div.class-container-div.class-skill 시작------
         const divInnerFirst = document.createElement("div");
         divInnerFirst.className = "class-skill";
 
@@ -67,10 +59,7 @@ async function onloadIndexBody() {
         divInnerFirst.appendChild(divInnerFirstId);
         divInnerFirst.appendChild(divInnerFirstUpdate);
         divInnerFirst.appendChild(divInnerFirstDelete);
-        //li-div.class-container-div.class-skill 끝------
 
-
-        //li-div.class-container-div.class-container 시작------
         const divInnerSecond = document.createElement("div");
         divInnerSecond.className = "class-title-container";
 
@@ -85,12 +74,8 @@ async function onloadIndexBody() {
 
         divInnerSecond.appendChild(divInnerSecondTitle);
         divInnerSecond.appendChild(divInnerSecondJoin);
-        //li-div.class-container-div.class-container 끝------
-
-        //li-div.class-container - 끝---------------------
         div.appendChild(divInnerFirst);
         div.appendChild(divInnerSecond);
-        //li-끝 ------------------------------------------------
         li.appendChild(div);
 
         roomSpace.appendChild(li);
@@ -100,11 +85,9 @@ async function onloadIndexBody() {
 async function createRoom() {
     const roomName = window.prompt("방 제목을 중복되지 않도록 입력해주세요.");
 
-    //1) dto의 필드명과 일치하도록 body안에 데이터 만들기
     const bodyValue = {
         name: roomName
     }
-    //2) POST 요청
     let response = await fetch("/api/chess/rooms/", {
         method: 'POST',
         headers: {
@@ -117,23 +100,18 @@ async function createRoom() {
         .catch(function (error) {
             alert(error.message);
         });
-
-    // console.log(response);
-
     window.location.reload();
 }
 
 async function handleErrors(response) {
     if (!response.ok) {
         let message = await response.json();
-        // console.log(response)
         throw Error(message.errorMessage);
     }
     return response;
 }
 
 async function enterRoom(id) {
-    //  GET 요청 -> 받다보니, 결국엔 roomId도 같이내려와야할 듯 (현재 안내려오는 중)
     let game = await fetch("/api/chess/rooms/" + id)
         .then(handleErrors)
         .catch(function (error) {
@@ -141,7 +119,6 @@ async function enterRoom(id) {
         })
     game = await game.json();
     console.log("game>>>", game);
-    // 진정, html명? 쿼리 파라미터 방법 밖엔 없는가?
     window.location.replace("/game.html?id=" + game.id);
 }
 
@@ -169,7 +146,6 @@ function updateRoomName(id) {
 
     f.submit();
 }
-
 
 function deleteRoom(id) {
 

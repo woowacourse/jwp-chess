@@ -10,12 +10,12 @@ public class BoardDto {
 
     private final String turn;
     private final Map<String, String> board;
-    private final boolean isFinish;
+    private final boolean finish;
 
-    public BoardDto(String turn, Map<String, String> board, boolean isFinish) {
+    public BoardDto(String turn, Map<String, String> board, boolean finish) {
         this.turn = turn;
         this.board = board;
-        this.isFinish = isFinish;
+        this.finish = finish;
     }
 
     public static BoardDto from(Board board) {
@@ -36,5 +36,9 @@ public class BoardDto {
 
     public String getTurn() {
         return turn;
+    }
+
+    public boolean isFinish() {
+        return finish;
     }
 }

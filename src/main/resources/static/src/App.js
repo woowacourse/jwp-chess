@@ -17,10 +17,13 @@ const SYMBOL_TO_IMAGE_PATH = {
     "k": IMAGE_PATH + "whiteKing.png",
     "K": IMAGE_PATH + "blackKing.png"
 };
+const GAME_RUNNING = false;
+const GAME_FINISHED = true;
 
 let boardInfo = "";
 let isChoiced = false;
 let currentTurn = "";
+let isFinished = GAME_RUNNING;
 
 function showStatusButton() {
     status.style.visibility = 'visible';
@@ -38,6 +41,7 @@ start.addEventListener('click', function () {
         loadBoard();
         move();
         start.textContent = "RESTART";
+        isFinished = GAME_RUNNING;
         return
     }
     window.alert("성공적으로 게임이 재시작되었습니다!")
@@ -80,20 +84,23 @@ function imageSetting(response) {
 }
 
 function turnSetting(response) {
-    if (response["isFinish"] === true) {
+    if (response["finish"] === true) {
         document.querySelector("#view-type").textContent = "승리자 :ㅤ";
+        isFinished = GAME_FINISHED;
+        alert("게임이 종료되었습니다. 승리자는 : " + CURRENT_TEAM.textContent + "입니다.");
         return;
-    } else {
-        document.querySelector("#view-type").textContent = "현재 턴 :ㅤ"
     }
 
-    if (response["turn"] === "white") {
-        currentTurn = "하얀색"
-    } else {
-        currentTurn = "검정색"
-    }
-
+    document.querySelector("#view-type").textContent = "현재 턴 :ㅤ"
+    currentTurn = getTurnByResponse(response);
     CURRENT_TEAM.textContent = currentTurn
+}
+
+function getTurnByResponse(response) {
+    if (response["turn"] === "white") {
+        return "하얀색";
+    }
+    return "검정색";
 }
 
 let toTarget = "";
@@ -142,6 +149,11 @@ function eventMove(event) {
 }
 
 function movePiece(from, to) {
+    if (isFinished) {
+        alert("게임이 종료되었습니다.");
+        return;
+    }
+
     const request = {
         from: from,
         to: to

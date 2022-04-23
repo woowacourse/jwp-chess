@@ -1,53 +1,51 @@
 package chess.domain.piece;
 
-import static chess.domain.ChessFixtures.C1;
-import static chess.domain.ChessFixtures.C3;
-import static chess.domain.ChessFixtures.C4;
-import static chess.domain.ChessFixtures.E3;
+import static chess.domain.Fixture.BISHOP_WHITE;
+import static chess.domain.Fixture.E4;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.board.Board;
-import chess.domain.board.coordinate.Coordinate;
-import org.junit.jupiter.api.BeforeEach;
+import chess.domain.board.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class BishopTest {
-
-    private final Bishop bishop = new Bishop(Symbol.BISHOP, Team.WHITE);
-    private Board board;
-
-    @BeforeEach
-    void init() {
-        board = Board.create();
+    @ParameterizedTest
+    @CsvSource(value = {"C6,SUCCESS", "G6,SUCCESS", "G2,SUCCESS", "C2,SUCCESS"})
+    @DisplayName("비숍은 대각선으로 이동한다")
+    void movableDiagonal(String to, MoveResult expected) {
+        final Board board = BoardFixture.of(E4, BISHOP_WHITE);
+        final MoveResult move = board.move(E4, Position.from(to));
+        assertThat(move).isEqualTo(expected);
     }
 
     @ParameterizedTest
-    @DisplayName("이동 가능한 위치인 경우 True를 반환")
-    @CsvSource(value = {
-            "c4,d5",
-            "c4,d3",
-            "c4,b5",
-            "c4,b3"
-    })
-    void is_movable(String from, String to) {
-        boolean actual = bishop.isMovable(board, Coordinate.of(from), Coordinate.of(to));
-        assertThat(actual).isTrue();
+    @CsvSource(value = {"E6", "G4", "E2", "C4"})
+    @DisplayName("비숍은 상하좌우로 이동할 수 없다")
+    void notMovableVerticalOrHorizontal(String to) {
+        final Board board = BoardFixture.of(E4, BISHOP_WHITE);
+        assertThatThrownBy(() -> board.move(E4, Position.from(to)))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("이동할 수 없는 방향입니다");
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"C6,D5", "G6,F5", "G2,F3", "C2,D3"})
+    @DisplayName("비숍은 이동 경로에 기물이 존재하면 이동할 수 없다")
+    void notMovableForPieceOnTheWay(String to, String anotherPiece) {
+        final Board board = BoardFixture.of(E4, BISHOP_WHITE, Position.from(anotherPiece), BISHOP_WHITE);
+        assertThatThrownBy(() -> board.move(E4, Position.from(to)))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("이동 경로에 기물이 존재합니다");
     }
 
     @Test
-    @DisplayName("해당 방향을 비숍이 가지고 있지 않으면 false를 반환")
-    void is_not_movable() {
-        boolean actual = bishop.isMovable(board, C3, C4);
-        assertThat(actual).isFalse();
-    }
-
-    @Test
-    @DisplayName("두 지점 사이에 장애물이 있는 경우 false를 반환")
-    void is_not_movable2() {
-        boolean actual = bishop.isMovable(board, C1, E3);
-        assertThat(actual).isFalse();
+    @DisplayName("비숍은 3점으로 계산된다")
+    void getScore() {
+        final double score = BISHOP_WHITE.getScore();
+        assertThat(score).isEqualTo(3.0);
     }
 }

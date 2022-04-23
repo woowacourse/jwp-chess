@@ -1,110 +1,30 @@
 <!DOCTYPE html>
-<html lang="ko">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>미니 체스 게임</title>
-    <link rel="stylesheet" href="/src/index.css">
+    <link rel="shortcut icon" href="/img/favicon.png"/>
+    <link rel="stylesheet" href="/css/button.css">
+    <title>체스</title>
 </head>
-
 <body>
+<h1>방 번호를 입력해주세요 ♟</h1>
+<input type="number" id="gameIdInput"/>
+<div>
+    <button type="button" class="button-30" id="gameEnterButton">입장하기</button>
+</div>
+<h2></h2>
+<script>
+    document.getElementById('gameEnterButton').addEventListener('click', () => {
+        const inputGameId = Number(document.getElementById('gameIdInput').value);
 
-<h1>♟️ 초간단 체스</h1>
-<section class="chess-ui">
+        if (Number.isInteger(inputGameId) && inputGameId > 0) {
+            location.href = `/game/${inputGameId}`;
+            return;
+        }
 
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-
-
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-
-
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-
-
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-
-
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-
-
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-
-
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-
-
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-</section>
-
-<column>
-    <row>
-        <h3> 사용자 입력</h3>
-    </row>
-
-    <row>
-        <form method="post" action="/start">
-            <input type="text" name="white_user_name" placeholder="흰팀 사용자">
-            <input type="text" name="black_user_name" placeholder="검은팀 사용자">
-            <input type="submit" value="시작" class=""/>
-        </form>
-    </row>
-</column>
-
+        document.querySelector('h2').innerText = '양의 정수만 입력 가능합니다 😅';
+        setTimeout(() => document.querySelector('h2').innerText = '', 2000);
+    })
+</script>
 </body>
 </html>

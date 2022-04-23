@@ -1,59 +1,46 @@
 package chess.domain.board;
 
+import static chess.domain.Fixture.E4;
+import static chess.domain.Fixture.E6;
+import static chess.domain.Fixture.E7;
+import static chess.domain.Fixture.E8;
+import static chess.domain.Fixture.PAWN_WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.domain.board.coordinate.Coordinate;
-import chess.domain.piece.Knight;
+import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
-import chess.domain.piece.Symbol;
-import chess.domain.piece.Team;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class BoardTest {
-
-    private Board board;
-
-    @BeforeEach
-    void setupBoard() {
-        board = Board.create();
+class BoardTest {
+    @Test
+    @DisplayName("초기 점수는 38점으로 계산된다.")
+    void getScore() {
+        final Board board = BoardFactory.newInstance();
+        final Map<Color, Double> score = board.getScore();
+        final double scoreForWhite = score.get(Color.WHITE);
+        final double scoreForBlack = score.get(Color.BLACK);
+        assertAll(
+                () -> assertThat(scoreForWhite).isEqualTo(38.0),
+                () -> assertThat(scoreForBlack).isEqualTo(38.0)
+        );
     }
 
     @Test
-    @DisplayName("move시 해당 칸에 체스 말이 없으면 에러를 발생시킨다.")
-    void move_error() {
-        assertThatThrownBy(() -> board.move("a3", "a4"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("해당 위치에 말이 존재하지 않습니다.");
-    }
+    @DisplayName("같은 파일에 있는 폰이 2개 이상일 경우, 해당 폰들은 각 0.5점 처리된다.")
+    void getScoreByFourPawnsInSameFile() {
+        Map<Position, Piece> testBoard = new HashMap<>();
+        testBoard.put(E4, PAWN_WHITE);
+        testBoard.put(E6, PAWN_WHITE);
+        testBoard.put(E8, PAWN_WHITE);
+        testBoard.put(E7, PAWN_WHITE);
+        final Board board = BoardFactory.newInstance(testBoard);
 
-    @Test
-    @DisplayName("move가 불가능하면 에러를 발생시킨다.")
-    void move_error1() {
-        assertThatThrownBy(() -> board.move("a1", "a4"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("해당 위치로 움직일 수 없습니다.");
-    }
-
-    @Test
-    @DisplayName("move가 가능하면 도착 위치로 말을 이동시킨다.")
-    void move_success() {
-        Board newBoard = board.move("b1", "c3");
-        assertThat(newBoard.findPiece(Coordinate.of("c3"))).isInstanceOf(Knight.class);
-    }
-
-    @Test
-    @DisplayName("왕이 둘다 살아있으면 true를 반환")
-    void is_both_king_alive() {
-        assertThat(board.isBothKingAlive()).isTrue();
-    }
-
-    @Test
-    @DisplayName("왕이 한명이라도 죽으면 false를 반환")
-    void is_both_king_not_alive() {
-        board.getValue().put(Coordinate.of("e1"), Piece.of(Symbol.EMPTY.name(), Team.NONE.name()));
-        assertThat(board.isBothKingAlive()).isFalse();
+        final Map<Color, Double> score = board.getScore();
+        final double scoreForWhite = score.get(Color.WHITE);
+        assertThat(scoreForWhite).isEqualTo(2.0);
     }
 }

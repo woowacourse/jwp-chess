@@ -7,6 +7,3 @@ spring:
   h2:
     console:
       enabled: true
-handlebars:
-  prefix: classpath:/templates/
-  suffix: .hbs

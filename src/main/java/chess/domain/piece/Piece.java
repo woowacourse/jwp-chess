@@ -1,111 +1,103 @@
 package chess.domain.piece;
 
 import chess.domain.board.Board;
-import chess.domain.board.coordinate.Coordinate;
-import chess.domain.direction.Direction;
-import chess.domain.piece.movestrategy.MoveStrategy;
-import java.util.HashMap;
+import chess.domain.board.Position;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public abstract class Piece {
+    public static final Piece EMPTY = new Empty();
+    private static final int TWO_FOR_NO_BETWEEN = 2;
+    private static final String SAME_COLOR_PIECE_IS_ON_TARGET = "목적지에 아군 기물이 존재합니다";
+    private static final String CAN_NOT_MOVE_FOR_PIECE_ON_THE_WAY = "이동 경로에 기물이 존재합니다";
+    private static final String CAN_NOT_MOVE_TO_THE_DIRECTION = "이동할 수 없는 방향입니다";
 
-    private static final Map<String, Piece> CACHE = new HashMap<>();
+    private static class Empty extends Piece {
+        public static final String EMPTY_PIECE_STRING = ".";
 
-    static {
-        CACHE.put(Team.WHITE.name() + Symbol.PAWN.name(), new Pawn(Symbol.PAWN, Team.WHITE));
-        CACHE.put(Team.BLACK.name() + Symbol.PAWN.name(), new Pawn(Symbol.PAWN, Team.BLACK));
-        CACHE.put(Team.WHITE.name() + Symbol.KING.name(), new King(Symbol.KING, Team.WHITE));
-        CACHE.put(Team.BLACK.name() + Symbol.KING.name(), new King(Symbol.KING, Team.BLACK));
-        CACHE.put(Team.WHITE.name() + Symbol.ROOK.name(), new Rook(Symbol.ROOK, Team.WHITE));
-        CACHE.put(Team.BLACK.name() + Symbol.ROOK.name(), new Rook(Symbol.ROOK, Team.BLACK));
-        CACHE.put(Team.WHITE.name() + Symbol.KNIGHT.name(), new Knight(Symbol.KNIGHT, Team.WHITE));
-        CACHE.put(Team.BLACK.name() + Symbol.KNIGHT.name(), new Knight(Symbol.KNIGHT, Team.BLACK));
-        CACHE.put(Team.WHITE.name() + Symbol.BISHOP.name(), new Bishop(Symbol.BISHOP, Team.WHITE));
-        CACHE.put(Team.BLACK.name() + Symbol.BISHOP.name(), new Bishop(Symbol.BISHOP, Team.BLACK));
-        CACHE.put(Team.WHITE.name() + Symbol.QUEEN.name(), new Queen(Symbol.QUEEN, Team.WHITE));
-        CACHE.put(Team.BLACK.name() + Symbol.QUEEN.name(), new Queen(Symbol.QUEEN, Team.BLACK));
-        CACHE.put(Team.NONE.name() + Symbol.EMPTY.name(), new Empty(Symbol.EMPTY, Team.NONE));
-    }
-
-    protected final Symbol symbol;
-    protected final Team team;
-
-    protected Piece(final Symbol symbol, final Team team) {
-        this.symbol = symbol;
-        this.team = team;
-    }
-
-    public static Piece of(String symbol, String team) {
-        return CACHE.get(team + symbol);
-    }
-
-    public boolean isMovable(Board board, Coordinate from, Coordinate to) {
-        Piece toPiece = board.findPiece(to);
-        if (isSameTeam(toPiece.team) || hasNotDirection(Direction.of(from, to))) {
-            return false;
+        public Empty() {
+            super(Color.EMPTY);
         }
-        return moveStrategy().isMovable(board, from, to);
+
+        @Override
+        public MoveResult movable(Position from, Position to, Board board) {
+            return MoveResult.FAIL;
+        }
+
+        @Override
+        public double getScore() {
+            return 0;
+        }
+
+        @Override
+        public String getName() {
+            return EMPTY_PIECE_STRING;
+        }
     }
 
-    public boolean hasDirection(Direction direction) {
-        return direction().contains(direction);
+    protected final Color color;
+
+    public Piece(Color color) {
+        this.color = color;
     }
 
-    public boolean hasNotDirection(Direction direction) {
-        return !hasDirection(direction);
+    public abstract MoveResult movable(Position from, Position to, Board board);
+
+    public abstract double getScore();
+
+    public abstract String getName();
+
+    protected void validateAngle(List<Integer> validAngles, Position from, Position to) {
+        if (!validAngles.contains(angle(from, to))) {
+            throw new IllegalStateException(CAN_NOT_MOVE_TO_THE_DIRECTION);
+        }
     }
 
-    public abstract List<Direction> direction();
-
-    public abstract MoveStrategy moveStrategy();
-
-    public boolean isSameTeam(Team team) {
-        return this.team.isSame(team);
+    private int angle(Position from, Position to) {
+        return (int) (Math.atan2(from.dy(to), from.dx(to)) * (180.0 / Math.PI));
     }
 
-    public boolean isKing() {
-        return symbol.isKing();
+    protected void validatePieceOnWay(Position from, Position to, Board board) {
+        if (Math.abs(from.dx(to)) < TWO_FOR_NO_BETWEEN
+                && Math.abs(from.dy(to)) < TWO_FOR_NO_BETWEEN) { // 중간 포지션이 존재하지 않는 1칸 이동의 경우 검증 탈출
+            return;
+        }
+
+        if (from.between(to)
+                .stream()
+                .anyMatch(board::exists)) {
+            throw new IllegalStateException(CAN_NOT_MOVE_FOR_PIECE_ON_THE_WAY);
+        }
     }
 
-    public boolean isPawn() {
-        return symbol.isPawn();
-    }
-
-    public boolean isEmpty() {
-        return false;
-    }
-
-    public boolean isExist() {
-        return true;
+    protected void validateTarget(Board board, Position to) {
+        if (board.isSameColorOnTarget(this, to)) {
+            throw new IllegalStateException(SAME_COLOR_PIECE_IS_ON_TARGET);
+        }
     }
 
     public boolean isBlack() {
-        return team.isBlack();
+        return color == Color.BLACK;
     }
 
-    public boolean isWhite() {
-        return team.isWhite();
+    public boolean isSameColor(Color color) {
+        return this.color == color;
     }
 
-    public String getSymbolByTeam() {
-        if (team.isBlack()) {
-            return symbol.getBlack();
-        }
-        return symbol.getWhite();
+    public boolean isSameColor(Piece another) {
+        return this.color == another.color;
     }
 
-    public String getTeam() {
-        return team.name();
+    public boolean isEnemy(Piece piece) {
+        return this.color.opposite() == piece.color;
     }
 
-    public String getSymbol() {
-        return symbol.name();
+    public boolean isKing() {
+        return false;
     }
 
-    public double getScore() {
-        return symbol.getScore();
+    public boolean isPawn() {
+        return false;
     }
 
     @Override
@@ -117,11 +109,11 @@ public abstract class Piece {
             return false;
         }
         Piece piece = (Piece) o;
-        return symbol == piece.symbol && team == piece.team;
+        return color == piece.color;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(symbol, team);
+        return Objects.hash(color);
     }
 }

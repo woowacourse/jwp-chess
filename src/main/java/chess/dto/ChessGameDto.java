@@ -14,7 +14,13 @@ public class ChessGameDto {
     private final String state;
     private final String turn;
 
-    public ChessGameDto(List<PieceDto> pieces, String state, String turn) {
+    public ChessGameDto(List<PieceDto> pieces, GameInfoDto gameInfo) {
+        this.pieces = pieces;
+        this.state = gameInfo.getState();
+        this.turn = gameInfo.getTurn();
+    }
+
+    private ChessGameDto(List<PieceDto> pieces, String state, String turn) {
         this.pieces = pieces;
         this.state = state;
         this.turn = turn;

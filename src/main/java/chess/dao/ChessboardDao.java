@@ -55,9 +55,13 @@ public class ChessboardDao {
     }
 
     public ChessGameDto load() {
-        final String sql = "SELECT * FROM gameInfos";
-        GameInfoDto gameInfo = jdbcTemplate.queryForObject(sql, gameInfoRowMapper);
-        return new ChessGameDto(loadPieces(), gameInfo.getState(), gameInfo.getTurn());
+        final String gameInfo_sql = "SELECT * FROM gameInfos";
+        final String pieces_sql = "SELECT * FROM pieces ORDER BY x ASC, y ASC";
+
+        List<PieceDto> pieces = jdbcTemplate.query(pieces_sql, pieceRowMapper);
+        GameInfoDto gameInfo = jdbcTemplate.queryForObject(gameInfo_sql, gameInfoRowMapper);
+
+        return new ChessGameDto(pieces, gameInfo);
     }
 
     private void addAll(ChessGameDto chessGameDto) {
@@ -74,11 +78,6 @@ public class ChessboardDao {
     private void addGameInfos(String state, String turn) {
         String sql = "INSERT INTO gameInfos (state,turn) VALUES ('" + state + "','" + turn + "')";
         jdbcTemplate.update(sql);
-    }
-
-    private List<PieceDto> loadPieces() {
-        final String sql = "SELECT * FROM pieces ORDER BY x ASC, y ASC";
-        return jdbcTemplate.query(sql, pieceRowMapper);
     }
 
 }

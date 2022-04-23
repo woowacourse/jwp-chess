@@ -25,11 +25,6 @@ public class FakeSquareRepository implements SquareRepository<Square> {
     }
 
     @Override
-    public int getSquareIdBySquare(Square square, int boardId) {
-        return 0;
-    }
-
-    @Override
     public Map<Square, Piece> findAllSquaresAndPieces(int boardId) {
         return null;
     }

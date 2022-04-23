@@ -11,16 +11,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@SpringBootTest
+@Transactional
 class ChessSquareRepositoryTest {
 
-    private final ChessSquareRepository repository = new ChessSquareRepository(new ConnectionManager());
+    @Autowired
+    private ChessSquareRepository repository;
     @Autowired
     private ChessBoardRepository chessBoardRepository;
     private int boardId;
@@ -31,11 +35,6 @@ class ChessSquareRepositoryTest {
         final Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
         this.boardId = board.getId();
         this.square = repository.save(new Square(File.A, Rank.TWO, boardId));
-    }
-
-    @AfterEach
-    void setDown() {
-        chessBoardRepository.deleteAll();
     }
 
     @Test
@@ -63,13 +62,6 @@ class ChessSquareRepositoryTest {
         int saveCount = repository.saveAllSquare(boardId);
 
         assertThat(saveCount).isEqualTo(64);
-    }
-
-    @Test
-    void getSquareIdBySquare() {
-        int squareId = repository.getSquareIdBySquare(new Square(File.A, Rank.TWO), boardId);
-
-        assertThat(squareId).isEqualTo(square.getId());
     }
 
     @Test

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -22,7 +21,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class ChessPieceRepositoryTest {
 
     private final ChessPieceRepository chessPieceRepository = new ChessPieceRepository(new ConnectionManager());
-    private final ChessSquareRepository chessSquareRepository = new ChessSquareRepository(new ConnectionManager());
+
+    @Autowired
+    private ChessSquareRepository chessSquareRepository;
     @Autowired
     private ChessBoardRepository chessBoardRepository;
     private int boardId;

@@ -14,8 +14,6 @@ public interface SquareRepository<T> {
 
     int saveAllSquare(int boardId);
 
-    int getSquareIdBySquare(T square, int boardId);
-
     Map<T, Piece> findAllSquaresAndPieces(int boardId);
 
     List<Square> getPaths(List<T> squares, int roomId);

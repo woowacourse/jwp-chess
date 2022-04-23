@@ -1,5 +1,10 @@
 package chess.repository;
 
+import chess.model.room.Room;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
@@ -17,122 +22,74 @@ import java.util.Map;
 @Repository
 public class ChessSquareRepository implements SquareRepository<Square> {
 
-    private final ConnectionManager connectionManager;
+    private final JdbcTemplate jdbcTemplate;
 
-    public ChessSquareRepository(ConnectionManager connectionManager) {
-        this.connectionManager = connectionManager;
+    public ChessSquareRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Square save(Square square) {
-        return connectionManager.executeQuery(connection -> {
-            final String sql = "INSERT INTO square (square_file, square_rank, board_id) VALUES (?, ?, ?)";
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql,
-                    Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, square.getFile().value());
-            preparedStatement.setInt(2, square.getRank().value());
-            preparedStatement.setInt(3, square.getBoardId());
-            preparedStatement.executeUpdate();
-            final ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (!generatedKeys.next()) {
-                throw new SQLException("실행에 오류가 생겼습니다.");
-            }
-            return new Square(generatedKeys.getInt(1), square.getFile(), square.getRank(), square.getBoardId());
-        });
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        simpleJdbcInsert.withTableName("square").usingGeneratedKeyColumns("id");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("square_file", square.getFile().value());
+        parameters.put("square_rank", square.getRank().value());
+        parameters.put("board_id", square.getBoardId());
+
+        Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return new Square(number.intValue(), square.getFile(), square.getRank(), square.getBoardId());
     }
 
     @Override
     public Square getBySquareAndBoardId(Square square, int boardId) {
-        return connectionManager.executeQuery(connection -> {
-            final ResultSet resultSet = findSquare(square.getFile(), square.getRank(), boardId, connection);
-            return new Square(
-                    resultSet.getInt("id"),
-                    File.findFileByValue(resultSet.getInt("square_file")),
-                    Rank.findRank(resultSet.getInt("square_rank")),
-                    resultSet.getInt("board_id")
-            );
-        });
-    }
-
-    private ResultSet findSquare(File file, Rank rank, int boardId, Connection connection) throws SQLException {
-        final String sql = "SELECT s.id, s.square_file, s.square_rank, s.board_id " +
-                "FROM square AS s " +
-                "WHERE s.square_file=? AND s.square_rank=? AND s.board_id=?";
-        final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1, file.value());
-        preparedStatement.setInt(2, rank.value());
-        preparedStatement.setInt(3, boardId);
-        final ResultSet resultSet = preparedStatement.executeQuery();
-        if (!resultSet.next()) {
-            throw new IllegalArgumentException("위치가 존재하지 않습니다." + file.name() + rank.name());
-        }
-        return resultSet;
+        return jdbcTemplate.queryForObject(
+                "SELECT s.id, s.square_file, s.square_rank, s.board_id " +
+                        "FROM square AS s " +
+                        "WHERE s.square_file=? AND s.square_rank=? AND s.board_id=?",
+                getRowMapper(),
+                square.getFile().value(), square.getRank().value(), boardId
+        );
     }
 
     @Override
     public int saveAllSquare(int boardId) {
-        return connectionManager.executeQuery(connection -> {
-            final String sql = "INSERT INTO square (square_file, square_rank, board_id) VALUES (?, ?, ?)";
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            for (File file : File.values()) {
-                for (Rank rank : Rank.values()) {
-                    preparedStatement.setInt(1, file.value());
-                    preparedStatement.setInt(2, rank.value());
-                    preparedStatement.setInt(3, boardId);
-                    preparedStatement.addBatch();
-                    preparedStatement.clearParameters();
-                }
+        List<Object[]> batch = new ArrayList<>();
+        for (File file : File.values()) {
+            for (Rank rank : Rank.values()) {
+                Object[] values = new Object[]{file.value(), rank.value(), boardId};
+                batch.add(values);
             }
-            return preparedStatement.executeBatch().length;
-        });
-//        public int[] batchInsertWithNamedJdbc(List<Car> cars) {
-//            String sql = "insert into car(name, color) values(:name, :color)";
-//            return namedParameterJdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(cars));
-//        }
-//        public int[] batchInsertVariation(List<Car> cars) {
-//            List<Object[]> batch = new ArrayList<>();
-//            for (Car car : cars) {
-//                Object[] values = new Object[]{car.getName(), car.getColor()};
-//                batch.add(values);
-//            }
-//            String sql = "insert into car(name, color) values(?,?)";
-//            return jdbcTemplate.batchUpdate(sql, batch);
-//        }
-    }
-
-    @Override
-    public int getSquareIdBySquare(Square square, int boardId) {
-        return getBySquareAndBoardId(square, boardId).getId();
+        }
+        return jdbcTemplate.batchUpdate(
+                "INSERT INTO square (square_file, square_rank, board_id) VALUES (?, ?, ?)"
+                , batch).length;
     }
 
     @Override
     public Map<Square, Piece> findAllSquaresAndPieces(int boardId) {
-        return connectionManager.executeQuery(connection -> {
-            final String sql = "SELECT po.id AS po_id, po.square_file, po.square_rank, po.board_id, " +
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(
+                "SELECT po.id AS po_id, po.square_file, po.square_rank, po.board_id, " +
                     "pi.id AS pi_id, pi.type, pi.team, pi.square_id " +
                     "FROM square po " +
                     "INNER JOIN piece pi ON po.id = pi.square_id " +
-                    "WHERE board_id=?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, boardId);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            Map<Square, Piece> existPiecesWithSquare = new HashMap<>();
-            while (resultSet.next()) {
-                existPiecesWithSquare.put(makeSquare(resultSet), makePiece(resultSet));
-            }
-            return existPiecesWithSquare;
-        });
+                    "WHERE board_id=?", boardId);
+        Map<Square, Piece> squarePieceMap = new HashMap<>();
+        while (sqlRowSet.next()) {
+            squarePieceMap.put(makeSquare(sqlRowSet), makePiece(sqlRowSet));
+        }
+        return squarePieceMap;
     }
 
-    private Piece makePiece(ResultSet resultSet) throws SQLException {
+    private Piece makePiece(SqlRowSet resultSet) {
         return PieceType.getPiece(resultSet.getString("type"),
                 resultSet.getInt("pi_id"),
                 Team.findTeam(resultSet.getString("team")),
                 resultSet.getInt("square_id"));
     }
 
-    private Square makeSquare(ResultSet resultSet) throws SQLException {
+    private Square makeSquare(SqlRowSet resultSet) {
         return new Square(resultSet.getInt("po_id"),
                 File.findFileByValue(resultSet.getInt("square_file")),
                 Rank.findRank(resultSet.getInt("square_rank")),
@@ -146,5 +103,14 @@ public class ChessSquareRepository implements SquareRepository<Square> {
             realSquares.add(getBySquareAndBoardId(square, roomId));
         }
         return realSquares;
+    }
+
+    private RowMapper<Square> getRowMapper() {
+        return (resultSet, rowNum) -> new Square(
+                resultSet.getInt("id"),
+                File.findFileByValue(resultSet.getInt("square_file")),
+                Rank.findRank(resultSet.getInt("square_rank")),
+                resultSet.getInt("board_id")
+        );
     }
 }

@@ -64,7 +64,7 @@ async function resumeGame() {
 }
 
 async function getStatus() {
-  let status = await fetch("/status/" + gameName)
+  let status = await fetch("/status?name=" + gameName)
   .then(handleErrors)
   .catch(function (error) {
     alert(error.message);
@@ -78,7 +78,7 @@ async function getStatus() {
 
   const result = "[White 팀] <br> 점수 : " + whitePlayerScore + "<br> 결과 : "
       + whitePlayerResult
-      + "<br>[Black 팀] <br> 점수 : " + blackPlayerScore + "<br> 결과 : "
+      + "<br><br>[Black 팀] <br> 점수 : " + blackPlayerScore + "<br> 결과 : "
       + blackPlayerResult;
 
   alert("현재 점수를 표시합니다.");

@@ -67,7 +67,7 @@ function end() {
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            if (data.isRunning === false) {
+            if (data.running === false) {
                 const winningTeam = data.gameState;
                 alert("게임이 종료되었습니다." + "우승자는 "+ winningTeam);
             }

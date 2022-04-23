@@ -2,43 +2,49 @@ package chess.controller;
 
 import chess.dto.*;
 import chess.service.ChessService;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ChessSpringController {
 
+    private final ChessService chessService;
+
+    public ChessSpringController(ChessService chessService) {
+        this.chessService = chessService;
+    }
+
     @GetMapping("/board")
-    public ResponseEntity<BoardDto> getBoard() {
-        ChessService chessService = new ChessService(1);
-        BoardDto initialBoard = chessService.getInitialBoard();
+    public ResponseEntity<BoardDto> initBoard() {
+        BoardDto initialBoard = chessService.getBoard();
         return ResponseEntity.ok().body(initialBoard);
     }
 
     @PostMapping(value = "/move")
     public ResponseEntity<GameStateDto> move(@RequestBody MoveDto moveDto) {
-        ChessService chessService = new ChessService(1);
-        return ResponseEntity.ok().body(chessService.move(moveDto, 1));
+        return ResponseEntity.ok().body(chessService.move(moveDto, chessService.getGame().getId()));
     }
 
     @GetMapping("/status")
     public ResponseEntity<ScoreDto> getStatus() {
-        ChessService chessService = new ChessService(1);
         return ResponseEntity.ok().body(chessService.getStatus());
     }
 
     @PostMapping("/reset")
     public ResponseEntity<BoardDto> reset() {
-        ChessService chessService = new ChessService(1);
-        return ResponseEntity.ok().body(chessService.resetBoard(1));
+        chessService.resetBoard();
+        return ResponseEntity.ok().body(chessService.getBoard());
     }
 
     @PostMapping("/end")
     public ResponseEntity<GameStateDto> end() {
-        ChessService chessService = new ChessService(1);
-        return ResponseEntity.ok().body(chessService.end(1));
+        chessService.endGame();
+        return ResponseEntity.ok().body(chessService.findWinner());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handle(RuntimeException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

@@ -3,7 +3,7 @@ package controller;
 
 import chess.SpringChessApplication;
 import chess.dto.MoveDto;
-import io.restassured.RestAssured;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import io.restassured.RestAssured;
 
 import static org.hamcrest.core.Is.is;
 
@@ -60,24 +62,12 @@ public class ChessSpringControllerTest {
                 .body("size()", is(2));
     }
 
-
     @DisplayName("reset - POST")
     @Test
     void reset() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/reset")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
-    }
-
-    @DisplayName("end - POST")
-    @Test
-    void end() {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/end")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));

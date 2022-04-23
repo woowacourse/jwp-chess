@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.Team;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,44 +12,44 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @JdbcTest
-public class RoomSpringDaoImplTest {
+public class RoomDaoTest {
 
-    private RoomSpringDaoImpl roomSpringDaoImpl;
+    private RoomDao roomDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        roomSpringDaoImpl = new RoomSpringDaoImpl(jdbcTemplate);
+        roomDao = new RoomDao(jdbcTemplate);
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS room" +
                 "(" +
-                "  id bigint NOT NULL," +
+                "  id bigint NOT NULL AUTO_INCREMENT," +
                 "  status varchar(50) NOT NULL," +
-                " PRIMARY KEY (id)" +
+                "  PRIMARY KEY (id)" +
                 ")");
 
-        jdbcTemplate.update("insert into room (id, status) values(?, ?)", 1, "WHITE");
+        jdbcTemplate.update("insert into room (status) values(?)", "WHITE");
+    }
+
+    @AfterEach
+    void delete() {
+        assertThatNoException().isThrownBy(() -> roomDao.deleteGame());
     }
 
     @Test
     void findRoom() {
-        assertThat(roomSpringDaoImpl.findById(1L)).isNotNull();
-    }
-
-    @Test
-    void deleteRoom() {
-        assertThatNoException().isThrownBy(() -> roomSpringDaoImpl.delete(1L));
+        assertThat(roomDao.findById()).isNotNull();
     }
 
     @Test
     void saveRoom() {
-        assertThatNoException().isThrownBy(() -> roomSpringDaoImpl.save(2L, Team.WHITE));
+        assertThatNoException().isThrownBy(() -> roomDao.makeGame(Team.WHITE));
     }
 
     @Test
     void updateStatus() {
-        assertThatNoException().isThrownBy(() -> roomSpringDaoImpl.updateStatus(Team.WHITE, 1L));
+        assertThatNoException().isThrownBy(() -> roomDao.updateStatus(Team.WHITE, roomDao.findById().getId()));
     }
 }

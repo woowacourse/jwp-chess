@@ -1,12 +1,13 @@
 package chess.repository;
 
+import chess.model.room.Room;
+import chess.model.status.Status;
+
 import java.util.List;
 
 public interface RoomRepository<T> {
 
-    List<T> findAllWithRunning();
-
-    int deleteAll();
+    List<Room> findAllByBoardStatus(Status status);
 
     T save(T room);
 

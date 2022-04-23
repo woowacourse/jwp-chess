@@ -8,16 +8,21 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@SpringBootTest
+@Transactional
 class ChessRoomRepositoryTest {
 
-    private final ChessRoomRepository repository = new ChessRoomRepository(new ConnectionManager());
+    @Autowired
+    private ChessRoomRepository chessRoomRepository;
+
     @Autowired
     private ChessBoardRepository chessBoardRepository;
     private int boardId;
@@ -27,13 +32,13 @@ class ChessRoomRepositoryTest {
     void setup() {
         final Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
         this.boardId = board.getId();
-        this.room = repository.save(new Room("개초보만", boardId));
+        this.room = chessRoomRepository.save(new Room("개초보만", boardId));
     }
 
-    @AfterEach
-    void setDown() {
-        repository.deleteAll();
-    }
+//    @AfterEach
+//    void setDown() {
+//        repository.deleteAll();
+//    }
 
     @Test
     void save() {
@@ -44,10 +49,15 @@ class ChessRoomRepositoryTest {
     }
 
     @Test
-    void findAll() {
-        repository.save(new Room("왕허접만", boardId));
-        final List<Room> boards = repository.findAllWithRunning();
+    void findAllByStatus() {
+        chessRoomRepository.save(new Room("왕허접만", boardId));
+        final List<Room> rooms = chessRoomRepository.findAllByBoardStatus(new Running());
+        assertThat(rooms.size()).isEqualTo(2);
+    }
 
-        assertThat(boards.size()).isEqualTo(2);
+    @Test
+    void getRoomById() {
+        Room room = chessRoomRepository.getById(this.room.getId());
+        assertThat(room.getTitle()).isEqualTo("개초보만");
     }
 }

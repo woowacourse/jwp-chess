@@ -57,7 +57,7 @@ public class ChessService {
 
     public RoomsDto getRooms() {
         List<RoomDto> roomsDto = new ArrayList<>();
-        List<Room> rooms = chessRoomRepository.findAllWithRunning();
+        List<Room> rooms = chessRoomRepository.findAllByBoardStatus(new Running());
         for (Room room : rooms) {
             List<Member> membersByRoom = chessMemberRepository.getAllByRoomId(room.getId());
             roomsDto.add(

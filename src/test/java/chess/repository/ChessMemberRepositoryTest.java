@@ -21,7 +21,9 @@ class ChessMemberRepositoryTest {
     private final ChessMemberRepository chessMemberRepository = new ChessMemberRepository(new ConnectionManager());
     @Autowired
     private ChessBoardRepository chessBoardRepository;
-    private final ChessRoomRepository chessRoomRepository = new ChessRoomRepository(new ConnectionManager());
+
+    @Autowired
+    private ChessRoomRepository chessRoomRepository;
     private int roomId;
 
     @BeforeEach

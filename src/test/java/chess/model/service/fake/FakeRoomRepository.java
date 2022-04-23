@@ -1,6 +1,7 @@
 package chess.model.service.fake;
 
 import chess.model.room.Room;
+import chess.model.status.Status;
 import chess.repository.RoomRepository;
 
 import java.util.List;
@@ -18,13 +19,8 @@ public class FakeRoomRepository implements RoomRepository<Room> {
     }
 
     @Override
-    public List<Room> findAllWithRunning() {
+    public List<Room> findAllByBoardStatus(Status status) {
         return List.of(new Room(fakeAutoIncrementId, fakeTitle, boardId));
-    }
-
-    @Override
-    public int deleteAll() {
-        return 0;
     }
 
     @Override

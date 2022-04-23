@@ -112,17 +112,20 @@ const renderScore = async () => {
 }
 
 const renderWinner = async () => {
-    const winner = await fetchWinner();
+    try {
+        const winner = await fetchWinner();
 
-    if (!winner.error) {
-        let color = "";
-        if (winner.pieceColor === "WHITE") {
-            color = "백";
-        } else {
-            color = "흑";
+        if (winner.pieceColor) {
+            let color = "";
+            if (winner.pieceColor === "WHITE") {
+                color = "백";
+            } else {
+                color = "흑";
+            }
+
+            document.getElementById("score").innerHTML = `승자는 ${color}`;
         }
-
-        document.getElementById("score").innerHTML = `승자는 ${color}`;
+    } catch (e) {
     }
 }
 

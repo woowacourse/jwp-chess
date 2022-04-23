@@ -24,7 +24,7 @@ public class SearchController {
     }
 
     @GetMapping
-    public ModelAndView render() {
+    public ModelAndView renderSearch() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameCountDto gameCountDto = chessService.countGames();

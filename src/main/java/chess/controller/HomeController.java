@@ -19,7 +19,7 @@ public class HomeController {
     }
 
     @GetMapping
-    public ModelAndView home() {
+    public ModelAndView renderHome() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameCountDto gameCountDto = chessService.countGames();

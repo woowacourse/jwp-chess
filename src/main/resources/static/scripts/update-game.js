@@ -9,7 +9,7 @@ let sourcePieceKey = null;
 const updateGame = async (source, target) => {
     const config = {
         headers: {'Content-Type': 'application/json'},
-        method: "post",
+        method: "put",
         body: JSON.stringify({source, target})
     };
     const response = await fetch(window.location.pathname, config);

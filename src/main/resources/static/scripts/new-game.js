@@ -1,5 +1,5 @@
 const initGameAndGetId = async () => {
-    const response = await fetch("/game/new", {method: "post"});
+    const response = await fetch("/game", {method: "post"});
     const {id} = await response.json();
     window.location.replace(`/game/${id}`);
 }

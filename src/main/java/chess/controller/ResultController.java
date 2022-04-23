@@ -22,7 +22,7 @@ public class ResultController {
     }
 
     @GetMapping("/{id}")
-    public ModelAndView result(@PathVariable int id) {
+    public ModelAndView findAndRenderResult(@PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameResultDto gameResultDto = chessService.findGameResult(id);

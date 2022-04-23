@@ -1,52 +1,62 @@
 package chess.web.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.state.StateType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+@JdbcTest
 class BoardStateDaoTest {
 
-    @DisplayName("보드 상태를 저장한다.")
-    @Test
-    void 보드_상태를_저장한다() {
-        final MockBoardStateDao boardStateDao = new MockBoardStateDao();
+    private BoardStateDao boardStateDao;
 
-        boardStateDao.save(StateType.READY);
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-        assertThat(boardStateDao.selectState()).isEqualTo(StateType.READY);
+    @BeforeEach
+    void setUp() {
+        boardStateDao = new BoardStateDaoJdbcImpl(jdbcTemplate);
+
+        jdbcTemplate.execute("drop table board if exists");
+        jdbcTemplate.execute("create table board ("
+                + " id int not null auto_increment primary key,"
+                + " state varchar(10) not null)");
+
+        boardStateDao.save(StateType.WHITE_TURN);
     }
 
     @DisplayName("보드 상태를 변경한다.")
     @Test
-    void 보드_상태를_변경한다() {
-        final MockBoardStateDao boardStateDao = new MockBoardStateDao();
+    void update() {
+        boardStateDao.update(StateType.BLACK_TURN);
+        StateType expected = StateType.BLACK_TURN;
 
-        boardStateDao.save(StateType.READY);
-        boardStateDao.update(StateType.WHITE_TURN);
-
-        assertThat(boardStateDao.selectState()).isEqualTo(StateType.WHITE_TURN);
+        StateType actual = boardStateDao.selectState();
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("보드 상태를 가져온다.")
     @Test
-    void 보드_상태를_가져온다() {
-        final MockBoardStateDao boardStateDao = new MockBoardStateDao();
+    void selectState() {
+        StateType actual = boardStateDao.selectState();
+        StateType expected = StateType.WHITE_TURN;
 
-        boardStateDao.save(StateType.READY);
-
-        assertThat(boardStateDao.selectState()).isEqualTo(StateType.READY);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("보드 상태를 전부 삭제한다.")
     @Test
-    void 보드_상태를_전부_삭제한다() {
-        final MockBoardStateDao boardStateDao = new MockBoardStateDao();
-
-        boardStateDao.save(StateType.READY);
+    void deleteAll() {
         boardStateDao.deleteAll();
 
-        assertThat(boardStateDao.selectState()).isNull();
+        assertThatThrownBy(() -> boardStateDao.selectState())
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

@@ -2,54 +2,70 @@ package chess.web.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.Color;
+import chess.domain.piece.King;
+import chess.domain.piece.Queen;
+import chess.domain.position.Position;
 import chess.web.dto.PieceDto;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+@JdbcTest
 class PieceDaoTest {
 
-    @DisplayName("기물을 저장한다.")
-    @Test
-    void 기물을_저장한다() {
-        final MockPieceDao pieceDao = new MockPieceDao();
+    private PieceDao pieceDao;
 
-        pieceDao.save(new PieceDto("P", "a2", "black"));
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-        assertThat(pieceDao.getSize()).isEqualTo(1);
-    }
+    @BeforeEach
+    void setUp() {
+        pieceDao = new PieceDaoJdbcImpl(jdbcTemplate);
 
-    @DisplayName("기물 정보를 변경한다.")
-    @Test
-    void 기물_정보를_변경한다() {
-        final MockPieceDao pieceDao = new MockPieceDao();
-        PieceDto pieceDto = new PieceDto("p", "a2", "white");
+        jdbcTemplate.execute("drop table piece if exists");
+        jdbcTemplate.execute("create table piece ("
+                + " id int not null auto_increment primary key,"
+                + " piece_type varchar(1) not null,"
+                + " position varchar(2) not null,"
+                + " color varchar(5) not null)");
 
-        pieceDao.save(new PieceDto("P", "a2", "black"));
-        pieceDao.update(pieceDto);
-
-        assertThat(pieceDao.getPieceDtoByPosition("a2")).isEqualTo(pieceDto);
-    }
-
-    @DisplayName("기물을 전부 가져온다.")
-    @Test
-    void 기물을_전부_가져온다() {
-        final MockPieceDao pieceDao = new MockPieceDao();
-
-        pieceDao.save(new PieceDto("P", "a2", "black"));
-        pieceDao.save(new PieceDto("p", "b2", "white"));
-
-        assertThat(pieceDao.selectAll().size()).isEqualTo(2);
+        pieceDao.save(new PieceDto(new King(Color.WHITE), new Position("a1")));
     }
 
     @DisplayName("기물을 전부 삭제한다.")
     @Test
-    void 기물을_전부_삭제한다() {
-        final MockPieceDao pieceDao = new MockPieceDao();
-
-        pieceDao.save(new PieceDto("P", "a2", "black"));
-        pieceDao.save(new PieceDto("p", "b2", "white"));
+    void deleteAll() {
         pieceDao.deleteAll();
 
-        assertThat(pieceDao.getSize()).isEqualTo(0);
+        int actual = pieceDao.selectAll().size();
+        int expected = 0;
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("기물 정보를 변경한다.")
+    @Test
+    void update() {
+        pieceDao.update(new PieceDto(new Queen(Color.WHITE), new Position("a1")));
+
+        List<PieceDto> pieceDtos = pieceDao.selectAll();
+        String actual = pieceDtos.get(0).getPieceType();
+        String expected = "Q";
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void selectAll() {
+        List<PieceDto> pieceDtos = pieceDao.selectAll();
+        int actual = pieceDtos.size();
+        int expected = 1;
+
+        assertThat(actual).isEqualTo(expected);
     }
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>체스 시뮬레이터</title>
+    <link rel="stylesheet" href="/styles/games.css"/>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+</head>
+<body>
+<section class="header__container">
+    <h1>체스 시뮬레이터</h1>
+    <p>체스 말의 기초적인 움직임을 테스트하기 위한 사이트</p>
+    <div>총 {{gameCount.totalCount}}개의 게임이 생성되었습니다.</div>
+    <div>현재 {{gameCount.runningCount}}개의 게임이 진행 중입니다.</div>
+</section>
+<section class="list__container">
+    <ul>
+        {{#games}}
+        <li class="game_link_box">
+            <a href="/game/{{id}}">{{name}}</a>
+        </li>
+        {{/games}}
+    </ul>
+</section>
+<section class="buttons__container">
+    <a href="/">뒤로가기!</a>
+</section>
+</body>
+</html>

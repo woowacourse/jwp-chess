@@ -36,15 +36,10 @@ class PieceDaoTest {
         pieceDao = new JdbcPieceDao(jdbcTemplate);
 
         jdbcTemplate.execute("drop table piece if exists");
-        jdbcTemplate.execute("drop table player if exists");
-        jdbcTemplate.execute("create table player (team varchar(5) not null primary key)");
-        jdbcTemplate.execute("insert into player (team) values ('WHITE')");
-        jdbcTemplate.execute("insert into player (team) values ('BLACK')");
         jdbcTemplate.execute("CREATE TABLE piece (\n" +
                 "    position varchar(3) not null primary key,\n" +
                 "    name varchar(2) not null,\n" +
-                "    team varchar(5) not null,\n" +
-                "    foreign key (team) references player (team))"
+                "    team varchar(5) not null)"
         );
     }
 

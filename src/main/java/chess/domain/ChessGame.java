@@ -1,5 +1,6 @@
 package chess.domain;
 
+import chess.domain.board.Board;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
@@ -32,7 +33,7 @@ public final class ChessGame {
         state = state.end();
     }
 
-    public Map<Position, Piece> getBoard() {
+    public Board getBoard() {
         return state.getBoard();
     }
 

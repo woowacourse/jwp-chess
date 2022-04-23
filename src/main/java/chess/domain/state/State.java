@@ -7,23 +7,19 @@ import chess.domain.position.Position;
 
 import java.util.Map;
 
-public abstract class State {
+public interface State {
 
-    protected Board board;
+    State start();
 
-    public abstract State start();
+    boolean isEnd();
 
-    public abstract boolean isEnd();
+    State move(final Position from, final Position to);
 
-    public abstract State move(final Position from, final Position to);
+    double score(final Color color);
 
-    public abstract double score(final Color color);
+    Result getWinner();
 
-    public abstract Result getWinner();
+    State end();
 
-    public abstract State end();
-
-    public final Map<Position, Piece> getBoard() {
-        return board.getValue();
-    }
+    Board getBoard();
 }

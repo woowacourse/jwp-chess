@@ -1,5 +1,6 @@
 package chess.view;
 
+import chess.domain.board.Board;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.File;
@@ -8,7 +9,6 @@ import chess.domain.position.Rank;
 import chess.domain.state.Status;
 
 import java.util.Locale;
-import java.util.Map;
 
 public final class Output {
 
@@ -28,21 +28,21 @@ public final class Output {
         System.out.println("> 게임 이동 : move source위치 target위치 - 예. move b2 b3");
     }
 
-    public static void printBoard(final Map<Position, Piece> board) {
+    public static void printBoard(final Board board) {
         for (final Rank rank : Rank.reversed()) {
             printBoard(rank, board);
         }
     }
 
-    private static void printBoard(final Rank rank, final Map<Position, Piece> board) {
+    private static void printBoard(final Rank rank, final Board board) {
         for (final File file : File.sorted()) {
             printBoard(file, rank, board);
         }
         System.out.println();
     }
 
-    private static void printBoard(final File file, final Rank rank, final Map<Position, Piece> board) {
-        final Piece target = board.get(Position.of(file, rank));
+    private static void printBoard(final File file, final Rank rank, final Board board) {
+        final Piece target = board.getValue().get(Position.of(file, rank));
         if (target != null) {
             printPieceName(target);
             return;

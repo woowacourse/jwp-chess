@@ -5,7 +5,7 @@ import chess.domain.board.BoardInitializer;
 import chess.domain.piece.Color;
 import chess.domain.position.Position;
 
-public final class Ready extends State {
+public final class Ready implements State {
 
     private static final String ERROR_MESSAGE = "게임을 시작해 주세요.";
 
@@ -36,6 +36,11 @@ public final class Ready extends State {
 
     @Override
     public State end() {
+        throw new IllegalStateException(ERROR_MESSAGE);
+    }
+
+    @Override
+    public Board getBoard() {
         throw new IllegalStateException(ERROR_MESSAGE);
     }
 }

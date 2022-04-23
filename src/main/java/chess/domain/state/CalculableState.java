@@ -7,7 +7,7 @@ import chess.domain.position.Position;
 
 import java.util.Map;
 
-public abstract class CalculableState extends State {
+public abstract class CalculableState extends Started {
 
     private static final int MIN_PAWN_COUNT = 1;
     private static final int NUMBER_DIVIDE_PAWN_SCORE = 2;

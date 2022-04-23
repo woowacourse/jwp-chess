@@ -11,19 +11,16 @@ import java.util.stream.Collectors;
 
 public class ChessGameDto {
     private final List<PieceDto> pieces;
-    private final String state;
-    private final String turn;
+    private final GameInfoDto gameInfo;
 
     public ChessGameDto(List<PieceDto> pieces, GameInfoDto gameInfo) {
         this.pieces = pieces;
-        this.state = gameInfo.getState();
-        this.turn = gameInfo.getTurn();
+        this.gameInfo = gameInfo;
     }
 
     private ChessGameDto(List<PieceDto> pieces, String state, String turn) {
         this.pieces = pieces;
-        this.state = state;
-        this.turn = turn;
+        this.gameInfo = new GameInfoDto(state,turn);
     }
 
     public static ChessGameDto of(ChessGame chessGame) {
@@ -44,12 +41,16 @@ public class ChessGameDto {
         return pieces;
     }
 
+    public GameInfoDto getGameInfo() {
+        return gameInfo;
+    }
+
     public String getState() {
-        return state;
+        return gameInfo.getState();
     }
 
     public String getTurn() {
-        return turn;
+        return gameInfo.getTurn();
     }
 
     private static String convertState(State state) {

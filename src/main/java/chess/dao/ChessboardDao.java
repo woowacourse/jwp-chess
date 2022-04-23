@@ -5,6 +5,9 @@ import chess.dto.GameInfoDto;
 import chess.dto.PieceDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,29 +15,25 @@ import java.util.List;
 @Repository
 public class ChessboardDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ChessboardDao(JdbcTemplate jdbcTemplate) {
+    public ChessboardDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    private final RowMapper<PieceDto> pieceRowMapper = (resultSet, rowNum) -> {
-        PieceDto piece = new PieceDto(
-                resultSet.getString("color"),
-                resultSet.getString("type"),
-                resultSet.getInt("x"),
-                resultSet.getInt("y")
-        );
-        return piece;
-    };
+    private final RowMapper<PieceDto> pieceRowMapper = (resultSet, rowNum) -> new PieceDto(
+           resultSet.getString("color"),
+           resultSet.getString("type"),
+           resultSet.getInt("x"),
+           resultSet.getInt("y")
+   );
 
-    private final RowMapper<GameInfoDto> gameInfoRowMapper = (resultSet, rowNum) -> {
-        GameInfoDto gameInfo = new GameInfoDto(
-                resultSet.getString("state"),
-                resultSet.getString("turn")
-        );
-        return gameInfo;
-    };
+    private final RowMapper<GameInfoDto> gameInfoRowMapper = (resultSet, rowNum) -> new GameInfoDto(
+            resultSet.getString("state"),
+            resultSet.getString("turn")
+    );
 
     public boolean isDataExist() {
         final String sql = "SELECT count(*) AS result FROM gameInfos";
@@ -67,17 +66,21 @@ public class ChessboardDao {
     private void addAll(ChessGameDto chessGameDto) {
         chessGameDto.getPieces()
                 .forEach(this::addBoard);
-        addGameInfos(chessGameDto.getState(), chessGameDto.getTurn());
+        addGameInfos(chessGameDto.getGameInfo());
     }
 
     private void addBoard(PieceDto pieceDto) {
-        final String sql = "INSERT INTO pieces (color,type,x,y) VALUES (?,?,?,?)";
-        jdbcTemplate.update(sql, pieceDto.getColor(), pieceDto.getType(), pieceDto.getX(), pieceDto.getY());
+        final String sql = "INSERT INTO pieces (color,type,x,y) VALUES (:color,:type,:x,:y)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(pieceDto);
+
+        namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
-    private void addGameInfos(String state, String turn) {
-        String sql = "INSERT INTO gameInfos (state,turn) VALUES ('" + state + "','" + turn + "')";
-        jdbcTemplate.update(sql);
+    private void addGameInfos(GameInfoDto gameInfo) {
+        String sql = "INSERT INTO gameInfos (state,turn) VALUES (:state,:turn)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(gameInfo);
+
+        namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
 }

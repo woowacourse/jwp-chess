@@ -10,6 +10,7 @@ import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,15 +24,21 @@ class WebChessPositionDaoTest {
     @Autowired
     private WebChessPositionDao webChessPositionDao;
 
-    private final BoardDao<ChessBoard> boardDao = new ChessBoardDao(new ChessConnectionManager());
-    private final PieceDao<Piece> pieceDao = new ChessPieceDao(new ChessConnectionManager());
+    @Autowired
+    private WebChessBoardDao boardDao;
+
+    @Autowired
+    private WebChessPieceDao pieceDao;
+
     private int boardId;
+    private int positionId;
 
     @BeforeEach
     void setup() {
         final ChessBoard board = boardDao.save(new ChessBoard("코린파이팅"));
         this.boardId = board.getId();
         Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, boardId));
+        this.positionId = position.getId();
         pieceDao.save(new Piece(Color.WHITE, new Pawn(), position.getId()));
     }
 
@@ -66,6 +73,21 @@ class WebChessPositionDaoTest {
     void saveAllPositionTest() {
         final int savedRecords = webChessPositionDao.saveAll(boardId);
         assertThat(savedRecords).isEqualTo(64);
+    }
+
+    @Test
+    void getIdByColumnAndRowAndBoardId() {
+        int positionId = webChessPositionDao.getIdByColumnAndRowAndBoardId(Column.A, Row.TWO, boardId);
+
+        assertThat(positionId).isEqualTo(this.positionId);
+    }
+
+    @Test
+    void getPaths() {
+        List<Position> positions = List.of(new Position(Column.A, Row.TWO, boardId));
+        List<Position> paths = webChessPositionDao.getPaths(positions, boardId);
+
+        assertThat(paths.get(0).getId()).isEqualTo(positionId);
     }
 
     @AfterEach

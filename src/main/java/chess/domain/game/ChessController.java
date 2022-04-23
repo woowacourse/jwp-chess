@@ -1,17 +1,22 @@
 package chess.domain.game;
 
-import chess.dao.*;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.position.Position;
-import chess.dto.*;
+import chess.dto.BoardDto;
+import chess.dto.RequestDto;
+import chess.dto.ResponseDto;
+import chess.dto.RoomsDto;
+import chess.dto.StatusDto;
 import chess.mapper.Command;
 import chess.service.GameService;
-import org.eclipse.jetty.http.HttpStatus;
-
 import java.util.Arrays;
 import java.util.List;
+import org.eclipse.jetty.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ChessController {
 
     private static final String MOVE_DELIMITER = " ";
@@ -19,20 +24,12 @@ public class ChessController {
     private static final int SOURCE_INDEX = 1;
     private static final int TARGET_INDEX = 2;
 
-    private final GameService gameService;
-
-    public ChessController() {
-        final ConnectionManager connectionManager = new ChessConnectionManager();
-        gameService = new GameService(
-                new ChessBoardDao(connectionManager),
-                new ChessPositionDao(connectionManager),
-                new ChessPieceDao(connectionManager),
-                new ChessMemberDao(connectionManager)
-        );
-    }
+    @Autowired
+    private GameService gameService;
 
     public int startGame(RequestDto requestDto) {
-        final ChessBoard board = new ChessBoard(requestDto.getTitle(), Color.WHITE, List.of(new Member(requestDto.getFirstMemberName()), new Member(requestDto.getSecondMemberName())));
+        final ChessBoard board = new ChessBoard(requestDto.getTitle(), Color.WHITE,
+                List.of(new Member(requestDto.getFirstMemberName()), new Member(requestDto.getSecondMemberName())));
         return gameService.saveBoard(board, new BoardInitializer()).getId();
     }
 

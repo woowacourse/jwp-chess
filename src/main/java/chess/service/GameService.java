@@ -1,13 +1,12 @@
 package chess.service;
 
-import chess.dao.BoardDao;
-import chess.dao.MemberDao;
-import chess.dao.PieceDao;
-import chess.dao.PositionDao;
+import chess.dao.WebChessBoardDao;
+import chess.dao.WebChessMemberDao;
+import chess.dao.WebChessPieceDao;
+import chess.dao.WebChessPositionDao;
 import chess.domain.game.ChessBoard;
 import chess.domain.game.ConsoleBoard;
 import chess.domain.game.Initializer;
-import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
@@ -15,30 +14,37 @@ import chess.dto.BoardDto;
 import chess.dto.RoomDto;
 import chess.dto.RoomsDto;
 import chess.dto.StatusDto;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public final class GameService {
 
-    private final BoardDao<ChessBoard> boardDao;
-    private final PositionDao<Position> positionDao;
-    private final PieceDao<Piece> pieceDao;
-    private final MemberDao<Member> memberDao;
+    @Autowired
+    private WebChessBoardDao boardDao;
 
-    public GameService(BoardDao<ChessBoard> boardDao, PositionDao<Position> positionDao, PieceDao<Piece> pieceDao, MemberDao<Member> memberDao) {
-        this.boardDao = boardDao;
-        this.positionDao = positionDao;
-        this.pieceDao = pieceDao;
-        this.memberDao = memberDao;
-    }
+    @Autowired
+    private WebChessPositionDao positionDao;
+
+    @Autowired
+    private WebChessPieceDao pieceDao;
+
+    @Autowired
+    private WebChessMemberDao memberDao;
 
     public ChessBoard saveBoard(final ChessBoard board, final Initializer initializer) {
         final ChessBoard savedBoard = boardDao.save(board);
         final Map<Position, Piece> initialize = initializer.initialize();
         positionDao.saveAll(savedBoard.getId());
         for (Position position : initialize.keySet()) {
-            int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(), savedBoard.getId());
+            int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),
+                    savedBoard.getId());
             final Piece piece = initialize.get(position);
             pieceDao.save(new Piece(piece.getColor(), piece.getType(), lastPositionId));
         }
@@ -47,8 +53,10 @@ public final class GameService {
     }
 
     public void move(final int roomId, final Position sourceRawPosition, final Position targetRawPosition) {
-        Position sourcePosition = positionDao.getByColumnAndRowAndBoardId(sourceRawPosition.getColumn(), sourceRawPosition.getRow(), roomId);
-        Position targetPosition = positionDao.getByColumnAndRowAndBoardId(targetRawPosition.getColumn(), targetRawPosition.getRow(), roomId);
+        Position sourcePosition = positionDao.getByColumnAndRowAndBoardId(sourceRawPosition.getColumn(),
+                sourceRawPosition.getRow(), roomId);
+        Position targetPosition = positionDao.getByColumnAndRowAndBoardId(targetRawPosition.getColumn(),
+                targetRawPosition.getRow(), roomId);
         ConsoleBoard consoleBoard = new ConsoleBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
         consoleBoard.validateMovement(sourcePosition, targetPosition);
         validateTurn(roomId, sourcePosition);
@@ -57,7 +65,8 @@ public final class GameService {
     }
 
     private void validateTurn(final int roomId, final Position sourcePosition) {
-        final Optional<Piece> wrappedPiece = pieceDao.findByPositionId(positionDao.getIdByColumnAndRowAndBoardId(sourcePosition.getColumn(), sourcePosition.getRow(), roomId));
+        final Optional<Piece> wrappedPiece = pieceDao.findByPositionId(
+                positionDao.getIdByColumnAndRowAndBoardId(sourcePosition.getColumn(), sourcePosition.getRow(), roomId));
         wrappedPiece.ifPresent(piece -> validateCorrectTurn(roomId, piece));
     }
 
@@ -68,7 +77,8 @@ public final class GameService {
         }
     }
 
-    private void updateMovingPiecePosition(Position sourcePosition, Position targetPosition, Optional<Piece> targetPiece) {
+    private void updateMovingPiecePosition(Position sourcePosition, Position targetPosition,
+                                           Optional<Piece> targetPiece) {
         if (targetPiece.isPresent()) {
             pieceDao.deleteByPositionId(targetPosition.getId());
         }
@@ -120,7 +130,8 @@ public final class GameService {
         List<RoomDto> boardsDto = new ArrayList<>();
         List<ChessBoard> boards = boardDao.findAll();
         for (ChessBoard board : boards) {
-            boardsDto.add(new RoomDto(board.getId(), board.getRoomTitle(), board.getMembers().get(0), board.getMembers().get(1)));
+            boardsDto.add(new RoomDto(board.getId(), board.getRoomTitle(), board.getMembers().get(0),
+                    board.getMembers().get(1)));
         }
         return new RoomsDto(boardsDto);
     }

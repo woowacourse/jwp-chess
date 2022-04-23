@@ -26,7 +26,9 @@ class WebPieceDaoTest {
     @Autowired
     private WebChessPieceDao webPieceDao;
 
-    private final BoardDao<ChessBoard> boardDao = new ChessBoardDao(new ChessConnectionManager());
+    @Autowired
+    private WebChessBoardDao boardDao;
+
     private int boardId;
     private int positionId;
 

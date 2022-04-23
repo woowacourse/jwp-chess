@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ColumnTest {
+
     @Test
     @DisplayName("숫자를 입력 시, 해당하는 컬럼을 조회한다.")
     void find() {

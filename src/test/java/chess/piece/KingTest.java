@@ -13,6 +13,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class KingTest {
+
     @ParameterizedTest
     @ValueSource(strings = {"c7", "a7", "a6", "h6"})
     @DisplayName("출발 지점과 도착 지점을 입력 후, 경로 리스트를 조회한다.")

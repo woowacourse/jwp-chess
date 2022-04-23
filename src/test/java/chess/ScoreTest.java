@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ScoreTest {
+
     @Test
     @DisplayName("현재 체스 보드를 입력 받아, 각 팀의 점수를 조회한다.")
     void getTotalScore() {

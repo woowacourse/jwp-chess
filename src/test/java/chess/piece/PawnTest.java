@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PawnTest {
+
     @ParameterizedTest
     @ValueSource(strings = {"e6", "d7", "f7"})
     @DisplayName("출발 지점과 도착 지점을 입력 후, 이동 가능하지 않은 위치라면 예외가 발생한다.")

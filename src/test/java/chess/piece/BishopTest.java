@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BishopTest {
+
     @ParameterizedTest
     @ValueSource(strings = {"d4", "c5", "d6", "e5"})
     @DisplayName("출발 지점과 도착 지점을 입력 후, 이동 가능하지 않은 위치라면 예외가 발생한다.")

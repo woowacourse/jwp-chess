@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class WhiteTurnTest {
+
     @ParameterizedTest
     @CsvSource(value = {"a8:R", "c8:B", "d2:p", "d1:q", "e1:k", "a2:p", "a3:."}, delimiter = ':')
     @DisplayName("위치 값 문자를 입력하여 해당되는 말을 조회한다.")

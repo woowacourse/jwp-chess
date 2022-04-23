@@ -15,8 +15,9 @@ public class InMemoryGameDao implements GameDao {
     private int id = 1;
 
     @Override
-    public void createGame(String name) {
+    public int createGame(String name) {
         gameTable.put(id++, new ChessGameDto(1, name, DEFAULT_STATUS, DEFAULT_TURN));
+        return id;
     }
 
     @Override

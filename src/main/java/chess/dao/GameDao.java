@@ -13,5 +13,5 @@ public interface GameDao {
 
     GamesDto findAll();
 
-    void createGame(String name);
+    int createGame(String name);
 }

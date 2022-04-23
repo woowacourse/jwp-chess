@@ -4,8 +4,11 @@ import chess.dao.GameDao;
 import chess.service.dto.ChessGameDto;
 import chess.service.dto.GamesDto;
 import chess.service.dto.StatusDto;
+import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -49,8 +52,15 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public void createGame(String name) {
+    public int createGame(String name) {
         String sql = "INSERT INTO game SET name = ?";
-        jdbcTemplate.update(sql, name);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement prepareStatement = con.prepareStatement(sql, new String[]{"id"});
+            prepareStatement.setString(1, name);
+            return prepareStatement;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 }

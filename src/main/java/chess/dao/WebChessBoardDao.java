@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -20,12 +21,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class WebChessBoardDao implements BoardDao<ChessBoard> {
 
+    @Autowired
+    private WebChessMemberDao webChessMemberDao;
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public WebChessBoardDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
 
     @Override
     public ChessBoard save(ChessBoard board) {
@@ -48,15 +51,15 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
         parameters.put("id", id);
         SqlParameterSource namedParameters = new MapSqlParameterSource(parameters);
         return jdbcTemplate.queryForObject(sql, namedParameters,
-                (rs, rowNum) -> makeBoard(rs, new ChessMemberDao(new ChessConnectionManager())));
+                (rs, rowNum) -> makeBoard(rs, webChessMemberDao));
     }
 
-    private ChessBoard makeBoard(ResultSet resultSet, ChessMemberDao chessMemberDao) throws SQLException {
+    private ChessBoard makeBoard(ResultSet resultSet, WebChessMemberDao webChessMemberDao) throws SQLException {
         return new ChessBoard(
                 resultSet.getInt("id"),
                 resultSet.getString("room_title"),
                 Color.findColor(resultSet.getString("turn")),
-                chessMemberDao.getAllByBoardId(resultSet.getInt("id")));
+                webChessMemberDao.getAllByBoardId(resultSet.getInt("id")));
     }
 
     @Override
@@ -64,12 +67,11 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
         final String sql = "SELECT * FROM board";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new MapSqlParameterSource());
         List<ChessBoard> boards = new ArrayList<>();
-        MemberDao<Member> memberDao = new ChessMemberDao(new ChessConnectionManager());
         for (Map<String, Object> map : maps) {
             int id = (int) map.get("id");
             String roomTitle = (String) map.get("room_title");
             String turn = (String) map.get("turn");
-            List<Member> members = memberDao.getAllByBoardId((int) map.get("id"));
+            List<Member> members = webChessMemberDao.getAllByBoardId((int) map.get("id"));
 
             boards.add(new ChessBoard(id, roomTitle, Color.findColor(turn), members));
         }

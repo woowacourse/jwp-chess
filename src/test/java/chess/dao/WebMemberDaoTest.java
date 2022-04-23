@@ -1,6 +1,7 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.domain.game.ChessBoard;
 import chess.domain.member.Member;
@@ -46,8 +47,12 @@ class WebMemberDaoTest {
     @Test
     void getAllByBoardId() {
         List<Member> members = dao.getAllByBoardId(boardId);
+        assertAll(
+                () -> assertThat(members.size()).isEqualTo(2),
+                () -> assertThat(members.get(0).getName()).isEqualTo("쿼리치"),
+                () -> assertThat(members.get(1).getName()).isEqualTo("코린")
+        );
 
-        assertThat(members.size()).isEqualTo(2);
     }
 
     @AfterEach

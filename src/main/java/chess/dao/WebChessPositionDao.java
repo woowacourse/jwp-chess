@@ -32,15 +32,16 @@ public class WebChessPositionDao implements PositionDao<Position> {
     @Override
     public Position save(Position position) {
         final String sql = "INSERT INTO position (position_column, position_row, board_id) VALUES (:position_column, :position_row, :board_id)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("position_column", position.getColumn().value());
-        parameters.put("position_row", position.getRow().value());
-        parameters.put("board_id", position.getBoardId());
-        SqlParameterSource namedParameters = new MapSqlParameterSource(parameters);
-        jdbcTemplate.update(sql, namedParameters, keyHolder);
-        int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
 
+        List<String> keys = List.of("position_column", "position_row", "board_id");
+        List<Object> values = List.of(position.getColumn().value(), position.getRow().value(), position.getBoardId());
+        SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(sql, namedParameters, keyHolder);
+
+        int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
         return new Position(id, position.getColumn(), position.getRow(), position.getBoardId());
     }
 
@@ -49,20 +50,12 @@ public class WebChessPositionDao implements PositionDao<Position> {
         final String sql = "SELECT id, position_column, position_row, board_id " +
                 "FROM position " +
                 "WHERE position_column=:position_column AND position_row=:position_row AND board_id=:board_id";
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("position_column", column.value());
-        parameters.put("position_row", row.value());
-        parameters.put("board_id", boardId);
-        SqlParameterSource namedParameters = new MapSqlParameterSource(parameters);
-        return jdbcTemplate.queryForObject(sql, namedParameters, (rs, rowNum) -> makePosition(rs, "id"));
-    }
 
-    private Position makePosition(ResultSet resultSet, String idLabel) throws SQLException {
-        return new Position(
-                resultSet.getInt(idLabel),
-                Column.findColumn(resultSet.getInt("position_column")),
-                Row.findRow(resultSet.getInt("position_row")),
-                resultSet.getInt("board_id"));
+        List<String> keys = List.of("position_column", "position_row", "board_id");
+        List<Object> values = List.of(column.value(), row.value(), boardId);
+        SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
+
+        return jdbcTemplate.queryForObject(sql, namedParameters, (rs, rowNum) -> makePosition(rs, "id"));
     }
 
     @Override
@@ -100,10 +93,13 @@ public class WebChessPositionDao implements PositionDao<Position> {
                 "FROM position po " +
                 "JOIN piece pi ON po.id = pi.position_id " +
                 "WHERE board_id=:board_id";
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("board_id", boardId);
-        SqlParameterSource namedParameters = new MapSqlParameterSource(parameters);
+
+        List<String> keys = List.of("board_id");
+        List<Object> values = List.of(boardId);
+        SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
+
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, namedParameters);
+
         Map<Position, Piece> result = new HashMap<>();
         for (Map<String, Object> map : maps) {
             result.put(makePosition(map), makePiece(map));
@@ -135,7 +131,14 @@ public class WebChessPositionDao implements PositionDao<Position> {
         for (Position position : positions) {
             realPositions.add(getByColumnAndRowAndBoardId(position.getColumn(), position.getRow(), roomId));
         }
-
         return realPositions;
+    }
+
+    private Position makePosition(ResultSet resultSet, String idLabel) throws SQLException {
+        return new Position(
+                resultSet.getInt(idLabel),
+                Column.findColumn(resultSet.getInt("position_column")),
+                Row.findRow(resultSet.getInt("position_row")),
+                resultSet.getInt("board_id"));
     }
 }

@@ -9,4 +9,6 @@ public interface MemberDao<T> {
     List<T> getAllByBoardId(int boardId);
 
     T save(String name, int boardId);
+
+    void deleteAll();
 }

@@ -1,27 +1,33 @@
 create table game
 (
-    id        int not null
+    id        int                         not null
         primary key,
     whiteName varchar(100) null,
     blackName varchar(100) null,
     winner    varchar(100) null,
-    turn      tinyint(1) default 0 null
+    password  varchar(100) null,
+    turn      varchar(10) default 'white' not null
 );
 
 create table board
 (
     game_id  int null,
     position varchar(2) null,
-    piece    varchar(2) null
+    piece    varchar(2) null,
+    constraint board_game_id_fk
+        foreign key (game_id) references game (id)
+            on update cascade on delete cascade
 );
+
 
 create table user
 (
-    id   int not null
+    id       int           not null
         primary key,
-    name varchar(100) null,
-    win  int null,
-    lost int null
+    name     varchar(100)  not null,
+    password varchar(100)  not null,
+    win      int default 0 not null,
+    lost     int default 0 not null
 );
 
 create table initialBoard

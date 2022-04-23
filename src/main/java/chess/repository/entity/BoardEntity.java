@@ -14,11 +14,11 @@ public class BoardEntity {
     private final String pieceName;
     private final String pieceTeamValue;
 
-    public BoardEntity(String name,
-                       String positionColumnValue,
-                       int positionRowValue,
-                       String pieceName,
-                       String pieceTeamValue) {
+    public BoardEntity(final String name,
+                       final String positionColumnValue,
+                       final int positionRowValue,
+                       final String pieceName,
+                       final String pieceTeamValue) {
         this.name = name;
         this.positionColumnValue = positionColumnValue;
         this.positionRowValue = positionRowValue;
@@ -26,10 +26,10 @@ public class BoardEntity {
         this.pieceTeamValue = pieceTeamValue;
     }
 
-    public BoardEntity(String name,
-                       char columnValue,
-                       int rowValue,
-                       Map<Position, Piece> currentBoard) {
+    public BoardEntity(final String name,
+                       final char columnValue,
+                       final int rowValue,
+                       final Map<Position, Piece> currentBoard) {
         this.name = name;
         positionColumnValue = String.valueOf(columnValue);
         positionRowValue = rowValue;

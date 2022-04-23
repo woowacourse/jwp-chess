@@ -19,7 +19,7 @@ public class SpringChessService {
     private final ChessGameDao chessGameDao;
     private final BoardDao boardDao;
 
-    public SpringChessService(ChessGameDao chessGameDao, BoardDao boardDao) {
+    public SpringChessService(final ChessGameDao chessGameDao, final BoardDao boardDao) {
         this.chessGameDao = chessGameDao;
         this.boardDao = boardDao;
     }

@@ -8,7 +8,7 @@ public class ChessGameEntity {
     private final boolean isOn;
     private final String teamValueOfTurn;
 
-    public ChessGameEntity(String name, boolean isOn, String teamValueOfTurn) {
+    public ChessGameEntity(final String name, final boolean isOn, final String teamValueOfTurn) {
         this.name = name;
         this.isOn = isOn;
         this.teamValueOfTurn = teamValueOfTurn;

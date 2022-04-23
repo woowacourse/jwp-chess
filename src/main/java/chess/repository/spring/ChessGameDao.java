@@ -14,7 +14,7 @@ public class ChessGameDao {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ChessGameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public ChessGameDao(final NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 

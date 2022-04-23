@@ -85,6 +85,19 @@ public class ChessSquareRepository implements SquareRepository<Square> {
             }
             return preparedStatement.executeBatch().length;
         });
+//        public int[] batchInsertWithNamedJdbc(List<Car> cars) {
+//            String sql = "insert into car(name, color) values(:name, :color)";
+//            return namedParameterJdbcTemplate.batchUpdate(sql, SqlParameterSourceUtils.createBatch(cars));
+//        }
+//        public int[] batchInsertVariation(List<Car> cars) {
+//            List<Object[]> batch = new ArrayList<>();
+//            for (Car car : cars) {
+//                Object[] values = new Object[]{car.getName(), car.getColor()};
+//                batch.add(values);
+//            }
+//            String sql = "insert into car(name, color) values(?,?)";
+//            return jdbcTemplate.batchUpdate(sql, batch);
+//        }
     }
 
     @Override

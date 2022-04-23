@@ -5,6 +5,7 @@ import chess.model.piece.Piece;
 import chess.model.piece.Team;
 import chess.model.square.Square;
 import chess.model.status.Running;
+import chess.model.status.Status;
 import chess.repository.BoardRepository;
 
 import java.util.Map;
@@ -43,17 +44,17 @@ public class FakeBoardRepository implements BoardRepository<Board> {
     }
 
     @Override
-    public int finishGame(int boardId) {
+    public int updateStatus(int boardId, Status status) {
         return 0;
     }
 
     @Override
-    public boolean isEnd(int boardId) {
-        return false;
+    public int updateTeamById(int boardId, Team team) {
+        return 0;
     }
 
     @Override
-    public int changeTurn(int boardId) {
-        return 0;
+    public Status getStatusById(int boardId) {
+        return null;
     }
 }

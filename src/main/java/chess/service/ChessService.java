@@ -1,5 +1,7 @@
 package chess.service;
 
+import chess.model.status.End;
+import chess.model.status.Status;
 import org.springframework.stereotype.Service;
 import chess.repository.*;
 import chess.dto.BoardDto;
@@ -81,13 +83,15 @@ public class ChessService {
         Square sourceSquare = chessSquareRepository.getBySquareAndBoardId(Square.fromString(source), room.getBoardId());
         Square targetSquare = chessSquareRepository.getBySquareAndBoardId(Square.fromString(target), room.getBoardId());
         Piece piece = chessPieceRepository.findBySquareId(sourceSquare.getId());
-        checkTurn(chessBoardRepository.getById(room.getBoardId()), piece);
+        Board board = chessBoardRepository.getById(room.getBoardId());
+        checkTurn(board, piece);
 
         checkMovable(sourceSquare, targetSquare, piece, room.getBoardId());
         chessPieceRepository.deletePieceBySquareId(targetSquare.getId());
         chessPieceRepository.updatePieceSquareId(sourceSquare.getId(), targetSquare.getId());
         chessPieceRepository.save(new Empty(), sourceSquare.getId());
-        chessBoardRepository.changeTurn(room.getBoardId());
+        
+        chessBoardRepository.updateTeamById(room.getBoardId(), board.getTeam().oppositeTeam());
         checkKingDead(room.getBoardId());
     }
 
@@ -103,7 +107,7 @@ public class ChessService {
                 .filter(Piece::isKing)
                 .count();
         if (kingCount != PROPER_KING_COUNT) {
-            chessBoardRepository.finishGame(boardId);
+            chessBoardRepository.updateStatus(boardId, new End());
         }
     }
 
@@ -136,7 +140,8 @@ public class ChessService {
 
     public boolean isEnd(int roomId) {
         Room room = chessRoomRepository.getById(roomId);
-        return chessBoardRepository.isEnd(room.getBoardId());
+        Status status = chessBoardRepository.getStatusById(room.getBoardId());
+        return status.isEnd();
     }
 
     public Map<String, Double> status(int roomId) {
@@ -170,6 +175,6 @@ public class ChessService {
 
     public void end(int roomId) {
         Room room = chessRoomRepository.getById(roomId);
-        chessBoardRepository.finishGame(room.getBoardId());
+        chessBoardRepository.updateStatus(room.getBoardId(), new End());
     }
 }

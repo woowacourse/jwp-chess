@@ -31,4 +31,11 @@ public enum Team {
         }
         return team.equals(BLACK);
     }
+
+    public Team oppositeTeam() {
+        if (this.equals(WHITE)) {
+            return BLACK;
+        }
+        return WHITE;
+    }
 }

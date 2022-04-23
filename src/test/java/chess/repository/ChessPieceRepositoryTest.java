@@ -11,6 +11,8 @@ import chess.model.status.Running;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -21,7 +23,8 @@ class ChessPieceRepositoryTest {
 
     private final ChessPieceRepository chessPieceRepository = new ChessPieceRepository(new ConnectionManager());
     private final ChessSquareRepository chessSquareRepository = new ChessSquareRepository(new ConnectionManager());
-    private final ChessBoardRepository chessBoardRepository = new ChessBoardRepository(new ConnectionManager());
+    @Autowired
+    private ChessBoardRepository chessBoardRepository;
     private int boardId;
     private int squareId;
 

@@ -2,7 +2,9 @@ package chess.repository;
 
 import chess.model.board.Board;
 import chess.model.piece.Piece;
+import chess.model.piece.Team;
 import chess.model.square.Square;
+import chess.model.status.Status;
 
 import java.util.Map;
 
@@ -18,9 +20,9 @@ public interface BoardRepository<T> {
 
     T init(T board, Map<Square, Piece> startingPieces);
 
-    int finishGame(int boardId);
+    int updateStatus(int boardId, Status status);
 
-    boolean isEnd(int boardId);
+    int updateTeamById(int boardId, Team team);
 
-    int changeTurn(int boardId);
+    Status getStatusById(int boardId);
 }

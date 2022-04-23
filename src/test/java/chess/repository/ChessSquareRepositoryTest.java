@@ -10,6 +10,8 @@ import chess.model.status.Running;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Map;
 
@@ -19,7 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class ChessSquareRepositoryTest {
 
     private final ChessSquareRepository repository = new ChessSquareRepository(new ConnectionManager());
-    private final ChessBoardRepository chessBoardRepository = new ChessBoardRepository(new ConnectionManager());
+    @Autowired
+    private ChessBoardRepository chessBoardRepository;
     private int boardId;
     private Square square;
 

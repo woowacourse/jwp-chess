@@ -1,16 +1,52 @@
 @import "global.css";
 
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 5px 0;
+}
+
+form > label {
+    margin-right: 8px;
+}
+
+form > #num_input {
+    margin-right: 10px;
+}
+
 .list__container {
     width: 100%;
+    margin-top: 16px;
 
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
+.list__container .title {
+    width: 200px;
+    font-size: 24px;
+    text-align: center;
+}
+
+.list__container ul {
+    width: 200px;
+}
+
 .list__container .game_link_box {
+    width: 100%;
     padding: 3px;
+}
+
+.list__container .game_link_box a {
+    display: block;
+    width: 100%;
+
+    text-align: center;
+    font-size: 16px;
 }
 
 .buttons__container {

@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.board.Board;
 import chess.domain.event.Event;
 import chess.domain.event.MoveEvent;
-import chess.util.BoardMapGeneratorUtil;
+import chess.domain.board.BoardFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ class BlackTurnTest {
 
     @BeforeEach
     void setUp() {
-        Board board = new Board(BoardMapGeneratorUtil.initFullChessBoard());
+        Board board = BoardFactory.init();
         game = new BlackTurn(board);
     }
 
@@ -40,7 +40,7 @@ class BlackTurnTest {
 
     @Test
     void 보드_정보가_동일한_흑색_턴_인스턴스는_동일() {
-        Board board = new Board(BoardMapGeneratorUtil.initFullChessBoard());
+        Board board = BoardFactory.init();
         Game game1 = new BlackTurn(board);
         Game game2 = new BlackTurn(board);
 

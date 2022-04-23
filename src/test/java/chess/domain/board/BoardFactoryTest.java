@@ -1,4 +1,4 @@
-package chess.util;
+package chess.domain.board;
 
 import static chess.domain.board.piece.Color.BLACK;
 import static chess.domain.board.piece.Color.WHITE;
@@ -19,13 +19,13 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("NonAsciiCharacters")
-class BoardMapGeneratorUtilTest {
+class BoardFactoryTest {
 
     private static Map<Position, Piece> boardMap;
 
     @BeforeAll
     static void setup() {
-        boardMap = BoardMapGeneratorUtil.initFullChessBoard();
+        boardMap = BoardFactory.initBoardMap();
     }
 
     @Test

@@ -4,7 +4,7 @@ import chess.domain.board.Board;
 import chess.domain.event.Event;
 import chess.domain.game.statistics.GameResult;
 import chess.dto.GameDto;
-import chess.util.BoardMapGeneratorUtil;
+import chess.domain.board.BoardFactory;
 
 public final class NewGame implements Game {
 
@@ -15,7 +15,7 @@ public final class NewGame implements Game {
         if (!event.isInit()) {
             throw new UnsupportedOperationException(GAME_NOT_STARTED_EXCEPTION_MESSAGE);
         }
-        Board board = new Board(BoardMapGeneratorUtil.initFullChessBoard());
+        Board board = BoardFactory.init();
         return new WhiteTurn(board);
     }
 

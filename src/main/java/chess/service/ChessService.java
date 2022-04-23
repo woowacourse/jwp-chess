@@ -57,13 +57,6 @@ public class ChessService {
         return chessWebGame.createMap();
     }
 
-    private ChessWebGame loadGame() {
-        final ChessWebGame chessWebGame = new ChessWebGame();
-        loadPieces(chessWebGame);
-        loadTurn(chessWebGame);
-        return chessWebGame;
-    }
-
     private void loadPieces(final ChessWebGame chessWebGame) {
         final List<PieceDto> whitePiecesDto = pieceDao.findPiecesByTeam(Team.WHITE);
         final List<PieceDto> blackPiecesDto = pieceDao.findPiecesByTeam(Team.BLACK);
@@ -74,12 +67,6 @@ public class ChessService {
                 .map(this::findPiece)
                 .collect(Collectors.toUnmodifiableList());
         chessWebGame.loadPlayers(whitePieces, blackPieces);
-    }
-
-    private void loadTurn(final ChessWebGame chessWebGame) {
-        final TurnDto turnDto = turnDao.findTurn();
-        Team turn = Team.from(turnDto.getTurn());
-        chessWebGame.loadTurn(turn);
     }
 
     private Piece findPiece(final PieceDto pieceDto) {
@@ -95,6 +82,12 @@ public class ChessService {
         return pieces.get(name);
     }
 
+    private void loadTurn(final ChessWebGame chessWebGame) {
+        final TurnDto turnDto = turnDao.findTurn();
+        Team turn = Team.from(turnDto.getTurn());
+        chessWebGame.loadTurn(turn);
+    }
+
     public ChessMap move(final MoveDto moveDto) {
         final Position currentPosition = Position.of(moveDto.getCurrentPosition());
         final Position destinationPosition = Position.of(moveDto.getDestinationPosition());
@@ -107,6 +100,13 @@ public class ChessService {
         pieceDao.updatePiece(moveDto);
         turnDao.updateTurn(turnDto.getTurn());
         return chessWebGame.createMap();
+    }
+
+    private ChessWebGame loadGame() {
+        final ChessWebGame chessWebGame = new ChessWebGame();
+        loadPieces(chessWebGame);
+        loadTurn(chessWebGame);
+        return chessWebGame;
     }
 
     public ScoreDto getStatus() {

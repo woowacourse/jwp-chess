@@ -3,7 +3,9 @@ package chess.view;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ChessMap {
 

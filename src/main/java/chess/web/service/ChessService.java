@@ -16,7 +16,9 @@ import chess.web.dao.PieceDao;
 import chess.web.dao.PieceDaoImpl;
 import chess.web.dto.PieceDto;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChessService {
 
     private static final int BOARD_START_INDEX = 0;

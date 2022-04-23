@@ -1,119 +1,84 @@
 package chess.web.controller;
 
-import static spark.Spark.exception;
-import static spark.Spark.get;
-
 import chess.domain.ChessGame;
 import chess.domain.Color;
 import chess.domain.position.Position;
+import chess.web.dto.MovePositionsDto;
+import chess.web.dto.MoveResultDto;
 import chess.web.service.ChessService;
-import java.util.HashMap;
-import java.util.Map;
-import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+import com.google.gson.Gson;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+@Controller
 public class ChessController {
 
-    public static final String INDEX_PATH = "/";
-    public static final String MOVE_PATH = "/move";
-    public static final String START_PATH = "/start";
-    public static final String RESULT_PATH = "/result";
+    private final ChessService chessService;
 
-    private final ChessService webChessService;
-
-    public ChessController() {
-        this.webChessService = new ChessService();
+    public ChessController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
-    public void run() {
-        get(INDEX_PATH, (req, res) -> rendIndexPage(res));
-
-        get(MOVE_PATH, this::movePiece);
-
-        get(START_PATH, (req, res) -> startChess(res));
-
-        get(RESULT_PATH, (req, res) -> rendResultPage());
-
-        exception(Exception.class, (exception, request, response) -> response.body(rendExceptionMessage(exception)));
-    }
-
-    public String rendIndexPage(Response res) {
-        checkRunning(res);
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("pieces", webChessService.getPieces());
-        model.put("black-score", webChessService.getScore(Color.BLACK));
-        model.put("white-score", webChessService.getScore(Color.WHITE));
-
-        return render(model, "index.html");
-    }
-
-    private void checkRunning(Response res) {
-        if (webChessService.isNotRunning()) {
-            res.redirect(START_PATH);
+    @GetMapping("/")
+    public String rendIndexPage(final Model model) {
+        if (chessService.isNotRunning()) {
+            return "redirect:/start";
         }
+
+        model.addAttribute("pieces", chessService.getPieces());
+        model.addAttribute("black-score", chessService.getScore(Color.BLACK));
+        model.addAttribute("white-score", chessService.getScore(Color.WHITE));
+
+        return "index";
     }
 
-    public String movePiece(Request req, Response res) {
-        ChessGame chessGame = webChessService.getChessGame();
-        chessGame.move(req.queryParams("source"), req.queryParams("target"));
+    @ResponseBody
+    @PostMapping("/move")
+    public String movePiece(@RequestBody MovePositionsDto movePositionsDto) {
+        ChessGame chessGame = chessService.getChessGame();
+        Gson gson = new Gson();
 
-        Position source = new Position(req.queryParams("source"));
-        Position target = new Position(req.queryParams("target"));
-        webChessService.move(chessGame, source, target);
+        try {
+            chessGame.move(movePositionsDto.getSource(), movePositionsDto.getTarget());
+            Position sourcePosition = new Position(movePositionsDto.getSource());
+            Position targetPosition = new Position(movePositionsDto.getTarget());
+            chessService.move(chessGame, sourcePosition, targetPosition);
 
-        checkFinished(res, chessGame);
 
-        res.redirect(INDEX_PATH);
-        return null;
-    }
-
-    private void checkFinished(Response res, ChessGame chessGame) {
-        if (chessGame.isFinished()) {
-            webChessService.updateState(chessGame);
-            res.redirect(RESULT_PATH);
+        } catch (Exception ex) {
+            return gson.toJson(new MoveResultDto(400, ex.getMessage(), chessGame.isFinished()));
         }
+        return gson.toJson(new MoveResultDto(200, "", chessGame.isFinished()));
     }
 
-    public String startChess(Response res) {
-        webChessService.start();
+    @GetMapping("/start")
+    public String startChess() {
+        chessService.start();
 
-        res.redirect(INDEX_PATH);
-        return null;
+        return "redirect:/";
     }
 
-    public String rendResultPage() {
-        ChessGame chessGame = webChessService.getChessGame();
-        checkFinished(chessGame);
+    @GetMapping("/result")
+    public String rendResultPage(final Model model) {
+        ChessGame chessGame = chessService.getChessGame();
+        endGame(chessGame);
 
-        Map<String, Object> model = new HashMap<>();
-        model.put("black-score", webChessService.getScore(Color.WHITE));
-        model.put("white-score", webChessService.getScore(Color.BLACK));
-        model.put("winner", chessGame.result().toString());
+        model.addAttribute("black-score", chessService.getScore(Color.WHITE));
+        model.addAttribute("white-score", chessService.getScore(Color.BLACK));
+        model.addAttribute("winner", chessGame.result().toString());
 
-        webChessService.end();
-        return render(model, "result.html");
+        chessService.end();
+
+        return "result";
     }
 
-    private void checkFinished(ChessGame chessGame) {
+    private void endGame(ChessGame chessGame) {
         if (!chessGame.isFinished()) {
             chessGame.end();
         }
-    }
-
-    public String rendExceptionMessage(Exception exception) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("error-message", exception.getMessage());
-        model.put("pieces", webChessService.getPieces());
-        model.put("black-score", webChessService.getScore(Color.WHITE));
-        model.put("white-score", webChessService.getScore(Color.BLACK));
-
-        return render(model, "index.html");
-    }
-
-    private String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
     }
 }

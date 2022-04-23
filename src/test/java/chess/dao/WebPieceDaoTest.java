@@ -78,6 +78,13 @@ class WebPieceDaoTest {
         assertThat(pieces.size()).isEqualTo(1);
     }
 
+    @Test
+    void countPawnsOnSameColumn() {
+        int pawnCount = webPieceDao.countPawnsOnSameColumn(boardId, Column.A, Color.WHITE);
+
+        assertThat(pawnCount).isEqualTo(1);
+    }
+
     @AfterEach
     void setDown() {
         boardDao.deleteAll();

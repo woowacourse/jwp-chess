@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/chess?serverTimezone=UTC&characterEncoding=UTF-8
+    password: password
+    username: user
+  h2:
+    console:
+      enabled: true
+handlebars:
+  prefix: classpath:/templates/
+  suffix: .hbs

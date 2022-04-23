@@ -64,7 +64,7 @@ class ChessGameControllerTest {
 	@DisplayName("체스 기물 이동")
 	void movePiece() {
 		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard(chessGameId));
+		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
 
 		RestAssured.given().log().all()
 				.body(new PieceMoveRequest("a2", "a4"))
@@ -78,7 +78,7 @@ class ChessGameControllerTest {
 	@DisplayName("체스 기물 프로모션")
 	void promotionPiece() {
 		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard(chessGameId));
+		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
 		Position source = Position.from("a2");
 		Position target = Position.from("a8");
 		pieceDao.delete(chessGameId, target);
@@ -120,7 +120,7 @@ class ChessGameControllerTest {
 	@DisplayName("게임 우승자 반환")
 	void chessGameWinner() {
 		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard(chessGameId));
+		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
 		pieceDao.delete(chessGameId, Position.from("e8"));
 
 		RestAssured.given().log().all()

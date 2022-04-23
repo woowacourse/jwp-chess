@@ -18,37 +18,37 @@ import org.junit.jupiter.api.Test;
 
 class RunningTurnTest {
 
-    private Position position;
+	private Position position;
 
-    @BeforeEach
-    void setUp() {
-        position = Position.of('a', '8');
-    }
+	@BeforeEach
+	void setUp() {
+		position = Position.of('a', '8');
+	}
 
-    @Test
-    @DisplayName("chess board가 promotion 상태라면 턴을 반환")
-    void nextTurnPromotion() {
-        ChessBoard chessBoard = new ChessBoard(Map.of(position, new Piece(1L, WHITE, new Pawn(WHITE))));
-        ChessGameState chessGameState = new RunningState(chessBoard, WHITE);
+	@Test
+	@DisplayName("chess board가 promotion 상태라면 턴을 반환")
+	void nextTurnPromotion() {
+		ChessBoard chessBoard = new ChessBoard(Map.of(position, new Piece(WHITE, new Pawn(WHITE))));
+		ChessGameState chessGameState = new RunningState(chessBoard, WHITE);
 
-        assertThat(chessGameState.nextTurn()).isEqualTo(WHITE_TURN);
-    }
+		assertThat(chessGameState.nextTurn()).isEqualTo(WHITE_TURN);
+	}
 
-    @Test
-    @DisplayName("게임이 종료되었으면 종료 상태를 반환")
-    void nextTurnEnd() {
-        ChessBoard chessBoard = new ChessBoard(Map.of(position, new Piece(1L, WHITE, new King())));
-        ChessGameState chessGameState = new RunningState(chessBoard, WHITE);
+	@Test
+	@DisplayName("게임이 종료되었으면 종료 상태를 반환")
+	void nextTurnEnd() {
+		ChessBoard chessBoard = new ChessBoard(Map.of(position, new Piece(WHITE, new King())));
+		ChessGameState chessGameState = new RunningState(chessBoard, WHITE);
 
-        assertThat(chessGameState.nextTurn()).isEqualTo(END);
-    }
+		assertThat(chessGameState.nextTurn()).isEqualTo(END);
+	}
 
-    @Test
-    @DisplayName("현재턴 종료 시 다음 턴 반환")
-    void nextTurnReverseColor() {
-        ChessBoard chessBoard = new ChessBoard(Map.of(Position.of('a', '1'), new Piece(1L, WHITE, new Pawn(WHITE))));
-        ChessGameState chessGameState = new RunningState(chessBoard, WHITE);
+	@Test
+	@DisplayName("현재턴 종료 시 다음 턴 반환")
+	void nextTurnReverseColor() {
+		ChessBoard chessBoard = new ChessBoard(Map.of(Position.of('a', '1'), new Piece(WHITE, new Pawn(WHITE))));
+		ChessGameState chessGameState = new RunningState(chessBoard, WHITE);
 
-        assertThat(chessGameState.nextTurn()).isEqualTo(BLACK_TURN);
-    }
+		assertThat(chessGameState.nextTurn()).isEqualTo(BLACK_TURN);
+	}
 }

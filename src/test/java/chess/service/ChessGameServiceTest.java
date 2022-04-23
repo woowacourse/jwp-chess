@@ -47,8 +47,8 @@ class ChessGameServiceTest {
 		Position source = Position.of('a', '1');
 		Position target = Position.of('b', '2');
 		pieceDao.savePieces(chessGameId, Map.of(
-				source, new Piece(chessGameId, WHITE, new Pawn(WHITE)),
-				target, new Piece(chessGameId, BLACK, new Knight())
+				source, new Piece(WHITE, new Pawn(WHITE)),
+				target, new Piece(BLACK, new Knight())
 		));
 
 		// when
@@ -71,7 +71,7 @@ class ChessGameServiceTest {
 
 		Position source = Position.of('a', '1');
 		Position target = Position.of('a', '2');
-		pieceDao.savePieces(chessGameId, Map.of(source, new Piece(chessGameId, WHITE, new Pawn(WHITE))));
+		pieceDao.savePieces(chessGameId, Map.of(source, new Piece(WHITE, new Pawn(WHITE))));
 
 		// when
 		chessGameService.move(chessGameId, source, target);
@@ -92,7 +92,7 @@ class ChessGameServiceTest {
 		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
 		Position source = Position.of('a', '8');
 		pieceDao.savePieces(chessGameId, Map.of(
-				source, new Piece(chessGameId, WHITE, new Pawn(WHITE))
+				source, new Piece(WHITE, new Pawn(WHITE))
 		));
 
 		// when

@@ -9,30 +9,24 @@ import chess.domain.Position;
 
 public final class Piece {
 
-    private final long chessGameId;
     private final Color color;
     private final PieceRule pieceRule;
 
-    public Piece(long chessGameId, Color color, PieceRule pieceRule) {
-        this.chessGameId = chessGameId;
+    public Piece(Color color, PieceRule pieceRule) {
         this.color = color;
         this.pieceRule = pieceRule;
     }
 
-    public static Piece createWhitePiece(long chessGameId, PieceRule pieceRule) {
-        return new Piece(chessGameId, WHITE, pieceRule);
+    public static Piece createWhitePiece(PieceRule pieceRule) {
+        return new Piece(WHITE, pieceRule);
     }
 
-    public static Piece createBlackPiece(long chessGameId, PieceRule pieceRule) {
-        return new Piece(chessGameId, BLACK, pieceRule);
+    public static Piece createBlackPiece(PieceRule pieceRule) {
+        return new Piece(BLACK, pieceRule);
     }
 
     public Piece move(Position source, Position target, ChessBoard chessBoard) {
-        return new Piece(chessGameId, color, pieceRule.move(source, target, chessBoard));
-    }
-
-    public String convertedName() {
-        return pieceRule.convertedName(color);
+        return new Piece(color, pieceRule.move(source, target, chessBoard));
     }
 
     public boolean isSameColor(Color color) {

@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 class PieceFactoryTest {
 
-    @Test
-    @DisplayName("새로운 기물 목록 생성")
-    void createNewPieces() {
-        assertThat(PieceFactory.createNewChessBoard(1L)).hasSize(32);
-    }
+	@Test
+	@DisplayName("새로운 기물 목록 생성")
+	void createNewPieces() {
+		assertThat(PieceFactory.createNewChessBoard()).hasSize(32);
+	}
 }

@@ -17,42 +17,42 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class KingTest {
 
-    private PieceRule king;
-    private Position source;
+	private PieceRule king;
+	private Position source;
 
-    @BeforeEach
-    void setUp() {
-        king = new King();
-        source = Position.of('a', '1');
-    }
+	@BeforeEach
+	void setUp() {
+		king = new King();
+		source = Position.of('a', '1');
+	}
 
-    @Test
-    @DisplayName("킹 기물 생성")
-    void createKing() {
-        assertThat(king).isInstanceOf(King.class);
-    }
+	@Test
+	@DisplayName("킹 기물 생성")
+	void createKing() {
+		assertThat(king).isInstanceOf(King.class);
+	}
 
-    @ParameterizedTest
-    @CsvSource(value = {"b,3,false", "c,3,false"})
-    @DisplayName("목표 지점이 이동 가능 경로를 벗어나면 예외 발생")
-    void isMovableToEmptyPosition(char col, char row) {
-        Position target = Position.of(col, row);
-        ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(1L, new King())));
+	@ParameterizedTest
+	@CsvSource(value = {"b,3,false", "c,3,false"})
+	@DisplayName("목표 지점이 이동 가능 경로를 벗어나면 예외 발생")
+	void isMovableToEmptyPosition(char col, char row) {
+		Position target = Position.of(col, row);
+		ChessBoard chessBoard = new ChessBoard(Map.of(source, createWhitePiece(new King())));
 
-        assertThatThrownBy(() -> king.move(source, target, chessBoard))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("움직일 수 없는 곳입니다.");
-    }
+		assertThatThrownBy(() -> king.move(source, target, chessBoard))
+				.isInstanceOf(IllegalStateException.class)
+				.hasMessage("움직일 수 없는 곳입니다.");
+	}
 
-    @Test
-    @DisplayName("기물이 존재할 경우의 이동 가능 여부 확인")
-    void isMovableToDifferentPiecePosition() {
-        Position target = Position.of('a', '2');
-        ChessBoard chessBoard = new ChessBoard(Map.of(
-                source, createWhitePiece(1L, new King()),
-                target, createBlackPiece(1L, new King())
-        ));
+	@Test
+	@DisplayName("기물이 존재할 경우의 이동 가능 여부 확인")
+	void isMovableToDifferentPiecePosition() {
+		Position target = Position.of('a', '2');
+		ChessBoard chessBoard = new ChessBoard(Map.of(
+				source, createWhitePiece(new King()),
+				target, createBlackPiece(new King())
+		));
 
-        assertThat(king.move(source, target, chessBoard)).isInstanceOf(King.class);
-    }
+		assertThat(king.move(source, target, chessBoard)).isInstanceOf(King.class);
+	}
 }

@@ -28,7 +28,7 @@ public class ChessGameService {
 
 	public long createNewChessGame() {
 		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard(chessGameId));
+		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
 		return chessGameId;
 	}
 

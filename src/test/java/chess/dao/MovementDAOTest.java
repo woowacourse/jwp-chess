@@ -2,7 +2,6 @@ package chess.dao;
 
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
-import java.sql.SQLException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +19,7 @@ class MovementDAOTest {
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    void before() throws SQLException {
+    void before() {
         ChessGameDAO chessGameDAO = new ChessGameDAO(jdbcTemplate);
         ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName("zero");
@@ -31,7 +30,7 @@ class MovementDAOTest {
 
     @Test
     @DisplayName("움직임 확인")
-    void checkMovement() throws SQLException {
+    void checkMovement() {
         ChessGame chessGame = ChessGame.initChessGame();
         MovementDAO movementDAO = new MovementDAO(jdbcTemplate);
         Movement movement = new Movement(

@@ -1,12 +1,10 @@
-package domain;
+package chess.domain;
 
 import static chess.domain.piece.property.Team.*;
-import static domain.PositionFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import chess.domain.board.ChessBoardGenerator;
-import chess.domain.piece.property.Team;
 import chess.domain.piece.unit.Piece;
 import chess.domain.piece.unit.Bishop;
 import chess.domain.piece.unit.King;
@@ -44,7 +42,7 @@ class ChessBoardGeneratorTest {
     }
 
     private static Stream<Position> whitePawns() {
-        return Stream.of(A2, B2, C2, D2, E2, F2, G2, H2);
+        return Stream.of(PositionFixtures.A2, PositionFixtures.B2, PositionFixtures.C2, PositionFixtures.D2, PositionFixtures.E2, PositionFixtures.F2, PositionFixtures.G2, PositionFixtures.H2);
     }
 
     @ParameterizedTest
@@ -61,15 +59,15 @@ class ChessBoardGeneratorTest {
     }
 
     private static Stream<Position> columns() {
-        return Stream.of(A7, B7, C7, D7, E7, F7, G7, H7);
+        return Stream.of(PositionFixtures.A7, PositionFixtures.B7, PositionFixtures.C7, PositionFixtures.D7, PositionFixtures.E7, PositionFixtures.F7, PositionFixtures.G7, PositionFixtures.H7);
     }
 
     @Test
     @DisplayName("흰색 플레이어의 초기 Rook 위치는 A1, H1이다.")
     void checkPositionWhiteRook() {
         ChessBoardGenerator chessBoardGenerator = new ChessBoardGenerator();
-        Piece leftRook = chessBoardGenerator.generate().get(A1);
-        Piece rightRook = chessBoardGenerator.generate().get(H1);
+        Piece leftRook = chessBoardGenerator.generate().get(PositionFixtures.A1);
+        Piece rightRook = chessBoardGenerator.generate().get(PositionFixtures.H1);
 
         assertAll(
                 () -> assertEquals(leftRook.checkSameTeam(WHITE), true),
@@ -83,8 +81,8 @@ class ChessBoardGeneratorTest {
     @DisplayName("검은색 플레이어의 초기 Rook 위치는 A8, H8이다.")
     void checkPositionBlackRook() {
         ChessBoardGenerator chessBoardGenerator = new ChessBoardGenerator();
-        Piece leftRook = chessBoardGenerator.generate().get(A8);
-        Piece rightRook = chessBoardGenerator.generate().get(H8);
+        Piece leftRook = chessBoardGenerator.generate().get(PositionFixtures.A8);
+        Piece rightRook = chessBoardGenerator.generate().get(PositionFixtures.H8);
 
         assertAll(
                 () -> assertEquals(leftRook.checkSameTeam(BLACK), true),
@@ -98,8 +96,8 @@ class ChessBoardGeneratorTest {
     @DisplayName("흰색 플레이어의 초기 Knight 위치는 B1, G1이다.")
     void checkPositionWhiteKnight() {
         ChessBoardGenerator chessBoardGenerator = new ChessBoardGenerator();
-        Piece leftKnight = chessBoardGenerator.generate().get(B1);
-        Piece rightKnight = chessBoardGenerator.generate().get(G1);
+        Piece leftKnight = chessBoardGenerator.generate().get(PositionFixtures.B1);
+        Piece rightKnight = chessBoardGenerator.generate().get(PositionFixtures.G1);
 
         assertAll(
                 () -> assertEquals(leftKnight.checkSameTeam(WHITE), true),
@@ -113,8 +111,8 @@ class ChessBoardGeneratorTest {
     @DisplayName("검은색 플레이어의 초기 Knight 위치는 B8, G8이다.")
     void checkPositionBlackKnight() {
         ChessBoardGenerator chessBoardGenerator = new ChessBoardGenerator();
-        Piece leftKnight = chessBoardGenerator.generate().get(B8);
-        Piece rightKnight = chessBoardGenerator.generate().get(G8);
+        Piece leftKnight = chessBoardGenerator.generate().get(PositionFixtures.B8);
+        Piece rightKnight = chessBoardGenerator.generate().get(PositionFixtures.G8);
 
         assertAll(
                 () -> assertEquals(leftKnight.checkSameTeam(BLACK), true),
@@ -128,8 +126,8 @@ class ChessBoardGeneratorTest {
     @DisplayName("흰색 플레이어의 초기 Bishop 위치는 C1, F1이다.")
     void checkPositionWhiteBishop() {
         ChessBoardGenerator chessBoardGenerator = new ChessBoardGenerator();
-        Piece leftBishop = chessBoardGenerator.generate().get(C1);
-        Piece rightBishop = chessBoardGenerator.generate().get(F1);
+        Piece leftBishop = chessBoardGenerator.generate().get(PositionFixtures.C1);
+        Piece rightBishop = chessBoardGenerator.generate().get(PositionFixtures.F1);
 
         assertAll(
                 () -> assertEquals(leftBishop.checkSameTeam(WHITE), true),
@@ -143,8 +141,8 @@ class ChessBoardGeneratorTest {
     @DisplayName("검은색 플레이어의 초기 Bishop 위치는 C8, F8이다.")
     void checkPositionBlackBishop() {
         ChessBoardGenerator chessBoardGenerator = new ChessBoardGenerator();
-        Piece leftBishop = chessBoardGenerator.generate().get(C8);
-        Piece rightBishop = chessBoardGenerator.generate().get(F8);
+        Piece leftBishop = chessBoardGenerator.generate().get(PositionFixtures.C8);
+        Piece rightBishop = chessBoardGenerator.generate().get(PositionFixtures.F8);
 
         assertAll(
                 () -> assertEquals(leftBishop.checkSameTeam(BLACK), true),
@@ -158,7 +156,7 @@ class ChessBoardGeneratorTest {
     @DisplayName("흰색 플레이어의 초기 Queen 위치는 D1이다.")
     void checkPositionWhiteQueen() {
         ChessBoardGenerator chessBoardGenerator = new ChessBoardGenerator();
-        Piece piece = chessBoardGenerator.generate().get(D1);
+        Piece piece = chessBoardGenerator.generate().get(PositionFixtures.D1);
 
         assertAll(
                 () -> assertEquals(piece.checkSameTeam(WHITE), true),
@@ -170,7 +168,7 @@ class ChessBoardGeneratorTest {
     @DisplayName("검은색 플레이어의 초기 Queen 위치는 D8이다.")
     void checkPositionBlackQueen() {
         ChessBoardGenerator chessBoardGenerator = new ChessBoardGenerator();
-        Piece piece = chessBoardGenerator.generate().get(D8);
+        Piece piece = chessBoardGenerator.generate().get(PositionFixtures.D8);
 
         assertAll(
                 () -> assertEquals(piece.checkSameTeam(BLACK), true),
@@ -182,7 +180,7 @@ class ChessBoardGeneratorTest {
     @DisplayName("흰색 플레이어의 초기 King 위치는 E1이다.")
     void checkPositionWhiteKing() {
         ChessBoardGenerator chessBoardGenerator = new ChessBoardGenerator();
-        Piece piece = chessBoardGenerator.generate().get(E1);
+        Piece piece = chessBoardGenerator.generate().get(PositionFixtures.E1);
 
         assertAll(
                 () -> assertEquals(piece.checkSameTeam(WHITE), true),
@@ -194,7 +192,7 @@ class ChessBoardGeneratorTest {
     @DisplayName("검은색 플레이어의 초기 King 위치는 E8이다.")
     void checkPositionBlackKing() {
         ChessBoardGenerator chessBoardGenerator = new ChessBoardGenerator();
-        Piece piece = chessBoardGenerator.generate().get(E8);
+        Piece piece = chessBoardGenerator.generate().get(PositionFixtures.E8);
 
         assertAll(
                 () -> assertEquals(piece.checkSameTeam(BLACK), true),

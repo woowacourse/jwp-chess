@@ -1,10 +1,8 @@
-package domain.piece.unit;
+package chess.domain.piece.unit;
 
 import static chess.domain.piece.property.Team.*;
-import static domain.PositionFixtures.*;
+import static chess.domain.PositionFixtures.*;
 
-import chess.domain.piece.unit.Bishop;
-import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;

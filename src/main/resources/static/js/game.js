@@ -23,6 +23,7 @@ function onClickSquare(e) {
         return;
     }
     move(sourceId, e.target.id, turn)
+    document.getElementById(sourceId).style.backgroundColor = '';
 }
 
 function move(source, target, team) {
@@ -40,7 +41,6 @@ function move(source, target, team) {
         complete: initSource
     })
 }
-
 
 function initBoard() {
     $.ajax({

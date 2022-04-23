@@ -60,4 +60,9 @@ public class WebChessMemberDao implements MemberDao<Member> {
 
         return new Member(id, name, boardId);
     }
+
+    public void deleteAll() {
+        String sql = "DELETE FROM member";
+        jdbcTemplate.update(sql, new MapSqlParameterSource());
+    }
 }

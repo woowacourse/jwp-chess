@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.game.ChessBoard;
 import chess.domain.member.Member;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ class WebMemberDaoTest {
     void setup() {
         final ChessBoard board = boardDao.save(new ChessBoard("에덴파이팅~!"));
         this.boardId = board.getId();
+        dao.saveAll(List.of(new Member("쿼리치"), new Member("코린")), boardId);
     }
 
     @Test
@@ -33,8 +35,24 @@ class WebMemberDaoTest {
         assertThat(member.getName()).isEqualTo("eden");
     }
 
+    @Test
+    void saveAll() {
+        dao.saveAll(List.of(new Member("우테코"), new Member("백엔드")), boardId);
+        List<Member> members = dao.getAllByBoardId(boardId);
+
+        assertThat(members.size()).isEqualTo(4);
+    }
+
+    @Test
+    void getAllByBoardId() {
+        List<Member> members = dao.getAllByBoardId(boardId);
+
+        assertThat(members.size()).isEqualTo(2);
+    }
+
     @AfterEach
     void setDown() {
         boardDao.deleteAll();
+        dao.deleteAll();
     }
 }

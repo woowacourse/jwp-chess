@@ -1,4 +1,5 @@
 let gameStatus = "";
+let gameUri = "";
 
 async function refreshAndDisplayBoard() {
     await refreshBoard().then(displayBoard);
@@ -40,17 +41,20 @@ async function loadButton() {
 }
 
 function getBoard() {
-    return fetch("/board")
+    return fetch(gameUri)
         .then((response) => response.json());
 }
 
 async function startChessGame() {
-    await fetch("/start", {
+    await fetch("/chessgames", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         }
     }).then(response => handlingException(response))
+        .then(function (response) {
+            gameUri = response.headers.get('Location');
+        })
         .then(refreshAndDisplayBoard)
         .catch(error => {
             alert(error.message);
@@ -63,7 +67,7 @@ async function promotionButton() {
         promotionValue: promotionPiece
     }
 
-    await fetch("/promotion", {
+    await fetch(gameUri + "/promotion", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -85,7 +89,7 @@ async function moveButton() {
         target: target
     }
 
-    fetch("/move", {
+    fetch(gameUri + "/move", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -102,10 +106,11 @@ async function moveButton() {
 }
 
 async function checkEndGame() {
-    const gameStatus = await fetch("/status")
-        .then((response) => response.json());
+    const gameStatus = await fetch(gameUri + "/status")
+        .then((response) => response.json())
+
     if (gameStatus.isEnd) {
-        await fetch("/winner")
+        await fetch(gameUri + "/winner")
             .then(response => handlingException(response))
             .then(response => displayWinner(response))
             .catch(error => {
@@ -120,9 +125,9 @@ async function displayWinner(response) {
 }
 
 async function scoreButton() {
-    const value = await fetch("/score")
+    const value = await fetch(gameUri + "/score")
         .then((response) => response.json());
-    if (gameStatus !== "") {
+    if (gameUri !== "") {
         alert(`${value[0].color}의 점수는 ${value[0].score}\n${value[1].color}의 점수는 ${value[1].score}`);
     } else {
         alert("게임을 로드하지 않았습니다.");

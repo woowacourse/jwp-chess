@@ -71,11 +71,10 @@ public class ChessGameService {
             gameResult.getBlackScore());
     }
 
-//    public void cleanGame() {
-//        pieceDao.deleteAllByGameId(gameId);
-//        gameDao.deleteById(gameId);
-//        game.clean();
-//    }
+    public void cleanGame(String gameId) {
+        pieceDao.deleteAllByGameId(gameId);
+        gameDao.deleteById(gameId);
+    }
 
     private void initGame(String gameId) {
         gameDao.createById(gameId);

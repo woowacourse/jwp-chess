@@ -351,29 +351,19 @@
   </section>
 
   <div class="chess-status">
-    <div class="end">
-      <form action="/game/end" method="post">
-        <button type="submit" formmethod="post">end</button>
-        <input name="gameId" type="hidden" value="{{gameId}}">
-      </form>
-    </div>
 
+    현재 방 번호: {{gameId}}
+    <p>게임 메세지: {{gameMessage}}</p>
     <div class="status" id="status">
-      <button id="btn">status</button>
-      <br>
       <label>
-        현재 상태: 승자: <a class="winner-name">없음</a> , 백색팀: <a class="white-score">??</a>점, 흑색팀: <a class="black-score">??</a>점
+        현재 상태: 승자: <a class="winner-name">{{status.winner}}</a> , 백색팀: <a class="white-score">{{status.whiteScore}}</a>점, 흑색팀: <a class="black-score">{{status.blackScore}}</a>점
       </label>
     </div>
 
-    <div class="save">
-      <form action="/game/save" method="post">
-        <button type="submit" formmethod="post">save</button>
-      </form>
-    </div>
-
     <div class="exit" id="exit">
-      <form action="/game/exit" method="post">
+      <form action="/game/exit" method="get">
+        <input type="hidden" name="gameId" value="{{gameId}}">
+
         <button type="submit">exit</button>
       </form>
     </div>

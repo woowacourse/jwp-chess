@@ -1,11 +1,10 @@
 package chess.controller;
 
-import chess.dto.ChessGameDto;
 import chess.dto.MoveCommandDto;
-import chess.dto.PiecesDto;
 import chess.service.ChessGameService;
 import chess.web.view.BoardView;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,63 +14,59 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class SpringChessController {
 
-    ChessGameService chessGameService = new ChessGameService();
+    public static final String MOVE_SUCCESS_MESSAGE = "성공적으로 이동했습니다";
 
-    //    private void exception() {
-//        exception(Exception.class, (exception, request, response) -> {
-//            response.status(400);
-//            response.body(exception.getMessage());
-//        });
-//    }
-//
-//    private void postExit() {
-//        post("/game/exit", (req, res) -> {
-//            chessGameService.get()
-//                    .cleanGame();
-//
-//            res.redirect("/");
-//            return true;
-//        });
-//    }
-//
-//    @PostMapping("/game/end")
-//    private void getEnd(@RequestBody ChessGameDto chessGameDto) {
-//            chessGameService.forceEnd(chessGameDto.getGameId());
-//
-//            return true;
-//        });
-//    }
+    ChessGameService chessGameService = new ChessGameService();
+    String error = "";
+
+    @ExceptionHandler(Exception.class)
+    public ModelAndView exception(String gameId, Exception e) {
+        error = e.getMessage();
+        return getModelUrl("redirect:/game", "1234");
+    }
+
+    @GetMapping("/game/exit")
+    private String postExit(@RequestParam String gameId) {
+        chessGameService.cleanGame(gameId);
+        return "redirect:/";
+    }
 
     @PostMapping("/game/move")
-    private String postMove(@RequestBody MoveCommandDto moveDto) {
-        chessGameService.move(moveDto.getGameId(), moveDto);
-        return "redirect:/game/progress";
+    private ModelAndView postMove(@RequestBody MoveCommandDto moveDto) {
+        try {
+            chessGameService.move(moveDto.getGameId(), moveDto);
+            error = MOVE_SUCCESS_MESSAGE;
+        } catch (Exception e) {
+            error = e.getMessage();
+        }
+        return getModelUrl("redirect:/game" , moveDto.getGameId());
     }
 
-    @GetMapping("/game/status")
-    private ChessGameDto getStatus(@RequestParam String gameId) {
-        return new ChessGameDto(chessGameService.calculateGameResult(gameId), gameId);
-    }
-
-    @GetMapping("/game/progress")
-    private ChessGameDto getProgressPage(@RequestParam String gameId) {
-        ModelAndView modelAndView = getModel();
-        modelAndView.addObject("pieces", BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
-        modelAndView.addObject("gameId", gameId);
-        return new ChessGameDto(chessGameService.getCurrentGame(gameId), gameId);
+    @GetMapping("/game")
+    private ModelAndView getGamePage(@RequestParam String gameId) {
+        return getModel(gameId);
     }
 
     @GetMapping("/game/start")
-    public ModelAndView getGamePage(@RequestParam String gameId) {
+    public String getStartPage(@RequestParam String gameId) {
         chessGameService.createOrGet(gameId);
-        PiecesDto piecesDto = chessGameService.getCurrentGame(gameId);
-        ModelAndView modelAndView = getModel();
-        modelAndView.addObject("pieces", BoardView.of(piecesDto).getBoardView());
+        return "redirect:/game?gameId=" + gameId;
+    }
+
+    private ModelAndView getModel(String gameId) {
+        ModelAndView modelAndView = new ModelAndView("game");
+        modelAndView.addObject("pieces", BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
         modelAndView.addObject("gameId", gameId);
+        modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
+        modelAndView.addObject("gameMessage", error);
         return modelAndView;
     }
 
-    private ModelAndView getModel() {
-        return new ModelAndView("game");
+    private ModelAndView getModelUrl(String url, String gameId) {
+        ModelAndView modelAndView = new ModelAndView(url);
+        modelAndView.addObject("pieces", BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
+        modelAndView.addObject("gameId", gameId);
+        modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
+        return modelAndView;
     }
 }

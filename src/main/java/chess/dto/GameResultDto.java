@@ -2,9 +2,12 @@ package chess.dto;
 
 public class GameResultDto {
 
-    private final String winner;
-    private final double whiteScore;
-    private final double blackScore;
+    private String winner;
+    private double whiteScore;
+    private double blackScore;
+
+    public GameResultDto() {
+    }
 
     public GameResultDto(String winner, double whiteScore, double blackScore) {
         this.winner = winner;

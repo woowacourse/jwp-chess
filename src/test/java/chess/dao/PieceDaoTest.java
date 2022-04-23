@@ -15,7 +15,7 @@ public class PieceDaoTest {
     final GameDao gameDao = new GameDao();
 
     static int id = 1000;
-    String gameId = "999";
+    String gameId = "1234";
 
     @BeforeEach
     void setup_chessGame() {
@@ -36,8 +36,8 @@ public class PieceDaoTest {
 
     @Test
     void deleteAllByGameId() {
-        gameDao.createById(gameId);
-        pieceDao.deleteAllByGameId(gameId);
+//        gameDao.createById("1234");
+        pieceDao.deleteAllByGameId("1234");
 
         final List<Piece> pieces = pieceDao.findAllByGameId(gameId).getPieces();
 

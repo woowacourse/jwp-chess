@@ -43,11 +43,6 @@ public class ChessBoardRepository implements BoardRepository<Board> {
     }
 
     @Override
-    public int deleteAll() {
-        return jdbcTemplate.update("DELETE FROM board");
-    }
-
-    @Override
     public int deleteById(int id) {
         return jdbcTemplate.update("DELETE FROM board WHERE id=?", id);
     }
@@ -66,22 +61,6 @@ public class ChessBoardRepository implements BoardRepository<Board> {
                 "SELECT b.id, b.status, b.team, r.title FROM board as b " +
                 "JOIN room as r on r.board_id=b.id WHERE b.id=?", id);
 //        jdbcTemplate.queryForObject("SELECT * FROM board WHERE id=?", boardRowMapper, id);
-        return null;
-    }
-
-    @Override
-    public Board init(Board board, Map<Square, Piece> startingPieces) {
-//        return connectionManager.executeQuery(connection -> {
-//            final Board savedBoard = save(board);
-//            final ChessSquareRepository chessSquareDao = new ChessSquareRepository(connectionManager);
-//            final ChessPieceRepository chessPieceDao = new ChessPieceRepository(connectionManager);
-//            chessSquareDao.saveAllSquare(savedBoard.getId());
-//            for (Square square : startingPieces.keySet()) {
-//                int squareId = chessSquareDao.getSquareIdBySquare(square, savedBoard.getId());
-//                chessPieceDao.save(startingPieces.get(square), squareId);
-//            }
-//            return savedBoard;
-//        });
         return null;
     }
 

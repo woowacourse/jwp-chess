@@ -49,7 +49,14 @@ public class ChessService {
     }
 
     public Room init(String roomTitle, String member1, String member2) {
-        Board board = chessBoardRepository.init(new Board(new Running(), Team.WHITE), Initializer.initialize());
+        Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
+        chessSquareRepository.saveAllSquare(board.getId());
+        Map<Square, Piece> startingPieces = Initializer.initialize();
+        for (Square square : startingPieces.keySet()) {
+            Square tempSquare = chessSquareRepository.getBySquareAndBoardId(square, board.getId());
+            chessPieceRepository.save(startingPieces.get(square), tempSquare.getId());
+        }
+//        Board board = chessBoardRepository.init(new Board(new Running(), Team.WHITE), Initializer.initialize());
         Room room = chessRoomRepository.save(new Room(roomTitle, board.getId()));
         chessMemberRepository.saveAll(List.of(new Member(member1), new Member(member2)), room.getId());
         return room;

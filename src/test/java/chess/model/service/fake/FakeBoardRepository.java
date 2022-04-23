@@ -24,11 +24,6 @@ public class FakeBoardRepository implements BoardRepository<Board> {
     }
 
     @Override
-    public int deleteAll() {
-        return 0;
-    }
-
-    @Override
     public int deleteById(int id) {
         return 0;
     }
@@ -36,11 +31,6 @@ public class FakeBoardRepository implements BoardRepository<Board> {
     @Override
     public Board getById(int id) {
         return new Board(fakeAutoIncrementId, new Running(), Team.WHITE);
-    }
-
-    @Override
-    public Board init(Board board, Map<Square, Piece> startingPieces) {
-        return new Board(101, board.getStatus(), Team.WHITE);
     }
 
     @Override

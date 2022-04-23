@@ -31,7 +31,7 @@ function checkSendToServer() {
 function checkStatus() {
     let element = document.getElementById("roomId");
 
-    fetch('/room/' + element.value + 'status', {
+    fetch('/room/' + element.value + '/status', {
         method: "GET",
         headers: {
             "Content-Type": "text/plain",
@@ -50,7 +50,7 @@ function sendToServer(first, second) {
     let element = document.getElementById("roomId");
     const moveCommand = "command=" + first + " " + second;
     console.log(moveCommand)
-    fetch('/room/' + element.value + 'move', {
+    fetch('/room/' + element.value + '/move', {
         method: "POST",
         headers: {
             "Content-Type": "text/plain",

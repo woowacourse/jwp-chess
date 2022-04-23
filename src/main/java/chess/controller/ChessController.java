@@ -39,7 +39,7 @@ public class ChessController {
                 createRoomInput.get(1),
                 createRoomInput.get(2));
 
-        return "redirect:/room" + room.getId();
+        return "redirect:/room/" + room.getId();
     }
 
     @GetMapping("/room/{roomId}")

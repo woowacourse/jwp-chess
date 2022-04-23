@@ -12,13 +12,9 @@ public interface BoardRepository<T> {
 
     Board save(Board board);
 
-    int deleteAll();
-
     int deleteById(int id);
 
     T getById(int id);
-
-    T init(T board, Map<Square, Piece> startingPieces);
 
     int updateStatus(int boardId, Status status);
 

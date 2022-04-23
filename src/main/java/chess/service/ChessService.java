@@ -1,25 +1,32 @@
 package chess.service;
 
 import chess.dao.PieceDao;
-import chess.dao.PieceDaoImpl;
 import chess.dao.TurnDao;
-import chess.dao.TurnDaoImpl;
 import chess.domain.ChessWebGame;
 import chess.domain.Position;
 import chess.domain.Result;
 import chess.domain.generator.BlackGenerator;
 import chess.domain.generator.WhiteGenerator;
-import chess.domain.piece.*;
+import chess.domain.piece.Bishop;
+import chess.domain.piece.King;
+import chess.domain.piece.Knight;
+import chess.domain.piece.Pawn;
+import chess.domain.piece.Piece;
+import chess.domain.piece.Queen;
+import chess.domain.piece.Rook;
 import chess.domain.player.Player;
 import chess.domain.player.Team;
-import chess.dto.*;
+import chess.dto.MoveDto;
+import chess.dto.PieceDto;
+import chess.dto.ResultDto;
+import chess.dto.ScoreDto;
+import chess.dto.TurnDto;
 import chess.view.ChessMap;
-import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
@@ -27,9 +34,9 @@ public class ChessService {
     private final PieceDao pieceDao;
     private final TurnDao turnDao;
 
-    public ChessService() {
-        pieceDao = new PieceDaoImpl();
-        turnDao = new TurnDaoImpl();
+    public ChessService(PieceDao pieceDao, TurnDao turnDao) {
+        this.pieceDao = pieceDao;
+        this.turnDao = turnDao;
     }
 
     public ChessMap initializeGame() {

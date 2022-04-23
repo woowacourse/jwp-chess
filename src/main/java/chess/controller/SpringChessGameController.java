@@ -14,8 +14,8 @@ public class SpringChessGameController {
 
     private final ChessService chessService;
 
-    public SpringChessGameController() {
-        this.chessService = new ChessService();
+    public SpringChessGameController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
     @GetMapping("/start")

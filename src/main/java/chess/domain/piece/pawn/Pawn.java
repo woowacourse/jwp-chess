@@ -7,7 +7,6 @@ import chess.domain.piece.PieceRule;
 
 public final class Pawn implements PieceRule {
 
-    private static final String PAWN_INITIAL_NAME = "P";
     private static final String PAWN_NAME = "pawn";
     private static final double PAWN_SCORE = 1;
 
@@ -27,11 +26,6 @@ public final class Pawn implements PieceRule {
             return this;
         }
         throw new IllegalStateException("움직일 수 없는 곳입니다.");
-    }
-
-    @Override
-    public String convertedName(Color color) {
-        return color.convertToCase(PAWN_INITIAL_NAME);
     }
 
     @Override

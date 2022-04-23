@@ -9,14 +9,12 @@ import static chess.domain.direction.Direction.UP;
 import static chess.domain.direction.Direction.UP_LEFT;
 import static chess.domain.direction.Direction.UP_RIGHT;
 
-import chess.domain.Color;
 import chess.domain.direction.Direction;
 import java.util.Arrays;
 import java.util.List;
 
 public final class King extends SingleMovePiece {
 
-    private static final String KING_INITIAL_NAME = "K";
     private static final String KING_NAME = "king";
     private static final double KING_SCORE = 0;
     private static final List<Direction> MOVE_DIRECTIONS = Arrays.asList(
@@ -24,11 +22,6 @@ public final class King extends SingleMovePiece {
 
     public King() {
         super(MOVE_DIRECTIONS);
-    }
-
-    @Override
-    public String convertedName(Color color) {
-        return color.convertToCase(KING_INITIAL_NAME);
     }
 
     @Override

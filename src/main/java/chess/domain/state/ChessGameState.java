@@ -10,13 +10,9 @@ public interface ChessGameState {
 
     Turn nextTurn();
 
-    Turn currentTurn();
-
     void movePiece(Position source, Position target);
 
     Position promotion(PromotionPiece promotionPiece);
-
-    boolean isEnd();
 
     Map<Color, Double> currentScore();
 

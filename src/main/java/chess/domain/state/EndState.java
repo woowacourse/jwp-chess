@@ -1,7 +1,5 @@
 package chess.domain.state;
 
-import static chess.domain.state.Turn.END;
-
 import chess.domain.ChessBoard;
 import chess.domain.Color;
 import chess.domain.Position;
@@ -23,11 +21,6 @@ public class EndState implements ChessGameState {
     }
 
     @Override
-    public Turn currentTurn() {
-        return END;
-    }
-
-    @Override
     public void movePiece(Position source, Position target) {
         throw new IllegalStateException("종료된 게임은 기물을 움직일 수 없습니다.");
     }
@@ -35,11 +28,6 @@ public class EndState implements ChessGameState {
     @Override
     public Position promotion(PromotionPiece promotionPiece) {
         throw new IllegalStateException("종료된 게임은 promotion할 수 없습니다.");
-    }
-
-    @Override
-    public boolean isEnd() {
-        return true;
     }
 
     @Override

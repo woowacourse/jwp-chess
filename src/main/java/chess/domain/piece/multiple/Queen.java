@@ -9,14 +9,12 @@ import static chess.domain.direction.Direction.UP;
 import static chess.domain.direction.Direction.UP_LEFT;
 import static chess.domain.direction.Direction.UP_RIGHT;
 
-import chess.domain.Color;
 import chess.domain.direction.Direction;
 import java.util.Arrays;
 import java.util.List;
 
 public final class Queen extends MultipleMovePiece {
 
-    private static final String QUEEN_INITIAL_NAME = "Q";
     private static final String QUEEN_NAME = "queen";
     private static final double QUEEN_SCORE = 9;
     private static final List<Direction> MOVE_DIRECTIONS = Arrays.asList(
@@ -24,11 +22,6 @@ public final class Queen extends MultipleMovePiece {
 
     public Queen() {
         super(MOVE_DIRECTIONS);
-    }
-
-    @Override
-    public String convertedName(Color color) {
-        return color.convertToCase(QUEEN_INITIAL_NAME);
     }
 
     @Override

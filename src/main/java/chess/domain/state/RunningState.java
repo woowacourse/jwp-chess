@@ -29,11 +29,6 @@ public class RunningState implements ChessGameState {
     }
 
     @Override
-    public Turn currentTurn() {
-        return color.currentTurn();
-    }
-
-    @Override
     public void movePiece(Position source, Position target) {
         chessBoard.movePiece(source, target, color);
     }
@@ -41,11 +36,6 @@ public class RunningState implements ChessGameState {
     @Override
     public Position promotion(PromotionPiece promotionPiece) {
         return chessBoard.promotionPosition(color);
-    }
-
-    @Override
-    public boolean isEnd() {
-        return false;
     }
 
     @Override

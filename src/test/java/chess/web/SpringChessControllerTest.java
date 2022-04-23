@@ -49,7 +49,7 @@ class SpringChessControllerTest {
 
         RestAssured.given().log().all()
                 .formParam("name", name)
-                .when().post("/board")
+                .when().post("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.FOUND.value())
                 .header("Location", containsString("/rooms/"));
@@ -63,7 +63,7 @@ class SpringChessControllerTest {
 
         RestAssured.given().log().all()
                 .formParam("name", name)
-                .when().post("/board")
+                .when().post("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }

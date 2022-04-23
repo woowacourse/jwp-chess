@@ -4,7 +4,6 @@ import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.ExceptionResponseDto;
 import chess.dto.MoveDto;
-import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

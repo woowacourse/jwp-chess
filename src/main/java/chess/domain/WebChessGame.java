@@ -1,9 +1,5 @@
-package chess.game;
+package chess.domain;
 
-import chess.domain.ChessBoard;
-import chess.domain.GameCommand;
-import chess.domain.ScoreCalculator;
-import chess.domain.Status;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
@@ -38,10 +34,6 @@ public class WebChessGame {
         PiecesGenerator piecesGenerator = new NormalPiecesGenerator();
         chessBoard = new ChessBoard(piecesGenerator);
         turn = Color.WHITE;
-    }
-
-    public void end() {
-        turn = Color.EMPTY;
     }
 
     public Status status() {

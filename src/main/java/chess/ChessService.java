@@ -1,4 +1,4 @@
-package chess.service;
+package chess;
 
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
@@ -10,7 +10,7 @@ import chess.dto.BoardDto;
 import chess.dto.MoveDto;
 import chess.entity.Room;
 import chess.entity.Square;
-import chess.game.WebChessGame;
+import chess.domain.WebChessGame;
 import chess.utils.PieceFactory;
 import java.util.HashMap;
 import java.util.List;

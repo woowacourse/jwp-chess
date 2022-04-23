@@ -2,6 +2,7 @@ package chess.dao2;
 
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.entity.GameEntity;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -27,7 +28,8 @@ public class GameDao2 {
     public List<GameEntity> findAll() {
         final String sql = "SELECT id, name, running FROM game2";
 
-        return jdbcTemplate.query(sql, new EmptySqlParameterSource(), rowMapper);
+        List<GameEntity> games = jdbcTemplate.query(sql, new EmptySqlParameterSource(), rowMapper);
+        return Collections.unmodifiableList(games);
     }
 
     public GameEntity findById(int gameId) {
@@ -66,13 +68,12 @@ public class GameDao2 {
         final String sql = "INSERT INTO game2(name, password) VALUES (:name, :password)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        SqlParameterSource paramSource = new BeanPropertySqlParameterSource(authCredentials);
         try {
-            jdbcTemplate.update(sql, paramSource, keyHolder);
-            return keyHolder.getKey().intValue();
+            jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(authCredentials), keyHolder);
         } catch (DataAccessException e) {
             throw new IllegalArgumentException("게임을 생성하는데 실패하였습니다.");
         }
+        return keyHolder.getKey().intValue();
     }
 
     public void finishGame(int gameId) {

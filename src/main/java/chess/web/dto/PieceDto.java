@@ -2,6 +2,7 @@ package chess.web.dto;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
+import java.util.Objects;
 
 public class PieceDto {
 
@@ -29,5 +30,22 @@ public class PieceDto {
 
     public String getRole() {
         return role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PieceDto pieceDto = (PieceDto) o;
+        return Objects.equals(color, pieceDto.color) && Objects.equals(role, pieceDto.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, role);
     }
 }

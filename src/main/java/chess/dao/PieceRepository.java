@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface PieceRepository {
-    void save(int boardId, String target, PieceDto pieceDto);
+    int save(int boardId, String target, PieceDto pieceDto);
 
     void saveAll(int boardId, Map<Position, Piece> pieces);
 
@@ -16,7 +16,8 @@ public interface PieceRepository {
 
     List<PieceDto> findAll(int boardId);
 
-    void updateOne(int boardId, String position, PieceDto pieceDto);
+    void updateOne(int boardId, String afterPosition, PieceDto pieceDto);
 
     void deleteOne(int boardId, String position);
+
 }

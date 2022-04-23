@@ -16,9 +16,10 @@ public class FakePieceRepository implements PieceRepository {
     private int autoIncrementId = 0;
 
     @Override
-    public void save(int boardId, String target, PieceDto pieceDto) {
+    public int save(int boardId, String target, PieceDto pieceDto) {
         autoIncrementId++;
         database.put(autoIncrementId, new PieceData(boardId, target, pieceDto.getColor(), pieceDto.getRole()));
+        return autoIncrementId;
     }
 
     @Override
@@ -45,9 +46,9 @@ public class FakePieceRepository implements PieceRepository {
     }
 
     @Override
-    public void updateOne(int boardId, String position, PieceDto pieceDto) {
-        deleteOne(boardId, position);
-        save(boardId, position, pieceDto);
+    public void updateOne(int boardId, String afterPosition, PieceDto pieceDto) {
+        deleteOne(boardId, afterPosition);
+        save(boardId, afterPosition, pieceDto);
     }
 
     @Override

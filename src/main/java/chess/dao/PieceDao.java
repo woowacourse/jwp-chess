@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.web.DBConnector;
 import chess.web.dto.PieceDto;
@@ -7,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,24 +18,30 @@ public class PieceDao implements PieceRepository {
 
     private static final String ERROR_DB_FAILED = "[ERROR] DB 연결에 문제가 발생했습니다.";
 
+
     @Override
-    public void save(int boardId, String target, PieceDto pieceDto) {
+    public int save(int boardId, String target, PieceDto pieceDto) {
         final String sql = "insert into piece (board_id, position , color, role) values (?, ?, ?, ?)";
 
         try (final Connection connection = DBConnector.getConnection();
-             final PreparedStatement statement = connection.prepareStatement(sql)) {
+             final PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, boardId);
             statement.setString(2, target);
             statement.setString(3, pieceDto.getColor());
             statement.setString(4, pieceDto.getRole());
-            statement.execute();
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(ERROR_DB_FAILED);
         }
+        throw new RuntimeException(ERROR_DB_FAILED);
     }
 
     @Override
-    public void saveAll(int boardId, Map<Position, chess.domain.piece.Piece> pieces) {
+    public void saveAll(int boardId, Map<Position, Piece> pieces) {
         final String sql = "insert into piece (board_id, position, color, role) values (?, ?, ?, ?)";
 
         try (final Connection connection = DBConnector.getConnection();
@@ -99,7 +107,7 @@ public class PieceDao implements PieceRepository {
     }
 
     @Override
-    public void updateOne(int boardId, String position, PieceDto pieceDto) {
+    public void updateOne(int boardId, String afterPosition, PieceDto pieceDto) {
         final String sql = "update piece set color = ?, role = ? where board_id = ? and position = ?";
 
         try (final Connection connection = DBConnector.getConnection();
@@ -107,7 +115,7 @@ public class PieceDao implements PieceRepository {
             statement.setString(1, pieceDto.getColor());
             statement.setString(2, pieceDto.getRole());
             statement.setInt(3, boardId);
-            statement.setString(4, position);
+            statement.setString(4, afterPosition);
             statement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(ERROR_DB_FAILED);

@@ -19,8 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/game")
 public class GameController {
 
-    private static final String NEW_HTML_TEMPLATE_PATH = "new";
-    private static final String HTML_TEMPLATE_PATH = "game";
+    private static final String INIT_GAME_HTML_TEMPLATE_PATH = "init_game";
+    private static final String PLAY_GAME_HTML_TEMPLATE_PATH = "play_game";
     private static final String RESPONSE_MODEL_KEY = "response";
 
     private final ChessService chessService;
@@ -32,7 +32,7 @@ public class GameController {
     @GetMapping
     public ModelAndView renderNew() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(NEW_HTML_TEMPLATE_PATH);
+        modelAndView.setViewName(INIT_GAME_HTML_TEMPLATE_PATH);
         return modelAndView;
     }
 
@@ -44,7 +44,7 @@ public class GameController {
     @GetMapping("/{id}")
     public ModelAndView findAndRenderGame(@PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(HTML_TEMPLATE_PATH);
+        modelAndView.setViewName(PLAY_GAME_HTML_TEMPLATE_PATH);
         GameSnapshotDto gameDto = chessService.findGame(id);
         modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
         return modelAndView;
@@ -56,7 +56,7 @@ public class GameController {
         chessService.playGame(id, new MoveEvent(moveRoute));
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(HTML_TEMPLATE_PATH);
+        modelAndView.setViewName(PLAY_GAME_HTML_TEMPLATE_PATH);
         GameSnapshotDto gameDto = chessService.findGame(id);
         modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
         return modelAndView;

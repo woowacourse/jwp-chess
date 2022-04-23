@@ -1,9 +1,7 @@
 package chess.service;
 
 import chess.dao.PieceDao;
-import chess.dao.PieceDaoImpl;
 import chess.dao.TurnDao;
-import chess.dao.TurnDaoImpl;
 import chess.domain.ChessWebGame;
 import chess.domain.Position;
 import chess.domain.Result;
@@ -14,20 +12,22 @@ import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.dto.*;
 import chess.view.ChessMap;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ChessService {
+@Service
+public class SpringChessService {
 
     private final PieceDao pieceDao;
     private final TurnDao turnDao;
 
-    public ChessService() {
-        pieceDao = new PieceDaoImpl();
-        turnDao = new TurnDaoImpl();
+    public SpringChessService(PieceDao pieceDao, TurnDao turnDao) {
+        this.pieceDao = pieceDao;
+        this.turnDao = turnDao;
     }
 
     public ChessMap initializeGame() {

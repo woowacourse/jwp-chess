@@ -16,11 +16,11 @@ class RoomDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private RoomDao roomDao;
+    private RoomDaoImpl roomDao;
 
     @BeforeEach
     void beforeEach() {
-        roomDao = new RoomDao(jdbcTemplate);
+        roomDao = new RoomDaoImpl(jdbcTemplate);
         JdbcFixture.dropTable(jdbcTemplate, "square");
         JdbcFixture.dropTable(jdbcTemplate, "room");
 
@@ -30,18 +30,11 @@ class RoomDaoTest {
     }
 
     @Test
-    @DisplayName("ID로 Room을 가져온다.")
-    void findById() {
-        Room room = roomDao.findById(1).get();
-        assertThat(room.getTurn()).isEqualTo("white");
-    }
-
-    @Test
     @DisplayName("Room을 새로 생성한다.")
     void save() {
         Room room = new Room("hi");
         roomDao.save(room);
-        assertThat(roomDao.findById(2).get().getName()).isEqualTo("hi");
+        assertThat(roomDao.findByName("hi").get().getName()).isEqualTo("hi");
     }
 
     @Test
@@ -55,6 +48,6 @@ class RoomDaoTest {
     @DisplayName("Room을 업데이트한다.")
     void update() {
         roomDao.update(1, "black");
-        assertThat(roomDao.findById(1).get().getTurn()).isEqualTo("black");
+        assertThat(roomDao.findByName("sojukang").get().getTurn()).isEqualTo("black");
     }
 }

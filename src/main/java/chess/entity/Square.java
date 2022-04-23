@@ -26,4 +26,14 @@ public class Square {
     public String getPiece() {
         return piece;
     }
+
+    @Override
+    public String toString() {
+        return "Square{" +
+                "id=" + id +
+                ", roomId=" + roomId +
+                ", position='" + position + '\'' +
+                ", piece='" + piece + '\'' +
+                '}';
+    }
 }

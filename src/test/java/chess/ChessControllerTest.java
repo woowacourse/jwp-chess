@@ -29,6 +29,8 @@ class ChessControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        JdbcFixture.dropTable(jdbcTemplate, "square");
+        JdbcFixture.dropTable(jdbcTemplate, "room");
         JdbcFixture.createRoomTable(jdbcTemplate);
         JdbcFixture.createSquareTable(jdbcTemplate);
         JdbcFixture.insertRoom(jdbcTemplate, "roma", "white");

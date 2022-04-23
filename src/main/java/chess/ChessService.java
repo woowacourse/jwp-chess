@@ -96,8 +96,8 @@ public class ChessService {
         return new ChessBoard(() -> board);
     }
 
-    public Status status(String name) {
-        Room room = roomDao.findByName(name)
+    public Status status(String roomName) {
+        Room room = roomDao.findByName(roomName)
                 .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
         WebChessGame webChessGame = WebChessGame.of(chessBoard, room.getTurn());
@@ -105,11 +105,13 @@ public class ChessService {
         return webChessGame.status();
     }
 
-    public void createRoom(String name) {
+    public boolean createRoom(String name) {
         Optional<Room> room = roomDao.findByName(name);
         if (room.isEmpty()) {
             Room newRoom = new Room(name);
             roomDao.save(newRoom);
+            return true;
         }
+        return false;
     }
 }

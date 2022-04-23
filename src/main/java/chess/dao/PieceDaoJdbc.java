@@ -12,18 +12,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class PieceDaoJdbcImpl implements PieceDao {
+public class PieceDaoJdbc implements PieceDao {
 
-    private final RowMapper<PieceDto> pieceRowMapper = (resultSet, rowNum) -> {
-        return new PieceDto(
-                resultSet.getString("position"),
-                resultSet.getString("name")
-        );
-    };
+    private final RowMapper<PieceDto> pieceRowMapper = (resultSet, rowNum) -> new PieceDto(
+            resultSet.getString("position"),
+            resultSet.getString("name")
+    );
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PieceDaoJdbcImpl(JdbcTemplate jdbcTemplate) {
+    public PieceDaoJdbc(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

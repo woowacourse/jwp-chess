@@ -7,16 +7,14 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TurnDaoJdbcImpl implements TurnDao {
+public class TurnDaoJdbc implements TurnDao {
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<TurnDto> turnRowMapper = (resultSet, rowNum) -> {
-        return new TurnDto(
-                resultSet.getString("team")
-        );
-    };
+    private final RowMapper<TurnDto> turnRowMapper = (resultSet, rowNum) -> new TurnDto(
+            resultSet.getString("team")
+    );
 
-    public TurnDaoJdbcImpl(JdbcTemplate jdbcTemplate) {
+    public TurnDaoJdbc(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

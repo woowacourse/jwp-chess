@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,24 +34,28 @@ public class ChessController {
     }
 
     @PostMapping("/start")
-    public String startChessGame() {
+    public String startChessGame(RedirectAttributes redirectAttributes) {
         commandDao.clear();
+        redirectAttributes.addAttribute("message", "게임을 시작합니다.");
         return "redirect:game";
     }
 
     @GetMapping(path = "/game")
-    public ModelAndView printCurrentBoard() {
+    public ModelAndView printCurrentBoard(@RequestParam("message") String message) {
         State state = currentState();
         ModelAndView modelAndView = new ModelAndView(getViewName(state));
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
         modelAndView.addObject("player", playerName(state.getPlayer()));
         modelAndView.addObject("commands", commandDao.findAll());
+        modelAndView.addObject("message", message);
         return modelAndView;
     }
 
     @PostMapping(path = "/game")
-    public String movePiece(@RequestParam("command") String command) {
+    public String movePiece(RedirectAttributes redirectAttributes, @RequestParam("command") String command) {
+        currentState().proceed(command);
         commandDao.insert(command);
+        redirectAttributes.addAttribute("message", "실행한 명령어: " + command);
         return "redirect:game";
     }
 

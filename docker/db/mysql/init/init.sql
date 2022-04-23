@@ -1,20 +1,15 @@
-create table board(
-    location varchar(20) not null,
-    name varchar(20) not null,
-    color varchar(20) not null,
-    roomID varchar(50) not null,
-    foreign key (roomID) references room(id) on delete cascade,
-    primary key (roomID, location)
+CREATE TABLE pieces
+(
+    piece_index int NOT NULL AUTO_INCREMENT,
+    type        ENUM('k','q','b','n','r','p','.'),
+    color       ENUM('BLACK','WHITE','NONE'),
+    x           int NOT NULL,
+    y           int NOT NULL,
+    PRIMARY KEY (piece_index)
 );
 
-create table state(
-    roomID varchar(50) not null,
-    color varchar(20),
-    foreign key (roomID) references room(id) on delete cascade,
-    primary key (roomID)
-);
-
-create table room(
-    id varchar(50) not null,
-    primary key(id)
+CREATE TABLE gameInfos
+(
+    state ENUM('Ready','Play','Finish'),
+    turn  ENUM('BLACK','WHITE')
 );

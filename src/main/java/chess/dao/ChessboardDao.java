@@ -56,8 +56,8 @@ public class ChessboardDao {
 
     public ChessGameDto load() {
         final String sql = "SELECT * FROM gameInfos";
-        GameInfoDto gameInfo = jdbcTemplate.queryForObject(sql,gameInfoRowMapper);
-        return new ChessGameDto(loadPieces(),gameInfo.getState(),gameInfo.getTurn());
+        GameInfoDto gameInfo = jdbcTemplate.queryForObject(sql, gameInfoRowMapper);
+        return new ChessGameDto(loadPieces(), gameInfo.getState(), gameInfo.getTurn());
     }
 
     private void addAll(ChessGameDto chessGameDto) {
@@ -68,7 +68,7 @@ public class ChessboardDao {
 
     private void addBoard(PieceDto pieceDto) {
         final String sql = "INSERT INTO pieces (color,type,x,y) VALUES (?,?,?,?)";
-        jdbcTemplate.update(sql, pieceDto);
+        jdbcTemplate.update(sql, pieceDto.getColor(), pieceDto.getType(), pieceDto.getX(), pieceDto.getY());
     }
 
     private void addGameInfos(String state, String turn) {

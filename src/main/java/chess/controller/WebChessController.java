@@ -1,85 +1,74 @@
 package chess.controller;
 
+import chess.dto.MoveRequestDto;
 import chess.dto.ScoreDto;
 import chess.service.ChessGameService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static spark.Spark.*;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class WebChessController {
 
-    private static final String CHESS_GAME_URL = "chessGame.html";
-    private static final String START_URL = "start.html";
+    private static final String CHESS_GAME_URL = "chessGame";
+    private static final String START_URL = "start";
 
-    private final ChessGameService service = new ChessGameService();
+    @Autowired
+    private ChessGameService service;
 
-    public void run() {
-        staticFileLocation("/templates");
-
-        get("/", (req, res) -> render(Map.of(), START_URL));
-
-        get("/game", (req, res) -> executeCommand(service::init));
-
-        get("/start", (req, res) -> executeCommand(service::start));
-
-        get("/end", (req, res) -> executeCommand(service::end));
-
-        get("/restart", (req, res) -> executeCommand(service::restart));
-
-        get("/save", (req, res) -> executeCommand(service::save));
-
-        get("/status", (req, res) -> status());
-
-        post("/move", (req, res) -> executeCommand(
-                () -> service.move(req.queryParams("from"), req.queryParams("to")))
-        );
-
+    @GetMapping("/")
+    public String main() {
+        return START_URL;
     }
 
-    private String executeCommand(Runnable command) {
+    @GetMapping("/game")
+    public String game(Model model) {
+        return executeCommand(service::init, model);
+    }
+
+    @GetMapping("/start")
+    public String start(Model model) {
+        return executeCommand(service::start, model);
+    }
+
+    @GetMapping("/end")
+    public String end(Model model) {
+        return executeCommand(service::end, model);
+    }
+
+    @GetMapping("/restart")
+    public String restart(Model model) {
+        return executeCommand(service::restart, model);
+    }
+
+    @GetMapping("/save")
+    public String save(Model model) {
+        return executeCommand(service::save, model);
+    }
+
+    @GetMapping("status")
+    public String status(Model model) {
+        return executeCommand(() -> {
+            ScoreDto score = service.status();
+            model.addAttribute("score", score);
+        }, model);
+    }
+
+    @PostMapping("/move")
+    public String move(MoveRequestDto moveRequest, Model model) {
+        return executeCommand(() -> service.move(moveRequest.getFrom(), moveRequest.getTo()), model);
+    }
+
+    private String executeCommand(Runnable command, Model model) {
         try {
             command.run();
-            return render(generateResponse(), CHESS_GAME_URL);
+            model.addAttribute("pieces", service.getPiecesByUnicode());
         } catch (RuntimeException e) {
-            return render(generateResponse(e.getMessage()), CHESS_GAME_URL);
+            model.addAttribute("error", e.getMessage());
         }
-    }
-
-    private String status() {
-        try {
-            ScoreDto score = service.status();
-            return render(generateResponse(score), CHESS_GAME_URL);
-        } catch (RuntimeException e) {
-            return render(generateResponse(e.getMessage()), CHESS_GAME_URL);
-        }
-    }
-
-    private String render(Map<String, Object> response, String url) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(response, url));
-    }
-
-    private Map<String, Object> generateResponse() {
-        Map<String, Object> response = new HashMap<>();
-        response.put("pieces", service.getPiecesByUnicode());
-        return response;
-    }
-
-    private Map<String, Object> generateResponse(String errorMessage) {
-        Map<String, Object> response = generateResponse();
-        response.put("error", errorMessage);
-        return response;
-    }
-
-    private Map<String, Object> generateResponse(ScoreDto score) {
-        Map<String, Object> response = generateResponse();
-        response.put("score", score);
-        return response;
+        return CHESS_GAME_URL;
     }
 
 }

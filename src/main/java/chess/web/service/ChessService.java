@@ -39,7 +39,12 @@ public class ChessService {
                 .orElseThrow(() -> new IllegalArgumentException("없는 차례입니다."));
 
         List<Piece> pieces = pieceDao.findAllByBoardId(boardId);
-        return Board.create(Pieces.from(pieces), turn);
+        Board board = Board.create(Pieces.from(pieces), turn);
+
+        if (board.isDeadKing() || pieces.isEmpty()) {
+            return initBoard(boardId);
+        }
+        return board;
     }
 
     public Board move(final MoveDto moveDto, final Long boardId) {
@@ -75,9 +80,8 @@ public class ChessService {
         Turn turn = Turn.init();
 
         pieceDao.deleteByBoardId(boardId);
-        boardDao.deleteById(boardId);
 
-        insertOrUpdateTurn(boardId, turn);
+        boardDao.updateTurnById(boardId, turn.getTeam().value());
         for (Piece piece : pieces.getPieces()) {
             insertOrUpdatePiece(boardId, piece);
         }
@@ -96,14 +100,6 @@ public class ChessService {
             return;
         }
         pieceDao.save(piece, boardId);
-    }
-
-    private void insertOrUpdateTurn(Long boardId, Turn turn) {
-        if (boardDao.findTurnById(boardId).isPresent()) {
-            boardDao.updateTurnById(boardId, turn.getTeam().value());
-            return;
-        }
-        boardDao.save(boardId, turn);
     }
 
     public ScoreDto getStatus(Long boardId) {

@@ -37,7 +37,6 @@ function initBoard() {
 
 start.addEventListener('click', function () {
     if (start.textContent === "START") {
-        initBoard();
         loadBoard();
         move();
         start.textContent = "RESTART";
@@ -45,6 +44,7 @@ start.addEventListener('click', function () {
         return
     }
     window.alert("성공적으로 게임이 재시작되었습니다!")
+    isFinished = GAME_RUNNING;
     initBoard();
 })
 

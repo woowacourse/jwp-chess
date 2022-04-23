@@ -3,10 +3,7 @@ package chess.controller;
 import chess.dto.*;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ChessSpringController {
@@ -40,5 +37,10 @@ public class ChessSpringController {
     public ResponseEntity<GameStateDto> end() {
         ChessService chessService = new ChessService(1);
         return ResponseEntity.ok().body(chessService.end(1));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handle(RuntimeException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

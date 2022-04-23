@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 class PieceDaoTest {
 
 	private PieceDao pieceDao;
-	private ChessGameDao chessGameDao;
 	private long chessGameId;
 
 	@Autowired
@@ -31,11 +30,11 @@ class PieceDaoTest {
 	@BeforeEach
 	void setUp() {
 		pieceDao = new PieceDao(jdbcTemplate);
-		chessGameDao = new ChessGameDao(jdbcTemplate);
-		chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+		chessGameId = new ChessGameDao(jdbcTemplate).createChessGame(Turn.WHITE_TURN);
 	}
 
 	@Test
+	@DisplayName("체스 기물 정보 저장")
 	void savePieces() {
 		Map<Position, Piece> pieces = Map.of(Position.of('a', '1'), new Piece(chessGameId, Color.WHITE, new King()),
 				Position.of('a', '2'), new Piece(chessGameId, Color.BLACK, new King()));

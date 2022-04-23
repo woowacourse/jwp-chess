@@ -6,7 +6,6 @@ import chess.domain.player.Result;
 import chess.domain.player.Score;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
-import chess.dto.ChessGameUpdateDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +21,10 @@ public class ChessGame {
         this(whitePlayer, blackPlayer, Team.WHITE);
     }
 
-    private ChessGame(Player whitePlayer, Player blackPlayer, Team turn) {
+    public ChessGame(Player whitePlayer, Player blackPlayer, Team turn) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.turn = turn;
-    }
-
-    public static ChessGame of(final ChessGameUpdateDto gameUpdateDto) {
-        final Player whitePlayer = Player.of(gameUpdateDto.getWhitePieces(), Team.WHITE);
-        final Player blackPlayer = Player.of(gameUpdateDto.getBlackPieces(), Team.BLACK);
-        final Team turn = Team.from(gameUpdateDto.getTurn());
-        return new ChessGame(whitePlayer, blackPlayer, turn);
     }
 
     public ChessMap createMap() {

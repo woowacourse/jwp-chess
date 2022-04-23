@@ -6,6 +6,8 @@ import chess.domain.ChessGame;
 import chess.domain.GameResult;
 import chess.domain.generator.BlackGenerator;
 import chess.domain.generator.WhiteGenerator;
+import chess.domain.piece.Piece;
+import chess.domain.piece.State;
 import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
@@ -15,6 +17,7 @@ import chess.dto.PieceDto;
 import chess.dto.StatusDto;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -89,7 +92,11 @@ public class ChessGameService {
     private ChessGame findGameByName(final String gameName) {
         final int chessGameId = chessGameDao.findChessGameIdByName(gameName);
         final ChessGameUpdateDto gameUpdateDto = findChessGame(chessGameId);
-        return ChessGame.of(gameUpdateDto);
+
+        final Player whitePlayer = new Player(toPieces(gameUpdateDto.getWhitePieces()), Team.WHITE);
+        final Player blackPlayer = new Player(toPieces(gameUpdateDto.getBlackPieces()), Team.BLACK);
+        final Team turn = Team.from(gameUpdateDto.getTurn());
+        return new ChessGame(whitePlayer, blackPlayer, turn);
     }
 
     private ChessGameUpdateDto findChessGame(final int chessGameId) {
@@ -97,5 +104,14 @@ public class ChessGameService {
         final List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(chessGameId, Team.WHITE.getName());
         final List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(chessGameId, Team.BLACK.getName());
         return new ChessGameUpdateDto(turn, whitePieces, blackPieces);
+    }
+
+    private List<Piece> toPieces(final List<PieceDto> piecesDto) {
+        List<Piece> pieces = new ArrayList<>();
+        for (PieceDto pieceDto : piecesDto) {
+            final Position position = new Position(pieceDto.getPosition());
+            pieces.add(State.createPieceByState(pieceDto.getName(), position));
+        }
+        return pieces;
     }
 }

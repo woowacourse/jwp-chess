@@ -14,6 +14,18 @@ Spark 기반의 웹 체스게임을 Spring으로 대체하는 프로젝트입니
 - Spring JDBC에서 제공하는 JdbcTemplate를 이용하여 Connection을 직접 만들어 주는 로직을 대체한다.
 - JdbcTemplate는 매번 새로 생성하지 않고 빈 주입을 받아서 사용한다.
 
+### 데이터베이스 설정
+- docker-compose.yml을 실행시켜 Mysql 기반의 데이터베이스를 docker 컨테이너로 띄워준다.
+
+- WebApplication을 실행하기 전 데이터베이스에 command 테이블을 생성해준다.
+```sql
+create table command
+(
+    command varchar(20) not null
+);
+```
+
+
 ### HTTP API
 - `/`
   - get: 체스 게임 초기화면

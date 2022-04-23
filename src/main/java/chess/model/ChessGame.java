@@ -2,17 +2,25 @@ package chess.model;
 
 import chess.model.board.Board;
 import chess.model.board.BoardInitializer;
+import chess.model.board.ChessInitializer;
+import chess.model.board.EmptyBoardInitializer;
 import chess.model.board.Square;
 import chess.model.piece.King;
 import chess.model.piece.Piece;
+import chess.service.dto.GameResultDto;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ChessGame {
-    private final Board board;
+    private Board board;
     private Color turn;
     private Status status;
+
+    public ChessGame() {
+        init();
+    }
 
     public ChessGame(BoardInitializer initializer, Status status) {
         this.board = new Board(initializer);
@@ -38,15 +46,15 @@ public class ChessGame {
     }
 
     private void changeStatusWhenKingDead() {
-        if (!board.aliveTwoKings()) {
+        if (!board.bothKingAlive()) {
             status = status.changeStatus(GameCommand.STATUS);
         }
     }
 
     public Map<Color, Double> getPlayersScore() {
-        status = status.changeStatus(GameCommand.STATUS);
+
         return Color.getPlayerColors().stream()
-                .collect(Collectors.toMap(Function.identity(), color -> board.calculatePoint(color)));
+                .collect(Collectors.toMap(Function.identity(), board::calculatePoint));
     }
 
     public boolean isPlaying() {
@@ -61,17 +69,37 @@ public class ChessGame {
         return board.findPieceBySquare(square);
     }
 
-    public Color findWinner() {
-        if (board.aliveTwoKings()) {
+    //TODO DTO대신 뭘 반환하는게 좋은가
+    public GameResultDto getResult() {
+        status = status.changeStatus(GameCommand.STATUS);
+        Color winner = findWinner();
+        if (winner.equals(Color.NOTHING)) {
+            return new GameResultDto(getScores(), winner.name(), true);
+        }
+        return new GameResultDto(getScores(), winner.name(), false);
+    }
+
+    private Map<String, Double> getScores() {
+        return getPlayersScore().entrySet()
+                .stream()
+                .collect(Collectors.toMap(entry -> entry.getKey().name(), Entry::getValue));
+    }
+
+    private Color findWinner() {
+        if (board.bothKingAlive()) {
             return findByPoint();
         }
         return findByKing();
     }
 
     private Color findByKing() {
-        if (board.aliveTwoKings()) {
+        if (board.bothKingAlive()) {
             return Color.NOTHING;
         }
+        return getColorHasKing();
+    }
+
+    private Color getColorHasKing() {
         return Color.getPlayerColors().stream()
                 .filter(color -> board.has(new King(color)))
                 .findFirst()
@@ -90,6 +118,11 @@ public class ChessGame {
         return Color.NOTHING;
     }
 
+    public void end() {
+        this.status = Status.EMPTY;
+        this.board.remove();
+    }
+
     public Board getBoard() {
         return board;
     }
@@ -100,5 +133,11 @@ public class ChessGame {
 
     public Status getStatus() {
         return status;
+    }
+
+    public void init() {
+        this.board = new Board(new ChessInitializer());
+        this.status = Status.PLAYING;
+        this.turn = Color.WHITE;
     }
 }

@@ -49,19 +49,6 @@ public class ChessService {
         return boardDao.getBoardByGameId(id);
     }
 
-    public List<List<String>> getAllPieceLetter(int id) {
-        return Rank.getRanksInBoardOrder().stream()
-                .map(rank -> getPieceLetterInRank(getGameFromDao(id).getBoard(), rank))
-                .collect(Collectors.toList());
-    }
-
-    private List<String> getPieceLetterInRank(Board board, Rank rank) {
-        return Arrays.stream(File.values())
-                .map(file -> board.findPieceBySquare(Square.of(file, rank)))
-                .map(PieceType::getLetterByColor)
-                .collect(Collectors.toList());
-    }
-
     public void move(int id, String from, String to) {
         ChessGame chessGame = getGameFromDao(id);
         Square fromSquare = Square.of(from);
@@ -97,25 +84,15 @@ public class ChessService {
         boardDao.remove(id);
     }
 
-    public GameResultDto getResult(int id) {
-        Color winner = getGameFromDao(id).findWinner();
-        if (winner.equals(Color.NOTHING)) {
-            return new GameResultDto(getScores(id), winner.name(), true);
-        }
-        return new GameResultDto(getScores(id), winner.name(), false);
-    }
-
-    private Map<String, Double> getScores(int id) {
-        return getGameFromDao(id).getPlayersScore().entrySet()
-                .stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().name(), Entry::getValue));
-    }
-
     public GamesDto getAllGames() {
         return gameDao.findAll();
     }
 
     public void createGame(String name) {
         gameDao.createGame(name);
+    }
+
+    public GameResultDto getResult(int id) {
+        return getGameFromDao(id).getResult();
     }
 }

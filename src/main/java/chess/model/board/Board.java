@@ -9,6 +9,7 @@ import chess.model.piece.PieceType;
 import chess.model.strategy.move.Direction;
 import chess.model.strategy.move.MoveType;
 import chess.service.dto.BoardDto;
+import java.util.Collections;
 import java.util.Map;
 
 public final class Board {
@@ -16,7 +17,7 @@ public final class Board {
     private static final int VALID_KING_COUNT = 2;
     private static final int PAWN_POINT_DIVIDE_VALUE = 2;
 
-    private final Map<Square, Piece> board;
+    private Map<Square, Piece> board;
 
     public Board(Map<Square, Piece> board) {
         this.board = board;
@@ -77,7 +78,7 @@ public final class Board {
         board.replace(sourceSquare, new Empty());
     }
 
-    public boolean aliveTwoKings() {
+    public boolean bothKingAlive() {
         return board.keySet().stream()
                 .map(board::get)
                 .filter(Piece::isKing)
@@ -109,5 +110,9 @@ public final class Board {
     public boolean has(Piece piece) {
         return board.values().stream()
                 .anyMatch(piece::equals);
+    }
+
+    public void remove() {
+        board = Collections.emptyMap();
     }
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <title>체스 시뮬레이터</title>
+    <link rel="stylesheet" href="/styles/new.css"/>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
+</head>
+<body>
+<section class="header__container">
+    <h1>체스 시뮬레이터</h1>
+    <p>체스 말의 기초적인 움직임을 테스트하기 위한 사이트</p>
+</section>
+<form action="/game" method="post">
+    <div>
+        방명 <input type="text" required name="name" placeholder="ex) 정의 유쾌한 체스방"/>
+    </div>
+    <div>
+        비밀번호 <input type="password" required name="password"/>
+    </div>
+    <input type="submit" value="제출"/>
+</form>
+<section class="buttons__container">
+    <a href="/">뒤로가기!</a>
+</section>
+<script src="/scripts/new-game.js"></script>
+</body>
+</html>

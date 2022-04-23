@@ -1,6 +1,7 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.domain.state.Turn;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +29,7 @@ class ChessGameDaoTest {
 	void createChessGame() {
 		Turn turn = Turn.WHITE_TURN;
 
-		assertThat(chessGameDao.createChessGame(turn)).isEqualTo(1L);
+		assertDoesNotThrow(() -> chessGameDao.createChessGame(turn));
 	}
 
 	@Test

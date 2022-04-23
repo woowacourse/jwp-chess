@@ -1,4 +1,4 @@
-package chess.domain;
+package chess.console;
 
 import chess.console.view.InputView;
 import chess.console.view.OutputView;

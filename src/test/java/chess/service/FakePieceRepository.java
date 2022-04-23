@@ -1,8 +1,8 @@
-package chess.repository;
+package chess.service;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dao.PieceRepository;
+import chess.repository.PieceRepository;
 import chess.web.dto.PieceDto;
 import java.util.HashMap;
 import java.util.List;

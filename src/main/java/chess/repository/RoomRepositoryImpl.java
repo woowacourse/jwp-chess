@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.repository;
 
 import chess.web.dto.RoomDto;
 import java.util.Map;

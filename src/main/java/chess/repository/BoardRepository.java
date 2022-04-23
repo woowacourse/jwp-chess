@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.repository;
 
 import chess.domain.Color;
 import chess.web.dto.GameStateDto;

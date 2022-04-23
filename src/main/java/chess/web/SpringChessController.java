@@ -1,11 +1,9 @@
 package chess.web;
 
-import chess.dao.BoardDao;
-import chess.dao.PieceDao;
-import chess.web.dto.CommendDto;
-import chess.web.dto.RoomDto;
 import chess.service.GameService;
 import chess.service.RoomService;
+import chess.web.dto.CommendDto;
+import chess.web.dto.RoomDto;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,9 +20,9 @@ public class SpringChessController {
     private final RoomService roomService;
     private final GameService gameService;
 
-    public SpringChessController(RoomService roomService) {
+    public SpringChessController(RoomService roomService, GameService gameService) {
         this.roomService = roomService;
-        this.gameService = new GameService(new PieceDao(), new BoardDao());
+        this.gameService = gameService;
     }
 
     @GetMapping("/")
@@ -35,7 +33,6 @@ public class SpringChessController {
     @PostMapping(value = "/board")
     public String createRoom(@RequestParam String name) {
         RoomDto roomDto = roomService.create(name);
-//        return "redirect:/board?boardid=" + roomDto.getId();
         return "redirect:/rooms/" + roomDto.getId();
     }
 

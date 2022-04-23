@@ -5,9 +5,8 @@ import chess.domain.Result;
 import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
 import chess.domain.position.Position;
-import chess.web.PieceFactory;
-import chess.dao.BoardRepository;
-import chess.dao.PieceRepository;
+import chess.repository.BoardRepository;
+import chess.repository.PieceRepository;
 import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
 import chess.web.dto.GameStateDto;
@@ -16,7 +15,9 @@ import chess.web.dto.ResultDto;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class GameService {
 
     private final PieceRepository pieceRepository;

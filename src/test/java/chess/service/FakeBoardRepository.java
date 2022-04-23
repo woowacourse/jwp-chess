@@ -1,7 +1,7 @@
-package chess.repository;
+package chess.service;
 
 import chess.domain.Color;
-import chess.dao.BoardRepository;
+import chess.repository.BoardRepository;
 import chess.web.dto.GameStateDto;
 import java.util.HashMap;
 import java.util.Map;

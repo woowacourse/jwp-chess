@@ -35,7 +35,6 @@ public class SpringChessGameController {
 
     @PostMapping("/move")
     public ResponseEntity<ChessMap> move(@RequestBody MoveDto moveDto) {
-        System.out.println(moveDto);
         return ResponseEntity.ok(chessService.move(moveDto));
     }
 

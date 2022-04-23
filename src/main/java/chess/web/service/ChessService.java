@@ -11,9 +11,7 @@ import chess.domain.piece.PieceType;
 import chess.domain.position.Position;
 import chess.domain.state.StateType;
 import chess.web.dao.BoardStateDao;
-import chess.web.dao.BoardStateDaoImpl;
 import chess.web.dao.PieceDao;
-import chess.web.dao.PieceDaoImpl;
 import chess.web.dto.PieceDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -27,9 +25,9 @@ public class ChessService {
     private final BoardStateDao boardStateDao;
     private final PieceDao pieceDao;
 
-    public ChessService() {
-        this.boardStateDao = new BoardStateDaoImpl();
-        this.pieceDao = new PieceDaoImpl();
+    public ChessService(BoardStateDao boardStateDao, PieceDao pieceDao) {
+        this.boardStateDao = boardStateDao;
+        this.pieceDao = pieceDao;
     }
 
     public void start() {

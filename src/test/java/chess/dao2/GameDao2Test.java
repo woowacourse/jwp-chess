@@ -1,7 +1,8 @@
-package chess.dao;
+package chess.dao2;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.auth.EncryptedAuthCredentials;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,19 +12,20 @@ import org.springframework.transaction.annotation.Transactional;
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest
 @Transactional
-class GameDaoTest {
+class GameDao2Test {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private GameDao dao;
+    private GameDao2 dao;
 
     @Test
     void saveAndGetGeneratedId_메서드는_저장한_데이터의_id값_반환() {
-        int actual = dao.saveAndGetGeneratedId();
+        int actual = dao.saveAndGetGeneratedId(
+                new EncryptedAuthCredentials("name", "passwordHash"));
 
-        assertThat(actual).isEqualTo(3);
+        assertThat(actual).isEqualTo(4);
     }
 
     @Test
@@ -31,7 +33,7 @@ class GameDaoTest {
         dao.finishGame(1);
 
         boolean actual = jdbcTemplate.queryForObject(
-                "SELECT running FROM game WHERE id = 1", Boolean.class);
+                "SELECT running FROM game2 WHERE id = 1", Boolean.class);
 
         assertThat(actual).isFalse();
     }
@@ -54,13 +56,13 @@ class GameDaoTest {
     void countAll_메서드로_여태까지_저장된_모든_데이터의_개수_조회가능() {
         int actual = dao.countAll();
 
-        assertThat(actual).isEqualTo(2);
+        assertThat(actual).isEqualTo(3);
     }
 
     @Test
     void countRunningGames_메서드로_running값이_참인_데이터의_개수_조회가능() {
         int actual = dao.countRunningGames();
 
-        assertThat(actual).isEqualTo(1);
+        assertThat(actual).isEqualTo(2);
     }
 }

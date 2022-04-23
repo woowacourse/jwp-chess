@@ -1,17 +1,31 @@
 package chess.dao;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-class GameDaoImplTest {
+@JdbcTest
+public class GameDaoImplTest {
     private static final String TEST_GAME_ID = "TEST-GAME-ID";
+
     private GameDaoImpl gameDao;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        gameDao = new GameDaoImpl();
+        gameDao = new GameDaoImpl(jdbcTemplate);
+
+        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE game("
+            + "id   VARCHAR(36) NOT NULL,"
+            + "turn ENUM('WHITE', 'BLACK'),"
+            + "PRIMARY KEY (id))"
+        );
     }
 
     @DisplayName("새로운 게임을 game 테이블에 생성한다.")
@@ -48,10 +62,5 @@ class GameDaoImplTest {
 
         // then
         gameDao.updateTurnToBlack(TEST_GAME_ID);
-    }
-
-    @AfterEach
-    void tearDown() {
-        gameDao.deleteGame(TEST_GAME_ID);
     }
 }

@@ -1,41 +1,34 @@
 package chess.controller;
 
-import static spark.Spark.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
-import chess.dao.BoardDaoImpl;
-import chess.dao.GameDaoImpl;
-import chess.domain.position.Position;
+import chess.dto.request.MovePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.BoardDto;
+import chess.dto.response.CommandResultDto;
 import chess.dto.response.PieceColorDto;
 import chess.dto.response.ScoreResultDto;
 import chess.service.ChessService;
-import chess.util.BodyParser;
 import chess.util.JsonMapper;
-import spark.Request;
 
-public class WebController {
-
+@RestController
+public class ChessController {
     private static final String GAME_ID = "game-id"; // TODO: 여러 게임 방 기능 구현시 제거
 
     private final ChessService chessService;
 
-    public WebController() {
-        this.chessService = new ChessService(new GameDaoImpl(), new BoardDaoImpl());
+    @Autowired
+    public ChessController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
-    public void run() {
-        get("/board", (req, res) -> getBoard());
-        get("/turn", (req, res) -> getTurn());
-        get("/score", (req, res) -> getScore());
-        get("/winner", (req, res) -> getWinner());
-        post("/move", (req, res) -> movePiece(req));
-        post("/initialize", (req, res) -> initialize());
-    }
-
-    private String getBoard() {
+    @GetMapping("/board")
+    public String getBoard() {
         try {
             BoardDto boardDto = chessService.getBoard(GAME_ID);
             return JsonMapper.boardDtoToJson(boardDto);
@@ -44,9 +37,9 @@ public class WebController {
         }
     }
 
-    private String getTurn() {
+    @GetMapping("/turn")
+    public String getTurn() {
         try {
-
             PieceColorDto pieceColorDto = chessService.getCurrentTurn(GAME_ID);
             return JsonMapper.turnToJson(pieceColorDto);
         } catch (IllegalStateException | IllegalArgumentException e) {
@@ -54,7 +47,8 @@ public class WebController {
         }
     }
 
-    private String getScore() {
+    @GetMapping("/score")
+    public String getScore() {
         try {
             ScoreResultDto scoreResultDto = chessService.getScore(GAME_ID);
             return JsonMapper.scoreResultDtoToJson(scoreResultDto);
@@ -63,7 +57,8 @@ public class WebController {
         }
     }
 
-    private String getWinner() {
+    @GetMapping("/winner")
+    public String getWinner() {
         try {
             return JsonMapper.winnerToJson(chessService.getWinColor(GAME_ID));
         } catch (IllegalStateException | IllegalArgumentException e) {
@@ -71,29 +66,29 @@ public class WebController {
         }
     }
 
-    private String movePiece(Request req) {
+    @ResponseBody
+    @PostMapping("/move")
+    public CommandResultDto movePiece(@RequestBody MovePieceDto movePieceDto) {
         try {
-            String request = req.body();
-            Map<String, String> moveRequest = BodyParser.parseToMap(request);
-
-            Position from = Position.from(moveRequest.get("from"));
-            Position to = Position.from(moveRequest.get("to"));
-
-            chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, from, to));
+            chessService.movePiece(
+                UpdatePiecePositionDto.of(GAME_ID, movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition()));
         } catch (IllegalStateException e) {
-            return e.getMessage();
+            return CommandResultDto.of(false, e.getMessage());
         }
 
-        return "success";
+        return CommandResultDto.of(true, "성공하였습니다.");
     }
 
     // TODO: Exception 으로 catch 하면 안됨
-    private String initialize() {
+    @ResponseBody
+    @PostMapping("/initialize")
+    public CommandResultDto initialize() {
         try {
             chessService.initializeGame(GAME_ID);
         } catch (Exception e) {
-            return "fail";
+            return CommandResultDto.of(false, e.getMessage());
         }
-        return "success";
+        return CommandResultDto.of(true, "성공하였습니다.");
     }
+
 }

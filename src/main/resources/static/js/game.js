@@ -82,6 +82,9 @@ const setupSelected = (selectedSquare) => {
 const processMove = (selectedSquare) => {
     fetch(moveUrl, {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
         body: JSON.stringify({
             gameId: gameId,
             piece: selected,

@@ -87,9 +87,13 @@
 <h2>체스 form</h2>
 <div>
     <input type="button" onclick="startChessGame()" value="start">
-    <input type="button" onclick="loadButton()" value="load game">
     <input type="button" onclick="scoreButton()" value="score">
 </div>
+<br>
+<form>
+    <input id="gameId" placeholder="체스게임 id입력">
+    <input type="button" onclick="loadButton()" value="load game">
+</form>
 <br>
 <form>
     <input id="source" placeholder="source 위치 (ex. a5)">

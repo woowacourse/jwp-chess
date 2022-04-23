@@ -32,12 +32,9 @@ async function displayBoard() {
 }
 
 async function loadButton() {
-    if (gameStatus === "") {
-        await refreshAndDisplayBoard();
-        gameStatus = "run status";
-    } else {
-        alert("이미 게임이 로딩되었습니다.");
-    }
+    const source = document.getElementById("gameId").value;
+    gameUri = "/chessgames/" + source;
+    await refreshAndDisplayBoard();
 }
 
 function getBoard() {

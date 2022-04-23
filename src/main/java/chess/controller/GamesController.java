@@ -1,39 +1,34 @@
 package chess.controller;
 
 import chess.dto.GameCountDto;
-import chess.dto.SearchResultDto;
 import chess.service.ChessService2;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping("/search")
-public class SearchController {
+@RequestMapping("/games")
+public class GamesController {
 
-    private static final String HTML_TEMPLATE_PATH = "search";
-    private static final String RESPONSE_MODEL_KEY = "response";
+    private static final String HTML_TEMPLATE_PATH = "games";
+    private static final String GAME_COUNT_MODEL_KEY = "gameCount";
+    private static final String GAME_LIST_MODEL_KEY = "games";
 
     private final ChessService2 chessService;
 
-    public SearchController(ChessService2 chessService) {
+    public GamesController(ChessService2 chessService) {
         this.chessService = chessService;
     }
 
     @GetMapping
-    public ModelAndView renderSearch() {
+    public ModelAndView renderGames() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
-        GameCountDto gameCountDto = chessService.countGames();
-        modelAndView.addObject(RESPONSE_MODEL_KEY, gameCountDto);
-        return modelAndView;
-    }
 
-    @PostMapping
-    public SearchResultDto searchResult(@RequestParam(name = "game_id") int gameId) {
-        return chessService.searchGame(gameId);
+        GameCountDto gameCountDto = chessService.countGames();
+        modelAndView.addObject(GAME_COUNT_MODEL_KEY, gameCountDto);
+        modelAndView.addObject(GAME_LIST_MODEL_KEY, chessService.findGames());
+        return modelAndView;
     }
 }

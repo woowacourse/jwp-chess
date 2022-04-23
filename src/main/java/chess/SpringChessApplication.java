@@ -2,7 +2,7 @@ package chess;
 
 import chess.application.web.JsonTransformer;
 import chess.application.web.WebGameController;
-import java.sql.SQLException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @SpringBootApplication
 @Controller
 public class SpringChessApplication {
-    private final WebGameController webGameController;
+    @Autowired
+    private WebGameController webGameController;
     private final JsonTransformer jsonTransformer;
 
     public SpringChessApplication() {
-        this.webGameController = new WebGameController();
         this.jsonTransformer = new JsonTransformer();
     }
 
@@ -42,7 +42,7 @@ public class SpringChessApplication {
     }
 
     @GetMapping("/load")
-    public String load(Model model) throws SQLException {
+    public String load(Model model) {
         webGameController.load();
         return play(model);
     }
@@ -69,11 +69,7 @@ public class SpringChessApplication {
 
     @GetMapping("/save")
     public ResponseEntity<Void> save() {
-        try {
-            webGameController.save();
-        } catch (SQLException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        webGameController.save();
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

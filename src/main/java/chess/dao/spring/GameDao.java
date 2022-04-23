@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GameDao {
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     public void save() {
         final String sql = chooseSaveSql();

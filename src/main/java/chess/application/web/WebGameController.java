@@ -3,9 +3,8 @@ package chess.application.web;
 import static chess.view.Expressions.EXPRESSIONS_COLUMN;
 import static chess.view.Expressions.EXPRESSIONS_ROW;
 
-import chess.dao.spark.BoardDao;
-import chess.dao.spark.DatabaseConnector;
-import chess.dao.spark.GameDao;
+import chess.dao.spring.BoardDao;
+import chess.dao.spring.GameDao;
 import chess.domain.Camp;
 import chess.domain.ChessGame;
 import chess.domain.board.Position;
@@ -13,13 +12,16 @@ import chess.domain.gamestate.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Type;
 import chess.dto.PieceDto;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import spark.Request;
 
+@Service
 public class WebGameController {
     private static final String KEY_READY = "ready";
     private static final String KEY_STARTED = "started";
@@ -31,24 +33,19 @@ public class WebGameController {
     private static final String REGEX_VALUE = "=";
     private static final String REGEX_DATA = "&";
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3307/chess";
-    private static final String DB_USER = "user";
-    private static final String DB_PASSWORD = "password";
-
     private static final int INDEX_KEY = 0;
     private static final int INDEX_VALUE = 1;
     private static final int INDEX_COLUMN = 0;
     private static final int INDEX_ROW = 1;
 
     private final ChessGame chessGame;
-    private final GameDao gameDao;
-    private final BoardDao boardDao;
+    @Autowired
+    private GameDao gameDao;
+    @Autowired
+    private BoardDao boardDao;
 
     public WebGameController() {
         this.chessGame = new ChessGame();
-        DatabaseConnector databaseConnector = new DatabaseConnector(DB_URL, DB_USER, DB_PASSWORD);
-        this.gameDao = new GameDao(databaseConnector);
-        this.boardDao = new BoardDao(databaseConnector);
     }
 
     public Map<String, Object> modelReady() {
@@ -66,19 +63,19 @@ public class WebGameController {
         Map<String, Object> model = board.entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> entry.getKey().toString(),
-                        entry -> PieceDto.of(entry.getValue())
+                        entry -> PieceDto.of(entry.getValue(), entry.getKey())
                 ));
         model.put(KEY_STARTED, true);
         model.put(KEY_READY, false);
         return model;
     }
 
-    public void load() throws SQLException {
-        Map<String, PieceDto> rawBoard = boardDao.load();
-        Map<Position, Piece> board = rawBoard.entrySet().stream()
+    public void load() {
+        List<PieceDto> rawBoard = boardDao.load();
+        Map<Position, Piece> board = rawBoard.stream()
                 .collect(Collectors.toMap(
-                        entry -> parsePosition(entry.getKey()),
-                        entry -> parsePiece(entry.getValue())
+                        pieceDto2 -> parsePosition(pieceDto2.getPosition()),
+                        this::parsePiece
                 ));
         chessGame.load(board, gameDao.isWhiteTurn());
     }
@@ -122,7 +119,7 @@ public class WebGameController {
         return chessGame.getScores();
     }
 
-    public void save() throws SQLException {
+    public void save() {
         gameDao.save();
         boardDao.save(chessGame.getBoardSquares());
     }

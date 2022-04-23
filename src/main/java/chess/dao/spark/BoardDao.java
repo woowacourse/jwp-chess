@@ -75,7 +75,8 @@ public class BoardDao {
     private void putPiece(Map<String, PieceDto> board, ResultSet resultSet) throws SQLException {
         PieceDto piece = PieceDto.of(
                 resultSet.getString("type"),
-                resultSet.getBoolean("white")
+                resultSet.getBoolean("white"),
+                resultSet.getString("position")
         );
         board.put(resultSet.getString("position"), piece);
     }

@@ -46,7 +46,7 @@
 </body>
 
 <script>
-    function start() {
+    async function start() {
         roomName = document.getElementById("roomNameInput").value;
         if (/^\s*$/.test(roomName)) {
             const error = document.getElementById("error");
@@ -55,9 +55,11 @@
             document.getElementById("roomNameInput").value = "";
             return;
         }
-        fetch(`/rooms/${roomName}`, {method: "POST"})
-            .then(it => fetch(`/rooms/${roomName}/pieces`, {method: "POST"}))
-            .then(it => window.location.href = `/rooms/${roomName}`)
+
+        await fetch(`/rooms/${roomName}`, {method: "POST"});
+        await fetch(`/rooms/${roomName}/pieces`, {method: "POST"});
+
+        window.location.href = `/rooms/${roomName}`;
     }
 </script>
 

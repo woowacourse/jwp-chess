@@ -10,9 +10,12 @@ import chess.domain.game.NewGame;
 import chess.dto.CreateGameDto;
 import chess.dto.GameCountDto;
 import chess.dto.GameDto;
+import chess.dto.GameEntityDto;
 import chess.dto.GameResultDto;
 import chess.dto.SearchResultDto;
+import chess.entity.GameEntity;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +30,13 @@ public class ChessService2 {
     public ChessService2(GameDao2 gameDao, EventDao eventDao) {
         this.gameDao = gameDao;
         this.eventDao = eventDao;
+    }
+
+    public List<GameEntityDto> findGames() {
+        return gameDao.findAll()
+                .stream()
+                .map(GameEntity::toDto)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public GameCountDto countGames() {

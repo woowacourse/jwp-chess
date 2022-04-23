@@ -1,5 +1,6 @@
 package chess.entity;
 
+import chess.dto.GameEntityDto;
 import java.util.Objects;
 
 public class GameEntity {
@@ -12,6 +13,10 @@ public class GameEntity {
         this.id = id;
         this.name = name;
         this.running = running;
+    }
+
+    public GameEntityDto toDto() {
+        return new GameEntityDto(id, name);
     }
 
     @Override

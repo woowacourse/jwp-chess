@@ -10,10 +10,12 @@ import chess.domain.game.NewGame;
 import chess.dto.CreateGameDto;
 import chess.dto.GameCountDto;
 import chess.dto.GameDto;
+import chess.dto.GameEntityDto;
 import chess.dto.GameResultDto;
 import chess.dto.SearchResultDto;
 import chess.service.fixture.EventDaoStub;
 import chess.service.fixture.GameDao2Stub;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,18 @@ class ChessService2Test {
     void setup() {
         service = new ChessService2(new GameDao2Stub(namedParameterJdbcTemplate),
                 new EventDaoStub(namedParameterJdbcTemplate));
+    }
+
+    @Test
+    void findGames_메서드는_모든_게임의_id와_이름_정보를_반환한다() {
+        List<GameEntityDto> actual = service.findGames();
+
+        List<GameEntityDto> expected = List.of(
+                new GameEntityDto(1, "진행중인_게임"),
+                new GameEntityDto(2, "이미_존재하는_게임명"),
+                new GameEntityDto(3, "종료된_게임"));
+
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test

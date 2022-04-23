@@ -3,7 +3,7 @@ package chess.controller;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
-import chess.dto.ErrorMessageDto;
+import chess.exception.dto.ErrorMessageDto;
 import chess.dto.MovePositionDto;
 import chess.service.ChessGameService;
 import com.google.gson.Gson;

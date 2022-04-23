@@ -1,5 +1,6 @@
 package chess.utils;
 
+import chess.exception.DbConnectionException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ public class SQLConnection {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+            throw new DbConnectionException();
         }
         return connection;
     }

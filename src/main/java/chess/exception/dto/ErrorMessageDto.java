@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.exception.dto;
 
 public class ErrorMessageDto {
 

@@ -7,6 +7,7 @@ import chess.domain.player.Team;
 import chess.domain.position.Position;
 import chess.dto.ChessGameUpdateDto;
 import chess.dto.PieceDto;
+import chess.exception.ExecuteQueryException;
 import chess.utils.SQLConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,6 +38,7 @@ public class ChessGameDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new ExecuteQueryException("체스 게임 정보 불러오는데 실패했습니다.");
         }
         return Optional.empty();
     }
@@ -58,7 +60,7 @@ public class ChessGameDao {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("게임을 저장할 수 없습니다.");
+            throw new ExecuteQueryException("게임을 저장할 수 없습니다.");
         }
     }
 
@@ -70,12 +72,12 @@ public class ChessGameDao {
             saveEachPiece(player, preparedStatement, pieces, chessGameId);
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new ExecuteQueryException("체스말 저장에 실패했습니다.");
         }
     }
 
     private void saveEachPiece(final Player player, final PreparedStatement preparedStatement, final List<Piece> pieces,
-            int chessGameId)
-            throws SQLException {
+            int chessGameId) throws SQLException {
         for (Piece piece : pieces) {
             preparedStatement.setString(1, toPositionString(piece.getPosition()));
             preparedStatement.setString(2, String.valueOf(piece.getName()));
@@ -114,6 +116,7 @@ public class ChessGameDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new ExecuteQueryException("체스말 불러오기가 실패했습니다.");
         }
         return pieces;
     }
@@ -129,6 +132,7 @@ public class ChessGameDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new ExecuteQueryException("현재 턴 정보 불러오기가 실패했습니다.");
         }
         return Optional.empty();
     }
@@ -141,7 +145,7 @@ public class ChessGameDao {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("체스말을 삭제할 수 없습니다.");
+            throw new ExecuteQueryException("체스말을 삭제할 수 없습니다.");
         }
     }
 
@@ -153,7 +157,7 @@ public class ChessGameDao {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("게임을 삭제할 수 없습니다.");
+            throw new ExecuteQueryException("게임을 삭제할 수 없습니다.");
         }
     }
 
@@ -166,6 +170,7 @@ public class ChessGameDao {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new ExecuteQueryException("턴 정보 업데이트에 실패했습니다.");
         }
     }
 
@@ -185,7 +190,7 @@ public class ChessGameDao {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new IllegalArgumentException("해당 위치의 체스말을 삭제할 수 없습니다.");
+            throw new ExecuteQueryException("해당 위치의 체스말을 삭제할 수 없습니다.");
         }
     }
 
@@ -201,6 +206,7 @@ public class ChessGameDao {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new ExecuteQueryException("체스말 위치 업데이트에 실패했습니다.");
         }
     }
 }

@@ -26,8 +26,6 @@ public class ChessController {
     @Autowired
     private CommandDao commandDao;
 
-    private State state;
-
     @GetMapping("/")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("index");
@@ -36,24 +34,14 @@ public class ChessController {
 
     @PostMapping("/start")
     public String startChessGame() {
-        state = Start.of();
         commandDao.clear();
-        return "redirect:start";
-    }
-
-    @GetMapping(path = "/start")
-    public ModelAndView printInitBoard() {
-        ModelAndView modelAndView = new ModelAndView("game");
-        modelAndView.addObject("squares", showChessBoard(state.getBoard()));
-        modelAndView.addObject("player", playerName(state.getPlayer()));
-        modelAndView.addObject("commands", commandDao.findAll());
-        modelAndView.addObject("message", "게임을 시작합니다.");
-        return modelAndView;
+        return "redirect:game";
     }
 
     @GetMapping(path = "/game")
     public ModelAndView printCurrentBoard() {
-        ModelAndView modelAndView = new ModelAndView("game");
+        State state = currentState();
+        ModelAndView modelAndView = new ModelAndView(getViewName(state));
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
         modelAndView.addObject("player", playerName(state.getPlayer()));
         modelAndView.addObject("commands", commandDao.findAll());
@@ -62,31 +50,20 @@ public class ChessController {
 
     @PostMapping(path = "/game")
     public String movePiece(@RequestParam("command") String command) {
-        state = state.proceed(command);
         commandDao.insert(command);
-        if (state.isRunning()) {
-            return "redirect:game";
-        }
-        return "redirect:finish";
-    }
-
-    @GetMapping(path = "/finish")
-    public ModelAndView printFinishedChess() {
-        ModelAndView modelAndView = new ModelAndView("finished");
-        modelAndView.addObject("squares", showChessBoard(state.getBoard()));
-        modelAndView.addObject("player", playerName(state.getPlayer()));
-        return modelAndView;
+        return "redirect:game";
     }
 
     @PostMapping(path = "/result")
     public String result() {
-        state = state.proceed("status");
+        commandDao.insert("status");
         return "redirect:result";
     }
 
     @GetMapping(path = "/result")
     public ModelAndView printResult() {
         ModelAndView modelAndView = new ModelAndView("status");
+        State state = currentState();
         Status status = (Status) state;
         HashMap<Player, Double> results = status.calculateScore();
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
@@ -95,16 +72,21 @@ public class ChessController {
         return modelAndView;
     }
 
-    @GetMapping(path = "/reload")
-    public String reload() {
+    private State currentState() {
         List<String> commands = commandDao.findAll();
-        state = Start.of();
+        State state = Start.of();
         for (String command : commands) {
             state = state.proceed(command);
         }
-        return "redirect:game";
+        return state;
     }
 
+    private String getViewName(State state) {
+        if (state.isRunning()) {
+            return "game";
+        }
+        return "finished";
+    }
 
     private List<Square> showChessBoard(final Map<Position, Piece> board) {
         final List<Square> squares = new ArrayList<>();

@@ -1,6 +1,7 @@
-package chess.service;
+package chess.dao;
 
 import chess.dto.MoveRequestDto;
+import chess.service.ChessSQLException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -156,16 +157,16 @@ public class ChessJDBCDao implements ChessDao {
     }
 
     @Override
-    public int getTurnByGameId(String gameId) {
+    public String getTurnByGameId(String gameId) {
         final String sql = "select turn from game where id = ?";
-        int turn = 0;
+        String turn = "";
         try (final Connection connection = getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
             preparedStatement.setString(1, gameId);
             final ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                turn = resultSet.getInt("turn");
+                turn = resultSet.getString("turn");
             }
         } catch (SQLException e) {
             throw new ChessSQLException(e.getMessage());
@@ -174,23 +175,15 @@ public class ChessJDBCDao implements ChessDao {
     }
 
     private void changeTurn(String gameId) {
-        int turn = oppositeTurn(getTurnByGameId(gameId));
-        final String sql = "update game set turn = ? where id = ?";
+        final String sql = "update game set turn = "
+                + "case when turn = 'black' then 'white' when turn = 'white' then 'black' end where id = ?";
         try (final Connection connection = getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
-            preparedStatement.setInt(1, turn);
-            preparedStatement.setString(2, gameId);
+            preparedStatement.setString(1, gameId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new ChessSQLException(e.getMessage());
         }
-    }
-
-    private int oppositeTurn(int turnByGameId) {
-        if (turnByGameId == 0) {
-            return 1;
-        }
-        return 0;
     }
 }

@@ -1,4 +1,4 @@
-package chess.service;
+package chess.dao;
 
 import chess.dto.MoveRequestDto;
 import java.util.Map;
@@ -8,5 +8,5 @@ public interface ChessDao {
 
     void move(MoveRequestDto moveRequestDto);
 
-    int getTurnByGameId(String gameId);
+    String getTurnByGameId(String gameId);
 }

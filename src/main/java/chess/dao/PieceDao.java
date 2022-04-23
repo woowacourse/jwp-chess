@@ -6,10 +6,15 @@ import chess.domain.PieceConverter;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceRule;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -24,13 +29,32 @@ public class PieceDao {
 
 	public int savePieces(long chessGameId, Map<Position, Piece> pieces) {
 		String sql = "insert into piece (type, color, position_col, position_row, chess_game_id) values (?, ?, ?, ?, ?)";
-		int count = 0;
-		for (Position position : pieces.keySet()) {
-			Piece piece = pieces.get(position);
-			jdbcTemplate.update(sql, piece.name(), piece.color().name(), position.column(), position.row(), chessGameId);
-			count++;
-		}
-		return count;
+
+		return jdbcTemplate.batchUpdate(sql,
+				pieceSaveBatchSetter(chessGameId, new ArrayList<>(pieces.entrySet()))).length;
+	}
+
+	private BatchPreparedStatementSetter pieceSaveBatchSetter(long chessGameId,
+															  List<Entry<Position, Piece>> pieceEntries) {
+		return new BatchPreparedStatementSetter() {
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				Entry<Position, Piece> pieceEntry = pieceEntries.get(i);
+				Position position = pieceEntry.getKey();
+				Piece piece = pieceEntry.getValue();
+
+				ps.setString(1, piece.name());
+				ps.setString(2, piece.color().name());
+				ps.setString(3, String.valueOf(position.column()));
+				ps.setString(4, String.valueOf(position.row()));
+				ps.setLong(5, chessGameId);
+			}
+
+			@Override
+			public int getBatchSize() {
+				return pieceEntries.size();
+			}
+		};
 	}
 
 	public ChessBoard findChessBoardByChessGameId(long chessGameId) {

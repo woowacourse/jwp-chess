@@ -6,9 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import chess.service.dto.ChessGameDto;
 import chess.service.dto.GamesDto;
 import chess.service.dto.StatusDto;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,13 +20,6 @@ class SpringGameDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    private void setUpGames(String... names) {
-        List<Object[]> params = Arrays.stream(names)
-                .map(name -> new Object[]{name})
-                .collect(Collectors.toList());
-        jdbcTemplate.batchUpdate("INSERT INTO game SET name = ?", params);
-    }
 
     @BeforeEach
     void setUp() {
@@ -46,7 +36,7 @@ class SpringGameDaoTest {
     @Test
     @DisplayName("update : 게임의 상태와 턴을 업데이트 하는지 확인")
     void update() {
-        setUpGames("first");
+        GameFactory.setUpGames(jdbcTemplate, "first");
         springGameDao.update(new ChessGameDto(1,"EMPTY", "BLACK"));
         ChessGameDto foundGame = springGameDao.findById(1);
         assertAll(() -> {
@@ -58,7 +48,7 @@ class SpringGameDaoTest {
     @Test
     @DisplayName("findById : 게임의 id를 통해 게임 조회가 정상적인지 확인")
     void findById() {
-        setUpGames("first");
+        GameFactory.setUpGames(jdbcTemplate,"first");
         ChessGameDto foundGame = springGameDao.findById(1);
         assertThat(foundGame.getName()).isEqualTo("first");
     }
@@ -66,7 +56,7 @@ class SpringGameDaoTest {
     @Test
     @DisplayName("updateStatus: 게임의 상태만 업데이트하는지 확인")
     void updateStatus() {
-        setUpGames("first");
+        GameFactory.setUpGames(jdbcTemplate,"first");
         String expected = "RESULT";
         springGameDao.updateStatus(new StatusDto(expected), 1);
         ChessGameDto foundGame = springGameDao.findById(1);
@@ -76,7 +66,7 @@ class SpringGameDaoTest {
     @Test
     @DisplayName("findAll: 저장된 모든 게임이 조회되는지 확인")
     void findAll() {
-        setUpGames("first", "second");
+        GameFactory.setUpGames(jdbcTemplate, "first", "second");
         GamesDto gamesDto = springGameDao.findAll();
         assertThat(gamesDto.getGames()).hasSize(2);
     }

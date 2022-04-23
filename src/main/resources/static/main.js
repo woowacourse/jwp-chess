@@ -53,14 +53,14 @@ const renderBoard = async () => {
 
     const board = await fetchBoard();
     let html = "";
-    Y_AXES.forEach((yAxis, i) => {
+    Y_AXES.forEach((yAxis) => {
         html += "<div class='row'>";
 
-        X_AXES.forEach((xAxis, j) => {
+        X_AXES.forEach((xAxis) => {
             const coordinate = xAxis + yAxis;
             const pieceName = board[coordinate];
             if (pieceName !== undefined) {
-                const imgTag = `<div class="column" onclick="handleClickTile('${coordinate}')"><img src='images/${pieceName.toLowerCase()}.svg'/></div>`;
+                const imgTag = `<div class="column" onclick="handleClickTile('${coordinate}')"><img alt="chess-piece" src='images/${pieceName.toLowerCase()}.svg'/></div>`;
                 html += imgTag;
             } else {
                 const imgTag = `<div class="column" onclick="handleClickTile('${coordinate}')"></div>`;
@@ -105,8 +105,8 @@ const renderScore = async () => {
     const score = await fetchScore();
 
     let html = "";
-    html += `백: ${score.white}<br/>`;
-    html += `흑: ${score.black}`;
+    html += `백: ${score.whiteScore}<br/>`;
+    html += `흑: ${score.whiteScore}`;
 
     document.getElementById("score").innerHTML = html;
 }
@@ -116,7 +116,7 @@ const renderWinner = async () => {
         const winner = await fetchWinner();
 
         if (winner.pieceColor) {
-            let color = "";
+            let color;
             if (winner.pieceColor === "WHITE") {
                 color = "백";
             } else {

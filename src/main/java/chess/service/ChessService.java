@@ -168,7 +168,7 @@ public class ChessService {
 
     private int countPawnsOnSameColumns(int boardId, final Team team) {
         return Arrays.stream(File.values())
-                .mapToInt(file -> chessPieceRepository.countPawnsOnSameColumn(boardId, file, team))
+                .mapToInt(file -> chessPieceRepository.countPawnsOnSameFile(boardId, file, team))
                 .filter(count -> count > 1)
                 .sum();
     }

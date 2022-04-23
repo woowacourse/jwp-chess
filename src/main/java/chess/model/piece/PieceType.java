@@ -19,7 +19,7 @@ public enum PieceType {
         this.function = function;
     }
 
-    public static Piece getPiece(String name, int pieceId, Team team, int squareId) {
+    public static Piece getPiece(int pieceId, String name, Team team, int squareId) {
         return Arrays.stream(values())
                 .filter(pieceType -> pieceType.name().equals(name))
                 .findFirst()

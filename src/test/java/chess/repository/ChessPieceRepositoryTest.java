@@ -12,15 +12,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@SpringBootTest
+@Transactional
 class ChessPieceRepositoryTest {
 
-    private final ChessPieceRepository chessPieceRepository = new ChessPieceRepository(new ConnectionManager());
+    @Autowired
+    private ChessPieceRepository chessPieceRepository;
 
     @Autowired
     private ChessSquareRepository chessSquareRepository;
@@ -36,11 +41,6 @@ class ChessPieceRepositoryTest {
         final Square square = chessSquareRepository.save(new Square(File.A, Rank.TWO, board.getId()));
         this.squareId = square.getId();
         chessPieceRepository.save(new Pawn(Team.WHITE), squareId);
-    }
-
-    @AfterEach
-    void setDown() {
-        chessBoardRepository.deleteAll();
     }
 
     @Test

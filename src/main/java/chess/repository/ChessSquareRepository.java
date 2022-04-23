@@ -1,6 +1,5 @@
 package chess.repository;
 
-import chess.model.room.Room;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -13,7 +12,6 @@ import chess.model.square.File;
 import chess.model.square.Rank;
 import chess.model.square.Square;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,8 +81,7 @@ public class ChessSquareRepository implements SquareRepository<Square> {
     }
 
     private Piece makePiece(SqlRowSet resultSet) {
-        return PieceType.getPiece(resultSet.getString("type"),
-                resultSet.getInt("pi_id"),
+        return PieceType.getPiece(resultSet.getInt("pi_id"), resultSet.getString("type"),
                 Team.findTeam(resultSet.getString("team")),
                 resultSet.getInt("square_id"));
     }

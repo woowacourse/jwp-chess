@@ -1,130 +1,100 @@
 package chess.repository;
 
-import org.springframework.stereotype.Repository;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
 import chess.model.piece.Team;
 import chess.model.square.File;
+import chess.model.square.Square;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ChessPieceRepository implements PieceRepository<Piece> {
 
-    private final ConnectionManager connectionManager;
+    private final JdbcTemplate jdbcTemplate;
 
-    public ChessPieceRepository(ConnectionManager connectionManager) {
-        this.connectionManager = connectionManager;
+    public ChessPieceRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Piece save(Piece piece, int squareId) {
-        return connectionManager.executeQuery(connection -> {
-            final String sql = "INSERT INTO piece (type, team, square_id) VALUES(?, ?, ?)";
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql,
-                    Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, piece.name());
-            preparedStatement.setString(2, piece.team().name());
-            preparedStatement.setInt(3, squareId);
-            preparedStatement.executeUpdate();
-            final ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            if (!resultSet.next()) {
-                throw new IllegalArgumentException("피스를 찾지 못했습니다." + piece.name());
-            }
-            return PieceType.getPiece(
-                    piece.name(),
-                    resultSet.getInt(1),
-                    piece.team(),
-                    squareId);
-        });
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        simpleJdbcInsert.withTableName("piece").usingGeneratedKeyColumns("id");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("type", piece.name());
+        parameters.put("team", piece.team());
+        parameters.put("square_id", squareId);
+
+        Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return PieceType.getPiece(
+                number.intValue(),
+                piece.name(),
+                piece.team(),
+                squareId);
     }
 
     @Override
     public Piece findBySquareId(int squareId) {
-        return connectionManager.executeQuery(connection -> {
-            final String sql = "SELECT * FROM piece WHERE square_id=?";
-            final PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, squareId);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.next()) {
-                throw new IllegalArgumentException("기물을 찾지 못했습니다.");
-            }
-            return PieceType.getPiece(
-                    resultSet.getString("type"),
-                    resultSet.getInt("id"),
-                    Team.findTeam(resultSet.getString("team")),
-                    resultSet.getInt("square_id"));
-        });
+        return jdbcTemplate.queryForObject("SELECT * FROM piece WHERE square_id=?", getRowMapper(), squareId);
     }
 
     @Override
     public int updatePieceSquareId(int originSquareId, int newSquareId) {
-        return connectionManager.executeQuery(connection -> {
-            final String sql = "UPDATE piece SET square_id=? WHERE square_id=?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql,
-                    PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, newSquareId);
-            preparedStatement.setInt(2, originSquareId);
-            return preparedStatement.executeUpdate();
-        });
+        return jdbcTemplate.update("UPDATE piece SET square_id=? WHERE square_id=?", newSquareId, originSquareId);
     }
 
     @Override
     public int deletePieceBySquareId(int squareId) {
-        return connectionManager.executeQuery(connection -> {
-            final String sql = "DELETE FROM piece WHERE square_id=?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql,
-                    PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, squareId);
-            return preparedStatement.executeUpdate();
-        });
+        return jdbcTemplate.update("DELETE FROM piece WHERE square_id=?", squareId);
     }
 
     @Override
     public List<Piece> getAllPiecesByBoardId(int boardId) {
-        return connectionManager.executeQuery(connection -> {
-            final String sql =
-                    "SELECT pi.id, pi.type, pi.team, pi.square_id FROM piece pi "
-                            + "JOIN square po ON pi.square_id=po.id "
-                            + "JOIN board nb ON po.board_id=nb.id WHERE nb.id=?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql,
-                    PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, boardId);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            List<Piece> pieces = new ArrayList<>();
-            while (resultSet.next()) {
-                pieces.add(
-                        PieceType.getPiece(resultSet.getString("type"),
-                                resultSet.getInt("id"),
-                                Team.findTeam(resultSet.getString("team")),
-                                resultSet.getInt("square_id")
-                        ));
-            }
-            return pieces;
-        });
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(
+                "SELECT pi.id, pi.type, pi.team, pi.square_id FROM piece pi "
+                        + "JOIN square po ON pi.square_id=po.id "
+                        + "JOIN board nb ON po.board_id=nb.id WHERE nb.id=?", boardId);
+        Map<Square, Piece> squarePieceMap = new HashMap<>();
+        List<Piece> pieces = new ArrayList<>();
+        while (sqlRowSet.next()) {
+            pieces.add(
+                    PieceType.getPiece(sqlRowSet.getInt("id"),
+                            sqlRowSet.getString("type"),
+                            Team.findTeam(sqlRowSet.getString("team")),
+                            sqlRowSet.getInt("square_id")
+                    ));
+        }
+        return pieces;
     }
 
     @Override
-    public int countPawnsOnSameColumn(int roomId, File column, Team team) {
-        return connectionManager.executeQuery(connection -> {
-            final String sql = "SELECT COUNT(*) AS total_count FROM piece pi " +
-                    "JOIN square s ON pi.square_id = s.id " +
-                    "WHERE s.square_file=? AND s.board_id=? AND pi.type='p' AND pi.team=?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql,
-                    PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, column.value());
-            preparedStatement.setInt(2, roomId);
-            preparedStatement.setString(3, team.name());
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.next()) {
-                throw new IllegalArgumentException("쿼리가 잘못됐습니다.");
-            }
+    public int countPawnsOnSameFile(int roomId, File file, Team team) {
 
-            return resultSet.getInt("total_count");
-        });
+        return jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) AS total_count FROM piece pi " +
+                        "JOIN square s ON pi.square_id = s.id " +
+                        "WHERE s.square_file=? AND s.board_id=? AND pi.type='p' AND pi.team=?",
+                Integer.class,
+                file.value(), roomId, team.name()
+        );
+    }
+
+    private RowMapper<Piece> getRowMapper() {
+        return (resultSet, rowNum) -> PieceType.getPiece(
+                resultSet.getInt("id"),
+                resultSet.getString("type"),
+                Team.findTeam(resultSet.getString("team")),
+                resultSet.getInt("square_id")
+        );
     }
 }

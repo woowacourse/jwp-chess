@@ -177,7 +177,7 @@ window.onload = async function () {
 
 function fetchNewChess() {
     let roomId = document.getElementById("room-id").value;
-    fetch('http://localhost:8080/start?roomId=' + roomId, {
+    fetch('http://localhost:8080/rooms/' + roomId + '?command=start', {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -200,7 +200,7 @@ function fetchLoadChess() {
         return;
     }
     let roomId = document.getElementById("room-id").value;
-    fetch('http://localhost:8080/load?roomId=' + roomId, {
+    fetch('http://localhost:8080/rooms/' + roomId + '?command=load', {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -218,7 +218,7 @@ function fetchLoadChess() {
 
 function fetchMove(source, target) {
     let boardId = document.getElementById("board-id").value;
-    fetch('http://localhost:8080/move?boardId=' + boardId, {
+    fetch('http://localhost:8080/boards/' + boardId + '?command=move', {
         method: 'POST',
         body: JSON.stringify({
             source: source,
@@ -252,7 +252,7 @@ function fetchResult() {
         return;
     }
     let boardId = document.getElementById("board-id").value;
-    fetch('http://localhost:8080/result?boardId=' + boardId, {
+    fetch('http://localhost:8080/boards/' + boardId + '?command=result', {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -264,7 +264,7 @@ function fetchResult() {
 
 function fetchFinalResult() {
     let boardId = document.getElementById("board-id").value;
-    fetch('http://localhost:8080/end?boardId=' + boardId, {
+    fetch('http://localhost:8080/boards/' + boardId + '?command=end', {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',

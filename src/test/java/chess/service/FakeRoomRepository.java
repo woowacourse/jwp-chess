@@ -25,4 +25,10 @@ public class FakeRoomRepository implements RoomRepository {
                 .map(key -> new RoomDto(key, database.get(key)))
                 .findAny();
     }
+
+    @Override
+    public Optional<RoomDto> findById(int roomId) {
+        return Optional.ofNullable(database.get(roomId))
+                .map(name -> new RoomDto(roomId, name));
+    }
 }

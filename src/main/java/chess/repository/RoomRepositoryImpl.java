@@ -4,6 +4,7 @@ import chess.web.dto.RoomDto;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -35,11 +36,28 @@ public class RoomRepositoryImpl implements RoomRepository {
     @Override
     public Optional<RoomDto> find(String name) {
         String sql = "select * from room where name = :name";
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject(sql, Map.of("name", name),
-                        (resultSet, rowNum) ->
-                                new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX))
-                )
-        );
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(sql, Map.of("name", name),
+                            (resultSet, rowNum) ->
+                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX))
+                    ));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<RoomDto> findById(int roomId) {
+        String sql = "select * from room where id = :roomId";
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId),
+                            (resultSet, rowNum) ->
+                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX))
+                    ));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 }

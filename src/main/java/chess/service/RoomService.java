@@ -32,4 +32,12 @@ public class RoomService {
             throw new IllegalArgumentException(ERROR_NAME_SIZE);
         }
     }
+
+    public void validateId(int roomId) {
+        Optional<RoomDto> roomDto = roomRepository.findById(roomId);
+        if (roomDto.isEmpty()) {
+            throw new IllegalArgumentException("유효하지 않은 체스방 주소입니다.");
+        }
+
+    }
 }

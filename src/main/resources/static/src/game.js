@@ -13,7 +13,7 @@ section.addEventListener("mouseup", (event) => {
 
   toInput = findTagId(event);
 
-  fetch("/game/move", {
+  fetch("/game/"+gameId+"/move", {
     method: "post",
     redirect: 'follow',
     headers: {
@@ -26,11 +26,9 @@ section.addEventListener("mouseup", (event) => {
       gameId: gameId
     }),
   })
-  // .then((res) => status(res))
-  .then((response) => {
-    window.location.href = response.url
-    status(response)
-  })
+  .then(res=>{
+     window.location.href = res.url
+   })
   .catch(error => {
     alert(error.message)
   })
@@ -38,7 +36,7 @@ section.addEventListener("mouseup", (event) => {
 
 function saveId() {
   let url = new URL(window.location.href);
-  gameId = url.searchParams.get("gameId");
+  gameId = url.pathname.split("/")[2]
 
 }
 

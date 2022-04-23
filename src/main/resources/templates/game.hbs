@@ -361,7 +361,7 @@
     </div>
 
     <div class="exit" id="exit">
-      <form action="/game/exit" method="get">
+      <form action="/game/{{gameId}}/exit" method="get">
         <input type="hidden" name="gameId" value="{{gameId}}">
 
         <button type="submit">exit</button>

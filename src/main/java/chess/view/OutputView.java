@@ -1,61 +1,45 @@
 package chess.view;
 
-import chess.domain.piece.Piece;
-import chess.domain.state.State;
-import java.util.Optional;
+import chess.chessgame.Position;
+import chess.dto.ScoreDto;
+import chess.piece.Piece;
 
-import chess.domain.ChessScore;
-import chess.domain.board.Board;
-import chess.domain.piece.Color;
-import chess.domain.position.Position;
+import java.util.Map;
 
 public class OutputView {
 
-    public void displayGameRule() {
-        System.out.println("체스 게임을 시작합니다.");
+    private static final String START_ERROR = "[ERROR] ";
+
+    public static void printError(String message) {
+        System.out.println(START_ERROR + message);
+    }
+
+    public static void printStartMessage() {
+        System.out.println("> 체스 게임을 시작합니다.");
         System.out.println("> 게임 시작 : start");
         System.out.println("> 게임 종료 : end");
-        System.out.println("> 점수 확인 : status");
         System.out.println("> 게임 이동 : move source위치 target위치 - 예. move b2 b3");
     }
 
-    public void displayChessBoard(Board board) {
-        for (int i = Position.MAX; i >= Position.MIN; i--) {
-            displayLine(board, i);
-            System.out.println();
+    public static void printBoard(Map<Position, Piece> chessboard) {
+        for (int i = 0; i < 8; i++) {
+            printBoardLine(chessboard, i);
         }
         System.out.println();
     }
 
-    public void displayTurn(State status) {
-        if (status.isWhite()) {
-            System.out.print("하얀색 차례 - ");
-            return;
+    public static void printScore(ScoreDto score) {
+        System.out.println("\n획득 점수");
+        System.out.println("Black : " + score.getBlack());
+        System.out.println("White : " + score.getWhite());
+        System.out.println("승리 : " + score.getWinner());
+    }
+
+    private static void printBoardLine(Map<Position, Piece> chessboard, int x) {
+        for (int i = 0; i < 8; i++) {
+            System.out.print(chessboard.get(new Position(x, i)).getSymbolByColor());
         }
-        System.out.print("검은색 차례 - ");
+        System.out.println();
     }
 
-    private void displayLine(Board board, int i) {
-        for (int j = Position.MIN; j <= Position.MAX; j++) {
-            displaySymbol(board, i, j);
-        }
-    }
-
-    private void displaySymbol(Board board, int i, int j) {
-        Position nowPosition = new Position(i, j);
-        if (board.getPieces().containsKey(nowPosition)) {
-            System.out.print(PieceView.from(board.findPiece(nowPosition)));
-            return;
-        }
-        System.out.print("ꕤ");
-    }
-
-    public void displayErrorMessage(RuntimeException exception) {
-        System.out.println(exception.getMessage());
-    }
-
-    public void displayScore(ChessScore chessScore) {
-        System.out.println("검은색 팀 점수 : " + chessScore.getBlackScore());
-        System.out.println("흰색 팀 점수 : " + chessScore.getWhiteScore());
-    }
 }

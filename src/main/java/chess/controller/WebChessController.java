@@ -1,171 +1,85 @@
 package chess.controller;
 
-import chess.domain.command.Command;
-import chess.domain.command.CommandConverter;
-import chess.domain.piece.Color;
-import chess.domain.state.State;
-import chess.web.BoardDTO;
-import chess.web.RequestDTO;
-import chess.web.RequestParser;
-import chess.web.WebChessGame;
-import org.springframework.beans.factory.annotation.Autowired;
+import chess.dto.ScoreDto;
+import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import spark.ModelAndView;
+import spark.template.handlebars.HandlebarsTemplateEngine;
 
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+
+import static spark.Spark.*;
 
 @Controller
 public class WebChessController {
 
-    private final BoardDTO boardDTO = BoardDTO.buildModel();
+    private static final String CHESS_GAME_URL = "chessGame.html";
+    private static final String START_URL = "start.html";
 
-    @Autowired
-    private WebChessGame webChessGame;
+    private final ChessGameService service = new ChessGameService();
 
-    @GetMapping("/")
-    public String inputGameID(Model model) {
-        model.addAttribute("users", webChessGame.findAllUsers());
-        return "index";
+    public void run() {
+        staticFileLocation("/templates");
+
+        get("/", (req, res) -> render(Map.of(), START_URL));
+
+        get("/game", (req, res) -> executeCommand(service::init));
+
+        get("/start", (req, res) -> executeCommand(service::start));
+
+        get("/end", (req, res) -> executeCommand(service::end));
+
+        get("/restart", (req, res) -> executeCommand(service::restart));
+
+        get("/save", (req, res) -> executeCommand(service::save));
+
+        get("/status", (req, res) -> status());
+
+        post("/move", (req, res) -> executeCommand(
+                () -> service.move(req.queryParams("from"), req.queryParams("to")))
+        );
+
     }
 
-    @PostMapping(value = "/preprocess")
-    public String preprocess(RequestDTO command, Model model) {
+    private String executeCommand(Runnable command) {
         try {
-            String roomId = command.getRoomId();
-            model.addAttribute("roomId", roomId);
-            webChessGame.searchSavedGame(roomId, boardDTO);
-            if (webChessGame.isSaved(roomId)) {
-
-                Set<String> keys = boardDTO.getData().keySet();
-                for (String key : keys) {
-                    model.addAttribute(key, boardDTO.getData().get(key));
-                }
-
-                Color savedColor = webChessGame.getColor(roomId);
-                if (savedColor == Color.WHITE) {
-                    return "white";
-                }
-                return "black";
-            }
-            return "new_game";
-        } catch (IllegalArgumentException exception) {
-            model.addAttribute("exception", exception.getMessage());
-            return "index_exception";
+            command.run();
+            return render(generateResponse(), CHESS_GAME_URL);
+        } catch (RuntimeException e) {
+            return render(generateResponse(e.getMessage()), CHESS_GAME_URL);
         }
     }
 
-    @PostMapping("/ready")
-    public String readyGame(RequestDTO command, Model model) {
+    private String status() {
         try {
-            State now = State.create();
-            State next = now.proceed(CommandConverter.convertCommand(RequestParser.from(command.getCommand()).getCommand()));
-            webChessGame.initializeGame(boardDTO, next, command.getRoomId());
-            model.addAttribute("roomId", command.getRoomId());
-            if (webChessGame.isSaved(command.getRoomId())) {
-                Set<String> keys = boardDTO.getData().keySet();
-                for (String key : keys) {
-                    model.addAttribute(key, boardDTO.getData().get(key));
-                }
-                return "white";
-            }
-            return "finished_before_start";
-        } catch (IllegalArgumentException | IllegalStateException | NoSuchElementException exception) {
-            model.addAttribute("exception", exception.getMessage());
-            return "ready_exception";
+            ScoreDto score = service.status();
+            return render(generateResponse(score), CHESS_GAME_URL);
+        } catch (RuntimeException e) {
+            return render(generateResponse(e.getMessage()), CHESS_GAME_URL);
         }
     }
 
-    @PostMapping("/move")
-    public String runTurn(RequestDTO command, Model model) {
-        State now = webChessGame.getState(command.getRoomId());
-        model.addAttribute("roomId", command.getRoomId());
-        try {
-            Command parsedCommand = CommandConverter.convertCommand(RequestParser.from(command.getCommand()).getCommand());
-            State next = webChessGame.executeOneTurn(parsedCommand, boardDTO, command.getRoomId());
-            return executeOneTurn(parsedCommand, next, model);
-        } catch (IllegalArgumentException | IllegalStateException | NoSuchElementException exception) {
-            return handleRunningException(command.getRoomId(), now, exception.getMessage(), model);
-        }
+    private String render(Map<String, Object> response, String url) {
+        return new HandlebarsTemplateEngine().render(new ModelAndView(response, url));
     }
 
-    private String executeOneTurn(Command command, State next, Model model) {
-        if (next.isFinished()) {
-            return "redirect:/finished";
-        }
-        Set<String> keys = boardDTO.getData().keySet();
-        for (String key : keys) {
-            model.addAttribute(key, boardDTO.getData().get(key));
-        }
-        if (command.isStatus()) {
-            return "status";
-        }
-        if (!next.isWhite()) {
-            return "black";
-        }
-        return "white";
+    private Map<String, Object> generateResponse() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("pieces", service.getPiecesByUnicode());
+        return response;
     }
 
-    private String handleRunningException(String roomId, State now, String message, Model model) {
-        Set<String> keys = boardDTO.getData().keySet();
-        model.addAttribute("roomId", roomId);
-        for (String key : keys) {
-            model.addAttribute(key, boardDTO.getData().get(key));
-        }
-        model.addAttribute("exception", message);
-        if (now.isWhite()) {
-            return "white_exception";
-        }
-        return "black_exception";
+    private Map<String, Object> generateResponse(String errorMessage) {
+        Map<String, Object> response = generateResponse();
+        response.put("error", errorMessage);
+        return response;
     }
 
-    @PostMapping("/backwardToMove")
-    public String backwardToMove(RequestDTO command, Model model) {
-        State now = webChessGame.getState(command.getRoomId());
-        Set<String> keys = boardDTO.getData().keySet();
-        model.addAttribute("roomId", command.getRoomId());
-        for (String key : keys) {
-            model.addAttribute(key, boardDTO.getData().get(key));
-        }
-        if (now.isWhite()) {
-            return "white";
-        }
-        return "black";
+    private Map<String, Object> generateResponse(ScoreDto score) {
+        Map<String, Object> response = generateResponse();
+        response.put("score", score);
+        return response;
     }
 
-    @PostMapping("/backwardToReady")
-    public String backwardToReady(RequestDTO command, Model model) {
-        Set<String> keys = boardDTO.getData().keySet();
-        model.addAttribute("roomId", command.getRoomId());
-        for (String key : keys) {
-            model.addAttribute(key, boardDTO.getData().get(key));
-        }
-        return "new_game";
-    }
-
-    @PostMapping("/backwardToPreprocess")
-    public String backwardToPreprocess() {
-        return "index";
-    }
-
-    @PostMapping("/saved")
-    public String saveGame(RequestDTO command, Model model) {
-        model.addAttribute("roomId", command.getRoomId());
-        Set<String> keys = boardDTO.getData().keySet();
-        for (String key : keys) {
-            model.addAttribute(key, boardDTO.getData().get(key));
-        }
-        return "saved";
-    }
-
-    @GetMapping("/finished")
-    public String terminateGame(Model model) {
-        Set<String> keys = boardDTO.getData().keySet();
-        for (String key : keys) {
-            model.addAttribute(key, boardDTO.getData().get(key));
-        }
-        return "finished";
-    }
 }

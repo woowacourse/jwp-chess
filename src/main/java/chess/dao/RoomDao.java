@@ -12,7 +12,7 @@ public class RoomDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public RoomDao(JdbcTemplate jdbcTemplate) {
+    public RoomDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

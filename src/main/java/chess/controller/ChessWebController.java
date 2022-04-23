@@ -8,21 +8,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class ChessWebController {
 
-    private static final String INDEX = "index";
-
     private final RoomService roomService;
 
-    public ChessWebController(RoomService roomService) {
+    public ChessWebController(final RoomService roomService) {
         this.roomService = roomService;
     }
 
     @GetMapping("/")
     public String index() {
-        return INDEX;
+        return "index";
     }
 
     @GetMapping("/rooms/{roomName}")
-    public String room(@PathVariable("roomName") String roomName) {
+    public String room(@PathVariable("roomName") final String roomName) {
         final boolean roomExist = roomService.isExistRoom(roomName);
         if (!roomExist) {
             return "redirect:/";

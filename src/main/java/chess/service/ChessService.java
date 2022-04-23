@@ -59,7 +59,7 @@ public class ChessService {
         List<RoomDto> roomsDto = new ArrayList<>();
         List<Room> rooms = chessRoomRepository.findAllByBoardStatus(new Running());
         for (Room room : rooms) {
-            List<Member> membersByRoom = chessMemberRepository.getAllByRoomId(room.getId());
+            List<Member> membersByRoom = chessMemberRepository.findMembersByRoomId(room.getId());
             roomsDto.add(
                     new RoomDto(room.getId(), room.getTitle(), membersByRoom));
         }
@@ -70,7 +70,7 @@ public class ChessService {
         final Room room = chessRoomRepository.getById(roomId);
         final Board board = chessBoardRepository.getById(room.getBoardId());
         final Map<Square, Piece> allPositionsAndPieces = chessSquareRepository.findAllSquaresAndPieces(board.getId());
-        List<Member> members = chessMemberRepository.getAllByRoomId(roomId);
+        List<Member> members = chessMemberRepository.findMembersByRoomId(roomId);
         return BoardDto.of(
                 allPositionsAndPieces,
                 room.getTitle(),

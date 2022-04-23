@@ -16,7 +16,7 @@ public class FakeMemberRepository implements MemberRepository<Member> {
     }
 
     @Override
-    public List<Member> getAllByRoomId(int roomId) {
+    public List<Member> findMembersByRoomId(int roomId) {
         return List.of(
                 new Member(fakeAutoIncrementId, fakeName, roomId),
                 new Member(fakeAutoIncrementId + 1, fakeName + 1, roomId));

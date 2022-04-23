@@ -9,16 +9,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@SpringBootTest
+@Transactional
 class ChessMemberRepositoryTest {
 
-    private final ChessMemberRepository chessMemberRepository = new ChessMemberRepository(new ConnectionManager());
+    @Autowired
+    private ChessMemberRepository chessMemberRepository;
     @Autowired
     private ChessBoardRepository chessBoardRepository;
 
@@ -34,15 +38,15 @@ class ChessMemberRepositoryTest {
         chessMemberRepository.save("eden", roomId);
     }
 
-    @AfterEach
-    void setDown() {
-        chessBoardRepository.deleteAll();
-    }
+//    @AfterEach
+//    void setDown() {
+//        chessBoardRepository.deleteAll();
+//    }
 
     @Test
     void getAllByBoardId() {
         chessMemberRepository.save("corinne", roomId);
-        final List<Member> members = chessMemberRepository.getAllByRoomId(roomId);
+        final List<Member> members = chessMemberRepository.findMembersByRoomId(roomId);
 
         assertAll(
                 () -> assertThat(members.get(0).getName()).isEqualTo("eden"),
@@ -62,7 +66,7 @@ class ChessMemberRepositoryTest {
     void saveAll() {
         List<Member> members = List.of(new Member("neo"));
         chessMemberRepository.saveAll(members, roomId);
-        final List<Member> savedMembers = chessMemberRepository.getAllByRoomId(roomId);
+        final List<Member> savedMembers = chessMemberRepository.findMembersByRoomId(roomId);
 
         assertThat(savedMembers.size()).isEqualTo(2);
     }

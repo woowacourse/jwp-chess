@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface MemberRepository<T> {
 
-    List<T> getAllByRoomId(int roomId);
+    List<T> findMembersByRoomId(int roomId);
 
     T save(String name, int roomId);
 

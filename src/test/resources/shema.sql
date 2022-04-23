@@ -19,4 +19,3 @@ CREATE TABLE piece
     primary key (id),
     foreign key (chess_game_id) references chess_game (id)
 );
-

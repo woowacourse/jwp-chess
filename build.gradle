@@ -19,14 +19,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
-    implementation 'com.google.code.gson:gson:2.8.7'
-    implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.12.0'
     implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.4'
 
     runtimeOnly 'mysql:mysql-connector-java:8.0.28'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.rest-assured:rest-assured:4.4.0'
+    testImplementation 'io.rest-assured:rest-assured:5.0.1'
 
     runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'com.h2database:h2'

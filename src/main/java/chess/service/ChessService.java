@@ -7,10 +7,10 @@ import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
-import chess.dto.CreateGameDto;
+import chess.dto.CreatedGameDto;
 import chess.dto.GameCountDto;
-import chess.dto.GameDto;
-import chess.dto.GameEntityDto;
+import chess.dto.GameSnapshotDto;
+import chess.dto.GameOverviewDto;
 import chess.dto.GameResultDto;
 import chess.dto.SearchResultDto;
 import chess.entity.GameEntity;
@@ -32,7 +32,7 @@ public class ChessService {
         this.eventDao = eventDao;
     }
 
-    public List<GameEntityDto> findGames() {
+    public List<GameOverviewDto> findGames() {
         return gameDao.findAll()
                 .stream()
                 .map(GameEntity::toDto)
@@ -47,23 +47,23 @@ public class ChessService {
     }
 
     @Transactional
-    public CreateGameDto initGame(AuthCredentials authCredentials) {
+    public CreatedGameDto initGame(AuthCredentials authCredentials) {
         int gameId = gameDao.saveAndGetGeneratedId(authCredentials.toEncrypted());
         eventDao.save(gameId, new InitEvent());
-        return new CreateGameDto(gameId);
+        return new CreatedGameDto(gameId);
     }
 
     public SearchResultDto searchGame(int gameId) {
         return new SearchResultDto(gameId, gameDao.checkById(gameId));
     }
 
-    public GameDto findGame(int gameId) {
+    public GameSnapshotDto findGame(int gameId) {
         Game game = currentSnapShotOf(gameId);
         return game.toDtoOf(gameId);
     }
 
     @Transactional
-    public GameDto playGame(int gameId, Event moveEvent) {
+    public GameSnapshotDto playGame(int gameId, Event moveEvent) {
         Game game = currentSnapShotOf(gameId).play(moveEvent);
 
         eventDao.save(gameId, moveEvent);

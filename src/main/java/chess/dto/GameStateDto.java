@@ -3,12 +3,12 @@ package chess.dto;
 import chess.domain.game.statistics.GameState;
 import java.util.Objects;
 
-public class GameDataDto {
+public class GameStateDto {
 
     private final int id;
     private final GameState state;
 
-    public GameDataDto(int id, GameState state) {
+    public GameStateDto(int id, GameState state) {
         this.id = id;
         this.state = state;
     }
@@ -29,7 +29,7 @@ public class GameDataDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GameDataDto that = (GameDataDto) o;
+        GameStateDto that = (GameStateDto) o;
         return id == that.id
                 && state == that.state;
     }
@@ -41,6 +41,6 @@ public class GameDataDto {
 
     @Override
     public String toString() {
-        return "GameDataDto{" + "id=" + id + ", state=" + state + '}';
+        return "GameStateDto{" + "id=" + id + ", state=" + state + '}';
     }
 }

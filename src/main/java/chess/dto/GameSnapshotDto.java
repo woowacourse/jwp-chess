@@ -5,17 +5,17 @@ import chess.dto.board.WebBoardViewDto;
 import java.util.List;
 import java.util.Objects;
 
-public class GameDto {
+public class GameSnapshotDto {
 
-    private final GameDataDto game;
+    private final GameStateDto game;
     private final WebBoardViewDto board;
 
-    public GameDto(GameDataDto game, WebBoardViewDto board) {
+    public GameSnapshotDto(GameStateDto game, WebBoardViewDto board) {
         this.game = game;
         this.board = board;
     }
 
-    public GameDataDto getGame() {
+    public GameStateDto getGame() {
         return game;
     }
 
@@ -31,7 +31,7 @@ public class GameDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GameDto gameDto = (GameDto) o;
+        GameSnapshotDto gameDto = (GameSnapshotDto) o;
         return Objects.equals(game, gameDto.game)
                 && Objects.equals(board, gameDto.board);
     }
@@ -43,6 +43,6 @@ public class GameDto {
 
     @Override
     public String toString() {
-        return "GameDto{" + "game=" + game + ", board=" + board + '}';
+        return "GameSnapshotDto{" + "game=" + game + ", board=" + board + '}';
     }
 }

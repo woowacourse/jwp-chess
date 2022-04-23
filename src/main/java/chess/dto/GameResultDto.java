@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class GameResultDto {
 
-    private final GameDto gameInfo;
+    private final GameSnapshotDto gameInfo;
     private final GameResult result;
 
     public GameResultDto(int gameId, Game game) {
@@ -14,7 +14,7 @@ public class GameResultDto {
         this.result = game.getResult();
     }
 
-    public GameDto getGameInfo() {
+    public GameSnapshotDto getGameInfo() {
         return gameInfo;
     }
 

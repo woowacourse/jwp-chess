@@ -7,10 +7,10 @@ import chess.domain.auth.AuthCredentials;
 import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
 import chess.domain.game.NewGame;
-import chess.dto.CreateGameDto;
+import chess.dto.CreatedGameDto;
 import chess.dto.GameCountDto;
-import chess.dto.GameDto;
-import chess.dto.GameEntityDto;
+import chess.dto.GameSnapshotDto;
+import chess.dto.GameOverviewDto;
 import chess.dto.GameResultDto;
 import chess.dto.SearchResultDto;
 import chess.service.fixture.EventDaoStub;
@@ -39,12 +39,12 @@ class ChessServiceTest {
 
     @Test
     void findGames_메서드는_모든_게임의_id와_이름_정보를_반환한다() {
-        List<GameEntityDto> actual = service.findGames();
+        List<GameOverviewDto> actual = service.findGames();
 
-        List<GameEntityDto> expected = List.of(
-                new GameEntityDto(1, "진행중인_게임"),
-                new GameEntityDto(2, "이미_존재하는_게임명"),
-                new GameEntityDto(3, "종료된_게임"));
+        List<GameOverviewDto> expected = List.of(
+                new GameOverviewDto(1, "진행중인_게임"),
+                new GameOverviewDto(2, "이미_존재하는_게임명"),
+                new GameOverviewDto(3, "종료된_게임"));
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -60,8 +60,8 @@ class ChessServiceTest {
     @Test
     void initGame_메서드는_새로운_게임을_DB에_저장하고_생성된_게임ID가_담긴_데이터를_반환한다() {
         AuthCredentials authCredentials = new AuthCredentials("유효한_게임명", "비밀번호");
-        CreateGameDto actual = service.initGame(authCredentials);
-        CreateGameDto expected = new CreateGameDto(4);
+        CreatedGameDto actual = service.initGame(authCredentials);
+        CreatedGameDto expected = new CreatedGameDto(4);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -84,9 +84,9 @@ class ChessServiceTest {
 
     @Test
     void findGame_메서드는_현재_게임의_상태와_체스말_정보를_반환한다() {
-        GameDto actual = service.findGame(1);
+        GameSnapshotDto actual = service.findGame(1);
 
-        GameDto expected = new NewGame().play(new InitEvent())
+        GameSnapshotDto expected = new NewGame().play(new InitEvent())
                 .play(new MoveEvent("e2 e4"))
                 .play(new MoveEvent("d7 d5"))
                 .play(new MoveEvent("f1 b5"))
@@ -104,9 +104,9 @@ class ChessServiceTest {
 
     @Test
     void playGame_메서드는_이동_명령에_따라_이동시킨_후_그_결과를_반환한다() {
-        GameDto actual = service.playGame(1, new MoveEvent("a7 a5"));
+        GameSnapshotDto actual = service.playGame(1, new MoveEvent("a7 a5"));
 
-        GameDto expected = new NewGame().play(new InitEvent())
+        GameSnapshotDto expected = new NewGame().play(new InitEvent())
                 .play(new MoveEvent("e2 e4"))
                 .play(new MoveEvent("d7 d5"))
                 .play(new MoveEvent("f1 b5"))

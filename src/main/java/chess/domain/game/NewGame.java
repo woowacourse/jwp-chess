@@ -3,7 +3,7 @@ package chess.domain.game;
 import chess.domain.board.Board;
 import chess.domain.event.Event;
 import chess.domain.game.statistics.GameResult;
-import chess.dto.GameDto;
+import chess.dto.GameSnapshotDto;
 import chess.domain.board.BoardFactory;
 
 public final class NewGame implements Game {
@@ -30,7 +30,7 @@ public final class NewGame implements Game {
     }
 
     @Override
-    public GameDto toDtoOf(int gameId) {
+    public GameSnapshotDto toDtoOf(int gameId) {
         throw new UnsupportedOperationException(GAME_NOT_STARTED_EXCEPTION_MESSAGE);
     }
 }

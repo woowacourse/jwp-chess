@@ -3,8 +3,8 @@ package chess.controller;
 import chess.domain.auth.AuthCredentials;
 import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
-import chess.dto.CreateGameDto;
-import chess.dto.GameDto;
+import chess.dto.CreatedGameDto;
+import chess.dto.GameSnapshotDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +37,7 @@ public class GameController {
     }
 
     @PostMapping
-    public CreateGameDto createGame(@RequestBody AuthCredentials authCredentials) {
+    public CreatedGameDto createGame(@RequestBody AuthCredentials authCredentials) {
         return chessService.initGame(authCredentials);
     }
 
@@ -45,7 +45,7 @@ public class GameController {
     public ModelAndView findAndRenderGame(@PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
-        GameDto gameDto = chessService.findGame(id);
+        GameSnapshotDto gameDto = chessService.findGame(id);
         modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
         return modelAndView;
     }
@@ -57,7 +57,7 @@ public class GameController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
-        GameDto gameDto = chessService.findGame(id);
+        GameSnapshotDto gameDto = chessService.findGame(id);
         modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
         return modelAndView;
     }

@@ -2,12 +2,12 @@ package chess.dto;
 
 import java.util.Objects;
 
-public class GameEntityDto {
+public class GameOverviewDto {
 
     private final int id;
     private final String name;
 
-    public GameEntityDto(int id, String name) {
+    public GameOverviewDto(int id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -28,7 +28,7 @@ public class GameEntityDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GameEntityDto that = (GameEntityDto) o;
+        GameOverviewDto that = (GameOverviewDto) o;
         return id == that.id
                 && Objects.equals(name, that.name);
     }
@@ -40,6 +40,6 @@ public class GameEntityDto {
 
     @Override
     public String toString() {
-        return "GameEntityDto{" + "id=" + id + ", name='" + name + '\'' + '}';
+        return "GameOverviewDto{" + "id=" + id + ", name='" + name + '\'' + '}';
     }
 }

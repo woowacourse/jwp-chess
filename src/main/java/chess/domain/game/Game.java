@@ -2,7 +2,7 @@ package chess.domain.game;
 
 import chess.domain.event.Event;
 import chess.domain.game.statistics.GameResult;
-import chess.dto.GameDto;
+import chess.dto.GameSnapshotDto;
 
 public interface Game {
 
@@ -12,5 +12,5 @@ public interface Game {
 
     GameResult getResult();
 
-    GameDto toDtoOf(int gameId);
+    GameSnapshotDto toDtoOf(int gameId);
 }

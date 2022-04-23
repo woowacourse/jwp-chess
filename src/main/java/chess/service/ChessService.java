@@ -1,9 +1,9 @@
 package chess.service;
 
 import chess.dao.PieceDao;
-import chess.dao.PieceDaoImpl;
+import chess.dao.SparkPieceDao;
 import chess.dao.TurnDao;
-import chess.dao.TurnDaoImpl;
+import chess.dao.SparkTurnDao;
 import chess.domain.ChessWebGame;
 import chess.domain.Position;
 import chess.domain.Result;
@@ -26,8 +26,8 @@ public class ChessService {
     private final TurnDao turnDao;
 
     public ChessService() {
-        pieceDao = new PieceDaoImpl();
-        turnDao = new TurnDaoImpl();
+        pieceDao = new SparkPieceDao();
+        turnDao = new SparkTurnDao();
     }
 
     public ChessMap initializeGame() {

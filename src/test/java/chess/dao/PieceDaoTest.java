@@ -33,7 +33,7 @@ class PieceDaoTest {
 
     @BeforeEach
     void setUp() {
-        pieceDao = new PieceDaoJdbcImpl(jdbcTemplate);
+        pieceDao = new JdbcPieceDao(jdbcTemplate);
 
         jdbcTemplate.execute("drop table piece if exists");
         jdbcTemplate.execute("drop table player if exists");

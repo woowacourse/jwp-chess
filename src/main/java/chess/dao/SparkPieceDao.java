@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PieceDaoImpl implements PieceDao {
+public class SparkPieceDao implements PieceDao {
 
     private final Connection connection;
 
-    public PieceDaoImpl() {
+    public SparkPieceDao() {
         connection = DbConnector.getConnection();
     }
 

@@ -9,11 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class TurnDaoImpl implements TurnDao {
+public class SparkTurnDao implements TurnDao {
 
     private final Connection connection;
 
-    public TurnDaoImpl() {
+    public SparkTurnDao() {
         connection = DbConnector.getConnection();
     }
 

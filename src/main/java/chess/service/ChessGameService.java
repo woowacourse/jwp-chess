@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dao.ChessGameDao;
+import chess.dao.SpringChessGameDao;
 import chess.domain.ChessGame;
 import chess.domain.GameResult;
 import chess.domain.generator.BlackGenerator;
@@ -17,15 +17,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessGameService {
 
-    private final ChessGameDao chessGameDao;
+    private final SpringChessGameDao chessGameDao;
 
-    public ChessGameService(ChessGameDao chessGameDao) {
+    public ChessGameService(SpringChessGameDao chessGameDao) {
         this.chessGameDao = chessGameDao;
     }
 
     public ChessGameDto createNewChessGame(final String gameName) {
-        final boolean hasGameByName = chessGameDao.findChessGameIdByName(gameName).isPresent();
-        if (hasGameByName) {
+        final boolean isDuplicate = chessGameDao.isDuplicateGameName(gameName);
+        if (isDuplicate) {
             throw new IllegalArgumentException("중복된 게임 이름입니다.");
         }
         final Player whitePlayer = new Player(new WhiteGenerator(), Team.WHITE);
@@ -75,7 +75,6 @@ public class ChessGameService {
     }
 
     private int findGameIdByGameName(final String gameName) {
-        return chessGameDao.findChessGameIdByName(gameName)
-                .orElseThrow(() -> new IllegalArgumentException("해당 이름의 게임이 존재하지 않습니다."));
+        return chessGameDao.findChessGameIdByName(gameName);
     }
 }

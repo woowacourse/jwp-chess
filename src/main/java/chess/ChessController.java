@@ -1,76 +1,70 @@
 package chess;
 
-import static spark.Spark.exception;
-import static spark.Spark.get;
-import static spark.Spark.post;
-
+import chess.domain.Status;
+import chess.dto.BoardDto;
 import chess.dto.ExceptionResponseDto;
 import chess.dto.MoveDto;
 import chess.service.ChessService;
-import com.google.gson.Gson;
-import java.util.HashMap;
-import java.util.Map;
-import spark.ModelAndView;
-import spark.Response;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+@Controller
 public class ChessController {
 
-    public static final int STATUS_BAD_REQUEST = 400;
-
     private final ChessService chessService;
-    private final Gson gson;
 
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
-        this.gson = new Gson();
     }
 
-    public void run() {
-        get("/", (req, res) -> {
-            return render(new HashMap<>(), "roby.hbs");
-        });
-
-        get("/room", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            String name = req.queryParams("name");
-            chessService.createRoom(name);
-            model.put("name", name);
-            return render(model, "room.hbs");
-        });
-
-        get("/start", (req, res) -> {
-            return gson.toJson(chessService.startNewGame(req.queryParams("name")));
-        });
-
-        get("/load", (req, res) -> {
-            return gson.toJson(chessService.load(req.queryParams("name")));
-        });
-
-        post("/move", (req, res) -> {
-            MoveDto moveDto = gson.fromJson(req.body(), MoveDto.class);
-            return gson.toJson(chessService.move(req.queryParams("name"), moveDto));
-        });
-
-        get("/status", (req, res) -> {
-            return gson.toJson(chessService.status(req.queryParams("name")));
-        });
-
-        exception(IllegalStateException.class, (e, req, res) -> {
-            handleError(res, e.getMessage());
-        });
-
-        exception(IllegalArgumentException.class, (e, req, res) -> {
-            handleError(res, e.getMessage());
-        });
+    @GetMapping("/")
+    public String index() {
+        return "roby.html";
     }
 
-    private void handleError(Response res, String exceptionMessage) {
-        res.status(STATUS_BAD_REQUEST);
-        res.body(gson.toJson(new ExceptionResponseDto(exceptionMessage)));
+    @GetMapping("/room")
+    public String room(@RequestParam String name,
+                       Model model) {
+        chessService.createRoom(name);
+        model.addAttribute("name", name);
+        return "room.html";
     }
 
-    private static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+    @GetMapping("/start")
+    @ResponseBody
+    public BoardDto start(@RequestParam String name) {
+        return chessService.startNewGame(name);
+    }
+
+    @GetMapping("/load")
+    @ResponseBody
+    public BoardDto load(@RequestParam String name) {
+        return chessService.load(name);
+    }
+
+    @PostMapping("/move")
+    @ResponseBody
+    public BoardDto move(@RequestParam String name,
+                         @RequestBody MoveDto moveDto) {
+        return chessService.move(name, moveDto);
+    }
+
+    @GetMapping("/status")
+    @ResponseBody
+    public Status status(@RequestParam String name) {
+        return chessService.status(name);
+    }
+
+    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})
+    public ResponseEntity<ExceptionResponseDto> handle(RuntimeException exception) {
+        return ResponseEntity.badRequest()
+                .body(new ExceptionResponseDto(exception.getMessage()));
     }
 }

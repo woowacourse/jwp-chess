@@ -1,81 +1,60 @@
 package chess.dao;
 
 import chess.entity.Room;
-import chess.exception.InsertQueryException;
-import chess.exception.SelectQueryException;
-import chess.exception.UpdateQueryException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class RoomDao {
 
-    private final Connection connection;
+    private final JdbcTemplate jdbcTemplate;
 
-    public RoomDao(Connection connection) {
-        this.connection = connection;
+    public RoomDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public boolean save(Room room) {
+    public void save(Room room) {
         String sql = "insert into room (turn, name) values (?, ?)";
-        boolean isSave = false;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, room.getTurn());
-            statement.setString(2, room.getName());
-            if (statement.executeUpdate() == 1) {
-                isSave = true;
-            }
-        } catch (SQLException e) {
-            throw new InsertQueryException();
-        }
-        return isSave;
+        jdbcTemplate.update(sql, room.getTurn(), room.getName());
     }
 
     public Optional<Room> findByName(String name) {
-        String sql = "select * from room r where name = ?";
-        Room room = null;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, name);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                room = new Room(resultSet.getLong("id"),
-                        resultSet.getString("turn"),
-                        resultSet.getString("name"));
-            }
-        } catch (SQLException e) {
-            throw new SelectQueryException();
-        }
+        String sql = "select * from room where name = ?";
 
-        return Optional.ofNullable(room);
+        try {
+            Room room = jdbcTemplate.queryForObject(sql,
+                    (rs, rowNum) -> {
+                        return new Room(
+                                rs.getLong("id"),
+                                rs.getString("turn"),
+                                rs.getString("name")
+                        );
+                    }, name);
+            return Optional.ofNullable(room);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public Optional<Room> findById(long id) {
         String sql = "select * from room r where id = ?";
-        Room room = null;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                room = new Room(resultSet.getLong("id"),
-                        resultSet.getString("turn"),
-                        resultSet.getString("name"));
-            }
-        } catch (SQLException e) {
-            throw new SelectQueryException();
-        }
-        return Optional.ofNullable(room);
+
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> {
+                    return new Room(
+                            rs.getLong("id"),
+                            rs.getString("turn"),
+                            rs.getString("name")
+                    );
+                }, id));
     }
 
     public void update(long id, String turn) {
         String sql = "update room set turn = ? where id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, turn);
-            statement.setLong(2, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new UpdateQueryException();
-        }
+        jdbcTemplate.update(sql, turn, id);
     }
+
+
 }

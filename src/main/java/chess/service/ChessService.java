@@ -11,12 +11,12 @@ import chess.dto.MoveDto;
 import chess.entity.Room;
 import chess.entity.Square;
 import chess.game.WebChessGame;
-import chess.utils.JdbcTemplate;
 import chess.utils.PieceFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +29,6 @@ public class ChessService {
 
     private final RoomDao roomDao;
     private final SquareDao squareDao;
-
-    public ChessService() {
-        this.roomDao = new RoomDao(JdbcTemplate.getConnection());
-        this.squareDao = new SquareDao(JdbcTemplate.getConnection());
-    }
 
     public ChessService(RoomDao roomDao, SquareDao squareDao) {
         this.roomDao = roomDao;
@@ -111,8 +106,8 @@ public class ChessService {
     }
 
     public void createRoom(String name) {
-        Room room = roomDao.findByName(name).orElse(null);
-        if (room == null) {
+        Optional<Room> room = roomDao.findByName(name);
+        if (room.isEmpty()) {
             Room newRoom = new Room(name);
             roomDao.save(newRoom);
         }

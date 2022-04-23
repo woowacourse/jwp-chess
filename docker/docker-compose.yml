@@ -5,10 +5,10 @@ services:
     platform: linux/x86_64
     restart: always
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: chess
+      MYSQL_DATABASE: chess2
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       TZ: Asia/Seoul

@@ -29,8 +29,8 @@ public class BoardJdbcTemplateDao implements BoardDao{
 
     private boolean existBoard() {
         final String sql = "select count(*) from board where id = 1";
-        final Integer integer = jdbcTemplate.queryForObject(sql, Integer.class);
-        return !integer.equals(0);
+        final Integer boardCount = jdbcTemplate.queryForObject(sql, Integer.class);
+        return !boardCount.equals(0);
     }
 
 

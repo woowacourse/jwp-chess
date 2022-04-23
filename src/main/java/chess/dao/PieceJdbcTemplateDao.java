@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PieceJdbcTemplateDao implements PieceDao{
+public class PieceJdbcTemplateDao implements PieceDao {
     private JdbcTemplate jdbcTemplate;
 
     public PieceJdbcTemplateDao(JdbcTemplate jdbcTemplate) {
@@ -36,7 +36,7 @@ public class PieceJdbcTemplateDao implements PieceDao{
     @Override
     public Map<Position, Piece> load() {
         final String sql = "select position, type, color from piece where board_id = 1";
-        Map<Position, Piece>  board = new TreeMap<>();
+        Map<Position, Piece> board = new TreeMap<>();
 
         final List<Pair> query = jdbcTemplate.query(sql, (res, rowNum) -> {
             final Position position = Position.from(res.getString("position"));
@@ -54,8 +54,8 @@ public class PieceJdbcTemplateDao implements PieceDao{
     @Override
     public boolean existPieces() {
         final String sql = "select count(*) from piece where board_id = 1";
-        final Integer integer = jdbcTemplate.queryForObject(sql, Integer.class);
-        return !integer.equals(0);
+        final Integer pieceCount = jdbcTemplate.queryForObject(sql, Integer.class);
+        return !pieceCount.equals(0);
     }
 
     @Override

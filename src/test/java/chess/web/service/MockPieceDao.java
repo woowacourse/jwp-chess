@@ -3,19 +3,21 @@ package chess.web.service;
 import chess.board.piece.Piece;
 import chess.board.piece.PieceFactory;
 import chess.web.dao.PieceDao;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MockPieceDao implements PieceDao {
     private final Map<Long, MockPiece> mockDb = new HashMap<>();
 
+    private long sequenceId = 1L;
+
     public MockPieceDao() {
 
         List<MockPiece> mockPieces = initFakePieces(1L);
-        saveFakePieces(mockPieces);
+        mockPieces.forEach(this::saveFakePiece);
     }
 
     private List<MockPiece> initFakePieces(Long boardId) {
@@ -95,9 +97,17 @@ public class MockPieceDao implements PieceDao {
     }
 
     @Override
+    public void save(Piece piece, Long boardId) {
+        mockDb.put(sequenceId++, convertPieceToFake(piece, boardId));
+    }
+
+    @Override
     public void updatePieceByPositionAndBoardId(String type, String team, String position, Long boardId) {
         List<Piece> pieces = findAllByBoardId(boardId);
-        List<MockPiece> mockPieces = convertPieceToFake(pieces, boardId);
+        List<MockPiece> mockPieces = pieces.stream()
+                .map(piece -> convertPieceToFake(piece, boardId))
+                .collect(Collectors.toList());
+
         for (MockPiece mockPiece : mockPieces) {
             if (mockPiece.position.equals(position)) {
                 mockPiece.type = type;
@@ -105,6 +115,15 @@ public class MockPieceDao implements PieceDao {
                 break;
             }
         }
+    }
+
+    @Override
+    public Optional<Piece> findByPositionAndBoardId(String position, Long boardId) {
+        return mockDb.values().stream()
+                .filter(mockPiece -> mockPiece.position.equals(position))
+                .filter(mockPiece -> mockPiece.boardId.equals(boardId))
+                .map(mockPiece -> PieceFactory.create(mockPiece.position, mockPiece.team, mockPiece.type))
+                .findFirst();
     }
 
     @Override
@@ -117,8 +136,9 @@ public class MockPieceDao implements PieceDao {
 
     @Override
     public void save(List<Piece> pieces, Long boardId) {
-        List<MockPiece> mockPieces = convertPieceToFake(pieces, boardId);
-        saveFakePieces(mockPieces);
+        pieces.stream()
+                .map(piece -> convertPieceToFake(piece, boardId)).
+                forEach(this::saveFakePiece);
     }
 
     @Override
@@ -126,17 +146,12 @@ public class MockPieceDao implements PieceDao {
         mockDb.clear();
     }
 
-    private List<MockPiece> convertPieceToFake(List<Piece> pieces, Long boardId) {
-        return pieces.stream()
-                .map(piece -> new MockPiece(boardId, piece.getPosition().name(), piece.getType(), piece.getTeam().value()))
-                .collect(Collectors.toList());
+    private MockPiece convertPieceToFake(Piece piece, Long boardId) {
+        return new MockPiece(boardId, piece.getPosition().name(), piece.getType(), piece.getTeam().value());
     }
 
-    private void saveFakePieces(List<MockPiece> mockPieces) {
-        long sequenceId = 1L;
-        for (MockPiece mockPiece : mockPieces) {
-            mockDb.put(sequenceId++, mockPiece);
-        }
+    private void saveFakePiece(MockPiece mockPiece) {
+        mockDb.put(sequenceId++, mockPiece);
     }
 
     private static class MockPiece {

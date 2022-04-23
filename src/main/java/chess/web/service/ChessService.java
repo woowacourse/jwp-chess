@@ -22,14 +22,13 @@ import java.util.List;
 @Service
 public class ChessService {
 
-    @Autowired
     private BoardDao boardDao;
-    @Autowired
     private PieceDao pieceDao;
 
     public ChessService() {
     }
 
+    @Autowired
     public ChessService(BoardDao boardDao, PieceDao pieceDao) {
         this.boardDao = boardDao;
         this.pieceDao = pieceDao;
@@ -73,12 +72,38 @@ public class ChessService {
 
     public Board initBoard(Long boardId) {
         Pieces pieces = Pieces.createInit();
-        Board board = Board.create(pieces, Turn.init());
+        Turn turn = Turn.init();
+
+        pieceDao.deleteByBoardId(boardId);
+        boardDao.deleteById(boardId);
+
+        insertOrUpdateTurn(boardId, turn);
         for (Piece piece : pieces.getPieces()) {
-            pieceDao.updatePieceByPositionAndBoardId(piece.getType(), piece.getTeam().value(), piece.getPosition().name(), boardId);
+            insertOrUpdatePiece(boardId, piece);
         }
-        boardDao.updateTurnById(boardId, Turn.init().getTeam().value());
-        return board;
+
+        Pieces savedPieces = Pieces.from(pieceDao.findAllByBoardId(boardId));
+        return Board.create(savedPieces, turn);
+    }
+
+    private void insertOrUpdatePiece(Long boardId, Piece piece) {
+        String position = piece.getPosition().name();
+        String type = piece.getType();
+        String team = piece.getTeam().value();
+
+        if (pieceDao.findByPositionAndBoardId(position, boardId).isPresent()) {
+            pieceDao.updatePieceByPositionAndBoardId(type, team, position, boardId);
+            return;
+        }
+        pieceDao.save(piece, boardId);
+    }
+
+    private void insertOrUpdateTurn(Long boardId, Turn turn) {
+        if (boardDao.findTurnById(boardId).isPresent()) {
+            boardDao.updateTurnById(boardId, turn.getTeam().value());
+            return;
+        }
+        boardDao.save(boardId, turn);
     }
 
     public ScoreDto getStatus(Long boardId) {

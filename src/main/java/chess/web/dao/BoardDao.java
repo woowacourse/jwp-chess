@@ -6,6 +6,7 @@ import chess.board.Turn;
 import java.util.Optional;
 
 public interface BoardDao {
+    void save(Long boardId, Turn turn);
 
     Optional<Turn> findTurnById(Long id);
 
@@ -13,7 +14,9 @@ public interface BoardDao {
 
     Long save();
 
+    // FIXME 사용하는 곳 없음
     Optional<Board> findById(Long id);
 
     void deleteById(Long id);
+
 }

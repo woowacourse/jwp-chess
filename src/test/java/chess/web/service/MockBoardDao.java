@@ -18,6 +18,11 @@ public class MockBoardDao implements BoardDao {
     }
 
     @Override
+    public void save(Long boardId, Turn turn) {
+        mockDb.put(1L, turn.getTeam().value());
+    }
+
+    @Override
     public Optional<Turn> findTurnById(Long id) {
         return Optional.of(new Turn(Team.from(mockDb.get(id))));
     }

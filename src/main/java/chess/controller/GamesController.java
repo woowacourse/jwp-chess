@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.GameCountDto;
-import chess.service.ChessService2;
+import chess.service.ChessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,9 +15,9 @@ public class GamesController {
     private static final String GAME_COUNT_MODEL_KEY = "gameCount";
     private static final String GAME_LIST_MODEL_KEY = "games";
 
-    private final ChessService2 chessService;
+    private final ChessService chessService;
 
-    public GamesController(ChessService2 chessService) {
+    public GamesController(ChessService chessService) {
         this.chessService = chessService;
     }
 

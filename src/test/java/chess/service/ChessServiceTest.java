@@ -3,16 +3,19 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import chess.domain.auth.AuthCredentials;
 import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
 import chess.domain.game.NewGame;
 import chess.dto.CreateGameDto;
 import chess.dto.GameCountDto;
 import chess.dto.GameDto;
+import chess.dto.GameEntityDto;
 import chess.dto.GameResultDto;
 import chess.dto.SearchResultDto;
 import chess.service.fixture.EventDaoStub;
 import chess.service.fixture.GameDaoStub;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,18 @@ class ChessServiceTest {
     }
 
     @Test
+    void findGames_메서드는_모든_게임의_id와_이름_정보를_반환한다() {
+        List<GameEntityDto> actual = service.findGames();
+
+        List<GameEntityDto> expected = List.of(
+                new GameEntityDto(1, "진행중인_게임"),
+                new GameEntityDto(2, "이미_존재하는_게임명"),
+                new GameEntityDto(3, "종료된_게임"));
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
     void countGames_메서드는_전체_게임_수와_실행_중인_게임_수를_담은_데이터를_반환한다() {
         GameCountDto actual = service.countGames();
         GameCountDto expected = new GameCountDto(3, 2);
@@ -44,7 +59,8 @@ class ChessServiceTest {
 
     @Test
     void initGame_메서드는_새로운_게임을_DB에_저장하고_생성된_게임ID가_담긴_데이터를_반환한다() {
-        CreateGameDto actual = service.initGame();
+        AuthCredentials authCredentials = new AuthCredentials("유효한_게임명", "비밀번호");
+        CreateGameDto actual = service.initGame(authCredentials);
         CreateGameDto expected = new CreateGameDto(4);
 
         assertThat(actual).isEqualTo(expected);

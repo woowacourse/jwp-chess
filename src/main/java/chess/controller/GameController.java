@@ -5,7 +5,7 @@ import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
 import chess.dto.CreateGameDto;
 import chess.dto.GameDto;
-import chess.service.ChessService2;
+import chess.service.ChessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +23,9 @@ public class GameController {
     private static final String HTML_TEMPLATE_PATH = "game";
     private static final String RESPONSE_MODEL_KEY = "response";
 
-    private final ChessService2 chessService;
+    private final ChessService chessService;
 
-    public GameController(ChessService2 chessService) {
+    public GameController(ChessService chessService) {
         this.chessService = chessService;
     }
 

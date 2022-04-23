@@ -1,4 +1,4 @@
-package chess.dao2;
+package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -17,13 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 @SuppressWarnings("NonAsciiCharacters")
 @SpringBootTest
 @Transactional
-class GameDao2Test {
+class GameDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private GameDao2 dao;
+    private GameDao dao;
 
     @Test
     void findAll_메서드로_존재하는_모든_게임_정보를_조회가능() {

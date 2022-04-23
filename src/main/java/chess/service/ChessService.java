@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.dao.EventDao;
 import chess.dao.GameDao;
+import chess.domain.auth.AuthCredentials;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.game.Game;
@@ -9,9 +10,12 @@ import chess.domain.game.NewGame;
 import chess.dto.CreateGameDto;
 import chess.dto.GameCountDto;
 import chess.dto.GameDto;
+import chess.dto.GameEntityDto;
 import chess.dto.GameResultDto;
 import chess.dto.SearchResultDto;
+import chess.entity.GameEntity;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +32,13 @@ public class ChessService {
         this.eventDao = eventDao;
     }
 
+    public List<GameEntityDto> findGames() {
+        return gameDao.findAll()
+                .stream()
+                .map(GameEntity::toDto)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
     public GameCountDto countGames() {
         int totalCount = gameDao.countAll();
         int runningCount = gameDao.countRunningGames();
@@ -36,8 +47,8 @@ public class ChessService {
     }
 
     @Transactional
-    public CreateGameDto initGame() {
-        int gameId = gameDao.saveAndGetGeneratedId();
+    public CreateGameDto initGame(AuthCredentials authCredentials) {
+        int gameId = gameDao.saveAndGetGeneratedId(authCredentials.toEncrypted());
         eventDao.save(gameId, new InitEvent());
         return new CreateGameDto(gameId);
     }

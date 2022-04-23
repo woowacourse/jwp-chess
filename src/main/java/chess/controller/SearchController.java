@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.SearchResultDto;
-import chess.service.ChessService2;
+import chess.service.ChessService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/search")
 public class SearchController {
 
-    private final ChessService2 chessService;
+    private final ChessService chessService;
 
-    public SearchController(ChessService2 chessService) {
+    public SearchController(ChessService chessService) {
         this.chessService = chessService;
     }
 

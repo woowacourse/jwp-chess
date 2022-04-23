@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.GameResultDto;
-import chess.service.ChessService2;
+import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +15,9 @@ public class ResultController {
     private static final String HTML_TEMPLATE_PATH = "result";
     private static final String RESPONSE_MODEL_KEY = "response";
 
-    private final ChessService2 chessService;
+    private final ChessService chessService;
 
-    public ResultController(ChessService2 chessService) {
+    public ResultController(ChessService chessService) {
         this.chessService = chessService;
     }
 

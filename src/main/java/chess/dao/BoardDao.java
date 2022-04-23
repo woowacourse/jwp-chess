@@ -1,4 +1,4 @@
-package chess.dao.spring;
+package chess.dao;
 
 import chess.domain.Camp;
 import chess.domain.board.Position;
@@ -8,14 +8,16 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class BoardDao {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public BoardDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void save(Map<Position, Piece> board) {
         final String sql = chooseSaveSql();

@@ -1,8 +1,5 @@
-package chess.application.web.spring;
+package chess.application.web;
 
-import chess.application.web.JsonTransformer;
-import chess.application.web.GameService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class GameController {
-    @Autowired
-    private GameService gameService;
+    private final GameService gameService;
     private final JsonTransformer jsonTransformer;
 
-    public GameController() {
+    public GameController(GameService gameService) {
         this.jsonTransformer = new JsonTransformer();
+        this.gameService = gameService;
     }
 
     public static void main(String[] args) {

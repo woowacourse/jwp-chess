@@ -3,8 +3,8 @@ package chess.application.web;
 import static chess.view.Expressions.EXPRESSIONS_COLUMN;
 import static chess.view.Expressions.EXPRESSIONS_ROW;
 
-import chess.dao.spring.BoardDao;
-import chess.dao.spring.GameDao;
+import chess.dao.BoardDao;
+import chess.dao.GameDao;
 import chess.domain.Camp;
 import chess.domain.ChessGame;
 import chess.domain.board.Position;
@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spark.Request;
 
@@ -39,13 +38,13 @@ public class GameService {
     private static final int INDEX_ROW = 1;
 
     private final ChessGame chessGame;
-    @Autowired
-    private GameDao gameDao;
-    @Autowired
-    private BoardDao boardDao;
+    private final GameDao gameDao;
+    private final BoardDao boardDao;
 
-    public GameService() {
+    public GameService(GameDao gameDao, BoardDao boardDao) {
         this.chessGame = new ChessGame();
+        this.gameDao = gameDao;
+        this.boardDao = boardDao;
     }
 
     public Map<String, Object> modelReady() {

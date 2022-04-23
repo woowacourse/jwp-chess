@@ -1,15 +1,17 @@
-package chess.dao.spring;
+package chess.dao;
 
 import chess.domain.Camp;
 import java.sql.ResultSet;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class GameDao {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public GameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void save() {
         final String sql = chooseSaveSql();

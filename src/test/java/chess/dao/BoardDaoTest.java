@@ -1,4 +1,4 @@
-package chess.dao.spring;
+package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;

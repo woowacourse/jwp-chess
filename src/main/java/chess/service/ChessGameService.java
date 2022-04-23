@@ -12,8 +12,10 @@ import chess.domain.state.ChessGameState;
 import chess.domain.state.Turn;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ChessGameService {
 
 	private final PieceDao pieceDao;

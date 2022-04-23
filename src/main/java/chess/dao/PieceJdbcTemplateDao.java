@@ -38,17 +38,21 @@ public class PieceJdbcTemplateDao implements PieceDao {
         final String sql = "select position, type, color from piece where board_id = 1";
         Map<Position, Piece> board = new TreeMap<>();
 
-        final List<Pair> query = jdbcTemplate.query(sql, (res, rowNum) -> {
+        final List<Pair> pairs = getPairs(sql);
+
+        for (Pair pair : pairs) {
+            board.put(pair.getPosition(), pair.getPiece());
+        }
+        return board;
+    }
+
+    private List<Pair> getPairs(String sql) {
+        return jdbcTemplate.query(sql, (res, rowNum) -> {
             final Position position = Position.from(res.getString("position"));
             final Type type = Type.from(res.getString("type"));
             final Piece piece = type.makePiece(Color.from(res.getString("color")));
             return new Pair(position, piece);
         });
-
-        for (Pair pair : query) {
-            board.put(pair.getPosition(), pair.getPiece());
-        }
-        return board;
     }
 
     @Override

@@ -3,9 +3,9 @@ package chess.application.web;
 import static chess.view.Expressions.EXPRESSIONS_COLUMN;
 import static chess.view.Expressions.EXPRESSIONS_ROW;
 
-import chess.dao.BoardDao;
-import chess.dao.DatabaseConnector;
-import chess.dao.GameDao;
+import chess.dao.spark.BoardDao;
+import chess.dao.spark.DatabaseConnector;
+import chess.dao.spark.GameDao;
 import chess.domain.Camp;
 import chess.domain.ChessGame;
 import chess.domain.board.Position;

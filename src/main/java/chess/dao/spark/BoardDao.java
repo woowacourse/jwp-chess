@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.dao.spark;
 
 import chess.domain.Camp;
 import chess.domain.board.Position;

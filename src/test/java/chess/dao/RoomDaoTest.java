@@ -21,17 +21,12 @@ class RoomDaoTest {
     @BeforeEach
     void beforeEach() {
         roomDao = new RoomDao(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE square IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE room IF EXISTS");
-        jdbcTemplate.execute("create table room ("
-                + " id bigint not null auto_increment,"
-                + " name VARCHAR(255) not null,"
-                + " turn varchar(10) not null,"
-                + " primary key (id),"
-                + " constraint uniqueName unique (name))");
+        JdbcFixture.dropTable(jdbcTemplate, "square");
+        JdbcFixture.dropTable(jdbcTemplate, "room");
 
-        jdbcTemplate.update("INSERT INTO room(name, turn) VALUES (?,?)",
-                "sojukang", "white");
+        JdbcFixture.createRoomTable(jdbcTemplate);
+
+        JdbcFixture.insertRoom(jdbcTemplate, "sojukang", "white");
     }
 
     @Test

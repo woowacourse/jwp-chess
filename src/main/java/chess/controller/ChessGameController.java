@@ -6,7 +6,6 @@ import chess.controller.dto.ChessGameWinnerResponse;
 import chess.controller.dto.PieceMoveRequest;
 import chess.controller.dto.PieceResponse;
 import chess.controller.dto.PromotionRequest;
-import chess.domain.ChessBoard;
 import chess.service.ChessGameService;
 import java.net.URI;
 import java.util.List;
@@ -37,8 +36,7 @@ public class ChessGameController {
 
 	@GetMapping("/{chessGameId}")
 	public ResponseEntity<List<PieceResponse>> loadChessGame(@PathVariable long chessGameId) {
-		ChessBoard chessBoard = chessGameService.findChessBoard(chessGameId);
-		List<PieceResponse> pieceResponses = chessBoard.getPieces()
+		List<PieceResponse> pieceResponses = chessGameService.findChessBoard(chessGameId)
 				.entrySet()
 				.stream()
 				.map(PieceResponse::from)

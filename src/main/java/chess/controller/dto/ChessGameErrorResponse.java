@@ -7,7 +7,7 @@ public class ChessGameErrorResponse {
 	private ChessGameErrorResponse() {
 	}
 
-	private ChessGameErrorResponse(String message) {
+	public ChessGameErrorResponse(String message) {
 		this.message = message;
 	}
 

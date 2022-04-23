@@ -6,6 +6,7 @@ import chess.domain.ChessBoard;
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.PromotionPiece;
+import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.state.ChessGameState;
 import chess.domain.state.Turn;
@@ -29,8 +30,8 @@ public class ChessGameService {
 		return chessGameId;
 	}
 
-	public ChessBoard findChessBoard(long chessGameId) {
-		return pieceDao.findChessBoardByChessGameId(chessGameId);
+	public Map<Position, Piece> findChessBoard(long chessGameId) {
+		return findChessGameState(chessGameId).pieces();
 	}
 
 	public void move(long chessGameId, Position source, Position target) {

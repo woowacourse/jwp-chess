@@ -48,13 +48,6 @@ public class SpringChessService {
         return chessWebGame.createMap();
     }
 
-    private ChessWebGame loadGame() {
-        final ChessWebGame chessWebGame = new ChessWebGame();
-        loadPieces(chessWebGame);
-        loadTurn(chessWebGame);
-        return chessWebGame;
-    }
-
     private void loadPieces(final ChessWebGame chessWebGame) {
         final List<PieceDto> whitePiecesDto = pieceDao.findPiecesByTeam(Team.WHITE);
         final List<PieceDto> blackPiecesDto = pieceDao.findPiecesByTeam(Team.BLACK);
@@ -115,5 +108,12 @@ public class SpringChessService {
         final ChessWebGame chessWebGame = loadGame();
         final Result result = chessWebGame.getResult();
         return new ResultDto(result.getResult());
+    }
+
+    private ChessWebGame loadGame() {
+        final ChessWebGame chessWebGame = new ChessWebGame();
+        loadPieces(chessWebGame);
+        loadTurn(chessWebGame);
+        return chessWebGame;
     }
 }

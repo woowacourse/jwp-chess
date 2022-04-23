@@ -6,7 +6,7 @@ import static spark.Spark.post;
 import static spark.Spark.staticFileLocation;
 
 import chess.application.web.JsonTransformer;
-import chess.application.web.WebGameController;
+import chess.application.web.GameService;
 import java.util.Map;
 import spark.ModelAndView;
 import spark.template.handlebars.HandlebarsTemplateEngine;
@@ -15,28 +15,28 @@ public class WebApplication {
 
     public static void main(String[] args) {
         staticFileLocation("/static");
-        WebGameController webGameController = new WebGameController();
+        GameService gameService = new GameService();
         JsonTransformer jsonTransformer = new JsonTransformer();
 
-        get("/", (req, res) -> render(webGameController.modelReady(), "index.html"));
+        get("/", (req, res) -> render(gameService.modelReady(), "index.html"));
 
         get("/start", (req, res) -> {
-            webGameController.start();
+            gameService.start();
             res.redirect("/play");
             return null;
         });
 
         get("/load", (req, res) -> {
-            webGameController.load();
+            gameService.load();
             res.redirect("/play");
             return null;
         });
 
-        get("/play", (req, res) -> render(webGameController.modelPlayingBoard(), "index.html"));
+        get("/play", (req, res) -> render(gameService.modelPlayingBoard(), "index.html"));
 
         post("/move", (req, res) -> {
-            webGameController.move(req);
-            if (webGameController.isGameFinished()) {
+            gameService.move(req);
+            if (gameService.isGameFinished()) {
                 res.redirect("/end");
                 return null;
             }
@@ -44,11 +44,11 @@ public class WebApplication {
             return null;
         });
 
-        get("/status", (req, res) -> jsonTransformer.render(webGameController.modelStatus()));
+        get("/status", (req, res) -> jsonTransformer.render(gameService.modelStatus()));
 
         get("/save", (req, res) -> {
             try {
-                webGameController.save();
+                gameService.save();
             } catch (Exception e) {
                 res.status(500);
                 return res;
@@ -57,7 +57,7 @@ public class WebApplication {
             return res;
         });
 
-        get("/end", (req, res) -> render(webGameController.end(), "result.html"));
+        get("/end", (req, res) -> render(gameService.end(), "result.html"));
 
         exception(Exception.class, (exception, request, response) -> {
             response.status(400);

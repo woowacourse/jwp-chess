@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import spark.Request;
 
 @Service
-public class WebGameController {
+public class GameService {
     private static final String KEY_READY = "ready";
     private static final String KEY_STARTED = "started";
     private static final String KEY_SOURCE = "source";
@@ -44,7 +44,7 @@ public class WebGameController {
     @Autowired
     private BoardDao boardDao;
 
-    public WebGameController() {
+    public GameService() {
         this.chessGame = new ChessGame();
     }
 

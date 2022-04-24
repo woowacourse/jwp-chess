@@ -18,8 +18,13 @@ dragables.forEach((dragable) => {
 
         const form = document.createElement("form");
 
+        let currentLocation = document.location.href;
+        let tokens = currentLocation.split("/");
+
+        let result = tokens[4].split("?");
+
         form.setAttribute("method", "post");
-        form.setAttribute("action", "/game/" + document.location.href + "/move");
+        form.setAttribute("action", "/game/" + result[0] + "/move");
         form.appendChild(createInput("from", fromVariable));
         form.appendChild(createInput("to", toVariable));
         document.body.appendChild(form);
@@ -59,4 +64,16 @@ function restart() {
         document.body.appendChild(form);
         form.submit();
     }
+}
+
+function makeForm(gamename, command) {
+
+    console.log(gamename);
+    console.log(command);
+    const form = document.createElement("form");
+
+    form.setAttribute("method", "get");
+    form.setAttribute("action", "/game/" + gamename + "/" + command);
+    document.body.appendChild(form);
+    form.submit();
 }

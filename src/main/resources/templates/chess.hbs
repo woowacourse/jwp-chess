@@ -473,15 +473,9 @@
     <div class="buttons-container">
         <div class="btn-group">
             <button onclick="restart()" type="submit" class="btn btn-primary">재시작</button>
-            <form action="/status" method="get" >
-                <button type="submit" class="btn btn-success">점수</button>
-            </form>
-            <form action="/save" method="get" >
-                <button type="submit" class="btn btn-info">저장</button>
-            </form>
-            <form action="/end" method="get">
-                <button type="submit" class="btn btn-danger">게임 종료</button>
-            </form>
+            <button type="submit" class="btn btn-success" onclick = "makeForm('{{gameName}}', 'status')">점수</button>
+            <button type="submit" class="btn btn-info" onclick = "makeForm('{{gameName}}', 'save')">저장</button>
+            <button type="submit" class="btn btn-danger" onclick = "makeForm('{{gameName}}', 'end')">게임 종료</button>
         </div>
         <div class="info">
             <div>

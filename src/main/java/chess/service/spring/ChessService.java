@@ -5,12 +5,15 @@ import chess.dao.jdbctemplate.GameDao;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.command.GameCommand;
 import chess.domain.game.ChessGame;
+import chess.domain.piece.Color;
 import chess.domain.piece.EmptyPiece;
 import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
+import chess.domain.state.State;
 import chess.dto.BoardDto;
 import chess.dto.PieceDto;
+import chess.dto.StatusDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +65,19 @@ public class ChessService {
         Piece target = stringPieceMap.get(to);
         boardDao.update(Position.of(to), target, gameDao.findId());
         boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameDao.findId());
+    }
+
+    public StatusDto selectStatus() {
+        State state = gameDao.findState();
+        ChessBoard chessBoard = boardDao.find();
+        ChessGame chessGame = new ChessGame(state, chessBoard);
+
+        chessGame.playGameByCommand(GameCommand.of("status"));
+        final Map<Color, Double> scores = chessGame.calculateScore();
+
+        Map<String, Double> status = new HashMap<>();
+        status.put(Color.WHITE.name(), scores.get(Color.WHITE));
+        status.put(Color.BLACK.name(), scores.get(Color.BLACK));
+        return new StatusDto(status);
     }
 }

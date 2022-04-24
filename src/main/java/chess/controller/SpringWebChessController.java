@@ -2,13 +2,16 @@ package chess.controller;
 
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
+import chess.dto.StatusDto;
 import chess.service.spring.ChessService;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -41,5 +44,12 @@ public class SpringWebChessController {
     public ModelAndView updateBoard(MoveDto moveDto) {
         chessService.updateBoard(moveDto.getFrom(), moveDto.getTo());
         return new ModelAndView("redirect:/");
+    }
+
+    @GetMapping("/game/status")
+    @ResponseBody
+    public ResponseEntity<StatusDto> selectStatus() {
+        StatusDto statusDto = chessService.selectStatus();
+        return ResponseEntity.ok().body(statusDto);
     }
 }

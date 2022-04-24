@@ -38,5 +38,5 @@
 
 - [x]  Application 계층에 Spring Framework 적용
 - [x]  Controller 계층에 Spring Framework 적용
-- [ ]  DB 계층에 Spring JdbcTemplate 적용
-- [ ]  Controller와 Service 분리, 적절하게 네이밍 변경
+- [x]  DB 계층에 Spring JdbcTemplate 적용
+- [x]  Controller와 Service 분리, 적절하게 네이밍 변경

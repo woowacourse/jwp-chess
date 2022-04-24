@@ -129,15 +129,15 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("GET - status api 테스트")
+    @DisplayName("GET - status 조회 테스트")
     @Test
     void status() {
-        chessService.createOrLoadGame(testGameId);
+        chessService.createGame(testGameId);
         chessService.startGame(testGameId);
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/status/" + testGameId)
+                .when().get("/api/games/" + testGameId + "/status")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

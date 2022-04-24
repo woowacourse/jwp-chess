@@ -218,7 +218,7 @@ function clearSelection() {
 }
 
 async function getStatus() {
-  const res = await fetch(`/api/status/${gameId}`);
+  const res = await fetch(`/api/games/${gameId}/status`);
   const data = await res.json();
   if (!res.ok) {
     alert(data.message);

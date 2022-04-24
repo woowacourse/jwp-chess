@@ -31,7 +31,7 @@ public class SpringChessController {
     @ExceptionHandler(Exception.class)
     public ModelAndView exception(HttpServletRequest request, Exception e) {
         String gameId = request.getRequestURI().split("/")[2];
-        return getModelErrorUrl(e.getMessage(), "redirect:/game/" + gameId, gameId);
+        return getModelWithGameMessage(e.getMessage(), "redirect:/game/" + gameId);
     }
 
     @GetMapping("/game/{gameId}/exit")
@@ -43,7 +43,7 @@ public class SpringChessController {
     @PostMapping(path = "/game/{gameId}/move")
     public ModelAndView postMove(@PathVariable String gameId, @RequestBody MoveCommandDto MoveCommandDto) {
         chessGameService.move(gameId, MoveCommandDto);
-        return getModelErrorUrl(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId, gameId);
+        return getModelWithGameMessage(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId);
     }
 
     @GetMapping("/game/{gameId}")
@@ -57,11 +57,8 @@ public class SpringChessController {
         return "redirect:/game/" + gameId;
     }
 
-    private ModelAndView getModelErrorUrl(String errorMessage, String url, String gameId) {
+    private ModelAndView getModelWithGameMessage(String errorMessage, String url) {
         ModelAndView modelAndView = new ModelAndView(url);
-        modelAndView.addObject("pieces", BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
-        modelAndView.addObject("gameId", gameId);
-        modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
         modelAndView.addObject("gameMessage", errorMessage);
         return modelAndView;
     }
@@ -79,4 +76,5 @@ public class SpringChessController {
         String decodedQueryString = URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8);
         return decodedQueryString.split("gameMessage=")[1];
     }
+
 }

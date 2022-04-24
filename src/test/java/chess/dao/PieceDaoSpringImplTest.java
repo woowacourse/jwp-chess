@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.position.Position;
 import chess.dto.PieceDto;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,17 @@ public class PieceDaoSpringImplTest {
         pieceDaoSpring.removeAll();
 
         assertThat(jdbcTemplate.queryForObject("select count(*) from piece", Integer.class)).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("전체 기물 정보 저장")
+    void saveAll() {
+        PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
+        PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
+
+        pieceDaoSpring.saveAll(List.of(pieceDtoA2, pieceDtoA3));
+
+        assertThat(jdbcTemplate.queryForObject("select count(*) from piece", Integer.class)).isEqualTo(2);
     }
 
     @Test

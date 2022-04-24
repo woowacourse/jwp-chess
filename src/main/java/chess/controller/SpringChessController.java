@@ -39,8 +39,8 @@ public class SpringChessController {
     }
 
     @PostMapping(path = "/game/{gameId}/move")
-    private ModelAndView postMove(@PathVariable String gameId, @RequestBody MoveCommandDto moveDto) {
-        chessGameService.move(gameId, moveDto);
+    private ModelAndView postMove(@PathVariable String gameId, @RequestBody MoveCommandDto MoveCommandDto) {
+        chessGameService.move(gameId, MoveCommandDto);
         return getModelErrorUrl(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId, gameId);
     }
 

@@ -2,7 +2,6 @@ package chess.controller;
 
 import chess.domain.command.MoveCommand;
 import chess.dto.ChessResponseDto;
-import chess.dto.ErrorResponseDto;
 import chess.dto.MoveCommandDto;
 import chess.dto.ScoresDto;
 import chess.serviece.ChessService;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,11 +23,6 @@ public class ChessController {
     @Autowired
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
-    }
-
-    @GetMapping()
-    public String init() {
-        return "index";
     }
 
     @GetMapping("/load")
@@ -56,11 +49,5 @@ public class ChessController {
     @PostMapping("/end")
     public ResponseEntity<ScoresDto> end() {
         return ResponseEntity.ok().body(chessService.finishGame());
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(Exception exception) {
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage());
-        return ResponseEntity.badRequest().body(errorResponseDto);
     }
 }

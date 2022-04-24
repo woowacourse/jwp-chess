@@ -36,7 +36,7 @@ window.onload = async function () {
   statusButton.addEventListener("click", getStatus);
   endButton.addEventListener("click", end);
 
-  const res = await fetch(`/api/games/${gameId}`);
+  const res = await fetch(`/games/${gameId}`);
   const data = await res.json();
   if (!res.ok) {
     await create();
@@ -46,7 +46,7 @@ window.onload = async function () {
 }
 
 async function create() {
-  const res = await fetch(`/api/games/${gameId}`, {
+  const res = await fetch(`/games/${gameId}`, {
     method: "post"
   });
   const data = await res.json();
@@ -111,7 +111,7 @@ function printTurn(data) {
 }
 
 async function start() {
-  const res = await fetch(`/api/games/${gameId}`, {
+  const res = await fetch(`/games/${gameId}`, {
     method: "PUT",
   });
   const data = await res.json();
@@ -126,7 +126,7 @@ async function start() {
 }
 
 async function restart() {
-  const res = await fetch(`/api/games/${gameId}`, {
+  const res = await fetch(`/games/${gameId}`, {
     method: "PUT",
   });
   const data = await res.json();
@@ -199,7 +199,7 @@ function highlightSelectedCell(cell) {
 }
 
 async function requestMove() {
-  return await fetch(`/api/games/${gameId}/pieces`, {
+  return await fetch(`/games/${gameId}/pieces`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -218,7 +218,7 @@ function clearSelection() {
 }
 
 async function getStatus() {
-  const res = await fetch(`/api/games/${gameId}/status`);
+  const res = await fetch(`/games/${gameId}/status`);
   const data = await res.json();
   if (!res.ok) {
     alert(data.message);
@@ -229,7 +229,7 @@ async function getStatus() {
 }
 
 async function end() {
-  const res = await fetch(`/api/end/${gameId}`);
+  const res = await fetch(`/games/${gameId}/end`);
   const data = await res.json();
   if (!res.ok) {
     alert(data.message);

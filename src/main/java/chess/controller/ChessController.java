@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/games")
 public class ChessController {
 
     private final ChessService chessService;
@@ -28,32 +28,32 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/games/{gameId}")
+    @GetMapping("/{gameId}")
     public ChessGameResponse loadGame(@PathVariable long gameId) {
         return chessService.loadGame(gameId);
     }
 
-    @PostMapping("/games/{gameId}")
+    @PostMapping("/{gameId}")
     public ResponseEntity<ChessGameResponse> createGame(@PathVariable long gameId) throws URISyntaxException {
         return ResponseEntity.created(new URI("/api/games/" + gameId)).body(chessService.createGame(gameId));
     }
 
-    @PutMapping("/games/{gameId}")
+    @PutMapping("/{gameId}")
     public ChessGameResponse startOrRestartGame(@PathVariable long gameId) {
         return chessService.startOrRestartGame(gameId);
     }
 
-    @PutMapping("/games/{gameId}/pieces")
+    @PutMapping("/{gameId}/pieces")
     public ChessGameResponse movePiece(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {
         return chessService.move(gameId, moveRequest);
     }
 
-    @GetMapping("/games/{gameId}/status")
+    @GetMapping("/{gameId}/status")
     public StatusResponse status(@PathVariable long gameId) {
         return chessService.status(gameId);
     }
 
-    @GetMapping("/end/{gameId}")
+    @GetMapping("/{gameId}/end")
     public ChessGameResponse endGame(@PathVariable long gameId) {
         return chessService.end(gameId);
     }

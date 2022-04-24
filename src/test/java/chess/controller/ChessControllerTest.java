@@ -52,7 +52,7 @@ class ChessControllerTest {
 
             RestAssured.given().log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
-                    .when().get("/api/games/" + testGameId)
+                    .when().get("/games/" + testGameId)
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value());
         }
@@ -62,7 +62,7 @@ class ChessControllerTest {
         void load_Fail() {
             RestAssured.given().log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
-                    .when().get("/api/games/" + testGameId)
+                    .when().get("/games/" + testGameId)
                     .then().log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value());
         }
@@ -73,7 +73,7 @@ class ChessControllerTest {
     void create() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/api/games/" + testGameId)
+                .when().post("/games/" + testGameId)
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
     }
@@ -89,7 +89,7 @@ class ChessControllerTest {
 
             RestAssured.given().log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
-                    .when().put("/api/games/" + testGameId)
+                    .when().put("/games/" + testGameId)
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .body("gameState", Matchers.equalTo("WHITE_RUNNING"));
@@ -104,7 +104,7 @@ class ChessControllerTest {
 
             RestAssured.given().log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
-                    .when().put("/api/games/" + testGameId)
+                    .when().put("/games/" + testGameId)
                     .then().log().all()
                     .body("gameState", Matchers.equalTo("READY"));
         }
@@ -124,7 +124,7 @@ class ChessControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonString)
-                .when().put("/api/games/" + testGameId + "/pieces")
+                .when().put("/games/" + testGameId + "/pieces")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -137,7 +137,7 @@ class ChessControllerTest {
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/games/" + testGameId + "/status")
+                .when().get("/games/" + testGameId + "/status")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -150,7 +150,7 @@ class ChessControllerTest {
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/end/" + testGameId)
+                .when().get("/games/" + testGameId + "/end")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 

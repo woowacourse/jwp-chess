@@ -43,6 +43,8 @@ public class ChessService {
     public String finish(Command command) {
         chessGame.progress(command);
 
+        save();
+
         return chessGame.getWinTeamName();
     }
 

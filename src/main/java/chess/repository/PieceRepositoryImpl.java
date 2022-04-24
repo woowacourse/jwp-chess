@@ -57,15 +57,9 @@ public class PieceRepositoryImpl implements PieceRepository {
 
     @Override
     public Optional<PieceDto> findOne(int boardId, String position) {
-        String sql = "select * from piece where board_id = :boardId and position = :position";
-        try {
-            return Optional.ofNullable(
-                    jdbcTemplate.queryForObject(sql,
-                            Map.of("boardId", boardId, "position", position), getPieceMapper()
-                    ));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+        return findAll(boardId).stream()
+            .filter(piece -> piece.getPosition().equals(position))
+            .findAny();
     }
 
 

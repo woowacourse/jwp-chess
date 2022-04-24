@@ -11,33 +11,33 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ChessGameDao {
 
-	private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-	public ChessGameDao(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
+    public ChessGameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-	public long createChessGame(Turn turn) {
-		String sql = "insert into chess_game (turn) values (?)";
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(con -> {
-					PreparedStatement statement = con.prepareStatement(sql, new String[]{"id"});
-					statement.setString(1, turn.name());
-					return statement;
-				},
-				keyHolder);
-		return Objects.requireNonNull(keyHolder.getKey()).longValue();
-	}
+    public long createChessGame(Turn turn) {
+        String sql = "insert into chess_game (turn) values (?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+                    PreparedStatement statement = con.prepareStatement(sql, new String[]{"id"});
+                    statement.setString(1, turn.name());
+                    return statement;
+                },
+                keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
 
-	public Turn findChessGame(long id) {
-		String sql = "select turn from chess_game where id = ?";
+    public Turn findChessGame(long id) {
+        String sql = "select turn from chess_game where id = ?";
 
-		return jdbcTemplate.queryForObject(sql, Turn.class, id);
-	}
+        return jdbcTemplate.queryForObject(sql, Turn.class, id);
+    }
 
-	public int changeChessGameTurn(long id, Turn turn) {
-		String sql = "update chess_game set turn = ? where id = ?";
+    public int changeChessGameTurn(long id, Turn turn) {
+        String sql = "update chess_game set turn = ? where id = ?";
 
-		return jdbcTemplate.update(sql, turn.name(), id);
-	}
+        return jdbcTemplate.update(sql, turn.name(), id);
+    }
 }

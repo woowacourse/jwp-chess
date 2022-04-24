@@ -21,62 +21,62 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class PieceDaoTest {
 
-	private PieceDao pieceDao;
-	private long chessGameId;
+    private PieceDao pieceDao;
+    private long chessGameId;
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@BeforeEach
-	void setUp() {
-		pieceDao = new PieceDao(jdbcTemplate);
-		chessGameId = new ChessGameDao(jdbcTemplate).createChessGame(Turn.WHITE_TURN);
-	}
+    @BeforeEach
+    void setUp() {
+        pieceDao = new PieceDao(jdbcTemplate);
+        chessGameId = new ChessGameDao(jdbcTemplate).createChessGame(Turn.WHITE_TURN);
+    }
 
-	@Test
-	@DisplayName("체스 기물 정보 저장")
-	void savePieces() {
-		Map<Position, Piece> pieces = Map.of(Position.of('a', '1'), new Piece(Color.WHITE, new King()),
-				Position.of('a', '2'), new Piece(Color.BLACK, new King()));
+    @Test
+    @DisplayName("체스 기물 정보 저장")
+    void savePieces() {
+        Map<Position, Piece> pieces = Map.of(Position.of('a', '1'), new Piece(Color.WHITE, new King()),
+                Position.of('a', '2'), new Piece(Color.BLACK, new King()));
 
-		assertThat(pieceDao.savePieces(chessGameId, pieces)).isEqualTo(2);
-	}
+        assertThat(pieceDao.savePieces(chessGameId, pieces)).isEqualTo(2);
+    }
 
-	@Test
-	@DisplayName("전체 피스 조회")
-	void findAllPieces() {
-		pieceDao.savePieces(chessGameId, Map.of(Position.of('a', '1'), new Piece(Color.WHITE, new King()),
-				Position.of('a', '2'), new Piece(Color.BLACK, new King())));
-		ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);
+    @Test
+    @DisplayName("전체 피스 조회")
+    void findAllPieces() {
+        pieceDao.savePieces(chessGameId, Map.of(Position.of('a', '1'), new Piece(Color.WHITE, new King()),
+                Position.of('a', '2'), new Piece(Color.BLACK, new King())));
+        ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);
 
-		assertThat(chessBoard.getPieces()).hasSize(2);
-	}
+        assertThat(chessBoard.getPieces()).hasSize(2);
+    }
 
-	@Test
-	@DisplayName("피스 위치 업데이트")
-	void updatePiecePosition() {
-		Position source = Position.from("a1");
-		Position target = Position.from("a2");
-		pieceDao.savePieces(chessGameId, Map.of(source, new Piece(Color.WHITE, new King())));
+    @Test
+    @DisplayName("피스 위치 업데이트")
+    void updatePiecePosition() {
+        Position source = Position.from("a1");
+        Position target = Position.from("a2");
+        pieceDao.savePieces(chessGameId, Map.of(source, new Piece(Color.WHITE, new King())));
 
-		assertThat(pieceDao.updatePiecePosition(chessGameId, source, target)).isEqualTo(1);
-	}
+        assertThat(pieceDao.updatePiecePosition(chessGameId, source, target)).isEqualTo(1);
+    }
 
-	@Test
-	@DisplayName("피스 이동 규칙 업데이트")
-	void updatePieceRule() {
-		Position source = Position.from("a1");
-		pieceDao.savePieces(chessGameId, Map.of(source, new Piece(Color.WHITE, new Pawn(Color.WHITE))));
+    @Test
+    @DisplayName("피스 이동 규칙 업데이트")
+    void updatePieceRule() {
+        Position source = Position.from("a1");
+        pieceDao.savePieces(chessGameId, Map.of(source, new Piece(Color.WHITE, new Pawn(Color.WHITE))));
 
-		assertThat(pieceDao.updatePieceRule(chessGameId, source, new Knight())).isEqualTo(1);
-	}
+        assertThat(pieceDao.updatePieceRule(chessGameId, source, new Knight())).isEqualTo(1);
+    }
 
-	@Test
-	@DisplayName("피스 삭제")
-	void deletePiece() {
-		Position source = Position.from("a1");
-		pieceDao.savePieces(chessGameId, Map.of(source, new Piece(Color.WHITE, new Pawn(Color.WHITE))));
+    @Test
+    @DisplayName("피스 삭제")
+    void deletePiece() {
+        Position source = Position.from("a1");
+        pieceDao.savePieces(chessGameId, Map.of(source, new Piece(Color.WHITE, new Pawn(Color.WHITE))));
 
-		assertThat(pieceDao.delete(chessGameId, source)).isEqualTo(1);
-	}
+        assertThat(pieceDao.delete(chessGameId, source)).isEqualTo(1);
+    }
 }

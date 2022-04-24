@@ -18,115 +18,114 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ChessGameControllerTest {
 
-	@Autowired
-	private PieceDao pieceDao;
+    @Autowired
+    private PieceDao pieceDao;
 
-	@Autowired
-	private ChessGameDao chessGameDao;
+    @Autowired
+    private ChessGameDao chessGameDao;
 
-	@LocalServerPort
-	private int port;
+    @LocalServerPort
+    private int port;
 
-	@BeforeEach
-	void setUp() {
-		RestAssured.port = port;
-	}
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
+    }
 
-	@Test
-	@DisplayName("새로운 게임 생성")
-	void createNewGame() {
-		RestAssured.given().log().all()
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.when().post("chessgames")
-				.then().log().all()
-				.statusCode(HttpStatus.CREATED.value())
-				.header("Location", Matchers.matchesRegex("/chessgames/[0-9+]"));
-	}
+    @Test
+    @DisplayName("새로운 게임 생성")
+    void createNewGame() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("chessgames")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .header("Location", Matchers.matchesRegex("/chessgames/[0-9+]"));
+    }
 
-	@Test
-	@DisplayName("체스 보드 로딩")
-	void loadChessGame() {
-		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+    @Test
+    @DisplayName("체스 보드 로딩")
+    void loadChessGame() {
+        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
 
-		RestAssured.given().log().all()
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.when().get("chessgames/" + chessGameId)
-				.then().log().all()
-				.statusCode(HttpStatus.OK.value());
-	}
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("chessgames/" + chessGameId)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
 
-	@Test
-	@DisplayName("체스 기물 이동")
-	void movePiece() {
-		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
+    @Test
+    @DisplayName("체스 기물 이동")
+    void movePiece() {
+        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+        pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
 
-		RestAssured.given().log().all()
-				.body(new PieceMoveRequest("a2", "a4"))
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.when().patch("chessgames/" + chessGameId + "/move")
-				.then().log().all()
-				.statusCode(HttpStatus.NO_CONTENT.value());
-	}
+        RestAssured.given().log().all()
+                .body(new PieceMoveRequest("a2", "a4"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("chessgames/" + chessGameId + "/move")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 
-	@Test
-	@DisplayName("체스 기물 프로모션")
-	void promotionPiece() {
-		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
-		Position source = Position.from("a2");
-		Position target = Position.from("a8");
-		pieceDao.delete(chessGameId, target);
-		pieceDao.updatePiecePosition(chessGameId, source, target);
+    @Test
+    @DisplayName("체스 기물 프로모션")
+    void promotionPiece() {
+        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+        pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
+        Position source = Position.from("a2");
+        Position target = Position.from("a8");
+        pieceDao.delete(chessGameId, target);
+        pieceDao.updatePiecePosition(chessGameId, source, target);
 
-		RestAssured.given().log().all()
-				.body(new PromotionRequest("Q"))
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.when().patch("chessgames/" + chessGameId + "/promotion")
-				.then().log().all()
-				.statusCode(HttpStatus.NO_CONTENT.value());
-	}
+        RestAssured.given().log().all()
+                .body(new PromotionRequest("Q"))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("chessgames/" + chessGameId + "/promotion")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
 
-	@Test
-	@DisplayName("체스 점수 반환")
-	void calculateScore() {
-		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+    @Test
+    @DisplayName("체스 점수 반환")
+    void calculateScore() {
+        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
 
-		RestAssured.given().log().all()
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.when().get("chessgames/" + chessGameId + "/score")
-				.then().log().all()
-				.statusCode(HttpStatus.OK.value());
-	}
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("chessgames/" + chessGameId + "/score")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
 
-	@Test
-	@DisplayName("게임 종료 여부 판별")
-	void chessGameStatus() {
-		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+    @Test
+    @DisplayName("게임 종료 여부 판별")
+    void chessGameStatus() {
+        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
 
-		RestAssured.given().log().all()
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.when().get("chessgames/" + chessGameId + "/status")
-				.then().log().all()
-				.statusCode(HttpStatus.OK.value());
-	}
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("chessgames/" + chessGameId + "/status")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
 
-	@Test
-	@DisplayName("게임 우승자 반환")
-	void chessGameWinner() {
-		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
-		pieceDao.delete(chessGameId, Position.from("e8"));
+    @Test
+    @DisplayName("게임 우승자 반환")
+    void chessGameWinner() {
+        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+        pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
+        pieceDao.delete(chessGameId, Position.from("e8"));
 
-		RestAssured.given().log().all()
-				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.when().get("chessgames/" + chessGameId + "/winner")
-				.then().log().all()
-				.statusCode(HttpStatus.OK.value());
-	}
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("chessgames/" + chessGameId + "/winner")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
 }

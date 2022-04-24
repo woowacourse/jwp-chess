@@ -4,20 +4,20 @@ import chess.domain.PromotionPiece;
 
 public class PromotionRequest {
 
-	private String promotionValue;
+    private String promotionValue;
 
-	private PromotionRequest() {
-	}
+    private PromotionRequest() {
+    }
 
-	public PromotionRequest(String promotionValue) {
-		this.promotionValue = promotionValue;
-	}
+    public PromotionRequest(String promotionValue) {
+        this.promotionValue = promotionValue;
+    }
 
-	public String getPromotionValue() {
-		return promotionValue;
-	}
+    public String getPromotionValue() {
+        return promotionValue;
+    }
 
-	public PromotionPiece toPromotionPiece() {
-		return PromotionPiece.createPromotionPiece(promotionValue);
-	}
+    public PromotionPiece toPromotionPiece() {
+        return PromotionPiece.createPromotionPiece(promotionValue);
+    }
 }

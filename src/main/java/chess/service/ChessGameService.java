@@ -18,63 +18,63 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ChessGameService {
 
-	private final PieceDao pieceDao;
-	private final ChessGameDao chessGameDao;
+    private final PieceDao pieceDao;
+    private final ChessGameDao chessGameDao;
 
-	public ChessGameService(PieceDao pieceDao, ChessGameDao chessGameDao) {
-		this.pieceDao = pieceDao;
-		this.chessGameDao = chessGameDao;
-	}
+    public ChessGameService(PieceDao pieceDao, ChessGameDao chessGameDao) {
+        this.pieceDao = pieceDao;
+        this.chessGameDao = chessGameDao;
+    }
 
-	public long createNewChessGame() {
-		long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-		pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
-		return chessGameId;
-	}
+    public long createNewChessGame() {
+        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+        pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
+        return chessGameId;
+    }
 
-	public Map<Position, Piece> findChessBoard(long chessGameId) {
-		return findChessGameState(chessGameId).pieces();
-	}
+    public Map<Position, Piece> findChessBoard(long chessGameId) {
+        return findChessGameState(chessGameId).pieces();
+    }
 
-	public void move(long chessGameId, Position source, Position target) {
-		ChessGameState chessGameState = findChessGameState(chessGameId);
-		chessGameState.movePiece(source, target);
+    public void move(long chessGameId, Position source, Position target) {
+        ChessGameState chessGameState = findChessGameState(chessGameId);
+        chessGameState.movePiece(source, target);
 
-		pieceDao.delete(chessGameId, target);
-		pieceDao.updatePiecePosition(chessGameId, source, target);
-		chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
-	}
+        pieceDao.delete(chessGameId, target);
+        pieceDao.updatePiecePosition(chessGameId, source, target);
+        chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
+    }
 
-	public void promotion(long chessGameId, PromotionPiece promotionPiece) {
-		ChessGameState chessGameState = findChessGameState(chessGameId);
-		Position position = chessGameState.promotion(promotionPiece);
+    public void promotion(long chessGameId, PromotionPiece promotionPiece) {
+        ChessGameState chessGameState = findChessGameState(chessGameId);
+        Position position = chessGameState.promotion(promotionPiece);
 
-		pieceDao.updatePieceRule(chessGameId, position, promotionPiece.pieceRule());
-		chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
-	}
+        pieceDao.updatePieceRule(chessGameId, position, promotionPiece.pieceRule());
+        chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
+    }
 
-	public Map<Color, Double> currentScore(long chessGameId) {
-		ChessGameState chessGameState = findChessGameState(chessGameId);
-		return chessGameState.currentScore();
-	}
+    public Map<Color, Double> currentScore(long chessGameId) {
+        ChessGameState chessGameState = findChessGameState(chessGameId);
+        return chessGameState.currentScore();
+    }
 
-	public boolean isEndGame(long chessGameId) {
-		Turn currentTurn = findChessGameTurn(chessGameId);
-		return currentTurn.isEnd();
-	}
+    public boolean isEndGame(long chessGameId) {
+        Turn currentTurn = findChessGameTurn(chessGameId);
+        return currentTurn.isEnd();
+    }
 
-	public Color winner(long chessGameId) {
-		ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);
-		return chessBoard.winner();
-	}
+    public Color winner(long chessGameId) {
+        ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);
+        return chessBoard.winner();
+    }
 
-	private ChessGameState findChessGameState(long chessGameId) {
-		Turn currentTurn = findChessGameTurn(chessGameId);
-		ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);
-		return currentTurn.createGameTurn(chessBoard);
-	}
+    private ChessGameState findChessGameState(long chessGameId) {
+        Turn currentTurn = findChessGameTurn(chessGameId);
+        ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);
+        return currentTurn.createGameTurn(chessBoard);
+    }
 
-	private Turn findChessGameTurn(long chessGameId) {
-		return chessGameDao.findChessGame(chessGameId);
-	}
+    private Turn findChessGameTurn(long chessGameId) {
+        return chessGameDao.findChessGame(chessGameId);
+    }
 }

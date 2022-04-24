@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ChessGameControllerAdvice {
 
-	@ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class, NullPointerException.class,
-			NoSuchElementException.class})
-	public ResponseEntity<ChessGameErrorResponse> handleBusinessException(RuntimeException runtimeException) {
-		return ResponseEntity.badRequest().body(ChessGameErrorResponse.from(runtimeException));
-	}
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class, NullPointerException.class,
+            NoSuchElementException.class})
+    public ResponseEntity<ChessGameErrorResponse> handleBusinessException(RuntimeException runtimeException) {
+        return ResponseEntity.badRequest().body(ChessGameErrorResponse.from(runtimeException));
+    }
 
-	@ExceptionHandler(EmptyResultDataAccessException.class)
-	public ResponseEntity<Void> handleNotFoundException() {
-		return ResponseEntity.notFound().build();
-	}
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity<Void> handleNotFoundException() {
+        return ResponseEntity.notFound().build();
+    }
 
-	@ExceptionHandler(DataAccessException.class)
-	public ResponseEntity<Void> handleSqlException() {
-		return ResponseEntity.internalServerError().build();
-	}
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Void> handleSqlException() {
+        return ResponseEntity.internalServerError().build();
+    }
 }

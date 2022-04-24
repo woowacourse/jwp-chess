@@ -2,6 +2,7 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.position.Position;
 import chess.dto.PieceDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +31,17 @@ public class PieceDaoSpringImplTest {
                 + "    color    varchar(20) not null,\n"
                 + "    primary key (position)\n"
                 + ");");
+    }
+
+    @Test
+    @DisplayName("기물 정보 삭제")
+    void remove() {
+        PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
+        pieceDaoSpring.save(pieceDto);
+
+        pieceDaoSpring.remove(Position.of("a2"));
+
+        assertThat(jdbcTemplate.queryForObject("select count(*) from piece", Integer.class)).isEqualTo(0);
     }
 
     @Test

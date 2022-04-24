@@ -15,7 +15,8 @@ public class PieceDaoSpringImpl implements PieceDao {
 
     @Override
     public void remove(Position position) {
-
+        final String sql = "delete from piece where position = ?";
+        jdbcTemplate.update(sql, position.getName());
     }
 
     @Override

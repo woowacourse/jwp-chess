@@ -43,7 +43,7 @@ public class PieceDaoSpringImplTest {
 
         pieceDaoSpring.remove(Position.of("a2"));
 
-        assertThat(jdbcTemplate.queryForObject("select count(*) from piece", Integer.class)).isEqualTo(0);
+        assertThat(getPieceCount()).isEqualTo(0);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class PieceDaoSpringImplTest {
 
         pieceDaoSpring.removeAll();
 
-        assertThat(jdbcTemplate.queryForObject("select count(*) from piece", Integer.class)).isEqualTo(0);
+        assertThat(getPieceCount()).isEqualTo(0);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class PieceDaoSpringImplTest {
 
         pieceDaoSpring.saveAll(List.of(pieceDtoA2, pieceDtoA3));
 
-        assertThat(jdbcTemplate.queryForObject("select count(*) from piece", Integer.class)).isEqualTo(2);
+        assertThat(getPieceCount()).isEqualTo(2);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class PieceDaoSpringImplTest {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
         pieceDaoSpring.save(pieceDto);
 
-        assertThat(jdbcTemplate.queryForObject("select count(*) from piece", Integer.class)).isEqualTo(1);
+        assertThat(getPieceCount()).isEqualTo(1);
     }
 
     @Test
@@ -99,8 +99,8 @@ public class PieceDaoSpringImplTest {
 
         pieceDaoSpring.update(Position.of("a2"), Position.of("a3"));
 
-        assertThatCode(() ->
-                jdbcTemplate.queryForObject(
+        assertThatCode(
+                () -> jdbcTemplate.queryForObject(
                         "select * from piece where position = 'a3'",
                         (resultSet, rowNum) ->
                                 new PieceDto(
@@ -110,5 +110,9 @@ public class PieceDaoSpringImplTest {
                                 )
                 )
         ).doesNotThrowAnyException();
+    }
+
+    private Integer getPieceCount() {
+        return jdbcTemplate.queryForObject("select count(*) from piece", Integer.class);
     }
 }

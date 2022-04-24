@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
-    private static final String NONE = "";
-
     private final PieceDao pieceDao;
     private final TurnDao turnDao;
 

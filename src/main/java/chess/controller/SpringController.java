@@ -31,7 +31,7 @@ public class SpringController {
     }
 
     @GetMapping("/start")
-    public String start(@RequestParam("game_name") String gameName) throws UnsupportedEncodingException {
+    public String start(@RequestParam String gameName) throws UnsupportedEncodingException {
         return "redirect:/game/" + UTF8Converter.encode(gameName);
     }
 

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PieceDaoImpl implements PieceDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public PieceDaoImpl(JdbcTemplate jdbcTemplate) {

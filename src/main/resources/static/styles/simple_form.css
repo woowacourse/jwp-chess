@@ -1,0 +1,15 @@
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+form > div {
+    width: 220px;
+    padding-bottom: 10px;
+
+    display: flex;
+    justify-content: space-between;
+}

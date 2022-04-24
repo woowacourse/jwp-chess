@@ -62,7 +62,6 @@ public class PieceRepositoryImpl implements PieceRepository {
             .findAny();
     }
 
-
     @Override
     public List<PieceDto> findAll(int boardId) {
         String sql = "select * from piece where board_id = :boardId";

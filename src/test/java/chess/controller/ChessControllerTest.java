@@ -3,18 +3,18 @@ package chess.controller;
 import static chess.controller.ControllerTestFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import chess.config.MockMvcConfig;
 import chess.domain.board.BoardFactory;
+import chess.domain.game.Score;
 import chess.dto.BoardsDto;
 import chess.dto.request.RoomRequestDto;
-import chess.dto.response.ErrorResponseDto;
-import chess.dto.response.GameResponseDto;
-import chess.dto.response.RoomResponseDto;
-import chess.dto.response.RoomsResponseDto;
+import chess.dto.response.*;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
 import chess.service.ChessService;
@@ -103,7 +103,32 @@ class ChessControllerTest {
                 .andExpect(content().string(response));
     }
 
+    @DisplayName("게임을 종료하면 200 ok와 statusResponseDto를 반환한다.")
+    @Test
+    void finishGame() throws Exception {
+        doNothing().when(chessService).endRoom(any());
+        StatusResponseDto statusResponseDto = StatusResponseDto.of(new Score(BoardFactory.initialize()));
+        String response = objectMapper.writeValueAsString(statusResponseDto);
 
+        given(chessService.createStatus(any()))
+                .willReturn(statusResponseDto);
+        mockMvc.perform(patch(DEFAULT_API + "/1/end"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(response));
+    }
+
+    @DisplayName("종료된 방을 다시 종료하면 400 에러가 발생한다.")
+    @Test
+    void finishGameException() throws Exception {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_FINISHED);
+        String response = objectMapper.writeValueAsString(errorResponseDto);
+
+        doThrow(new IllegalArgumentException(ERROR_FINISHED)).when(chessService).endRoom(1L);
+
+        mockMvc.perform(patch(DEFAULT_API + "/1/end"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(response));
+    }
 
     private RoomEntity createRoomEntity(Long id) {
         return new RoomEntity(id, ROOM_NAME, WHITE, FALSE);

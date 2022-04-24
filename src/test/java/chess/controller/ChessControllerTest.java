@@ -8,9 +8,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import chess.config.MockMvcConfig;
+import chess.domain.board.BoardFactory;
+import chess.dto.BoardsDto;
 import chess.dto.request.RoomRequestDto;
+import chess.dto.response.ErrorResponseDto;
+import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
+import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
 import chess.service.ChessService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Import(MockMvcConfig.class)
 @ActiveProfiles("test")
@@ -40,7 +46,7 @@ class ChessControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @DisplayName("방을 생성하는 기능을 수행한다.")
+    @DisplayName("방을 생성하면 201 create와 Location을 헤더로 반환한다.")
     @Test
     void create() throws Exception {
         final RoomRequestDto roomRequestDto = new RoomRequestDto(ROOM_NAME);
@@ -55,12 +61,11 @@ class ChessControllerTest {
             .andExpect(header().string("Location", "/api/chess/rooms/1"));
     }
 
-    @DisplayName("진행 중인 모든 방을 찾아온다.")
+    @DisplayName("진행 중인 모든 방을 조회하고 200 ok 를 반환한다.")
     @Test
     void findRooms() throws Exception {
         RoomsResponseDto roomsResponseDto = RoomsResponseDto.of(List.of(createRoomEntity(1L)
                 , createRoomEntity(2L)));
-
         String response = objectMapper.writeValueAsString(roomsResponseDto);
 
         given(chessService.findRooms())
@@ -70,7 +75,49 @@ class ChessControllerTest {
                 .andExpect(content().string(response));
     }
 
+    @DisplayName("진행 중인 방을 들어가면 200 ok와 gameResponseDto를 반환한다.")
+    @Test
+    void enterRoom() throws Exception {
+        GameResponseDto gameResponseDto = GameResponseDto.of(createRoomEntity(1L)
+                , BoardsDto.of(createBoardEntities()));
+        String response = objectMapper.writeValueAsString(gameResponseDto);
+
+        given(chessService.enterRoom(any()))
+                .willReturn(gameResponseDto);
+        mockMvc.perform(get(DEFAULT_API + "/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(response));
+    }
+
+    @DisplayName("종료된 방을 들어가면 400 에러가 발생한다.")
+    @Test
+    void enterRoomException() throws Exception {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_FINISHED);
+        String response = objectMapper.writeValueAsString(errorResponseDto);
+
+        given(chessService.enterRoom(any()))
+                .willThrow(new IllegalArgumentException(ERROR_FINISHED));
+
+        mockMvc.perform(get(DEFAULT_API + "/1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(response));
+    }
+
+
+
     private RoomEntity createRoomEntity(Long id) {
         return new RoomEntity(id, ROOM_NAME, WHITE, FALSE);
+    }
+
+    private List<BoardEntity> createBoardEntities() {
+        return BoardFactory.initialize()
+                .entrySet()
+                .stream()
+                .map(entry -> new BoardEntity(
+                        1L,
+                        entry.getKey().convertPositionToString(),
+                        entry.getValue().convertPieceToString())
+                )
+                .collect(Collectors.toList());
     }
 }

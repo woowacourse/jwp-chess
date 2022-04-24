@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,17 +35,10 @@ public class ChessController {
         return chessService.createGame(gameId);
     }
 
-    @GetMapping("/start/{gameId}")
-    public ChessGameResponse startGame(@PathVariable long gameId) {
-        return chessService.startGame(gameId);
+    @PutMapping("/games/{gameId}")
+    public ChessGameResponse startOrRestartGame(@PathVariable long gameId) {
+        return chessService.startOrRestartGame(gameId);
     }
-    // TODO : POST "/games/{gameId}"
-
-    @GetMapping("/restart/{gameId}")
-    public ChessGameResponse restartGame(@PathVariable long gameId) {
-        return chessService.restartGame(gameId);
-    }
-    // TODO: PUT "/games/{gameId}"
 
     @PostMapping("/move/{gameId}")
     public ChessGameResponse movePiece(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {

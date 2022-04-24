@@ -78,29 +78,36 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("GET - start api 테스트")
-    @Test
-    void start() {
-        chessService.createOrLoadGame(testGameId);
+    @Nested
+    @DisplayName("PUT - start api 테스트")
+    class StartOrRestartTest {
 
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/start/" + testGameId)
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
-    }
+        @DisplayName("게임이 READY 상태면 시작한다.")
+        @Test
+        void start() {
+            chessService.createGame(testGameId);
 
-    @DisplayName("GET - restart api 테스트")
-    @Test
-    void restart() {
-        chessService.createOrLoadGame(testGameId);
-        chessService.startGame(testGameId);
+            RestAssured.given().log().all()
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .when().put("/api/games/" + testGameId)
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("gameState", Matchers.equalTo("WHITE_RUNNING"));
+        }
 
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/restart/" + testGameId)
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+        @DisplayName("게임이 READY 상태가 아니면 재시작한다.")
+        @Test
+        void restart() {
+            chessService.createGame(testGameId);
+            chessService.startGame(testGameId);
+            chessService.end(testGameId);
+
+            RestAssured.given().log().all()
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .when().put("/api/games/" + testGameId)
+                    .then().log().all()
+                    .body("gameState", Matchers.equalTo("READY"));
+        }
     }
 
     @DisplayName("POST - move api 테스트")

@@ -93,6 +93,15 @@ public class ChessService {
         }
     }
 
+    public ChessGameResponse startOrRestartGame(long gameId) {
+        Optional<GameState> maybeGameState = gameDao.load(gameId);
+        GameState gameState = maybeGameState.orElseThrow(() -> new IllegalArgumentException("게임이 없습니다."));
+        if (gameState == GameState.READY) {
+            return startGame(gameId);
+        }
+        return restartGame(gameId);
+    }
+
     public ChessGameResponse startGame(long gameId) {
         ChessGame chessGame = getChessGame(gameId);
         chessGame.start();

@@ -111,7 +111,9 @@ function printTurn(data) {
 }
 
 async function start() {
-  const res = await fetch(`/api/start/${gameId}`);
+  const res = await fetch(`/api/games/${gameId}`, {
+    method: "PUT",
+  });
   const data = await res.json();
   if (!res.ok) {
     alert(data.message);
@@ -124,7 +126,9 @@ async function start() {
 }
 
 async function restart() {
-  const res = await fetch(`/api/restart/${gameId}`);
+  const res = await fetch(`/api/games/${gameId}`, {
+    method: "PUT",
+  });
   const data = await res.json();
   if (!res.ok) {
     alert(data.message);

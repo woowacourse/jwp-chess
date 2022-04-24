@@ -47,7 +47,7 @@ class BoardTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("정상적으로 기물이 이동하는지 테스트한다.")
     void move() {
         final Board board = new Board();
         final Board movedBoard = board.movePiece(Position.from("a2"), Position.from("a4"));
@@ -58,7 +58,7 @@ class BoardTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("정상적으로 기물이 상대방을 잡을 수 있는지 테스트한다.")
     void moveAttack() {
         Board board = new Board();
         board = board.movePiece(Position.from("a2"), Position.from("a4"));

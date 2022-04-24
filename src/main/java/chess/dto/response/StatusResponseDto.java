@@ -1,24 +1,24 @@
-package chess.dto;
+package chess.dto.response;
 
 import chess.domain.game.Score;
 import chess.domain.piece.Team;
 
-public class StatusDto {
+public class StatusResponseDto {
 
     private final double whiteScore;
     private final double blackScore;
     private final String winningTeam;
 
-    private StatusDto(final double whiteScore, final double blackScore, final String winningTeam) {
+    private StatusResponseDto(final double whiteScore, final double blackScore, final String winningTeam) {
         this.whiteScore = whiteScore;
         this.blackScore = blackScore;
         this.winningTeam = winningTeam;
     }
 
-    public static StatusDto of(final Score score) {
+    public static StatusResponseDto of(final Score score) {
         double whiteScore = score.calculateScore(Team.WHITE);
         double blackScore = score.calculateScore(Team.BLACK);
-        return new StatusDto(whiteScore, blackScore, score.calculateWinningTeam(whiteScore, blackScore).getValue());
+        return new StatusResponseDto(whiteScore, blackScore, score.calculateWinningTeam(whiteScore, blackScore).getValue());
     }
 
     public double getWhiteScore() {

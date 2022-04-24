@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.StatusDto;
+import chess.dto.response.StatusResponseDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
 import chess.dto.response.GameResponseDto;
@@ -38,7 +38,7 @@ public class SpringChessController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StatusDto> finishGame(@PathVariable Long id) {
+    public ResponseEntity<StatusResponseDto> finishGame(@PathVariable Long id) {
         chessService.endRoom(id);
         return ResponseEntity.ok(chessService.createStatus(id));
     }
@@ -50,7 +50,7 @@ public class SpringChessController {
     }
 
     @GetMapping("/{id}/status")
-    public ResponseEntity<StatusDto> calculateStatus(@PathVariable Long id) {
+    public ResponseEntity<StatusResponseDto> calculateStatus(@PathVariable Long id) {
         return ResponseEntity.ok(chessService.createStatus(id));
     }
 }

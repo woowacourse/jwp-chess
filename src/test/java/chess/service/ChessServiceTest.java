@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.dto.StatusDto;
+import chess.dto.response.StatusResponseDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
 import chess.dto.response.GameResponseDto;
@@ -122,7 +122,7 @@ class ChessServiceTest {
     @Test
     void createStatus() {
         final Long id = createTestRoom("체스 초보만").getId();
-        final StatusDto status = chessService.createStatus(id);
+        final StatusResponseDto status = chessService.createStatus(id);
 
         assertThat(status.getBlackScore()).isEqualTo(38);
     }

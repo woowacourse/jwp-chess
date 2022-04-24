@@ -44,11 +44,12 @@ public class GameDaoSpringImplTest {
     @Test
     @DisplayName("전체 게임 데이터 삭제")
     void removeAll() {
-        jdbcTemplate.execute("insert into game (turn, status) values ('white', 'playing')");
+        GameDto gameDto = new GameDto("white", "playing");
+        gameDaoSpringImpl.save(gameDto);
 
         gameDaoSpringImpl.removeAll();
 
-        assertThat(jdbcTemplate.queryForObject("select count(*) from game", Integer.class)).isEqualTo(0);
+        assertThat(getGameCount()).isEqualTo(0);
     }
 
     @Test
@@ -57,7 +58,7 @@ public class GameDaoSpringImplTest {
         GameDto gameDto = new GameDto("white", "playing");
         gameDaoSpringImpl.save(gameDto);
 
-        assertThat(jdbcTemplate.queryForObject("select count(*) from game", Integer.class)).isEqualTo(1);
+        assertThat(getGameCount()).isEqualTo(1);
     }
 
     @Test
@@ -97,5 +98,9 @@ public class GameDaoSpringImplTest {
                 () -> assertThat(gameDaoSpringImpl.find().getStatus()).isEqualTo("playing"),
                 () -> assertThat(gameDaoSpringImpl.find().getTurn()).isEqualTo("white")
         );
+    }
+
+    private Integer getGameCount() {
+        return jdbcTemplate.queryForObject("select count(*) from game", Integer.class);
     }
 }

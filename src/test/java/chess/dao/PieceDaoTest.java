@@ -1,7 +1,7 @@
 package chess.dao;
 
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Color;
@@ -10,18 +10,20 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
 import java.util.List;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+@TestInstance(Lifecycle.PER_CLASS)
 @JdbcTest
-public class DaoTest {
+public class PieceDaoTest {
 
     private PieceDao pieceDao;
-
     private GameDao gameDao;
 
     @Autowired
@@ -51,64 +53,14 @@ public class DaoTest {
             + ")");
     }
 
-    @Test
-    void createById() {
-        gameDao.createById("1234");
+    @AfterAll
+    void end() {
+        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
+        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
     }
 
     @Test
-    void isInId() {
-        gameDao.createById("1234");
-        assertThat(gameDao.isInId("1234")).isTrue();
-        assertThat(gameDao.isInId("123")).isFalse();
-    }
-
-    @Test
-    void findForceEndFlagById() {
-        gameDao.createById("1234");
-        assertThat(gameDao.findForceEndFlagById("1234")).isFalse();
-        assertThatThrownBy(() -> gameDao.findForceEndFlagById("124"))
-            .isInstanceOf(EmptyResultDataAccessException.class);
-    }
-
-    @Test
-    void findTurnById() {
-        gameDao.createById("1234");
-        assertThat(gameDao.findTurnById("1234")).isEqualTo(Color.BLACK);
-        assertThatThrownBy(() -> gameDao.findTurnById("124"))
-            .isInstanceOf(EmptyResultDataAccessException.class);
-    }
-
-    @Test
-    void updateTurnById() {
-        gameDao.createById("1234");
-
-        gameDao.updateTurnById(Color.WHITE, "1234");
-
-        assertThat(gameDao.findTurnById("1234")).isEqualTo(Color.WHITE);
-    }
-
-    @Test
-    void updateForceEndFlagById() {
-        gameDao.createById("1234");
-
-        gameDao.updateForceEndFlagById(true, "1234");
-
-        assertThat(gameDao.findForceEndFlagById("1234")).isEqualTo(true);
-    }
-
-    @Test
-    void deleteById() {
-        gameDao.createById("1234");
-        assertThat(gameDao.isInId("1234")).isTrue();
-
-        gameDao.deleteById("1234");
-
-        assertThat(gameDao.isInId("1234")).isFalse();
-    }
-
-    @Test
-    void createAllById() {
+    void createAllById_Piece_생성_성공() {
         gameDao.createById("1234");
 
         final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
@@ -119,7 +71,7 @@ public class DaoTest {
     }
 
     @Test
-    void updateAllByGameId() {
+    void updateAllByGameId_Piece_업데이트_성공() {
         gameDao.createById("1234");
         final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
         final List<Piece> pieces = chessmenInitializer.init().getPieces();
@@ -136,7 +88,7 @@ public class DaoTest {
     }
 
     @Test
-    void deleteAllByGameId() {
+    void deleteAllByGameId_Piece_삭제_성공() {
         gameDao.createById("1234");
 
         final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();

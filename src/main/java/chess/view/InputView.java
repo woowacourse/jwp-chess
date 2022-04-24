@@ -1,35 +1,72 @@
 package chess.view;
 
+import static java.lang.System.err;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+
+import chess.constant.Command;
+import chess.domain.board.position.Position;
+import chess.dto.request.console.MoveRequest;
+import chess.dto.request.console.NotMoveRequest;
+import chess.dto.request.console.Request;
+import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class InputView {
 
-    private static String input() {
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+    private static final Scanner SCANNER = new Scanner(System.in);
+    private static final Pattern START_END_PATTERN = Pattern.compile("(start)|(end)", CASE_INSENSITIVE);
+    private static final Pattern END_MOVE_PATTERN =
+            Pattern.compile("(end)|(status)|(move [a-h][1-8] [a-h][1-8])", CASE_INSENSITIVE);
+    static final String NOT_SUPPORT_OPERATION_MESSAGE = "[ERROR] 현재 명령은 허용되지 않습니다";
+    static final String NOT_SUPPORT_OPERATION_MESSAGE_FORMAT = NOT_SUPPORT_OPERATION_MESSAGE + ": <%s>";
+
+    private InputView() {
     }
 
-    public static String requestCommand() {
+    public static Command inputStartCommand() {
         try {
-            return getCommand();
-        } catch (IllegalArgumentException e) {
-            System.out.println("[ERROR] : " + e.getMessage());
-            return requestCommand();
+            String input = SCANNER.nextLine();
+            validateStartCommand(input);
+            return Command.from(input);
+        } catch (RuntimeException e) {
+            err.println(e.getMessage());
+        }
+        return inputStartCommand();
+    }
+
+    static void validateStartCommand(String input) {
+        if (!START_END_PATTERN.matcher(input).matches()) {
+            throw new UnsupportedOperationException(String.format(NOT_SUPPORT_OPERATION_MESSAGE_FORMAT, input));
         }
     }
 
-    private static String getCommand() {
-        String text = input().toLowerCase();
-        validateNotNull(text);
-
-        Command.validateCommand(text);
-
-        return text;
+    public static Request inputCommandInGaming() {
+        try {
+            return getInputCommandInGaming();
+        } catch (RuntimeException e) {
+            err.println(e.getMessage());
+        }
+        return inputCommandInGaming();
     }
 
-    private static void validateNotNull(String text) {
-        if (text == null) {
-            throw new IllegalArgumentException("null은 허용되지 않습니다.");
+    private static Request getInputCommandInGaming() {
+        String input = SCANNER.nextLine();
+        validateCommandInGaming(input);
+        Command command = Command.from(input);
+        if (command.isEnd() || command.isStatus()) {
+            return new NotMoveRequest(command);
+        }
+        List<String> inputs = List.of(input.split(" "));
+        Position source = Position.of(inputs.get(1));
+        Position target = Position.of(inputs.get(2));
+        return new MoveRequest(command, source, target);
+    }
+
+    public static void validateCommandInGaming(String input) {
+        if (!END_MOVE_PATTERN.matcher(input).matches()) {
+            throw new UnsupportedOperationException(String.format(NOT_SUPPORT_OPERATION_MESSAGE_FORMAT, input));
         }
     }
+
 }

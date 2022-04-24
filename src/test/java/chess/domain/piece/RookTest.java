@@ -1,36 +1,44 @@
 package chess.domain.piece;
 
-import chess.domain.game.Color;
-import chess.domain.position.Position;
-import org.assertj.core.api.Assertions;
+import static chess.domain.board.position.File.C;
+import static chess.domain.board.position.Rank.THREE;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import chess.constant.TargetType;
+import chess.domain.board.position.File;
+import chess.domain.board.position.Position;
+import chess.domain.board.position.Rank;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+public class RookTest {
 
-class RookTest {
+    @ParameterizedTest
+    @CsvSource(value = {"A:THREE", "H:THREE", "C:ONE", "C:EIGHT"}, delimiter = ':')
+    @DisplayName("Rook은 동일 Rank나 File에 있는 좌표로 이동할 수 있다")
+    void isMovable(File file, Rank rank) {
+        //given
+        Rook rook = new Rook(PieceTeam.WHITE);
 
-    private Position initialPosition = new Position("d5");
+        //when
+        boolean actual = rook.isMovable(Position.of(C, THREE), Position.of(file, rank), TargetType.EMPTY);
 
-    @Test
-    @DisplayName("이동 할 수 없는 위치로 이동하면 예외를 던진다.")
-    void canMove_cantGo() {
-        // given
-        ChessPiece rook = new Rook(Color.BLACK);
-        // then
-        assertThatThrownBy(() -> rook.checkMovable(initialPosition, new Position("c6")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 기물이 갈 수 없는 위치입니다.");
+        //then
+        assertThat(actual).isTrue();
     }
 
-    @Test
-    @DisplayName("이동 할 수 있는 위치라면 예외를 던지지 않는다.")
-    void canMove_canGo() {
-        // given
-        ChessPiece rook = new Rook(Color.BLACK);
-        // then
-        Assertions.assertThatCode(() -> rook.checkMovable(initialPosition, new Position("c5")))
-                .doesNotThrowAnyException();
+    @ParameterizedTest
+    @CsvSource(value = {"A:ONE", "B:TWO", "D:FOUR"}, delimiter = ':')
+    @DisplayName("Rook은 Rank 나 File 모두 동일하지 않다면 이동이 불가하다 (false 반환)")
+    void cantMovable(File file, Rank rank) {
+        //given
+        Rook rook = new Rook(PieceTeam.WHITE);
 
+        //when
+        boolean actual = rook.isMovable(Position.of(C, THREE), Position.of(file, rank), TargetType.EMPTY);
+
+        //then
+        assertThat(actual).isFalse();
     }
 }

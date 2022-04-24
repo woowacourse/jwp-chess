@@ -1,50 +1,53 @@
 package chess.domain.piece;
 
-import chess.domain.game.Color;
-import chess.domain.position.Position;
+import static chess.domain.board.position.MoveDirection.DOWN;
+import static chess.domain.board.position.MoveDirection.DOWN_LEFT;
+import static chess.domain.board.position.MoveDirection.DOWN_RIGHT;
+import static chess.domain.board.position.MoveDirection.LEFT;
+import static chess.domain.board.position.MoveDirection.RIGHT;
+import static chess.domain.board.position.MoveDirection.UP;
+import static chess.domain.board.position.MoveDirection.UP_LEFT;
+import static chess.domain.board.position.MoveDirection.UP_RIGHT;
 
+import chess.constant.TargetType;
+import chess.domain.board.position.MoveDirection;
+import chess.domain.board.position.Position;
 import java.util.List;
 
-public class King extends ChessPiece {
+public class King extends Piece {
 
-    private static final String NAME = "K";
+    private static final String EMBLEM = "K";
+    private static final double SCORE = 0;
+    private static final List<MoveDirection> POSSIBLE_MOVE_DIRECTIONS = List.of(
+            UP, DOWN, LEFT, RIGHT,
+            UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT
+    );
 
-    public King(Color color) {
-        super(color, NAME);
+    public King(PieceTeam pieceTeam) {
+        super(pieceTeam);
     }
 
     @Override
-    public List<Position> getInitWhitePosition() {
-        return List.of(new Position("e1"));
+    public String getConcreteEmblem() {
+        return EMBLEM;
     }
 
     @Override
-    public List<Position> getInitBlackPosition() {
-        return List.of(new Position("e8"));
-    }
-
-    @Override
-    public void checkMovable(Position from, Position to) {
-        int fileDistance = Math.abs(from.fileDistance(to));
-        int rankDistance = Math.abs(from.rankDistance(to));
-
-        if (Math.abs(fileDistance) > 1 || Math.abs(rankDistance) > 1) {
-            throw new IllegalArgumentException("해당 기물이 갈 수 없는 위치입니다.");
-        }
+    public boolean isMovable(Position from, Position to, TargetType targetType) {
+        return super.isMovable(from, to, targetType, POSSIBLE_MOVE_DIRECTIONS) &&
+                from.fileDistance(to) <= 1 &&
+                from.rankDistance(to) <=1;
     }
 
     @Override
     public double getScore() {
-        return 0.0;
+        return SCORE;
     }
 
     @Override
-    public boolean isKing() {
-        return true;
-    }
-
-    @Override
-    public String convertToImageName() {
-        return (getColor().name() + "-king").toLowerCase();
+    public String toString() {
+        return "King{" +
+                "pieceTeam=" + pieceTeam +
+                '}';
     }
 }

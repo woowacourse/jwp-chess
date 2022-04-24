@@ -8,9 +8,9 @@ services:
       - "13306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: chess
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: woowa-chess
+      MYSQL_USER: woowa-chess
+      MYSQL_PASSWORD: 1234
       TZ: Asia/Seoul
     volumes:
       - ./db/mysql/data:/var/lib/mysql

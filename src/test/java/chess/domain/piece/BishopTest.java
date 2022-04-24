@@ -1,39 +1,48 @@
 package chess.domain.piece;
 
-import chess.domain.game.Color;
-import chess.domain.position.Position;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import static chess.domain.board.position.File.*;
+import static chess.domain.board.position.Rank.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import chess.constant.TargetType;
+import chess.domain.board.position.File;
+import chess.domain.board.position.Position;
+import chess.domain.board.position.Rank;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class BishopTest {
 
-    private Position initialPosition = new Position("d5");
+    @DisplayName("비숍은 오로지 대각선 방향으로만 이동이 가능하다")
+    @ParameterizedTest
+    @CsvSource(value = {"D:FOUR", "E:FIVE", "B:FOUR", "B:TWO"}, delimiter = ':')
+    void isMovable(File file, Rank rank) {
+        //given
+        Bishop bishop = new Bishop(PieceTeam.WHITE);
+        Position source = Position.of(C, THREE);
+        Position target = Position.of(file, rank);
 
-    @Test
-    @DisplayName("이동 할 수 없는 위치로 이동하면 예외를 던진다.")
-    void canMove_cantGo() {
-        // given
-        ChessPiece bishop = new Bishop(Color.BLACK);
-        // then
-        assertThatThrownBy(() -> bishop.checkMovable(initialPosition, new Position("d6")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 기물이 갈 수 없는 위치입니다.");
+        //when
+        boolean actual = bishop.isMovable(source, target, TargetType.EMPTY);
+
+        //then
+        assertThat(actual).isTrue();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"b7", "f7", "f3", "b3"})
-    @DisplayName("이동 할 수 있는 위치라면 예외를 던지지 않는다.")
-    void canMove_canGo() {
-        // given
-        ChessPiece bishop = new Bishop(Color.BLACK);
-        // then
-        Assertions.assertThatCode(() -> bishop.checkMovable(initialPosition, new Position("c4")))
-                .doesNotThrowAnyException();
+    @CsvSource(value = {"D:THREE", "E:FOUR"}, delimiter = ':')
+    @DisplayName("비숍은 대각선이 아니면 이동이 불가능하다")
+    void cantMovable(File file, Rank rank) {
+        //given
+        Bishop bishop = new Bishop(PieceTeam.WHITE);
+        Position source = Position.of(C, THREE);
+        Position target = Position.of(file, rank);
 
+        //when
+        boolean actual = bishop.isMovable(source, target, TargetType.EMPTY);
+
+        //then
+        assertThat(actual).isFalse();
     }
 }

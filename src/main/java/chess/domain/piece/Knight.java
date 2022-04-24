@@ -1,55 +1,51 @@
 package chess.domain.piece;
 
-import chess.domain.game.Color;
-import chess.domain.position.Position;
+import static chess.domain.board.position.MoveDirection.TWO_DOWN_ONE_LEFT;
+import static chess.domain.board.position.MoveDirection.TWO_DOWN_ONE_RIGHT;
+import static chess.domain.board.position.MoveDirection.TWO_LEFT_ONE_DOWN;
+import static chess.domain.board.position.MoveDirection.TWO_LEFT_ONE_UP;
+import static chess.domain.board.position.MoveDirection.TWO_RIGHT_ONE_DOWN;
+import static chess.domain.board.position.MoveDirection.TWO_RIGHT_ONE_UP;
+import static chess.domain.board.position.MoveDirection.TWO_UP_ONE_LEFT;
+import static chess.domain.board.position.MoveDirection.TWO_UP_ONE_RIGHT;
 
+import chess.constant.TargetType;
+import chess.domain.board.position.MoveDirection;
+import chess.domain.board.position.Position;
 import java.util.List;
 
-public class Knight extends ChessPiece {
+public class Knight extends Piece {
 
-    private static final String NAME = "N";
-    private static final int SUM_OF_MOVABLE_DISTANCE = 3;
+    private static final String EMBLEM = "N";
+    private static final double SCORE = 2.5;
+    private static final List<MoveDirection> POSSIBLE_MOVE_DIRECTIONS = List.of(
+            TWO_UP_ONE_LEFT, TWO_UP_ONE_RIGHT,
+            TWO_DOWN_ONE_LEFT, TWO_DOWN_ONE_RIGHT,
+            TWO_LEFT_ONE_UP, TWO_LEFT_ONE_DOWN,
+            TWO_RIGHT_ONE_UP, TWO_RIGHT_ONE_DOWN
+    );
 
-    public Knight(Color color) {
-        super(color, NAME);
+    public Knight(PieceTeam pieceTeam) {
+        super(pieceTeam);
     }
 
     @Override
-    public List<Position> getInitWhitePosition() {
-        return List.of(new Position("b1"), new Position("g1"));
+    public String getConcreteEmblem() {
+        return EMBLEM;
     }
 
     @Override
-    public List<Position> getInitBlackPosition() {
-        return List.of(new Position("b8"), new Position("g8"));
-    }
-
-    @Override
-    public void checkMovable(Position from, Position to) {
-        int fileDistance = Math.abs(from.fileDistance(to));
-        int rankDistance = Math.abs(from.rankDistance(to));
-
-        if (rankDistance + fileDistance != SUM_OF_MOVABLE_DISTANCE) {
-            throw new IllegalArgumentException("해당 기물이 갈 수 없는 위치입니다.");
-        }
-
-        if (from.isSameFile(to) || from.isSameRank(to)) {
-            throw new IllegalArgumentException("해당 기물이 갈 수 없는 위치입니다.");
-        }
-    }
-
-    @Override
-    public boolean isKnight() {
-        return true;
+    public boolean isMovable(Position from, Position to, TargetType targetType) {
+        return super.isMovable(from, to, targetType, POSSIBLE_MOVE_DIRECTIONS);
     }
 
     @Override
     public double getScore() {
-        return 2.5;
+        return SCORE;
     }
 
     @Override
-    public String convertToImageName() {
-        return (getColor().name() + "-knight").toLowerCase();
+    public String toString() {
+        return "Knight{}";
     }
 }

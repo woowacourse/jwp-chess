@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/index.css">
+<script src="library/jquery-3.6.0.js"></script>
+<script src="js/game.js"></script>
+
+<body>
+  <table id="chess-board">
+  </table>
+
+  <br /><br />
+
+  현재 팀: <span id="current-team"></span>
+  <br />
+  움직일 위치 : <input type="text" name="from" /> <input type="text" name="to" />
+  <br />
+  <button id="move">움직이기</button>
+  <button id="save-game">게임저장</button>
+</body>
+</html>

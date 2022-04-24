@@ -1,40 +1,44 @@
 package chess.domain.piece;
 
-import chess.domain.game.Color;
-import chess.domain.position.Position;
-import org.assertj.core.api.Assertions;
+import static chess.domain.board.position.File.C;
+import static chess.domain.board.position.Rank.THREE;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import chess.constant.TargetType;
+import chess.domain.board.position.File;
+import chess.domain.board.position.Position;
+import chess.domain.board.position.Rank;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+public class KnightTest {
 
-class KnightTest {
+    @ParameterizedTest
+    @CsvSource(value = {"FIVE:D", "FIVE:B", "ONE:D", "ONE:B", "FOUR:A", "FOUR:E", "TWO:A", "TWO:E"}, delimiter = ':')
+    @DisplayName("나이트는 앞 2칸, 옆 1칸 이동만 가능하다.")
+    void isMovable(Rank rank, File file) {
+        //given
+        Knight knight = new Knight(PieceTeam.WHITE);
 
-    private Position initialPosition = new Position("d5");
+        //when
+        boolean actual = knight.isMovable(Position.of(C, THREE), Position.of(file, rank), TargetType.EMPTY);
 
-    @Test
-    @DisplayName("이동 할 수 없는 위치로 이동하면 예외를 던진다.")
-    void canMove_cantGo() {
-        // given
-        ChessPiece knight = new Knight(Color.BLACK);
-        // then
-        assertThatThrownBy(() -> knight.checkMovable(initialPosition, new Position("d7")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 기물이 갈 수 없는 위치입니다.");
+        //then
+        assertThat(actual).isTrue();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"c7", "c3", "b6", "b4", "f4", "f6", "e7", "e3"})
-    @DisplayName("이동 할 수 있는 위치라면 예외를 던지지 않는다.")
-    void canMove_canGo(String target) {
-        // given
-        ChessPiece knight = new Knight(Color.BLACK);
-        // then
-        Assertions.assertThatCode(() -> knight.checkMovable(initialPosition, new Position(target)))
-                .doesNotThrowAnyException();
+    @CsvSource(value = {"FIVE:C", "ONE:C", "FOUR:B", "THREE:E"}, delimiter = ':')
+    @DisplayName("나이트는 이동불가능 한 곳으로 이동하면 false를 반환한다")
+    void knight_cant_move(Rank rank, File file) {
+        //given
+        Knight knight = new Knight(PieceTeam.WHITE);
 
+        //when
+        boolean actual = knight.isMovable(Position.of(C, THREE), Position.of(file, rank), TargetType.EMPTY);
+
+        //then
+        assertThat(actual).isFalse();
     }
-
 }

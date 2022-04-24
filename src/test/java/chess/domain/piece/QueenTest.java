@@ -1,36 +1,45 @@
 package chess.domain.piece;
 
-import chess.domain.game.Color;
-import chess.domain.position.Position;
-import org.assertj.core.api.Assertions;
+import static chess.domain.board.position.File.C;
+import static chess.domain.board.position.Rank.THREE;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import chess.constant.TargetType;
+import chess.domain.board.position.File;
+import chess.domain.board.position.Position;
+import chess.domain.board.position.Rank;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+public class QueenTest {
 
-class QueenTest {
+    @ParameterizedTest
+    @CsvSource(value = {"E:FIVE", "C:FIVE"}, delimiter = ':')
+    @DisplayName("퀸은 상하좌우, 대각선 이동만 가능하다")
+    void isMovable(File file, Rank rank) {
 
-    private Position initialPosition = new Position("d5");
-    private ChessPiece queen = new Queen(Color.BLACK);
+        //given
+        Queen queen = new Queen(PieceTeam.WHITE);
 
-    @Test
-    @DisplayName("이동 할 수 없는 위치로 이동하면 예외를 던진다.")
-    void canMove_cantGo() {
-        // then
-        assertThatThrownBy(() -> queen.checkMovable(initialPosition, new Position("c2")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 기물이 갈 수 없는 위치입니다.");
+        //when
+        boolean actual = queen.isMovable(Position.of(C, THREE), Position.of(file, rank), TargetType.EMPTY);
+
+        //then
+        assertThat(actual).isTrue();
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"b7", "b5", "d7", "f7", "f5", "f3", "d3", "b3"})
-    @DisplayName("이동 할 수 있는 위치라면 예외를 던지지 않는다.")
-    void canMove_canGo(String target) {
-        // then
-        Assertions.assertThatCode(() -> queen.checkMovable(initialPosition, new Position(target)))
-                .doesNotThrowAnyException();
+    @CsvSource(value = {"D:FIVE", "B:ONE"}, delimiter = ':')
+    @DisplayName("퀸은 상하좌우, 대각선 이동이 아니면 false를 반환한다")
+    void cantMovable(File file, Rank rank) {
+        //given
+        Queen queen = new Queen(PieceTeam.WHITE);
 
+        //when
+        boolean actual = queen.isMovable(Position.of(C, THREE), Position.of(file, rank), TargetType.EMPTY);
+
+        //then
+        assertThat(actual).isFalse();
     }
 }

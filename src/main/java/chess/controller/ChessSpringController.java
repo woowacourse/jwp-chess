@@ -57,7 +57,7 @@ public class ChessSpringController {
         return modelAndView;
     }
 
-    @GetMapping("/end")
+    @PostMapping("/end")
     public @ResponseBody
     ResponseDto end() {
         return chessGameService.end();

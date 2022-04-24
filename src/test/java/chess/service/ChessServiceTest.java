@@ -20,13 +20,13 @@ class ChessServiceTest {
     @DisplayName("게임 생성 테스트")
     @Test
     void create_Game() {
-        chessService.createOrLoadGame(1);
+        chessService.createGame(1);
     }
 
     @DisplayName("게임을 불러오면 저장된 상태 그대로 나온다.")
     @Test
     void load_Game() {
-        chessService.createOrLoadGame(1);
+        chessService.createGame(1);
 
         ChessGameResponse chessGameResponse = chessService.loadGame(1);
 
@@ -36,7 +36,7 @@ class ChessServiceTest {
     @DisplayName("재시작 요청이 들어오면 게임을 새로 생성한다.")
     @Test
     void restart_Game() {
-        chessService.createOrLoadGame(1);
+        chessService.createGame(1);
 
         ChessGameResponse chessGameResponse = chessService.restartGame(1);
 

@@ -39,10 +39,6 @@ public class ChessService {
         this.chessGames = new HashMap<>();
     }
 
-    public ChessGameResponse createOrLoadGame(long gameId) {
-        return loadGame(gameId);
-    }
-
     public ChessGameResponse loadGame(long gameId) {
         Optional<GameState> maybeGameState = gameDao.load(gameId);
         GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);

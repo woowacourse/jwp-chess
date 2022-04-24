@@ -86,4 +86,16 @@ public class GameDaoSpringImplTest {
 
         assertThat(gameDaoSpringImpl.find().getStatus()).isEqualTo(gameStatusDto.getName());
     }
+
+    @Test
+    @DisplayName("게임 정보 조회")
+    void find() {
+        GameDto gameDto = new GameDto("white", "playing");
+        gameDaoSpringImpl.save(gameDto);
+
+        assertAll(
+                () -> assertThat(gameDaoSpringImpl.find().getStatus()).isEqualTo("playing"),
+                () -> assertThat(gameDaoSpringImpl.find().getTurn()).isEqualTo("white")
+        );
+    }
 }

@@ -311,7 +311,7 @@ class ChessControllerTest {
     @DisplayName("GET - end api 테스트")
     @Test
     void end() {
-        chessService.createOrLoadGame(testGameId);
+        chessService.createGame(testGameId);
         chessService.startGame(testGameId);
 
         RestAssured.given().log().all()
@@ -321,19 +321,5 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
 
         assertThat(chessService.loadGame(testGameId).getGameState()).isEqualTo(GameState.FINISHED);
-    }
-
-    @DisplayName("Exception handle 테스트")
-    @Test
-    void handle_Exception() {
-        chessService.createOrLoadGame(testGameId);
-        chessService.startGame(testGameId);
-
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/start/" + testGameId)
-                .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", Matchers.equalTo("현재 실행할 수 없는 명령입니다."));
     }
 }

@@ -110,7 +110,7 @@ public class ChessController {
         return chessService.move(gameId, moveRequest);
     }
 
-    @GetMapping("/status/{gameId}")
+    @GetMapping("/games/{gameId}/status")
     public StatusResponse status(@PathVariable long gameId) {
         return chessService.status(gameId);
     }

@@ -21,10 +21,10 @@ import org.springframework.test.context.ActiveProfiles;
 class ChessControllerTest {
 
     @LocalServerPort
-    int port;
+    private int port;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {

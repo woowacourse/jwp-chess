@@ -2,6 +2,7 @@ package chess.controller;
 
 import static chess.controller.ControllerTestFixture.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.doNothing;
@@ -13,6 +14,7 @@ import chess.config.MockMvcConfig;
 import chess.domain.board.BoardFactory;
 import chess.domain.game.Score;
 import chess.dto.BoardsDto;
+import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
 import chess.dto.response.*;
 import chess.entity.BoardEntity;
@@ -127,6 +129,23 @@ class ChessControllerTest {
 
         mockMvc.perform(patch(DEFAULT_API + "/1/end"))
                 .andExpect(status().isBadRequest())
+                .andExpect(content().string(response));
+    }
+
+    @DisplayName("진행 중인 방에서 움직임 요청을 보내면 200 ok와 gameResponseDto를 반환한다.")
+    @Test
+    void move() throws Exception {
+        GameResponseDto gameResponseDto = GameResponseDto.of(createRoomEntity(1L)
+                , BoardsDto.of(createBoardEntities()));
+        String response = objectMapper.writeValueAsString(gameResponseDto);
+
+        MoveRequestDto moveRequestDto = new MoveRequestDto(source, target);
+        given(chessService.move(anyLong(), any(MoveRequestDto.class)))
+                .willReturn(gameResponseDto);
+        mockMvc.perform(post(DEFAULT_API + "/1/move")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(moveRequestDto))
+                ).andExpect(status().isOk())
                 .andExpect(content().string(response));
     }
 

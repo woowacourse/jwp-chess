@@ -58,7 +58,7 @@ public class ChessService {
         GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
 =======
         if (maybeGameState.isEmpty()) {
-            return createGame(gameId);
+            throw new IllegalArgumentException("게임이 없습니다.");
         }
         GameState gameState = maybeGameState.get();
 >>>>>>> refactor: 체스 보드를 만드는 메서드 분리

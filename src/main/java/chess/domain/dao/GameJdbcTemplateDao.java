@@ -3,7 +3,6 @@ package chess.domain.dao;
 import chess.domain.dto.GameDto;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
-import chess.domain.game.status.Playing;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-// GameJdbcTemplateDao -> GameDao
 @Repository
 public class GameJdbcTemplateDao {
 

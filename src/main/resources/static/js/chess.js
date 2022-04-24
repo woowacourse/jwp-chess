@@ -108,6 +108,17 @@ async function initPieces(pieces) {
 
 function toggleState(state) {
     turn = state.turn;
+    let whiteIcon = document.getElementById('white-icon');
+    let blackIcon = document.getElementById('black-icon');
+
+    if (turn === 'white') {
+        whiteIcon.className = 'room-icon on';
+        blackIcon.className = 'room-icon off';
+    } else {
+        whiteIcon.className = 'room-icon off';
+        blackIcon.className = 'room-icon on';
+    }
+
     document.getElementById('white-message').innerHTML = '';
     document.getElementById('black-message').innerHTML = '';
     end = state.end;
@@ -143,9 +154,18 @@ function checkEnd(state) {
 function showFinalResult(result) {
     lockPiece();
     lockSquare();
+    let winner = result.winner;
     document.getElementById('white-score').innerHTML = result.whiteScore + '점';
     document.getElementById('black-score').innerHTML = result.blackScore + '점';
-    document.getElementById(result.winner + '-score').innerHTML += ' 승리';
+    document.getElementById(winner + '-score').innerHTML += ' 승리';
+
+    if (winner === 'white') {
+        document.getElementById('white-icon').className = 'room-icon';
+        document.getElementById('black-icon').className = 'room-icon off';
+    } else {
+        document.getElementById('white-icon').className = 'room-icon off';
+        document.getElementById('black-icon').className = 'room-icon';
+    }
 }
 
 function resetScores() {

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,14 +45,14 @@ public class ChessGameController {
 		return ResponseEntity.ok(pieceResponses);
 	}
 
-	@PostMapping("/{chessGameId}/move")
+	@PatchMapping("/{chessGameId}/move")
 	public ResponseEntity<Void> movePiece(@PathVariable long chessGameId,
 										  @RequestBody PieceMoveRequest pieceMoveRequest) {
 		chessGameService.move(chessGameId, pieceMoveRequest.toSourcePosition(), pieceMoveRequest.toTargetPosition());
 		return ResponseEntity.noContent().build();
 	}
 
-	@PostMapping("/{chessGameId}/promotion")
+	@PatchMapping("/{chessGameId}/promotion")
 	public ResponseEntity<Void> promotionPiece(@PathVariable long chessGameId,
 											   @RequestBody PromotionRequest promotionRequest) {
 		chessGameService.promotion(chessGameId, promotionRequest.toPromotionPiece());

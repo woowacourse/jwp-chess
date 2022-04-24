@@ -69,7 +69,7 @@ class ChessGameControllerTest {
 		RestAssured.given().log().all()
 				.body(new PieceMoveRequest("a2", "a4"))
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.when().post("chessgames/" + chessGameId + "/move")
+				.when().patch("chessgames/" + chessGameId + "/move")
 				.then().log().all()
 				.statusCode(HttpStatus.NO_CONTENT.value());
 	}
@@ -87,7 +87,7 @@ class ChessGameControllerTest {
 		RestAssured.given().log().all()
 				.body(new PromotionRequest("Q"))
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.when().post("chessgames/" + chessGameId + "/promotion")
+				.when().patch("chessgames/" + chessGameId + "/promotion")
 				.then().log().all()
 				.statusCode(HttpStatus.NO_CONTENT.value());
 	}

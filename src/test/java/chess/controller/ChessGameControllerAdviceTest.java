@@ -41,7 +41,7 @@ class ChessGameControllerAdviceTest {
 		RestAssured.given().log().all()
 				.body(new PieceMoveRequest("a7", "a6"))
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
-				.when().post("chessgames/" + chessGameId + "/move")
+				.when().patch("chessgames/" + chessGameId + "/move")
 				.then().log().all()
 				.statusCode(HttpStatus.BAD_REQUEST.value())
 				.body("message", is("해당 위치에 존재하는 기물이 없습니다."));

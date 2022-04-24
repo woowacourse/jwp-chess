@@ -1,17 +1,17 @@
-DROP TABLE board IF EXISTS;
-DROP TABLE game IF EXISTS;
-DROP TABLE init_board IF EXISTS;
+DROP TABLE IF EXISTS piece;
+DROP TABLE IF EXISTS game;
+DROP TABLE IF EXISTS init_board;
 
 CREATE TABLE game
 (
     id     INT NOT NULL AUTO_INCREMENT UNIQUE,
     name   VARCHAR(20) NOT NULL ,
-    status VARCHAR(10) NOT NULL DEFAULT 'empty',
+    statusType VARCHAR(10) NOT NULL DEFAULT 'empty',
     turn   VARCHAR(10) NOT NULL DEFAULT 'white',
     PRIMARY KEY (id)
 );
 
-CREATE TABLE board
+CREATE TABLE piece
 (
     id          INT NOT NULL AUTO_INCREMENT UNIQUE,
     piece_type  VARCHAR(10) NOT NULL ,
@@ -22,7 +22,7 @@ CREATE TABLE board
     foreign key (game_id) references game (id)
 );
 
-ALTER TABLE board ADD UNIQUE (game_id, square);
+ALTER TABLE piece ADD UNIQUE (game_id, square);
 
 CREATE TABLE init_board
 (

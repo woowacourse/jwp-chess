@@ -22,34 +22,25 @@ public class ChessGameService {
         this.boardDao = boardDao;
     }
 
-    public ResponseDto start() {
+    public void start() {
         chessGame = new ChessGame();
-        try {
-            if (pieceDao.existPieces()) {
-                chessGame.load(pieceDao.load(), boardDao.findTurn());
-                return new ResponseDto(200, "");
-            }
-            chessGame.start();
-            return new ResponseDto(200, "");
-        } catch (Exception e) {
-            return new ResponseDto(501, e.getMessage());
+        if (pieceDao.existPieces()) {
+            chessGame.load(pieceDao.load(), boardDao.findTurn());
+            return;
         }
+        chessGame.start();
     }
 
-    public ResponseDto move(String rawSource, String rawTarget) {
-        try {
-            final Position source = Position.from(rawSource);
-            final Position target = Position.from(rawTarget);
-            chessGame.move(source, target);
-            savePieces(source, target);
-            if (!isRunning()) {
-                end();
-                return new ResponseDto(301, "");
-            }
-            return new ResponseDto(302, "");
-        } catch (Exception e) {
-            return new ResponseDto(501, e.getMessage());
+    public ResponseCode move(String rawSource, String rawTarget) {
+        final Position source = Position.from(rawSource);
+        final Position target = Position.from(rawTarget);
+        chessGame.move(source, target);
+        savePieces(source, target);
+        if (!isRunning()) {
+            end();
+            return ResponseCode.MOVED_PERMANENTLY;
         }
+        return ResponseCode.FOUND;
     }
 
     private void savePieces(Position source, Position target) {
@@ -70,15 +61,10 @@ public class ChessGameService {
         pieceDao.save(chessGame.getBoard().getPiecesByPosition());
     }
 
-    public ResponseDto end() {
-        try {
-            chessGame.end();
-            pieceDao.delete();
-            boardDao.deleteBoard();
-            return new ResponseDto(200, "");
-        } catch (Exception e) {
-            return new ResponseDto(501, e.getMessage());
-        }
+    public void end() {
+        chessGame.end();
+        pieceDao.delete();
+        boardDao.deleteBoard();
     }
 
     public ChessBoardDto getBoard() {

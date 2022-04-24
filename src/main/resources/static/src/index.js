@@ -25,46 +25,40 @@ function movePiece() {
         },
         body: source + " " + target
     }).then((res) => {
-        res.json().then(data => {
-            document.getElementById(source).style.backgroundColor = '';
-            document.getElementById(target).style.backgroundColor = '';
-            source = '';
-            target = '';
-            if (data.statusCode === 301) {
-                alert("킹이 잡혀 게임이 종료 되었습니다!")
-                end();
-            }
-            if (data.statusCode === 302) {
-                location.replace("/chess");
-            }
-            if (data.statusCode === 501) {
-                alert(data.errorMessage);
-            }
-        })
+        document.getElementById(source).style.backgroundColor = '';
+        document.getElementById(target).style.backgroundColor = '';
+        source = '';
+        target = '';
+        if (res.status === 301) {
+            alert("킹이 잡혀 게임이 종료 되었습니다!")
+            end();
+        }
+        if (res.status === 302) {
+            location.replace("/chess");
+        }
+        if (res.status === 501) {
+            res.text().then(message => alert(message))
+        }
     })
 }
 
 function start() {
     fetch("/start").then(res => {
-        res.json().then(data => {
-            if (data.statusCode === 501) {
-                alert(data.errorMessage);
-                return;
-            }
-            location.replace("/chess");
-        })
+        if (res.status === 501) {
+            res.text().then(message => alert(message))
+            return;
+        }
+        location.replace("/chess");
     })
 }
 
 function end() {
     fetch("/end").then(res => {
-        res.json().then(data => {
-            if (data.statusCode === 501) {
-                alert(data.errorMessage);
-                return;
-            }
-            location.replace("/chess-result");
-        })
+        if (res.status === 501) {
+            res.text().then(message => alert(message))
+            return;
+        }
+        location.replace("/chess-result");
     })
 }
 

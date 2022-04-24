@@ -1,11 +1,12 @@
 package chess.controller;
 
-import chess.dto.ResponseDto;
 import chess.dto.ResultDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
+import chess.service.ResponseCode;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,11 +28,10 @@ public class ChessSpringController {
     }
 
     @GetMapping("/start")
-    public @ResponseBody
-    ResponseDto start() {
-        return chessGameService.start();
+    public ResponseEntity<String> start() {
+        chessGameService.start();
+        return ResponseEntity.ok().body("");
     }
-
 
     @GetMapping("/chess")
     public ModelAndView chess() {
@@ -42,10 +42,11 @@ public class ChessSpringController {
     }
 
     @PostMapping("/move")
-    public @ResponseBody
-    ResponseDto move(@RequestBody String request) {
+    public @ResponseBody ResponseEntity<String> move(@RequestBody String request) {
         List<String> command = Arrays.asList(request.split(" "));
-        return chessGameService.move(command.get(0), command.get(1));
+        ResponseCode code = chessGameService.move(command.get(0), command.get(1));
+
+        return ResponseEntity.status(code.getHttpStatus()).body("");
     }
 
     @GetMapping("/chess-status")
@@ -58,9 +59,9 @@ public class ChessSpringController {
     }
 
     @GetMapping("/end")
-    public @ResponseBody
-    ResponseDto end() {
-        return chessGameService.end();
+    public @ResponseBody  ResponseEntity<String> end() {
+         chessGameService.end();
+         return ResponseEntity.ok().body("");
     }
 
     @GetMapping("/chess-result")

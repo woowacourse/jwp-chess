@@ -1,3 +1,21 @@
+
+## 실행 방법
+
+1. 도커 실행
+
+  ```
+  cd docker
+  docker-compose -p chess up -d
+  ```
+2. 테이블 정보
+  ```
+docker/db/mysql/init/init.sql
+   ```
+3. 포트번호
+ ```
+http://localhost:8080/
+   ```
+
 ## 요구사항
 
 - Spring Framework를 활용하여 애플리케이션을 구동한다.

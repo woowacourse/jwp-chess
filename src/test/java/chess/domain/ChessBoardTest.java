@@ -1,8 +1,18 @@
 package chess.domain;
 
-import static chess.constants.TestConstants.PARAMETERIZED_TEST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static chess.constants.TestConstants.*;
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import chess.domain.piece.Bishop;
 import chess.domain.piece.Color;
@@ -16,15 +26,6 @@ import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.piece.generator.PiecesGenerator;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 public class ChessBoardTest {
 
@@ -34,8 +35,8 @@ public class ChessBoardTest {
     @DisplayName("체스판을 생성한다.")
     void construct() {
         Map<Position, Piece> pieces = new HashMap<>(Map.ofEntries(
-                Map.entry(Position.of("a1"), new Pawn(Color.WHITE)),
-                Map.entry(Position.of("a2"), new Pawn(Color.BLACK))
+            Map.entry(Position.of("a1"), new Pawn(Color.WHITE)),
+            Map.entry(Position.of("a2"), new Pawn(Color.BLACK))
         ));
         ChessBoard chessBoard = new ChessBoard(() -> pieces);
         assertThat(chessBoard.getPieces()).containsAllEntriesOf(pieces);
@@ -45,8 +46,8 @@ public class ChessBoardTest {
     @DisplayName("체스판을 생성할 때 빈 칸은 EmptyPiece를 삽입한다.")
     void constructEmptyPieces() {
         Map<Position, Piece> pieces = new HashMap<>(Map.ofEntries(
-                Map.entry(Position.of("a1"), new Pawn(Color.WHITE)),
-                Map.entry(Position.of("a2"), new Pawn(Color.BLACK))
+            Map.entry(Position.of("a1"), new Pawn(Color.WHITE)),
+            Map.entry(Position.of("a2"), new Pawn(Color.BLACK))
         ));
         ChessBoard chessBoard = new ChessBoard(() -> pieces);
         assertThat(chessBoard.getPieces()).contains(Map.entry(Position.of("a3"), EmptyPiece.getInstance()));
@@ -76,13 +77,13 @@ public class ChessBoardTest {
     void getPiecesOnColumnsByColor() {
 
         Map<Position, Piece> testPieces = new HashMap<>(Map.ofEntries(
-                Map.entry(Position.of("a1"), new Queen(Color.WHITE)),
-                Map.entry(Position.of("b3"), new Pawn(Color.WHITE)),
-                Map.entry(Position.of("c4"), new Pawn(Color.WHITE)),
-                Map.entry(Position.of("a4"), new Pawn(Color.BLACK)),
-                Map.entry(Position.of("a7"), new Pawn(Color.BLACK)),
-                Map.entry(Position.of("c5"), new Pawn(Color.BLACK)),
-                Map.entry(Position.of("b8"), new Pawn(Color.BLACK))
+            Map.entry(Position.of("a1"), new Queen(Color.WHITE)),
+            Map.entry(Position.of("b3"), new Pawn(Color.WHITE)),
+            Map.entry(Position.of("c4"), new Pawn(Color.WHITE)),
+            Map.entry(Position.of("a4"), new Pawn(Color.BLACK)),
+            Map.entry(Position.of("a7"), new Pawn(Color.BLACK)),
+            Map.entry(Position.of("c5"), new Pawn(Color.BLACK)),
+            Map.entry(Position.of("b8"), new Pawn(Color.BLACK))
 
         ));
         ChessBoard chessBoard = new ChessBoard(() -> testPieces);
@@ -94,9 +95,9 @@ public class ChessBoardTest {
 
         List<List<Piece>> pieces = chessBoard.getPiecesOnColumns(Color.BLACK);
         assertThat(pieces).contains(
-                List.of(a, a2),
-                List.of(b),
-                List.of(c)
+            List.of(a, a2),
+            List.of(b),
+            List.of(c)
         );
     }
 
@@ -104,13 +105,13 @@ public class ChessBoardTest {
     @DisplayName("킹이 1개일 때, 게임은 끝난다.")
     void isEndTrue() {
         Map<Position, Piece> testPieces = new HashMap<>(Map.ofEntries(
-                Map.entry(Position.of("a1"), new King(Color.WHITE)),
-                Map.entry(Position.of("b3"), new Pawn(Color.WHITE)),
-                Map.entry(Position.of("c4"), new Pawn(Color.WHITE)),
-                Map.entry(Position.of("a4"), new Pawn(Color.BLACK)),
-                Map.entry(Position.of("a7"), new Pawn(Color.BLACK)),
-                Map.entry(Position.of("c5"), new Pawn(Color.BLACK)),
-                Map.entry(Position.of("b8"), new Pawn(Color.BLACK))
+            Map.entry(Position.of("a1"), new King(Color.WHITE)),
+            Map.entry(Position.of("b3"), new Pawn(Color.WHITE)),
+            Map.entry(Position.of("c4"), new Pawn(Color.WHITE)),
+            Map.entry(Position.of("a4"), new Pawn(Color.BLACK)),
+            Map.entry(Position.of("a7"), new Pawn(Color.BLACK)),
+            Map.entry(Position.of("c5"), new Pawn(Color.BLACK)),
+            Map.entry(Position.of("b8"), new Pawn(Color.BLACK))
         ));
         ChessBoard chessBoard = new ChessBoard(() -> testPieces);
 
@@ -121,13 +122,13 @@ public class ChessBoardTest {
     @DisplayName("킹이 2개일 때, 게임은 끝나지 않는다.")
     void isEndFalse() {
         Map<Position, Piece> testPieces = new HashMap<>(Map.ofEntries(
-                Map.entry(Position.of("a1"), new King(Color.WHITE)),
-                Map.entry(Position.of("b3"), new Pawn(Color.WHITE)),
-                Map.entry(Position.of("c4"), new Pawn(Color.WHITE)),
-                Map.entry(Position.of("a4"), new King(Color.BLACK)),
-                Map.entry(Position.of("a7"), new Pawn(Color.BLACK)),
-                Map.entry(Position.of("c5"), new Pawn(Color.BLACK)),
-                Map.entry(Position.of("b8"), new Pawn(Color.BLACK))
+            Map.entry(Position.of("a1"), new King(Color.WHITE)),
+            Map.entry(Position.of("b3"), new Pawn(Color.WHITE)),
+            Map.entry(Position.of("c4"), new Pawn(Color.WHITE)),
+            Map.entry(Position.of("a4"), new King(Color.BLACK)),
+            Map.entry(Position.of("a7"), new Pawn(Color.BLACK)),
+            Map.entry(Position.of("c5"), new Pawn(Color.BLACK)),
+            Map.entry(Position.of("b8"), new Pawn(Color.BLACK))
         ));
         ChessBoard chessBoard = new ChessBoard(() -> testPieces);
 
@@ -138,10 +139,10 @@ public class ChessBoardTest {
     @DisplayName("해당 Position의 컬러를 확인한다.")
     void getPositionColor() {
         ChessBoard chessBoard = new ChessBoard(
-                () -> new HashMap<>(Map.ofEntries(
-                        Map.entry(Position.of("a1"), new King(Color.WHITE)))));
+            () -> new HashMap<>(Map.ofEntries(
+                Map.entry(Position.of("a1"), new King(Color.WHITE)))));
         assertThat(chessBoard.getPositionColor(Position.of("a1")))
-                .isEqualTo(Color.WHITE);
+            .isEqualTo(Color.WHITE);
     }
 
     @Nested
@@ -154,11 +155,11 @@ public class ChessBoardTest {
         void move(String toPosition) {
             King movingKing = new King(Color.WHITE);
             Map<Position, Piece> pieces = new HashMap<>(Map.ofEntries(
-                    Map.entry(Position.of("d4"), movingKing),
-                    Map.entry(Position.of("c4"), new Pawn(Color.BLACK)),
-                    Map.entry(Position.of("d5"), new Pawn(Color.BLACK)),
-                    Map.entry(Position.of("e3"), new Pawn(Color.WHITE)),
-                    Map.entry(Position.of("e4"), new Pawn(Color.WHITE))
+                Map.entry(Position.of("d4"), movingKing),
+                Map.entry(Position.of("c4"), new Pawn(Color.BLACK)),
+                Map.entry(Position.of("d5"), new Pawn(Color.BLACK)),
+                Map.entry(Position.of("e3"), new Pawn(Color.WHITE)),
+                Map.entry(Position.of("e4"), new Pawn(Color.WHITE))
             ));
             ChessBoard chessBoard = new ChessBoard(() -> pieces);
 
@@ -171,15 +172,15 @@ public class ChessBoardTest {
         @DisplayName("말이 해당하는 곳에 같은 편이 있을 경우 움직이지 못한다.")
         void moveExceptionBySameTeam(String toPosition) {
             Map<Position, Piece> pieces = new HashMap<>(Map.ofEntries(
-                    Map.entry(Position.of("d4"), new King(Color.WHITE)),
-                    Map.entry(Position.of("e3"), new Pawn(Color.WHITE)),
-                    Map.entry(Position.of("e4"), new Pawn(Color.WHITE))
+                Map.entry(Position.of("d4"), new King(Color.WHITE)),
+                Map.entry(Position.of("e3"), new Pawn(Color.WHITE)),
+                Map.entry(Position.of("e4"), new Pawn(Color.WHITE))
             ));
             ChessBoard chessBoard = new ChessBoard(() -> pieces);
 
             assertThatThrownBy(() -> chessBoard.move(new GameCommand("move", "d4", toPosition)))
-                    .isInstanceOf(IllegalStateException.class)
-                    .hasMessage(NOT_MOVABLE_EXCEPTION_MESSAGE);
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(NOT_MOVABLE_EXCEPTION_MESSAGE);
         }
 
         @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)
@@ -187,13 +188,13 @@ public class ChessBoardTest {
         @DisplayName("말이 움직이지 못하는 방향으로는 가지 못한다.")
         void moveExceptionByMovableDirection(String toPosition) {
             Map<Position, Piece> pieces = new HashMap<>(Map.ofEntries(
-                    Map.entry(Position.of("d4"), new Bishop(Color.WHITE))
+                Map.entry(Position.of("d4"), new Bishop(Color.WHITE))
             ));
             ChessBoard chessBoard = new ChessBoard(() -> pieces);
 
             assertThatThrownBy(() -> chessBoard.move(new GameCommand("move", "d4", toPosition)))
-                    .isInstanceOf(IllegalStateException.class)
-                    .hasMessage(NOT_MOVABLE_EXCEPTION_MESSAGE);
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(NOT_MOVABLE_EXCEPTION_MESSAGE);
         }
 
         @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)
@@ -201,15 +202,15 @@ public class ChessBoardTest {
         @DisplayName("말이 움직일 수 있는 방향에 장애물이 있는 경우 가지 못한다.")
         void moveExceptionByBlock(String toPosition) {
             Map<Position, Piece> pieces = new HashMap<>(Map.ofEntries(
-                    Map.entry(Position.of("d4"), new Queen(Color.WHITE)),
-                    Map.entry(Position.of("g4"), new Pawn(Color.BLACK)),
-                    Map.entry(Position.of("f2"), new Pawn(Color.WHITE))
+                Map.entry(Position.of("d4"), new Queen(Color.WHITE)),
+                Map.entry(Position.of("g4"), new Pawn(Color.BLACK)),
+                Map.entry(Position.of("f2"), new Pawn(Color.WHITE))
             ));
             ChessBoard chessBoard = new ChessBoard(() -> pieces);
 
             assertThatThrownBy(() -> chessBoard.move(new GameCommand("move", "d4", toPosition)))
-                    .isInstanceOf(IllegalStateException.class)
-                    .hasMessage(NOT_MOVABLE_EXCEPTION_MESSAGE);
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(NOT_MOVABLE_EXCEPTION_MESSAGE);
         }
 
         @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)
@@ -218,9 +219,9 @@ public class ChessBoardTest {
         void attackPawn(String toPosition) {
             Pawn movingPawn = new Pawn(Color.WHITE);
             Map<Position, Piece> pieces = new HashMap<>(Map.ofEntries(
-                    Map.entry(Position.of("d4"), movingPawn),
-                    Map.entry(Position.of("c5"), new Pawn(Color.BLACK)),
-                    Map.entry(Position.of("e5"), new Pawn(Color.BLACK))
+                Map.entry(Position.of("d4"), movingPawn),
+                Map.entry(Position.of("c5"), new Pawn(Color.BLACK)),
+                Map.entry(Position.of("e5"), new Pawn(Color.BLACK))
             ));
             ChessBoard chessBoard = new ChessBoard(() -> pieces);
 
@@ -234,14 +235,14 @@ public class ChessBoardTest {
         void movePawnExceptionWithBlock(String toPosition) {
             Pawn movingPawn = new Pawn(Color.WHITE);
             Map<Position, Piece> pieces = new HashMap<>(Map.ofEntries(
-                    Map.entry(Position.of("d2"), movingPawn),
-                    Map.entry(Position.of(toPosition), new Pawn(Color.BLACK))
+                Map.entry(Position.of("d2"), movingPawn),
+                Map.entry(Position.of(toPosition), new Pawn(Color.BLACK))
             ));
             ChessBoard chessBoard = new ChessBoard(() -> pieces);
 
             assertThatThrownBy(() -> chessBoard.move(new GameCommand("move", "d2", toPosition)))
-                    .isInstanceOf(IllegalStateException.class)
-                    .hasMessage(NOT_MOVABLE_EXCEPTION_MESSAGE);
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage(NOT_MOVABLE_EXCEPTION_MESSAGE);
         }
     }
 }

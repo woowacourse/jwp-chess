@@ -1,7 +1,7 @@
 package chess.domain;
 
-import static chess.constants.TestConstants.PARAMETERIZED_TEST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import static chess.constants.TestConstants.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

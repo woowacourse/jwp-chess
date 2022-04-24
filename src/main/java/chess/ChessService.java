@@ -1,5 +1,14 @@
 package chess;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
 import chess.domain.ChessBoard;
@@ -12,13 +21,6 @@ import chess.dto.MoveDto;
 import chess.entity.Room;
 import chess.entity.Square;
 import chess.utils.PieceFactory;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
@@ -37,7 +39,7 @@ public class ChessService {
 
     public BoardDto startNewGame(String roomName) {
         Room room = roomDao.findByName(roomName)
-                .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
+            .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
 
         WebChessGame webChessGame = new WebChessGame();
         webChessGame.start();
@@ -51,7 +53,7 @@ public class ChessService {
 
     public BoardDto load(String roomName) {
         Room room = roomDao.findByName(roomName)
-                .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
+            .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
 
         return BoardDto.of(chessBoard.getPieces(), room.getTurn());
@@ -59,7 +61,7 @@ public class ChessService {
 
     public BoardDto move(String roomName, MoveDto moveDto) {
         Room room = roomDao.findByName(roomName)
-                .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
+            .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         WebChessGame webChessGame = WebChessGame.of(loadChessBoard(room.getId()), room.getTurn());
         webChessGame.move(moveDto.getFrom(), moveDto.getTo());
         roomDao.update(room.getId(), webChessGame.getTurn());
@@ -70,16 +72,16 @@ public class ChessService {
 
     private void updateMovement(long roomId, MoveDto moveDto) {
         String fromPiece = squareDao.findByRoomIdAndPosition(roomId, moveDto.getFrom())
-                .orElseThrow(() -> new NoSuchElementException(NO_SQUARE_MESSAGE))
-                .getPiece();
+            .orElseThrow(() -> new NoSuchElementException(NO_SQUARE_MESSAGE))
+            .getPiece();
         squareDao.update(roomId, moveDto.getFrom(), "empty");
         squareDao.update(roomId, moveDto.getTo(), fromPiece);
     }
 
     private List<Square> convertBoardToSquares(Map<Position, Piece> board) {
         return board.keySet().stream()
-                .map(position -> new Square(position.convertToString(), board.get(position).convertToString()))
-                .collect(Collectors.toList());
+            .map(position -> new Square(position.convertToString(), board.get(position).convertToString()))
+            .collect(Collectors.toList());
     }
 
     private ChessBoard loadChessBoard(long roomId) {
@@ -98,7 +100,7 @@ public class ChessService {
 
     public Status status(String roomName) {
         Room room = roomDao.findByName(roomName)
-                .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
+            .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
         WebChessGame webChessGame = WebChessGame.of(chessBoard, room.getTurn());
 

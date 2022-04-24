@@ -1,14 +1,14 @@
 package chess.domain.piece;
 
-import static chess.constants.TestConstants.PARAMETERIZED_TEST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static chess.constants.TestConstants.*;
+import static org.assertj.core.api.Assertions.*;
 
-import chess.domain.position.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import chess.domain.position.Position;
 
 public class EmptyPieceTest {
 
@@ -32,7 +32,7 @@ public class EmptyPieceTest {
     void getDirections() {
         Piece emptyPiece = EmptyPiece.getInstance();
         assertThatThrownBy(emptyPiece::getMovableDirections)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("빈 피스는 갈 수 있는 방향이 없습니다.");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("빈 피스는 갈 수 있는 방향이 없습니다.");
     }
 }

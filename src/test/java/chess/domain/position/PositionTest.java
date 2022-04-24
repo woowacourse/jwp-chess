@@ -1,9 +1,7 @@
 package chess.domain.position;
 
-import static chess.constants.TestConstants.PARAMETERIZED_TEST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static chess.constants.TestConstants.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,7 +20,7 @@ public class PositionTest {
         @DisplayName("포지션을 생성한다.")
         void constructPosition() {
             assertThatCode(() -> Position.of(Column.A, Row.ONE))
-                    .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
         }
 
         @Test
@@ -37,7 +35,7 @@ public class PositionTest {
         @DisplayName("생성할 때 지정된 문자열 외의 문자열이 들어오면 안된다.")
         void throwOutOfRange(String value) {
             assertThatThrownBy(() -> Position.of(value))
-                    .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         }
 
         @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)
@@ -45,8 +43,8 @@ public class PositionTest {
         @DisplayName("생성할 때 빈 문자열이나 공백이 들어오면 안된다.")
         void throwBlank(String value) {
             assertThatThrownBy(() -> Position.of(value))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("공백 또는 빈 문자열이면 안됩니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("공백 또는 빈 문자열이면 안됩니다.");
         }
 
         @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)
@@ -54,8 +52,8 @@ public class PositionTest {
         @DisplayName("생성할 때 길이가 2가 아니면 안된다.")
         void throwLength(String value) {
             assertThatThrownBy(() -> Position.of(value))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("포지션은 두 글자입니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("포지션은 두 글자입니다.");
         }
     }
 

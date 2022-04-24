@@ -24,17 +24,17 @@ public enum Column {
 
     public static Column of(String value) {
         return Arrays.stream(values())
-                .filter(column -> column.name()
-                        .equalsIgnoreCase(value))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 열 이름이 들어왔습니다."));
+            .filter(column -> column.name()
+                .equalsIgnoreCase(value))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("잘못된 열 이름이 들어왔습니다."));
     }
 
     public static Column of(int index) {
         return Arrays.stream(values())
-                .filter(column -> column.value == index)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 인덱스의 열은 존재하지 않습니다."));
+            .filter(column -> column.value == index)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("해당 인덱스의 열은 존재하지 않습니다."));
     }
 
     public static int calculateDifference(Column source, Column target) {

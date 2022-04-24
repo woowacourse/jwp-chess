@@ -1,10 +1,11 @@
 package chess;
 
-import chess.dao.RoomDao;
-import chess.entity.Room;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import chess.dao.RoomDao;
+import chess.entity.Room;
 
 public class FakeRoomDao implements RoomDao {
 
@@ -24,13 +25,13 @@ public class FakeRoomDao implements RoomDao {
     public Optional<Room> findByName(String name) {
 
         return rooms.stream()
-                .filter(room -> room.getName().equals(name))
-                .findAny();
+            .filter(room -> room.getName().equals(name))
+            .findAny();
     }
 
     @Override
     public void update(long id, String turn) {
-        Room room = rooms.get((int) (id - 1));
-        rooms.set((int) (id - 1), new Room(id, turn, room.getName()));
+        Room room = rooms.get((int)(id - 1));
+        rooms.set((int)(id - 1), new Room(id, turn, room.getName()));
     }
 }

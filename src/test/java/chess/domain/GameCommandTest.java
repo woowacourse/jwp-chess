@@ -1,12 +1,11 @@
 package chess.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
-import chess.domain.position.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import chess.domain.position.Position;
 
 public class GameCommandTest {
 
@@ -14,31 +13,31 @@ public class GameCommandTest {
     @DisplayName("게임 커맨드를 생성한다.")
     void construct() {
         assertThatCode(() -> new GameCommand("start"))
-                .doesNotThrowAnyException();
+            .doesNotThrowAnyException();
     }
 
     @Test
     @DisplayName("정해진 커맨드 외의 게임 커맨드를 입력하면 안된다.")
     void constructThrowException() {
         assertThatThrownBy(() -> new GameCommand("1"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("유효한 커맨드가 아닙니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("유효한 커맨드가 아닙니다.");
     }
 
     @Test
     @DisplayName("싱글 타입 커맨드는 하나의 인자만 전달해야 합니다.")
     void constructSingleCommandThrowExceptionByArgumentLength() {
         assertThatThrownBy(() -> new GameCommand("start", "a1", "a2"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 타입의 커맨드는 인자가 하나여야합니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("해당 타입의 커맨드는 인자가 하나여야합니다.");
     }
 
     @Test
     @DisplayName("Move 커맨드는 인자가 3개여야합니다.")
     void constructMoveCommandThrowExceptionByArgumentLength() {
         assertThatThrownBy(() -> new GameCommand("move", "a1"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 타입의 커맨드는 인자가 3개여야합니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("해당 타입의 커맨드는 인자가 3개여야합니다.");
     }
 
     @Test
@@ -55,7 +54,6 @@ public class GameCommandTest {
         assertThat(gameCommand.isSameCommandType(CommandType.END)).isTrue();
     }
 
-
     @Test
     @DisplayName("이동할 말의 위치를 반환한다.")
     void getFromPosition() {
@@ -68,8 +66,8 @@ public class GameCommandTest {
     void getFromPositionThrowException() {
         GameCommand gameCommand = new GameCommand("start");
         assertThatThrownBy(gameCommand::getFromPosition)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("해당 커맨드는 이 작업을 할 수 없습니다.");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("해당 커맨드는 이 작업을 할 수 없습니다.");
     }
 
     @Test
@@ -84,7 +82,7 @@ public class GameCommandTest {
     void getToPositionThrowException() {
         GameCommand gameCommand = new GameCommand("end");
         assertThatThrownBy(gameCommand::getToPosition)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("해당 커맨드는 이 작업을 할 수 없습니다.");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("해당 커맨드는 이 작업을 할 수 없습니다.");
     }
 }

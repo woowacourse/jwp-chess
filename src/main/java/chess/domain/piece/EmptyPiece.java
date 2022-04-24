@@ -1,8 +1,9 @@
 package chess.domain.piece;
 
+import java.util.List;
+
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
-import java.util.List;
 
 public class EmptyPiece extends Piece {
 

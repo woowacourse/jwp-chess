@@ -1,10 +1,10 @@
 package chess.domain.position;
 
-import static chess.constants.TestConstants.PARAMETERIZED_TEST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static chess.constants.TestConstants.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,8 +25,8 @@ public class RowTest {
     @DisplayName("지정되지 않은 문자열로는 Row 상수를 얻을 수 없다.")
     void ofThrowException() {
         assertThatThrownBy(() -> Row.of(0))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("잘못된 행 이름이 들어왔습니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("잘못된 행 이름이 들어왔습니다.");
     }
 
     @Test
@@ -40,8 +40,8 @@ public class RowTest {
     @DisplayName("범위를 벗어난 인덱스로는 Row 상수를 얻을 수 없다.")
     void ofByIntThrowException() {
         assertThatThrownBy(() -> Row.of(0))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("잘못된 행 이름이 들어왔습니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("잘못된 행 이름이 들어왔습니다.");
     }
 
     @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)
@@ -57,8 +57,8 @@ public class RowTest {
     @DisplayName("이동할 수 없는 Row일 경우, 예외를 발생한다.")
     void moveThrowException(Row row, int moveValue) {
         assertThatThrownBy(() -> row.move(moveValue))
-                .isInstanceOf(IndexOutOfBoundsException.class)
-                .hasMessage("범위를 벗어났습니다.");
+            .isInstanceOf(IndexOutOfBoundsException.class)
+            .hasMessage("범위를 벗어났습니다.");
     }
 
     @Test
@@ -66,8 +66,8 @@ public class RowTest {
     void getRowsReverseOrder() {
         List<Row> rowsReverseOrder = Row.getRowsReverseOrder();
         assertThat(rowsReverseOrder).containsExactly(
-                Row.EIGHT, Row.SEVEN, Row.SIX, Row.FIVE,
-                Row.FOUR, Row.THREE, Row.TWO, Row.ONE
+            Row.EIGHT, Row.SEVEN, Row.SIX, Row.FIVE,
+            Row.FOUR, Row.THREE, Row.TWO, Row.ONE
         );
     }
 

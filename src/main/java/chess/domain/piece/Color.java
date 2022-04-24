@@ -25,10 +25,10 @@ public enum Color {
 
     public static Color of(String value) {
         return Arrays.stream(values())
-                .filter(color -> color.name()
-                        .equalsIgnoreCase(value))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 Color 이름이 들어왔습니다."));
+            .filter(color -> color.name()
+                .equalsIgnoreCase(value))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("잘못된 Color 이름이 들어왔습니다."));
     }
 
     public abstract Color getReverseColor();

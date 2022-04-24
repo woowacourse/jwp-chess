@@ -1,10 +1,12 @@
 package chess.dao;
 
-import chess.entity.Room;
 import java.util.Optional;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import chess.entity.Room;
 
 @Repository
 public class RoomDaoImpl implements RoomDao {
@@ -27,13 +29,13 @@ public class RoomDaoImpl implements RoomDao {
 
         try {
             Room room = jdbcTemplate.queryForObject(sql,
-                    (rs, rowNum) -> {
-                        return new Room(
-                                rs.getLong("id"),
-                                rs.getString("turn"),
-                                rs.getString("name")
-                        );
-                    }, name);
+                (rs, rowNum) -> {
+                    return new Room(
+                        rs.getLong("id"),
+                        rs.getString("turn"),
+                        rs.getString("name")
+                    );
+                }, name);
             return Optional.ofNullable(room);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -45,6 +47,5 @@ public class RoomDaoImpl implements RoomDao {
         String sql = "update room set turn = ? where id = ?";
         jdbcTemplate.update(sql, turn, id);
     }
-
 
 }

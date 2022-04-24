@@ -1,8 +1,9 @@
 package chess.domain.position;
 
-import chess.domain.piece.Color;
 import java.util.Arrays;
 import java.util.List;
+
+import chess.domain.piece.Color;
 
 public enum Direction {
     EAST(1, 0),
@@ -24,7 +25,6 @@ public enum Direction {
     WEST_WEST_SOUTH(-2, -1),
     WEST_WEST_NORTH(-2, 1);
 
-
     private final int columnValue;
     private final int rowValue;
 
@@ -35,17 +35,17 @@ public enum Direction {
 
     public static Direction getDirectionByPositions(Position source, Position target) {
         return Arrays.stream(values())
-                .filter(direction -> Math.atan2(direction.rowValue, direction.columnValue)
-                        == Math.atan2(source.getRowDifferenceWithTarget(target),
-                        source.getColumnDifferenceWithTarget(target)))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("해당 위치로 가는 방향이 존재하지 않습니다."));
+            .filter(direction -> Math.atan2(direction.rowValue, direction.columnValue)
+                == Math.atan2(source.getRowDifferenceWithTarget(target),
+                source.getColumnDifferenceWithTarget(target)))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("해당 위치로 가는 방향이 존재하지 않습니다."));
     }
 
     public static List<Direction> kingAndQueenDirections() {
         return List.of(
-                Direction.EAST, Direction.WEST, Direction.SOUTH, Direction.NORTH,
-                Direction.NORTH_EAST, Direction.NORTH_WEST, Direction.SOUTH_EAST, Direction.SOUTH_WEST);
+            Direction.EAST, Direction.WEST, Direction.SOUTH, Direction.NORTH,
+            Direction.NORTH_EAST, Direction.NORTH_WEST, Direction.SOUTH_EAST, Direction.SOUTH_WEST);
     }
 
     public static List<Direction> rookDirections() {
@@ -58,10 +58,10 @@ public enum Direction {
 
     public static List<Direction> knightDirections() {
         return List.of(
-                Direction.SOUTH_SOUTH_EAST, Direction.SOUTH_SOUTH_WEST,
-                Direction.NORTH_NORTH_EAST, Direction.NORTH_NORTH_WEST,
-                Direction.EAST_EAST_SOUTH, Direction.EAST_EAST_NORTH,
-                Direction.WEST_WEST_SOUTH, Direction.WEST_WEST_NORTH);
+            Direction.SOUTH_SOUTH_EAST, Direction.SOUTH_SOUTH_WEST,
+            Direction.NORTH_NORTH_EAST, Direction.NORTH_NORTH_WEST,
+            Direction.EAST_EAST_SOUTH, Direction.EAST_EAST_NORTH,
+            Direction.WEST_WEST_SOUTH, Direction.WEST_WEST_NORTH);
     }
 
     public static List<Direction> pawnDirection(Color color) {
@@ -84,7 +84,7 @@ public enum Direction {
 
     public boolean isSameWithDistanceAndDirection(Position source, Position target) {
         return source.getColumnDifferenceWithTarget(target) == this.columnValue
-                && source.getRowDifferenceWithTarget(target) == this.rowValue;
+            && source.getRowDifferenceWithTarget(target) == this.rowValue;
     }
 
     public boolean isPawnStraigtDirection() {

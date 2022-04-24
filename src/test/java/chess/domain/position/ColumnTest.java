@@ -1,8 +1,7 @@
 package chess.domain.position;
 
-import static chess.constants.TestConstants.PARAMETERIZED_TEST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static chess.constants.TestConstants.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -24,8 +23,8 @@ public class ColumnTest {
     @DisplayName("지정되지 않은 문자열로는 Column 상수를 얻을 수 없다.")
     void ofByStringThrowException() {
         assertThatThrownBy(() -> Column.of("i"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("잘못된 열 이름이 들어왔습니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("잘못된 열 이름이 들어왔습니다.");
     }
 
     @Test
@@ -39,8 +38,8 @@ public class ColumnTest {
     @DisplayName("범위를 벗어난 인덱스로는 Column 상수를 얻을 수 없다.")
     void ofByIntThrowException() {
         assertThatThrownBy(() -> Column.of(0))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 인덱스의 열은 존재하지 않습니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("해당 인덱스의 열은 존재하지 않습니다.");
     }
 
     @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)
@@ -56,8 +55,8 @@ public class ColumnTest {
     @DisplayName("이동할 수 없는 Column일 경우, 예외를 발생한다.")
     void moveThrowException(Column column, int moveValue) {
         assertThatThrownBy(() -> column.move(moveValue))
-                .isInstanceOf(IndexOutOfBoundsException.class)
-                .hasMessage("범위를 벗어났습니다.");
+            .isInstanceOf(IndexOutOfBoundsException.class)
+            .hasMessage("범위를 벗어났습니다.");
     }
 
     @Test

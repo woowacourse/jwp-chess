@@ -1,7 +1,8 @@
 package chess.dao;
 
-import chess.entity.Room;
 import java.util.Optional;
+
+import chess.entity.Room;
 
 public interface RoomDao {
     void save(Room room);

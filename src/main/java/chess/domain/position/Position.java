@@ -117,7 +117,7 @@ public class Position {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Position position = (Position) o;
+        Position position = (Position)o;
         return column == position.column && row == position.row;
     }
 
@@ -129,8 +129,8 @@ public class Position {
     @Override
     public String toString() {
         return "Position{" +
-                "column=" + column +
-                ", row=" + row +
-                '}';
+            "column=" + column +
+            ", row=" + row +
+            '}';
     }
 }

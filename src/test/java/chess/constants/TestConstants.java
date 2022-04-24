@@ -1,7 +1,6 @@
 package chess.constants;
 
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.*;
 
 public class TestConstants {
 

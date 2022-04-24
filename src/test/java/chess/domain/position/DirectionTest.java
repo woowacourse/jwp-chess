@@ -1,14 +1,14 @@
 package chess.domain.position;
 
-import static chess.constants.TestConstants.PARAMETERIZED_TEST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static chess.constants.TestConstants.*;
+import static org.assertj.core.api.Assertions.*;
 
-import chess.domain.piece.Color;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import chess.domain.piece.Color;
 
 public class DirectionTest {
 
@@ -16,8 +16,8 @@ public class DirectionTest {
     @DisplayName("Empty에서 pawnDirection을 호출하면 예외가 발생한다.")
     void pawnDirectionThrowException() {
         assertThatThrownBy(() -> Direction.pawnDirection(Color.EMPTY))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("해당 폰의 디렉션은 존재하지 않습니다.");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("해당 폰의 디렉션은 존재하지 않습니다.");
     }
 
     @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)

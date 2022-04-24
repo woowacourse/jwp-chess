@@ -1,15 +1,17 @@
 package chess.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
-import chess.entity.Square;
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import chess.entity.Square;
 
 @JdbcTest
 class SquareDaoTest {
@@ -30,17 +32,17 @@ class SquareDaoTest {
 
         JdbcFixture.insertRoom(jdbcTemplate, "sojukang", "white");
         JdbcFixture.insertSquares(jdbcTemplate, List.of(
-                "a1,white_pawn,1",
-                "a2,black_pawn,1",
-                "a3,white_queen,1"));
+            "a1,white_pawn,1",
+            "a2,black_pawn,1",
+            "a3,white_queen,1"));
     }
 
     @Test
     @DisplayName("Sqaure 들을 저장한다.")
     void saveAll() {
         List<Square> squares = List.of(
-                new Square("b1", "white_pawn"),
-                new Square("b2", "white_pawn")
+            new Square("b1", "white_pawn"),
+            new Square("b2", "white_pawn")
         );
         squareDao.saveAll(squares, 1);
 

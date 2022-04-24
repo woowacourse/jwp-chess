@@ -1,11 +1,13 @@
 package chess.dao;
 
-import chess.entity.Square;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import chess.entity.Square;
 
 @Repository
 public class SquareDaoImpl implements SquareDao {
@@ -21,8 +23,8 @@ public class SquareDaoImpl implements SquareDao {
         String sql = "insert into square (position, piece, room_id) values (?, ?, ?)";
 
         List<Object[]> result = squares.stream()
-                .map(s -> new Object[]{s.getPosition(), s.getPiece(), roomId})
-                .collect(Collectors.toList());
+            .map(s -> new Object[] {s.getPosition(), s.getPiece(), roomId})
+            .collect(Collectors.toList());
 
         jdbcTemplate.batchUpdate(sql, result);
     }
@@ -31,13 +33,13 @@ public class SquareDaoImpl implements SquareDao {
     public List<Square> findByRoomId(long roomId) {
         String sql = "select id, position, piece from square where room_id = ?";
         return jdbcTemplate.query(sql,
-                (rs, rowNum) ->
-                        new Square(
-                                rs.getLong("id"),
-                                roomId,
-                                rs.getString("position"),
-                                rs.getString("piece")),
-                roomId
+            (rs, rowNum) ->
+                new Square(
+                    rs.getLong("id"),
+                    roomId,
+                    rs.getString("position"),
+                    rs.getString("piece")),
+            roomId
         );
     }
 
@@ -45,11 +47,11 @@ public class SquareDaoImpl implements SquareDao {
     public Optional<Square> findByRoomIdAndPosition(long roomId, String position) {
         String sql = "select id, piece from square where room_id = ? and position = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new Square(rs.getLong("id"),
-                        roomId,
-                        position,
-                        rs.getString("piece")),
-                roomId, position
+            (rs, rowNum) -> new Square(rs.getLong("id"),
+                roomId,
+                position,
+                rs.getString("piece")),
+            roomId, position
         ));
     }
 

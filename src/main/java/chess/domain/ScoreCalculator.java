@@ -1,8 +1,9 @@
 package chess.domain;
 
+import java.util.List;
+
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
-import java.util.List;
 
 public class ScoreCalculator {
 
@@ -18,17 +19,17 @@ public class ScoreCalculator {
 
     public double calculateColumns(List<List<Piece>> pieces) {
         return pieces.stream()
-                .mapToDouble(this::calculateOneColumn)
-                .sum();
+            .mapToDouble(this::calculateOneColumn)
+            .sum();
     }
 
     public double calculateOneColumn(List<Piece> pieces) {
         long pawnCount = pieces.stream()
-                .filter(p -> p.isSamePieceType(PieceType.PAWN))
-                .count();
+            .filter(p -> p.isSamePieceType(PieceType.PAWN))
+            .count();
         double sum = pieces.stream()
-                .mapToDouble(Piece::getPoint)
-                .sum();
+            .mapToDouble(Piece::getPoint)
+            .sum();
 
         if (pawnCount == SINGLE_PAWN_COUNT) {
             return sum;

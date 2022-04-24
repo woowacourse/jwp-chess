@@ -1,9 +1,10 @@
 package chess.domain.piece;
 
+import java.util.List;
+
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import java.util.List;
 
 public class Pawn extends Piece {
 
@@ -50,7 +51,7 @@ public class Pawn extends Piece {
 
     private List<Direction> getDiagonalDirections(List<Direction> movableDirections) {
         return movableDirections.subList(DIAGONAL_DIRECTION_START_INDEX,
-                movableDirections.size());
+            movableDirections.size());
     }
 
     private boolean isFirstMove(Position position) {

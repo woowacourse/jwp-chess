@@ -1,13 +1,14 @@
 package chess.domain.piece;
 
-import static chess.constants.TestConstants.PARAMETERIZED_TEST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import static chess.constants.TestConstants.*;
+import static org.assertj.core.api.Assertions.*;
 
-import chess.domain.position.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import chess.domain.position.Position;
 
 public class QueenTest {
 
@@ -20,7 +21,7 @@ public class QueenTest {
 
     @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)
     @CsvSource(value = {"c3, true", "c4, true", "g1, true", "d1, true", "d2, true", "d3, true", "e4, true", "h8, true",
-            "d8, true", "e6, false", "e2, false"})
+        "d8, true", "e6, false", "e2, false"})
     @DisplayName("퀸은 8방향으로 쭉 이동할 수 있다.")
     void canMove(String position, boolean expected) {
         Piece piece = new Queen(Color.BLACK);

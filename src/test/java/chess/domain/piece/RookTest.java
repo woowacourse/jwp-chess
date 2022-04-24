@@ -1,13 +1,14 @@
 package chess.domain.piece;
 
-import static chess.constants.TestConstants.PARAMETERIZED_TEST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
+import static chess.constants.TestConstants.*;
+import static org.assertj.core.api.Assertions.*;
 
-import chess.domain.position.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import chess.domain.position.Position;
 
 public class RookTest {
 
@@ -20,7 +21,7 @@ public class RookTest {
 
     @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)
     @CsvSource(value = {"d1, true", "d2, true", "d3, true", "e4, true", "c4, true", "d8,true",
-            "e5, false", "g7, false"})
+        "e5, false", "g7, false"})
     @DisplayName("룩은 십자가 방향으로 이동할 수 있다.")
     void canMove(String position, boolean expected) {
         Piece piece = new Rook(Color.BLACK);

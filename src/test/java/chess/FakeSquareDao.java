@@ -1,12 +1,13 @@
 package chess;
 
-import chess.dao.SquareDao;
-import chess.entity.Square;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import chess.dao.SquareDao;
+import chess.entity.Square;
 
 public class FakeSquareDao implements SquareDao {
 
@@ -26,17 +27,17 @@ public class FakeSquareDao implements SquareDao {
     public Optional<Square> findByRoomIdAndPosition(long roomId, String position) {
         List<Square> squares = value.get(roomId);
         return squares.stream()
-                .filter(square -> square.getPosition().equals(position))
-                .findAny();
+            .filter(square -> square.getPosition().equals(position))
+            .findAny();
     }
 
     @Override
     public void update(long roomId, String position, String piece) {
         List<Square> squares = value.get(roomId);
         List<Square> newSquares = squares.stream()
-                .filter(square -> square.getPosition().equals(position))
-                .map(square -> new Square(position, piece))
-                .collect(Collectors.toList());
+            .filter(square -> square.getPosition().equals(position))
+            .map(square -> new Square(position, piece))
+            .collect(Collectors.toList());
         value.replace(roomId, newSquares);
     }
 

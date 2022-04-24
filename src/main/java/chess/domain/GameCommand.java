@@ -1,8 +1,9 @@
 package chess.domain;
 
-import chess.domain.position.Position;
 import java.util.ArrayList;
 import java.util.List;
+
+import chess.domain.position.Position;
 
 public class GameCommand {
 

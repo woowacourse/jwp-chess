@@ -1,8 +1,9 @@
 package chess.dao;
 
-import chess.entity.Square;
 import java.util.List;
 import java.util.Optional;
+
+import chess.entity.Square;
 
 public interface SquareDao {
     void saveAll(List<Square> squares, long roomId);

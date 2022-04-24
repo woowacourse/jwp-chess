@@ -1,8 +1,7 @@
 package chess.domain.piece;
 
-import static chess.constants.TestConstants.PARAMETERIZED_TEST_NAME;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static chess.constants.TestConstants.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -20,42 +19,42 @@ public class PieceTest {
         @DisplayName("폰을 생성한다.")
         void constructPawn() {
             assertThatCode(() -> new Pawn(Color.BLACK))
-                    .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
         }
 
         @Test
         @DisplayName("룩을 생성한다.")
         void constructRook() {
             assertThatCode(() -> new Rook(Color.BLACK))
-                    .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
         }
 
         @Test
         @DisplayName("나이트를 생성한다.")
         void constructKnight() {
             assertThatCode(() -> new Knight(Color.BLACK))
-                    .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
         }
 
         @Test
         @DisplayName("비숍을 생성한다.")
         void constructBishop() {
             assertThatCode(() -> new Bishop(Color.BLACK))
-                    .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
         }
 
         @Test
         @DisplayName("퀸을 생성한다.")
         void constructQueen() {
             assertThatCode(() -> new Queen(Color.BLACK))
-                    .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
         }
 
         @Test
         @DisplayName("킹을 생성한다.")
         void constructKing() {
             assertThatCode(() -> new King(Color.BLACK))
-                    .doesNotThrowAnyException();
+                .doesNotThrowAnyException();
         }
 
         @ParameterizedTest(name = PARAMETERIZED_TEST_NAME)

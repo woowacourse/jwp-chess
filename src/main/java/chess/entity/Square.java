@@ -30,10 +30,10 @@ public class Square {
     @Override
     public String toString() {
         return "Square{" +
-                "id=" + id +
-                ", roomId=" + roomId +
-                ", position='" + position + '\'' +
-                ", piece='" + piece + '\'' +
-                '}';
+            "id=" + id +
+            ", roomId=" + roomId +
+            ", position='" + position + '\'' +
+            ", piece='" + piece + '\'' +
+            '}';
     }
 }

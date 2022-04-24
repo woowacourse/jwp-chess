@@ -6,7 +6,7 @@ import java.util.List;
 public class Room {
 
     private long id;
-    private String name;
+    private final String name;
     private final String turn;
     private final List<Square> board = new ArrayList<>();
 

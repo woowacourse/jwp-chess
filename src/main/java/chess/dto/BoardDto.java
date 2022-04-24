@@ -1,9 +1,10 @@
 package chess.dto;
 
-import chess.domain.piece.Piece;
-import chess.domain.position.Position;
 import java.util.HashMap;
 import java.util.Map;
+
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 
 public class BoardDto {
 

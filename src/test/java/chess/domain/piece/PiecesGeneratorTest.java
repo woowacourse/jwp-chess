@@ -1,13 +1,15 @@
 package chess.domain.piece;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.Map;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.piece.generator.PiecesGenerator;
 import chess.domain.position.Position;
-import java.util.Map;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 public class PiecesGeneratorTest {
 

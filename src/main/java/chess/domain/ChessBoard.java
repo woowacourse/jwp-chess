@@ -1,5 +1,11 @@
 package chess.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import chess.domain.piece.Color;
 import chess.domain.piece.EmptyPiece;
 import chess.domain.piece.Piece;
@@ -9,11 +15,6 @@ import chess.domain.position.Column;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ChessBoard {
 
@@ -50,7 +51,7 @@ public class ChessBoard {
     }
 
     private void checkMovable(Position fromPosition, Position toPosition,
-                              Direction direction, MoveChecker moveChecker) {
+        Direction direction, MoveChecker moveChecker) {
         Piece fromPiece = selectPiece(fromPosition);
         Piece toPiece = selectPiece(toPosition);
 
@@ -60,7 +61,7 @@ public class ChessBoard {
     }
 
     private void checkRouteNotBlock(Position fromPosition, Position toPosition,
-                                    Direction direction, MoveChecker moveChecker) {
+        Direction direction, MoveChecker moveChecker) {
         for (Position nextPosition = fromPosition.toDirection(direction);
              nextPosition != toPosition;
              nextPosition = nextPosition.toDirection(direction)) {
@@ -79,8 +80,8 @@ public class ChessBoard {
             result.add(pieces.get(Position.of(column, row)));
         }
         return result.stream()
-                .filter(piece -> piece.isSameColor(color))
-                .collect(Collectors.toList());
+            .filter(piece -> piece.isSameColor(color))
+            .collect(Collectors.toList());
     }
 
     public List<List<Piece>> getPiecesOnColumns(Color color) {
@@ -93,8 +94,8 @@ public class ChessBoard {
 
     public boolean isEnd() {
         long kingCount = pieces.values().stream()
-                .filter(p -> p.isSamePieceType(PieceType.KING))
-                .count();
+            .filter(p -> p.isSamePieceType(PieceType.KING))
+            .count();
         return kingCount != RUNNING_KING_COUNT;
     }
 

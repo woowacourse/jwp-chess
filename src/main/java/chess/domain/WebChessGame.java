@@ -1,12 +1,13 @@
 package chess.domain;
 
+import java.util.List;
+import java.util.Map;
+
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.piece.generator.PiecesGenerator;
 import chess.domain.position.Position;
-import java.util.List;
-import java.util.Map;
 
 public class WebChessGame {
 

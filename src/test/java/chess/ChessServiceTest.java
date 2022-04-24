@@ -1,15 +1,16 @@
 package chess;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
 import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 public class ChessServiceTest {
 
@@ -43,8 +44,8 @@ public class ChessServiceTest {
         BoardDto boardDto = chessService.load("roma");
 
         assertAll(
-                () -> assertThat(boardDto.getTurn()).isEqualTo("white"),
-                () -> assertThat(boardDto.getBoard()).hasSize(64)
+            () -> assertThat(boardDto.getTurn()).isEqualTo("white"),
+            () -> assertThat(boardDto.getBoard()).hasSize(64)
         );
     }
 
@@ -54,9 +55,9 @@ public class ChessServiceTest {
         BoardDto actual = chessService.move("roma", new MoveDto("a2", "a4"));
 
         assertAll(
-                () -> assertThat(actual.getTurn()).isEqualTo("black"),
-                () -> assertThat(actual.getBoard()).containsEntry("a2", "empty"),
-                () -> assertThat(actual.getBoard()).containsEntry("a4", "white_pawn")
+            () -> assertThat(actual.getTurn()).isEqualTo("black"),
+            () -> assertThat(actual.getBoard()).containsEntry("a2", "empty"),
+            () -> assertThat(actual.getBoard()).containsEntry("a4", "white_pawn")
         );
     }
 
@@ -66,8 +67,8 @@ public class ChessServiceTest {
         Status actual = chessService.status("roma");
 
         assertAll(
-                () -> assertThat(actual.getWhiteScore()).isEqualTo(38.0),
-                () -> assertThat(actual.getBlackScore()).isEqualTo(38.0)
+            () -> assertThat(actual.getWhiteScore()).isEqualTo(38.0),
+            () -> assertThat(actual.getBlackScore()).isEqualTo(38.0)
         );
     }
 }

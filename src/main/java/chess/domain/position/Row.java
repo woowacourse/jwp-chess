@@ -27,15 +27,15 @@ public enum Row {
 
     public static Row of(int targetValue) {
         return Arrays.stream(values())
-                .filter(row -> row.value == targetValue)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 행 이름이 들어왔습니다."));
+            .filter(row -> row.value == targetValue)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("잘못된 행 이름이 들어왔습니다."));
     }
 
     public static List<Row> getRowsReverseOrder() {
         Row[] values = Row.values();
         List<Row> reverse = Arrays.stream(values)
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
         Collections.reverse(reverse);
         return reverse;
     }

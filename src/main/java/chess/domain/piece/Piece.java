@@ -1,9 +1,10 @@
 package chess.domain.piece;
 
-import chess.domain.position.Direction;
-import chess.domain.position.Position;
 import java.util.List;
 import java.util.Locale;
+
+import chess.domain.position.Direction;
+import chess.domain.position.Position;
 
 public abstract class Piece {
 

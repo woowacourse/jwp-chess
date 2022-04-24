@@ -50,11 +50,12 @@ public class SpringController {
     public String move(@PathVariable String gameName,
                        @RequestParam("from") String from, @RequestParam("to") String to,
                        Model model, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
+        String encodedParam = URLEncoder.encode(gameName, "UTF-8");
         try {
             String command = makeCommand(from, to);
             chessService.move(command);
             if (chessService.isEnd()) {
-                return "redirect:/game/" + gameName + "/end";
+                return "redirect:/game/" + encodedParam + "/end";
             }
         } catch (IllegalArgumentException e) {
             redirectAttributes.addAttribute("error", e.getMessage());
@@ -62,7 +63,6 @@ public class SpringController {
 
         model.addAttribute("gameName", gameName);
 
-        String encodedParam = URLEncoder.encode(gameName, "UTF-8");
         return "redirect:/game/" + encodedParam;
     }
 

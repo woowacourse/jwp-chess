@@ -17,7 +17,7 @@ public class ResultController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/status")
+    @GetMapping("/results")
     public String showResult(@RequestParam String gameID, Model model) {
 
         GameResult gameResult = chessService.getGameResult(gameID);

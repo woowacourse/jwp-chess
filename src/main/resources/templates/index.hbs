@@ -17,11 +17,13 @@
         <div class="score">{{blackScore}}&nbsp;&nbsp;&nbsp;&nbsp;{{whiteScore}}</div>
     </div>
     <section class="chess-board">
+        {{#piecesDto}}
         {{#pieces}}
         <div class="{{position}}" id="{{position}}" onclick="clicked(this.id)">
             <img src="images/{{color}}_{{pieceType}}.png" class="img"/>
         </div>
         {{/pieces}}
+        {{/piecesDto}}
     {{/chessStatus}}
     </section>
     <br/>

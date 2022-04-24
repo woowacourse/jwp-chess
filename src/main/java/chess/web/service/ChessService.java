@@ -4,10 +4,8 @@ import chess.domain.Board;
 import chess.domain.ChessBoard;
 import chess.domain.ChessGame;
 import chess.domain.Color;
-import chess.domain.generator.EmptyBoardGenerator;
 import chess.domain.generator.InitBoardGenerator;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceType;
 import chess.domain.position.Position;
 import chess.domain.state.StateType;
 import chess.web.dao.BoardStateDao;
@@ -17,6 +15,7 @@ import chess.web.dto.ChessStatusDto;
 import chess.web.dto.MovePositionsDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PieceDto;
+import chess.web.dto.PiecesDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +31,6 @@ public class ChessService {
     public ChessService(BoardStateDao boardStateDao, PieceDao pieceDao) {
         this.boardStateDao = boardStateDao;
         this.pieceDao = pieceDao;
-    }
-
-    public ChessStatusDto getChessStatus() {
-        return new ChessStatusDto(getPieces(), getScore(Color.BLACK), getScore(Color.WHITE));
     }
 
     public void start() {
@@ -62,6 +57,10 @@ public class ChessService {
     public void end() {
         boardStateDao.deleteAll();
         pieceDao.deleteAll();
+    }
+
+    public ChessStatusDto getChessStatus() {
+        return new ChessStatusDto(new PiecesDto(getPieces()), getScore(Color.BLACK), getScore(Color.WHITE));
     }
 
     public MoveResultDto getMoveResult(MovePositionsDto movePositionsDto) {
@@ -98,29 +97,20 @@ public class ChessService {
     }
 
     public ChessGame getChessGame() {
-        Board board = getBoardFromDtos(getPieces());
-        ChessBoard chessBoard = new ChessBoard(board);
+        PiecesDto piecesDto = new PiecesDto(getPieces());
+        ChessBoard chessBoard = new ChessBoard(piecesDto.toBoard());
         return new ChessGame(getStateType().newState(chessBoard));
-    }
-
-    private Board getBoardFromDtos(List<PieceDto> pieceDtos) {
-        Board board = new Board(new EmptyBoardGenerator().generate().getBoard());
-        for (PieceDto pieceDto : pieceDtos) {
-            board.place(new Position(pieceDto.getPosition()),
-                    PieceType.from(pieceDto.getPieceType()).newPiece(Color.from(pieceDto.getColor())));
-        }
-        return board;
-    }
-
-    private StateType getStateType() {
-        return boardStateDao.findState();
     }
 
     private List<PieceDto> getPieces() {
         return pieceDao.findAll();
     }
 
-    public double getScore(Color color) {
+    private StateType getStateType() {
+        return boardStateDao.findState();
+    }
+
+    private double getScore(Color color) {
         return getChessGame().score(color);
     }
 

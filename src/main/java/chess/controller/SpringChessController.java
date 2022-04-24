@@ -20,7 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class SpringChessController {
 
-    private static final String MOVE_SUCCESS_MESSAGE = "성공적으로 이동했습니다";
+    private static final String WELCOME_MESSAGE = "어서오세요 :)";
+    private static final String MOVE_SUCCESS_MESSAGE = "성공적으로 이동했습니다.";
 
     private final ChessGameService chessGameService;
 
@@ -35,9 +36,9 @@ public class SpringChessController {
     }
 
     @GetMapping("/game/start")
-    public String startGame(@RequestParam String gameId) {
+    public ModelAndView startGame(@RequestParam String gameId) {
         chessGameService.createOrGet(gameId);
-        return "redirect:/game/" + gameId;
+        return getModelWithGameMessage(WELCOME_MESSAGE, "redirect:/game/" + gameId);
     }
 
     @GetMapping("/game/{gameId}")
@@ -57,9 +58,9 @@ public class SpringChessController {
         return "redirect:/";
     }
 
-    private ModelAndView getModelWithGameMessage(String errorMessage, String url) {
+    private ModelAndView getModelWithGameMessage(String massage, String url) {
         ModelAndView modelAndView = new ModelAndView(url);
-        modelAndView.addObject("gameMessage", errorMessage);
+        modelAndView.addObject("gameMessage", massage);
         return modelAndView;
     }
 

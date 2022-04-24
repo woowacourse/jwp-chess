@@ -92,7 +92,7 @@ async function finish() {
 }
 
 async function deleteAndFinish() {
-  await fetch("/finish?name=" + gameName, {
+  await fetch("/delete?name=" + gameName, {
     method: "GET",
   })
   alert("방이 삭제됐습니다.");

@@ -57,7 +57,7 @@ public class ChessGameService {
         return StatusDto.of(whitePlayerResult, blackPlayerResult);
     }
 
-    public StatusDto finishGame(final String gameName) {
+    public StatusDto deleteGame(final String gameName) {
         final StatusDto status = findStatus(gameName);
         final int gameId = findChessGameIdByName(gameName);
         pieceDao.deletePieces(gameId);

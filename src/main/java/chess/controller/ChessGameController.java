@@ -35,9 +35,9 @@ public class ChessGameController {
         return ResponseEntity.ok(status);
     }
 
-    @GetMapping("/finish")
-    public ResponseEntity<StatusDto> finishGame(@RequestParam("name") String gameName) {
-        final StatusDto status = chessGameService.finishGame(gameName);
+    @GetMapping("/delete")
+    public ResponseEntity<StatusDto> deleteGame(@RequestParam("name") String gameName) {
+        final StatusDto status = chessGameService.deleteGame(gameName);
         return ResponseEntity.ok(status);
     }
 

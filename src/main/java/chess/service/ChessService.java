@@ -16,6 +16,7 @@ import chess.domain.board.strategy.CreateCompleteBoardStrategy;
 import chess.domain.piece.Piece;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -44,10 +45,7 @@ public class ChessService {
 
     public ChessGameResponse loadGame(long gameId) {
         Optional<GameState> maybeGameState = gameDao.load(gameId);
-        if (maybeGameState.isEmpty()) {
-            throw new IllegalArgumentException("게임이 없습니다.");
-        }
-        GameState gameState = maybeGameState.get();
+        GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
         Board board = createBoard(gameId);
         chessGames.put(gameId, new ChessGame(board, gameState));
         return new ChessGameResponse(getChessGame(gameId));

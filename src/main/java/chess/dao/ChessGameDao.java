@@ -7,11 +7,12 @@ import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
 import chess.dto.ChessGameDto;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -38,16 +39,24 @@ public class ChessGameDao {
     public ChessGame findByName(String gameName) {
         String sql = "select CHESSGAME.turn, CHESSGAME.game_name, PIECE.type, PIECE.team, PIECE.`rank`, PIECE.file from CHESSGAME, PIECE\n"
                 + "where CHESSGAME.game_name = PIECE.game_name AND CHESSGAME.game_name = ?;";
-        try {
-            return jdbcTemplate.queryForObject(sql, chessGameRowMapper, gameName);
-        } catch(EmptyResultDataAccessException e) {
+
+        List<ChessGame> result = jdbcTemplate.query(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            preparedStatement.setString(1, gameName);
+            return preparedStatement;
+        }, chessGameRowMapper);
+
+        if(result.isEmpty()) {
             return null;
         }
+
+        return result.get(0);
     }
 
     private final RowMapper<ChessGame> chessGameRowMapper = (resultSet, rowNum) -> new ChessGame(
         getTurn(resultSet),
-        resultSet.getString("gameName"),
+        resultSet.getString("game_name"),
         makeCells(resultSet)
     );
 

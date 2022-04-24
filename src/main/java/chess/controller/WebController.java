@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class WebController {
 
     private final Gson gson = new Gson();
-    private final ChessService chessService = new ChessService();
+    private final ChessService chessService;
+
+    public WebController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
     @GetMapping("/")
     public String showFirstPage() {

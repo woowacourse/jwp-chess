@@ -12,6 +12,12 @@ public final class PieceDto {
         this.color = value.get(1);
     }
 
+    public PieceDto(String name, String color) {
+        this.name = name;
+        this.color = color;
+
+    }
+
     public String getColor() {
         return color;
     }

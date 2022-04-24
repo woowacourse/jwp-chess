@@ -94,7 +94,6 @@ async function onClickPiece (id) {
     const data = await response.json();
     if (response.ok) {
         movePiece(from, to);
-        console.log(data);
         loadBoard(data);
         return;
     }

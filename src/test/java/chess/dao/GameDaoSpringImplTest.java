@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.dto.GameDto;
+import chess.dto.GameStatusDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,5 +73,17 @@ public class GameDaoSpringImplTest {
                 () -> assertThat(gameDaoSpringImpl.find().getTurn()).isEqualTo("black"),
                 () -> assertThat(gameDaoSpringImpl.find().getStatus()).isEqualTo("end")
         );
+    }
+
+    @Test
+    @DisplayName("게임 상태 업데이트")
+    void updateStatus() {
+        GameDto gameDto = new GameDto("white", "playing");
+        gameDaoSpringImpl.save(gameDto);
+
+        GameStatusDto gameStatusDto = GameStatusDto.FINISHED;
+        gameDaoSpringImpl.updateStatus(gameStatusDto);
+
+        assertThat(gameDaoSpringImpl.find().getStatus()).isEqualTo(gameStatusDto.getName());
     }
 }

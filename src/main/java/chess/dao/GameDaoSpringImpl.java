@@ -32,7 +32,8 @@ public class GameDaoSpringImpl implements GameDao {
 
     @Override
     public void updateStatus(GameStatusDto statusDto) {
-
+        final String sql = "update game set status = ?";
+        jdbcTemplate.update(sql, statusDto.getName());
     }
 
     @Override

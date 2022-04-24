@@ -9,12 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@JdbcTest
+@SpringBootTest
 public class GameDaoImplTest {
 
+    @Autowired
     private GameDaoImpl gameDaoImpl;
 
     @Autowired
@@ -22,7 +23,6 @@ public class GameDaoImplTest {
 
     @BeforeEach
     void setUp() {
-        gameDaoImpl = new GameDaoImpl(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE game IF EXISTS");
         jdbcTemplate.execute("create table game\n"
                 + "(\n"

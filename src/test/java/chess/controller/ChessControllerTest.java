@@ -279,7 +279,7 @@ class ChessControllerTest {
     @DisplayName("POST - move api 테스트")
     @Test
     void move() throws JsonProcessingException {
-        chessService.createOrLoadGame(testGameId);
+        chessService.createGame(testGameId);
         chessService.startGame(testGameId);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -290,7 +290,7 @@ class ChessControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonString)
-                .when().post("/api/move/" + testGameId)
+                .when().put("/api/games/" + testGameId + "/pieces")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

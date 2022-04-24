@@ -54,7 +54,14 @@ public class ChessService {
 
     public ChessGameResponse loadGame(long gameId) {
         Optional<GameState> maybeGameState = gameDao.load(gameId);
+<<<<<<< HEAD
         GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
+=======
+        if (maybeGameState.isEmpty()) {
+            return createGame(gameId);
+        }
+        GameState gameState = maybeGameState.get();
+>>>>>>> refactor: 체스 보드를 만드는 메서드 분리
         Board board = createBoard(gameId);
         chessGames.put(gameId, new ChessGame(board, gameState));
         return new ChessGameResponse(getChessGame(gameId));

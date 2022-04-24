@@ -6,6 +6,7 @@ import chess.domain.event.MoveRoute;
 import chess.dto.CreatedGameDto;
 import chess.dto.FullGameDto;
 import chess.service.ChessService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,5 +61,12 @@ public class GameController {
         FullGameDto gameDto = chessService.findGame(id);
         modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
         return modelAndView;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteGame(@PathVariable int id,
+                           @RequestBody AuthCredentials authCredentials) {
+        System.out.println(authCredentials);
+        chessService.deleteFinishedGame(id, authCredentials);
     }
 }

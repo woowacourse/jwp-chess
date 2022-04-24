@@ -88,6 +88,12 @@ public class ChessService {
                 game.getResult());
     }
 
+    @Transactional
+    public void deleteFinishedGame(int gameId, AuthCredentials authCredentials) {
+        gameDao.deleteGame(authCredentials.toEncrypted());
+        eventDao.deleteAllByGameId(gameId);
+    }
+
     private Game currentSnapShotOf(int gameId) {
         List<Event> events = eventDao.findAllByGameId(gameId);
         Game game = new NewGame();

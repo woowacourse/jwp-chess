@@ -2,6 +2,7 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.dto.GameDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,5 +47,14 @@ public class GameDaoSpringImplTest {
         gameDaoSpringImpl.removeAll();
 
         assertThat(jdbcTemplate.queryForObject("select count(*) from game", Integer.class)).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("게임 정보 저장")
+    void save() {
+        GameDto gameDto = new GameDto("white", "playing");
+        gameDaoSpringImpl.save(gameDto);
+
+        assertThat(jdbcTemplate.queryForObject("select count(*) from game", Integer.class)).isEqualTo(1);
     }
 }

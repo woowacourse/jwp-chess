@@ -20,7 +20,8 @@ public class GameDaoSpringImpl implements GameDao {
 
     @Override
     public void save(GameDto gameDto) {
-
+        final String sql = "insert into game (turn, status) values (?, ?)";
+        jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus());
     }
 
     @Override

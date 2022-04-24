@@ -9,7 +9,6 @@ public class GameDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-
     public GameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -22,6 +21,7 @@ public class GameDao {
 
     public boolean isInId(String gameId) {
         final String sql = "select count(*) from game where id = ?";
+
         return jdbcTemplate.queryForObject(sql, Integer.class, gameId) > 0;
     }
 
@@ -35,8 +35,7 @@ public class GameDao {
         final String sql = "select turn from game where id = ?";
 
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                Color.of(resultSet.getString("turn")),
-            gameId);
+                Color.of(resultSet.getString("turn")), gameId);
     }
 
     public void updateTurnById(Color nextTurn, String gameId) {
@@ -56,4 +55,5 @@ public class GameDao {
 
         jdbcTemplate.update(sql, gameId);
     }
+
 }

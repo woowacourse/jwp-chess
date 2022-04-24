@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.repository;
 
 import chess.domain.state.State;
 import org.springframework.beans.factory.annotation.Autowired;

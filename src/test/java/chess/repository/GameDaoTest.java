@@ -1,15 +1,10 @@
-package chess.dao;
+package chess.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import chess.dao.BoardDao;
-import chess.domain.chessboard.ChessBoard;
-import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
-import chess.domain.piece.Symbol;
-import chess.domain.piece.generator.NormalPiecesGenerator;
-import chess.domain.position.Position;
+import chess.domain.state.BlackRunning;
+import chess.domain.state.State;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,10 +16,10 @@ import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
-public class BoardDaoTest {
+class GameDaoTest {
 
     @Autowired
-    private BoardDao boardDao;
+    private GameDao gameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -54,30 +49,35 @@ public class BoardDaoTest {
     }
 
     @Test
-    @DisplayName("체스 보드를 생성할 수 있다.")
-    void save() {
-        ChessBoard chessBoard = new ChessBoard(new NormalPiecesGenerator());
-        assertThatCode(() ->
-                boardDao.save(chessBoard, 1L)).doesNotThrowAnyException();
+    @DisplayName("게임을 생성할 수 있다.")
+    void saveGame() {
+        assertThatCode(() -> {
+            gameDao.save("WhiteRunning");
+        }).doesNotThrowAnyException();
     }
 
     @Test
-    @DisplayName("체스 보드를 조회할 수 있다")
-    void find() {
-        boardDao.save(new ChessBoard(new NormalPiecesGenerator()), 1L);
-
-        assertThat(boardDao.find()).isInstanceOf(ChessBoard.class);
+    @DisplayName("게임의 상태를 조회할 수 있다.")
+    void findState() {
+        assertThat(gameDao.findState()).isInstanceOf(State.class);
     }
 
     @Test
-    @DisplayName("체스 보드를 갱신할 수 있다.")
-    void update() {
-        boardDao.save(new ChessBoard(new NormalPiecesGenerator()), 1L);
-        Position position = Position.of("a2");
-        Piece piece = Piece.of(Color.WHITE, Symbol.PAWN);
+    @DisplayName("게임의 일련번호를 조회할 수 있다.")
+    void findId() {
+        assertThat(gameDao.findId()).isEqualTo(1L);
+    }
 
-        assertThatCode(() ->
-                boardDao.update(position, piece, 1L)
-        ).doesNotThrowAnyException();
+    @Test
+    @DisplayName("게임의 상태를 업데이트할 수 있다.")
+    void updateGameByState() {
+        gameDao.update("BlackRunning", 1L);
+        assertThat(gameDao.findState()).isInstanceOf(BlackRunning.class);
+    }
+
+    @Test
+    @DisplayName("게임을 제거할 수 있다.")
+    void deleteGame() {
+        assertThat(gameDao.delete()).isEqualTo(1L);
     }
 }

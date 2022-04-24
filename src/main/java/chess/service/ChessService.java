@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.dao.BoardDao;
-import chess.dao.GameDao;
+import chess.repository.BoardDao;
+import chess.repository.GameDao;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.command.GameCommand;
 import chess.domain.game.ChessGame;

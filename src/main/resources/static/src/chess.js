@@ -60,7 +60,7 @@ function setPieces(pieces) {
 function start() {
     $.ajax({
         url: "/chess-game/start",
-        type: 'get',
+        type: 'post',
         success(data) {
             clearPieces();
             let obj = parseToJSON(data);

@@ -37,7 +37,7 @@ public class ChessController {
         return ResponseEntity.ok().body(chessService.getChess());
     }
 
-    @GetMapping("/start")
+    @PostMapping("/start")
     public ResponseEntity<ChessResponseDto> start() {
         return ResponseEntity.ok().body(chessService.initializeGame());
     }

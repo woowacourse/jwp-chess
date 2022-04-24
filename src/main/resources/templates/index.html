@@ -8,24 +8,24 @@
             crossorigin="anonymous"></script>
     <link href="/css/chess.css" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>화분 깨먹는 말썽쟁이의 체스</title>
+    <title>화분 꺠먹는 말썽쟁이의 체스</title>
 </head>
 <body>
 <div class="chess-header">
     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createGame">
         게임 생성
     </button>
-    <button class="btn btn-dark" onclick="location.href='/members/management'">멤버 관리</button>
+    <button class="btn btn-dark" onclick="location.href='/member-management'">멤버 관리</button>
 </div>
 <div class="container" style="flex-direction: column;">
     {{#games}}
-        <div class="card" style="width: 100%; margin-top: 1vh;">
-            <div class="card-body">
-                <h5 class="card-title">{{id}} 번째 게임</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
-                <a href="/games/{{id}}/play" class="btn btn-dark">입장</a>
-            </div>
+    <div class="card" style="width: 100%; margin-top: 1vh;">
+        <div class="card-body">
+            <h5 class="card-title">{{id}} 번째 게임</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
+            <a href="/play/{{id}}" class="btn btn-dark">입장</a>
         </div>
+    </div>
     {{/games}}
 </div>
 
@@ -41,13 +41,13 @@
                 <div>백팀</div>
                 <select id="white" class="form-control">
                     {{#members}}
-                        <option value="{{id}}">{{name}}</option>
+                    <option value="{{id}}">{{name}}</option>
                     {{/members}}
                 </select>
                 <div>흑팀</div>
                 <select id="black" class="form-control">
                     {{#members}}
-                        <option value="{{id}}">{{name}}</option>
+                    <option value="{{id}}">{{name}}</option>
                     {{/members}}
                 </select>
             </div>
@@ -64,12 +64,9 @@
     const createGame = () => {
         let whiteId = document.getElementById("white").value;
         let blackId = document.getElementById("black").value;
-        fetch("/games", {
+        fetch("/chessGame", {
             method: "POST",
-            body: JSON.stringify({whiteId: whiteId, blackId: blackId}),
-            headers: {
-                'Content-Type': 'application/json',
-            }
+            body: `${whiteId},${blackId}`
         }).then(response => {
             if (response.ok) {
                 alert("게임이 생성되었습니다.");

@@ -1,22 +1,26 @@
 package chess;
 
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static spark.Spark.get;
+import chess.controller.spark.SparkWebController;
+import chess.dao.SqlExecutor;
+import chess.dao.game.JdbcGameDao;
+import chess.dao.game.JdbcPieceDao;
+import chess.dao.member.JdbcMemberDao;
+import chess.dao.member.MemberDao;
+import chess.service.GameService;
+import chess.service.MemberService;
 
 public class SparkChessApplication {
     public static void main(String[] args) {
-        get("/", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            return render(model, "index.hbs");
-        });
-    }
-
-    private static String render(Map<String, Object> model, String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
+        final SqlExecutor sqlExecutor = SqlExecutor.getInstance();
+        final MemberDao memberDao = new JdbcMemberDao(sqlExecutor);
+        final JdbcPieceDao pieceDao = new JdbcPieceDao(sqlExecutor);
+        final SparkWebController controller = new SparkWebController(
+                new GameService(
+                        new JdbcGameDao(pieceDao, memberDao, sqlExecutor),
+                        new JdbcMemberDao(sqlExecutor)
+                ),
+                new MemberService(memberDao)
+        );
+        controller.run();
     }
 }

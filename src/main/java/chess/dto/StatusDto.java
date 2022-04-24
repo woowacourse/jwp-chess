@@ -9,4 +9,8 @@ public class StatusDto {
     public StatusDto(Map<String, Double> status) {
         this.status = status;
     }
+
+    public Map<String, Double> getStatus() {
+        return status;
+    }
 }

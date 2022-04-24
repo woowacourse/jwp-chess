@@ -40,7 +40,7 @@ public class GameService {
 
     private State proceed(MoveDto moveDto) {
         State nowState = gameRepository.getState();
-        State nextState = nowState.proceed(moveDto.getCommand());
+        State nextState = nowState.proceed(moveDto.command());
         gameRepository.saveGameData(nextState, moveDto);
         return nextState;
     }

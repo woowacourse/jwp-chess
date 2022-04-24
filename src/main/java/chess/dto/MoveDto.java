@@ -22,7 +22,7 @@ public class MoveDto {
         return target;
     }
 
-    public List<String> getCommand() {
+    public List<String> command() {
         return List.of(COMMAND, source, target);
     }
 }

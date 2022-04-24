@@ -11,6 +11,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import chess.dto.MoveDto;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -65,6 +66,21 @@ class SpringWebChessControllerTest {
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
             .when().get("/game/load")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value())
+            .body("values.size()", is(64));
+    }
+
+    @DisplayName("체스 기물을 이동시킨다.")
+    @Test
+    void move() {
+        MoveDto moveDto = new MoveDto("a2", "a3");
+
+        start();
+        RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(moveDto)
+            .when().post("/game/move")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("values.size()", is(64));

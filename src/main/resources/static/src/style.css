@@ -49,7 +49,7 @@ body {
 }
 
 .message {
-    font-size: 50px;
+    font-size: 35px;
 }
 
 #end {
@@ -103,7 +103,6 @@ input {
 
 #restart {
     float: right;
-    margin-right: 50px;
 }
 
 .invisible {

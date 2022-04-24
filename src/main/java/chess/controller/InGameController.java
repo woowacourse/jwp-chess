@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
+@RequestMapping("/ingame")
 public class InGameController {
     private final ChessService chessService;
 
@@ -20,7 +21,7 @@ public class InGameController {
         this.chessService = chessService;
     }
 
-    @GetMapping(value = "/ingame", params = "gameID")
+    @GetMapping(params = "gameID")
     public String runGame(@RequestParam String gameID, Model model) {
         ChessGame chessGame = chessService.loadGame(gameID);
         chessService.loadPieces(gameID);
@@ -34,7 +35,7 @@ public class InGameController {
         return "ingame";
     }
 
-    @PostMapping("/ingame/{gameID}")
+    @PostMapping("/{gameID}")
     public String movePiece(@PathVariable String gameID, @RequestBody String movement, Model model) {
         ChessGame chessGame = chessService.loadSavedChessGame(gameID, chessService.getTurn(gameID));
         List<String> movements = Arrays.asList(movement.split("&"));

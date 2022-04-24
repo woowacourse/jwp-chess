@@ -2,7 +2,7 @@ package chess.model.board;
 
 import static java.util.stream.Collectors.toMap;
 
-import chess.model.Color;
+import chess.model.game.GameResult;
 import chess.model.piece.Empty;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
@@ -14,12 +14,9 @@ import java.util.Map;
 
 public final class Board {
 
-    private static final int VALID_KING_COUNT = 2;
-    private static final int PAWN_POINT_DIVIDE_VALUE = 2;
+    private final Map<Square, Piece> board;
 
-    private Map<Square, Piece> board;
-
-    public Board(Map<Square, Piece> board) {
+    private Board(Map<Square, Piece> board) {
         this.board = board;
     }
 
@@ -28,8 +25,13 @@ public final class Board {
     }
 
     public Board(BoardDto boardDto) {
-        this.board = boardDto.getPieces().stream()
-                .collect(toMap(dto -> Square.of(dto.getSquare()), PieceType::createPiece));
+        this(boardDto.getPieces()
+                .stream()
+                .collect(toMap(dto -> Square.of(dto.getSquare()), PieceType::createPiece)));
+    }
+
+    public static Board init() {
+        return new Board(new ChessInitializer());
     }
 
     public Piece findPieceBySquare(Square square) {
@@ -39,19 +41,23 @@ public final class Board {
         throw new IllegalArgumentException("해당 위치의 값을 찾을 수 없습니다.");
     }
 
-
-    public void move(Square sourceSquare, Square targetSquare) {
-        Piece sourcePiece = findPieceBySquare(sourceSquare);
-        MoveType moveType = getMoveType(sourcePiece, targetSquare);
-        if (!sourcePiece.movable(sourceSquare, targetSquare, moveType)) {
-            throw new IllegalArgumentException("해당 칸으로 이동할 수 없습니다.");
-        }
-        checkRoute(sourceSquare, targetSquare);
-        updateBoard(sourceSquare, targetSquare, sourcePiece);
+    public MoveResult move(Square from, Square to) {
+        Piece movePiece = findPieceBySquare(from);
+        Piece targetPiece = findPieceBySquare(to);
+        checkCanMove(from, to, movePiece, targetPiece);
+        checkRoute(from, to);
+        updateBoard(from, to, movePiece);
+        return MoveResult.from(from, to,
+                findPieceBySquare(from), findPieceBySquare(to), targetPiece);
     }
 
-    private MoveType getMoveType(Piece sourcePiece, Square targetSquare) {
-        Piece targetPiece = findPieceBySquare(targetSquare);
+    private void checkCanMove(Square from, Square to, Piece movePiece, Piece targetPiece) {
+        if (!movePiece.movable(from, to, getMoveType(movePiece, targetPiece))) {
+            throw new IllegalArgumentException("해당 칸으로 이동할 수 없습니다.");
+        }
+    }
+
+    private MoveType getMoveType(Piece sourcePiece, Piece targetPiece) {
         if (targetPiece.isAlly(sourcePiece)) {
             throw new IllegalArgumentException("동료를 공격할 수 없습니다.");
         }
@@ -78,41 +84,15 @@ public final class Board {
         board.replace(sourceSquare, new Empty());
     }
 
-    public boolean bothKingAlive() {
-        return board.keySet().stream()
-                .map(board::get)
-                .filter(Piece::isKing)
-                .count() == VALID_KING_COUNT;
+    public Score calculateScore() {
+        return Score.of(board);
     }
 
-    public double calculatePoint(Color color) {
-        return board.entrySet().stream()
-                .filter(entry -> entry.getValue().isSameColor(color))
-                .mapToDouble(entry -> calculateEachPoint(entry.getKey()))
-                .sum();
+    public GameResult getResult() {
+        return GameResult.from(board, calculateScore());
     }
 
-    private double calculateEachPoint(Square square) {
-        Piece piece = board.get(square);
-        if (piece.isPawn() && hasAllyPawnInSameFile(square, piece)) {
-            return piece.getPointValue() / PAWN_POINT_DIVIDE_VALUE;
-        }
-        return piece.getPointValue();
-    }
-
-    private boolean hasAllyPawnInSameFile(Square sourceSquare, Piece sourcePiece) {
-        return board.keySet().stream()
-                .filter(square -> sourceSquare.isSameFile(square) && sourceSquare.isDifferent(square))
-                .map(board::get)
-                .anyMatch(piece -> piece.isPawn() && piece.isAlly(sourcePiece));
-    }
-
-    public boolean has(Piece piece) {
-        return board.values().stream()
-                .anyMatch(piece::equals);
-    }
-
-    public void remove() {
-        board = Collections.emptyMap();
+    public Map<Square, Piece> getBoard() {
+        return board;
     }
 }

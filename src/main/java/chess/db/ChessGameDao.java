@@ -1,10 +1,11 @@
 package chess.db;
 
-import chess.domain.ChessGame;
+import java.util.List;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import chess.domain.ChessGame;
 
 @Repository
 public class ChessGameDao {
@@ -22,6 +23,11 @@ public class ChessGameDao {
     public void updateTurn(String gameID, ChessGame chessGame) {
         String sql = "update chessGame set turn = ? where gameID = ?";
         jdbcTemplate.update(sql, chessGame.getTurn().name(), gameID);
+    }
+
+    public void initTurn(String gameID) {
+        String sql = "update chessGame set turn = ? where gameID = ?";
+        jdbcTemplate.update(sql, "WHITE", gameID);
     }
 
     public String findTurnByID(String gameID) {

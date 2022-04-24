@@ -1,5 +1,7 @@
 package chess.service;
 
+import org.springframework.stereotype.Service;
+
 import chess.db.ChessGameDao;
 import chess.db.PieceDao;
 import chess.domain.ChessGame;
@@ -9,7 +11,6 @@ import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.board.SavedBoardGenerator;
 import chess.domain.position.Square;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
@@ -59,6 +60,12 @@ public class ChessService {
 
     public void updateTurn(String gameID, ChessGame chessGame) {
         chessGameDao.updateTurn(gameID, chessGame);
+    }
+
+    public void loadTurn(String restart, String gameID) {
+        if ("true".equals(restart)) {
+            chessGameDao.initTurn(gameID);
+        }
     }
 
     public void loadPieces(String gameID) {

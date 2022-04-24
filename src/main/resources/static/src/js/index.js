@@ -133,16 +133,16 @@ async function handleErrors(response) {
 }
 
 async function enterRoom(id) {
-    //  GET 요청 -> 받다보니, 결국엔 roomId도 같이내려와야할 듯 (현재 안내려오는 중)
-    let game = await fetch("/api/chess/rooms/enter?id=" + id)
+    let response = await fetch("/api/chess/rooms/" + id + "/enter")
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         })
-    game = await game.json();
-    console.log("game>>>", game);
-    // 진정, html명? 쿼리 파라미터 방법 밖엔 없는가?
-    window.location.replace("/game.html?id=" + game.id);
+    // console.log("response>>>", response);
+    // controller에서 ok/notFound 나눠서 처리
+    // -> front에서 response.ok아닐시 처리되도록 handleErrors()가 처리해줌
+    // -> 여긴 ok로 통과상태니 그냥 redirect
+    window.location.replace("/game.html?id=" + id);
 }
 
 

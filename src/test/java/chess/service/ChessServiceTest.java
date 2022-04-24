@@ -49,11 +49,11 @@ class ChessServiceTest {
         assertThat(roomsResponseDto.getRoomResponseDtos()).hasSize(2);
     }
 
-    @DisplayName("체스 초보만 방에 입장한다.")
+    @DisplayName("체스 초보만 방이 정보를 가져온다.")
     @Test
     void enterRoom() {
         final Long id = createTestRoom("체스 초보만").getId();
-        final GameResponseDto gameResponseDto = chessService.enterRoom(id);
+        final GameResponseDto gameResponseDto = chessService.getCurrentBoard(id);
 
         assertAll(
             () -> assertThat(gameResponseDto.getName()).isEqualTo("체스 초보만"),

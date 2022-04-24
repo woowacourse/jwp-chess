@@ -28,12 +28,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class SpringChessControllerTest {
+class WebChessControllerTest {
 
     private MockMvc mockMvc;
 
     @Autowired
-    private SpringChessController controller;
+    private WebChessController controller;
 
     @MockBean
     private ChessService chessService;

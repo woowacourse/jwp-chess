@@ -53,4 +53,11 @@ public class ChessController {
     public ResponseEntity<StatusResponseDto> calculateStatus(@PathVariable Long id) {
         return ResponseEntity.ok(chessService.createStatus(id));
     }
+
+    @PatchMapping("/{id}/update")
+    public ResponseEntity<?> changeRoomName(@PathVariable Long id,
+                                         @RequestBody RoomRequestDto roomRequestDto) {
+        chessService.updateRoomName(id, roomRequestDto.getName());
+        return ResponseEntity.ok().build();
+    }
 }

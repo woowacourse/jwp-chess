@@ -123,28 +123,31 @@ async function enterRoom(id) {
 }
 
 
-function updateRoomName(id) {
+async function updateRoomName(id) {
 
     const roomName = window.prompt("바꿀 방 제목을 입력해주세요");
 
-    let f = document.createElement("form");
-    f.setAttribute("method", "post");
-    f.setAttribute("action", "/room/update/"); //url
-    document.body.appendChild(f);
+    if (roomName === null) {
+        return;
+    }
 
-    let i = document.createElement("input");
-    i.setAttribute("type", "hidden");
-    i.setAttribute("name", "roomName"); // key
-    i.setAttribute("value", roomName); // value
-    f.appendChild(i);
+    const bodyValue = {
+        name: roomName
+    }
 
-    let i2 = document.createElement("input");
-    i2.setAttribute("type", "hidden");
-    i2.setAttribute("name", "roomId"); // key
-    i2.setAttribute("value", id); // value
-    f.appendChild(i2);
-
-    f.submit();
+    await fetch("/api/chess/rooms/" + id + "/update",{
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)
+    })
+        .then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        });
+    window.location.reload();
 }
 
 async function deleteRoom(id) {

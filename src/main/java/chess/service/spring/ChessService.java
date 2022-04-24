@@ -68,17 +68,11 @@ public class ChessService {
     }
 
     public StatusDto selectStatus() {
-        State state = gameDao.findState();
-        ChessBoard chessBoard = boardDao.find();
-        ChessGame chessGame = new ChessGame(state, chessBoard);
-
+        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
         chessGame.playGameByCommand(GameCommand.of("status"));
-        final Map<Color, Double> scores = chessGame.calculateScore();
+        Map<Color, Double> scores = chessGame.calculateScore();
 
-        Map<String, Double> status = new HashMap<>();
-        status.put(Color.WHITE.name(), scores.get(Color.WHITE));
-        status.put(Color.BLACK.name(), scores.get(Color.BLACK));
-        return new StatusDto(status);
+        return new StatusDto(scores.get(Color.WHITE), scores.get(Color.BLACK));
     }
 
     @Transactional

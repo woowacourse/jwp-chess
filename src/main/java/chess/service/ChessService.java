@@ -48,15 +48,19 @@ public class ChessService {
             return createGame(gameId);
         }
         GameState gameState = maybeGameState.get();
+        Board board = createBoard(gameId);
+        chessGames.put(gameId, new ChessGame(board, gameState));
+        return new ChessGameResponse(getChessGame(gameId));
+    }
+
+    private Board createBoard(long gameId) {
         Map<Position, Piece> pieces = new HashMap<>();
         for (PieceResponse pieceResponse : pieceDao.findAll(gameId)) {
             Position position = parseStringToPosition(pieceResponse.getPosition());
             Piece piece = pieceResponse.toPiece();
             pieces.put(position, piece);
         }
-        Board board = new Board(() -> pieces);
-        chessGames.put(gameId, new ChessGame(board, gameState));
-        return new ChessGameResponse(getChessGame(gameId));
+        return new Board(() -> pieces);
     }
 
     private ChessGame getChessGame(long gameId) {

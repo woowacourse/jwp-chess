@@ -5,6 +5,8 @@ import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.ErrorResponse;
 import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +33,8 @@ public class ChessController {
     }
 
     @PostMapping("/games/{gameId}")
-    public ChessGameResponse createGame(@PathVariable long gameId) {
-        return chessService.createGame(gameId);
+    public ResponseEntity<ChessGameResponse> createGame(@PathVariable long gameId) throws URISyntaxException {
+        return ResponseEntity.created(new URI("/api/games/" + gameId)).body(chessService.createGame(gameId));
     }
 
     @PutMapping("/games/{gameId}")
@@ -54,6 +56,7 @@ public class ChessController {
     public ChessGameResponse endGame(@PathVariable long gameId) {
         return chessService.end(gameId);
     }
+    // TODO: 게임 삭제 기능으로 변경 필요
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleError(IllegalArgumentException e) {

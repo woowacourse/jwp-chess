@@ -75,7 +75,7 @@ class ChessControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/api/games/" + testGameId)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @Nested

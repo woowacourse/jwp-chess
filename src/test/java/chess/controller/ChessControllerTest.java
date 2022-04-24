@@ -4,7 +4,6 @@ import static chess.controller.ControllerTestFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -139,13 +138,62 @@ class ChessControllerTest {
                 , BoardsDto.of(createBoardEntities()));
         String response = objectMapper.writeValueAsString(gameResponseDto);
 
-        MoveRequestDto moveRequestDto = new MoveRequestDto(source, target);
+        MoveRequestDto moveRequestDto = new MoveRequestDto(WHITE_SOURCE, WHITE_TARGET);
         given(chessService.move(anyLong(), any(MoveRequestDto.class)))
                 .willReturn(gameResponseDto);
         mockMvc.perform(post(DEFAULT_API + "/1/move")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(moveRequestDto))
                 ).andExpect(status().isOk())
+                .andExpect(content().string(response));
+    }
+
+    @DisplayName("움직임 요청시 자신의 차례가 아닌 경우 400 bad request와 errorResponseDto를 반환한다.")
+    @Test
+    void moveNotMyTurnException() throws Exception {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_NOT_TURN);
+        String response = objectMapper.writeValueAsString(errorResponseDto);
+        given(chessService.move(anyLong(), any(MoveRequestDto.class)))
+                .willThrow(new IllegalStateException(ERROR_NOT_TURN));
+
+        MoveRequestDto moveRequestDto = new MoveRequestDto(BLACK_SOURCE, BLACK_TARGET);
+        mockMvc.perform(post(DEFAULT_API + "/1/move")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(moveRequestDto))
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().string(response));
+    }
+
+    @DisplayName("움직임 요청시 움직일 수 없는 경우 400 bad request와 errorResponseDto를 반환한다.")
+    @Test
+    void moveNotMovableException() throws Exception {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_NOT_MOVABLE);
+        String response = objectMapper.writeValueAsString(errorResponseDto);
+        given(chessService.move(anyLong(), any(MoveRequestDto.class)))
+                .willThrow(new IllegalStateException(ERROR_NOT_MOVABLE));
+
+        MoveRequestDto moveRequestDto = new MoveRequestDto(BLACK_SOURCE, WHITE_TARGET);
+        mockMvc.perform(post(DEFAULT_API + "/1/move")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(moveRequestDto))
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().string(response));
+    }
+
+    @DisplayName("움직임 요청시 게임이 종료된 경우 400 bad request와 errorResponseDto를 반환한다.")
+    @Test
+    void moveException() throws Exception {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_FINISHED);
+        String response = objectMapper.writeValueAsString(errorResponseDto);
+
+        given(chessService.move(anyLong(), any(MoveRequestDto.class)))
+                .willThrow(new IllegalArgumentException(ERROR_FINISHED));
+
+        MoveRequestDto moveRequestDto = new MoveRequestDto(BLACK_SOURCE, WHITE_TARGET);
+        mockMvc.perform(post(DEFAULT_API + "/1/move")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(moveRequestDto))
+                ).andExpect(status().isBadRequest())
                 .andExpect(content().string(response));
     }
 

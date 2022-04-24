@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -19,12 +18,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class WebChessBoardDao implements BoardDao<ChessBoard> {
 
-    @Autowired
-    private WebChessMemberDao webChessMemberDao;
+    private final WebChessMemberDao webChessMemberDao;
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public WebChessBoardDao(NamedParameterJdbcTemplate jdbcTemplate) {
+    public WebChessBoardDao(WebChessMemberDao webChessMemberDao,
+                            NamedParameterJdbcTemplate jdbcTemplate) {
+        this.webChessMemberDao = webChessMemberDao;
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -20,23 +20,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public final class GameService {
 
-    @Autowired
-    private WebChessBoardDao boardDao;
+    private final WebChessBoardDao boardDao;
+    private final WebChessPositionDao positionDao;
+    private final WebChessPieceDao pieceDao;
+    private final WebChessMemberDao memberDao;
 
-    @Autowired
-    private WebChessPositionDao positionDao;
-
-    @Autowired
-    private WebChessPieceDao pieceDao;
-
-    @Autowired
-    private WebChessMemberDao memberDao;
+    public GameService(WebChessBoardDao boardDao, WebChessPositionDao positionDao, WebChessPieceDao pieceDao,
+                       WebChessMemberDao memberDao) {
+        this.boardDao = boardDao;
+        this.positionDao = positionDao;
+        this.pieceDao = pieceDao;
+        this.memberDao = memberDao;
+    }
 
     public ChessBoard saveBoard(final ChessBoard board, final Initializer initializer) {
         final ChessBoard savedBoard = boardDao.save(board);

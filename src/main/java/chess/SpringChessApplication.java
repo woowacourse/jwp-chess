@@ -4,7 +4,6 @@ import chess.domain.game.ChessController;
 import chess.dto.RequestDto;
 import chess.dto.ResponseDto;
 import chess.dto.StatusDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
@@ -20,8 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class SpringChessApplication {
 
-    @Autowired
-    private ChessController controller;
+    private final ChessController controller;
+
+    public SpringChessApplication(ChessController controller) {
+        this.controller = controller;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(SpringChessApplication.class, args);

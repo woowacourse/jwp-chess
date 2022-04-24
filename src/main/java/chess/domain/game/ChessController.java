@@ -13,7 +13,6 @@ import chess.service.GameService;
 import java.util.Arrays;
 import java.util.List;
 import org.eclipse.jetty.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,8 +23,11 @@ public class ChessController {
     private static final int SOURCE_INDEX = 1;
     private static final int TARGET_INDEX = 2;
 
-    @Autowired
-    private GameService gameService;
+    private final GameService gameService;
+
+    public ChessController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     public int startGame(RequestDto requestDto) {
         final ChessBoard board = new ChessBoard(requestDto.getTitle(), Color.WHITE,

@@ -14,6 +14,8 @@ import chess.web.dao.BoardStateDao;
 import chess.web.dao.PieceDao;
 import chess.web.dto.ChessResultDto;
 import chess.web.dto.ChessStatusDto;
+import chess.web.dto.MovePositionsDto;
+import chess.web.dto.MoveResultDto;
 import chess.web.dto.PieceDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -62,7 +64,22 @@ public class ChessService {
         pieceDao.deleteAll();
     }
 
-    public void move(ChessGame chessGame, Position source, Position target) {
+    public MoveResultDto getMoveResult(MovePositionsDto movePositionsDto) {
+        ChessGame chessGame = getChessGame();
+
+        try {
+            chessGame.move(movePositionsDto.getSource(), movePositionsDto.getTarget());
+            Position sourcePosition = new Position(movePositionsDto.getSource());
+            Position targetPosition = new Position(movePositionsDto.getTarget());
+            move(chessGame, sourcePosition, targetPosition);
+        } catch (Exception ex) {
+            return new MoveResultDto(400, ex.getMessage(), chessGame.isFinished());
+        }
+
+        return new MoveResultDto(200, "", chessGame.isFinished());
+    }
+
+    private void move(ChessGame chessGame, Position target, Position source) {
         boardStateDao.update(chessGame.getStateType());
         pieceDao.update(new PieceDto(chessGame.board().findPiece(target), target));
         pieceDao.update(new PieceDto(chessGame.board().findPiece(source), source));

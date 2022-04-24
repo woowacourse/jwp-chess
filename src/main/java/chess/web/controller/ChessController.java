@@ -1,10 +1,6 @@
 package chess.web.controller;
 
-import chess.domain.ChessGame;
-import chess.domain.Color;
-import chess.domain.position.Position;
 import chess.web.dto.MovePositionsDto;
-import chess.web.dto.MoveResultDto;
 import chess.web.service.ChessService;
 import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
@@ -36,20 +32,7 @@ public class ChessController {
     @ResponseBody
     @PostMapping("/move")
     public String movePiece(@RequestBody MovePositionsDto movePositionsDto) {
-        ChessGame chessGame = chessService.getChessGame();
-        Gson gson = new Gson();
-
-        try {
-            chessGame.move(movePositionsDto.getSource(), movePositionsDto.getTarget());
-            Position sourcePosition = new Position(movePositionsDto.getSource());
-            Position targetPosition = new Position(movePositionsDto.getTarget());
-            chessService.move(chessGame, sourcePosition, targetPosition);
-
-
-        } catch (Exception ex) {
-            return gson.toJson(new MoveResultDto(400, ex.getMessage(), chessGame.isFinished()));
-        }
-        return gson.toJson(new MoveResultDto(200, "", chessGame.isFinished()));
+        return new Gson().toJson(chessService.getMoveResult(movePositionsDto));
     }
 
     @GetMapping("/start")

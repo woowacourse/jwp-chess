@@ -12,7 +12,5 @@
 - [x] 기존 Spark 환경을 Spring으로 변경
 - [x] JDBC 템플릿으로 변경
 
-### 질문할 내용
-- ChessService.movePiece 메서드에 DTO를 적용해야할까? 
 
-- [온라인 코드 리뷰 과정](https://github.com/woowacourse/woowacourse-docs/blob/master/maincourse/README.md)
+[온라인 코드 리뷰 과정](https://github.com/woowacourse/woowacourse-docs/blob/master/maincourse/README.md)

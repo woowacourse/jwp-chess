@@ -33,7 +33,7 @@ public class BoardStateDaoJdbcImpl implements BoardStateDao {
     }
 
     @Override
-    public StateType selectState() {
+    public StateType findState() {
         final String sql = "select state from board order by id desc limit 1";
         return jdbcTemplate.queryForObject(sql, boardStateRowMapper);
     }

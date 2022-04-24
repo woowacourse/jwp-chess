@@ -43,7 +43,7 @@ public class PieceDaoJdbcImpl implements PieceDao {
     }
 
     @Override
-    public List<PieceDto> selectAll() {
+    public List<PieceDto> findAll() {
         final String sql = "select * from piece";
         return jdbcTemplate.query(sql, pieceDtoRowMapper);
     }

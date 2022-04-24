@@ -38,14 +38,14 @@ class BoardStateDaoTest {
         boardStateDao.update(StateType.BLACK_TURN);
         StateType expected = StateType.BLACK_TURN;
 
-        StateType actual = boardStateDao.selectState();
+        StateType actual = boardStateDao.findState();
         assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("보드 상태를 가져온다.")
     @Test
     void selectState() {
-        StateType actual = boardStateDao.selectState();
+        StateType actual = boardStateDao.findState();
         StateType expected = StateType.WHITE_TURN;
 
         assertThat(actual).isEqualTo(expected);
@@ -56,7 +56,7 @@ class BoardStateDaoTest {
     void deleteAll() {
         boardStateDao.deleteAll();
 
-        assertThatThrownBy(() -> boardStateDao.selectState())
+        assertThatThrownBy(() -> boardStateDao.findState())
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

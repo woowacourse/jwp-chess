@@ -11,5 +11,5 @@ public interface PieceDao {
 
     void update(PieceDto pieceDto);
 
-    List<PieceDto> selectAll();
+    List<PieceDto> findAll();
 }

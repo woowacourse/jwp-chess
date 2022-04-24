@@ -42,7 +42,7 @@ class PieceDaoTest {
     void deleteAll() {
         pieceDao.deleteAll();
 
-        int actual = pieceDao.selectAll().size();
+        int actual = pieceDao.findAll().size();
         int expected = 0;
 
         assertThat(actual).isEqualTo(expected);
@@ -53,7 +53,7 @@ class PieceDaoTest {
     void update() {
         pieceDao.update(new PieceDto(new Queen(Color.WHITE), new Position("a1")));
 
-        List<PieceDto> pieceDtos = pieceDao.selectAll();
+        List<PieceDto> pieceDtos = pieceDao.findAll();
         String actual = pieceDtos.get(0).getPieceType();
         String expected = "Q";
 
@@ -62,7 +62,7 @@ class PieceDaoTest {
 
     @Test
     void selectAll() {
-        List<PieceDto> pieceDtos = pieceDao.selectAll();
+        List<PieceDto> pieceDtos = pieceDao.findAll();
         int actual = pieceDtos.size();
         int expected = 1;
 

@@ -113,11 +113,11 @@ public class ChessService {
     }
 
     private StateType getStateType() {
-        return boardStateDao.selectState();
+        return boardStateDao.findState();
     }
 
     private List<PieceDto> getPieces() {
-        return pieceDao.selectAll();
+        return pieceDao.findAll();
     }
 
     public double getScore(Color color) {

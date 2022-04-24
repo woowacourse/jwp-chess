@@ -8,7 +8,7 @@ public interface BoardStateDao {
 
     void update(StateType stateType);
 
-    StateType selectState();
+    StateType findState();
 
     void deleteAll();
 }

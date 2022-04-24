@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BoardJdbcTemplateDao implements BoardDao{
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public BoardJdbcTemplateDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

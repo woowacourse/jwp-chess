@@ -37,6 +37,7 @@ class SpringWebChessControllerTest {
     @DisplayName("체스 게임을 종료하고 게임보드 데이터가 전송된다.")
     @Test
     void end() {
+        start();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/game/end")

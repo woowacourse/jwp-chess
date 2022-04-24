@@ -1,7 +1,3 @@
-drop database if exists chess;
-create database chess;
-use chess;
-
 drop table if exists piece cascade;
 drop table if exists game cascade;
 
@@ -23,5 +19,3 @@ create table piece
     unique key (game_no, position),
     foreign key (game_no) references game (no)
 );
-
-grant all privileges on chess.* to 'user'@'%';

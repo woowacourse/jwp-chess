@@ -2,10 +2,10 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.dao.InMemoryBoardDao;
+import chess.dao.InMemoryPieceDao;
 import chess.dao.InMemoryGameDao;
 import chess.service.dto.BoardDto;
-import chess.service.dto.ChessGameDto;
+import chess.service.dto.GameEntity;
 import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 
 class ChessServiceTest {
     private ChessService service;
-    private InMemoryBoardDao boardDao;
+    private InMemoryPieceDao boardDao;
     private InMemoryGameDao gameDao;
 
     @BeforeEach
     void setUp() {
-        boardDao = new InMemoryBoardDao();
+        boardDao = new InMemoryPieceDao();
         gameDao = new InMemoryGameDao();
         service = new ChessService(boardDao, gameDao);
     }
@@ -42,27 +42,13 @@ class ChessServiceTest {
         service.createGame("firstGame");
         service.initGame(1);
         service.move(1, "a2", "a4");
-        ChessGameDto chessGameDto = gameDao.getGameTable().get(1);
+        GameEntity gameEntity = gameDao.getGameTable().get(1);
         BoardDto boardDto = boardDao.getBoardTable().get(1);
         boolean fromSquareIsEmpty = boardDto.getPieces().stream()
                 .anyMatch(piece -> piece.getSquare().equals("a2") && piece.getType().equals("EMPTY"));
         boolean toSquareIsPawn = boardDto.getPieces().stream()
                 .anyMatch(piece -> piece.getSquare().equals("a4") && piece.getType().equals("PAWN"));
         assertThat(fromSquareIsEmpty && toSquareIsPawn).isTrue();
-    }
-
-    @Test
-    void isRunning() {
-        service.createGame("firstGame");
-        service.initGame(1);
-        assertThat(service.isRunning(1)).isTrue();
-    }
-
-    @Test
-    void isGameEmpty() {
-        service.createGame("firstGame");
-        service.initGame(1);
-        assertThat(service.isGameEmpty(1)).isFalse();
     }
 
     @Test
@@ -73,7 +59,7 @@ class ChessServiceTest {
         BoardDto boardDto = boardDao.getBoardTable().get(1);
         String status = gameDao.getGameTable().get(1).getStatus();
         assertThat(boardDto).isNull();
-        assertThat(status).isEqualTo("EMPTY");
+        assertThat(status).isEqualTo("END");
     }
 
     @Test

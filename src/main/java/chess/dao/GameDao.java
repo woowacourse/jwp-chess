@@ -1,15 +1,13 @@
 package chess.dao;
 
-import chess.service.dto.ChessGameDto;
+import chess.service.dto.GameEntity;
 import chess.service.dto.GamesDto;
 import chess.service.dto.StatusDto;
 
 public interface GameDao {
-    void update(ChessGameDto dto);
+    void update(GameEntity dto);
 
-    ChessGameDto findById(int id);
-
-    void updateStatus(StatusDto statusDto, int id);
+    GameEntity findById(int id);
 
     GamesDto findAll();
 

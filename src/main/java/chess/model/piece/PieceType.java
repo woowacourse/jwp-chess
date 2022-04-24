@@ -2,7 +2,7 @@ package chess.model.piece;
 
 import chess.model.Color;
 import chess.model.piece.pawn.Pawn;
-import chess.service.dto.PieceWithSquareDto;
+import chess.service.dto.PieceEntity;
 import java.util.Arrays;
 import java.util.function.Function;
 
@@ -91,7 +91,7 @@ public enum PieceType {
         return getStringByPieceLetter(piece, Enum::name);
     }
 
-    public static Piece createPiece(PieceWithSquareDto pieceDto) {
+    public static Piece createPiece(PieceEntity pieceDto) {
         PieceType pieceType = valueOf(pieceDto.getType().toUpperCase());
         Color color = Color.valueOf(pieceDto.getColor().toUpperCase());
         return pieceType.getPiece(color);

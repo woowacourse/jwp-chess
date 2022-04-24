@@ -1,7 +1,7 @@
 package chess.console;
 
 import chess.console.controller.ConsoleChessController;
-import chess.model.ChessGame;
+import chess.model.game.ChessGame;
 
 public class Main {
 

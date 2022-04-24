@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@Transactional
 class ChessGameDAOTest {
 
     @Autowired
@@ -20,18 +20,26 @@ class ChessGameDAOTest {
     @Test
     @DisplayName("체스 게임방 생성")
     void makeChessGameRoom() {
+        String gameId = addZero();
+
+        Assertions.assertThat(gameId).isNotNull();
+    }
+
+    private String addZero() {
         ChessGameDAO chessGameDAO = new ChessGameDAO(template);
         ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName("zero");
         String gameId = chessGameDAO.addGame(chessGame);
-
-        Assertions.assertThat(gameId).isNotNull();
+        return gameId;
     }
 
     @Test
     @DisplayName("체스 게임방 가져오기")
     void findChessGameRoom() {
         ChessGameDAO chessGameDAO = new ChessGameDAO(template);
+        ChessGame chessGame = ChessGame.initChessGame();
+        chessGame.setName("zero");
+        String gameId = chessGameDAO.addGame(chessGame);
         List<ChessGameRoomInfoDTO> activeGames = chessGameDAO.findActiveGames();
 
         Assertions.assertThat(activeGames.size()).isNotEqualTo(0);

@@ -1,7 +1,9 @@
 package chess.dao;
 
 import chess.domain.position.Position;
+
 import java.util.List;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

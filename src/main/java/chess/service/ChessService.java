@@ -8,17 +8,17 @@ import chess.dao.ChessGameDAO;
 import chess.dao.Movement;
 import chess.dao.MovementDAO;
 import chess.dto.ChessGameRoomInfoDTO;
+
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public final class ChessService {
 
-//    private static final ChessGameDAO CHESS_GAME_DAO = new ChessGameDAO();
-//    private static final MovementDAO MOVEMENT_DAO = new MovementDAO();
     private final ChessGameDAO chessGameDAO;
     private final MovementDAO movementDAO;
 
@@ -49,7 +49,7 @@ public final class ChessService {
         final ChessGame chessGame = getChessGamePlayed(gameId);
         validateCurrentTurn(chessGame, team);
         move(chessGame, new Movement(Position.of(source), Position.of(target)), team);
-        if (chessGame.isGameSet()){
+        if (chessGame.isGameSet()) {
             chessGameDAO.updateGameEnd(gameId);
         }
         return chessGame;

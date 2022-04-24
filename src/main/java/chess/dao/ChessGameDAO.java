@@ -1,8 +1,10 @@
 package chess.dao;
 
 import chess.dto.ChessGameRoomInfoDTO;
+
 import java.sql.PreparedStatement;
 import java.util.List;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

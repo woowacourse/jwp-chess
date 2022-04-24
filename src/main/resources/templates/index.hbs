@@ -102,11 +102,9 @@
         <input type="submit" value="움직이기">
     </form>
 
-    <form action="/game/status">
-        <input type="submit" value="점수현황">
-        <p>{{white}}</p>
-        <p>{{black}}</p>
-    </form>
+    <button onClick='selectStatus()'>점수현황</button>
+    <p id="score">{{data}}</p>
 </div>
 </body>
+<script src ="/src/index.js"></script>
 </html>

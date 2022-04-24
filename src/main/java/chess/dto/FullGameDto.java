@@ -14,6 +14,7 @@ public class FullGameDto {
         this.snapshot = snapshot;
     }
 
+    // TODO: should be cleansed
     public GameStateDto getGame() {
         return snapshot.getGame();
     }
@@ -24,6 +25,10 @@ public class FullGameDto {
 
     public List<RowDto> getBoard() {
         return snapshot.getBoard();
+    }
+
+    public GameSnapshotDto getSnapshot() {
+        return snapshot;
     }
 
     @Override

@@ -1,5 +1,6 @@
 @import "global.css";
 @import "chessboard.css";
+@import "simple_form.css";
 
 body {
     display: flex;

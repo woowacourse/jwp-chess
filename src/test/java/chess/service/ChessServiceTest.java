@@ -6,13 +6,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.auth.AuthCredentials;
 import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
+import chess.domain.game.Game;
 import chess.domain.game.NewGame;
 import chess.dto.CreatedGameDto;
 import chess.dto.FullGameDto;
 import chess.dto.GameCountDto;
-import chess.dto.GameSnapshotDto;
 import chess.dto.GameOverviewDto;
 import chess.dto.GameResultDto;
+import chess.dto.GameSnapshotDto;
 import chess.dto.SearchResultDto;
 import chess.service.fixture.EventDaoStub;
 import chess.service.fixture.GameDaoStub;
@@ -140,13 +141,17 @@ class ChessServiceTest {
     void findGameResult_메서드는_종료된_게임의_승자_및_점수_정보를_계산하여_반환한다() {
         GameResultDto actual = service.findGameResult(3);
 
-        GameResultDto expected = new GameResultDto(3, new NewGame()
-                .play(new InitEvent())
+        Game expectedGame = new NewGame().play(new InitEvent())
                 .play(new MoveEvent("e2 e4"))
                 .play(new MoveEvent("d7 d5"))
                 .play(new MoveEvent("f1 b5"))
                 .play(new MoveEvent("a7 a5"))
-                .play(new MoveEvent("b5 e8")));
+                .play(new MoveEvent("b5 e8"));
+        GameResultDto expected = new GameResultDto(
+                new FullGameDto(
+                        new GameOverviewDto(3, "종료된_게임"),
+                        expectedGame.toDtoOf(3)),
+                expectedGame.getResult());
 
         assertThat(actual).isEqualTo(expected);
     }

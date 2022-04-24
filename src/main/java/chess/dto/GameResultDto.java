@@ -1,21 +1,24 @@
 package chess.dto;
 
-import chess.domain.game.Game;
 import chess.domain.game.statistics.GameResult;
 import java.util.Objects;
 
 public class GameResultDto {
 
-    private final GameSnapshotDto gameInfo;
+    private final FullGameDto game;
     private final GameResult result;
 
-    public GameResultDto(int gameId, Game game) {
-        this.gameInfo = game.toDtoOf(gameId);
-        this.result = game.getResult();
+    public GameResultDto(FullGameDto game, GameResult result) {
+        this.game = game;
+        this.result = result;
+    }
+
+    public String getName() {
+        return game.getName();
     }
 
     public GameSnapshotDto getGameInfo() {
-        return gameInfo;
+        return game.getSnapshot();
     }
 
     public GameResult getResult() {
@@ -31,17 +34,20 @@ public class GameResultDto {
             return false;
         }
         GameResultDto that = (GameResultDto) o;
-        return Objects.equals(gameInfo, that.gameInfo)
+        return Objects.equals(game, that.game)
                 && Objects.equals(result, that.result);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gameInfo, result);
+        return Objects.hash(game, result);
     }
 
     @Override
     public String toString() {
-        return "GameResultDto{" + "gameInfo=" + gameInfo + ", result=" + result + '}';
+        return "GameResultDto{" +
+                "game=" + game +
+                ", result=" + result +
+                '}';
     }
 }

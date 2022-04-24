@@ -34,8 +34,10 @@ class ChessServiceTest {
     @Test
     void createRoom() {
         final RoomResponseDto room = createTestRoom("체스 초보만");
-        assertThat(room.getName()).isEqualTo("체스 초보만");
-        assertThat(boardRepository.findBoardByRoomId(room.getId())).hasSize(64);
+        assertAll(
+                () -> assertThat(room.getName()).isEqualTo("체스 초보만"),
+                () -> assertThat(boardRepository.findBoardByRoomId(room.getId())).hasSize(64)
+        );
     }
 
     @DisplayName("생성한 체스 방을 모두 가져온다.")
@@ -104,7 +106,7 @@ class ChessServiceTest {
         final Long id = createTestRoom("체스 초보만").getId();
         chessService.endRoom(id);
         final RoomsResponseDto rooms = chessService.findRooms();
-        assertThat(rooms.getRoomResponseDtos()).hasSize(0);
+        assertThat(rooms.getRoomResponseDtos()).isEmpty();
     }
 
     @DisplayName("종료된 방에 다시 종료를 요청하여 에러가 발생한다.")
@@ -118,7 +120,7 @@ class ChessServiceTest {
             .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }
 
-    @DisplayName("")
+    @DisplayName("최초 방생성시 score를 확인한다.")
     @Test
     void createStatus() {
         final Long id = createTestRoom("체스 초보만").getId();

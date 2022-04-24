@@ -10,6 +10,9 @@
 <body>
 <div id="app">
     <h1>♟️ 초간단 체스</h1>
+    {{#error}}
+        <h1> {{error}} </h1>
+    {{/error}}
     <section class="chess-ui">
         {{#this}}
         <div class="gray-square">

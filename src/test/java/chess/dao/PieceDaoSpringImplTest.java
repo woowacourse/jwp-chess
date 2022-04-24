@@ -45,6 +45,19 @@ public class PieceDaoSpringImplTest {
     }
 
     @Test
+    @DisplayName("전체 기물 정보 삭제")
+    void removeAll() {
+        PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
+        PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
+        pieceDaoSpring.save(pieceDtoA2);
+        pieceDaoSpring.save(pieceDtoA3);
+
+        pieceDaoSpring.removeAll();
+
+        assertThat(jdbcTemplate.queryForObject("select count(*) from piece", Integer.class)).isEqualTo(0);
+    }
+
+    @Test
     @DisplayName("기물 정보 저장")
     void save() {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");

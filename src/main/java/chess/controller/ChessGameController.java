@@ -35,7 +35,7 @@ public class ChessGameController {
         return ResponseEntity.ok(status);
     }
 
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<StatusDto> deleteGame(@RequestParam("name") String gameName) {
         final StatusDto status = chessGameService.deleteGame(gameName);
         return ResponseEntity.ok(status);
@@ -47,7 +47,7 @@ public class ChessGameController {
         return ResponseEntity.ok(loadChessGame);
     }
 
-    @PostMapping("/move")
+    @PutMapping("/move")
     public ResponseEntity<ChessGameDto> move(@RequestBody MovePositionDto movePositionDto) {
         final String chessGameName = movePositionDto.getChessGameName();
         final String currentPosition = movePositionDto.getCurrent();

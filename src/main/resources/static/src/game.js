@@ -93,7 +93,10 @@ async function finish() {
 
 async function deleteAndFinish() {
   await fetch("/delete?name=" + gameName, {
-    method: "GET",
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
   })
   alert("방이 삭제됐습니다.");
   removeAllPieces();
@@ -130,7 +133,7 @@ async function movePiece(current, destination) {
 
 async function requestMovePiece(current, destination) {
   let boardAndTurnInfo = await fetch("/move", {
-    method: "POST",
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },

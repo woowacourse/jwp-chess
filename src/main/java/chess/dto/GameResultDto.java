@@ -5,20 +5,20 @@ import java.util.Objects;
 
 public class GameResultDto {
 
-    private final FullGameDto game;
+    private final FullGameDto fullGame;
     private final GameResult result;
 
-    public GameResultDto(FullGameDto game, GameResult result) {
-        this.game = game;
+    public GameResultDto(FullGameDto fullGame, GameResult result) {
+        this.fullGame = fullGame;
         this.result = result;
     }
 
-    public String getName() {
-        return game.getName();
+    public GameOverviewDto getMetadata() {
+        return fullGame.getMetadata();
     }
 
-    public GameSnapshotDto getGameInfo() {
-        return game.getSnapshot();
+    public GameSnapshotDto getSnapshot() {
+        return fullGame.getSnapshot();
     }
 
     public GameResult getResult() {
@@ -34,20 +34,17 @@ public class GameResultDto {
             return false;
         }
         GameResultDto that = (GameResultDto) o;
-        return Objects.equals(game, that.game)
+        return Objects.equals(fullGame, that.fullGame)
                 && Objects.equals(result, that.result);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(game, result);
+        return Objects.hash(fullGame, result);
     }
 
     @Override
     public String toString() {
-        return "GameResultDto{" +
-                "game=" + game +
-                ", result=" + result +
-                '}';
+        return "GameResultDto{" + "fullGame=" + fullGame + ", result=" + result + '}';
     }
 }

@@ -12,7 +12,7 @@ public class HomeController {
     private static final String HTML_TEMPLATE_PATH = "home";
     private static final String RESPONSE_MODEL_KEY = "response";
 
-   private final ChessService chessService;
+    private final ChessService chessService;
 
     public HomeController(ChessService chessService) {
         this.chessService = chessService;

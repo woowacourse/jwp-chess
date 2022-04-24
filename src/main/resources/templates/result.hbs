@@ -8,11 +8,13 @@
 </head>
 <body>
 {{#response}}
+{{#metadata}}
 <section class="header__container">
     <h1 id="game_name">{{name}}</h1>
     <div class="game_info__container">
         <div>
-            <span>게임 ID: {{gameInfo.game.id}} | </span>
+            <span>게임 ID: {{id}} | </span>
+            {{/metadata}}
             {{#result}}
             <span class="bold">승자: {{winner}}</span>
         </div>
@@ -21,8 +23,9 @@
         {{/result}}
     </div>
 </section>
+{{#snapshot}}
 <section id="chess_board">
-    {{#gameInfo.board}}
+    {{#board}}
     <div class="row">
         {{#squares}}
         <div class="square">
@@ -30,13 +33,14 @@
         </div>
         {{/squares}}
     </div>
-    {{/gameInfo.board}}
+    {{/board}}
 </section>
-<form action="/game/{{gameInfo.game.id}}">
+<form action="/game/{{game.id}}">
     <label for="password_input">비밀번호</label>
     <input type="password" required id="password_input" name="password"/>
     <input type="submit" value="삭제"/>
 </form>
+{{/snapshot}}
 <section class="buttons__container">
     <a href="/">홈으로 돌아가기!</a>
 </section>

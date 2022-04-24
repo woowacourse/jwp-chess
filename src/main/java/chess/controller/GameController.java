@@ -4,7 +4,6 @@ import chess.domain.auth.AuthCredentials;
 import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
 import chess.dto.CreatedGameDto;
-import chess.dto.FullGameDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,29 +43,26 @@ public class GameController {
 
     @GetMapping("/{id}")
     public ModelAndView findAndRenderGame(@PathVariable int id) {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(PLAY_GAME_HTML_TEMPLATE_PATH);
-        FullGameDto gameDto = chessService.findGame(id);
-        modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
-        return modelAndView;
+        return getGameModelAndView(id);
     }
 
     @PutMapping("/{id}")
     public ModelAndView updateGame(@PathVariable int id,
                                    @RequestBody MoveRoute moveRoute) {
         chessService.playGame(id, new MoveEvent(moveRoute));
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName(PLAY_GAME_HTML_TEMPLATE_PATH);
-        FullGameDto gameDto = chessService.findGame(id);
-        modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
-        return modelAndView;
+        return getGameModelAndView(id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteGame(@PathVariable int id,
                            @RequestBody AuthCredentials authCredentials) {
-        System.out.println(authCredentials);
         chessService.deleteFinishedGame(id, authCredentials);
+    }
+
+    private ModelAndView getGameModelAndView(int id) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(PLAY_GAME_HTML_TEMPLATE_PATH);
+        modelAndView.addObject(RESPONSE_MODEL_KEY, chessService.findGame(id));
+        return modelAndView;
     }
 }

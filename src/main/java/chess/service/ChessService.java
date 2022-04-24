@@ -40,6 +40,24 @@ public class ChessService {
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    public FullGameDto findGame(int gameId) {
+        GameEntity gameEntity = gameDao.findById(gameId);
+        Game game = currentSnapShotOf(gameId);
+        return new FullGameDto(gameEntity.toDto(), game.toDtoOf(gameId));
+    }
+
+    public GameResultDto findGameResult(int gameId) {
+        GameEntity gameEntity = gameDao.findById(gameId);
+        Game game = currentSnapShotOf(gameId);
+        validateGameOver(game);
+        FullGameDto fullGame = new FullGameDto(gameEntity.toDto(), game.toDtoOf(gameId));
+        return new GameResultDto(fullGame, game.getResult());
+    }
+
+    public SearchResultDto searchGame(int gameId) {
+        return new SearchResultDto(gameId, gameDao.checkById(gameId));
+    }
+
     public GameCountDto countGames() {
         int totalCount = gameDao.countAll();
         int runningCount = gameDao.countRunningGames();
@@ -54,38 +72,19 @@ public class ChessService {
         return new CreatedGameDto(gameId);
     }
 
-    public SearchResultDto searchGame(int gameId) {
-        return new SearchResultDto(gameId, gameDao.checkById(gameId));
-    }
-
-    public FullGameDto findGame(int gameId) {
-        GameEntity gameEntity = gameDao.findById(gameId);
-        Game game = currentSnapShotOf(gameId);
-        return new FullGameDto(gameEntity.toDto(), game.toDtoOf(gameId));
-    }
-
     @Transactional
     public GameSnapshotDto playGame(int gameId, Event moveEvent) {
         Game game = currentSnapShotOf(gameId).play(moveEvent);
 
         eventDao.save(gameId, moveEvent);
-        updateGameState(gameId, game);
+        finishGameOnEnd(gameId, game);
         return game.toDtoOf(gameId);
     }
 
-    private void updateGameState(int gameId, Game game) {
+    private void finishGameOnEnd(int gameId, Game game) {
         if (game.isEnd()) {
             gameDao.finishGame(gameId);
         }
-    }
-
-    public GameResultDto findGameResult(int gameId) {
-        GameEntity gameEntity = gameDao.findById(gameId);
-        Game game = currentSnapShotOf(gameId);
-        validateGameOver(game);
-        return new GameResultDto(
-                new FullGameDto(gameEntity.toDto(), game.toDtoOf(gameId)),
-                game.getResult());
     }
 
     @Transactional

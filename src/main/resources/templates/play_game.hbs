@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 {{#response}}
+{{#metadata}}
 <head>
     <meta charset="UTF-8"/>
     <title>{{name}} | 체스 시뮬레이터</title>
@@ -10,6 +11,8 @@
 <body>
 <section class="header__container">
     <h1>{{name}}</h1>
+    {{/metadata}}
+    {{#snapshot}}
     <div class="game_info__container">
         <span>게임 ID: {{game.id}} | 게임 상태: </span>
         <span class="bold">{{game.state.value}}</span>
@@ -39,6 +42,7 @@
         <a href="/result/{{game.id}}">게임결과 보러 가기!</a>
     </div>
 </section>
+{{/snapshot}}
 {{/response}}
 <script src="/scripts/update-game.js"></script>
 </body>

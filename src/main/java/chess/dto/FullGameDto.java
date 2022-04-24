@@ -1,7 +1,5 @@
 package chess.dto;
 
-import chess.dto.board.RowDto;
-import java.util.List;
 import java.util.Objects;
 
 public class FullGameDto {
@@ -14,17 +12,8 @@ public class FullGameDto {
         this.snapshot = snapshot;
     }
 
-    // TODO: should be cleansed
-    public GameStateDto getGame() {
-        return snapshot.getGame();
-    }
-
-    public String getName() {
-        return metadata.getName();
-    }
-
-    public List<RowDto> getBoard() {
-        return snapshot.getBoard();
+    public GameOverviewDto getMetadata() {
+        return metadata;
     }
 
     public GameSnapshotDto getSnapshot() {

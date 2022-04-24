@@ -47,21 +47,25 @@ public class SpringController {
     }
 
     @PostMapping("/game/{gameName}/move")
-    public String move(@PathVariable String gameName,
-                       @RequestParam("from") String from, @RequestParam("to") String to,
-                       Model model, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
+    public String move(
+        @PathVariable String gameName,
+        @RequestParam("from") String from,
+        @RequestParam("to") String to,
+        Model model,
+        RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
+        String encodedGameName = URLEncoder.encode(gameName, "UTF-8");
         try {
             String command = makeCommand(from, to);
             chessService.move(command);
             if (chessService.isEnd()) {
-                return "redirect:/game/" + gameName + "end";
+                return "redirect:/game/" + encodedGameName + "/end";
             }
         } catch (IllegalArgumentException e) {
             redirectAttributes.addAttribute("error", e.getMessage());
         }
 
         model.addAttribute("gameName", gameName);
-        return "redirect:/game/" + URLEncoder.encode(gameName, "UTF-8");
+        return "redirect:/game/" + encodedGameName;
     }
 
     @GetMapping("/game/{gameName}/end")

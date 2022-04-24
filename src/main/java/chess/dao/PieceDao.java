@@ -9,36 +9,42 @@ import chess.dto.PositionDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class PieceDao {
-    public void save(ChessGameDto chessGameDto) {
-        String sql = "insert into piece (type, team, `rank`, file, game_name) values (?, ?, ?, ?, ?)";
-        try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+    private JdbcTemplate jdbcTemplate;
 
-            ChessBoardDto chessBoard = chessGameDto.getChessBoard();
-            String gameName = chessGameDto.getGameName();
-
-            Map<PositionDto, PieceDto> cells = chessBoard.getCells();
-
-            updateCells(gameName, cells, statement);
-
-        } catch (SQLException e) {
-            throw new IllegalStateException(e.getMessage());
-        }
+    public PieceDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    private void updateCells(String gameName, Map<PositionDto, PieceDto> cells, PreparedStatement statement) throws SQLException {
-        for (PositionDto positionDto : cells.keySet()) {
-            statement.setString(1, cells.get(positionDto).getSymbol());
-            statement.setString(2, cells.get(positionDto).getTeam());
-            statement.setInt(3, positionDto.getRank());
-            statement.setString(4, positionDto.getFile());
-            statement.setString(5, gameName);
+    public void save(ChessGameDto chessGameDto) {
+        String gameName = chessGameDto.getGameName();
+        ChessBoardDto chessBoard = chessGameDto.getChessBoard();
+        Map<PositionDto, PieceDto> cells = chessBoard.getCells();
 
-            statement.executeUpdate();
+        updateCells(gameName, cells);
+    }
+
+    private void updateCells(String gameName, Map<PositionDto, PieceDto> cells) {
+        String sql = "insert into piece (type, team, `rank`, file, game_name) values (?, ?, ?, ?, ?)";
+
+        List<Object[]> parameters = new ArrayList<>();
+        for (PositionDto positionDto : cells.keySet()) {
+            parameters.add(new Object[]{
+                    cells.get(positionDto).getSymbol(),
+                    cells.get(positionDto).getTeam(),
+                    positionDto.getRank(),
+                    positionDto.getFile(),
+                    gameName});
         }
+
+        jdbcTemplate.batchUpdate(sql, parameters);
     }
 
     public void delete(ChessGameDto chessGameDto) {

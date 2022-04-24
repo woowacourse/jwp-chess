@@ -90,7 +90,6 @@ class PieceDaoTest {
         assertThat(result.isPresent()).isTrue();
     }
 
-
     @AfterEach
     void afterEach() {
         pieceDao.deletePieces(gameId);

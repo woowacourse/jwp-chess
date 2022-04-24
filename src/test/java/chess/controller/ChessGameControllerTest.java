@@ -30,7 +30,7 @@ class ChessGameControllerTest {
 
     @Nested
     @DisplayName("[Post] 게임 생성")
-    class createGame {
+    class CreateGameTest {
         @Test
         @DisplayName("새로운 게임을 성공적으로 생성한다.")
         void createNewGame() {
@@ -56,7 +56,7 @@ class ChessGameControllerTest {
 
     @Nested
     @DisplayName("[Get] 게임 불러오기")
-    class loadGame {
+    class LoadGameTest {
         @Test
         @DisplayName("게임을 성공적으로 불러온다.")
         void loadGame() {
@@ -83,7 +83,7 @@ class ChessGameControllerTest {
 
     @Nested
     @DisplayName("[Delete] 게임 삭제하기")
-    class deleteGame {
+    class DeleteGameTest {
         @Test
         @DisplayName("게임을 성공적으로 삭제한다.")
         void deleteGame() {
@@ -111,7 +111,7 @@ class ChessGameControllerTest {
 
     @Nested
     @DisplayName("[Get] 게임 점수 조회하기")
-    class findGameStatus {
+    class FindGameStatusTest {
         @Test
         @DisplayName("점수 조회를 성공적으로 조회한다.")
         void findStatusByGameName() {
@@ -138,7 +138,7 @@ class ChessGameControllerTest {
 
     @Nested
     @DisplayName("[Put] 체스 말 움직이기")
-    class movePiece {
+    class MovePieceTest {
         @Test
         @DisplayName("말을 성공적으로 이동했다")
         void movePiece() {
@@ -167,7 +167,6 @@ class ChessGameControllerTest {
                     .statusCode(HttpStatus.BAD_REQUEST.value());
         }
     }
-
 
     @AfterEach
     void afterEach() {

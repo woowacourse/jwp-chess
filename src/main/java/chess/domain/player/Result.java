@@ -13,7 +13,7 @@ public enum Result {
     }
 
     public static Result from(final double currentPlayerScore, final double opponentPlayerScore,
-            boolean hasKingCurrentPlayer, boolean hasKingOpponentPlayer) {
+                              boolean hasKingCurrentPlayer, boolean hasKingOpponentPlayer) {
         if (hasKingCurrentPlayer && hasKingOpponentPlayer) {
             return calculateScore(currentPlayerScore, opponentPlayerScore);
         }

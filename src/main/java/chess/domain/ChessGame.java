@@ -1,6 +1,5 @@
 package chess.domain;
 
-import chess.controller.Command;
 import chess.domain.player.Player;
 import chess.domain.player.Result;
 import chess.domain.player.Score;
@@ -36,7 +35,7 @@ public class ChessGame {
     }
 
     public void move(final Player currentPlayer, final Player opponentPlayer,
-            final Position currentPosition, final Position destinationPosition) {
+                     final Position currentPosition, final Position destinationPosition) {
         validateMovable(currentPlayer, currentPosition, destinationPosition);
         final boolean hasPieceOfOpponentPlayer = opponentPlayer.hasPiece(destinationPosition);
         if (hasPieceOfOpponentPlayer) {
@@ -48,14 +47,14 @@ public class ChessGame {
     }
 
     private void capture(final Player currentPlayer, final Player opponentPlayer, final Position currentPosition,
-            Position destinationPosition) {
+                         Position destinationPosition) {
         currentPlayer.capture(currentPosition, destinationPosition);
         opponentPlayer.remove(destinationPosition);
         turn = turn.next();
     }
 
     private void validateMovable(final Player currentPlayer, final Position currentPosition,
-            final Position destinationPosition) {
+                                 final Position destinationPosition) {
         if (!currentPlayer.hasPiece(currentPosition)) {
             throw new IllegalArgumentException("선택한 출발 위치에 체스말이 존재하지 않습니다.");
         }
@@ -90,7 +89,7 @@ public class ChessGame {
     }
 
     private List<GameResult> createGameResult(final Score whitePlayerScore, final Score blackPlayerScore,
-            final Result whitePlayerResult, final Result blackPlayerResult) {
+                                              final Result whitePlayerResult, final Result blackPlayerResult) {
         final List<GameResult> results = new ArrayList<>();
         results.add(new GameResult(whitePlayer.getTeamName(), whitePlayerScore, whitePlayerResult));
         results.add(new GameResult(blackPlayer.getTeamName(), blackPlayerScore, blackPlayerResult));

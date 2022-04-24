@@ -10,7 +10,7 @@ public class StatusDto {
     private final String blackPlayerResult;
 
     private StatusDto(double whitePlayerScore, double blackPlayerScore, String whitePlayerResult,
-            String blackPlayerResult) {
+                      String blackPlayerResult) {
         this.whitePlayerScore = whitePlayerScore;
         this.blackPlayerScore = blackPlayerScore;
         this.whitePlayerResult = whitePlayerResult;

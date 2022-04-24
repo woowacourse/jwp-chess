@@ -18,15 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/chess-game")
-public class SpringChessController {
+public class ChessController {
 
     private ChessService chessService;
 
     @Autowired
-    public SpringChessController(ChessService chessService) {
+    public ChessController(ChessService chessService) {
         this.chessService = chessService;
-//        final DBConnector dbConnector = new DBConnector();
-//        this.chessService = new ChessService(new PieceDaoSpringImpl(dbConnector), new GameDaoImpl(dbConnector));
     }
 
     @GetMapping()

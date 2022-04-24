@@ -13,16 +13,16 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-public class GameDaoSpringImplTest {
+public class GameDaoImplTest {
 
-    private GameDaoSpringImpl gameDaoSpringImpl;
+    private GameDaoImpl gameDaoImpl;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        gameDaoSpringImpl = new GameDaoSpringImpl(jdbcTemplate);
+        gameDaoImpl = new GameDaoImpl(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE game IF EXISTS");
         jdbcTemplate.execute("create table game\n"
                 + "(\n"
@@ -37,9 +37,9 @@ public class GameDaoSpringImplTest {
     @DisplayName("전체 게임 데이터 삭제")
     void removeAll() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoSpringImpl.save(gameDto);
+        gameDaoImpl.save(gameDto);
 
-        gameDaoSpringImpl.removeAll();
+        gameDaoImpl.removeAll();
 
         assertThat(getGameCount()).isEqualTo(0);
     }
@@ -48,7 +48,7 @@ public class GameDaoSpringImplTest {
     @DisplayName("게임 정보 저장")
     void save() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoSpringImpl.save(gameDto);
+        gameDaoImpl.save(gameDto);
 
         assertThat(getGameCount()).isEqualTo(1);
     }
@@ -57,14 +57,14 @@ public class GameDaoSpringImplTest {
     @DisplayName("게임 정보 수정")
     void update() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoSpringImpl.save(gameDto);
+        gameDaoImpl.save(gameDto);
 
         GameDto updatedGameDto = new GameDto("black", "end");
-        gameDaoSpringImpl.update(updatedGameDto);
+        gameDaoImpl.update(updatedGameDto);
 
         assertAll(
-                () -> assertThat(gameDaoSpringImpl.find().getTurn()).isEqualTo("black"),
-                () -> assertThat(gameDaoSpringImpl.find().getStatus()).isEqualTo("end")
+                () -> assertThat(gameDaoImpl.find().getTurn()).isEqualTo("black"),
+                () -> assertThat(gameDaoImpl.find().getStatus()).isEqualTo("end")
         );
     }
 
@@ -72,23 +72,23 @@ public class GameDaoSpringImplTest {
     @DisplayName("게임 상태 업데이트")
     void updateStatus() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoSpringImpl.save(gameDto);
+        gameDaoImpl.save(gameDto);
 
         GameStatusDto gameStatusDto = GameStatusDto.FINISHED;
-        gameDaoSpringImpl.updateStatus(gameStatusDto);
+        gameDaoImpl.updateStatus(gameStatusDto);
 
-        assertThat(gameDaoSpringImpl.find().getStatus()).isEqualTo(gameStatusDto.getName());
+        assertThat(gameDaoImpl.find().getStatus()).isEqualTo(gameStatusDto.getName());
     }
 
     @Test
     @DisplayName("게임 정보 조회")
     void find() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoSpringImpl.save(gameDto);
+        gameDaoImpl.save(gameDto);
 
         assertAll(
-                () -> assertThat(gameDaoSpringImpl.find().getStatus()).isEqualTo("playing"),
-                () -> assertThat(gameDaoSpringImpl.find().getTurn()).isEqualTo("white")
+                () -> assertThat(gameDaoImpl.find().getStatus()).isEqualTo("playing"),
+                () -> assertThat(gameDaoImpl.find().getTurn()).isEqualTo("white")
         );
     }
 

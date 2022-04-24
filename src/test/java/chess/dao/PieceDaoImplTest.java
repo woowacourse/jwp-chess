@@ -14,16 +14,16 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-public class PieceDaoSpringImplTest {
+public class PieceDaoImplTest {
 
-    private PieceDaoSpringImpl pieceDaoSpring;
+    private PieceDaoImpl pieceDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        pieceDaoSpring = new PieceDaoSpringImpl(jdbcTemplate);
+        pieceDao = new PieceDaoImpl(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
         jdbcTemplate.execute("create table piece\n"
@@ -39,9 +39,9 @@ public class PieceDaoSpringImplTest {
     @DisplayName("기물 정보 삭제")
     void remove() {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
-        pieceDaoSpring.save(pieceDto);
+        pieceDao.save(pieceDto);
 
-        pieceDaoSpring.remove(Position.of("a2"));
+        pieceDao.remove(Position.of("a2"));
 
         assertThat(getPieceCount()).isEqualTo(0);
     }
@@ -51,10 +51,10 @@ public class PieceDaoSpringImplTest {
     void removeAll() {
         PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
         PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
-        pieceDaoSpring.save(pieceDtoA2);
-        pieceDaoSpring.save(pieceDtoA3);
+        pieceDao.save(pieceDtoA2);
+        pieceDao.save(pieceDtoA3);
 
-        pieceDaoSpring.removeAll();
+        pieceDao.removeAll();
 
         assertThat(getPieceCount()).isEqualTo(0);
     }
@@ -65,7 +65,7 @@ public class PieceDaoSpringImplTest {
         PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
         PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
 
-        pieceDaoSpring.saveAll(List.of(pieceDtoA2, pieceDtoA3));
+        pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
 
         assertThat(getPieceCount()).isEqualTo(2);
     }
@@ -74,7 +74,7 @@ public class PieceDaoSpringImplTest {
     @DisplayName("기물 정보 저장")
     void save() {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
-        pieceDaoSpring.save(pieceDto);
+        pieceDao.save(pieceDto);
 
         assertThat(getPieceCount()).isEqualTo(1);
     }
@@ -84,9 +84,9 @@ public class PieceDaoSpringImplTest {
     void findAll() {
         PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
         PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
-        pieceDaoSpring.saveAll(List.of(pieceDtoA2, pieceDtoA3));
+        pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
 
-        List<PieceDto> pieceDtos = pieceDaoSpring.findAll();
+        List<PieceDto> pieceDtos = pieceDao.findAll();
 
         assertThat(pieceDtos).containsOnly(pieceDtoA2, pieceDtoA3);
     }
@@ -95,9 +95,9 @@ public class PieceDaoSpringImplTest {
     @DisplayName("기물 정보 수정")
     void update() {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
-        pieceDaoSpring.save(pieceDto);
+        pieceDao.save(pieceDto);
 
-        pieceDaoSpring.update(Position.of("a2"), Position.of("a3"));
+        pieceDao.update(Position.of("a2"), Position.of("a3"));
 
         assertThatCode(
                 () -> jdbcTemplate.queryForObject(

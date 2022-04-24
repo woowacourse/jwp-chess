@@ -11,12 +11,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PieceDaoSpringImpl implements PieceDao {
+public class PieceDaoImpl implements PieceDao {
 
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public PieceDaoSpringImpl(JdbcTemplate jdbcTemplate) {
+    public PieceDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

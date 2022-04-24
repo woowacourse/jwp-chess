@@ -8,12 +8,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class GameDaoSpringImpl implements GameDao {
+public class GameDaoImpl implements GameDao {
 
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public GameDaoSpringImpl(JdbcTemplate jdbcTemplate) {
+    public GameDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -1,4 +1,4 @@
-package chess.domain.game.repository;
+package chess.repository;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,6 @@ import chess.domain.Color;
 import chess.domain.game.ChessGame;
 import chess.domain.player.Player;
 import chess.domain.player.Players;
-import chess.domain.player.repository.PlayerRepository;
 
 @Repository
 public class GameRepository {

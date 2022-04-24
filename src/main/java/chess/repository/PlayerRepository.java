@@ -1,4 +1,4 @@
-package chess.domain.player.repository;
+package chess.repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;

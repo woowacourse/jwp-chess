@@ -15,12 +15,12 @@ import chess.service.GameService;
 
 @Controller
 @RequestMapping("/game")
-public class SpringWebChessController {
+public class ChessController {
 
     @Autowired
     private GameService gameService;
 
-    @GetMapping("")
+    @GetMapping
     public String board() {
         return "board";
     }

@@ -22,14 +22,11 @@ public class SquareDaoImpl implements SquareDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<SquareEntity> actorRowMapper = (resultSet, rowNum) -> {
-        SquareEntity squareEntity = new SquareEntity(
-            resultSet.getString("position"),
-            resultSet.getString("team"),
-            resultSet.getString("symbol")
-        );
-        return squareEntity;
-    };
+    private final RowMapper<SquareEntity> squareEntityRowMapper = (resultSet, rowNum) -> new SquareEntity(
+        resultSet.getString("position"),
+        resultSet.getString("team"),
+        resultSet.getString("symbol")
+    );
 
     public void insert(Position position, Piece piece) {
         final String sql = "insert into square (position, team, symbol) values (?, ?, ?)";
@@ -49,7 +46,7 @@ public class SquareDaoImpl implements SquareDao {
 
     private List<SquareEntity> findAll() {
         final String sql = "select position, team, symbol from square";
-        return jdbcTemplate.query(sql, actorRowMapper);
+        return jdbcTemplate.query(sql, squareEntityRowMapper);
     }
 
     public int delete() {

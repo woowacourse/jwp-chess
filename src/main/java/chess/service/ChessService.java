@@ -1,10 +1,10 @@
 package chess.service;
 
+import chess.dao.ChessGameDao;
+import chess.dao.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.Command;
 import chess.domain.piece.Team;
-import chess.dao.ChessGameDao;
-import chess.dao.PieceDao;
 import chess.dto.ChessGameDto;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +30,8 @@ public class ChessService {
         Command command = Command.from(moveCommand);
 
         chessGame.progress(command);
+
+        save();
 
         return chessGame.getChessBoardSymbol();
     }

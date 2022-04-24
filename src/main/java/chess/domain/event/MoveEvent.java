@@ -15,14 +15,6 @@ public final class MoveEvent extends Event {
         this(MoveRoute.ofEventDescription(description));
     }
 
-    public boolean isInit() {
-        return false;
-    }
-
-    public boolean isMove() {
-        return true;
-    }
-
     public MoveRoute toMoveRoute() {
         return moveRoute;
     }

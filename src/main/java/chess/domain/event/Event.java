@@ -20,9 +20,9 @@ public abstract class Event {
         return new InitEvent();
     }
 
-    public abstract boolean isInit();
-
-    public abstract boolean isMove();
+    public boolean hasTypeOf(EventType type) {
+        return this.type == type;
+    }
 
     public abstract MoveRoute toMoveRoute();
 

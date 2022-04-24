@@ -5,6 +5,7 @@ import chess.domain.board.piece.Color;
 import chess.domain.board.piece.PieceType;
 import chess.domain.board.position.Position;
 import chess.domain.event.Event;
+import chess.domain.event.EventType;
 import chess.domain.event.MoveRoute;
 import chess.domain.game.statistics.GameResult;
 
@@ -20,10 +21,10 @@ abstract class Running extends Started {
 
     @Override
     public Game play(Event event) {
-        if (event.isMove()) {
+        if (event.hasTypeOf(EventType.MOVE)) {
             return moveChessmen(event.toMoveRoute());
         }
-        if (event.isInit()) {
+        if (event.hasTypeOf(EventType.INIT)) {
             return new WhiteTurn(board);
         }
         throw new UnsupportedOperationException(NOT_YET_IMPLEMENTED_EXCEPTION_MESSAGE);

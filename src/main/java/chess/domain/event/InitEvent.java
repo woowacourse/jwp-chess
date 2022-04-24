@@ -8,14 +8,6 @@ public final class InitEvent extends Event {
         super(EventType.INIT, INIT_DESCRIPTION);
     }
 
-    public boolean isInit() {
-        return true;
-    }
-
-    public boolean isMove() {
-        return false;
-    }
-
     public MoveRoute toMoveRoute() {
         throw new UnsupportedOperationException("이동 이벤트가 아닙니다.");
     }

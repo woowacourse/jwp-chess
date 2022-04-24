@@ -1,9 +1,9 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import chess.domain.GameState;
-import com.mysql.cj.exceptions.AssertionFailedException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ public class GameDaoTest {
         gameDao.save(testGameId);
 
         Optional<GameState> maybeGameState = gameDao.load(testGameId);
-        GameState actual = maybeGameState.orElseThrow(() -> new AssertionFailedException("데이터가 없습니다."));
+        GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
 
         assertThat(actual).isEqualTo(GameState.READY);
     }
@@ -44,7 +44,7 @@ public class GameDaoTest {
         gameDao.updateState(testGameId, GameState.WHITE_RUNNING);
 
         Optional<GameState> maybeGameState = gameDao.load(testGameId);
-        GameState actual = maybeGameState.orElseThrow(() -> new AssertionFailedException("데이터가 없습니다."));
+        GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
 
         assertThat(actual).isEqualTo(GameState.WHITE_RUNNING);
     }

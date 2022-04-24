@@ -37,7 +37,7 @@ public class ChessController {
         return ResponseEntity.ok(chessService.enterRoom(id));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}/end")
     public ResponseEntity<StatusResponseDto> finishGame(@PathVariable Long id) {
         chessService.endRoom(id);
         return ResponseEntity.ok(chessService.createStatus(id));

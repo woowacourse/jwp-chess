@@ -147,19 +147,13 @@ function updateRoomName(id) {
     f.submit();
 }
 
-function deleteRoom(id) {
-
-    let f = document.createElement("form");
-    f.setAttribute("method", "post");
-    f.setAttribute("action", "/room/delete/"); //url
-    document.body.appendChild(f);
-
-    let i = document.createElement("input");
-    i.setAttribute("type", "hidden");
-    i.setAttribute("name", "roomId"); // key
-    i.setAttribute("value", id); // value
-    f.appendChild(i);
-
-    console.log(f);
-    f.submit();
+async function deleteRoom(id) {
+    if(confirm("정말 삭제하시겠습니까?")) {
+        await fetch("/api/chess/rooms/" + id + "/end",{ method:"PATCH"})
+            .then(handleErrors)
+            .catch(function (error) {
+                alert(error.message);
+            });
+        window.location.reload()
+    }
 }

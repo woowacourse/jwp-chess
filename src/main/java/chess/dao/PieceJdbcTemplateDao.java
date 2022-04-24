@@ -59,8 +59,8 @@ public class PieceJdbcTemplateDao implements PieceDao{
     @Override
     public boolean existPieces() {
         final String sql = "select count(*) from piece where board_id = 1";
-        final Integer integer = jdbcTemplate.queryForObject(sql, Integer.class);
-        return !integer.equals(0);
+        final Integer numOfPiece = jdbcTemplate.queryForObject(sql, Integer.class);
+        return !numOfPiece.equals(0);
     }
 
     @Override

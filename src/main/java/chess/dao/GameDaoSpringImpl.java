@@ -26,7 +26,8 @@ public class GameDaoSpringImpl implements GameDao {
 
     @Override
     public void update(GameDto gameDto) {
-
+        final String sql = "update game set turn = ?, status = ?";
+        jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus());
     }
 
     @Override
@@ -36,6 +37,14 @@ public class GameDaoSpringImpl implements GameDao {
 
     @Override
     public GameDto find() {
-        return null;
+        final String sql = "select * from game";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) ->
+                        new GameDto(
+                                resultSet.getString("turn"),
+                                resultSet.getString("status")
+                        )
+        );
     }
 }

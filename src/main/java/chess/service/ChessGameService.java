@@ -31,12 +31,27 @@ public class ChessGameService {
         this.gameDao = gameDao;
     }
 
-    public PiecesDto createOrGet(String gameId) {
+    public void createOrGet(String gameId) {
         if (!gameDao.isInId(gameId)) {
             initGame(gameId);
-            return new PiecesDto(toDto(getChessmenFromDB(gameId)));
         }
-        return new PiecesDto(toDto(getChessmenFromDB(gameId)));
+    }
+
+    private void initGame(String gameId) {
+        gameDao.createById(gameId);
+        Pieces chessmen = chessmenInitializer.init();
+        pieceDao.createAllById(chessmen.getPieces(), gameId);
+    }
+
+    public ChessGame getGameStatus(String gameId) {
+        boolean forceEndFlag = gameDao.findForceEndFlagById(gameId);
+        Color turn = gameDao.findTurnById(gameId);
+        Pieces chessmen = pieceDao.findAllByGameId(gameId);
+        return new ChessGame(forceEndFlag, chessmen, turn);
+    }
+
+    public PiecesDto getCurrentGame(String gameId) {
+        return new PiecesDto(toDto(getGameStatus(gameId).getChessmen()));
     }
 
     private List<PieceDto> toDto(Pieces chessmen) {
@@ -49,24 +64,8 @@ public class ChessGameService {
         return pieces;
     }
 
-    public ChessGame getGameFromDB(String gameId) {
-        boolean forceEndFlag = gameDao.findForceEndFlagById(gameId);
-        Color turn = gameDao.findTurnById(gameId);
-        Pieces chessmen = pieceDao.findAllByGameId(gameId);
-        return new ChessGame(forceEndFlag, chessmen, turn);
-    }
-
-    public Pieces getChessmenFromDB(String gameId) {
-        return pieceDao.findAllByGameId(gameId);
-
-    }
-
-    public PiecesDto getCurrentGame(String gameId) {
-        return new PiecesDto(toDto(getGameFromDB(gameId).getChessmen()));
-    }
-
     public GameResultDto calculateGameResult(String gameId) {
-        GameResult gameResult = GameResult.calculate(getGameFromDB(gameId).getChessmen());
+        GameResult gameResult = GameResult.calculate(getGameStatus(gameId).getChessmen());
         return new GameResultDto(gameResult.getWinner().getName(),
             gameResult.getWhiteScore(),
             gameResult.getBlackScore());
@@ -77,21 +76,15 @@ public class ChessGameService {
         gameDao.deleteById(gameId);
     }
 
-    private void initGame(String gameId) {
-        gameDao.createById(gameId);
-        Pieces chessmen = chessmenInitializer.init();
-        pieceDao.createAllById(chessmen.getPieces(), gameId);
-    }
-
     public void move(String gameId, MoveCommandDto moveCommandDto) {
         String from = moveCommandDto.getSource();
         String to = moveCommandDto.getTarget();
-        getGameFromDB(gameId).moveChessmen(new MoveCommand(from, to));
+        getGameStatus(gameId).moveChessmen(new MoveCommand(from, to));
         saveMove(gameId, moveCommandDto);
     }
 
     private void saveMove(String gameId, MoveCommandDto moveCommandDto) {
-        ChessGame chessGame = getGameFromDB(gameId);
+        ChessGame chessGame = getGameStatus(gameId);
         chessGame.moveChessmen(moveCommandDto.toEntity());
         boolean forceEndFlag = chessGame.getForceEndFlag();
         Color turn = chessGame.getTurn();
@@ -102,7 +95,4 @@ public class ChessGameService {
         gameDao.updateForceEndFlagById(forceEndFlag, gameId);
     }
 
-    public void forceEnd(String gameId) {
-        gameDao.updateForceEndFlagById(true, gameId);
-    }
 }

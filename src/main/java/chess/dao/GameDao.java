@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GameDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
 
     public GameDao(JdbcTemplate jdbcTemplate) {

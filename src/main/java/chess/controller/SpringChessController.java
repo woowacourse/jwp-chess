@@ -4,7 +4,7 @@ import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.dto.MoveCommandDto;
 import chess.service.ChessGameService;
-import chess.web.view.BoardView;
+import chess.controller.view.BoardView;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ public class SpringChessController {
 
     private static final String MOVE_SUCCESS_MESSAGE = "성공적으로 이동했습니다";
 
-    final ChessGameService chessGameService;
+    private final ChessGameService chessGameService;
 
     public SpringChessController(GameDao gameDao, PieceDao pieceDao) {
         this.chessGameService = new ChessGameService(pieceDao, gameDao);

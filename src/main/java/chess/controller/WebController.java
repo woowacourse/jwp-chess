@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.BoardDto;
+import chess.dto.GameDto;
 import chess.dto.MoveDto;
 import chess.dto.StatusDto;
 import chess.service.ChessService;

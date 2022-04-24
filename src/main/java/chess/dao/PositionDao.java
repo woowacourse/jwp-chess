@@ -20,4 +20,6 @@ public interface PositionDao<T> {
     Map<T, Piece> findAllPositionsAndPieces(int boardId);
 
     List<T> getPaths(List<T> positions, int roomId);
+
+    void deleteAll();
 }

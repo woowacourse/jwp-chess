@@ -141,4 +141,11 @@ public class WebChessPositionDao implements PositionDao<Position> {
                 Row.findRow(resultSet.getInt("position_row")),
                 resultSet.getInt("board_id"));
     }
+
+    @Override
+    public void deleteAll() {
+        String sql = "DELETE FROM position";
+        jdbcTemplate.update(sql, new MapSqlParameterSource());
+    }
+
 }

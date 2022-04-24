@@ -303,7 +303,7 @@ class ChessControllerTest {
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/games/" + testGameId + "/status")
+                .when().get("/games/" + testGameId + "/status")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -316,7 +316,7 @@ class ChessControllerTest {
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/end/" + testGameId)
+                .when().get("/games/" + testGameId + "/end")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 

@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,38 +30,36 @@ public class SpringController {
     }
 
     @GetMapping("/start")
-    public ModelAndView start(@RequestParam("game_name") String gameName) {
-        List<String> chessBoard = chessService.findByName(gameName);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("chessboard", chessBoard);
-        modelAndView.setViewName("chess");
-
-        return modelAndView;
+    public String start(@RequestParam("game_name") String gameName) {
+        return "redirect:/game/" + gameName;
     }
 
-    @PostMapping("/move")
-    public ModelAndView move(@RequestParam("from") String from, @RequestParam("to") String to) {
-        List<String> chessBoard = chessService.getCurrentChessBoard();
+    @GetMapping("/game/{gameName}")
+    public String game(@PathVariable String gameName, Model model) {
+        List<String> chessBoard = chessService.findByName(gameName);
+        model.addAttribute("chessboard", chessBoard);
 
-        ModelAndView modelAndView = new ModelAndView();
+        return "chess";
+    }
+
+    @PostMapping("/game/{gameName}/move")
+    public String move(@PathVariable String gameName,
+                             @RequestParam("from") String from, @RequestParam("to") String to,
+                       Model model) {
         try {
             String command = makeCommand(from, to);
-            chessBoard = chessService.move(command);
+            chessService.move(command);
             if (chessService.isEnd()) {
-                modelAndView.setViewName("redirect:/end");
-                return modelAndView;
+                return "redirect:/end";
             }
         } catch (IllegalArgumentException e) {
-            modelAndView.addObject("error", e.getMessage());
+            model.addAttribute("error", e.getMessage());
         }
 
-        modelAndView.addObject("chessboard", chessBoard);
-        modelAndView.setViewName("chess");
-        return modelAndView;
+        return "redirect:/game/" + gameName;
     }
 
-    @GetMapping("/end")
+    @GetMapping("/game/{game_name}/end")
     public ModelAndView end() {
         String winTeamName = chessService.finish(Command.from("end"));
         List<String> chessBoard = chessService.getCurrentChessBoard();

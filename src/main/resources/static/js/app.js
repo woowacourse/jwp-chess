@@ -19,7 +19,7 @@ dragables.forEach((dragable) => {
         const form = document.createElement("form");
 
         form.setAttribute("method", "post");
-        form.setAttribute("action", "/move");
+        form.setAttribute("action", "/game/" + document.location.href + "/move");
         form.appendChild(createInput("from", fromVariable));
         form.appendChild(createInput("to", toVariable));
         document.body.appendChild(form);

@@ -12,17 +12,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorMessageDto> dataAccessException(DataAccessException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto("DB 관련 작업이 실패했습니다."));
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorMessageDto> chessGameException(IllegalArgumentException e) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorMessageDto> chessGameException(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(e.getMessage()));
-    }
-
-    @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<ErrorMessageDto> applicationException(ApplicationException e) {
-        return ResponseEntity.status(e.getStatus()).body(new ErrorMessageDto(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)

@@ -37,9 +37,13 @@ async function loadButton() {
     await refreshAndDisplayBoard();
 }
 
-function getBoard() {
+async function getBoard() {
     return fetch(gameUri)
-        .then((response) => response.json());
+        .then(response => handlingException(response))
+        .then((response) => response.json())
+        .catch(error => {
+            alert("존재하지 않는 게임입니다.");
+        });
 }
 
 async function startChessGame() {
@@ -134,6 +138,9 @@ async function scoreButton() {
 async function handlingException(response) {
     if (response.ok) {
         return response;
+    }
+    if (response.status === 404) {
+        throw Error("게임이 존재하지 않아 찾을 수 없습니다.");
     }
     const error = await response.json();
     throw Error(error.message);

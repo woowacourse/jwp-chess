@@ -8,7 +8,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import chess.dao.connect.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import chess.dao.connect.CustomJdbcTemplate;
 import chess.dao.dto.PlayerDto;
 import chess.dao.mysql.PlayerDao;
 import chess.domain.Color;
@@ -17,14 +20,16 @@ import chess.domain.piece.Piece;
 import chess.domain.player.Player;
 import chess.domain.player.Players;
 
+@Repository
 public class PlayerRepository {
 
     private final PlayerDao playerDao;
 
-    public PlayerRepository(final JdbcTemplate jdbcTemplate) {
-        this(new PlayerDao(jdbcTemplate));
+    public PlayerRepository(final CustomJdbcTemplate customJdbcTemplate) {
+        this(new PlayerDao(customJdbcTemplate));
     }
 
+    @Autowired
     public PlayerRepository(final PlayerDao playerDao) {
         this.playerDao = playerDao;
     }

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import chess.dao.connect.JdbcTemplate;
+import chess.dao.connect.CustomJdbcTemplate;
 import chess.dao.connect.TestDbConnector;
 import chess.dao.dto.GameDto;
 import chess.dao.dto.GameUpdateDto;
@@ -20,7 +20,7 @@ class GameDaoTest {
 
     @BeforeEach
     void setUp() {
-        gameDao = new GameDao(new JdbcTemplate(new TestDbConnector()));
+        gameDao = new GameDao(new CustomJdbcTemplate(new TestDbConnector()));
     }
 
     @DisplayName("데이터 저장 및 조회가 가능해야 한다.")

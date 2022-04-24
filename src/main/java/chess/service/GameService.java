@@ -2,11 +2,14 @@ package chess.service;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.game.ChessGame;
 import chess.domain.game.repository.GameRepository;
 
+@Service
 public class GameService {
 
     private final GameRepository gameRepository;

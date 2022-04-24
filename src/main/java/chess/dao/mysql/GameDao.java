@@ -3,21 +3,24 @@ package chess.dao.mysql;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import chess.dao.connect.JdbcTemplate;
+import org.springframework.stereotype.Component;
+
+import chess.dao.connect.CustomJdbcTemplate;
 import chess.dao.dto.GameDto;
 import chess.dao.dto.GameUpdateDto;
 
+@Component
 public class GameDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final CustomJdbcTemplate customJdbcTemplate;
 
-    public GameDao(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public GameDao(final CustomJdbcTemplate customJdbcTemplate) {
+        this.customJdbcTemplate = customJdbcTemplate;
     }
 
     public Long save(final GameDto gameDto) {
         final String query = "INSERT INTO Game (player_id1, player_id2, finished, turn_color) VALUES (?,?,?,?)";
-        return jdbcTemplate.executeInsertQuery(query,
+        return customJdbcTemplate.executeInsertQuery(query,
                 preparedStatement -> {
                     preparedStatement.setLong(1, gameDto.getPlayer_id1());
                     preparedStatement.setLong(2, gameDto.getPlayer_id2());
@@ -28,7 +31,7 @@ public class GameDao {
 
     public GameDto findById(final Long id) {
         final String query = "SELECT id, player_id1, player_id2, finished, turn_color FROM Game WHERE id=?";
-        return jdbcTemplate.executeQuery(query,
+        return customJdbcTemplate.executeQuery(query,
                 preparedStatement -> preparedStatement.setLong(1, id),
                 resultSet -> new GameDto(
                         resultSet.getLong("id"),
@@ -41,7 +44,7 @@ public class GameDao {
 
     public Map<Long, Boolean> findIdAndFinished() {
         final String query = "SELECT id, finished FROM Game ORDER BY id DESC";
-        return jdbcTemplate.executeQuery(query,
+        return customJdbcTemplate.executeQuery(query,
                 resultSet -> {
                     final Map<Long, Boolean> gameStates = new LinkedHashMap<>();
                     while (resultSet.next()) {
@@ -55,7 +58,7 @@ public class GameDao {
 
     public void update(final GameUpdateDto gameUpdateDto) {
         final String query = "UPDATE Game SET finished=?, turn_color=? WHERE id=?";
-        jdbcTemplate.executeQuery(query,
+        customJdbcTemplate.executeQuery(query,
                 preparedStatement -> {
                     preparedStatement.setBoolean(1, gameUpdateDto.getFinished());
                     preparedStatement.setString(2, gameUpdateDto.getCurrentTurnColor());
@@ -65,7 +68,7 @@ public class GameDao {
 
     public void remove(final long id) {
         final String query = "DELETE FROM Game WHERE id=?";
-        jdbcTemplate.executeQuery(query,
+        customJdbcTemplate.executeQuery(query,
                 preparedStatement -> {
                     preparedStatement.setLong(1, id);
                 });

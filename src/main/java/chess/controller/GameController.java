@@ -1,21 +1,26 @@
 package chess.controller;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import chess.domain.Color;
 import chess.domain.game.ChessGame;
 import chess.dto.GameDto;
 import chess.dto.PlayerScoresDto;
 import chess.service.GameService;
-import spark.ExceptionHandler;
-import spark.ModelAndView;
-import spark.Route;
-import spark.template.handlebars.HandlebarsTemplateEngine;
 
+@Controller
+@RequestMapping("/games")
 public class GameController {
-
-    private static final int HTTP_STATUS_ERROR = 400;
 
     private final GameService gameService;
 
@@ -23,88 +28,53 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    public Route index() {
-        return (request, response) -> {
-            final Map<Long, Boolean> games = gameService.listGames();
-            final Map<String, Object> model = new HashMap<>();
-            model.put("games", games);
-            return render(model, "index.html");
-        };
+    @GetMapping("/start")
+    public String createNewGame() {
+        final ChessGame chessGame = gameService.createNewGame();
+        return "redirect:/games/" + chessGame.getId();
     }
 
-    public Route createNewGame() {
-        return (request, response) -> {
-            final ChessGame chessGame = gameService.createNewGame();
-            response.redirect("/games/" + chessGame.getId());
-            return "";
-        };
+    @GetMapping("/{gameId}")
+    public String loadGame(@PathVariable("gameId") final Long gameId, final Model model) {
+        return renderBoard(gameService.loadGame(gameId), model);
     }
 
-    public Route loadGame() {
-        return (request, response) -> {
-            final long gameId = parseGameId(request.params(":gameId"));
-            return renderBoard(gameService.loadGame(gameId));
-        };
+    @PostMapping("/{gameId}/move")
+    public String movePiece(@PathVariable("gameId") final Long gameId,
+                            @RequestParam("source") final String source,
+                            @RequestParam("target") final String target,
+                            final Model model) {
+        return renderBoard(gameService.movePiece(gameId, source, target), model);
     }
 
-    public Route movePiece() {
-        return (request, response) -> {
-            final long gameId = parseGameId(request.params(":gameId"));
-            final String source = request.queryParams("source");
-            final String target = request.queryParams("target");
-            return renderBoard(gameService.movePiece(gameId, source, target));
-        };
+    @PostMapping("/{gameId}/promotion")
+    public String promotion(@PathVariable("gameId") final Long gameId,
+                            @RequestParam("pieceName") final String pieceName,
+                            final Model model) {
+        return renderBoard(gameService.promotion(gameId, pieceName), model);
     }
 
-    public Route promotion() {
-        return (request, response) -> {
-            final long gameId = parseGameId(request.params(":gameId"));
-            final String pieceName = request.queryParams("pieceName");
-            return renderBoard(gameService.promotion(gameId, pieceName));
-        };
+    @GetMapping("/{gameId}/status")
+    public ResponseEntity calculatePlayerScores(@PathVariable("gameId") final Long gameId) {
+        final Map<Color, Double> playerScores = gameService.calculatePlayerScores(gameId);
+        return ResponseEntity.ok().body(PlayerScoresDto.toDto(playerScores));
     }
 
-    public Route calculatePlayerScores() {
-        return (request, response) -> {
-            final long gameId = parseGameId(request.params(":gameId"));
-            final Map<Color, Double> playerScores = gameService.calculatePlayerScores(gameId);
-            return PlayerScoresDto.toDto(playerScores);
-        };
+    @GetMapping("/{gameId}/end")
+    public String endGame(@PathVariable("gameId") final Long gameId, final Model model) {
+        return renderBoard(gameService.endGame(gameId), model);
     }
 
-    public Route endGame() {
-        return (request, response) -> {
-            final long gameId = parseGameId(request.params(":gameId"));
-            return renderBoard(gameService.endGame(gameId));
-        };
-    }
-
-    private long parseGameId(final String gameId) {
-        try {
-            return Integer.parseInt(gameId);
-        } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("gameId는 숫자여야 합니다.");
-        }
-    }
-
-    private String renderBoard(final ChessGame chessGame) {
-        final Map<String, Object> model = new HashMap<>();
-        model.put("game", GameDto.toDto(chessGame));
+    private String renderBoard(final ChessGame chessGame, final Model model) {
+        model.addAttribute("game", GameDto.toDto(chessGame));
         if (chessGame.isRunning()) {
-            model.put("promotable", chessGame.isPromotable());
+            model.addAttribute("promotable", chessGame.isPromotable());
         }
-        return render(model, "board.html");
+        return "board";
     }
 
-    private String render(final Map<String, Object> model, final String templatePath) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, templatePath));
-    }
-
-    public ExceptionHandler<RuntimeException> handleException() {
-        return (exception, request, response) -> {
-            response.type("application/json; charset=utf-8");
-            response.status(HTTP_STATUS_ERROR);
-            response.body(exception.getMessage());
-        };
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handle(final RuntimeException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

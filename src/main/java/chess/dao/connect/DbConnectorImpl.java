@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DbConnectorImpl implements DbConnector {
 
     private static final String URL = "jdbc:mysql://localhost:13306/chess";

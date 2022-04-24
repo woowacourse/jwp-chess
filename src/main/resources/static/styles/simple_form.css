@@ -1,15 +1,15 @@
 form {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
 
+    padding: 5px 0;
 }
 
-form > div {
-    width: 220px;
-    padding-bottom: 10px;
+form > label {
+    margin-right: 8px;
+}
 
-    display: flex;
-    justify-content: space-between;
+form > #num_input {
+    margin-right: 10px;
 }

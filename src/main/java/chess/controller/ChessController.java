@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/chess/rooms")
-public class SpringChessController {
+public class ChessController {
 
     private final ChessService chessService;
 
-    public SpringChessController(final ChessService chessService) {
+    public ChessController(final ChessService chessService) {
         this.chessService = chessService;
     }
 

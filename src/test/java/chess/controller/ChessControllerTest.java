@@ -21,8 +21,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ActiveProfiles("test")
-@WebMvcTest(SpringChessController.class)
-class SpringChessControllerTest {
+@WebMvcTest(ChessController.class)
+class ChessControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

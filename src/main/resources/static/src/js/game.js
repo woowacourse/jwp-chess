@@ -32,7 +32,7 @@ async function startGame() {
 
 async function endGame() {
     await getScore()
-    let savedBoard = await fetch("/api/chess/rooms/" + gameId,{ method:"DELETE"})
+    let savedBoard = await fetch("/api/chess/rooms/" + gameId,{ method:"PUT"})
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);

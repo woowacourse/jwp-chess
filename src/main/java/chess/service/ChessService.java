@@ -8,10 +8,12 @@ import chess.domain.event.InitEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
 import chess.dto.CreatedGameDto;
+import chess.dto.FullGameDto;
 import chess.dto.GameCountDto;
 import chess.dto.GameSnapshotDto;
 import chess.dto.GameOverviewDto;
 import chess.dto.GameResultDto;
+import chess.dto.GameSnapshotDto;
 import chess.dto.SearchResultDto;
 import chess.entity.GameEntity;
 import java.util.List;
@@ -57,9 +59,10 @@ public class ChessService {
         return new SearchResultDto(gameId, gameDao.checkById(gameId));
     }
 
-    public GameSnapshotDto findGame(int gameId) {
+    public FullGameDto findGame(int gameId) {
+        GameEntity gameEntity = gameDao.findById(gameId);
         Game game = currentSnapShotOf(gameId);
-        return game.toDtoOf(gameId);
+        return new FullGameDto(gameEntity.toDto(), game.toDtoOf(gameId));
     }
 
     @Transactional

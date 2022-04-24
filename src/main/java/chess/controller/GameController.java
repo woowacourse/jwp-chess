@@ -4,7 +4,7 @@ import chess.domain.auth.AuthCredentials;
 import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
 import chess.dto.CreatedGameDto;
-import chess.dto.GameSnapshotDto;
+import chess.dto.FullGameDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,19 +45,19 @@ public class GameController {
     public ModelAndView findAndRenderGame(@PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(PLAY_GAME_HTML_TEMPLATE_PATH);
-        GameSnapshotDto gameDto = chessService.findGame(id);
+        FullGameDto gameDto = chessService.findGame(id);
         modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
         return modelAndView;
     }
 
     @PutMapping("/{id}")
-    private ModelAndView updateGame(@PathVariable int id,
-                                    @RequestBody MoveRoute moveRoute) {
+    public ModelAndView updateGame(@PathVariable int id,
+                                   @RequestBody MoveRoute moveRoute) {
         chessService.playGame(id, new MoveEvent(moveRoute));
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(PLAY_GAME_HTML_TEMPLATE_PATH);
-        GameSnapshotDto gameDto = chessService.findGame(id);
+        FullGameDto gameDto = chessService.findGame(id);
         modelAndView.addObject(RESPONSE_MODEL_KEY, gameDto);
         return modelAndView;
     }

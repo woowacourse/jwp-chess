@@ -32,6 +32,9 @@ public class GameDaoStub extends GameDao {
     @Override
     public GameEntity findById(int gameId) {
         GameFullEntity game = repository.get(gameId);
+        if (game == null) {
+            throw new IllegalArgumentException("존재하지 않는 게임입니다.");
+        }
         return new GameEntity(game.id, game.name, game.running);
     }
 

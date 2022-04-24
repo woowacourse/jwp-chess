@@ -8,6 +8,7 @@ import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
 import chess.domain.game.NewGame;
 import chess.dto.CreatedGameDto;
+import chess.dto.FullGameDto;
 import chess.dto.GameCountDto;
 import chess.dto.GameSnapshotDto;
 import chess.dto.GameOverviewDto;
@@ -83,14 +84,16 @@ class ChessServiceTest {
     }
 
     @Test
-    void findGame_메서드는_현재_게임의_상태와_체스말_정보를_반환한다() {
-        GameSnapshotDto actual = service.findGame(1);
+    void findGame_메서드는_방명과_현재_게임의_상태_및_체스말_정보를_반환한다() {
+        FullGameDto actual = service.findGame(1);
 
-        GameSnapshotDto expected = new NewGame().play(new InitEvent())
-                .play(new MoveEvent("e2 e4"))
-                .play(new MoveEvent("d7 d5"))
-                .play(new MoveEvent("f1 b5"))
-                .toDtoOf(1);
+        FullGameDto expected = new FullGameDto(
+                new GameOverviewDto(1, "진행중인_게임"),
+                new NewGame().play(new InitEvent())
+                        .play(new MoveEvent("e2 e4"))
+                        .play(new MoveEvent("d7 d5"))
+                        .play(new MoveEvent("f1 b5"))
+                        .toDtoOf(1));
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -98,8 +101,8 @@ class ChessServiceTest {
     @Test
     void findGame_메서드는_존재하지_않는_게임인_경우_예외를_발생시킨다() {
         assertThatThrownBy(() -> service.findGame(999999))
-                .isInstanceOf(UnsupportedOperationException.class)
-                .hasMessage("아직 게임이 시작되지 않았습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 게임입니다.");
     }
 
     @Test
@@ -129,8 +132,8 @@ class ChessServiceTest {
     @Test
     void playGame_메서드는_존재하지_않는_게임인_경우_예외를_발생시킨다() {
         assertThatThrownBy(() -> service.findGame(999999))
-                .isInstanceOf(UnsupportedOperationException.class)
-                .hasMessage("아직 게임이 시작되지 않았습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 게임입니다.");
     }
 
     @Test

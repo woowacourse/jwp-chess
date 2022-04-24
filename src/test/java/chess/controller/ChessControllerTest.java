@@ -197,6 +197,20 @@ class ChessControllerTest {
                 .andExpect(content().string(response));
     }
 
+
+    @DisplayName("score 요청시 200 ok와 scoreResponseDto를 반환한다.")
+    @Test
+    void createStatus() throws Exception {
+        StatusResponseDto statusResponseDto = StatusResponseDto.of(new Score(BoardFactory.initialize()));
+        String response = objectMapper.writeValueAsString(statusResponseDto);
+
+        given(chessService.createStatus(any()))
+                .willReturn(statusResponseDto);
+        mockMvc.perform(get(DEFAULT_API + "/1/status"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(response));
+    }
+
     private RoomEntity createRoomEntity(Long id) {
         return new RoomEntity(id, ROOM_NAME, WHITE, FALSE);
     }

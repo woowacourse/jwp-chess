@@ -1,35 +1,46 @@
 package chess.controller;
 
-import chess.dto.MoveDto;
+import chess.dto.*;
 import chess.service.ChessService;
-import com.google.gson.Gson;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import static spark.Spark.*;
-
+@RestController
 public class ChessController {
-    private static final int roomId = 1;
+    private static final int ROOM_ID = 1;
+    private final ChessService chessService;
 
-    private final ChessService chessService = new ChessService(roomId);
+    public ChessController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
-    public void run() {
-        Gson gson = new Gson();
+    @GetMapping("/board")
+    public ResponseEntity<BoardDto> getBoard() {
+        return ResponseEntity.ok().body(chessService.getInitialBoard(ROOM_ID));
+    }
 
-        get("/board", (req, res) -> gson.toJson(chessService.getInitialBoard()));
+    @PostMapping(value = "/move")
+    public ResponseEntity<GameStateDto> move(@RequestBody MoveDto moveDto) {
+        return ResponseEntity.ok().body(chessService.move(moveDto, ROOM_ID));
+    }
 
-        post("/move", (req, res) -> {
-            MoveDto moveDTO = gson.fromJson(req.body(), MoveDto.class);
-            return gson.toJson(chessService.move(moveDTO, roomId));
-        });
+    @GetMapping("/status")
+    public ResponseEntity<ScoreDto> getStatus() {
+        return ResponseEntity.ok().body(chessService.getStatus(ROOM_ID));
+    }
 
-        get("/status", (req, res) -> gson.toJson(chessService.getStatus()));
+    @PostMapping("/reset")
+    public ResponseEntity<BoardDto> reset() {
+        return ResponseEntity.ok().body(chessService.resetBoard(ROOM_ID));
+    }
 
-        post("/reset", (req, res) -> gson.toJson(chessService.resetBoard(roomId)));
+    @PostMapping("/end")
+    public ResponseEntity<GameStateDto> end() {
+        return ResponseEntity.ok().body(chessService.end(ChessController.ROOM_ID));
+    }
 
-        post("/end", (req, res) -> gson.toJson(chessService.end(roomId)));
-
-        exception(Exception.class, (exception, request, response) -> {
-            response.status(500);
-            response.body(exception.getMessage());
-        });
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handle(RuntimeException exception) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

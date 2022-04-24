@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(classes = SpringChessApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ChessSpringControllerTest {
+public class ChessControllerTest {
 
     @LocalServerPort
     int port;

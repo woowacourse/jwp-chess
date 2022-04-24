@@ -23,8 +23,7 @@ function movePiece(object, position) {
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(object),
         success(data) {
-            let result = JSON.parse(data);
-            printGameState(result);
+            printGameState(data);
             changePiece(position);
         },
         error(error) {
@@ -46,7 +45,7 @@ function resetSourPosition() {
 }
 
 function printGameState(result) {
-    if (result.isRunning === false) {
+    if (result.running === false) {
         alert(result.gameState + "가 승리했습니다.");
         document.getElementById("turn").innerText = "게임이 종료되었습니다.";
         getScore();

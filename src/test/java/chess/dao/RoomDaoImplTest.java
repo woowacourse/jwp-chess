@@ -11,16 +11,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @JdbcTest
-public class RoomSpringDaoImplTest {
+public class RoomDaoImplTest {
 
-    private RoomSpringDaoImpl roomSpringDaoImpl;
+    private RoomDaoImpl roomDaoImpl;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        roomSpringDaoImpl = new RoomSpringDaoImpl(jdbcTemplate);
+        roomDaoImpl = new RoomDaoImpl(jdbcTemplate);
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS room" +
                 "(" +
@@ -34,21 +34,21 @@ public class RoomSpringDaoImplTest {
 
     @Test
     void findRoom() {
-        assertThat(roomSpringDaoImpl.findById(1L)).isNotNull();
+        assertThat(roomDaoImpl.findById(1L)).isNotNull();
     }
 
     @Test
     void deleteRoom() {
-        assertThatNoException().isThrownBy(() -> roomSpringDaoImpl.delete(1L));
+        assertThatNoException().isThrownBy(() -> roomDaoImpl.delete(1L));
     }
 
     @Test
     void saveRoom() {
-        assertThatNoException().isThrownBy(() -> roomSpringDaoImpl.save(2L, Team.WHITE));
+        assertThatNoException().isThrownBy(() -> roomDaoImpl.save(2L, Team.WHITE));
     }
 
     @Test
     void updateStatus() {
-        assertThatNoException().isThrownBy(() -> roomSpringDaoImpl.updateStatus(Team.WHITE, 1L));
+        assertThatNoException().isThrownBy(() -> roomDaoImpl.updateStatus(Team.WHITE, 1L));
     }
 }

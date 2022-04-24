@@ -1,7 +1,6 @@
 package chess.service;
 
-import chess.dao.BoardSparkDaoImpl;
-import chess.dao.RoomSparkDaoImpl;
+import chess.dao.*;
 import chess.domain.Score;
 import chess.domain.Team;
 import chess.domain.piece.Blank;
@@ -10,23 +9,26 @@ import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
 import chess.domain.state.*;
 import chess.dto.*;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
 public class ChessService {
-    private GameState gameState;
-    BoardSparkDaoImpl boardSparkDaoImpl = new BoardSparkDaoImpl();
-    RoomSparkDaoImpl roomSparkDaoImpl = new RoomSparkDaoImpl();
+    BoardDao boardDao;
+    RoomDao roomDao;
 
-    public ChessService(int roomId) {
-        this.gameState = getGameState(roomId);
+    public ChessService(BoardDao boardDao, RoomDao roomDao) {
+        this.boardDao = boardDao;
+        this.roomDao = roomDao;
     }
 
-    public BoardDto getInitialBoard() {
-        Map<String, String> board = getBoardPieces();
+    public BoardDto getInitialBoard(long roomId) {
+        GameState gameState = getGameState(roomId);
+        Map<String, String> board = getBoardPieces(roomId);
         List<PieceDto> pieces = board.entrySet()
                 .stream()
                 .map(i -> new PieceDto(i.getKey(), i.getValue()))
@@ -34,8 +36,8 @@ public class ChessService {
         return new BoardDto(pieces, gameState.getTeam());
     }
 
-    private GameState getGameState(int roomId) {
-        RoomDto room = roomSparkDaoImpl.findById(roomId);
+    private GameState getGameState(long roomId) {
+        RoomDto room = roomDao.findById(roomId);
         if (room == null) {
             return createGameState(roomId);
         }
@@ -43,16 +45,16 @@ public class ChessService {
     }
 
     private WhiteTurn createGameState(long roomId) {
-        roomSparkDaoImpl.save(roomId, Team.WHITE);
+        roomDao.save(roomId, Team.WHITE);
         Map<Position, Piece> board = BoardInitialize.create();
-        boardSparkDaoImpl.saveAll(board, roomId);
+        boardDao.saveAll(board, roomId);
         return new WhiteTurn(board);
     }
 
     private Playing getGameState(RoomDto room) {
-        List<PieceDto> pieces = boardSparkDaoImpl.findAll(room.getId());
+        List<PieceDto> pieces = boardDao.findAll(room.getId());
         Map<Position, Piece> board = new HashMap<>();
-        for (PieceDto pieceOfPieces :pieces) {
+        for (PieceDto pieceOfPieces : pieces) {
             Piece piece = PieceFactory.create(pieceOfPieces.getSymbol());
             Position position = Position.from(pieceOfPieces.getPosition());
             board.put(position, piece);
@@ -68,36 +70,39 @@ public class ChessService {
         String source = moveDTO.getSource();
         String destination = moveDTO.getDestination();
 
-        updateMove(roomId, source, destination);
+        GameState gameState = updateMove(roomId, source, destination);
 
         Team team = gameState.getTeam();
         return new GameStateDto(team, gameState.isRunning());
     }
 
-    private void updateMove(long roomId, String source, String destination) {
+    private GameState updateMove(long roomId, String source, String destination) {
+        GameState gameState = getGameState(roomId);
         Map<Position, Piece> board = gameState.getBoard();
         Piece sourcePiece = board.get(Position.from(source));
         gameState = gameState.move(source, destination);
 
-        boardSparkDaoImpl.updatePosition(source, Blank.SYMBOL);
-        boardSparkDaoImpl.updatePosition(destination, sourcePiece.getSymbol());
+        boardDao.updatePosition(Blank.SYMBOL, source, roomId);
+        boardDao.updatePosition(sourcePiece.getSymbol(), destination, roomId);
 
         if (!gameState.isRunning()) {
             deleteAll(roomId);
-            return;
+            return gameState;
         }
-        roomSparkDaoImpl.updateStatus(gameState.getTeam(), roomId);
+        roomDao.updateStatus(gameState.getTeam(), roomId);
+        return gameState;
     }
 
-    public ScoreDto getStatus() {
+    public ScoreDto getStatus(long roomId) {
+        GameState gameState = getGameState(roomId);
         Score score = new Score(gameState.getBoard());
         return new ScoreDto(score.getTotalScoreWhiteTeam(), score.getTotalScoreBlackTeam());
     }
 
     public BoardDto resetBoard(long roomId) {
         deleteAll(roomId);
-        gameState = createGameState(roomId);
-        Map<String, String> board = getBoardPieces();
+        GameState gameState = createGameState(roomId);
+        Map<String, String> board = getBoardPieces(roomId);
         List<PieceDto> pieces = board.entrySet()
                 .stream()
                 .map(i -> new PieceDto(i.getKey(), i.getValue()))
@@ -105,7 +110,8 @@ public class ChessService {
         return new BoardDto(pieces, gameState.getTeam());
     }
 
-    private Map<String, String> getBoardPieces() {
+    private Map<String, String> getBoardPieces(long roomId) {
+        GameState gameState = getGameState(roomId);
         Map<Position, Piece> chessBoard = gameState.getBoard();
         Map<String, String> board = new HashMap<>();
         for (Position position : chessBoard.keySet()) {
@@ -116,11 +122,12 @@ public class ChessService {
     }
 
     private void deleteAll(long roomId) {
-        boardSparkDaoImpl.delete(roomId);
-        roomSparkDaoImpl.delete(roomId);
+        roomDao.delete(roomId);
+        boardDao.delete(roomId);
     }
 
     public GameStateDto end(long roomId) {
+        GameState gameState = getGameState(roomId);
         gameState = new Finished(gameState.getTeam(), gameState.getBoard());
         deleteAll(roomId);
         Score score = new Score(gameState.getBoard());

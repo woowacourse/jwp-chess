@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class BoardSpringDaoImpl implements BoardDao {
+public class BoardDaoImpl implements BoardDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    public BoardSpringDaoImpl(JdbcTemplate jdbcTemplate) {
+    public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -28,6 +28,7 @@ public class BoardSpringDaoImpl implements BoardDao {
                         ),
                 roomId);
     }
+
     @Override
     public void saveAll(Map<Position, Piece> board, long roomId) {
         final String sql = "insert into board (position, symbol, room_id) values(?, ?, ?)";
@@ -47,8 +48,8 @@ public class BoardSpringDaoImpl implements BoardDao {
     }
 
     @Override
-    public void updatePosition(String source, String destination) {
-        final String sql = "update board set symbol = ? where position = ?";
-        jdbcTemplate.update(sql, source, destination);
+    public void updatePosition(String symbol, String position, long roomId) {
+        final String sql = "update board set symbol = ? where position = ? and room_id = ?";
+        jdbcTemplate.update(sql, symbol, position, roomId);
     }
 }

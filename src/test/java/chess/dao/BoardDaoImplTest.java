@@ -22,16 +22,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @JdbcTest
-class BoardSpringDaoImplTest {
+class BoardDaoImplTest {
 
-    private BoardSpringDaoImpl boardSpringDaoImpl;
+    private BoardDaoImpl boardDaoImpl;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        boardSpringDaoImpl = new BoardSpringDaoImpl(jdbcTemplate);
+        boardDaoImpl = new BoardDaoImpl(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE board IF EXISTS");
         jdbcTemplate.execute("DROP TABLE room IF EXISTS");
@@ -60,7 +60,7 @@ class BoardSpringDaoImplTest {
 
     @Test
     void findAll() {
-        List<PieceDto> pieces = boardSpringDaoImpl.findAll(1L);
+        List<PieceDto> pieces = boardDaoImpl.findAll(1L);
         assertThat(pieces).hasSize(3);
     }
 
@@ -68,20 +68,12 @@ class BoardSpringDaoImplTest {
     void saveAll() {
         Map<Position, Piece> board = Map.of(Position.of(Column.A, Row.EIGHT), new Pawn(Team.BLACK));
         assertThatNoException().isThrownBy(() ->
-                boardSpringDaoImpl.saveAll(board, 1L));
+                boardDaoImpl.saveAll(board, 1L));
     }
 
     @Test
     void updatePosition() {
         assertThatNoException().isThrownBy(() ->
-                boardSpringDaoImpl.updatePosition("a7", "a6"));
+                boardDaoImpl.updatePosition("P", "a6", 1));
     }
-
-   // @Test
-   // void deleteAllPiece() {
-   //     assertThatNoException().isThrownBy(() ->
-   //             boardSpringDao.delete(1L));
-   // }
-
-
 }

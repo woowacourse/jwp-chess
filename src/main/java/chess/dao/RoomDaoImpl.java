@@ -3,21 +3,28 @@ package chess.dao;
 import chess.domain.Team;
 import chess.dto.RoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-public class RoomSpringDaoImpl implements RoomDao{
+@Repository
+public class RoomDaoImpl implements RoomDao{
     private JdbcTemplate jdbcTemplate;
 
-    public RoomSpringDaoImpl(JdbcTemplate jdbcTemplate) {
+    public RoomDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     public RoomDto findById(long roomId) {
         final String sql = "select * from room  where id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                new RoomDto(
-                        rs.getLong("id"),
-                        Team.valueOf(rs.getString("status"))
-                ), roomId);
+        try{
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                    new RoomDto(
+                            rs.getLong("id"),
+                            Team.valueOf(rs.getString("status"))
+                    ), roomId);
+        }catch (Exception exception) {
+            return null;
+        }
     }
     @Override
     public void delete(long roomId) {

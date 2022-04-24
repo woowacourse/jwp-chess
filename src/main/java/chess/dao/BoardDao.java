@@ -13,5 +13,5 @@ public interface BoardDao {
 
     void delete(long roomId);
 
-    void updatePosition(String source, String destination);
+    void updatePosition(String symbol, String position, long roomId);
 }

@@ -24,30 +24,39 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/load/{gameId}")
+    @GetMapping("/games/{gameId}")
     public ChessGameResponse loadGame(@PathVariable long gameId) {
-        return chessService.createOrLoadGame(gameId);
+        return chessService.loadGame(gameId);
+    }
+
+    @PostMapping("/games/{gameId}")
+    public ChessGameResponse createGame(@PathVariable long gameId) {
+        return chessService.createGame(gameId);
     }
 
     @GetMapping("/start/{gameId}")
     public ChessGameResponse startGame(@PathVariable long gameId) {
         return chessService.startGame(gameId);
     }
+    // TODO : POST "/games/{gameId}"
 
     @GetMapping("/restart/{gameId}")
     public ChessGameResponse restartGame(@PathVariable long gameId) {
         return chessService.restartGame(gameId);
     }
+    // TODO: PUT "/games/{gameId}"
 
     @PostMapping("/move/{gameId}")
     public ChessGameResponse movePiece(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {
         return chessService.move(gameId, moveRequest);
     }
+    // TODO: PUT "/games/{gameId}/pieces"
 
     @GetMapping("/status/{gameId}")
     public StatusResponse status(@PathVariable long gameId) {
         return chessService.status(gameId);
     }
+    // TODO: GET "/games/{gameId}/status"
 
     @GetMapping("/end/{gameId}")
     public ChessGameResponse endGame(@PathVariable long gameId) {

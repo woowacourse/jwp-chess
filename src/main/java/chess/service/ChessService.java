@@ -45,7 +45,7 @@ public class ChessService {
     public ChessGameResponse loadGame(long gameId) {
         Optional<GameState> maybeGameState = gameDao.load(gameId);
         if (maybeGameState.isEmpty()) {
-            return createGame(gameId);
+            throw new IllegalArgumentException("게임이 없습니다.");
         }
         GameState gameState = maybeGameState.get();
         Board board = createBoard(gameId);
@@ -70,7 +70,7 @@ public class ChessService {
         return chessGames.get(gameId);
     }
 
-    private ChessGameResponse createGame(long gameId) {
+    public ChessGameResponse createGame(long gameId) {
         ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
         gameDao.save(gameId);
         saveBoard(gameId, chessGame.getBoard());

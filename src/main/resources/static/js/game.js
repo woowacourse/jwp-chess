@@ -36,7 +36,19 @@ window.onload = async function () {
   statusButton.addEventListener("click", getStatus);
   endButton.addEventListener("click", end);
 
-  const res = await fetch(`/api/load/${gameId}`);
+  const res = await fetch(`/api/games/${gameId}`);
+  const data = await res.json();
+  if (!res.ok) {
+    await create();
+    return;
+  }
+  load(data);
+}
+
+async function create() {
+  const res = await fetch(`/api/games/${gameId}`, {
+    method: "post"
+  });
   const data = await res.json();
   if (!res.ok) {
     alert(data.message);

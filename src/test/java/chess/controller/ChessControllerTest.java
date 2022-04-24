@@ -12,6 +12,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,12 +42,38 @@ class ChessControllerTest {
         chessService.deleteGame(testGameId);
     }
 
-    @DisplayName("GET - load api 테스트")
+    @Nested
+    @DisplayName("GET - 게임 조회 테스트")
+    class LoadTest {
+        @DisplayName("게임이 생성되어 있으면 조회에 성공한다.")
+        @Test
+        void load() {
+            chessService.createGame(testGameId);
+
+            RestAssured.given().log().all()
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get("/api/games/" + testGameId)
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value());
+        }
+
+        @DisplayName("게임이 생성되어 있지 않으면 조회에 실패한다.")
+        @Test
+        void load_Fail() {
+            RestAssured.given().log().all()
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .when().get("/api/games/" + testGameId)
+                    .then().log().all()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+        }
+    }
+
+    @DisplayName("POST - 게임 생성 테스트")
     @Test
-    void load() {
+    void create() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/load/" + testGameId)
+                .when().post("/api/games/" + testGameId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

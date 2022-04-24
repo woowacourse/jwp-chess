@@ -38,7 +38,7 @@ public class SpringController {
     @GetMapping("/game/{gameName}")
     public String game(@PathVariable String gameName, @RequestParam(value = "error", required = false) String error, Model model) {
         List<String> chessBoard = chessService.findByName(gameName);
-
+        chessService.save();
         model.addAttribute("chessboard", chessBoard);
         model.addAttribute("gameName", gameName);
         model.addAttribute("error", error);
@@ -55,8 +55,7 @@ public class SpringController {
         RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
         String encodedGameName = URLEncoder.encode(gameName, "UTF-8");
         try {
-            String command = makeCommand(from, to);
-            chessService.move(command);
+            chessService.move(from, to, gameName);
             if (chessService.isEnd()) {
                 return "redirect:/game/" + encodedGameName + "/end";
             }
@@ -96,9 +95,5 @@ public class SpringController {
     @GetMapping("/error")
     public String error() {
         return "error";
-    }
-
-    private String makeCommand(String from, String to) {
-        return "move " + from + " " + to;
     }
 }

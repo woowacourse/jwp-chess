@@ -1,14 +1,16 @@
 package chess.service;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.Command;
 import chess.domain.piece.Team;
 import chess.dto.ChessGameDto;
-import java.util.List;
-import java.util.Map;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
@@ -26,14 +28,18 @@ public class ChessService {
         return chessGame.getChessBoardSymbol();
     }
 
-    public List<String> move(String moveCommand) {
-        Command command = Command.from(moveCommand);
+    public List<String> move(String from, String to, String gameName) {
+        Command command = Command.from(makeCommand(from, to));
 
         chessGame.progress(command);
-
-        save();
-
+        pieceDao.deleteByPosition(to, gameName);
+        pieceDao.updatePosition(from, to, gameName);
+        chessGameDao.update(ChessGameDto.from(chessGame));
         return chessGame.getChessBoardSymbol();
+    }
+
+    private String makeCommand(String from, String to) {
+        return "move " + from + " " + to;
     }
 
     public Map<Team, Double> getScore() {

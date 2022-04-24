@@ -48,19 +48,15 @@ public class ChessService {
 
     public String finish(Command command) {
         chessGame.progress(command);
-
         save();
-
         return chessGame.getWinTeamName();
     }
 
     public List<String> findByName(String gameName) throws IllegalStateException {
         ChessGame selectedChessGame = chessGameDao.findByName(gameName);
-
         if (selectedChessGame == null) {
             return createChessBoard(gameName);
         }
-
         chessGame = selectedChessGame;
 
         return chessGame.getChessBoardSymbol();
@@ -68,7 +64,6 @@ public class ChessService {
 
     private List<String> createChessBoard(String gameName) {
         this.chessGame = new ChessGame(gameName);
-
         chessGame.progress(Command.from("start"));
 
         return chessGame.getChessBoardSymbol();
@@ -76,11 +71,8 @@ public class ChessService {
 
     public void save() throws IllegalStateException {
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
-
         String gameName = chessGameDto.getGameName();
-
         ChessGame chessGame = chessGameDao.findByName(gameName);
-
         if (chessGame != null) {
             updateChessGame(chessGameDto);
             return;

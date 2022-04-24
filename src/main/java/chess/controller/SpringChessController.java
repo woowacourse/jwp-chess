@@ -5,6 +5,8 @@ import chess.dao.PieceDao;
 import chess.dto.MoveCommandDto;
 import chess.service.ChessGameService;
 import chess.web.view.BoardView;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class SpringChessController {
 
-    public static final String MOVE_SUCCESS_MESSAGE = "성공적으로 이동했습니다";
+    private static final String MOVE_SUCCESS_MESSAGE = "성공적으로 이동했습니다";
 
     final ChessGameService chessGameService;
 
@@ -33,20 +35,20 @@ public class SpringChessController {
     }
 
     @GetMapping("/game/{gameId}/exit")
-    private String postExit(@PathVariable String gameId) {
+    public String postExit(@PathVariable String gameId) {
         chessGameService.cleanGame(gameId);
         return "redirect:/";
     }
 
     @PostMapping(path = "/game/{gameId}/move")
-    private ModelAndView postMove(@PathVariable String gameId, @RequestBody MoveCommandDto MoveCommandDto) {
+    public ModelAndView postMove(@PathVariable String gameId, @RequestBody MoveCommandDto MoveCommandDto) {
         chessGameService.move(gameId, MoveCommandDto);
         return getModelErrorUrl(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId, gameId);
     }
 
     @GetMapping("/game/{gameId}")
-    private ModelAndView getStartGamePage(@PathVariable String gameId) {
-        return getModel(gameId);
+    public ModelAndView getStartGamePage(HttpServletRequest request, @PathVariable String gameId) {
+        return getModel(request, gameId);
     }
 
     @GetMapping("/game/start")
@@ -64,12 +66,17 @@ public class SpringChessController {
         return modelAndView;
     }
 
-    private ModelAndView getModel(String gameId) {
+    private ModelAndView getModel(HttpServletRequest request, String gameId) {
         ModelAndView modelAndView = new ModelAndView("game");
         modelAndView.addObject("pieces", BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
         modelAndView.addObject("gameId", gameId);
         modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
-        modelAndView.addObject("gameMessage", "none");
+        modelAndView.addObject("gameMessage", getGameMessage(request));
         return modelAndView;
+    }
+
+    private String getGameMessage(HttpServletRequest request) {
+        String decodedQueryString = URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8);
+        return decodedQueryString.split("gameMessage=")[1];
     }
 }

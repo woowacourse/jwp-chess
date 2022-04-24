@@ -1,4 +1,4 @@
-package chess.dto.board;
+package chess.dto.view.board;
 
 import chess.domain.board.Board;
 import chess.domain.board.piece.Piece;
@@ -9,11 +9,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class WebBoardViewDto {
+public class BoardViewDto {
 
     private final List<RowDto> boardDisplay;
 
-    public WebBoardViewDto(Board board) {
+    public BoardViewDto(Board board) {
         boardDisplay = toBoardDisplay(board.toMap());
     }
 
@@ -36,7 +36,7 @@ public class WebBoardViewDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        WebBoardViewDto that = (WebBoardViewDto) o;
+        BoardViewDto that = (BoardViewDto) o;
         return Objects.equals(boardDisplay, that.boardDisplay);
     }
 

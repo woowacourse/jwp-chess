@@ -1,6 +1,6 @@
 package chess.entity;
 
-import chess.dto.GameOverviewDto;
+import chess.dto.view.GameOverviewDto;
 import java.util.Objects;
 
 public class GameEntity {

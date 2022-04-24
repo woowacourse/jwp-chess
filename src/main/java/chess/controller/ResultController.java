@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.dto.GameResultDto;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

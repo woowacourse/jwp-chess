@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.SearchResultDto;
+import chess.dto.response.SearchResultDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

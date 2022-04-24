@@ -2,9 +2,9 @@ package chess.domain.game;
 
 import chess.domain.board.Board;
 import chess.domain.game.statistics.GameState;
-import chess.dto.GameStateDto;
-import chess.dto.GameSnapshotDto;
-import chess.dto.board.WebBoardViewDto;
+import chess.dto.view.GameStateDto;
+import chess.dto.view.GameSnapshotDto;
+import chess.dto.view.board.BoardViewDto;
 
 public abstract class Started implements Game {
 
@@ -16,7 +16,7 @@ public abstract class Started implements Game {
 
     @Override
     public GameSnapshotDto toDtoOf(int gameId) {
-        return new GameSnapshotDto(new GameStateDto(gameId, getState()), new WebBoardViewDto(board));
+        return new GameSnapshotDto(new GameStateDto(gameId, getState()), new BoardViewDto(board));
     }
 
     protected abstract GameState getState();

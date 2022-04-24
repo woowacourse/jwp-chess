@@ -7,13 +7,12 @@ import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
-import chess.dto.CreatedGameDto;
-import chess.dto.FullGameDto;
-import chess.dto.GameCountDto;
-import chess.dto.GameOverviewDto;
-import chess.dto.GameResultDto;
-import chess.dto.GameSnapshotDto;
-import chess.dto.SearchResultDto;
+import chess.dto.response.SearchResultDto;
+import chess.dto.response.CreatedGameDto;
+import chess.dto.view.FullGameDto;
+import chess.dto.view.GameCountDto;
+import chess.dto.view.GameOverviewDto;
+import chess.dto.view.GameResultDto;
 import chess.entity.GameEntity;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,12 +72,11 @@ public class ChessService {
     }
 
     @Transactional
-    public GameSnapshotDto playGame(int gameId, Event moveEvent) {
+    public void playGame(int gameId, Event moveEvent) {
         Game game = currentSnapShotOf(gameId).play(moveEvent);
 
         eventDao.save(gameId, moveEvent);
         finishGameOnEnd(gameId, game);
-        return game.toDtoOf(gameId);
     }
 
     private void finishGameOnEnd(int gameId, Game game) {

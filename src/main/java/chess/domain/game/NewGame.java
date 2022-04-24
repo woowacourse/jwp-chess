@@ -3,7 +3,7 @@ package chess.domain.game;
 import chess.domain.board.Board;
 import chess.domain.event.Event;
 import chess.domain.game.statistics.GameResult;
-import chess.dto.GameSnapshotDto;
+import chess.dto.view.GameSnapshotDto;
 import chess.domain.board.BoardFactory;
 
 public final class NewGame implements Game {

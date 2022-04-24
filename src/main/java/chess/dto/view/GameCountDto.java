@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.view;
 
 import java.util.Objects;
 

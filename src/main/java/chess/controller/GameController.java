@@ -3,7 +3,7 @@ package chess.controller;
 import chess.domain.auth.AuthCredentials;
 import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
-import chess.dto.CreatedGameDto;
+import chess.dto.response.CreatedGameDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

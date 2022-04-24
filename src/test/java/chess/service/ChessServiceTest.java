@@ -8,13 +8,13 @@ import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
-import chess.dto.CreatedGameDto;
-import chess.dto.FullGameDto;
-import chess.dto.GameCountDto;
-import chess.dto.GameOverviewDto;
-import chess.dto.GameResultDto;
-import chess.dto.GameSnapshotDto;
-import chess.dto.SearchResultDto;
+import chess.dto.response.CreatedGameDto;
+import chess.dto.view.FullGameDto;
+import chess.dto.view.GameCountDto;
+import chess.dto.view.GameOverviewDto;
+import chess.dto.view.GameResultDto;
+import chess.dto.view.GameSnapshotDto;
+import chess.dto.response.SearchResultDto;
 import chess.service.fixture.EventDaoStub;
 import chess.service.fixture.GameDaoStub;
 import java.util.List;
@@ -90,11 +90,7 @@ class ChessServiceTest {
 
         FullGameDto expected = new FullGameDto(
                 new GameOverviewDto(1, "진행중인_게임"),
-                new NewGame().play(new InitEvent())
-                        .play(new MoveEvent("e2 e4"))
-                        .play(new MoveEvent("d7 d5"))
-                        .play(new MoveEvent("f1 b5"))
-                        .toDtoOf(1));
+                currentGameSnapshotOfGameIdOne().toDtoOf(1));
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -107,15 +103,15 @@ class ChessServiceTest {
     }
 
     @Test
-    void playGame_메서드는_이동_명령에_따라_이동시킨_후_그_결과를_반환한다() {
-        GameSnapshotDto actual = service.playGame(1, new MoveEvent("a7 a5"));
+    void playGame_메서드는_이동_명령에_따라_이동시킨다() {
+        service.playGame(1, new MoveEvent("a7 a5"));
+        FullGameDto actual = service.findGame(1);
 
-        GameSnapshotDto expected = new NewGame().play(new InitEvent())
-                .play(new MoveEvent("e2 e4"))
-                .play(new MoveEvent("d7 d5"))
-                .play(new MoveEvent("f1 b5"))
+        GameSnapshotDto expectedGame = currentGameSnapshotOfGameIdOne()
                 .play(new MoveEvent("a7 a5"))
                 .toDtoOf(1);
+        FullGameDto expected = new FullGameDto(
+                new GameOverviewDto(1, "진행중인_게임"), expectedGame);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -155,5 +151,12 @@ class ChessServiceTest {
         assertThatThrownBy(() -> service.findGameResult(1))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("아직 게임 결과가 산출되지 않았습니다.");
+    }
+
+    private Game currentGameSnapshotOfGameIdOne() {
+        return new NewGame().play(new InitEvent())
+                .play(new MoveEvent("e2 e4"))
+                .play(new MoveEvent("d7 d5"))
+                .play(new MoveEvent("f1 b5"));
     }
 }

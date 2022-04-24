@@ -1,16 +1,16 @@
-package chess.dto;
+package chess.dto.view;
 
-import chess.dto.board.RowDto;
-import chess.dto.board.WebBoardViewDto;
+import chess.dto.view.board.RowDto;
+import chess.dto.view.board.BoardViewDto;
 import java.util.List;
 import java.util.Objects;
 
 public class GameSnapshotDto {
 
     private final GameStateDto game;
-    private final WebBoardViewDto board;
+    private final BoardViewDto board;
 
-    public GameSnapshotDto(GameStateDto game, WebBoardViewDto board) {
+    public GameSnapshotDto(GameStateDto game, BoardViewDto board) {
         this.game = game;
         this.board = board;
     }

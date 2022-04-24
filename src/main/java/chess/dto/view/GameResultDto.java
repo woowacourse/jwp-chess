@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.view;
 
 import chess.domain.game.statistics.GameResult;
 import java.util.Objects;

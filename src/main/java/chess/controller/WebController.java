@@ -68,5 +68,4 @@ public class WebController {
         model.addAttribute("error", exception.getMessage());
         return "index";
     }
-
 }

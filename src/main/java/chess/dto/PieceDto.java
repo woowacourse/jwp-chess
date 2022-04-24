@@ -8,7 +8,6 @@ public class PieceDto {
     private final String team;
     private final String name;
 
-
     public PieceDto(final String position, final String team, final String name) {
         this.position = position;
         this.team = team;

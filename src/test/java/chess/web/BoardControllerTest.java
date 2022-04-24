@@ -11,10 +11,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 import chess.configuration.RepositoryConfiguration;
-import chess.repository.PieceRepository;
 import chess.service.GameService;
 import chess.service.RoomService;
-
 import chess.web.dto.CommendDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -34,9 +32,6 @@ class BoardControllerTest {
 	@Autowired
 	private GameService gameService;
 	private int boardId;
-
-	@Autowired
-	private PieceRepository pieceRepository;
 
 	@BeforeEach
 	void setUp() {

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -37,13 +38,17 @@ public class ChessGameDao {
     public ChessGame findByName(String gameName) {
         String sql = "select CHESSGAME.turn, CHESSGAME.game_name, PIECE.type, PIECE.team, PIECE.`rank`, PIECE.file from CHESSGAME, PIECE\n"
                 + "where CHESSGAME.game_name = PIECE.game_name AND CHESSGAME.game_name = ?;";
-        return jdbcTemplate.queryForObject(sql, chessGameRowMapper, gameName);
+        try {
+            return jdbcTemplate.queryForObject(sql, chessGameRowMapper, gameName);
+        } catch(EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     private final RowMapper<ChessGame> chessGameRowMapper = (resultSet, rowNum) -> new ChessGame(
-            getTurn(resultSet),
-            resultSet.getString("gameName"),
-            makeCells(resultSet)
+        getTurn(resultSet),
+        resultSet.getString("gameName"),
+        makeCells(resultSet)
     );
 
     private String getTurn(ResultSet resultSet) throws SQLException {

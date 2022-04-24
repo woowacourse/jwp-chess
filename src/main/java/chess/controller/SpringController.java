@@ -51,7 +51,7 @@ public class SpringController {
             String command = makeCommand(from, to);
             chessService.move(command);
             if (chessService.isEnd()) {
-                return "redirect:/game/" + gameName + "end";
+                return "redirect:/game/" + gameName + "/end";
             }
         } catch (IllegalArgumentException e) {
             redirectAttributes.addAttribute("error", e.getMessage());

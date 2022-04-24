@@ -29,9 +29,6 @@ public class BoardDaoImpl implements BoardDao {
         );
     };
 
-    private final RowMapper<Turn> turnRowMapper = (resultSet, rowNum) ->
-            new Turn(Team.from(resultSet.getString("turn")));
-
     public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

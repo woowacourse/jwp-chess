@@ -8,19 +8,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.web.WebAppConfiguration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-@SpringBootTest
+@JdbcTest
 class BoardDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
     private BoardDao boardDao;
     private Long boardId;
 
@@ -42,6 +37,8 @@ class BoardDaoTest {
                 " team     VARCHAR (10) not null," +
                 " foreign key (board_id) references board (id) ON DELETE CASCADE ," +
                 " primary key (id))");
+
+        boardDao = new BoardDaoImpl(jdbcTemplate);
 
         boardId = boardDao.save();
     }

@@ -1,3 +1,13 @@
+## 접속 방법
+
+- db 정보
+    - docker
+        - prod db: mysql / port: 13306
+            - init.sql
+        - test db: h2(tesdb, MySQL mode) / mem
+            - schema.sql
+    - 접속 방법
+
 ## 기능 구현 목록
 
 - repository (board)

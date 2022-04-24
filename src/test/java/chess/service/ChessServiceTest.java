@@ -12,6 +12,7 @@ import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
 import chess.entity.BoardEntity;
 import chess.repository.BoardRepository;
+import chess.repository.RoomRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ class ChessServiceTest {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
 
     @DisplayName("체스 초보만이라는 이름을 가진 방을 생성한다.")
     @Test
@@ -127,6 +131,26 @@ class ChessServiceTest {
         final StatusResponseDto status = chessService.createStatus(id);
 
         assertThat(status.getBlackScore()).isEqualTo(38);
+    }
+
+    @DisplayName("방 이름을 업데이트 한다.")
+    @Test
+    void updateRoomName() {
+        final Long id = createTestRoom("체스 초보만").getId();
+        chessService.updateRoomName(id, "체스 왕 초보만");
+
+        assertThat(roomRepository.findById(id).getName()).isEqualTo("체스 왕 초보만");
+    }
+
+
+    @DisplayName("종료된 방 이름을 업데이트 하여 에러를 발생한다.")
+    @Test
+    void updateRoomNameException() {
+        final Long id = createTestRoom("체스 초보만").getId();
+        chessService.endRoom(id);
+        assertThatThrownBy(() -> chessService.updateRoomName(id, "체스 왕 초보만"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }
 
     private RoomResponseDto createTestRoom(final String roomName) {

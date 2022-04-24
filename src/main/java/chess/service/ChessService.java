@@ -115,6 +115,11 @@ public class ChessService {
         return StatusResponseDto.of(new Score(board.getBoard()));
     }
 
+    public void updateRoomName(final Long id, final String name) {
+        validateGameOver(roomRepository.findById(id));
+        roomRepository.updateName(id, name);
+    }
+
     private void validateGameOver(final RoomEntity room) {
         if (room.isGameOver()) {
             throw new IllegalArgumentException("[ERROR] 이미 종료된 게임입니다.");

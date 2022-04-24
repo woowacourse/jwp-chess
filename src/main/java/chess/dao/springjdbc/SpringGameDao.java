@@ -1,7 +1,7 @@
 package chess.dao.springjdbc;
 
 import chess.dao.GameDao;
-import chess.service.dto.ChessGameDto;
+import chess.service.dto.GameEntity;
 import chess.service.dto.GamesDto;
 import chess.service.dto.StatusDto;
 import java.sql.PreparedStatement;
@@ -16,7 +16,7 @@ public class SpringGameDao implements GameDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<ChessGameDto> chessGameDtoRowMapper = (resultSet, rowNum) -> new ChessGameDto(
+    private final RowMapper<GameEntity> chessGameDtoRowMapper = (resultSet, rowNum) -> new GameEntity(
         resultSet.getInt("id"),
         resultSet.getString("name"),
         resultSet.getString("status"),
@@ -28,21 +28,15 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public void update(ChessGameDto dto) {
+    public void update(GameEntity game) {
         String sql = "UPDATE game SET status = ?, turn = ? WHERE id = ?";
-        jdbcTemplate.update(sql, dto.getStatus(), dto.getTurn(), dto.getId());
+        jdbcTemplate.update(sql, game.getStatus(), game.getTurn(), game.getId());
     }
 
     @Override
-    public ChessGameDto findById(int id) {
+    public GameEntity findById(int id) {
         String sql = "SELECT id, name, status, turn FROM game WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, chessGameDtoRowMapper, id);
-    }
-
-    @Override
-    public void updateStatus(StatusDto statusDto, int id) {
-        String sql = "UPDATE game SET status = ? WHERE id = ?";
-        jdbcTemplate.update(sql, statusDto.getStatus(), id);
     }
 
     @Override

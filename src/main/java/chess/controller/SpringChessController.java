@@ -1,10 +1,10 @@
 package chess.controller;
 
+import chess.controller.view.BoardView;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.dto.MoveCommandDto;
 import chess.service.ChessGameService;
-import chess.controller.view.BoardView;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
@@ -34,27 +34,27 @@ public class SpringChessController {
         return getModelWithGameMessage(e.getMessage(), "redirect:/game/" + gameId);
     }
 
-    @GetMapping("/game/{gameId}/exit")
-    public String postExit(@PathVariable String gameId) {
-        chessGameService.cleanGame(gameId);
-        return "redirect:/";
+    @GetMapping("/game/start")
+    public String startGame(@RequestParam String gameId) {
+        chessGameService.createOrGet(gameId);
+        return "redirect:/game/" + gameId;
+    }
+
+    @GetMapping("/game/{gameId}")
+    public ModelAndView getGameByGameId(HttpServletRequest request, @PathVariable String gameId) {
+        return getModel(request, gameId);
     }
 
     @PostMapping(path = "/game/{gameId}/move")
-    public ModelAndView postMove(@PathVariable String gameId, @RequestBody MoveCommandDto MoveCommandDto) {
+    public ModelAndView move(@PathVariable String gameId, @RequestBody MoveCommandDto MoveCommandDto) {
         chessGameService.move(gameId, MoveCommandDto);
         return getModelWithGameMessage(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId);
     }
 
-    @GetMapping("/game/{gameId}")
-    public ModelAndView getStartGamePage(HttpServletRequest request, @PathVariable String gameId) {
-        return getModel(request, gameId);
-    }
-
-    @GetMapping("/game/start")
-    public String getStartPage(@RequestParam String gameId) {
-        chessGameService.createOrGet(gameId);
-        return "redirect:/game/" + gameId;
+    @GetMapping("/game/{gameId}/exit")
+    public String exitAndDeleteGame(@PathVariable String gameId) {
+        chessGameService.cleanGame(gameId);
+        return "redirect:/";
     }
 
     private ModelAndView getModelWithGameMessage(String errorMessage, String url) {

@@ -1,15 +1,16 @@
 package chess.dao;
 
+import chess.domain.game.GameId;
 import chess.dto.response.ChessGameDto;
 
 public interface GameDao {
-    ChessGameDto getGame(String gameId);
+    ChessGameDto getGame(GameId gameId);
 
-    void createGame(String gameId);
+    void createGame(GameId gameId);
 
-    void deleteGame(String gameId);
+    void deleteGame(GameId gameId);
 
-    void updateTurnToWhite(String gameId);
+    void updateTurnToWhite(GameId gameId);
 
-    void updateTurnToBlack(String gameId);
+    void updateTurnToBlack(GameId gameId);
 }

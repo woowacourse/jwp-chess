@@ -1,9 +1,17 @@
 package chess.controller;
 
+import chess.domain.game.GameId;
+import chess.dto.request.MovePieceDto;
+import chess.dto.response.BoardDto;
+import chess.dto.response.CommandResultDto;
 import chess.dto.response.ErrorDto;
+import chess.dto.response.PieceColorDto;
+import chess.dto.response.PieceDto;
+import chess.dto.response.PositionDto;
+import chess.dto.response.ScoreResultDto;
+import chess.service.ChessService;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,19 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import chess.dto.request.MovePieceDto;
-import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
-import chess.dto.response.CommandResultDto;
-import chess.dto.response.PieceColorDto;
-import chess.dto.response.PieceDto;
-import chess.dto.response.PositionDto;
-import chess.dto.response.ScoreResultDto;
-import chess.service.ChessService;
-
 @RestController
 public class ChessController {
-    private static final String GAME_ID = "game-id"; // TODO: 여러 게임 방 기능 구현시 제거
+    private static final GameId GAME_ID = GameId.from("game-id"); // TODO: 여러 게임 방 기능 구현시 제거
     private static final String PIECE_NAME_FORMAT = "%s_%s";
 
     private final ChessService chessService;
@@ -63,8 +61,7 @@ public class ChessController {
     @PostMapping("/move")
     public CommandResultDto movePiece(@RequestBody MovePieceDto movePieceDto) {
         try {
-            chessService.movePiece(
-                UpdatePiecePositionDto.of(GAME_ID, movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition()));
+            chessService.movePiece(GAME_ID, movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition());
             return CommandResultDto.createSuccess();
         } catch (IllegalStateException e) {
             return CommandResultDto.createFail(e.getMessage());

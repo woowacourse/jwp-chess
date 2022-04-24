@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.BoardDao;
+import chess.domain.game.GameId;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceType;
@@ -16,7 +17,7 @@ public class BoardDaoFake implements BoardDao {
     private final Map<Position, Piece> fakeBoard = new HashMap<>();
 
     @Override
-    public BoardDto getBoard(String gameId) {
+    public BoardDto getBoard(GameId gameId) {
         return BoardDto.from(fakeBoard);
     }
 
@@ -37,10 +38,7 @@ public class BoardDaoFake implements BoardDao {
     }
 
     @Override
-    public void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto) {
-        Position from = updatePiecePositionDto.getFrom();
-        Position to = updatePiecePositionDto.getTo();
-
+    public void updatePiecePosition(GameId gameId, Position from, Position to) {
         fakeBoard.put(to, fakeBoard.remove(from));
     }
 

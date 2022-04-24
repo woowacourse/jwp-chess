@@ -1,5 +1,6 @@
 package chess.dto.request;
 
+import chess.domain.game.GameId;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceType;
@@ -22,8 +23,8 @@ public class CreatePieceDto {
         this.pieceColor = pieceColor;
     }
 
-    public static CreatePieceDto of(String gameId, Position position, Piece piece) {
-        return new CreatePieceDto(gameId, position.getXAxis(), position.getYAxis(), piece.getPieceType(),
+    public static CreatePieceDto of(GameId gameId, Position position, Piece piece) {
+        return new CreatePieceDto(gameId.getGameId(), position.getXAxis(), position.getYAxis(), piece.getPieceType(),
                 piece.getPieceColor());
     }
 

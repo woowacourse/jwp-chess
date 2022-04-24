@@ -2,6 +2,7 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.*;
 
+import chess.domain.game.GameId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import chess.dto.response.BoardDto;
 import chess.dto.response.ScoreResultDto;
 
 class ChessServiceTest {
-    private final String GAME_ID = "test-game-id";
+    private final GameId GAME_ID = GameId.from("test-game-id");
 
     private ChessService chessService;
 
@@ -40,12 +41,7 @@ class ChessServiceTest {
     @DisplayName("기물 이동")
     @Test
     void movePiece() {
-        // given
-        UpdatePiecePositionDto updatePiecePositionDto = UpdatePiecePositionDto.of(GAME_ID, Position.from("a2"),
-            Position.from("a3"));
-
-        // when & then
-        chessService.movePiece(updatePiecePositionDto);
+        chessService.movePiece(GAME_ID, Position.from("a2"), Position.from("a3"));
     }
 
     @DisplayName("현재 차례 색상 가져오기")
@@ -88,20 +84,13 @@ class ChessServiceTest {
     @Test
     void getWinColor() {
         // given
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("b1"),
-            Position.from("c3")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("a7"),
-            Position.from("a6")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("c3"),
-            Position.from("b5")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("a6"),
-            Position.from("a5")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("b5"),
-            Position.from("c7")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("a5"),
-            Position.from("a4")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("c7"),
-            Position.from("e8")));
+        chessService.movePiece(GAME_ID, Position.from("b1"), Position.from("c3"));
+        chessService.movePiece(GAME_ID, Position.from("a7"), Position.from("a6"));
+        chessService.movePiece(GAME_ID, Position.from("c3"), Position.from("b5"));
+        chessService.movePiece(GAME_ID, Position.from("a6"), Position.from("a5"));
+        chessService.movePiece(GAME_ID, Position.from("b5"), Position.from("c7"));
+        chessService.movePiece(GAME_ID, Position.from("a5"), Position.from("a4"));
+        chessService.movePiece(GAME_ID, Position.from("c7"), Position.from("e8"));
 
         // when
         PieceColor actual = chessService.getWinColor(GAME_ID).getPieceColor();

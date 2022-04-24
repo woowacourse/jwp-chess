@@ -1,23 +1,21 @@
 package chess.service;
 
-import java.util.Map.Entry;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import chess.dao.BoardDao;
 import chess.dao.GameDao;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
+import chess.domain.game.GameId;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.request.CreatePieceDto;
 import chess.dto.request.DeletePieceDto;
-import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.BoardDto;
 import chess.dto.response.ChessGameDto;
 import chess.dto.response.PieceColorDto;
 import chess.dto.response.ScoreResultDto;
+import java.util.Map.Entry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
@@ -30,12 +28,12 @@ public class ChessService {
         this.boardDao = boardDao;
     }
 
-    public void initializeGame(String gameId) {
+    public void initializeGame(GameId gameId) {
         gameDao.deleteGame(gameId);
         createGame(gameId);
     }
 
-    public void createGame(String gameId) {
+    public void createGame(GameId gameId) {
         gameDao.createGame(gameId);
 
         Board initializedBoard = Board.createInitializedBoard();
@@ -48,22 +46,20 @@ public class ChessService {
         }
     }
 
-    public void movePiece(UpdatePiecePositionDto updatePiecePositionDto) {
-        String gameId = updatePiecePositionDto.getGameId();
-
+    public void movePiece(GameId gameId, Position from, Position to) {
         ChessGame chessGame = generateChessGame(gameId);
-        chessGame.movePiece(updatePiecePositionDto.getFrom(), updatePiecePositionDto.getTo());
+        chessGame.movePiece(from, to);
 
         updateGameTurn(gameId, chessGame);
-        updatePiecePosition(updatePiecePositionDto, gameId);
+        updatePiecePosition(gameId, from, to);
     }
 
-    private void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto, String gameId) {
-        boardDao.deletePiece(DeletePieceDto.of(gameId, updatePiecePositionDto.getTo()));
-        boardDao.updatePiecePosition(updatePiecePositionDto);
+    private void updatePiecePosition(GameId gameId, Position from, Position to) {
+        boardDao.deletePiece(DeletePieceDto.of(gameId, to));
+        boardDao.updatePiecePosition(gameId, from, to);
     }
 
-    private void updateGameTurn(String gameId, ChessGame chessGame) {
+    private void updateGameTurn(GameId gameId, ChessGame chessGame) {
         if (chessGame.isWhiteTurn()) {
             gameDao.updateTurnToWhite(gameId);
             return;
@@ -72,35 +68,35 @@ public class ChessService {
         gameDao.updateTurnToBlack(gameId);
     }
 
-    public PieceColorDto getCurrentTurn(String gameId) {
+    public PieceColorDto getCurrentTurn(GameId gameId) {
         return PieceColorDto.from(generateChessGame(gameId));
     }
 
-    public ScoreResultDto getScore(String gameId) {
+    public ScoreResultDto getScore(GameId gameId) {
         return ScoreResultDto.from(generateChessGame(gameId));
     }
 
-    public PieceColorDto getWinColor(String gameId) {
+    public PieceColorDto getWinColor(GameId gameId) {
         ChessGame chessGame = generateChessGame(gameId);
         return PieceColorDto.from(chessGame.getWinColor());
     }
 
-    private ChessGame generateChessGame(String gameId) {
+    private ChessGame generateChessGame(GameId gameId) {
         BoardDto boardDto = boardDao.getBoard(gameId);
         ChessGameDto chessGameDto = gameDao.getGame(gameId);
 
         return ChessGame.of(boardDto.toBoard(), chessGameDto.getCurrentTurnAsPieceColor());
     }
 
-    public BoardDto getBoard(String gameId) {
+    public BoardDto getBoard(GameId gameId) {
         return boardDao.getBoard(gameId);
     }
 
     @Override
     public String toString() {
         return "ChessService{" +
-            "gameDao=" + gameDao +
-            ", boardDao=" + boardDao +
-            '}';
+                "gameDao=" + gameDao +
+                ", boardDao=" + boardDao +
+                '}';
     }
 }

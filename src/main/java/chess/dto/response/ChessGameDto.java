@@ -1,5 +1,6 @@
 package chess.dto.response;
 
+import chess.domain.game.GameId;
 import chess.domain.piece.PieceColor;
 
 public class ChessGameDto {
@@ -11,8 +12,8 @@ public class ChessGameDto {
         this.currentTurn = currentTurn;
     }
 
-    public static ChessGameDto of(String gameId, String turn) {
-        return new ChessGameDto(gameId, PieceColorDto.from(turn));
+    public static ChessGameDto of(GameId gameId, String turn) {
+        return new ChessGameDto(gameId.getGameId(), PieceColorDto.from(turn));
     }
 
     public PieceColor getCurrentTurnAsPieceColor() {

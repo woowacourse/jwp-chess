@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.game.GameId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
 public class GameDaoImplTest {
-    private static final String TEST_GAME_ID = "TEST-GAME-ID";
+    private static final GameId TEST_GAME_ID = GameId.from("TEST-GAME-ID");
 
     private GameDaoImpl gameDao;
 

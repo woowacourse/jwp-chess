@@ -1,5 +1,6 @@
 package chess.dto.request;
 
+import chess.domain.game.GameId;
 import chess.domain.position.Position;
 import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
@@ -15,8 +16,8 @@ public class DeletePieceDto {
         this.yAxis = yAxis;
     }
 
-    public static DeletePieceDto of(String gameId, Position position) {
-        return new DeletePieceDto(gameId, position.getXAxis(), position.getYAxis());
+    public static DeletePieceDto of(GameId gameId, Position position) {
+        return new DeletePieceDto(gameId.getGameId(), position.getXAxis(), position.getYAxis());
     }
 
     public String getGameId() {

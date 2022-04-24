@@ -2,6 +2,7 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
+import chess.domain.game.GameId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import chess.dto.response.BoardDto;
 
 @JdbcTest
 class BoardDaoImplTest {
-    private static final String GAME_ID = "test-game";
+    private static final GameId GAME_ID = GameId.from("test-game");
     private static final XAxis X_AXIS = XAxis.A;
     private static final YAxis Y_AXIS = YAxis.ONE;
     private static final XAxis X_AXIS_2 = XAxis.B;
@@ -97,12 +98,10 @@ class BoardDaoImplTest {
     @Test
     void updatePiecePosition() {
         // given
-        UpdatePiecePositionDto updatePiecePositionDto = UpdatePiecePositionDto.of(GAME_ID, X_AXIS, Y_AXIS, X_AXIS_2,
-            Y_AXIS_2);
         boardDao.createPiece(
             CreatePieceDto.of(GAME_ID, Position.of(X_AXIS, Y_AXIS), new Piece(PIECE_TYPE, PIECE_COLOR)));
 
         // then
-        boardDao.updatePiecePosition(updatePiecePositionDto);
+        boardDao.updatePiecePosition(GAME_ID, Position.of(X_AXIS,Y_AXIS), Position.of(X_AXIS_2, Y_AXIS_2));
     }
 }

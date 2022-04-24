@@ -78,6 +78,5 @@ class RunningTest {
         Map<Point, Piece> pointPieces = state.getPointPieces();
 
         assertThat(pointPieces).hasSize(64);
-
     }
 }

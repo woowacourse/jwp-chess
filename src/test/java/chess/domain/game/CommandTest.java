@@ -57,5 +57,4 @@ class CommandTest {
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> Command.find(input));
     }
-
 }

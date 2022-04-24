@@ -1,13 +1,7 @@
 package chess.service;
 
-import static org.assertj.core.api.Assertions.*;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import chess.database.dao.FakeBoardDao;
 import chess.database.dao.FakeGameDao;
@@ -15,6 +9,12 @@ import chess.database.dto.GameStateDto;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import chess.dto.Arguments;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class GameServiceTest {
@@ -63,7 +63,7 @@ class GameServiceTest {
     public void moveBoard() {
         // given
         String roomName = TEST_ROOM_NAME;
-        Arguments arguments = Arguments.ofArray(new String[] {"a2", "a4"}, 0);
+        Arguments arguments = Arguments.ofArray(new String[]{"a2", "a4"}, 0);
 
         GameState gameState = service.readGameState(roomName);
         GameState started = gameState.start();

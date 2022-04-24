@@ -13,5 +13,4 @@ public class DaoConfig {
     public static BoardDao getBoardDao() {
         return new JdbcBoardDao();
     }
-
 }

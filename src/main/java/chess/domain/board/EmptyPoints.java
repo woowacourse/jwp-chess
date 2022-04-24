@@ -29,5 +29,4 @@ public class EmptyPoints {
     public boolean contains(Point point) {
         return this.points.contains(point);
     }
-
 }

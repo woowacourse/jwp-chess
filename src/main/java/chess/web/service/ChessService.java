@@ -8,16 +8,12 @@ import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
 import chess.web.dao.BoardDao;
-import chess.web.dao.BoardDaoImpl;
 import chess.web.dao.PieceDao;
-import chess.web.dao.PieceDaoImpl;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {

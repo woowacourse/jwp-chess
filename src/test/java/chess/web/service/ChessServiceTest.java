@@ -1,5 +1,8 @@
 package chess.web.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import chess.board.Board;
 import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
@@ -9,9 +12,6 @@ import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ChessServiceTest {
 

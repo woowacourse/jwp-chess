@@ -1,17 +1,14 @@
 package chess.web.dao;
 
-import chess.board.piece.Empty;
 import chess.board.piece.Piece;
 import chess.board.piece.PieceFactory;
+import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class PieceDaoImpl implements PieceDao {

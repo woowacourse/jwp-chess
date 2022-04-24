@@ -1,7 +1,6 @@
 package chess.board.piece;
 
 import chess.board.piece.position.Position;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

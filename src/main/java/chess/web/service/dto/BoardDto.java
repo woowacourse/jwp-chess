@@ -2,7 +2,6 @@ package chess.web.service.dto;
 
 import chess.board.Board;
 import chess.board.piece.Piece;
-
 import java.util.Map;
 import java.util.stream.Collectors;
 

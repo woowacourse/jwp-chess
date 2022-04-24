@@ -1,10 +1,10 @@
 package chess.board;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.board.piece.Pieces;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class BoardTest {
 

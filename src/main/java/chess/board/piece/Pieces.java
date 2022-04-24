@@ -1,15 +1,14 @@
 package chess.board.piece;
 
+import static java.util.stream.Collectors.counting;
+
 import chess.board.Team;
 import chess.board.piece.position.File;
 import chess.board.piece.position.Position;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.counting;
 
 public final class Pieces {
     private final List<Piece> pieces;

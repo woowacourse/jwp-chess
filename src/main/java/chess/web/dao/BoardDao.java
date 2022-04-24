@@ -2,7 +2,6 @@ package chess.web.dao;
 
 import chess.board.Board;
 import chess.board.Turn;
-
 import java.util.Optional;
 
 public interface BoardDao {

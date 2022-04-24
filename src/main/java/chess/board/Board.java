@@ -4,7 +4,6 @@ import chess.board.piece.Empty;
 import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
-
 import java.util.List;
 
 public final class Board {

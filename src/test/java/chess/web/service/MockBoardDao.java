@@ -5,7 +5,6 @@ import chess.board.Team;
 import chess.board.Turn;
 import chess.board.piece.Pieces;
 import chess.web.dao.BoardDao;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

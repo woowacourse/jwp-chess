@@ -1,5 +1,7 @@
 package chess.web.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.board.Board;
 import chess.board.Team;
 import chess.board.Turn;

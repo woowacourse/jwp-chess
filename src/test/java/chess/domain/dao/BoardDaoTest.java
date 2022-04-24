@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -17,12 +18,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BoardDaoTest {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
     private BoardJdbcTemplateDao boardDao;
-    @Autowired
     private GameJdbcTemplateDao gameDao;
 
     @BeforeEach
     void set() {
+        boardDao = new BoardJdbcTemplateDao(jdbcTemplate);
+        gameDao = new GameJdbcTemplateDao(jdbcTemplate);
         boardDao.deleteAll();
         gameDao.deleteAll();
         gameDao.save(ChessBoardFactory.initBoard());

@@ -199,8 +199,8 @@ function highlightSelectedCell(cell) {
 }
 
 async function requestMove() {
-  return await fetch(`/api/move/${gameId}`, {
-    method: "post",
+  return await fetch(`/api/games/${gameId}/pieces`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },

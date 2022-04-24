@@ -40,11 +40,10 @@ public class ChessController {
         return chessService.startOrRestartGame(gameId);
     }
 
-    @PostMapping("/move/{gameId}")
+    @PutMapping("/games/{gameId}/pieces")
     public ChessGameResponse movePiece(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {
         return chessService.move(gameId, moveRequest);
     }
-    // TODO: PUT "/games/{gameId}/pieces"
 
     @GetMapping("/status/{gameId}")
     public StatusResponse status(@PathVariable long gameId) {

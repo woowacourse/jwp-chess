@@ -211,6 +211,38 @@ class ChessControllerTest {
                 .andExpect(content().string(response));
     }
 
+    @DisplayName("room 이름 변경 시 200 ok를 반환한다.")
+    @Test
+    void changeRoomName() throws Exception {
+        RoomRequestDto roomRequestDto = new RoomRequestDto("체스 초고수만");
+        String request = objectMapper.writeValueAsString(roomRequestDto);
+
+        doNothing().when(chessService).updateRoomName(1L, roomRequestDto.getName());
+        mockMvc.perform(patch(DEFAULT_API + "/1/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
+        ).andExpect(status().isOk());
+    }
+
+    @DisplayName("종료된 room 이름 변경 시 400 bad request와 errorResponseDto를 반환한다.")
+    @Test
+    void changeRoomNameException() throws Exception {
+        RoomRequestDto roomRequestDto = new RoomRequestDto("체스 초고수만");
+        String request = objectMapper.writeValueAsString(roomRequestDto);
+
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_FINISHED);
+        String response = objectMapper.writeValueAsString(errorResponseDto);
+
+        doThrow(new IllegalArgumentException(ERROR_FINISHED))
+                .when(chessService)
+                .updateRoomName(1L, roomRequestDto.getName());
+        mockMvc.perform(patch(DEFAULT_API + "/1/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
+        ).andExpect(status().isBadRequest())
+                .andExpect(content().string(response));
+    }
+
     private RoomEntity createRoomEntity(Long id) {
         return new RoomEntity(id, ROOM_NAME, WHITE, FALSE);
     }

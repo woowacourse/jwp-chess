@@ -60,25 +60,30 @@ public class ChessService {
     }
 
     @Transactional
-    public void insertGame() {
+    public Long insertGame() {
         ChessGame chessGame = new ChessGame(new NormalPiecesGenerator());
         chessGame.playGameByCommand(GameCommand.of("start"));
 
         gameDao.delete();
         gameDao.save(chessGame.getState().toString());
-        boardDao.save(chessGame.getChessBoard(), gameDao.findId());
+
+        Long gameId = gameDao.findId();
+        boardDao.save(chessGame.getChessBoard(), gameId);
+        return gameId;
     }
 
     @Transactional
-    public void updateBoard(String from, String to) {
+    public Long updateBoard(String from, String to) {
         ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
         chessGame.playGameByCommand(GameCommand.of("move", from, to));
         chessGame.isEndGameByPiece();
-        gameDao.update(chessGame.getState().toString(), gameDao.findId());
+        Long gameId = gameDao.findId();
+        gameDao.update(chessGame.getState().toString(), gameId);
 
         Map<String, Piece> pieces = chessGame.getChessBoard().toMap();
-        boardDao.update(Position.of(to), pieces.get(to), gameDao.findId());
-        boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameDao.findId());
+        boardDao.update(Position.of(to), pieces.get(to), gameId);
+        boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameId);
+        return gameId;
     }
 
     public StatusDto selectStatus() {
@@ -90,10 +95,12 @@ public class ChessService {
     }
 
     @Transactional
-    public void deleteGame() {
+    public Long deleteGame() {
         ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
 
         chessGame.playGameByCommand(GameCommand.of("end"));
+        Long gameId = gameDao.findId();
         gameDao.delete();
+        return gameId;
     }
 }

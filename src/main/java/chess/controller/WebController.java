@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,16 +39,18 @@ public class WebController {
         return new ModelAndView("index", model);
     }
 
-    @GetMapping("/game")
-    public ModelAndView insertGame() {
-        chessService.insertGame();
-        return new ModelAndView("redirect:/");
+    @PostMapping("/game")
+    @ResponseBody
+    public ResponseEntity insertGame() {
+        final Long gameId = chessService.insertGame();
+        return ResponseEntity.ok().body(new GameDto(gameId));
     }
 
     @PutMapping("/game/board")
-    public ModelAndView updateBoard(MoveDto moveDto) {
-        chessService.updateBoard(moveDto.getFrom(), moveDto.getTo());
-        return new ModelAndView("redirect:/");
+    @ResponseBody
+    public ResponseEntity updateBoard(@RequestBody MoveDto moveDto) {
+        final Long gameId = chessService.updateBoard(moveDto.getFrom(), moveDto.getTo());
+        return ResponseEntity.ok().body(new GameDto(gameId));
     }
 
     @GetMapping("/game/status")
@@ -57,8 +61,10 @@ public class WebController {
     }
 
     @DeleteMapping("/game")
-    public ModelAndView deleteGame() {
-        chessService.deleteGame();
-        return new ModelAndView("redirect:/");
+    @ResponseBody
+    public ResponseEntity deleteGame() {
+        final ChessService chessService = this.chessService;
+        final Long gameId = chessService.deleteGame();
+        return ResponseEntity.ok().body(new GameDto(gameId));
     }
 }

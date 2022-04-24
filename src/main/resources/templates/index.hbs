@@ -86,21 +86,15 @@
         {{/this}}
     </section>
     <h1>{{#if winner}} {{winner}} <span> 승리 </span> {{/if}}</h1>
-    <form action="/game">
-        <input type="submit" value="시작">
-    </form>
 
-    <form method="post" action="/game">
-        <input type="hidden" name="_method" value="DELETE"/>
-        <input type="submit" value="종료">
-    </form>
+    <button onClick='insertGame()'>시작</button>
+    <button onClick='deleteGame()'>종료</button>
 
-    <form method="post" action="/game/board">
-        <input type="hidden" name="_method" value="PUT"/>
-        <input type="text" name="from">
-        <input type="text" name="to">
-        <input type="submit" value="움직이기">
-    </form>
+    <div class="positionBox">
+        <input id="from" type="text" name="from">
+        <input id="to" type="text" name="from">
+        <button onClick='updateBoard()' class="submit">움직이기</button>
+    </div>
 
     <button onClick='selectStatus()'>점수현황</button>
     <p id="score">{{data}}</p>

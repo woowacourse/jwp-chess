@@ -54,18 +54,7 @@ public class ChessService {
 
     public ChessGameResponse loadGame(long gameId) {
         Optional<GameState> maybeGameState = gameDao.load(gameId);
-<<<<<<< HEAD
-<<<<<<< HEAD
         GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
-=======
-        if (maybeGameState.isEmpty()) {
-            throw new IllegalArgumentException("게임이 없습니다.");
-        }
-        GameState gameState = maybeGameState.get();
->>>>>>> refactor: 체스 보드를 만드는 메서드 분리
-=======
-        GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
->>>>>>> refactor: 게임 조회 시 게임이 없으면 404 NOT FOUND 반환하도록 변경
         Board board = createBoard(gameId);
         chessGames.put(gameId, new ChessGame(board, gameState));
         return new ChessGameResponse(getChessGame(gameId));

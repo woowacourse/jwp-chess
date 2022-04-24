@@ -33,6 +33,10 @@ class SpringGameDaoTest {
 
     @BeforeEach
     void setup() {
+        jdbcTemplate.execute("drop table if exists member");
+        jdbcTemplate.execute("drop table if exists piece");
+        jdbcTemplate.execute("drop table if exists game");
+
         jdbcTemplate.execute("create table Member ("
                 + "id bigint auto_increment primary key, "
                 + "name varchar(10) not null);");

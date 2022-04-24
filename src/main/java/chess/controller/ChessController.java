@@ -95,9 +95,9 @@ public class ChessController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/start/{gameId}")
-    public ChessGameResponse startGame(@PathVariable long gameId) {
-        return chessService.startGame(gameId);
+    @PutMapping("/games/{gameId}")
+    public ChessGameResponse startOrRestartGame(@PathVariable long gameId) {
+        return chessService.startOrRestartGame(gameId);
     }
 
     @GetMapping("/restart/{gameId}")

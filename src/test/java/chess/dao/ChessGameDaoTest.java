@@ -12,12 +12,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class ChessGameDaoTest {
 
     @Autowired
     private ChessGameDao chessGameDao;
-    private static final PieceDao pieceDao = new PieceDao();
+    @Autowired
+    private PieceDao pieceDao;
 
     @AfterEach
     private void rollback() {

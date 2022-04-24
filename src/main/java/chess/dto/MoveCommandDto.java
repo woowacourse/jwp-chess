@@ -3,13 +3,14 @@ package chess.dto;
 import chess.domain.command.MoveCommand;
 
 public class MoveCommandDto {
+
     private String source;
     private String target;
 
     public MoveCommandDto(){
     }
 
-    public MoveCommandDto(String source, String target, String gameId) {
+    public MoveCommandDto(String source, String target) {
         this.source = source;
         this.target = target;
     }
@@ -25,4 +26,5 @@ public class MoveCommandDto {
     public MoveCommand toEntity() {
         return new MoveCommand(source,target);
     }
+
 }

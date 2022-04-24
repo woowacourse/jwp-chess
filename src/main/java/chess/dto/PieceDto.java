@@ -7,7 +7,6 @@ public class PieceDto {
     private String name;
 
     public PieceDto() {
-
     }
 
     public PieceDto(String position, String color, String name) {

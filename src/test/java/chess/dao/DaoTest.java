@@ -146,4 +146,5 @@ public class DaoTest {
 
         assertThat(pieceDao.findAllByGameId("1234").getPieces().size()).isEqualTo(0);
     }
+
 }

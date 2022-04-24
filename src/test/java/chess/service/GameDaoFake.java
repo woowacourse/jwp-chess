@@ -3,18 +3,11 @@ package chess.service;
 import chess.dao.GameDao;
 import chess.domain.game.GameId;
 import chess.domain.piece.PieceColor;
-import chess.dto.response.ChessGameDto;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GameDaoFake implements GameDao {
     private final Map<GameId, PieceColor> fakeGame = new HashMap<>();
-
-    @Override
-    public ChessGameDto getGame(GameId gameId) {
-        PieceColor pieceColor = fakeGame.get(gameId);
-        return ChessGameDto.of(gameId, pieceColor.name());
-    }
 
     @Override
     public void createGame(GameId gameId) {
@@ -34,6 +27,11 @@ public class GameDaoFake implements GameDao {
     @Override
     public void updateTurnToBlack(GameId gameId) {
         fakeGame.put(gameId, PieceColor.BLACK);
+    }
+
+    @Override
+    public PieceColor getCurrentTurn(GameId gameId) {
+        return fakeGame.get(gameId);
     }
 
     @Override

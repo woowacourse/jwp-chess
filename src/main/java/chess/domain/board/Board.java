@@ -173,17 +173,17 @@ public class Board {
                 .count();
     }
 
+    public boolean hasKing(PieceColor pieceColor) {
+        return findPiecesByPieceColor(pieceColor)
+                .stream()
+                .anyMatch(Piece::isKing);
+    }
+
     public Set<Piece> findPiecesByPieceColor(PieceColor pieceColor) {
         return value.values()
                 .stream()
                 .filter(piece -> piece.isSameColorAs(pieceColor))
                 .collect(Collectors.toSet());
-    }
-
-    public boolean hasKing(PieceColor pieceColor) {
-        return findPiecesByPieceColor(pieceColor)
-                .stream()
-                .anyMatch(Piece::isKing);
     }
 
     public Map<Position, Piece> getValue() {

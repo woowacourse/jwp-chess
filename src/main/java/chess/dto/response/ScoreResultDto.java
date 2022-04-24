@@ -1,8 +1,6 @@
 package chess.dto.response;
 
-import chess.domain.game.ChessGame;
-import chess.domain.game.score.ScoreResult;
-import chess.domain.piece.PieceColor;
+import chess.domain.game.score.Score;
 
 public class ScoreResultDto {
     private final double whiteScore;
@@ -13,13 +11,8 @@ public class ScoreResultDto {
         this.blackScore = blackScore;
     }
 
-    public static ScoreResultDto from(ChessGame chessGame) {
-        ScoreResult scoreResult = chessGame.getStatus();
-
-        double whiteScore = scoreResult.getScoreByPieceColor(PieceColor.WHITE).getValue();
-        double blackScore = scoreResult.getScoreByPieceColor(PieceColor.BLACK).getValue();
-
-        return new ScoreResultDto(whiteScore, blackScore);
+    public static ScoreResultDto of(Score whiteScore, Score blackScore) {
+        return new ScoreResultDto(whiteScore.getValue(), blackScore.getValue());
     }
 
     public double getWhiteScore() {

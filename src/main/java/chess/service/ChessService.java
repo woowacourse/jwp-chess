@@ -5,14 +5,10 @@ import chess.dao.GameDao;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameId;
+import chess.domain.game.score.Score;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
-import chess.dto.request.CreatePieceDto;
-import chess.dto.request.DeletePieceDto;
-import chess.dto.response.BoardDto;
-import chess.dto.response.ChessGameDto;
-import chess.dto.response.PieceColorDto;
-import chess.dto.response.ScoreResultDto;
 import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,8 +37,7 @@ public class ChessService {
             Position position = entry.getKey();
             Piece piece = entry.getValue();
 
-            CreatePieceDto createPieceDto = CreatePieceDto.of(gameId, position, piece);
-            boardDao.createPiece(createPieceDto);
+            boardDao.createPiece(gameId, position, piece);
         }
     }
 
@@ -55,7 +50,7 @@ public class ChessService {
     }
 
     private void updatePiecePosition(GameId gameId, Position from, Position to) {
-        boardDao.deletePiece(DeletePieceDto.of(gameId, to));
+        boardDao.deletePiece(gameId, to);
         boardDao.updatePiecePosition(gameId, from, to);
     }
 
@@ -68,27 +63,32 @@ public class ChessService {
         gameDao.updateTurnToBlack(gameId);
     }
 
-    public PieceColorDto getCurrentTurn(GameId gameId) {
-        return PieceColorDto.from(generateChessGame(gameId));
-    }
-
-    public ScoreResultDto getScore(GameId gameId) {
-        return ScoreResultDto.from(generateChessGame(gameId));
-    }
-
-    public PieceColorDto getWinColor(GameId gameId) {
+    public PieceColor getCurrentTurn(GameId gameId) {
         ChessGame chessGame = generateChessGame(gameId);
-        return PieceColorDto.from(chessGame.getWinColor());
+        if (chessGame.isWhiteTurn()) {
+            return PieceColor.WHITE;
+        }
+
+        return PieceColor.BLACK;
+    }
+
+    public Score getScore(GameId gameId, PieceColor pieceColor) {
+        ChessGame chessGame = generateChessGame(gameId);
+        return chessGame.getStatus().getScoreByPieceColor(pieceColor);
+    }
+
+    public PieceColor getWinColor(GameId gameId) {
+        ChessGame chessGame = generateChessGame(gameId);
+        return chessGame.getWinColor();
     }
 
     private ChessGame generateChessGame(GameId gameId) {
-        BoardDto boardDto = boardDao.getBoard(gameId);
-        ChessGameDto chessGameDto = gameDao.getGame(gameId);
-
-        return ChessGame.of(boardDto.toBoard(), chessGameDto.getCurrentTurnAsPieceColor());
+        Board board = boardDao.getBoard(gameId);
+        PieceColor currentTurn = gameDao.getCurrentTurn(gameId);
+        return ChessGame.of(board, currentTurn);
     }
 
-    public BoardDto getBoard(GameId gameId) {
+    public Board getBoard(GameId gameId) {
         return boardDao.getBoard(gameId);
     }
 

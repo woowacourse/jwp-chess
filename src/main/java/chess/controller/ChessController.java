@@ -1,13 +1,15 @@
 package chess.controller;
 
+import chess.domain.board.Board;
 import chess.domain.game.GameId;
+import chess.domain.game.score.Score;
+import chess.domain.piece.Piece;
+import chess.domain.piece.PieceColor;
+import chess.domain.position.Position;
 import chess.dto.request.MovePieceDto;
-import chess.dto.response.BoardDto;
 import chess.dto.response.CommandResultDto;
 import chess.dto.response.ErrorDto;
 import chess.dto.response.PieceColorDto;
-import chess.dto.response.PieceDto;
-import chess.dto.response.PositionDto;
 import chess.dto.response.ScoreResultDto;
 import chess.service.ChessService;
 import java.util.HashMap;
@@ -35,26 +37,30 @@ public class ChessController {
     @ResponseBody
     @GetMapping("/board")
     public Map<String, String> getBoard() {
-        BoardDto boardDto = chessService.getBoard(GAME_ID);
-        return boardDtoToRaw(boardDto);
+        Board board = chessService.getBoard(GAME_ID);
+        return boardToRaw(board);
     }
 
     @ResponseBody
     @GetMapping("/turn")
     public PieceColorDto getTurn() {
-        return chessService.getCurrentTurn(GAME_ID);
+        PieceColor currentTurn = chessService.getCurrentTurn(GAME_ID);
+        return PieceColorDto.from(currentTurn);
     }
 
     @ResponseBody
     @GetMapping("/score")
     public ScoreResultDto getScore() {
-        return chessService.getScore(GAME_ID);
+        Score whiteScore = chessService.getScore(GAME_ID, PieceColor.WHITE);
+        Score blackScore = chessService.getScore(GAME_ID, PieceColor.BLACK);
+        return ScoreResultDto.of(whiteScore, blackScore);
     }
 
     @ResponseBody
     @GetMapping("/winner")
     public PieceColorDto getWinner() {
-        return chessService.getWinColor(GAME_ID);
+        PieceColor winColor = chessService.getWinColor(GAME_ID);
+        return PieceColorDto.from(winColor);
     }
 
     @ResponseBody
@@ -85,10 +91,10 @@ public class ChessController {
         return new ErrorDto(e.getMessage());
     }
 
-    private Map<String, String> boardDtoToRaw(BoardDto boardDto) {
+    private Map<String, String> boardToRaw(Board board) {
         Map<String, String> coordinateAndPiece = new HashMap<>();
-        for (Map.Entry<PositionDto, PieceDto> entrySet : boardDto.getValue().entrySet()) {
-            String coordinate = entrySet.getKey().toPosition().toCoordinate();
+        for (Map.Entry<Position, Piece> entrySet : board.getValue().entrySet()) {
+            String coordinate = entrySet.getKey().toCoordinate();
             String piece = generatePieceName(entrySet.getValue());
             coordinateAndPiece.put(coordinate, piece);
         }
@@ -96,9 +102,9 @@ public class ChessController {
         return coordinateAndPiece;
     }
 
-    private String generatePieceName(PieceDto pieceDto) {
-        String pieceName = pieceDto.getPieceType().name();
-        String pieceColorName = pieceDto.getPieceColor().name();
+    private String generatePieceName(Piece piece) {
+        String pieceName = piece.getPieceType().name();
+        String pieceColorName = piece.getPieceColor().name();
         return String.format(PIECE_NAME_FORMAT, pieceName, pieceColorName);
     }
 }

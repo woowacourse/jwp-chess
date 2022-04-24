@@ -1,10 +1,9 @@
 package chess.dao;
 
 import chess.domain.game.GameId;
-import chess.dto.response.ChessGameDto;
+import chess.domain.piece.PieceColor;
 
 public interface GameDao {
-    ChessGameDto getGame(GameId gameId);
 
     void createGame(GameId gameId);
 
@@ -13,4 +12,6 @@ public interface GameDao {
     void updateTurnToWhite(GameId gameId);
 
     void updateTurnToBlack(GameId gameId);
+
+    PieceColor getCurrentTurn(GameId gameId);
 }

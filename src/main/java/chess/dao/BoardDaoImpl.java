@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.board.Board;
 import chess.domain.game.GameId;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
@@ -7,9 +8,6 @@ import chess.domain.piece.PieceType;
 import chess.domain.position.Position;
 import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
-import chess.dto.request.CreatePieceDto;
-import chess.dto.request.DeletePieceDto;
-import chess.dto.response.BoardDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +27,7 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public BoardDto getBoard(GameId gameId) {
+    public Board getBoard(GameId gameId) {
         Map<Position, Piece> boardValue = new HashMap<>();
 
         for (Position position : getPositionsByGameId(gameId)) {
@@ -45,7 +43,7 @@ public class BoardDaoImpl implements BoardDao {
             boardValue.put(position, piece);
         }
 
-        return BoardDto.from(boardValue);
+        return Board.from(boardValue);
     }
 
     private List<Position> getPositionsByGameId(GameId gameId) {
@@ -61,21 +59,20 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public void createPiece(CreatePieceDto createPieceDto) {
+    public void createPiece(GameId gameId, Position position, Piece piece) {
         String query = String.format(
                 "INSERT INTO %s(game_id, x_axis, y_axis, piece_type, piece_color) VALUES(?, ?, ?, ?, ?)",
                 TABLE_NAME);
-        jdbcTemplate.update(query, createPieceDto.getGameId(), createPieceDto.getXAxisValueAsString(),
-                createPieceDto.getYAxisValueAsString(), createPieceDto.getPieceTypeName(),
-                createPieceDto.getPieceColorName());
+        jdbcTemplate.update(query, gameId.getGameId(), position.getXAxis().getValueAsString(),
+                position.getYAxis().getValueAsString(), piece.getPieceType().name(), piece.getPieceColor().name());
     }
 
     @Override
-    public void deletePiece(DeletePieceDto deletePieceDto) {
+    public void deletePiece(GameId gameid, Position position) {
         String query = String.format(
                 "DELETE FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
-        jdbcTemplate.update(query, deletePieceDto.getGameId(), deletePieceDto.getXAxisValueAsString(),
-                deletePieceDto.getYAxisValueAsString());
+        jdbcTemplate.update(query, gameid.getGameId(), position.getXAxis().getValueAsString(),
+                position.getYAxis().getValueAsString());
     }
 
     @Override

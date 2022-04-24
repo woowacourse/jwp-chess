@@ -1,17 +1,14 @@
 package chess.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.board.Board;
 import chess.domain.game.GameId;
+import chess.domain.piece.PieceColor;
+import chess.domain.position.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import chess.domain.piece.PieceColor;
-import chess.domain.position.Position;
-import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
-import chess.dto.response.ScoreResultDto;
 
 class ChessServiceTest {
     private final GameId GAME_ID = GameId.from("test-game-id");
@@ -29,7 +26,7 @@ class ChessServiceTest {
     void initializeGame() {
         // given
         chessService.initializeGame(GAME_ID);
-        BoardDto board = chessService.getBoard(GAME_ID);
+        Board board = chessService.getBoard(GAME_ID);
 
         // when
         int actual = board.getValue().keySet().size();
@@ -48,7 +45,7 @@ class ChessServiceTest {
     @Test
     void getCurrentTurn() {
         // given & when
-        PieceColor actual = chessService.getCurrentTurn(GAME_ID).getPieceColor();
+        PieceColor actual = chessService.getCurrentTurn(GAME_ID);
 
         // then
         assertThat(actual).isEqualTo(PieceColor.WHITE);
@@ -57,11 +54,8 @@ class ChessServiceTest {
     @DisplayName("검정팀 점수 가져오기")
     @Test
     void getScore_black() {
-        // given
-        ScoreResultDto scoreResultDto = chessService.getScore(GAME_ID);
-
-        // when
-        double actual = scoreResultDto.getBlackScore();
+        // given & when
+        double actual = chessService.getScore(GAME_ID, PieceColor.BLACK).getValue();
 
         // then
         assertThat(actual).isEqualTo(38.0);
@@ -70,11 +64,8 @@ class ChessServiceTest {
     @DisplayName("흰팀 점수 가져오기")
     @Test
     void getScore_white() {
-        // given
-        ScoreResultDto scoreResultDto = chessService.getScore(GAME_ID);
-
-        // when
-        double actual = scoreResultDto.getWhiteScore();
+        // given & when
+        double actual = chessService.getScore(GAME_ID, PieceColor.WHITE).getValue();
 
         // then
         assertThat(actual).isEqualTo(38.0);
@@ -93,7 +84,7 @@ class ChessServiceTest {
         chessService.movePiece(GAME_ID, Position.from("c7"), Position.from("e8"));
 
         // when
-        PieceColor actual = chessService.getWinColor(GAME_ID).getPieceColor();
+        PieceColor actual = chessService.getWinColor(GAME_ID);
 
         // then
         assertThat(actual).isEqualTo(PieceColor.WHITE);

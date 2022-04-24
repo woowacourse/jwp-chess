@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.game.GameId;
-import chess.dto.response.ChessGameDto;
+import chess.domain.piece.PieceColor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,14 +17,6 @@ public class GameDaoImpl implements GameDao {
     @Autowired
     public GameDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Override
-    public ChessGameDto getGame(GameId gameId) {
-        String query = String.format("SELECT turn FROM %s WHERE id = ?", TABLE_NAME);
-        String turn = jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> resultSet.getString("turn"),
-                gameId.getGameId());
-        return ChessGameDto.of(gameId, turn);
     }
 
     @Override
@@ -54,4 +46,11 @@ public class GameDaoImpl implements GameDao {
         jdbcTemplate.update(query, turn, gameId.getGameId());
     }
 
+    @Override
+    public PieceColor getCurrentTurn(GameId gameId) {
+        String query = String.format("SELECT turn FROM %s WHERE id = ?", TABLE_NAME);
+        String turn = jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> resultSet.getString("turn"),
+                gameId.getGameId());
+        return PieceColor.valueOf(turn);
+    }
 }

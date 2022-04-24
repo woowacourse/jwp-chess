@@ -31,14 +31,6 @@ public class GameDaoSpringImplTest {
                 + "    status    varchar(20) not null,\n"
                 + "    primary key (game_id)\n"
                 + ");");
-        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
-        jdbcTemplate.execute("create table piece\n"
-                + "(\n"
-                + "    position varchar(5)  not null,\n"
-                + "    type     varchar(10) not null,\n"
-                + "    color    varchar(20) not null,\n"
-                + "    primary key (position)\n"
-                + ");");
     }
 
     @Test

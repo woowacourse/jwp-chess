@@ -36,7 +36,10 @@ public class SpringController {
     }
 
     @GetMapping("/game/{gameName}")
-    public String game(@PathVariable String gameName, @RequestParam(value = "error", required = false) String error, Model model) {
+    public String game(
+        @PathVariable String gameName,
+        @RequestParam(value = "error", required = false) String error,
+        Model model) {
         List<String> chessBoard = chessService.findByName(gameName);
         chessService.save();
         model.addAttribute("chessboard", chessBoard);

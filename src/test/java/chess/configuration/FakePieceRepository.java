@@ -1,4 +1,4 @@
-package chess.service;
+package chess.configuration;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
@@ -18,7 +18,13 @@ public class FakePieceRepository implements PieceRepository {
     @Override
     public int save(int boardId, String target, PieceDto pieceDto) {
         autoIncrementId++;
-        database.put(autoIncrementId, new PieceData(boardId, target, pieceDto.getColor(), pieceDto.getRole()));
+        database.put(autoIncrementId,
+            new PieceData(
+                boardId,
+                target.toLowerCase(),
+                pieceDto.getColor(),
+                pieceDto.getRole())
+        );
         return autoIncrementId;
     }
 

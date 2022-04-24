@@ -14,12 +14,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
+import chess.configuration.RepositoryConfiguration;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.RoomDto;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(RepositoryConfiguration.class)
 class RoomControllerTest {
 
     @LocalServerPort

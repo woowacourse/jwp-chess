@@ -1,4 +1,4 @@
-package chess.service;
+package chess.configuration;
 
 import chess.domain.Color;
 import chess.repository.BoardRepository;
@@ -32,14 +32,14 @@ public class FakeBoardRepository implements BoardRepository {
 
     private Optional<Integer> findBoardId(int roomId) {
         return database.keySet().stream()
-                .filter(key -> database.get(key).getroomId() == roomId)
+                .filter(key -> database.get(key).getRoomId() == roomId)
                 .findAny();
     }
 
     @Override
     public void updateTurn(int boardId, GameStateDto gameStateDto) {
         BoardData board = database.get(boardId);
-        database.put(boardId, new BoardData(board.getroomId(), gameStateDto.getTurn()));
+        database.put(boardId, new BoardData(board.getRoomId(), gameStateDto.getTurn()));
     }
 
     @Override
@@ -56,12 +56,12 @@ public class FakeBoardRepository implements BoardRepository {
             this.turn = turn;
         }
 
-        public int getroomId() {
+        public int getRoomId() {
             return roomId;
         }
 
         public String getTurn() {
-            return turn;
+            return turn.toUpperCase();
         }
     }
 }

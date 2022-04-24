@@ -1,4 +1,4 @@
-package chess.service;
+package chess.configuration;
 
 import chess.repository.RoomRepository;
 import chess.web.dto.RoomDto;

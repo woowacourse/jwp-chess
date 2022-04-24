@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,5 +52,11 @@ public class SpringWebChessController {
     public ResponseEntity<StatusDto> selectStatus() {
         StatusDto statusDto = chessService.selectStatus();
         return ResponseEntity.ok().body(statusDto);
+    }
+
+    @DeleteMapping("/game")
+    public ModelAndView deleteGame() {
+        chessService.deleteGame();
+        return new ModelAndView("redirect:/");
     }
 }

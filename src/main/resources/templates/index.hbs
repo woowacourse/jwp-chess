@@ -91,7 +91,8 @@
         <input type="submit" value="시작">
     </form>
 
-    <form action="/end">
+    <form method="post" action="/game">
+        <input type="hidden" name="_method" value="DELETE"/>
         <input type="submit" value="종료">
     </form>
 
@@ -102,7 +103,7 @@
         <input type="submit" value="움직이기">
     </form>
 
-    <form action="/status">
+    <form action="/game/status">
         <input type="submit" value="점수현황">
         <p>{{white}}</p>
         <p>{{black}}</p>

@@ -80,4 +80,14 @@ public class ChessService {
         status.put(Color.BLACK.name(), scores.get(Color.BLACK));
         return new StatusDto(status);
     }
+
+    @Transactional
+    public void deleteGame() {
+        State state = gameDao.findState();
+        ChessBoard chessBoard = boardDao.find();
+        ChessGame chessGame = new ChessGame(state, chessBoard);
+
+        chessGame.playGameByCommand(GameCommand.of("end"));
+        gameDao.delete();
+    }
 }

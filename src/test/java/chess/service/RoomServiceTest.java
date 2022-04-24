@@ -39,7 +39,7 @@ class RoomServiceTest {
 	@Test
 	@DisplayName("없는 id로 방을 조회하면 예외가 발생한다.")
 	void validate() {
-		assertThatThrownBy(() -> roomService.validateId(1))
+		assertThatThrownBy(() -> roomService.validateId(0))
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 }

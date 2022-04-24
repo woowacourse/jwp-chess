@@ -6,8 +6,10 @@ import chess.web.dto.RoomDto;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class RoomService {
 
 	private static final int NAME_MIN_SIZE = 1;
@@ -20,6 +22,7 @@ public class RoomService {
 		this.roomRepository = roomRepository;
 	}
 
+	@Transactional
 	public RoomDto create(String name) {
 		validateNameSize(name);
 		return roomRepository.find(name)

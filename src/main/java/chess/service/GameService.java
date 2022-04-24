@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import chess.domain.Color;
 import chess.domain.Result;
@@ -20,6 +21,7 @@ import chess.web.dto.PieceDto;
 import chess.web.dto.ResultDto;
 
 @Service
+@Transactional(readOnly = true)
 public class GameService {
 
 	private final PieceRepository pieceRepository;
@@ -30,6 +32,7 @@ public class GameService {
 		this.boardRepository = boardRepository;
 	}
 
+	@Transactional
 	public BoardDto startNewGame(int roomId) {
 		Board board = new Board(new RegularRuleSetup());
 
@@ -40,6 +43,7 @@ public class GameService {
 		return gameStateAndPieces(boardId);
 	}
 
+	@Transactional
 	public void move(int boardId, CommendDto commendDto) {
 		String source = commendDto.getSource();
 		String target = commendDto.getTarget();
@@ -47,7 +51,7 @@ public class GameService {
 		board.move(source, target);
 
 		PieceDto pieceDto = pieceRepository.findOne(boardId, source)
-			.orElseThrow(IllegalArgumentException::new);
+			.orElseThrow(() -> new IllegalArgumentException("피스가 존재하지 않습니다."));
 		pieceRepository.deleteOne(boardId, source);
 		updateMovedPieceToTarget(boardId, target, pieceDto);
 		boardRepository.updateTurn(boardId, GameStateDto.from(board));
@@ -74,22 +78,10 @@ public class GameService {
 	}
 
 	public ResultDto gameResult(int boardId) {
-		return getResultDto(loadBoard(boardId));
-	}
-
-	private ResultDto getResultDto(Board board) {
-		int whiteScore = (int)board.calculateScore(Color.WHITE);
-		int blackScore = (int)board.calculateScore(Color.BLACK);
-		return new ResultDto(whiteScore, blackScore, board.gameResult());
-	}
-
-	public ResultDto gameFinalResult(int boardId) {
 		Board board = loadBoard(boardId);
-		return new ResultDto(
-			(int) board.calculateScore(Color.WHITE),
-			(int) board.calculateScore(Color.BLACK),
-			Map.of(Result.WIN, board.winnersColor())
-		);
+		int whiteScore = (int) board.calculateScore(Color.WHITE);
+		int blackScore = (int) board.calculateScore(Color.BLACK);
+		return new ResultDto(whiteScore, blackScore, board.gameResult());
 	}
 
 	private Board loadBoard(int boardId) {
@@ -100,5 +92,14 @@ public class GameService {
 		Board board = new Board(() -> pieces);
 		board.loadTurn(boardRepository.getTurn(boardId));
 		return board;
+	}
+
+	public ResultDto gameFinalResult(int boardId) {
+		Board board = loadBoard(boardId);
+		return new ResultDto(
+			(int) board.calculateScore(Color.WHITE),
+			(int) board.calculateScore(Color.BLACK),
+			Map.of(Result.WIN, board.winnersColor())
+		);
 	}
 }

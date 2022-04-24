@@ -9,22 +9,22 @@ import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.piece.generator.PiecesGenerator;
 import chess.domain.position.Position;
 
-public class WebChessGame {
+public class ChessGame {
 
     private ChessBoard chessBoard;
     private Color turn;
 
-    public WebChessGame() {
+    public ChessGame() {
         this.turn = Color.WHITE;
     }
 
-    private WebChessGame(ChessBoard chessBoard, Color turn) {
+    private ChessGame(ChessBoard chessBoard, Color turn) {
         this.chessBoard = chessBoard;
         this.turn = turn;
     }
 
-    public static WebChessGame of(ChessBoard chessBoard, String turnValue) {
-        return new WebChessGame(chessBoard, Color.of(turnValue));
+    public static ChessGame of(ChessBoard chessBoard, String turnValue) {
+        return new ChessGame(chessBoard, Color.of(turnValue));
     }
 
     public void start() {

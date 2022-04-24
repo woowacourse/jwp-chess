@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -22,25 +24,9 @@ class ChessGameDaoTest {
     @Test
     @DisplayName("게임의 아이디를 올바르게 찾아온다.")
     void findChessGameIdByName() {
-        int id = chessGameDao.findChessGameIdByName(gameName);
+        int id = chessGameDao.findChessGameIdByName(gameName).get();
 
         assertThat(id).isEqualTo(gameId);
-    }
-
-    @Test
-    @DisplayName("중복된 게임이 존재하는 경우 true를 반환한다.")
-    void isDuplicateGameName() {
-        boolean result = chessGameDao.isDuplicateGameName(gameName);
-
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    @DisplayName("중복된 게임이 존재하는 경우 false를 반환한다.")
-    void isNotDuplicateGameName() {
-        boolean result = chessGameDao.isDuplicateGameName("newGame");
-
-        assertThat(result).isFalse();
     }
 
     @Test
@@ -50,9 +36,9 @@ class ChessGameDaoTest {
         Team turn = Team.WHITE;
 
         chessGameDao.saveChessGame(newGameName, turn);
-        int id = chessGameDao.findChessGameIdByName(newGameName);
+        Optional<Integer> id = chessGameDao.findChessGameIdByName(newGameName);
 
-        assertThat(id).isNotNull();
+        assertThat(id.isPresent()).isTrue();
     }
 
     @Test
@@ -80,7 +66,7 @@ class ChessGameDaoTest {
     void deleteChessGame() {
         chessGameDao.deleteChessGame(gameId);
 
-        boolean result = chessGameDao.isDuplicateGameName(gameName);
+        boolean result = chessGameDao.findChessGameIdByName(gameName).isPresent();
 
         assertThat(result).isFalse();
     }

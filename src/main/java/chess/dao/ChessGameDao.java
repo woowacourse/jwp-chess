@@ -1,9 +1,11 @@
 package chess.dao;
 
 import chess.domain.player.Team;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class ChessGameDao {
@@ -14,18 +16,12 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int findChessGameIdByName(final String gameName) {
-        final String sql = "select id from chess_game where name = (?)";
-        return jdbcTemplate.queryForObject(sql, Integer.class, gameName);
-    }
-
-    public boolean isDuplicateGameName(final String gameName) {
+    public Optional<Integer> findChessGameIdByName(final String gameName) {
         final String sql = "select id from chess_game where name = (?)";
         try {
-            jdbcTemplate.queryForObject(sql, Integer.class, gameName);
-            return true;
-        } catch (DataAccessException e) {
-            return false;
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class, gameName));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 

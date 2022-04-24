@@ -32,9 +32,8 @@ public class ChessGameService {
     }
 
     public ChessGameDto createNewChessGame(final String gameName) {
-        final boolean isDuplicate = chessGameDao.isDuplicateGameName(gameName);
-        if (isDuplicate) {
-            throw new IllegalArgumentException("중복된 게임 이름입니다.");
+        if (chessGameDao.findChessGameIdByName(gameName).isPresent()) {
+            throw new IllegalArgumentException("중복된 이름의 게임이 존재합니다.");
         }
         final Player whitePlayer = new Player(new WhiteGenerator(), Team.WHITE);
         final Player blackPlayer = new Player(new BlackGenerator(), Team.BLACK);
@@ -45,7 +44,7 @@ public class ChessGameService {
 
     private void saveNewChessGame(final ChessGame chessGame, final String gameName) {
         chessGameDao.saveChessGame(gameName, chessGame.getTurn());
-        final int chessGameId = chessGameDao.findChessGameIdByName(gameName);
+        final int chessGameId = findChessGameIdByName(gameName);
         pieceDao.savePieces(chessGame.getCurrentPlayer(), chessGameId);
         pieceDao.savePieces(chessGame.getOpponentPlayer(), chessGameId);
     }
@@ -60,7 +59,7 @@ public class ChessGameService {
 
     public StatusDto finishGame(final String gameName) {
         final StatusDto status = findStatus(gameName);
-        final int gameId = chessGameDao.findChessGameIdByName(gameName);
+        final int gameId = findChessGameIdByName(gameName);
         pieceDao.deletePieces(gameId);
         chessGameDao.deleteChessGame(gameId);
         return status;
@@ -72,7 +71,7 @@ public class ChessGameService {
     }
 
     public ChessGameDto move(final String gameName, final String current, final String destination) {
-        final int gameId = chessGameDao.findChessGameIdByName(gameName);
+        final int gameId = findChessGameIdByName(gameName);
         final ChessGame chessGame = findGameByName(gameName);
         final Player currentPlayer = chessGame.getCurrentPlayer();
         final Player opponentPlayer = chessGame.getOpponentPlayer();
@@ -89,8 +88,13 @@ public class ChessGameService {
         pieceDao.updatePiecePositionByGameId(gameId, current, destination, currentTeam);
     }
 
+    private int findChessGameIdByName(String name) {
+        return chessGameDao.findChessGameIdByName(name)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게임입니다."));
+    }
+
     private ChessGame findGameByName(final String gameName) {
-        final int chessGameId = chessGameDao.findChessGameIdByName(gameName);
+        final int chessGameId = findChessGameIdByName(gameName);
         final ChessGameUpdateDto gameUpdateDto = findChessGame(chessGameId);
 
         final Player whitePlayer = new Player(toPieces(gameUpdateDto.getWhitePieces()), Team.WHITE);

@@ -1,8 +1,10 @@
 package chess.dao;
 
 import chess.domain.event.Event;
+import chess.entity.EventEntity;
 import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -17,10 +19,6 @@ public class EventDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Event> eventRowMapper = (resultSet, rowNum) ->
-            Event.of(resultSet.getString("type"),
-                    resultSet.getString("description"));
-
     public List<Event> findAllByGameId(int gameId) {
         final String sql = "SELECT type, description FROM event WHERE game_id = :game_id";
         SqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
@@ -29,13 +27,10 @@ public class EventDao {
 
     public void save(int gameId, Event event) {
         final String sql = "INSERT INTO event (game_id, type, description)"
-                + "VALUES (:game_id, :type, :description)";
+                + "VALUES (:gameId, :type, :description)";
 
-        MapSqlParameterSource paramSource = new MapSqlParameterSource();
-        paramSource.addValue("game_id", gameId);
-        paramSource.addValue("type", event.getType());
-        paramSource.addValue("description", event.getDescription());
-
+        EventEntity eventEntity = event.toEntityOf(gameId);
+        SqlParameterSource paramSource = new BeanPropertySqlParameterSource(eventEntity);
         jdbcTemplate.update(sql, paramSource);
     }
 
@@ -51,4 +46,8 @@ public class EventDao {
             throw new IllegalArgumentException("해당되는 이벤트가 없습니다!");
         }
     }
+
+    private final RowMapper<Event> eventRowMapper = (resultSet, rowNum) ->
+            Event.of(resultSet.getString("type"),
+                    resultSet.getString("description"));
 }

@@ -36,7 +36,7 @@ public class ChessController {
 
     @PostMapping("/end")
     public ResponseEntity<GameStateDto> end() {
-        return ResponseEntity.ok().body(chessService.end(ChessController.ROOM_ID));
+        return ResponseEntity.ok().body(chessService.end(ROOM_ID));
     }
 
     @ExceptionHandler(RuntimeException.class)

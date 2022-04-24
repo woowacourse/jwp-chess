@@ -1,4 +1,4 @@
-package chess.state;
+package chess.domain.state;
 
 import chess.domain.Team;
 import chess.domain.piece.Piece;

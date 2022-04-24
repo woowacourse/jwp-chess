@@ -1,4 +1,4 @@
-package chess.position;
+package chess.domain.position;
 
 import chess.domain.position.Column;
 import org.junit.jupiter.api.DisplayName;

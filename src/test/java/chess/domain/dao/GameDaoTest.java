@@ -4,13 +4,11 @@ import chess.domain.dto.GameDto;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
 import chess.domain.game.status.Playing;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Scope;
-import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -18,9 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @SpringBootTest
 class GameDaoTest {
 
+    private final ChessBoard chessBoard = initTestChessBoard();
     @Autowired
     private GameJdbcTemplateDao gameDao;
-    private final ChessBoard chessBoard = initTestChessBoard();
 
     private ChessBoard initTestChessBoard() {
         ChessBoard chessBoard = ChessBoardFactory.initBoard();

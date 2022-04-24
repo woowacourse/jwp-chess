@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,7 +18,8 @@ class BoardDaoTest {
 
     @Autowired
     private BoardJdbcTemplateDao boardDao;
-    @Autowired private GameJdbcTemplateDao gameDao;
+    @Autowired
+    private GameJdbcTemplateDao gameDao;
 
     @BeforeEach
     void set() {

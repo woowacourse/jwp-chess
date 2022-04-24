@@ -21,14 +21,6 @@ public enum Command {
                 .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 명령어를 입력하셨습니다."));
     }
 
-    public boolean isEnd() {
-        return this == END;
-    }
-
-    public boolean isStatus() {
-        return this == STATUS;
-    }
-
     public boolean isMove() {
         return this == MOVE;
     }

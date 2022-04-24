@@ -77,12 +77,6 @@ public class ChessGame {
         return hasPieceOfBlackPlayer || hasPieceOfWhitePlayer;
     }
 
-    public void changeTurn(final Command command) {
-        if (command.isMove()) {
-            turn = turn.next();
-        }
-    }
-
     public List<GameResult> findGameResult() {
         final Score whitePlayerScore = whitePlayer.calculateScore();
         final Score blackPlayerScore = blackPlayer.calculateScore();

@@ -2,16 +2,16 @@ package chess.console.controller;
 
 import chess.console.view.InputView;
 import chess.console.view.OutputView;
-import chess.model.ChessGame;
+import chess.model.game.ChessGame;
 import chess.model.File;
-import chess.model.GameCommand;
 import chess.model.Rank;
-import chess.model.board.Board;
 import chess.model.board.Square;
+import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
-import chess.service.ChessService;
+import chess.service.dto.GameResultDto;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class ConsoleChessController {
@@ -28,7 +28,7 @@ public final class ConsoleChessController {
     public void run() {
         do {
             runUntilValid(this::executeByInput);
-        } while (game.isPlaying());
+        } while (!game.isEnd());
     }
 
     private void runUntilValid(Runnable runner) {
@@ -66,11 +66,15 @@ public final class ConsoleChessController {
         Square to = Square.of(body.get(TO_INDEX));
         game.move(from, to);
         OutputView.printBoard(getAllPieceLetter(game));
+        if (game.isEnd()) {
+            status(request);
+        }
     }
 
     public void status(GameCommandRequest request) {
-        OutputView.printWinner(game.getResult());
-        this.end(request);
+        GameResultDto gameResultDto = GameResultDto.of(game.getResult());
+        OutputView.printWinner(gameResultDto);
+        game.end();
     }
 
     public void end(GameCommandRequest request) {
@@ -84,9 +88,9 @@ public final class ConsoleChessController {
                 .collect(Collectors.toList());
     }
 
-    private List<String> getPieceLetterInRank(Board board, Rank rank) {
+    private List<String> getPieceLetterInRank(Map<Square, Piece> board, Rank rank) {
         return Arrays.stream(File.values())
-                .map(file -> board.findPieceBySquare(Square.of(file, rank)))
+                .map(file -> board.get(Square.of(file, rank)))
                 .map(PieceType::getLetterByColor)
                 .collect(Collectors.toList());
     }

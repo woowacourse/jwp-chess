@@ -37,7 +37,7 @@ public class SpringChessController {
     }
 
     private BoardDto getRunningBoard(int gameId) {
-        if (chessService.isRunning(gameId) || chessService.isGameEmpty(gameId)) {
+        if (!chessService.isEnd(gameId)) {
             return chessService.getBoard(gameId);
         }
         return null;

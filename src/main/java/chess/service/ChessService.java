@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class ChessService {
 
     private static final int EMPTY_RESULT = 0;
-    // private final GameRawJdbcDao gameDao;
 
     private final BoardJdbcTemplateDao boardDao;
     private final GameJdbcTemplateDao gameDao;

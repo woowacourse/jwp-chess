@@ -22,7 +22,7 @@ class BoardDaoTest {
     @Autowired private GameJdbcTemplateDao gameDao;
 
     @BeforeEach
-    void set() throws SQLException {
+    void set() {
         boardDao.deleteAll();
         gameDao.deleteAll();
         gameDao.save(ChessBoardFactory.initBoard());

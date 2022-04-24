@@ -15,7 +15,6 @@ public class BoardJdbcTemplateDao {
     private static final int EMPTY_RESULT = 0;
 
     private final JdbcTemplate jdbcTemplate;
-    private int boardId = 0;
 
     public BoardJdbcTemplateDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,22 +33,25 @@ public class BoardJdbcTemplateDao {
     public List<PieceDto> findByGameId(int gameId) {
         final String sql = "select * from board where game_id = ?";
         try {
-//            return jdbcTemplate.queryForList(sql, PieceDto.class, gameId);
             return jdbcTemplate.query(sql, new RowMapper<PieceDto>() {
                 @Override
-                public PieceDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    return new PieceDto(
-                            rs.getInt("game_id"),
-                            rs.getString("position"),
-                            rs.getString("piece"),
-                            rs.getString("color")
-                    );
+                public PieceDto mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+                    return makePieceDto(resultSet);
                 }
             }, gameId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
+    }
+
+    private PieceDto makePieceDto(ResultSet resultSet) throws SQLException {
+        return new PieceDto(
+                resultSet.getInt("game_id"),
+                resultSet.getString("position"),
+                resultSet.getString("piece"),
+                resultSet.getString("color")
+        );
     }
 
     public void delete(int gameId) {

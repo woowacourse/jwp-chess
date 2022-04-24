@@ -45,7 +45,7 @@ class GameDaoTest {
 
     @Test
     @DisplayName("가장 최근 게임을 불러온다")
-    void findLastGame() throws SQLException {
+    void findLastGame() {
         //given
         gameSave();
         gameSave();

@@ -19,17 +19,14 @@ public class GameJdbcTemplateDao {
     private static final int EMPTY_RESULT = 0;
 
     private final JdbcTemplate jdbcTemplate;
-    public int gameId = 0;
 
     public GameJdbcTemplateDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public int save(ChessBoard chessBoard) {
-//        final String sql = "insert into Game (id, status, turn) values(?, ?, ?)";
         final String sql = "insert into Game (status, turn) values( ?, ?)";
         try {
-            // jdbcTemplate.update(sql, ++gameId, chessBoard.compareStatus(Status.PLAYING), chessBoard.getCurrentTurn().name());
             jdbcTemplate.update(sql, chessBoard.compareStatus(Status.PLAYING), chessBoard.getCurrentTurn().name());
             return findLastGameId();
         } catch (Exception exception) {
@@ -54,7 +51,6 @@ public class GameJdbcTemplateDao {
     public GameDto findById(int id) {
         final String sql = "select id, status, turn from game where id = ?";
         try {
-//            GameDto result = jdbcTemplate.queryForObject(sql, GameDto.class, id);
             GameDto result = jdbcTemplate.queryForObject(sql, new RowMapper<GameDto>() {
                 @Override
                 public GameDto mapRow(ResultSet rs, int rowNum) throws SQLException {

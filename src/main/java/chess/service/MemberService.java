@@ -11,8 +11,7 @@ import chess.domain.Member;
 @Service
 public class MemberService {
 
-    @Autowired
-    private MemberDao memberDao;
+    private final MemberDao memberDao;
 
     public MemberService(final MemberDao memberDao) {
         this.memberDao = memberDao;

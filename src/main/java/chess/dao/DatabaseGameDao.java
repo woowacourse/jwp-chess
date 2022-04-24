@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
@@ -27,14 +26,16 @@ import chess.domain.square.Square;
 @Repository
 public class DatabaseGameDao implements GameDao {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final PieceDao pieceDao;
+    private final MemberDao memberDao;
 
-    @Autowired
-    private PieceDao pieceDao;
-
-    @Autowired
-    private MemberDao memberDao;
+    public DatabaseGameDao(final JdbcTemplate jdbcTemplate, final PieceDao pieceDao,
+                           final MemberDao memberDao) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.pieceDao = pieceDao;
+        this.memberDao = memberDao;
+    }
 
     @Override
     public Long save(ChessGame game) {

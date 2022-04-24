@@ -32,10 +32,8 @@ import chess.service.MemberService;
 @Controller
 public class ChessController {
 
-    @Autowired
-    private GameService gameService;
-    @Autowired
-    private MemberService memberService;
+    private final GameService gameService;
+    private final MemberService memberService;
 
     public ChessController(final GameService gameService, final MemberService memberService) {
         this.gameService = gameService;

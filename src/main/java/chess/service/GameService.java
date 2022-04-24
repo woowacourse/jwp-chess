@@ -21,10 +21,8 @@ import chess.dto.GameResultDto;
 @Service
 public class GameService {
 
-    @Autowired
-    private GameDao gameDao;
-    @Autowired
-    private MemberDao memberDao;
+    private final GameDao gameDao;
+    private final MemberDao memberDao;
 
     public GameService(final GameDao gameDao, final MemberDao memberDao) {
         this.gameDao = gameDao;

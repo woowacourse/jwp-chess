@@ -1,9 +1,111 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>모두의 체스</title>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link rel="stylesheet" href="/src/index.css">
 </head>
 <body>
-<h1>Hello World</h1>
+<h1>체스게임</h1>
+<div id="app">
+    <section class="chess-ui">
+        {{#this}}
+        {{#board}}
+        <div class="black-square pawn">{{#board.a8}}<img src="images/{{board.a8.piece}}.png" class="img" />{{/board.a8}}</div>
+        <div class="white-square pawn">{{#board.b8}}<img src="images/{{board.b8.piece}}.png" class="img" />{{/board.b8}}</div>
+        <div class="black-square pawn">{{#board.c8}}<img src="images/{{board.c8.piece}}.png" class="img" />{{/board.c8}}</div>
+        <div class="white-square pawn">{{#board.d8}}<img src="images/{{board.d8.piece}}.png" class="img" />{{/board.d8}}</div>
+        <div class="black-square pawn">{{#board.e8}}<img src="images/{{board.e8.piece}}.png" class="img" />{{/board.e8}}</div>
+        <div class="white-square pawn">{{#board.f8}}<img src="images/{{board.f8.piece}}.png" class="img" />{{/board.f8}}</div>
+        <div class="black-square pawn">{{#board.g8}}<img src="images/{{board.g8.piece}}.png" class="img" />{{/board.g8}}</div>
+        <div class="white-square pawn">{{#board.h8}}<img src="images/{{board.h8.piece}}.png" class="img" />{{/board.h8}}</div>
+
+        <div class="white-square pawn">{{#board.a7}}<img src="images/{{board.a7.piece}}.png" class="img" />{{/board.a7}}</div>
+        <div class="black-square pawn">{{#board.b7}}<img src="images/{{board.b7.piece}}.png" class="img" />{{/board.b7}}</div>
+        <div class="white-square pawn">{{#board.c7}}<img src="images/{{board.c7.piece}}.png" class="img" />{{/board.c7}}</div>
+        <div class="black-square pawn">{{#board.d7}}<img src="images/{{board.d7.piece}}.png" class="img" />{{/board.d7}}</div>
+        <div class="white-square pawn">{{#board.e7}}<img src="images/{{board.e7.piece}}.png" class="img" />{{/board.e7}}</div>
+        <div class="black-square pawn">{{#board.f7}}<img src="images/{{board.f7.piece}}.png" class="img" />{{/board.f7}}</div>
+        <div class="white-square pawn">{{#board.g7}}<img src="images/{{board.g7.piece}}.png" class="img" />{{/board.g7}}</div>
+        <div class="black-square pawn">{{#board.h7}}<img src="images/{{board.h7.piece}}.png" class="img" />{{/board.h7}}</div>
+
+        <div class="black-square pawn">{{#board.a6}}<img src="images/{{board.a6.piece}}.png" class="img" />{{/board.a6}}</div>
+        <div class="white-square pawn">{{#board.b6}}<img src="images/{{board.b6.piece}}.png" class="img" />{{/board.b6}}</div>
+        <div class="black-square pawn">{{#board.c6}}<img src="images/{{board.c6.piece}}.png" class="img" />{{/board.c6}}</div>
+        <div class="white-square pawn">{{#board.d6}}<img src="images/{{board.d6.piece}}.png" class="img" />{{/board.d6}}</div>
+        <div class="black-square pawn">{{#board.e6}}<img src="images/{{board.e6.piece}}.png" class="img" />{{/board.e6}}</div>
+        <div class="white-square pawn">{{#board.f6}}<img src="images/{{board.f6.piece}}.png" class="img" />{{/board.f6}}</div>
+        <div class="black-square pawn">{{#board.g6}}<img src="images/{{board.g6.piece}}.png" class="img" />{{/board.g6}}</div>
+        <div class="white-square pawn">{{#board.h6}}<img src="images/{{board.h6.piece}}.png" class="img" />{{/board.h6}}</div>
+
+        <div class="white-square pawn">{{#board.a5}}<img src="images/{{board.a5.piece}}.png" class="img" />{{/board.a5}}</div>
+        <div class="black-square pawn">{{#board.b5}}<img src="images/{{board.b5.piece}}.png" class="img" />{{/board.b5}}</div>
+        <div class="white-square pawn">{{#board.c5}}<img src="images/{{board.c5.piece}}.png" class="img" />{{/board.c5}}</div>
+        <div class="black-square pawn">{{#board.d5}}<img src="images/{{board.d5.piece}}.png" class="img" />{{/board.d5}}</div>
+        <div class="white-square pawn">{{#board.e5}}<img src="images/{{board.e5.piece}}.png" class="img" />{{/board.e5}}</div>
+        <div class="black-square pawn">{{#board.f5}}<img src="images/{{board.f5.piece}}.png" class="img" />{{/board.f5}}</div>
+        <div class="white-square pawn">{{#board.g5}}<img src="images/{{board.g5.piece}}.png" class="img" />{{/board.g5}}</div>
+        <div class="black-square pawn">{{#board.h5}}<img src="images/{{board.h5.piece}}.png" class="img" />{{/board.h5}}</div>
+
+        <div class="black-square pawn">{{#board.a4}}<img src="images/{{board.a4.piece}}.png" class="img" />{{/board.a4}}</div>
+        <div class="white-square pawn">{{#board.b4}}<img src="images/{{board.b4.piece}}.png" class="img" />{{/board.b4}}</div>
+        <div class="black-square pawn">{{#board.c4}}<img src="images/{{board.c4.piece}}.png" class="img" />{{/board.c4}}</div>
+        <div class="white-square pawn">{{#board.d4}}<img src="images/{{board.d4.piece}}.png" class="img" />{{/board.d4}}</div>
+        <div class="black-square pawn">{{#board.e4}}<img src="images/{{board.e4.piece}}.png" class="img" />{{/board.e4}}</div>
+        <div class="white-square pawn">{{#board.f4}}<img src="images/{{board.f4.piece}}.png" class="img" />{{/board.f4}}</div>
+        <div class="black-square pawn">{{#board.g4}}<img src="images/{{board.g4.piece}}.png" class="img" />{{/board.g4}}</div>
+        <div class="white-square pawn">{{#board.h4}}<img src="images/{{board.h4.piece}}.png" class="img" />{{/board.h4}}</div>
+
+        <div class="white-square pawn">{{#board.a3}}<img src="images/{{board.a3.piece}}.png" class="img" />{{/board.a3}}</div>
+        <div class="black-square pawn">{{#board.b3}}<img src="images/{{board.b3.piece}}.png" class="img" />{{/board.b3}}</div>
+        <div class="white-square pawn">{{#board.c3}}<img src="images/{{board.c3.piece}}.png" class="img" />{{/board.c3}}</div>
+        <div class="black-square pawn">{{#board.d3}}<img src="images/{{board.d3.piece}}.png" class="img" />{{/board.d3}}</div>
+        <div class="white-square pawn">{{#board.e3}}<img src="images/{{board.e3.piece}}.png" class="img" />{{/board.e3}}</div>
+        <div class="black-square pawn">{{#board.f3}}<img src="images/{{board.f3.piece}}.png" class="img" />{{/board.f3}}</div>
+        <div class="white-square pawn">{{#board.g3}}<img src="images/{{board.g3.piece}}.png" class="img" />{{/board.g3}}</div>
+        <div class="black-square pawn">{{#board.h3}}<img src="images/{{board.h3.piece}}.png" class="img" />{{/board.h3}}</div>
+
+        <div class="black-square pawn">{{#board.a2}}<img src="images/{{board.a2.piece}}.png" class="img" />{{/board.a2}}</div>
+        <div class="white-square pawn">{{#board.b2}}<img src="images/{{board.b2.piece}}.png" class="img" />{{/board.b2}}</div>
+        <div class="black-square pawn">{{#board.c2}}<img src="images/{{board.c2.piece}}.png" class="img" />{{/board.c2}}</div>
+        <div class="white-square pawn">{{#board.d2}}<img src="images/{{board.d2.piece}}.png" class="img" />{{/board.d2}}</div>
+        <div class="black-square pawn">{{#board.e2}}<img src="images/{{board.e2.piece}}.png" class="img" />{{/board.e2}}</div>
+        <div class="white-square pawn">{{#board.f2}}<img src="images/{{board.f2.piece}}.png" class="img" />{{/board.f2}}</div>
+        <div class="black-square pawn">{{#board.g2}}<img src="images/{{board.g2.piece}}.png" class="img" />{{/board.g2}}</div>
+        <div class="white-square pawn">{{#board.h2}}<img src="images/{{board.h2.piece}}.png" class="img" />{{/board.h2}}</div>
+
+        <div class="white-square pawn">{{#board.a1}}<img src="images/{{board.a1.piece}}.png" class="img" />{{/board.a1}}</div>
+        <div class="black-square pawn">{{#board.b1}}<img src="images/{{board.b1.piece}}.png" class="img" />{{/board.b1}}</div>
+        <div class="white-square pawn">{{#board.c1}}<img src="images/{{board.c1.piece}}.png" class="img" />{{/board.c1}}</div>
+        <div class="black-square pawn">{{#board.d1}}<img src="images/{{board.d1.piece}}.png" class="img" />{{/board.d1}}</div>
+        <div class="white-square pawn">{{#board.e1}}<img src="images/{{board.e1.piece}}.png" class="img" />{{/board.e1}}</div>
+        <div class="black-square pawn">{{#board.f1}}<img src="images/{{board.f1.piece}}.png" class="img" />{{/board.f1}}</div>
+        <div class="white-square pawn">{{#board.g1}}<img src="images/{{board.g1.piece}}.png" class="img" />{{/board.g1}}</div>
+        <div class="black-square pawn">{{#board.h1}}<img src="images/{{board.h1.piece}}.png" class="img" />{{/board.h1}}</div>
+        {{/board}}
+        {{/this}}
+    </section>
+    <h1>{{winner}}</h1>
+    <h1>{{error}}</h1>
+    <form action="/game">
+        <input type="submit" value="시작">
+    </form>
+
+    <form action="/end">
+        <input type="submit" value="종료">
+    </form>
+
+    <form method="post" action="/move">
+        <input type="text" name="from">
+        <input type="text" name="to">
+        <input type="submit" value="움직이기">
+    </form>
+
+    <form action="/status">
+        <input type="submit" value="점수현황">
+        <p>{{white}}</p>
+        <p>{{black}}</p>
+    </form>
+</div>
 </body>
 </html>

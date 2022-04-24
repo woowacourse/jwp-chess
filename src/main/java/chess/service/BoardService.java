@@ -4,7 +4,7 @@ import chess.dao.BoardDao;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.BoardDto;
+import chess.dto.SquareDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,22 +20,22 @@ public class BoardService {
 
     public void saveBoard(final ChessGame chessGame, final int gameId) {
         final Map<String, Piece> model = chessGame.getChessBoard().toMap();
-        final List<BoardDto> boardDtos = new ArrayList<>();
+        final List<SquareDto> boardDtos = new ArrayList<>();
 
         for (final String position : model.keySet()) {
             final Piece piece = model.get(position);
             final String symbol = piece.getSymbol().name();
             final String color = piece.getColor().name();
-            boardDtos.add(new BoardDto(position, symbol, color));
+            boardDtos.add(new SquareDto(position, symbol, color));
         }
         boardDao.save(boardDtos, gameId);
     }
 
     public Map<String, Piece> findBoard() {
         final Map<String, Piece> model = new HashMap<>();
-        final List<BoardDto> boardDtos = boardDao.findAll();
+        final List<SquareDto> boardDtos = boardDao.findAll();
 
-        for (final BoardDto boardDto : boardDtos) {
+        for (final SquareDto boardDto : boardDtos) {
             final String position = boardDto.getPosition();
             final String color = boardDto.getColor();
             final String symbol = boardDto.getSymbol();
@@ -46,9 +46,9 @@ public class BoardService {
 
     public Map<Position, Piece> loadBoard() {
         final Map<Position, Piece> pieces = new HashMap<>();
-        final List<BoardDto> boardDtos = boardDao.findAll();
+        final List<SquareDto> boardDtos = boardDao.findAll();
 
-        for (final BoardDto boardDto : boardDtos) {
+        for (final SquareDto boardDto : boardDtos) {
             final String positionName = boardDto.getPosition();
             final String symbol = boardDto.getSymbol();
             final String color = boardDto.getColor();
@@ -63,7 +63,7 @@ public class BoardService {
         final Piece piece = model.get(position);
         final String symbol = piece.getSymbol().name();
         final String color = piece.getColor().name();
-        BoardDto boardDto = new BoardDto(position, symbol, color);
+        SquareDto boardDto = new SquareDto(position, symbol, color);
         boardDao.update(boardDto);
     }
 }

@@ -1,26 +1,16 @@
 package chess.dto;
 
+import java.util.Map;
+
 public class BoardDto {
 
-    private String position;
-    private String symbol;
-    private String color;
+    private Map<String, PieceDto> board;
 
-    public BoardDto(String position, String symbol, String color) {
-        this.position = position;
-        this.symbol = symbol;
-        this.color = color;
+    public BoardDto(Map<String, PieceDto> board) {
+        this.board = board;
     }
 
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public String getPosition() {
-        return position;
+    public Map<String, PieceDto> getBoard() {
+        return board;
     }
 }

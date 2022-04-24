@@ -79,6 +79,6 @@ public class WebController {
     }
 
     private static String render(Map<String, Object> model) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, "index.html"));
+        return new HandlebarsTemplateEngine().render(new ModelAndView(model, "index.hbs"));
     }
 }

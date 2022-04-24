@@ -2,7 +2,7 @@ package chess.dao;
 
 import static chess.dao.Connector.getConnection;
 
-import chess.dto.BoardDto;
+import chess.dto.SquareDto;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,9 +11,9 @@ import java.util.List;
 
 public class BoardDao {
 
-    public List<BoardDto> findAll() {
+    public List<SquareDto> findAll() {
         final String sql = "select position, symbol, color from board";
-        final List<BoardDto> boardDtos = new ArrayList<>();
+        final List<SquareDto> boardDtos = new ArrayList<>();
 
         try (final PreparedStatement statement = getConnection().prepareStatement(sql)) {
             loadBoardFromDB(boardDtos, statement);
@@ -23,23 +23,23 @@ public class BoardDao {
         return boardDtos;
     }
 
-    private void loadBoardFromDB(final List<BoardDto> boardDtos, final PreparedStatement statement)
+    private void loadBoardFromDB(final List<SquareDto> boardDtos, final PreparedStatement statement)
             throws SQLException {
         try (final ResultSet resultSet = statement.executeQuery()) {
             loadPieceFromDB(boardDtos, resultSet);
         }
     }
 
-    private void loadPieceFromDB(final List<BoardDto> boardDtos, final ResultSet resultSet) throws SQLException {
+    private void loadPieceFromDB(final List<SquareDto> boardDtos, final ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
-            boardDtos.add(new BoardDto(
+            boardDtos.add(new SquareDto(
                     resultSet.getString("position"),
                     resultSet.getString("symbol"),
                     resultSet.getString("color")));
         }
     }
 
-    public void save(final List<BoardDto> boardDtos, final int gameId) {
+    public void save(final List<SquareDto> boardDtos, final int gameId) {
         final String sql = "insert into board (position, symbol, color, game_id) values (?, ?, ?, ?)";
 
         try (final PreparedStatement statement = getConnection().prepareStatement(sql)) {
@@ -49,9 +49,9 @@ public class BoardDao {
         }
     }
 
-    private void convertPieceToBoard(final List<BoardDto> boardDtos, final int gameId,
+    private void convertPieceToBoard(final List<SquareDto> boardDtos, final int gameId,
                                      final PreparedStatement statement) throws SQLException {
-        for (final BoardDto boardDto : boardDtos) {
+        for (final SquareDto boardDto : boardDtos) {
             statement.setString(1, boardDto.getPosition());
             statement.setString(2, boardDto.getSymbol());
             statement.setString(3, boardDto.getColor());
@@ -60,7 +60,7 @@ public class BoardDao {
         }
     }
 
-    public void update(final BoardDto boardDto) {
+    public void update(final SquareDto boardDto) {
         final String sql = "update board set symbol = (?), color = (?) where position = (?)";
 
         try (final PreparedStatement statement = getConnection().prepareStatement(sql)) {

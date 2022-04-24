@@ -3,7 +3,7 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import chess.dto.BoardDto;
+import chess.dto.SquareDto;
 import java.sql.Connection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ public class BoardDaoTest {
         gameDao.save("BlackRunning");
 
         assertThatCode(() -> {
-            boardDao.save(List.of(new BoardDto("a1", "ROOK", "BLACK")), gameDao.findGameId());
+            boardDao.save(List.of(new SquareDto("a1", "ROOK", "BLACK")), gameDao.findGameId());
         }).doesNotThrowAnyException();
 
         gameDao.delete(gameDao.findGameId());
@@ -41,8 +41,8 @@ public class BoardDaoTest {
     @Test
     void findAll() {
         gameDao.save("WhiteRunning");
-        boardDao.save(List.of(new BoardDto("a1", "ROOK", "BLACK")), gameDao.findGameId());
-        final List<BoardDto> boardDtos = boardDao.findAll();
+        boardDao.save(List.of(new SquareDto("a1", "ROOK", "BLACK")), gameDao.findGameId());
+        final List<SquareDto> boardDtos = boardDao.findAll();
 
         assertThat(boardDtos).isNotEmpty();
 
@@ -52,10 +52,10 @@ public class BoardDaoTest {
     @Test
     void update() {
         gameDao.save("BlackRunning");
-        boardDao.save(List.of(new BoardDto("a1", "ROOK", "BLACK")), gameDao.findGameId());
+        boardDao.save(List.of(new SquareDto("a1", "ROOK", "BLACK")), gameDao.findGameId());
 
         assertThatCode(() -> {
-            boardDao.update(new BoardDto("a1", "PAWN", "WHITE"));
+            boardDao.update(new SquareDto("a1", "PAWN", "WHITE"));
         }).doesNotThrowAnyException();
 
         gameDao.delete(gameDao.findGameId());

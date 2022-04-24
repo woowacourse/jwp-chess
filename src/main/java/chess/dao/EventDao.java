@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class EventDao {
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public EventDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    public EventDao(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     private final RowMapper<Event> eventRowMapper = (resultSet, rowNum) ->
@@ -24,7 +24,7 @@ public class EventDao {
     public List<Event> findAllByGameId(int gameId) {
         final String sql = "SELECT type, description FROM event WHERE game_id = :game_id";
         SqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
-        return namedParameterJdbcTemplate.query(sql, paramSource, eventRowMapper);
+        return jdbcTemplate.query(sql, paramSource, eventRowMapper);
     }
 
     public void save(int gameId, Event event) {
@@ -36,6 +36,19 @@ public class EventDao {
         paramSource.addValue("type", event.getType());
         paramSource.addValue("description", event.getDescription());
 
-        namedParameterJdbcTemplate.update(sql, paramSource);
+        jdbcTemplate.update(sql, paramSource);
+    }
+
+    public void deleteAllByGameId(int gameId) {
+        final String sql = "DELETE FROM event WHERE game_id = :game_id";
+        SqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
+        int deletedRowCount = jdbcTemplate.update(sql, paramSource);
+        checkDeleteResult(deletedRowCount);
+    }
+
+    private void checkDeleteResult(int deletedRowCount) {
+        if (deletedRowCount == 0) {
+            throw new IllegalArgumentException("해당되는 이벤트가 없습니다!");
+        }
     }
 }

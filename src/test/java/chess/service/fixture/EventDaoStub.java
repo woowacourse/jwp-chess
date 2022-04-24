@@ -43,4 +43,12 @@ public class EventDaoStub extends EventDao {
         }
         repository.put(gameId, new ArrayList<>(List.of(event)));
     }
+
+    @Override
+    public void deleteAllByGameId(int gameId) {
+        if (!repository.containsKey(gameId)) {
+            throw new IllegalArgumentException("해당되는 이벤트가 없습니다!");
+        }
+        repository.remove(gameId);
+    }
 }

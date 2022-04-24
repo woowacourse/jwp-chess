@@ -64,4 +64,10 @@ public class RoomRepositoryImpl implements RoomRepository {
         String sql = "update room set game_over = true where id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public void updateName(final Long id, final String name) {
+        String sql = "update room set name = ? where id = ?";
+        jdbcTemplate.update(sql, name, id);
+    }
 }

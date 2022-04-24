@@ -54,4 +54,14 @@ class RoomRepositoryImplTest {
 
         assertThat(roomRepository.findById(id).isGameOver()).isTrue();
     }
+
+    @DisplayName("룸의 이름을 수정한다.")
+    @Test
+    void updateName() {
+        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final Long id = roomRepository.insert(roomEntity).getId();
+        roomRepository.updateName(id, "체스 왕초보만");
+
+        assertThat(roomRepository.findById(id).getName()).isEqualTo("체스 왕초보만");
+    }
 }

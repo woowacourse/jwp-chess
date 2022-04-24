@@ -74,22 +74,6 @@ public class SpringController {
         return "chess";
     }
 
-    @GetMapping("/game/{gameName}/save")
-    public String save(@PathVariable String gameName, Model model) {
-        try {
-            chessService.save();
-        } catch (IllegalStateException e) {
-            model.addAttribute("gameName", gameName);
-            return "redirect:/game/" + gameName + "/end";
-        }
-
-        List<String> chessBoard = chessService.getCurrentChessBoard();
-        model.addAttribute("chessboard", chessBoard);
-        model.addAttribute("gameName", gameName);
-
-        return "chess";
-    }
-
     @GetMapping("/game/{gameName}/status")
     public String status(@PathVariable String gameName, Model model) {
         Map<Team, Double> score = chessService.getScore();

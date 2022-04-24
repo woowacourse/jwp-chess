@@ -1,5 +1,7 @@
 package chess.controller;
 
+import chess.dao.GameDao;
+import chess.dao.PieceDao;
 import chess.dto.MoveCommandDto;
 import chess.service.ChessGameService;
 import chess.web.view.BoardView;
@@ -18,14 +20,16 @@ public class SpringChessController {
 
     public static final String MOVE_SUCCESS_MESSAGE = "성공적으로 이동했습니다";
 
-    ChessGameService chessGameService = new ChessGameService();
+    final ChessGameService chessGameService;
+
+    public SpringChessController(GameDao gameDao, PieceDao pieceDao) {
+        this.chessGameService = new ChessGameService(pieceDao, gameDao);
+    }
 
     @ExceptionHandler(Exception.class)
     public ModelAndView exception(HttpServletRequest request, Exception e) {
         String gameId = request.getRequestURI().split("/")[2];
-        System.out.println(e.getMessage());
-        System.out.println("erer"+getModelErrorUrl(e.getMessage(),"redirect:/game/" + gameId, gameId).getModel());
-        return getModelErrorUrl(e.getMessage(),"redirect:/game/" + gameId, gameId);
+        return getModelErrorUrl(e.getMessage(), "redirect:/game/" + gameId, gameId);
     }
 
     @GetMapping("/game/{gameId}/exit")
@@ -37,7 +41,7 @@ public class SpringChessController {
     @PostMapping(path = "/game/{gameId}/move")
     private ModelAndView postMove(@PathVariable String gameId, @RequestBody MoveCommandDto moveDto) {
         chessGameService.move(gameId, moveDto);
-        return getModelErrorUrl(MOVE_SUCCESS_MESSAGE,"redirect:/game/" + gameId, gameId);
+        return getModelErrorUrl(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId, gameId);
     }
 
     @GetMapping("/game/{gameId}")
@@ -53,7 +57,6 @@ public class SpringChessController {
 
     private ModelAndView getModelErrorUrl(String errorMessage, String url, String gameId) {
         ModelAndView modelAndView = new ModelAndView(url);
-        System.out.println("첫번째 에러 뷰");
         modelAndView.addObject("pieces", BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
         modelAndView.addObject("gameId", gameId);
         modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
@@ -63,7 +66,6 @@ public class SpringChessController {
 
     private ModelAndView getModel(String gameId) {
         ModelAndView modelAndView = new ModelAndView("game");
-        System.out.println("두번째 에러 뷰");
         modelAndView.addObject("pieces", BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
         modelAndView.addObject("gameId", gameId);
         modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));

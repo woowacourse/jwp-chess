@@ -1,119 +1,59 @@
 package chess.dao;
 
-import chess.dao.util.DatabaseConnector;
 import chess.domain.piece.Color;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class GameDao {
 
-    private static final String INVALID_GAME_ID_EXCEPTION_MESSAGE = "유효하지 않은 게임 방 번호입니다.";
+    private JdbcTemplate jdbcTemplate;
 
-    DatabaseConnector databaseConnector = new DatabaseConnector();
 
-    public void createById(String gameId) {
-        final Connection connection = databaseConnector.getConnection();
-        final String sql = "insert into game (id, turn) values (?, ?)";
-
-        try {
-            final PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, gameId);
-            statement.setString(2, Color.BLACK.getName());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(INVALID_GAME_ID_EXCEPTION_MESSAGE);
-        }
+    public GameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public boolean findById(String gameId) {
-        final Connection connection = databaseConnector.getConnection();
-        final String sql = "select id from game where id = ?";
+    public void createById(String gameId) {
+        final String sql = "insert into game (id, turn) values (?, ?)";
 
-        try {
-            final PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, gameId);
-            final ResultSet resultSet = statement.executeQuery();
-            if (!resultSet.next()) {
-                return false;
-            }
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(INVALID_GAME_ID_EXCEPTION_MESSAGE);
-        }
-        return true;
+        jdbcTemplate.update(sql, gameId, Color.BLACK.getName());
+    }
+
+    public boolean isInId(String gameId) {
+        final String sql = "select count(*) from game where id = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, gameId) > 0;
     }
 
     public boolean findForceEndFlagById(String gameId) {
-        final Connection connection = databaseConnector.getConnection();
         final String sql = "select force_end_flag from game where id = ?";
 
-        try {
-            final PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, gameId);
-            final ResultSet resultSet = statement.executeQuery();
-            if (!resultSet.next()) {
-                throw new IllegalArgumentException(INVALID_GAME_ID_EXCEPTION_MESSAGE);
-            }
-            return resultSet.getBoolean("force_end_flag");
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(INVALID_GAME_ID_EXCEPTION_MESSAGE);
-        }
+        return jdbcTemplate.queryForObject(sql, Boolean.class, gameId);
     }
 
     public Color findTurnById(String gameId) {
-        final Connection connection = databaseConnector.getConnection();
-        final String sql = "select id, turn from game where id = ?";
+        final String sql = "select turn from game where id = ?";
 
-        try {
-            final PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, gameId);
-            final ResultSet resultSet = statement.executeQuery();
-            if (!resultSet.next()) {
-                throw new IllegalArgumentException(INVALID_GAME_ID_EXCEPTION_MESSAGE);
-            }
-            return Color.of(resultSet.getString("turn"));
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(INVALID_GAME_ID_EXCEPTION_MESSAGE);
-        }
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
+                Color.of(resultSet.getString("turn")),
+            gameId);
     }
 
     public void updateTurnById(Color nextTurn, String gameId) {
-        final Connection connection = databaseConnector.getConnection();
         final String sql = "update game set turn = ? where id = ?";
-        try {
-            final PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, nextTurn.getName());
-            statement.setString(2, gameId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(INVALID_GAME_ID_EXCEPTION_MESSAGE);
-        }
+
+        jdbcTemplate.update(sql, nextTurn.getName(), gameId);
     }
 
     public void updateForceEndFlagById(boolean forceEndFlag, String gameId) {
-        final Connection connection = databaseConnector.getConnection();
         final String sql = "update game set force_end_flag = ? where id = ?";
-        try {
-            final PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setBoolean(1, forceEndFlag);
-            statement.setString(2, gameId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(INVALID_GAME_ID_EXCEPTION_MESSAGE);
-        }
+
+        jdbcTemplate.update(sql, forceEndFlag, gameId);
     }
 
     public void deleteById(String gameId) {
-        final Connection connection = databaseConnector.getConnection();
         final String sql = "delete from game where id = ?";
-        try {
-            final PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, gameId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new IllegalArgumentException(INVALID_GAME_ID_EXCEPTION_MESSAGE);
-        }
-    }
 
+        jdbcTemplate.update(sql, gameId);
+    }
 }

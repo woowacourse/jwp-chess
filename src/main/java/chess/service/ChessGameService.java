@@ -25,13 +25,14 @@ public class ChessGameService {
     private final PieceDao pieceDao;
     private final GameDao gameDao;
 
-    public ChessGameService() {
-        this.pieceDao = new PieceDao();
-        this.gameDao = new GameDao();
+
+    public ChessGameService(PieceDao pieceDao, GameDao gameDao) {
+        this.pieceDao = pieceDao;
+        this.gameDao = gameDao;
     }
 
     public PiecesDto createOrGet(String gameId) {
-        if (!gameDao.findById(gameId)) {
+        if (!gameDao.isInId(gameId)) {
             initGame(gameId);
             return new PiecesDto(toDto(getChessmenFromDB(gameId)));
         }
@@ -42,8 +43,8 @@ public class ChessGameService {
         List<PieceDto> pieces = new ArrayList<>();
         for (Piece piece : chessmen.getPieces()) {
             pieces.add(new PieceDto(piece.getPosition().getPosition(),
-                    piece.getColor().getName(),
-                    piece.getName()));
+                piece.getColor().getName(),
+                piece.getName()));
         }
         return pieces;
     }
@@ -79,14 +80,14 @@ public class ChessGameService {
     private void initGame(String gameId) {
         gameDao.createById(gameId);
         Pieces chessmen = chessmenInitializer.init();
-        pieceDao.saveAllByGameId(chessmen.getPieces(), gameId);
+        pieceDao.createAllById(chessmen.getPieces(), gameId);
     }
 
     public void move(String gameId, MoveCommandDto moveCommandDto) {
         String from = moveCommandDto.getSource();
         String to = moveCommandDto.getTarget();
         getGameFromDB(gameId).moveChessmen(new MoveCommand(from, to));
-        saveMove(gameId,moveCommandDto);
+        saveMove(gameId, moveCommandDto);
     }
 
     private void saveMove(String gameId, MoveCommandDto moveCommandDto) {
@@ -96,7 +97,7 @@ public class ChessGameService {
         Color turn = chessGame.getTurn();
 
         pieceDao.deleteAllByGameId(gameId);
-        pieceDao.saveAllByGameId(chessGame.getChessmen().getPieces(), gameId);
+        pieceDao.createAllById(chessGame.getChessmen().getPieces(), gameId);
         gameDao.updateTurnById(turn, gameId);
         gameDao.updateForceEndFlagById(forceEndFlag, gameId);
     }

@@ -9,7 +9,7 @@
 <body>
 {{#response}}
 <section class="header__container">
-    <h1>{{name}}</h1>
+    <h1 id="game_name">{{name}}</h1>
     <div class="game_info__container">
         <div>
             <span>게임 ID: {{gameInfo.game.id}} | </span>
@@ -32,7 +32,7 @@
     </div>
     {{/gameInfo.board}}
 </section>
-<form action="/game">
+<form action="/game/{{gameInfo.game.id}}">
     <label for="password_input">비밀번호</label>
     <input type="password" required id="password_input" name="password"/>
     <input type="submit" value="삭제"/>
@@ -41,5 +41,6 @@
     <a href="/">홈으로 돌아가기!</a>
 </section>
 {{/response}}
+<script src="/scripts/delete-game.js"></script>
 </body>
 </html>

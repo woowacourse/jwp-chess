@@ -2,6 +2,7 @@ package chess.controller;
 
 import java.util.Map;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,7 +56,7 @@ public class GameController {
     }
 
     @GetMapping("/{gameId}/status")
-    public ResponseEntity calculatePlayerScores(@PathVariable("gameId") final Long gameId) {
+    public ResponseEntity<PlayerScoresDto> calculatePlayerScores(@PathVariable("gameId") final Long gameId) {
         final Map<Color, Double> playerScores = gameService.calculatePlayerScores(gameId);
         return ResponseEntity.ok().body(PlayerScoresDto.toDto(playerScores));
     }

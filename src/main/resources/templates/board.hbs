@@ -191,9 +191,8 @@
             url: "/games/{{game.gameId}}/status",
             type: "get",
             success(data) {
-                let obj = JSON.parse(data);
                 let scoreMessage = "";
-                for (const [color, score] of Object.entries(obj.playerScores)) {
+                for (const [color, score] of Object.entries(data.playerScores)) {
                     scoreMessage += `${color}의 점수는 ${score}입니다.\n`
                 }
                 alert(scoreMessage);

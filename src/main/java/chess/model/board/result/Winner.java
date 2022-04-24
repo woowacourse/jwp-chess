@@ -1,11 +1,8 @@
 package chess.model.board.result;
 
-import static chess.model.Team.BLACK;
-import static chess.model.Team.NONE;
-import static chess.model.Team.WHITE;
+import static chess.model.Team.*;
 
 import chess.model.Team;
-import java.util.Map;
 
 public class Winner {
 

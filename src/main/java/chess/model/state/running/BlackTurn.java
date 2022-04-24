@@ -1,6 +1,8 @@
 package chess.model.state.running;
 
-import static chess.model.Team.BLACK;
+import static chess.model.Team.*;
+
+import java.util.List;
 
 import chess.model.board.Board;
 import chess.model.position.Position;
@@ -8,7 +10,6 @@ import chess.model.state.Command;
 import chess.model.state.State;
 import chess.model.state.finished.End;
 import chess.model.state.finished.Status;
-import java.util.List;
 
 public final class BlackTurn extends Running {
 

@@ -1,12 +1,13 @@
 package chess.model.piece;
 
+import java.util.List;
+import java.util.Map;
+
 import chess.model.Team;
 import chess.model.direction.Direction;
 import chess.model.direction.strategy.MoveStrategy;
 import chess.model.direction.strategy.MultipleMove;
 import chess.model.position.Position;
-import java.util.List;
-import java.util.Map;
 
 public class Queen extends Piece {
 

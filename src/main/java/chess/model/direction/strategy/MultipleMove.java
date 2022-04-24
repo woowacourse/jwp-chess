@@ -1,14 +1,15 @@
 package chess.model.direction.strategy;
 
-import static chess.model.Team.NONE;
+import static chess.model.Team.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import chess.model.Team;
 import chess.model.direction.Direction;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class MultipleMove implements MoveStrategy {
 

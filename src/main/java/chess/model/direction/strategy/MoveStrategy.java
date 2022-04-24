@@ -1,9 +1,10 @@
 package chess.model.direction.strategy;
 
-import chess.model.piece.Piece;
-import chess.model.position.Position;
 import java.util.List;
 import java.util.Map;
+
+import chess.model.piece.Piece;
+import chess.model.position.Position;
 
 public interface MoveStrategy {
 

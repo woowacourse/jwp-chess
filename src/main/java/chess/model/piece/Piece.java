@@ -1,14 +1,13 @@
 package chess.model.piece;
 
-import static chess.model.Team.BLACK;
-import static chess.model.Team.NONE;
-import static chess.model.Team.WHITE;
+import static chess.model.Team.*;
 
-import chess.model.Team;
-import chess.model.position.Position;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import chess.model.Team;
+import chess.model.position.Position;
 
 public abstract class Piece {
 
@@ -70,7 +69,7 @@ public abstract class Piece {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        Piece that = (Piece) obj;
+        Piece that = (Piece)obj;
         return this.team == that.team;
     }
 

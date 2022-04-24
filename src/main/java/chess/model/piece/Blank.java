@@ -1,9 +1,10 @@
 package chess.model.piece;
 
-import static chess.model.Team.NONE;
+import static chess.model.Team.*;
+
+import java.util.Map;
 
 import chess.model.position.Position;
-import java.util.Map;
 
 public class Blank extends Piece {
 

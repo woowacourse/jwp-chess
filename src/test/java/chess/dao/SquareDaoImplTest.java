@@ -1,7 +1,14 @@
 package chess.dao;
 
-import static chess.model.Team.BLACK;
-import static org.assertj.core.api.Assertions.assertThat;
+import static chess.model.Team.*;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import chess.model.Team;
 import chess.model.board.Board;
@@ -9,15 +16,6 @@ import chess.model.piece.King;
 import chess.model.piece.Pawn;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class SquareDaoImplTest {
@@ -33,17 +31,17 @@ public class SquareDaoImplTest {
         squareDao = new SquareDaoImpl(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS square");
         jdbcTemplate.execute("CREATE TABLE square(" +
-                "position VARCHAR(2) NOT NULL, "
-                + "team VARCHAR(10) NOT NULL, "
-                + "symbol VARCHAR(10) NOT NULL, "
-                + "PRIMARY KEY (position)"
-                + ");");
+            "position VARCHAR(2) NOT NULL, "
+            + "team VARCHAR(10) NOT NULL, "
+            + "symbol VARCHAR(10) NOT NULL, "
+            + "PRIMARY KEY (position)"
+            + ");");
 
         Position position = Position.from("a1");
         Piece piece = new Pawn(BLACK);
 
         jdbcTemplate.update("insert into square (position, team, symbol) values (?, ?, ?)",
-                position.getKey(), piece.getTeam(), piece.getSymbol());
+            position.getKey(), piece.getTeam(), piece.getSymbol());
     }
 
     @DisplayName("데이터를 삽입한다.")

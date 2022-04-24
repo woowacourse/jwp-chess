@@ -1,17 +1,18 @@
 package chess.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
-import chess.model.board.Board;
-import chess.model.state.State;
-import chess.model.state.running.BlackTurn;
-import chess.model.state.running.WhiteTurn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import chess.model.board.Board;
+import chess.model.state.State;
+import chess.model.state.running.BlackTurn;
+import chess.model.state.running.WhiteTurn;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class StateDaoImplTest {
@@ -27,9 +28,9 @@ class StateDaoImplTest {
         stateDao = new StateDaoImpl(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS state");
         jdbcTemplate.execute("CREATE TABLE state("
-                + "  `name` VARCHAR(20) NOT NULL, "
-                + "  PRIMARY KEY (name) "
-                + ");");
+            + "  `name` VARCHAR(20) NOT NULL, "
+            + "  PRIMARY KEY (name) "
+            + ");");
 
         jdbcTemplate.update("insert into state(name) values (?)", "BLACK_TURN");
     }

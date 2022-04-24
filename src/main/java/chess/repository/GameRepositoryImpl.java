@@ -1,5 +1,9 @@
 package chess.repository;
 
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
 import chess.dao.SquareDao;
 import chess.dao.StateDao;
 import chess.dto.MoveDto;
@@ -7,9 +11,6 @@ import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
 import chess.model.state.State;
-import java.util.HashMap;
-import java.util.Map;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class GameRepositoryImpl implements GameRepository {
@@ -57,6 +58,6 @@ public class GameRepositoryImpl implements GameRepository {
 
     private void insertBoard(Map<Position, Piece> board) {
         board.keySet()
-                .forEach(position -> squareDao.insert(position, board.get(position)));
+            .forEach(position -> squareDao.insert(position, board.get(position)));
     }
 }

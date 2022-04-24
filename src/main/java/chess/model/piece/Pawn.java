@@ -1,10 +1,11 @@
 package chess.model.piece;
 
+import java.util.List;
+import java.util.Map;
+
 import chess.model.Team;
 import chess.model.direction.strategy.PawnMove;
 import chess.model.position.Position;
-import java.util.List;
-import java.util.Map;
 
 public class Pawn extends Piece {
 

@@ -1,7 +1,8 @@
 package chess.dto;
 
-import chess.model.Team;
 import java.util.Map;
+
+import chess.model.Team;
 
 public class ResultDto {
 

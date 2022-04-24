@@ -1,15 +1,17 @@
 package chess.dao;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
 import chess.entity.SquareEntity;
 import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class SquareDaoImpl implements SquareDao {
@@ -22,9 +24,9 @@ public class SquareDaoImpl implements SquareDao {
 
     private final RowMapper<SquareEntity> actorRowMapper = (resultSet, rowNum) -> {
         SquareEntity squareEntity = new SquareEntity(
-                resultSet.getString("position"),
-                resultSet.getString("team"),
-                resultSet.getString("symbol")
+            resultSet.getString("position"),
+            resultSet.getString("team"),
+            resultSet.getString("symbol")
         );
         return squareEntity;
     };

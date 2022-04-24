@@ -1,11 +1,12 @@
 package chess.dao;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
 import chess.dao.converter.StateToStringConverter;
 import chess.dao.converter.StringToStateConverter;
 import chess.model.board.Board;
 import chess.model.state.State;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class StateDaoImpl implements StateDao {

@@ -24,9 +24,9 @@ public enum Rank {
 
     public static Rank of(final int otherValue) {
         return Arrays.stream(values())
-                .filter(rank -> rank.value == otherValue)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 잘못된 값이 입력 되었습니다."));
+            .filter(rank -> rank.value == otherValue)
+            .findAny()
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 잘못된 값이 입력 되었습니다."));
     }
 
     public boolean canAdd(final int column) {

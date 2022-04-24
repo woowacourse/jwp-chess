@@ -1,15 +1,16 @@
 package chess.model.direction.strategy;
 
-import static chess.model.Team.NONE;
+import static chess.model.Team.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import chess.model.Team;
 import chess.model.direction.Direction;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class PawnMove implements MoveStrategy {
 
@@ -31,10 +32,10 @@ public class PawnMove implements MoveStrategy {
     private List<Position> searchCatchPositions(Position source, Map<Position, Piece> board) {
         List<Direction> directions = Direction.pawnCatchDirection(team);
         return directions.stream()
-                .filter(source::movableTo)
-                .map(source::createPositionTo)
-                .filter(position -> board.get(position).isOpponentTeam(team))
-                .collect(Collectors.toUnmodifiableList());
+            .filter(source::movableTo)
+            .map(source::createPositionTo)
+            .filter(position -> board.get(position).isOpponentTeam(team))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private List<Position> searchBaseMovePositions(Position source, Map<Position, Piece> board) {

@@ -1,13 +1,13 @@
 package chess.model.state;
 
+import java.util.List;
+import java.util.Map;
+
 import chess.model.Team;
 import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
 import chess.model.state.running.WhiteTurn;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public final class Ready implements State {
 

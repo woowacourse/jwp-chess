@@ -1,12 +1,13 @@
 package chess.model.direction;
 
-import static chess.model.Team.BLACK;
+import static chess.model.Team.*;
+
+import java.util.List;
 
 import chess.model.Team;
 import chess.model.position.File;
 import chess.model.position.Position;
 import chess.model.position.Rank;
-import java.util.List;
 
 public enum Direction {
 
@@ -44,7 +45,7 @@ public enum Direction {
 
     public static List<Direction> knightDirection() {
         return List.of(EAST_TWICE_NORTH, EAST_TWICE_SOUTH, WEST_TWICE_NORTH, WEST_TWICE_SOUTH, SOUTH_TWICE_EAST,
-                SOUTH_TWICE_WEST, NORTH_TWICE_EAST, NORTH_TWICE_WEST);
+            SOUTH_TWICE_WEST, NORTH_TWICE_EAST, NORTH_TWICE_WEST);
     }
 
     public static List<Direction> cardinalDirection() {

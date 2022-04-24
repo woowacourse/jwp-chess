@@ -1,16 +1,16 @@
 package chess.model.board.result;
 
-import static chess.model.Team.BLACK;
-import static chess.model.Team.WHITE;
+import static chess.model.Team.*;
 
-import chess.model.Team;
-import chess.model.piece.Piece;
-import chess.model.position.Position;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
+
+import chess.model.Team;
+import chess.model.piece.Piece;
+import chess.model.position.Position;
 
 public class Score {
 
@@ -40,10 +40,10 @@ public class Score {
 
     private Double team(Team team, Map<Position, Piece> board) {
         return board.values()
-                .stream()
-                .filter(piece -> piece.isSameTeam(team))
-                .mapToDouble(Piece::score)
-                .sum();
+            .stream()
+            .filter(piece -> piece.isSameTeam(team))
+            .mapToDouble(Piece::score)
+            .sum();
     }
 
     private Double pawnPenalty(Team team, Map<Position, Piece> board) {
@@ -53,20 +53,20 @@ public class Score {
 
     private List<Position> searchPositionOfPawns(Team team, Map<Position, Piece> board) {
         return board.keySet().stream()
-                .filter(position -> board.get(position).isSameTeam(team))
-                .filter(position -> board.get(position).isPawn())
-                .collect(Collectors.toList());
+            .filter(position -> board.get(position).isSameTeam(team))
+            .filter(position -> board.get(position).isPawn())
+            .collect(Collectors.toList());
     }
 
     private long searchPenaltyPawns(List<Position> positionOfPawns) {
         return positionOfPawns.stream()
-                .flatMapToLong(positionOfPawn -> calculateSameRankCount(positionOfPawn, positionOfPawns))
-                .filter(count -> count > 1)
-                .sum() / DUPLICATE_CHECK_PAWN_COUNT;
+            .flatMapToLong(positionOfPawn -> calculateSameRankCount(positionOfPawn, positionOfPawns))
+            .filter(count -> count > 1)
+            .sum() / DUPLICATE_CHECK_PAWN_COUNT;
     }
 
     private LongStream calculateSameRankCount(Position position, List<Position> positionOfPawns) {
         return LongStream.of(positionOfPawns.stream()
-                .filter(otherPosition -> otherPosition.isSameFile(position)).count());
+            .filter(otherPosition -> otherPosition.isSameFile(position)).count());
     }
 }

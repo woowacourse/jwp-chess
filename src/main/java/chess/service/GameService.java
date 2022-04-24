@@ -1,5 +1,7 @@
 package chess.service;
 
+import org.springframework.stereotype.Service;
+
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
 import chess.dto.ResultDto;
@@ -8,7 +10,6 @@ import chess.model.state.State;
 import chess.model.state.finished.Status;
 import chess.model.state.running.WhiteTurn;
 import chess.repository.GameRepository;
-import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {

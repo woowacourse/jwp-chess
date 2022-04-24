@@ -1,9 +1,10 @@
 package chess.model.position;
 
-import chess.model.direction.Direction;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import chess.model.direction.Direction;
 
 public class Position {
 
@@ -70,7 +71,7 @@ public class Position {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Position position = (Position) o;
+        Position position = (Position)o;
         return rank == position.rank && file == position.file;
     }
 

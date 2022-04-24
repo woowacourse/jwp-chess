@@ -1,20 +1,11 @@
 package chess.model.board;
 
-import static chess.model.Team.BLACK;
-import static chess.model.Team.NONE;
-import static chess.model.Team.WHITE;
-import static chess.model.position.File.A;
-import static chess.model.position.File.B;
-import static chess.model.position.File.C;
-import static chess.model.position.File.D;
-import static chess.model.position.File.E;
-import static chess.model.position.File.F;
-import static chess.model.position.File.G;
-import static chess.model.position.File.H;
-import static chess.model.position.Rank.EIGHT;
-import static chess.model.position.Rank.ONE;
-import static chess.model.position.Rank.SEVEN;
-import static chess.model.position.Rank.TWO;
+import static chess.model.Team.*;
+import static chess.model.position.File.*;
+import static chess.model.position.Rank.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import chess.model.piece.Bishop;
 import chess.model.piece.Blank;
@@ -27,8 +18,6 @@ import chess.model.piece.Rook;
 import chess.model.position.File;
 import chess.model.position.Position;
 import chess.model.position.Rank;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BoardCreator {
 

@@ -1,6 +1,9 @@
 package chess.model.state.finished;
 
-import static chess.model.state.Ready.COMMAND_INDEX;
+import static chess.model.state.Ready.*;
+
+import java.util.List;
+import java.util.Map;
 
 import chess.model.board.Board;
 import chess.model.piece.Piece;
@@ -8,9 +11,6 @@ import chess.model.position.Position;
 import chess.model.state.Command;
 import chess.model.state.State;
 import chess.model.state.running.WhiteTurn;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public abstract class Finished implements State {
 

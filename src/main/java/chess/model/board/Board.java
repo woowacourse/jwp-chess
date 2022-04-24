@@ -1,15 +1,15 @@
 package chess.model.board;
 
-import static chess.model.Team.NONE;
+import static chess.model.Team.*;
 
-import chess.model.Team;
-import chess.model.board.result.GameResult;
-import chess.model.piece.Blank;
-import chess.model.piece.Piece;
-import chess.model.position.Position;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import chess.model.Team;
+import chess.model.piece.Blank;
+import chess.model.piece.Piece;
+import chess.model.position.Position;
 
 public class Board {
 
@@ -56,9 +56,9 @@ public class Board {
 
     public boolean isKingDead() {
         return board.values()
-                .stream()
-                .filter(Piece::isKing)
-                .count() < KING_COUNT_IN_BOARD;
+            .stream()
+            .filter(Piece::isKing)
+            .count() < KING_COUNT_IN_BOARD;
     }
 
     public Map<Position, Piece> getBoard() {

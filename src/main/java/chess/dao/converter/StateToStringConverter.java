@@ -12,10 +12,10 @@ public class StateToStringConverter {
         if (state.isWhiteTurn()) {
             return WHITE_TURN;
         }
-        if(state.isBlackTurn()) {
+        if (state.isBlackTurn()) {
             return BLACK_TURN;
         }
-        if(state.isFinished()) {
+        if (state.isFinished()) {
             return END;
         }
         throw new IllegalStateException("[ERROR] 변경할수 있는 상태가 아닙니다.");

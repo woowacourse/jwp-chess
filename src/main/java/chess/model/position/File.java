@@ -23,9 +23,9 @@ public enum File {
 
     public static File of(final int otherValue) {
         return Arrays.stream(values())
-                .filter(file -> file.value == otherValue)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 잘못된 값이 입력 되었습니다."));
+            .filter(file -> file.value == otherValue)
+            .findAny()
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 잘못된 값이 입력 되었습니다."));
     }
 
     public boolean canAdd(int row) {

@@ -1,9 +1,10 @@
 package chess.model.state.finished;
 
+import java.util.Map;
+
 import chess.model.Team;
 import chess.model.board.Board;
 import chess.model.board.result.GameResult;
-import java.util.Map;
 
 public final class Status extends Finished {
 

@@ -1,9 +1,10 @@
 package chess.dto;
 
-import chess.model.piece.Piece;
-import chess.model.position.Position;
 import java.util.HashMap;
 import java.util.Map;
+
+import chess.model.piece.Piece;
+import chess.model.position.Position;
 
 public class BoardDto {
 

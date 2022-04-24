@@ -44,7 +44,7 @@ public class ChessGameController {
 
     @GetMapping("/end")
     public ModelAndView end() {
-        ModelAndView modelAndView = new ModelAndView("end");
+        ModelAndView modelAndView = new ModelAndView("finished");
         return modelAndView;
     }
 }

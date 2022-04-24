@@ -4,6 +4,9 @@ public class MoveDto {
     private String source;
     private String target;
 
+    public MoveDto() {
+    }
+
     public MoveDto(String source, String target) {
         this.source = source;
         this.target = target;

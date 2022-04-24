@@ -39,6 +39,9 @@ dependencies {
     compile "com.sparkjava:spark-template-handlebars:2.7.1"
 
     implementation 'com.google.code.gson:gson:2.9.0'
+
+    // h2 : test database
+    runtimeOnly 'com.h2database:h2'
 }
 
 test {

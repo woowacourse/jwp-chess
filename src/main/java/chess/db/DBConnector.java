@@ -11,7 +11,6 @@ public class DBConnector {
     private Connection connection;
 
     public DBConnector() {
-        this.connection = JdbcConnector.getConnection();
     }
 
     public Connection getConnection() {

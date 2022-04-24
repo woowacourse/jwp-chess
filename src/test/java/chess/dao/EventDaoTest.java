@@ -58,7 +58,7 @@ class EventDaoTest {
         void gameId에_해당되는_게임의_이벤트가_없으면_예외발생() {
             assertThatThrownBy(() -> dao.deleteAllByGameId(999999))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("해당되는 이벤트가 없습니다!");
+                    .hasMessage("데이터 삭제에 실패하였습니다.");
         }
     }
 }

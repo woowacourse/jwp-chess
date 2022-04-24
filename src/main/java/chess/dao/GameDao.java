@@ -4,7 +4,6 @@ import chess.domain.auth.EncryptedAuthCredentials;
 import chess.entity.GameEntity;
 import java.util.Collections;
 import java.util.List;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
@@ -68,11 +67,9 @@ public class GameDao {
         final String sql = "INSERT INTO game(name, password) VALUES (:name, :password)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        try {
-            jdbcTemplate.update(sql, new BeanPropertySqlParameterSource(authCredentials), keyHolder);
-        } catch (DataAccessException e) {
-            throw new IllegalArgumentException("게임을 생성하는데 실패하였습니다.");
-        }
+        SqlParameterSource paramSource =  new BeanPropertySqlParameterSource(authCredentials);
+        new Command(() -> jdbcTemplate.update(sql, paramSource, keyHolder))
+                .executeOrThrow("게임을 생성하는데 실패하였습니다.");
         return keyHolder.getKey().intValue();
     }
 
@@ -81,7 +78,8 @@ public class GameDao {
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource();
         paramSource.addValue("game_id", gameId);
-        jdbcTemplate.update(sql, paramSource);
+        Command.execute(() -> jdbcTemplate.update(sql, paramSource))
+                .throwOnNonEffected(gameId + "에 해당되는 게임을 종료시키는 데 실패하였습니다.");
     }
 
     public void deleteGame(EncryptedAuthCredentials authCredentials) {
@@ -89,17 +87,11 @@ public class GameDao {
                 + "AND password = :password AND running = false";
 
         SqlParameterSource paramSource = new BeanPropertySqlParameterSource(authCredentials);
-        int deletedRowCount = jdbcTemplate.update(sql, paramSource);
-        checkDeleteResult(deletedRowCount);
+        Command.execute(() -> jdbcTemplate.update(sql, paramSource))
+                .throwOnNonEffected("게임을 삭제하는 데 실패하였습니다!");
     }
 
-    private void checkDeleteResult(int deletedRowCount) {
-        if (deletedRowCount == 0) {
-            throw new IllegalArgumentException("게임을 삭제하는 데 실패하였습니다!");
-        }
-    }
-
-    final RowMapper<GameEntity> rowMapper = (resultSet, rowNum) ->
+    private final RowMapper<GameEntity> rowMapper = (resultSet, rowNum) ->
             new GameEntity(resultSet.getInt("id"),
                     resultSet.getString("name"),
                     resultSet.getBoolean("running"));

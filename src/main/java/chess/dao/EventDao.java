@@ -31,20 +31,15 @@ public class EventDao {
 
         EventEntity eventEntity = event.toEntityOf(gameId);
         SqlParameterSource paramSource = new BeanPropertySqlParameterSource(eventEntity);
-        jdbcTemplate.update(sql, paramSource);
+        Command.execute(() -> jdbcTemplate.update(sql, paramSource))
+                .throwOnNonEffected("이벤트 저장에 실패하였습니다.");
     }
 
     public void deleteAllByGameId(int gameId) {
         final String sql = "DELETE FROM event WHERE game_id = :game_id";
         SqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
-        int deletedRowCount = jdbcTemplate.update(sql, paramSource);
-        checkDeleteResult(deletedRowCount);
-    }
-
-    private void checkDeleteResult(int deletedRowCount) {
-        if (deletedRowCount == 0) {
-            throw new IllegalArgumentException("해당되는 이벤트가 없습니다!");
-        }
+        Command.execute(() -> jdbcTemplate.update(sql, paramSource))
+                .throwOnNonEffected("데이터 삭제에 실패하였습니다.");
     }
 
     private final RowMapper<Event> eventRowMapper = (resultSet, rowNum) ->

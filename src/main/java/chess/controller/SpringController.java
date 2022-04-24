@@ -1,7 +1,6 @@
 package chess.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import chess.converter.UTF8Converter;
 import chess.domain.Command;
 import chess.domain.piece.Team;
 import chess.service.ChessService;
@@ -32,7 +32,7 @@ public class SpringController {
 
     @GetMapping("/start")
     public String start(@RequestParam("game_name") String gameName) throws UnsupportedEncodingException {
-        return "redirect:/game/" + URLEncoder.encode(gameName, "UTF-8");
+        return "redirect:/game/" + UTF8Converter.encode(gameName);
     }
 
     @GetMapping("/game/{gameName}")
@@ -53,7 +53,7 @@ public class SpringController {
         @RequestParam("to") String to,
         Model model,
         RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
-        String encodedGameName = URLEncoder.encode(gameName, "UTF-8");
+        String encodedGameName = UTF8Converter.encode(gameName);
         try {
             chessService.move(from, to, gameName);
             if (chessService.isEnd()) {

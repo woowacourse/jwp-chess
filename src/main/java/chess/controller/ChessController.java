@@ -9,13 +9,9 @@ import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
 import java.net.URI;
 import java.net.URISyntaxException;
-<<<<<<< HEAD
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
-=======
-import java.util.NoSuchElementException;
->>>>>>> refactor: 게임 조회 시 게임이 없으면 404 NOT FOUND 반환하도록 변경
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -114,12 +110,12 @@ public class ChessController {
         return chessService.move(gameId, moveRequest);
     }
 
-    @GetMapping("/games/{gameId}/status")
+    @GetMapping("/{gameId}/status")
     public StatusResponse status(@PathVariable long gameId) {
         return chessService.status(gameId);
     }
 
-    @GetMapping("/end/{gameId}")
+    @GetMapping("/{gameId}/end")
     public ChessGameResponse endGame(@PathVariable long gameId) {
         return chessService.end(gameId);
     }

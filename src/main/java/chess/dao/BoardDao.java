@@ -1,75 +1,48 @@
 package chess.dao;
 
-import static chess.dao.Connector.getConnection;
-
-import chess.dto.SquareDto;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import chess.domain.chessboard.ChessBoard;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class BoardDao {
 
-    public List<SquareDto> findAll() {
-        final String sql = "select position, symbol, color from board";
-        final List<SquareDto> boardDtos = new ArrayList<>();
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-        try (final PreparedStatement statement = getConnection().prepareStatement(sql)) {
-            loadBoardFromDB(boardDtos, statement);
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return boardDtos;
+    public void save(ChessBoard chessBoard, Long gameId) {
+        String sql = "insert into board (position, symbol, color, game_id) values (?, ?, ?, ?)";
+
+        List<Object[]> board = chessBoard.getPieces().entrySet().stream()
+                .map(entry -> new Object[]{entry.getKey().toString(), entry.getValue().getSymbol().name(),
+                        entry.getValue().getColor().name(), gameId})
+                .collect(Collectors.toList());
+
+        jdbcTemplate.batchUpdate(sql, board);
     }
 
-    private void loadBoardFromDB(final List<SquareDto> boardDtos, final PreparedStatement statement)
-            throws SQLException {
-        try (final ResultSet resultSet = statement.executeQuery()) {
-            loadPieceFromDB(boardDtos, resultSet);
+    public ChessBoard find() {
+        String sql = "select position, symbol, color from board";
+
+        List<Map<String, Object>> squares = jdbcTemplate.queryForList(sql);
+        Map<Position, Piece> board = new HashMap<>();
+        for (Map<String, Object> square : squares) {
+            board.put(
+                    Position.of((String) square.get("position")),
+                    Piece.of((String) square.get("color"), (String) square.get("symbol")));
         }
+        return new ChessBoard(board);
     }
 
-    private void loadPieceFromDB(final List<SquareDto> boardDtos, final ResultSet resultSet) throws SQLException {
-        while (resultSet.next()) {
-            boardDtos.add(new SquareDto(
-                    resultSet.getString("position"),
-                    resultSet.getString("symbol"),
-                    resultSet.getString("color")));
-        }
-    }
-
-    public void save(final List<SquareDto> boardDtos, final int gameId) {
-        final String sql = "insert into board (position, symbol, color, game_id) values (?, ?, ?, ?)";
-
-        try (final PreparedStatement statement = getConnection().prepareStatement(sql)) {
-            convertPieceToBoard(boardDtos, gameId, statement);
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    private void convertPieceToBoard(final List<SquareDto> boardDtos, final int gameId,
-                                     final PreparedStatement statement) throws SQLException {
-        for (final SquareDto boardDto : boardDtos) {
-            statement.setString(1, boardDto.getPosition());
-            statement.setString(2, boardDto.getSymbol());
-            statement.setString(3, boardDto.getColor());
-            statement.setInt(4, gameId);
-            statement.executeUpdate();
-        }
-    }
-
-    public void update(final SquareDto boardDto) {
-        final String sql = "update board set symbol = (?), color = (?) where position = (?)";
-
-        try (final PreparedStatement statement = getConnection().prepareStatement(sql)) {
-            statement.setString(1, boardDto.getSymbol());
-            statement.setString(2, boardDto.getColor());
-            statement.setString(3, boardDto.getPosition());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    public int update(Position position, Piece piece, Long gameId) {
+        String sql = "update board set symbol = (?), color = (?) where game_id = (?) and position = (?)";
+        return jdbcTemplate.update(sql, piece.getSymbol().name(), piece.getColor().name(), gameId, position.toString());
     }
 }

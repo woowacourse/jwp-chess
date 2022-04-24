@@ -1,84 +1,64 @@
 package chess.controller;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
-
+import chess.dto.BoardDto;
+import chess.dto.MoveDto;
+import chess.dto.StatusDto;
 import chess.service.ChessService;
+import java.util.HashMap;
 import java.util.Map;
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+@Controller
 public class WebController {
 
-    private ChessService chessService;
+    private final ChessService chessService;
 
-    public WebController() {
-        this.chessService = new ChessService();
+    @Autowired
+    public WebController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
-    public void run() {
-        renderReady();
-        renderStart();
-        renderMove();
-        renderStatus();
-        renderEnd();
+    @GetMapping("/")
+    public ModelAndView selectGame() {
+        BoardDto boardDto = chessService.selectBoard();
+        String winner = chessService.selectWinner();
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("board", boardDto);
+        model.put("winner", winner);
+
+        return new ModelAndView("index", model);
     }
 
-    private void renderReady() {
-        get("/", (req, res) ->
-                render(chessService.ready())
-        );
+    @GetMapping("/game")
+    public ModelAndView insertGame() {
+        chessService.insertGame();
+        return new ModelAndView("redirect:/");
     }
 
-    private void renderStart() {
-        get("/start", (req, res) -> {
-            try {
-                return render(chessService.start());
-            } catch (Exception e) {
-                return renderError(e.getMessage());
-            }
-        });
+    @PutMapping("/game/board")
+    public ModelAndView updateBoard(MoveDto moveDto) {
+        chessService.updateBoard(moveDto.getFrom(), moveDto.getTo());
+        return new ModelAndView("redirect:/");
     }
 
-    private void renderMove() {
-        post("/move", (req, res) -> {
-            try {
-                chessService.move(req.queryParams("from"), req.queryParams("to"));
-                res.redirect("/");
-                return null;
-            } catch (Exception e) {
-                return renderError(e.getMessage());
-            }
-        });
+    @GetMapping("/game/status")
+    @ResponseBody
+    public ResponseEntity<StatusDto> selectStatus() {
+        StatusDto statusDto = chessService.selectStatus();
+        return ResponseEntity.ok().body(statusDto);
     }
 
-    private void renderStatus() {
-        get("/status", (req, res) -> {
-            try {
-                return render(chessService.status());
-            } catch (Exception e) {
-                return renderError(e.getMessage());
-            }
-        });
-    }
-
-    private void renderEnd() {
-        get("/end", (req, res) -> {
-            try {
-                chessService.end();
-                res.redirect("/");
-                return null;
-            } catch (Exception e) {
-                return renderError(e.getMessage());
-            }
-        });
-    }
-
-    private String renderError(String errorMessage) {
-        return render(chessService.error(errorMessage));
-    }
-
-    private static String render(Map<String, Object> model) {
-        return new HandlebarsTemplateEngine().render(new ModelAndView(model, "index.hbs"));
+    @DeleteMapping("/game")
+    public ModelAndView deleteGame() {
+        chessService.deleteGame();
+        return new ModelAndView("redirect:/");
     }
 }

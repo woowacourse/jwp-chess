@@ -6,98 +6,94 @@ import chess.domain.chessboard.ChessBoard;
 import chess.domain.command.GameCommand;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
+import chess.domain.piece.EmptyPiece;
 import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
+import chess.domain.state.State;
+import chess.dto.BoardDto;
+import chess.dto.PieceDto;
+import chess.dto.StatusDto;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class ChessService {
 
-    private static final String WINNER_KEY = "winner";
-    private static final String WHITE_KEY = "white";
-    private static final String BLACK_KEY = "black";
-    private static final String ERROR_KEY = "error";
-    private static final String WHITE_SCORE_MESSAGE = "WHITE : ";
-    private static final String BLACK_SCORE_MESSAGE = "BLACK : ";
-    private static final String VICTORY_MESSAGE = " 승리!!";
+    private final GameDao gameDao;
+    private final BoardDao boardDao;
 
-    private final BoardService boardService;
-    private final GameService gameService;
-    private final ChessGame chessGame;
-
-    public ChessService() {
-        this.boardService = new BoardService(new BoardDao());
-        this.gameService = new GameService(new GameDao());
-        this.chessGame = initChessGame();
+    @Autowired
+    public ChessService(GameDao gameDao, BoardDao boardDao) {
+        this.gameDao = gameDao;
+        this.boardDao = boardDao;
     }
 
-    private ChessGame initChessGame() {
-        final Map<Position, Piece> board = boardService.loadBoard();
-        if (board.isEmpty()) {
-            return new ChessGame(new NormalPiecesGenerator());
+    public BoardDto selectBoard() {
+        ChessBoard chessBoard = boardDao.find();
+        Map<Position, Piece> pieces = chessBoard.getPieces();
+        Map<String, PieceDto> board = new HashMap<>();
+        for (Position position : pieces.keySet()) {
+            String key = position.toString();
+            Piece piece = pieces.get(Position.of(key));
+            PieceDto pieceDto = new PieceDto(piece.getSymbol().name(), piece.getColor().name());
+            board.put(key, pieceDto);
         }
-        return new ChessGame(gameService.loadState(), new ChessBoard(board));
+        return new BoardDto(board);
     }
 
-    public Map<String, Object> ready() {
-        final Map<String, Object> model = new HashMap<>();
-        model.putAll(boardService.findBoard());
+    public String selectWinner() {
+        if (gameDao.findGameCount() == 0) {
+            return null;
+        }
+        ChessBoard chessBoard = boardDao.find();
+        State state = gameDao.findState();
 
+        ChessGame chessGame = new ChessGame(state, chessBoard);
         if (chessGame.isEndGameByPiece()) {
-            model.put(WINNER_KEY, chessGame.getWinner() + VICTORY_MESSAGE);
-            gameService.delete();
-            chessGame.init(new NormalPiecesGenerator());
-            return model;
+            return chessGame.getWinner().name();
         }
-        return model;
+        return null;
     }
 
-    public Map<String, Object> start() {
-        final Map<String, Object> model = new HashMap<>();
+    @Transactional
+    public void insertGame() {
+        ChessGame chessGame = new ChessGame(new NormalPiecesGenerator());
         chessGame.playGameByCommand(GameCommand.of("start"));
-        save();
-        model.putAll(boardService.findBoard());
-        return model;
+
+        gameDao.delete();
+        gameDao.save(chessGame.getState().toString());
+        boardDao.save(chessGame.getChessBoard(), gameDao.findId());
     }
 
-    private void save() {
-        gameService.saveGame(chessGame);
-        boardService.saveBoard(chessGame, gameService.findGameId());
-    }
-
-    public void move(final String from, final String to) {
+    @Transactional
+    public void updateBoard(String from, String to) {
+        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
         chessGame.playGameByCommand(GameCommand.of("move", from, to));
-        update(from, to);
+        chessGame.isEndGameByPiece();
+        gameDao.update(chessGame.getState().toString(), gameDao.findId());
+
+        Map<String, Piece> pieces = chessGame.getChessBoard().toMap();
+        boardDao.update(Position.of(to), pieces.get(to), gameDao.findId());
+        boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameDao.findId());
     }
 
-    private void update(final String from, final String to) {
-        gameService.update(chessGame);
-        boardService.update(chessGame, from);
-        boardService.update(chessGame, to);
-    }
-
-    public Map<String, Object> status() {
-        final Map<String, Object> model = new HashMap<>();
+    public StatusDto selectStatus() {
+        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
         chessGame.playGameByCommand(GameCommand.of("status"));
-        model.putAll(boardService.findBoard());
+        Map<Color, Double> scores = chessGame.calculateScore();
 
-        final Map<Color, Double> scores = chessGame.calculateScore();
-        model.put(WHITE_KEY, WHITE_SCORE_MESSAGE + scores.get(Color.WHITE));
-        model.put(BLACK_KEY, BLACK_SCORE_MESSAGE + scores.get(Color.BLACK));
-        return model;
+        return new StatusDto(scores.get(Color.WHITE), scores.get(Color.BLACK));
     }
 
-    public void end() {
+    @Transactional
+    public void deleteGame() {
+        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
+
         chessGame.playGameByCommand(GameCommand.of("end"));
-        gameService.delete();
-        chessGame.init(new NormalPiecesGenerator());
-    }
-
-    public Map<String, Object> error(final String errorMessage) {
-        final Map<String, Object> model = new HashMap<>();
-        model.putAll(boardService.findBoard());
-        model.put(ERROR_KEY, errorMessage);
-        return model;
+        gameDao.delete();
     }
 }

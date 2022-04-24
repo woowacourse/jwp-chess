@@ -1,13 +1,28 @@
 package chess.service.dto;
 
+import chess.model.board.Square;
+import chess.model.piece.Piece;
+import chess.model.piece.PieceType;
 import java.util.Objects;
 
-public class PieceWithSquareDto {
-    private final String square;
-    private final String type;
-    private final String color;
+public class PieceEntity {
+    private int id;
+    private String square;
+    private String type;
+    private String color;
+    private int gameId;
 
-    public PieceWithSquareDto(String square, String type, String color) {
+
+    public PieceEntity() {
+    }
+
+    public PieceEntity(Square square, Piece piece) {
+        this.square = square.getName();
+        this.type = PieceType.getName(piece);
+        this.color = piece.getColor().name();
+    }
+
+    public PieceEntity(String square, String type, String color) {
         this.square = square;
         this.type = type;
         this.color = color;
@@ -33,7 +48,7 @@ public class PieceWithSquareDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PieceWithSquareDto that = (PieceWithSquareDto) o;
+        PieceEntity that = (PieceEntity) o;
         return Objects.equals(getSquare(), that.getSquare()) && Objects.equals(
             getType(), that.getType()) && Objects.equals(getColor(), that.getColor());
     }

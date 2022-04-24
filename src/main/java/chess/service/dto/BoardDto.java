@@ -3,13 +3,13 @@ package chess.service.dto;
 import java.util.List;
 
 public class BoardDto {
-    private final List<PieceWithSquareDto> pieces;
+    private final List<PieceEntity> pieces;
 
-    public BoardDto(List<PieceWithSquareDto> pieces) {
+    public BoardDto(List<PieceEntity> pieces) {
         this.pieces = pieces;
     }
 
-    public List<PieceWithSquareDto> getPieces() {
+    public List<PieceEntity> getPieces() {
         return pieces;
     }
 }

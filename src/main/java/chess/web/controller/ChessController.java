@@ -28,11 +28,7 @@ public class ChessController {
         if (chessService.isNotRunning()) {
             return "redirect:/start";
         }
-
-        model.addAttribute("pieces", chessService.getPieces());
-        model.addAttribute("black-score", chessService.getScore(Color.BLACK));
-        model.addAttribute("white-score", chessService.getScore(Color.WHITE));
-
+        model.addAttribute("chessStatus", chessService.getChessStatus());
         return "index";
     }
 

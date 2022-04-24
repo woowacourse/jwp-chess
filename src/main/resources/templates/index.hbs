@@ -11,6 +11,7 @@
 <body>
 <div class="chess-game">
     <h1>♗혼돈의 체스 게임♗</h1>
+    {{#chessStatus}}
     <div>
         Black 진영 점수 VS White 진영 점수
         <div class="score">{{black-score}}&nbsp;&nbsp;&nbsp;&nbsp;{{white-score}}</div>
@@ -21,6 +22,7 @@
             <img src="images/{{color}}_{{pieceType}}.png" class="img"/>
         </div>
         {{/pieces}}
+    {{/chessStatus}}
     </section>
     <br/>
     <form action="/result" method="get">

@@ -12,6 +12,7 @@ import chess.domain.position.Position;
 import chess.domain.state.StateType;
 import chess.web.dao.BoardStateDao;
 import chess.web.dao.PieceDao;
+import chess.web.dto.ChessStatusDto;
 import chess.web.dto.PieceDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,10 @@ public class ChessService {
     public ChessService(BoardStateDao boardStateDao, PieceDao pieceDao) {
         this.boardStateDao = boardStateDao;
         this.pieceDao = pieceDao;
+    }
+
+    public ChessStatusDto getChessStatus() {
+        return new ChessStatusDto(getPieces(), getScore(Color.BLACK), getScore(Color.WHITE));
     }
 
     public void start() {
@@ -85,7 +90,7 @@ public class ChessService {
         return boardStateDao.selectState();
     }
 
-    public List<PieceDto> getPieces() {
+    private List<PieceDto> getPieces() {
         return pieceDao.selectAll();
     }
 

@@ -1,6 +1,7 @@
 const FILES = ["A", "B", "C", "D", "E", "F", "G", "H"];
 const RANKS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const REVERSE_RANKS = RANKS.reverse();
+const pieceRegExp = /images\/(\w*?)\.png/;
 
 $(document).ready(function () {
   initChessBoard();
@@ -47,7 +48,9 @@ function triggerEvents() {
     movePiece();
   });
 
-  $("button#save-game").click(function () {});
+  $("button#save-game").click(function () {
+    saveGame();
+  });
 }
 
 function addChessBoardRow() {
@@ -82,14 +85,12 @@ function placeChessPiece(position, pieceImage) {
 }
 
 function movePiece() {
+  const from = $('input[name="from"]').val();
+  const to = $('input[name="to"]').val();
   $.ajax({
-    url: "/move",
-    data: {
-      from: $('input[name="from"]').val(),
-      to: $('input[name="to"]').val(),
-    },
+    url: `/move?from=${from}&to=${to}`,
     method: "POST",
-    dataType: "json"
+    dataType: "json",
   })
     .done(function (json) {
       clearChessBoard();
@@ -119,13 +120,54 @@ function currentTeam() {
   $.ajax({
     url: "/current-team",
     method: "GET",
-    dataType: "text"
+    dataType: "text",
   })
     .done(function (json) {
       $("#current-team").text(json);
     })
     .fail(function (xhr, status, errorThrown) {
-      debugger;
       alert("currentTeam - error !");
+    });
+}
+
+function isExistPiece(sqaure) {
+  return $("#" + sqaure).find("img").length == true;
+}
+
+function getPieces() {
+  let pieces = {};
+
+  $("#chess-board tr td").each(function (index, element) {
+    const square = element;
+    if (isExistPiece(square.id)) {
+      const imageName = $(square).find("img").attr("src");
+      const piece = imageName.replace(pieceRegExp, `$1`);
+      pieces[square.id] = piece;
+    }
+  });
+
+  return pieces;
+}
+
+function convertAndGetCurrentTeam() {}
+
+function saveGame() {
+  const gameData = {
+    currentTeam: $("#current-team").text(),
+    pieces: getPieces(),
+  };
+
+  $.ajax({
+    url: "/save-game",
+    method: "POST",
+    data: JSON.stringify(gameData),
+    contentType: "application/json",
+  })
+    .done(function (data) {
+      alert("저장 완료 !");
+    })
+    .fail(function (xhr, status, errorThrown) {
+      alert("저장 오류");
+      console.log(xhr);
     });
 }

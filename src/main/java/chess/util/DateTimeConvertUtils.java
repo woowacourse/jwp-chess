@@ -3,7 +3,7 @@ package chess.util;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-public class DateTimeConvertUtil {
+public class DateTimeConvertUtils {
 
     public static Timestamp toTimestampFrom(LocalDateTime localDateTime) {
         Timestamp timestamp = Timestamp.valueOf(localDateTime);

@@ -1,6 +1,6 @@
 package chess.domain.user;
 
-import chess.util.DateTimeConvertUtil;
+import chess.util.DateTimeConvertUtils;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -22,7 +22,7 @@ public class User {
 
     public User(String name, Timestamp createdAt) {
         this.name = name;
-        this.createdAt = DateTimeConvertUtil.toLocalDateTimeFrom(createdAt);
+        this.createdAt = DateTimeConvertUtils.toLocalDateTimeFrom(createdAt);
     }
 
     public String getName() {

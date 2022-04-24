@@ -18,7 +18,7 @@ public class ChessConfig {
 
     @Bean
     public ChessBoard chessBoard() {
-        BoardFactory boardFactory = RegularBoardFactory.getInstance();
+        BoardFactory boardFactory = boardFactory();
         GameFlow gameFlow = new AlternatingGameFlow();
         return new ChessBoard(boardFactory.create(), gameFlow);
     }

@@ -4,12 +4,15 @@ import chess.domain.board.ChessBoard;
 import chess.domain.board.factory.BoardFactory;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
+import chess.dto.request.web.SaveRequest;
 import chess.dto.response.web.BoardResponse;
+import chess.service.ChessService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +24,9 @@ public class ChessApiController {
 
     @Autowired
     private BoardFactory boardFactory;
+
+    @Autowired
+    private ChessService chessService;
 
     @GetMapping(value = "/board", produces = MediaType.APPLICATION_JSON_VALUE)
     public BoardResponse board() {
@@ -40,5 +46,10 @@ public class ChessApiController {
 
         Map<Position, Piece> movedBoard = chessBoard.getBoard();
         return BoardResponse.from(movedBoard);
+    }
+
+    @PostMapping(value = "save-game", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void saveGame(@RequestBody SaveRequest saveRequest) {
+        chessService.saveGame(saveRequest);
     }
 }

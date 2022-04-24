@@ -6,7 +6,7 @@ import chess.domain.piece.PieceTeam;
 public class BlackTeam extends Running {
 
     private static final PieceTeam pieceTeam = PieceTeam.BLACK;
-    private static final String name = "검은색 팀";
+    private static final String name = "Black Team";
 
     @Override
     public boolean isSameColor(Piece sourcePiece) {

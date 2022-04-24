@@ -70,6 +70,7 @@ public class PieceDaoSpringImpl implements PieceDao {
 
     @Override
     public void update(Position source, Position target) {
-
+        final String sql = "update piece set position = ? where position = ?";
+        jdbcTemplate.update(sql, target.getName(), source.getName());
     }
 }

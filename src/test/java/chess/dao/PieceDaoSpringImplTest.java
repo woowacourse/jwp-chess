@@ -1,6 +1,7 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import chess.domain.position.Position;
 import chess.dto.PieceDto;
@@ -88,5 +89,26 @@ public class PieceDaoSpringImplTest {
         List<PieceDto> pieceDtos = pieceDaoSpring.findAll();
 
         assertThat(pieceDtos).containsOnly(pieceDtoA2, pieceDtoA3);
+    }
+
+    @Test
+    @DisplayName("기물 정보 수정")
+    void update() {
+        PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
+        pieceDaoSpring.save(pieceDto);
+
+        pieceDaoSpring.update(Position.of("a2"), Position.of("a3"));
+
+        assertThatCode(() ->
+                jdbcTemplate.queryForObject(
+                        "select * from piece where position = 'a3'",
+                        (resultSet, rowNum) ->
+                                new PieceDto(
+                                        resultSet.getString("position"),
+                                        resultSet.getString("color"),
+                                        resultSet.getString("type")
+                                )
+                )
+        ).doesNotThrowAnyException();
     }
 }

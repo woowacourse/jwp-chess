@@ -4,17 +4,14 @@ import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
 import chess.model.piece.Team;
 import chess.model.square.File;
-import chess.model.square.Square;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class ChessPieceRepository implements PieceRepository<Piece> {
@@ -64,7 +61,6 @@ public class ChessPieceRepository implements PieceRepository<Piece> {
                 "SELECT pi.id, pi.type, pi.team, pi.square_id FROM piece pi "
                         + "JOIN square po ON pi.square_id=po.id "
                         + "JOIN board nb ON po.board_id=nb.id WHERE nb.id=?", boardId);
-        Map<Square, Piece> squarePieceMap = new HashMap<>();
         List<Piece> pieces = new ArrayList<>();
         while (sqlRowSet.next()) {
             pieces.add(
@@ -87,6 +83,20 @@ public class ChessPieceRepository implements PieceRepository<Piece> {
                 Integer.class,
                 file.value(), roomId, team.name()
         );
+    }
+
+    @Override
+    public int saveAllPieces(List<Piece> pieces) {
+        List<Object[]> batch = changeToObjects(pieces);
+        return jdbcTemplate.batchUpdate(
+                "INSERT INTO piece (type, team, square_id) values(?, ?, ?)"
+                , batch).length;
+    }
+
+    private List<Object[]> changeToObjects(List<Piece> pieces) {
+        return pieces.stream()
+                .map(piece -> new Object[]{piece.name(), piece.team().name(), piece.getSquareId()})
+                .collect(Collectors.toList());
     }
 
     private RowMapper<Piece> getRowMapper() {

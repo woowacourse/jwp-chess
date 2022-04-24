@@ -1,22 +1,20 @@
 package chess.service;
 
-import chess.model.status.End;
-import chess.model.status.Status;
-import org.springframework.stereotype.Service;
-import chess.repository.*;
 import chess.dto.BoardDto;
 import chess.dto.RoomDto;
 import chess.dto.RoomsDto;
 import chess.model.board.Board;
+import chess.model.board.ConsoleBoard;
 import chess.model.member.Member;
-import chess.model.piece.Empty;
-import chess.model.piece.Initializer;
-import chess.model.piece.Piece;
-import chess.model.piece.Team;
+import chess.model.piece.*;
 import chess.model.room.Room;
 import chess.model.square.File;
 import chess.model.square.Square;
+import chess.model.status.End;
 import chess.model.status.Running;
+import chess.model.status.Status;
+import chess.repository.*;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,8 +24,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
-
-    private static final int PROPER_KING_COUNT = 2;
 
     private final BoardRepository<Board> chessBoardRepository;
     private final SquareRepository<Square> chessSquareRepository;
@@ -50,16 +46,22 @@ public class ChessService {
 
     public Room init(String roomTitle, String member1, String member2) {
         Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
-        chessSquareRepository.saveAllSquare(board.getId());
         Map<Square, Piece> startingPieces = Initializer.initialize();
-        for (Square square : startingPieces.keySet()) {
-            Square tempSquare = chessSquareRepository.getBySquareAndBoardId(square, board.getId());
-            chessPieceRepository.save(startingPieces.get(square), tempSquare.getId());
-        }
-//        Board board = chessBoardRepository.init(new Board(new Running(), Team.WHITE), Initializer.initialize());
+        chessSquareRepository.saveAllSquares(board.getId(), startingPieces.keySet());
+        chessPieceRepository.saveAllPieces(mapToPieces(board.getId(), startingPieces));
         Room room = chessRoomRepository.save(new Room(roomTitle, board.getId()));
         chessMemberRepository.saveAll(List.of(new Member(member1), new Member(member2)), room.getId());
         return room;
+    }
+
+    private List<Piece> mapToPieces(int boardId, Map<Square, Piece> startingPieces) {
+        return startingPieces.keySet().stream()
+                .map(square -> startingPieces.get(square).setSquareId(getSquare(square, boardId).getId()))
+                .collect(Collectors.toList());
+    }
+
+    private Square getSquare(Square square, int board) {
+        return chessSquareRepository.getBySquareAndBoardId(square, board);
     }
 
     public RoomsDto getRooms() {
@@ -75,8 +77,7 @@ public class ChessService {
 
     public BoardDto getBoard(int roomId) {
         final Room room = chessRoomRepository.getById(roomId);
-        final Board board = chessBoardRepository.getById(room.getBoardId());
-        final Map<Square, Piece> allPositionsAndPieces = chessSquareRepository.findAllSquaresAndPieces(board.getId());
+        final Map<Square, Piece> allPositionsAndPieces = chessSquareRepository.findAllSquaresAndPieces(room.getBoardId());
         List<Member> members = chessMemberRepository.findMembersByRoomId(roomId);
         return BoardDto.of(
                 allPositionsAndPieces,
@@ -87,62 +88,29 @@ public class ChessService {
 
     public void move(String source, String target, int roomId) {
         Room room = chessRoomRepository.getById(roomId);
-        Square sourceSquare = chessSquareRepository.getBySquareAndBoardId(Square.fromString(source), room.getBoardId());
-        Square targetSquare = chessSquareRepository.getBySquareAndBoardId(Square.fromString(target), room.getBoardId());
-        Piece piece = chessPieceRepository.findBySquareId(sourceSquare.getId());
-        Board board = chessBoardRepository.getById(room.getBoardId());
-        checkTurn(board, piece);
+        int boardId = room.getBoardId();
+        ConsoleBoard consoleBoard = new ConsoleBoard(chessSquareRepository.findAllSquaresAndPieces(boardId));
+        Team team = chessBoardRepository.getTeamById(boardId);
+        consoleBoard.checkTurn(team, source);
+        consoleBoard.move(source, target);
 
-        checkMovable(sourceSquare, targetSquare, piece, room.getBoardId());
-        chessPieceRepository.deletePieceBySquareId(targetSquare.getId());
-        chessPieceRepository.updatePieceSquareId(sourceSquare.getId(), targetSquare.getId());
-        chessPieceRepository.save(new Empty(), sourceSquare.getId());
-        
-        chessBoardRepository.updateTeamById(room.getBoardId(), board.getTeam().oppositeTeam());
-        checkKingDead(room.getBoardId());
+        updatePieces(source, target, boardId);
+        chessBoardRepository.updateTeamById(boardId, team.oppositeTeam());
+        checkKingDead(boardId, consoleBoard);
     }
 
-    private void checkTurn(Board board, Piece piece) {
-        Team team = board.getTeam();
-        if (!team.isProperTurn(piece.team())) {
-            throw new IllegalArgumentException(String.format("현재 %s팀의 차례가 아닙니다.", piece.team().name()));
-        }
-    }
-
-    private void checkKingDead(int boardId) {
-        long kingCount = chessPieceRepository.getAllPiecesByBoardId(boardId).stream()
-                .filter(Piece::isKing)
-                .count();
-        if (kingCount != PROPER_KING_COUNT) {
+    private void checkKingDead(int boardId, ConsoleBoard consoleBoard) {
+        if (consoleBoard.isKingDead()) {
             chessBoardRepository.updateStatus(boardId, new End());
         }
     }
 
-    private void checkMovable(Square sourceSquare, Square targetSquare, Piece piece, int boardId) {
-        Piece targetPiece = chessPieceRepository.findBySquareId(targetSquare.getId());
-        if (!piece.movable(targetPiece, sourceSquare, targetSquare)) {
-            throw new IllegalArgumentException("해당 위치로 움직일 수 없습니다.");
-        }
-        List<Square> route = piece.getRoute(sourceSquare, targetSquare);
-
-        if (piece.isPawn() && !route.isEmpty() && !piece.isNotAlly(targetPiece)) {
-            throw new IllegalArgumentException("같은 팀이 있는 곳으로 갈 수 없습니다.");
-        }
-
-        checkMoveWithoutObstacle(route, boardId, piece, targetPiece);
-    }
-
-    private void checkMoveWithoutObstacle(List<Square> route, int boardId, Piece sourcePiece, Piece targetPiece) {
-        List<Square> realSquares = chessSquareRepository.getPaths(route, boardId);
-        for (Square square : realSquares) {
-            Piece piece = chessPieceRepository.findBySquareId(square.getId());
-            if (piece.equals(targetPiece) && sourcePiece.isNotAlly(targetPiece)) {
-                return;
-            }
-            if (piece.isNotEmpty()) {
-                throw new IllegalArgumentException("경로 중 기물이 있습니다.");
-            }
-        }
+    private void updatePieces(String source, String target, int boardId) {
+        Square sourceSquare = getSquare(Square.fromString(source), boardId);
+        Square targetSquare = getSquare(Square.fromString(target), boardId);
+        chessPieceRepository.deletePieceBySquareId(targetSquare.getId());
+        chessPieceRepository.updatePieceSquareId(sourceSquare.getId(), targetSquare.getId());
+        chessPieceRepository.save(new Empty(), sourceSquare.getId());
     }
 
     public boolean isEnd(int roomId) {
@@ -152,7 +120,7 @@ public class ChessService {
     }
 
     public Map<String, Double> status(int roomId) {
-         return Team.getPlayerTeams().stream()
+        return Team.getPlayerTeams().stream()
                 .collect(Collectors.toMap(Enum::name, team -> calculateScore(roomId, team)));
     }
 

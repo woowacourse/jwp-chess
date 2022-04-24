@@ -10,7 +10,7 @@ public abstract class Piece {
 
     private final int id;
     protected final Team team;
-    private final int squareId;
+    private int squareId;
 
     protected Piece(int id, Team team, int squareId) {
         this.id = id;
@@ -70,6 +70,11 @@ public abstract class Piece {
 
     public int getSquareId() {
         return squareId;
+    }
+
+    public Piece setSquareId(int squareId) {
+        this.squareId = squareId;
+        return this;
     }
 
     @Override

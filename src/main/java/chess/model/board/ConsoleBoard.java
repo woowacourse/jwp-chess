@@ -19,6 +19,7 @@ public final class ConsoleBoard {
 
     private static final int LINE_RANGE = 8;
     private static final int KING_COUNT = 2;
+    private static final int PROPER_KING_COUNT = 2;
 
     private final Map<Square, Piece> board;
     private Status status;
@@ -35,13 +36,49 @@ public final class ConsoleBoard {
         initEmpty();
     }
 
+    public ConsoleBoard(Map<Square, Piece> allSquaresAndPieces) {
+        this.board = allSquaresAndPieces;
+    }
+
     public void move(String source, String target) {
         Square sourceSquare = Square.fromString(source);
         Square targetSquare = Square.fromString(target);
         Piece piece = board.get(sourceSquare);
-        checkMovable(sourceSquare, targetSquare, piece);
+        Piece targetPiece = board.get(targetSquare);
+//        checkMovable(sourceSquare, targetSquare, piece);
+//        moveTo(sourceSquare, targetSquare, piece);
+//        status = checkAliveTwoKings();
+
+        if (!piece.movable(targetPiece, sourceSquare, targetSquare)) {
+            throw new IllegalArgumentException("해당 위치로 움직일 수 없습니다.");
+        }
+
+        List<Square> route = piece.getRoute(sourceSquare, targetSquare);
+        if (piece.isPawn() && !route.isEmpty() && !piece.isNotAlly(targetPiece)) {
+            throw new IllegalArgumentException("같은 팀이 있는 곳으로 갈 수 없습니다.");
+        }
+
+        checkMoveWithoutObstacle(route, piece, targetPiece);
         moveTo(sourceSquare, targetSquare, piece);
-        status = checkAliveTwoKings();
+    }
+
+    public void checkTurn(Team team, String source) {
+        Piece piece = board.get(Square.fromString(source));
+        if (!team.isProperTurn(piece.team())) {
+            throw new IllegalArgumentException(String.format("현재 %s팀의 차례가 아닙니다.", piece.team().name()));
+        }
+    }
+
+    private void checkMoveWithoutObstacle(List<Square> route, Piece sourcePiece, Piece targetPiece) {
+        for (Square square : route) {
+            Piece piece = board.get(square);
+            if (piece.equals(targetPiece) && sourcePiece.isNotAlly(targetPiece)) {
+                return;
+            }
+            if (piece.isNotEmpty()) {
+                throw new IllegalArgumentException("경로 중 기물이 있습니다.");
+            }
+        }
     }
 
     private void moveTo(Square sourceSquare, Square targetSquare, Piece piece) {
@@ -130,5 +167,12 @@ public final class ConsoleBoard {
 
     public void finishGame() {
         status = new End();
+    }
+
+    public boolean isKingDead() {
+        long kingCount = board.values().stream()
+                .filter(Piece::isKing)
+                .count();
+        return kingCount != PROPER_KING_COUNT;
     }
 }

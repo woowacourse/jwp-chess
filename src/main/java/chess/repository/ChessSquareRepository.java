@@ -12,10 +12,8 @@ import chess.model.square.File;
 import chess.model.square.Rank;
 import chess.model.square.Square;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class ChessSquareRepository implements SquareRepository<Square> {
@@ -52,17 +50,17 @@ public class ChessSquareRepository implements SquareRepository<Square> {
     }
 
     @Override
-    public int saveAllSquare(int boardId) {
-        List<Object[]> batch = new ArrayList<>();
-        for (File file : File.values()) {
-            for (Rank rank : Rank.values()) {
-                Object[] values = new Object[]{file.value(), rank.value(), boardId};
-                batch.add(values);
-            }
-        }
+    public int saveAllSquares(int boardId, Set<Square> squares) {
+        List<Object[]> batch = changeToObjects(boardId, squares);
         return jdbcTemplate.batchUpdate(
                 "INSERT INTO square (square_file, square_rank, board_id) VALUES (?, ?, ?)"
                 , batch).length;
+    }
+
+    private List<Object[]> changeToObjects(int boardId, Set<Square> squares) {
+        return squares.stream()
+                .map(square -> new Object[]{square.getFile().value(), square.getRank().value(), boardId})
+                .collect(Collectors.toList());
     }
 
     @Override

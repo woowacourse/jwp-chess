@@ -52,18 +52,6 @@ public class ChessBoardRepository implements BoardRepository<Board> {
         return jdbcTemplate.queryForObject("SELECT * FROM board WHERE id=?", boardRowMapper, id);
     }
 
-    public Board test(int id) {
-        Map<String, Object> stringObjectMap = jdbcTemplate.queryForMap(
-                "SELECT b.id, b.status, b.team, r.title FROM board as b " +
-                        "JOIN room as r on r.board_id=b.id WHERE b.id=?", id);
-
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(
-                "SELECT b.id, b.status, b.team, r.title FROM board as b " +
-                "JOIN room as r on r.board_id=b.id WHERE b.id=?", id);
-//        jdbcTemplate.queryForObject("SELECT * FROM board WHERE id=?", boardRowMapper, id);
-        return null;
-    }
-
     @Override
     public int updateStatus(int boardId, Status status) {
         return jdbcTemplate.update("UPDATE board SET status=? where id=?", status.name(), boardId);
@@ -78,5 +66,11 @@ public class ChessBoardRepository implements BoardRepository<Board> {
     public Status getStatusById(int boardId) {
         String status = jdbcTemplate.queryForObject("SELECT status FROM board WHERE id=?", String.class, boardId);
         return StatusType.findStatus(status);
+    }
+
+    @Override
+    public Team getTeamById(int boardId) {
+        String team = jdbcTemplate.queryForObject("SELECT team FROM board WHERE id=?", String.class, boardId);
+        return Team.findTeam(team);
     }
 }

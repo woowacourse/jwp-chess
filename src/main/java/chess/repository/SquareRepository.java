@@ -5,6 +5,7 @@ import chess.model.square.Square;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface SquareRepository<T> {
 
@@ -12,7 +13,7 @@ public interface SquareRepository<T> {
 
     T getBySquareAndBoardId(T square, int boardId);
 
-    int saveAllSquare(int boardId);
+    int saveAllSquares(int boardId, Set<Square> squares);
 
     Map<T, Piece> findAllSquaresAndPieces(int boardId);
 

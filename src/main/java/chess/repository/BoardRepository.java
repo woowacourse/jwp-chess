@@ -1,12 +1,8 @@
 package chess.repository;
 
 import chess.model.board.Board;
-import chess.model.piece.Piece;
 import chess.model.piece.Team;
-import chess.model.square.Square;
 import chess.model.status.Status;
-
-import java.util.Map;
 
 public interface BoardRepository<T> {
 
@@ -21,4 +17,6 @@ public interface BoardRepository<T> {
     int updateTeamById(int boardId, Team team);
 
     Status getStatusById(int boardId);
+
+    Team getTeamById(int roomId);
 }

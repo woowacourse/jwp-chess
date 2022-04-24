@@ -6,6 +6,7 @@ import chess.repository.SquareRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class FakeSquareRepository implements SquareRepository<Square> {
 
@@ -20,7 +21,7 @@ public class FakeSquareRepository implements SquareRepository<Square> {
     }
 
     @Override
-    public int saveAllSquare(int boardId) {
+    public int saveAllSquares(int boardId, Set<Square> squares) {
         return 0;
     }
 

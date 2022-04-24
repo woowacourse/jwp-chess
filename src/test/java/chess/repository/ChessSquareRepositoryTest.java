@@ -7,7 +7,6 @@ import chess.model.square.File;
 import chess.model.square.Rank;
 import chess.model.square.Square;
 import chess.model.status.Running;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,7 @@ class ChessSquareRepositoryTest {
 
     @Test
     void saveAllSquares() {
-        int saveCount = repository.saveAllSquare(boardId);
+        int saveCount = repository.saveAllSquares(boardId, );
 
         assertThat(saveCount).isEqualTo(64);
     }

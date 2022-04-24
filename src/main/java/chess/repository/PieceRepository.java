@@ -19,4 +19,6 @@ public interface PieceRepository<T> {
     List<T> getAllPiecesByBoardId(int boardId);
 
     int countPawnsOnSameFile(int roomId, File column, Team team);
+
+    int saveAllPieces(List<T> pieces);
 }

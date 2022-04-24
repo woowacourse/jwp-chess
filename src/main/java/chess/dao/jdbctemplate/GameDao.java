@@ -40,4 +40,9 @@ public class GameDao {
         String sql = "delete from game";
         return jdbcTemplate.update(sql);
     }
+
+    public Long findGameCount() {
+        String sql = "select count(*) from game";
+        return jdbcTemplate.queryForObject(sql, Long.class);
+    }
 }

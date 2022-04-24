@@ -45,6 +45,20 @@ public class ChessService {
         return new BoardDto(board);
     }
 
+    public String selectWinner() {
+        if (gameDao.findGameCount() == 0) {
+            return null;
+        }
+        ChessBoard chessBoard = boardDao.find();
+        State state = gameDao.findState();
+
+        ChessGame chessGame = new ChessGame(state, chessBoard);
+        if (chessGame.isEndGameByPiece()) {
+            return chessGame.getWinner().name();
+        }
+        return null;
+    }
+
     @Transactional
     public void insertGame() {
         ChessGame chessGame = new ChessGame(new NormalPiecesGenerator());

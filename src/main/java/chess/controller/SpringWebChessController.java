@@ -28,9 +28,11 @@ public class SpringWebChessController {
     @GetMapping("/")
     public ModelAndView selectGame() {
         BoardDto boardDto = chessService.selectBoard();
+        String winner = chessService.selectWinner();
 
         Map<String, Object> model = new HashMap<>();
         model.put("board", boardDto);
+        model.put("winner", winner);
 
         return new ModelAndView("index", model);
     }

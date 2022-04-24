@@ -85,8 +85,7 @@
         {{/board}}
         {{/this}}
     </section>
-    <h1>{{winner}}</h1>
-    <h1>{{error}}</h1>
+    <h1>{{#if winner}} {{winner}} <span> 승리 </span> {{/if}}</h1>
     <form action="/game">
         <input type="submit" value="시작">
     </form>

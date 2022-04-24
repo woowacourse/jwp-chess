@@ -5,12 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Map;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import chess.dao.connect.CustomJdbcTemplate;
-import chess.dao.connect.TestDbConnector;
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
@@ -18,14 +18,12 @@ import chess.domain.piece.movable.Pawn;
 import chess.domain.piece.movable.multiple.Rook;
 import chess.domain.player.Player;
 
+@SpringBootTest
+@Transactional
 class PlayerRepositoryTest {
 
+    @Autowired
     private PlayerRepository playerRepository;
-
-    @BeforeEach
-    void setUp() {
-        playerRepository = new PlayerRepository(new CustomJdbcTemplate(new TestDbConnector()));
-    }
 
     @DisplayName("데이터를 저장할 수 있어야 한다.")
     @Test

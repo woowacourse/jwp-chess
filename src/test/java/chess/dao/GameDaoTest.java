@@ -1,27 +1,25 @@
-package chess.dao.mysql;
+package chess.dao;
 
 import static chess.domain.Color.BLACK;
 import static chess.domain.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import chess.dao.connect.CustomJdbcTemplate;
-import chess.dao.connect.TestDbConnector;
 import chess.dao.dto.GameDto;
 import chess.dao.dto.GameUpdateDto;
 
+@SpringBootTest
+@Transactional
 class GameDaoTest {
 
+    @Autowired
     private GameDao gameDao;
-
-    @BeforeEach
-    void setUp() {
-        gameDao = new GameDao(new CustomJdbcTemplate(new TestDbConnector()));
-    }
 
     @DisplayName("데이터 저장 및 조회가 가능해야 한다.")
     @Test
@@ -32,10 +30,9 @@ class GameDaoTest {
 
         final GameDto gameDto = gameDao.findById(id);
         assertAll(() -> {
-                    assertThat(gameDto.getFinished()).isEqualTo(finished);
-                    assertThat(gameDto.getCurrentTurnColor()).isEqualTo(currentTurnColor);
-                });
-        gameDao.remove(id);
+            assertThat(gameDto.getFinished()).isEqualTo(finished);
+            assertThat(gameDto.getCurrentTurnColor()).isEqualTo(currentTurnColor);
+        });
     }
 
     @DisplayName("데이터를 수정할 수 있어야 한다.")
@@ -53,6 +50,5 @@ class GameDaoTest {
             assertThat(updatedGameDto.getFinished()).isEqualTo(finished);
             assertThat(updatedGameDto.getCurrentTurnColor()).isEqualTo(currentTurnColor);
         });
-        gameDao.remove(id);
     }
 }

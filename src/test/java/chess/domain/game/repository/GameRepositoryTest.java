@@ -3,25 +3,21 @@ package chess.domain.game.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import chess.dao.connect.CustomJdbcTemplate;
-import chess.dao.connect.TestDbConnector;
 import chess.domain.Position;
 import chess.domain.game.ChessGame;
-import chess.domain.player.repository.PlayerRepository;
 
+@SpringBootTest
+@Transactional
 class GameRepositoryTest {
 
+    @Autowired
     private GameRepository gameRepository;
-
-    @BeforeEach
-    void setUp() {
-        final PlayerRepository playerRepository = new PlayerRepository(new CustomJdbcTemplate(new TestDbConnector()));
-        gameRepository = new GameRepository(playerRepository, new CustomJdbcTemplate(new TestDbConnector()));
-    }
 
     @DisplayName("데이터를 저장할 수 있어야 한다.")
     @Test

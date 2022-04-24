@@ -3,13 +3,11 @@ package chess.domain.game.repository;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import chess.dao.connect.CustomJdbcTemplate;
+import chess.dao.GameDao;
 import chess.dao.dto.GameDto;
 import chess.dao.dto.GameUpdateDto;
-import chess.dao.mysql.GameDao;
 import chess.domain.Color;
 import chess.domain.game.ChessGame;
 import chess.domain.player.Player;
@@ -22,11 +20,6 @@ public class GameRepository {
     private final PlayerRepository playerRepository;
     private final GameDao gameDao;
 
-    public GameRepository(final PlayerRepository playerRepository, final CustomJdbcTemplate customJdbcTemplate) {
-        this(playerRepository, new GameDao(customJdbcTemplate));
-    }
-
-    @Autowired
     public GameRepository(final PlayerRepository playerRepository, final GameDao gameDao) {
         this.playerRepository = playerRepository;
         this.gameDao = gameDao;

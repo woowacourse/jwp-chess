@@ -19,11 +19,9 @@ class GameDaoTest {
 
     private final ChessBoard chessBoard = initTestChessBoard();
     @Autowired
-    private JdbcTemplate jdbcTemplate;
     private GameJdbcTemplateDao gameDao;
 
     private ChessBoard initTestChessBoard() {
-        gameDao = new GameJdbcTemplateDao(jdbcTemplate);
         ChessBoard chessBoard = ChessBoardFactory.initBoard();
         chessBoard.changeStatus(new Playing());
         return chessBoard;

@@ -50,6 +50,7 @@ public class ChessService {
         ChessGame chessGame = new ChessGame(new NormalPiecesGenerator());
         chessGame.playGameByCommand(GameCommand.of("start"));
 
+        gameDao.delete();
         gameDao.save(chessGame.getState().toString());
         boardDao.save(chessGame.getChessBoard(), gameDao.findId());
     }
@@ -58,12 +59,11 @@ public class ChessService {
     public void updateBoard(String from, String to) {
         ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
         chessGame.playGameByCommand(GameCommand.of("move", from, to));
-
+        chessGame.isEndGameByPiece();
         gameDao.update(chessGame.getState().toString(), gameDao.findId());
 
-        Map<String, Piece> stringPieceMap = chessGame.getChessBoard().toMap();
-        Piece target = stringPieceMap.get(to);
-        boardDao.update(Position.of(to), target, gameDao.findId());
+        Map<String, Piece> pieces = chessGame.getChessBoard().toMap();
+        boardDao.update(Position.of(to), pieces.get(to), gameDao.findId());
         boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameDao.findId());
     }
 
@@ -83,9 +83,7 @@ public class ChessService {
 
     @Transactional
     public void deleteGame() {
-        State state = gameDao.findState();
-        ChessBoard chessBoard = boardDao.find();
-        ChessGame chessGame = new ChessGame(state, chessBoard);
+        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
 
         chessGame.playGameByCommand(GameCommand.of("end"));
         gameDao.delete();

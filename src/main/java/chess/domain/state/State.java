@@ -14,7 +14,10 @@ public interface State {
         if (value.equals("WhiteRunning")) {
             return new WhiteRunning();
         }
-        throw new IllegalArgumentException();
+        if (value.equals("Finish")) {
+            return new Finish();
+        }
+        throw new IllegalArgumentException("게임 진행 상태가 없습니다.");
     }
 
     boolean isFinished();

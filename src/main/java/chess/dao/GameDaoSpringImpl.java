@@ -2,12 +2,17 @@ package chess.dao;
 
 import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class GameDaoSpringImpl implements GameDao {
 
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public GameDaoSpringImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -39,13 +44,18 @@ public class GameDaoSpringImpl implements GameDao {
     @Override
     public GameDto find() {
         final String sql = "select * from game";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) ->
-                        new GameDto(
-                                resultSet.getString("turn"),
-                                resultSet.getString("status")
-                        )
-        );
+        try {
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (resultSet, rowNum) ->
+                            new GameDto(
+                                    resultSet.getString("turn"),
+                                    resultSet.getString("status")
+                            )
+            );
+        } catch (EmptyResultDataAccessException e) {
+            e.printStackTrace();
+            return new GameDto(null, "ready");
+        }
     }
 }

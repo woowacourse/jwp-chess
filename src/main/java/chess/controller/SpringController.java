@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class SpringController {
@@ -35,73 +35,72 @@ public class SpringController {
     }
 
     @GetMapping("/game/{gameName}")
-    public String game(@PathVariable String gameName, Model model) {
+    public String game(@PathVariable String gameName, @RequestParam(value = "error", required = false) String error, Model model) {
         List<String> chessBoard = chessService.findByName(gameName);
+
         model.addAttribute("chessboard", chessBoard);
+        model.addAttribute("gameName", gameName);
+        model.addAttribute("error", error);
 
         return "chess";
     }
 
     @PostMapping("/game/{gameName}/move")
     public String move(@PathVariable String gameName,
-                             @RequestParam("from") String from, @RequestParam("to") String to,
-                       Model model) {
+                       @RequestParam("from") String from, @RequestParam("to") String to,
+                       Model model, RedirectAttributes redirectAttributes) {
         try {
             String command = makeCommand(from, to);
             chessService.move(command);
             if (chessService.isEnd()) {
-                return "redirect:/end";
+                return "redirect:/game/" + gameName + "end";
             }
         } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
+            redirectAttributes.addAttribute("error", e.getMessage());
         }
 
+        model.addAttribute("gameName", gameName);
         return "redirect:/game/" + gameName;
     }
 
-    @GetMapping("/game/{game_name}/end")
-    public ModelAndView end() {
+    @GetMapping("/game/{gameName}/end")
+    public String end(Model model) {
         String winTeamName = chessService.finish(Command.from("end"));
         List<String> chessBoard = chessService.getCurrentChessBoard();
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("winTeam", winTeamName);
-        modelAndView.addObject("chessboard", chessBoard);
-        modelAndView.setViewName("chess");
+        model.addAttribute("winTeam", winTeamName);
+        model.addAttribute("chessboard", chessBoard);
 
-        return modelAndView;
+        return "chess";
     }
 
-    @GetMapping("/save")
-    public ModelAndView save() {
-        ModelAndView modelAndView = new ModelAndView();
+    @GetMapping("/game/{gameName}/save")
+    public String save(@PathVariable String gameName, Model model) {
         try {
             chessService.save();
         } catch (IllegalStateException e) {
-            modelAndView.setViewName("redirect:/end");
-            return modelAndView;
+            model.addAttribute("gameName", gameName);
+            return "redirect:/game/" + gameName + "/end";
         }
 
         List<String> chessBoard = chessService.getCurrentChessBoard();
-        modelAndView.addObject("chessboard", chessBoard);
-        modelAndView.setViewName("chess");
+        model.addAttribute("chessboard", chessBoard);
+        model.addAttribute("gameName", gameName);
 
-        return modelAndView;
+        return "chess";
     }
 
-    @GetMapping("/status")
-    public ModelAndView status() {
-        ModelAndView modelAndView = new ModelAndView();
-
+    @GetMapping("/game/{gameName}/status")
+    public String status(@PathVariable String gameName, Model model) {
         Map<Team, Double> score = chessService.getScore();
         List<String> chessBoard = chessService.getCurrentChessBoard();
 
-        modelAndView.addObject("blackScore", score.get(Team.BLACK));
-        modelAndView.addObject("whiteScore", score.get(Team.WHITE));
-        modelAndView.addObject("chessboard", chessBoard);
-        modelAndView.setViewName("chess");
+        model.addAttribute("blackScore", score.get(Team.BLACK));
+        model.addAttribute("whiteScore", score.get(Team.WHITE));
+        model.addAttribute("chessboard", chessBoard);
+        model.addAttribute("gameName", gameName);
 
-        return modelAndView;
+        return "chess";
     }
 
     @GetMapping("/error")

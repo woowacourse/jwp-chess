@@ -1,8 +1,11 @@
 package chess.web.controller;
 
+import chess.domain.piece.Piece;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
+import chess.web.dto.PlayResultDto;
 import chess.web.service.ChessGameService;
+import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +36,15 @@ public class ChessGameController {
 
     @GetMapping("/play")
     public ModelAndView play() {
-        return service.play();
+        ModelAndView modelAndView = new ModelAndView("index");
+        PlayResultDto playResultDto = service.play();
+        Map<String, Piece> board = playResultDto.getBoard();
+        for (String position : board.keySet()) {
+            modelAndView.addObject(position, board.get(position));
+        }
+        modelAndView.addObject("turn", playResultDto.getTurn());
+
+        return modelAndView;
     }
 
     @PostMapping("/move")

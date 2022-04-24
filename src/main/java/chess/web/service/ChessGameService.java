@@ -11,9 +11,10 @@ import chess.web.dao.ChessBoardDao;
 import chess.web.dao.PlayerDao;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
+import chess.web.dto.PlayResultDto;
+import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 @Service
 public class ChessGameService {
@@ -26,45 +27,14 @@ public class ChessGameService {
         this.playerDao = playerDao;
     }
 
-    public void start() {
+    public ChessGame start() {
         ChessGame chessGame = new ChessGame();
         chessGame.start();
 
         removeAll();
         saveAll(chessGame);
-    }
 
-    public ChessBoard createChessBoard() {
-        return ChessBoard.of(chessBoardDao.findAll());
-    }
-
-    private void removeAll() {
-        chessBoardDao.deleteAll();
-        playerDao.deleteAll();
-    }
-
-    private void saveAll(ChessGame chessGame) {
-        Map<Position, Piece> chessBoard = chessGame.getBoard();
-        for (Position position : chessBoard.keySet()) {
-            chessBoardDao.save(position, chessBoard.get(position));
-        }
-        playerDao.save(Color.of(chessGame.getTurn()));
-    }
-
-    public Map<Position, Piece> findAllBoard() {
-        return chessBoardDao.findAll();
-    }
-
-    public Player findTurn() {
-        return playerDao.getPlayer();
-    }
-
-    public boolean isChessGameEnd(ChessGame chessGame) {
-        return chessGame.isFinished();
-    }
-
-    public ChessGame getChessGame() {
-        return ChessGame.of(new RunningGame(createChessBoard(), findTurn()));
+        return chessGame;
     }
 
     public MoveResultDto move(MoveDto moveDto) {
@@ -88,20 +58,47 @@ public class ChessGameService {
         return moveResultDto;
     }
 
-    public ModelAndView play() {
+    public PlayResultDto play() {
         Map<Position, Piece> board = findAllBoard();
         if (board.isEmpty()) {
             start();
         }
 
-        ModelAndView modelAndView = new ModelAndView("index");
+        Map<String, Piece> boardDto = new HashMap<>();
         for (Position position : board.keySet()) {
             Piece piece = board.get(position);
-            modelAndView.addObject(position.toString(), piece);
+            boardDto.put(position.toString(), piece);
         }
 
-        modelAndView.addObject("turn",  findTurn().name());
+        return new PlayResultDto(boardDto, findTurn().name());
+    }
 
-        return modelAndView;
+    private void removeAll() {
+        chessBoardDao.deleteAll();
+        playerDao.deleteAll();
+    }
+
+    private void saveAll(ChessGame chessGame) {
+        Map<Position, Piece> chessBoard = chessGame.getBoard();
+        for (Position position : chessBoard.keySet()) {
+            chessBoardDao.save(position, chessBoard.get(position));
+        }
+        playerDao.save(Color.of(chessGame.getTurn()));
+    }
+
+    public ChessGame getChessGame() {
+        return ChessGame.of(new RunningGame(ChessBoard.of(findAllBoard()), findTurn()));
+    }
+
+    private Map<Position, Piece> findAllBoard() {
+        return chessBoardDao.findAll();
+    }
+
+    private Player findTurn() {
+        return playerDao.getPlayer();
+    }
+
+    private boolean isChessGameEnd(ChessGame chessGame) {
+        return chessGame.isFinished();
     }
 }

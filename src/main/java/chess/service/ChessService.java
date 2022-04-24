@@ -22,7 +22,13 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGame loadGame(String gameID) {
+    public ChessGame loadChessGame(String gameID, String restart) {
+        loadPieces(gameID);
+        loadTurn(gameID, restart);
+        return loadGame(gameID);
+    }
+
+    private ChessGame loadGame(String gameID) {
         ChessGame chessGame;
         try {
             GameTurn gameTurn = getTurn(gameID);
@@ -53,34 +59,39 @@ public class ChessService {
         return new ChessGame(new InitialBoardGenerator(), GameTurn.READY);
     }
 
-    public void startGame(String gameID, ChessGame chessGame) {
+    private void startGame(String gameID, ChessGame chessGame) {
         chessGameDao.save(gameID, chessGame);
         updateTurn(gameID, chessGame);
     }
 
-    public void updateTurn(String gameID, ChessGame chessGame) {
-        chessGameDao.updateTurn(gameID, chessGame);
-    }
-
-    public void loadTurn(String restart, String gameID) {
+    private void loadTurn(String gameID, String restart) {
         if ("true".equals(restart)) {
             chessGameDao.initTurn(gameID);
         }
     }
 
-    public void loadPieces(String gameID) {
+    private void loadPieces(String gameID) {
         pieceDao.deleteAll(gameID);
         pieceDao.save(gameID);
+    }
+
+    public void movePiece(String gameID, ChessGame chessGame, String source, String target) {
+        updateTurn(gameID, chessGame);
+        updatePosition(gameID, source, target);
+    }
+
+    private void updateTurn(String gameID, ChessGame chessGame) {
+        chessGameDao.updateTurn(gameID, chessGame);
+    }
+
+    private void updatePosition(String gameID, String source, String target) {
+        pieceDao.deleteByPosition(new Square(target), gameID);
+        pieceDao.updatePosition(new Square(source), new Square(target), gameID);
+        pieceDao.insertNone(gameID, new Square(source));
     }
 
     public GameResult getGameResult(String gameID) {
         Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameID(gameID)));
         return new GameResult(board);
-    }
-
-    public void movePiece(String gameID, String source, String target) {
-        pieceDao.deleteByPosition(new Square(target), gameID);
-        pieceDao.updatePosition(new Square(source), new Square(target), gameID);
-        pieceDao.insertNone(gameID, new Square(source));
     }
 }

@@ -30,9 +30,7 @@ public class InGameController {
     @GetMapping()
     public String runGame(@RequestParam(name = "gameID") String gameID, @RequestParam(name = "restart") String restart,
             Model model) {
-        ChessGame chessGame = chessService.loadGame(gameID);
-        chessService.loadPieces(gameID);
-        chessService.loadTurn(restart, gameID);
+        ChessGame chessGame = chessService.loadChessGame(gameID, restart);
         GameResult gameResult = chessService.getGameResult(gameID);
 
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
@@ -54,8 +52,7 @@ public class InGameController {
 
         try {
             chessGame.move(new Square(source), new Square(target));
-            chessService.movePiece(gameID, source, target);
-            chessService.updateTurn(gameID, chessGame);
+            chessService.movePiece(gameID, chessGame, source, target);
             model.addAllAttributes(chessGame.getEmojis());
             model.addAttribute("msg", "누가 이기나 보자구~!");
         } catch (IllegalArgumentException e) {

@@ -1,12 +1,14 @@
 package chess.controller;
 
 import chess.dto.BoardDto;
+import chess.dto.MoveDto;
 import chess.service.spring.ChessService;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -32,8 +34,12 @@ public class SpringWebChessController {
     @GetMapping("/game")
     public ModelAndView insertGame() {
         chessService.insertGame();
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("redirect:/");
-        return mv;
+        return new ModelAndView("redirect:/");
+    }
+
+    @PutMapping("/game/board")
+    public ModelAndView updateBoard(MoveDto moveDto) {
+        chessService.updateBoard(moveDto.getFrom(), moveDto.getTo());
+        return new ModelAndView("redirect:/");
     }
 }

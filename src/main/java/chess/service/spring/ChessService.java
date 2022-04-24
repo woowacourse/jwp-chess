@@ -5,6 +5,7 @@ import chess.dao.jdbctemplate.GameDao;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.command.GameCommand;
 import chess.domain.game.ChessGame;
+import chess.domain.piece.EmptyPiece;
 import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
@@ -48,5 +49,18 @@ public class ChessService {
 
         gameDao.save(chessGame.getState().toString());
         boardDao.save(chessGame.getChessBoard(), gameDao.findId());
+    }
+
+    @Transactional
+    public void updateBoard(String from, String to) {
+        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
+        chessGame.playGameByCommand(GameCommand.of("move", from, to));
+
+        gameDao.update(chessGame.getState().toString(), gameDao.findId());
+
+        Map<String, Piece> stringPieceMap = chessGame.getChessBoard().toMap();
+        Piece target = stringPieceMap.get(to);
+        boardDao.update(Position.of(to), target, gameDao.findId());
+        boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameDao.findId());
     }
 }

@@ -95,7 +95,8 @@
         <input type="submit" value="종료">
     </form>
 
-    <form method="post" action="/move">
+    <form method="post" action="/game/board">
+        <input type="hidden" name="_method" value="PUT"/>
         <input type="text" name="from">
         <input type="text" name="to">
         <input type="submit" value="움직이기">

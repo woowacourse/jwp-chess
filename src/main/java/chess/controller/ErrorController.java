@@ -14,7 +14,7 @@ public class ErrorController {
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<String> errorDbResponse(Exception e) {
+    public ResponseEntity<String> errorDbResponse() {
         return ResponseEntity.badRequest().body("값이 존재하지 않습니다.");
     }
 }

@@ -77,4 +77,16 @@ public class PieceDaoSpringImplTest {
 
         assertThat(jdbcTemplate.queryForObject("select count(*) from piece", Integer.class)).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("전체 기물 정보 조회")
+    void findAll() {
+        PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
+        PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
+        pieceDaoSpring.saveAll(List.of(pieceDtoA2, pieceDtoA3));
+
+        List<PieceDto> pieceDtos = pieceDaoSpring.findAll();
+
+        assertThat(pieceDtos).containsOnly(pieceDtoA2, pieceDtoA3);
+    }
 }

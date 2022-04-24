@@ -56,7 +56,16 @@ public class PieceDaoSpringImpl implements PieceDao {
 
     @Override
     public List<PieceDto> findAll() {
-        return null;
+        final String sql = "select * from piece";
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) ->
+                        new PieceDto(
+                                resultSet.getString("position"),
+                                resultSet.getString("color"),
+                                resultSet.getString("type")
+                        )
+        );
     }
 
     @Override

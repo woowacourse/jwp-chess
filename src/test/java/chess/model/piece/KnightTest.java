@@ -1,6 +1,6 @@
 package chess.model.piece;
 
-import chess.model.board.ConsoleBoard;
+import chess.model.board.Board;
 import chess.model.square.File;
 import chess.model.square.Rank;
 import chess.model.square.Square;
@@ -13,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class KnightTest {
 
-    private ConsoleBoard consoleBoard;
+    private Board board;
 
     @BeforeEach
     public void setUp() {
-        consoleBoard = new ConsoleBoard();
+        board = new Board();
     }
     
     @Test
@@ -61,6 +61,6 @@ public class KnightTest {
         Square source = Square.of(File.B, Rank.EIGHT);
         Square target = Square.of(File.D, Rank.SEVEN);
 
-        assertThat(knight.canMoveWithoutObstacle(consoleBoard, source, target)).isFalse();
+        assertThat(knight.canMoveWithoutObstacle(board, source, target)).isFalse();
     }
 }

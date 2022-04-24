@@ -27,10 +27,6 @@ class ChessBoardRepositoryTest {
     }
 
     @Test
-    void test() {
-        chessBoardRepository.test(69);
-    }
-    @Test
     void saveTest() {
         board = chessBoardRepository.save(new Board(new Ready(), Team.BLACK));
         assertThat(board.getStatus()).isInstanceOf(Ready.class);
@@ -49,14 +45,6 @@ class ChessBoardRepositoryTest {
 
         assertThat(foundBoard.getStatus()).isInstanceOf(Ready.class);
     }
-
-//    @Test
-//    void initBoard() {
-//        final Board edenFightingBoard = new Board(new Running(), Team.WHITE);
-//        Board board = chessBoardRepository.init(edenFightingBoard, Initializer.initialize());
-//
-//        assertThat(board.getStatus().name()).isEqualTo("running");
-//    }
 
     @Test
     void updateStatus() {

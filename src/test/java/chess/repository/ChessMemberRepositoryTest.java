@@ -5,7 +5,6 @@ import chess.model.member.Member;
 import chess.model.piece.Team;
 import chess.model.room.Room;
 import chess.model.status.Running;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +36,6 @@ class ChessMemberRepositoryTest {
         this.roomId = room.getId();
         chessMemberRepository.save("eden", roomId);
     }
-
-//    @AfterEach
-//    void setDown() {
-//        chessBoardRepository.deleteAll();
-//    }
 
     @Test
     void getAllByBoardId() {

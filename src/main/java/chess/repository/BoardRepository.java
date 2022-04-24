@@ -1,12 +1,11 @@
 package chess.repository;
 
-import chess.model.board.Board;
 import chess.model.piece.Team;
 import chess.model.status.Status;
 
 public interface BoardRepository<T> {
 
-    Board save(Board board);
+    T save(T board);
 
     int deleteById(int id);
 

@@ -1,7 +1,7 @@
 package chess.model;
 
 import chess.dto.ScoreResult;
-import chess.model.board.ConsoleBoard;
+import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.piece.Team;
 import chess.model.square.File;
@@ -16,26 +16,26 @@ public class ConsoleBoardTest {
 
     @Test
     void createTest() {
-        ConsoleBoard consoleBoard = new ConsoleBoard();
+        Board board = new Board();
 
-        assertThat(consoleBoard).isInstanceOf(ConsoleBoard.class);
+        assertThat(board).isInstanceOf(Board.class);
     }
 
     @Test
     void findPiece() {
-        ConsoleBoard consoleBoard = new ConsoleBoard();
+        Board board = new Board();
 
-        Piece a2 = consoleBoard.get(Square.of(File.A, Rank.TWO));
+        Piece a2 = board.get(Square.of(File.A, Rank.TWO));
 
         assertThat(a2.isPawn()).isTrue();
     }
 
     @Test
     void getTest() {
-        ConsoleBoard consoleBoard = new ConsoleBoard();
+        Board board = new Board();
 
-        Piece a1Piece = consoleBoard.get(Square.of(File.A, Rank.ONE));
-        Piece h8Piece = consoleBoard.get(Square.of(File.H, Rank.EIGHT));
+        Piece a1Piece = board.get(Square.of(File.A, Rank.ONE));
+        Piece h8Piece = board.get(Square.of(File.H, Rank.EIGHT));
 
         assertAll(
                 () -> assertThat(a1Piece.name()).isEqualTo("r"),
@@ -45,32 +45,32 @@ public class ConsoleBoardTest {
 
     @Test
     void move() {
-        ConsoleBoard consoleBoard = new ConsoleBoard();
+        Board board = new Board();
 
-        consoleBoard.move("a2", "a3");
-        Piece a3Piece = consoleBoard.get(Square.of(File.A, Rank.THREE));
+        board.move("a2", "a3");
+        Piece a3Piece = board.get(Square.of(File.A, Rank.THREE));
 
         assertThat(a3Piece.isPawn()).isTrue();
     }
 
     @Test
     void point() {
-        ConsoleBoard consoleBoard = new ConsoleBoard();
+        Board board = new Board();
 
-        ScoreResult scoreResult = consoleBoard.calculateScore();
+        ScoreResult scoreResult = board.calculateScore();
 
         assertThat(scoreResult.get(Team.WHITE)).isEqualTo(38);
     }
 
     @Test
     void pointWithPawn() {
-        ConsoleBoard consoleBoard = new ConsoleBoard();
+        Board board = new Board();
 
-        consoleBoard.move("b8", ("c6"));
-        consoleBoard.move(("c6"), ("b4"));
-        consoleBoard.move(("b4"), ("d3"));
-        consoleBoard.move(("c2"), ("d3"));
-        ScoreResult score = consoleBoard.calculateScore();
+        board.move("b8", ("c6"));
+        board.move(("c6"), ("b4"));
+        board.move(("b4"), ("d3"));
+        board.move(("c2"), ("d3"));
+        ScoreResult score = board.calculateScore();
 
         assertThat(score.get(Team.WHITE)).isEqualTo(37);
         assertThat(score.get(Team.BLACK)).isEqualTo(35.5);

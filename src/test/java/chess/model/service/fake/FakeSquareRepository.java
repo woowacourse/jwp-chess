@@ -1,6 +1,8 @@
 package chess.model.service.fake;
 
 import chess.model.piece.Piece;
+import chess.model.square.File;
+import chess.model.square.Rank;
 import chess.model.square.Square;
 import chess.repository.SquareRepository;
 
@@ -17,7 +19,7 @@ public class FakeSquareRepository implements SquareRepository<Square> {
 
     @Override
     public Square getBySquareAndBoardId(Square square, int boardId) {
-        return null;
+        return new Square(1, File.A, Rank.FOUR, 1);
     }
 
     @Override

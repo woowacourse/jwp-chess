@@ -1,14 +1,10 @@
 package chess.model.service.fake;
 
 import chess.model.board.Board;
-import chess.model.piece.Piece;
 import chess.model.piece.Team;
-import chess.model.square.Square;
 import chess.model.status.Running;
 import chess.model.status.Status;
 import chess.repository.BoardRepository;
-
-import java.util.Map;
 
 public class FakeBoardRepository implements BoardRepository<Board> {
 
@@ -20,7 +16,7 @@ public class FakeBoardRepository implements BoardRepository<Board> {
 
     @Override
     public Board save(Board board) {
-        return null;
+        return new Board(1, new Running(), Team.WHITE);
     }
 
     @Override
@@ -45,6 +41,11 @@ public class FakeBoardRepository implements BoardRepository<Board> {
 
     @Override
     public Status getStatusById(int boardId) {
+        return null;
+    }
+
+    @Override
+    public Team getTeamById(int roomId) {
         return null;
     }
 }

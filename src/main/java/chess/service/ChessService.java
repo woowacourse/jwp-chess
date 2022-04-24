@@ -4,7 +4,6 @@ import chess.dto.BoardDto;
 import chess.dto.RoomDto;
 import chess.dto.RoomsDto;
 import chess.model.board.Board;
-import chess.model.board.ConsoleBoard;
 import chess.model.member.Member;
 import chess.model.piece.*;
 import chess.model.room.Room;
@@ -89,18 +88,18 @@ public class ChessService {
     public void move(String source, String target, int roomId) {
         Room room = chessRoomRepository.getById(roomId);
         int boardId = room.getBoardId();
-        ConsoleBoard consoleBoard = new ConsoleBoard(chessSquareRepository.findAllSquaresAndPieces(boardId));
+        Board board = new Board(chessSquareRepository.findAllSquaresAndPieces(boardId));
         Team team = chessBoardRepository.getTeamById(boardId);
-        consoleBoard.checkTurn(team, source);
-        consoleBoard.move(source, target);
+        board.checkTurn(team, source);
+        board.move(source, target);
 
         updatePieces(source, target, boardId);
         chessBoardRepository.updateTeamById(boardId, team.oppositeTeam());
-        checkKingDead(boardId, consoleBoard);
+        checkKingDead(boardId, board);
     }
 
-    private void checkKingDead(int boardId, ConsoleBoard consoleBoard) {
-        if (consoleBoard.isKingDead()) {
+    private void checkKingDead(int boardId, Board board) {
+        if (board.isKingDead()) {
             chessBoardRepository.updateStatus(boardId, new End());
         }
     }

@@ -1,15 +1,12 @@
 package chess.repository;
 
 import chess.model.board.Board;
-import chess.model.piece.Piece;
 import chess.model.piece.Team;
-import chess.model.square.Square;
 import chess.model.status.Status;
 import chess.model.status.StatusType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;

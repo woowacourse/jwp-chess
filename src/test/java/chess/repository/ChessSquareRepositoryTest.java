@@ -1,6 +1,7 @@
 package chess.repository;
 
 import chess.model.board.Board;
+import chess.model.piece.Initializer;
 import chess.model.piece.Piece;
 import chess.model.piece.Team;
 import chess.model.square.File;
@@ -58,7 +59,7 @@ class ChessSquareRepositoryTest {
 
     @Test
     void saveAllSquares() {
-        int saveCount = repository.saveAllSquares(boardId, );
+        int saveCount = repository.saveAllSquares(boardId, Initializer.initialize().keySet());
 
         assertThat(saveCount).isEqualTo(64);
     }
@@ -67,8 +68,8 @@ class ChessSquareRepositoryTest {
     void findAllSquaresAndPieces() {
         Map<Square, Piece> all = repository.findAllSquaresAndPieces(boardId);
 
-        for (Square Square : all.keySet()) {
-            assertThat(all.get(Square).name()).isEqualTo("p");
+        for (Square square : all.keySet()) {
+            assertThat(all.get(square).name()).isEqualTo("p");
         }
     }
 }

@@ -4,7 +4,6 @@ import chess.model.board.Board;
 import chess.model.piece.Team;
 import chess.model.room.Room;
 import chess.model.status.Running;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +34,6 @@ class ChessRoomRepositoryTest {
         this.room = chessRoomRepository.save(new Room("개초보만", boardId));
     }
 
-//    @AfterEach
-//    void setDown() {
-//        repository.deleteAll();
-//    }
-
     @Test
     void save() {
         assertAll(
@@ -52,7 +46,7 @@ class ChessRoomRepositoryTest {
     void findAllByStatus() {
         chessRoomRepository.save(new Room("왕허접만", boardId));
         final List<Room> rooms = chessRoomRepository.findAllByBoardStatus(new Running());
-        assertThat(rooms.size()).isEqualTo(2);
+        assertThat(room).isEqualTo(2);
     }
 
     @Test

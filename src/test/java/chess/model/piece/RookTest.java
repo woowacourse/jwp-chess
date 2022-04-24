@@ -1,6 +1,6 @@
 package chess.model.piece;
 
-import chess.model.board.ConsoleBoard;
+import chess.model.board.Board;
 import chess.model.square.File;
 import chess.model.square.Rank;
 import chess.model.square.Square;
@@ -13,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class RookTest {
 
-    private ConsoleBoard consoleBoard;
+    private Board board;
 
     @BeforeEach
     public void setUp() {
-        consoleBoard = new ConsoleBoard();
+        board = new Board();
     }
     
     @Test
@@ -55,7 +55,7 @@ public class RookTest {
         Square source = Square.of(File.A, Rank.EIGHT);
         Square target = Square.of(File.A, Rank.SEVEN);
 
-        assertThat(rook.canMoveWithoutObstacle(consoleBoard, source, target)).isFalse();
+        assertThat(rook.canMoveWithoutObstacle(board, source, target)).isFalse();
     }
 
     @Test
@@ -64,6 +64,6 @@ public class RookTest {
         Square source = Square.of(File.A, Rank.EIGHT);
         Square target = Square.of(File.A, Rank.SIX);
 
-        assertThat(rook.canMoveWithoutObstacle(consoleBoard, source, target)).isFalse();
+        assertThat(rook.canMoveWithoutObstacle(board, source, target)).isFalse();
     }
 }

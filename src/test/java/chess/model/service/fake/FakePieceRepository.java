@@ -38,4 +38,9 @@ public class FakePieceRepository implements PieceRepository<Piece> {
     public int countPawnsOnSameFile(int roomId, File column, Team team) {
         return 0;
     }
+
+    @Override
+    public int saveAllPieces(List<Piece> pieces) {
+        return 0;
+    }
 }

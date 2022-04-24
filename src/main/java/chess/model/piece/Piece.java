@@ -1,6 +1,6 @@
 package chess.model.piece;
 
-import chess.model.board.ConsoleBoard;
+import chess.model.board.Board;
 import chess.model.square.Direction;
 import chess.model.square.Square;
 
@@ -26,7 +26,7 @@ public abstract class Piece {
         return team.equals(Team.BLACK);
     }
 
-    public boolean movable(ConsoleBoard consoleBoard, Square source, Square target) {
+    public boolean movable(Board board, Square source, Square target) {
         return movable(source, target);
     }
 
@@ -60,7 +60,7 @@ public abstract class Piece {
 
     public abstract String name();
 
-    public abstract boolean canMoveWithoutObstacle(ConsoleBoard board, Square source, Square target);
+    public abstract boolean canMoveWithoutObstacle(Board board, Square source, Square target);
 
     public abstract List<Square> getRoute(Square source, Square target);
 

@@ -6,9 +6,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 class ChessBoardDaoTest {
-    private static final ChessGameDao chessGameDao = new ChessGameDao();
+    @Autowired
+    private ChessGameDao chessGameDao;
 
     @AfterEach
     private void rollback() {

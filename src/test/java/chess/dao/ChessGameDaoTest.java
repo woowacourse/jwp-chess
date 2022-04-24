@@ -11,10 +11,12 @@ import java.sql.Connection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 class ChessGameDaoTest {
 
-    private static final ChessGameDao chessGameDao = new ChessGameDao();
+    @Autowired
+    private ChessGameDao chessGameDao;
     private static final PieceDao pieceDao = new PieceDao();
 
     @AfterEach

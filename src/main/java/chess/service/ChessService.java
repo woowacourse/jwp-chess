@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessService {
 
-    private final ChessGameDao chessGameDao;
+    private ChessGameDao chessGameDao;
     private final PieceDao pieceDao;
     private ChessGame chessGame;
 
-    public ChessService() {
-        this.chessGameDao = new ChessGameDao();
+    public ChessService(ChessGameDao chessGameDao) {
+        this.chessGameDao = chessGameDao;
         this.pieceDao = new PieceDao();
     }
 

@@ -57,11 +57,11 @@ public class GameDao {
 
     private Map<Long, Boolean> loadGameStates(final ResultSet resultSet) throws SQLException {
         final Map<Long, Boolean> gameStates = new LinkedHashMap<>();
-        while (resultSet.next()) {
+        do {
             final Long gameId = resultSet.getLong("id");
             final Boolean finished = resultSet.getBoolean("finished");
             gameStates.put(gameId, finished);
-        }
+        } while (resultSet.next());
         return gameStates;
     }
 

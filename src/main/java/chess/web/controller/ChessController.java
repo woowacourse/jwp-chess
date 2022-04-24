@@ -29,6 +29,7 @@ public class ChessController {
             return "redirect:/start";
         }
         model.addAttribute("chessStatus", chessService.getChessStatus());
+
         return "index";
     }
 
@@ -60,21 +61,9 @@ public class ChessController {
 
     @GetMapping("/result")
     public String rendResultPage(final Model model) {
-        ChessGame chessGame = chessService.getChessGame();
-        endGame(chessGame);
-
-        model.addAttribute("black-score", chessService.getScore(Color.WHITE));
-        model.addAttribute("white-score", chessService.getScore(Color.BLACK));
-        model.addAttribute("winner", chessGame.result().toString());
-
+        model.addAttribute("result", chessService.getChessResult());
         chessService.end();
 
         return "result";
-    }
-
-    private void endGame(ChessGame chessGame) {
-        if (!chessGame.isFinished()) {
-            chessGame.end();
-        }
     }
 }

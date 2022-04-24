@@ -12,6 +12,7 @@ import chess.domain.position.Position;
 import chess.domain.state.StateType;
 import chess.web.dao.BoardStateDao;
 import chess.web.dao.PieceDao;
+import chess.web.dto.ChessResultDto;
 import chess.web.dto.ChessStatusDto;
 import chess.web.dto.PieceDto;
 import java.util.List;
@@ -62,13 +63,21 @@ public class ChessService {
     }
 
     public void move(ChessGame chessGame, Position source, Position target) {
-        updateState(chessGame);
+        boardStateDao.update(chessGame.getStateType());
         pieceDao.update(new PieceDto(chessGame.board().findPiece(target), target));
         pieceDao.update(new PieceDto(chessGame.board().findPiece(source), source));
     }
 
-    public void updateState(ChessGame chessGame) {
-        boardStateDao.update(chessGame.getStateType());
+    public ChessResultDto getChessResult() {
+        ChessGame chessGame = getChessGame();
+        endGame(chessGame);
+        return new ChessResultDto(getScore(Color.BLACK), getScore(Color.WHITE), chessGame.result());
+    }
+
+    private void endGame(ChessGame chessGame) {
+        if (!chessGame.isFinished()) {
+            chessGame.end();
+        }
     }
 
     public ChessGame getChessGame() {

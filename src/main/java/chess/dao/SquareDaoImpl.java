@@ -45,10 +45,11 @@ public class SquareDaoImpl implements SquareDao {
     public Optional<Square> findByRoomIdAndPosition(long roomId, String position) {
         String sql = "select id, piece from square where room_id = ? and position = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new Square(rs.getLong("id"),
-                        roomId,
-                        position,
-                        rs.getString("piece")),
+                (rs, rowNum) ->
+                        new Square(rs.getLong("id"),
+                                roomId,
+                                position,
+                                rs.getString("piece")),
                 roomId, position
         ));
     }

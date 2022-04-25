@@ -27,13 +27,12 @@ public class RoomDaoImpl implements RoomDao {
 
         try {
             Room room = jdbcTemplate.queryForObject(sql,
-                    (rs, rowNum) -> {
-                        return new Room(
+                    (rs, rowNum) ->
+                        new Room(
                                 rs.getLong("id"),
                                 rs.getString("turn"),
-                                rs.getString("name")
-                        );
-                    }, name);
+                                rs.getString("name")),
+                    name);
             return Optional.ofNullable(room);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

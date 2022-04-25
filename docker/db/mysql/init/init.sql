@@ -1,4 +1,4 @@
-create table PIECE
+create table piece
 (
     id     bigint auto_increment primary key,
     type   enum ('r', 'n', 'b', 'q', 'k', 'p') not null,
@@ -7,18 +7,18 @@ create table PIECE
     file   varchar(1)                          not null
 );
 
-create table CHESSGAME
+create table chessgame
 (
     game_name varchar(20) not null,
     turn      varchar(5)  not null,
-    constraint CHESSGAME_pk
+    constraint chessgame_pk
         primary key (game_name)
 );
 
-alter table PIECE
+alter table piece
     add game_name varchar(20) null;
 
-alter table PIECE
-    add constraint PIECE_CHESSBOARD__fk
-        foreign key (game_name) references CHESSGAME (game_name)
+alter table piece
+    add constraint piece_chessboard__fk
+        foreign key (game_name) references chessgame (game_name)
             on update cascade on delete cascade;

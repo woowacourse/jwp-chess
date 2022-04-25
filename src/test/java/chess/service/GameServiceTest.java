@@ -1,7 +1,7 @@
 package chess.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.dao.MockGameDao;
 import chess.dao.MockMemberDao;
@@ -9,7 +9,6 @@ import chess.domain.ChessGame;
 import chess.domain.piece.pawn.Pawn;
 import chess.domain.square.Square;
 import java.util.NoSuchElementException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

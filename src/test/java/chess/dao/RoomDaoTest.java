@@ -89,4 +89,22 @@ class RoomDaoTest {
         // then
         assertThat(dto.getGameStatus()).isEqualTo(gameStatus);
     }
+
+    @Test
+    @DisplayName("방 id로 방을 삭제한다.")
+    void deleteById() {
+        // given
+        final String roomName = "hi";
+        final GameStatus gameStatus = GameStatus.READY;
+        final Color currentTurn = Color.WHITE;
+        final String password = "1q2w3e4r";
+
+        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+
+        // when
+        final int deletedRow = roomDao.deleteById(roomId);
+
+        // then
+        assertThat(deletedRow).isEqualTo(1);
+    }
 }

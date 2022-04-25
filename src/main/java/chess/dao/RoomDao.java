@@ -55,9 +55,9 @@ public class RoomDao {
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> RoomStatusDto.from(resultSet), roomId);
     }
 
-    public int delete(final String roomName) {
-        final String sql = "DELETE FROM room WHERE name = ?";
-        return jdbcTemplate.update(sql, roomName);
+    public int deleteById(final int roomId) {
+        final String sql = "DELETE FROM room WHERE room_id = ?";
+        return jdbcTemplate.update(sql, roomId);
     }
 
     public int update(final String roomName, final GameStatus gameStatus, final Color currentTurn) {

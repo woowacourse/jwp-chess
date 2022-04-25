@@ -34,7 +34,7 @@ public class Ready implements Status {
 
     @Override
     public GameResult getResult() {
-        return null;
+        throw new IllegalArgumentException("게임이 시작되지 않았으면 결과를 조회할 수 없습니다.");
     }
 
     @Override

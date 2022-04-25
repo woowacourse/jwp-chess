@@ -40,7 +40,7 @@ public class ChessGameService {
 
     public ChessGameDto getOrSaveChessGame(int chessGameId) {
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
-        if (!isGameRunning(chessGameDto)) {
+        if (!chessGameDto.getStatus().isRunning()) {
             return prepareNewChessGame(chessGameDto);
         }
         return chessGameDto;
@@ -72,11 +72,6 @@ public class ChessGameService {
     public List<ChessGameDto> findAll() {
         return chessGameDao.findAll();
     }
-
-    private boolean isGameRunning(ChessGameDto chessGameDto) {
-        return chessGameDto.getStatus() == GameStatus.RUNNING;
-    }
-
 
     private ChessBoard createChessBoard(List<PieceDto> pieces, ChessGameDto chessGameDto) {
         return new ChessBoard(createBoard(pieces), chessGameDto.getCurrentColor());

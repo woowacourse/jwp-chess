@@ -1,7 +1,6 @@
 package chess.controller;
 
 import chess.dto.ChessGameDto;
-import chess.dto.GameStatus;
 import chess.exception.ChessGameException;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
@@ -35,15 +34,11 @@ public class ChessGameController {
                        @RequestParam String to,
                        RedirectAttributes attributes) {
         ChessGameDto chessGameDto = chessGameService.move(chessGameId, new Movement(from, to));
-        if (isGameFinished(chessGameDto)) {
+        if (chessGameDto.getStatus().isFinished()) {
             attributes.addFlashAttribute("isFinished", true);
             attributes.addFlashAttribute("winner", chessGameDto.getWinner());
         }
         return "redirect:/chess-game?chess-game-id=" + chessGameId;
-    }
-
-    private boolean isGameFinished(ChessGameDto chessGameDto) {
-        return chessGameDto.getStatus() == GameStatus.FINISHED;
     }
 
     @ExceptionHandler(ChessGameException.class)

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class RoomDao {
 
+    private static final int IS_EXIST = 1;
+
     private final JdbcTemplate jdbcTemplate;
 
     public RoomDao(final JdbcTemplate jdbcTemplate) {
@@ -22,9 +24,8 @@ public class RoomDao {
     }
 
     public boolean isExistName(final String roomName) {
-        final String sql = "SELECT name FROM room WHERE name = ?";
-        final String name = jdbcTemplate.queryForObject(sql, String.class, roomName);
-        return name != null;
+        final String sql = "SELECT EXISTS (SELECT name FROM room WHERE name = ?)";
+        return jdbcTemplate.queryForObject(sql, Integer.class, roomName) == IS_EXIST;
     }
 
     public CurrentTurnDto findCurrentTurnByName(final String roomName) {

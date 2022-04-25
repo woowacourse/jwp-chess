@@ -27,7 +27,7 @@ public class PieceResponse {
 	}
 
 	private static String positionName(Position position) {
-		return String.format("%c%c", position.column(), position.row());
+		return position.column() + position.row();
 	}
 
 	private static String toLowerName(String name) {

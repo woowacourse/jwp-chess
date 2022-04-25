@@ -112,12 +112,12 @@ public class Position {
         return row == BLACK_PAWN_INITIAL_ROW;
     }
 
-    public char column() {
-        return column;
+    public String column() {
+        return String.valueOf(column);
     }
 
-    public char row() {
-        return row;
+    public String row() {
+        return String.valueOf(row);
     }
 
     @Override

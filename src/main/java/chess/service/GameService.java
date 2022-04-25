@@ -13,6 +13,7 @@ import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
 import chess.dto.GameResultDto;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class GameService {
     @Transactional
     public ChessGame findByGameId(final Long gameId) {
         return gameDao.findById(gameId)
-                .orElseThrow(() -> new RuntimeException("찾는 게임이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("찾는 게임이 존재하지 않습니다."));
     }
 
     @Transactional

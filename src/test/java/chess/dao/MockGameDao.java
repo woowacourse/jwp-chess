@@ -53,4 +53,10 @@ public class MockGameDao implements GameDao {
         game.terminate();
         store.put(id, game);
     }
+
+    @Override
+    public Long deleteById(final Long gameId) {
+        store.remove(gameId);
+        return gameId;
+    }
 }

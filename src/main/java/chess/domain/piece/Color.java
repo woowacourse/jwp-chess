@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public enum Color {
+    
     BLACK("black"),
     WHITE("white"),
     EMPTY("empty");
@@ -40,12 +41,5 @@ public enum Color {
         }
 
         return EMPTY;
-    }
-
-    public static Color fromInt(int number) {
-        if (number == 0) {
-            return WHITE;
-        }
-        return BLACK;
     }
 }

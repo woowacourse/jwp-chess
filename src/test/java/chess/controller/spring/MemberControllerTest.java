@@ -1,12 +1,14 @@
 package chess.controller.spring;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.notNullValue;
 
 import chess.domain.Member;
 import chess.service.MemberService;
 import io.restassured.RestAssured;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,7 +69,8 @@ class MemberControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
-        final List<Member> members = memberService.findAllMembers();
-        assertThat(members.size()).isEqualTo(0);
+        assertThatThrownBy(() -> memberService.findById(memberId))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("멤버를 찾을 수 없습니다.");
     }
 }

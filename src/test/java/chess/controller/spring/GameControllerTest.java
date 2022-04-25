@@ -43,7 +43,9 @@ class GameControllerTest {
     void movePiece() {
         final Long member1Id = memberService.addMember("알렉스");
         final Long member2Id = memberService.addMember("짱구");
-        final Long gameId = gameService.createGame(member1Id, member2Id);
+        final String title = "테스트 방";
+        final String password = "1234";
+        final Long gameId = gameService.createGame(title, password, member1Id, member2Id);
         final String rawTo = "a4";
         final MoveRequestDto moveRequestDto = new MoveRequestDto("a2", rawTo);
 
@@ -65,7 +67,9 @@ class GameControllerTest {
     void getGameScore() {
         final Long member1Id = memberService.addMember("알렉스");
         final Long member2Id = memberService.addMember("짱구");
-        final Long gameId = gameService.createGame(member1Id, member2Id);
+        final String title = "테스트 방";
+        final String password = "1234";
+        final Long gameId = gameService.createGame(title, password, member1Id, member2Id);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -81,7 +85,9 @@ class GameControllerTest {
     void terminateGame() {
         final Long member1Id = memberService.addMember("알렉스");
         final Long member2Id = memberService.addMember("짱구");
-        final Long gameId = gameService.createGame(member1Id, member2Id);
+        final String title = "테스트 방";
+        final String password = "1234";
+        final Long gameId = gameService.createGame(title, password, member1Id, member2Id);
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -98,8 +104,10 @@ class GameControllerTest {
     void createGame() {
         final Long member1Id = memberService.addMember("알렉스");
         final Long member2Id = memberService.addMember("짱구");
+        final String title = "테스트 방";
+        final String password = "1234";
 
-        final CreateGameRequestDto createGameRequestDto = new CreateGameRequestDto(member1Id, member2Id);
+        final CreateGameRequestDto createGameRequestDto = new CreateGameRequestDto(title, password, member1Id, member2Id);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(createGameRequestDto)

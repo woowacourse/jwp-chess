@@ -13,22 +13,21 @@ public class ChessGame {
     private final Long id;
     private final Board board;
     private Team turn;
-    private final Participant participant;
+    private final RoomInfo roomInfo;
 
-
-    public ChessGame(final Long id, final Board board, final Team turn, final Participant participant) {
+    public ChessGame(final Long id, final Board board, final Team turn, final RoomInfo roomInfo) {
         this.id = id;
         this.board = board;
         this.turn = turn;
-        this.participant = participant;
+        this.roomInfo = roomInfo;
     }
 
     public ChessGame(final Long id, final Board board, final Team turn) {
         this(id, board, turn, null);
     }
 
-    public ChessGame(final Board board, final Team turn, final Participant participant) {
-        this(null, board, turn, participant);
+    public ChessGame(final Board board, final Team turn, final RoomInfo roomInfo) {
+        this(null, board, turn, roomInfo);
     }
 
     public static ChessGame initGame() {
@@ -121,20 +120,32 @@ public class ChessGame {
     }
 
     public Participant getParticipant() {
-        return participant;
+        return roomInfo.getParticipant();
     }
 
     public Long getWhiteId() {
-        return participant.getWhiteId();
+        return getParticipant().getWhiteId();
     }
 
     public Long getBlackId() {
-        return participant.getBlackId();
+        return getParticipant().getBlackId();
     }
 
     public Long getWinnerId() {
         Result result = createResult();
         final Team team = result.getWinner();
-        return participant.getIdByTeam(team);
+        return getParticipant().getIdByTeam(team);
+    }
+
+    public RoomInfo getRoomInfo() {
+        return roomInfo;
+    }
+
+    public String getTitle() {
+        return roomInfo.getTitle();
+    }
+
+    public String getPassword() {
+        return roomInfo.getPassword();
     }
 }

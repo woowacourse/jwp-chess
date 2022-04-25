@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -42,7 +43,11 @@ public class SpringJdbcMemberDao implements MemberDao {
     @Override
     public Optional<Member> findById(final Long id) {
         final String sql = "select id, name from Member where id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, id));
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, memberRowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

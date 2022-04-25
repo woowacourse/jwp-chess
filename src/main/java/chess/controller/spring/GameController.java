@@ -95,8 +95,12 @@ public class GameController {
     @PostMapping
     @ResponseBody
     public ResponseEntity<Long> createGame(@RequestBody final CreateGameRequestDto createGameRequestDto) {
-        final Long gameId = gameService.createGame(createGameRequestDto.getWhiteId(),
-                createGameRequestDto.getBlackId());
-        return ResponseEntity.created(URI.create("/chessGame/" + gameId)).body(gameId);
+        final Long gameId = gameService.createGame(
+                createGameRequestDto.getTitle(),
+                createGameRequestDto.getPassword(),
+                createGameRequestDto.getWhiteId(),
+                createGameRequestDto.getBlackId()
+        );
+        return ResponseEntity.created(URI.create("/games/" + gameId)).body(gameId);
     }
 }

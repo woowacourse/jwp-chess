@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -47,12 +46,6 @@ public class SpringJdbcPieceDao implements PieceDao {
         statement.setString(3, piece.getTeam().name());
         statement.setString(4, piece.getPieceType().name());
         statement.setLong(5, gameId);
-    }
-
-    @Override
-    public void deletePiecesByGameId(final Long gameId) {
-        final String sql = "delete from Piece where game_id = ?";
-        jdbcTemplate.update(sql, gameId);
     }
 
     @Override

@@ -45,9 +45,9 @@ public class RoomDao {
         return result != 0;
     }
 
-    public CurrentTurnDto findCurrentTurnByName(final String roomName) {
-        final String sql = "SELECT name, current_turn FROM room WHERE name = ?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> CurrentTurnDto.from(resultSet), roomName);
+    public CurrentTurnDto findCurrentTurnById(final int roomId) {
+        final String sql = "SELECT name, current_turn FROM room WHERE room_id = ?";
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> CurrentTurnDto.from(resultSet), roomId);
     }
 
     public RoomStatusDto findStatusByName(final String roomName) {

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
+import chess.dto.CurrentTurnDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class RoomDaoTest {
     void setUp() {
         roomDao = new RoomDao(jdbcTemplate);
 
-        jdbcTemplate.execute("DROP TABLE room IF EXISTS");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS room");
         jdbcTemplate.execute(""
                 + "CREATE TABLE room"
                 + "("
@@ -39,7 +40,6 @@ class RoomDaoTest {
     @DisplayName("이름과 비밀번호가 주어지면 새로운 방을 생성한다.")
     void save() {
         // given
-        final String roomName = "hi";
         final GameStatus gameStatus = GameStatus.READY;
         final Color currentTurn = Color.WHITE;
         final String password = "1q2w3e4r";
@@ -51,5 +51,23 @@ class RoomDaoTest {
         // then
         assertThat(roomId).isEqualTo(1);
         assertThat(roomId2).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("방 id로 현재 턴을 조회한다.")
+    void findCurrentTurnById() {
+        // given
+        final String roomName = "hi";
+        final GameStatus gameStatus = GameStatus.READY;
+        final Color currentTurn = Color.WHITE;
+        final String password = "1q2w3e4r";
+
+        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+
+        // when
+        final CurrentTurnDto dto = roomDao.findCurrentTurnById(roomId);
+
+        // then
+        assertThat(dto.getCurrentTurn()).isEqualTo(currentTurn);
     }
 }

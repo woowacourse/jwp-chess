@@ -26,7 +26,7 @@
 - service
     - [x] 전체 방 조회
     - [x] 방 만들기 - 방을 만들고 보드를 생성
-    - [x] 방 입장하기 - 생성된 방 검증 정보 전달 
+    - [x] 방 입장하기 - 생성된 방 검증 정보 전달
     - [x] 체스보드 정보 - 보드와 현재 팀을 가져온다
     - [x] 움직인다 - 기물을 update하고 방의 팀을 변경한다
     - [x] 게임 종료 - 방을 game over로 변경한다
@@ -37,5 +37,5 @@
     - [x] 방 입장 - get api/chess/rooms/{id}/enter
     - [x] 체스 현재 정보 조회 - get api/chess/rooms/{id}
     - [x] 체스 기물 이동 - post api/chess/rooms/{id}/move
-    - [x] 체스 종료 및 결과계산 - update api/chess/rooms/{id}
+    - [x] 체스 종료 및 결과계산 - patch api/chess/rooms/{id}
     - [x] 체스 점수 출력 - get api/chess/rooms/{id}/status

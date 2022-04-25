@@ -1,4 +1,3 @@
-const startButton = document.querySelector("#startButton");
 // document.querySelectorAll('.piece-image')
 //     .forEach(cell => cell.addEventListener('click', e => cellClick(e, id)));
 const id = new URL(window.location).searchParams.get('id')
@@ -28,7 +27,11 @@ async function onloadGameBody() {
 
     // 3) (추가) 입장했다면, start버튼 hide시키기
     // startButton.classList.add("hide");
-    startButton.style.display = 'none';
+    // const startButton = document.querySelector("#startButton");
+    // startButton.style.display = 'none';
+    const endButton = document.querySelector("#endButton");
+    endButton.style.display = 'block';
+
 
     // 4) board판을 돌면서, 해당position의 div에 [기존 자식태그(img) 삭제후 -> 새 img태그 추가]
     putPiece(boards);
@@ -55,20 +58,20 @@ function putPiece(boards) {
     }
 }
 
-startButton.addEventListener('click', async function () {
-    // if (startButton.textContent === "Start") {
-    let board = startGame();
-    // console.log(board)
-    await initializeBoard(board);
-    // startButton.textContent = "End";
-    // return
-    // }
-
-    // let board = endGame();
-    // await initializeBoard(board);
-    // startButton.textContent = "Start";
-
-})
+// startButton.addEventListener('click', async function () {
+//     // if (startButton.textContent === "Start") {
+//     let board = startGame();
+//     // console.log(board)
+//     await initializeBoard(board);
+//     // startButton.textContent = "End";
+//     // return
+//     // }
+//
+//     // let board = endGame();
+//     // await initializeBoard(board);
+//     // startButton.textContent = "Start";
+//
+// })
 
 async function startGame() {
     let savedBoard = await fetch("/api/chess/rooms/" + id)
@@ -81,16 +84,13 @@ async function startGame() {
     return savedBoard.board.boards;
 }
 
-async function endGame() {
-    await getScore()
-    let savedBoard = await fetch("/api/chess/rooms/33")
-        .then(handleErrors)
-        .catch(function (error) {
-            alert(error.message);
-        });
-    savedBoard = await savedBoard.json();
-    gameOver = savedBoard.gameOver;
-    return savedBoard.board.boards;
+async function handleErrors(response) {
+    if (!response.ok) {
+        let message = await response.json();
+        console.log(response)
+        throw Error(message.errorMessage);
+    }
+    return response;
 }
 
 async function initializeBoard(board) {
@@ -146,8 +146,7 @@ async function sendMoveInformation(source, target) {
     }
     let game = await fetch("/api/chess/rooms/" + id + "/move", {
         method: 'POST', headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Accept': 'application/json'
+            'Content-Type': 'application/json;charset=utf-8', 'Accept': 'application/json'
         }, body: JSON.stringify(bodyValue)
     }).then(handleErrors)
         .catch(function (error) {
@@ -172,7 +171,11 @@ async function checkGameOver(gameOverMessage) {
         await initializeBoard(board);
 
         // startButton.textContent = "Start";
+        const startButton = document.querySelector("#startButton");
         startButton.style.display = 'block';
+
+        const endButton = document.querySelector("#endButton");
+        endButton.style.display = 'none';
     }
 }
 
@@ -191,11 +194,15 @@ async function getScore() {
 
 }
 
-async function handleErrors(response) {
-    if (!response.ok) {
-        let message = await response.json();
-        console.log(response)
-        throw Error(message.errorMessage);
-    }
-    return response;
+async function endGame() {
+    await fetch("/api/chess/rooms/" + id, {method: "PATCH"})
+        .then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        });
+
+    await getScore();
+
+    // 종료버튼 누를 시 -> 1) 종료상태로 update / 2) 종료되었으면 alert(점수) / 3) index.html로 redirect
+    window.location.href = "index.html";
 }

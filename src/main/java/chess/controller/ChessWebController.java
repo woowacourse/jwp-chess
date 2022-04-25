@@ -20,7 +20,7 @@ public class ChessWebController {
     }
 
     @GetMapping("/rooms/{roomName}")
-    public String room(@PathVariable("roomName") final String roomName) {
+    public String room(@PathVariable final String roomName) {
         final boolean roomExist = roomService.isExistRoom(roomName);
         if (!roomExist) {
             return "redirect:/";

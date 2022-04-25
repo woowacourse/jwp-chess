@@ -21,6 +21,7 @@ public class ChessGame {
     }
 
     public void checkPassword(String password) {
+        Objects.requireNonNull(password, "password는 null이 들어올 수 없습니다.");
         if (!this.password.equals(password)) {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }

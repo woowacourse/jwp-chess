@@ -20,4 +20,15 @@ class ChessGameTest {
             .isInstanceOf(IllegalStateException.class)
             .hasMessage("비밀번호가 일치하지 않습니다.");
     }
+
+    @Test
+    @DisplayName("입력된 비밀번호가 null인 경우 예외발생")
+    void checkPasswordExceptionByNull() {
+        ChessGameState gameState = new RunningState(new ChessBoard(new HashMap<>()), Color.WHITE);
+        ChessGame chessGame = new ChessGame(1L, "title", "password", gameState);
+
+        assertThatThrownBy(() -> chessGame.checkPassword(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("password는 null이 들어올 수 없습니다.");
+    }
 }

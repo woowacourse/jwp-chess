@@ -1,12 +1,11 @@
 package chess.model.gamestatus;
 
 import chess.model.Color;
-import chess.model.game.GameResult;
-import chess.model.board.MoveResult;
-import chess.model.board.Score;
 import chess.model.board.Board;
 import chess.model.board.EmptyBoardInitializer;
+import chess.model.board.MoveResult;
 import chess.model.board.Square;
+import chess.model.game.GameResult;
 import chess.model.piece.Piece;
 import java.util.Map;
 
@@ -28,11 +27,6 @@ public class Ready implements Status {
     }
 
     @Override
-    public Score getScore() {
-        throw new IllegalArgumentException("게임이 시작되지 않았으면 점수를 조회할 수 없습니다.");
-    }
-
-    @Override
     public GameResult getResult() {
         throw new IllegalArgumentException("게임이 시작되지 않았으면 결과를 조회할 수 없습니다.");
     }
@@ -49,6 +43,6 @@ public class Ready implements Status {
 
     @Override
     public Map<Square, Piece> getBoard() {
-        return board.getBoard();
+        return Map.copyOf(board.getBoard());
     }
 }

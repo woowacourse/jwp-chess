@@ -7,10 +7,12 @@ import chess.dto.ChessPieceDto;
 import chess.dto.CurrentTurnDto;
 import chess.dto.ErrorResponseDto;
 import chess.dto.MoveRequestDto;
+import chess.dto.RoomCreationRequestDto;
 import chess.dto.RoomDeletionRequestDto;
 import chess.dto.RoomResponseDto;
 import chess.service.ChessService;
 import chess.service.RoomService;
+import java.net.URI;
 import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,12 @@ public class ChessController {
     @GetMapping
     public List<RoomResponseDto> findAllRoom() {
         return roomService.findAll();
+    }
+
+    @PostMapping
+    public ResponseEntity<Object> createRoom(@RequestBody final RoomCreationRequestDto dto) {
+        final int roomId = roomService.createRoom(dto);
+        return ResponseEntity.created(URI.create("/rooms/" + roomId)).build();
     }
 
     @DeleteMapping

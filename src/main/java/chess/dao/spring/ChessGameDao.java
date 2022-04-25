@@ -1,6 +1,6 @@
-package chess.repository.spring;
+package chess.dao.spring;
 
-import chess.repository.entity.ChessGameEntity;
+import chess.entity.ChessGameEntity;
 import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;

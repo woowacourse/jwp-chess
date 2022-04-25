@@ -19,11 +19,11 @@ public class ChessGame {
     }
 
     public ChessGame(Board board, String state) {
-        if (state.equals(END_STATE)) {
+        if (END_STATE.equals(state)) {
             this.state = new End(board);
             return;
         }
-        if (state.equals(Team.WHITE.name())) {
+        if (Team.WHITE.name().equals(state)) {
             this.state = new WhiteTurn(board);
             return;
         }

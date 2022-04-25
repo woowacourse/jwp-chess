@@ -112,7 +112,7 @@ public class ChessService {
         return gameDao.findGameIdByUserName(whiteUserName, blackUserName);
     }
 
-    public boolean isNotExistGame(int gameId) {
+    private boolean isNotExistGame(int gameId) {
         return gameId == NOT_EXIST_GAME;
     }
 

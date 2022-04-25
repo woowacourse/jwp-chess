@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.domain.dao.BoardJdbcTemplateDao;
-import chess.domain.dao.GameJdbcTemplateDao;
+import chess.domain.dao.BoardDao;
+import chess.domain.dao.GameDao;
 import chess.service.dto.GameDto;
 import chess.service.dto.PieceDto;
 import chess.domain.game.Color;
@@ -25,11 +25,11 @@ public class ChessService {
 
     private static final int EMPTY_RESULT = 0;
 
-    private final BoardJdbcTemplateDao boardDao;
-    private final GameJdbcTemplateDao gameDao;
+    private final BoardDao boardDao;
+    private final GameDao gameDao;
     private ChessBoard chessBoard = null;
 
-    public ChessService(BoardJdbcTemplateDao boardDao, GameJdbcTemplateDao gameDao) {
+    public ChessService(BoardDao boardDao, GameDao gameDao) {
         this.boardDao = boardDao;
         this.gameDao = gameDao;
     }

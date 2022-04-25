@@ -19,13 +19,13 @@ class BoardDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private BoardJdbcTemplateDao boardDao;
-    private GameJdbcTemplateDao gameDao;
+    private BoardDao boardDao;
+    private GameDao gameDao;
 
     @BeforeEach
     void set() {
-        boardDao = new BoardJdbcTemplateDao(jdbcTemplate);
-        gameDao = new GameJdbcTemplateDao(jdbcTemplate);
+        boardDao = new BoardDao(jdbcTemplate);
+        gameDao = new GameDao(jdbcTemplate);
         boardDao.deleteAll();
         gameDao.deleteAll();
         gameDao.save(ChessBoardFactory.initBoard());

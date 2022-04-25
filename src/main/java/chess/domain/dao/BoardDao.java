@@ -10,13 +10,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public class BoardJdbcTemplateDao {
+public class BoardDao {
 
     private static final int EMPTY_RESULT = 0;
 
     private final JdbcTemplate jdbcTemplate;
 
-    public BoardJdbcTemplateDao(JdbcTemplate jdbcTemplate) {
+    public BoardDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

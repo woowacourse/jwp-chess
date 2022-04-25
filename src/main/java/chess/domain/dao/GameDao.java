@@ -12,13 +12,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-public class GameJdbcTemplateDao {
+public class GameDao {
 
     private static final int EMPTY_RESULT = 0;
 
     private final JdbcTemplate jdbcTemplate;
 
-    public GameJdbcTemplateDao(JdbcTemplate jdbcTemplate) {
+    public GameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

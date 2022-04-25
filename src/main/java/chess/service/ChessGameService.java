@@ -1,17 +1,11 @@
 package chess.service;
 
 import static java.util.stream.Collectors.toMap;
-
-import chess.domain.ChessBoard;
-import chess.domain.Score;
-import chess.domain.position.File;
-import chess.domain.position.Position;
-import chess.domain.position.Rank;
+import chess.controller.Movement;
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
-import chess.dto.ChessGameDto;
-import chess.dto.GameStatus;
-import chess.dto.PieceDto;
+import chess.domain.ChessBoard;
+import chess.domain.Score;
 import chess.domain.piece.Bishop;
 import chess.domain.piece.Color;
 import chess.domain.piece.King;
@@ -20,14 +14,18 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
-import java.math.BigDecimal;
+import chess.domain.position.File;
+import chess.domain.position.Position;
+import chess.domain.position.Rank;
+import chess.dto.ChessGameDto;
+import chess.dto.GameStatus;
+import chess.dto.PieceDto;
+import chess.exception.ChessGameException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
-import chess.controller.Movement;
-import chess.exception.ChessGameException;
 
 @Service
 public class ChessGameService {
@@ -40,6 +38,18 @@ public class ChessGameService {
         this.chessGameDao = chessGameDao;
     }
 
+    public ChessGameDto getOrSaveChessGame(int chessGameId) {
+        ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
+        if (!isGameRunning(chessGameDto)) {
+            return prepareNewChessGame(chessGameDto);
+        }
+        return chessGameDto;
+    }
+
+    public List<PieceDto> findPieces(int chessGameId) {
+        return pieceDao.findPieces(chessGameId);
+    }
+
     public ChessGameDto move(int chessGameId, Movement movement) {
         List<PieceDto> pieces = pieceDao.findPieces(chessGameId);
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
@@ -47,6 +57,26 @@ public class ChessGameService {
         movePiece(chessGameId, movement, chessBoard);
         return updateChessBoard(chessBoard, movement, chessGameDto);
     }
+
+    public int create(String name) {
+        return chessGameDao.saveChessGame(name, GameStatus.READY, Color.WHITE, new Score(), new Score());
+    }
+
+    public ChessGameDto prepareChessGame(ChessGameDto chessGameDto) {
+        ChessGameDto newChessGameDto = new ChessGameDto(chessGameDto.getId(), chessGameDto.getName(),
+            GameStatus.RUNNING, new Score(), new Score(), Color.WHITE, chessGameDto.getWinner());
+        chessGameDao.updateChessGame(newChessGameDto);
+        return newChessGameDto;
+    }
+
+    public List<ChessGameDto> findAll() {
+        return chessGameDao.findAll();
+    }
+
+    private boolean isGameRunning(ChessGameDto chessGameDto) {
+        return chessGameDto.getStatus() == GameStatus.RUNNING;
+    }
+
 
     private ChessBoard createChessBoard(List<PieceDto> pieces, ChessGameDto chessGameDto) {
         return new ChessBoard(createBoard(pieces), chessGameDto.getCurrentColor());
@@ -96,17 +126,9 @@ public class ChessGameService {
                 chessBoard.getScore(Color.WHITE), chessBoard.getCurrentColor(), winner);
     }
 
-    public ChessGameDto prepareNewChessGame(ChessGameDto chessGameDto) {
+    private ChessGameDto prepareNewChessGame(ChessGameDto chessGameDto) {
         preparePieces(chessGameDto);
         return prepareChessGame(chessGameDto);
-    }
-
-    private ChessGameDto prepareChessGame(ChessGameDto chessGameDto) {
-        Score initialScore = new Score(new BigDecimal("38.0"));
-        ChessGameDto newChessGameDto = new ChessGameDto(chessGameDto.getId(), chessGameDto.getName(),
-                GameStatus.RUNNING, initialScore, initialScore, Color.WHITE, chessGameDto.getWinner());
-        chessGameDao.updateChessGame(newChessGameDto);
-        return newChessGameDto;
     }
 
     private void preparePieces(ChessGameDto chessGameDto) {

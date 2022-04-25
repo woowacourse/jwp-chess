@@ -12,12 +12,17 @@ import java.util.Objects;
 
 public class Score {
 
-    public static final BigDecimal PAWN_DEDUCT_POINT = new BigDecimal("0.5");
+    private static final BigDecimal PAWN_DEDUCT_POINT = new BigDecimal("0.5");
+    private static final BigDecimal INIT_SCORE = new BigDecimal("38.0");
 
     private final BigDecimal value;
 
     public Score(BigDecimal value) {
         this.value = value;
+    }
+
+    public Score() {
+        this(INIT_SCORE);
     }
 
     public Score(Map<Position, Piece> board, Color color) {

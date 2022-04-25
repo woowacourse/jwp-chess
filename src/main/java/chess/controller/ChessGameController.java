@@ -1,7 +1,5 @@
 package chess.controller;
 
-import chess.dao.ChessGameDao;
-import chess.dao.PieceDao;
 import chess.dto.ChessGameDto;
 import chess.dto.GameStatus;
 import chess.exception.ChessGameException;
@@ -17,31 +15,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class ChessGameController {
 
-    private final ChessGameService service;
-    private final ChessGameDao chessGameDao;
-    private final PieceDao pieceDao;
+    private final ChessGameService chessGameService;
 
-    public ChessGameController(ChessGameService service, ChessGameDao chessGameDao, PieceDao pieceDao) {
-        this.service = service;
-        this.chessGameDao = chessGameDao;
-        this.pieceDao = pieceDao;
+    public ChessGameController(ChessGameService chessGameService) {
+        this.chessGameService = chessGameService;
     }
 
     @GetMapping("/chess-game")
     public String chessGame(@RequestParam("chess-game-id") int chessGameId, Model model) {
-        ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
-
-        if (!isGameRunning(chessGameDto)) {
-            chessGameDto = service.prepareNewChessGame(chessGameDto);
-        }
-
-        model.addAttribute("pieces", pieceDao.findPieces(chessGameDto.getId()));
+        ChessGameDto chessGameDto = chessGameService.getOrSaveChessGame(chessGameId);
+        model.addAttribute("pieces", chessGameService.findPieces(chessGameDto.getId()));
         model.addAttribute("chessGame", chessGameDto);
         return "chess-game";
-    }
-
-    private boolean isGameRunning(ChessGameDto chessGameDto) {
-        return chessGameDto.getStatus() == GameStatus.RUNNING;
     }
 
     @PostMapping("/chess-game/move")
@@ -49,7 +34,7 @@ public class ChessGameController {
                        @RequestParam String from,
                        @RequestParam String to,
                        RedirectAttributes attributes) {
-        ChessGameDto chessGameDto = service.move(chessGameId, new Movement(from, to));
+        ChessGameDto chessGameDto = chessGameService.move(chessGameId, new Movement(from, to));
         if (isGameFinished(chessGameDto)) {
             attributes.addFlashAttribute("isFinished", true);
             attributes.addFlashAttribute("winner", chessGameDto.getWinner());

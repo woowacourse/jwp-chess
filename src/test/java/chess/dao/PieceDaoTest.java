@@ -8,12 +8,12 @@ import static chess.domain.position.Rank.EIGHT;
 import static chess.domain.position.Rank.SEVEN;
 import static chess.domain.position.Rank.SIX;
 import static org.assertj.core.api.Assertions.assertThat;
-
 import chess.domain.Score;
 import chess.domain.piece.Color;
 import chess.domain.position.Position;
-import chess.dao.ChessGameDao;
-import chess.dao.PieceDao;
+import chess.dto.GameStatus;
+import chess.dto.PieceDto;
+import chess.dto.PieceType;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -22,9 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import chess.dto.GameStatus;
-import chess.dto.PieceDto;
-import chess.dto.PieceType;
 
 @JdbcTest
 class PieceDaoTest {

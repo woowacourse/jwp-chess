@@ -75,8 +75,8 @@ public class ChessGameDao {
     }
 
     public boolean existByName(String name) {
-        int count = jdbcTemplate.queryForObject("SELECT count(*) FROM chess_game WHERE name = ?",
-                Integer.class, name);
+        int count = jdbcTemplate.queryForObject(
+            "SELECT count(*) FROM chess_game WHERE name = ?", Integer.class, name);
         return count != 0;
     }
 }

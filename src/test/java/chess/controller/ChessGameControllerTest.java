@@ -8,10 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import chess.domain.Score;
-import chess.domain.piece.Color;
-import java.math.BigDecimal;
+import chess.service.ChessGameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,9 +17,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
-import chess.dao.ChessGameDao;
-import chess.dto.GameStatus;
-import chess.service.ChessGameService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -33,9 +27,6 @@ class ChessGameControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ChessGameDao chessGameDao;
 
     @Autowired
     private ChessGameService chessGameService;
@@ -64,10 +55,8 @@ class ChessGameControllerTest {
                 + "    PRIMARY KEY (position, chess_game_id),\n"
                 + "    FOREIGN KEY (chess_game_id) REFERENCES chess_game (id)\n"
                 + ")");
-
-        chessGameId = chessGameDao.saveChessGame("hoho", GameStatus.READY, Color.WHITE, new Score(new BigDecimal("38")),
-                new Score(new BigDecimal("38")));
-        chessGameService.prepareNewChessGame(chessGameDao.findById(chessGameId));
+        chessGameId = chessGameService.create("hoho");
+        chessGameService.getOrSaveChessGame(chessGameId);
     }
 
     @Test
@@ -79,7 +68,7 @@ class ChessGameControllerTest {
                     status().isOk(),
                     view().name("chess-game"),
                     model().attributeExists("pieces"),
-                    model().attributeExists("chess")
+                    model().attributeExists("chessGame")
             );
     }
 

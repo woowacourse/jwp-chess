@@ -56,9 +56,7 @@ class ChessServiceTest {
         service.createGame("firstGame");
         service.initGame(1);
         service.endGame(1);
-        BoardDto boardDto = boardDao.getBoardTable().get(1);
         String status = gameDao.getGameTable().get(1).getStatus();
-        assertThat(boardDto).isNull();
         assertThat(status).isEqualTo("END");
     }
 

@@ -71,7 +71,6 @@ public class ChessService {
         ChessGame game = getGameFromDao(id);
         game.end();
         gameDao.update(new GameEntity(id, game));
-        pieceDao.remove(id);
     }
 
     public GamesDto getAllGames() {

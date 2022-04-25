@@ -1,14 +1,13 @@
 package chess.controller;
 
+import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.service.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,16 +42,17 @@ public class Controller {
 
     @GetMapping("/game/{name}")
     public String getChessGamePage(final Model model, final @PathVariable String name) {
-        Map<String, Piece> boardForHtml = convertBoardForHtml(service, name);
-        model.addAllAttributes(boardForHtml);
+        Map<Position, Piece> currentBoard = service.loadChessGame(name).getCurrentBoard();
+        Map<String, Piece> boardForModel = convertBoardForModel(currentBoard);
+        model.addAllAttributes(boardForModel);
         model.addAttribute("chessGameName", name);
         model.addAttribute("turn", service.loadChessGame(name).getTurn());
         model.addAttribute("result", service.loadChessGame(name).generateResult());
         return "chess-game";
     }
 
-    private Map<String, Piece> convertBoardForHtml(final Service service, final String name) {
-        return service.loadChessGame(name).getCurrentBoard().entrySet().stream()
+    private Map<String, Piece> convertBoardForModel(final Map<Position, Piece> currentBoard) {
+        return currentBoard.entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> String.valueOf(entry.getKey().getColumn().getValue()) +
                                 entry.getKey().getRow().getValue(),
@@ -70,26 +70,29 @@ public class Controller {
     public RedirectView movePiece(final @PathVariable String chessGameName,
                                   final @RequestParam String source,
                                   final @RequestParam String target) {
-        String refinedSource = source.trim().toLowerCase();
-        String refinedTarget = target.trim().toLowerCase();
+        char[] sourcesElements = refineInputPosition(source);
+        char[] targetElements = refineInputPosition(target);
         service.movePiece(
                 chessGameName,
-                refinedSource.charAt(COLUMN_INDEX),
-                Character.getNumericValue(refinedSource.charAt(ROW_INDEX)),
-                refinedTarget.charAt(COLUMN_INDEX),
-                Character.getNumericValue(refinedTarget.charAt(ROW_INDEX))
+                sourcesElements[COLUMN_INDEX],
+                Character.getNumericValue(sourcesElements[ROW_INDEX]),
+                targetElements[COLUMN_INDEX],
+                Character.getNumericValue(targetElements[ROW_INDEX])
         );
         return new RedirectView("/game/" + chessGameName);
+    }
+
+    private char[] refineInputPosition(final String position) {
+        String refinedSource = position.trim().toLowerCase();
+        if (refinedSource.length() != 2) {
+            throw new IllegalArgumentException("[ERROR] 좌표를 잘못 입력했습니다.");
+        }
+        return refinedSource.toCharArray();
     }
 
     @PostMapping("/reset/{chessGameName}")
     public RedirectView resetChessGame(final @PathVariable String chessGameName) {
         service.createChessGame(chessGameName);
         return new RedirectView("/game/" + chessGameName);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<String> getException(final Exception exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

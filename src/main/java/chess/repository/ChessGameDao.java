@@ -1,4 +1,4 @@
-package chess.repository.spring;
+package chess.repository;
 
 import chess.repository.entity.ChessGameEntity;
 import java.util.List;

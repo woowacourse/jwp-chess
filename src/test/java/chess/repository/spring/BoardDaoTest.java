@@ -3,6 +3,7 @@ package chess.repository.spring;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import chess.repository.BoardDao;
 import chess.repository.entity.BoardEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

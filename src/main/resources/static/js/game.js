@@ -170,4 +170,6 @@ function saveGame() {
       alert("저장 오류");
       console.log(xhr);
     });
+
+  location.replace("/");
 }

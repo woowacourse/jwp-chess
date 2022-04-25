@@ -19,6 +19,11 @@ public class ChessService {
         this.chessBoardDao = chessBoardDao;
     }
 
+    @Transactional(readOnly = true)
+    public boolean isExistGame() {
+        return chessGameDao.isExistGame();
+    }
+
     @Transactional
     public void saveGame(SaveRequest saveRequest) {
         String gameId = createUuid();

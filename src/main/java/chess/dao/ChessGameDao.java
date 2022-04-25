@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.ChessGameRoom;
 import chess.domain.state.Turn;
 import java.sql.PreparedStatement;
 import java.util.Objects;
@@ -17,12 +18,13 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long createChessGame(Turn turn) {
-        String sql = "insert into chess_game (turn) values (?)";
+    public long createChessGame(ChessGameRoom chessGameRoom) {
+        String sql = "insert into chess_game (name, password) values (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
                     PreparedStatement statement = con.prepareStatement(sql, new String[]{"id"});
-                    statement.setString(1, turn.name());
+                    statement.setString(1, chessGameRoom.getTitle());
+                    statement.setString(2, chessGameRoom.getPassword());
                     return statement;
                 },
                 keyHolder);

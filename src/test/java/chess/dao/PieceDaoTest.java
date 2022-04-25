@@ -3,13 +3,13 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.ChessBoard;
+import chess.domain.ChessGameRoom;
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.single.King;
 import chess.domain.piece.single.Knight;
-import chess.domain.state.Turn;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +23,7 @@ class PieceDaoTest {
 
     private PieceDao pieceDao;
     private long chessGameId;
+    private ChessGameRoom chessGameRoom;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -30,7 +31,8 @@ class PieceDaoTest {
     @BeforeEach
     void setUp() {
         pieceDao = new PieceDao(jdbcTemplate);
-        chessGameId = new ChessGameDao(jdbcTemplate).createChessGame(Turn.WHITE_TURN);
+        chessGameRoom = new ChessGameRoom("title", "password");
+        chessGameId = new ChessGameDao(jdbcTemplate).createChessGame(chessGameRoom);
     }
 
     @Test

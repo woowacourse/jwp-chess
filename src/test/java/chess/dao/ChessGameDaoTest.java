@@ -3,6 +3,7 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import chess.domain.ChessGameRoom;
 import chess.domain.state.Turn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 class ChessGameDaoTest {
 
     private ChessGameDao chessGameDao;
+    private ChessGameRoom chessGameRoom;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -22,30 +24,27 @@ class ChessGameDaoTest {
     @BeforeEach
     void setup() {
         chessGameDao = new ChessGameDao(jdbcTemplate);
+        chessGameRoom = new ChessGameRoom("title", "password");
     }
 
     @Test
     @DisplayName("체스 게임 생성")
     void createChessGame() {
-        Turn turn = Turn.WHITE_TURN;
-
-        assertDoesNotThrow(() -> chessGameDao.createChessGame(turn));
+        assertDoesNotThrow(() -> chessGameDao.createChessGame(chessGameRoom));
     }
 
     @Test
     @DisplayName("현재 게임 상태 반환")
     void findChessGame() {
-        Turn turn = Turn.WHITE_TURN;
-        long id = chessGameDao.createChessGame(turn);
+        long id = chessGameDao.createChessGame(chessGameRoom);
 
-        assertThat(chessGameDao.findChessGame(id)).isEqualTo(turn);
+        assertThat(chessGameDao.findChessGame(id)).isEqualTo(Turn.WHITE_TURN);
     }
 
     @Test
     @DisplayName("현재 게임 상태 변경")
     void changeChessGameTurn() {
-        Turn turn = Turn.WHITE_TURN;
-        long id = chessGameDao.createChessGame(turn);
+        long id = chessGameDao.createChessGame(chessGameRoom);
 
         assertThat(chessGameDao.changeChessGameTurn(id, Turn.END)).isEqualTo(1);
     }

@@ -7,12 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
+import chess.domain.ChessGameRoom;
 import chess.domain.Position;
 import chess.domain.PromotionPiece;
 import chess.domain.piece.Piece;
 import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.single.Knight;
-import chess.domain.state.Turn;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +27,7 @@ class ChessGameServiceTest {
     private ChessGameService chessGameService;
     private ChessGameDao chessGameDao;
     private PieceDao pieceDao;
+    private ChessGameRoom chessGameRoom;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -36,13 +37,14 @@ class ChessGameServiceTest {
         chessGameDao = new ChessGameDao(jdbcTemplate);
         pieceDao = new PieceDao(jdbcTemplate);
         chessGameService = new ChessGameService(pieceDao, chessGameDao);
+        chessGameRoom = new ChessGameRoom("title", "password");
     }
 
     @Test
     @DisplayName("Position을 받아 상대 기물이 있는 곳에 move")
     void moveTargetPosition() {
         // given
-        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+        long chessGameId = chessGameDao.createChessGame(chessGameRoom);
 
         Position source = Position.of('a', '1');
         Position target = Position.of('b', '2');
@@ -67,7 +69,7 @@ class ChessGameServiceTest {
     @DisplayName("Position을 받아 빈 곳에 move")
     void moveEmptyPosition() {
         // given
-        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+        long chessGameId = chessGameDao.createChessGame(chessGameRoom);
 
         Position source = Position.of('a', '1');
         Position target = Position.of('a', '2');
@@ -89,7 +91,7 @@ class ChessGameServiceTest {
     @DisplayName("pawn 프로모션")
     void promotion() {
         // given
-        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+        long chessGameId = chessGameDao.createChessGame(chessGameRoom);
         Position source = Position.of('a', '8');
         pieceDao.savePieces(chessGameId, Map.of(
                 source, new Piece(WHITE, new Pawn(WHITE))

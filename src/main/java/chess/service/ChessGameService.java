@@ -3,6 +3,7 @@ package chess.service;
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessBoard;
+import chess.domain.ChessGameRoom;
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.PromotionPiece;
@@ -26,8 +27,8 @@ public class ChessGameService {
         this.chessGameDao = chessGameDao;
     }
 
-    public long createNewChessGame() {
-        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+    public long createNewChessGame(ChessGameRoom chessGameRoom) {
+        long chessGameId = chessGameDao.createChessGame(chessGameRoom);
         pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
         return chessGameId;
     }

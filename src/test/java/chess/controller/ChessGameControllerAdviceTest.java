@@ -4,7 +4,7 @@ import static org.hamcrest.core.Is.is;
 
 import chess.controller.dto.request.PieceMoveRequest;
 import chess.dao.ChessGameDao;
-import chess.domain.state.Turn;
+import chess.domain.ChessGameRoom;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +23,7 @@ class ChessGameControllerAdviceTest {
     private ChessGameDao chessGameDao;
 
     private long chessGameId;
+    private long chessGameTitleTag = 1L;
 
     @LocalServerPort
     private int port;
@@ -30,7 +31,7 @@ class ChessGameControllerAdviceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
+        chessGameId = chessGameDao.createChessGame(new ChessGameRoom("title" + chessGameTitleTag++, "password"));
     }
 
     @Test

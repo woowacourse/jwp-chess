@@ -4,7 +4,7 @@ drop table if exists chess_game cascade;
 CREATE TABLE chess_game
 (
     id       bigint                                   NOT NULL AUTO_INCREMENT,
-    turn     enum ('WHITE_TURN', 'BLACK_TURN', 'END') NOT NULL,
+    turn     enum ('WHITE_TURN', 'BLACK_TURN', 'END') NOT NULL DEFAULT 'WHITE_TURN',
     name     varchar(10)                              NULL,
     password varchar(50)                              NULL,
     primary key (id)

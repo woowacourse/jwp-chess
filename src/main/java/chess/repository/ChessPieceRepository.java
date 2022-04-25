@@ -42,7 +42,7 @@ public class ChessPieceRepository implements PieceRepository<Piece> {
 
     @Override
     public Piece findBySquareId(int squareId) {
-        return jdbcTemplate.queryForObject("SELECT * FROM piece WHERE square_id=?", getRowMapper(), squareId);
+        return jdbcTemplate.queryForObject("SELECT * FROM piece WHERE square_id=?", pieceRowMapper(), squareId);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ChessPieceRepository implements PieceRepository<Piece> {
                 .collect(Collectors.toList());
     }
 
-    private RowMapper<Piece> getRowMapper() {
+    private RowMapper<Piece> pieceRowMapper() {
         return (resultSet, rowNum) -> PieceType.getPiece(
                 resultSet.getInt("id"),
                 resultSet.getString("type"),

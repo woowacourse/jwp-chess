@@ -7,8 +7,7 @@ public enum Team {
 
     WHITE,
     BLACK,
-    EMPTY
-    ;
+    EMPTY;
 
     public static List<Team> getPlayerTeams() {
         return List.of(WHITE, BLACK);

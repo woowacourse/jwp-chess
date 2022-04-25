@@ -26,12 +26,10 @@ public class Initializer {
         return startingMembers;
     }
 
-
     private static void initMajorPieces(Team team, Rank rank, List<File> files,
                                         Map<Square, Piece> startingMembers) {
         List<Piece> majorPiecesLineup = majorPiecesLineup(team);
         for (int i = 0; i < majorPiecesLineup.size(); i++) {
-
             startingMembers.put(Square.of(files.get(i), rank), majorPiecesLineup.get(i));
         }
     }
@@ -62,19 +60,16 @@ public class Initializer {
         }
     }
 
-    private static void fillSquareByFile(Rank rank,
-                                         Map<Square, Piece> startingMembers) {
+    private static void fillSquareByFile(Rank rank, Map<Square, Piece> startingMembers) {
         for (File file : File.values()) {
             Square square = Square.of(file, rank);
             checkEmpty(square, startingMembers);
         }
     }
 
-    private static void checkEmpty(Square square,
-                                   Map<Square, Piece> startingMembers) {
+    private static void checkEmpty(Square square, Map<Square, Piece> startingMembers) {
         if (!startingMembers.containsKey(square)) {
             startingMembers.put(square, new Empty());
         }
     }
-
 }

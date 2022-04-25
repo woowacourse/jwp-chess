@@ -16,7 +16,6 @@ import java.util.Map;
 public final class Board {
 
     private static final int LINE_RANGE = 8;
-    private static final int KING_COUNT = 2;
     private static final int PROPER_KING_COUNT = 2;
 
     private Map<Square, Piece> board;
@@ -91,15 +90,6 @@ public final class Board {
     private void moveTo(Square sourceSquare, Square targetSquare, Piece piece) {
         board.put(targetSquare, piece);
         board.put(sourceSquare, new Empty());
-    }
-
-    private void checkMovable(Square sourceSquare, Square targetSquare, Piece piece) {
-        if (!piece.movable(this, sourceSquare, targetSquare)) {
-            throw new IllegalArgumentException("해당 위치로 움직일 수 없습니다.");
-        }
-        if (!piece.canMoveWithoutObstacle(this, sourceSquare, targetSquare)) {
-            throw new IllegalArgumentException("경로 중 기물이 있습니다.");
-        }
     }
 
     public ScoreResult calculateScore() {

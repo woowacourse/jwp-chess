@@ -16,11 +16,6 @@ import java.util.Map;
 public class ChessBoardRepository implements BoardRepository<Board> {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Board> boardRowMapper = (resultSet, rowNum) -> new Board(
-            resultSet.getInt("id"),
-            StatusType.findStatus(resultSet.getString("status")),
-            Team.findTeam(resultSet.getString("team"))
-    );
 
     public ChessBoardRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -46,7 +41,7 @@ public class ChessBoardRepository implements BoardRepository<Board> {
 
     @Override
     public Board getById(int id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM board WHERE id=?", boardRowMapper, id);
+        return jdbcTemplate.queryForObject("SELECT * FROM board WHERE id=?", boardRowMapper(), id);
     }
 
     @Override
@@ -69,5 +64,13 @@ public class ChessBoardRepository implements BoardRepository<Board> {
     public Team getTeamById(int boardId) {
         String team = jdbcTemplate.queryForObject("SELECT team FROM board WHERE id=?", String.class, boardId);
         return Team.findTeam(team);
+    }
+
+    private RowMapper<Board> boardRowMapper() {
+        return (resultSet, rowNum) -> new Board(
+                resultSet.getInt("id"),
+                StatusType.findStatus(resultSet.getString("status")),
+                Team.findTeam(resultSet.getString("team"))
+        );
     }
 }

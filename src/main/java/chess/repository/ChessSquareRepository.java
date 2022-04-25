@@ -44,7 +44,7 @@ public class ChessSquareRepository implements SquareRepository<Square> {
                 "SELECT s.id, s.square_file, s.square_rank, s.board_id " +
                         "FROM square AS s " +
                         "WHERE s.square_file=? AND s.square_rank=? AND s.board_id=?",
-                getRowMapper(),
+                squareRowMapper(),
                 square.getFile().value(), square.getRank().value(), boardId
         );
     }
@@ -67,10 +67,10 @@ public class ChessSquareRepository implements SquareRepository<Square> {
     public Map<Square, Piece> findAllSquaresAndPieces(int boardId) {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(
                 "SELECT po.id AS po_id, po.square_file, po.square_rank, po.board_id, " +
-                    "pi.id AS pi_id, pi.type, pi.team, pi.square_id " +
-                    "FROM square po " +
-                    "INNER JOIN piece pi ON po.id = pi.square_id " +
-                    "WHERE board_id=?", boardId);
+                        "pi.id AS pi_id, pi.type, pi.team, pi.square_id " +
+                        "FROM square po " +
+                        "INNER JOIN piece pi ON po.id = pi.square_id " +
+                        "WHERE board_id=?", boardId);
         Map<Square, Piece> squarePieceMap = new HashMap<>();
         while (sqlRowSet.next()) {
             squarePieceMap.put(makeSquare(sqlRowSet), makePiece(sqlRowSet));
@@ -100,7 +100,7 @@ public class ChessSquareRepository implements SquareRepository<Square> {
         return realSquares;
     }
 
-    private RowMapper<Square> getRowMapper() {
+    private RowMapper<Square> squareRowMapper() {
         return (resultSet, rowNum) -> new Square(
                 resultSet.getInt("id"),
                 File.findFileByValue(resultSet.getInt("square_file")),

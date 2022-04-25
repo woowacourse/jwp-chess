@@ -3,6 +3,7 @@ package chess.controller;
 import chess.dto.ResponseDto;
 import chess.dto.ScoreDto;
 import org.eclipse.jetty.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,8 @@ public class ChessController {
         try {
             chessService.move(source, target, Integer.parseInt(roomId));
         } catch (IllegalArgumentException e) {
-            return ResponseDto.of(HttpStatus.BAD_REQUEST_400, e.getMessage(), chessService.isEnd(Integer.parseInt(roomId))).toString();
+            return ResponseDto.of(HttpStatus.BAD_REQUEST_400, e.getMessage(),
+                    chessService.isEnd(Integer.parseInt(roomId))).toString();
         }
         return ResponseDto.of(HttpStatus.OK_200, null, chessService.isEnd(Integer.parseInt(roomId))).toString();
     }

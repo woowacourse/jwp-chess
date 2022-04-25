@@ -19,15 +19,9 @@ public class ChessMemberRepository implements MemberRepository<Member> {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private RowMapper<Member> getRowMapper() {
-        return (resultSet, rowNum) -> new Member(
-                resultSet.getInt("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("room_id"));
-        }
     @Override
     public List<Member> findMembersByRoomId(int roomId) {
-        return jdbcTemplate.query("SELECT * FROM member WHERE room_id=?", getRowMapper(), roomId);
+        return jdbcTemplate.query("SELECT * FROM member WHERE room_id=?", memberRowMapper(), roomId);
     }
 
     @Override
@@ -49,5 +43,12 @@ public class ChessMemberRepository implements MemberRepository<Member> {
         for (Member member : members) {
             save(member.getName(), roomId);
         }
+    }
+
+    private RowMapper<Member> memberRowMapper() {
+        return (resultSet, rowNum) -> new Member(
+                resultSet.getInt("id"),
+                resultSet.getString("name"),
+                resultSet.getInt("room_id"));
     }
 }

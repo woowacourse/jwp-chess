@@ -91,10 +91,4 @@ public class ChessApiController {
         final EndResult endResult = chessService.result(roomName);
         return ResponseEntity.ok(endResult);
     }
-
-    @ExceptionHandler({IllegalArgumentException.class, DataAccessException.class,
-            InvalidResultSetAccessException.class})
-    public ResponseEntity<ErrorResponseDto> handle(final Exception e) {
-        return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
-    }
 }

@@ -1,8 +1,6 @@
 package chess.controller;
 
 import chess.controller.view.BoardView;
-import chess.dao.GameDao;
-import chess.dao.PieceDao;
 import chess.dto.MoveCommandDto;
 import chess.service.ChessGameService;
 import java.net.URLDecoder;
@@ -19,14 +17,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class SpringChessController {
-
     private static final String WELCOME_MESSAGE = "어서오세요 :)";
     private static final String MOVE_SUCCESS_MESSAGE = "성공적으로 이동했습니다.";
-
     private final ChessGameService chessGameService;
 
-    public SpringChessController(GameDao gameDao, PieceDao pieceDao) {
-        this.chessGameService = new ChessGameService(pieceDao, gameDao);
+    public SpringChessController(ChessGameService chessGameService) {
+        this.chessGameService = chessGameService;
     }
 
     @ExceptionHandler(Exception.class)
@@ -77,5 +73,4 @@ public class SpringChessController {
         String decodedQueryString = URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8);
         return decodedQueryString.split("gameMessage=")[1];
     }
-
 }

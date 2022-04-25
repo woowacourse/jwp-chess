@@ -9,6 +9,7 @@ docker exec -it chess_db_1 bash
 ```
 
 2.mysql 실행
+
 ```
 mysql -u root -proot
 use chess;
@@ -62,6 +63,7 @@ http://localhost:8080/
 - [x] 게임 방 번호별로 동시에 게임을 진행할 수 있다.
 
 ## TODO
+
 - [x] test에서 displayname 적기
 - [x] pieceDao에서 Bulk insert batchUpdate로 구현 & application.properties변경
 - [x] Readme로 실행방법 update.
@@ -69,10 +71,15 @@ http://localhost:8080/
 - [x] Private method를 public으로 바꾸기. (컨트롤러)
 - [x] 에러 처리 어떻게 할 것인지 고민해보기 -> httpservlet 사용
 - [x] 전체적으로 함수이름, 함수위치 컨벤션 수정
-- [ ] 여기는 ChessGameService를 bean으로 주입하지 않고 있는데 이유가 있을까요?
-- [ ] JdbcTemplate 은 final로 선언해주면 좋을 것 같아요!
+- [x] ChessGameService를 bean으로 주입
+- [x] JdbcTemplate final로 선언
+- [x] default 접근제어자를 private로 변경
+- [ ] ResponseBody로 내려주는 방법 고려하기
 - [ ] 스프링에서 bean 주입 방식에 대해 알아볼까요?
-- [ ] 생성자 주입을 사용하셨는데 이 방식을 택한 이유가 있을까요?
-- [ ] default 접근제어자를 사용하신 이유가 있을까요?
-- [ ] @Controller 와 @RestController 의 차이도 공부해보면 좋을것 같아요!
-- [ ] ResponseBody로 내려주는 방법도 고려해볼 수 있을 것 같아요~
+    - 생성자 주입
+    - 이외...?(더 공부)
+- [ ] 생성자 주입 사용 이유
+    - @Autuwired의 취약성(더 공부)
+- [ ] @Controller 와 @RestController 의 차이
+    - @Controller :
+    - @RestController : 

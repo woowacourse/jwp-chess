@@ -8,6 +8,7 @@ import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
+import chess.exception.NotFoundException;
 import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -38,23 +39,29 @@ public class RoomService {
         return roomDao.save(dto.getRoomName(), GameStatus.READY, Color.WHITE, hashPassword);
     }
 
-    public int deleteRoom(final RoomDeletionRequestDto dto) {
+    public void deleteRoom(final RoomDeletionRequestDto dto) {
         final int roomId = dto.getRoomId();
 
         checkRoomExist(roomId);
         checkPassword(dto.getPassword(), roomId);
         checkRoomStatus(roomId);
 
-        return roomDao.deleteById(roomId);
+        final int deletedRow = roomDao.deleteById(roomId);
+        if (deletedRow != 1) {
+            throw new IllegalArgumentException("방을 삭제할 수 없습니다.");
+        }
     }
 
     private void checkRoomExist(final int roomId) {
         if (!roomDao.isExistId(roomId)) {
-            throw new IllegalArgumentException("존재하지 않는 방 입니다.");
+            throw new NotFoundException("존재하지 않는 방 입니다.");
         }
     }
 
     private void checkPassword(final String plainPassword, final int roomId) {
+        if (plainPassword.isBlank()) {
+            throw new IllegalArgumentException("요청에 비밀번호가 존재하지 않습니다.");
+        }
         final String password = roomDao.findPasswordById(roomId);
         final boolean matchPassword = BCrypt.checkpw(plainPassword, password);
         if (!matchPassword) {

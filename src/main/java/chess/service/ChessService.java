@@ -64,7 +64,7 @@ public class ChessService {
         roomDao.updateStatusById(roomId, gameStatus);
     }
 
-    public MoveResult move(final int roomId, MoveRequestDto requestDto) {
+    public void move(final int roomId, MoveRequestDto requestDto) {
         final ChessGame chessGame = findGameByRoomId(roomId);
         final Position from = requestDto.getFrom();
         final Position to = requestDto.getTo();
@@ -72,8 +72,6 @@ public class ChessService {
         final MoveResult moveResult = chessGame.move(from, to);
         updatePosition(roomId, from, to);
         updateRoom(roomId, moveResult.getGameStatus(), moveResult.getCurrentTurn());
-
-        return moveResult;
     }
 
     private void updatePosition(final int roomId, final Position from, final Position to) {

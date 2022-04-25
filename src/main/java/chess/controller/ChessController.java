@@ -2,7 +2,6 @@ package chess.controller;
 
 import chess.domain.Score;
 import chess.domain.result.EndResult;
-import chess.domain.result.MoveResult;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -53,6 +53,7 @@ public class ChessController {
     }
 
     @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRoom(@RequestBody RoomDeletionRequestDto dto) {
         roomService.deleteRoom(dto);
     }
@@ -64,15 +65,16 @@ public class ChessController {
     }
 
     @PostMapping("/{roomId}/pieces")
+    @ResponseStatus(HttpStatus.CREATED)
     public void createPieces(@PathVariable final int roomId) {
         chessService.initPiece(roomId);
     }
 
     @PutMapping("/{roomId}/pieces")
-    public ResponseEntity<MoveResult> movePiece(@PathVariable final int roomId,
-                                                @RequestBody final MoveRequestDto moveRequestDto) {
-        final MoveResult moveResult = chessService.move(roomId, moveRequestDto);
-        return ResponseEntity.ok(moveResult);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void movePiece(@PathVariable final int roomId,
+                          @RequestBody final MoveRequestDto moveRequestDto) {
+        chessService.move(roomId, moveRequestDto);
     }
 
     @GetMapping("/{roomId}/scores")

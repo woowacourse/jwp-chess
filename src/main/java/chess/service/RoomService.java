@@ -51,10 +51,4 @@ public class RoomService {
             throw new IllegalArgumentException("존재하지 않는 방 입니다.");
         }
     }
-
-    private void checkRoomExist(final String roomName) {
-        if (!roomDao.isExistName(roomName)) {
-            throw new IllegalArgumentException("존재하지 않는 방 입니다.");
-        }
-    }
 }

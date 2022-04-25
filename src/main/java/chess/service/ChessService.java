@@ -40,49 +40,46 @@ public class ChessService {
         return chessPieceDao.findAllByRoomId(roomId);
     }
 
-    public void initPiece(final String roomName) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
+    public void initPiece(final int roomId) {
+        checkRoomExist(roomId);
+        final ChessGame chessGame = findGameByRoomId(roomId);
 
         final StartResult startResult = chessGame.start();
-        updateChessPiece(roomName, startResult.getPieceByPosition());
-        updateRoomStatusTo(roomName, GameStatus.PLAYING);
+        updateChessPiece(roomId, startResult.getPieceByPosition());
+        updateRoomStatusTo(roomId, GameStatus.PLAYING);
     }
 
-    private void checkRoomExist(final String roomName) {
-    }
-
-    public MoveResult move(final String roomName, MoveRequestDto requestDto) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
+    public MoveResult move(final int roomId, MoveRequestDto requestDto) {
+        checkRoomExist(roomId);
+        final ChessGame chessGame = findGameByRoomId(roomId);
         final Position from = requestDto.getFrom();
         final Position to = requestDto.getTo();
 
         final MoveResult moveResult = chessGame.move(from, to);
-        updatePosition(roomName, from, to);
-        updateRoom(roomName, moveResult.getGameStatus(), moveResult.getCurrentTurn());
+        updatePosition(roomId, from, to);
+        updateRoom(roomId, moveResult.getGameStatus(), moveResult.getCurrentTurn());
 
         return moveResult;
     }
 
-    private void updatePosition(final String roomName, final Position from, final Position to) {
-        // chessPieceDao.deleteByPosition(roomName, to);
-//        chessPieceDao.update(roomName, from, to);
+    private void updatePosition(final int roomId, final Position from, final Position to) {
+         chessPieceDao.deleteByRoomIdAndPosition(roomId, to);
+        chessPieceDao.updateByRoomIdAndPosition(roomId, from, to);
     }
 
-    public Score findScore(final String roomName) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
+    public Score findScore(final int roomId) {
+        checkRoomExist(roomId);
+        final ChessGame chessGame = findGameByRoomId(roomId);
 
         return chessGame.calculateScore();
     }
 
-    public EndResult result(final String roomName) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
+    public EndResult result(final int roomId) {
+        checkRoomExist(roomId);
+        final ChessGame chessGame = findGameByRoomId(roomId);
 
         final EndResult result = chessGame.end();
-        updateRoomStatusTo(roomName, GameStatus.END);
+        updateRoomStatusTo(roomId, GameStatus.END);
 
         return result;
     }
@@ -93,55 +90,54 @@ public class ChessService {
         }
     }
 
-    private ChessGame findGameByRoomName(final String roomName) {
-        Map<Position, ChessPiece> pieceByPosition = initAllPiece(roomName);
-        Color currentTurn = initCurrentTurn(roomName);
-        GameStatus gameStatus = initGameStatus(roomName);
+    private ChessGame findGameByRoomId(final int roomId) {
+        Map<Position, ChessPiece> pieceByPosition = initAllPiece(roomId);
+        Color currentTurn = initCurrentTurn(roomId);
+        GameStatus gameStatus = initGameStatus(roomId);
 
         return new ChessGame(new ChessBoard(pieceByPosition, currentTurn), gameStatus);
     }
 
-    private Map<Position, ChessPiece> initAllPiece(final String roomName) {
-//        final List<ChessPieceDto> dtos = chessPieceDao.findAllByRoomName(roomName);
-//        if (dtos.isEmpty()) {
-//            return ChessBoardFactory.createInitPieceByPosition();
-//        }
-//
-//        return dtos.stream()
-//                .collect(Collectors.toMap(
-//                        chessPieceDto -> Position.from(chessPieceDto.getPosition()),
-//                        chessPieceDto -> ChessPieceMapper.toChessPiece(chessPieceDto.getPieceType(),
-//                                chessPieceDto.getColor())
-//                ));
-        return null;
+    private Map<Position, ChessPiece> initAllPiece(final int roomId) {
+        final List<ChessPieceDto> dtos = chessPieceDao.findAllByRoomId(roomId);
+        if (dtos.isEmpty()) {
+            return ChessBoardFactory.createInitPieceByPosition();
+        }
+
+        return dtos.stream()
+                .collect(Collectors.toMap(
+                        chessPieceDto -> Position.from(chessPieceDto.getPosition()),
+                        chessPieceDto -> ChessPieceMapper.toChessPiece(chessPieceDto.getPieceType(),
+                                chessPieceDto.getColor())
+                ));
     }
 
-    private Color initCurrentTurn(final String roomName) {
-        final CurrentTurnDto dto = roomDao.findCurrentTurnById(1);
+    private Color initCurrentTurn(final int roomId) {
+        final CurrentTurnDto dto = roomDao.findCurrentTurnById(roomId);
         if (Objects.isNull(dto)) {
             return Color.WHITE;
         }
         return dto.getCurrentTurn();
     }
 
-    private GameStatus initGameStatus(final String roomName) {
-        final RoomStatusDto dto = roomDao.findStatusById(1);
+    private GameStatus initGameStatus(final int roomId) {
+        final RoomStatusDto dto = roomDao.findStatusById(roomId);
         if (Objects.isNull(dto)) {
             return GameStatus.READY;
         }
         return dto.getGameStatus();
     }
 
-    private void updateChessPiece(final String roomName, final Map<Position, ChessPiece> pieceByPosition) {
-//        chessPieceDao.deleteAllByRoomName(roomName);
-        // chessPieceDao.saveAll(roomName, pieceByPosition);
+    private void updateChessPiece(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {
+        chessPieceDao.deleteAllByRoomId(roomId);
+        chessPieceDao.saveAll(roomId, pieceByPosition);
     }
 
-    private void updateRoom(final String roomName, final GameStatus gameStatus, final Color currentTurn) {
-        // roomDao.updateById(roomName, gameStatus, currentTurn);
+    private void updateRoom(final int roomId, final GameStatus gameStatus, final Color currentTurn) {
+         roomDao.updateById(roomId, gameStatus, currentTurn);
     }
 
-    private void updateRoomStatusTo(final String roomName, final GameStatus gameStatus) {
-        // roomDao.updateStatusTo(roomName, gameStatus);
+    private void updateRoomStatusTo(final int roomId, final GameStatus gameStatus) {
+         roomDao.updateStatusById(roomId, gameStatus);
     }
 }

@@ -47,21 +47,21 @@ public class ChessController {
         return ResponseEntity.ok(chessPieces);
     }
 
-    @PostMapping("/{roomName}/pieces")
-    public void createPieces(@PathVariable final String roomName) {
-        chessService.initPiece(roomName);
+    @PostMapping("/{roomId}/pieces")
+    public void createPieces(@PathVariable final int roomId) {
+        chessService.initPiece(roomId);
     }
 
-    @PutMapping("/{roomName}/pieces")
-    public ResponseEntity<MoveResult> movePiece(@PathVariable final String roomName,
+    @PutMapping("/{roomId}/pieces")
+    public ResponseEntity<MoveResult> movePiece(@PathVariable final int roomId,
                                                 @RequestBody final MoveRequestDto moveRequestDto) {
-        final MoveResult moveResult = chessService.move(roomName, moveRequestDto);
+        final MoveResult moveResult = chessService.move(roomId, moveRequestDto);
         return ResponseEntity.ok(moveResult);
     }
 
-    @GetMapping("/{roomName}/scores")
-    public ResponseEntity<Score> findScore(@PathVariable final String roomName) {
-        final Score score = chessService.findScore(roomName);
+    @GetMapping("/{roomId}/scores")
+    public ResponseEntity<Score> findScore(@PathVariable final int roomId) {
+        final Score score = chessService.findScore(roomId);
         return ResponseEntity.ok(score);
     }
 
@@ -71,9 +71,9 @@ public class ChessController {
         return ResponseEntity.ok(currentTurn);
     }
 
-    @GetMapping("/{roomName}/result")
-    public ResponseEntity<EndResult> findResult(@PathVariable final String roomName) {
-        final EndResult endResult = chessService.result(roomName);
+    @GetMapping("/{roomId}/result")
+    public ResponseEntity<EndResult> findResult(@PathVariable final int roomId) {
+        final EndResult endResult = chessService.result(roomId);
         return ResponseEntity.ok(endResult);
     }
 

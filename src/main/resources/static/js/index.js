@@ -60,9 +60,30 @@ async function fetchRoomList() {
 
         const deleteButton = document.createElement("button");
         deleteButton.className = "deleteButton";
+        deleteButton.id = `${data.roomId}`
         deleteButton.innerText = "삭제";
+        deleteButton.addEventListener("click", requestDelete);
         argument.appendChild(deleteButton);
 
         container.appendChild(argument);
     });
+}
+
+async function requestDelete({target: {id}}) {
+    const password = prompt("비밀번호를 입력해 주세요.");
+
+    const res = await fetch("/rooms", {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({roomId: `${id}`, password: `${password}`})
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        const error = document.getElementById("error");
+        error.innerText = data.message;
+    }
 }

@@ -30,7 +30,6 @@ public class SpringJdbcGameDao implements GameDao {
     private final MemberDao memberDao;
     private final RowMapper<ChessGame> gameRowMapper = (resultSet, rowNumber) -> makeChessGame(resultSet);
 
-    @Autowired
     public SpringJdbcGameDao(final JdbcTemplate jdbcTemplate, final PieceDao pieceDao, final MemberDao memberDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.pieceDao = pieceDao;

@@ -23,7 +23,6 @@ public class SpringJdbcPieceDao implements PieceDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Piece> pieceRowMapper = (resultSet, rowNumber) -> serializePiece(resultSet);
 
-    @Autowired
     public SpringJdbcPieceDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

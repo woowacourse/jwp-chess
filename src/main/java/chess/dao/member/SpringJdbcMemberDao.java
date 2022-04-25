@@ -34,7 +34,6 @@ public class SpringJdbcMemberDao implements MemberDao {
         return members;
     };
 
-    @Autowired
     public SpringJdbcMemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

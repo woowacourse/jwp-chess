@@ -27,7 +27,6 @@ public class MemberController {
     private final MemberService memberService;
     private final GameService gameService;
 
-    @Autowired
     public MemberController(final MemberService memberService, final GameService gameService) {
         this.memberService = memberService;
         this.gameService = gameService;

@@ -17,6 +17,7 @@ import chess.web.dto.MoveResultDto;
 import chess.web.dto.PieceDto;
 import chess.web.dto.PiecesDto;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,7 +58,7 @@ public class ChessService {
         pieceDao.deleteAll();
     }
 
-    private void start() {
+    public void start() {
         boardStateDao.save(StateType.WHITE_TURN);
 
         ChessBoard chessBoard = new ChessBoard(new InitBoardGenerator());
@@ -112,7 +113,7 @@ public class ChessService {
     }
 
     private StateType getStateType() {
-        return boardStateDao.findState();
+            return boardStateDao.findState();
     }
 
     private double getScore(Color color) {

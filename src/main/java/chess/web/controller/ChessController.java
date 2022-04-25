@@ -3,6 +3,7 @@ package chess.web.controller;
 import chess.web.dto.MovePositionsDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.service.ChessService;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +22,17 @@ public class ChessController {
 
     @GetMapping("/")
     public String showIndex(final Model model) {
-        model.addAttribute("chessStatus", chessService.getChessStatus());
+        try {
+            model.addAttribute("chessStatus", chessService.getChessStatus());
+        } catch (EmptyResultDataAccessException e) {
+            chessService.start();
+            showIndex(model);
+        }
 
         return "index";
     }
 
-//    @ResponseBody
+    @ResponseBody
     @PostMapping("/move")
     public MoveResultDto movePiece(@RequestBody MovePositionsDto movePositionsDto) {
         return chessService.getMoveResult(movePositionsDto);

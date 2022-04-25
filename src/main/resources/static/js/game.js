@@ -11,7 +11,7 @@ $(document).ready(function () {
     initChessPieces();
     currentTeam();
   } else {
-    loadPiecesAndTeam();
+    loadLastGame();
   }
 });
 
@@ -30,7 +30,7 @@ function initChessBoard() {
 
 function initChessPieces() {
   $.ajax({
-    url: "/board",
+    url: "/chess/board",
     method: "GET",
     dataType: "json",
   })
@@ -42,9 +42,9 @@ function initChessPieces() {
     });
 }
 
-function loadPiecesAndTeam() {
+function loadLastGame() {
   $.ajax({
-    url: "/load-last-game",
+    url: "/chess/load-last-game",
     method: "GET",
     dataType: "json",
   })
@@ -116,8 +116,8 @@ function movePiece() {
   const from = $('input[name="from"]').val();
   const to = $('input[name="to"]').val();
   $.ajax({
-    url: `/move?from=${from}&to=${to}`,
-    method: "POST",
+    url: `/chess/move?from=${from}&to=${to}`,
+    method: "PATCH",
     dataType: "json",
   })
     .done(function (data) {
@@ -141,7 +141,7 @@ function setCurrentTeam(teamName) {
 
 function currentTeam() {
   $.ajax({
-    url: "/current-team",
+    url: "/chess/current-team",
     method: "GET",
     dataType: "text",
   })
@@ -181,8 +181,8 @@ function saveGame() {
   };
 
   $.ajax({
-    url: "/save-game",
-    method: "POST",
+    url: "/chess/save-game",
+    method: "PUT",
     data: JSON.stringify(gameData),
     contentType: "application/json",
   })

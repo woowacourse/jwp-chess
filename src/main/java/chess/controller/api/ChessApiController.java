@@ -14,12 +14,15 @@ import chess.service.ChessService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/chess")
 public class ChessApiController {
 
     @Autowired
@@ -41,7 +44,7 @@ public class ChessApiController {
         return chessBoard.currentState().getName();
     }
 
-    @PostMapping(value = "/move", produces = APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/move", produces = APPLICATION_JSON_VALUE)
     public BoardResponse move(@RequestParam("from") String fromString, @RequestParam("to") String toString) {
         Position from = Position.of(fromString);
         Position to = Position.of(toString);
@@ -51,7 +54,7 @@ public class ChessApiController {
         return BoardResponse.from(movedBoard);
     }
 
-    @PostMapping(value = "save-game", consumes = APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/save-game", consumes = APPLICATION_JSON_VALUE)
     public void saveGame(@RequestBody SaveRequest saveRequest) {
         chessService.saveGame(saveRequest);
     }
@@ -60,5 +63,10 @@ public class ChessApiController {
     public LastGameResponse loadLastGame() {
         LastGameResponse lastGameResponse = chessService.loadLastGame();
         return lastGameResponse;
+    }
+
+    @PutMapping("/test-put")
+    public void testPUt() {
+        System.out.println("ChessApiController.postTest");
     }
 }

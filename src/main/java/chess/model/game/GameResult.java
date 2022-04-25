@@ -29,18 +29,18 @@ public class GameResult {
         return findWinnerByKing(board);
     }
 
-    public static boolean bothKingAlive(Map<Square, Piece> board) {
+    private static boolean bothKingAlive(Map<Square, Piece> board) {
         return board.keySet().stream()
                 .map(board::get)
                 .filter(Piece::isKing)
                 .count() == VALID_KING_COUNT;
     }
 
-    public static Color findWinnerByKing(Map<Square, Piece> board) {
-        return getColorHasKing(board);
+    private static Color findWinnerByKing(Map<Square, Piece> board) {
+        return getColorHavingKing(board);
     }
 
-    private static Color getColorHasKing(Map<Square, Piece> board) {
+    private static Color getColorHavingKing(Map<Square, Piece> board) {
         return Color.getPlayerColors().stream()
                 .filter(color -> board.containsValue(new King(color)))
                 .findFirst()

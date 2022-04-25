@@ -1,10 +1,9 @@
 package chess.dao.springjdbc;
 
 import chess.dao.GameDao;
-import chess.service.dto.GameEntity;
-import chess.service.dto.GamesDto;
-import chess.service.dto.StatusDto;
+import chess.dao.GameEntity;
 import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -40,9 +39,9 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public GamesDto findAll() {
+    public List<GameEntity> findAll() {
         String sql = "SELECT id, name, status, turn FROM game";
-        return new GamesDto(jdbcTemplate.query(sql, chessGameDtoRowMapper));
+        return jdbcTemplate.query(sql, chessGameDtoRowMapper);
     }
 
     @Override

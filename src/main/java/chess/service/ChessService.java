@@ -11,10 +11,10 @@ import chess.model.board.Board;
 import chess.model.board.Square;
 import chess.model.piece.Piece;
 import chess.service.dto.BoardDto;
-import chess.service.dto.GameEntity;
+import chess.dao.GameEntity;
 import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
-import chess.service.dto.PieceEntity;
+import chess.dao.PieceEntity;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +75,7 @@ public class ChessService {
     }
 
     public GamesDto getAllGames() {
-        return gameDao.findAll();
+        return new GamesDto(gameDao.findAll());
     }
 
     public void createGame(String name) {

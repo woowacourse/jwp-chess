@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.dao.InMemoryPieceDao;
 import chess.dao.InMemoryGameDao;
 import chess.service.dto.BoardDto;
-import chess.service.dto.GameEntity;
+import chess.dao.GameEntity;
 import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
 import org.junit.jupiter.api.BeforeEach;

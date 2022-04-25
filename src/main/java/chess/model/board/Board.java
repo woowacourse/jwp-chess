@@ -9,7 +9,6 @@ import chess.model.piece.PieceType;
 import chess.model.strategy.move.Direction;
 import chess.model.strategy.move.MoveType;
 import chess.service.dto.BoardDto;
-import java.util.Collections;
 import java.util.Map;
 
 public final class Board {
@@ -45,7 +44,7 @@ public final class Board {
         Piece movePiece = findPieceBySquare(from);
         Piece targetPiece = findPieceBySquare(to);
         checkCanMove(from, to, movePiece, targetPiece);
-        checkRoute(from, to);
+        checkHasPieceInRoute(from, to);
         updateBoard(from, to, movePiece);
         return MoveResult.from(from, to,
                 findPieceBySquare(from), findPieceBySquare(to), targetPiece);
@@ -64,7 +63,7 @@ public final class Board {
         return MoveType.of(sourcePiece.isEnemy(targetPiece));
     }
 
-    private void checkRoute(Square sourceSquare, Square targetSquare) {
+    private void checkHasPieceInRoute(Square sourceSquare, Square targetSquare) {
         Square tempSquare = sourceSquare;
         Direction direction = sourceSquare.findDirection(targetSquare);
         while (tempSquare.isDifferent(targetSquare)) {

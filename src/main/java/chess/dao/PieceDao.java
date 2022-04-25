@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.service.dto.BoardDto;
-import chess.service.dto.PieceEntity;
 
 public interface PieceDao {
     void initBoard(int gameId);

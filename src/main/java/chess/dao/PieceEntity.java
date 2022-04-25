@@ -1,4 +1,4 @@
-package chess.service.dto;
+package chess.dao;
 
 import chess.model.board.Square;
 import chess.model.piece.Piece;
@@ -6,15 +6,10 @@ import chess.model.piece.PieceType;
 import java.util.Objects;
 
 public class PieceEntity {
-    private int id;
-    private String square;
-    private String type;
-    private String color;
-    private int gameId;
 
-
-    public PieceEntity() {
-    }
+    private final String square;
+    private final String type;
+    private final String color;
 
     public PieceEntity(Square square, Piece piece) {
         this.square = square.getName();

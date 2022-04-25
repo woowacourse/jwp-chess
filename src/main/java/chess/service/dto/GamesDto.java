@@ -1,5 +1,6 @@
 package chess.service.dto;
 
+import chess.dao.GameEntity;
 import java.util.ArrayList;
 import java.util.List;
 

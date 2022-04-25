@@ -2,7 +2,7 @@ package chess.dao.springjdbc;
 
 import chess.dao.PieceDao;
 import chess.service.dto.BoardDto;
-import chess.service.dto.PieceEntity;
+import chess.dao.PieceEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

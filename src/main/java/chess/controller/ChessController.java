@@ -36,47 +36,47 @@ public class ChessController {
     }
 
     @PostMapping("/{roomName}")
-    public void createRoom(@PathVariable("roomName") final String roomName) {
+    public void createRoom(@PathVariable final String roomName) {
         roomService.createRoom(roomName);
     }
 
     @DeleteMapping("/{roomName}")
-    public void deleteRoom(@PathVariable("roomName") final String roomName) {
+    public void deleteRoom(@PathVariable final String roomName) {
         roomService.deleteRoom(roomName);
     }
 
     @GetMapping("/{roomName}/pieces")
-    public ResponseEntity<List<ChessPieceDto>> findPieces(@PathVariable("roomName") final String roomName) {
+    public ResponseEntity<List<ChessPieceDto>> findPieces(@PathVariable final String roomName) {
         final List<ChessPieceDto> chessPieces = chessService.findAllPiece(roomName);
         return ResponseEntity.ok(chessPieces);
     }
 
     @PostMapping("/{roomName}/pieces")
-    public void createPieces(@PathVariable("roomName") final String roomName) {
+    public void createPieces(@PathVariable final String roomName) {
         chessService.initPiece(roomName);
     }
 
     @PatchMapping("/{roomName}/pieces")
-    public ResponseEntity<MoveResult> movePiece(@PathVariable("roomName") final String roomName,
+    public ResponseEntity<MoveResult> movePiece(@PathVariable final String roomName,
                                                 @RequestBody final MoveRequestDto moveRequestDto) {
         final MoveResult moveResult = chessService.move(roomName, moveRequestDto);
         return ResponseEntity.ok(moveResult);
     }
 
     @GetMapping("/{roomName}/scores")
-    public ResponseEntity<Score> findScore(@PathVariable("roomName") final String roomName) {
+    public ResponseEntity<Score> findScore(@PathVariable final String roomName) {
         final Score score = chessService.findScore(roomName);
         return ResponseEntity.ok(score);
     }
 
     @GetMapping("/{roomName}/turn")
-    public ResponseEntity<CurrentTurnDto> findTurn(@PathVariable("roomName") final String roomName) {
+    public ResponseEntity<CurrentTurnDto> findTurn(@PathVariable final String roomName) {
         final CurrentTurnDto currentTurn = roomService.findCurrentTurn(roomName);
         return ResponseEntity.ok(currentTurn);
     }
 
     @GetMapping("/{roomName}/result")
-    public ResponseEntity<EndResult> findResult(@PathVariable("roomName") final String roomName) {
+    public ResponseEntity<EndResult> findResult(@PathVariable final String roomName) {
         final EndResult endResult = chessService.result(roomName);
         return ResponseEntity.ok(endResult);
     }

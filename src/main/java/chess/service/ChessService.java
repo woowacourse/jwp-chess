@@ -35,9 +35,9 @@ public class ChessService {
         this.roomDao = roomDao;
     }
 
-    public List<ChessPieceDto> findAllPiece(final String roomName) {
-        checkRoomExist(roomName);
-        return chessPieceDao.findAllByRoomName(roomName);
+    public List<ChessPieceDto> findAllPiece(final int roomId) {
+        checkRoomExist(roomId);
+        return chessPieceDao.findAllByRoomId(roomId);
     }
 
     public void initPiece(final String roomName) {
@@ -47,6 +47,9 @@ public class ChessService {
         final StartResult startResult = chessGame.start();
         updateChessPiece(roomName, startResult.getPieceByPosition());
         updateRoomStatusTo(roomName, GameStatus.PLAYING);
+    }
+
+    private void checkRoomExist(final String roomName) {
     }
 
     public MoveResult move(final String roomName, MoveRequestDto requestDto) {
@@ -63,8 +66,8 @@ public class ChessService {
     }
 
     private void updatePosition(final String roomName, final Position from, final Position to) {
-        chessPieceDao.deleteByPosition(roomName, to);
-        chessPieceDao.update(roomName, from, to);
+        // chessPieceDao.deleteByPosition(roomName, to);
+//        chessPieceDao.update(roomName, from, to);
     }
 
     public Score findScore(final String roomName) {
@@ -84,8 +87,8 @@ public class ChessService {
         return result;
     }
 
-    private void checkRoomExist(final String roomName) {
-        if (!roomDao.isExistName(roomName)) {
+    private void checkRoomExist(final int roomId) {
+        if (!roomDao.isExistId(roomId)) {
             throw new IllegalArgumentException("존재하지 않는 방 입니다.");
         }
     }
@@ -99,21 +102,22 @@ public class ChessService {
     }
 
     private Map<Position, ChessPiece> initAllPiece(final String roomName) {
-        final List<ChessPieceDto> dtos = chessPieceDao.findAllByRoomName(roomName);
-        if (dtos.isEmpty()) {
-            return ChessBoardFactory.createInitPieceByPosition();
-        }
-
-        return dtos.stream()
-                .collect(Collectors.toMap(
-                        chessPieceDto -> Position.from(chessPieceDto.getPosition()),
-                        chessPieceDto -> ChessPieceMapper.toChessPiece(chessPieceDto.getPieceType(),
-                                chessPieceDto.getColor())
-                ));
+//        final List<ChessPieceDto> dtos = chessPieceDao.findAllByRoomName(roomName);
+//        if (dtos.isEmpty()) {
+//            return ChessBoardFactory.createInitPieceByPosition();
+//        }
+//
+//        return dtos.stream()
+//                .collect(Collectors.toMap(
+//                        chessPieceDto -> Position.from(chessPieceDto.getPosition()),
+//                        chessPieceDto -> ChessPieceMapper.toChessPiece(chessPieceDto.getPieceType(),
+//                                chessPieceDto.getColor())
+//                ));
+        return null;
     }
 
     private Color initCurrentTurn(final String roomName) {
-        final CurrentTurnDto dto = roomDao.findCurrentTurnByName(roomName);
+        final CurrentTurnDto dto = roomDao.findCurrentTurnById(1);
         if (Objects.isNull(dto)) {
             return Color.WHITE;
         }
@@ -121,7 +125,7 @@ public class ChessService {
     }
 
     private GameStatus initGameStatus(final String roomName) {
-        final RoomStatusDto dto = roomDao.findStatusByName(roomName);
+        final RoomStatusDto dto = roomDao.findStatusById(1);
         if (Objects.isNull(dto)) {
             return GameStatus.READY;
         }
@@ -129,15 +133,15 @@ public class ChessService {
     }
 
     private void updateChessPiece(final String roomName, final Map<Position, ChessPiece> pieceByPosition) {
-        chessPieceDao.deleteAllByRoomName(roomName);
-        chessPieceDao.saveAll(roomName, pieceByPosition);
+//        chessPieceDao.deleteAllByRoomName(roomName);
+        // chessPieceDao.saveAll(roomName, pieceByPosition);
     }
 
     private void updateRoom(final String roomName, final GameStatus gameStatus, final Color currentTurn) {
-        roomDao.update(roomName, gameStatus, currentTurn);
+        // roomDao.updateById(roomName, gameStatus, currentTurn);
     }
 
     private void updateRoomStatusTo(final String roomName, final GameStatus gameStatus) {
-        roomDao.updateStatusTo(roomName, gameStatus);
+        // roomDao.updateStatusTo(roomName, gameStatus);
     }
 }

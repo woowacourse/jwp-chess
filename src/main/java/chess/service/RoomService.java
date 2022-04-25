@@ -5,6 +5,7 @@ import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.CurrentTurnDto;
 import chess.dto.RoomCreationRequestDto;
+import chess.dto.RoomDeletionRequestDto;
 import chess.dto.RoomStatusDto;
 import org.springframework.stereotype.Service;
 
@@ -25,18 +26,30 @@ public class RoomService {
         return roomDao.save(dto.getRoomName(), GameStatus.READY, Color.WHITE, dto.getPassword());
     }
 
-    public void deleteRoom(final String roomName) {
-        checkRoomExist(roomName);
+    public int deleteRoom(final RoomDeletionRequestDto dto) {
+        final int roomId = dto.getRoomId();
+        checkRoomExist(roomId);
 
-        final RoomStatusDto dto = roomDao.findStatusByName(roomName);
-        if (dto.getGameStatus().isEnd()) {
-            roomDao.delete(roomName);
+        final RoomStatusDto roomStatusDto = roomDao.findStatusById(roomId);
+        final String password = roomDao.findPasswordById(roomId);
+        if (!password.equals(dto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+        if (!roomStatusDto.getGameStatus().isEnd()) {
+            throw new IllegalArgumentException("게임이 진행 중입니다.");
+        }
+        return roomDao.deleteById(roomId);
     }
 
-    public CurrentTurnDto findCurrentTurn(final String roomName) {
-        checkRoomExist(roomName);
-        return roomDao.findCurrentTurnByName(roomName);
+    public CurrentTurnDto findCurrentTurn(final int roomId) {
+        checkRoomExist(roomId);
+        return roomDao.findCurrentTurnById(roomId);
+    }
+
+    private void checkRoomExist(final int roomId) {
+        if (!roomDao.isExistId(roomId)) {
+            throw new IllegalArgumentException("존재하지 않는 방 입니다.");
+        }
     }
 
     private void checkRoomExist(final String roomName) {

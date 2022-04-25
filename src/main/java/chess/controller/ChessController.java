@@ -11,6 +11,7 @@ import java.util.NoSuchElementException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,7 +44,7 @@ public class ChessController {
         return chessService.startOrRestartGame(gameId);
     }
 
-    @PutMapping("/{gameId}/pieces")
+    @PatchMapping("/{gameId}/pieces")
     public ChessGameResponse movePiece(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {
         return chessService.move(gameId, moveRequest);
     }

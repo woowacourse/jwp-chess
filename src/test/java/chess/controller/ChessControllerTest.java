@@ -110,7 +110,7 @@ class ChessControllerTest {
         }
     }
 
-    @DisplayName("PUT - 체스 기물 이동 테스트")
+    @DisplayName("PATCH - 체스 기물 이동 테스트")
     @Test
     void move() throws JsonProcessingException {
         chessService.createGame(testGameId);
@@ -124,7 +124,7 @@ class ChessControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .body(jsonString)
-                .when().put("/games/" + testGameId + "/pieces")
+                .when().patch("/games/" + testGameId + "/pieces")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

@@ -200,7 +200,7 @@ function highlightSelectedCell(cell) {
 
 async function requestMove() {
   return await fetch(`/games/${gameId}/pieces`, {
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },

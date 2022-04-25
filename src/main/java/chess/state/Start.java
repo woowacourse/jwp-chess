@@ -34,7 +34,7 @@ public final class Start extends Running {
     }
 
     @Override
-    public Player getPlayer() {
+    public Player getNextTurnPlayer() {
         return Player.WHITE;
     }
 }

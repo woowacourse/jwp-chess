@@ -17,13 +17,13 @@ public enum Player {
         return name;
     }
 
-    public String getOpponentName() {
+    public Player getOpponentPlayer() {
         if (this == WHITE) {
-            return BLACK.name;
+            return BLACK;
         }
         if (this == BLACK) {
-            return WHITE.name;
+            return WHITE;
         }
-        return NONE.name;
+        return NONE;
     }
 }

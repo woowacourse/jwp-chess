@@ -21,7 +21,7 @@ public abstract class Started implements State {
     }
 
     @Override
-    public Player getPlayer() {
+    public Player getNextTurnPlayer() {
         return Player.NONE;
     }
 }

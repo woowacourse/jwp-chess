@@ -48,7 +48,7 @@ public class ChessController {
         State state = currentState();
         ModelAndView modelAndView = new ModelAndView(getViewName(state));
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
-        modelAndView.addObject("player", playerName(state.getPlayer()));
+        modelAndView.addObject("player", state.getNextTurnPlayer());
         modelAndView.addObject("commands", commandDao.findAll());
         modelAndView.addObject("message", message);
         return modelAndView;
@@ -108,9 +108,5 @@ public class ChessController {
         if (!piece.isBlank()) {
             squares.add(new Square(piece.getImageName(), position.getPosition()));
         }
-    }
-
-    private String playerName(final Player player) {
-        return player.getName();
     }
 }

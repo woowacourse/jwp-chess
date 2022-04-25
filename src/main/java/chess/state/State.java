@@ -15,5 +15,5 @@ public interface State {
 
     boolean isStatus();
 
-    Player getPlayer();
+    Player getNextTurnPlayer();
 }

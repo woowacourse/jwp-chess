@@ -18,7 +18,7 @@ public class PieceDaoImpl implements PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<PieceDto> pieceDtoRowMapper = (resultSet, rowNum) ->
+    private static final RowMapper<PieceDto> pieceDtoRowMapper = (resultSet, rowNum) ->
             new PieceDto(
                     resultSet.getString("position"),
                     resultSet.getString("team"),

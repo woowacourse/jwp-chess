@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -35,7 +36,29 @@ public class JdbcPieceDao implements PieceDao {
     @Override
     public void saveAll(List<PieceDto> pieceDtos) {
         final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
-        jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(pieceDtos));
+    }
+
+    @Override
+    public void save(PieceDto pieceDto) {
+        final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
+        jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor());
+    }
+
+    @Override
+    public List<PieceDto> findAll() {
+        final String sql = "select * from piece";
+        return jdbcTemplate.query(sql, getPieceDtoRowMapper());
+    }
+
+    @Override
+    public void update(Position source, Position target) {
+        final String sql = "update piece set position = ? where position = ?";
+        jdbcTemplate.update(sql, target.getName(), source.getName());
+    }
+
+    private BatchPreparedStatementSetter getBatchPreparedStatementSetter(List<PieceDto> pieceDtos) {
+        return new BatchPreparedStatementSetter() {
 
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -49,32 +72,15 @@ public class JdbcPieceDao implements PieceDao {
             public int getBatchSize() {
                 return pieceDtos.size();
             }
-        });
+        };
     }
 
-    @Override
-    public void save(PieceDto pieceDto) {
-        final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
-        jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor());
-    }
-
-    @Override
-    public List<PieceDto> findAll() {
-        final String sql = "select * from piece";
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) ->
-                        new PieceDto(
-                                resultSet.getString("position"),
-                                resultSet.getString("color"),
-                                resultSet.getString("type")
-                        )
-        );
-    }
-
-    @Override
-    public void update(Position source, Position target) {
-        final String sql = "update piece set position = ? where position = ?";
-        jdbcTemplate.update(sql, target.getName(), source.getName());
+    private RowMapper<PieceDto> getPieceDtoRowMapper() {
+        return (resultSet, rowNum) ->
+                new PieceDto(
+                        resultSet.getString("position"),
+                        resultSet.getString("color"),
+                        resultSet.getString("type")
+                );
     }
 }

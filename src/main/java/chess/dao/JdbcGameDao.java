@@ -5,6 +5,7 @@ import chess.dto.GameStatusDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -45,17 +46,18 @@ public class JdbcGameDao implements GameDao {
     public GameDto find() {
         final String sql = "select * from game";
         try {
-            return jdbcTemplate.queryForObject(
-                    sql,
-                    (resultSet, rowNum) ->
-                            new GameDto(
-                                    resultSet.getString("turn"),
-                                    resultSet.getString("status")
-                            )
-            );
+            return jdbcTemplate.queryForObject(sql, getGameDtoRowMapper());
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();
             return new GameDto(null, "ready");
         }
+    }
+
+    private RowMapper<GameDto> getGameDtoRowMapper() {
+        return (resultSet, rowNum) ->
+                new GameDto(
+                        resultSet.getString("turn"),
+                        resultSet.getString("status")
+                );
     }
 }

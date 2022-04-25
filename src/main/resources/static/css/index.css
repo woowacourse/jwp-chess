@@ -1,0 +1,26 @@
+.mainContainer {
+    margin: 100px auto;
+    float: top;
+    text-align: center;
+}
+
+.input {
+    width: 300px;
+    height: 40px;
+    font-size: xx-large;
+    margin: 0 auto 30px;
+}
+
+.ui-button {
+    width: 100px;
+    height: 40px;
+    font-size: xx-large;
+    margin: 0 auto;
+}
+
+.error {
+    font-size: x-large;
+    font-weight: bold;
+    text-align: center;
+    color: darkred;
+}

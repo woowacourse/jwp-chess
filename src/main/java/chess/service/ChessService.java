@@ -2,8 +2,8 @@ package chess.service;
 
 import chess.domain.dao.BoardJdbcTemplateDao;
 import chess.domain.dao.GameJdbcTemplateDao;
-import chess.domain.dto.GameDto;
-import chess.domain.dto.PieceDto;
+import chess.service.dto.GameDto;
+import chess.service.dto.PieceDto;
 import chess.domain.game.Color;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;

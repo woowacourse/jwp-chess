@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.domain.dto.MoveRequestDto;
-import chess.domain.dto.ResponseDto;
+import chess.controller.dto.MoveRequestDto;
+import chess.controller.dto.ResponseDto;
 import chess.domain.game.Status;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;

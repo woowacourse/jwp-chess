@@ -1,4 +1,4 @@
-package chess.domain.dto;
+package chess.service.dto;
 
 import chess.domain.game.Color;
 import chess.domain.game.Status;

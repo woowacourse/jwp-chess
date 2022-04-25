@@ -1,6 +1,6 @@
 package chess.domain.dao;
 
-import chess.domain.dto.GameDto;
+import chess.service.dto.GameDto;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import org.springframework.dao.EmptyResultDataAccessException;

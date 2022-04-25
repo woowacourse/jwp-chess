@@ -1,6 +1,6 @@
 package chess.domain.dao;
 
-import chess.domain.dto.PieceDto;
+import chess.service.dto.PieceDto;
 import chess.domain.game.board.ChessBoardFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

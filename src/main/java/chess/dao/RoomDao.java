@@ -60,9 +60,9 @@ public class RoomDao {
         return jdbcTemplate.update(sql, roomId);
     }
 
-    public int update(final String roomName, final GameStatus gameStatus, final Color currentTurn) {
-        final String sql = "UPDATE room SET game_status = ?, current_turn = ? WHERE name = ?";
-        return jdbcTemplate.update(sql, gameStatus.getValue(), currentTurn.getValue(), roomName);
+    public int updateById(final int roomId, final GameStatus gameStatus, final Color currentTurn) {
+        final String sql = "UPDATE room SET game_status = ?, current_turn = ? WHERE room_id = ?";
+        return jdbcTemplate.update(sql, gameStatus.getValue(), currentTurn.getValue(), roomId);
     }
 
     public int updateStatusTo(final String roomName, final GameStatus gameStatus) {

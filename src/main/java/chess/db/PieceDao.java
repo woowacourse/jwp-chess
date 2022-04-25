@@ -74,6 +74,7 @@ public class PieceDao {
         loadBoard(board, data);
         checkGameExist(board);
         return board;
+
     }
 
     private void loadBoard(Map<Square, Piece> board, List<Map<String, Object>> pieces) {

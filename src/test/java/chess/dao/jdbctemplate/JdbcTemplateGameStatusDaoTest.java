@@ -21,7 +21,7 @@ public class JdbcTemplateGameStatusDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplateGameStatusDao = new JdbcTemplateGameStatusDao(jdbcTemplate);
-        jdbcTemplateGameStatusDao.init();
+        jdbcTemplateGameStatusDao.init(GameStatus.READY);
     }
 
     @DisplayName("초기 값을 확인한다.")
@@ -54,7 +54,7 @@ public class JdbcTemplateGameStatusDaoTest {
         GameStatus nextStatus = GameStatus.PLAYING;
         //when
         jdbcTemplateGameStatusDao.update(initStatus.toString(), nextStatus.toString());
-        jdbcTemplateGameStatusDao.reset();
+        jdbcTemplateGameStatusDao.reset(initStatus);
         // then
         Assertions.assertThat(jdbcTemplateGameStatusDao.getStatus()).isEqualTo(initStatus.toString());
     }

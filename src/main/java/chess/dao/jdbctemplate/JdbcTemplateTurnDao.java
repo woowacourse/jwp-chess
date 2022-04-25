@@ -15,8 +15,8 @@ public class JdbcTemplateTurnDao implements TurnDao {
     }
 
     @Override
-    public void init() {
-        jdbcTemplate.update("INSERT INTO turn(team) VALUES (?)", "white");
+    public void init(String data) {
+        jdbcTemplate.update("INSERT INTO turn(team) VALUES (?)", data);
     }
 
     @Override
@@ -32,10 +32,10 @@ public class JdbcTemplateTurnDao implements TurnDao {
     }
 
     @Override
-    public void reset() {
+    public void reset(Team data) {
         removeAll();
         String sql = "insert into turn (team) values (?)";
-        jdbcTemplate.update(sql, Team.WHITE.toString());
+        jdbcTemplate.update(sql, data.toString());
     }
 
     private void removeAll() {

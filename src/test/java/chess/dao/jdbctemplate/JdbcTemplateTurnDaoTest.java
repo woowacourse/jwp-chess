@@ -3,6 +3,7 @@ package chess.dao.jdbctemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.dao.jdbctemplate.JdbcTemplateTurnDao;
+import chess.domain.piece.Team;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class JdbcTemplateTurnDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplateTurnDao = new JdbcTemplateTurnDao(jdbcTemplate);
-        jdbcTemplateTurnDao.init();
+        jdbcTemplateTurnDao.init(Team.WHITE.toString());
     }
 
 
@@ -41,7 +42,7 @@ public class JdbcTemplateTurnDaoTest {
     @Test
     @DisplayName("리셋을 확인한다.")
     void reset() {
-        jdbcTemplateTurnDao.reset();
+        jdbcTemplateTurnDao.reset(Team.WHITE);
         assertThat(jdbcTemplateTurnDao.getTurn()).isEqualTo("white");
     }
 }

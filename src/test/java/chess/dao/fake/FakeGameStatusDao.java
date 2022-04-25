@@ -8,8 +8,8 @@ public class FakeGameStatusDao implements GameStatusDao {
     private GameStatus status = GameStatus.READY;
 
     @Override
-    public void init() {
-        status = GameStatus.READY;
+    public void init(GameStatus data) {
+        status = data;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class FakeGameStatusDao implements GameStatusDao {
     }
 
     @Override
-    public void reset() {
-        status = GameStatus.READY;
+    public void reset(GameStatus data) {
+        status = data;
     }
 }

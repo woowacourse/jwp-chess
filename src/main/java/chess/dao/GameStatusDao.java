@@ -1,12 +1,14 @@
 package chess.dao;
 
+import chess.domain.GameStatus;
+
 public interface GameStatusDao {
 
-    void init();
+    void init(GameStatus data);
 
     void update(String nowStatus, String nextStatus);
 
     String getStatus();
 
-    void reset();
+    void reset(GameStatus data);
 }

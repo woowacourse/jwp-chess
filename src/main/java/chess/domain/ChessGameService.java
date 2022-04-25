@@ -42,8 +42,8 @@ public class ChessGameService {
         try {
             turnDao.getTurn();
         } catch (Exception e) {
-            turnDao.init();
-            gameStatusDao.init();
+            turnDao.init(Team.WHITE.toString());
+            gameStatusDao.init(GameStatus.READY);
         }
     }
 
@@ -131,8 +131,8 @@ public class ChessGameService {
             scoreDto = new ScoreDto(String.format(WIN_MESSAGE, Team.of(turnDao.getTurn()).change()));
         }
         resetBoard();
-        turnDao.reset();
-        gameStatusDao.reset();
+        turnDao.reset(Team.WHITE);
+        gameStatusDao.reset(GameStatus.READY);
         return selectScoreDto(result, scoreDto);
     }
 

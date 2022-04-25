@@ -15,8 +15,8 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
     }
 
     @Override
-    public void init() {
-        jdbcTemplate.update("INSERT INTO game_status (status) values (?)", "READY");
+    public void init(GameStatus data) {
+        jdbcTemplate.update("INSERT INTO game_status (status) values (?)", data.toString());
     }
 
     @Override
@@ -32,10 +32,10 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
     }
 
     @Override
-    public void reset() {
+    public void reset(GameStatus data) {
         removeAll();
         String sql = "insert into game_status (status) values (?)";
-        jdbcTemplate.update(sql, GameStatus.READY.toString());
+        jdbcTemplate.update(sql, data.toString());
     }
 
     private void removeAll() {

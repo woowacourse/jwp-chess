@@ -85,7 +85,7 @@ public class ChessService {
 
     public int createGame(String name) {
         int gameId = gameDao.createGame(name);
-        boardDao.initBoard(gameId);
+        initGame(gameId);
         return gameId;
     }
 

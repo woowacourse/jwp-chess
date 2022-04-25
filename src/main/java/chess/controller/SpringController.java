@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +34,7 @@ public class SpringController {
         return "index";
     }
 
-    @PostMapping("/chess-game")
+    @PostMapping("/game")
     public RedirectView createChessGame(final @RequestParam String name) {
         springChessService.createChessGame(name);
         return new RedirectView("/games/" + name);
@@ -89,8 +87,4 @@ public class SpringController {
         return new RedirectView("/games/" + name);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> getException(final Exception exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
-    }
 }

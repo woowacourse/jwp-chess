@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PieceDto {
+
     private String position;
     private final String color;
     private final String type;

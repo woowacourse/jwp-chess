@@ -5,7 +5,6 @@ import chess.dto.SearchResultDto;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,12 +23,12 @@ public class SearchController {
     }
 
     @GetMapping
-    public ModelAndView render() {
+    public ModelAndView renderSearchPage() {
         GameCountDto gameCountDto = chessService.countGames();
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameCountDto);
     }
 
-    @PostMapping
+    @GetMapping(params = "game_id")
     public SearchResultDto searchResult(@RequestParam(name = "game_id") int gameId) {
         return chessService.searchGame(gameId);
     }

@@ -3,9 +3,9 @@ package chess.domain;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.chessboard.ChessBoardFactory;
 import chess.domain.position.Position;
-import chess.result.EndResult;
-import chess.result.MoveResult;
-import chess.result.StartResult;
+import chess.domain.result.EndResult;
+import chess.domain.result.MoveResult;
+import chess.domain.result.StartResult;
 
 public class ChessGame {
 

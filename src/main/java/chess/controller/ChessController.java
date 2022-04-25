@@ -1,12 +1,12 @@
 package chess.controller;
 
 import chess.domain.Score;
+import chess.domain.result.EndResult;
+import chess.domain.result.MoveResult;
 import chess.dto.ChessPieceDto;
 import chess.dto.CurrentTurnDto;
 import chess.dto.ErrorResponseDto;
 import chess.dto.MoveRequestDto;
-import chess.result.EndResult;
-import chess.result.MoveResult;
 import chess.service.ChessService;
 import chess.service.RoomService;
 import java.util.List;

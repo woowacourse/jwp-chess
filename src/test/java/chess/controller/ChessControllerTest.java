@@ -112,13 +112,16 @@ class ChessControllerTest {
     @DisplayName("게임을 종료하면 200 ok와 statusResponseDto를 반환한다.")
     @Test
     void finishGame() throws Exception {
-        doNothing().when(chessService).endRoom(any());
+        doNothing().when(chessService)
+                .endRoom(any(), any(RoomAccessRequestDto.class));
         StatusResponseDto statusResponseDto = StatusResponseDto.of(new Score(BoardFactory.initialize()));
         String response = objectMapper.writeValueAsString(statusResponseDto);
 
         given(chessService.createStatus(any()))
                 .willReturn(statusResponseDto);
-        mockMvc.perform(patch(DEFAULT_API + "/1/end"))
+        mockMvc.perform(patch(DEFAULT_API + "/1/end")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new RoomAccessRequestDto(ROOM_PASSWORD))))
                 .andExpect(status().isOk())
                 .andExpect(content().string(response));
     }
@@ -129,9 +132,13 @@ class ChessControllerTest {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_FINISHED);
         String response = objectMapper.writeValueAsString(errorResponseDto);
 
-        doThrow(new IllegalArgumentException(ERROR_FINISHED)).when(chessService).endRoom(1L);
+        doThrow(new IllegalArgumentException(ERROR_FINISHED))
+                .when(chessService)
+                .endRoom(any(), any(RoomAccessRequestDto.class));
 
-        mockMvc.perform(patch(DEFAULT_API + "/1/end"))
+        mockMvc.perform(patch(DEFAULT_API + "/1/end")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new RoomAccessRequestDto(ROOM_PASSWORD))))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(response));
     }

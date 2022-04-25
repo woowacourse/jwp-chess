@@ -115,8 +115,9 @@ public class ChessService {
         return RoomsResponseDto.of(rooms);
     }
 
-    public void endRoom(final Long id) {
+    public void endRoom(final Long id, final RoomAccessRequestDto roomAccessRequestDto) {
         final RoomEntity room = roomRepository.findById(id);
+        validatePassword(roomAccessRequestDto.getPassword(), room.getPassword());
         validateGameOver(room);
         roomRepository.updateGameOver(id);
     }

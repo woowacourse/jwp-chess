@@ -74,11 +74,21 @@ class ChessServiceTest {
     @Test
     void enterRoomException() {
         final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id);
+        chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
 
         assertThatThrownBy(() -> chessService.enterRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("[ERROR] 이미 종료된 게임입니다.");
+    }
+
+    @DisplayName("비밀번호가 맞지 않은 경우 입장에 실패한다.")
+    @Test
+    void enterRoomNotPasswordException() {
+        final Long id = createTestRoom("체스 초보만").getId();
+
+        assertThatThrownBy(() -> chessService.endRoom(id, new RoomAccessRequestDto("123123")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 비밀번호가 틀렸습니다.");
     }
 
     @DisplayName("a2의 기물을 a4로 이동한다.")
@@ -99,7 +109,7 @@ class ChessServiceTest {
     @Test
     void moveException() {
         final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id);
+        chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
 
         assertThatThrownBy(() -> chessService.move(id, new MoveRequestDto("a2", "a4")))
             .isInstanceOf(IllegalArgumentException.class)
@@ -110,7 +120,7 @@ class ChessServiceTest {
     @Test
     void end() {
         final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id);
+        chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
         final RoomsResponseDto rooms = chessService.findRooms();
         assertThat(rooms.getRoomResponseDtos()).isEmpty();
     }
@@ -119,11 +129,21 @@ class ChessServiceTest {
     @Test
     void endException() {
         final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id);
+        chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
 
-        assertThatThrownBy(() -> chessService.endRoom(id))
+        assertThatThrownBy(() -> chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("[ERROR] 이미 종료된 게임입니다.");
+    }
+
+    @DisplayName("비밀번호가 맞지 않은 경우 종료에 실패한다.")
+    @Test
+    void endNotPasswordException() {
+        final Long id = createTestRoom("체스 초보만").getId();
+
+        assertThatThrownBy(() -> chessService.endRoom(id, new RoomAccessRequestDto("123123")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 비밀번호가 틀렸습니다.");
     }
 
     @DisplayName("최초 방생성시 score를 확인한다.")
@@ -149,7 +169,7 @@ class ChessServiceTest {
     @Test
     void updateRoomNameException() {
         final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id);
+        chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
         assertThatThrownBy(() -> chessService.updateRoomName(id, "체스 왕 초보만"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 이미 종료된 게임입니다.");

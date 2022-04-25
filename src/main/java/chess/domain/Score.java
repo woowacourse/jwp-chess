@@ -14,13 +14,15 @@ import java.util.stream.Collectors;
 
 public class Score {
 
+    private static final double DEFAULT_SCORE = 0.0;
+
     private final double whiteScore;
     private final double blackScore;
 
     public Score(Map<Position, ChessPiece> pieceByPosition) {
         final Map<Color, Double> scoreByColor = calculateScore(pieceByPosition);
-        this.whiteScore = scoreByColor.getOrDefault(Color.WHITE, 0.0);
-        this.blackScore = scoreByColor.getOrDefault(Color.BLACK, 0.0);
+        this.whiteScore = scoreByColor.getOrDefault(Color.WHITE, DEFAULT_SCORE);
+        this.blackScore = scoreByColor.getOrDefault(Color.BLACK, DEFAULT_SCORE);
     }
 
     private Map<Color, Double> calculateScore(final Map<Position, ChessPiece> pieceByPosition) {

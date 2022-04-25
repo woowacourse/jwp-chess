@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.dto.request.RoomAccessRequestDto;
 import chess.dto.response.StatusResponseDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
@@ -60,7 +61,7 @@ class ChessServiceTest {
     @Test
     void enterRoom() {
         final Long id = createTestRoom("체스 초보만").getId();
-        final GameResponseDto gameResponseDto = chessService.enterRoom(id);
+        final GameResponseDto gameResponseDto = chessService.enterRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
 
         assertAll(
             () -> assertThat(gameResponseDto.getName()).isEqualTo("체스 초보만"),
@@ -75,7 +76,7 @@ class ChessServiceTest {
         final Long id = createTestRoom("체스 초보만").getId();
         chessService.endRoom(id);
 
-        assertThatThrownBy(() -> chessService.enterRoom(id))
+        assertThatThrownBy(() -> chessService.enterRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD)))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }

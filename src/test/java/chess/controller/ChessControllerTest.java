@@ -14,6 +14,7 @@ import chess.domain.board.BoardFactory;
 import chess.domain.game.Score;
 import chess.dto.BoardsDto;
 import chess.dto.request.MoveRequestDto;
+import chess.dto.request.RoomAccessRequestDto;
 import chess.dto.request.RoomRequestDto;
 import chess.dto.response.*;
 import chess.entity.BoardEntity;
@@ -83,9 +84,11 @@ class ChessControllerTest {
                 , BoardsDto.of(createBoardEntities()));
         String response = objectMapper.writeValueAsString(gameResponseDto);
 
-        given(chessService.enterRoom(any()))
+        given(chessService.enterRoom(any(), any(RoomAccessRequestDto.class)))
                 .willReturn(gameResponseDto);
-        mockMvc.perform(get(DEFAULT_API + "/1"))
+        mockMvc.perform(post(DEFAULT_API + "/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(new RoomAccessRequestDto(ROOM_PASSWORD))))
                 .andExpect(status().isOk())
                 .andExpect(content().string(response));
     }
@@ -96,10 +99,12 @@ class ChessControllerTest {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_FINISHED);
         String response = objectMapper.writeValueAsString(errorResponseDto);
 
-        given(chessService.enterRoom(any()))
+        given(chessService.enterRoom(any(), any(RoomAccessRequestDto.class)))
                 .willThrow(new IllegalArgumentException(ERROR_FINISHED));
 
-        mockMvc.perform(get(DEFAULT_API + "/1"))
+        mockMvc.perform(post(DEFAULT_API + "/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RoomAccessRequestDto(ROOM_PASSWORD))))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(response));
     }

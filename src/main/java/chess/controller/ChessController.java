@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.dto.request.RoomAccessRequestDto;
 import chess.dto.response.StatusResponseDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
@@ -32,9 +33,9 @@ public class ChessController {
         return ResponseEntity.ok(chessService.findRooms());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GameResponseDto> enterRoom(@PathVariable Long id) {
-        return ResponseEntity.ok(chessService.enterRoom(id));
+    @PostMapping("/{id}")
+    public ResponseEntity<GameResponseDto> enterRoom(@PathVariable Long id, @RequestBody RoomAccessRequestDto roomAccessRequestDto) {
+        return ResponseEntity.ok(chessService.enterRoom(id, roomAccessRequestDto));
     }
 
     @PatchMapping("/{id}/end")

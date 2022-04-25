@@ -10,6 +10,7 @@ import chess.domain.game.Turn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.dto.BoardsDto;
+import chess.dto.request.RoomAccessRequestDto;
 import chess.dto.response.StatusResponseDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
@@ -45,7 +46,10 @@ public class ChessService {
     }
 
     public RoomResponseDto createRoom(final RoomRequestDto roomRequestDto) {
-        final RoomEntity room = new RoomEntity(roomRequestDto.getName(), roomRequestDto.getPassword(), "white", false);
+        final RoomEntity room = new RoomEntity(roomRequestDto.getName(),
+                passwordEncoder.encode(roomRequestDto.getPassword()),
+                "white",
+                false);
         final RoomEntity createdRoom = roomRepository.insert(room);
         boardRepository.batchInsert(createBoards(createdRoom));
         return RoomResponseDto.of(createdRoom);
@@ -60,8 +64,9 @@ public class ChessService {
             .collect(Collectors.toList());
     }
 
-    public GameResponseDto enterRoom(final Long roomId) {
+    public GameResponseDto enterRoom(final Long roomId, final RoomAccessRequestDto roomAccessRequestDto) {
         final RoomEntity room = roomRepository.findById(roomId);
+        validatePassword(roomAccessRequestDto.getPassword(), room.getPassword());
         validateGameOver(room);
         final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
         return GameResponseDto.of(room, BoardsDto.of(boards));
@@ -129,6 +134,12 @@ public class ChessService {
     private void validateGameOver(final RoomEntity room) {
         if (room.isGameOver()) {
             throw new IllegalArgumentException("[ERROR] 이미 종료된 게임입니다.");
+        }
+    }
+
+    private void validatePassword(final String password, final String roomPassword) {
+        if (!roomPassword.equals(passwordEncoder.encode(password))) {
+            throw new IllegalArgumentException("[ERROR] 비밀번호가 틀렸습니다.");
         }
     }
 }

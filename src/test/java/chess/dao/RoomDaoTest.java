@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.CurrentTurnDto;
+import chess.dto.RoomStatusDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,5 +70,23 @@ class RoomDaoTest {
 
         // then
         assertThat(dto.getCurrentTurn()).isEqualTo(currentTurn);
+    }
+
+    @Test
+    @DisplayName("방 id로 현재 상태을 조회한다.")
+    void findStatusById() {
+        // given
+        final String roomName = "hi";
+        final GameStatus gameStatus = GameStatus.READY;
+        final Color currentTurn = Color.WHITE;
+        final String password = "1q2w3e4r";
+
+        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+
+        // when
+        final RoomStatusDto dto = roomDao.findStatusById(roomId);
+
+        // then
+        assertThat(dto.getGameStatus()).isEqualTo(gameStatus);
     }
 }

@@ -50,9 +50,9 @@ public class RoomDao {
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> CurrentTurnDto.from(resultSet), roomId);
     }
 
-    public RoomStatusDto findStatusByName(final String roomName) {
-        final String sql = "SELECT name, game_status FROM room WHERE name = ?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> RoomStatusDto.from(resultSet), roomName);
+    public RoomStatusDto findStatusById(final int roomId) {
+        final String sql = "SELECT name, game_status FROM room WHERE room_id = ?";
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> RoomStatusDto.from(resultSet), roomId);
     }
 
     public int delete(final String roomName) {

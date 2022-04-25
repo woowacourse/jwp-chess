@@ -1,25 +1,18 @@
 package chess.application.web.controller;
 
 import chess.application.web.dao.CommandDao;
-import chess.chessboard.position.Position;
+import chess.application.web.dto.StateDto;
+import chess.application.web.dto.StatusDto;
 import chess.game.Player;
-import chess.piece.Piece;
 import chess.state.Start;
 import chess.state.State;
-import chess.state.Status;
-import chess.view.Square;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 public class ChessController {
@@ -46,9 +39,10 @@ public class ChessController {
     @GetMapping(path = "/game")
     public ModelAndView printCurrentBoard(@RequestParam("message") String message) {
         State state = currentState();
+        StateDto stateDto = StateDto.of(state);
         ModelAndView modelAndView = new ModelAndView(getViewName(state));
-        modelAndView.addObject("squares", showChessBoard(state.getBoard()));
-        modelAndView.addObject("player", state.getNextTurnPlayer());
+        modelAndView.addObject("squares", stateDto.getSquares());
+        modelAndView.addObject("player", stateDto.getPlayer());
         modelAndView.addObject("commands", commandDao.findAll());
         modelAndView.addObject("message", message);
         return modelAndView;
@@ -65,18 +59,16 @@ public class ChessController {
     @GetMapping(path = "/result")
     public ModelAndView printResult() {
         ModelAndView modelAndView = new ModelAndView("status");
-        Status status = (Status) currentState().proceed("status");
-        HashMap<Player, Double> results = status.calculateScore();
-        modelAndView.addObject("squares", showChessBoard(status.getBoard()));
-        modelAndView.addObject("whiteScore", results.get(Player.WHITE));
-        modelAndView.addObject("blackScore", results.get(Player.BLACK));
+        StatusDto statusDto = StatusDto.of(currentState().proceed("status"));
+        modelAndView.addObject("squares", statusDto.getSquares());
+        modelAndView.addObject("whiteScore", statusDto.getScore(Player.WHITE));
+        modelAndView.addObject("blackScore", statusDto.getScore(Player.BLACK));
         return modelAndView;
     }
 
     private State currentState() {
-        List<String> commands = commandDao.findAll();
         State state = Start.of();
-        for (String command : commands) {
+        for (String command : commandDao.findAll()) {
             state = state.proceed(command);
         }
         return state;
@@ -87,19 +79,5 @@ public class ChessController {
             return "game";
         }
         return "finished";
-    }
-
-    private List<Square> showChessBoard(final Map<Position, Piece> board) {
-        final List<Square> squares = new ArrayList<>();
-        for (final Position position : board.keySet()) {
-            addPiece(position, board.get(position), squares);
-        }
-        return squares;
-    }
-
-    private void addPiece(final Position position, final Piece piece, final List<Square> squares) {
-        if (!piece.isBlank()) {
-            squares.add(new Square(piece.getImageName(), position.getPosition()));
-        }
     }
 }

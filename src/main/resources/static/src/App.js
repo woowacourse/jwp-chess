@@ -80,7 +80,7 @@ function imageSetting(response) {
 }
 
 function turnSetting(response) {
-    if (response["isFinish"] === true) {
+    if (response["finish"] === true) {
         document.querySelector("#view-type").textContent = "승리자 :ㅤ";
         return;
     } else {
@@ -106,7 +106,7 @@ function initPosition() {
 
 function eventMove(event) {
     const turn = boardInfo["turn"];
-    if (boardInfo["isFinish"] === true) {
+    if (boardInfo["finish"] === true) {
         window.alert("게임이 종료되었습니다. RESTART 또는 STATUS만 눌러주세요.");
         return;
     }

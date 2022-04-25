@@ -3,8 +3,11 @@ package chess.controller;
 import chess.dto.*;
 import chess.service.ChessService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.SQLException;
 
 @RestController
 public class ChessSpringController {
@@ -43,8 +46,18 @@ public class ChessSpringController {
         return ResponseEntity.ok().body(chessService.findWinner());
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handle(RuntimeException exception) {
+    @ExceptionHandler({RuntimeException.class})
+    public ResponseEntity<String> runTimeExceptionHandle(RuntimeException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<String> IllegalArgumentExceptionHandle(IllegalArgumentException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+    }
+
+    @ExceptionHandler({SQLException.class})
+    public ResponseEntity<String> DBExceptionHandle(SQLException exception) {
+        return ResponseEntity.internalServerError().body(exception.getMessage());
     }
 }

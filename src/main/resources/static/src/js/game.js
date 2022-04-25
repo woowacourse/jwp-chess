@@ -32,7 +32,18 @@ async function startGame() {
 
 async function endGame() {
     await getScore()
-    let savedBoard = await fetch("/api/chess/rooms/" + gameId + "/end",{ method:"PATCH"})
+    const password = window.prompt("비밀번호를 입력해주세요.")
+    const bodyValue = {
+        password: password
+    }
+    await fetch("/api/chess/rooms/" + id + "/end",{
+        method:"PATCH",
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)}
+    )
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);

@@ -84,9 +84,15 @@ async function onloadIndexBody() {
 
 async function createRoom() {
     const roomName = window.prompt("방 제목을 중복되지 않도록 입력해주세요.");
+    if (roomName === null) {
+        alert("제목 입력은 필수입니다")
+        return;
+    }
+    const password = window.prompt("비밀번호를 설정하세요.")
 
     const bodyValue = {
-        name: roomName
+        name: roomName,
+        password: password
     }
     let response = await fetch("/api/chess/rooms/", {
         method: 'POST',
@@ -124,15 +130,15 @@ async function enterRoom(id) {
 
 
 async function updateRoomName(id) {
-
     const roomName = window.prompt("바꿀 방 제목을 입력해주세요");
-
     if (roomName === null) {
         return;
     }
 
+    const password = window.prompt("비밀번호를 입력해주세요.")
     const bodyValue = {
-        name: roomName
+        name: roomName,
+        password: password
     }
 
     await fetch("/api/chess/rooms/" + id + "/update",{
@@ -151,12 +157,22 @@ async function updateRoomName(id) {
 }
 
 async function deleteRoom(id) {
-    if(confirm("정말 삭제하시겠습니까?")) {
-        await fetch("/api/chess/rooms/" + id + "/end",{ method:"PATCH"})
-            .then(handleErrors)
-            .catch(function (error) {
-                alert(error.message);
-            });
-        window.location.reload()
+    const password = window.prompt("비밀번호를 입력해주세요.")
+    const bodyValue = {
+        password: password
     }
+    await fetch("/api/chess/rooms/" + id + "/end",{
+        method:"PATCH",
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)}
+    )
+        .then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        });
+    window.location.reload()
+
 }

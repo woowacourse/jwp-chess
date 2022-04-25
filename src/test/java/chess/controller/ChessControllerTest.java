@@ -84,11 +84,9 @@ class ChessControllerTest {
                 , BoardsDto.of(createBoardEntities()));
         String response = objectMapper.writeValueAsString(gameResponseDto);
 
-        given(chessService.enterRoom(any(), any(RoomAccessRequestDto.class)))
+        given(chessService.enterRoom(any()))
                 .willReturn(gameResponseDto);
-        mockMvc.perform(post(DEFAULT_API + "/1")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(new RoomAccessRequestDto(ROOM_PASSWORD))))
+        mockMvc.perform(get(DEFAULT_API + "/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(response));
     }
@@ -99,12 +97,10 @@ class ChessControllerTest {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_FINISHED);
         String response = objectMapper.writeValueAsString(errorResponseDto);
 
-        given(chessService.enterRoom(any(), any(RoomAccessRequestDto.class)))
+        given(chessService.enterRoom(any()))
                 .willThrow(new IllegalArgumentException(ERROR_FINISHED));
 
-        mockMvc.perform(post(DEFAULT_API + "/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new RoomAccessRequestDto(ROOM_PASSWORD))))
+        mockMvc.perform(get(DEFAULT_API + "/1"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(response));
     }
@@ -247,7 +243,7 @@ class ChessControllerTest {
 
         doThrow(new IllegalArgumentException(ERROR_FINISHED))
                 .when(chessService)
-                .updateRoomName(1L, roomRequestDto);
+                .updateRoomName(any(), any(RoomRequestDto.class));
         mockMvc.perform(patch(DEFAULT_API + "/1/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request)

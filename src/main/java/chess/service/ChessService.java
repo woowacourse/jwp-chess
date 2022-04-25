@@ -64,9 +64,8 @@ public class ChessService {
             .collect(Collectors.toList());
     }
 
-    public GameResponseDto enterRoom(final Long roomId, final RoomAccessRequestDto roomAccessRequestDto) {
+    public GameResponseDto enterRoom(final Long roomId) {
         final RoomEntity room = roomRepository.findById(roomId);
-        validatePassword(roomAccessRequestDto.getPassword(), room.getPassword());
         validateGameOver(room);
         final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
         return GameResponseDto.of(room, BoardsDto.of(boards));

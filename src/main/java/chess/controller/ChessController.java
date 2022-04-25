@@ -33,9 +33,9 @@ public class ChessController {
         return ResponseEntity.ok(chessService.findRooms());
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<GameResponseDto> enterRoom(@PathVariable Long id, @RequestBody RoomAccessRequestDto roomAccessRequestDto) {
-        return ResponseEntity.ok(chessService.enterRoom(id, roomAccessRequestDto));
+    @GetMapping("/{id}")
+    public ResponseEntity<GameResponseDto> enterRoom(@PathVariable Long id) {
+        return ResponseEntity.ok(chessService.enterRoom(id));
     }
 
     @PatchMapping("/{id}/end")

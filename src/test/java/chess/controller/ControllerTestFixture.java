@@ -4,7 +4,7 @@ public class ControllerTestFixture {
 
     public static final String DEFAULT_API = "/api/chess/rooms";
     public static final String ROOM_NAME = "체스 초보만";
-    public static final String ROOM_PASSWORD = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+    public static final String ROOM_PASSWORD = "1234";
     public static final String WHITE = "white";
     public static final boolean FALSE = false;
     public static final String ERROR_FINISHED = "[ERROR] 이미 종료된 게임입니다.";

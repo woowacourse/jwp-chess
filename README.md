@@ -1,20 +1,30 @@
-
 ## 실행 방법
 
 1. 도커 실행
 
-  ```
-  cd docker
-  docker-compose -p chess up -d
-  ```
+```
+cd docker
+docker-compose -p chess up -d
+docker exec -it chess_db_1 bash
+```
+
+2.mysql 실행
+```
+mysql -u root -proot
+use chess;
+```
+
 2. 테이블 정보
-  ```
+
+```
 docker/db/mysql/init/init.sql
-   ```
+```
+
 3. 포트번호
- ```
+
+```
 http://localhost:8080/
-   ```
+```
 
 ## 요구사항
 
@@ -32,7 +42,7 @@ http://localhost:8080/
 ## TODO
 
 - [x] 기존의 spark로 구현한 controller를 spring으로 대체한다.
-  - [x] ModelAndView를 사용해 웹 페이지를 렌더링한다.
+    - [x] ModelAndView를 사용해 웹 페이지를 렌더링한다.
 - [x] 기존의 jdbc로 구현한 dao를 Spring jdbcTemplate으로 대체한다.
 - [x] 서버 DB(MySQL)와 테스트용 DB(H2)를 따로 만들어 관리한다.
 
@@ -50,3 +60,19 @@ http://localhost:8080/
     - [x] 킹이 죽으면 더이상 움직일 수 없다.
 
 - [x] 게임 방 번호별로 동시에 게임을 진행할 수 있다.
+
+## TODO
+- [x] test에서 displayname 적기
+- [x] pieceDao에서 Bulk insert batchUpdate로 구현 & application.properties변경
+- [x] Readme로 실행방법 update.
+- [x] moveCommandDto 변경(gameId삭제)
+- [x] Private method를 public으로 바꾸기. (컨트롤러)
+- [x] 에러 처리 어떻게 할 것인지 고민해보기 -> httpservlet 사용
+- [x] 전체적으로 함수이름, 함수위치 컨벤션 수정
+- [ ] 여기는 ChessGameService를 bean으로 주입하지 않고 있는데 이유가 있을까요?
+- [ ] JdbcTemplate 은 final로 선언해주면 좋을 것 같아요!
+- [ ] 스프링에서 bean 주입 방식에 대해 알아볼까요?
+- [ ] 생성자 주입을 사용하셨는데 이 방식을 택한 이유가 있을까요?
+- [ ] default 접근제어자를 사용하신 이유가 있을까요?
+- [ ] @Controller 와 @RestController 의 차이도 공부해보면 좋을것 같아요!
+- [ ] ResponseBody로 내려주는 방법도 고려해볼 수 있을 것 같아요~

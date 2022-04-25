@@ -33,3 +33,4 @@ out/
 
 ### DOCKER ###
 /docker/db/
+!docker/db/mysql/init/init.sql

@@ -63,8 +63,7 @@ public class ChessGameService {
     }
 
     public ChessGameDto prepareChessGame(ChessGameDto chessGameDto) {
-        ChessGameDto newChessGameDto = new ChessGameDto(chessGameDto.getId(), chessGameDto.getName(),
-            GameStatus.RUNNING, new Score(), new Score(), Color.WHITE, chessGameDto.getWinner());
+        ChessGameDto newChessGameDto = createNewChessGameDto(chessGameDto);
         chessGameDao.updateChessGame(newChessGameDto);
         return newChessGameDto;
     }
@@ -88,6 +87,18 @@ public class ChessGameService {
         } catch (IllegalArgumentException | IllegalStateException e) {
             throw new ChessGameException(chessGameId, e.getMessage());
         }
+    }
+
+    private ChessGameDto createNewChessGameDto(ChessGameDto chessGameDto) {
+        return new ChessGameDto(
+            chessGameDto.getId(),
+            chessGameDto.getName(),
+            GameStatus.RUNNING,
+            new Score(),
+            new Score(),
+            Color.WHITE,
+            chessGameDto.getWinner()
+        );
     }
 
     private ChessGameDto updateChessBoard(ChessBoard chessBoard, Movement movement, ChessGameDto chessGameDto) {

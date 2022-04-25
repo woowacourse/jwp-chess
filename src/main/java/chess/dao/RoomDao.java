@@ -4,5 +4,5 @@ public interface RoomDao {
 
     void saveNewRoom(final String roomName, final String password);
 
-    boolean isDuplicatedName(final String roomName);
+    boolean hasDuplicatedName(final String roomName);
 }

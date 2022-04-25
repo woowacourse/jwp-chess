@@ -19,7 +19,7 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public boolean isDuplicatedName(final String roomName) {
+    public boolean hasDuplicatedName(final String roomName) {
         final String sql = "select count(*) from room where name = ?";
         final int count = jdbcTemplate.queryForObject(sql, Integer.class, roomName);
         return count > 0;

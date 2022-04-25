@@ -11,7 +11,7 @@ public class RoomService {
     }
 
     public RoomServiceMessage saveNewRoom(final String roomName, final String passWord) {
-        if (roomDao.isDuplicatedName(roomName)) {
+        if (roomDao.hasDuplicatedName(roomName)) {
             return RoomServiceMessage.ROOM_CREATE_FAIL_BY_DUPLICATED_NAME;
         }
         roomDao.saveNewRoom(roomName, passWord);

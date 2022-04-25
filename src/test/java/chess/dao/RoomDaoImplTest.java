@@ -33,7 +33,7 @@ class RoomDaoImplTest {
         roomDao.saveNewRoom("first", "1234");
 
         //actual
-        final boolean actual = roomDao.isDuplicatedName(roomName);
+        final boolean actual = roomDao.hasDuplicatedName(roomName);
 
         //then
         assertThat(actual).isEqualTo(expected);

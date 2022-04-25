@@ -18,7 +18,7 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public boolean isDuplicatedName(final String roomName) {
+    public boolean hasDuplicatedName(final String roomName) {
         return rooms.keySet()
                 .stream()
                 .anyMatch(name -> name.equals(roomName));

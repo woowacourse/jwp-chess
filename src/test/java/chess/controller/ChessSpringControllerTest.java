@@ -3,8 +3,8 @@ package chess.controller;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import chess.domain.Winner;
@@ -14,6 +14,7 @@ import chess.dto.ResponseDto;
 import chess.dto.ResultDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
+import chess.service.ResponseCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +31,14 @@ public class ChessSpringControllerTest {
     @MockBean
     private ChessGameService chessGameService;
 
-    @DisplayName("start Test- GET")
+    @DisplayName("start GET 요청 테스트")
     @Test
     void get_start() throws Exception {
-        ResponseDto responseDto = new ResponseDto(200, "");
-        given(chessGameService.start()).willReturn(new ResponseDto(200, ""));
-
         mockMvc.perform(get("/start"))
-                .andExpect(content().json(responseDto.toJson()));
+                .andExpect(status().isOk());
     }
 
-    @DisplayName("chess Test- GET")
+    @DisplayName("chess GET 요청 테스트")
     @Test
     void get_chess() throws Exception {
         final ChessBoardDto chessBoardDto = ChessBoardDto.from(new Board().getPiecesByPosition());
@@ -56,11 +54,10 @@ public class ChessSpringControllerTest {
     void post_move() throws Exception {
         final String requestString = "a2 a4";
         final ResponseDto responseDto = new ResponseDto(302, "");
-        given(chessGameService.move("a2", "a4")).willReturn(responseDto);
+        given(chessGameService.move("a2", "a4")).willReturn(ResponseCode.FOUND);
         mockMvc.perform(post("/move")
-                .content(requestString))
-                .andExpect(content().json(responseDto.toJson()));
-
+                        .content(requestString))
+                .andExpect(status().isFound());
     }
 
     @DisplayName("status GET 요청 테스트")
@@ -78,11 +75,8 @@ public class ChessSpringControllerTest {
     @DisplayName("end GET 요청 테스트")
     @Test
     void get_end() throws Exception {
-        ResponseDto responseDto = new ResponseDto(200, "");
-        given(chessGameService.end()).willReturn(new ResponseDto(200, ""));
-
         mockMvc.perform(get("/end"))
-                .andExpect(content().json(responseDto.toJson()));
+                .andExpect(status().isOk());
     }
 
     @DisplayName("result GET 요청 테스트")

@@ -12,13 +12,14 @@ import chess.domain.state.Running;
 import chess.domain.state.StateFactory;
 import chess.dto.ChessGameDto;
 import chess.dto.PieceAndPositionDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static chess.dao.ChessDao.DEFAULT_GAME_ID;
+import static chess.dao.ChessDaoImpl.DEFAULT_GAME_ID;
 
 @Service
 public class ChessService {
@@ -35,8 +36,8 @@ public class ChessService {
     public ChessGameDto newGame() {
         deleteOldData(DEFAULT_GAME_ID);
         initNewChessGame(DEFAULT_GAME_ID);
-        chessGame = new ChessGame(new Running(Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)), convertToBoard(chessDao.findBoard(DEFAULT_GAME_ID))));
-        return new ChessGameDto(chessDao.findBoard(DEFAULT_GAME_ID), chessGame.status());
+        chessGame = new ChessGame(new Running(Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)), convertToBoard(chessDao.findAllPiece(DEFAULT_GAME_ID))));
+        return new ChessGameDto(chessDao.findAllPiece(DEFAULT_GAME_ID), chessGame.status());
     }
 
     private void deleteOldData(final int gameId) {
@@ -62,17 +63,18 @@ public class ChessService {
         chessGame.move(Position.from(from), Position.from(to));
         final var nextColor = Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)).next();
         updateBoard(from, to, DEFAULT_GAME_ID, nextColor.name());
-        return new ChessGameDto(chessDao.findBoard(DEFAULT_GAME_ID), chessGame.status());
+        return new ChessGameDto(chessDao.findAllPiece(DEFAULT_GAME_ID), chessGame.status());
     }
 
     private void updateBoard(final String from, final String to, final int gameId, final String color) {
-        chessDao.deletePiece(to);
+        chessDao.deletePiece(gameId, to);
         chessDao.updatePiece(from, to, gameId);
         chessDao.updateTurn(color, gameId);
     }
 
     public ChessGameDto loadGame() {
-        chessGame = new ChessGame(StateFactory.of(Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)), convertToBoard(chessDao.findBoard(DEFAULT_GAME_ID))));
-        return new ChessGameDto(chessDao.findBoard(DEFAULT_GAME_ID), chessGame.status());
+        chessGame = new ChessGame(StateFactory.of(Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)), convertToBoard(chessDao.findAllPiece(DEFAULT_GAME_ID))));
+        return new ChessGameDto(chessDao.findAllPiece(DEFAULT_GAME_ID), chessGame.status());
     }
+
 }

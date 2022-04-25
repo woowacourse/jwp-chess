@@ -3,11 +3,13 @@ package chess.dto;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 
+import java.util.Objects;
+
 public final class PieceAndPositionDto {
 
     private final String pieceName;
     private final String pieceColor;
-    private final String position;
+    private String position;
 
     public PieceAndPositionDto(final Position position, final Piece piece) {
         this.pieceName = piece.getNotation().name();
@@ -31,5 +33,22 @@ public final class PieceAndPositionDto {
 
     public String getPosition() {
         return position;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PieceAndPositionDto that = (PieceAndPositionDto) o;
+        return Objects.equals(pieceName, that.pieceName) && Objects.equals(pieceColor, that.pieceColor) && Objects.equals(position, that.position);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceName, pieceColor, position);
+    }
+
+    public void setPosition(final String position) {
+        this.position = position;
     }
 }

@@ -2,8 +2,6 @@ package chess.controller;
 
 import static chess.view.webview.Converter.convertToWebViewPiece;
 
-import chess.domain.board.position.Position;
-import chess.domain.piece.Piece;
 import chess.service.ChessGameService;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
@@ -14,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class WebController {
+
+    private static final String RE_DIRECT = "redirect:/";
 
     private final ChessGameService chessGameService;
 
@@ -29,25 +29,20 @@ public class WebController {
     }
 
     @GetMapping(path = "/start")
-    public String start(final Model model) {
-        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.start());
-        model.addAllAttributes(pieces);
-        return "index";
+    public String start() {
+        chessGameService.start();
+        return RE_DIRECT;
     }
 
     @PostMapping(path = "/move")
-    public String move(final Model model,
-                     @RequestParam("source") String source,
-                     @RequestParam("target") String target) {
-        final Map<Position, Piece> pieces = chessGameService.move(source, target);
-        model.addAllAttributes(convertToWebViewPiece(pieces));
-        return "index";
+    public String move(@RequestParam("source") String source, @RequestParam("target") String target) {
+        chessGameService.move(source, target);
+        return RE_DIRECT;
     }
 
     @GetMapping(path = "/end")
-    public String end(final Model model) {
-        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.end());
-        model.addAllAttributes(pieces);
-        return "index";
+    public String end() {
+        chessGameService.end();
+        return RE_DIRECT;
     }
 }

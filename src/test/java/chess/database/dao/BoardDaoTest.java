@@ -1,24 +1,15 @@
 package chess.database.dao;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import chess.database.dao.spring.RoomDao;
-import chess.database.dto.GameStateDto;
-import chess.database.dto.RoomDto;
-import java.util.List;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import chess.database.dao.spring.SpringBoardDao;
 import chess.database.dao.spring.SpringGameDao;
 import chess.database.dto.BoardDto;
+import chess.database.dto.GameStateDto;
 import chess.database.dto.PointDto;
+import chess.database.dto.RoomDto;
 import chess.database.dto.RouteDto;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
@@ -26,6 +17,14 @@ import chess.domain.board.Point;
 import chess.domain.board.Route;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
+import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest
 class BoardDaoTest {

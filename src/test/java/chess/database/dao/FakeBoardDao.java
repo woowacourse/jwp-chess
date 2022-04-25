@@ -1,16 +1,15 @@
 package chess.database.dao;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import chess.database.dto.BoardDto;
 import chess.database.dto.PieceDto;
 import chess.database.dto.PointDto;
 import chess.database.dto.RouteDto;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FakeBoardDao implements BoardDao {
 
-    private final Map<String, Map<PointDto, PieceDto>> memoryDatabase;
+    private final Map<Integer, Map<PointDto, PieceDto>> memoryDatabase;
 
     public FakeBoardDao() {
         this.memoryDatabase = new HashMap<>();
@@ -18,7 +17,7 @@ public class FakeBoardDao implements BoardDao {
 
     @Override
     public void saveBoard(BoardDto boardDto, int roomId) {
-        this.memoryDatabase.put(Integer.toString(roomId), new HashMap<>(boardDto.getPointPieces()));
+        this.memoryDatabase.put(roomId, new HashMap<>(boardDto.getPointPieces()));
     }
 
     @Override

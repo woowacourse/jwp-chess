@@ -33,13 +33,6 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public void start() {
-        boardStateDao.save(StateType.WHITE_TURN);
-
-        ChessBoard chessBoard = new ChessBoard(new InitBoardGenerator());
-        initChessBoard(chessBoard.getBoard());
-    }
-
     private void initChessBoard(Board board) {
         for (int rankIndex = BOARD_START_INDEX; rankIndex <= BOARD_END_INDEX; rankIndex++) {
             initOneRank(board, rankIndex);
@@ -54,9 +47,21 @@ public class ChessService {
         }
     }
 
-    public void end() {
+    public void restart() {
+        end();
+        start();
+    }
+
+    private void end() {
         boardStateDao.deleteAll();
         pieceDao.deleteAll();
+    }
+
+    private void start() {
+        boardStateDao.save(StateType.WHITE_TURN);
+
+        ChessBoard chessBoard = new ChessBoard(new InitBoardGenerator());
+        initChessBoard(chessBoard.getBoard());
     }
 
     public ChessStatusDto getChessStatus() {

@@ -21,9 +21,6 @@ public class ChessController {
 
     @GetMapping("/")
     public String rendIndexPage(final Model model) {
-        if (chessService.isNotRunning()) {
-            return "redirect:/start";
-        }
         model.addAttribute("chessStatus", chessService.getChessStatus());
 
         return "index";
@@ -35,17 +32,10 @@ public class ChessController {
         return new Gson().toJson(chessService.getMoveResult(movePositionsDto));
     }
 
-    @GetMapping("/start")
-    public String startChess() {
-        chessService.start();
-
-        return "redirect:/";
-    }
-
     @GetMapping("/result")
     public String rendResultPage(final Model model) {
         model.addAttribute("result", chessService.getChessResult());
-        chessService.end();
+        chessService.restart();
 
         return "result";
     }

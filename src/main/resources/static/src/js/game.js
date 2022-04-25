@@ -1,4 +1,7 @@
 const startButton = document.querySelector("#startButton");
+// document.querySelectorAll('.piece-image')
+//     .forEach(cell => cell.addEventListener('click', e => cellClick(e, id)));
+
 let gameOver = "";
 
 let source = "";
@@ -14,17 +17,43 @@ async function onloadGameBody() {
         })
     game = await game.json();
     console.log(game);
-
-    // let boards = game.board.boards;
+    let boards = game.board.boards;
     // console.log(boards);
 
     //view 세팅 시작------------
-    // 1) 제목 변경
+    // 1) 방 제목 넣어주기
     document.getElementById("roomName").innerText = game.name;
 
+    // 2) move직전에, gameOver라는 플래그를 통해 게임시작/종료를 확인한다. -> 채워주기
+    gameOver = game.gameOver;
 
-    // document.querySelectorAll('.piece-image')
-    //     .forEach(cell => cell.addEventListener('click', e => cellClick(e, id)));
+    // 3) (추가) 입장했다면, start버튼 hide시키기
+    // startButton.classList.add("hide");
+    startButton.style.display = 'none';
+
+    // 4) board판을 돌면서, 해당position의 div에 [기존 자식태그(img) 삭제후 -> 새 img태그 추가]
+    putPiece(boards);
+}
+
+function putPiece(boards) {
+    for (let i = 0; i < boards.length; i++) {
+        let position = boards[i].position;
+        let piece = boards[i].piece;
+
+        let div = document.querySelector("#" + position);
+        // (1) 이미 안에 기물용img태그 있다면 지우기
+        if (div.hasChildNodes()) {
+            div.removeChild(div.firstChild);
+        }
+        // (2) 기물용img태그 추가해주기
+        let img = document.createElement("img");
+        img.style.width = '30px';
+        img.style.height = '40px';
+        img.style.display = 'block';
+        img.style.margin = 'auto';
+        img.src = "/images/" + piece + ".png";
+        div.appendChild(img);
+    }
 }
 
 startButton.addEventListener('click', async function () {
@@ -72,18 +101,18 @@ async function initializeBoard(board) {
     }))
 }
 
-function putPiece(eachDiv, board, value) {
-    if (eachDiv.hasChildNodes()) {
-        eachDiv.removeChild(eachDiv.firstChild);
-    }
-    const img = document.createElement("img");
-    img.style.width = '30px';
-    img.style.height = '40px';
-    img.style.display = 'block';
-    img.style.margin = 'auto';
-    img.src = "/images/" + value + ".png";
-    eachDiv.appendChild(img);
-}
+// function putPiece(eachDiv, board, value) {
+//     if (eachDiv.hasChildNodes()) {
+//         eachDiv.removeChild(eachDiv.firstChild);
+//     }
+//     const img = document.createElement("img");
+//     img.style.width = '30px';
+//     img.style.height = '40px';
+//     img.style.display = 'block';
+//     img.style.margin = 'auto';
+//     img.src = "/images/" + value + ".png";
+//     eachDiv.appendChild(img);
+// }
 
 function clickMovePosition(e) {
     if (gameOver === "true" || gameOver === "") {
@@ -120,17 +149,13 @@ async function updateBoard(board) {
 
 async function sendMoveInformation(source, target) {
     const bodyValue = {
-        source: source,
-        target: target
+        source: source, target: target
     }
 
     let movedBoard = await fetch("/api/chess/rooms/33/move", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(bodyValue)
+        method: 'POST', headers: {
+            'Content-Type': 'application/json;charset=utf-8', 'Accept': 'application/json'
+        }, body: JSON.stringify(bodyValue)
     }).then(handleErrors)
         .catch(function (error) {
             alert(error.message);

@@ -24,8 +24,11 @@ import java.util.Map;
 @Controller
 public class ChessController {
 
-    @Autowired
-    private CommandDao commandDao;
+    private final CommandDao commandDao;
+
+    public ChessController(CommandDao commandDao) {
+        this.commandDao = commandDao;
+    }
 
     @GetMapping("/")
     public ModelAndView index() {

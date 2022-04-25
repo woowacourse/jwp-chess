@@ -8,8 +8,12 @@ import java.util.List;
 
 @Repository
 public class CommandDao {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public CommandDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void insert(String command) {
         String sql = "insert into command (command) values (?)";

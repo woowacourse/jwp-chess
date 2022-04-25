@@ -36,10 +36,6 @@ public class BoardEntity {
         return piece;
     }
 
-    public void update(String piece) {
-        this.piece = piece;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

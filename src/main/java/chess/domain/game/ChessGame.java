@@ -67,10 +67,6 @@ public class ChessGame {
         return board.getPiece(Position.valueOf(rawPosition)).convertPieceToString();
     }
 
-    public Board getBoard() {
-        return board;
-    }
-
     public Team getCurrentTurn() {
         return turn.getTeam();
     }

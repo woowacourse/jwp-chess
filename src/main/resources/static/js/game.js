@@ -38,7 +38,8 @@ function initChessPieces() {
       placeChessPieces(json.board);
     })
     .fail(function (xhr, status, errorThrown) {
-      alert("initChessPieces - error !");
+      console.log(xhr);
+      alert(xhr.responseText);
     });
 }
 
@@ -53,8 +54,8 @@ function loadLastGame() {
       setCurrentTeam(data.lastTeam);
     })
     .fail(function (xhr, status, errorThrown) {
-      alert("loadPiecesAndTeam - error !");
       console.log(xhr);
+      alert(xhr.responseText);
     });
 }
 
@@ -127,7 +128,8 @@ function movePiece() {
       placeChessPieces(data.board);
     })
     .fail(function (xhr, status, errorThrown) {
-      alert("movePiece - error !");
+      console.log(xhr);
+      alert(xhr.responseText);
     });
 }
 
@@ -149,7 +151,8 @@ function currentTeam() {
       setCurrentTeam(data);
     })
     .fail(function (xhr, status, errorThrown) {
-      alert("currentTeam - error !");
+      console.log(xhr);
+      alert(xhr.responseText);
     });
 }
 
@@ -190,8 +193,8 @@ function saveGame() {
       alert("저장 완료 !");
     })
     .fail(function (xhr, status, errorThrown) {
-      alert("저장 오류");
       console.log(xhr);
+      alert(xhr.responseText);
     });
 
   location.replace("/");

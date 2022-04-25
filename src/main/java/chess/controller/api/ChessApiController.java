@@ -13,12 +13,15 @@ import chess.dto.response.web.LastGameResponse;
 import chess.service.ChessService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -65,8 +68,14 @@ public class ChessApiController {
         return lastGameResponse;
     }
 
-    @PutMapping("/test-put")
-    public void testPUt() {
-        System.out.println("ChessApiController.postTest");
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public String illegalExHandle(IllegalArgumentException exception) {
+        return exception.getMessage();
+    }
+
+    @ExceptionHandler
+    public String exHandle(Exception exception) {
+        return exception.getMessage();
     }
 }

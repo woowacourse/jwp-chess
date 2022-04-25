@@ -1,13 +1,11 @@
 package chess.controller.spring;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.notNullValue;
 
 import chess.domain.Member;
 import chess.service.MemberService;
 import io.restassured.RestAssured;
-import java.util.List;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

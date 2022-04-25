@@ -12,13 +12,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class DataSourceConfig {
     @Bean(name = "transactionManager")
-    public PlatformTransactionManager transactionManager(DataSource dataSource)
-    {
+    public PlatformTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean(name = "jdbcTemplate")
-    public JdbcTemplate apiJdbcTemplate(DataSource dataSource){
+    public JdbcTemplate apiJdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 }

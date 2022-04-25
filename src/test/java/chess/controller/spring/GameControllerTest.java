@@ -107,7 +107,8 @@ class GameControllerTest {
         final String title = "테스트 방";
         final String password = "1234";
 
-        final CreateGameRequestDto createGameRequestDto = new CreateGameRequestDto(title, password, member1Id, member2Id);
+        final CreateGameRequestDto createGameRequestDto = new CreateGameRequestDto(title, password, member1Id,
+                member2Id);
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(createGameRequestDto)

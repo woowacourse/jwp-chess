@@ -52,4 +52,7 @@ class ChessServiceTest {
 
         assertThat(chessGameResponse.getGameState()).isEqualTo(GameState.READY);
     }
+
+    @DisplayName("종료 요청이 들어오면 게임을 삭제한다.")
+    @Test
 }

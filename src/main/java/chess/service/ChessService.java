@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
+import chess.controller.dto.response.EndResponse;
 import chess.controller.dto.response.PieceResponse;
 import chess.controller.dto.response.StatusResponse;
 import chess.dao.GameDao;
@@ -112,11 +113,9 @@ public class ChessService {
         return new StatusResponse(chessGame.createStatus());
     }
 
-    public ChessGameResponse end(long gameId) {
-        ChessGame chessGame = getChessGame(gameId);
-        chessGame.end();
-        gameDao.updateState(gameId, chessGame.getGameState());
-        return new ChessGameResponse(chessGame);
+    public EndResponse endGame(long gameId) {
+        gameDao.delete(gameId);
+        return new EndResponse("게임이 종료되었습니다.");
     }
 
     public void deleteGame(long gameId) {

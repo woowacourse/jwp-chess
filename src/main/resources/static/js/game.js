@@ -229,11 +229,14 @@ async function getStatus() {
 }
 
 async function end() {
-  const res = await fetch(`/games/${gameId}/end`);
+  const res = await fetch(`/games/${gameId}`, {
+    method: "DELETE"
+  });
   const data = await res.json();
   if (!res.ok) {
     alert(data.message);
     return;
   }
-  alert("게임을 중단합니다.");
+  alert(data.message);
+  location.replace("/");
 }

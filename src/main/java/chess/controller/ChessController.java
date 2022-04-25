@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
+import chess.controller.dto.response.EndResponse;
 import chess.controller.dto.response.ErrorResponse;
 import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
@@ -9,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -59,11 +61,10 @@ public class ChessController {
         return chessService.status(gameId);
     }
 
-    @GetMapping("/{gameId}/end")
-    public ChessGameResponse endGame(@PathVariable long gameId) {
-        return chessService.end(gameId);
+    @DeleteMapping("/{gameId}")
+    public EndResponse endGame(@PathVariable long gameId) {
+        return chessService.endGame(gameId);
     }
-    // TODO: 게임 삭제 기능으로 변경 필요
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException e) {

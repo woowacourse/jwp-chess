@@ -1,13 +1,13 @@
 package chess.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.controller.dto.request.MoveRequest;
-import chess.domain.GameState;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import java.util.NoSuchElementException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -100,7 +100,7 @@ class ChessControllerTest {
         void restart() {
             chessService.createGame(testGameId);
             chessService.startGame(testGameId);
-            chessService.end(testGameId);
+            chessService.endGame(testGameId);
 
             RestAssured.given().log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -142,7 +142,7 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("GET - end api 테스트")
+    @DisplayName("DELETE - 게임 종료 기능 테스트")
     @Test
     void end() {
         chessService.createGame(testGameId);
@@ -150,10 +150,11 @@ class ChessControllerTest {
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/games/" + testGameId + "/end")
+                .when().delete("/games/" + testGameId)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("message", Matchers.equalTo("게임이 종료되었습니다."));
 
-        assertThat(chessService.loadGame(testGameId).getGameState()).isEqualTo(GameState.FINISHED);
+        assertThatThrownBy(() -> chessService.loadGame(testGameId)).isInstanceOf(NoSuchElementException.class);
     }
 }

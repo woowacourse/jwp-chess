@@ -62,7 +62,8 @@ public class ChessService {
         return new BlackTurn(board);
     }
 
-    public GameStateDto move(MoveDto moveDTO, long roomId) {
+    public GameStateDto move(MoveDto moveDTO) {
+        Long roomId = getGame().getId();
         updateMove(roomId, moveDTO.getSource(), moveDTO.getDestination());
 
         GameState gameState = changeState(roomId);

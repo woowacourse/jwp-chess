@@ -23,7 +23,7 @@ public class ChessSpringController {
 
     @PostMapping(value = "/move")
     public ResponseEntity<GameStateDto> move(@RequestBody MoveDto moveDto) {
-        return ResponseEntity.ok().body(chessService.move(moveDto, chessService.getGame().getId()));
+        return ResponseEntity.ok().body(chessService.move(moveDto));
     }
 
     @GetMapping("/status")

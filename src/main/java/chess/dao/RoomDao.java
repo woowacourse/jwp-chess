@@ -45,6 +45,11 @@ public class RoomDao {
         return result != 0;
     }
 
+    public String findPasswordById(final int roomId) {
+        final String sql = "SELECT password FROM room WHERE room_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, roomId);
+    }
+
     public CurrentTurnDto findCurrentTurnById(final int roomId) {
         final String sql = "SELECT name, current_turn FROM room WHERE room_id = ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> CurrentTurnDto.from(resultSet), roomId);

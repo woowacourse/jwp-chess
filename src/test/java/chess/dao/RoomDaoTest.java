@@ -73,6 +73,24 @@ class RoomDaoTest {
     }
 
     @Test
+    @DisplayName("방 id로 비밀번호를 조회한다.")
+    void findPasswordById() {
+        // given
+        final String roomName = "hi";
+        final GameStatus gameStatus = GameStatus.READY;
+        final Color currentTurn = Color.WHITE;
+        final String password = "1q2w3e4r";
+
+        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+
+        // when
+        final String actual = roomDao.findPasswordById(roomId);
+
+        // then
+        assertThat(actual).isEqualTo(password);
+    }
+
+    @Test
     @DisplayName("방 id로 현재 상태을 조회한다.")
     void findStatusById() {
         // given

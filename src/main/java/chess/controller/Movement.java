@@ -4,8 +4,11 @@ import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Movement {
+
+    private final Pattern pattern = Pattern.compile("[A-H][1-8]");
 
     private final Position from;
     private final Position to;
@@ -25,7 +28,7 @@ public class Movement {
     }
 
     private void checkPosition(String position) {
-        if (!position.matches("[A-H][1-8]")) {
+        if (!pattern.matcher(position).matches()) {
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }
     }

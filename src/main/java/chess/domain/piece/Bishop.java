@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 
 public class Bishop extends Piece {
 
+    private static final BigDecimal BISHOP_POINT = new BigDecimal("3");
+
     public Bishop(Color color) {
         super(color);
     }
@@ -22,6 +24,6 @@ public class Bishop extends Piece {
 
     @Override
     public BigDecimal getPoint() {
-        return new BigDecimal("3");
+        return BISHOP_POINT;
     }
 }

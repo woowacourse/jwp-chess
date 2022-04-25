@@ -4,11 +4,10 @@ import static chess.domain.piece.movementcondition.BaseMovementCondition.IMPOSSI
 import static chess.domain.piece.movementcondition.BaseMovementCondition.MUST_CAPTURE_PIECE;
 import static chess.domain.piece.movementcondition.BaseMovementCondition.MUST_EMPTY_DESTINATION;
 import static chess.domain.piece.movementcondition.BaseMovementCondition.MUST_OBSTACLE_FREE;
-
-import chess.domain.position.Position;
-import chess.domain.position.Rank;
 import chess.domain.piece.movementcondition.MovementCondition;
 import chess.domain.piece.movementcondition.MovementConditions;
+import chess.domain.position.Position;
+import chess.domain.position.Rank;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -16,6 +15,9 @@ public class Pawn extends Piece {
 
     private static final Rank BLACK_START_RANK = Rank.SEVEN;
     private static final Rank WHITE_START_RANK = Rank.TWO;
+
+    private static final int MOVE_DISTANCE = 1;
+    private static final int START_MOVE_DISTANCE = 2;
 
     public Pawn(Color color) {
         super(color);
@@ -46,7 +48,7 @@ public class Pawn extends Piece {
         if (isVerticalWay(from, to)) {
             return getVerticalDistance(from, to) <= movableDistance(from);
         }
-        return getVerticalDistance(from, to) == 1 && getHorizontalDistance(from, to) == 1;
+        return getVerticalDistance(from, to) == MOVE_DISTANCE && getHorizontalDistance(from, to) == MOVE_DISTANCE;
     }
 
     private int getVerticalDistance(Position from, Position to) {
@@ -55,9 +57,9 @@ public class Pawn extends Piece {
 
     private int movableDistance(Position from) {
         if (isStartPawnPosition(from)) {
-            return 2;
+            return START_MOVE_DISTANCE;
         }
-        return 1;
+        return MOVE_DISTANCE;
     }
 
     private boolean isStartPawnPosition(Position position) {

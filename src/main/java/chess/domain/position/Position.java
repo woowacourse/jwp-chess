@@ -1,9 +1,9 @@
 package chess.domain.position;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Position {
 
@@ -104,11 +104,9 @@ public class Position {
         List<Rank> ranks = rank.getPath(to.rank);
         List<File> files = file.getPath(to.file);
 
-        List<Position> result = new ArrayList<>();
-        for (int i = 0; i < ranks.size(); i++) {
-            result.add(new Position(files.get(i), ranks.get(i)));
-        }
-        return result;
+        return IntStream.range(0, ranks.size())
+            .mapToObj(i -> new Position(files.get(i), ranks.get(i)))
+            .collect(Collectors.toList());
     }
 
     @Override

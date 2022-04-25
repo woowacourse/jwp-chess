@@ -9,7 +9,7 @@ import chess.domain.chesspiece.King;
 import chess.domain.chesspiece.Pawn;
 import chess.domain.chesspiece.Queen;
 import chess.domain.position.Position;
-import chess.dto.ChessPieceDto;
+import chess.dto.response.ChessPieceDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

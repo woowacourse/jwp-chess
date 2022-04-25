@@ -2,9 +2,9 @@ package chess.dao;
 
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
-import chess.dto.CurrentTurnDto;
-import chess.dto.RoomResponseDto;
-import chess.dto.RoomStatusDto;
+import chess.dto.response.CurrentTurnDto;
+import chess.dto.response.RoomResponseDto;
+import chess.dto.response.RoomStatusDto;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +21,8 @@ public class RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn, final String password) {
+    public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn,
+                    final String password) {
         final String sql = "INSERT INTO room (name, game_status, current_turn, password) VALUES (?, ?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {

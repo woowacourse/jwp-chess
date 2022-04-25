@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.request;
 
 public class RoomDeletionRequestDto {
 
@@ -9,12 +9,12 @@ public class RoomDeletionRequestDto {
         return roomId;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setRoomId(final int roomId) {
         this.roomId = roomId;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(final String password) {

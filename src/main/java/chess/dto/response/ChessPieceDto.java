@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.response;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

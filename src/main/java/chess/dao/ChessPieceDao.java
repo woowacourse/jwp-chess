@@ -2,8 +2,8 @@ package chess.dao;
 
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.position.Position;
-import chess.dto.ChessPieceDto;
 import chess.dto.ChessPieceMapper;
+import chess.dto.response.ChessPieceDto;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

@@ -13,11 +13,11 @@ import chess.domain.position.Position;
 import chess.domain.result.EndResult;
 import chess.domain.result.MoveResult;
 import chess.domain.result.StartResult;
-import chess.dto.ChessPieceDto;
 import chess.dto.ChessPieceMapper;
-import chess.dto.CurrentTurnDto;
-import chess.dto.MoveRequestDto;
-import chess.dto.RoomStatusDto;
+import chess.dto.request.MoveRequestDto;
+import chess.dto.response.ChessPieceDto;
+import chess.dto.response.CurrentTurnDto;
+import chess.dto.response.RoomStatusDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -63,7 +63,7 @@ public class ChessService {
     }
 
     private void updatePosition(final int roomId, final Position from, final Position to) {
-         chessPieceDao.deleteByRoomIdAndPosition(roomId, to);
+        chessPieceDao.deleteByRoomIdAndPosition(roomId, to);
         chessPieceDao.updateByRoomIdAndPosition(roomId, from, to);
     }
 
@@ -134,10 +134,10 @@ public class ChessService {
     }
 
     private void updateRoom(final int roomId, final GameStatus gameStatus, final Color currentTurn) {
-         roomDao.updateById(roomId, gameStatus, currentTurn);
+        roomDao.updateById(roomId, gameStatus, currentTurn);
     }
 
     private void updateRoomStatusTo(final int roomId, final GameStatus gameStatus) {
-         roomDao.updateStatusById(roomId, gameStatus);
+        roomDao.updateStatusById(roomId, gameStatus);
     }
 }

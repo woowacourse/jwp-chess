@@ -5,8 +5,10 @@ import chess.domain.chesspiece.Color;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
+import chess.exception.NotFoundException;
 import java.sql.PreparedStatement;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -54,18 +56,30 @@ public class RoomDao {
     }
 
     public String findPasswordById(final int roomId) {
-        final String sql = "SELECT password FROM room WHERE room_id = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, roomId);
+        try {
+            final String sql = "SELECT password FROM room WHERE room_id = ?";
+            return jdbcTemplate.queryForObject(sql, String.class, roomId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("방 아이디에 해당하는 비밀번호가 존재하지 않습니다.");
+        }
     }
 
     public CurrentTurnDto findCurrentTurnById(final int roomId) {
-        final String sql = "SELECT name, current_turn FROM room WHERE room_id = ?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> CurrentTurnDto.from(resultSet), roomId);
+        try {
+            final String sql = "SELECT name, current_turn FROM room WHERE room_id = ?";
+            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> CurrentTurnDto.from(resultSet), roomId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("방 아이디에 해당하는 턴 정보가 존재하지 않습니다.");
+        }
     }
 
     public RoomStatusDto findStatusById(final int roomId) {
-        final String sql = "SELECT name, game_status FROM room WHERE room_id = ?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> RoomStatusDto.from(resultSet), roomId);
+        try {
+            final String sql = "SELECT name, game_status FROM room WHERE room_id = ?";
+            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> RoomStatusDto.from(resultSet), roomId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("방 아이디에 해당하는 게임 상태가 존재하지 않습니다.");
+        }
     }
 
     public int deleteById(final int roomId) {

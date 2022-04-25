@@ -21,6 +21,15 @@ class RoomDaoImplTest {
     @BeforeEach
     void setUp() {
         roomDao = new RoomDaoImpl(jdbcTemplate);
+        jdbcTemplate.execute("DROP TABLE IF EXISTS room");
+        jdbcTemplate.execute("CREATE TABLE room("
+                + "id INT NOT NULL AUTO_INCREMENT,"
+                + "name VARCHAR(20) NOT NULL, "
+                + "password VARCHAR(20) NOT NULL,"
+                + "PRIMARY KEY (id));"
+        );
+
+        jdbcTemplate.update("insert into room (name, password) values (?, ?)", "일번방", "1234");
     }
 
     @DisplayName("데이터를 삽입한다.")
@@ -30,5 +39,11 @@ class RoomDaoImplTest {
         String password = "1234";
 
         assertThat(roomDao.insert(name, password)).isEqualTo(1);
+    }
+
+    @DisplayName("전체 방 데이터를 가져온다.")
+    @Test
+    void findAll() {
+        assertThat(roomDao.findAll()).isNotEmpty();
     }
 }

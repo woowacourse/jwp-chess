@@ -58,7 +58,7 @@ public class ChessService {
             return createChessBoard(gameName);
         }
         chessGame = selectedChessGame;
-
+        save();
         return chessGame.getChessBoardSymbol();
     }
 

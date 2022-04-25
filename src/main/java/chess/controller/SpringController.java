@@ -41,7 +41,6 @@ public class SpringController {
         @RequestParam(value = "error", required = false) String error,
         Model model) {
         List<String> chessBoard = chessService.findByName(gameName);
-        chessService.save();
         model.addAttribute("chessboard", chessBoard);
         model.addAttribute("gameName", gameName);
         model.addAttribute("error", error);

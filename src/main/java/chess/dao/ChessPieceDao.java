@@ -21,11 +21,6 @@ public class ChessPieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ChessPieceDto> findAllByRoomName(final String roomName) {
-        final String sql = "SELECT * FROM chess_piece WHERE room_name = ?";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> ChessPieceDto.from(resultSet), roomName);
-    }
-
     public List<ChessPieceDto> findAllByRoomId(final int roomId) {
         final String sql = "SELECT * FROM chess_piece WHERE room_id = ?";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> ChessPieceDto.from(resultSet), roomId);
@@ -41,20 +36,20 @@ public class ChessPieceDao {
         return jdbcTemplate.update(sql, roomName);
     }
 
-    public int saveAll(final String roomName, final Map<Position, ChessPiece> pieceByPosition) {
-        String sql = "INSERT INTO chess_piece (room_name, position, chess_piece, color) VALUES (?, ?, ?, ?)";
-        final List<Object[]> list = setAllParameter(roomName, pieceByPosition);
+    public int saveAll(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {
+        String sql = "INSERT INTO chess_piece (room_id, position, chess_piece, color) VALUES (?, ?, ?, ?)";
+        final List<Object[]> list = setAllParameter(roomId, pieceByPosition);
         final int[] result = jdbcTemplate.batchUpdate(sql, list);
         return Arrays.stream(result).sum();
     }
 
-    private List<Object[]> setAllParameter(final String roomName, final Map<Position, ChessPiece> pieceByPosition) {
+    private List<Object[]> setAllParameter(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {
         final List<Object[]> list = new ArrayList<>();
         for (final Entry<Position, ChessPiece> entry : pieceByPosition.entrySet()) {
             final Position position = entry.getKey();
             final ChessPiece chessPiece = entry.getValue();
             Object[] array = {
-                    roomName,
+                    roomId,
                     position.getValue(),
                     ChessPieceMapper.toPieceType(chessPiece),
                     chessPiece.color().getValue()

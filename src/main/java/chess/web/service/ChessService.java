@@ -8,13 +8,10 @@ import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
 import chess.web.dao.BoardDao;
-import chess.web.dao.BoardDaoImpl;
 import chess.web.dao.PieceDao;
-import chess.web.dao.PieceDaoImpl;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,9 +48,9 @@ public class ChessService {
         Pieces pieces = board.getPieces();
 
         Piece piece = pieces.findByPosition(Position.from(moveDto.getFrom()));
-        try{
+        try {
             board.move(List.of(moveDto.getFrom(), moveDto.getTo()), turn);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return move(moveDto, boardId);
         }
         Turn changedTurn = updatePieces(moveDto, turn, piece, boardId);

@@ -139,6 +139,25 @@ class ChessControllerTest {
                 .andExpect(content().string(response));
     }
 
+    @DisplayName("room 삭제 시 비밀번호가 틀릴 경우 400 bad request와 errorResponseDto를 반환한다.")
+    @Test
+    void finishGameNotSamePasswordException() throws Exception {
+        RoomRequestDto roomRequestDto = new RoomRequestDto(ROOM_NAME, ROOM_PASSWORD);
+        String request = objectMapper.writeValueAsString(roomRequestDto);
+
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_PASSWORD_WRONG);
+        String response = objectMapper.writeValueAsString(errorResponseDto);
+
+        doThrow(new IllegalArgumentException(ERROR_PASSWORD_WRONG))
+                .when(chessService)
+                .endRoom(any(), any(RoomAccessRequestDto.class));
+        mockMvc.perform(patch(DEFAULT_API + "/1/end")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().string(response));
+    }
+
     @DisplayName("진행 중인 방에서 움직임 요청을 보내면 200 ok와 gameResponseDto를 반환한다.")
     @Test
     void move() throws Exception {
@@ -242,6 +261,25 @@ class ChessControllerTest {
         String response = objectMapper.writeValueAsString(errorResponseDto);
 
         doThrow(new IllegalArgumentException(ERROR_FINISHED))
+                .when(chessService)
+                .updateRoomName(any(), any(RoomRequestDto.class));
+        mockMvc.perform(patch(DEFAULT_API + "/1/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request)
+        ).andExpect(status().isBadRequest())
+                .andExpect(content().string(response));
+    }
+
+    @DisplayName("room 이름 변경 시 비밀번호가 틀릴 경우 400 bad request와 errorResponseDto를 반환한다.")
+    @Test
+    void changeRoomNameNotSamePasswordException() throws Exception {
+        RoomRequestDto roomRequestDto = new RoomRequestDto(ROOM_NAME, ROOM_PASSWORD);
+        String request = objectMapper.writeValueAsString(roomRequestDto);
+
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_PASSWORD_WRONG);
+        String response = objectMapper.writeValueAsString(errorResponseDto);
+
+        doThrow(new IllegalArgumentException(ERROR_PASSWORD_WRONG))
                 .when(chessService)
                 .updateRoomName(any(), any(RoomRequestDto.class));
         mockMvc.perform(patch(DEFAULT_API + "/1/update")

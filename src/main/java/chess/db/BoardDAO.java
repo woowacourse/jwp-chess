@@ -18,20 +18,17 @@ public class BoardDAO {
     public static final String INSERT_ONE_PIECE_SQL = "insert into board (location, name, color, roomID) values (?, ?, ?, ?)";
     public static final String DELETE_ONE_PIECE_SQL = "delete from board where location = ? and roomID = ?";
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public BoardDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<PiecesDto> pieceRowMapper = (resultSet, rowNum) -> {
-        PiecesDto piece = new PiecesDto(
-                resultSet.getString("location"),
-                resultSet.getString("color"),
-                resultSet.getString("name")
-        );
-        return piece;
-    };
+    private final RowMapper<PiecesDto> pieceRowMapper = (resultSet, rowNum) ->
+            new PiecesDto(resultSet.getString("location"),
+                    resultSet.getString("color"),
+                    resultSet.getString("name")
+    );
 
     public void initializePieces(State state, String roomId) {
         Map<Position, Piece> pieces = state.getBoard().getPieces();
@@ -56,5 +53,4 @@ public class BoardDAO {
     public void delete(Position position, String roomId) {
         jdbcTemplate.update(DELETE_ONE_PIECE_SQL, position.getPosition(), roomId);
     }
-
 }

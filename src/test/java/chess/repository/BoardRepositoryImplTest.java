@@ -7,6 +7,7 @@ import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.entity.BoardEntity;
+import chess.entity.RoomEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,7 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 class BoardRepositoryImplTest {
 
     @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
     private BoardRepository boardRepository;
+
 
     @DisplayName("저장된 보드를 가져온다")
     @Test
@@ -63,6 +68,7 @@ class BoardRepositoryImplTest {
     @DisplayName("a2 blank를 insert한다.")
     @Test
     void insert() {
+        insertInitialData();
         final BoardEntity boardEntity = new BoardEntity(1L, "a2", "blank");
         final BoardEntity insertBoard = boardRepository.insert(boardEntity);
 
@@ -70,6 +76,9 @@ class BoardRepositoryImplTest {
     }
 
     private void insertInitialData() {
+        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        roomRepository.insert(roomEntity);
+
         final Map<Position, Piece> boards = BoardFactory.initialize();
         final List<BoardEntity> boardEntities = boards.entrySet().stream()
             .map(entry -> new BoardEntity(1L, entry.getKey().convertPositionToString(),

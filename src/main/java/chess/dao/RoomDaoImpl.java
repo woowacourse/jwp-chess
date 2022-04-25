@@ -45,6 +45,4 @@ public class RoomDaoImpl implements RoomDao {
         String sql = "update room set turn = ? where id = ?";
         jdbcTemplate.update(sql, turn, id);
     }
-
-
 }

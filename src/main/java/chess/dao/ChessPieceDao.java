@@ -4,11 +4,10 @@ import chess.domain.chesspiece.ChessPiece;
 import chess.domain.position.Position;
 import chess.dto.ChessPieceMapper;
 import chess.dto.response.ChessPieceDto;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -38,25 +37,21 @@ public class ChessPieceDao {
 
     public int saveAll(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {
         String sql = "INSERT INTO chess_piece (room_id, position, chess_piece, color) VALUES (?, ?, ?, ?)";
-        final List<Object[]> list = setAllParameter(roomId, pieceByPosition);
-        final int[] result = jdbcTemplate.batchUpdate(sql, list);
+        final List<Object[]> batchArguments = toBatchArguments(roomId, pieceByPosition);
+        final int[] result = jdbcTemplate.batchUpdate(sql, batchArguments);
         return Arrays.stream(result).sum();
     }
 
-    private List<Object[]> setAllParameter(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {
-        final List<Object[]> list = new ArrayList<>();
-        for (final Entry<Position, ChessPiece> entry : pieceByPosition.entrySet()) {
-            final Position position = entry.getKey();
-            final ChessPiece chessPiece = entry.getValue();
-            Object[] array = {
-                    roomId,
-                    position.getValue(),
-                    ChessPieceMapper.toPieceType(chessPiece),
-                    chessPiece.color().getValue()
-            };
-            list.add(array);
-        }
-        return list;
+    private List<Object[]> toBatchArguments(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {
+        return pieceByPosition.entrySet()
+                .stream()
+                .map(entry -> new Object[]{
+                        roomId,
+                        entry.getKey().getValue(),
+                        ChessPieceMapper.toPieceType(entry.getValue()),
+                        entry.getValue().color().getValue()
+                })
+                .collect(Collectors.toList());
     }
 
     public int updateByRoomIdAndPosition(final int roomId, final Position from, final Position to) {

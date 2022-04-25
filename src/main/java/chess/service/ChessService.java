@@ -8,11 +8,11 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
+import chess.domain.state.Ready;
 import chess.domain.state.Running;
 import chess.domain.state.StateFactory;
 import chess.dto.ChessGameDto;
 import chess.dto.PieceAndPositionDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class ChessService {
     private static final String FIRST_COLOR = "WHITE";
 
     private final ChessDao chessDao;
-    private ChessGame chessGame;
+    private ChessGame chessGame = new ChessGame(new Ready());
 
     public ChessService(final ChessDao chessDao) {
         this.chessDao = chessDao;
@@ -76,5 +76,4 @@ public class ChessService {
         chessGame = new ChessGame(StateFactory.of(Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)), convertToBoard(chessDao.findAllPiece(DEFAULT_GAME_ID))));
         return new ChessGameDto(chessDao.findAllPiece(DEFAULT_GAME_ID), chessGame.status());
     }
-
 }

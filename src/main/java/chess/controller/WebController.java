@@ -19,7 +19,7 @@ public class WebController {
     }
 
     @GetMapping("/")
-    public String showFirstPage() {
+    public String indexPage() {
         return "index";
     }
 
@@ -43,7 +43,6 @@ public class WebController {
 
     @ExceptionHandler({RuntimeException.class})
     private ResponseEntity<String> handleException(final RuntimeException exception) {
-        ResponseEntity.status(500);
         return ResponseEntity.badRequest().body(gson.toJson(exception.getMessage()));
     }
 }

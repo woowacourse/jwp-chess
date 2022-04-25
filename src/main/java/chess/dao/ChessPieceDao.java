@@ -26,6 +26,11 @@ public class ChessPieceDao {
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> ChessPieceDto.from(resultSet), roomName);
     }
 
+    public List<ChessPieceDto> findAllByRoomId(final int roomId) {
+        final String sql = "SELECT * FROM chess_piece WHERE room_id = ?";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> ChessPieceDto.from(resultSet), roomId);
+    }
+
     public int deleteByPosition(final String roomName, final Position position) {
         final String sql = "DELETE FROM chess_piece WHERE room_name = ? AND position = ?";
         return jdbcTemplate.update(sql, roomName, position.getValue());

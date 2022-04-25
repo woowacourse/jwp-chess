@@ -12,6 +12,19 @@ const initMapEvent = () => {
     }
 }
 
+const makeRoom = async () => {
+    // fetch로 방 생성하기
+    await restartChess();
+}
+
+const enterRoom = async () => {
+    // fetch로 방 id 받아와서 이동하기
+}
+
+const deleteRoom = async () => {
+    // fetch로 방 id 받아와서 삭제하기
+}
+
 const intToFile = (value) => {
     const map = new Map([
         [0, "a"], [1, "b"], [2, "c"], [3, "d"],
@@ -109,6 +122,7 @@ const load = async () => {
     let chessMap = await fetch('/load');
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
+    showChessMenu();
 }
 
 const restartChess = async () => {
@@ -116,6 +130,12 @@ const restartChess = async () => {
     let chessMap = await fetch('/start');
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
+    showChessMenu();
+}
+
+const showChessMenu = () => {
+    document.getElementById("chess-room").style.display = 'none';
+    document.getElementById("chess-menu").style.visibility = 'visible';
 }
 
 const showStatus = async () => {

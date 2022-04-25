@@ -72,11 +72,6 @@ public class ChessService {
         return new ChessGameResponse(chessGame);
     }
 
-    public ChessGameResponse restartGame(long gameId) {
-        gameDao.delete(gameId);
-        return createGame(gameId);
-    }
-
     public void saveBoard(long gameId, Map<Position, Piece> board) {
         board.forEach((position, piece) -> savePiece(gameId, position, piece));
     }
@@ -87,20 +82,16 @@ public class ChessService {
         }
     }
 
-    public ChessGameResponse startOrRestartGame(long gameId) {
-        Optional<GameState> maybeGameState = gameDao.load(gameId);
-        GameState gameState = maybeGameState.orElseThrow(() -> new IllegalArgumentException("게임이 없습니다."));
-        if (gameState == GameState.READY) {
-            return startGame(gameId);
-        }
-        return restartGame(gameId);
-    }
-
     public ChessGameResponse startGame(long gameId) {
         ChessGame chessGame = getChessGame(gameId);
         chessGame.start();
         gameDao.updateState(gameId, chessGame.getGameState());
         return new ChessGameResponse(chessGame);
+    }
+
+    public ChessGameResponse resetGame(long gameId) {
+        gameDao.delete(gameId);
+        return createGame(gameId);
     }
 
     public ChessGameResponse move(long gameId, MoveRequest moveRequest) {

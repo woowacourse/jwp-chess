@@ -39,9 +39,14 @@ public class ChessController {
         return ResponseEntity.created(new URI("/api/games/" + gameId)).body(chessService.createGame(gameId));
     }
 
+    @PatchMapping("/{gameId}")
+    public ChessGameResponse startGame(@PathVariable long gameId) {
+        return chessService.startGame(gameId);
+    }
+
     @PutMapping("/{gameId}")
-    public ChessGameResponse startOrRestartGame(@PathVariable long gameId) {
-        return chessService.startOrRestartGame(gameId);
+    public ChessGameResponse resetGame(@PathVariable long gameId) {
+        return chessService.resetGame(gameId);
     }
 
     @PatchMapping("/{gameId}/pieces")

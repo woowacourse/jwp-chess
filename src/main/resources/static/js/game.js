@@ -5,7 +5,7 @@ const gameId = window.location.pathname.split("/")[2];
 
 const section = document.getElementById("chess-section");
 const startButton = document.getElementById("start-button");
-const restartButton = document.getElementById("restart-button");
+const resetButton = document.getElementById("reset-button");
 const turnInfo = document.getElementById("turn-info");
 const statusButton = document.getElementById("status-button");
 const score = document.getElementById("score");
@@ -32,7 +32,7 @@ window.onload = async function () {
     section.appendChild(row);
   }
   startButton.addEventListener("click", start);
-  restartButton.addEventListener("click", restart);
+  resetButton.addEventListener("click", reset);
   statusButton.addEventListener("click", getStatus);
   endButton.addEventListener("click", end);
 
@@ -65,7 +65,7 @@ function load(data) {
   rendBoard(data.board.pieces);
   printTurn(data);
   startButton.classList.add("hidden");
-  restartButton.classList.remove("hidden");
+  resetButton.classList.remove("hidden");
 }
 
 function rendBoard(pieces) {
@@ -112,7 +112,7 @@ function printTurn(data) {
 
 async function start() {
   const res = await fetch(`/games/${gameId}`, {
-    method: "PUT",
+    method: "PATCH",
   });
   const data = await res.json();
   if (!res.ok) {
@@ -122,10 +122,10 @@ async function start() {
   rendBoard(data.board.pieces);
   printTurn(data);
   startButton.classList.add("hidden");
-  restartButton.classList.remove("hidden");
+  resetButton.classList.remove("hidden");
 }
 
-async function restart() {
+async function reset() {
   const res = await fetch(`/games/${gameId}`, {
     method: "PUT",
   });
@@ -138,7 +138,7 @@ async function restart() {
   turnInfo.innerText = "게임을 시작해주세요.";
   score.innerText = "";
   startButton.classList.remove("hidden");
-  restartButton.classList.add("hidden");
+  resetButton.classList.add("hidden");
 }
 
 function removePiece(cell) {

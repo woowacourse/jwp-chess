@@ -33,12 +33,22 @@ class ChessServiceTest {
         assertThat(chessGameResponse.getGameState()).isEqualTo(GameState.READY);
     }
 
-    @DisplayName("재시작 요청이 들어오면 게임을 새로 생성한다.")
+    @DisplayName("게임 시작 요청이 들어오면 게임을 시작한다.")
+    @Test
+    void start_Game() {
+        chessService.createGame(1);
+
+        ChessGameResponse chessGameResponse = chessService.startGame(1);
+
+        assertThat(chessGameResponse.getGameState()).isEqualTo(GameState.WHITE_RUNNING);
+    }
+
+    @DisplayName("초기화 요청이 들어오면 게임을 새로 생성한다.")
     @Test
     void restart_Game() {
         chessService.createGame(1);
 
-        ChessGameResponse chessGameResponse = chessService.restartGame(1);
+        ChessGameResponse chessGameResponse = chessService.resetGame(1);
 
         assertThat(chessGameResponse.getGameState()).isEqualTo(GameState.READY);
     }

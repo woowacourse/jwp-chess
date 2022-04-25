@@ -5,7 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.CurrentTurnDto;
+import chess.dto.RoomResponseDto;
 import chess.dto.RoomStatusDto;
+import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,6 +55,21 @@ class RoomDaoTest {
         // then
         assertThat(roomId).isEqualTo(1);
         assertThat(roomId2).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("모든 방을 조회한다.")
+    void findAll() {
+        // given
+        roomDao.save("name1", GameStatus.READY, Color.WHITE, "123");
+        roomDao.save("name2", GameStatus.PLAYING, Color.BLACK, "1234");
+        roomDao.save("name3", GameStatus.END, Color.WHITE, "12345");
+
+        // when
+        final List<RoomResponseDto> result = roomDao.findAll();
+
+        // then
+        assertThat(result.size()).isEqualTo(3);
     }
 
     @Test

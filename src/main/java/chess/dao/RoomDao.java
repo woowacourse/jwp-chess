@@ -3,8 +3,10 @@ package chess.dao;
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.CurrentTurnDto;
+import chess.dto.RoomResponseDto;
 import chess.dto.RoomStatusDto;
 import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -43,6 +45,11 @@ public class RoomDao {
         final String sql = "SELECT EXISTS(SELECT room_id FROM room WHERE room_id = ?)";
         final Integer result = jdbcTemplate.queryForObject(sql, Integer.class, roomId);
         return result != 0;
+    }
+
+    public List<RoomResponseDto> findAll() {
+        final String sql = "SELECT room_id, name, game_status FROM room";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> RoomResponseDto.from(resultSet));
     }
 
     public String findPasswordById(final int roomId) {

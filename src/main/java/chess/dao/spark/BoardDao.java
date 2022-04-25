@@ -1,6 +1,6 @@
-package chess.repository.spark;
+package chess.dao.spark;
 
-import chess.repository.entity.BoardEntity;
+import chess.entity.BoardEntity;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

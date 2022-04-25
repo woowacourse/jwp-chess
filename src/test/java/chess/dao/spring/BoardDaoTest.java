@@ -1,9 +1,9 @@
-package chess.repository.spring;
+package chess.dao.spring;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.repository.entity.BoardEntity;
+import chess.entity.BoardEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

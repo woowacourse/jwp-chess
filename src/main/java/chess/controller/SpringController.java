@@ -36,13 +36,13 @@ public class SpringController {
         return "index";
     }
 
-    @PostMapping("/create_chess_game")
+    @PostMapping("/chess-game")
     public RedirectView createChessGame(final @RequestParam String name) {
         springChessService.createChessGame(name);
-        return new RedirectView("/game/" + name);
+        return new RedirectView("/games/" + name);
     }
 
-    @GetMapping("/game/{name}")
+    @GetMapping("/games/{name}")
     public String getChessGamePage(final Model model, final @PathVariable String name) {
         Map<String, Piece> boardForHtml = convertBoardForHtml(springChessService, name);
         model.addAllAttributes(boardForHtml);
@@ -67,26 +67,26 @@ public class SpringController {
         return new RedirectView("/");
     }
 
-    @PostMapping("/move/{chess_game_name}")
-    public RedirectView movePiece(final @PathVariable String chess_game_name,
+    @PostMapping("/move/{name}")
+    public RedirectView movePiece(final @PathVariable String name,
                                   final @RequestParam String source,
                                   final @RequestParam String target) {
         String refinedSource = source.trim().toLowerCase();
         String refinedTarget = target.trim().toLowerCase();
         springChessService.movePiece(
-                chess_game_name,
+                name,
                 refinedSource.charAt(COLUMN_INDEX),
                 Character.getNumericValue(refinedSource.charAt(ROW_INDEX)),
                 refinedTarget.charAt(COLUMN_INDEX),
                 Character.getNumericValue(refinedTarget.charAt(ROW_INDEX))
         );
-        return new RedirectView("/game/" + chess_game_name);
+        return new RedirectView("/games/" + name);
     }
 
-    @PostMapping("/reset/{chess_game_name}")
-    public RedirectView resetChessGame(final @PathVariable String chess_game_name) {
-        springChessService.createChessGame(chess_game_name);
-        return new RedirectView("/game/" + chess_game_name);
+    @PostMapping("/reset/{name}")
+    public RedirectView resetChessGame(final @PathVariable String name) {
+        springChessService.createChessGame(name);
+        return new RedirectView("/games/" + name);
     }
 
     @ExceptionHandler

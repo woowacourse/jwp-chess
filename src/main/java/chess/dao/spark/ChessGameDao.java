@@ -1,14 +1,12 @@
-package chess.repository.spark;
+package chess.dao.spark;
 
-import chess.repository.entity.ChessGameEntity;
+import chess.entity.ChessGameEntity;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 public class ChessGameDao {
 

@@ -1,4 +1,4 @@
-package chess.repository.entity;
+package chess.entity;
 
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;

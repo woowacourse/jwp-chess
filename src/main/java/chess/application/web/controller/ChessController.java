@@ -62,19 +62,12 @@ public class ChessController {
         return "redirect:game";
     }
 
-    @PostMapping(path = "/result")
-    public String result() {
-        commandDao.insert("status");
-        return "redirect:result";
-    }
-
     @GetMapping(path = "/result")
     public ModelAndView printResult() {
         ModelAndView modelAndView = new ModelAndView("status");
-        State state = currentState();
-        Status status = (Status) state;
+        Status status = (Status) currentState().proceed("status");
         HashMap<Player, Double> results = status.calculateScore();
-        modelAndView.addObject("squares", showChessBoard(state.getBoard()));
+        modelAndView.addObject("squares", showChessBoard(status.getBoard()));
         modelAndView.addObject("whiteScore", results.get(Player.WHITE));
         modelAndView.addObject("blackScore", results.get(Player.BLACK));
         return modelAndView;

@@ -40,7 +40,7 @@ public class WebChessController {
     }
 
     @GetMapping("/{id}/enter")
-    public ResponseEntity<Object> enterRoom(@PathVariable() Long id) {
+    public ResponseEntity<Object> enterRoom(@PathVariable Long id) {
         final RoomEntity roomEntity = chessService.enterRoom(id);
         if (roomEntity == null) {
             return ResponseEntity.notFound().build();
@@ -49,7 +49,7 @@ public class WebChessController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GameResponseDto> getCurrentBoard(@PathVariable() Long id) {
+    public ResponseEntity<GameResponseDto> getCurrentBoard(@PathVariable Long id) {
         return ResponseEntity.ok(chessService.getCurrentBoard(id));
     }
 
@@ -63,7 +63,7 @@ public class WebChessController {
     public ResponseEntity<Object> finishGame(@PathVariable Long id) {
         chessService.endRoom(id);
 //        return ResponseEntity.ok(chessService.createStatus(id));
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/status")

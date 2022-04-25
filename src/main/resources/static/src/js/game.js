@@ -14,7 +14,6 @@ async function onloadGameBody() {
             alert(error.message);
         })
     game = await game.json();
-    console.log(game);
     let boards = game.board.boards;
     // console.log(boards);
 
@@ -87,7 +86,6 @@ async function startGame() {
 async function handleErrors(response) {
     if (!response.ok) {
         let message = await response.json();
-        console.log(response)
         throw Error(message.errorMessage);
     }
     return response;
@@ -200,6 +198,7 @@ async function endGame() {
         .catch(function (error) {
             alert(error.message);
         });
+
 
     await getScore();
 

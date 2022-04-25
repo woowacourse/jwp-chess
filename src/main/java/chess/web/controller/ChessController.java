@@ -1,8 +1,8 @@
 package chess.web.controller;
 
 import chess.web.dto.MovePositionsDto;
+import chess.web.dto.MoveResultDto;
 import chess.web.service.ChessService;
-import com.google.gson.Gson;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +28,8 @@ public class ChessController {
 
     @ResponseBody
     @PostMapping("/move")
-    public String movePiece(@RequestBody MovePositionsDto movePositionsDto) {
-        return new Gson().toJson(chessService.getMoveResult(movePositionsDto));
+    public MoveResultDto movePiece(@RequestBody MovePositionsDto movePositionsDto) {
+        return chessService.getMoveResult(movePositionsDto);
     }
 
     @GetMapping("/result")

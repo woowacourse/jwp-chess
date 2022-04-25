@@ -20,7 +20,7 @@ public class MoveResultDto {
         return errorMessage;
     }
 
-    public boolean isGameOver() {
+    public boolean getIsGameOver() {
         return isGameOver;
     }
 }

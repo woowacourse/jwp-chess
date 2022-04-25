@@ -8,6 +8,7 @@ import chess.domain.Position;
 import chess.domain.piece.PieceFactory;
 import chess.domain.state.Turn;
 import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ChessGameControllerTest {
 
 	@Autowired
@@ -45,7 +44,7 @@ class ChessGameControllerTest {
 				.when().post("chessgames")
 				.then().log().all()
 				.statusCode(HttpStatus.CREATED.value())
-				.header("Location", "/chessgames/1");
+				.header("Location", Matchers.matchesRegex("/chessgames/[0-9+]"));
 	}
 
 	@Test

@@ -31,12 +31,11 @@ async function startGame() {
 }
 
 async function endGame() {
-    await getScore()
     const password = window.prompt("비밀번호를 입력해주세요.")
     const bodyValue = {
         password: password
     }
-    await fetch("/api/chess/rooms/" + id + "/end",{
+    await fetch("/api/chess/rooms/" + gameId + "/end",{
         method:"PATCH",
         headers: {
             'Content-Type': 'application/json;charset=utf-8',

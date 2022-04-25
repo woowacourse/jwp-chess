@@ -5,6 +5,7 @@ import chess.domain.Result;
 import chess.domain.piece.Piece;
 import chess.domain.square.Rank;
 import chess.dto.CreateGameRequestDto;
+import chess.dto.GameRoomEnterDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.RankDto;
 import chess.service.GameService;
@@ -102,5 +103,15 @@ public class GameController {
                 createGameRequestDto.getBlackId()
         );
         return ResponseEntity.created(URI.create("/games/" + gameId)).body(gameId);
+    }
+
+    @PostMapping("/password")
+    @ResponseBody
+    public ResponseEntity<Boolean> checkPassword(@RequestBody GameRoomEnterDto gameRoomEnterDto) {
+        final ChessGame game = gameService.findByGameId(gameRoomEnterDto.getGameId());
+        if (game.getPassword().equals(gameRoomEnterDto.getPassword())) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.badRequest().body(false);
     }
 }

@@ -1,85 +1,88 @@
 package chess.controller;
 
-import static spark.Spark.*;
-
-import java.util.Map;
-
 import chess.converter.Converter;
-import chess.dao.BoardDBDao;
-import chess.dao.GameDBDao;
 import chess.domain.board.Board;
 import chess.domain.game.StatusCalculator;
 import chess.service.ChessService;
-import spark.ModelAndView;
-import spark.template.handlebars.HandlebarsTemplateEngine;
+import java.util.Map;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+@Controller
 public class WebChessController {
 
-    private final ChessService chessService = new ChessService(new BoardDBDao(), new GameDBDao());
+    private final ChessService chessService;
 
-    public void run() {
-        port(8081);
-        staticFileLocation("/static");
+    public WebChessController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
-        get("/", (req, res) -> {
-            return new ModelAndView(null, "index.html");
-        }, new HandlebarsTemplateEngine());
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
 
-        get("/game/:id", (req, res) -> {
-            int gameId = Integer.parseInt(req.params(":id"));
-            Board board = chessService.findBoardByGameId(gameId);
+    @GetMapping("/game/{id}")
+    public org.springframework.web.servlet.ModelAndView game(@PathVariable("id") int id) {
+        Board board = chessService.findBoardByGameId(id);
 
-            Map<String, Object> map = Converter.toMap(gameId, board);
-            return new ModelAndView(map, "start.html");
-        }, new HandlebarsTemplateEngine());
+        Map<String, Object> map = Converter.toMap(id, board);
+        org.springframework.web.servlet.ModelAndView modelAndView = new org.springframework.web.servlet.ModelAndView("start");
+        modelAndView.addObject("board", map);
+        return modelAndView;
+    }
 
-        post("/game/:id/move", (req, res) -> {
-            String from = req.queryParams("from");
-            String to = req.queryParams("to");
+    @PostMapping("/start")
+    public String start(
+            @RequestParam("white_user_name") String whiteUserName,
+            @RequestParam("black_user_name") String blackUserName) {
+        chessService.start(whiteUserName, blackUserName);
+        int gameId = chessService.findGameIdByUserName(whiteUserName, blackUserName);
+        return "redirect:/game/" + gameId;
+    }
 
-            int gameId = Integer.parseInt(req.params(":id"));
-            chessService.move(gameId, from, to);
+    @PostMapping("/game/{gameId}/move")
+    public String move(
+            @PathVariable("gameId") int gameId,
+            @RequestParam("from") String from,
+            @RequestParam("to") String to
+    ) {
+        chessService.move(gameId, from, to);
+        return "redirect:/game/" + gameId;
+    }
 
-            res.redirect("/game/" + gameId);
-            return null;
-        });
+    @PostMapping("/stop")
+    public String stop() {
+        return "redirect:/";
+    }
 
-        post("/start", (req, res) -> {
-            String whiteUserName = req.queryParams("white_user_name");
-            String blackUserName = req.queryParams("black_user_name");
+    @PostMapping("/game/{gameId}/end")
+    public String end(@PathVariable("gameId") int gameId) {
+        chessService.deleteGameByGameId(gameId);
+        return "redirect:/";
+    }
 
-            chessService.start(whiteUserName, blackUserName);
-            int gameId = chessService.findGameIdByUserName(whiteUserName, blackUserName);
+    @GetMapping("/game/{gameId}/status")
+    public org.springframework.web.servlet.ModelAndView status(@PathVariable("gameId") int gameId) {
+        StatusCalculator status = chessService.createStatus(gameId);
+        Board board = chessService.findBoardByGameId(gameId);
 
-            res.redirect("/game/" + gameId);
-            return null;
-        });
+        Map<String, Object> map = Converter.toMap(gameId, board, status);
+        org.springframework.web.servlet.ModelAndView modelAndView = new ModelAndView("start");
+        modelAndView.addObject("board", map);
+        return modelAndView;
+    }
 
-        post("/stop", (req, res) -> {
-            res.redirect("/");
-            return null;
-        });
-
-        post("/game/:id/end", (req, res) -> {
-            int gameId = Integer.parseInt(req.params(":id"));
-            chessService.deleteGameByGameId(gameId);
-            res.redirect("/");
-            return null;
-        });
-
-        get("/game/:id/status", (req, res) -> {
-            int gameId = Integer.parseInt(req.params(":id"));
-
-            StatusCalculator status = chessService.createStatus(gameId);
-            Board board = chessService.findBoardByGameId(gameId);
-
-            Map<String, Object> map = Converter.toMap(gameId, board, status);
-            return new ModelAndView(map, "start.html");
-        }, new HandlebarsTemplateEngine());
-
-        exception(Exception.class, (exception, request, response) -> {
-            response.status(500);
-            response.body(exception.getMessage());
-        });
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseBody
+    public ResponseEntity<String> handle(RuntimeException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

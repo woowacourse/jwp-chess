@@ -31,9 +31,9 @@ public class ChessPieceDao {
         return jdbcTemplate.update(sql, roomId, position.getValue());
     }
 
-    public int deleteAllByRoomName(final String roomName) {
-        final String sql = "DELETE FROM chess_piece WHERE room_name = ?";
-        return jdbcTemplate.update(sql, roomName);
+    public int deleteAllByRoomId(final int roomId) {
+        final String sql = "DELETE FROM chess_piece WHERE room_id = ?";
+        return jdbcTemplate.update(sql, roomId);
     }
 
     public int saveAll(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {

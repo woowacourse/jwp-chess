@@ -6,6 +6,8 @@ import chess.domain.GameStatus;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Color;
 import chess.domain.chesspiece.King;
+import chess.domain.chesspiece.Pawn;
+import chess.domain.chesspiece.Queen;
 import chess.domain.position.Position;
 import chess.dto.ChessPieceDto;
 import java.util.HashMap;
@@ -107,5 +109,24 @@ class ChessPieceDaoTest {
 
         // then
         assertThat(deletedRow).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("방 id에 해당하는 모든 기물을 삭제한다.")
+    void deleteAllByRoomId() {
+        // given
+        final int roomId = roomDao.save("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r");
+
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        pieceByPosition.put(Position.from("a1"), King.from(Color.WHITE));
+        pieceByPosition.put(Position.from("a2"), Queen.from(Color.WHITE));
+        pieceByPosition.put(Position.from("a3"), Pawn.from(Color.WHITE));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
+
+        // when
+        final int deletedRow = chessPieceDao.deleteAllByRoomId(roomId);
+
+        // then
+        assertThat(deletedRow).isEqualTo(3);
     }
 }

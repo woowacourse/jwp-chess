@@ -57,7 +57,6 @@ public class ChessController {
     public ChessGameResponse endGame(@PathVariable long gameId) {
         return chessService.end(gameId);
     }
-    // TODO: 게임 삭제 기능으로 변경 필요
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException e) {

@@ -9,7 +9,6 @@ $(document).ready(function () {
 
   if (isNewGame()) {
     initChessPieces();
-    currentTeam();
   } else {
     loadLastGame();
   }
@@ -36,6 +35,7 @@ function initChessPieces() {
   })
     .done(function (json) {
       placeChessPieces(json.board);
+      currentTeam();
     })
     .fail(function (xhr, status, errorThrown) {
       console.log(xhr);

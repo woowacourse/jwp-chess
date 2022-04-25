@@ -12,6 +12,7 @@ import chess.dto.response.web.BoardResponse;
 import chess.dto.response.web.LastGameResponse;
 import chess.service.ChessService;
 import java.util.Map;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChessApiController {
 
     @Autowired
+    private ObjectProvider<ChessBoard> prototypeBeanProvider;
+
     private ChessBoard chessBoard;
 
     @Autowired
@@ -37,8 +40,13 @@ public class ChessApiController {
     @Autowired
     private ChessService chessService;
 
+    private void initChessBoard() {
+        this.chessBoard = prototypeBeanProvider.getObject();
+    }
+
     @GetMapping(value = "/board", produces = APPLICATION_JSON_VALUE)
     public BoardResponse board() {
+        initChessBoard();
         return BoardResponse.from(boardFactory.create());
     }
 
@@ -48,7 +56,8 @@ public class ChessApiController {
     }
 
     @PatchMapping(value = "/move", produces = APPLICATION_JSON_VALUE)
-    public BoardResponse move(@RequestParam("from") String fromString, @RequestParam("to") String toString) {
+    public BoardResponse move(@RequestParam("from") String fromString,
+                              @RequestParam("to") String toString) {
         Position from = Position.of(fromString);
         Position to = Position.of(toString);
         chessBoard.movePiece(from, to);
@@ -64,8 +73,7 @@ public class ChessApiController {
 
     @GetMapping(value = "/load-last-game", produces = APPLICATION_JSON_VALUE)
     public LastGameResponse loadLastGame() {
-        LastGameResponse lastGameResponse = chessService.loadLastGame();
-        return lastGameResponse;
+        return chessService.loadLastGame();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

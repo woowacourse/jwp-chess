@@ -6,11 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class SpringChessWebController {
+public class ChessViewController {
 
     private final ChessService chessService;
 
-    public SpringChessWebController(ChessService chessService) {
+    public ChessViewController(ChessService chessService) {
         this.chessService = chessService;
     }
 

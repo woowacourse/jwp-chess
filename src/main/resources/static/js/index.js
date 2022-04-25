@@ -1,6 +1,6 @@
 async function start() {
-    roomName = document.getElementById("roomNameInput").value;
-    password = document.getElementById("passwordInput").value;
+    const roomName = document.getElementById("roomNameInput").value;
+    const password = document.getElementById("passwordInput").value;
     if (/^\s*$/.test(roomName)) {
         const error = document.getElementById("error");
         error.innerText = "방 이름을 입력하세요!";
@@ -25,7 +25,10 @@ async function start() {
         body: JSON.stringify({roomName: `${roomName}`, password: `${password}`})
     });
     if (res.status === 201) {
-        await fetch(`/rooms/${roomName}/pieces`, {method: "POST"});
-        window.location.href = res.headers.get("location");
+        const location = res.headers.get("Location");
+        const array = location.split("/");
+        const roomId = array[array.length - 1];
+        await fetch(`/rooms/${roomId}/pieces`, {method: "POST"});
+        window.location.href = location;
     }
 }

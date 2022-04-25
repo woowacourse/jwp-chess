@@ -63,6 +63,7 @@ public class GameController {
     }
 
     @PutMapping("/{gameId}/move")
+    @ResponseBody
     public ResponseEntity<Long> movePiece(@PathVariable final Long gameId,
                                           @RequestBody final MoveRequestDto moveRequestDto) {
         gameService.move(gameId, moveRequestDto.getSource(), moveRequestDto.getTarget());

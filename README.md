@@ -57,16 +57,16 @@
 
 | Method |           Url           |         Description         |
 |--------|-------------------------|-----------------------------|
-|GET     |/                        |메인 페이지                     |
-|GET     |/rooms/{name}            |이름이 {name}인 방 조회          |
-|POST    |/rooms/{name}            |새로운 방 생성                  |
-|DELETE  |/rooms/{name}            |방 삭제                        |
-|GET     |/rooms/{name}/pieces     |{name} 방이 소유한 모든 기물 조회  |
-|POST    |/rooms/{name}/pieces     |{name} 방의 기물 등록           |
-|PUT     |/rooms/{name}/pieces     |{name} 방의 기물 위치 변경       |
-|GET     |/rooms/{name}/scores     |{name} 방의 점수 조회           |
-|GET     |/rooms/{name}/turn       |{name} 방 현재 턴 조회          |
-|GET     |/rooms/{name}/result     |{name} 방의 result 조회        |
+| GET    |/                        |메인 페이지                     |
+| GET    |/rooms/{name}            |이름이 {name}인 방 조회          |
+| POST   |/rooms/{name}            |새로운 방 생성                  |
+| DELETE |/rooms/{name}            |방 삭제                        |
+| GET    |/rooms/{name}/pieces     |{name} 방이 소유한 모든 기물 조회  |
+| POST   |/rooms/{name}/pieces     |{name} 방의 기물 등록           |
+| PATCH  |/rooms/{name}/pieces     |{name} 방의 기물 위치 변경       |
+| GET    |/rooms/{name}/scores     |{name} 방의 점수 조회           |
+| GET    |/rooms/{name}/turn       |{name} 방 현재 턴 조회          |
+| GET    |/rooms/{name}/result     |{name} 방의 result 조회        |
 
 ## Wiki 📚
 

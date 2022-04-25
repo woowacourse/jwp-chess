@@ -31,13 +31,13 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void update(GameDto gameDto) {
+    public void modify(GameDto gameDto) {
         final String sql = "update game set turn = ?, status = ?";
         jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus());
     }
 
     @Override
-    public void updateStatus(GameStatusDto statusDto) {
+    public void modifyStatus(GameStatusDto statusDto) {
         final String sql = "update game set status = ?";
         jdbcTemplate.update(sql, statusDto.getName());
     }

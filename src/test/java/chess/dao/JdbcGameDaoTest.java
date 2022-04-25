@@ -60,7 +60,7 @@ public class JdbcGameDaoTest {
         jdbcGameDao.save(gameDto);
 
         GameDto updatedGameDto = new GameDto("black", "end");
-        jdbcGameDao.update(updatedGameDto);
+        jdbcGameDao.modify(updatedGameDto);
 
         assertAll(
                 () -> assertThat(jdbcGameDao.find().getTurn()).isEqualTo("black"),
@@ -75,7 +75,7 @@ public class JdbcGameDaoTest {
         jdbcGameDao.save(gameDto);
 
         GameStatusDto gameStatusDto = GameStatusDto.FINISHED;
-        jdbcGameDao.updateStatus(gameStatusDto);
+        jdbcGameDao.modifyStatus(gameStatusDto);
 
         assertThat(jdbcGameDao.find().getStatus()).isEqualTo(gameStatusDto.getName());
     }

@@ -17,5 +17,5 @@ public interface PieceDao {
 
     List<PieceDto> findAll();
 
-    void update(Position source, Position target);
+    void modifyPosition(Position source, Position target);
 }

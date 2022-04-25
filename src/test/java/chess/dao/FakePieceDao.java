@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class FakePieceDao implements PieceDao {
 
-    private Map<String, PieceDto> pieces = new HashMap<>();
+    private final Map<String, PieceDto> pieces = new HashMap<>();
 
     @Override
     public void remove(Position position) {
@@ -41,7 +41,7 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public void update(Position source, Position target) {
+    public void modifyPosition(Position source, Position target) {
         PieceDto pieceDto = pieces.get(source.getName());
         pieceDto.setPosition(target.getName());
         pieces.remove(source.getName());

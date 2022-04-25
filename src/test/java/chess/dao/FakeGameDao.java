@@ -19,12 +19,12 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public void update(GameDto gameDto) {
+    public void modify(GameDto gameDto) {
         this.gameDto = gameDto;
     }
 
     @Override
-    public void updateStatus(GameStatusDto statusDto) {
+    public void modifyStatus(GameStatusDto statusDto) {
         this.gameDto = new GameDto(this.gameDto.getTurn(), statusDto.getName());
     }
 

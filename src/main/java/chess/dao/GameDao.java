@@ -9,9 +9,9 @@ public interface GameDao {
 
     void save(GameDto gameDto);
 
-    void update(GameDto gameDto);
+    void modify(GameDto gameDto);
 
-    void updateStatus(GameStatusDto statusDto);
+    void modifyStatus(GameStatusDto statusDto);
 
     GameDto find();
 }

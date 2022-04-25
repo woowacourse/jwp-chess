@@ -96,7 +96,7 @@ public class JdbcPieceDaoTest {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
         pieceDao.save(pieceDto);
 
-        pieceDao.update(Position.of("a2"), Position.of("a3"));
+        pieceDao.modifyPosition(Position.of("a2"), Position.of("a3"));
 
         assertThatCode(
                 () -> jdbcTemplate.queryForObject(

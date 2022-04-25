@@ -68,8 +68,8 @@ public class ChessService {
             ChessGame game = getGame();
             game.proceedWith(moveCommand);
             pieceDao.remove(moveCommand.to());
-            pieceDao.update(moveCommand.from(), moveCommand.to());
-            gameDao.update(GameDto.from(game.getTurnColor(), game.isRunning()));
+            pieceDao.modifyPosition(moveCommand.from(), moveCommand.to());
+            gameDao.modify(GameDto.from(game.getTurnColor(), game.isRunning()));
             return getChess();
         } catch (Exception e) {
             throw new IllegalArgumentException("기물을 움직일 수 없습니다.");
@@ -97,7 +97,7 @@ public class ChessService {
 
     public ScoresDto finishGame() {
         try {
-            gameDao.updateStatus(GameStatusDto.FINISHED);
+            gameDao.modifyStatus(GameStatusDto.FINISHED);
             return getScore();
         } catch (Exception e) {
             throw new IllegalArgumentException("게임을 종료시킬 수 없습니다.");

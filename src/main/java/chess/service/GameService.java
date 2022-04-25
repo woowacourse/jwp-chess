@@ -33,7 +33,7 @@ public class GameService {
         validateDistinctGame(roomName);
         GameState state = new Ready();
 //        gameDao.saveGame(GameStateDto.of(state), roomName);
-        boardDao.saveBoard(BoardDto.of(state.getPointPieces()), roomName);
+//        boardDao.saveBoard(BoardDto.of(state.getPointPieces()), roomName);
     }
 
     private void validateDistinctGame(String roomName) {
@@ -76,13 +76,13 @@ public class GameService {
 //        gameDao.updateState(GameStateDto.of(movedState), roomName);
 
         Route route = Route.of(arguments);
-        boardDao.deletePiece(PointDto.of(route.getDestination()), roomName);
-        boardDao.updatePiece(RouteDto.of(route), roomName);
+//        boardDao.deletePiece(PointDto.of(route.getDestination()), roomName);
+//        boardDao.updatePiece(RouteDto.of(route), roomName);
         return movedState;
     }
 
     public void removeGameAndBoard(String roomName) {
-        boardDao.removeBoard(roomName);
+//        boardDao.removeBoard(roomName);
 //        gameDao.removeGame(roomName);
     }
 }

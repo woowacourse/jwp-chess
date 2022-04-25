@@ -5,13 +5,14 @@ import chess.database.dto.PointDto;
 import chess.database.dto.RouteDto;
 
 public interface BoardDao {
-    void saveBoard(BoardDto boardDto, String roomName);
 
-    BoardDto readBoard(String roomName);
+    void saveBoard(BoardDto boardDto, int roomId);
 
-    void deletePiece(PointDto destination, String roomName);
+    BoardDto readBoard(int roomId);
 
-    void updatePiece(RouteDto routeDto, String roomName);
+    void deletePiece(PointDto destination, int roomId);
 
-    void removeBoard(String roomName);
+    void updatePiece(RouteDto routeDto, int roomId);
+
+    void removeBoard(int roomId);
 }

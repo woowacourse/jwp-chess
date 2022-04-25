@@ -17,31 +17,31 @@ public class FakeBoardDao implements BoardDao {
     }
 
     @Override
-    public void saveBoard(BoardDto boardDto, String roomName) {
-        this.memoryDatabase.put(roomName, new HashMap<>(boardDto.getPointPieces()));
+    public void saveBoard(BoardDto boardDto, int roomId) {
+        this.memoryDatabase.put(Integer.toString(roomId), new HashMap<>(boardDto.getPointPieces()));
     }
 
     @Override
-    public BoardDto readBoard(String roomName) {
-        return new BoardDto(memoryDatabase.get(roomName));
+    public BoardDto readBoard(int roomId) {
+        return new BoardDto(memoryDatabase.get(roomId));
     }
 
     @Override
-    public void deletePiece(PointDto destination, String roomName) {
-        Map<PointDto, PieceDto> pointPieces = memoryDatabase.get(roomName);
+    public void deletePiece(PointDto destination, int roomId) {
+        Map<PointDto, PieceDto> pointPieces = memoryDatabase.get(roomId);
         pointPieces.remove(destination);
     }
 
     @Override
-    public void updatePiece(RouteDto routeDto, String roomName) {
-        Map<PointDto, PieceDto> pointPieces = memoryDatabase.get(roomName);
+    public void updatePiece(RouteDto routeDto, int roomId) {
+        Map<PointDto, PieceDto> pointPieces = memoryDatabase.get(roomId);
         PieceDto piece = pointPieces.get(routeDto.getSource());
         pointPieces.remove(routeDto.getSource());
         pointPieces.put(routeDto.getDestination(), piece);
     }
 
     @Override
-    public void removeBoard(String roomName) {
-        memoryDatabase.remove(roomName);
+    public void removeBoard(int roomId) {
+        memoryDatabase.remove(roomId);
     }
 }

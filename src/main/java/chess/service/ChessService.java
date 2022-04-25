@@ -39,7 +39,7 @@ public class ChessService {
     }
 
     public RoomResponseDto createRoom(final RoomRequestDto roomRequestDto) {
-        final RoomEntity room = new RoomEntity(roomRequestDto.getName(), "white", false);
+        final RoomEntity room = new RoomEntity(roomRequestDto.getName(), roomRequestDto.getPassword(), "white", false);
         final RoomEntity createdRoom = roomRepository.insert(room);
         boardRepository.batchInsert(createBoards(createdRoom));
         return RoomResponseDto.of(createdRoom);

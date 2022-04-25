@@ -50,7 +50,7 @@ class ChessControllerTest {
     @DisplayName("방을 생성하면 201 create와 Location을 헤더로 반환한다.")
     @Test
     void create() throws Exception {
-        final RoomRequestDto roomRequestDto = new RoomRequestDto(ROOM_NAME);
+        final RoomRequestDto roomRequestDto = new RoomRequestDto(ROOM_NAME, ROOM_PASSWORD);
         String content = objectMapper.writeValueAsString(roomRequestDto);
 
         given(chessService.createRoom(any()))
@@ -214,7 +214,7 @@ class ChessControllerTest {
     @DisplayName("room 이름 변경 시 200 ok를 반환한다.")
     @Test
     void changeRoomName() throws Exception {
-        RoomRequestDto roomRequestDto = new RoomRequestDto("체스 초고수만");
+        RoomRequestDto roomRequestDto = new RoomRequestDto(ROOM_NAME, ROOM_PASSWORD);
         String request = objectMapper.writeValueAsString(roomRequestDto);
 
         doNothing().when(chessService).updateRoomName(1L, roomRequestDto.getName());
@@ -227,7 +227,7 @@ class ChessControllerTest {
     @DisplayName("종료된 room 이름 변경 시 400 bad request와 errorResponseDto를 반환한다.")
     @Test
     void changeRoomNameException() throws Exception {
-        RoomRequestDto roomRequestDto = new RoomRequestDto("체스 초고수만");
+        RoomRequestDto roomRequestDto = new RoomRequestDto(ROOM_NAME, ROOM_PASSWORD);
         String request = objectMapper.writeValueAsString(roomRequestDto);
 
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(ERROR_FINISHED);
@@ -244,7 +244,7 @@ class ChessControllerTest {
     }
 
     private RoomEntity createRoomEntity(Long id) {
-        return new RoomEntity(id, ROOM_NAME, WHITE, FALSE);
+        return new RoomEntity(id, ROOM_NAME, ROOM_PASSWORD, WHITE, FALSE);
     }
 
     private List<BoardEntity> createBoardEntities() {

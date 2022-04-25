@@ -1,5 +1,6 @@
 package chess.service;
 
+import static chess.controller.ControllerTestFixture.ROOM_PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -154,7 +155,7 @@ class ChessServiceTest {
     }
 
     private RoomResponseDto createTestRoom(final String roomName) {
-        final RoomRequestDto roomRequestDto = new RoomRequestDto(roomName);
+        final RoomRequestDto roomRequestDto = new RoomRequestDto(roomName, ROOM_PASSWORD);
         return chessService.createRoom(roomRequestDto);
     }
 }

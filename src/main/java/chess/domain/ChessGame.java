@@ -1,6 +1,5 @@
 package chess.domain;
 
-import chess.controller.Command;
 import chess.domain.player.Player;
 import chess.domain.player.Result;
 import chess.domain.player.Score;
@@ -82,12 +81,6 @@ public class ChessGame {
                 .anyMatch(whitePlayer::hasPiece);
 
         return hasPieceOfBlackPlayer || hasPieceOfWhitePlayer;
-    }
-
-    public void changeTurn(final Command command) {
-        if (command.isMove()) {
-            turn = turn.next();
-        }
     }
 
     public List<GameResult> findGameResult() {

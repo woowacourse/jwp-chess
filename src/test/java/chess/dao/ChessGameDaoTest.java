@@ -14,39 +14,39 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class ChessGameDaoTest {
 
-	private ChessGameDao chessGameDao;
+    private ChessGameDao chessGameDao;
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@BeforeEach
-	void setup() {
-		chessGameDao = new ChessGameDao(jdbcTemplate);
-	}
+    @BeforeEach
+    void setup() {
+        chessGameDao = new ChessGameDao(jdbcTemplate);
+    }
 
-	@Test
-	@DisplayName("체스 게임 생성")
-	void createChessGame() {
-		Turn turn = Turn.WHITE_TURN;
+    @Test
+    @DisplayName("체스 게임 생성")
+    void createChessGame() {
+        Turn turn = Turn.WHITE_TURN;
 
-		assertDoesNotThrow(() -> chessGameDao.createChessGame(turn));
-	}
+        assertDoesNotThrow(() -> chessGameDao.createChessGame(turn));
+    }
 
-	@Test
-	@DisplayName("현재 게임 상태 반환")
-	void findChessGame() {
-		Turn turn = Turn.WHITE_TURN;
-		long id = chessGameDao.createChessGame(turn);
+    @Test
+    @DisplayName("현재 게임 상태 반환")
+    void findChessGame() {
+        Turn turn = Turn.WHITE_TURN;
+        long id = chessGameDao.createChessGame(turn);
 
-		assertThat(chessGameDao.findChessGame(id)).isEqualTo(turn);
-	}
+        assertThat(chessGameDao.findChessGame(id)).isEqualTo(turn);
+    }
 
-	@Test
-	@DisplayName("현재 게임 상태 변경")
-	void changeChessGameTurn() {
-		Turn turn = Turn.WHITE_TURN;
-		long id = chessGameDao.createChessGame(turn);
+    @Test
+    @DisplayName("현재 게임 상태 변경")
+    void changeChessGameTurn() {
+        Turn turn = Turn.WHITE_TURN;
+        long id = chessGameDao.createChessGame(turn);
 
-		assertThat(chessGameDao.changeChessGameTurn(id, Turn.END)).isEqualTo(1);
-	}
+        assertThat(chessGameDao.changeChessGameTurn(id, Turn.END)).isEqualTo(1);
+    }
 }

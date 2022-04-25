@@ -8,6 +8,7 @@ import chess.dto.CurrentTurnDto;
 import chess.dto.ErrorResponseDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.RoomDeletionRequestDto;
+import chess.dto.RoomResponseDto;
 import chess.service.ChessService;
 import chess.service.RoomService;
 import java.util.List;
@@ -34,6 +35,11 @@ public class ChessController {
     public ChessController(final RoomService roomService, final ChessService chessService) {
         this.roomService = roomService;
         this.chessService = chessService;
+    }
+
+    @GetMapping
+    public List<RoomResponseDto> findAllRoom() {
+        return roomService.findAll();
     }
 
     @DeleteMapping

@@ -6,7 +6,9 @@ import chess.domain.chesspiece.Color;
 import chess.dto.CurrentTurnDto;
 import chess.dto.RoomCreationRequestDto;
 import chess.dto.RoomDeletionRequestDto;
+import chess.dto.RoomResponseDto;
 import chess.dto.RoomStatusDto;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +18,10 @@ public class RoomService {
 
     public RoomService(final RoomDao roomDao) {
         this.roomDao = roomDao;
+    }
+
+    public List<RoomResponseDto> findAll() {
+        return roomDao.findAll();
     }
 
     public boolean isExistRoom(final int roomId) {

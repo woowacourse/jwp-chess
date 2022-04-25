@@ -16,7 +16,6 @@ import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import chess.dto.Arguments;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class GameServiceTest {
 
     private static final String TEST_ROOM_NAME = "TESTING";

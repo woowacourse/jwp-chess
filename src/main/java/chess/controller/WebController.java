@@ -19,7 +19,7 @@ public class WebController {
     }
 
     @GetMapping("/")
-    public String showFirstPage() {
+    public String indexPage() {
         return "index";
     }
 

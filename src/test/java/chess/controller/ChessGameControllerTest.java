@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class SpringWebChessControllerTest {
+class ChessGameControllerTest {
 
     @LocalServerPort
     int port;

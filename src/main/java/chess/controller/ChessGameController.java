@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/game")
-public class SpringWebChessController {
+public class ChessGameController {
 
     @Autowired
     private GameService gameService;

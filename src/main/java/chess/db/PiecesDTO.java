@@ -1,11 +1,11 @@
 package chess.db;
 
-public class PiecesDto {
+public class PiecesDTO {
     private final String location;
     private final String color;
     private final String name;
 
-    public PiecesDto(String location, String color, String name) {
+    public PiecesDTO(String location, String color, String name) {
         this.location = location;
         this.color = color;
         this.name = name;

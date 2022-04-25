@@ -24,8 +24,8 @@ public class BoardDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<PiecesDto> pieceRowMapper = (resultSet, rowNum) ->
-            new PiecesDto(resultSet.getString("location"),
+    private final RowMapper<PiecesDTO> pieceRowMapper = (resultSet, rowNum) ->
+            new PiecesDTO(resultSet.getString("location"),
                     resultSet.getString("color"),
                     resultSet.getString("name")
     );
@@ -38,9 +38,9 @@ public class BoardDAO {
     }
 
     public Map<Position, Piece> findAllPieces(String roomId) {
-        List<PiecesDto> pieces = jdbcTemplate.query(FIND_ALL_SQL, pieceRowMapper, roomId);
+        List<PiecesDTO> pieces = jdbcTemplate.query(FIND_ALL_SQL, pieceRowMapper, roomId);
         Map<Position, Piece> result = new HashMap<>();
-        for (PiecesDto piecesDto : pieces) {
+        for (PiecesDTO piecesDto : pieces) {
             result.put(new Position(piecesDto.getLocation()), PieceGenerator.of(piecesDto.getName(), piecesDto.getColor()));
         }
         return result;

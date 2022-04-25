@@ -2,12 +2,13 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.dao.InMemoryPieceDao;
-import chess.dao.InMemoryGameDao;
-import chess.service.dto.BoardDto;
 import chess.dao.GameEntity;
+import chess.dao.InMemoryGameDao;
+import chess.dao.InMemoryPieceDao;
+import chess.dao.PieceEntity;
 import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +35,7 @@ class ChessServiceTest {
         service.createGame("firstGame");
         service.initGame(1);
         assertThat(gameDao.getGameTable().size()).isEqualTo(1);
-        assertThat(boardDao.getBoardByGameId(1).getPieces().size()).isEqualTo(64);
+        assertThat(boardDao.getBoardByGameId(1).size()).isEqualTo(64);
     }
 
     @Test
@@ -43,10 +44,10 @@ class ChessServiceTest {
         service.initGame(1);
         service.move(1, "a2", "a4");
         GameEntity gameEntity = gameDao.getGameTable().get(1);
-        BoardDto boardDto = boardDao.getBoardTable().get(1);
-        boolean fromSquareIsEmpty = boardDto.getPieces().stream()
+        List<PieceEntity> boardDto = boardDao.getBoardTable().get(1);
+        boolean fromSquareIsEmpty = boardDto.stream()
                 .anyMatch(piece -> piece.getSquare().equals("a2") && piece.getType().equals("EMPTY"));
-        boolean toSquareIsPawn = boardDto.getPieces().stream()
+        boolean toSquareIsPawn = boardDto.stream()
                 .anyMatch(piece -> piece.getSquare().equals("a4") && piece.getType().equals("PAWN"));
         assertThat(fromSquareIsEmpty && toSquareIsPawn).isTrue();
     }

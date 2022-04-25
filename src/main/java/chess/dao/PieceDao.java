@@ -1,11 +1,11 @@
 package chess.dao;
 
-import chess.service.dto.BoardDto;
+import java.util.List;
 
 public interface PieceDao {
     void initBoard(int gameId);
 
-    BoardDto getBoardByGameId(int id);
+    List<PieceEntity> getBoardByGameId(int id);
 
     void remove(int id);
 

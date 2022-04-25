@@ -2,8 +2,8 @@ package chess.dao.springjdbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.service.dto.BoardDto;
 import chess.dao.PieceEntity;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,9 +35,9 @@ class SpringPieceDaoTest {
     @DisplayName("initBoard : 보드를 정상적으로 초기화 하는지 확인")
     void initBoard() {
         initBoard("first");
-        BoardDto boardDto = springPieceDao.getBoardByGameId(1);
+        List<PieceEntity> pieces = springPieceDao.getBoardByGameId(1);
 
-        assertThat(boardDto.getPieces()).hasSize(64);
+        assertThat(pieces).hasSize(64);
     }
 
     private void initBoard(String... names) {
@@ -51,9 +51,9 @@ class SpringPieceDaoTest {
     @DisplayName("getBoardByGameId : 게임id로 보드를 정상적으로 가져오는 확인")
     void getBoardByGameId() {
         initBoard("first", "second");
-        BoardDto boardDto = springPieceDao.getBoardByGameId(2);
+        List<PieceEntity> pieces = springPieceDao.getBoardByGameId(2);
 
-        assertThat(boardDto.getPieces()).hasSize(64);
+        assertThat(pieces).hasSize(64);
     }
 
     @Test
@@ -62,7 +62,7 @@ class SpringPieceDaoTest {
         initBoard("first");
         springPieceDao.remove(1);
 
-        assertThat(springPieceDao.getBoardByGameId(1).getPieces()).isEmpty();
+        assertThat(springPieceDao.getBoardByGameId(1)).isEmpty();
     }
 
     @Test
@@ -71,8 +71,8 @@ class SpringPieceDaoTest {
         initBoard("first");
         PieceEntity piece = new PieceEntity("a4", "pawn", "white");
         springPieceDao.update(piece, 1);
-        BoardDto board = springPieceDao.getBoardByGameId(1);
+        List<PieceEntity> pieces = springPieceDao.getBoardByGameId(1);
 
-        assertThat(board.getPieces()).contains(piece);
+        assertThat(pieces).contains(piece);
     }
 }

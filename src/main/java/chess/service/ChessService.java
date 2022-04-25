@@ -1,20 +1,24 @@
 package chess.service;
 
-import chess.dao.PieceDao;
+import static java.util.stream.Collectors.toMap;
+
 import chess.dao.GameDao;
-import chess.model.board.MoveResult;
-import chess.model.gamestatus.Status;
-import chess.model.gamestatus.StatusType;
-import chess.model.game.ChessGame;
+import chess.dao.GameEntity;
+import chess.dao.PieceDao;
+import chess.dao.PieceEntity;
 import chess.model.Color;
 import chess.model.board.Board;
+import chess.model.board.MoveResult;
 import chess.model.board.Square;
+import chess.model.game.ChessGame;
+import chess.model.gamestatus.Status;
+import chess.model.gamestatus.StatusType;
 import chess.model.piece.Piece;
+import chess.model.piece.PieceType;
 import chess.service.dto.BoardDto;
-import chess.dao.GameEntity;
 import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
-import chess.dao.PieceEntity;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
@@ -59,8 +63,13 @@ public class ChessService {
     }
 
     public Board getBoardFromDao(int id) {
-        BoardDto boardDto = pieceDao.getBoardByGameId(id);
-        return new Board(boardDto);
+        Map<Square, Piece> pieces = convertPieces(pieceDao.getBoardByGameId(id));
+        return new Board(pieces);
+    }
+
+    private Map<Square, Piece> convertPieces(List<PieceEntity> pieceEntities) {
+        return pieceEntities.stream()
+                .collect(toMap(dto -> Square.of(dto.getSquare()), PieceType::createPiece));
     }
 
     private Status getStatusFromDao(String statusName, Board board) {
@@ -90,6 +99,6 @@ public class ChessService {
     }
 
     public BoardDto getBoard(int gameId) {
-        return pieceDao.getBoardByGameId(gameId);
+        return new BoardDto(pieceDao.getBoardByGameId(gameId));
     }
 }

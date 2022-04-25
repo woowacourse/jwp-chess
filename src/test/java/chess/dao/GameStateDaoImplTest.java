@@ -15,11 +15,11 @@ class GameStateDaoImplTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private GameStateDaoImpl gameStateDaoImpl;
+    private JdbcGameStateDao gameStateDaoImpl;
 
     @BeforeEach
     void setUp() {
-        gameStateDaoImpl = new GameStateDaoImpl(jdbcTemplate);
+        gameStateDaoImpl = new JdbcGameStateDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE game IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE game(id SERIAL, state varchar(7), turn varchar(5))");
     }

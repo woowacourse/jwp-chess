@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 @Component
-public class PieceDaoImpl implements PieceDao {
+public class JdbcPieceDao implements PieceDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PieceDaoImpl(final JdbcTemplate jdbcTemplate) {
+    public JdbcPieceDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

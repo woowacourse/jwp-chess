@@ -25,11 +25,11 @@ class PieceDaoImplTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private PieceDaoImpl pieceDaoImpl;
+    private JdbcPieceDao pieceDaoImpl;
 
     @BeforeEach
     void setUp() {
-        pieceDaoImpl = new PieceDaoImpl(jdbcTemplate);
+        pieceDaoImpl = new JdbcPieceDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
         jdbcTemplate.execute("create table piece("
                 + "position varchar(2) not null, team varchar(5) not null ,"

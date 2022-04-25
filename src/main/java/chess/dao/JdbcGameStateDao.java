@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 @Component
-public class GameStateDaoImpl implements GameStateDao {
+public class JdbcGameStateDao implements GameStateDao {
 
     private static final String DATABASE_EMPTY_SYMBOL = "nothing";
 
     private final JdbcTemplate jdbcTemplate;
 
-    public GameStateDaoImpl(final JdbcTemplate jdbcTemplate) {
+    public JdbcGameStateDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

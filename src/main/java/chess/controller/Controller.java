@@ -30,12 +30,12 @@ public class Controller {
     @GetMapping("/")
     public String getIndexPage(final Model model) {
         Map<String, Object> attributes = new HashMap<>();
-        attributes.put("chess_games", service.loadAllChessGames());
+        attributes.put("chessGames", service.loadAllChessGames());
         model.addAllAttributes(attributes);
         return "index";
     }
 
-    @PostMapping("/create_chess_game")
+    @PostMapping("/create-chess-game")
     public RedirectView createChessGame(final @RequestParam String name) {
         service.createChessGame(name);
         return new RedirectView("/game/" + name);
@@ -45,10 +45,10 @@ public class Controller {
     public String getChessGamePage(final Model model, final @PathVariable String name) {
         Map<String, Piece> boardForHtml = convertBoardForHtml(service, name);
         model.addAllAttributes(boardForHtml);
-        model.addAttribute("chess_game_name", name);
+        model.addAttribute("chessGameName", name);
         model.addAttribute("turn", service.loadChessGame(name).getTurn());
         model.addAttribute("result", service.loadChessGame(name).generateResult());
-        return "chess_game";
+        return "chess-game";
     }
 
     private Map<String, Piece> convertBoardForHtml(final Service service, final String name) {
@@ -66,26 +66,26 @@ public class Controller {
         return new RedirectView("/");
     }
 
-    @PostMapping("/move/{chess_game_name}")
-    public RedirectView movePiece(final @PathVariable String chess_game_name,
+    @PostMapping("/move/{chessGameName}")
+    public RedirectView movePiece(final @PathVariable String chessGameName,
                                   final @RequestParam String source,
                                   final @RequestParam String target) {
         String refinedSource = source.trim().toLowerCase();
         String refinedTarget = target.trim().toLowerCase();
         service.movePiece(
-                chess_game_name,
+                chessGameName,
                 refinedSource.charAt(COLUMN_INDEX),
                 Character.getNumericValue(refinedSource.charAt(ROW_INDEX)),
                 refinedTarget.charAt(COLUMN_INDEX),
                 Character.getNumericValue(refinedTarget.charAt(ROW_INDEX))
         );
-        return new RedirectView("/game/" + chess_game_name);
+        return new RedirectView("/game/" + chessGameName);
     }
 
-    @PostMapping("/reset/{chess_game_name}")
-    public RedirectView resetChessGame(final @PathVariable String chess_game_name) {
-        service.createChessGame(chess_game_name);
-        return new RedirectView("/game/" + chess_game_name);
+    @PostMapping("/reset/{chessGameName}")
+    public RedirectView resetChessGame(final @PathVariable String chessGameName) {
+        service.createChessGame(chessGameName);
+        return new RedirectView("/game/" + chessGameName);
     }
 
     @ExceptionHandler

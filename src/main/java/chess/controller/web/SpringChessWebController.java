@@ -2,6 +2,7 @@ package chess.controller.web;
 
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -24,16 +25,20 @@ public class SpringChessWebController {
     }
 
     @GetMapping("/new-game")
-    public String playNewGame() {
+    public String playNewGame(Model model) {
+        model.addAttribute("isNewGame", true);
         return "game";
     }
 
     @GetMapping("/load-game")
-    public String loadGame() {
+    public String loadGame(Model model) {
 
         if (!chessService.isExistGame()) {
             return "redirect:/";
         }
+
+        model.addAttribute("isNewGame", false);
+        chessService.loadLastGame();
 
         return "game";
     }

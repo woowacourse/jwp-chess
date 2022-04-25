@@ -2,6 +2,7 @@ package chess.dao;
 
 import static chess.util.RandomCreationUtils.createUuid;
 
+import chess.domain.db.BoardPiece;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,14 +11,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ChessBoardDao {
+public class BoardPieceDao {
 
-    // chess_board_id	game_id	team_color	position	piece
-    private static final String saveDml = "insert into chess_boards (chess_board_id, game_id, position, piece) values (?, ?, ?, ?)";
+    private static final String saveDml = "insert into board_pieces (board_piece_id, game_id, position, piece) values (?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ChessBoardDao(JdbcTemplate jdbcTemplate) {
+    public BoardPieceDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -34,5 +34,18 @@ public class ChessBoardDao {
         }
 
         jdbcTemplate.batchUpdate(saveDml, boardData);
+    }
+
+    public List<BoardPiece> findLastBoardPiece(String lastGameId) {
+        final String lastBoardPieceDml = "select * from board_pieces where game_id = ?";
+        final List<BoardPiece> boardPieces = jdbcTemplate.query(lastBoardPieceDml,
+                (rs, rowNum) -> new BoardPiece(
+                        rs.getString("board_piece_id"),
+                        rs.getString("game_id"),
+                        rs.getString("position"),
+                        rs.getString("piece")
+                ),
+                lastGameId);
+        return boardPieces;
     }
 }

@@ -63,8 +63,12 @@ public abstract class Piece {
         return this.pieceTeam == pieceTeam;
     }
 
-    public PieceTeam getPieceTeam() {
-        return pieceTeam;
+    public String teamName() {
+        return pieceTeam.name();
+    }
+
+    public String className() {
+        return this.getClass().getSimpleName();
     }
 
     @Override

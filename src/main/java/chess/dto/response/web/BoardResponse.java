@@ -17,16 +17,16 @@ public class BoardResponse {
 
     public static BoardResponse from(Map<Position, Piece> board) {
 
-        final List<Map<String, String>> boardResponse = new ArrayList<>();
+        final List<Map<String, String>> boardString = new ArrayList<>();
 
         for (Position position : board.keySet()) {
             final Piece piece = board.get(position);
             final Map<String, String> keyValue = getPiecePositionResponse(position, piece);
 
-            boardResponse.add(keyValue);
+            boardString.add(keyValue);
         }
 
-        return new BoardResponse(boardResponse);
+        return new BoardResponse(boardString);
     }
 
     private static Map<String, String> getPiecePositionResponse(Position position, Piece piece) {
@@ -34,7 +34,7 @@ public class BoardResponse {
 
         keyValue.put("position", PositionResponse.from(position));
         keyValue.put("piece", piece.getClass().getSimpleName());
-        keyValue.put("team", piece.getPieceTeam().name().toLowerCase());
+        keyValue.put("team", piece.teamName().toLowerCase());
 
         return keyValue;
     }

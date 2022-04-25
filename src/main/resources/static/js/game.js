@@ -5,10 +5,19 @@ const pieceRegExp = /images\/(\w*?)\.png/;
 
 $(document).ready(function () {
   initChessBoard();
-  initChessPieces();
-  currentTeam();
   triggerEvents();
+
+  if (isNewGame()) {
+    initChessPieces();
+    currentTeam();
+  } else {
+    loadPiecesAndTeam();
+  }
 });
+
+function isNewGame() {
+  return JSON.parse($("#isNewGame").val());
+}
 
 function initChessBoard() {
   for (let r = 0; r < REVERSE_RANKS.length; r++) {
@@ -24,22 +33,28 @@ function initChessPieces() {
     url: "/board",
     method: "GET",
     dataType: "json",
-    contentType: "json",
   })
     .done(function (json) {
-      for (let element of json.board) {
-        let team = element["team"];
-        let piece = element["piece"];
-        let position = element["position"].toUpperCase();
-        let pieceImage = team + piece; // blackPawn
-
-        if (team !== "empty") {
-          placeChessPiece(position, pieceImage);
-        }
-      }
+      placeChessPieces(json.board);
     })
     .fail(function (xhr, status, errorThrown) {
       alert("initChessPieces - error !");
+    });
+}
+
+function loadPiecesAndTeam() {
+  $.ajax({
+    url: "/load-last-game",
+    method: "GET",
+    dataType: "json",
+  })
+    .done(function (data) {
+      placeChessPieces(data.boardResponse.board);
+      setCurrentTeam(data.lastTeam);
+    })
+    .fail(function (xhr, status, errorThrown) {
+      alert("loadPiecesAndTeam - error !");
+      console.log(xhr);
     });
 }
 
@@ -84,6 +99,19 @@ function placeChessPiece(position, pieceImage) {
   );
 }
 
+function placeChessPieces(piecePositions) {
+  for (let element of piecePositions) {
+    let team = element["team"];
+    let piece = element["piece"];
+    let position = element["position"].toUpperCase();
+    let pieceImage = team + piece; // ex) blackPawn
+
+    if (team !== "empty") {
+      placeChessPiece(position, pieceImage);
+    }
+  }
+}
+
 function movePiece() {
   const from = $('input[name="from"]').val();
   const to = $('input[name="to"]').val();
@@ -92,20 +120,11 @@ function movePiece() {
     method: "POST",
     dataType: "json",
   })
-    .done(function (json) {
+    .done(function (data) {
       clearChessBoard();
       initChessBoard();
       currentTeam();
-      for (let element of json.board) {
-        let team = element["team"];
-        let piece = element["piece"];
-        let position = element["position"].toUpperCase();
-        let pieceImage = team + piece; // blackPawn
-
-        if (team !== "empty") {
-          placeChessPiece(position, pieceImage);
-        }
-      }
+      placeChessPieces(data.board);
     })
     .fail(function (xhr, status, errorThrown) {
       alert("movePiece - error !");
@@ -116,14 +135,18 @@ function clearChessBoard() {
   $("#chess-board").children().remove();
 }
 
+function setCurrentTeam(teamName) {
+  $("#current-team").text(teamName);
+}
+
 function currentTeam() {
   $.ajax({
     url: "/current-team",
     method: "GET",
     dataType: "text",
   })
-    .done(function (json) {
-      $("#current-team").text(json);
+    .done(function (data) {
+      setCurrentTeam(data);
     })
     .fail(function (xhr, status, errorThrown) {
       alert("currentTeam - error !");

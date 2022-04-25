@@ -1,15 +1,18 @@
 package chess.controller.api;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
+
 import chess.domain.board.ChessBoard;
 import chess.domain.board.factory.BoardFactory;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
 import chess.dto.request.web.SaveRequest;
 import chess.dto.response.web.BoardResponse;
+import chess.dto.response.web.LastGameResponse;
 import chess.service.ChessService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,17 +31,17 @@ public class ChessApiController {
     @Autowired
     private ChessService chessService;
 
-    @GetMapping(value = "/board", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/board", produces = APPLICATION_JSON_VALUE)
     public BoardResponse board() {
         return BoardResponse.from(boardFactory.create());
     }
 
-    @GetMapping(value = "/current-team", produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(value = "/current-team", produces = TEXT_HTML_VALUE)
     public String currentTeam() {
         return chessBoard.currentState().getName();
     }
 
-    @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/move", produces = APPLICATION_JSON_VALUE)
     public BoardResponse move(@RequestParam("from") String fromString, @RequestParam("to") String toString) {
         Position from = Position.of(fromString);
         Position to = Position.of(toString);
@@ -48,8 +51,14 @@ public class ChessApiController {
         return BoardResponse.from(movedBoard);
     }
 
-    @PostMapping(value = "save-game", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "save-game", consumes = APPLICATION_JSON_VALUE)
     public void saveGame(@RequestBody SaveRequest saveRequest) {
         chessService.saveGame(saveRequest);
+    }
+
+    @GetMapping(value = "/load-last-game", produces = APPLICATION_JSON_VALUE)
+    public LastGameResponse loadLastGame() {
+        LastGameResponse lastGameResponse = chessService.loadLastGame();
+        return lastGameResponse;
     }
 }

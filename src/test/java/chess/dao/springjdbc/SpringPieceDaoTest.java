@@ -3,7 +3,7 @@ package chess.dao.springjdbc;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.service.dto.BoardDto;
-import chess.service.dto.PieceEntity;
+import chess.dao.PieceEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @TestPropertySource("classpath:application-test.properties")
-@Sql("classpath:static/init.sql")
+@Sql("classpath:schema-test.sql")
 class SpringPieceDaoTest {
 
     private SpringPieceDao springPieceDao;

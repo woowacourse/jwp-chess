@@ -1,10 +1,8 @@
 package chess.dao;
 
-import chess.service.dto.GameEntity;
-import chess.service.dto.GamesDto;
-import chess.service.dto.StatusDto;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryGameDao implements GameDao {
@@ -31,8 +29,8 @@ public class InMemoryGameDao implements GameDao {
     }
 
     @Override
-    public GamesDto findAll() {
-        return new GamesDto(new ArrayList<>(gameTable.values()));
+    public List<GameEntity> findAll() {
+        return new ArrayList<>(gameTable.values());
     }
 
     public Map<Integer, GameEntity> getGameTable() {

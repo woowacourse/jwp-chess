@@ -5,7 +5,7 @@ import chess.model.board.Square;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
 import chess.service.dto.BoardDto;
-import chess.service.dto.PieceEntity;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class SpringChessController {
@@ -44,22 +45,22 @@ public class SpringChessController {
     }
 
     @GetMapping("/new-board/{gameId}")
-    public String initBoard(@PathVariable int gameId) {
+    public RedirectView initBoard(@PathVariable int gameId) {
         chessService.initGame(gameId);
-        return "redirect:../board/" + gameId;
+        return new RedirectView("/board/" + gameId);
     }
 
     @PostMapping("/board")
-    public String createGame(@RequestParam String name) {
-        chessService.createGame(name.trim());
-        return "redirect:/";
+    public RedirectView createGame(@RequestParam String name) {
+        int gameId = chessService.createGame(name.trim());
+        return new RedirectView("/board/" + gameId);
     }
 
     @PostMapping("/move/{gameId}")
-    public String requestMove(@PathVariable int gameId, @RequestParam String from,
+    public RedirectView requestMove(@PathVariable int gameId, @RequestParam String from,
         @RequestParam String to) {
         chessService.move(gameId, from, to);
-        return "redirect:../board/" + gameId;
+        return new RedirectView("/board/" + gameId);
     }
 
     @GetMapping("/status/{gameId}")
@@ -71,9 +72,9 @@ public class SpringChessController {
     }
 
     @GetMapping("/game-end/{gameId}")
-    public String requestEndGame(@PathVariable int gameId) {
+    public RedirectView requestEndGame(@PathVariable int gameId) {
         chessService.endGame(gameId);
-        return "redirect:../";
+        return new RedirectView("/");
     }
 
     @ExceptionHandler(RuntimeException.class)

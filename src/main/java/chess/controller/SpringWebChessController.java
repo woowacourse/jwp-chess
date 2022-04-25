@@ -30,15 +30,8 @@ public class SpringWebChessController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<ResponseDto> start() {
-        try {
-            chessService.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseDto("정상적으로 시작되지 않았습니다."));
-        }
+    public ResponseEntity<ResponseDto> start() throws Exception {
+        chessService.start();
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -53,16 +46,10 @@ public class SpringWebChessController {
     }
 
     @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDto> move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
-        try {
-            chessService.move(moveRequestDto.getSource(), moveRequestDto.getTarget());
-            if (chessService.checkStatus(Status.END)) {
-                chessService.end();
-            }
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseDto(e.getMessage()));
+    public ResponseEntity<ResponseDto> move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException, IllegalArgumentException {
+        chessService.move(moveRequestDto.getSource(), moveRequestDto.getTarget());
+        if (chessService.checkStatus(Status.END)) {
+            chessService.end();
         }
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -87,14 +74,8 @@ public class SpringWebChessController {
     }
 
     @GetMapping("/end")
-    public ResponseEntity<ResponseDto> end() {
-        try {
-            chessService.end();
-        } catch (IllegalArgumentException | SQLException e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseDto(e.getMessage()));
-        }
+    public ResponseEntity<ResponseDto> end() throws SQLException, IllegalArgumentException {
+        chessService.end();
         return new ResponseEntity(HttpStatus.OK);
     }
 

@@ -35,11 +35,6 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @PostMapping
-    public void createRoom(@PathVariable final String roomName) {
-        roomService.createRoom(roomName);
-    }
-
     @DeleteMapping
     public void deleteRoom(@PathVariable final String roomName) {
         roomService.deleteRoom(roomName);

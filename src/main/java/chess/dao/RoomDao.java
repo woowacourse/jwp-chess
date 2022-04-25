@@ -19,11 +19,6 @@ public class RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn) {
-        final String sql = "INSERT INTO room (name, game_status, current_turn) VALUE (?, ?, ?)";
-        return jdbcTemplate.update(sql, roomName, gameStatus.getValue(), currentTurn.getValue());
-    }
-
     public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn, final String password) {
         final String sql = "INSERT INTO room (name, game_status, current_turn, password) VALUES (?, ?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();

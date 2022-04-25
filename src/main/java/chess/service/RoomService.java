@@ -30,34 +30,46 @@ public class RoomService {
     }
 
     public int createRoom(final RoomCreationRequestDto dto) {
+        final boolean existName = roomDao.isExistName(dto.getRoomName());
+        if (existName) {
+            throw new IllegalArgumentException("이름이 같은 방이 이미 존재합니다.");
+        }
         final String hashPassword = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt());
         return roomDao.save(dto.getRoomName(), GameStatus.READY, Color.WHITE, hashPassword);
     }
 
     public int deleteRoom(final RoomDeletionRequestDto dto) {
         final int roomId = dto.getRoomId();
-        checkRoomExist(roomId);
 
-        final RoomStatusDto roomStatusDto = roomDao.findStatusById(roomId);
-        final String password = roomDao.findPasswordById(roomId);
-        final boolean matchPassword = BCrypt.checkpw(dto.getPassword(), password);
-        if (!matchPassword) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-        if (!roomStatusDto.getGameStatus().isEnd()) {
-            throw new IllegalArgumentException("게임이 진행 중입니다.");
-        }
+        checkRoomExist(roomId);
+        checkPassword(dto.getPassword(), roomId);
+        checkRoomStatus(roomId);
+
         return roomDao.deleteById(roomId);
-    }
-
-    public CurrentTurnDto findCurrentTurn(final int roomId) {
-        checkRoomExist(roomId);
-        return roomDao.findCurrentTurnById(roomId);
     }
 
     private void checkRoomExist(final int roomId) {
         if (!roomDao.isExistId(roomId)) {
             throw new IllegalArgumentException("존재하지 않는 방 입니다.");
         }
+    }
+
+    private void checkPassword(final String plainPassword, final int roomId) {
+        final String password = roomDao.findPasswordById(roomId);
+        final boolean matchPassword = BCrypt.checkpw(plainPassword, password);
+        if (!matchPassword) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    private void checkRoomStatus(final int roomId) {
+        final RoomStatusDto roomStatusDto = roomDao.findStatusById(roomId);
+        if (!roomStatusDto.getGameStatus().isEnd()) {
+            throw new IllegalArgumentException("게임이 진행 중입니다.");
+        }
+    }
+
+    public CurrentTurnDto findCurrentTurn(final int roomId) {
+        return roomDao.findCurrentTurnById(roomId);
     }
 }

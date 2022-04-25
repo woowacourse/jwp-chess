@@ -37,11 +37,11 @@ window.onload = async function () {
   endButton.addEventListener("click", end);
 
   const res = await fetch(`/games/${gameId}`);
-  const data = await res.json();
   if (!res.ok) {
     await create();
     return;
   }
+  const data = await res.json();
   load(data);
 }
 

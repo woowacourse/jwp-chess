@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Component
 public class PieceDaoImpl implements PieceDao {
 
     private final JdbcTemplate jdbcTemplate;

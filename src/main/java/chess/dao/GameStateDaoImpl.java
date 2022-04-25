@@ -1,9 +1,10 @@
 package chess.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Component
 public class GameStateDaoImpl implements GameStateDao {
 
     private static final String DATABASE_EMPTY_SYMBOL = "nothing";

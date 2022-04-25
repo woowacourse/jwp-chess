@@ -4,7 +4,10 @@ import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.CurrentTurnDto;
 import chess.dto.RoomStatusDto;
+import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,6 +22,19 @@ public class RoomDao {
     public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn) {
         final String sql = "INSERT INTO room (name, game_status, current_turn) VALUE (?, ?, ?)";
         return jdbcTemplate.update(sql, roomName, gameStatus.getValue(), currentTurn.getValue());
+    }
+
+    public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn, final String password) {
+        final String sql = "INSERT INTO room (name, game_status, current_turn, password) VALUES (?, ?, ?, ?)";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        return jdbcTemplate.update(con -> {
+            final PreparedStatement ps = con.prepareStatement(sql, new String[]{"room_id"});
+            ps.setString(1, roomName);
+            ps.setString(2, gameStatus.getValue());
+            ps.setString(3, currentTurn.getValue());
+            ps.setString(4, password);
+            return ps;
+        }, keyHolder);
     }
 
     public boolean isExistName(final String roomName) {

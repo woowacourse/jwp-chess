@@ -5,6 +5,7 @@ import chess.service.dto.ChessGameDto;
 import chess.service.dto.GamesDto;
 import chess.service.dto.StatusDto;
 import java.sql.PreparedStatement;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Repository;
 public class SpringGameDao implements GameDao {
 
     private final JdbcTemplate jdbcTemplate;
-
     private final RowMapper<ChessGameDto> chessGameDtoRowMapper = (resultSet, rowNum) -> new ChessGameDto(
         resultSet.getInt("id"),
         resultSet.getString("name"),
@@ -61,6 +61,6 @@ public class SpringGameDao implements GameDao {
             return prepareStatement;
         }, keyHolder);
 
-        return keyHolder.getKey().intValue();
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 }

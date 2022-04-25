@@ -18,11 +18,6 @@ import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
 import chess.service.dto.PieceWithSquareDto;
 import chess.service.dto.StatusDto;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -88,8 +83,10 @@ public class ChessService {
         return gameDao.findAll();
     }
 
-    public void createGame(String name) {
-        gameDao.createGame(name);
+    public int createGame(String name) {
+        int gameId = gameDao.createGame(name);
+        boardDao.initBoard(gameId);
+        return gameId;
     }
 
     public GameResultDto getResult(int id) {

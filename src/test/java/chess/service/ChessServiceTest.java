@@ -159,7 +159,7 @@ class ChessServiceTest {
     @Test
     void updateRoomName() {
         final Long id = createTestRoom("체스 초보만").getId();
-        chessService.updateRoomName(id, "체스 왕 초보만");
+        chessService.updateRoomName(id, new RoomRequestDto("체스 왕 초보만", "1234"));
 
         assertThat(roomRepository.findById(id).getName()).isEqualTo("체스 왕 초보만");
     }
@@ -170,9 +170,19 @@ class ChessServiceTest {
     void updateRoomNameException() {
         final Long id = createTestRoom("체스 초보만").getId();
         chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
-        assertThatThrownBy(() -> chessService.updateRoomName(id, "체스 왕 초보만"))
+        assertThatThrownBy(() -> chessService.updateRoomName(id, new RoomRequestDto("체스 왕 초보만", "1234")))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 이미 종료된 게임입니다.");
+    }
+
+    @DisplayName("비밀번호가 맞지 않은 경우 업데이트에 실패한다.")
+    @Test
+    void updateNotPasswordException() {
+        final Long id = createTestRoom("체스 초보만").getId();
+
+        assertThatThrownBy(() -> chessService.updateRoomName(id, new RoomRequestDto("체스 개초보만", "123123")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 비밀번호가 틀렸습니다.");
     }
 
     private RoomResponseDto createTestRoom(final String roomName) {

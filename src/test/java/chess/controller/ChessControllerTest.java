@@ -229,7 +229,7 @@ class ChessControllerTest {
         RoomRequestDto roomRequestDto = new RoomRequestDto(ROOM_NAME, ROOM_PASSWORD);
         String request = objectMapper.writeValueAsString(roomRequestDto);
 
-        doNothing().when(chessService).updateRoomName(1L, roomRequestDto.getName());
+        doNothing().when(chessService).updateRoomName(1L, roomRequestDto);
         mockMvc.perform(patch(DEFAULT_API + "/1/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request)
@@ -247,7 +247,7 @@ class ChessControllerTest {
 
         doThrow(new IllegalArgumentException(ERROR_FINISHED))
                 .when(chessService)
-                .updateRoomName(1L, roomRequestDto.getName());
+                .updateRoomName(1L, roomRequestDto);
         mockMvc.perform(patch(DEFAULT_API + "/1/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request)

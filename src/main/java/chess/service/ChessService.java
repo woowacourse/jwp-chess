@@ -127,9 +127,11 @@ public class ChessService {
         return StatusResponseDto.of(new Score(board.getBoard()));
     }
 
-    public void updateRoomName(final Long id, final String name) {
-        validateGameOver(roomRepository.findById(id));
-        roomRepository.updateName(id, name);
+    public void updateRoomName(final Long id, final RoomRequestDto roomRequestDto) {
+        RoomEntity room = roomRepository.findById(id);
+        validatePassword(roomRequestDto.getPassword(), room.getPassword());
+        validateGameOver(room);
+        roomRepository.updateName(id, roomRequestDto.getName());
     }
 
     private void validateGameOver(final RoomEntity room) {

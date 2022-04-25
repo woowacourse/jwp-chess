@@ -59,4 +59,8 @@ public class MockGameDao implements GameDao {
         store.remove(gameId);
         return gameId;
     }
+
+    public void deleteAll() {
+        store.clear();
+    }
 }

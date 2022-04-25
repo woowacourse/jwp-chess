@@ -34,7 +34,7 @@ public class MockMemberDao implements MemberDao {
         store.remove(id);
     }
 
-    void deleteAll() {
+    public void deleteAll() {
         store.clear();
     }
 }

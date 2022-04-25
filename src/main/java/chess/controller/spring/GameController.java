@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -113,5 +114,12 @@ public class GameController {
             return ResponseEntity.ok(true);
         }
         return ResponseEntity.badRequest().body(false);
+    }
+
+    @DeleteMapping("/{gameId}")
+    @ResponseBody
+    public ResponseEntity<Long> deleteGame(@PathVariable Long gameId) {
+        final Long deletedId = gameService.deleteGame(gameId);
+        return ResponseEntity.ok(deletedId);
     }
 }

@@ -132,4 +132,15 @@ public class SpringJdbcGameDao implements GameDao {
             return statement;
         });
     }
+
+    @Override
+    public Long deleteById(final Long gameId) {
+        final String sql = "delete from Game where id = ?";
+        jdbcTemplate.update(connection -> {
+            final PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, gameId);
+            return statement;
+        });
+        return gameId;
+    }
 }

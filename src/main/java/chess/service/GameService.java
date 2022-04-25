@@ -125,5 +125,9 @@ public class GameService {
         chessGame.terminate();
         gameDao.terminate(gameId);
     }
+
+    public Long deleteGame(final Long gameId) {
+        return gameDao.deleteById(gameId);
+    }
 }
 

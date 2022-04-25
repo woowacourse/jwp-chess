@@ -17,4 +17,6 @@ public interface GameDao {
     void move(final ChessGame game, final String rawFrom, final String rawTo);
 
     void terminate(final Long id);
+
+    Long deleteById(Long gameId);
 }

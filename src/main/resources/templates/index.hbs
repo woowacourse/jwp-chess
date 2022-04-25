@@ -25,6 +25,7 @@
                 <h4 class="card-title">{{title}}</h4>
                 <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
                 <a href="/games/{{id}}/play" class="btn btn-dark">입장</a>
+                <a onclick="deleteGame({{id}})" class="btn btn-danger">삭제</a>
             </div>
         </div>
     {{/games}}
@@ -86,11 +87,26 @@
             if (response.ok) {
                 alert("게임이 생성되었습니다.");
                 location.reload();
+                return;
             }
-            if (!response.ok) {
-                alert(response.statusText);
-            }
+            alert(response.statusText);
         });
+    }
+
+    const deleteGame = (gameId) => {
+        fetch(`/games/${gameId}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            if (response.ok) {
+                alert("게임이 삭제되었습니다.");
+                location.reload();
+                return;
+            }
+            alert(response.statusText);
+        })
     }
 </script>
 

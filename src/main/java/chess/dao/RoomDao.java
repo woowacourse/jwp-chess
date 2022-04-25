@@ -65,8 +65,8 @@ public class RoomDao {
         return jdbcTemplate.update(sql, gameStatus.getValue(), currentTurn.getValue(), roomId);
     }
 
-    public int updateStatusTo(final String roomName, final GameStatus gameStatus) {
-        final String sql = "UPDATE room SET game_status = ? WHERE name = ?";
-        return jdbcTemplate.update(sql, gameStatus.getValue(), roomName);
+    public int updateStatusById(final int roomId, final GameStatus gameStatus) {
+        final String sql = "UPDATE room SET game_status = ? WHERE room_id = ?";
+        return jdbcTemplate.update(sql, gameStatus.getValue(), roomId);
     }
 }

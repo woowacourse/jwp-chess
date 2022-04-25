@@ -132,4 +132,26 @@ class RoomDaoTest {
         assertThat(updatedStatusDto.getGameStatus()).isEqualTo(updatedStatus);
         assertThat(updatedCurrentTurnDto.getCurrentTurn()).isEqualTo(updatedCurrentTurn);
     }
+
+    @Test
+    @DisplayName("방 id로 상태를 갱신한다.")
+    void updateStatusById() {
+        // given
+        final String roomName = "hi";
+        final GameStatus gameStatus = GameStatus.READY;
+        final Color currentTurn = Color.WHITE;
+        final String password = "1q2w3e4r";
+
+        final GameStatus updatedStatus = GameStatus.PLAYING;
+
+        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+
+        // when
+        final int updatedRow = roomDao.updateStatusById(roomId, updatedStatus);
+        final RoomStatusDto updatedStatusDto = roomDao.findStatusById(roomId);
+
+        // then
+        assertThat(updatedRow).isEqualTo(1);
+        assertThat(updatedStatusDto.getGameStatus()).isEqualTo(updatedStatus);
+    }
 }

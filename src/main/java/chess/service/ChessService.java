@@ -23,6 +23,8 @@ import chess.repository.RoomRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import chess.util.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,10 +34,14 @@ public class ChessService {
 
     private final RoomRepository roomRepository;
     private final BoardRepository boardRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ChessService(final RoomRepository roomRepository, final BoardRepository boardRepository) {
+    public ChessService(final RoomRepository roomRepository,
+                        final BoardRepository boardRepository,
+                        final PasswordEncoder passwordEncoder) {
         this.roomRepository = roomRepository;
         this.boardRepository = boardRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public RoomResponseDto createRoom(final RoomRequestDto roomRequestDto) {

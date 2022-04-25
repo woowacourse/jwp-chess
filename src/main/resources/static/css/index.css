@@ -1,5 +1,5 @@
 .mainContainer {
-    margin: 100px auto;
+    margin-top: 100px;
     float: top;
     text-align: center;
 }
@@ -12,7 +12,7 @@
 }
 
 .ui-button {
-    width: 100px;
+    width: 200px;
     height: 40px;
     font-size: xx-large;
     margin: 0 auto;
@@ -23,4 +23,44 @@
     font-weight: bold;
     text-align: center;
     color: darkred;
+    height: 40px;
+    padding-top: 20px;
+}
+
+.room_list {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.room_data {
+    height: 50px;
+    width: auto;
+    padding-bottom: 10px;
+    margin: 0 auto;
+
+}
+
+.roomName {
+    font-size: xx-large;
+    display: inline-block;
+    width: 300px;
+    text-align: left;
+    color: black;
+    text-decoration: none;
+}
+
+.roomStatus {
+    font-size: xx-large;
+    display: inline-block;
+    width: 150px;
+    text-align: left;
+}
+
+.deleteButton {
+    font-size: x-large;
+    display: inline-block;
+}
+
+button:hover {
+    cursor: pointer;
 }

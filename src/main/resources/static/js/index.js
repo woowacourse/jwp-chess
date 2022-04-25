@@ -1,3 +1,5 @@
+fetchRoomList();
+
 async function start() {
     const roomName = document.getElementById("roomNameInput").value;
     const password = document.getElementById("passwordInput").value;
@@ -33,4 +35,34 @@ async function start() {
         return;
     }
     document.getElementById("error").innerText = data.message;
+}
+
+async function fetchRoomList() {
+    const res = await fetch("/rooms");
+    const datas = await res.json();
+    const container = document.getElementById("room_list");
+    const containerHeight = Object.keys(datas).length * 60;
+    container.style.height = `${containerHeight}px`;
+    datas.forEach(data => {
+        const argument = document.createElement("div");
+        argument.className = "room_data";
+
+        const link = document.createElement("a");
+        link.className = "roomName";
+        link.innerText = data.roomName;
+        link.href = `/rooms/${data.roomId}`;
+        argument.appendChild(link);
+
+        const status = document.createElement("div");
+        status.className = "roomStatus";
+        status.innerText = data.gameStatus;
+        argument.appendChild(status);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "deleteButton";
+        deleteButton.innerText = "삭제";
+        argument.appendChild(deleteButton);
+
+        container.appendChild(argument);
+    });
 }

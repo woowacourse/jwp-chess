@@ -6,16 +6,16 @@
     <link rel="stylesheet" href="/css/index.css"/>
 </head>
 <body style="background: dimgray">
-
-<div class="mainContainer">
-    <div>
-        <input type="text" class="input" id="roomNameInput" placeholder="방 이름" autofocus maxlength="10"/>
-        <input type="password" class="input" id="passwordInput" placeholder="비밀번호" />
+    <div class="mainContainer">
+        <div>
+            <input type="text" class="input" id="roomNameInput" placeholder="방 이름" autofocus maxlength="10"/>
+            <input type="password" class="input" id="passwordInput" placeholder="비밀번호" />
+        </div>
+        <button class="ui-button" id="start" onclick="start()">방 생성</button>
     </div>
-    <button class="ui-button" id="start" onclick="start()">입장</button>
+    <div class="error" id="error"></div>
+    <div class="room_list", id="room_list"></div>
 </div>
-<div class="error" id="error"></div>
-
 <script src="/js/index.js"></script>
 
 </body>

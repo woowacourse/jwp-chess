@@ -4,11 +4,8 @@ import static chess.view.webview.Converter.convertToWebViewPiece;
 
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
-import chess.dto.ScoreDto;
 import chess.service.ChessGameService;
 import java.util.Map;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,12 +42,6 @@ public class WebController {
         final Map<Position, Piece> pieces = chessGameService.move(source, target);
         model.addAllAttributes(convertToWebViewPiece(pieces));
         return "index";
-    }
-
-    @GetMapping(path="/status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ScoreDto> status() {
-        final ScoreDto score = chessGameService.getScore();
-        return ResponseEntity.ok(score);
     }
 
     @GetMapping(path = "/end")

@@ -22,7 +22,7 @@ public class RoomDao {
     }
 
     public boolean isExistName(final String roomName) {
-        final String sql = "SELECT name FROM room WHERE name = ?";
+        final String sql = "SELECT EXISTS(SELECT name FROM room WHERE name = ?)";
         final String name = jdbcTemplate.queryForObject(sql, String.class, roomName);
         return name != null;
     }

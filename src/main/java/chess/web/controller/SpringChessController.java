@@ -28,19 +28,12 @@ public class SpringChessController {
 
     @GetMapping("/board/{gameId}")
     public String renderBoard(@PathVariable int gameId, Model model) {
-        BoardDto board = getRunningBoard(gameId);
-        if (board == null) {
+        if (chessService.isEnd(gameId)) {
             return "redirect:../status/" + gameId;
         }
+        BoardDto board = chessService.getBoard(gameId);
         model.addAttribute("board", board);
         return "board";
-    }
-
-    private BoardDto getRunningBoard(int gameId) {
-        if (!chessService.isEnd(gameId)) {
-            return chessService.getBoard(gameId);
-        }
-        return null;
     }
 
     @GetMapping("/new-board/{gameId}")

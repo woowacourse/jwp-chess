@@ -22,10 +22,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ChessGameDaoTest {
-
     ChessmenInitializer chessmenInitializer;
     ChessGame chessGame;
-
 
     @BeforeEach
     void setup_chessGame() {

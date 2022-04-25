@@ -18,8 +18,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql({"classpath:pieceDaoTest.sql"})
 class PieceDaoImplTest {
 
     @Autowired
@@ -30,10 +32,6 @@ class PieceDaoImplTest {
     @BeforeEach
     void setUp() {
         pieceDaoImpl = new PieceDaoImpl(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
-        jdbcTemplate.execute("create table piece("
-                + "position varchar(2) not null, team varchar(5) not null ,"
-                + "name varchar(6) not null, primary key (position))");
     }
 
     @Test

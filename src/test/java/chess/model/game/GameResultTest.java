@@ -1,11 +1,8 @@
 package chess.model.game;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import chess.model.Color;
-import chess.model.board.Board;
-import chess.model.board.BoardInitializer;
 import chess.model.board.Score;
 import chess.model.board.Square;
 import chess.model.piece.Bishop;

@@ -22,7 +22,7 @@ public final class Square {
         this.rank = rank;
     }
 
-    public static Square of(String squareName) {
+    public static Square of(final String squareName) {
         if (squareName.length() != SQUARE_NAME_LENGTH) {
             throw new IllegalArgumentException("잘못된 위치를 입력하였습니다.");
         }
@@ -31,7 +31,7 @@ public final class Square {
         return Square.of(file, rank);
     }
 
-    public static Square of(File file, Rank rank) {
+    public static Square of(final File file, final Rank rank) {
         String squareName = file.getName() + rank.getName();
         if (!SQUARE_CACHE.containsKey(squareName)) {
             SQUARE_CACHE.put(squareName, new Square(file, rank));
@@ -52,7 +52,7 @@ public final class Square {
         return bigger;
     }
 
-    public Distance getDistance(Square target) {
+    public Distance getDistance(final Square target) {
         Direction direction = this.findDirection(target);
         Square tempSquare = this;
         int movedCount = FILE_INDEX;
@@ -63,26 +63,26 @@ public final class Square {
         return Distance.of(movedCount);
     }
 
-    public Square move(Direction direction) {
+    public Square move(final Direction direction) {
         return Square.of(file.add(direction.getRow()), rank.add(direction.getCol()));
     }
 
-    public Direction findDirection(Square source) {
+    public Direction findDirection(final Square source) {
         int fileDistance = file.calculateGap(source.file);
         int rankDistance = rank.calculateGap(source.rank);
         int gcd = gcd(fileDistance, rankDistance);
         return Direction.of(fileDistance / gcd, rankDistance / gcd);
     }
 
-    public boolean isSameFile(Square other) {
+    public boolean isSameFile(final Square other) {
         return this.file.equals(other.file);
     }
 
-    public boolean isSameRank(Rank startRank) {
+    public boolean isSameRank(final Rank startRank) {
         return this.rank.equals(startRank);
     }
 
-    public boolean isDifferent(Square other) {
+    public boolean isDifferent(final Square other) {
         return !this.equals(other);
     }
 

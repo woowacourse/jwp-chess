@@ -9,14 +9,15 @@ public class GameEntity {
     private final int id;
     private String name;
 
-    public GameEntity(int id, String name, String status, String turn) {
+    public GameEntity(final int id, final String name,
+                      final String status, final String turn) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.turn = turn;
     }
 
-    public GameEntity(int id, ChessGame chessGame) {
+    public GameEntity(final int id, final ChessGame chessGame) {
         this.id = id;
         this.status = StatusType.findByStatus(chessGame.getStatus()).name();
         this.turn = chessGame.getTurn().name();

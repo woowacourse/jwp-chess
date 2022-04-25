@@ -50,7 +50,7 @@ public class SpringChessController {
 
     @PostMapping("/move/{gameId}")
     public String requestMove(@PathVariable int gameId, @RequestParam String from,
-        @RequestParam String to) {
+                              @RequestParam String to) {
         chessService.move(gameId, from, to);
         return "redirect:../board/" + gameId;
     }

@@ -24,14 +24,13 @@ public final class OutputView {
         System.out.println(stringBuilder);
     }
 
-    private static void appendLetters(StringBuilder stringBuilder, List<String> lettersInRank) {
+    private static void appendLetters(final StringBuilder stringBuilder, final List<String> lettersInRank) {
         for (String letter : lettersInRank) {
             stringBuilder.append(letter);
         }
     }
 
-
-    public static void printException(RuntimeException exception) {
+    public static void printException(final RuntimeException exception) {
         System.out.println(ERROR + exception.getMessage());
     }
 
@@ -39,16 +38,16 @@ public final class OutputView {
         System.out.println(END_MESSAGE);
     }
 
-    public static void printWinner(GameResultDto result) {
+    public static void printWinner(final GameResultDto result) {
         printStatus(result.getPlayerPoints());
         if (result.getIsDraw()) {
             System.out.println("비겼습니다!");
             return;
         }
-        System.out.println(String.format("승자는 %s입니다!", result.getWinnerColor()));
+        System.out.printf("승자는 %s입니다!%n", result.getWinnerColor());
     }
 
-    private static void printStatus(Map<String, Double> scores) {
+    private static void printStatus(final Map<String, Double> scores) {
         for (String name : scores.keySet()) {
             System.out.println(name + NAME_SCORE_DELIMITER + scores.get(name));
         }

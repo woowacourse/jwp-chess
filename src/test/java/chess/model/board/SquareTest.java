@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.model.File;
 import chess.model.Rank;
-import chess.model.board.Square;
 import chess.model.strategy.move.Direction;
 import chess.model.strategy.move.Distance;
 import org.junit.jupiter.api.Test;

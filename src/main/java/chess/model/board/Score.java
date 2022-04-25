@@ -13,7 +13,7 @@ public class Score {
 
     private final Map<Color, Double> scores;
 
-    private Score(Map<Color, Double> scores) {
+    private Score(final Map<Color, Double> scores) {
         this.scores = new HashMap<>(scores);
     }
 

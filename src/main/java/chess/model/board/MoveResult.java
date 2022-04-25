@@ -13,7 +13,9 @@ public final class MoveResult {
         this.removedPiece = removedPiece;
     }
 
-    public static MoveResult from(Square from, Square to, Piece fromPiece, Piece toPiece, Piece removedPiece) {
+    public static MoveResult from(Square from, Square to,
+                                  Piece fromPiece, Piece toPiece,
+                                  Piece removedPiece) {
         return new MoveResult(Map.of(from, fromPiece, to, toPiece), removedPiece);
     }
 

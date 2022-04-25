@@ -1,18 +1,18 @@
 package chess.model.gamestatus;
 
 import chess.model.Color;
-import chess.model.game.GameResult;
-import chess.model.board.MoveResult;
-import chess.model.board.Score;
 import chess.model.board.Board;
+import chess.model.board.MoveResult;
 import chess.model.board.Square;
+import chess.model.game.GameResult;
 import chess.model.piece.Piece;
 import java.util.Map;
 
 public class End implements Status {
+
     private final Board board;
 
-    public End(Board board) {
+    public End(final Board board) {
         this.board = board;
     }
 
@@ -22,13 +22,8 @@ public class End implements Status {
     }
 
     @Override
-    public MoveResult move(Square from, Square to, Color turn) {
+    public MoveResult move(final Square from, final Square to, final Color turn) {
         throw new IllegalArgumentException("게임이 종료되었으면 말을 이동할 수 없습니다.");
-    }
-
-    @Override
-    public Score getScore() {
-        return board.calculateScore();
     }
 
     @Override
@@ -48,6 +43,6 @@ public class End implements Status {
 
     @Override
     public Map<Square, Piece> getBoard() {
-        return board.getBoard();
+        return Map.copyOf(board.getBoard());
     }
 }

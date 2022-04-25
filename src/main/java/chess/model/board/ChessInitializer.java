@@ -25,16 +25,16 @@ public class ChessInitializer implements BoardInitializer {
         return board;
     }
 
-    private void initBlack(Map<Square, Piece> board) {
+    private void initBlack(final Map<Square, Piece> board) {
         initBaseLine(board, Rank.EIGHT, Color.BLACK);
         initPawns(board, Rank.SEVEN, Color.BLACK);
     }
 
-    private void initBaseLine(Map<Square, Piece> board, Rank rank, Color color) {
+    private void initBaseLine(final Map<Square, Piece> board, final Rank rank, final Color color) {
         board.putAll(initRoyalPieces(color, rank));
     }
 
-    private Map<Square, Piece> initRoyalPieces(Color color, Rank rank) {
+    private Map<Square, Piece> initRoyalPieces(final Color color, final Rank rank) {
         return Map.of(
                 Square.of(File.A, rank), new Rook(color),
                 Square.of(File.B, rank), new Knight(color),
@@ -47,25 +47,25 @@ public class ChessInitializer implements BoardInitializer {
         );
     }
 
-    private void initPawns(Map<Square, Piece> board, Rank rank, Color color) {
+    private void initPawns(final Map<Square, Piece> board, final Rank rank, final Color color) {
         for (File file : File.values()) {
             board.put(Square.of(file, rank), Pawn.of(color));
         }
     }
 
-    private void initEmpty(Map<Square, Piece> board) {
+    private void initEmpty(final Map<Square, Piece> board) {
         for (Rank rank : Rank.emptyBaseLine()) {
             initEmptiesInRank(board, rank);
         }
     }
 
-    private void initEmptiesInRank(Map<Square, Piece> board, Rank rank) {
+    private void initEmptiesInRank(final Map<Square, Piece> board, final Rank rank) {
         for (File file : File.values()) {
             board.put(Square.of(file, rank), new Empty());
         }
     }
 
-    private void initWhite(Map<Square, Piece> board) {
+    private void initWhite(final Map<Square, Piece> board) {
         initPawns(board, Rank.TWO, Color.WHITE);
         initBaseLine(board, Rank.ONE, Color.WHITE);
     }

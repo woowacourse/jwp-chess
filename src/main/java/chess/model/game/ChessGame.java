@@ -3,8 +3,8 @@ package chess.model.game;
 import chess.model.Color;
 import chess.model.board.MoveResult;
 import chess.model.board.Square;
-import chess.model.gamestatus.Status;
 import chess.model.gamestatus.Playing;
+import chess.model.gamestatus.Status;
 import chess.model.piece.Piece;
 import java.util.Map;
 
@@ -16,7 +16,7 @@ public class ChessGame {
         init();
     }
 
-    public ChessGame(Color turn, Status status) {
+    public ChessGame(final Color turn, final Status status) {
         this.turn = turn;
         this.status = status;
     }
@@ -26,7 +26,7 @@ public class ChessGame {
         this.turn = Color.WHITE;
     }
 
-    public MoveResult move(Square from, Square to) {
+    public MoveResult move(final Square from, final Square to) {
         MoveResult moveResult = status.move(from, to, turn);
         turn = turn.changeToOpposite();
         if (moveResult.isKingAttacked()) {

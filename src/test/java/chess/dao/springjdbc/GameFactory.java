@@ -9,8 +9,8 @@ public class GameFactory {
 
     public static void setUpGames(JdbcTemplate jdbcTemplate, String... names) {
         List<Object[]> params = Arrays.stream(names)
-            .map(name -> new Object[]{name})
-            .collect(Collectors.toList());
+                .map(name -> new Object[]{name})
+                .collect(Collectors.toList());
         jdbcTemplate.batchUpdate("INSERT INTO game SET name = ?", params);
     }
 }

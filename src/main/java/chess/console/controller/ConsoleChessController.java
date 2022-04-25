@@ -2,10 +2,10 @@ package chess.console.controller;
 
 import chess.console.view.InputView;
 import chess.console.view.OutputView;
-import chess.model.game.ChessGame;
 import chess.model.File;
 import chess.model.Rank;
 import chess.model.board.Square;
+import chess.model.game.ChessGame;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
 import chess.service.dto.GameResultDto;
@@ -21,7 +21,7 @@ public final class ConsoleChessController {
 
     private final ChessGame game;
 
-    public ConsoleChessController(ChessGame game) {
+    public ConsoleChessController(final ChessGame game) {
         this.game = game;
     }
 
@@ -31,7 +31,7 @@ public final class ConsoleChessController {
         } while (!game.isEnd());
     }
 
-    private void runUntilValid(Runnable runner) {
+    private void runUntilValid(final Runnable runner) {
         boolean runSuccess;
         do {
             runSuccess = tryRun(runner);
@@ -54,13 +54,13 @@ public final class ConsoleChessController {
         gameCommand.executeRequest(this, request);
     }
 
-    public void start(GameCommandRequest request) {
+    public void start(final GameCommandRequest request) {
         OutputView.startGame();
         game.init();
         OutputView.printBoard(getAllPieceLetter(game));
     }
 
-    public void move(GameCommandRequest request) {
+    public void move(final GameCommandRequest request) {
         List<String> body = request.getBody();
         Square from = Square.of(body.get(FROM_INDEX));
         Square to = Square.of(body.get(TO_INDEX));
@@ -71,24 +71,24 @@ public final class ConsoleChessController {
         }
     }
 
-    public void status(GameCommandRequest request) {
+    public void status(final GameCommandRequest request) {
         GameResultDto gameResultDto = GameResultDto.of(game.getResult());
         OutputView.printWinner(gameResultDto);
         game.end();
     }
 
-    public void end(GameCommandRequest request) {
+    public void end(final GameCommandRequest request) {
         game.end();
         OutputView.printEndMessage();
     }
 
-    public List<List<String>> getAllPieceLetter(ChessGame game) {
+    public List<List<String>> getAllPieceLetter(final ChessGame game) {
         return Rank.getRanksInBoardOrder().stream()
                 .map(rank -> getPieceLetterInRank(game.getBoard(), rank))
                 .collect(Collectors.toList());
     }
 
-    private List<String> getPieceLetterInRank(Map<Square, Piece> board, Rank rank) {
+    private List<String> getPieceLetterInRank(final Map<Square, Piece> board, final Rank rank) {
         return Arrays.stream(File.values())
                 .map(file -> board.get(Square.of(file, rank)))
                 .map(PieceType::getLetterByColor)

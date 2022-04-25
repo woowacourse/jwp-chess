@@ -14,26 +14,26 @@ import org.springframework.stereotype.Repository;
 public class SpringGameDao implements GameDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<GameEntity> chessGameDtoRowMapper = (resultSet, rowNum) ->
+            new GameEntity(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("status"),
+                    resultSet.getString("turn")
+            );
 
-    private final RowMapper<GameEntity> chessGameDtoRowMapper = (resultSet, rowNum) -> new GameEntity(
-        resultSet.getInt("id"),
-        resultSet.getString("name"),
-        resultSet.getString("status"),
-        resultSet.getString("turn")
-    );
-
-    public SpringGameDao(JdbcTemplate jdbcTemplate) {
+    public SpringGameDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void update(GameEntity game) {
+    public void update(final GameEntity game) {
         String sql = "UPDATE game SET status = ?, turn = ? WHERE id = ?";
         jdbcTemplate.update(sql, game.getStatus(), game.getTurn(), game.getId());
     }
 
     @Override
-    public GameEntity findById(int id) {
+    public GameEntity findById(final int id) {
         String sql = "SELECT id, name, status, turn FROM game WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, chessGameDtoRowMapper, id);
     }
@@ -45,7 +45,7 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public int createGame(String name) {
+    public int createGame(final String name) {
         String sql = "INSERT INTO game SET name = ?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {

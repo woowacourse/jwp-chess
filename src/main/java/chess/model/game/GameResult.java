@@ -13,34 +13,34 @@ public class GameResult {
     private final Score score;
     private final Color winnerColor;
 
-    private GameResult(Score score, Color winnerColor) {
+    private GameResult(final Score score, final Color winnerColor) {
         this.score = score;
         this.winnerColor = winnerColor;
     }
 
-    public static GameResult from(Map<Square, Piece> board, Score score) {
+    public static GameResult from(final Map<Square, Piece> board, final Score score) {
         return new GameResult(score, findWinner(board, score));
     }
 
-    private static Color findWinner(Map<Square, Piece> board, Score score) {
+    private static Color findWinner(final Map<Square, Piece> board, final Score score) {
         if (bothKingAlive(board)) {
             return score.findWinnerByScore();
         }
         return findWinnerByKing(board);
     }
 
-    private static boolean bothKingAlive(Map<Square, Piece> board) {
+    private static boolean bothKingAlive(final Map<Square, Piece> board) {
         return board.keySet().stream()
                 .map(board::get)
                 .filter(Piece::isKing)
                 .count() == VALID_KING_COUNT;
     }
 
-    private static Color findWinnerByKing(Map<Square, Piece> board) {
+    private static Color findWinnerByKing(final Map<Square, Piece> board) {
         return getColorHavingKing(board);
     }
 
-    private static Color getColorHavingKing(Map<Square, Piece> board) {
+    private static Color getColorHavingKing(final Map<Square, Piece> board) {
         return Color.getPlayerColors().stream()
                 .filter(color -> board.containsValue(new King(color)))
                 .findFirst()
@@ -48,7 +48,7 @@ public class GameResult {
     }
 
     public Map<Color, Double> getScore() {
-        return score.getScoresPerColor();
+        return Map.copyOf(score.getScoresPerColor());
     }
 
     public Color getWinnerColor() {

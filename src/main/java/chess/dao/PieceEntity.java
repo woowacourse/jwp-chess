@@ -11,13 +11,13 @@ public class PieceEntity {
     private final String type;
     private final String color;
 
-    public PieceEntity(Square square, Piece piece) {
+    public PieceEntity(final Square square, final Piece piece) {
         this.square = square.getName();
         this.type = PieceType.getName(piece);
         this.color = piece.getColor().name();
     }
 
-    public PieceEntity(String square, String type, String color) {
+    public PieceEntity(final String square, final String type, final String color) {
         this.square = square;
         this.type = type;
         this.color = color;
@@ -45,7 +45,7 @@ public class PieceEntity {
         }
         PieceEntity that = (PieceEntity) o;
         return Objects.equals(getSquare(), that.getSquare()) && Objects.equals(
-            getType(), that.getType()) && Objects.equals(getColor(), that.getColor());
+                getType(), that.getType()) && Objects.equals(getColor(), that.getColor());
     }
 
     @Override

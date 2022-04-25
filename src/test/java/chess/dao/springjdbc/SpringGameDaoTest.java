@@ -35,7 +35,7 @@ class SpringGameDaoTest {
     @Test
     @DisplayName("findById : 게임의 id를 통해 게임 조회가 정상적인지 확인")
     void findById() {
-        GameFactory.setUpGames(jdbcTemplate,"first");
+        GameFactory.setUpGames(jdbcTemplate, "first");
         GameEntity foundGame = springGameDao.findById(1);
         assertThat(foundGame.getName()).isEqualTo("first");
     }
@@ -44,7 +44,7 @@ class SpringGameDaoTest {
     @DisplayName("update : 게임의 상태와 턴을 업데이트 하는지 확인")
     void update() {
         GameFactory.setUpGames(jdbcTemplate, "first");
-        springGameDao.update(new GameEntity(1,"first", "READY", "BLACK"));
+        springGameDao.update(new GameEntity(1, "first", "READY", "BLACK"));
         GameEntity foundGame = springGameDao.findById(1);
         assertAll(() -> {
             assertThat(foundGame.getTurn()).isEqualTo("BLACK");

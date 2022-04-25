@@ -15,7 +15,7 @@ public enum StatusType {
         this.statusFunction = statusFunction;
     }
 
-    public static Status createStatus(String statusName, Board board) {
+    public static Status createStatus(final String statusName, final Board board) {
         return Arrays.stream(values())
                 .filter(type -> type.hasSameName(statusName))
                 .findFirst()
@@ -23,14 +23,14 @@ public enum StatusType {
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 상태입니다."));
     }
 
-    public static StatusType findByStatus(Status status) {
+    public static StatusType findByStatus(final Status status) {
         return Arrays.stream(values())
                 .filter(type -> type.hasSameName(status.getClass().getSimpleName()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("맞는 상태 타입을 찾지 못했습니다."));
     }
 
-    private boolean hasSameName(String compareName) {
+    private boolean hasSameName(final String compareName) {
         return this.name().equals(compareName.toUpperCase());
     }
 }

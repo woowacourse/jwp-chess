@@ -1,19 +1,21 @@
 package chess.console.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameCommandRequest {
     private static final int COMMAND_INDEX = 0;
     private static final int MOVE_REQUEST_BODY_SIZE = 2;
+
     private final GameCommand gameCommand;
     private final List<String> body;
 
-    private GameCommandRequest(GameCommand gameCommand, List<String> body) {
+    private GameCommandRequest(final GameCommand gameCommand, final List<String> body) {
         this.gameCommand = gameCommand;
-        this.body = body;
+        this.body = new ArrayList<>(body);
     }
 
-    public static GameCommandRequest of(List<String> commandInputs) {
+    public static GameCommandRequest of(final List<String> commandInputs) {
         checkRequestInputs(commandInputs);
         GameCommand command = GameCommand.findCommand(commandInputs.get(COMMAND_INDEX));
         commandInputs.remove(COMMAND_INDEX);
@@ -21,13 +23,13 @@ public class GameCommandRequest {
         return new GameCommandRequest(command, commandInputs);
     }
 
-    private static void checkRequestBody(List<String> commandInputs, GameCommand command) {
+    private static void checkRequestBody(final List<String> commandInputs, final GameCommand command) {
         if (command.isMove() && commandInputs.size() != MOVE_REQUEST_BODY_SIZE) {
             throw new IllegalArgumentException("move 요청에 내용이 없습니다.");
         }
     }
 
-    private static void checkRequestInputs(List<String> commandInputs) {
+    private static void checkRequestInputs(final List<String> commandInputs) {
         if (commandInputs.isEmpty()) {
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }
@@ -38,6 +40,6 @@ public class GameCommandRequest {
     }
 
     public List<String> getBody() {
-        return body;
+        return List.copyOf(body);
     }
 }

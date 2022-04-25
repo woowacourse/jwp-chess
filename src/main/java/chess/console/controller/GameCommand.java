@@ -22,26 +22,14 @@ public enum GameCommand {
         return Arrays.stream(values())
                 .filter(gameStartCommand -> gameStartCommand.commandLine.equals(commandLine))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("잘못된 게임 시작 커맨드입니다. %s", commandLine)));
-    }
-
-    public boolean isStart() {
-        return this.equals(START);
+                .orElseThrow(() -> new IllegalArgumentException(String.format("잘못된 게임 커맨드입니다. %s", commandLine)));
     }
 
     public boolean isMove() {
         return this.equals(MOVE);
     }
 
-    public boolean isStatus() {
-        return this.equals(STATUS);
-    }
-
-    public boolean isEnd() {
-        return this.equals(END);
-    }
-
-    public void executeRequest(ConsoleChessController controller, GameCommandRequest request) {
+    public void executeRequest(final ConsoleChessController controller, final GameCommandRequest request) {
         this.requestBiConsumer.accept(controller, request);
     }
 }

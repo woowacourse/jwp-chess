@@ -25,12 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/rooms")
-public class ChessController {
+public class ChessApiController {
 
     private final RoomService roomService;
     private final ChessService chessService;
 
-    public ChessController(final RoomService roomService, final ChessService chessService) {
+    public ChessApiController(final RoomService roomService, final ChessService chessService) {
         this.roomService = roomService;
         this.chessService = chessService;
     }

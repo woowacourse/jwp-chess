@@ -22,7 +22,7 @@ public class RoomDao {
     public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn, final String password) {
         final String sql = "INSERT INTO room (name, game_status, current_turn, password) VALUES (?, ?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-        return jdbcTemplate.update(con -> {
+        jdbcTemplate.update(con -> {
             final PreparedStatement ps = con.prepareStatement(sql, new String[]{"room_id"});
             ps.setString(1, roomName);
             ps.setString(2, gameStatus.getValue());
@@ -30,6 +30,7 @@ public class RoomDao {
             ps.setString(4, password);
             return ps;
         }, keyHolder);
+        return keyHolder.getKey().intValue();
     }
 
     public boolean isExistName(final String roomName) {

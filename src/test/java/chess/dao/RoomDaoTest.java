@@ -45,9 +45,11 @@ class RoomDaoTest {
         final String password = "1q2w3e4r";
 
         // when
-        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+        final int roomId = roomDao.save("hi", gameStatus, currentTurn, password);
+        final int roomId2 = roomDao.save("hello", gameStatus, currentTurn, password);
 
         // then
         assertThat(roomId).isEqualTo(1);
+        assertThat(roomId2).isEqualTo(2);
     }
 }

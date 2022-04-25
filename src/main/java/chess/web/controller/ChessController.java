@@ -20,7 +20,7 @@ public class ChessController {
     }
 
     @GetMapping("/")
-    public String rendIndexPage(final Model model) {
+    public String showIndex(final Model model) {
         model.addAttribute("chessStatus", chessService.getChessStatus());
 
         return "index";
@@ -33,7 +33,7 @@ public class ChessController {
     }
 
     @GetMapping("/result")
-    public String rendResultPage(final Model model) {
+    public String showResult(final Model model) {
         model.addAttribute("result", chessService.getChessResult());
         chessService.restart();
 

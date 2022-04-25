@@ -20,7 +20,7 @@ class TurnDaoTest {
 
     @BeforeEach
     void setUp() {
-        turnDao = new TurnDaoJdbc(jdbcTemplate);
+        turnDao = new JdbcTurnDao(jdbcTemplate);
 
         jdbcTemplate.execute("drop table turn if exists");
         jdbcTemplate.execute("CREATE TABLE turn (team varchar(5) not null primary key)");

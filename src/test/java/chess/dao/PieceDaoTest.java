@@ -33,7 +33,7 @@ class PieceDaoTest {
 
     @BeforeEach
     void setUp() {
-        pieceDao = new PieceDaoJdbc(jdbcTemplate);
+        pieceDao = new JdbcPieceDao(jdbcTemplate);
 
         jdbcTemplate.execute("drop table piece if exists");
         jdbcTemplate.execute("CREATE TABLE piece (\n" +

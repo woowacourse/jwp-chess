@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class PieceDaoJdbc implements PieceDao {
+public class JdbcPieceDao implements PieceDao {
 
     private final RowMapper<PieceDto> pieceRowMapper = (resultSet, rowNum) -> new PieceDto(
             resultSet.getString("position"),
@@ -21,7 +21,7 @@ public class PieceDaoJdbc implements PieceDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PieceDaoJdbc(JdbcTemplate jdbcTemplate) {
+    public JdbcPieceDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

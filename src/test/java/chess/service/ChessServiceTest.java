@@ -3,9 +3,9 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.dao.PieceDao;
-import chess.dao.PieceDaoJdbc;
+import chess.dao.JdbcPieceDao;
 import chess.dao.TurnDao;
-import chess.dao.TurnDaoJdbc;
+import chess.dao.JdbcTurnDao;
 import chess.dto.MoveDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,8 +23,8 @@ class ChessServiceTest {
 
     @BeforeEach
     void setUp() {
-        PieceDao pieceDao = new PieceDaoJdbc(jdbcTemplate);
-        TurnDao turnDao = new TurnDaoJdbc(jdbcTemplate);
+        PieceDao pieceDao = new JdbcPieceDao(jdbcTemplate);
+        TurnDao turnDao = new JdbcTurnDao(jdbcTemplate);
         this.chessService = new ChessService(pieceDao, turnDao);
 
         jdbcTemplate.execute("drop table piece if exists");

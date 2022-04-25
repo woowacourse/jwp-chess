@@ -15,10 +15,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DBChessServiceImpl implements ChessService {
+public class SpringChessService implements ChessService {
+
     private final ChessDao chessDao;
 
-    public DBChessServiceImpl(ChessDao chessDao) {
+    public SpringChessService(ChessDao chessDao) {
         this.chessDao = chessDao;
     }
 
@@ -61,7 +62,6 @@ public class DBChessServiceImpl implements ChessService {
 
     @Override
     public Map<Color, Double> getScore(String gameId) {
-        final Board board = findBoardByGameId(gameId);
-        return board.getScore();
+        return findBoardByGameId(gameId).getScore();
     }
 }

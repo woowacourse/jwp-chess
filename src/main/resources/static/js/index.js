@@ -30,5 +30,7 @@ async function start() {
         const roomId = array[array.length - 1];
         await fetch(`/rooms/${roomId}/pieces`, {method: "POST"});
         window.location.href = location;
+        return;
     }
+    document.getElementById("error").innerText = data.message;
 }

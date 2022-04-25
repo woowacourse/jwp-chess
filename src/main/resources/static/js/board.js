@@ -1,6 +1,5 @@
 let from = "";
 let to = "";
-let roomName = "{{roomName}}";
 
 fetchPieces();
 fetchScores();
@@ -66,9 +65,7 @@ async function end() {
 }
 
 function exitRoom() {
-    const pathName = window.location.pathname;
     window.location.href = "/";
-    fetch(`${pathName}`, {method: "DELETE"})
 }
 
 async function fetchPieces() {

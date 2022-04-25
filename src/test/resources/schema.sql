@@ -1,3 +1,7 @@
+drop table if exists Member;
+drop table if exists Game;
+drop table if exists Piece;
+
 create table Member
 (
     id   bigint auto_increment primary key,

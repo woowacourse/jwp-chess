@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GameService {
@@ -28,6 +29,7 @@ public class GameService {
         this.memberDao = memberDao;
     }
 
+    @Transactional
     public Long createGame(final Long whiteId, final Long blackId) {
         final Member white = memberDao.findById(whiteId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
         final Member black = memberDao.findById(blackId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
@@ -37,6 +39,7 @@ public class GameService {
         return gameDao.save(new ChessGame(board, Team.WHITE, participant));
     }
 
+    @Transactional
     public List<ChessGame> findPlayingGames() {
         return gameDao.findAll()
                 .stream()
@@ -45,11 +48,13 @@ public class GameService {
     }
 
 
+    @Transactional
     public ChessGame findByGameId(final Long gameId) {
         return gameDao.findById(gameId)
                 .orElseThrow(() -> new RuntimeException("찾는 게임이 존재하지 않습니다."));
     }
 
+    @Transactional
     public List<GameResultDto> findHistoriesByMemberId(final Long memberId) {
         final List<ChessGame> games = gameDao.findHistoriesByMemberId(memberId);
         return games.stream()
@@ -106,12 +111,14 @@ public class GameService {
         return result.getBlackScore();
     }
 
+    @Transactional
     public void move(final Long gameId, final String rawFrom, final String rawTo) {
         final ChessGame chessGame = findByGameId(gameId);
         chessGame.move(Square.from(rawFrom), Square.from(rawTo));
         gameDao.move(chessGame, rawFrom, rawTo);
     }
 
+    @Transactional
     public void terminate(final Long gameId) {
         final ChessGame chessGame = findByGameId(gameId);
         chessGame.terminate();

@@ -46,8 +46,8 @@ class BoardDaoTest {
     void setUp() {
         gameDao = new SpringGameDao(jdbcTemplate);
         state = new Ready();
-        gameDao.saveGame(GameStateDto.of(state), TEST_ROOM_NAME);
-        gameDao.saveGame(GameStateDto.of(state), TEST_CREATION_ROOM_NAME);
+//        gameDao.saveGame(GameStateDto.of(state), TEST_ROOM_NAME);
+//        gameDao.saveGame(GameStateDto.of(state), TEST_CREATION_ROOM_NAME);
 
         dao = new SpringBoardDao(jdbcTemplate);
         Board board = Board.of(new InitialBoardGenerator());
@@ -111,7 +111,7 @@ class BoardDaoTest {
     void setDown() {
         dao.removeBoard(TEST_ROOM_NAME);
         dao.removeBoard(TEST_CREATION_ROOM_NAME);
-        gameDao.removeGame(TEST_ROOM_NAME);
-        gameDao.removeGame(TEST_CREATION_ROOM_NAME);
+//        gameDao.removeGame(TEST_ROOM_NAME);
+//        gameDao.removeGame(TEST_CREATION_ROOM_NAME);
     }
 }

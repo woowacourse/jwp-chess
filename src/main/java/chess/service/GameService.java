@@ -32,34 +32,35 @@ public class GameService {
     public void createNewGame(String roomName) {
         validateDistinctGame(roomName);
         GameState state = new Ready();
-        gameDao.saveGame(GameStateDto.of(state), roomName);
+//        gameDao.saveGame(GameStateDto.of(state), roomName);
         boardDao.saveBoard(BoardDto.of(state.getPointPieces()), roomName);
     }
 
     private void validateDistinctGame(String roomName) {
-        List<String> stateAndColor = gameDao.readStateAndColor(roomName);
-        if (!stateAndColor.isEmpty()) {
-            throw new IllegalArgumentException(String.format("[ERROR] %s 이름의 방이 이미 존재합니다.", roomName));
-        }
+//        List<String> stateAndColor = gameDao.readStateAndColor(roomName);
+//        if (!stateAndColor.isEmpty()) {
+//            throw new IllegalArgumentException(String.format("[ERROR] %s 이름의 방이 이미 존재합니다.", roomName));
+//        }
     }
 
     public void startGame(String roomName) {
         GameState state = readGameState(roomName).start();
-        gameDao.updateState(GameStateDto.of(state), roomName);
+//        gameDao.updateState(GameStateDto.of(state), roomName);
     }
 
     public void finishGame(String roomName) {
         GameState state = readGameState(roomName).finish();
-        gameDao.updateState(GameStateDto.of(state), roomName);
+//        gameDao.updateState(GameStateDto.of(state), roomName);
     }
 
     public GameState readGameState(String roomName) {
-        List<String> stateAndColor = gameDao.readStateAndColor(roomName);
-        validateExistGame(stateAndColor, roomName);
-
-        BoardDto boardDto = boardDao.readBoard(roomName);
-        Board board = Board.of(new CustomBoardGenerator(boardDto));
-        return GameStateGenerator.generate(board, stateAndColor);
+//        List<String> stateAndColor = gameDao.readStateAndColor(roomName);
+//        validateExistGame(stateAndColor, roomName);
+//
+//        BoardDto boardDto = boardDao.readBoard(roomName);
+//        Board board = Board.of(new CustomBoardGenerator(boardDto));
+//        return GameStateGenerator.generate(board, stateAndColor);
+        return null;
     }
 
     private void validateExistGame(List<String> stateAndColor, String roomName) {
@@ -72,7 +73,7 @@ public class GameService {
 
     public GameState moveBoard(String roomName, Arguments arguments) {
         GameState movedState = readGameState(roomName).move(arguments);
-        gameDao.updateState(GameStateDto.of(movedState), roomName);
+//        gameDao.updateState(GameStateDto.of(movedState), roomName);
 
         Route route = Route.of(arguments);
         boardDao.deletePiece(PointDto.of(route.getDestination()), roomName);
@@ -82,6 +83,6 @@ public class GameService {
 
     public void removeGameAndBoard(String roomName) {
         boardDao.removeBoard(roomName);
-        gameDao.removeGame(roomName);
+//        gameDao.removeGame(roomName);
     }
 }

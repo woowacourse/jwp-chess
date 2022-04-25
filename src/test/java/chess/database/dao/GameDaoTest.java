@@ -2,6 +2,8 @@ package chess.database.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
+import chess.database.dao.spring.RoomDao;
+import chess.database.dto.RoomDto;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -15,8 +17,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import chess.database.dao.spring.SpringGameDao;
 import chess.database.dto.GameStateDto;
-import chess.database.dao.vanilla.JdbcConnector;
-import chess.database.dao.vanilla.JdbcGameDao;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 
@@ -24,32 +24,47 @@ import chess.domain.game.Ready;
 class GameDaoTest {
 
     private static final String TEST_ROOM_NAME = "TESTING";
+    private static final String TEST_ROOM_PASSWORD = "1234";
     private static final String TEST_CREATION_ROOM_NAME = "TESTING2";
+    private static final String TEST_CREATION_ROOM_PASSWORD = "4321";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private GameDao dao;
+    private GameDao gameDao;
+    private RoomDao roomDao;
 
     @BeforeEach
     void setUp() {
-        dao = new SpringGameDao(jdbcTemplate);
+        gameDao = new SpringGameDao(jdbcTemplate);
+        roomDao = new RoomDao(jdbcTemplate);
         GameState state = new Ready();
-        dao.saveGame(GameStateDto.of(state), TEST_ROOM_NAME);
+        RoomDto roomDto = roomDao.create(new RoomDto(TEST_ROOM_NAME, TEST_ROOM_PASSWORD));
+        gameDao.create(GameStateDto.of(state), roomDto.getId());
     }
 
     @Test
     @DisplayName("게임을 생성한다.")
     public void createGame() {
         GameState state = new Ready();
-        assertThatCode(() -> dao.saveGame(GameStateDto.of(state), TEST_CREATION_ROOM_NAME))
+        RoomDto roomDto = roomDao.create(
+            new RoomDto(TEST_CREATION_ROOM_NAME, TEST_CREATION_ROOM_PASSWORD));
+        assertThatCode(() -> gameDao.create(GameStateDto.of(state), roomDto.getId()))
             .doesNotThrowAnyException();
+        gameDao.removeGame(roomDao.findByName(TEST_CREATION_ROOM_NAME).getId());
+        roomDao.delete(new RoomDto(TEST_CREATION_ROOM_NAME, TEST_CREATION_ROOM_PASSWORD));
     }
+
 
     @Test
     @DisplayName("방 이름으로 게임 상태와 턴 색깔을 조회한다.")
     public void insert() {
+        RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
+        System.out.println("id " + roomDto.getId());
+        System.out.println("name " + roomDto.getName());
+        System.out.println("pw " + roomDto.getPassword());
         // given
-        List<String> stateAndColor = dao.readStateAndColor(TEST_ROOM_NAME);
+        List<String> stateAndColor = gameDao.readStateAndColor(roomDto.getId());
+        System.out.println("stateAndColor : " + stateAndColor);
         // when
 
         String stateString = stateAndColor.get(0);
@@ -68,8 +83,9 @@ class GameDaoTest {
         GameState state = new Ready();
         GameState started = state.start();
         // when
-        dao.updateState(GameStateDto.of(started), TEST_ROOM_NAME);
-        List<String> stateAndColor = dao.readStateAndColor(TEST_ROOM_NAME);
+        RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
+        gameDao.updateState(GameStateDto.of(started), roomDto.getId());
+        List<String> stateAndColor = gameDao.readStateAndColor(roomDto.getId());
 
         String stateString = stateAndColor.get(0);
         String colorString = stateAndColor.get(1);
@@ -80,7 +96,7 @@ class GameDaoTest {
 
     @AfterEach
     void afterAll() {
-        dao.removeGame(TEST_ROOM_NAME);
-        dao.removeGame(TEST_CREATION_ROOM_NAME);
+        gameDao.removeGame(roomDao.findByName(TEST_ROOM_NAME).getId());
+        roomDao.delete(new RoomDto(TEST_ROOM_NAME, TEST_ROOM_PASSWORD));
     }
 }

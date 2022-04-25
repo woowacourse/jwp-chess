@@ -19,29 +19,49 @@ public class FakeGameDao implements GameDao {
         this.memoryDatabase = new HashMap<>();
     }
 
+//    @Override
+//    public List<String> readStateAndColor(String roomName) {
+//        final List<String> stateAndColor = memoryDatabase.get(roomName);
+//        if (stateAndColor == null) {
+//            return new ArrayList<>();
+//        }
+//        return stateAndColor;
+//    }
+
     @Override
-    public List<String> readStateAndColor(String roomName) {
-        final List<String> stateAndColor = memoryDatabase.get(roomName);
-        if (stateAndColor == null) {
-            return new ArrayList<>();
-        }
-        return stateAndColor;
+    public List<String> readStateAndColor(int roomId) {
+        return null;
+    }
+
+//    @Override
+//    public void saveGame(GameStateDto gameStateDto, String roomName) {
+//        memoryDatabase.put(roomName, Arrays.asList(gameStateDto.getState(), gameStateDto.getTurnColor()));
+//    }
+
+//    @Override
+//    public void updateState(GameStateDto gameStateDto, String roomName) {
+//        List<String> target = memoryDatabase.get(roomName);
+//        target.set(STATE_INDEX, gameStateDto.getState());
+//        target.set(COLOR_INDEX, gameStateDto.getTurnColor());
+//    }
+
+    @Override
+    public void updateState(GameStateDto gameStateDto, int roomId) {
+
+    }
+
+//    @Override
+//    public void removeGame(String roomName) {
+//        memoryDatabase.remove(roomName);
+//    }
+
+    @Override
+    public void removeGame(int roomId) {
+
     }
 
     @Override
-    public void saveGame(GameStateDto gameStateDto, String roomName) {
-        memoryDatabase.put(roomName, Arrays.asList(gameStateDto.getState(), gameStateDto.getTurnColor()));
-    }
+    public void create(GameStateDto gameStateDto, int roomId) {
 
-    @Override
-    public void updateState(GameStateDto gameStateDto, String roomName) {
-        List<String> target = memoryDatabase.get(roomName);
-        target.set(STATE_INDEX, gameStateDto.getState());
-        target.set(COLOR_INDEX, gameStateDto.getTurnColor());
-    }
-
-    @Override
-    public void removeGame(String roomName) {
-        memoryDatabase.remove(roomName);
     }
 }

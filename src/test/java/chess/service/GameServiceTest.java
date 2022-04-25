@@ -67,7 +67,7 @@ class GameServiceTest {
 
         GameState gameState = service.readGameState(roomName);
         GameState started = gameState.start();
-        gameDao.saveGame(GameStateDto.of(started), roomName);
+//        gameDao.saveGame(GameStateDto.of(started), roomName);
 
         // when
         GameState moved = service.moveBoard(roomName, arguments);
@@ -88,9 +88,9 @@ class GameServiceTest {
 
     @AfterEach
     void setDown() {
-        gameDao.removeGame(TEST_ROOM_NAME);
-        boardDao.removeBoard(TEST_ROOM_NAME);
-        gameDao.removeGame(TEST_CREATION_ROOM_NAME);
-        boardDao.removeBoard(TEST_CREATION_ROOM_NAME);
+//        gameDao.removeGame(TEST_ROOM_NAME);
+//        boardDao.removeBoard(TEST_ROOM_NAME);
+//        gameDao.removeGame(TEST_CREATION_ROOM_NAME);
+//        boardDao.removeBoard(TEST_CREATION_ROOM_NAME);
     }
 }

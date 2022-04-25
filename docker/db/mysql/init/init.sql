@@ -7,7 +7,7 @@ CREATE TABLE room
     game_status  VARCHAR(10) NOT NULL,
     current_turn VARCHAR(10) NOT NULL,
     password     VARCHAR(10) NOT NULL,
-    PRIMARY KEY (name)
+    PRIMARY KEY (room_id)
 );
 
 CREATE TABLE chess_piece

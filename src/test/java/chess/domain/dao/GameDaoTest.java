@@ -9,16 +9,21 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestConstructor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @SpringBootTest
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class GameDaoTest {
 
     private final ChessBoard chessBoard = initTestChessBoard();
-    @Autowired
-    private GameDao gameDao;
+    private final GameDao gameDao;
+
+    public GameDaoTest(GameDao gameDao) {
+        this.gameDao = gameDao;
+    }
 
     private ChessBoard initTestChessBoard() {
         ChessBoard chessBoard = ChessBoardFactory.initBoard();

@@ -9,23 +9,25 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.TestConstructor;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class BoardDaoTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private BoardDao boardDao;
-    private GameDao gameDao;
+    private final BoardDao boardDao;
+    private final GameDao gameDao;
 
+    public BoardDaoTest(BoardDao boardDao, GameDao gameDao) {
+        this.boardDao = boardDao;
+        this.gameDao = gameDao;
+    }
     @BeforeEach
     void set() {
-        boardDao = new BoardDao(jdbcTemplate);
-        gameDao = new GameDao(jdbcTemplate);
         boardDao.deleteAll();
         gameDao.deleteAll();
         gameDao.save(ChessBoardFactory.initBoard());

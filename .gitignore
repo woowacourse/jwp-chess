@@ -33,3 +33,4 @@ out/
 
 ### DOCKER ###
 /docker/db/mysql/data/
+/src/main/resources/static/gameDB.html

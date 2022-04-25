@@ -26,7 +26,7 @@ public class ChessController {
         return "index";
     }
 
-    @ResponseBody
+//    @ResponseBody
     @PostMapping("/move")
     public MoveResultDto movePiece(@RequestBody MovePositionsDto movePositionsDto) {
         return chessService.getMoveResult(movePositionsDto);

@@ -16,8 +16,8 @@ public class RoomService {
         this.roomDao = roomDao;
     }
 
-    public boolean isExistRoom(final String roomName) {
-        return roomDao.isExistName(roomName);
+    public boolean isExistRoom(final int roomId) {
+        return roomDao.isExistId(roomId);
     }
 
     public void createRoom(final String roomName) {

@@ -19,11 +19,11 @@ public class ChessWebController {
         return "index";
     }
 
-    @GetMapping("/rooms/{roomName}")
-    public String room(@PathVariable final String roomName) {
-        final boolean roomExist = roomService.isExistRoom(roomName);
+    @GetMapping("/rooms/{roomId}")
+    public String room(@PathVariable final int roomId) {
+        final boolean roomExist = roomService.isExistRoom(roomId);
         if (!roomExist) {
-            return "redirect:/";
+            return "index";
         }
 
         return "board";

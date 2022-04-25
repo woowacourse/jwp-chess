@@ -6,7 +6,7 @@ CREATE TABLE room
     name         VARCHAR(10) NOT NULL UNIQUE,
     game_status  VARCHAR(10) NOT NULL,
     current_turn VARCHAR(10) NOT NULL,
-    password     VARCHAR(10) NOT NULL,
+    password     VARCHAR(255) NOT NULL,
     PRIMARY KEY (room_id)
 );
 

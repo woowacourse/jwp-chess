@@ -9,6 +9,7 @@ import chess.dto.RoomDeletionRequestDto;
 import chess.dto.RoomResponseDto;
 import chess.dto.RoomStatusDto;
 import java.util.List;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +30,8 @@ public class RoomService {
     }
 
     public int createRoom(final RoomCreationRequestDto dto) {
-        return roomDao.save(dto.getRoomName(), GameStatus.READY, Color.WHITE, dto.getPassword());
+        final String hashPassword = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt());
+        return roomDao.save(dto.getRoomName(), GameStatus.READY, Color.WHITE, hashPassword);
     }
 
     public int deleteRoom(final RoomDeletionRequestDto dto) {
@@ -38,7 +40,8 @@ public class RoomService {
 
         final RoomStatusDto roomStatusDto = roomDao.findStatusById(roomId);
         final String password = roomDao.findPasswordById(roomId);
-        if (!password.equals(dto.getPassword())) {
+        final boolean matchPassword = BCrypt.checkpw(dto.getPassword(), password);
+        if (!matchPassword) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         if (!roomStatusDto.getGameStatus().isEnd()) {

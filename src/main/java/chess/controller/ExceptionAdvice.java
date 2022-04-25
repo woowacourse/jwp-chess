@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(Exception exception) {
+    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException exception) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage());
         return ResponseEntity.badRequest().body(errorResponseDto);
     }

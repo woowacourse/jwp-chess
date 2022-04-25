@@ -129,4 +129,23 @@ class ChessPieceDaoTest {
         // then
         assertThat(deletedRow).isEqualTo(3);
     }
+
+    @Test
+    @DisplayName("방 id와 위치에 해당하는 기물의 위치를 갱신한다.")
+    void updateByRoomIdAndPosition() {
+        // given
+        final int roomId = roomDao.save("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r");
+
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        final Position from = Position.from("a1");
+        pieceByPosition.put(from, King.from(Color.WHITE));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
+
+        // when
+        final Position to = Position.from("b2");
+        final int updatedRow = chessPieceDao.updateByRoomIdAndPosition(roomId, from, to);
+
+        // then
+        assertThat(updatedRow).isEqualTo(1);
+    }
 }

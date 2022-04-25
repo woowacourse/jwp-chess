@@ -59,8 +59,8 @@ public class ChessPieceDao {
         return list;
     }
 
-    public int update(final String roomName, final Position from, final Position to) {
-        final String sql = "UPDATE chess_piece SET position = ? WHERE room_name = ? AND position = ?";
-        return jdbcTemplate.update(sql, to.getValue(), roomName, from.getValue());
+    public int updateByRoomIdAndPosition(final int roomId, final Position from, final Position to) {
+        final String sql = "UPDATE chess_piece SET position = ? WHERE room_id = ? AND position = ?";
+        return jdbcTemplate.update(sql, to.getValue(), roomId, from.getValue());
     }
 }

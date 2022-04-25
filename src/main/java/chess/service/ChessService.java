@@ -23,9 +23,6 @@ import static chess.dao.ChessDao.GAME_ID;
 @Service
 public final class ChessService {
 
-    private static final int PIECE_NAME_INDEX = 0;
-    private static final int PIECE_COLOR_INDEX = 1;
-
     private final ChessDao chessDao;
     private ChessGame chessGame;
 
@@ -34,10 +31,9 @@ public final class ChessService {
     }
 
     public ChessGameDto newGame() {
-//        chessDao.initBoard(toBoardDtos(GAME_ID, new BoardInitializer().init()));
         deleteOldData(GAME_ID);
         initNewChessGame(GAME_ID);
-        chessGame = new ChessGame(new Running(Color.from(chessDao.findCurrentColor(GAME_ID)), convertToBoard(chessDao.findBoard(GAME_ID))));
+        chessGame = new ChessGame(new Running(getColorFromStorage(GAME_ID), getBoardFromStorage(GAME_ID)));
         return new ChessGameDto(chessDao.findBoard(GAME_ID), chessGame.status());
     }
 
@@ -63,23 +59,16 @@ public final class ChessService {
         return new BoardElementDto(gameId, position, piece);
     }
 
-    /*private Board convertToBoard(final Map<String, List<String>> boardData) {
-        final Map<Position, Piece> board = new HashMap<>();
-        for (final Map.Entry<String, List<String>> entry : boardData.entrySet()) {
-            board.put(Position.from(entry.getKey()), PieceFactory.of(entry.getValue().get(PIECE_NAME_INDEX), entry.getValue().get(PIECE_COLOR_INDEX)));
-        }
-        return new Board(() -> board);
-    }*/
-
     private Board convertToBoard(final List<BoardElementDto> boardDatas) {
         Map<Position, Piece> board = boardDatas.stream()
-                .collect(Collectors.toMap(it -> Position.from(it.getPosition()), it -> PieceFactory.of(it.getPieceName(), it.getPieceColor())));
+                .collect(Collectors.toMap(it -> Position.from(it.getPosition()),
+                        it -> PieceFactory.of(it.getPieceName(), it.getPieceColor())));
         return new Board(() -> board);
     }
 
     public ChessGameDto move(final String from, final String to) {
         chessGame.move(Position.from(from), Position.from(to));
-        final var nextColor = Color.from(chessDao.findCurrentColor(GAME_ID)).next();
+        final var nextColor = getColorFromStorage(GAME_ID).next();
         updateBoard(from, to, GAME_ID, nextColor.name());
         return new ChessGameDto(chessDao.findBoard(GAME_ID), chessGame.status());
     }
@@ -91,7 +80,15 @@ public final class ChessService {
     }
 
     public ChessGameDto loadGame() {
-        chessGame = new ChessGame(StateFactory.of(Color.from(chessDao.findCurrentColor(GAME_ID)), convertToBoard(chessDao.findBoard(GAME_ID))));
+        chessGame = new ChessGame(StateFactory.of(getColorFromStorage(GAME_ID), getBoardFromStorage(GAME_ID)));
         return new ChessGameDto(chessDao.findBoard(GAME_ID), chessGame.status());
+    }
+
+    private Color getColorFromStorage(int gameId) {
+        return Color.from(chessDao.findCurrentColor(gameId));
+    }
+
+    private Board getBoardFromStorage(int gameId) {
+        return convertToBoard(chessDao.findBoard(gameId));
     }
 }

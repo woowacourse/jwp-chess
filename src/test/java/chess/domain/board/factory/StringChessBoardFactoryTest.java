@@ -12,6 +12,7 @@ import static chess.domain.board.position.Rank.EIGHT;
 import static chess.domain.board.position.Rank.SEVEN;
 import static chess.domain.piece.PieceTeam.BLACK;
 import static chess.domain.piece.PieceTeam.WHITE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -101,9 +102,9 @@ public class StringChessBoardFactoryTest {
         Map<Position, Piece> board = boardFactory.create();
 
         assertAll(
-                ()->assertThat(findPiece(board, D, EIGHT)).isEqualTo(new Queen(BLACK)),
-                ()->assertThat(findPiece(board, E, EIGHT)).isEqualTo(new King(BLACK)),
-                ()->assertThat(findPiece(board, C, SEVEN)).isEqualTo(new Pawn(BLACK))
+                () -> assertThat(findPiece(board, D, EIGHT)).isEqualTo(new Queen(BLACK)),
+                () -> assertThat(findPiece(board, E, EIGHT)).isEqualTo(new King(BLACK)),
+                () -> assertThat(findPiece(board, C, SEVEN)).isEqualTo(new Pawn(BLACK))
         );
     }
 
@@ -125,8 +126,8 @@ public class StringChessBoardFactoryTest {
         Map<Position, Piece> board = boardFactory.create();
 
         assertAll(
-                ()->assertThat(findPiece(board, A, EIGHT)).isEqualTo(new Queen(BLACK)),
-                ()->assertThat(findPiece(board, B, SEVEN)).isEqualTo(new Queen(WHITE))
+                () -> assertThat(findPiece(board, A, EIGHT)).isEqualTo(new Queen(BLACK)),
+                () -> assertThat(findPiece(board, B, SEVEN)).isEqualTo(new Queen(WHITE))
         );
     }
 }

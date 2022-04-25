@@ -4,8 +4,8 @@ import chess.controller.console.ConsoleChessController;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.factory.BoardFactory;
 import chess.domain.board.factory.RegularBoardFactory;
-import chess.turndecider.AlternatingGameFlow;
-import chess.turndecider.GameFlow;
+import chess.gameflow.AlternatingGameFlow;
+import chess.gameflow.GameFlow;
 
 public class ConsoleApplication {
 

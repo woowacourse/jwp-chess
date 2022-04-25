@@ -1,4 +1,4 @@
-package chess.turndecider;
+package chess.gameflow;
 
 import static chess.domain.piece.PieceTeam.*;
 import static org.assertj.core.api.Assertions.assertThat;

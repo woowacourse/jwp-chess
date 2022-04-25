@@ -1,9 +1,9 @@
-package chess.turndecider;
+package chess.gameflow;
 
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
-import chess.turndecider.state.State;
-import chess.turndecider.state.WhiteTeam;
+import chess.gameflow.state.State;
+import chess.gameflow.state.WhiteTeam;
 
 public class AlternatingGameFlow implements GameFlow {
 

@@ -9,12 +9,11 @@ import chess.domain.board.position.Rank;
 import chess.domain.piece.EmptySpace;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
-import chess.turndecider.GameFlow;
-import chess.turndecider.state.State;
+import chess.gameflow.GameFlow;
+import chess.gameflow.state.State;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Predicate;
-import org.springframework.stereotype.Component;
 
 public class ChessBoard {
 

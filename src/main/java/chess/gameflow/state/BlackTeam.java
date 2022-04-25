@@ -1,4 +1,4 @@
-package chess.turndecider.state;
+package chess.gameflow.state;
 
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;

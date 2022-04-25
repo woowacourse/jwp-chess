@@ -1,8 +1,8 @@
-package chess.turndecider;
+package chess.gameflow;
 
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
-import chess.turndecider.state.State;
+import chess.gameflow.state.State;
 
 public interface GameFlow {
 

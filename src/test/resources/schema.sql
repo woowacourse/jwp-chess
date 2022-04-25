@@ -1,4 +1,6 @@
-create table chess.chess_game
+drop table chess_game if exists;
+
+create table chess_game
 (
     chess_game_id      int primary key auto_increment,
     name               varchar(20) not null unique,
@@ -6,7 +8,9 @@ create table chess.chess_game
     team_value_of_turn varchar(20) not null
 );
 
-create table chess.board
+drop table board if exists;
+
+create table board
 (
     board_id              int primary key auto_increment,
     name                  varchar(20) not null,

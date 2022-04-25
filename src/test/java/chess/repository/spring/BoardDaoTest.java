@@ -13,41 +13,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("/settingForTest.sql")
 public class BoardDaoTest {
 
     private static final String SAVED_NAME = "test";
 
-    private BoardDao boardDao;
-
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
+    private BoardDao boardDao;
 
     @BeforeEach
     void setUp() {
         boardDao = new BoardDao(namedParameterJdbcTemplate);
-
-        jdbcTemplate.execute("drop table board if exists");
-        jdbcTemplate.execute("create table board\n"
-                + "(\n"
-                + "    board_id              int primary key auto_increment,\n"
-                + "    name                  varchar(20) not null,\n"
-                + "    position_column_value varchar(1)  not null,\n"
-                + "    position_row_value    int         not null,\n"
-                + "    piece_name            varchar(20) not null,\n"
-                + "    piece_team_value      varchar(20) not null\n"
-                + ")");
-
-        jdbcTemplate.execute(
-                "insert into board(name, position_column_value, position_row_value, piece_name, piece_team_value)"
-                        + " values ('" + SAVED_NAME + "', 'a', 2, 'KING', 'BLACK')");
-        jdbcTemplate.execute(
-                "insert into board(name, position_column_value, position_row_value, piece_name, piece_team_value)"
-                        + " values ('" + SAVED_NAME + "', 'b', 3, 'QUEEN', 'WHITE')");
     }
 
     @Test

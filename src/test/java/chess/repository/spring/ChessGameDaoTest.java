@@ -13,35 +13,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("/settingForTest.sql")
 class ChessGameDaoTest {
 
     private static final String SAVED_NAME = "test";
 
-    private ChessGameDao chessGameDao;
-
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
+    private ChessGameDao chessGameDao;
 
     @BeforeEach
     void setUp() {
         chessGameDao = new ChessGameDao(namedParameterJdbcTemplate);
-
-        jdbcTemplate.execute("drop table chess_game if exists");
-        jdbcTemplate.execute("create table chess_game\n"
-                + "(\n"
-                + "    chess_game_id      int primary key auto_increment,\n"
-                + "    name               varchar(20) not null unique,\n"
-                + "    is_on              bool        not null,\n"
-                + "    team_value_of_turn varchar(20) not null\n"
-                + ")");
-
-        jdbcTemplate.execute(
-                "insert into chess_game (name, is_on, team_value_of_turn)"
-                        + " values ('" + SAVED_NAME + "', true, 'BLACK')");
     }
 
     @Test

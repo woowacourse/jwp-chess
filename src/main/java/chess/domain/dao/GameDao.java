@@ -49,16 +49,7 @@ public class GameDao {
     public GameDto findById(int id) {
         final String sql = "select id, status, turn from game where id = ?";
         try {
-            GameDto result = jdbcTemplate.queryForObject(sql, new RowMapper<GameDto>() {
-                @Override
-                public GameDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    return new GameDto(
-                            rs.getInt("id"),
-                            rs.getBoolean("status"),
-                            rs.getString("turn")
-                    );
-                }
-            }, id);
+            GameDto result = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeGameDto(rs), id);
             return result;
         } catch (EmptyResultDataAccessException exception) {
             return null;
@@ -66,6 +57,14 @@ public class GameDao {
             exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
+    }
+
+    private GameDto makeGameDto(ResultSet rs) throws SQLException {
+        return new GameDto(
+                rs.getInt("id"),
+                rs.getBoolean("status"),
+                rs.getString("turn")
+        );
     }
 
     public void delete() {

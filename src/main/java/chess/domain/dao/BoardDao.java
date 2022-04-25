@@ -33,12 +33,7 @@ public class BoardDao {
     public List<PieceDto> findByGameId(int gameId) {
         final String sql = "select * from board where game_id = ?";
         try {
-            return jdbcTemplate.query(sql, new RowMapper<PieceDto>() {
-                @Override
-                public PieceDto mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-                    return makePieceDto(resultSet);
-                }
-            }, gameId);
+            return jdbcTemplate.query(sql, (resultSet, rowNum) -> makePieceDto(resultSet), gameId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");

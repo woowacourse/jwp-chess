@@ -6,15 +6,17 @@ import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.position.Position;
 import chess.dto.RequestDto;
-import chess.dto.ResponseDto;
+import chess.dto.GameStatusDto;
 import chess.dto.StatusDto;
 import chess.mapper.Command;
 import chess.service.GameService;
-import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,21 +67,20 @@ public class ChessController {
 
     @ResponseBody
     @PostMapping("/room/{roomId}/move")
-    public ResponseDto movePiece(@PathVariable("roomId") int id, @RequestBody String body) {
+    public ResponseEntity<GameStatusDto> moveByCommand(@PathVariable("roomId") int id, @RequestBody String body) {
         final String[] split = body.split("=");
         if (Command.isMove(split[1])) {
-            return getResponseDto(id, split[1]);
+            moveByCommand(id, split);
         }
-        return new ResponseDto(HttpStatus.BAD_REQUEST_400, "잘못된 명령어 입니다.", gameService.isEnd(id));
+        return new ResponseEntity<>(new GameStatusDto(gameService.isEnd(id)), HttpStatus.OK);
     }
 
-    private ResponseDto getResponseDto(int roomId, String command) {
+    private void moveByCommand(int id, String[] split) {
         try {
-            move(roomId, Arrays.asList(command.split(MOVE_DELIMITER)));
+            move(id, Arrays.asList(split[1].split(MOVE_DELIMITER)));
         } catch (IllegalArgumentException e) {
-            return new ResponseDto(HttpStatus.BAD_REQUEST_400, e.getMessage(), gameService.isEnd(roomId));
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-        return new ResponseDto(HttpStatus.OK_200, "", gameService.isEnd(roomId));
     }
 
     private void move(int roomId, final List<String> commands) {

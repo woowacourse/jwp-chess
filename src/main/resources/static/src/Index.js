@@ -55,10 +55,11 @@ function sendToServer(first, second) {
         },
         body: "command=move " + first + " " + second
     }).then((response) => {
-            response.json().then(data => {
-                console.log(data.finished);
-                if (data.status === 400) {
-                    alert(data.errorMessage);
+        response.json()
+            .then(data => {
+                console.log(data);
+                if (response.status === 400) {
+                    alert(data.message);
                 }
                 if (data.finished === true) {
                     alert("게임이 종료되었습니다.");
@@ -66,8 +67,10 @@ function sendToServer(first, second) {
                     return;
                 }
                 location.reload();
-            });
-        }
-    );
+            })
+    })
+        .catch((error) => {
+            console.log(error);
+        });
 }
 

@@ -5,8 +5,8 @@ CREATE TABLE chess_game
 (
     id       bigint                                   NOT NULL AUTO_INCREMENT,
     turn     enum ('WHITE_TURN', 'BLACK_TURN', 'END') NOT NULL,
-    name     varchar(10)                              NOT NULL,
-    password varchar(50)                              NOT NULL,
+    name     varchar(10)                              NULL,
+    password varchar(50)                              NULL,
     primary key (id)
 );
 

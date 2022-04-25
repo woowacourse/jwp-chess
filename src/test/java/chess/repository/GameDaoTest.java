@@ -72,6 +72,7 @@ class GameDaoTest {
     @DisplayName("게임의 상태를 업데이트할 수 있다.")
     void updateGameByState() {
         gameDao.update("BlackRunning", 1L);
+
         assertThat(gameDao.findState()).isInstanceOf(BlackRunning.class);
     }
 

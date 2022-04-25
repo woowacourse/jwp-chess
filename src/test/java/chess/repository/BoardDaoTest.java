@@ -56,6 +56,7 @@ public class BoardDaoTest {
     @DisplayName("체스 보드를 생성할 수 있다.")
     void save() {
         ChessBoard chessBoard = new ChessBoard(new NormalPiecesGenerator());
+
         assertThatCode(() ->
                 boardDao.save(chessBoard, 1L)).doesNotThrowAnyException();
     }

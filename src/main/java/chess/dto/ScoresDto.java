@@ -4,6 +4,7 @@ import chess.domain.Score;
 import chess.domain.WinResult;
 import chess.domain.piece.PieceColor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class ScoresDto {
     private final String winnerName;
 
     private ScoresDto(List<ScoreDto> scores, String winnerName) {
-        this.scores = scores;
+        this.scores = new ArrayList<>(scores);
         this.winnerName = winnerName;
     }
 
@@ -33,7 +34,7 @@ public class ScoresDto {
     }
 
     public List<ScoreDto> getScores() {
-        return scores;
+        return List.copyOf(scores);
     }
 
     public String getWinnerName() {

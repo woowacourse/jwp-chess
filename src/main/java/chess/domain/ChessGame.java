@@ -36,7 +36,7 @@ public final class ChessGame {
             Map<Position, Piece> pieces = board.getPiecesOf(color);
             scores.put(color, Score.of(pieces));
         }
-        return scores;
+        return Map.copyOf(scores);
     }
 
     public Map<Position, Piece> getPieces() {

@@ -6,6 +6,7 @@ import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ public class Board {
     private final Map<Position, Piece> pieces;
 
     public Board(Map<Position, Piece> pieces) {
-        this.pieces = pieces;
+        this.pieces = new HashMap<>(pieces);
     }
 
     public void movePiece(PieceColor turnColor, MoveCommand command) {
@@ -86,7 +87,7 @@ public class Board {
             Position routeNode = source.displacedOf(xSlope * step, ySlope * step);
             route.add(routeNode);
         }
-        return route;
+        return List.copyOf(route);
     }
 
     private void validatePieceOnRoute(Position node) {

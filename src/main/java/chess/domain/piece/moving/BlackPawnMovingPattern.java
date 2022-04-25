@@ -3,6 +3,7 @@ package chess.domain.piece.moving;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlackPawnMovingPattern extends PawnMovingPattern {
@@ -12,7 +13,7 @@ public class BlackPawnMovingPattern extends PawnMovingPattern {
     private final List<Movement> movements;
 
     public BlackPawnMovingPattern(List<Movement> movements) {
-        this.movements = movements;
+        this.movements = new ArrayList<>(movements);
     }
 
     @Override

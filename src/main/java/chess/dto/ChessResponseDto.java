@@ -1,5 +1,6 @@
 package chess.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChessResponseDto {
@@ -9,7 +10,7 @@ public class ChessResponseDto {
     private final String status;
 
     public ChessResponseDto(List<PieceDto> pieces, String turn, String status) {
-        this.pieces = pieces;
+        this.pieces = new ArrayList<>(pieces);
         this.turn = turn;
         this.status = status;
     }
@@ -19,7 +20,7 @@ public class ChessResponseDto {
     }
 
     public List<PieceDto> getPieces() {
-        return pieces;
+        return List.copyOf(pieces);
     }
 
     public String getTurn() {

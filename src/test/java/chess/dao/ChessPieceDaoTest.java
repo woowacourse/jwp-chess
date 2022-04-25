@@ -90,4 +90,22 @@ class ChessPieceDaoTest {
         // then
         assertThat(insertedRow).isEqualTo(2);
     }
+
+    @Test
+    @DisplayName("방 id와 위치에 해당하는 기물을 삭제한다.")
+    void deleteByRoomIdAndPosition() {
+        // given
+        final int roomId = roomDao.save("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r");
+
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        final Position position = Position.from("a1");
+        pieceByPosition.put(position, King.from(Color.WHITE));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
+
+        // when
+        final int deletedRow = chessPieceDao.deleteByRoomIdAndPosition(roomId, position);
+
+        // then
+        assertThat(deletedRow).isEqualTo(1);
+    }
 }

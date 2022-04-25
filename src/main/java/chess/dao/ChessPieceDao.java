@@ -26,9 +26,9 @@ public class ChessPieceDao {
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> ChessPieceDto.from(resultSet), roomId);
     }
 
-    public int deleteByPosition(final String roomName, final Position position) {
-        final String sql = "DELETE FROM chess_piece WHERE room_name = ? AND position = ?";
-        return jdbcTemplate.update(sql, roomName, position.getValue());
+    public int deleteByRoomIdAndPosition(final int roomId, final Position position) {
+        final String sql = "DELETE FROM chess_piece WHERE room_id = ? AND position = ?";
+        return jdbcTemplate.update(sql, roomId, position.getValue());
     }
 
     public int deleteAllByRoomName(final String roomName) {

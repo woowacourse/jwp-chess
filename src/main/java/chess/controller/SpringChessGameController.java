@@ -55,6 +55,6 @@ public class SpringChessGameController {
     @ExceptionHandler
     public ResponseEntity<ErrorMessageDto> handle(Exception e) {
         ErrorMessageDto errorMessageDto = new ErrorMessageDto(e.getMessage());
-        return ResponseEntity.badRequest().body(errorMessageDto);
+        return ResponseEntity.internalServerError().body(errorMessageDto);
     }
 }

@@ -13,10 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest
-public class GameDaoImplTest {
+public class JdbcGameDaoTest {
 
     @Autowired
-    private GameDaoImpl gameDaoImpl;
+    private JdbcGameDao jdbcGameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -37,9 +37,9 @@ public class GameDaoImplTest {
     @DisplayName("전체 게임 데이터 삭제")
     void removeAll() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.save(gameDto);
+        jdbcGameDao.save(gameDto);
 
-        gameDaoImpl.removeAll();
+        jdbcGameDao.removeAll();
 
         assertThat(getGameCount()).isEqualTo(0);
     }
@@ -48,7 +48,7 @@ public class GameDaoImplTest {
     @DisplayName("게임 정보 저장")
     void save() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.save(gameDto);
+        jdbcGameDao.save(gameDto);
 
         assertThat(getGameCount()).isEqualTo(1);
     }
@@ -57,14 +57,14 @@ public class GameDaoImplTest {
     @DisplayName("게임 정보 수정")
     void update() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.save(gameDto);
+        jdbcGameDao.save(gameDto);
 
         GameDto updatedGameDto = new GameDto("black", "end");
-        gameDaoImpl.update(updatedGameDto);
+        jdbcGameDao.update(updatedGameDto);
 
         assertAll(
-                () -> assertThat(gameDaoImpl.find().getTurn()).isEqualTo("black"),
-                () -> assertThat(gameDaoImpl.find().getStatus()).isEqualTo("end")
+                () -> assertThat(jdbcGameDao.find().getTurn()).isEqualTo("black"),
+                () -> assertThat(jdbcGameDao.find().getStatus()).isEqualTo("end")
         );
     }
 
@@ -72,23 +72,23 @@ public class GameDaoImplTest {
     @DisplayName("게임 상태 업데이트")
     void updateStatus() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.save(gameDto);
+        jdbcGameDao.save(gameDto);
 
         GameStatusDto gameStatusDto = GameStatusDto.FINISHED;
-        gameDaoImpl.updateStatus(gameStatusDto);
+        jdbcGameDao.updateStatus(gameStatusDto);
 
-        assertThat(gameDaoImpl.find().getStatus()).isEqualTo(gameStatusDto.getName());
+        assertThat(jdbcGameDao.find().getStatus()).isEqualTo(gameStatusDto.getName());
     }
 
     @Test
     @DisplayName("게임 정보 조회")
     void find() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.save(gameDto);
+        jdbcGameDao.save(gameDto);
 
         assertAll(
-                () -> assertThat(gameDaoImpl.find().getStatus()).isEqualTo("playing"),
-                () -> assertThat(gameDaoImpl.find().getTurn()).isEqualTo("white")
+                () -> assertThat(jdbcGameDao.find().getStatus()).isEqualTo("playing"),
+                () -> assertThat(jdbcGameDao.find().getTurn()).isEqualTo("white")
         );
     }
 

@@ -14,10 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest
-public class PieceDaoImplTest {
+public class JdbcPieceDaoTest {
 
     @Autowired
-    private PieceDaoImpl pieceDao;
+    private JdbcPieceDao pieceDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -73,7 +73,9 @@ public class ChessApiController {
 
     @GetMapping(value = "/load-last-game", produces = APPLICATION_JSON_VALUE)
     public LastGameResponse loadLastGame() {
-        return chessService.loadLastGame();
+        LastGameResponse lastGameResponse = chessService.loadLastGame();
+        String lastTeam = lastGameResponse.getLastTeam();
+        return lastGameResponse;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

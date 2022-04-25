@@ -2,66 +2,27 @@ package chess.model.piece;
 
 import chess.model.Color;
 import chess.model.piece.pawn.Pawn;
-import chess.service.dto.PieceEntity;
+import chess.dao.PieceEntity;
 import java.util.Arrays;
 import java.util.function.Function;
 
 public enum PieceType {
-    KING(King.class, "k") {
-        @Override
-        public Piece getPiece(Color color) {
-            return new King(color);
-        }
-    },
-
-    QUEEN(Queen.class, "q") {
-        @Override
-        public Piece getPiece(Color color) {
-            return new Queen(color);
-        }
-    },
-
-    KNIGHT(Knight.class, "n") {
-        @Override
-        public Piece getPiece(Color color) {
-            return new Knight(color);
-        }
-    },
-
-    ROOK(Rook.class, "r") {
-        @Override
-        public Piece getPiece(Color color) {
-            return new Rook(color);
-        }
-    },
-
-    BISHOP(Bishop.class, "b") {
-        @Override
-        public Piece getPiece(Color color) {
-            return new Bishop(color);
-        }
-    },
-
-    PAWN(Pawn.class, "p") {
-        @Override
-        public Piece getPiece(Color color) {
-            return Pawn.of(color);
-        }
-    },
-
-    EMPTY(Empty.class, ".") {
-        @Override
-        public Piece getPiece(Color color) {
-            return new Empty();
-        }
-    };
+    KING(King.class, "k", King::new),
+    QUEEN(Queen.class, "q", Queen::new),
+    KNIGHT(Knight.class, "n", Knight::new),
+    ROOK(Rook.class, "r", Rook::new),
+    BISHOP(Bishop.class, "b", Bishop::new),
+    PAWN(Pawn.class, "p", Pawn::of),
+    EMPTY(Empty.class, ".", color -> new Empty());
 
     private final Class<? extends Piece> pieceClass;
     private final String letter;
+    private final Function<Color, Piece> function;
 
-    PieceType(Class<? extends Piece> pieceClass, String letter) {
+    PieceType(Class<? extends Piece> pieceClass, String letter, Function<Color, Piece> function) {
         this.pieceClass = pieceClass;
         this.letter = letter;
+        this.function = function;
     }
 
     public static String getLetterByColor(Piece piece) {
@@ -94,8 +55,6 @@ public enum PieceType {
     public static Piece createPiece(PieceEntity pieceDto) {
         PieceType pieceType = valueOf(pieceDto.getType().toUpperCase());
         Color color = Color.valueOf(pieceDto.getColor().toUpperCase());
-        return pieceType.getPiece(color);
+        return pieceType.function.apply(color);
     }
-
-    public abstract Piece getPiece(Color color);
 }

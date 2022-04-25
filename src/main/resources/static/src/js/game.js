@@ -181,7 +181,7 @@ async function getScore() {
         alert("게임이 시작되지 않아 선택 불가");
         return;
     }
-    let score = await fetch("/api/chess/rooms/33/status")
+    let score = await fetch("/api/chess/rooms/" + id + "/status")
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);

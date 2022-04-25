@@ -3,11 +3,9 @@ package chess.dao.member;
 import chess.domain.Member;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -24,15 +22,6 @@ public class SpringJdbcMemberDao implements MemberDao {
                     resultSet.getLong("id"),
                     resultSet.getString("name")
             );
-
-    private final RowMapper<List<Member>> membersRowMapper = (resultSet, rowNumber) -> {
-        List<Member> members = new ArrayList<>();
-        while (!resultSet.isAfterLast()) {
-            members.add(new Member(resultSet.getLong("id"), resultSet.getString("name")));
-            resultSet.next();
-        }
-        return members;
-    };
 
     public SpringJdbcMemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

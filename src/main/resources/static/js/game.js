@@ -101,7 +101,7 @@ function decideCellColor(column, row) {
 }
 
 function printTurn(data) {
-  score.innerText = null;
+  score.innerText = "";
   if (data.gameState === "WHITE_WIN" || data.gameState === "BLACK_WIN") {
     turnInfo.innerText = `${turn[data.gameState]}의 승리입니다.`;
     alert(`${turn[data.gameState]}의 승리입니다.`);

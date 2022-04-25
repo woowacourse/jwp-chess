@@ -15,7 +15,7 @@ import chess.dto.MoveDto;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class ChessControllerTest {
+class GameControllerTest {
 
     @LocalServerPort
     int port;

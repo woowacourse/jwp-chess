@@ -74,12 +74,13 @@ http://localhost:8080/
 - [x] ChessGameService를 bean으로 주입
 - [x] JdbcTemplate final로 선언
 - [x] default 접근제어자를 private로 변경
+- [x] [스프링 bean 주입 방식 공부]()
+- [x] 생성자 주입 사용 이유
+    - 필드 주입(@Autuwired)의 취약성(더 공부)
+- [x] [@Controller 와 @RestController 의 차이 공부](https://velog.io/@betterfuture4/Spring-Controller-RestController-Annotations)
 - [ ] ResponseBody로 내려주는 방법 고려하기
-- [ ] 스프링에서 bean 주입 방식에 대해 알아볼까요?
-    - 생성자 주입
-    - 이외...?(더 공부)
-- [ ] 생성자 주입 사용 이유
-    - @Autuwired의 취약성(더 공부)
-- [ ] @Controller 와 @RestController 의 차이
-    - @Controller :
-    - @RestController : 
+
+## 질문
+
+- 현재 service 단에서 bean으로 주입한 방식이 맞는지
+- 

@@ -44,19 +44,26 @@ public final class ChessService {
 
     private void initNewChessGame(int gameId) {
         chessDao.initGame(GAME_ID);
-        chessDao.updateTurn("WHITE", gameId);
-        chessDao.savePiece(toBoardDtos(gameId, new BoardInitializer().init()));
+        chessDao.updateTurn(gameId, "WHITE");
+        saveAllPieceToStorage(gameId, new BoardInitializer().init());
     }
 
-    private List<BoardElementDto> toBoardDtos(int gameId, Map<Position, Piece> board) {
+    private void saveAllPieceToStorage(int gameId, Map<Position, Piece> boardElements) {
+        List<BoardElementDto> boardElementDtos = toBoardDtos(boardElements);
+        for (BoardElementDto boardElementDto : boardElementDtos) {
+            chessDao.savePiece(gameId, boardElementDto);
+        }
+    }
+
+    private List<BoardElementDto> toBoardDtos(Map<Position, Piece> board) {
         return board.entrySet()
                 .stream()
-                .map(it -> toBoardDto(gameId, it.getKey(), it.getValue()))
+                .map(it -> toBoardDto(it.getKey(), it.getValue()))
                 .collect(Collectors.toList());
     }
 
-    private BoardElementDto toBoardDto(int gameId, Position position, Piece piece) {
-        return new BoardElementDto(gameId, position, piece);
+    private BoardElementDto toBoardDto(Position position, Piece piece) {
+        return new BoardElementDto(position, piece);
     }
 
     private Board convertToBoard(final List<BoardElementDto> boardDatas) {
@@ -75,8 +82,8 @@ public final class ChessService {
 
     private void updateBoard(String from, String to, int gameId, String color) {
         chessDao.deletePiece(to);
-        chessDao.updatePiece(from, to, gameId);
-        chessDao.updateTurn(color, gameId);
+        chessDao.updatePiece(gameId, from, to);
+        chessDao.updateTurn(gameId, color);
     }
 
     public ChessGameDto loadGame() {

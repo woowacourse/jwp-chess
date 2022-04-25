@@ -4,16 +4,16 @@ import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.Symbol;
 import chess.domain.position.Column;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class WebChessPieceDao implements PieceDao<Piece> {
@@ -39,16 +39,12 @@ public class WebChessPieceDao implements PieceDao<Piece> {
     }
 
     @Override
-    public Optional<Piece> findByPositionId(int positionId) {
+    public Piece findByPositionId(int positionId) {
         final String sql = "SELECT * FROM piece WHERE position_id=:position_id";
         List<String> keys = List.of("position_id");
         List<Object> values = List.of(positionId);
         SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
-        Piece piece = jdbcTemplate.queryForObject(sql, namedParameters, (rs, rowNum) -> makePiece(rs));
-        if (piece == null) {
-            return Optional.empty();
-        }
-        return Optional.of(piece);
+        return jdbcTemplate.queryForObject(sql, namedParameters, (rs, rowNum) -> makePiece(rs));
     }
 
     private Piece makePiece(ResultSet resultSet) throws SQLException {

@@ -14,13 +14,10 @@ import chess.dto.BoardDto;
 import chess.dto.RoomDto;
 import chess.dto.RoomsDto;
 import chess.dto.StatusDto;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public final class GameService {
@@ -65,9 +62,9 @@ public final class GameService {
     }
 
     private void validateTurn(final int roomId, final Position sourcePosition) {
-        final Optional<Piece> wrappedPiece = pieceDao.findByPositionId(
+        Piece piece = pieceDao.findByPositionId(
                 positionDao.getIdByColumnAndRowAndBoardId(sourcePosition.getColumn(), sourcePosition.getRow(), roomId));
-        wrappedPiece.ifPresent(piece -> validateCorrectTurn(roomId, piece));
+        validateCorrectTurn(roomId, piece);
     }
 
     private void validateCorrectTurn(int roomId, Piece piece) {

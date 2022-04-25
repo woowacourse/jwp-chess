@@ -5,13 +5,12 @@ import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PieceDao<T> {
 
     T save(T piece);
 
-    Optional<Piece> findByPositionId(int positionId);
+    Piece findByPositionId(int positionId);
 
     int updatePositionId(int sourcePositionId, int targetPositionId);
 

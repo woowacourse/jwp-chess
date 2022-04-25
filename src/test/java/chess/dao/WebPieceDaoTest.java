@@ -1,8 +1,5 @@
 package chess.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import chess.domain.game.ChessBoard;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Pawn;
@@ -10,12 +7,16 @@ import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class WebPieceDaoTest {
@@ -38,7 +39,7 @@ class WebPieceDaoTest {
         this.boardId = board.getId();
         final Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, board.getId()));
         this.positionId = position.getId();
-        final Piece piece = webPieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
+        webPieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
     }
 
     @Test
@@ -53,7 +54,7 @@ class WebPieceDaoTest {
 
     @Test
     void findByPositionId() {
-        Piece piece = webPieceDao.findByPositionId(positionId).get();
+        Piece piece = webPieceDao.findByPositionId(positionId);
         assertAll(
                 () -> assertThat(piece.getType()).isInstanceOf(Pawn.class),
                 () -> assertThat(piece.getColor()).isEqualTo(Color.WHITE)

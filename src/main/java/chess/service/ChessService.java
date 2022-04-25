@@ -1,0 +1,97 @@
+package chess.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import chess.dao.ChessGameDao;
+import chess.dao.PieceDao;
+import chess.domain.ChessGame;
+import chess.domain.Command;
+import chess.domain.piece.Team;
+import chess.dto.ChessGameDto;
+
+@Service
+public class ChessService {
+
+    private final ChessGameDao chessGameDao;
+    private final PieceDao pieceDao;
+    private ChessGame chessGame;
+
+    public ChessService(ChessGameDao chessGameDao, PieceDao pieceDao) {
+        this.chessGameDao = chessGameDao;
+        this.pieceDao = pieceDao;
+    }
+
+    public List<String> getCurrentChessBoard() {
+        return chessGame.getChessBoardSymbol();
+    }
+
+    public List<String> move(String from, String to, String gameName) {
+        Command command = Command.from(makeCommand(from, to));
+
+        chessGame.progress(command);
+        pieceDao.deleteByPosition(to, gameName);
+        pieceDao.updatePosition(from, to, gameName);
+        chessGameDao.update(ChessGameDto.from(chessGame));
+        return chessGame.getChessBoardSymbol();
+    }
+
+    private String makeCommand(String from, String to) {
+        return "move " + from + " " + to;
+    }
+
+    public Map<Team, Double> getScore() {
+        return chessGame.calculateResult();
+    }
+
+    public String finish(Command command) {
+        chessGame.progress(command);
+        save();
+        return chessGame.getWinTeamName();
+    }
+
+    public List<String> findByName(String gameName) throws IllegalStateException {
+        ChessGame selectedChessGame = chessGameDao.findByName(gameName);
+        if (selectedChessGame == null) {
+            return createChessBoard(gameName);
+        }
+        chessGame = selectedChessGame;
+        save();
+        return chessGame.getChessBoardSymbol();
+    }
+
+    private List<String> createChessBoard(String gameName) {
+        this.chessGame = new ChessGame(gameName);
+        chessGame.progress(Command.from("start"));
+
+        return chessGame.getChessBoardSymbol();
+    }
+
+    public void save() throws IllegalStateException {
+        ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
+        String gameName = chessGameDto.getGameName();
+        ChessGame chessGame = chessGameDao.findByName(gameName);
+        if (chessGame != null) {
+            updateChessGame(chessGameDto);
+            return;
+        }
+
+        saveChessGame(chessGameDto);
+    }
+
+    private void updateChessGame(ChessGameDto chessGameDto) throws IllegalStateException {
+        chessGameDao.update(chessGameDto);
+        pieceDao.update(chessGameDto);
+    }
+
+    private void saveChessGame(ChessGameDto chessGameDto) throws IllegalStateException {
+        chessGameDao.save(chessGameDto);
+        pieceDao.save(chessGameDto);
+    }
+
+    public boolean isEnd() {
+        return chessGame.isEnd();
+    }
+}

@@ -20,23 +20,17 @@ public class BoardDao {
 
     public void save(final List<BoardEntity> boardEntities) {
         String insertSql =
-                "insert into board (name, position_column_value, position_row_value, piece_name, piece_team_value)"
-                        + " values (:name, :positionColumnValue, :positionRowValue, :pieceName, :pieceTeamValue)";
+                "insert into board (chess_game_id, position_column_value, position_row_value, piece_name, piece_team_value)"
+                        + " values (:chessGameId, :positionColumnValue, :positionRowValue, :pieceName, :pieceTeamValue)";
         for (BoardEntity boardEntity : boardEntities) {
             SqlParameterSource source = new BeanPropertySqlParameterSource(boardEntity);
             namedParameterJdbcTemplate.update(insertSql, source);
         }
     }
 
-    public void delete(final String name) {
-        String deleteSql = "delete from board where name=:name";
-        SqlParameterSource source = new MapSqlParameterSource("name", name);
-        namedParameterJdbcTemplate.update(deleteSql, source);
-    }
-
-    public List<BoardEntity> load(final String name) {
-        String selectSql = "select * from board where name=:name";
-        SqlParameterSource source = new MapSqlParameterSource("name", name);
+    public List<BoardEntity> load(final int chessGameId) {
+        String selectSql = "select * from board where chess_game_id=:chessGameId";
+        SqlParameterSource source = new MapSqlParameterSource("chessGameId", chessGameId);
         List<BoardEntity> boardEntities =
                 namedParameterJdbcTemplate.query(selectSql, source, getBoardEntityRowMapper());
         validateBoardExist(boardEntities);
@@ -46,7 +40,7 @@ public class BoardDao {
     private RowMapper<BoardEntity> getBoardEntityRowMapper() {
         return (rs, rn) ->
                 new BoardEntity(
-                        rs.getString("name"),
+                        rs.getInt("chess_game_id"),
                         rs.getString("position_column_value"),
                         rs.getInt("position_row_value"),
                         rs.getString("piece_name"),
@@ -62,7 +56,9 @@ public class BoardDao {
 
     public void updatePiece(final BoardEntity boardEntity) {
         String updateSql = "update board set piece_name=:pieceName, piece_team_value=:pieceTeamValue"
-                + " where name=:name and position_column_value=:positionColumnValue and position_row_value=:positionRowValue";
+                + " where chess_game_id=:chessGameId"
+                + " and position_column_value=:positionColumnValue"
+                + " and position_row_value=:positionRowValue";
         SqlParameterSource source = new BeanPropertySqlParameterSource(boardEntity);
         namedParameterJdbcTemplate.update(updateSql, source);
     }

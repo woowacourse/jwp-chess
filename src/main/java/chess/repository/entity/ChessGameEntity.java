@@ -14,7 +14,7 @@ public class ChessGameEntity {
         this.teamValueOfTurn = teamValueOfTurn;
     }
 
-    public ChessGameEntity(final ChessGame chessGame) {
+    public ChessGameEntity(ChessGame chessGame) {
         this.name = chessGame.getName();
         this.isOn = chessGame.isOn();
         this.teamValueOfTurn = chessGame.getTurn().getNow().getValue();

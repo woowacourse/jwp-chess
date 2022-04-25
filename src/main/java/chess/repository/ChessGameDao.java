@@ -53,9 +53,15 @@ public class ChessGameDao {
         );
     }
 
-    public void updateIsOnAndTurn(final ChessGameEntity chessGameEntity) {
+    public void updateChessGame(final ChessGameEntity chessGameEntity) {
         String updateSql = "update chess_game set is_on=:isOn, team_value_of_turn=:teamValueOfTurn where name=:name";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(updateSql, source);
+    }
+
+    public int findChessGameIdByName(final String name) {
+        String selectSql = "select chess_game_id from chess_game where name=:name";
+        SqlParameterSource source = new MapSqlParameterSource("name", name);
+        return namedParameterJdbcTemplate.queryForObject(selectSql, source, Integer.class);
     }
 }

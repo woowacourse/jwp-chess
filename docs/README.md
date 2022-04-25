@@ -1,12 +1,34 @@
-## 접속 방법
+## 접속 정보
 
-- db 정보
-    - docker
-        - prod db: mysql / port: 13306
-            - init.sql
-        - test db: h2(tesdb, MySQL mode) / mem
-            - schema.sql
-    - 접속 방법
+### db 정보
+- docker
+    - prod db: mysql / port: 13306
+        - init.sql
+    - test db: h2(tesdb, MySQL mode) / mem 
+        - schema.sql
+- db_name: chess
+    - table_name: room, board
+        
+### 접속 방법
+1. `docker`를 실행한다(설치를 확인한다)
+2. 프로젝트내 docker/db내 폴더에서 query, db_name, 접속port를 확인한다
+    - mysql/
+        - config/
+        - init/
+            - `init.sql`
+    - docker-compose.yml
+        - db_name: `chess`
+        - port: `13306`(local):3306(docker)
+3. Terminal에서 docker 실행
+    ```shell
+    cd docker;
+    docker-compose -p chess -up
+    ```
+4. `localhost:8080` 접속해서 확인
+5. Terminal에서 docker 종료
+    ```shell
+    docker-compose -p chess down
+    ```
 
 ## 기능 구현 목록
 

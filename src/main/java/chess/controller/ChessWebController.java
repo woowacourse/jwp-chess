@@ -19,13 +19,8 @@ public class ChessWebController {
         return "index";
     }
 
-    @GetMapping("/rooms/{roomName}")
+    @GetMapping("/room/{roomName}")
     public String room(@PathVariable final String roomName) {
-        final boolean roomExist = roomService.isExistRoom(roomName);
-        if (!roomExist) {
-            return "redirect:/";
-        }
-
-        return "board";
+        return "room";
     }
 }

@@ -2,114 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>체스</title>
+    <title>체스 미션</title>
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/src/room.css">
 </head>
-<body style="background: dimgray">
-<style>.outer_box {
-    width: 800px;
-    height: 800px;
-    margin: 50px auto 50px 200px;
-    float: left;
-}
-
-.score_board {
-    width: 300px;
-    height: 600px;
-    margin: 150px 50px;
-    float: left;
-}
-
-.inner_score {
-    width: 300px;
-    height: 50px;
-    margin-bottom: 20px;
-    float: top;
-    text-align: center;
-}
-
-.turn {
-    width: 300px;
-    height: 200px;
-    margin-bottom: 20px;
-    float: top;
-    text-align: center;
-}
-
-.turn_box {
-    width: 130px;
-    height: 130px;
-    float: left;
-    padding: 10px;
-}
-
-.win_text {
-    width: 140px;
-    height: 50px;
-    text-align: center;
-    font-size: xxx-large;
-    font-weight: bolder;
-    visibility: hidden;
-}
-
-.draw_text {
-    width: 300px;
-    height: 50px;
-    padding-top: 160px;
-    text-align: center;
-    font-size: xxx-large;
-    font-weight: bolder;
-    visibility: hidden;
-}
-
-.inner_box {
-    width: 100px;
-    height: 100px;
-    float: left;
-    text-align: center;
-    display: table;
-}
-
-.inner_box > div {
-    vertical-align: middle;
-    display: table-cell
-}
-
-.black {
-    background-color: grey;
-    color: white;
-}
-
-.white {
-    background-color: white;
-    color: black;
-}
-
-.ui-button {
-    width: 100px;
-    height: 50px;
-    font-size: x-large;
-}
-
-.score {
-    font-size: larger;
-    font-weight: bold;
-    text-align: center;
-}
-
-.error {
-    font-size: larger;
-    font-weight: bold;
-    text-align: center;
-    color: darkred;
-}
-
-.piece_img {
-    height: 80px;
-    width: 80px;
-    padding: 5px;
-}
-
-</style>
+<body>
 
 <div id="chessBoard" class="outer_box">
 
@@ -232,9 +129,8 @@
 
     async function move() {
         document.getElementById("error").innerText = "";
-        const pathName = window.location.pathname;
 
-        const res = await fetch(`${pathName}/pieces`, {
+        const res = await fetch(`/rooms/${roomName}/pieces`, {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -253,9 +149,7 @@
     }
 
     async function end() {
-        const pathName = window.location.pathname;
-
-        const res = await fetch(`${pathName}/result`);
+        const res = await fetch(`/rooms/${roomName}/result`);
         const data = await res.json();
 
         if (!res.ok) {
@@ -279,16 +173,13 @@
     }
 
     function exitRoom() {
-        const pathName = window.location.pathname;
         window.location.href = "/";
-        fetch(`${pathName}`, {method: "DELETE"})
     }
 
     async function fetchPieces() {
-        const pathName = window.location.pathname;
         clearBoard();
 
-        const res = await fetch(`${pathName}/pieces`);
+        const res = await fetch(`/rooms/${roomName}/pieces`);
         const datas = await res.json();
 
         datas.forEach(data => {
@@ -304,9 +195,7 @@
 
 
     async function fetchScores() {
-        const pathName = window.location.pathname;
-
-        const res = await fetch(`${pathName}/scores`);
+        const res = await fetch(`/rooms/${roomName}/scores`);
         const data = await res.json();
 
         if (!res.ok) {
@@ -319,9 +208,7 @@
     }
 
     async function fetchTurn() {
-        const pathName = window.location.pathname;
-
-        let res = await fetch(`${pathName}/turn`);
+        let res = await fetch(`/rooms/${roomName}/turn`);
         res = await res.json();
 
         const turns = document.getElementById("turn");

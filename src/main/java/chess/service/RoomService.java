@@ -4,7 +4,9 @@ import chess.dao.RoomDao;
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.CurrentTurnDto;
+import chess.dto.RoomNameDto;
 import chess.dto.RoomStatusDto;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,21 +18,17 @@ public class RoomService {
         this.roomDao = roomDao;
     }
 
-    public boolean isExistRoom(final String roomName) {
-        return roomDao.isExistName(roomName);
+    public List<RoomNameDto> findAllRoomName() {
+        return roomDao.findAllRoomName();
     }
 
-    public void createRoom(final String roomName) {
-        roomDao.save(roomName, GameStatus.READY, Color.WHITE);
+    public void createRoom(final RoomNameDto roomNameDto) {
+        roomDao.save(roomNameDto.getName(), GameStatus.READY, Color.WHITE);
     }
 
     public void deleteRoom(final String roomName) {
         checkRoomExist(roomName);
-
-        final RoomStatusDto dto = roomDao.findStatusByName(roomName);
-        if (dto.getGameStatus().isEnd()) {
-            roomDao.delete(roomName);
-        }
+        roomDao.delete(roomName);
     }
 
     public CurrentTurnDto findCurrentTurn(final String roomName) {

@@ -5,10 +5,12 @@ import chess.dto.ChessPieceDto;
 import chess.dto.CurrentTurnDto;
 import chess.dto.ErrorResponseDto;
 import chess.dto.MoveRequestDto;
+import chess.dto.RoomNameDto;
 import chess.result.EndResult;
 import chess.result.MoveResult;
 import chess.service.ChessService;
 import chess.service.RoomService;
+import java.net.URI;
 import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
@@ -35,14 +37,22 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/{roomName}")
-    public void createRoom(@PathVariable final String roomName) {
-        roomService.createRoom(roomName);
+    @GetMapping
+    public ResponseEntity<List<RoomNameDto>> findAllRoomName() {
+        final List<RoomNameDto> roomNames = roomService.findAllRoomName();
+        return ResponseEntity.ok(roomNames);
+    }
+
+    @PostMapping
+    public ResponseEntity createRoom(@RequestBody final RoomNameDto roomNameDto) {
+        roomService.createRoom(roomNameDto);
+        return ResponseEntity.created(URI.create("/rooms/" + roomNameDto.getName())).build();
     }
 
     @DeleteMapping("/{roomName}")
-    public void deleteRoom(@PathVariable final String roomName) {
+    public ResponseEntity deleteRoom(@PathVariable final String roomName) {
         roomService.deleteRoom(roomName);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{roomName}/pieces")
@@ -52,8 +62,9 @@ public class ChessApiController {
     }
 
     @PostMapping("/{roomName}/pieces")
-    public void createPieces(@PathVariable final String roomName) {
+    public ResponseEntity createPieces(@PathVariable final String roomName) {
         chessService.initPiece(roomName);
+        return ResponseEntity.created(URI.create("/rooms/" + roomName + "/pieces")).build();
     }
 
     @PatchMapping("/{roomName}/pieces")

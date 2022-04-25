@@ -3,7 +3,9 @@ package chess.dao;
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.CurrentTurnDto;
+import chess.dto.RoomNameDto;
 import chess.dto.RoomStatusDto;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +18,11 @@ public class RoomDao {
 
     public RoomDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<RoomNameDto> findAllRoomName() {
+        final String sql = "SELECT name FROM room";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> RoomNameDto.from(resultSet));
     }
 
     public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn) {

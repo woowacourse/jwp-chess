@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BoardPieceDao {
 
-    private static final String saveDml = "insert into board_pieces (board_piece_id, game_id, position, piece) values (?, ?, ?, ?)";
+    private static final String SAVE_DML = "insert into board_pieces (board_piece_id, game_id, position, piece) values (?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -33,7 +33,7 @@ public class BoardPieceDao {
             boardData.add(new Object[]{boardId, gameId, position, piece});
         }
 
-        jdbcTemplate.batchUpdate(saveDml, boardData);
+        jdbcTemplate.batchUpdate(SAVE_DML, boardData);
     }
 
     public List<BoardPiece> findLastBoardPiece(String lastGameId) {

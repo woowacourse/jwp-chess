@@ -1,6 +1,7 @@
 const startButton = document.querySelector("#startButton");
 // document.querySelectorAll('.piece-image')
 //     .forEach(cell => cell.addEventListener('click', e => cellClick(e, id)));
+const id = new URL(window.location).searchParams.get('id')
 
 let gameOver = "";
 
@@ -8,8 +9,6 @@ let source = "";
 let target = "";
 
 async function onloadGameBody() {
-    const id = new URL(window.location).searchParams.get('id')
-
     let game = await fetch("/api/chess/rooms/" + id)
         .then(handleErrors)
         .catch(function (error) {
@@ -57,22 +56,22 @@ function putPiece(boards) {
 }
 
 startButton.addEventListener('click', async function () {
-    if (startButton.textContent === "Start") {
-        let board = startGame();
-        console.log(board)
-        await initializeBoard(board);
-        startButton.textContent = "End";
-        return
-    }
-
-    let board = endGame();
+    // if (startButton.textContent === "Start") {
+    let board = startGame();
+    // console.log(board)
     await initializeBoard(board);
-    startButton.textContent = "Start";
+    // startButton.textContent = "End";
+    // return
+    // }
+
+    // let board = endGame();
+    // await initializeBoard(board);
+    // startButton.textContent = "Start";
 
 })
 
 async function startGame() {
-    let savedBoard = await fetch("/api/chess/rooms/33")
+    let savedBoard = await fetch("/api/chess/rooms/" + id)
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
@@ -135,34 +134,35 @@ function clickMovePosition(e) {
 }
 
 async function movePiece(source, target) {
-    const board = await sendMoveInformation(source, target);
-    await updateBoard(board.board.boards);
-    await checkGameOver(board.gameOver);
-}
-
-async function updateBoard(board) {
-    Object.values(board).forEach(function (value) {
-        let eachDiv = document.querySelector("#" + value.position);
-        putPiece(eachDiv, board, value.piece);
-    })
+    const game = await sendMoveInformation(source, target);
+    // await updateBoard(board.board.boards);
+    putPiece(game.board.boards)
+    await checkGameOver(game.gameOver);
 }
 
 async function sendMoveInformation(source, target) {
     const bodyValue = {
         source: source, target: target
     }
-
-    let movedBoard = await fetch("/api/chess/rooms/33/move", {
+    let game = await fetch("/api/chess/rooms/" + id + "/move", {
         method: 'POST', headers: {
-            'Content-Type': 'application/json;charset=utf-8', 'Accept': 'application/json'
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
         }, body: JSON.stringify(bodyValue)
     }).then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         })
-    movedBoard = await movedBoard.json();
-    return movedBoard;
+    game = await game.json();
+    return game;
 }
+
+// async function updateBoard(board) {
+//     Object.values(board).forEach(function (value) {
+//         let eachDiv = document.querySelector("#" + value.position);
+//         putPiece(eachDiv, board, value.piece);
+//     })
+// }
 
 async function checkGameOver(gameOverMessage) {
     gameOver = gameOverMessage;
@@ -170,7 +170,9 @@ async function checkGameOver(gameOverMessage) {
         alert("게임이 종료되었습니다.");
         let board = endGame();
         await initializeBoard(board);
-        startButton.textContent = "Start";
+
+        // startButton.textContent = "Start";
+        startButton.style.display = 'block';
     }
 }
 

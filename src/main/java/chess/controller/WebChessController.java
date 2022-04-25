@@ -53,16 +53,16 @@ public class WebChessController {
         return ResponseEntity.ok(chessService.getCurrentBoard(id));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<StatusDto> finishGame(@PathVariable Long id) {
-        chessService.endRoom(id);
-        return ResponseEntity.ok(chessService.createStatus(id));
-    }
-
     @PostMapping("/{id}/move")
     public ResponseEntity<GameResponseDto> movePiece(@PathVariable Long id,
                                                      @RequestBody MoveRequestDto moveRequestDto) {
         return ResponseEntity.ok(chessService.move(id, moveRequestDto));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<StatusDto> finishGame(@PathVariable Long id) {
+        chessService.endRoom(id);
+        return ResponseEntity.ok(chessService.createStatus(id));
     }
 
     @GetMapping("/{id}/status")

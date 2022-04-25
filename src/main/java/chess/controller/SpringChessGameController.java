@@ -6,8 +6,10 @@ import chess.dto.ResultDto;
 import chess.dto.ScoreDto;
 import chess.service.SpringChessService;
 import chess.view.ChessMap;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 public class SpringChessGameController {
@@ -16,6 +18,11 @@ public class SpringChessGameController {
 
     public SpringChessGameController(SpringChessService springChessService) {
         this.springChessService = springChessService;
+    }
+
+    @GetMapping("/")
+    public ModelAndView index() {
+        return new ModelAndView("index", HttpStatus.OK);
     }
 
     @GetMapping("/start")

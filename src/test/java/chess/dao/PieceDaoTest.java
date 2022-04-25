@@ -4,12 +4,12 @@ import static chess.domain.CachedPosition.a2;
 import static chess.domain.CachedPosition.a3;
 import static chess.domain.CachedPosition.b2;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import chess.controller.dto.response.PieceResponse;
 import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
-import com.mysql.cj.exceptions.AssertionFailedException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -59,7 +59,7 @@ public class PieceDaoTest {
         pieceDao.save(testGameId, a2, new Pawn(Color.WHITE));
 
         Optional<Piece> maybePiece = pieceDao.find(testGameId, a2);
-        Piece actual = maybePiece.orElseThrow(() -> new AssertionFailedException("해당하는 기물이 없습니다."));
+        Piece actual = maybePiece.orElseGet(() -> fail("해당하는 기물이 없습니다."));
 
         assertThat(actual).isEqualTo(new Pawn(Color.WHITE));
     }
@@ -71,7 +71,7 @@ public class PieceDaoTest {
 
         pieceDao.updatePosition(testGameId, a2, a3);
         Optional<Piece> shouldEmpty = pieceDao.find(testGameId, a2);
-        Piece actual = pieceDao.find(testGameId, a3).orElseThrow(() -> new AssertionFailedException("해당하는 기물이 없습니다."));
+        Piece actual = pieceDao.find(testGameId, a3).orElseGet(() -> fail("해당하는 기물이 없습니다."));
 
         Assertions.assertAll(
                 () -> assertThat(shouldEmpty.isPresent()).isFalse(),

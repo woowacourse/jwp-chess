@@ -1,12 +1,17 @@
 package chess.dao;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
 import chess.dto.GameDto;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class GameJdbcDao implements GameDao {
+
+    private static final RowMapper<GameDto> GAME_DTO_ROW_MAPPER = (resultSet, rowNum) ->
+            new GameDto(resultSet.getString("white_user_name"),
+                    resultSet.getString("black_user_name"),
+                    resultSet.getString("state"));
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -28,8 +33,8 @@ public class GameJdbcDao implements GameDao {
 
     @Override
     public GameDto findById(int gameId) {
-        final String sql = "select * from game where id = (?)";
-        return jdbcTemplate.queryForObject(sql, GameDto.class, gameId);
+        final String sql = "select white_user_name, black_user_name, state from game where id = (?)";
+        return jdbcTemplate.queryForObject(sql, GAME_DTO_ROW_MAPPER, gameId);
     }
 
     @Override

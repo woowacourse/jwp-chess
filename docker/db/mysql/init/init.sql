@@ -16,5 +16,5 @@ CREATE TABLE chess_piece
     chess_piece    VARCHAR(10) NOT NULL,
     color          VARCHAR(10) NOT NULL,
     PRIMARY KEY (chess_piece_id),
-    FOREIGN KEY (room_name) REFERENCES Room (name) ON DELETE CASCADE
+    FOREIGN KEY (room_name) REFERENCES room (name) ON DELETE CASCADE
 );

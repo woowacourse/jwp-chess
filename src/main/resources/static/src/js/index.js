@@ -1,22 +1,3 @@
-async function onloadGameBody() {
-    const id = new URL(window.location).searchParams.get('id')
-
-    let game = await fetch("/api/chess/rooms/" + id)
-        .then(handleErrors)
-        .catch(function (error) {
-            alert(error.message);
-        })
-    game = await game.json();
-
-    console.log(game);
-
-    let boards = game.board.boards;
-
-    document.querySelectorAll('.piece-image')
-        .forEach(cell => cell.addEventListener('click', e => cellClick(e, id)));
-}
-
-
 async function onloadIndexBody() {
     //1) GET 요청
     let rooms = await fetch("/api/chess/rooms/")

@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>체스게임</title>
-    <link rel="stylesheet" href="/src/css/game.css" />
+    <link rel="stylesheet" href="/src/css/game.css"/>
 </head>
-<body>
+<body onload="onloadGameBody()">
 <h1 class="centered">체스 게임</h1>
+<h2 class="centered" id="roomName">방 제목</h2>
 <div class="button-center">
     <button class="btn third" id="startButton" type="button">Start</button>
     <button class="btn third" id="statusButton" type="button" onclick="getScore()">Score</button>
@@ -100,6 +101,6 @@
         <div id="h1" onclick="clickMovePosition(id)" class="piece-box white-box"></div>
     </div>
 </div>
-<script src = "/src/js/game.js"></script>
+<script src="/src/js/game.js"></script>
 </body>
 </html>

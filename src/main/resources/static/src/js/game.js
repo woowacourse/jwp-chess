@@ -4,6 +4,29 @@ let gameOver = "";
 let source = "";
 let target = "";
 
+async function onloadGameBody() {
+    const id = new URL(window.location).searchParams.get('id')
+
+    let game = await fetch("/api/chess/rooms/" + id)
+        .then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        })
+    game = await game.json();
+    console.log(game);
+
+    // let boards = game.board.boards;
+    // console.log(boards);
+
+    //view 세팅 시작------------
+    // 1) 제목 변경
+    document.getElementById("roomName").innerText = game.name;
+
+
+    // document.querySelectorAll('.piece-image')
+    //     .forEach(cell => cell.addEventListener('click', e => cellClick(e, id)));
+}
+
 startButton.addEventListener('click', async function () {
     if (startButton.textContent === "Start") {
         let board = startGame();

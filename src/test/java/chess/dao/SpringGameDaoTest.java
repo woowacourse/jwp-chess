@@ -17,13 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
+@Sql("classpath:init.sql")
 class SpringGameDaoTest {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private MemberDao memberDao;
@@ -34,28 +33,6 @@ class SpringGameDaoTest {
 
     @BeforeEach
     void setup() {
-        jdbcTemplate.execute("drop table if exists member");
-        jdbcTemplate.execute("drop table if exists piece");
-        jdbcTemplate.execute("drop table if exists game");
-
-        jdbcTemplate.execute("create table Member ("
-                + "id bigint auto_increment primary key, "
-                + "name varchar(10) not null);");
-
-        jdbcTemplate.execute("create table Game ( "
-                + "id bigint auto_increment primary key, "
-                + "turn varchar(10) not null,"
-                + "white_member_id bigint, "
-                + "black_member_id bigint);");
-
-        jdbcTemplate.execute("create table Piece ( "
-                + "game_id bigint not null, "
-                + "square_file varchar(2) not null, "
-                + "square_rank varchar(2) not null, "
-                + "team varchar(10), "
-                + "piece_type varchar(10) not null, "
-                + "constraint fk_game_id foreign key(game_id) references Game(id));");
-
         final Member one = new Member(1L, "one");
         final Member two = new Member(2L, "two");
         final Board board = new Board(BoardInitializer.create());

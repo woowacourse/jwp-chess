@@ -21,13 +21,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
+@Sql("classpath:init.sql")
 class ChessControllerTest {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private MemberDao memberDao;
@@ -40,28 +39,6 @@ class ChessControllerTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("drop table if exists member");
-        jdbcTemplate.execute("drop table if exists piece");
-        jdbcTemplate.execute("drop table if exists game");
-
-        jdbcTemplate.execute("create table Member ("
-                + "id bigint auto_increment primary key, "
-                + "name varchar(10) not null);");
-
-        jdbcTemplate.execute("create table Game ( "
-                + "id bigint auto_increment primary key, "
-                + "turn varchar(10) not null,"
-                + "white_member_id bigint, "
-                + "black_member_id bigint);");
-
-        jdbcTemplate.execute("create table Piece ( "
-                + "game_id bigint not null, "
-                + "square_file varchar(2) not null, "
-                + "square_rank varchar(2) not null, "
-                + "team varchar(10), "
-                + "piece_type varchar(10) not null, "
-                + "constraint fk_game_id foreign key(game_id) references Game(id));");
-
         RestAssured.port = port;
     }
 
@@ -112,8 +89,7 @@ class ChessControllerTest {
                 .body("rawFrom=a2&rawTo=a5")
                 .when().post("/move/" + 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("statusCode", is(400));
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("결과를 반환한다.")

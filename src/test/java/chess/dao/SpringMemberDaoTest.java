@@ -10,30 +10,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
+@Sql("classpath:init.sql")
 class SpringMemberDaoTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     private MemberDao memberDao;
 
-    @BeforeEach
-    void setup() {
-        jdbcTemplate.execute("drop table if exists member");
-        jdbcTemplate.execute("create table Member ("
-                + "id bigint auto_increment primary key, "
-                + "name varchar(10) not null)");
-
-        memberDao = new ChessMemberDao(jdbcTemplate);
-    }
 
     @DisplayName("정상적으로 멤버가 등록되는지 확인한다.")
     @Test
     void saveMember() {
         memberDao.save(new Member(1L, "abc"));
+
         assertThat(memberDao.findById(1L).get().getName()).isEqualTo("abc");
     }
 
@@ -42,6 +34,7 @@ class SpringMemberDaoTest {
     void findAllMembers() {
         memberDao.save(new Member(1L, "썬"));
         memberDao.save(new Member(2L, "문"));
+
         assertThat(memberDao.findAll().size()).isEqualTo(2);
     }
 
@@ -50,6 +43,7 @@ class SpringMemberDaoTest {
     void deleteMember() {
         memberDao.save(new Member(1L, "썬"));
         memberDao.deleteById(1L);
+
         assertThat(memberDao.findAll().size()).isEqualTo(0);
     }
 }

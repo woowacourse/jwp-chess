@@ -3,62 +3,60 @@ package chess.web.dao;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.position.Position;
-import chess.web.jdbc.JdbcTemplate;
-import chess.web.jdbc.SelectJdbcTemplate;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import chess.web.dto.ChessBoardDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ChessBoardDaoImpl implements ChessBoardDao {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public ChessBoardDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final RowMapper<ChessBoardDto> actorRowMapper = (resultSet, rowNum) -> {
+        ChessBoardDto board = new ChessBoardDto(
+                resultSet.getString("position"),
+                resultSet.getString("piece")
+        );
+        return board;
+    };
 
     @Override
     public void save(Position position, Piece piece) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate() {
-            @Override
-            public void setParameters(PreparedStatement statement)
-                    throws SQLException {
-                statement.setString(1, position.toString());
-                statement.setString(2, piece.toString());
-            }
-        };
         final String sql = "insert into board (position, piece) values (?, ?)";
-        jdbcTemplate.executeUpdate(sql);
+        this.jdbcTemplate.update(
+                sql,
+                position.toString(),
+                piece.toString());
     }
 
     @Override
     public void deleteAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate() {
-            @Override
-            public void setParameters(PreparedStatement statement) throws SQLException {
-                return;
-            }
-        };
         final String sql = "delete from board";
-        jdbcTemplate.executeUpdate(sql);
+        this.jdbcTemplate.update(sql);
     }
 
+    @Override
     public Map<Position, Piece> findAll() {
-        final Map<Position, Piece> board = new HashMap<>();
-        SelectJdbcTemplate jdbcTemplate = new SelectJdbcTemplate() {
-            @Override
-            public void setParameters(PreparedStatement statement) throws SQLException {
-                return;
-            }
-
-            @Override
-            public Object mapRow(ResultSet resultSet) throws SQLException {
-                while (resultSet.next()) {
-                    String position = resultSet.getString("position");
-                    String piece = resultSet.getString("piece");
-                    board.put(Position.of(resultSet.getString("position")), PieceFactory.of(position, piece));
-                }
-                return null;
-            }
-        };
         final String sql = "select position, piece from board";
-        jdbcTemplate.executeQuery(sql);
+        List<ChessBoardDto> chessBoardDtos = jdbcTemplate.query(sql, actorRowMapper);
+
+        Map<Position, Piece> board = new HashMap<>();
+        for (ChessBoardDto boardDto : chessBoardDtos) {
+            String position = boardDto.getPosition();
+            String piece = boardDto.getPiece();
+            board.put(Position.of(position), PieceFactory.of(position, piece));
+        }
 
         return board;
     }

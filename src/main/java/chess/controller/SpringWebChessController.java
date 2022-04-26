@@ -26,7 +26,7 @@ public class SpringWebChessController {
 
     @GetMapping("/")
     public String index() {
-        return "game";
+        return "lobby";
     }
 
     @PostMapping("/start")

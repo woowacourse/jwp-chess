@@ -2,6 +2,8 @@ package chess.controller.handler;
 
 import chess.controller.dto.response.ErrorResponse;
 import java.util.NoSuchElementException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,5 +19,10 @@ public class ChessExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Void> handleDataNotFound() {
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<ErrorResponse> handleCreateGameAlreadyExistingRequest() {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("이미 존재하는 게임입니다."));
     }
 }

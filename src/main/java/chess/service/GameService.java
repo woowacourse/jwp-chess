@@ -42,7 +42,6 @@ public class GameService {
                 .collect(Collectors.toList());
     }
 
-
     public ChessGame findByGameId(final Long gameId) {
         return gameDao.findById(gameId)
                 .orElseThrow(() -> new RuntimeException("찾는 게임이 존재하지 않습니다."));
@@ -53,6 +52,18 @@ public class GameService {
         return games.stream()
                 .map(game -> toGameResultDTO(game, memberId))
                 .collect(Collectors.toList());
+    }
+
+    public void move(final Long gameId, final String rawFrom, final String rawTo) {
+        final ChessGame chessGame = findByGameId(gameId);
+        chessGame.move(Square.from(rawFrom), Square.from(rawTo));
+        updateGameByMove(chessGame, rawFrom, rawTo);
+    }
+
+    public void terminate(final Long gameId) {
+        final ChessGame game = findByGameId(gameId);
+        game.terminate();
+        gameDao.terminate(game);
     }
 
     private GameResultDto toGameResultDTO(final ChessGame game, final Long memberId) {
@@ -102,18 +113,6 @@ public class GameService {
             return result.getWhiteScore();
         }
         return result.getBlackScore();
-    }
-
-    public void move(final Long gameId, final String rawFrom, final String rawTo) {
-        final ChessGame chessGame = findByGameId(gameId);
-        chessGame.move(Square.from(rawFrom), Square.from(rawTo));
-        updateGameByMove(chessGame, rawFrom, rawTo);
-    }
-
-    public void terminate(final Long gameId) {
-        final ChessGame game = findByGameId(gameId);
-        game.terminate();
-        gameDao.terminate(game);
     }
 
     private void updateGameByMove(final ChessGame chessGame, final String rawFrom, final String rawTo) {

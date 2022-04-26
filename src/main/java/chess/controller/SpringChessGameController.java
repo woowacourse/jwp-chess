@@ -25,30 +25,30 @@ public class SpringChessGameController {
         return new ModelAndView("index", HttpStatus.OK);
     }
 
-    @GetMapping("/start")
-    public ResponseEntity<ChessMap> start() {
-        return ResponseEntity.ok(springChessService.initializeGame());
+    @GetMapping("/start/{id}")
+    public ResponseEntity<ChessMap> start(@PathVariable long id) {
+        return ResponseEntity.ok(springChessService.initializeGame(id));
     }
 
-    @GetMapping("/load")
-    public ResponseEntity<ChessMap> load() {
-        return ResponseEntity.ok(springChessService.load());
+    @GetMapping("/load/{id}")
+    public ResponseEntity<ChessMap> load(@PathVariable long id) {
+        return ResponseEntity.ok(springChessService.load(id));
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<ScoreDto> status() {
-        return ResponseEntity.ok(springChessService.getStatus());
+    @GetMapping("/status/{id}")
+    public ResponseEntity<ScoreDto> status(@PathVariable long id) {
+        return ResponseEntity.ok(springChessService.getStatus(id));
     }
 
-    @PostMapping("/move")
-    public ResponseEntity<ChessMap> move(@RequestBody MoveDto moveDto) {
-        return ResponseEntity.ok(springChessService.move(moveDto));
+    @PostMapping("/move/{id}")
+    public ResponseEntity<ChessMap> move(@PathVariable long id, @RequestBody MoveDto moveDto) {
+        return ResponseEntity.ok(springChessService.move(id, moveDto));
     }
 
-    @GetMapping("/end")
-    public ResponseEntity<ResultDto> end() {
-        final ResultDto resultDto = springChessService.getResult();
-        springChessService.initializeGame();
+    @GetMapping("/end/{id}")
+    public ResponseEntity<ResultDto> end(@PathVariable long id) {
+        final ResultDto resultDto = springChessService.getResult(id);
+        springChessService.initializeGame(id);
         return ResponseEntity.ok(resultDto);
     }
 

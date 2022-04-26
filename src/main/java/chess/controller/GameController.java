@@ -38,7 +38,7 @@ public class GameController {
 
     @PostMapping
     public CreatedGameDto createGame(@RequestBody AuthCredentials authCredentials) {
-        return chessService.initGame(authCredentials);
+        return chessService.initGame(authCredentials.toEncrypted());
     }
 
     @GetMapping("/{id}")
@@ -56,7 +56,7 @@ public class GameController {
     @DeleteMapping("/{id}")
     public void deleteGame(@PathVariable int id,
                            @RequestBody AuthCredentials authCredentials) {
-        chessService.deleteFinishedGame(id, authCredentials);
+        chessService.deleteFinishedGame(id, authCredentials.toEncrypted());
     }
 
     private ModelAndView getGameModelAndView(int id) {

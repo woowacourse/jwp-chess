@@ -2,13 +2,13 @@ package chess.service;
 
 import chess.dao.EventDao;
 import chess.dao.GameDao;
-import chess.domain.auth.AuthCredentials;
+import chess.domain.auth.EncryptedAuthCredentials;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
-import chess.dto.response.SearchResultDto;
 import chess.dto.response.CreatedGameDto;
+import chess.dto.response.SearchResultDto;
 import chess.dto.view.FullGameDto;
 import chess.dto.view.GameCountDto;
 import chess.dto.view.GameOverviewDto;
@@ -65,8 +65,8 @@ public class ChessService {
     }
 
     @Transactional
-    public CreatedGameDto initGame(AuthCredentials authCredentials) {
-        int gameId = gameDao.saveAndGetGeneratedId(authCredentials.toEncrypted());
+    public CreatedGameDto initGame(EncryptedAuthCredentials authCredentials) {
+        int gameId = gameDao.saveAndGetGeneratedId(authCredentials);
         eventDao.save(gameId, new InitEvent());
         return new CreatedGameDto(gameId);
     }
@@ -86,8 +86,8 @@ public class ChessService {
     }
 
     @Transactional
-    public void deleteFinishedGame(int gameId, AuthCredentials authCredentials) {
-        gameDao.deleteGame(authCredentials.toEncrypted());
+    public void deleteFinishedGame(int gameId, EncryptedAuthCredentials authCredentials) {
+        gameDao.deleteGame(authCredentials);
         eventDao.deleteAllByGameId(gameId);
     }
 

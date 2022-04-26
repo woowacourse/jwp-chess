@@ -17,6 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -31,17 +32,17 @@ public class GameService {
         this.memberDao = memberDao;
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public Long createGame(final String title, final String password, final Long whiteId, final Long blackId) {
-        final Member white = memberDao.findById(whiteId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
-        final Member black = memberDao.findById(blackId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
+        final Member white = memberDao.findById(whiteId).orElseThrow(() -> new NoSuchElementException("찾는 멤버가 없음!"));
+        final Member black = memberDao.findById(blackId).orElseThrow(() -> new NoSuchElementException("찾는 멤버가 없음!"));
         final Board board = new Board(BoardInitializer.create());
         final Participant participant = new Participant(white, black);
 
         return gameDao.save(new ChessGame(board, Team.WHITE, new RoomInfo(title, password, participant)));
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<ChessGame> findPlayingGames() {
         return gameDao.findAll()
                 .stream()
@@ -50,13 +51,13 @@ public class GameService {
     }
 
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public ChessGame findByGameId(final Long gameId) {
         return gameDao.findById(gameId)
                 .orElseThrow(() -> new NoSuchElementException("찾는 게임이 존재하지 않습니다."));
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<GameResultDto> findHistoriesByMemberId(final Long memberId) {
         final List<ChessGame> games = gameDao.findHistoriesByMemberId(memberId);
         return games.stream()
@@ -113,14 +114,14 @@ public class GameService {
         return result.getBlackScore();
     }
 
-    @Transactional
-    public void move(final Long gameId, final String rawFrom, final String rawTo) {
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public synchronized void move(final Long gameId, final String rawFrom, final String rawTo) {
         final ChessGame chessGame = findByGameId(gameId);
         chessGame.move(Square.from(rawFrom), Square.from(rawTo));
         gameDao.move(chessGame, rawFrom, rawTo);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void terminate(final Long gameId) {
         final ChessGame chessGame = findByGameId(gameId);
         chessGame.terminate();

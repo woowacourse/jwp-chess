@@ -76,6 +76,6 @@ public class ChessGameService {
     }
 
     private Turn findChessGameTurn(long chessGameId) {
-        return chessGameDao.findChessGame(chessGameId);
+        return chessGameDao.findChessGameTurn(chessGameId);
     }
 }

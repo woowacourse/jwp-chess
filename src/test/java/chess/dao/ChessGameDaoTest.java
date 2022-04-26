@@ -54,7 +54,16 @@ class ChessGameDaoTest {
     void findChessGame() {
         long id = chessGameDao.createChessGame(chessGameRoom);
 
-        assertThat(chessGameDao.findChessGame(id)).isEqualTo(Turn.WHITE_TURN);
+        assertThat(chessGameDao.findChessGameTurn(id)).isEqualTo(Turn.WHITE_TURN);
+    }
+
+    @Test
+    @DisplayName("체스방 반환")
+    void findChessGameRoom() {
+        long chessGameId = chessGameDao.createChessGame(chessGameRoom);
+        ChessGameRoom findRoom = chessGameDao.findChessGameRoom(chessGameId);
+
+        assertThat(findRoom.getId()).isEqualTo(chessGameId);
     }
 
     @Test

@@ -1,11 +1,15 @@
 package chess.controller;
 
+import chess.controller.dto.request.ChessGameRoomDeleteRequest;
 import chess.controller.dto.response.ChessGameRoomTitleResponse;
 import chess.service.ChessGameRoomService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,5 +29,12 @@ public class ChessGameRoomController {
                 .stream()
                 .map(ChessGameRoomTitleResponse::from)
                 .collect(Collectors.toList()));
+    }
+
+    @DeleteMapping("/{chessGameId}")
+    public ResponseEntity<Void> deleteChessGame(@PathVariable long chessGameId,
+                                                @RequestBody ChessGameRoomDeleteRequest request) {
+        chessGameRoomService.deleteChessRoom(chessGameId, request);
+        return ResponseEntity.noContent().build();
     }
 }

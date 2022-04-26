@@ -43,10 +43,16 @@ public class ChessGameDao {
             resultSet.getString("title"),
             resultSet.getString("password"));
 
-    public Turn findChessGame(long id) {
+    public Turn findChessGameTurn(long id) {
         String sql = "select turn from chess_game where id = ?";
 
         return jdbcTemplate.queryForObject(sql, Turn.class, id);
+    }
+
+    public ChessGameRoom findChessGameRoom(long id) {
+        String sql = "select id, title, password from chess_game where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, chessGameRoomRowMapper, id);
     }
 
     public int changeChessGameTurn(long id, Turn turn) {

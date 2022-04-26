@@ -48,15 +48,14 @@ function checkStatus() {
 
 function sendToServer(first, second) {
     let element = document.getElementById("roomId");
-    const moveCommand = "command=" + first + " " + second;
-
+    const moveCommand = {"source": first, "target": second};
     let moveUrl = '/room/' + element.value + 'move';
     fetch(moveUrl, {
-        method: "POST",
+        method: "PATCH",
         headers: {
-            "Content-Type": "text/plain",
+            "Content-Type": "application/json",
         },
-        body: moveCommand
+        body: JSON.stringify(moveCommand)
     }).then((response) => {
             response.json().then(data => {
                 if (data.status === 400) {

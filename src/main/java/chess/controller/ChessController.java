@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.EndResponse;
@@ -30,7 +31,7 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public GameIdsResponse loadGameList() {
         return chessService.findAllGameIds();
     }
@@ -40,10 +41,12 @@ public class ChessController {
         return chessService.loadGame(gameId);
     }
 
-    @PostMapping("")
-    public ResponseEntity<ChessGameResponse> createGame() throws URISyntaxException {
+    @PostMapping
+    public ResponseEntity<ChessGameResponse> createGame(@RequestBody CreateGameRequest createGameRequest)
+            throws URISyntaxException {
         long gameId = Math.abs(new Random().nextInt());
-        return ResponseEntity.created(new URI("/game/" + gameId)).body(chessService.createGame(gameId));
+        return ResponseEntity.created(new URI("/game/" + gameId))
+                .body(chessService.createGame(gameId, createGameRequest));
     }
 
     @PatchMapping("/{gameId}")

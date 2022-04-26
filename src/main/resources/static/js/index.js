@@ -35,7 +35,14 @@ function enterGame(event) {
 async function createGame() {
   modal.classList.add("hidden");
   const res = await fetch(`/games`, {
-    method: "post"
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      gameName: this.gameName.value,
+      password: this.password.value,
+    })
   });
   if (res.ok) {
     location.href = res.headers.get("Location");

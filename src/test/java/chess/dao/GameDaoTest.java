@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import chess.domain.GameState;
+import chess.util.PasswordEncryptor;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GameDaoTest {
 
-    private static final long testGameId = 1;
+    private static final String NOT_HAVE_DATA = "데이터가 없습니다.";
+    private static final long TEST_GAME_ID = 1;
 
     @Autowired
     private GameDao gameDao;
@@ -24,27 +25,68 @@ public class GameDaoTest {
     @DisplayName("게임 저장 테스트")
     @Test
     void save() {
-        gameDao.save(testGameId);
+        String salt = PasswordEncryptor.generateSalt();
+        String password = PasswordEncryptor.encrypt("password", salt);
+
+        gameDao.save(TEST_GAME_ID, "game", password, salt);
     }
 
     @DisplayName("전체 게임 id 조회 테스트")
     @Test
     void find_All_Game_Id() {
-        gameDao.save(1);
-        gameDao.save(2);
+        String salt = PasswordEncryptor.generateSalt();
+        String password = PasswordEncryptor.encrypt("password", salt);
+        gameDao.save(TEST_GAME_ID, "game", password, salt);
 
         List<Long> actual = gameDao.findAllIds();
 
-        assertThat(actual).containsOnly(1L, 2L);
+        assertThat(actual).containsOnly(1L);
     }
 
-    @DisplayName("게임 조회 테스트")
+    @DisplayName("게임 이름 조회 테스트")
     @Test
-    void load() {
-        gameDao.save(testGameId);
+    void find_Name() {
+        String salt = PasswordEncryptor.generateSalt();
+        String password = PasswordEncryptor.encrypt("password", salt);
+        gameDao.save(TEST_GAME_ID, "game", password, salt);
 
-        Optional<GameState> maybeGameState = gameDao.load(testGameId);
-        GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
+        String actual = gameDao.findName(TEST_GAME_ID).orElseGet(() -> fail(NOT_HAVE_DATA));
+
+        assertThat(actual).isEqualTo("game");
+    }
+
+    @DisplayName("게임 비밀번호 조회 테스트")
+    @Test
+    void find_Password() {
+        String salt = PasswordEncryptor.generateSalt();
+        String password = PasswordEncryptor.encrypt("password", salt);
+        gameDao.save(TEST_GAME_ID, "game", password, salt);
+
+        String actual = gameDao.findPassword(TEST_GAME_ID).orElseGet(() -> fail(NOT_HAVE_DATA));
+
+        assertThat(actual).isEqualTo(password);
+    }
+
+    @DisplayName("salt 조회 테스트")
+    @Test
+    void find_Salt() {
+        String salt = PasswordEncryptor.generateSalt();
+        String password = PasswordEncryptor.encrypt("password", salt);
+        gameDao.save(TEST_GAME_ID, "game", password, salt);
+
+        String actual = gameDao.findSalt(TEST_GAME_ID).orElseGet(() -> fail(NOT_HAVE_DATA));
+
+        assertThat(actual).isEqualTo(salt);
+    }
+
+    @DisplayName("게임 상태 조회 테스트")
+    @Test
+    void find_State() {
+        String salt = PasswordEncryptor.generateSalt();
+        String password = PasswordEncryptor.encrypt("password", salt);
+        gameDao.save(TEST_GAME_ID, "game", password, salt);
+
+        GameState actual = gameDao.findState(TEST_GAME_ID).orElseGet(() -> fail(NOT_HAVE_DATA));
 
         assertThat(actual).isEqualTo(GameState.READY);
     }
@@ -52,11 +94,12 @@ public class GameDaoTest {
     @DisplayName("게임 정보 업데이트 테스트")
     @Test
     void update() {
-        gameDao.save(testGameId);
-        gameDao.updateState(testGameId, GameState.WHITE_RUNNING);
+        String salt = PasswordEncryptor.generateSalt();
+        String password = PasswordEncryptor.encrypt("password", salt);
+        gameDao.save(TEST_GAME_ID, "game", password, salt);
+        gameDao.updateState(TEST_GAME_ID, GameState.WHITE_RUNNING);
 
-        Optional<GameState> maybeGameState = gameDao.load(testGameId);
-        GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
+        GameState actual = gameDao.findState(TEST_GAME_ID).orElseGet(() -> fail(NOT_HAVE_DATA));
 
         assertThat(actual).isEqualTo(GameState.WHITE_RUNNING);
     }
@@ -64,6 +107,6 @@ public class GameDaoTest {
     @DisplayName("게임 삭제 테스트")
     @Test
     void delete() {
-        gameDao.delete(testGameId);
+        gameDao.delete(TEST_GAME_ID);
     }
 }

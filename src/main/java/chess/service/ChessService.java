@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.EndResponse;
@@ -16,6 +17,7 @@ import chess.domain.board.Position;
 import chess.domain.board.Row;
 import chess.domain.board.strategy.CreateCompleteBoardStrategy;
 import chess.domain.piece.Piece;
+import chess.util.PasswordEncryptor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -30,8 +32,6 @@ public class ChessService {
     private static final int ROW_INDEX = 0;
     private static final int COLUMN_INDEX = 1;
 
-    private static final String NOT_HAVE_GAME = "해당하는 게임이 없습니다.";
-
     private final GameDao gameDao;
     private final PieceDao pieceDao;
 
@@ -40,9 +40,14 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGameResponse createGame(long gameId) {
+    public ChessGameResponse createGame(long gameId, CreateGameRequest createGameRequest) {
+        return createGame(gameId, createGameRequest.getGameName(), createGameRequest.getPassword());
+    }
+
+    private ChessGameResponse createGame(long gameId, String gameName, String password) {
+        String salt = PasswordEncryptor.generateSalt();
         ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
-        gameDao.save(gameId);
+        gameDao.save(gameId, gameName, PasswordEncryptor.encrypt(password, salt), salt);
         saveBoard(gameId, chessGame.getBoard());
         return new ChessGameResponse(chessGame);
     }
@@ -66,7 +71,7 @@ public class ChessService {
     }
 
     private ChessGame createChessGameObject(long gameId) {
-        Optional<GameState> maybeGameState = gameDao.load(gameId);
+        Optional<GameState> maybeGameState = gameDao.findState(gameId);
         GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
         Board board = createBoard(gameId);
         return new ChessGame(board, gameState);
@@ -88,8 +93,12 @@ public class ChessService {
     }
 
     public ChessGameResponse resetGame(long gameId) {
+        Optional<String> maybeGameName = gameDao.findName(gameId);
+        String gameName = maybeGameName.orElseThrow(NoSuchElementException::new);
+        Optional<String> maybePassword = gameDao.findPassword(gameId);
+        String password = maybePassword.orElseThrow(NoSuchElementException::new);
         gameDao.delete(gameId);
-        return createGame(gameId);
+        return createGame(gameId, gameName, password);
     }
 
     public ChessGameResponse move(long gameId, MoveRequest moveRequest) {

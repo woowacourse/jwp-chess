@@ -26,10 +26,13 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public void save(long id) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("game_id", id);
-        parameters.put("state", GameState.READY);
+    public void save(long id, String name, String password, String salt) {
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("game_id", id)
+                .addValue("game_name", name)
+                .addValue("game_password", password)
+                .addValue("salt", salt)
+                .addValue("state", GameState.READY);
         insertGame.execute(parameters);
     }
 
@@ -39,9 +42,37 @@ public class GameDaoImpl implements GameDao {
         return namedParameterJdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getLong("game_id"));
     }
 
+    @Override
+    public Optional<String> findName(long id) {
+        String sql = "SELECT game_name FROM game WHERE game_id = :game_id";
+        return find(sql, id);
+    }
 
     @Override
-    public Optional<GameState> load(long id) {
+    public Optional<String> findPassword(long id) {
+        String sql = "SELECT game_password FROM game WHERE game_id = :game_id";
+        return find(sql, id);
+    }
+
+    @Override
+    public Optional<String> findSalt(long id) {
+        String sql = "SELECT salt FROM game WHERE game_id = :game_id";
+        return find(sql, id);
+    }
+
+    private Optional<String> find(String sql, long id) {
+        SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", id);
+
+        try {
+            return Optional.ofNullable(
+                    namedParameterJdbcTemplate.queryForObject(sql, namedParameters, String.class));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<GameState> findState(long id) {
         String sql = "SELECT state FROM game WHERE game_id = :game_id";
 
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", id);

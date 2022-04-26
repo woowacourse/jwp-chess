@@ -10,6 +10,7 @@ import chess.controller.dto.response.PieceResponse;
 import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
+import chess.util.PasswordEncryptor;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -24,7 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PieceDaoTest {
 
-    private static final long testGameId = 1;
+    private static final String NOT_HAVE_DATA = "해당하는 기물이 없습니다.";
+    private static final long TEST_GAME_ID = 1;
 
     @Autowired
     private GameDao gameDao;
@@ -33,22 +35,24 @@ public class PieceDaoTest {
 
     @BeforeEach
     void createGame() {
-        gameDao.save(testGameId);
+        String salt = PasswordEncryptor.generateSalt();
+        String password = PasswordEncryptor.encrypt("password", salt);
+        gameDao.save(TEST_GAME_ID, "game", password, salt);
     }
 
     @DisplayName("기물 저장 테스트")
     @Test
     void save() {
-        pieceDao.save(testGameId, a2, new Pawn(Color.WHITE));
+        pieceDao.save(TEST_GAME_ID, a2, new Pawn(Color.WHITE));
     }
 
     @DisplayName("게임의 전체 기물 조회 테스트")
     @Test
     void findAll() {
-        pieceDao.save(testGameId, a2, new Pawn(Color.WHITE));
-        pieceDao.save(testGameId, b2, new Pawn(Color.WHITE));
+        pieceDao.save(TEST_GAME_ID, a2, new Pawn(Color.WHITE));
+        pieceDao.save(TEST_GAME_ID, b2, new Pawn(Color.WHITE));
 
-        List<PieceResponse> pieces = pieceDao.findAll(testGameId);
+        List<PieceResponse> pieces = pieceDao.findAll(TEST_GAME_ID);
 
         assertThat(pieces.size()).isEqualTo(2);
     }
@@ -56,10 +60,10 @@ public class PieceDaoTest {
     @DisplayName("위치에 맞는 기물 조회 테스트")
     @Test
     void find() {
-        pieceDao.save(testGameId, a2, new Pawn(Color.WHITE));
+        pieceDao.save(TEST_GAME_ID, a2, new Pawn(Color.WHITE));
 
-        Optional<Piece> maybePiece = pieceDao.find(testGameId, a2);
-        Piece actual = maybePiece.orElseGet(() -> fail("해당하는 기물이 없습니다."));
+        Optional<Piece> maybePiece = pieceDao.find(TEST_GAME_ID, a2);
+        Piece actual = maybePiece.orElseGet(() -> fail(NOT_HAVE_DATA));
 
         assertThat(actual).isEqualTo(new Pawn(Color.WHITE));
     }
@@ -67,11 +71,11 @@ public class PieceDaoTest {
     @DisplayName("기물의 위치 변경 테스트")
     @Test
     void update() {
-        pieceDao.save(testGameId, a2, new Pawn(Color.WHITE));
+        pieceDao.save(TEST_GAME_ID, a2, new Pawn(Color.WHITE));
 
-        pieceDao.updatePosition(testGameId, a2, a3);
-        Optional<Piece> shouldEmpty = pieceDao.find(testGameId, a2);
-        Piece actual = pieceDao.find(testGameId, a3).orElseGet(() -> fail("해당하는 기물이 없습니다."));
+        pieceDao.updatePosition(TEST_GAME_ID, a2, a3);
+        Optional<Piece> shouldEmpty = pieceDao.find(TEST_GAME_ID, a2);
+        Piece actual = pieceDao.find(TEST_GAME_ID, a3).orElseGet(() -> fail(NOT_HAVE_DATA));
 
         Assertions.assertAll(
                 () -> assertThat(shouldEmpty.isPresent()).isFalse(),
@@ -82,9 +86,9 @@ public class PieceDaoTest {
     @DisplayName("위치에 맞는 기물 삭제 테스트")
     @Test
     void delete() {
-        pieceDao.save(testGameId, a2, new Pawn(Color.WHITE));
+        pieceDao.save(TEST_GAME_ID, a2, new Pawn(Color.WHITE));
 
-        pieceDao.delete(testGameId, a2);
+        pieceDao.delete(TEST_GAME_ID, a2);
         Optional<Piece> maybePiece = pieceDao.find(1, a2);
 
         assertThat(maybePiece.isPresent()).isFalse();
@@ -93,7 +97,7 @@ public class PieceDaoTest {
     @DisplayName("게임을 삭제하면 전체 기물이 삭제 되는지 테스트")
     @Test
     void deleteAll() {
-        gameDao.delete(testGameId);
+        gameDao.delete(TEST_GAME_ID);
         List<PieceResponse> pieces = pieceDao.findAll(1);
 
         assertThat(pieces).isEmpty();

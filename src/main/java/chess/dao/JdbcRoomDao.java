@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dao.dto.RoomSaveDto;
+import chess.dao.dto.RoomUpdateDto;
 import chess.entity.Room;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,9 +52,9 @@ public class JdbcRoomDao {
         return Optional.empty();
     }
 
-    private boolean existsById(final int roomId) {
+    private boolean existsById(final int id) {
         final String sql = "SELECT COUNT(*) from room where id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, roomId) == 1;
+        return jdbcTemplate.queryForObject(sql, Integer.class, id) == 1;
     }
 
     private RowMapper<Room> createRoomRowMapper() {
@@ -68,8 +69,21 @@ public class JdbcRoomDao {
         };
     }
 
+    public void update(final RoomUpdateDto updateDto) {
+        final String sql = "UPDATE room SET game_status = ?, current_turn = ? WHERE id = ?";
+        int rowCount = jdbcTemplate.update(sql, updateDto.getGameStatus(), updateDto.getCurrentTurn(), updateDto.getId());
+
+        if (rowCount == 0) {
+            throw new IllegalStateException("수정에 실패 하였습니다.");
+        }
+    }
+
     public void deleteById(final int id) {
         final String sql = "DELETE FROM room WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        int rowCount = jdbcTemplate.update(sql, id);
+
+        if (rowCount == 0) {
+            throw new IllegalStateException("삭제에 실패 하였습니다.");
+        }
     }
 }

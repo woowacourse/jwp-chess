@@ -10,14 +10,6 @@ public class MoveCommandDto {
     public MoveCommandDto() {
     }
 
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
-    }
-
     public String getSource() {
         return source;
     }

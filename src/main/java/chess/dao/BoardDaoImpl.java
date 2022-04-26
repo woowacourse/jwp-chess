@@ -33,7 +33,6 @@ public class BoardDaoImpl implements BoardDao{
         return !integer.equals(0);
     }
 
-
     @Override
     public Color findTurn() {
         final String sql = "select turn from board";

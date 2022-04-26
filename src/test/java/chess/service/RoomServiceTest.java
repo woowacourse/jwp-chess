@@ -11,6 +11,8 @@ import chess.dto.request.RoomDeletionRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -73,6 +75,48 @@ class RoomServiceTest {
         assertThatThrownBy(() -> roomService.createRoom(creationRequestDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이름이 같은 방이 이미 존재합니다.");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 방을 삭제하면 예외가 터진다.")
+    void deleteRoom_not_exist() {
+        // given
+        final int roomId = 1;
+        final String password = "1234";
+        final RoomDeletionRequestDto dto = new RoomDeletionRequestDto(roomId, password);
+
+        // then
+        assertThatThrownBy(() -> roomService.deleteRoom(dto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 방 입니다.");
+    }
+
+    @ParameterizedTest
+    @DisplayName("요청의 비밀번호 값이 존재하지 않으면 예외가 터진다.")
+    @ValueSource(strings = {"", "   "})
+    void deleteRoom_blank_password(final String password) {
+        // given
+        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
+        final RoomDeletionRequestDto dto = new RoomDeletionRequestDto(roomId, password);
+
+        // then
+        assertThatThrownBy(() -> roomService.deleteRoom(dto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("요청에 비밀번호가 존재하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("삭제하려는 방의 비밀번호가 일치하지 않으면 예외가 터진다.")
+    void deleteRoom_password_not_match() {
+        // given
+        final String password = BCrypt.hashpw("1234", BCrypt.gensalt());
+        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, password);
+        final RoomDeletionRequestDto dto = new RoomDeletionRequestDto(roomId, "4321");
+
+        // then
+        assertThatThrownBy(() -> roomService.deleteRoom(dto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
     }
 
     @Test

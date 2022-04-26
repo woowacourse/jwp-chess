@@ -8,7 +8,6 @@ import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
-import chess.exception.NotFoundException;
 import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -54,7 +53,7 @@ public class RoomService {
 
     private void checkRoomExist(final int roomId) {
         if (!roomDao.isExistId(roomId)) {
-            throw new NotFoundException("존재하지 않는 방 입니다.");
+            throw new IllegalArgumentException("존재하지 않는 방 입니다.");
         }
     }
 

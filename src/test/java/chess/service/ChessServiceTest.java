@@ -3,7 +3,7 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.dao.ChessPieceDao;
+import chess.dao.ChessPieceDaoImpl;
 import chess.dao.RoomDao;
 import chess.dao.RoomDaoImpl;
 import chess.domain.GameStatus;
@@ -34,7 +34,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 class ChessServiceTest {
 
     private RoomDao roomDao;
-    private ChessPieceDao chessPieceDao;
+    private ChessPieceDaoImpl chessPieceDao;
 
     @Autowired
     private ChessService chessService;
@@ -56,7 +56,7 @@ class ChessServiceTest {
                 + "    password     VARCHAR(255) NOT NULL"
                 + ")");
 
-        chessPieceDao = new ChessPieceDao(jdbcTemplate);
+        chessPieceDao = new ChessPieceDaoImpl(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS chess_piece");
         jdbcTemplate.execute(""
                 + "CREATE TABLE chess_piece"

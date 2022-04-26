@@ -60,7 +60,6 @@ public class JdbcTemplateBoardDaoTest {
         jdbcTemplateBoardDao.update("a2", "blank");
 
         Board board = new Board();
-        board.initBoard(new WebBasicBoardStrategy());
         jdbcTemplateBoardDao.reset(board.toMap());
 
         assertThat(jdbcTemplateBoardDao.getBoard()).isEqualTo(board.toMap());

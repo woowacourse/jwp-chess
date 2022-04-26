@@ -31,7 +31,7 @@ public final class NewGame implements Game {
     }
 
     @Override
-    public GameSnapshotDto toDtoOf(int gameId) {
+    public GameSnapshotDto toSnapshotDto() {
         throw new UnsupportedOperationException(GAME_NOT_STARTED_EXCEPTION_MESSAGE);
     }
 }

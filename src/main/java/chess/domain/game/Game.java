@@ -12,5 +12,5 @@ public interface Game {
 
     GameResult getResult();
 
-    GameSnapshotDto toDtoOf(int gameId);
+    GameSnapshotDto toSnapshotDto();
 }

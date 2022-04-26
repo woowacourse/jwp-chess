@@ -35,12 +35,12 @@
     </div>
     {{/board}}
 </section>
-<form action="/game/{{game.id}}">
+{{/snapshot}}
+<form action="/game/{{metadata.id}}">
     <label for="password_input">비밀번호</label>
     <input type="password" required id="password_input" name="password"/>
     <input type="submit" value="삭제"/>
 </form>
-{{/snapshot}}
 <section class="buttons__container">
     <a href="/">홈으로 돌아가기!</a>
 </section>

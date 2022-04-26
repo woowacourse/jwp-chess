@@ -41,14 +41,14 @@ public class ChessService {
     public FullGameDto findGame(int gameId) {
         GameEntity gameEntity = gameDao.findById(gameId);
         Game game = currentSnapShotOf(gameId);
-        return new FullGameDto(gameEntity.toDto(), game.toDtoOf(gameId));
+        return new FullGameDto(gameEntity.toDto(), game.toSnapshotDto());
     }
 
     public GameResultDto findGameResult(int gameId) {
         GameEntity gameEntity = gameDao.findById(gameId);
         Game game = currentSnapShotOf(gameId);
         validateGameOver(game);
-        FullGameDto fullGame = new FullGameDto(gameEntity.toDto(), game.toDtoOf(gameId));
+        FullGameDto fullGame = new FullGameDto(gameEntity.toDto(), game.toSnapshotDto());
         return new GameResultDto(fullGame, game.getResult());
     }
 

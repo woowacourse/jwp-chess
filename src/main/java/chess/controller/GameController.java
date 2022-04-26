@@ -77,7 +77,7 @@ public class GameController {
     }
 
     @GetMapping("/search")
-    public SearchResultDto searchResult(@RequestParam(name = "game_id") int gameId) {
+    public SearchResultDto searchGame(@RequestParam(name = "game_id") int gameId) {
         return chessService.searchGame(gameId);
     }
 

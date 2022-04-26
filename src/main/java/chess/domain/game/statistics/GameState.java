@@ -8,11 +8,11 @@ public enum GameState {
 
     private final String value;
 
-    GameState(String value) {
-        this.value = value;
+    GameState(String displayValue) {
+        this.value = displayValue;
     }
 
-    public String getValue() {
+    public String toDisplay() {
         return this.value;
     }
 }

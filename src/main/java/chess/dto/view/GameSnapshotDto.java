@@ -1,22 +1,27 @@
 package chess.dto.view;
 
-import chess.dto.view.board.RowDto;
+import chess.domain.game.statistics.GameState;
 import chess.dto.view.board.BoardViewDto;
+import chess.dto.view.board.RowDto;
 import java.util.List;
 import java.util.Objects;
 
 public class GameSnapshotDto {
 
-    private final GameStateDto game;
+    private final GameState state;
     private final BoardViewDto board;
 
-    public GameSnapshotDto(GameStateDto game, BoardViewDto board) {
-        this.game = game;
+    public GameSnapshotDto(GameState state, BoardViewDto board) {
+        this.state = state;
         this.board = board;
     }
 
-    public GameStateDto getGame() {
-        return game;
+    public GameState getState() {
+        return state;
+    }
+
+    public String getStateValue() {
+        return state.toDisplay();
     }
 
     public List<RowDto> getBoard() {
@@ -31,18 +36,21 @@ public class GameSnapshotDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GameSnapshotDto gameDto = (GameSnapshotDto) o;
-        return Objects.equals(game, gameDto.game)
-                && Objects.equals(board, gameDto.board);
+        GameSnapshotDto that = (GameSnapshotDto) o;
+        return state == that.state
+                && Objects.equals(board, that.board);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(game, board);
+        return Objects.hash(state, board);
     }
 
     @Override
     public String toString() {
-        return "GameSnapshotDto{" + "game=" + game + ", board=" + board + '}';
+        return "GameSnapshotDto{" +
+                "state=" + state +
+                ", board=" + board +
+                '}';
     }
 }

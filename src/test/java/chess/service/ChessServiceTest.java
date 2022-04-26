@@ -92,7 +92,7 @@ class ChessServiceTest {
 
         FullGameDto expected = new FullGameDto(
                 new GameOverviewDto(1, "진행중인_게임"),
-                currentGameSnapshotOfGameIdOne().toDtoOf(1));
+                currentGameSnapshotOfGameIdOne().toSnapshotDto());
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -111,7 +111,7 @@ class ChessServiceTest {
 
         GameSnapshotDto expectedGame = currentGameSnapshotOfGameIdOne()
                 .play(new MoveEvent("a7 a5"))
-                .toDtoOf(1);
+                .toSnapshotDto();
         FullGameDto expected = new FullGameDto(
                 new GameOverviewDto(1, "진행중인_게임"), expectedGame);
 
@@ -146,7 +146,7 @@ class ChessServiceTest {
             Game expectedGame = new NewGame().play(new InitEvent()).play(new MoveEvent("e2 e4"))
                     .play(new MoveEvent("d7 d5")).play(new MoveEvent("f1 b5"))
                     .play(new MoveEvent("a7 a5")).play(new MoveEvent("b5 e8"));
-            FullGameDto fullGame = new FullGameDto(new GameOverviewDto(3, "종료된_게임"), expectedGame.toDtoOf(3));
+            FullGameDto fullGame = new FullGameDto(new GameOverviewDto(3, "종료된_게임"), expectedGame.toSnapshotDto());
             GameResultDto expected = new GameResultDto(fullGame, expectedGame.getResult());
 
             assertThat(actual).isEqualTo(expected);

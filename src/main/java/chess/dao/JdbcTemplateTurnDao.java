@@ -1,4 +1,4 @@
-package chess.dao.jdbctemplate;
+package chess.dao;
 
 import chess.dao.TurnDao;
 import chess.domain.piece.Team;

@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.dao.jdbctemplate.JdbcTemplateGameStatusDao;
 import chess.domain.GameStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

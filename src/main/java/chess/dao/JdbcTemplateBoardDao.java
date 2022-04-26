@@ -1,6 +1,5 @@
-package chess.dao.jdbctemplate;
+package chess.dao;
 
-import chess.dao.BoardDao;
 import chess.dto.BoardDto;
 import java.util.List;
 import java.util.Map;

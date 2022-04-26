@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import chess.dao.fake.FakeBoardDao;
 import chess.dao.fake.FakeGameStatusDao;
 import chess.dao.fake.FakeTurnDao;
-import chess.domain.ChessGameService;
 import chess.domain.board.strategy.BasicBoardStrategy;
 import chess.domain.board.strategy.WebBasicBoardStrategy;
 import chess.dto.GameStatusDto;

@@ -1,4 +1,4 @@
-package chess.dao.jdbctemplate;
+package chess.dao;
 
 import chess.dto.BoardDto;
 import java.sql.ResultSet;

@@ -1,8 +1,10 @@
-package chess.domain;
+package chess.service;
 
 import chess.dao.BoardDao;
 import chess.dao.GameStatusDao;
 import chess.dao.TurnDao;
+import chess.domain.ChessGame;
+import chess.domain.GameStatus;
 import chess.domain.board.Board;
 import chess.domain.board.Result;
 import chess.domain.board.strategy.BoardGenerationStrategy;

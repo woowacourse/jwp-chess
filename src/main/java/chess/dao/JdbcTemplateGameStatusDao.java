@@ -1,4 +1,4 @@
-package chess.dao.jdbctemplate;
+package chess.dao;
 
 import chess.dao.GameStatusDao;
 import chess.domain.GameStatus;

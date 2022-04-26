@@ -2,7 +2,6 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.dao.jdbctemplate.JdbcTemplateTurnDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

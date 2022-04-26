@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.domain.ChessGameService;
+import chess.service.ChessGameService;
 import chess.domain.board.strategy.WebBasicBoardStrategy;
 import chess.dto.ErrorDto;
 import chess.dto.GameStatusDto;

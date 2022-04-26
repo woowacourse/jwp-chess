@@ -9,25 +9,13 @@ public class RequestDto {
     private final String title;
     private final String firstMemberName;
     private final String secondMemberName;
+    private final String password;
 
-    private RequestDto(String title, String firstMemberName, String secondMemberName) {
+    private RequestDto(String title, String firstMemberName, String secondMemberName, String password) {
         this.title = title;
         this.firstMemberName = firstMemberName;
         this.secondMemberName = secondMemberName;
-    }
-
-    public static RequestDto of(String request) {
-        final List<String> inputs = Arrays.stream(request.split(System.lineSeparator()))
-                .map(s -> s.split("=")[1])
-                .collect(Collectors.toList());
-        validateInputSize(inputs);
-        return new RequestDto(inputs.get(0), inputs.get(1), inputs.get(2));
-    }
-
-    private static void validateInputSize(List<String> inputs) {
-        if (inputs.size() != 3) {
-            throw new IllegalArgumentException("입력값이 올바르지 않습니다.");
-        }
+        this.password = password;
     }
 
     public String getTitle() {
@@ -40,5 +28,9 @@ public class RequestDto {
 
     public String getSecondMemberName() {
         return secondMemberName;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

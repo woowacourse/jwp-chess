@@ -35,7 +35,7 @@ class WebChessPositionDaoTest {
 
     @BeforeEach
     void setup() {
-        final ChessBoard board = boardDao.save(new ChessBoard("코린파이팅"));
+        final ChessBoard board = boardDao.save(new ChessBoard("코린파이팅", "1111"));
         this.boardId = board.getId();
         Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, boardId));
         this.positionId = position.getId();

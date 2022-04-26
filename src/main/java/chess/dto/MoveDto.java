@@ -1,6 +1,7 @@
 package chess.dto;
 
 public class MoveDto {
+
     private final String source;
     private final String destination;
 

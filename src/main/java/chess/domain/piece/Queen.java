@@ -8,6 +8,7 @@ import java.util.List;
 
 
 public class Queen extends Piece {
+
     private static final String SYMBOL = "Q";
     private static final float SCORE = 9.0f;
 
@@ -24,6 +25,7 @@ public class Queen extends Piece {
     @Override
     protected List<Direction> getDirections() {
         return Arrays.asList(Direction.NORTH, Direction.EAST, Direction.SOUTH,
-                Direction.WEST, Direction.NORTHEAST, Direction.SOUTHEAST, Direction.SOUTHWEST, Direction.NORTHWEST);
+            Direction.WEST, Direction.NORTHEAST, Direction.SOUTHEAST, Direction.SOUTHWEST,
+            Direction.NORTHWEST);
     }
 }

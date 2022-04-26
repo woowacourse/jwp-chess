@@ -1,6 +1,7 @@
 package chess.dto;
 
 public class ScoreDto {
+
     private final float whiteScore;
     private final float blackScore;
 

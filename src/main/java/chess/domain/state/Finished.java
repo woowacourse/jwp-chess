@@ -7,6 +7,7 @@ import chess.domain.position.Position;
 import java.util.Map;
 
 public class Finished implements GameState {
+
     private final Team team;
     private final Map<Position, Piece> board;
 

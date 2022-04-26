@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class King extends Piece {
+
     private static final String SYMBOL = "K";
     private static final float SCORE = 0;
 
@@ -35,6 +36,6 @@ public class King extends Piece {
     @Override
     protected List<Direction> getDirections() {
         return Arrays.asList(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST,
-                Direction.NORTHEAST, Direction.SOUTHEAST, Direction.SOUTHWEST, Direction.NORTHWEST);
+            Direction.NORTHEAST, Direction.SOUTHEAST, Direction.SOUTHWEST, Direction.NORTHWEST);
     }
 }

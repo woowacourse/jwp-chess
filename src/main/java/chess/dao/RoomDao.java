@@ -4,6 +4,7 @@ import chess.domain.Team;
 import chess.dto.RoomDto;
 
 public interface RoomDao {
+
     RoomDto findById(long roomId);
 
     void delete(long roomId);

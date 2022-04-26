@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Piece {
+
     private final Team team;
     private final String symbol;
     private final float score;
@@ -71,8 +72,8 @@ public abstract class Piece {
     @Override
     public String toString() {
         return "Piece{" +
-                "team=" + team +
-                ", name='" + symbol + '\'' +
-                '}';
+            "team=" + team +
+            ", name='" + symbol + '\'' +
+            '}';
     }
 }

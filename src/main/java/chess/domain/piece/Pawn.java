@@ -11,6 +11,7 @@ import java.util.EnumMap;
 import java.util.List;
 
 public class Pawn extends Piece {
+
     private static final String SYMBOL = "P";
     private static final float SCORE = 1.0f;
 
@@ -51,13 +52,15 @@ public class Pawn extends Piece {
 
     protected List<Direction> getDirections(Position source) {
         if (isFirstTurn(source) && isBlackTeam()) {
-            return Arrays.asList(Direction.SOUTH, Direction.SOUTHEAST, Direction.SOUTHWEST, Direction.SOUTH_TWO_STEP);
+            return Arrays.asList(Direction.SOUTH, Direction.SOUTHEAST, Direction.SOUTHWEST,
+                Direction.SOUTH_TWO_STEP);
         }
         if (isBlackTeam()) {
             return Arrays.asList(Direction.SOUTH, Direction.SOUTHEAST, Direction.SOUTHWEST);
         }
         if (isFirstTurn(source) && !isBlackTeam()) {
-            return Arrays.asList(Direction.NORTH, Direction.NORTHEAST, Direction.NORTHWEST, Direction.NORTH_TWO_STEP);
+            return Arrays.asList(Direction.NORTH, Direction.NORTHEAST, Direction.NORTHWEST,
+                Direction.NORTH_TWO_STEP);
         }
         return Arrays.asList(Direction.NORTH, Direction.NORTHEAST, Direction.NORTHWEST);
     }

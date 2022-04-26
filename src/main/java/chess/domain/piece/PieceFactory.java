@@ -3,6 +3,7 @@ package chess.domain.piece;
 import chess.domain.Team;
 
 public class PieceFactory {
+
     public static Piece create(String symbol) {
         if (symbol.equals("B")) {
             return new Bishop(Team.BLACK);

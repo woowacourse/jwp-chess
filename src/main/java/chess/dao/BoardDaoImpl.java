@@ -22,11 +22,11 @@ public class BoardDaoImpl implements BoardDao {
     public List<PieceDto> findAll(long roomId) {
         String sql = "select * from board where room_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) ->
-                        new PieceDto(
-                                rs.getString("position"),
-                                rs.getString("symbol")
-                        ),
-                roomId);
+                new PieceDto(
+                    rs.getString("position"),
+                    rs.getString("symbol")
+                ),
+            roomId);
     }
 
     @Override
@@ -34,11 +34,11 @@ public class BoardDaoImpl implements BoardDao {
         final String sql = "insert into board (position, symbol, room_id) values(?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, board.keySet(), board.size(),
-                (rs, position) -> {
-                    rs.setString(1, position.getPositionToString());
-                    rs.setString(2, board.get(position).getSymbol());
-                    rs.setLong(3, roomId);
-                });
+            (rs, position) -> {
+                rs.setString(1, position.getPositionToString());
+                rs.setString(2, board.get(position).getSymbol());
+                rs.setLong(3, roomId);
+            });
     }
 
     @Override

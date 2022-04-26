@@ -3,6 +3,7 @@ package chess.dto;
 import chess.domain.Team;
 
 public class GameStateDto {
+
     private final Team gameState;
     private final boolean isRunning;
 

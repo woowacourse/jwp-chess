@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Knight extends Piece {
+
     private static final String SYMBOL = "N";
     private static final float SCORE = 2.5f;
 
@@ -23,6 +24,6 @@ public class Knight extends Piece {
     @Override
     protected List<Direction> getDirections() {
         return Arrays.asList(Direction.NNE, Direction.NNW, Direction.SSE, Direction.SSW,
-                Direction.EEN, Direction.EES, Direction.WWN, Direction.WWS);
+            Direction.EEN, Direction.EES, Direction.WWN, Direction.WWS);
     }
 }

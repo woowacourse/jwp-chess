@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface BoardDao {
+
     List<PieceDto> findAll(long roomId);
+
     void saveAll(Map<Position, Piece> board, long roomId);
 
     void delete(long roomId);

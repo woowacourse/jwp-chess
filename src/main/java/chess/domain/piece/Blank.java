@@ -8,6 +8,7 @@ import java.util.EnumMap;
 import java.util.List;
 
 public class Blank extends Piece {
+
     public static final String SYMBOL = ".";
     private static final float SCORE = 0;
 

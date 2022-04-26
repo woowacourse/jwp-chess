@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
+
     BoardDao boardDao;
     RoomDao roomDao;
 
@@ -30,9 +31,9 @@ public class ChessService {
         GameState gameState = getGameState(roomId);
         Map<String, String> board = getBoardPieces(roomId);
         List<PieceDto> pieces = board.entrySet()
-                .stream()
-                .map(i -> new PieceDto(i.getKey(), i.getValue()))
-                .collect(Collectors.toUnmodifiableList());
+            .stream()
+            .map(i -> new PieceDto(i.getKey(), i.getValue()))
+            .collect(Collectors.toUnmodifiableList());
         return new BoardDto(pieces, gameState.getTeam());
     }
 
@@ -104,9 +105,9 @@ public class ChessService {
         GameState gameState = createGameState(roomId);
         Map<String, String> board = getBoardPieces(roomId);
         List<PieceDto> pieces = board.entrySet()
-                .stream()
-                .map(i -> new PieceDto(i.getKey(), i.getValue()))
-                .collect(Collectors.toUnmodifiableList());
+            .stream()
+            .map(i -> new PieceDto(i.getKey(), i.getValue()))
+            .collect(Collectors.toUnmodifiableList());
         return new BoardDto(pieces, gameState.getTeam());
     }
 

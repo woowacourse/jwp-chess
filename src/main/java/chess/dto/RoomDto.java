@@ -3,6 +3,7 @@ package chess.dto;
 import chess.domain.Team;
 
 public class RoomDto {
+
     private final Long id;
     private final Team status;
 

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class Playing implements GameState {
+
     private final Map<Position, Piece> board;
 
     public Playing(Map<Position, Piece> board) {
@@ -42,7 +43,8 @@ public abstract class Playing implements GameState {
         validateMovingPath(source, destination, positions);
     }
 
-    private void validateMovingPath(Position source, Position destination, List<Position> positions) {
+    private void validateMovingPath(Position source, Position destination,
+        List<Position> positions) {
         Piece sourcePiece = board.get(source);
         Piece destinationPiece = board.get(destination);
         if (sourcePiece.isSameTeam(destinationPiece)) {
@@ -62,7 +64,7 @@ public abstract class Playing implements GameState {
 
     private boolean isDiagonal(Position source, Position destination) {
         return Math.abs(source.getRow().getDifference(destination.getRow())) == 1
-                && Math.abs(source.getCol().getDifference(destination.getCol())) == 1;
+            && Math.abs(source.getCol().getDifference(destination.getCol())) == 1;
     }
 
     private void validatePawnAttemptKill(Piece destination) {

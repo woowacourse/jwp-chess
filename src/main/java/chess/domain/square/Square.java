@@ -3,11 +3,10 @@ package chess.domain.square;
 import static chess.domain.square.Rank.BLACK_PAWN_INITIAL_RANK;
 import static chess.domain.square.Rank.WHITE_PAWN_INITIAL_RANK;
 
+import chess.domain.piece.detail.Direction;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import chess.domain.piece.detail.Direction;
 
 public class Square {
 

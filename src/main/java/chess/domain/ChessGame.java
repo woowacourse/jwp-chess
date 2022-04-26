@@ -1,13 +1,12 @@
 package chess.domain;
 
-import java.util.List;
-import java.util.Map;
-
 import chess.domain.piece.Piece;
 import chess.domain.piece.detail.PieceType;
 import chess.domain.piece.detail.Team;
 import chess.domain.square.File;
 import chess.domain.square.Square;
+import java.util.List;
+import java.util.Map;
 
 public class ChessGame {
 

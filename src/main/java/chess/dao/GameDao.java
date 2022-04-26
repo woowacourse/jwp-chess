@@ -1,9 +1,8 @@
 package chess.dao;
 
+import chess.domain.ChessGame;
 import java.util.List;
 import java.util.Optional;
-
-import chess.domain.ChessGame;
 
 public interface GameDao {
 

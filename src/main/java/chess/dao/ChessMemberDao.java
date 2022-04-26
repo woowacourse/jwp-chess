@@ -1,15 +1,13 @@
 package chess.dao;
 
+import chess.domain.Member;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-
-import chess.domain.Member;
 
 @Repository
 public class ChessMemberDao implements MemberDao {

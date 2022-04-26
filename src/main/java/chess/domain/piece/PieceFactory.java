@@ -1,9 +1,5 @@
 package chess.domain.piece;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.function.BiFunction;
-
 import chess.domain.piece.detail.PieceType;
 import chess.domain.piece.detail.Team;
 import chess.domain.piece.multiplemove.Bishop;
@@ -13,6 +9,9 @@ import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.singlemove.King;
 import chess.domain.piece.singlemove.Knight;
 import chess.domain.square.Square;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.function.BiFunction;
 
 public class PieceFactory {
 

@@ -1,9 +1,8 @@
 package chess.dao;
 
+import chess.domain.piece.Piece;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import chess.domain.piece.Piece;
 
 @Repository
 public class ChessPieceDao {

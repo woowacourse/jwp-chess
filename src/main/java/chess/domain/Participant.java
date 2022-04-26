@@ -1,8 +1,7 @@
 package chess.domain;
 
-import java.util.Objects;
-
 import chess.domain.piece.detail.Team;
+import java.util.Objects;
 
 public class Participant {
     private final Member white;

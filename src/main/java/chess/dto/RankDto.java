@@ -1,10 +1,9 @@
 package chess.dto;
 
+import chess.domain.piece.Piece;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import chess.domain.piece.Piece;
 
 public class RankDto {
 

@@ -1,12 +1,9 @@
 package chess.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import chess.dao.MemberDao;
 import chess.domain.Member;
+import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {

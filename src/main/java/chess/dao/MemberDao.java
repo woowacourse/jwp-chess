@@ -1,9 +1,8 @@
 package chess.dao;
 
+import chess.domain.Member;
 import java.util.List;
 import java.util.Optional;
-
-import chess.domain.Member;
 
 public interface MemberDao {
 

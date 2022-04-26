@@ -2,18 +2,16 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import chess.domain.Board;
 import chess.domain.BoardInitializer;
 import chess.domain.ChessGame;
 import chess.domain.Member;
 import chess.domain.Participant;
 import chess.domain.piece.detail.Team;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class MockGameDaoTest {
 

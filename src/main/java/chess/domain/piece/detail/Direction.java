@@ -1,10 +1,9 @@
 package chess.domain.piece.detail;
 
+import chess.domain.square.Square;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
-
-import chess.domain.square.Square;
 
 public enum Direction {
 

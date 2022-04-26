@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.ChessGame;
 import chess.domain.square.Square;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +9,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
-import chess.domain.ChessGame;
 
 public class MockGameDao implements GameDao {
 

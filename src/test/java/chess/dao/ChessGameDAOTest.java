@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.board.ChessGame;
 import chess.dto.ChessGameRoomInfoDTO;
 import java.util.List;
 import org.assertj.core.api.Assertions;

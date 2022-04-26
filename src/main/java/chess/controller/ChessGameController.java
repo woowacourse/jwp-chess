@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dao.ChessGame;
+import chess.domain.board.ChessGame;
 import chess.domain.piece.property.Team;
 import chess.dto.BoardDTO;
 import chess.dto.ChessGameRoomInfoDTO;

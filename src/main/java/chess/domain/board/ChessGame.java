@@ -1,8 +1,6 @@
-package chess.dao;
+package chess.domain.board;
 
-import chess.domain.board.BoardGenerator;
-import chess.domain.board.ChessBoard;
-import chess.domain.board.ChessBoardGenerator;
+import chess.dao.Movement;
 import chess.domain.position.Position;
 
 public final class ChessGame {

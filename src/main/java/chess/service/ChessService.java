@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dao.ChessGame;
+import chess.domain.board.ChessGame;
 import chess.dao.ChessGameDAO;
 import chess.dao.Movement;
 import chess.dao.MovementDAO;

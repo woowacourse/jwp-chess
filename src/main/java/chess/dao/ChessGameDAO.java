@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.board.ChessGame;
 import chess.dto.ChessGameRoomInfoDTO;
 import java.sql.PreparedStatement;
 import java.util.List;

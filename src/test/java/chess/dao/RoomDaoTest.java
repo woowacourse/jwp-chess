@@ -1,13 +1,16 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
+import chess.exception.NotFoundException;
 import java.util.List;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -108,6 +111,18 @@ class RoomDaoTest {
     }
 
     @Test
+    @DisplayName("방 id에 해당하는 현재 턴이 존재하지 않으면 예외가 터진다.")
+    void findCurrentTurnById_exception() {
+        // given
+        final int roomId = 1;
+
+        // then
+        assertThatThrownBy(() -> roomDao.findCurrentTurnById(roomId))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("방 아이디에 해당하는 턴 정보가 존재하지 않습니다.");
+    }
+
+    @Test
     @DisplayName("방 id로 비밀번호를 조회한다.")
     void findPasswordById() {
         // given
@@ -126,6 +141,18 @@ class RoomDaoTest {
     }
 
     @Test
+    @DisplayName("방 id에 해당하는 비밀번호가 존재하지 않으면 예외가 터진다.")
+    void findPasswordById_exception() {
+        // given
+        final int roomId = 1;
+
+        // then
+        assertThatThrownBy(() -> roomDao.findPasswordById(roomId))
+                        .isInstanceOf(NotFoundException.class)
+                        .hasMessage("방 아이디에 해당하는 비밀번호가 존재하지 않습니다.");
+    }
+
+    @Test
     @DisplayName("방 id로 현재 상태을 조회한다.")
     void findStatusById() {
         // given
@@ -141,6 +168,18 @@ class RoomDaoTest {
 
         // then
         assertThat(dto.getGameStatus()).isEqualTo(gameStatus);
+    }
+
+    @Test
+    @DisplayName("방 id에 해당하는 상태가 존재하지 않으면 예외가 터진다.")
+    void findStatusById_exception() {
+        // given
+        final int roomId = 1;
+
+        // then
+        assertThatThrownBy(() -> roomDao.findStatusById(roomId))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("방 아이디에 해당하는 게임 상태가 존재하지 않습니다.");
     }
 
     @Test

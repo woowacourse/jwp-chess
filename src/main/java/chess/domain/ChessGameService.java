@@ -37,7 +37,6 @@ public class ChessGameService {
         this.gameStatusDao = gameStatusDao;
     }
 
-    // todo - 조금 더 고민해보기 (예외는 예외상황 일 때만 사용하자)
     public void init() {
         try {
             turnDao.getTurn();

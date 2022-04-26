@@ -3,7 +3,7 @@ package chess.domain.board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.domain.position.Position;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,7 +13,7 @@ public class Result {
     private static final double CONVERT_PAWN_SCORE = 0.5;
     private static final int DUPLICATION_REMOVE_VALUE = 2;
 
-    private final Map<Team, Double> value = new HashMap<>();
+    private final Map<Team, Double> value = new LinkedHashMap<>();
     private final List<Team> winnerResult;
 
     public Result(Map<Position, Piece> board) {
@@ -56,7 +56,7 @@ public class Result {
     }
 
     public Map<Team, Double> getValue() {
-        return Map.copyOf(value);
+        return new LinkedHashMap<>(value);
     }
 
     public List<Team> getWinnerResult() {

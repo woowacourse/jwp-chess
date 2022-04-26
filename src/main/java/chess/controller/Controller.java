@@ -47,7 +47,7 @@ public class Controller {
 
     private void validateInputString(final String input) {
         if (input.replace(" ", "").length() != input.length()) {
-            throw new IllegalArgumentException("[ERROR] 공백이 포함될 수 없습니다");
+            throw new IllegalArgumentException("[ERROR] 입력값에 공백이 포함될 수 없습니다");
         }
         if (input.trim().isEmpty()) {
             throw new IllegalArgumentException("[ERROR] 입력값이 비어있습니다.");

@@ -32,7 +32,7 @@ public class ChessGameService {
     }
 
     public void createOrGet(String gameId) {
-        if (!gameDao.isInId(gameId)) {
+        if (!gameDao.exists(gameId)) {
             initGame(gameId);
         }
     }

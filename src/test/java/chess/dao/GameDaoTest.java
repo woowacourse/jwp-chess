@@ -35,13 +35,13 @@ public class GameDaoTest {
     @Test
     void isExistId_게임생성_성공시_true를_반환() {
         gameDao.createById("1234");
-        assertThat(gameDao.isInId("1234")).isTrue();
+        assertThat(gameDao.exists("1234")).isTrue();
     }
 
     @Test
     void isExistId_게임생성_실패시_false를_반환() {
         gameDao.createById("1234");
-        assertThat(gameDao.isInId("123")).isFalse();
+        assertThat(gameDao.exists("123")).isFalse();
     }
 
     @Test
@@ -84,11 +84,11 @@ public class GameDaoTest {
     @Test
     void deleteById_게임_삭제_성공() {
         gameDao.createById("1234");
-        assertThat(gameDao.isInId("1234")).isTrue();
+        assertThat(gameDao.exists("1234")).isTrue();
 
         gameDao.deleteById("1234");
 
-        assertThat(gameDao.isInId("1234")).isFalse();
+        assertThat(gameDao.exists("1234")).isFalse();
     }
 
 

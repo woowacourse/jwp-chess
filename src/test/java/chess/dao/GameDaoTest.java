@@ -27,17 +27,6 @@ public class GameDaoTest {
         gameDao.save(testGameId);
     }
 
-    @DisplayName("게임 조회 테스트")
-    @Test
-    void load() {
-        gameDao.save(testGameId);
-
-        Optional<GameState> maybeGameState = gameDao.load(testGameId);
-        GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
-
-        assertThat(actual).isEqualTo(GameState.READY);
-    }
-
     @DisplayName("전체 게임 id 조회 테스트")
     @Test
     void find_All_Game_Id() {
@@ -47,6 +36,17 @@ public class GameDaoTest {
         List<Long> actual = gameDao.findAllGameId();
 
         assertThat(actual).containsOnly(1L, 2L);
+    }
+
+    @DisplayName("게임 조회 테스트")
+    @Test
+    void load() {
+        gameDao.save(testGameId);
+
+        Optional<GameState> maybeGameState = gameDao.load(testGameId);
+        GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
+
+        assertThat(actual).isEqualTo(GameState.READY);
     }
 
     @DisplayName("게임 정보 업데이트 테스트")

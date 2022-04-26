@@ -34,6 +34,13 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
+    public List<Long> findAllGameId() {
+        String sql = "SELECT game_id FROM game";
+        return namedParameterJdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getLong("game_id"));
+    }
+
+
+    @Override
     public Optional<GameState> load(long id) {
         String sql = "SELECT state FROM game WHERE game_id = :game_id";
 
@@ -45,12 +52,6 @@ public class GameDaoImpl implements GameDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public List<Long> findAllGameId() {
-        String sql = "SELECT game_id FROM game";
-        return namedParameterJdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getLong("game_id"));
     }
 
     @Override

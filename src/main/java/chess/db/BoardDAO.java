@@ -14,9 +14,9 @@ import java.util.Map;
 @Repository
 public class BoardDAO {
 
-    public static final String FIND_ALL_SQL = "select location, name, color from board where roomID = ?";
-    public static final String INSERT_ONE_PIECE_SQL = "insert into board (location, name, color, roomID) values (?, ?, ?, ?)";
-    public static final String DELETE_ONE_PIECE_SQL = "delete from board where location = ? and roomID = ?";
+    private static final String FIND_ALL_SQL = "select location, name, color from board where roomID = ?";
+    private static final String INSERT_ONE_PIECE_SQL = "insert into board (location, name, color, roomID) values (?, ?, ?, ?)";
+    private static final String DELETE_ONE_PIECE_SQL = "delete from board where location = ? and roomID = ?";
 
     private final JdbcTemplate jdbcTemplate;
 

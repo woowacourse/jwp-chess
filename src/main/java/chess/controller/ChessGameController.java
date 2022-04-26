@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.controller.dto.request.ChessGameRoomCreateRequest;
 import chess.controller.dto.request.PieceMoveRequest;
 import chess.controller.dto.request.PromotionRequest;
 import chess.controller.dto.response.ChessGameScoreResponse;
@@ -8,14 +7,12 @@ import chess.controller.dto.response.ChessGameStatusResponse;
 import chess.controller.dto.response.ChessGameWinnerResponse;
 import chess.controller.dto.response.PieceResponse;
 import chess.service.ChessGameService;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,12 +25,6 @@ public class ChessGameController {
 
     public ChessGameController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
-    }
-
-    @PostMapping
-    public ResponseEntity<Long> createNewGame(@RequestBody ChessGameRoomCreateRequest request) {
-        long chessGameId = chessGameService.createNewChessGame(request.toNewChessGameRoom());
-        return ResponseEntity.created(URI.create("/chessgames/" + chessGameId)).build();
     }
 
     @GetMapping("/{chessGameId}")

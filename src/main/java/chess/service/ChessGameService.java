@@ -3,12 +3,10 @@ package chess.service;
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessBoard;
-import chess.domain.ChessGameRoom;
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.PromotionPiece;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceFactory;
 import chess.domain.state.ChessGameState;
 import chess.domain.state.Turn;
 import java.util.Map;
@@ -25,12 +23,6 @@ public class ChessGameService {
     public ChessGameService(PieceDao pieceDao, ChessGameDao chessGameDao) {
         this.pieceDao = pieceDao;
         this.chessGameDao = chessGameDao;
-    }
-
-    public long createNewChessGame(ChessGameRoom chessGameRoom) {
-        long chessGameId = chessGameDao.createChessGame(chessGameRoom);
-        pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
-        return chessGameId;
     }
 
     public Map<Position, Piece> findChessBoard(long chessGameId) {

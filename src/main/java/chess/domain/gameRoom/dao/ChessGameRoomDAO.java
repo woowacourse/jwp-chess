@@ -17,13 +17,13 @@ public class ChessGameRoomDAO {
 
     public static final String ID = "id";
     public static final String NAME = "name";
-    public static final String PASSWORD = "password";
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<ChessGameRoomInfoDTO> chessGameRoomInfoDTORowMapper = (rs, rowNum) ->
             new ChessGameRoomInfoDTO(
                     rs.getString(ID),
                     rs.getString(NAME)
             );
+
     public ChessGameRoomDAO(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -33,7 +33,7 @@ public class ChessGameRoomDAO {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, new String[]{ID, PASSWORD});
+            PreparedStatement statement = connection.prepareStatement(sql, new String[]{ID});
             statement.setString(1, chessGame.getName());
             statement.setString(2, chessGame.getPassword());
             return statement;

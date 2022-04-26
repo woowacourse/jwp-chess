@@ -46,7 +46,7 @@ public final class ChessService {
         return chessGame;
     }
 
-    public ChessGame movePiece(final String gameId, final MoveDTO moveDTO){
+    public ChessGame movePiece(final String gameId, final MoveDTO moveDTO) {
         final ChessGame chessGame = getChessGamePlayed(gameId);
         final String source = moveDTO.getSource();
         final String target = moveDTO.getTarget();

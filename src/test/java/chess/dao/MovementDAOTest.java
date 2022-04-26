@@ -27,6 +27,7 @@ class MovementDAOTest {
         ChessGameRoomDAO chessGameDAO = new ChessGameRoomDAO(jdbcTemplate);
         ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName("zero");
+        chessGame.setPassword("1234");
         String gameId = chessGameDAO.addGame(chessGame);
 
         org.assertj.core.api.Assertions.assertThat(gameId).isNotNull();

@@ -31,6 +31,7 @@ class ChessGameDAOTest {
         ChessGameRoomDAO chessGameDAO = new ChessGameRoomDAO(template);
         ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName("zero");
+        chessGame.setPassword("1234");
         String gameId = chessGameDAO.addGame(chessGame);
         return gameId;
     }
@@ -41,9 +42,40 @@ class ChessGameDAOTest {
         ChessGameRoomDAO chessGameDAO = new ChessGameRoomDAO(template);
         ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName("zero");
+        chessGame.setPassword("1234");
         String gameId = chessGameDAO.addGame(chessGame);
         List<ChessGameRoomInfoDTO> activeGames = chessGameDAO.findActiveGames();
 
+        Assertions.assertThat(activeGames.size()).isNotEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("체스 게임방 삭제 (성공)")
+    void deleteChessGameRoom() {
+        ChessGameRoomDAO chessGameDAO = new ChessGameRoomDAO(template);
+        ChessGame chessGame = ChessGame.initChessGame();
+        chessGame.setName("zero");
+        chessGame.setPassword("1234");
+        String gameId = chessGameDAO.addGame(chessGame);
+
+        chessGameDAO.deleteGameByIdAndPassword(gameId, "1234");
+
+        List<ChessGameRoomInfoDTO> activeGames = chessGameDAO.findActiveGames();
+        Assertions.assertThat(activeGames.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("체스 게임방 삭제 (실패)")
+    void deleteChessGameRoomFail() {
+        ChessGameRoomDAO chessGameDAO = new ChessGameRoomDAO(template);
+        ChessGame chessGame = ChessGame.initChessGame();
+        chessGame.setName("zero");
+        chessGame.setPassword("1234");
+        String gameId = chessGameDAO.addGame(chessGame);
+
+        chessGameDAO.deleteGameByIdAndPassword(gameId, "12345");
+
+        List<ChessGameRoomInfoDTO> activeGames = chessGameDAO.findActiveGames();
         Assertions.assertThat(activeGames.size()).isNotEqualTo(0);
     }
 }

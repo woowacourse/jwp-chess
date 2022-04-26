@@ -5,6 +5,7 @@ import chess.domain.gameRoom.GameStatus;
 import chess.domain.piece.property.Team;
 import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public final class BoardDTO {
         this.currentTurn = chessGame.getChessBoard().getCurrentTurn();
         this.blackScore = GameStatus.calculateTeamScore(chessGame.getChessBoard().getBoard(), Team.BLACK);
         this.whiteScore = GameStatus.calculateTeamScore(chessGame.getChessBoard().getBoard(), Team.WHITE);
-        if (chessGame.isGameSet()){
+        if (chessGame.isGameSet()) {
             isGameSet = Boolean.TRUE;
             this.winner = chessGame.getChessBoard().calculateWhoWinner().toString();
         }

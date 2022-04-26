@@ -8,6 +8,7 @@ import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;
 import chess.domain.position.XPosition;
 import chess.domain.position.YPosition;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

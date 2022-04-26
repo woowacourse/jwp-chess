@@ -1,18 +1,22 @@
 package chess.service;
 
+import static chess.domain.piece.State.createPieceByState;
+
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.GameResult;
 import chess.domain.generator.BlackGenerator;
 import chess.domain.generator.WhiteGenerator;
+import chess.domain.piece.Piece;
+import chess.domain.piece.State;
 import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
 import chess.dto.ChessGameDto;
-import chess.dto.ChessGameUpdateDto;
 import chess.dto.PieceDto;
 import chess.dto.StatusDto;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +46,7 @@ public class ChessGameService {
     private ChessGame initializeChessGame() {
         final Player whitePlayer = new Player(new WhiteGenerator(), Team.WHITE);
         final Player blackPlayer = new Player(new BlackGenerator(), Team.BLACK);
-        final ChessGame chessGame = new ChessGame(whitePlayer, blackPlayer);
-        return chessGame;
+        return new ChessGame(whitePlayer, blackPlayer);
     }
 
     public StatusDto findStatus(final String gameName) {
@@ -84,10 +87,23 @@ public class ChessGameService {
         final String currentTurn = chessGameDao.findCurrentTurn(chessGameId);
         final List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(chessGameId, Team.WHITE.getName());
         final List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(chessGameId, Team.BLACK.getName());
-        return ChessGame.of(new ChessGameUpdateDto(currentTurn, whitePieces, blackPieces));
+        final Player whitePlayer = new Player(toPieces(whitePieces), Team.WHITE);
+        final Player blackPlayer = new Player(toPieces(blackPieces), Team.BLACK);
+
+        return new ChessGame(whitePlayer, blackPlayer, Team.from(currentTurn));
     }
 
     private int findGameIdByGameName(final String gameName) {
         return chessGameDao.findChessGameIdByName(gameName);
+    }
+
+    private static List<Piece> toPieces(final List<PieceDto> piecesDto) {
+        List<Piece> pieces = new ArrayList<>();
+        for (PieceDto pieceDto : piecesDto) {
+            final State state = State.from(pieceDto.getName());
+            final Position position = new Position(pieceDto.getPosition());
+            pieces.add(createPieceByState(state, position));
+        }
+        return pieces;
     }
 }

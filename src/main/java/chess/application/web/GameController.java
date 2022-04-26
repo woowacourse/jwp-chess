@@ -1,6 +1,5 @@
 package chess.application.web;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,10 +17,6 @@ public class GameController {
     public GameController(GameService gameService) {
         this.jsonTransformer = new JsonTransformer();
         this.gameService = gameService;
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(GameController.class, args);
     }
 
     @GetMapping("/")

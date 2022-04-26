@@ -7,7 +7,6 @@ import chess.domain.event.MoveRoute;
 import chess.dto.response.SearchResultDto;
 import chess.service.ChessService;
 import chess.util.CookieUtils;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -59,14 +58,13 @@ public class GameController {
     public void enterGame(@PathVariable int id,
                           EncryptedAuthCredentials authCredentials,
                           HttpServletResponse response) {
-        Cookie cookie = new Cookie(CookieUtils.KEY, id + "_" + "WHITE");
-        cookie.setMaxAge(1000);
-        response.addCookie(cookie);
+        // TODO: create Opponent(BLACK) or validate Player(WHITE/BLACK) password
+        response.addCookie(CookieUtils.generate(id, Color.BLACK));
     }
 
     @PutMapping("/{id}")
     public ModelAndView updateGame(@PathVariable int id,
-                                   @CookieValue(value = CookieUtils.KEY, defaultValue = "hello") String cookie,
+                                   @CookieValue(value = CookieUtils.KEY) String cookie,
                                    @RequestBody MoveRoute moveRoute) {
         chessService.playGame(id, new MoveEvent(moveRoute));
         return getGameModelAndView(id);

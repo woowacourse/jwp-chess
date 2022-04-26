@@ -6,7 +6,7 @@ import javax.servlet.http.Cookie;
 public class CookieUtils {
 
     public static final String KEY = "player_validation";
-    public static final int VALID_AGE = 1000;
+    private static final int VALID_AGE = 1000;
 
     private CookieUtils() {
     }
@@ -14,6 +14,7 @@ public class CookieUtils {
     public static Cookie generate(int gameId, Color playerColor) {
         Cookie cookie = new Cookie(KEY, toEncrypted(gameId, playerColor));
         cookie.setMaxAge(VALID_AGE);
+        cookie.setPath("/game/" + gameId);
         return cookie;
     }
 

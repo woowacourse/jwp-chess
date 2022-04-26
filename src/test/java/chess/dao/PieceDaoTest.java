@@ -69,7 +69,7 @@ public class PieceDaoTest {
         final List<Piece> pieces = chessmenInitializer.init().getPieces();
         pieceDao.createAllById(pieces, "1234");
 
-        assertThat(pieceDao.findAllByGameId("1234").getPieces().size()).isEqualTo(32);
+        assertThat(pieceDao.findAll("1234").getPieces().size()).isEqualTo(32);
     }
 
     @DisplayName("updateAllByGameId로 해당 아이디의 Piece들의 상태를 업데이트한다")
@@ -84,7 +84,7 @@ public class PieceDaoTest {
         pieces.add(new King(Color.BLACK, Position.of("h2")));
 
         pieceDao.updateAllByGameId(pieces, "1234");
-        Pieces move = pieceDao.findAllByGameId("1234");
+        Pieces move = pieceDao.findAll("1234");
 
         assertThat(move.extractPiece(Position.of("h2")).getName()).isEqualTo("king");
     }
@@ -99,6 +99,6 @@ public class PieceDaoTest {
         pieceDao.createAllById(pieces, "1234");
         pieceDao.deleteAllByGameId("1234");
 
-        assertThat(pieceDao.findAllByGameId("1234").getPieces().size()).isEqualTo(0);
+        assertThat(pieceDao.findAll("1234").getPieces().size()).isEqualTo(0);
     }
 }

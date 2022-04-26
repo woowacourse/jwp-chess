@@ -47,7 +47,7 @@ public class PieceDao {
         );
     }
 
-    public Pieces findAllByGameId(String gameId) {
+    public Pieces findAll(String gameId) {
         final String sql = "select name, color, position from piece where game_id = ?";
 
         List<Piece> pieces = jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceFactory.of(

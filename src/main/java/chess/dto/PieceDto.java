@@ -1,5 +1,7 @@
 package chess.dto;
 
+import chess.domain.piece.Piece;
+
 public class PieceDto {
 
     private String position;
@@ -7,6 +9,12 @@ public class PieceDto {
     private String name;
 
     public PieceDto() {
+    }
+
+    public PieceDto(Piece piece) {
+        this.position = piece.getPosition().getPosition();
+        this.color = piece.getColor().getName();
+        this.name = piece.getName();
     }
 
     public PieceDto(String position, String color, String name) {

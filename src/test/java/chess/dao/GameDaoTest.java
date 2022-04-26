@@ -51,14 +51,14 @@ public class GameDaoTest {
     @Test
     void findForceEndFlagById() {
         gameDao.createById("1234");
-        assertThat(gameDao.findForceEndFlagById("1234")).isFalse();
+        assertThat(gameDao.findForceEndFlag("1234")).isFalse();
     }
 
     @DisplayName("findForceEndFlagById에서 존재하지 않는 게임아이디 조회시 예외가 발생한다")
     @Test
     void findForceEndFlagByIdError() {
         gameDao.createById("1234");
-        assertThatThrownBy(() -> gameDao.findForceEndFlagById("124"))
+        assertThatThrownBy(() -> gameDao.findForceEndFlag("124"))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
@@ -66,7 +66,7 @@ public class GameDaoTest {
     @Test
     void findTurnById() {
         gameDao.createById("1234");
-        assertThat(gameDao.findTurnById("1234")).isEqualTo(Color.BLACK);
+        assertThat(gameDao.findTurn("1234")).isEqualTo(Color.BLACK);
     }
 
     @DisplayName("updateTurnById로 게임을 업데이트한다")
@@ -74,7 +74,7 @@ public class GameDaoTest {
     void updateTurnById() {
         gameDao.createById("1234");
         gameDao.updateTurnById(Color.WHITE, "1234");
-        assertThat(gameDao.findTurnById("1234")).isEqualTo(Color.WHITE);
+        assertThat(gameDao.findTurn("1234")).isEqualTo(Color.WHITE);
     }
 
     @DisplayName("updateForceEndFlagById를 통해 force_end_flag를 업데이트한다")
@@ -82,7 +82,7 @@ public class GameDaoTest {
     void updateForceEndFlagById() {
         gameDao.createById("1234");
         gameDao.updateForceEndFlagById(true, "1234");
-        assertThat(gameDao.findForceEndFlagById("1234")).isEqualTo(true);
+        assertThat(gameDao.findForceEndFlag("1234")).isEqualTo(true);
     }
 
     @DisplayName("deleteById로 게임을 삭제한다")

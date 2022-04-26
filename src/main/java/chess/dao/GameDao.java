@@ -21,17 +21,15 @@ public class GameDao {
 
     public boolean isInId(String gameId) {
         final String sql = "select count(*) from game where id = ?";
-
         return jdbcTemplate.queryForObject(sql, Integer.class, gameId) > 0;
     }
 
-    public boolean findForceEndFlagById(String gameId) {
+    public boolean findForceEndFlag(String gameId) {
         final String sql = "select force_end_flag from game where id = ?";
-
         return jdbcTemplate.queryForObject(sql, Boolean.class, gameId);
     }
 
-    public Color findTurnById(String gameId) {
+    public Color findTurn(String gameId) {
         final String sql = "select turn from game where id = ?";
 
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
@@ -40,13 +38,11 @@ public class GameDao {
 
     public void updateTurnById(Color nextTurn, String gameId) {
         final String sql = "update game set turn = ? where id = ?";
-
         jdbcTemplate.update(sql, nextTurn.getName(), gameId);
     }
 
     public void updateForceEndFlagById(boolean forceEndFlag, String gameId) {
         final String sql = "update game set force_end_flag = ? where id = ?";
-
         jdbcTemplate.update(sql, forceEndFlag, gameId);
     }
 

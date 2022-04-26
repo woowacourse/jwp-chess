@@ -48,7 +48,11 @@ public class ChessService {
         Pieces pieces = board.getPieces();
 
         Piece piece = pieces.findByPosition(Position.from(moveDto.getFrom()));
-        board.move(List.of(moveDto.getFrom(), moveDto.getTo()), turn);
+        try {
+            board.move(List.of(moveDto.getFrom(), moveDto.getTo()), turn);
+        } catch (IllegalArgumentException exception) {
+            return board;
+        }
         Turn changedTurn = updatePieces(moveDto, turn, piece, boardId);
 
         return Board.create(pieces, changedTurn);

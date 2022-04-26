@@ -29,11 +29,17 @@ public class SpringWebChessController {
         return "lobby";
     }
 
-    @PostMapping("/start")
-    public ResponseEntity<ResponseDto> start() throws Exception {
-        chessService.start();
+    @PostMapping("/create")
+    public ResponseEntity<ResponseDto> create(){
+        chessService.create();
         return new ResponseEntity(HttpStatus.OK);
     }
+
+//    @PostMapping("/start")
+//    public ResponseEntity<ResponseDto> start() throws Exception {
+//        chessService.start();
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 
     @GetMapping("/play")
     public String play(Model model) {

@@ -34,7 +34,21 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public void start() {
+    public void create(){
+        makeNewGame();
+        gameDao.save(chessBoard);
+    }
+
+//    public void start() {
+//        int lastGameId = gameDao.findLastGameId();
+//        if (isNotSaved(lastGameId)) {
+//            makeNewGame();
+//            return;
+//        }
+//        loadLastGame(lastGameId);
+//    }
+
+    public void loadGame(int gameId){
         int lastGameId = gameDao.findLastGameId();
         if (isNotSaved(lastGameId)) {
             makeNewGame();

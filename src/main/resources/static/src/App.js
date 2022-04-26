@@ -1,6 +1,25 @@
 let source = null;
 let target = null;
 
+function create(){
+    fetch('/create', {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/json',
+               'Accept': 'application/json',
+           },
+           body: JSON.stringify(null)
+       }).then(response => {
+           if (!response.ok) {
+               response.json()
+                   .then(body => alert(body.message));
+               location.replace("/")
+               return;
+           }
+           location.replace("/play");
+       });
+}
+
 function start() {
     fetch('/start', {
         method: 'POST',

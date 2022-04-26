@@ -2,10 +2,16 @@ package chess.controller;
 
 import chess.TestConfig;
 import chess.domain.GameStatus;
+import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Color;
+import chess.domain.chesspiece.King;
+import chess.domain.position.Position;
+import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
 import io.restassured.RestAssured;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -106,5 +112,30 @@ class ChessControllerTest {
                 .when().post("/rooms/" + roomId + "/pieces")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("기물을 이동 시킨다.")
+    void movePiece() {
+        // given
+        final String from = "a1";
+        final String to = "b2";
+
+        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.WHITE, "1234");
+
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        pieceByPosition.put(Position.from(from), King.from(Color.WHITE));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
+
+        // when
+        final MoveRequestDto requestDto = new MoveRequestDto(from, to);
+
+        // then
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(requestDto)
+                .when().put("/rooms/" + roomId + "/pieces")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

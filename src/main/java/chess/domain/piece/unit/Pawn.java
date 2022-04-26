@@ -5,6 +5,8 @@ import chess.domain.piece.property.PieceFeature;
 import chess.domain.piece.property.PieceInfo;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
+
 import java.util.List;
 
 public final class Pawn extends SpecificMovablePiece {
@@ -75,13 +77,13 @@ public final class Pawn extends SpecificMovablePiece {
 
     private void validateBoardPositionIsNull(final boolean isNullTarget) {
         if (isNullTarget != true) {
-            throw new IllegalArgumentException("[ERROR] Target에 다른 기물이 존재합니다.");
+            throw new InvalidMoveException("[ERROR] Target에 다른 기물이 존재합니다.");
         }
     }
 
     private void validatePawnAttack(final boolean isNullTarget) {
         if (isNullTarget != false) {
-            throw new IllegalArgumentException("[ERROR] 선택한 위치에 상대 기물이 없습니다.");
+            throw new InvalidMoveException("[ERROR] 선택한 위치에 상대 기물이 없습니다.");
         }
     }
 

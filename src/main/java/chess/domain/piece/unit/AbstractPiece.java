@@ -6,6 +6,8 @@ import chess.domain.position.Position;
 import chess.domain.position.XPosition;
 import chess.domain.position.YPosition;
 import chess.domain.piece.property.Direction;
+import chess.exception.InvalidMoveException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +122,7 @@ public abstract class AbstractPiece implements Piece {
                 .filter(direction -> directionalPositions.get(direction).contains(target))
                 .filter(direction -> directionalPositions.get(direction) != null)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 잘못된 타켓 입력입니다."));
+                .orElseThrow(() -> new InvalidMoveException("[ERROR] 잘못된 타켓 입력입니다."));
 
     }
 

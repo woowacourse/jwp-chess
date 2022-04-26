@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import chess.exception.InvalidMoveException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -55,7 +56,7 @@ public final class ChessService {
 
     private void validateCurrentTurn(final ChessGame chessGame, final Team team) {
         if (!chessGame.getChessBoard().getCurrentTurn().equals(team)) {
-            throw new IllegalArgumentException("플레이어의 턴이 아닙니다");
+            throw new InvalidMoveException("플레이어의 턴이 아닙니다");
         }
     }
 
@@ -66,7 +67,7 @@ public final class ChessService {
         int insertedRowCount = movementDAO.addMoveCommand(movement);
 
         if (insertedRowCount == 0) {
-            throw new IllegalArgumentException("플레이어의 턴이 아닙니다");
+            throw new InvalidMoveException("플레이어의 턴이 아닙니다");
         }
     }
 

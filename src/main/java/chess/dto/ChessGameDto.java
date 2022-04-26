@@ -5,10 +5,15 @@ import chess.domain.ChessGame;
 import chess.domain.state.State;
 
 public class ChessGameDto {
-
-    private final ChessBoardDto chessBoard;
-    private final String gameName;
+    private int chessGameId;
+    private ChessBoardDto chessBoard;
+    private String gameName;
     private String turn;
+
+    public ChessGameDto(int chessGameId, String gameName) {
+        this.chessGameId = chessGameId;
+        this.gameName = gameName;
+    }
 
     private ChessGameDto(ChessBoardDto chessBoardDto, String gameName, String turn) {
         this.chessBoard = chessBoardDto;
@@ -26,6 +31,10 @@ public class ChessGameDto {
         String turn = state.getTurn();
 
         return new ChessGameDto(chessBoardDto, gameName, turn);
+    }
+
+    public int getChessGameId() {
+        return this.chessGameId;
     }
 
     public String getGameName() {

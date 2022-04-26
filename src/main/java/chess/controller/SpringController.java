@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import chess.converter.UTF8Converter;
 import chess.domain.Command;
 import chess.domain.piece.Team;
+import chess.dto.ChessGameDto;
 import chess.service.ChessService;
 
 @Controller
@@ -26,70 +26,84 @@ public class SpringController {
     }
 
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+        List<ChessGameDto> chessGameDtos = chessService.findAllChessGames();
+        model.addAttribute("rooms", chessGameDtos);
         return "index";
     }
 
-    @GetMapping("/start")
-    public String start(@RequestParam String gameName) throws UnsupportedEncodingException {
-        return "redirect:/game/" + UTF8Converter.encode(gameName);
+    // @GetMapping("/start")
+    // public String start(@RequestParam String gameName) throws UnsupportedEncodingException {
+    //     return "redirect:/game/" + UTF8Converter.encode(gameName);
+    // }
+
+    @PostMapping("/save")
+    public String save(@RequestParam String gameName, @RequestParam String password) {
+        chessService.save(gameName, password);
+        return "redirect:/";
     }
 
-    @GetMapping("/game/{gameName}")
+    @PostMapping("/delete/{chessGameId}")
+    public String delete(@PathVariable int chessGameId) {
+        chessService.delete(chessGameId);
+        return "redirect:/";
+    }
+
+
+    @GetMapping("/game/{chessGameId}")
     public String game(
-        @PathVariable String gameName,
+        @PathVariable int chessGameId,
         @RequestParam(value = "error", required = false) String error,
         Model model) {
-        List<String> chessBoard = chessService.findByName(gameName);
+        List<String> chessBoard = chessService.findChessBoardById(chessGameId);
         model.addAttribute("chessboard", chessBoard);
-        model.addAttribute("gameName", gameName);
+        model.addAttribute("chessGameId", chessGameId);
         model.addAttribute("error", error);
 
         return "chess";
     }
 
-    @PostMapping("/game/{gameName}/move")
+    @PostMapping("/game/{chessGameId}/move")
     public String move(
-        @PathVariable String gameName,
+        @PathVariable int chessGameId,
         @RequestParam("from") String from,
         @RequestParam("to") String to,
         Model model,
         RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
-        String encodedGameName = UTF8Converter.encode(gameName);
         try {
-            chessService.move(from, to, gameName);
-            if (chessService.isEnd()) {
-                return "redirect:/game/" + encodedGameName + "/end";
+            chessService.move(from, to, chessGameId);
+            if (chessService.isEnd(chessGameId)) {
+                return "redirect:/game/" + chessGameId + "/end";
             }
         } catch (IllegalArgumentException e) {
             redirectAttributes.addAttribute("error", e.getMessage());
         }
 
-        model.addAttribute("gameName", gameName);
-        return "redirect:/game/" + encodedGameName;
+        model.addAttribute("chessGameId", chessGameId);
+        return "redirect:/game/" + chessGameId;
     }
 
-    @GetMapping("/game/{gameName}/end")
-    public String end(@PathVariable String gameName, Model model) {
-        String winTeamName = chessService.finish(Command.from("end"));
-        List<String> chessBoard = chessService.getCurrentChessBoard();
+    @GetMapping("/game/{chessGameId}/end")
+    public String end(@PathVariable int chessGameId, Model model) {
+        String winTeamName = chessService.finish(Command.from("end"), chessGameId);
+        List<String> chessBoard = chessService.getCurrentChessBoard(chessGameId);
 
         model.addAttribute("winTeam", winTeamName);
         model.addAttribute("chessboard", chessBoard);
-        model.addAttribute("gameName", gameName);
+        model.addAttribute("chessGameId", chessGameId);
 
         return "chess";
     }
 
-    @GetMapping("/game/{gameName}/status")
-    public String status(@PathVariable String gameName, Model model) {
-        Map<Team, Double> score = chessService.getScore();
-        List<String> chessBoard = chessService.getCurrentChessBoard();
+    @GetMapping("/game/{chessGameId}/status")
+    public String status(@PathVariable int chessGameId, Model model) {
+        Map<Team, Double> score = chessService.getScore(chessGameId);
+        List<String> chessBoard = chessService.getCurrentChessBoard(chessGameId);
 
         model.addAttribute("blackScore", score.get(Team.BLACK));
         model.addAttribute("whiteScore", score.get(Team.WHITE));
         model.addAttribute("chessboard", chessBoard);
-        model.addAttribute("gameName", gameName);
+        model.addAttribute("chessGameId", chessGameId);
 
         return "chess";
     }

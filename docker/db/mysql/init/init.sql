@@ -1,24 +1,20 @@
+create table chess_game
+(
+    id        int not null AUTO_INCREMENT,
+    game_name varchar(20) not null,
+    password  varchar(20) not null,
+    turn      varchar(5)  not null,
+    primary key (id)
+);
+
 create table piece
 (
-    id     bigint auto_increment primary key,
-    type   enum ('r', 'n', 'b', 'q', 'k', 'p') not null,
-    team   enum ('white', 'black')             not null,
-    `rank` int                                 not null,
-    file   varchar(1)                          not null
+    id              bigint auto_increment               not null,
+    type            enum ('r', 'n', 'b', 'q', 'k', 'p') not null,
+    team            enum ('white', 'black')             not null,
+    `rank`          int                                 not null,
+    file            varchar(1)                          not null,
+    chess_game_id   int                                 not null,
+    primary key (id),
+    foreign key (chess_game_id) references chess_game (id) on delete cascade
 );
-
-create table chessgame
-(
-    game_name varchar(20) not null,
-    turn      varchar(5)  not null,
-    constraint chessgame_pk
-        primary key (game_name)
-);
-
-alter table piece
-    add game_name varchar(20) null;
-
-alter table piece
-    add constraint piece_chessboard__fk
-        foreign key (game_name) references chessgame (game_name)
-            on update cascade on delete cascade;

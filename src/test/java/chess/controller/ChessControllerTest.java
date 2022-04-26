@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import util.FakeChessPieceDao;
 import util.FakeRoomDao;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -30,6 +31,9 @@ class ChessControllerTest {
     @Autowired
     private FakeRoomDao roomDao;
 
+    @Autowired
+    private FakeChessPieceDao chessPieceDao;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
@@ -38,6 +42,7 @@ class ChessControllerTest {
     @AfterEach
     void clear() {
         roomDao.deleteAll();
+        chessPieceDao.deleteAll();
     }
 
     @Test
@@ -88,5 +93,18 @@ class ChessControllerTest {
                 .when().delete("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("기물을 초기화한다.")
+    void createPieces() {
+        // given
+        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
+
+        // then
+        RestAssured.given().log().all()
+                .when().post("/rooms/" + roomId + "/pieces")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value());
     }
 }

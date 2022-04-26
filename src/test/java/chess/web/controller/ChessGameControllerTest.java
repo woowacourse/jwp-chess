@@ -9,6 +9,8 @@ import chess.web.dao.ChessBoardDao;
 import chess.web.dao.PlayerDao;
 import chess.web.dto.MoveDto;
 import chess.web.service.ChessGameService;
+import chess.web.service.fakedao.FakeChessBoardDao;
+import chess.web.service.fakedao.FakePlayerDao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,18 +28,13 @@ public class ChessGameControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ChessGameService chessGameService;
-    @Autowired
-    private ChessBoardDao chessBoardDao;
-    @Autowired
-    private PlayerDao playerDao;
+    
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setup() {
+        ChessGameService chessGameService = new ChessGameService(new FakeChessBoardDao(), new FakePlayerDao());
         this.mockMvc = MockMvcBuilders.standaloneSetup(new ChessGameController(chessGameService)).build();
     }
 

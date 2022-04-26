@@ -6,11 +6,11 @@ import org.springframework.stereotype.Repository;
 import chess.domain.piece.Piece;
 
 @Repository
-public class PieceDao {
+public class ChessPieceDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PieceDao(final JdbcTemplate jdbcTemplate) {
+    public ChessPieceDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

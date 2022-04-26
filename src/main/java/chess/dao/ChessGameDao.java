@@ -24,14 +24,14 @@ import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
 
 @Repository
-public class DatabaseGameDao implements GameDao {
+public class ChessGameDao implements GameDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final PieceDao pieceDao;
+    private final ChessPieceDao pieceDao;
     private final MemberDao memberDao;
 
-    public DatabaseGameDao(final JdbcTemplate jdbcTemplate, final PieceDao pieceDao,
-                           final MemberDao memberDao) {
+    public ChessGameDao(final JdbcTemplate jdbcTemplate, final ChessPieceDao pieceDao,
+                        final MemberDao memberDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.pieceDao = pieceDao;
         this.memberDao = memberDao;

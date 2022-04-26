@@ -12,11 +12,11 @@ import org.springframework.stereotype.Repository;
 import chess.domain.Member;
 
 @Repository
-public class DatabaseMemberDao implements MemberDao {
+public class ChessMemberDao implements MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public DatabaseMemberDao(final JdbcTemplate jdbcTemplate) {
+    public ChessMemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

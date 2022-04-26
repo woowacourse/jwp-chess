@@ -9,10 +9,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MovementDAO {
 
-    private final RowMapper<Movement> movementRowMapper = (resultSet, rowNumber) -> new Movement(
+    private static final RowMapper<Movement> MOVEMENT_ROW_MAPPER = (resultSet, rowNumber) -> new Movement(
             Position.of(resultSet.getString("m.source_position")),
             Position.of(resultSet.getString("m.target_position"))
     );
+
     private final JdbcTemplate jdbcTemplate;
 
     public MovementDAO(final JdbcTemplate jdbcTemplate) {
@@ -40,7 +41,7 @@ public class MovementDAO {
         String sql = "SELECT * FROM CHESS_GAME cg JOIN MOVEMENT m on cg.id = m.game_id WHERE cg.is_end=false AND cg.id=(?) ORDER BY m.created_at";
         return jdbcTemplate.query(
                 sql,
-                movementRowMapper,
+                MOVEMENT_ROW_MAPPER,
                 gameId);
     }
 }

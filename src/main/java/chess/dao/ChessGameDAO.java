@@ -13,12 +13,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ChessGameDAO {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ChessGameRoomInfoDTO> chessGameRoomInfoDTORowMapper = (resultSet, rowNumber) ->
+    private static final RowMapper<ChessGameRoomInfoDTO> CHESS_GAME_ROOM_INFO_DTO_ROW_MAPPER = (resultSet, rowNumber) ->
             new ChessGameRoomInfoDTO(
                     resultSet.getString("id"),
                     resultSet.getString("name")
             );
+
+    private final JdbcTemplate jdbcTemplate;
 
     public ChessGameDAO(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -38,12 +39,12 @@ public class ChessGameDAO {
 
     public List<ChessGameRoomInfoDTO> findActiveGames() {
         String sql = "SELECT id, name FROM CHESS_GAME WHERE IS_END = false";
-        return jdbcTemplate.query(sql, chessGameRoomInfoDTORowMapper);
+        return jdbcTemplate.query(sql, CHESS_GAME_ROOM_INFO_DTO_ROW_MAPPER);
     }
 
     public ChessGameRoomInfoDTO findGameById(final String gameId) {
         String sql = "SELECT id, name FROM CHESS_GAME WHERE ID = ? AND IS_END = FALSE ORDER BY created_at";
-        return jdbcTemplate.queryForObject(sql, chessGameRoomInfoDTORowMapper, gameId);
+        return jdbcTemplate.queryForObject(sql, CHESS_GAME_ROOM_INFO_DTO_ROW_MAPPER, gameId);
     }
 
     public void updateGameEnd(final String gameId) {

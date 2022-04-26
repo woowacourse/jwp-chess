@@ -1,10 +1,14 @@
 package chess.web.controller;
 
 import chess.domain.piece.Piece;
+import chess.web.dto.CreateRoomRequestDto;
+import chess.web.dto.CreateRoomResultDto;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
+import chess.web.dto.ReadRoomResultDto;
 import chess.web.service.ChessGameService;
+import java.util.ArrayList;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,5 +60,17 @@ public class ChessGameController {
     public ModelAndView end() {
         ModelAndView modelAndView = new ModelAndView("finished");
         return modelAndView;
+    }
+
+    @PostMapping("/create")
+    @ResponseBody
+    public CreateRoomResultDto createRoom(@RequestBody CreateRoomRequestDto createRoomRequestDto) {
+        return new CreateRoomResultDto("테스트용입니다");
+    }
+
+    @GetMapping("/rooms")
+    @ResponseBody
+    public ReadRoomResultDto readRooms() {
+        return new ReadRoomResultDto(new ArrayList<>());
     }
 }

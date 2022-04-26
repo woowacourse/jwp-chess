@@ -70,6 +70,8 @@ public class ChessGameService {
 
     public void resetChessGame(final long chessGameId) {
         boardDao.delete(chessGameId);
+        ChessGameEntity gameEntity = chessGameDao.load(chessGameId);
+        chessGameDao.updateIsOnAndTurn(new ChessGameEntity(ChessGame.createBasic(gameEntity.getName())));
         boardDao.save(BoardEntity.generateBoardEntities(chessGameId, BoardFactory.createInitChessBoard().getBoard()));
     }
 }

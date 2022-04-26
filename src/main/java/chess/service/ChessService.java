@@ -21,8 +21,10 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ChessService {
 
     private static final int ROW_INDEX = 0;
@@ -33,19 +35,15 @@ public class ChessService {
     private final GameDao gameDao;
     private final PieceDao pieceDao;
 
-    private final Map<Long, ChessGame> chessGames;
-
     public ChessService(GameDao gameDao, PieceDao pieceDao) {
         this.gameDao = gameDao;
         this.pieceDao = pieceDao;
-        this.chessGames = new HashMap<>();
     }
 
     public ChessGameResponse createGame(long gameId) {
         ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
         gameDao.save(gameId);
         saveBoard(gameId, chessGame.getBoard());
-        chessGames.put(gameId, chessGame);
         return new ChessGameResponse(chessGame);
     }
 
@@ -64,11 +62,14 @@ public class ChessService {
     }
 
     public ChessGameResponse loadGame(long gameId) {
+        return new ChessGameResponse(createChessGameObject(gameId));
+    }
+
+    private ChessGame createChessGameObject(long gameId) {
         Optional<GameState> maybeGameState = gameDao.load(gameId);
         GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
         Board board = createBoard(gameId);
-        chessGames.put(gameId, new ChessGame(board, gameState));
-        return new ChessGameResponse(getChessGame(gameId));
+        return new ChessGame(board, gameState);
     }
 
     private Board createBoard(long gameId) {
@@ -81,18 +82,9 @@ public class ChessService {
         return new Board(() -> pieces);
     }
 
-    private ChessGame getChessGame(long gameId) {
-        if (!chessGames.containsKey(gameId)) {
-            throw new IllegalArgumentException(NOT_HAVE_GAME);
-        }
-        return chessGames.get(gameId);
-    }
-
     public ChessGameResponse startGame(long gameId) {
-        ChessGame chessGame = getChessGame(gameId);
-        chessGame.start();
-        gameDao.updateState(gameId, chessGame.getGameState());
-        return new ChessGameResponse(chessGame);
+        gameDao.updateState(gameId, GameState.WHITE_RUNNING);
+        return loadGame(gameId);
     }
 
     public ChessGameResponse resetGame(long gameId) {
@@ -101,7 +93,7 @@ public class ChessService {
     }
 
     public ChessGameResponse move(long gameId, MoveRequest moveRequest) {
-        ChessGame chessGame = getChessGame(gameId);
+        ChessGame chessGame = createChessGameObject(gameId);
         Position start = parseStringToPosition(moveRequest.getStart());
         Position target = parseStringToPosition(moveRequest.getTarget());
         chessGame.move(start, target);
@@ -114,7 +106,7 @@ public class ChessService {
     }
 
     public StatusResponse status(long gameId) {
-        ChessGame chessGame = getChessGame(gameId);
+        ChessGame chessGame = createChessGameObject(gameId);
         return new StatusResponse(chessGame.createStatus());
     }
 

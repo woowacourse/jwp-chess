@@ -1,6 +1,7 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.response.ChessGameResponse;
@@ -8,6 +9,7 @@ import chess.controller.dto.response.ChessGamesResponse;
 import chess.controller.dto.response.EndResponse;
 import chess.domain.GameState;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -69,13 +71,28 @@ class ChessServiceTest {
         assertThat(chessGameResponse.getGameState()).isEqualTo(GameState.READY);
     }
 
-    @DisplayName("종료 요청이 들어오면 게임을 삭제한다.")
-    @Test
-    void end_Game() {
-        chessService.createGame(1, CREAT_GAME_REQUEST);
+    @Nested
+    @DisplayName("DELETE - 게임 삭제 테스트")
+    class DeleteTest {
 
-        EndResponse endResponse = chessService.endGame(1);
+        @DisplayName("올바른 종료 요청이 들어오면 게임을 삭제한다.")
+        @Test
+        void end_Game_Success() {
+            chessService.createGame(1, CREAT_GAME_REQUEST);
 
-        assertThat(endResponse.getMessage()).isEqualTo("게임이 종료되었습니다.");
+            EndResponse endResponse = chessService.endGame(1, "password");
+
+            assertThat(endResponse.getMessage()).isEqualTo("게임이 종료되었습니다.");
+        }
+
+        @DisplayName("비밀번호가 틀리면 종료할 수 없다.")
+        @Test
+        void end_Game_Fail() {
+            chessService.createGame(1, CREAT_GAME_REQUEST);
+
+            assertThatThrownBy(() -> chessService.endGame(1, "wrong"))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

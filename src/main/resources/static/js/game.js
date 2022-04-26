@@ -10,6 +10,9 @@ const turnInfo = document.getElementById("turn-info");
 const statusButton = document.getElementById("status-button");
 const score = document.getElementById("score");
 const endButton = document.getElementById("end-button");
+const modal = document.getElementById("modal");
+const closeButton = document.getElementById("close-button");
+const endGameForm = document.getElementById("end-game-form");
 
 const turn = {
   WHITE_RUNNING: "백",
@@ -34,7 +37,11 @@ window.onload = async function () {
   startButton.addEventListener("click", start);
   resetButton.addEventListener("click", reset);
   statusButton.addEventListener("click", getStatus);
-  endButton.addEventListener("click", end);
+  endButton.addEventListener("click", showEndForm);
+  endGameForm.addEventListener("submit", end);
+  closeButton.addEventListener("click", () => {
+    modal.classList.add("hidden");
+  });
 
   const res = await fetch(`/games/${gameId}`);
   if (!res.ok) {
@@ -217,15 +224,23 @@ async function getStatus() {
   흑: ${data.blackScore}점`;
 }
 
+function showEndForm() {
+  modal.classList.remove("hidden");
+}
+
 async function end() {
+  modal.classList.add("hidden");
   const res = await fetch(`/games/${gameId}`, {
-    method: "DELETE"
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": this.password.value,
+    },
   });
   const data = await res.json();
+  alert(data.message);
   if (!res.ok) {
-    alert(data.message);
     return;
   }
-  alert(data.message);
   location.replace("/");
 }

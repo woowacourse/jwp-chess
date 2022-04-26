@@ -1,14 +1,11 @@
 package chess.controller;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
-import java.util.NoSuchElementException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -177,12 +174,12 @@ class ChessControllerTest {
         chessService.startGame(TEST_GAME_ID);
 
         RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
+                .header("Authorization", "password")
                 .when().delete("/games/" + TEST_GAME_ID)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("message", Matchers.equalTo("게임이 종료되었습니다."));
-
-        assertThatThrownBy(() -> chessService.loadGame(TEST_GAME_ID)).isInstanceOf(NoSuchElementException.class);
     }
 }

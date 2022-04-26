@@ -22,5 +22,26 @@
   <div id="turn-info" class="status"></div>
   <div id="score" class="status"></div>
 </div>
+<div id="modal" class="modal-overlay hidden">
+  <div class="modal-window">
+    <div class="title">
+      <h2>게임을 종료하시겠습니까?</h2>
+    </div>
+    <div class="close-area" id="close-button">X</div>
+    <div class="content">
+      <form id="end-game-form" action="/games" onsubmit="return false">
+        <section class="input-section">
+          <div class="form-explanation">비밀번호</div>
+          <label>
+            <input type="password" name="password" required/>
+          </label>
+        </section>
+        <section class="submit-section">
+          <input type="submit" id="submit-button" class="submit button" value="게임 종료">
+        </section>
+      </form>
+    </div>
+  </div>
+</div>
 </body>
 </html>

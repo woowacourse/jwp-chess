@@ -119,9 +119,21 @@ public class ChessService {
         return new StatusResponse(chessGame.createStatus());
     }
 
-    public EndResponse endGame(long gameId) {
+    public EndResponse endGame(long gameId, String password) {
+        authenticate(gameId, password);
         gameDao.delete(gameId);
         return new EndResponse("게임이 종료되었습니다.");
+    }
+
+    private void authenticate(long gameId, String password) {
+        Optional<String> maybeSalt = gameDao.findSalt(gameId);
+        String salt = maybeSalt.orElseThrow(NoSuchElementException::new);
+        Optional<String> maybePassword = gameDao.findPassword(gameId);
+        String actualPassword = maybePassword.orElseThrow(NoSuchElementException::new);
+        String sentPassword = PasswordEncryptor.encrypt(password, salt);
+        if (!sentPassword.equals(actualPassword)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 
     public void deleteGame(long gameId) {

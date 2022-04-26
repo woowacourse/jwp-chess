@@ -3,8 +3,11 @@ package chess.dao.fake;
 import chess.dao.BoardDao;
 import chess.domain.board.Board;
 import chess.domain.board.strategy.BoardGenerationStrategy;
+import chess.dto.BoardDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FakeBoardDao implements BoardDao {
 
@@ -27,8 +30,12 @@ public class FakeBoardDao implements BoardDao {
     }
 
     @Override
-    public Map<String, String> getBoard() {
-        return Map.copyOf(board);
+    public List<BoardDto> getBoard() {
+        List<BoardDto> data = board.entrySet()
+                .stream()
+                .map(value -> new BoardDto(value.getKey(), value.getValue()))
+                .collect(Collectors.toList());
+        return data;
     }
 
     @Override

@@ -7,6 +7,10 @@ import chess.domain.board.strategy.WebBasicBoardStrategy;
 import chess.domain.piece.Blank;
 import chess.domain.piece.WhitePawn;
 import chess.domain.position.Position;
+import chess.dto.BoardDto;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +46,7 @@ public class JdbcTemplateBoardDaoTest {
     void getBoard() {
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
-        assertThat(jdbcTemplateBoardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(toMap(jdbcTemplateBoardDao.getBoard())).isEqualTo(board.toMap());
     }
 
     @Test
@@ -56,7 +60,7 @@ public class JdbcTemplateBoardDaoTest {
         board.move(new Position("a3"), new WhitePawn());
         board.move(new Position("a2"), new Blank());
 
-        assertThat(jdbcTemplateBoardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(toMap(jdbcTemplateBoardDao.getBoard())).isEqualTo(board.toMap());
     }
 
     @Test
@@ -69,6 +73,10 @@ public class JdbcTemplateBoardDaoTest {
         board.initBoard(new WebBasicBoardStrategy());
         jdbcTemplateBoardDao.reset(board.toMap());
 
-        assertThat(jdbcTemplateBoardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(toMap(jdbcTemplateBoardDao.getBoard())).isEqualTo(board.toMap());
+    }
+
+    private Map<String, String> toMap(List<BoardDto> data) {
+        return data.stream().collect(Collectors.toMap(BoardDto::getPosition, BoardDto::getPiece));
     }
 }

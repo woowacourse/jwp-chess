@@ -13,12 +13,13 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceConvertor;
 import chess.domain.piece.Team;
 import chess.domain.position.Position;
+import chess.dto.BoardDto;
 import chess.dto.GameStatusDto;
 import chess.dto.ScoreDto;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -63,9 +64,13 @@ public class ChessGameService {
     }
 
     public ScoreDto createScore() {
-        Board board = createCustomBoard(boardDao.getBoard());
+        Board board = createCustomBoard(toMap(boardDao.getBoard()));
         Result result = board.createResult();
         return ScoreDto.of(result);
+    }
+
+    private Map<String, String> toMap(List<BoardDto> data) {
+        return data.stream().collect(Collectors.toMap(BoardDto::getPosition, BoardDto::getPiece));
     }
 
     public GameStatusDto move(String from, String to) {
@@ -90,7 +95,7 @@ public class ChessGameService {
 
     private ChessGame createCustomChessGame() {
         return new ChessGame(Team.of(turnDao.getTurn()), GameStatus.of(gameStatusDao.getStatus()),
-                createCustomBoard(boardDao.getBoard()));
+                createCustomBoard(toMap(boardDao.getBoard())));
     }
 
     private Board createCustomBoard(Map<String, String> data) {

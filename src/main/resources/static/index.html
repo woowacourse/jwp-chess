@@ -89,13 +89,16 @@
     }
 
     const createRoomElement = (gameRoomDto) => {
+        const gameEnterUrl = `/game/${gameRoomDto.id}`;
         return new DOMParser()
             .parseFromString(
                 `<div class="room">
                     <button class="button-30 deleteRoomButton" onclick="deleteRoom(event)" data-id="${gameRoomDto.id}">X</button>
                     <span>No. ${gameRoomDto.id} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <span>${gameRoomDto.whiteName} vs ${gameRoomDto.blackName}</span>
-                    <h3>${gameRoomDto.roomName}</h3>
+                    <h3>
+                        <a href=${gameEnterUrl}> ${gameRoomDto.roomName}</a>
+                    </h3>
                 </div>`
                 , "text/html")
             .body

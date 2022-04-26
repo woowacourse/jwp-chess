@@ -1,13 +1,15 @@
 create table game
 (
-    id            int                          not null auto_increment
+    id            int auto_increment
         primary key,
     room_name     varchar(100)                 null,
+    room_password varchar(100)                 null,
     white_name    varchar(100)                 null,
     black_name    varchar(100)                 null,
     winner        varchar(100) default ''      null,
-    room_password varchar(100)                 null,
+    looser        varchar(100) default ''      null,
     turn          varchar(10)  default 'white' not null,
+    deleted       tinyint(1)   default 0       null,
     constraint game_room_name_uindex
         unique (room_name)
 );

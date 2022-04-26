@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 @Configuration
-public class ChessGameConfig {
+public class DiConfig {
 
     @Bean
     public BoardFactory boardFactory() {

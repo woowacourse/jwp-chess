@@ -8,7 +8,7 @@ public interface GameDao {
 
     void save(long id);
 
-    List<Long> findAllGameId();
+    List<Long> findAllIds();
 
     Optional<GameState> load(long id);
 

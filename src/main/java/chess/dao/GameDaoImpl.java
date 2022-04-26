@@ -34,7 +34,7 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public List<Long> findAllGameId() {
+    public List<Long> findAllIds() {
         String sql = "SELECT game_id FROM game";
         return namedParameterJdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getLong("game_id"));
     }

@@ -33,7 +33,7 @@ public class GameDaoTest {
         gameDao.save(1);
         gameDao.save(2);
 
-        List<Long> actual = gameDao.findAllGameId();
+        List<Long> actual = gameDao.findAllIds();
 
         assertThat(actual).containsOnly(1L, 2L);
     }

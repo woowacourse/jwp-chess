@@ -24,4 +24,22 @@ public class RoomDaoImpl implements RoomDao {
         final int count = jdbcTemplate.queryForObject(sql, Integer.class, roomName);
         return count > 0;
     }
+
+    @Override
+    public String getPasswordByName(final String roomName) {
+        final String sql = "select password from room where name = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, roomName);
+    }
+
+    @Override
+    public String getGameStateByName(final String roomName) {
+        final String sql = "select gameState from room where name = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, roomName);
+    }
+
+    @Override
+    public void deleteRoomByName(final String roomName) {
+        final String sql = "delete from room where name = ?";
+        jdbcTemplate.update(sql, roomName);
+    }
 }

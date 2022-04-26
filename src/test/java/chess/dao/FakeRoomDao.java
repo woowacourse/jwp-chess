@@ -24,6 +24,29 @@ public class FakeRoomDao implements RoomDao {
                 .anyMatch(name -> name.equals(roomName));
     }
 
+    @Override
+    public String getPasswordByName(final String roomName) {
+        final Room room = rooms.get(roomName);
+        return room.password;
+    }
+
+    @Override
+    public String getGameStateByName(final String roomName) {
+        final Room room = rooms.get(roomName);
+        return room.gameState;
+    }
+
+    @Override
+    public void deleteRoomByName(final String roomName) {
+        rooms.remove(roomName);
+    }
+
+    public void updateGameState(final String roomName, final String state) {
+        final Room room = rooms.get(roomName);
+        final Room updateRoom = new Room(room.index, room.password, state, room.turn);
+        rooms.put(roomName, updateRoom);
+    }
+
     class Room {
 
         private final int index;

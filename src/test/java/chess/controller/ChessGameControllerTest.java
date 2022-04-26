@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.request.ChessGameRequest;
 import chess.controller.dto.request.PieceMoveRequest;
 import chess.controller.dto.request.PromotionRequest;
 import chess.dao.ChessGameDao;
@@ -41,6 +42,7 @@ class ChessGameControllerTest {
     @DisplayName("새로운 게임 생성")
     void createNewGame() {
         RestAssured.given().log().all()
+                .body(new ChessGameRequest("title", "password"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("chessgames")
                 .then().log().all()

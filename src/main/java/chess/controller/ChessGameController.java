@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.request.ChessGameRequest;
 import chess.controller.dto.request.PieceMoveRequest;
 import chess.controller.dto.request.PromotionRequest;
 import chess.controller.dto.response.ChessGameScoreResponse;
@@ -29,8 +30,8 @@ public class ChessGameController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createNewGame() {
-        long chessGameId = chessGameService.createNewChessGame();
+    public ResponseEntity<Long> createNewGame(@RequestBody ChessGameRequest chessGameRequest) {
+        long chessGameId = chessGameService.createNewChessGame(chessGameRequest.getTitle(), chessGameRequest.getPassword());
         return ResponseEntity.created(URI.create("/chessgames/" + chessGameId)).build();
     }
 

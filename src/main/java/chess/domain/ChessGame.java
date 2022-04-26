@@ -1,5 +1,7 @@
 package chess.domain;
 
+import java.util.Objects;
+
 public class ChessGame {
 
     private static final int MAX_TITLE_LENGTH = 20;
@@ -41,5 +43,23 @@ public class ChessGame {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return id == chessGame.id && Objects.equals(turn, chessGame.turn) && Objects.equals(title,
+                chessGame.title) && Objects.equals(password, chessGame.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, turn, title, password);
     }
 }

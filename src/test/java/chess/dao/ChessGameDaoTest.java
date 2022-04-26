@@ -39,13 +39,13 @@ class ChessGameDaoTest {
     }
 
     @Test
-    @DisplayName("현재 게임 상태 반환")
+    @DisplayName("id 값을 통해서 체스 게임 반환")
     void findChessGame() {
         Turn turn = Turn.WHITE_TURN;
         ChessGame chessGame = new ChessGame(turn.name(), "title", "password");
         ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
 
-        assertThat(chessGameDao.findChessGame(savedChessGame.getId())).isEqualTo(turn);
+        assertThat(chessGameDao.findChessGame(savedChessGame.getId())).isEqualTo(savedChessGame);
     }
 
     @Test

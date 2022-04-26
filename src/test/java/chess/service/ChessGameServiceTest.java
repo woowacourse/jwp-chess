@@ -28,6 +28,7 @@ class ChessGameServiceTest {
 
     private ChessGameService chessGameService;
     private PieceDao pieceDao;
+    private ChessGameDao chessGameDao;
     private long chessGameId;
 
     @Autowired
@@ -39,12 +40,29 @@ class ChessGameServiceTest {
 
     @BeforeEach
     void setUp() {
-        ChessGameDao chessGameDao = new ChessGameDao(jdbcTemplate, dataSource);
+        chessGameDao = new ChessGameDao(jdbcTemplate, dataSource);
         pieceDao = new PieceDao(jdbcTemplate);
         chessGameService = new ChessGameService(pieceDao, chessGameDao);
         ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
         ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
         chessGameId = savedChessGame.getId();
+    }
+
+    @Test
+    @DisplayName("새로운 체스 게임 생성")
+    void createNewChessGame() {
+        // given
+        String title = "새로운 게임";
+        String password = "password";
+
+        // when
+        long newChessGameId = chessGameService.createNewChessGame(title, password);
+
+        // then
+        assertAll(
+                () -> assertThat(newChessGameId).isEqualTo(chessGameId + 1),
+                () -> assertThat(chessGameDao.findChessGame(newChessGameId).getTitle()).isEqualTo(title)
+        );
     }
 
     @Test

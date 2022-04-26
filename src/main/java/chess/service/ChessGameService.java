@@ -1,5 +1,7 @@
 package chess.service;
 
+import static chess.domain.state.Turn.WHITE_TURN;
+
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessBoard;
@@ -27,8 +29,8 @@ public class ChessGameService {
         this.chessGameDao = chessGameDao;
     }
 
-    public long createNewChessGame() {
-        ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
+    public long createNewChessGame(String title, String password) {
+        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), title, password);
         ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
         pieceDao.savePieces(savedChessGame.getId(), PieceFactory.createNewChessBoard());
         return savedChessGame.getId();
@@ -77,6 +79,6 @@ public class ChessGameService {
     }
 
     private Turn findChessGameTurn(long chessGameId) {
-        return chessGameDao.findChessGame(chessGameId);
+        return Turn.valueOf(chessGameDao.findChessGame(chessGameId).getTurn());
     }
 }

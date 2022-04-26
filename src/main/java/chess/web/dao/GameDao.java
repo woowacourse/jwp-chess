@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GameDao {
 
-    void save(String title, String password, StateType stateType);
+    int save(String title, String password, StateType stateType);
 
     void updateStateById(int id, StateType stateType);
 

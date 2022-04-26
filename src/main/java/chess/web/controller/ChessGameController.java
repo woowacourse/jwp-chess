@@ -23,9 +23,8 @@ public class ChessGameController {
     }
 
     @GetMapping("/")
-    public ModelAndView root() {
-        ModelAndView modelAndView = new ModelAndView("start");
-        return modelAndView;
+    public String root() {
+        return "index";
     }
 
     @GetMapping("/start")
@@ -36,7 +35,7 @@ public class ChessGameController {
 
     @GetMapping("/play")
     public ModelAndView play() {
-        ModelAndView modelAndView = new ModelAndView("index");
+        ModelAndView modelAndView = new ModelAndView("playing");
         PlayResultDto playResultDto = service.play();
         Map<String, Piece> board = playResultDto.getBoard();
         for (String position : board.keySet()) {
@@ -54,8 +53,7 @@ public class ChessGameController {
     }
 
     @GetMapping("/end")
-    public ModelAndView end() {
-        ModelAndView modelAndView = new ModelAndView("finished");
-        return modelAndView;
+    public String end() {
+        return "finished";
     }
 }

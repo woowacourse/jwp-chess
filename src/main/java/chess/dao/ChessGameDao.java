@@ -3,8 +3,10 @@ package chess.dao;
 import chess.domain.ChessGameRoom;
 import chess.domain.state.Turn;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -19,7 +21,7 @@ public class ChessGameDao {
     }
 
     public long createChessGame(ChessGameRoom chessGameRoom) {
-        String sql = "insert into chess_game (name, password) values (?, ?)";
+        String sql = "insert into chess_game (title, password) values (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
                     PreparedStatement statement = con.prepareStatement(sql, new String[]{"id"});
@@ -30,6 +32,16 @@ public class ChessGameDao {
                 keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
+
+    public List<ChessGameRoom> findAllChessGames() {
+        String sql = "select id, title, password from chess_game";
+        return jdbcTemplate.query(sql, chessGameRoomRowMapper);
+    }
+
+    private RowMapper<ChessGameRoom> chessGameRoomRowMapper = (resultSet, rowNum) -> new ChessGameRoom(
+            resultSet.getLong("id"),
+            resultSet.getString("title"),
+            resultSet.getString("password"));
 
     public Turn findChessGame(long id) {
         String sql = "select turn from chess_game where id = ?";

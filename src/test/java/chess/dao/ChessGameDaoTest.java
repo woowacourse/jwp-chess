@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.domain.ChessGameRoom;
 import chess.domain.state.Turn;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,14 @@ class ChessGameDaoTest {
     @DisplayName("체스 게임 생성")
     void createChessGame() {
         assertDoesNotThrow(() -> chessGameDao.createChessGame(chessGameRoom));
+    }
+
+    @Test
+    @DisplayName("체스게임 목록 반환")
+    void findAllChessGame() {
+        chessGameDao.createChessGame(chessGameRoom);
+        List<ChessGameRoom> chessGameRooms = chessGameDao.findAllChessGames();
+        assertThat(chessGameRooms).hasSize(1);
     }
 
     @Test

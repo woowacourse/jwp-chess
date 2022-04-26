@@ -36,6 +36,13 @@ public class ChessGameDao {
         return turns.get(0);
     }
 
+    public boolean checkPassword(String gameID, String inputPW){
+        String sql = "select gamePW from chessGame where gameID = ?";
+        final List<String> passwords = jdbcTemplate.queryForList(sql, String.class, gameID);
+        String gamePW = passwords.get(0);
+        return inputPW.equals(gamePW);
+    }
+
     public List<String> findAllGames() {
         String sql = "select gameID from chessGame";
         return jdbcTemplate.queryForList(sql, String.class);

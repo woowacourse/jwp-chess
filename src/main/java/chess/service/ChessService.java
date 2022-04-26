@@ -12,7 +12,6 @@ import chess.domain.position.Square;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ChessService {
@@ -43,6 +42,10 @@ public class ChessService {
     public void deleteGame(String gameID) {
         chessGameDao.delete(gameID);
         pieceDao.deleteAll(gameID);
+    }
+
+    public boolean checkPassword(String gameID, String inputPW){
+        return chessGameDao.checkPassword(gameID, inputPW);
     }
 
     public GameTurn getTurn(String gameID) {

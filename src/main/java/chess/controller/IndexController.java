@@ -29,13 +29,22 @@ public class IndexController {
     public String createGame(@RequestParam String gameID, @RequestParam String gamePW, Model model){
         chessService.createGame(gameID, gamePW);
         model.addAttribute("rooms", chessService.loadGameLists());
-        return "index";
+        return "redirect:/";
+    }
+
+    @GetMapping("/checkPW")
+    public String checkPassword(@RequestParam String gameID, Model model){
+        model.addAttribute("gameID",gameID);
+        model.addAttribute("rooms", chessService.loadGameLists());
+        return "delete";
     }
 
     @GetMapping("/delete")
-    public String deleteGame(@RequestParam String gameID, Model model){
-        chessService.deleteGame(gameID);
+    public String deleteGame(@RequestParam String gameID, @RequestParam String inputPW, Model model){
+        if(chessService.checkPassword(gameID, inputPW)){
+            chessService.deleteGame(gameID);
+        }
         model.addAttribute("rooms", chessService.loadGameLists());
-        return "index";
+        return "redirect:/";
     }
 }

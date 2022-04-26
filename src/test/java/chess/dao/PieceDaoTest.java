@@ -34,8 +34,7 @@ public class PieceDaoTest {
     @BeforeEach
     void createGame() {
         gameDao.save("name", "password");
-        testGameId = gameDao.load("name", "password")
-                .get().getId();
+        testGameId = gameDao.find("name", "password").get();
     }
 
     @DisplayName("기물 저장 테스트")

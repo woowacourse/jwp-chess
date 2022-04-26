@@ -2,7 +2,10 @@ package chess.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.controller.dto.GameDto;
 import chess.controller.dto.request.MoveRequest;
+import chess.dao.GameDao;
+import chess.dao.GameDaoImpl;
 import chess.domain.GameState;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,7 +27,7 @@ import org.springframework.http.MediaType;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ChessControllerTest {
 
-    private final long testGameId = 1;
+    private long testGameId;
 
     @LocalServerPort
     int port;
@@ -32,14 +35,20 @@ class ChessControllerTest {
     @Autowired
     private ChessService chessService;
 
+    @Autowired
+    GameDao gameDao;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        gameDao.save("name", "password");
+        testGameId = gameDao.find("name", "password").get();
     }
 
     @AfterEach
     void cleanUp() {
-        chessService.deleteGame(testGameId);
+//        chessService.deleteGame(testGameId);
+        gameDao.delete(testGameId);
     }
 
     @Nested
@@ -62,7 +71,7 @@ class ChessControllerTest {
         void load_Fail() {
             RestAssured.given().log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
-                    .when().get("/games/" + testGameId)
+                    .when().get("/games/" + 0)
                     .then().log().all()
                     .statusCode(HttpStatus.NOT_FOUND.value());
         }

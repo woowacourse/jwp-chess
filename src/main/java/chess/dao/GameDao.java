@@ -8,7 +8,9 @@ public interface GameDao {
 
     void save(String name, String password);
 
-    Optional<GameDto> load(String name, String password);
+    Optional<Integer> find(String name, String password);
+
+    Optional<GameState> load(long gameId);
 
     void updateState(long id, GameState gameState);
 

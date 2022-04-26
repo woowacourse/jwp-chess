@@ -29,28 +29,39 @@ public class GameDaoTest {
         gameDao.save(name, password);
     }
 
+    @DisplayName("게임 조회")
+    @Test
+    void createAccount() {
+        gameDao.save(name, password);
+
+        Optional<Integer> maybeGameState = gameDao.find(name, password);
+        Integer actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
+
+        assertThat(actual).isGreaterThanOrEqualTo(1);
+    }
+
     @DisplayName("게임 조회 테스트")
     @Test
     void load() {
         gameDao.save(name, password);
+        final int gameId = gameDao.find(name, password).get();
+        Optional<GameState> maybeGameState = gameDao.load(gameId);
+        GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
 
-        Optional<GameDto> maybeGameState = gameDao.load(name, password);
-        GameDto actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
-
-        assertThat(actual.getGameState()).isEqualTo(GameState.READY);
+        assertThat(actual).isEqualTo(GameState.READY);
     }
 
     @DisplayName("게임 정보 업데이트 테스트")
     @Test
     void update() {
         gameDao.save(name, password);
-        final int gameId = gameDao.load(name, password).get().getId();
+        final int gameId = gameDao.find(name, password).get();
         gameDao.updateState(gameId, GameState.WHITE_RUNNING);
 
-        Optional<GameDto> maybeGameState = gameDao.load(name, password);
-        GameDto actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
+        Optional<GameState> maybeGameState = gameDao.load(gameId);
+        GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
 
-        assertThat(actual.getGameState()).isEqualTo(GameState.WHITE_RUNNING);
+        assertThat(actual).isEqualTo(GameState.WHITE_RUNNING);
     }
 
     @DisplayName("게임 삭제 테스트")

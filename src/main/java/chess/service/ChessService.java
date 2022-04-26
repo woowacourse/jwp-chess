@@ -39,6 +39,17 @@ public class ChessService {
         this.chessGames = new HashMap<>();
     }
 
+    public int getGameId(String name, String password) {
+        Optional<Integer> gameId = gameDao.find(name, password);
+        if (gameId.isEmpty()) {
+            gameDao.save(name, password);
+            final int newGameId = gameDao.find(name, password).get();
+            saveBoard(newGameId, (new CreateCompleteBoardStrategy()).createPieces());
+            return newGameId;
+        }
+        return gameId.get();
+    }
+
     public ChessGameResponse loadGame(long gameId) {
         Optional<GameState> maybeGameState = gameDao.load(gameId);
         GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
@@ -66,14 +77,13 @@ public class ChessService {
 
     public ChessGameResponse createGame(long gameId) {
         ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
-        gameDao.save(gameId);
         saveBoard(gameId, chessGame.getBoard());
         chessGames.put(gameId, chessGame);
         return new ChessGameResponse(chessGame);
     }
 
     public ChessGameResponse restartGame(long gameId) {
-        gameDao.delete(gameId);
+        gameDao.updateState(gameId, GameState.READY);
         return createGame(gameId);
     }
 

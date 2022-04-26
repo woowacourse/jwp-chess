@@ -31,7 +31,9 @@ class GameServiceTest {
         final MemberService memberService = new MemberService(mockMemberDao);
         final Long member1Id = memberService.addMember("알렉스");
         final Long member2Id = memberService.addMember("루피");
+
         final Long gameId = gameService.createGame("테스트 방", "1234", member1Id, member2Id);
+
         assertThat(gameService.findByGameId(gameId).getWhiteId()).isEqualTo(member1Id);
     }
 
@@ -42,9 +44,11 @@ class GameServiceTest {
         final MemberService memberService = new MemberService(mockMemberDao);
         final Long member1Id = memberService.addMember("알렉스");
         final Long member2Id = memberService.addMember("루피");
+
         gameService.createGame("테스트 방", "1234", member1Id, member2Id);
         gameService.createGame("테스트 방", "1234", member1Id, member2Id);
         gameService.createGame("테스트 방", "1234", member1Id, member2Id);
+
         assertThat(gameService.findPlayingGames().size()).isEqualTo(3);
     }
 

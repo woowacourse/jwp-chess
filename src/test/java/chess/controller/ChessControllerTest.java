@@ -9,6 +9,7 @@ import chess.domain.chesspiece.King;
 import chess.domain.chesspiece.Queen;
 import chess.domain.chesspiece.Rook;
 import chess.domain.position.Position;
+import chess.domain.result.EndResult;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
@@ -186,5 +187,27 @@ class ChessControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(Is.is(objectMapper.writeValueAsString(response)));
+    }
+
+    @Test
+    @DisplayName("게임 결과를 계산한다.")
+    void findResult() throws JsonProcessingException {
+        // given
+        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.BLACK, "1234");
+
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        pieceByPosition.put(Position.from("a1"), Queen.from(Color.WHITE));
+        pieceByPosition.put(Position.from("a2"), Rook.from(Color.BLACK));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
+
+        final Score score = new Score(pieceByPosition);
+        final EndResult endResult = new EndResult(score);
+
+        // then
+        RestAssured.given().log().all()
+                .when().get("/rooms/" + roomId + "/result")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(Is.is(objectMapper.writeValueAsString(endResult)));
     }
 }

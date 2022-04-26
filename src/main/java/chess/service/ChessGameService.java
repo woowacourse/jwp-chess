@@ -40,7 +40,7 @@ public class ChessGameService {
     private void initGame(String gameId) {
         gameDao.createById(gameId);
         Pieces chessmen = chessmenInitializer.init();
-        pieceDao.createAllById(chessmen.getPieces(), gameId);
+        pieceDao.createAllByGameId(chessmen.getPieces(), gameId);
     }
 
     public ChessGame getGameStatus(String gameId) {
@@ -90,7 +90,7 @@ public class ChessGameService {
         Color turn = chessGame.getTurn();
 
         pieceDao.deleteAllByGameId(gameId);
-        pieceDao.createAllById(chessGame.getChessmen().getPieces(), gameId);
+        pieceDao.createAllByGameId(chessGame.getChessmen().getPieces(), gameId);
         gameDao.updateTurnById(turn, gameId);
         gameDao.updateForceEndFlagById(forceEndFlag, gameId);
     }

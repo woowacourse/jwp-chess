@@ -67,7 +67,7 @@ public class PieceDaoTest {
 
         final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
         final List<Piece> pieces = chessmenInitializer.init().getPieces();
-        pieceDao.createAllById(pieces, "1234");
+        pieceDao.createAllByGameId(pieces, "1234");
 
         assertThat(pieceDao.findAllByGameId("1234").getPieces().size()).isEqualTo(32);
     }
@@ -78,7 +78,7 @@ public class PieceDaoTest {
         gameDao.createById("1234");
         final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
         final List<Piece> pieces = chessmenInitializer.init().getPieces();
-        pieceDao.createAllById(pieces, "1234");
+        pieceDao.createAllByGameId(pieces, "1234");
 
         pieces.remove(pieces.size() - 1);
         pieces.add(new King(Color.BLACK, Position.of("h2")));
@@ -96,7 +96,7 @@ public class PieceDaoTest {
 
         final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
         final List<Piece> pieces = chessmenInitializer.init().getPieces();
-        pieceDao.createAllById(pieces, "1234");
+        pieceDao.createAllByGameId(pieces, "1234");
         pieceDao.deleteAllByGameId("1234");
 
         assertThat(pieceDao.findAllByGameId("1234").getPieces().size()).isEqualTo(0);

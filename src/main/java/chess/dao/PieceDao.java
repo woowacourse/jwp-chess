@@ -18,7 +18,7 @@ public class PieceDao {
     }
 
     @Transactional
-    public void createAllById(List<Piece> pieces, String gameId) {
+    public void createAllByGameId(List<Piece> pieces, String gameId) {
         final String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, pieces, pieces.size(),

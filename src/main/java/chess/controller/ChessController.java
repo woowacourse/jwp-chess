@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/games")
 public class ChessController {
-
     private final ChessService chessService;
 
     public ChessController(ChessService chessService) {

@@ -1,11 +1,13 @@
 package chess.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import chess.dao.GameDao;
 import io.restassured.RestAssured;
+import io.restassured.config.EncoderConfig;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,9 @@ class WebControllerTest {
 
     @LocalServerPort
     int port;
+
+    @Autowired
+    GameDao gameDao;
 
     @BeforeEach
     void setUp() {
@@ -35,13 +40,18 @@ class WebControllerTest {
     @DisplayName("게임 redirect 테스트")
     @Test
     void redirect() {
-        assertThat(RestAssured.given().redirects().follow(false).log().all()
-                .when().get("/game/?gameId=1")
+        RestAssured.given()
+                .config(RestAssured.config().encoderConfig(EncoderConfig.encoderConfig()
+                        .encodeContentTypeAs(MediaType.MULTIPART_FORM_DATA_VALUE, ContentType.TEXT)))
+                .formParam("gameName", "name")
+                .formParam("password", "password")
+                .redirects().follow(false).log().all()
+                .when().get("/game")
                 .then().log().all()
                 .statusCode(302)
-                .extract()
-                .header("Location")
-                .contains("/game/1")).isTrue();
+                .extract();
+
+        gameDao.delete(gameDao.find("name", "password").get());
     }
 
     @DisplayName("게임 방 입장 테스트")

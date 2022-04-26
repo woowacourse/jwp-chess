@@ -35,18 +35,28 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public Optional<GameDto> load(String name, String password) {
-        String sql = "SELECT id, state FROM game WHERE name = :name AND password = :password";
+    public Optional<Integer> find(String name, String password) {
+        String sql = "SELECT id FROM game WHERE name = :name AND password = :password";
         SqlParameterSource namedParameters =
                 new MapSqlParameterSource(Map.of("name", name, "password", password));
 
         try {
             return Optional.ofNullable(
-                    namedParameterJdbcTemplate.queryForObject(sql, namedParameters, (res, rowNumber) ->
-                            new GameDto(
-                                    res.getInt("id"),
-                                    GameState.valueOf(res.getString("state"))
-                            )));
+                    namedParameterJdbcTemplate.queryForObject(sql, namedParameters, Integer.class));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<GameState> load(long gameId) {
+        String sql = "SELECT state FROM game WHERE id = :gameId";
+        SqlParameterSource namedParameters =
+                new MapSqlParameterSource("gameId", gameId);
+
+        try {
+            return Optional.ofNullable(
+                    namedParameterJdbcTemplate.queryForObject(sql, namedParameters, GameState.class));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

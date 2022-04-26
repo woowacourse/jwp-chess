@@ -4,6 +4,8 @@ import chess.domain.piece.Color;
 import chess.dto.ExceptionDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.MoveResultDto;
+import chess.dto.NewGameRequest;
+import chess.dto.NewGameResponse;
 import chess.dto.PositionDto;
 import chess.service.ChessService;
 import java.util.List;
@@ -29,6 +31,11 @@ public class SpringChessRestController {
     @GetMapping("/board/{id}")
     public List<PositionDto> board(@PathVariable("id") String id) {
         return chessService.getBoardByGameId(id);
+    }
+
+    @PostMapping("/board")
+    public ResponseEntity<NewGameResponse> createBoard(@RequestBody NewGameRequest newGameRequest) {
+        return new ResponseEntity<>(chessService.createNewGame(newGameRequest), HttpStatus.CREATED);
     }
 
     @PostMapping("/move")

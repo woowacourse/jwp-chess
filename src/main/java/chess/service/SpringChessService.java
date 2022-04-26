@@ -8,6 +8,8 @@ import chess.domain.piece.Color;
 import chess.domain.piece.MoveResult;
 import chess.dto.MoveRequestDto;
 import chess.dto.MoveResultDto;
+import chess.dto.NewGameRequest;
+import chess.dto.NewGameResponse;
 import chess.dto.PositionDto;
 import java.util.List;
 import java.util.Map;
@@ -63,5 +65,10 @@ public class SpringChessService implements ChessService {
     @Override
     public Map<Color, Double> getScore(String gameId) {
         return findBoardByGameId(gameId).getScore();
+    }
+
+    @Override
+    public NewGameResponse createNewGame(NewGameRequest newGameRequest) {
+        return new NewGameResponse(chessDao.createNewGame(newGameRequest));
     }
 }

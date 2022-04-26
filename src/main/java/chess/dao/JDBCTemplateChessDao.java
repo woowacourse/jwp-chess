@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dto.MoveRequestDto;
+import chess.dto.NewGameRequest;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,5 +94,19 @@ public class JDBCTemplateChessDao implements ChessDao {
         final String sql = "update game set turn = "
                 + "case when turn = 'black' then 'white' when turn = 'white' then 'black' end where id = ?";
         jdbcTemplate.update(sql, gameId);
+    }
+
+    @Override
+    public int createNewGame(NewGameRequest newGameRequest) {
+        final String sql = "insert into game(room_name, room_password, white_name, black_name) values(:roomName, :roomPassword, :whiteName, :blackName)";
+        namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(newGameRequest));
+        final int newRoomId = findRoomIdByRoomName(newGameRequest.getRoomName());
+        insertPiecesOnPositions(String.valueOf(newRoomId));
+        return newRoomId;
+    }
+
+    private int findRoomIdByRoomName(String roomName) {
+        final String sql = "select id from game where room_name = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, roomName);
     }
 }

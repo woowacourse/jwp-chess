@@ -3,6 +3,8 @@ package chess.service;
 import chess.domain.piece.Color;
 import chess.dto.MoveRequestDto;
 import chess.dto.MoveResultDto;
+import chess.dto.NewGameRequest;
+import chess.dto.NewGameResponse;
 import chess.dto.PositionDto;
 import java.util.List;
 import java.util.Map;
@@ -15,4 +17,6 @@ public interface ChessService {
     boolean isFinished(String gameId);
 
     Map<Color, Double> getScore(String gameId);
+
+    NewGameResponse createNewGame(NewGameRequest newGameRequest);
 }

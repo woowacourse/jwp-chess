@@ -1,17 +1,20 @@
 create table game
 (
-    id        int                         not null
+    id            int                          not null auto_increment
         primary key,
-    whiteName varchar(100) null,
-    blackName varchar(100) null,
-    winner    varchar(100) null,
-    password  varchar(100) null,
-    turn      varchar(10) default 'white' not null
+    room_name     varchar(100)                 null,
+    white_name    varchar(100)                 null,
+    black_name    varchar(100)                 null,
+    winner        varchar(100) default ''      null,
+    room_password varchar(100)                 null,
+    turn          varchar(10)  default 'white' not null,
+    constraint game_room_name_uindex
+        unique (room_name)
 );
 
 create table board
 (
-    game_id  int null,
+    game_id  int        null,
     position varchar(2) null,
     piece    varchar(2) null,
     constraint board_game_id_fk

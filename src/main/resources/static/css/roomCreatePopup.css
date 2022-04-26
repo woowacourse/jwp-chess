@@ -1,0 +1,29 @@
+#roomCreatePopup {
+    margin: 0 auto;
+    border: 3px solid black;
+    width: 250px;
+}
+
+#roomCreatePopup h2 {
+    text-align: center;
+}
+
+#roomCreatePopup input {
+    height: 30px;
+    font-size: 1.2rem;
+    width: 80%;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+#roomCreatePopup button {
+    margin-left: 10px;
+    padding: 5px;
+    font-size: 1rem;
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+.invisible {
+    display: none;
+}

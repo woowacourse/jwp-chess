@@ -4,7 +4,9 @@ import chess.web.dto.PieceDto;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class PieceDaoJdbcImpl2 implements PieceDao2 {
 
     private static final RowMapper<PieceDto> pieceDtoRowMapper = (resultSet, rowNum) -> {

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/chess-game")
 public class ChessViewController {
 
-    @GetMapping()
+    @GetMapping
     public String init() {
         return "index";
     }

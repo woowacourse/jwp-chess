@@ -62,15 +62,6 @@ public class ChessController {
         return "play";
     }
 
-    private List<RankDto> makeRanksDto(final ChessGame chessGame) {
-        final List<RankDto> ranks = new ArrayList<>();
-        for (int i = 8; i > 0; i--) {
-            final List<Piece> pieces = chessGame.getBoard().getPiecesByRank(Rank.from(i));
-            ranks.add(RankDto.toDto(pieces, i));
-        }
-        return ranks;
-    }
-
     @GetMapping("/result/{gameId}")
     public String gameResult(@PathVariable("gameId") Long gameId, final Model model) {
         final ChessGame chessGame = gameService.findByGameId(gameId);
@@ -96,57 +87,12 @@ public class ChessController {
         return "member-management";
     }
 
-    @GetMapping("/score/{gameId}")
-    public ResponseEntity gameScore(@PathVariable("gameId") Long gameId) {
-        final ChessGame chessGame = gameService.findByGameId(gameId);
-        final Result result = chessGame.createResult();
-
-        final Map<String, String> jsonData = new HashMap<>();
-        jsonData.put("whiteScore", String.valueOf(result.getWhiteScore()));
-        jsonData.put("blackScore", String.valueOf(result.getBlackScore()));
-        return ResponseEntity.ok().body(jsonData);
-    }
-
-    @PostMapping("/member")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public String addMember(@RequestParam("memberName") final String memberName) {
-        memberService.addMember(memberName);
-        return "OK";
-    }
-
-    @PostMapping("/move/{gameId}")
-    @ResponseBody
-    public ResponseDto movePiece(@PathVariable("gameId") final Long gameId,
-                                 @RequestParam("rawFrom") final String rawFrom,
-                                 @RequestParam("rawTo") final String rawTo) {
-        try {
-            gameService.move(gameId, rawFrom, rawTo);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            return new ResponseDto(400, e.getMessage());
+    private List<RankDto> makeRanksDto(final ChessGame chessGame) {
+        final List<RankDto> ranks = new ArrayList<>();
+        for (int i = 8; i > 0; i--) {
+            final List<Piece> pieces = chessGame.getBoard().getPiecesByRank(Rank.from(i));
+            ranks.add(RankDto.toDto(pieces, i));
         }
-        return new ResponseDto(200, "");
+        return ranks;
     }
-
-    @PostMapping("/terminate/{gameId}")
-    @ResponseBody
-    public String terminateGame(@PathVariable("gameId") final Long gameId) {
-        gameService.terminate(gameId);
-        return "OK";
-    }
-
-    @PostMapping("/chessGame")
-    @ResponseBody
-    public String createGame(@RequestParam("whiteId") Long whiteId, @RequestParam("blackId") Long blackId) {
-        gameService.createGame(whiteId, blackId);
-        return "OK";
-    }
-
-    @DeleteMapping("/member/{memberId}")
-    @ResponseBody
-    public String deleteMember(@PathVariable("memberId") Long memberId) {
-        memberService.deleteMember(memberId);
-        return "OK";
-    }
-
 }

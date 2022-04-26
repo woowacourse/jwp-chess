@@ -21,8 +21,8 @@ public class MemberService {
         return memberDao.findAll();
     }
 
-    public void addMember(final String memberName) {
-        memberDao.save(new Member(memberName));
+    public Long addMember(final String memberName) {
+        return memberDao.save(new Member(memberName));
     }
 
     public void deleteMember(final Long memberId) {

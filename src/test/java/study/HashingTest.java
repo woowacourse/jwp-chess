@@ -36,6 +36,54 @@ public class HashingTest {
     }
 
     @Test
+    void 동일한_입력값에_대해_salt가_다르면_다른_해쉬값_출력() throws InvalidKeySpecException {
+        final byte[] SALT1 = "salt1".getBytes();
+        final byte[] SALT2 = "salt2".getBytes();
+
+        KeySpec spec = new PBEKeySpec(PASSWORD.toCharArray(), SALT1, 65536, 128);
+        byte[] hashByte1 = factory.generateSecret(spec).getEncoded();
+
+        KeySpec spec2 = new PBEKeySpec(PASSWORD.toCharArray(), SALT2, 65536, 128);
+        byte[] hashByte2 = factory.generateSecret(spec2).getEncoded();
+
+        assertThat(hashByte1).isNotEqualTo(hashByte2);
+        // System.out.println(Base64.getEncoder().encodeToString(hashByte1));
+        // System.out.println(Base64.getEncoder().encodeToString(hashByte2));
+    }
+
+    @Test
+    void 동일한_입력값과_salt에_대해_iterationCount가_다르면_다른_해쉬값_출력() throws InvalidKeySpecException {
+        int iterationCount1 = 100;
+        int iterationCount2 = 65536;
+
+        KeySpec spec = new PBEKeySpec(PASSWORD.toCharArray(), SALT, iterationCount1, 128);
+        byte[] hashByte1 = factory.generateSecret(spec).getEncoded();
+
+        KeySpec spec2 = new PBEKeySpec(PASSWORD.toCharArray(), SALT, iterationCount2, 128);
+        byte[] hashByte2 = factory.generateSecret(spec2).getEncoded();
+
+        assertThat(hashByte1).isNotEqualTo(hashByte2);
+        // System.out.println(Base64.getEncoder().encodeToString(hashByte1));
+        // System.out.println(Base64.getEncoder().encodeToString(hashByte2));
+    }
+
+    @Test
+    void 동일한_입력값과_salt에_대해_keyLength가_다르면_다른_해쉬값_출력() throws InvalidKeySpecException {
+        int keyLength1 = 128;
+        int keyLength2 = 256;
+
+        KeySpec spec = new PBEKeySpec(PASSWORD.toCharArray(), SALT, 65536, keyLength1);
+        byte[] hashByte1 = factory.generateSecret(spec).getEncoded();
+
+        KeySpec spec2 = new PBEKeySpec(PASSWORD.toCharArray(), SALT, 65536, keyLength2);
+        byte[] hashByte2 = factory.generateSecret(spec2).getEncoded();
+
+        assertThat(hashByte1).isNotEqualTo(hashByte2);
+        // System.out.println(Base64.getEncoder().encodeToString(hashByte1));
+        // System.out.println(Base64.getEncoder().encodeToString(hashByte2));
+    }
+
+    @Test
     void hash의_길이는_비트단위로_지정가능() throws InvalidKeySpecException {
         KeySpec spec = new PBEKeySpec(PASSWORD.toCharArray(), SALT, 65536, 128);
         byte[] hashByte128 = factory.generateSecret(spec).getEncoded();

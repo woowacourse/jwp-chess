@@ -53,7 +53,7 @@ class ChessServiceTest {
     @Test
     @DisplayName("64개의 말들이 초기화된다.")
     void initBoard() {
-        Long boardId = boardDao.save();
+        Long boardId = boardDao.save(1L, Turn.init());
         Board initBoard = chessService.initBoard(boardId);
         Pieces pieces = initBoard.getPieces();
         assertThat(pieces.getPieces().size()).isEqualTo(64);

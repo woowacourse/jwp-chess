@@ -6,10 +6,8 @@ import chess.board.Turn;
 import chess.board.piece.Pieces;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -34,10 +32,17 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public void save(Long boardId, Turn turn) {
+    public Long save(Long boardId, Turn turn) {
         final String query = "INSERT INTO board (turn) VALUES (?)";
 
-        jdbcTemplate.update(query, turn.getTeam().value());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
+            preparedStatement.setString(1, "white");
+            return preparedStatement;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     @Override
@@ -55,25 +60,6 @@ public class BoardDaoImpl implements BoardDao {
     public void updateTurnById(Long id, String newTurn) {
         final String query = "UPDATE board set turn = ? where id = ?";
         jdbcTemplate.update(query, newTurn, id);
-    }
-
-    @Override
-    public Long save() {
-        final String query = "INSERT INTO board (turn) values (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, "white");
-            return preparedStatement;
-        }, keyHolder);
-        return keyHolder.getKey().longValue();
-    }
-
-    private Board getBoard(List<Board> boards) {
-        if (boards.isEmpty()) {
-            return Board.create(Pieces.from(new ArrayList<>()), Turn.init());
-        }
-        return DataAccessUtils.singleResult(boards);
     }
 
     @Override

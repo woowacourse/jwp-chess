@@ -1,9 +1,7 @@
 package chess.web.service;
 
-import chess.board.Board;
 import chess.board.Team;
 import chess.board.Turn;
-import chess.board.piece.Pieces;
 import chess.web.dao.BoardDao;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +15,9 @@ public class MockBoardDao implements BoardDao {
     }
 
     @Override
-    public void save(Long boardId, Turn turn) {
+    public Long save(Long boardId, Turn turn) {
         mockDb.put(1L, turn.getTeam().value());
+        return 1L;
     }
 
     @Override
@@ -29,11 +28,6 @@ public class MockBoardDao implements BoardDao {
     @Override
     public void updateTurnById(Long id, String newTurn) {
         mockDb.put(id, newTurn);
-    }
-
-    @Override
-    public Long save() {
-        return 1L;
     }
 
     @Override

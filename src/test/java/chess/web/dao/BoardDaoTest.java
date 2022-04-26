@@ -42,7 +42,7 @@ class BoardDaoTest {
 
         boardDao = new BoardDaoImpl(jdbcTemplate);
 
-        boardId = boardDao.save();
+        boardId = boardDao.save(1L, Turn.init());
     }
 
     @Test
@@ -68,7 +68,7 @@ class BoardDaoTest {
     @DisplayName("새로운 보드판이 만들어지면 pk값이 1 증가한다.")
     void save() {
         //when
-        Long saveId = boardDao.save();
+        Long saveId = boardDao.save(1L, Turn.init());
         //then
         assertThat(boardId + 1).isEqualTo(saveId);
         boardDao.deleteById(saveId);

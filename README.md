@@ -26,7 +26,7 @@
 
 - [ ] 말을 이동한 뒤 말이 이동할 수 없는 경우 보드가 먹통이 되는 에러 수정해야 함
 - [x] TODO, FIXME는 당장 필요가 없다면 PR에 있을 이유가 없음
-- [ ] `BoardDaoImpl`에서 `save`는 무조건 white 값을 넣고 있음
+- [x] `BoardDaoImpl`에서 `save`는 무조건 white 값을 넣고 있음
 - [ ] 테스트에서 BeforeEach로 매번 테이블을 만드는 쿼리가 실행되는데 이런 raw한 sql 쿼리문이 노출되지 않도록 구현할 수 있을까?
 - [x] 불필요한 spark 의존성을 제거하자
 

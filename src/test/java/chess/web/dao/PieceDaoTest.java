@@ -2,6 +2,7 @@ package chess.web.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.board.Turn;
 import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
 import java.util.List;
@@ -46,7 +47,7 @@ class PieceDaoTest {
         boardDao = new BoardDaoImpl(jdbcTemplate);
 
         pieces = Pieces.createInit();
-        boardId = boardDao.save();
+        boardId = boardDao.save(1L, Turn.init());
         pieceDao.save(pieces.getPieces(), boardId);
     }
 

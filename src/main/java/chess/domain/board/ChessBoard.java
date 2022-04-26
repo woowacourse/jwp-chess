@@ -21,12 +21,16 @@ public final class ChessBoard {
     }
 
     public void move(final Position source, final Position target) {
+        validateCanMove(source, target);
+        movePiece(source, target);
+    }
+
+    private void validateCanMove(final Position source, final Position target) {
         validateSource(source);
         validateTarget(target);
         validateCurrentTurn(source, target);
         validateRoute(source, target);
         validateMove(source, target);
-        movePiece(source, target);
     }
 
     private void validateSource(final Position source) {

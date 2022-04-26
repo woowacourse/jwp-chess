@@ -27,28 +27,33 @@ public class ChessWebController {
         return "index";
     }
 
-    @GetMapping("/api/load")
+    @GetMapping("/chess")
+    public String chess() {
+        return "chess";
+    }
+
+    @GetMapping(value = "/api/chess/load", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<BoardDto> loadGame() {
         Board board = chessService.loadGame(1L);
         return ResponseEntity.ok().body(BoardDto.from(board));
     }
 
-    @GetMapping("api/restart")
+    @GetMapping(value = "/api/chess/restart", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<BoardDto> initBoard() {
         Board board = chessService.initBoard(1L);
         return ResponseEntity.ok().body(BoardDto.from(board));
     }
 
-    @GetMapping("api/status")
+    @GetMapping(value = "/api/chess/status", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<ScoreDto> getStatus() {
         ScoreDto status = chessService.getStatus(1L);
         return ResponseEntity.ok().body(status);
     }
 
-    @PostMapping(value = "/api/move", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/api/chess/move", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto) {
         Board board = chessService.move(moveDto, 1L);

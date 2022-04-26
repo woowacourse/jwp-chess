@@ -30,7 +30,7 @@ function showStatusButton() {
 }
 
 function initBoard() {
-    fetch('/api/restart')
+    fetch('/api/chess/restart')
         .then(res => res.json())
         .then(imageSetting)
 }
@@ -56,13 +56,13 @@ function getStatus(scoreResponse) {
 }
 
 status.addEventListener('click', function () {
-    fetch('/api/status')
+    fetch('/api/chess/status')
         .then(res => res.json())
         .then(getStatus)
 })
 
 function loadBoard() {
-    fetch('/api/load')
+    fetch('/api/chess/load')
         .then(res => res.json())
         .then(imageSetting)
 }
@@ -159,7 +159,7 @@ function movePiece(from, to) {
         to: to
     }
 
-    fetch('/api/move', {
+    fetch('/api/chess/move', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

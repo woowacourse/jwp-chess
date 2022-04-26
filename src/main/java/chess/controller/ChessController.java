@@ -3,8 +3,8 @@ package chess.controller;
 import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
+import chess.controller.dto.response.ChessGamesResponse;
 import chess.controller.dto.response.EndResponse;
-import chess.controller.dto.response.GameIdsResponse;
 import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
 import java.net.URI;
@@ -32,7 +32,7 @@ public class ChessController {
     }
 
     @GetMapping
-    public GameIdsResponse loadGameList() {
+    public ChessGamesResponse loadGameList() {
         return chessService.findAllGameIds();
     }
 

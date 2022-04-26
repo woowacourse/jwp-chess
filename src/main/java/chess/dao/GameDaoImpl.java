@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.controller.dto.response.GameIdentifiers;
 import chess.domain.GameState;
 import java.util.HashMap;
 import java.util.List;
@@ -37,9 +38,11 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public List<Long> findAllIds() {
-        String sql = "SELECT game_id FROM game";
-        return namedParameterJdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getLong("game_id"));
+    public List<GameIdentifiers> findAllGames() {
+        String sql = "SELECT game_id, game_name FROM game";
+        return namedParameterJdbcTemplate.query(sql,
+                (resultSet, rowNum) -> new GameIdentifiers(resultSet.getLong("game_id"),
+                        resultSet.getString("game_name")));
     }
 
     @Override

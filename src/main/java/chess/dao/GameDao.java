@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.controller.dto.response.GameIdentifiers;
 import chess.domain.GameState;
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +9,7 @@ public interface GameDao {
 
     void save(long id, String name, String password, String salt);
 
-    List<Long> findAllIds();
+    List<GameIdentifiers> findAllGames();
 
     Optional<String> findName(long id);
 

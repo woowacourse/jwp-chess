@@ -3,8 +3,8 @@ package chess.service;
 import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
+import chess.controller.dto.response.ChessGamesResponse;
 import chess.controller.dto.response.EndResponse;
-import chess.controller.dto.response.GameIdsResponse;
 import chess.controller.dto.response.PieceResponse;
 import chess.controller.dto.response.StatusResponse;
 import chess.dao.GameDao;
@@ -62,8 +62,8 @@ public class ChessService {
         }
     }
 
-    public GameIdsResponse findAllGameIds() {
-        return new GameIdsResponse(gameDao.findAllIds());
+    public ChessGamesResponse findAllGameIds() {
+        return new ChessGamesResponse(gameDao.findAllGames());
     }
 
     public ChessGameResponse loadGame(long gameId) {

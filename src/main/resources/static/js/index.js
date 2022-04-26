@@ -7,13 +7,13 @@ const createGameForm = document.getElementById("create-game-form");
 window.onload = async () => {
   const res = await fetch("/games");
   const body = await res.json();
-  body.gameIds.forEach(id => {
-    const game = document.createElement("ul");
-    game.innerText = `${id}번 게임`;
-    game.id = id;
-    game.classList.add("game-id");
-    game.addEventListener("click", enterGame);
-    gamesDiv.appendChild(game);
+  body.games.forEach(game => {
+    const gameDiv = document.createElement("ul");
+    gameDiv.innerText = `${game.name}`;
+    gameDiv.id = game.id;
+    gameDiv.classList.add("game-info");
+    gameDiv.addEventListener("click", enterGame);
+    gamesDiv.appendChild(gameDiv);
   });
 }
 

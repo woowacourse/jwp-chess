@@ -3,6 +3,7 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+import chess.controller.dto.response.GameIdentifiers;
 import chess.domain.GameState;
 import chess.util.PasswordEncryptor;
 import java.util.List;
@@ -31,16 +32,16 @@ public class GameDaoTest {
         gameDao.save(TEST_GAME_ID, "game", password, salt);
     }
 
-    @DisplayName("전체 게임 id 조회 테스트")
+    @DisplayName("전체 게임 조회 테스트")
     @Test
     void find_All_Game_Id() {
         String salt = PasswordEncryptor.generateSalt();
         String password = PasswordEncryptor.encrypt("password", salt);
         gameDao.save(TEST_GAME_ID, "game", password, salt);
 
-        List<Long> actual = gameDao.findAllIds();
+        List<GameIdentifiers> actual = gameDao.findAllGames();
 
-        assertThat(actual).containsOnly(1L);
+        assertThat(actual.size()).isEqualTo(1);
     }
 
     @DisplayName("게임 이름 조회 테스트")

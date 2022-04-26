@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.response.ChessGameResponse;
+import chess.controller.dto.response.ChessGamesResponse;
 import chess.controller.dto.response.EndResponse;
-import chess.controller.dto.response.GameIdsResponse;
 import chess.domain.GameState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,9 +34,9 @@ class ChessServiceTest {
         chessService.createGame(1, CREAT_GAME_REQUEST);
         chessService.createGame(2, new CreateGameRequest("game2", "password"));
 
-        GameIdsResponse response = chessService.findAllGameIds();
+        ChessGamesResponse response = chessService.findAllGameIds();
 
-        assertThat(response.getGameIds()).containsOnly(1L, 2L);
+        assertThat(response.getGames().size()).isEqualTo(2);
     }
 
     @DisplayName("게임을 불러오면 저장된 상태 그대로 나온다.")

@@ -11,7 +11,10 @@ async function searchRooms () {
 function printSearchResultsBy(rooms) {
     rooms.forEach(function (value) {
         const room = document.createElement('li');
-        room.innerText = value.name;
+        const roomRink = document.createElement('a');
+        roomRink.innerText = value.name;
+        roomRink.href = "/game/" + value.id;
+        room.appendChild(roomRink);
         roomList.appendChild(room);
     })
 }

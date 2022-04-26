@@ -21,7 +21,7 @@ public class ChessGameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("")
+    @GetMapping("/{id}")
     public String board() {
         return "board";
     }

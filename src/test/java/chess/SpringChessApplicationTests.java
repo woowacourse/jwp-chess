@@ -35,7 +35,7 @@ class SpringChessApplicationTests {
     void setUp() {
         RestAssured.port = port;
         ChessBoard board = boardDao.save(
-                new ChessBoard("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린"))));
+                new ChessBoard("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린")), "1111"));
         this.boardId = board.getId();
         positionDao.saveAll(boardId);
     }
@@ -58,6 +58,17 @@ class SpringChessApplicationTests {
                 .when().get("/room/" + boardId + "/status")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("비밀번호가 비어있는 경우 예외가 발생한다.")
+    @Test
+    void passwordEmpty() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .body("title=쿼리치&firstMemberName=쿼리치&secondMemberName=코린&password=")
+                .when().post("/room")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @AfterEach

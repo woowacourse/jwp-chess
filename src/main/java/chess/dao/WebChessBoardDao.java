@@ -59,10 +59,10 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
     }
 
     @Override
-    public int deleteById(int id) {
-        String sql = "DELETE FROM board where id=:id";
-        List<String> keys = List.of("id");
-        List<Object> values = List.of(id);
+    public int deleteByIdAndPassword(int id, String password) {
+        String sql = "DELETE FROM board where id=:id and password=:password";
+        List<String> keys = List.of("id", "password");
+        List<Object> values = List.of(id, password);
         return jdbcTemplate.update(sql, ParameterSourceCreator.makeParameterSource(keys, values));
     }
 

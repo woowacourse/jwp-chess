@@ -46,7 +46,7 @@ class WebBoardDaoTest {
     @Test
     void deleteBoard() {
         final ChessBoard board = dao.save(new ChessBoard("aaa", "1111"));
-        int affectedRow = dao.deleteById(board.getId());
+        int affectedRow = dao.deleteByIdAndPassword(board.getId(), board.getPassword());
         assertThat(affectedRow).isEqualTo(1);
     }
 

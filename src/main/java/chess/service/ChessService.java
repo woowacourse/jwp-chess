@@ -38,7 +38,7 @@ public class ChessService {
             gameDao.removeAll();
 
             pieceDao.saveAll(getInitPieceDtos());
-            gameDao.save(GameDto.from(PieceColor.WHITE, true));
+            gameDao.save(GameDto.of(PieceColor.WHITE, true));
         } catch (Exception e) {
             throw new IllegalArgumentException("게임을 초기화할 수 없습니다.");
         }
@@ -59,7 +59,7 @@ public class ChessService {
         Map<Position, Piece> initPieces = PieceFactory.createChessPieces();
         return initPieces.entrySet()
                 .stream()
-                .map(entry -> PieceDto.from(entry.getKey(), entry.getValue()))
+                .map(entry -> PieceDto.of(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
 
@@ -69,7 +69,7 @@ public class ChessService {
             game.proceedWith(moveCommand);
             pieceDao.remove(moveCommand.to());
             pieceDao.modifyPosition(moveCommand.from(), moveCommand.to());
-            gameDao.modify(GameDto.from(game.getTurnColor(), game.isRunning()));
+            gameDao.modify(GameDto.of(game.getTurnColor(), game.isRunning()));
             return getChess();
         } catch (Exception e) {
             throw new IllegalArgumentException("기물을 움직일 수 없습니다.");

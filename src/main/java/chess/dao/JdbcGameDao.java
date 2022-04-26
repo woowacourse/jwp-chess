@@ -49,13 +49,13 @@ public class JdbcGameDao implements GameDao {
             return jdbcTemplate.queryForObject(sql, getGameDtoRowMapper());
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();
-            return new GameDto(null, "ready");
+            return GameDto.of(null, "ready");
         }
     }
 
     private RowMapper<GameDto> getGameDtoRowMapper() {
         return (resultSet, rowNum) ->
-                new GameDto(
+                GameDto.of(
                         resultSet.getString("turn"),
                         resultSet.getString("status")
                 );

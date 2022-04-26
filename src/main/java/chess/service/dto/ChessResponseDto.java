@@ -15,10 +15,6 @@ public class ChessResponseDto {
         this.status = status;
     }
 
-    public static ChessResponseDto from(List<PieceDto> pieces, GameDto gameDto) {
-        return new ChessResponseDto(pieces, gameDto.getTurn(), gameDto.getStatus());
-    }
-
     public List<PieceDto> getPieces() {
         return List.copyOf(pieces);
     }

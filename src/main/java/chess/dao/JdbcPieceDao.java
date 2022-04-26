@@ -2,9 +2,11 @@ package chess.dao;
 
 import chess.domain.position.Position;
 import chess.service.dto.PieceDto;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -77,7 +79,7 @@ public class JdbcPieceDao implements PieceDao {
 
     private RowMapper<PieceDto> getPieceDtoRowMapper() {
         return (resultSet, rowNum) ->
-                new PieceDto(
+                PieceDto.of(
                         resultSet.getString("position"),
                         resultSet.getString("color"),
                         resultSet.getString("type")

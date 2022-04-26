@@ -102,7 +102,7 @@ public class JdbcPieceDaoTest {
                 () -> jdbcTemplate.queryForObject(
                         "select * from piece where position = 'a3'",
                         (resultSet, rowNum) ->
-                                new PieceDto(
+                                PieceDto.of(
                                         resultSet.getString("position"),
                                         resultSet.getString("color"),
                                         resultSet.getString("type")

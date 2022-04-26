@@ -15,24 +15,24 @@ public class PieceDto {
     private final String color;
     private final String type;
 
-    public PieceDto(String position, String color, String type) {
+    private PieceDto(String position, String color, String type) {
         this.position = position;
         this.color = color;
         this.type = type;
+    }
+
+    public static PieceDto of(Position position, Piece piece) {
+        return PieceDto.of(position.getName(), piece.getColor().getName(), piece.getType().getName());
+    }
+
+    public static PieceDto of(String position, String color, String type) {
+        return new PieceDto(position, color, type);
     }
 
     public static Map.Entry<Position, Piece> toPieceEntry(PieceDto pieceDto) {
         PieceType type = PieceType.find(pieceDto.getType());
         PieceColor color = PieceColor.find(pieceDto.getColor());
         return Map.entry(Position.of(pieceDto.position), PieceFactory.find(type, color));
-    }
-
-    public static PieceDto from(Position position, Piece piece) {
-        return new PieceDto(position.getName(), piece.getColor().getName(), piece.getType().getName());
-    }
-
-    public static PieceDto of(String position, String color, String type) {
-        return new PieceDto(position, color, type);
     }
 
     public void setPosition(String position) {

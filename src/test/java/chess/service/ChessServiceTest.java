@@ -30,7 +30,7 @@ public class ChessServiceTest {
     void gameStart() {
         List<PieceDto> initPieceDtos = PieceFactory.createChessPieces().entrySet()
                 .stream()
-                .map(entry -> PieceDto.from(entry.getKey(), entry.getValue()))
+                .map(entry -> PieceDto.of(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
         ChessResponseDto chessResponseDto = chessService.initializeGame();
@@ -63,7 +63,7 @@ public class ChessServiceTest {
     void getChess() {
         List<PieceDto> initPieceDtos = PieceFactory.createChessPieces().entrySet()
                 .stream()
-                .map(entry -> PieceDto.from(entry.getKey(), entry.getValue()))
+                .map(entry -> PieceDto.of(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
         chessService.initializeGame();
 

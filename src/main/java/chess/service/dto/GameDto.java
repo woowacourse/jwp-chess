@@ -10,16 +10,20 @@ public class GameDto {
     private final String turn;
     private final String status;
 
-    public GameDto(String turn, String status) {
+    private GameDto(String turn, String status) {
         this.turn = turn;
         this.status = status;
     }
 
-    public static GameDto from(PieceColor turnColor, boolean isPlaying) {
+    public static GameDto of(PieceColor turnColor, boolean isPlaying) {
         if (isPlaying) {
-            return new GameDto(turnColor.getName(), PLAYING.getName());
+            return GameDto.of(turnColor.getName(), PLAYING.getName());
         }
-        return new GameDto(turnColor.getName(), FINISHED.getName());
+        return GameDto.of(turnColor.getName(), FINISHED.getName());
+    }
+
+    public static GameDto of(String turn, String status) {
+        return new GameDto(turn, status);
     }
 
     public String getTurn() {

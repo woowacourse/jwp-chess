@@ -1,16 +1,18 @@
 package chess.web;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.BoardDto;
 import chess.web.dto.RoomDto;
+import chess.web.dto.RoomResponseDto;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +31,10 @@ public class RoomController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoomDto>> loadRooms() {
-        List<RoomDto> rooms = roomService.findAll();
+    public ResponseEntity<List<RoomResponseDto>> loadRooms() {
+        List<RoomResponseDto> rooms = roomService.findAll().stream()
+            .map(room -> new RoomResponseDto(room.getId(), room.getName()))
+            .collect(Collectors.toList());
         return ResponseEntity.ok(rooms);
     }
 
@@ -47,8 +51,8 @@ public class RoomController {
     }
 
     @DeleteMapping("/{roomId}")
-    public String deleteRoom(@PathVariable int roomId) {
-        roomService.removeById(roomId);
+    public String deleteRoom(@PathVariable int roomId, @RequestParam String password) {
+        roomService.delete(roomId, password);
         return "redirect:/";
     }
 

@@ -21,6 +21,7 @@ import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.RoomDto;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(RepositoryConfiguration.class)
@@ -48,7 +49,7 @@ class RoomControllerTest {
     @AfterEach
     void deleteCreated() {
         roomService.findAll()
-            .forEach(room -> roomService.removeById((int) room.getId()));
+            .forEach(room -> roomService.delete((int) room.getId(), password));
     }
 
     @DisplayName("유효한 이름을 받으면 게임방 입장")
@@ -56,7 +57,7 @@ class RoomControllerTest {
     void createRoom() {
         RestAssured.given().log().all()
             .formParam("name", testName)
-            .formParam("password", "1234")
+            .formParam("password", password)
             .when().post("/rooms")
             .then().log().all()
             .statusCode(HttpStatus.FOUND.value())
@@ -67,7 +68,7 @@ class RoomControllerTest {
     @DisplayName("방 목록을 불러온다.")
     void loadRooms() {
         roomService.create(new RoomDto(testName, password));
-        roomService.create(new RoomDto("does", "does"));
+        roomService.create(new RoomDto("does", password));
         RestAssured.given().log().all()
             .when().get("/rooms")
             .then().log().all()
@@ -115,6 +116,7 @@ class RoomControllerTest {
         RoomDto room = roomService.create(new RoomDto(testName, password));
 
         RestAssured.given().log().all()
+            .formParam("password", password)
             .when().delete("/rooms/" + room.getId())
             .then().log().all()
             .header("location", containsString("/"));

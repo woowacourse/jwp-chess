@@ -27,7 +27,7 @@ class RoomServiceTest {
 	@AfterEach
 	void deleteCreated() {
 		roomService.findAll()
-			.forEach(room -> roomService.removeById((int) room.getId()));
+			.forEach(room -> roomService.delete((int) room.getId(), password));
 	}
 
 	@Test
@@ -38,7 +38,7 @@ class RoomServiceTest {
 	}
 
 	@Test
-	@DisplayName("이미 있는 이름으 저장하면 예외가 발생한다.")
+	@DisplayName("이미 있는 이름으로 저장하면 예외가 발생한다.")
 	void validateDuplicateName() {
 		roomService.create(new RoomDto(testName, password));
 
@@ -58,6 +58,23 @@ class RoomServiceTest {
 	@DisplayName("없는 id로 방을 조회하면 예외가 발생한다.")
 	void validate() {
 		assertThatThrownBy(() -> roomService.validateId(0))
+			.isInstanceOf(IllegalArgumentException.class);
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"", " "})
+	@DisplayName("빈 비밀번호를 입력하면 예외가 발생한다.")
+	void passwordException(String password) {
+		assertThatThrownBy(() -> roomService.create(new RoomDto(testName, password)))
+			.isInstanceOf(IllegalArgumentException.class);
+	}
+
+	@Test
+	@DisplayName("id와 비밀번호가 맞지 않으면 삭제하지 못한다.")
+	void removeException() {
+		RoomDto room = roomService.create(new RoomDto(testName, password));
+
+		assertThatThrownBy(() -> roomService.delete((int)room.getId(), "1234"))
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 }

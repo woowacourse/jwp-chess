@@ -24,6 +24,7 @@ import io.restassured.http.ContentType;
 class BoardControllerTest {
 
 	private static final String testName = "summer";
+	private static final String password = "summer";
 
 	@LocalServerPort
 	private int port;
@@ -41,13 +42,13 @@ class BoardControllerTest {
 	@BeforeEach
 	void setUp() {
 		RestAssured.port = port;
-		roomId = (int) roomService.create(new RoomDto(testName, "1234")).getId();
+		roomId = (int) roomService.create(new RoomDto(testName, password)).getId();
 		boardId = gameService.startNewGame(roomId).getBoardId();
 	}
 
 	@AfterEach
 	void deleteCreated() {
-		roomService.removeById(roomId);
+		roomService.delete(roomId, password);
 	}
 
 	@Test

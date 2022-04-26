@@ -12,6 +12,7 @@ import chess.web.dao.PlayerDao;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
+import chess.web.dto.ScoreDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Service;
@@ -44,12 +45,12 @@ public class ChessGameService {
 
         try {
             chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
-            removeAll();
             if (isChessGameEnd(chessGame)) {
                 moveResultDto.setIsGameOver(true);
                 moveResultDto.setWinner(turn);
                 return moveResultDto;
             }
+            removeAll();
             saveAll(chessGame);
         } catch (IllegalArgumentException e) {
             moveResultDto.setIsMovable(false);
@@ -100,5 +101,12 @@ public class ChessGameService {
 
     private boolean isChessGameEnd(ChessGame chessGame) {
         return chessGame.isFinished();
+    }
+
+    public ScoreDto status() {
+        ChessBoard board = ChessBoard.of(findAllBoard());
+        Map<Color, Double> score = board.computeScore();
+        removeAll();
+        return new ScoreDto(score.get(Color.WHITE), score.get(Color.BLACK));
     }
 }

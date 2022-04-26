@@ -23,7 +23,7 @@ public class RunningGame extends StartedGame {
 
         if (isKingKilled(target)) {
             board.move(source, target);
-            return new EndGame();
+            return new EndGame(board);
         }
 
         board.move(source, target);

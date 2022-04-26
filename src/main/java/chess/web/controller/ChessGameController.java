@@ -4,6 +4,7 @@ import chess.domain.piece.Piece;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
+import chess.web.dto.ScoreDto;
 import chess.web.service.ChessGameService;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
@@ -53,7 +54,12 @@ public class ChessGameController {
     }
 
     @GetMapping("/end")
-    public String end() {
-        return "finished";
+    public ModelAndView end() {
+        ModelAndView modelAndView = new ModelAndView("finished");
+        ScoreDto scores = service.status();
+        modelAndView.addObject("whiteScore", scores.getWhiteScore());
+        modelAndView.addObject("blackScore", scores.getBlackScore());
+
+        return modelAndView;
     }
 }

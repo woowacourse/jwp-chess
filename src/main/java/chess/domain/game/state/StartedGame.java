@@ -38,7 +38,7 @@ public class StartedGame implements GameState {
 
     @Override
     public GameState end() {
-        return new EndGame();
+        return new EndGame(board);
     }
 
     @Override

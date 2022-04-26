@@ -9,6 +9,12 @@ import chess.domain.piece.property.Color;
 
 public class EndGame implements GameState {
 
+    private final ChessBoard board;
+
+    public EndGame(ChessBoard board) {
+        this.board = board;
+    }
+
     @Override
     public GameState start() {
         throw new UnsupportedOperationException("이미 종료된 게임입니다.");
@@ -21,7 +27,7 @@ public class EndGame implements GameState {
 
     @Override
     public Map<Color, Double> status() {
-        throw new UnsupportedOperationException("이미 종료된 게임입니다.");
+        return board.computeScore();
     }
 
     @Override

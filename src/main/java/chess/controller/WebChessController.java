@@ -37,8 +37,12 @@ public class WebChessController {
     private static final String EXCEPTION = "exception";
     private final BoardDTO boardDTO = BoardDTO.buildModel();
 
+    private final WebChessGame webChessGame;
+
     @Autowired
-    private final WebChessGame webChessGame = new WebChessGame();
+    public WebChessController(WebChessGame webChessGame) {
+        this.webChessGame = webChessGame;
+    }
 
     @GetMapping("/")
     public String inputGameID(Model model) {

@@ -48,7 +48,6 @@ class ChessGameDAOTest {
 
         Assertions.assertThat(activeGames.size()).isNotEqualTo(0);
     }
-
     @Test
     @DisplayName("체스 게임방 삭제 (성공)")
     void deleteChessGameRoom() {

@@ -20,7 +20,6 @@ class SpringMemberDaoTest {
     @Autowired
     private MemberDao memberDao;
 
-
     @DisplayName("정상적으로 멤버가 등록되는지 확인한다.")
     @Test
     void saveMember() {

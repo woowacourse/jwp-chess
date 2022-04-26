@@ -30,7 +30,6 @@ class SpringGameDaoTest {
     @Autowired
     private GameDao gameDao;
 
-
     @BeforeEach
     void setup() {
         final Member one = new Member(1L, "one");
@@ -42,7 +41,6 @@ class SpringGameDaoTest {
         memberDao.save(two);
         gameDao.save(game);
     }
-
 
     @Test
     @DisplayName("정상적으로 게임이 생성되는지 확인한다.")

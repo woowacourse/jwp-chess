@@ -2,10 +2,8 @@ package chess.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.controller.dto.GameDto;
 import chess.controller.dto.request.MoveRequest;
 import chess.dao.GameDao;
-import chess.dao.GameDaoImpl;
 import chess.domain.GameState;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;

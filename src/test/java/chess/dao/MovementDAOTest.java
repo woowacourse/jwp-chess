@@ -1,5 +1,7 @@
 package chess.dao;
 
+import static org.assertj.core.api.Assertions.*;
+
 import chess.dto.GameCreationDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,6 @@ class MovementDAOTest {
         ChessGameDAO chessGameDAO = new ChessGameDAO(jdbcTemplate);
         long id = chessGameDAO.addGame(new GameCreationDTO("zero", "1234"));
 
-        org.assertj.core.api.Assertions.assertThat(id).isNotNull();
+        assertThat(id).isNotNull();
     }
 }

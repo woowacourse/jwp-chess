@@ -1,0 +1,51 @@
+@font-face {
+    font-family: "Hanna";
+    src: url("/fonts/BMHANNA_11yrs.ttf");
+}
+
+body, button, input {
+    font-family: "Hanna", sans-serif;
+}
+
+body {
+    background: dimgray;
+}
+
+.main-container {
+    margin: 100px auto;
+    float: top;
+    text-align: center;
+}
+
+.input {
+    width: 300px;
+    height: 40px;
+    font-size: x-large;
+    margin: 0 auto 30px;
+}
+
+.ui-button {
+    width: 100px;
+    height: 40px;
+    font-size: x-large;
+    margin: 0 auto;
+}
+
+.room-list {
+    width: 400px;
+    margin: 0 auto;
+    list-style: none;
+    padding: 0 40px 40px;
+}
+
+.join-btn, .delete-btn {
+    font-size: large;
+    margin: 5px 0;
+}
+
+.error {
+    font-size: x-large;
+    font-weight: bold;
+    text-align: center;
+    color: darkred;
+}

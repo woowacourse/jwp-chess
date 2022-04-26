@@ -1,9 +1,98 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>모두의 체스</title>
+    <meta charset="UTF-8">
+    <title>체스 미션</title>
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/src/index.css">
 </head>
 <body>
-<h1>Hello World</h1>
+    <div class="main-container">
+        <h1>엘리의 재미난 체스 게임</h1>
+        <input type="text" class="input" id="input-room-name" placeholder="방 이름" autofocus maxlength="10"/>
+        <button class="ui-button" id="start" onclick="create()">생성</button>
+        <div class="error" id="error"></div>
+        <h2>체스 방 목록</h2>
+        <ul class="room-list"></ul>
+    </div>
 </body>
+
+<script>
+    window.onload = async function () {
+        const res = await fetch("/rooms", {method: "GET",});
+        const data = await res.json();
+
+        const ul = document.getElementsByClassName("room-list")[0];
+        for (let i = 0; i < data.length; i++) {
+            const li = document.createElement("li");
+            li.id = data[i].name;
+
+            const joinBtn = document.createElement("button");
+            joinBtn.className = "join-btn";
+            joinBtn.innerText = data[i].name;
+            joinBtn.addEventListener('click', join);
+            li.appendChild(joinBtn);
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "delete-btn";
+            deleteBtn.innerText = "삭제"
+            deleteBtn.addEventListener('click', deleteRoom);
+            li.appendChild(deleteBtn);
+
+            ul.appendChild(li);
+        }
+    }
+
+    async function join(event) {
+        window.location.href = `/room/${event.target.innerText}`;
+    }
+
+    async function create() {
+        roomName = document.getElementById("input-room-name").value;
+        if (/^\s*$/.test(roomName)) {
+            const error = document.getElementById("error");
+            error.innerText = "방 이름을 입력하세요!";
+            document.getElementById("input-room-name").value = "";
+            return;
+        }
+
+        let res = await fetch("/rooms", {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify({name: `${roomName}`})
+        });
+        if (!res.ok) {
+            const data = await res.json();
+            const error = document.getElementById("error");
+            error.innerText = data.message;
+            document.getElementById("input-room-name").value = "";
+            return;
+        }
+
+        res = await fetch(`/rooms/${roomName}/pieces`, {method: "POST"});
+        if (!res.ok) {
+            const data = await res.json();
+            const error = document.getElementById("error");
+            error.innerText = data.message;
+            document.getElementById("input-room-name").value = "";
+            return;
+        }
+
+        window.location.href = `/room/${roomName}`;
+    }
+
+    async function deleteRoom(event) {
+        const res = await fetch(`/rooms/${event.target.parentElement.id}`, {method: "DELETE"});
+        if (!res.ok) {
+            const data = await res.json();
+            const error = document.getElementById("error");
+            error.innerText = data.message;
+            return;
+        }
+        window.location.href = "/";
+    }
+</script>
+
 </html>

@@ -2,7 +2,6 @@ package chess.controller;
 
 import chess.domain.ChessGame;
 import chess.domain.Result;
-import chess.dto.ResponseDto;
 import chess.service.GameService;
 import chess.service.MemberService;
 import java.net.URI;
@@ -46,15 +45,12 @@ public class ChessApiController {
 
     @PostMapping("/move/{gameId}")
     @ResponseBody
-    public ResponseDto movePiece(@PathVariable("gameId") final Long gameId,
-                                 @RequestParam("rawFrom") final String rawFrom,
-                                 @RequestParam("rawTo") final String rawTo) {
-        try {
-            gameService.move(gameId, rawFrom, rawTo);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            return new ResponseDto(400, e.getMessage());
-        }
-        return new ResponseDto(200, "");
+    public ResponseEntity<Long> movePiece(@PathVariable("gameId") final Long gameId,
+                                          @RequestParam("rawFrom") final String rawFrom,
+                                          @RequestParam("rawTo") final String rawTo) {
+        gameService.move(gameId, rawFrom, rawTo);
+
+        return ResponseEntity.ok().body(gameId);
     }
 
     @PostMapping("/terminate/{gameId}")
@@ -67,7 +63,8 @@ public class ChessApiController {
 
     @PostMapping("/chessGame")
     @ResponseBody
-    public ResponseEntity<Long> createGame(@RequestParam("whiteId") Long whiteId, @RequestParam("blackId") Long blackId) {
+    public ResponseEntity<Long> createGame(@RequestParam("whiteId") Long whiteId,
+                                           @RequestParam("blackId") Long blackId) {
         final Long gameId = gameService.createGame(whiteId, blackId);
 
         return ResponseEntity.created(URI.create("/chessGame/" + gameId)).body(gameId);

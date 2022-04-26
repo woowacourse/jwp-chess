@@ -10,6 +10,38 @@ body {
   font-style: normal;
 }
 
+#game-list {
+  margin: 5vmin;
+  background: lavender;
+  border-radius: 20px;
+  width: 50vmin;
+  height: 50vmin;
+}
+
+#games {
+  overflow: auto;
+  font-size: 3vmin;
+  height: 46vmin;
+  margin: 2vmin 0;
+}
+
+#games::-webkit-scrollbar {
+  width: 1vmin;
+}
+
+#games::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background-color: #8977ad;
+}
+
+#games::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.game-id {
+  cursor: pointer;
+}
+
 .explanation {
   margin: 1vmin;
   font-size: 3vmin;

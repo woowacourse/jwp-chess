@@ -107,7 +107,7 @@ function printTurn(data) {
     alert(`${turn[data.gameState]}의 승리입니다.`);
     return;
   }
-  turnInfo.innerText = `${turn[data.gameState]}의 턴입니다.`;
+  turnInfo.innerText = `${turn[data.gameState]}의 차례입니다.`;
 }
 
 async function start() {

@@ -9,23 +9,17 @@
 <body>
 <div>
   <div id="contents">
-    <div id="title-bar">
+    <section id="title-bar">
       Chess With Me
-    </div>
+    </section>
     <div class="explanation">
-      Input the game number!
+      진행중인 게임
     </div>
-    <form method="get" id="game-id-form" action="/game">
-      <label>
-        <input type="text" name="gameId"/>
-      </label>
-      <input type="submit" class="submit button" value="submit">
-    </form>
-    <div class="explanation">
-      or...
-    </div>
+    <section id="game-list">
+      <div id="games"></div>
+    </section>
     <div id="buttons">
-      <div id="random-start-button" class="button">start random game</div>
+      <div id="random-start-button" class="button">새 게임 시작</div>
     </div>
   </div>
 </div>

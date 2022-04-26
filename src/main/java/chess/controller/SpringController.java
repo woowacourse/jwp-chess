@@ -1,5 +1,7 @@
 package chess.controller;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import chess.domain.Command;
 import chess.domain.piece.Team;
 import chess.service.ChessService;
@@ -31,7 +33,7 @@ public class SpringController {
 
     @GetMapping("/start")
     public String start(@RequestParam("game_name") String gameName) throws UnsupportedEncodingException {
-        String encodedParam = URLEncoder.encode(gameName, "UTF-8");
+        String encodedParam = URLEncoder.encode(gameName, UTF_8);
         return "redirect:/game/" + encodedParam;
     }
 
@@ -50,7 +52,7 @@ public class SpringController {
     public String move(@PathVariable String gameName,
                        @RequestParam("from") String from, @RequestParam("to") String to,
                        Model model, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
-        String encodedParam = URLEncoder.encode(gameName, "UTF-8");
+        String encodedParam = URLEncoder.encode(gameName, UTF_8);
         try {
             String command = makeCommand(from, to);
             chessService.move(command);

@@ -48,17 +48,17 @@ public class GameDaoImpl implements GameDao {
 
     @Override
     public void updateState(long id, GameState gameState) {
-        String query = "UPDATE game SET state = :game_state WHERE game_id = :game_id";
+        String sql = "UPDATE game SET state = :game_state WHERE game_id = :game_id";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("game_state", gameState.name());
         parameters.put("game_id", id);
-        namedParameterJdbcTemplate.update(query, parameters);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 
     @Override
     public void delete(long id) {
-        String query = "DELETE FROM game WHERE game_id = :game_id";
+        String sql = "DELETE FROM game WHERE game_id = :game_id";
         MapSqlParameterSource parameter = new MapSqlParameterSource("game_id", id);
-        namedParameterJdbcTemplate.update(query, parameter);
+        namedParameterJdbcTemplate.update(sql, parameter);
     }
 }

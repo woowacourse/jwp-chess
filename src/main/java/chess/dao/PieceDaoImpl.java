@@ -69,12 +69,12 @@ public class PieceDaoImpl implements PieceDao {
 
     @Override
     public List<PieceResponse> findAll(long gameId) {
-        String query = "SELECT * FROM piece WHERE game_id = :game_id";
+        String sql = "SELECT * FROM piece WHERE game_id = :game_id";
 
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId);
 
         try {
-            return namedParameterJdbcTemplate.query(query, namedParameters, pieceResponseRowMapper);
+            return namedParameterJdbcTemplate.query(sql, namedParameters, pieceResponseRowMapper);
         } catch (EmptyResultDataAccessException e) {
             return Collections.emptyList();
         }
@@ -89,14 +89,14 @@ public class PieceDaoImpl implements PieceDao {
 
     @Override
     public Optional<Piece> find(long gameId, Position position) {
-        String query = "SELECT piece_type, color FROM piece WHERE game_id = :game_id AND position = :position";
+        String sql = "SELECT piece_type, color FROM piece WHERE game_id = :game_id AND position = :position";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("game_id", gameId);
         parameters.put("position", convertPositionToString(position));
 
         try {
             return Optional.ofNullable(
-                    namedParameterJdbcTemplate.queryForObject(query, parameters, pieceRowMapper));
+                    namedParameterJdbcTemplate.queryForObject(sql, parameters, pieceRowMapper));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -104,20 +104,20 @@ public class PieceDaoImpl implements PieceDao {
 
     @Override
     public void updatePosition(long gameId, Position start, Position target) {
-        String query = "UPDATE piece SET position = :target WHERE game_id = :game_id AND position = :start";
+        String sql = "UPDATE piece SET position = :target WHERE game_id = :game_id AND position = :start";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("game_id", gameId);
         parameters.put("start", convertPositionToString(start));
         parameters.put("target", convertPositionToString(target));
-        namedParameterJdbcTemplate.update(query, parameters);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 
     @Override
     public void delete(long gameId, Position position) {
-        String query = "DELETE FROM piece WHERE game_id = :game_id AND position = :position";
+        String sql = "DELETE FROM piece WHERE game_id = :game_id AND position = :position";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("game_id", gameId);
         parameters.put("position", convertPositionToString(position));
-        namedParameterJdbcTemplate.update(query, parameters);
+        namedParameterJdbcTemplate.update(sql, parameters);
     }
 }

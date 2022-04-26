@@ -2,6 +2,18 @@
 
 - Spring MVC, Spring JDBC
 
+## 개발환경 셋업
+
+1. 도커 데스크탑 실행
+2. 해당 프로젝트의 /docker 경로에서 `docker-compose -p 컨테이너명 up -d` 실행
+3. 컨테이너가 정상적으로 생성되어 실행되고 있을 때 애플리케이션 실행
+4. 애플리케이션 종료 후 /docker 경로에서 `docker-compose -p 컨테이너명 down` 실행
+
+### 디버깅
+
+- `application.properties`의 `spring.datasource.url`에 사용되는 포트정보(XXXX)에 별도의 프로그램이 실행되는 중인지 확인
+- 이러한 경우 XXXX의 값을 수정하고, `docker-compose.yml`의 `ports` 정보도 "XXXX:3306" 형식으로 수정 후 컨테이너 재생성
+
 ## 기능 요구사항
 
 체스 게임을 진행할 수 있는 방을 만들어서 동시에 여러 게임이 가능하도록 하기

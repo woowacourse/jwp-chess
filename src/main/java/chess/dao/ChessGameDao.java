@@ -3,6 +3,7 @@ package chess.dao;
 import chess.domain.ChessGame;
 import chess.domain.state.Turn;
 import javax.sql.DataSource;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -35,9 +36,13 @@ public class ChessGameDao {
 
     public ChessGame createChessGame(ChessGame chessGame) {
         SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(chessGame);
-        long id = insertActor.executeAndReturnKey(sqlParameterSource).longValue();
 
-        return new ChessGame(id, chessGame.getTurn(), chessGame.getTitle(), chessGame.getPassword());
+        try {
+            long id = insertActor.executeAndReturnKey(sqlParameterSource).longValue();
+            return new ChessGame(id, chessGame.getTurn(), chessGame.getTitle(), chessGame.getPassword());
+        } catch (DuplicateKeyException duplicateKeyException){
+            throw new IllegalArgumentException("중복된 체스 게임 제목이 이미 존재합니다.");
+        }
     }
 
     public ChessGame findChessGame(long id) {
@@ -50,5 +55,11 @@ public class ChessGameDao {
         String sql = "update chess_game set turn = ? where id = ?";
 
         return jdbcTemplate.update(sql, turn.name(), id);
+    }
+
+    public int deleteChessGame(ChessGame chessGame) {
+        String sql = "delete from chess_game where title = ?";
+
+        return jdbcTemplate.update(sql, chessGame.getTitle());
     }
 }

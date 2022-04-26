@@ -32,6 +32,7 @@ class ChessGameControllerAdviceTest {
     void setUp() {
         RestAssured.port = port;
         ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
+        chessGameDao.deleteChessGame(chessGame);
         chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
     }

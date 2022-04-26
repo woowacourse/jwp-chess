@@ -1,10 +1,12 @@
 package chess.dao;
 
+import static chess.domain.state.Turn.END;
+import static chess.domain.state.Turn.WHITE_TURN;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.domain.ChessGame;
-import chess.domain.state.Turn;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,17 +34,25 @@ class ChessGameDaoTest {
     @Test
     @DisplayName("체스 게임 생성")
     void createChessGame() {
-        Turn turn = Turn.WHITE_TURN;
-        ChessGame chessGame = new ChessGame(turn.name(), "title", "password");
+        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), "title", "password");
 
         assertDoesNotThrow(() -> chessGameDao.createChessGame(chessGame));
     }
 
     @Test
+    @DisplayName("중복된 제목의 체스 게임 생성")
+    void createDuplicateTitleChessGame() {
+        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), "title", "password");
+        chessGameDao.createChessGame(chessGame);
+
+        assertThatThrownBy(() -> chessGameDao.createChessGame(chessGame))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("id 값을 통해서 체스 게임 반환")
     void findChessGame() {
-        Turn turn = Turn.WHITE_TURN;
-        ChessGame chessGame = new ChessGame(turn.name(), "title", "password");
+        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), "title", "password");
         ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
 
         assertThat(chessGameDao.findChessGame(savedChessGame.getId())).isEqualTo(savedChessGame);
@@ -51,10 +61,18 @@ class ChessGameDaoTest {
     @Test
     @DisplayName("현재 게임 상태 변경")
     void changeChessGameTurn() {
-        Turn turn = Turn.WHITE_TURN;
-        ChessGame chessGame = new ChessGame(turn.name(), "title", "password");
+        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), "title", "password");
         ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
 
-        assertThat(chessGameDao.changeChessGameTurn(savedChessGame.getId(), Turn.END)).isEqualTo(1);
+        assertThat(chessGameDao.changeChessGameTurn(savedChessGame.getId(), END)).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("체스 게임 제목으로 게임 삭제")
+    void deleteChessGameByTitle() {
+        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), "title", "password");
+        ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
+
+        assertThat(chessGameDao.deleteChessGame(savedChessGame)).isEqualTo(1);
     }
 }

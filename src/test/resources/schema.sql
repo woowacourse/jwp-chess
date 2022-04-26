@@ -5,7 +5,7 @@ CREATE TABLE chess_game
 (
     id   bigint NOT NULL AUTO_INCREMENT,
     turn enum('WHITE_TURN', 'BLACK_TURN', 'END') NOT NULL,
-    title varchar(20) NOT NULL,
+    title varchar(20) NOT NULL UNIQUE,
     password varchar(100) NOT NULL,
     primary key (id)
 );
@@ -19,5 +19,5 @@ CREATE TABLE piece
     position_row  varchar(1)  NOT NULL,
     chess_game_id bigint      NOT NULL,
     primary key (id),
-    foreign key (chess_game_id) references chess_game (id)
+    foreign key (chess_game_id) references chess_game (id) on delete cascade
 );

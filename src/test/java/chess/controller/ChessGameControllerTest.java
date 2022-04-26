@@ -33,9 +33,13 @@ class ChessGameControllerTest {
     @LocalServerPort
     private int port;
 
+    private ChessGame chessGame;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
+        chessGameDao.deleteChessGame(chessGame);
     }
 
     @Test
@@ -53,7 +57,6 @@ class ChessGameControllerTest {
     @Test
     @DisplayName("체스 보드 로딩")
     void loadChessGame() {
-        ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
         long chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
 
@@ -67,7 +70,6 @@ class ChessGameControllerTest {
     @Test
     @DisplayName("체스 기물 이동")
     void movePiece() {
-        ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
         long chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
         pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
@@ -83,7 +85,6 @@ class ChessGameControllerTest {
     @Test
     @DisplayName("체스 기물 프로모션")
     void promotionPiece() {
-        ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
         long chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
         pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
@@ -103,7 +104,6 @@ class ChessGameControllerTest {
     @Test
     @DisplayName("체스 점수 반환")
     void calculateScore() {
-        ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
         long chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
 
@@ -117,7 +117,6 @@ class ChessGameControllerTest {
     @Test
     @DisplayName("게임 종료 여부 판별")
     void chessGameStatus() {
-        ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
         long chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
 
@@ -131,7 +130,6 @@ class ChessGameControllerTest {
     @Test
     @DisplayName("게임 우승자 반환")
     void chessGameWinner() {
-        ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
         long chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
         pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());

@@ -26,4 +26,7 @@ public class ChessGameControllerAdvice {
     public ResponseEntity<Void> handleSqlException() {
         return ResponseEntity.internalServerError().build();
     }
+
+
+
 }

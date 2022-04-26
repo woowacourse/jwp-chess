@@ -8,6 +8,7 @@ import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Random;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,9 +40,10 @@ public class ChessController {
         return chessService.loadGame(gameId);
     }
 
-    @PostMapping("/{gameId}")
-    public ResponseEntity<ChessGameResponse> createGame(@PathVariable long gameId) throws URISyntaxException {
-        return ResponseEntity.created(new URI("/games/" + gameId)).body(chessService.createGame(gameId));
+    @PostMapping("")
+    public ResponseEntity<ChessGameResponse> createGame() throws URISyntaxException {
+        long gameId = Math.abs(new Random().nextInt());
+        return ResponseEntity.created(new URI("/game/" + gameId)).body(chessService.createGame(gameId));
     }
 
     @PatchMapping("/{gameId}")

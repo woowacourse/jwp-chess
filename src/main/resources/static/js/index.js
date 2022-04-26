@@ -1,27 +1,10 @@
-const randomStartButton = document.getElementById("random-start-button");
+const createGameButton = document.getElementById("create-game-button");
 const gamesDiv = document.getElementById("games");
+const modal = document.getElementById("modal");
+const closeButton = document.getElementById("close-button");
+const createGameForm = document.getElementById("create-game-form");
 
-randomStartButton.addEventListener("click", async () => {
-  const gameId = Math.floor(Math.random() * 10000);
-
-  const res = await fetch(`/games/${gameId}`);
-  if (!res.ok) {
-    await create(gameId);
-    location.href = `/game/${gameId}`;
-  }
-});
-
-async function create(gameId) {
-  const res = await fetch(`/games/${gameId}`, {
-    method: "post"
-  });
-  if (!res.ok) {
-    const data = await res.json();
-    alert(data.message);
-  }
-}
-
-window.onload = async function () {
+window.onload = async () => {
   const res = await fetch("/games");
   const body = await res.json();
   body.gameIds.forEach(id => {
@@ -34,7 +17,31 @@ window.onload = async function () {
   });
 }
 
+createGameButton.addEventListener("click", () => {
+  modal.classList.remove("hidden");
+});
+
+closeButton.addEventListener("click", () => {
+  modal.classList.add("hidden");
+});
+
+createGameForm.addEventListener("submit", createGame);
+
 function enterGame(event) {
   const gameId = event.target.id;
   location.href = `/game/${gameId}`;
+}
+
+async function createGame() {
+  modal.classList.add("hidden");
+  const res = await fetch(`/games`, {
+    method: "post"
+  });
+  if (res.ok) {
+    location.href = res.headers.get("Location");
+    return;
+  }
+  const data = await res.json();
+  alert(data.message);
+  location.href = "/";
 }

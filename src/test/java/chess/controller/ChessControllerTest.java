@@ -89,23 +89,23 @@ class ChessControllerTest {
         void create() {
             RestAssured.given().log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
-                    .when().post("/games/" + testGameId)
+                    .when().post("/games")
                     .then().log().all()
                     .statusCode(HttpStatus.CREATED.value());
         }
 
-        @DisplayName("이미 생성된 게임 생성 요청은 실패한다.")
-        @Test
-        void create_Fail() {
-            chessService.createGame(testGameId);
-
-            RestAssured.given().log().all()
-                    .accept(MediaType.APPLICATION_JSON_VALUE)
-                    .when().post("/games/" + testGameId)
-                    .then().log().all()
-                    .statusCode(HttpStatus.CONFLICT.value())
-                    .body("message", Matchers.equalTo("이미 존재하는 게임입니다."));
-        }
+//        @DisplayName("이미 생성된 게임 생성 요청은 실패한다.")
+//        @Test
+//        void create_Fail() {
+//            chessService.createGame(testGameId);
+//
+//            RestAssured.given().log().all()
+//                    .accept(MediaType.APPLICATION_JSON_VALUE)
+//                    .when().post("/games")
+//                    .then().log().all()
+//                    .statusCode(HttpStatus.CONFLICT.value())
+//                    .body("message", Matchers.equalTo("이미 존재하는 게임입니다."));
+//        }
     }
 
     @Nested

@@ -2,7 +2,9 @@ package chess.database.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.List;
+import java.util.function.Supplier;
+
+import javax.sql.DataSource;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -10,54 +12,64 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import chess.database.dao.spring.SpringGameDao;
 import chess.database.dto.GameStateDto;
-import chess.database.dao.vanilla.JdbcConnector;
-import chess.database.dao.vanilla.JdbcGameDao;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 
-@SpringBootTest
+@JdbcTest
+@Sql("classpath:ddl.sql")
 class GameDaoTest {
 
-    private static final String TEST_ROOM_NAME = "TESTING";
-    private static final String TEST_CREATION_ROOM_NAME = "TESTING2";
+    private static final String TEST_ROOM_NAME = "TEST_ROOM_NAME";
+    private static final String TEST_CREATION_ROOM_NAME = "TEST_CREATION_ROOM_NAME";
+    private static final Supplier<RuntimeException> RUNTIME_EXCEPTION_SUPPLIER =
+        () -> new RuntimeException("[ERROR] 방이 존재하지 않습니다.");
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private DataSource dataSource;
+
     private GameDao dao;
+    private Long testId;
 
     @BeforeEach
     void setUp() {
-        dao = new SpringGameDao(jdbcTemplate);
+        dao = new SpringGameDao(dataSource, jdbcTemplate);
         GameState state = new Ready();
-        dao.saveGame(GameStateDto.of(state), TEST_ROOM_NAME);
+        testId = dao.saveGame(GameStateDto.of(state), TEST_ROOM_NAME, "password");
     }
 
     @Test
     @DisplayName("게임을 생성한다.")
     public void createGame() {
+        // given
         GameState state = new Ready();
-        assertThatCode(() -> dao.saveGame(GameStateDto.of(state), TEST_CREATION_ROOM_NAME))
-            .doesNotThrowAnyException();
+
+        // when
+        final Long savedId = dao.saveGame(GameStateDto.of(state), TEST_CREATION_ROOM_NAME, "password");
+
+        // then
+        assertThat(savedId).isNotNull();
     }
 
     @Test
     @DisplayName("방 이름으로 게임 상태와 턴 색깔을 조회한다.")
     public void insert() {
         // given
-        List<String> stateAndColor = dao.readStateAndColor(TEST_ROOM_NAME);
+        final GameStateDto gameStateDto = dao.findGameById(testId)
+            .orElseThrow(RUNTIME_EXCEPTION_SUPPLIER);
         // when
-
-        String stateString = stateAndColor.get(0);
-        String colorString = stateAndColor.get(1);
         // then
         Assertions.assertAll(
-            () -> assertThat(stateString).isEqualTo("READY"),
-            () -> assertThat(colorString).isEqualTo("WHITE")
+            () -> assertThat(gameStateDto.getState()).isEqualTo("READY"),
+            () -> assertThat(gameStateDto.getTurnColor()).isEqualTo("WHITE")
         );
     }
 
@@ -68,19 +80,16 @@ class GameDaoTest {
         GameState state = new Ready();
         GameState started = state.start();
         // when
-        dao.updateState(GameStateDto.of(started), TEST_ROOM_NAME);
-        List<String> stateAndColor = dao.readStateAndColor(TEST_ROOM_NAME);
+        dao.updateState(GameStateDto.of(started), testId);
+        final GameStateDto gameStateDto = dao.findGameById(testId).orElseThrow(RUNTIME_EXCEPTION_SUPPLIER);
 
-        String stateString = stateAndColor.get(0);
-        String colorString = stateAndColor.get(1);
         // then
-        assertThat(stateString).isEqualTo("RUNNING");
-        assertThat(colorString).isEqualTo("WHITE");
+        assertThat(gameStateDto.getState()).isEqualTo("RUNNING");
+        assertThat(gameStateDto.getTurnColor()).isEqualTo("WHITE");
     }
 
     @AfterEach
-    void afterAll() {
-        dao.removeGame(TEST_ROOM_NAME);
-        dao.removeGame(TEST_CREATION_ROOM_NAME);
+    void setDown() {
+        dao.removeGame(testId);
     }
 }

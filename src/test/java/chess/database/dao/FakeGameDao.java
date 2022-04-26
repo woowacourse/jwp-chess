@@ -1,47 +1,91 @@
 package chess.database.dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import chess.database.dto.GameStateDto;
+import chess.dto.RoomRequest;
 
 public class FakeGameDao implements GameDao {
 
-    private static final int STATE_INDEX = 0;
-    private static final int COLOR_INDEX = 1;
+    private static class FakeTable {
+        private GameStateDto dto;
+        private String roomName;
+        private String password;
 
-    private final Map<String, List<String>> memoryDatabase;
+        public FakeTable(GameStateDto dto, String roomName, String password) {
+            this.dto = dto;
+            this.roomName = roomName;
+            this.password = password;
+        }
+
+        public GameStateDto getDto() {
+            return dto;
+        }
+
+        public String getRoomName() {
+            return roomName;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setDto(GameStateDto dto) {
+            this.dto = dto;
+        }
+    }
+
+    private final Map<Long, FakeTable> memoryDatabase;
+    private long id;
 
     public FakeGameDao() {
         this.memoryDatabase = new HashMap<>();
+        this.id = 1L;
     }
 
     @Override
-    public List<String> readStateAndColor(String roomName) {
-        final List<String> stateAndColor = memoryDatabase.get(roomName);
-        if (stateAndColor == null) {
-            return new ArrayList<>();
+    public Optional<GameStateDto> findGameById(Long id) {
+        final FakeTable table = memoryDatabase.get(id);
+        if (table == null) {
+            return Optional.empty();
         }
-        return stateAndColor;
+        return Optional.of(table.getDto());
     }
 
     @Override
-    public void saveGame(GameStateDto gameStateDto, String roomName) {
-        memoryDatabase.put(roomName, Arrays.asList(gameStateDto.getState(), gameStateDto.getTurnColor()));
+    public Long saveGame(GameStateDto gameStateDto, String roomName, String password) {
+        FakeTable table = new FakeTable(gameStateDto, roomName, password);
+        memoryDatabase.put(id, table);
+        return id++;
     }
 
     @Override
-    public void updateState(GameStateDto gameStateDto, String roomName) {
-        List<String> target = memoryDatabase.get(roomName);
-        target.set(STATE_INDEX, gameStateDto.getState());
-        target.set(COLOR_INDEX, gameStateDto.getTurnColor());
+    public void updateState(GameStateDto gameStateDto, Long id) {
+        final FakeTable table = memoryDatabase.get(id);
+        if (table == null) {
+            return;
+        }
+        table.setDto(gameStateDto);
     }
 
     @Override
-    public void removeGame(String roomName) {
-        memoryDatabase.remove(roomName);
+    public void removeGame(Long id) {
+        memoryDatabase.remove(id);
+    }
+
+    @Override
+    public Optional<GameStateDto> findGameByRoomName(String roomName) {
+        return memoryDatabase.values().stream()
+            .filter(table -> table.getRoomName().equals(roomName))
+            .map(FakeTable::getDto)
+            .findAny();
+    }
+
+    @Override
+    public List<String> readGames() {
+        return null;
     }
 }

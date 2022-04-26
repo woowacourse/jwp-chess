@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import chess.database.GameStateGenerator;
+import chess.database.dto.GameStateDto;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFixtures;
 import chess.domain.game.GameState;
@@ -20,21 +21,10 @@ class GameStateGeneratorTest {
     public void createStateByStateAndColorString() {
         // given
         Board board = BoardFixtures.EMPTY;
-        List<String> stateAndColor = List.of("READY", "WHITE");
+        GameStateDto dto = new GameStateDto("READY", "WHITE");
         // when
-        GameState generated = GameStateGenerator.generate(board, stateAndColor);
+        GameState generated = GameStateGenerator.generate(board, dto);
         // then
         assertThat(generated).isInstanceOf(Ready.class);
-    }
-
-    @Test
-    @DisplayName("리스트의 길이가 맞지 않으면 예외를 던진다.")
-    public void throwsExceptionWithInvalidSize() {
-        // given & when
-        Board board = BoardFixtures.EMPTY;
-        List<String> stateAndColor = List.of("READY", "WHITE", "wrong");
-        // then
-        assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> GameStateGenerator.generate(board, stateAndColor));
     }
 }

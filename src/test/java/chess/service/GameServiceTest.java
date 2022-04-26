@@ -15,24 +15,25 @@ import chess.database.dto.GameStateDto;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import chess.dto.Arguments;
+import chess.dto.RoomRequest;
 
 class GameServiceTest {
 
-    private static final String TEST_ROOM_NAME = "TESTING";
-    private static final String TEST_CREATION_ROOM_NAME = "TESTING2";
-    private static final FakeGameDao gameDao = new FakeGameDao();
-    private static final FakeBoardDao boardDao = new FakeBoardDao();
-    private static final GameService service = new GameService(gameDao, boardDao);
+    private final FakeGameDao gameDao = new FakeGameDao();
+    private final FakeBoardDao boardDao = new FakeBoardDao();
+    
+    private final GameService service = new GameService(gameDao, boardDao);
+    private Long id;
 
     @BeforeEach
     void setUp() {
-        service.createNewGame(TEST_ROOM_NAME);
+        id = service.createNewGame(new RoomRequest("TEST-GAME", "TEST-PASSWORD"));
     }
 
     @Test
     @DisplayName("새로운 방을 만든다.")
     public void createNewGame() {
-        assertThatCode(() -> service.createNewGame(TEST_CREATION_ROOM_NAME))
+        assertThatCode(() -> service.createNewGame(new RoomRequest("TEST-GAME2", "TEST-PASSWORD")))
             .doesNotThrowAnyException();
     }
 
@@ -40,9 +41,9 @@ class GameServiceTest {
     @DisplayName("게임 상태를 얻는다.")
     public void readGameState() {
         // given
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id; 
         // when
-        GameState gameState = service.readGameState(roomName);
+        GameState gameState = service.readGameState(roomId);
         // then
         assertThat(gameState).isInstanceOf(Ready.class);
     }
@@ -51,9 +52,9 @@ class GameServiceTest {
     @DisplayName("게임을 시작한다.")
     public void startGame() {
         // given & when
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id;
         // then
-        assertThatCode(() -> service.startGame(roomName))
+        assertThatCode(() -> service.startGame(roomId))
             .doesNotThrowAnyException();
     }
 
@@ -61,15 +62,15 @@ class GameServiceTest {
     @DisplayName("말을 움직인다.")
     public void moveBoard() {
         // given
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id;
         Arguments arguments = Arguments.ofArray(new String[] {"a2", "a4"}, 0);
 
-        GameState gameState = service.readGameState(roomName);
+        GameState gameState = service.readGameState(roomId);
         GameState started = gameState.start();
-        gameDao.saveGame(GameStateDto.of(started), roomName);
+        gameDao.updateState(GameStateDto.of(started), id);
 
         // when
-        GameState moved = service.moveBoard(roomName, arguments);
+        GameState moved = service.moveBoard(roomId, arguments);
         // then
         assertThat(moved).isNotNull();
     }
@@ -78,18 +79,16 @@ class GameServiceTest {
     @DisplayName("게임을 종료한다.")
     public void finishGame() {
         // given & when
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id;
 
         // then
-        assertThatCode(() -> service.finishGame(roomName))
+        assertThatCode(() -> service.finishGame(roomId))
             .doesNotThrowAnyException();
     }
 
     @AfterEach
     void setDown() {
-        gameDao.removeGame(TEST_ROOM_NAME);
-        boardDao.removeBoard(TEST_ROOM_NAME);
-        gameDao.removeGame(TEST_CREATION_ROOM_NAME);
-        boardDao.removeBoard(TEST_CREATION_ROOM_NAME);
+        gameDao.removeGame(id);
+        boardDao.removeBoard(id);
     }
 }

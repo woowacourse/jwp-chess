@@ -21,13 +21,14 @@ public class SpringViewChessController {
     }
 
     @GetMapping("/")
-    public String showIndex() {
+    public String showIndex(Model model) {
+        // model.addAttribute("rooms", )
         return "index";
     }
 
     @GetMapping(path = "/main")
-    public String showGame(Model model, @RequestParam("room_name") String roomName) {
-        GameState state = gameService.readGameState(roomName);
+    public String showGame(Model model, @RequestParam("roomId") Long roomId) {
+        GameState state = gameService.readGameState(roomId);
         GameStateResponse response = GameStateResponse.of(state);
         model.addAttribute("response", response);
         return "game";

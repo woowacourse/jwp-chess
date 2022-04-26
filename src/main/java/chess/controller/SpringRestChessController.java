@@ -15,10 +15,13 @@ import chess.dto.Arguments;
 import chess.dto.BoardResponse;
 import chess.dto.GameStateResponse;
 import chess.dto.PathResponse;
+import chess.dto.RoomRequest;
 import chess.service.GameService;
 
 @RestController
 public class SpringRestChessController {
+
+    private static final String MAIN_PATH_FORMAT = "/main?roomId=%d";
 
     private final GameService gameService;
 
@@ -27,40 +30,41 @@ public class SpringRestChessController {
         this.gameService = gameService;
     }
 
-    @GetMapping(path = "/create")
-    public ResponseEntity<PathResponse> create(@RequestParam("room_name") String roomName) {
-        gameService.createNewGame(roomName);
-        return respondPath("/main?room_name=" + roomName);
+    @PostMapping(path = "/create")
+    public ResponseEntity<PathResponse> create(@RequestBody RoomRequest roomRequest) {
+        final Long id = gameService.createNewGame(roomRequest);
+        return respondPath(String.format(MAIN_PATH_FORMAT, id));
     }
 
     @GetMapping(path = "/enter")
-    public ResponseEntity<PathResponse> enter(@RequestParam("room_name") String roomName) {
-        return respondPath("/main?room_name=" + roomName);
+    public ResponseEntity<PathResponse> enter(@RequestParam("roomId") Long roomId) {
+        return respondPath(String.format(MAIN_PATH_FORMAT, roomId));
     }
 
     @GetMapping(path = "/start")
-    public ResponseEntity<PathResponse> start(@RequestParam("room_name") String roomName) {
-        gameService.startGame(roomName);
-        return respondPath("/main?room_name=" + roomName);
+    public ResponseEntity<PathResponse> start(@RequestParam("roomId") Long roomId) {
+        gameService.startGame(roomId);
+        return respondPath(String.format(MAIN_PATH_FORMAT, roomId));
     }
 
     @GetMapping(path = "/end")
-    public ResponseEntity<PathResponse> end(@RequestParam("room_name") String roomName) {
-        gameService.finishGame(roomName);
+    public ResponseEntity<PathResponse> end(@RequestParam("roomId") Long roomId) {
+        gameService.finishGame(roomId);
         return respondPath("/");
     }
 
     @PostMapping(path = "/move")
-    public ResponseEntity<GameStateResponse> move(@RequestParam("room_name") String roomName,
+    public ResponseEntity<GameStateResponse> move(
+        @RequestParam("roomId") Long roomId,
         @RequestBody String body) {
         final Arguments arguments = Arguments.ofJson(body, Command.MOVE.getParameters());
-        GameState state = gameService.moveBoard(roomName, arguments);
+        GameState state = gameService.moveBoard(roomId, arguments);
         return ResponseEntity.ok().body(GameStateResponse.of(state));
     }
 
     @GetMapping(path = "/status")
-    public ResponseEntity<Map<String, Object>> status(@RequestParam("room_name") String roomName) {
-        GameState state = gameService.readGameState(roomName);
+    public ResponseEntity<Map<String, Object>> status(@RequestParam("roomId") Long roomId) {
+        GameState state = gameService.readGameState(roomId);
         return ResponseEntity.ok().body(Map.of("board", BoardResponse.of(state.getPointPieces()),
             "score", state.getColorScore())
         );

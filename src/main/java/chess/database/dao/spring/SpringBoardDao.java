@@ -24,64 +24,64 @@ public class SpringBoardDao implements BoardDao {
     }
 
     @Override
-    public void saveBoard(BoardDto boardDto, String roomName) {
-        String sql = "insert into board (horizontal_index, vertical_index, piece_type, piece_color, room_name)"
-            + " values (?, ?, ?, ?, ?)";
+    public void saveBoard(BoardDto boardDto, Long gameId) {
+        String sql = "INSERT INTO board (horizontal_index, vertical_index, piece_type, piece_color, game_id)"
+            + " VALUES (?, ?, ?, ?, ?)";
         Map<PointDto, PieceDto> pointPieceDto = boardDto.getPointPieces();
         List<Object[]> batch = new ArrayList<>();
         for (Map.Entry<PointDto, PieceDto> entry : pointPieceDto.entrySet()) {
             PointDto point = entry.getKey();
             PieceDto piece = entry.getValue();
             final Object[] objects =
-                {point.getHorizontal(), point.getVertical(), piece.getType(), piece.getColor(), roomName};
+                {point.getHorizontal(), point.getVertical(), piece.getType(), piece.getColor(), gameId};
             batch.add(objects);
         }
         jdbcTemplate.batchUpdate(sql, batch);
     }
 
     @Override
-    public BoardDto readBoard(String roomName) {
-        final String sql = "select * from board where room_name = ?";
+    public BoardDto findBoardById(Long gameId) {
+        final String sql = "SELECT * FROM board WHERE game_id = ?";
         final List<Map.Entry<PointDto, PieceDto>> entries = jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             PointDto point = PointDto.of(resultSet.getInt("horizontal_index"), resultSet.getInt("vertical_index"));
             PieceDto piece = PieceDto.of(resultSet.getString("piece_type"), resultSet.getString("piece_color"));
             return Map.entry(point, piece);
-        }, roomName);
+        }, gameId);
         final Map<PointDto, PieceDto> pointPieces = entries.stream()
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        validateExist(pointPieces, roomName);
+        validateExist(pointPieces, gameId);
         return new BoardDto(pointPieces);
     }
 
-    private void validateExist(Map<PointDto, PieceDto> pointPieces, String roomName) {
+    private void validateExist(Map<PointDto, PieceDto> pointPieces, Long gameId) {
         if (pointPieces.size() == 0) {
             throw new IllegalArgumentException(
-                String.format("[ERROR] %s에 해당하는 이름의 보드가 없습니다.", roomName)
+                String.format("[ERROR] %d 번에 해당하는 보드가 없습니다.", gameId)
             );
         }
     }
 
     @Override
-    public void deletePiece(PointDto destination, String roomName) {
-        final String sql = "DELETE FROM board WHERE horizontal_index = ? and vertical_index = ? and room_name = ?";
-        jdbcTemplate.update(sql, destination.getHorizontal(), destination.getVertical(), roomName);
+    public void deletePiece(PointDto destination, Long gameId) {
+        final String sql = "DELETE FROM board WHERE horizontal_index = ? AND vertical_index = ? AND game_id = ?";
+        jdbcTemplate.update(sql, destination.getHorizontal(), destination.getVertical(), gameId);
     }
 
     @Override
-    public void updatePiece(RouteDto routeDto, String roomName) {
+    public void updatePiece(RouteDto routeDto, Long gameId) {
         PointDto source = routeDto.getSource();
         PointDto destination = routeDto.getDestination();
 
-        final String sql = "update board set horizontal_index = ?, vertical_index = ? "
-            + "where horizontal_index = ? and vertical_index = ? and room_name = ?";
+        final String sql = "UPDATE board SET horizontal_index = ?, vertical_index = ? "
+            + "WHERE horizontal_index = ? AND vertical_index = ? AND game_id = ?";
         jdbcTemplate.update(sql,
             destination.getHorizontal(), destination.getVertical(),
-            source.getHorizontal(), source.getVertical(), roomName);
+            source.getHorizontal(), source.getVertical(), gameId);
     }
 
     @Override
-    public void removeBoard(String roomName) {
-        final String sql = "DELETE FROM board WHERE room_name = ?";
-        jdbcTemplate.update(sql, roomName);
+    public void removeBoard(Long gameId) {
+        final String sql = "DELETE FROM board WHERE game_id = ?";
+        jdbcTemplate.update(sql, gameId);
     }
 }

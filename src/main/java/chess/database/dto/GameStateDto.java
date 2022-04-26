@@ -7,7 +7,7 @@ public class GameStateDto {
     private final String state;
     private final String turnColor;
 
-    private GameStateDto(String state, String turnColor) {
+    public GameStateDto(String state, String turnColor) {
         this.state = state;
         this.turnColor = turnColor;
     }

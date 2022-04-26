@@ -1,15 +1,20 @@
 package chess.database.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import chess.database.dto.GameStateDto;
 
 public interface GameDao {
-    List<String> readStateAndColor(String roomName);
+    Optional<GameStateDto> findGameById(Long id);
 
-    void saveGame(GameStateDto gameStateDto, String roomName);
+    Long saveGame(GameStateDto gameStateDto, String roomName, String password);
 
-    void updateState(GameStateDto gameStateDto, String roomName);
+    void updateState(GameStateDto gameStateDto, Long id);
 
-    void removeGame(String roomName);
+    void removeGame(Long id);
+
+    List<String> readGames();
+
+    Optional<GameStateDto> findGameByRoomName(String roomName);
 }

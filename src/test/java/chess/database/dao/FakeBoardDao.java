@@ -10,38 +10,38 @@ import chess.database.dto.RouteDto;
 
 public class FakeBoardDao implements BoardDao {
 
-    private final Map<String, Map<PointDto, PieceDto>> memoryDatabase;
+    private final Map<Long, Map<PointDto, PieceDto>> memoryDatabase;
 
     public FakeBoardDao() {
         this.memoryDatabase = new HashMap<>();
     }
 
     @Override
-    public void saveBoard(BoardDto boardDto, String roomName) {
-        this.memoryDatabase.put(roomName, new HashMap<>(boardDto.getPointPieces()));
+    public void saveBoard(BoardDto boardDto, Long gameId) {
+        this.memoryDatabase.put(gameId, new HashMap<>(boardDto.getPointPieces()));
     }
 
     @Override
-    public BoardDto readBoard(String roomName) {
-        return new BoardDto(memoryDatabase.get(roomName));
+    public BoardDto findBoardById(Long gameId) {
+        return new BoardDto(memoryDatabase.get(gameId));
     }
 
     @Override
-    public void deletePiece(PointDto destination, String roomName) {
-        Map<PointDto, PieceDto> pointPieces = memoryDatabase.get(roomName);
+    public void deletePiece(PointDto destination, Long gameId) {
+        Map<PointDto, PieceDto> pointPieces = memoryDatabase.get(gameId);
         pointPieces.remove(destination);
     }
 
     @Override
-    public void updatePiece(RouteDto routeDto, String roomName) {
-        Map<PointDto, PieceDto> pointPieces = memoryDatabase.get(roomName);
+    public void updatePiece(RouteDto routeDto, Long gameId) {
+        Map<PointDto, PieceDto> pointPieces = memoryDatabase.get(gameId);
         PieceDto piece = pointPieces.get(routeDto.getSource());
         pointPieces.remove(routeDto.getSource());
         pointPieces.put(routeDto.getDestination(), piece);
     }
 
     @Override
-    public void removeBoard(String roomName) {
-        memoryDatabase.remove(roomName);
+    public void removeBoard(Long gameId) {
+        memoryDatabase.remove(gameId);
     }
 }

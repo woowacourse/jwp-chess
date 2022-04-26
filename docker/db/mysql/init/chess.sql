@@ -1,10 +1,12 @@
 
 
 CREATE TABLE game (
-    room_name VARCHAR(10) NOT NULL,
+    id BIGINT AUTO_INCREMENT,
+    room_name VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
     turn_color VARCHAR(10) NOT NULL,
     state VARCHAR(10) NOT NULL,
-    PRIMARY KEY (room_name)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE board (
@@ -12,6 +14,6 @@ CREATE TABLE board (
     piece_color VARCHAR(10) NOT NULL,
     vertical_index INT NOT NULL,
     horizontal_index INT NOT NULL,
-    room_name VARCHAR(10) NOT NULL,
-    FOREIGN KEY(room_name) REFERENCES game (room_name)
- );
+    game_id BIGINT NOT NULL,
+    FOREIGN KEY(game_id) REFERENCES game (id)
+);

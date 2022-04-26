@@ -1,6 +1,5 @@
 package chess.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +13,6 @@ public class GameDaoImpl implements GameDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public GameDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

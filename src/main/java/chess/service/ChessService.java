@@ -2,7 +2,6 @@ package chess.service;
 
 import java.util.Map.Entry;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import chess.dao.BoardDao;
@@ -23,8 +22,7 @@ import chess.dto.response.ScoreResultDto;
 public class ChessService {
     private final GameDao gameDao;
     private final BoardDao boardDao;
-
-    @Autowired
+    
     public ChessService(GameDao gameDao, BoardDao boardDao) {
         this.gameDao = gameDao;
         this.boardDao = boardDao;

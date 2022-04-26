@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -24,8 +23,7 @@ public class BoardDaoImpl implements BoardDao {
     private static final String TABLE_NAME = "board";
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
+    
     public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -45,7 +43,7 @@ public class BoardDaoImpl implements BoardDao {
 
             boardValue.put(position, piece);
         }
-        
+
         return BoardDto.from(boardValue);
     }
 

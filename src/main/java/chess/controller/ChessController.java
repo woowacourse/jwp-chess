@@ -3,7 +3,6 @@ package chess.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +29,6 @@ public class ChessController {
 
     private final ChessService chessService;
 
-    @Autowired
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
     }

@@ -48,12 +48,14 @@ function checkStatus() {
 
 function sendToServer(first, second) {
     let element = document.getElementById("roomId");
-    fetch(`/room/${element.value}/move`, {
-        method: "PUT",
+    const moveCommand = {"source": first, "target": second};
+    let moveUrl = '/room/' + element.value + '/move';
+    fetch(moveUrl, {
+        method: "PATCH",
         headers: {
-            "Content-Type": "text/plain",
+            "Content-Type": "application/json",
         },
-        body: "command=move " + first + " " + second
+        body: JSON.stringify(moveCommand)
     }).then((response) => {
         response.json()
             .then(data => {

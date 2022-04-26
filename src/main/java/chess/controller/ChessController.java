@@ -5,29 +5,23 @@ import chess.domain.game.ChessBoard;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.position.Position;
-import chess.dto.RequestDto;
 import chess.dto.GameStatusDto;
+import chess.dto.MoveForm;
+import chess.dto.RequestDto;
 import chess.dto.StatusDto;
-import chess.mapper.Command;
 import chess.service.GameService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
 public class ChessController {
-
-    private static final String MOVE_DELIMITER = " ";
-    private static final int MOVE_COMMAND_SIZE = 3;
-    private static final int SOURCE_INDEX = 1;
-    private static final int TARGET_INDEX = 2;
 
     private final GameService gameService;
 
@@ -66,27 +60,14 @@ public class ChessController {
     }
 
     @ResponseBody
-    @PutMapping("/room/{roomId}/move")
-    public ResponseEntity<GameStatusDto> moveByCommand(@PathVariable("roomId") int id, @RequestBody String body) {
-        final String[] split = body.split("=");
-        if (Command.isMove(split[1])) {
-            moveByCommand(id, split);
-        }
-        return new ResponseEntity<>(new GameStatusDto(gameService.isEnd(id)), HttpStatus.OK);
-    }
-
-    private void moveByCommand(int id, String[] split) {
+    @PatchMapping("/room/{roomId}/move")
+    public ResponseEntity<GameStatusDto> moveByCommand(@PathVariable("roomId") int id, @RequestBody MoveForm moveForm) {
         try {
-            move(id, Arrays.asList(split[1].split(MOVE_DELIMITER)));
+            gameService.move(id, Position.of(moveForm.getSource()), Position.of(moveForm.getTarget()));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
-    }
-
-    private void move(int roomId, final List<String> commands) {
-        if (commands.size() == MOVE_COMMAND_SIZE) {
-            gameService.move(roomId, Position.of(commands.get(SOURCE_INDEX)), Position.of(commands.get(TARGET_INDEX)));
-        }
+        return new ResponseEntity<>(new GameStatusDto(gameService.isEnd(id)), HttpStatus.OK);
     }
 
     @PostMapping("/room/{roomId}/end")

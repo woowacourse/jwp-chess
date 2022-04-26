@@ -26,13 +26,6 @@ class PieceDaoTest {
     @BeforeEach
     void initPieceDaoTest() {
         jdbcTemplate.execute("DROP TABLE PIECES IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE GAMES IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE games\n" +
-                "(\n" +
-                "    game_id  int        not null AUTO_INCREMENT,\n" +
-                "    turn     varchar(5) not null,\n" +
-                "    primary key (game_id)\n" +
-                ");");
         jdbcTemplate.execute("CREATE TABLE pieces\n" +
                 "(\n" +
                 "    piece_id int         not null AUTO_INCREMENT,\n" +

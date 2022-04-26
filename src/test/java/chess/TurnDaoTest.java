@@ -60,7 +60,6 @@ class TurnDaoTest {
     @DisplayName("턴이 update 되는지 확인한다")
     void update() {
         turnDao.init();
-
         turnDao.update("BLACK");
         Optional<String> turn = turnDao.findOne();
 

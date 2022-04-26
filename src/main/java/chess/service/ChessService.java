@@ -15,72 +15,71 @@ public class ChessService {
 
     private final ChessGameDao chessGameDao;
     private final PieceDao pieceDao;
-    private ChessGame chessGame;
 
     public ChessService(ChessGameDao chessGameDao, PieceDao pieceDao) {
         this.chessGameDao = chessGameDao;
         this.pieceDao = pieceDao;
     }
 
-    public List<String> getCurrentChessBoard() {
+    public List<String> getCurrentChessBoard(String gameName) {
+        ChessGame chessGame = chessGameDao.findByName(gameName);
         return chessGame.getChessBoardSymbol();
     }
 
-    public List<String> move(String moveCommand) {
+    public List<String> move(String gameName, String moveCommand) {
+        ChessGame chessGame = chessGameDao.findByName(gameName);
         Command command = Command.from(moveCommand);
 
         chessGame.progress(command);
-
-        save();
+        save(chessGame);
 
         return chessGame.getChessBoardSymbol();
     }
 
-    public Map<Team, Double> getScore() {
+    public Map<Team, Double> getScore(String gameName) {
+        ChessGame chessGame = chessGameDao.findByName(gameName);
         return chessGame.calculateResult();
     }
 
-    public String finish(Command command) {
-        chessGame.progress(command);
+    public String finish(String gameName, Command command) {
+        ChessGame chessGame = chessGameDao.findByName(gameName);
 
-        save();
+        chessGame.progress(command);
+        save(chessGame);
 
         return chessGame.getWinTeamName();
     }
 
     public List<String> findByName(String gameName) throws IllegalStateException {
-        ChessGame selectedChessGame = chessGameDao.findByName(gameName);
+        ChessGame chessGame = chessGameDao.findByName(gameName);
 
-        if (selectedChessGame == null) {
+        if (chessGame == null) {
             return createChessBoard(gameName);
         }
-
-        chessGame = selectedChessGame;
 
         return chessGame.getChessBoardSymbol();
     }
 
     private List<String> createChessBoard(String gameName) {
-        this.chessGame = new ChessGame(gameName);
+        ChessGame chessGame = new ChessGame(gameName);
 
         chessGame.progress(Command.from("start"));
+        save(chessGame);
 
         return chessGame.getChessBoardSymbol();
     }
 
-    public void save() throws IllegalStateException {
+    public void save(ChessGame chessGame) throws IllegalStateException {
+        String gameName = chessGame.getGameName();
+        ChessGame chessGameByName = chessGameDao.findByName(gameName);
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
-        String gameName = chessGameDto.getGameName();
-
-        ChessGame chessGame = chessGameDao.findByName(gameName);
-
-        if (chessGame != null) {
-            updateChessGame(chessGameDto);
+        if (chessGameByName == null) {
+            saveChessGame(chessGameDto);
             return;
         }
 
-        saveChessGame(chessGameDto);
+        updateChessGame(chessGameDto);
     }
 
     private void updateChessGame(ChessGameDto chessGameDto) throws IllegalStateException {
@@ -93,7 +92,8 @@ public class ChessService {
         pieceDao.save(chessGameDto);
     }
 
-    public boolean isEnd() {
+    public boolean isEnd(String gameName) {
+        ChessGame chessGame = chessGameDao.findByName(gameName);
         return chessGame.isEnd();
     }
 }

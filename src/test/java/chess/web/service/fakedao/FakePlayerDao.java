@@ -4,6 +4,7 @@ import chess.domain.game.state.Player;
 import chess.domain.piece.property.Color;
 import chess.web.dao.RoomDao;
 import chess.web.dto.CreateRoomRequestDto;
+import chess.web.dto.ReadRoomResultDto;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,5 +33,10 @@ public class FakePlayerDao implements RoomDao {
     public int createRoom(CreateRoomRequestDto createRoomRequestDto) {
 
         return 0;
+    }
+
+    @Override
+    public ReadRoomResultDto findAll() {
+        return null;
     }
 }

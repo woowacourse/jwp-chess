@@ -71,6 +71,6 @@ public class ChessGameController {
     @GetMapping("/rooms")
     @ResponseBody
     public ReadRoomResultDto readRooms() {
-        return new ReadRoomResultDto(new ArrayList<>());
+        return service.findAllRooms();
     }
 }

@@ -1,30 +1,30 @@
 package chess.web.dto;
 
 public class RoomDto {
+    private int roomId;
     private String roomTitle;
-    private String status;
 
     public RoomDto() {
     }
 
-    public RoomDto(String roomTitle, String status) {
+    public RoomDto(int roomId, String roomTitle) {
+        this.roomId = roomId;
         this.roomTitle = roomTitle;
-        this.status = status;
+    }
+
+    public int getRoomId() {
+        return roomId;
     }
 
     public String getRoomTitle() {
         return roomTitle;
     }
 
-    public String getStatus() {
-        return status;
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
     }
 
     public void setRoomTitle(String roomTitle) {
         this.roomTitle = roomTitle;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

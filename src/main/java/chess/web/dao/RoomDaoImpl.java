@@ -3,8 +3,11 @@ package chess.web.dao;
 import chess.domain.game.state.Player;
 import chess.domain.piece.property.Color;
 import chess.web.dto.CreateRoomRequestDto;
+import chess.web.dto.ReadRoomResultDto;
+import chess.web.dto.RoomDto;
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,6 +20,13 @@ public class RoomDaoImpl implements RoomDao {
     public RoomDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final RowMapper<RoomDto> roomDtoRowMapper = (resultSet, rowNum) -> {
+        RoomDto roomDto = new RoomDto();
+        roomDto.setRoomId(resultSet.getInt("id"));
+        roomDto.setRoomTitle(resultSet.getString("title"));
+        return roomDto;
+    };
 
     @Override
     public void save(Color color) {
@@ -44,6 +54,12 @@ public class RoomDaoImpl implements RoomDao {
             return ps;
         }, keyHolder);
         return keyHolder.getKey().intValue();
+    }
+
+    @Override
+    public ReadRoomResultDto findAll() {
+        final String sql = "select id, title from room";
+        return new ReadRoomResultDto(jdbcTemplate.query(sql, roomDtoRowMapper));
     }
 
     @Override

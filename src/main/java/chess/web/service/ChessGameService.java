@@ -14,6 +14,7 @@ import chess.web.dto.CreateRoomResultDto;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
+import chess.web.dto.ReadRoomResultDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Service;
@@ -106,5 +107,9 @@ public class ChessGameService {
 
     public CreateRoomResultDto createRoom(CreateRoomRequestDto createRoomRequestDto) {
         return new CreateRoomResultDto(roomDao.createRoom(createRoomRequestDto));
+    }
+
+    public ReadRoomResultDto findAllRooms() {
+        return roomDao.findAll();
     }
 }

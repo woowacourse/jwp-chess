@@ -30,7 +30,6 @@ public class PlayController {
 
     @PostMapping(path = "/game/{gameId}/move")
     public String move(@PathVariable String gameId, @RequestBody MoveDto moveDto) {
-        System.out.println("moveDto" + moveDto);
         chessGameService.move(gameId, moveDto);
         return renderGame(MOVE_MESSAGE, gameId);
     }

@@ -2,15 +2,15 @@ package chess.dto;
 
 import chess.domain.command.MoveCommand;
 
-public class MoveCommandDto {
+public class MoveDto {
 
     private String source;
     private String target;
 
-    public MoveCommandDto(){
+    public MoveDto(){
     }
 
-    public MoveCommandDto(String source, String target) {
+    public MoveDto(String source, String target) {
         this.source = source;
         this.target = target;
     }

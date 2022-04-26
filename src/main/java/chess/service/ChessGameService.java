@@ -2,7 +2,6 @@ package chess.service;
 
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
-import chess.domain.command.MoveCommand;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameResult;
 import chess.domain.piece.ChessmenInitializer;
@@ -10,7 +9,7 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.dto.GameResultDto;
-import chess.dto.MoveCommandDto;
+import chess.dto.MoveDto;
 import chess.dto.PieceDto;
 import chess.dto.PiecesDto;
 import java.util.ArrayList;
@@ -58,8 +57,8 @@ public class ChessGameService {
         List<PieceDto> pieces = new ArrayList<>();
         for (Piece piece : chessmen.getPieces()) {
             pieces.add(new PieceDto(piece.getPosition().getPosition(),
-                piece.getColor().getName(),
-                piece.getName()));
+                    piece.getColor().getName(),
+                    piece.getName()));
         }
         return pieces;
     }
@@ -67,8 +66,8 @@ public class ChessGameService {
     public GameResultDto calculateGameResult(String gameId) {
         GameResult gameResult = GameResult.calculate(getGameStatus(gameId).getChessmen());
         return new GameResultDto(gameResult.getWinner().getName(),
-            gameResult.getWhiteScore(),
-            gameResult.getBlackScore());
+                gameResult.getWhiteScore(),
+                gameResult.getBlackScore());
     }
 
     public void cleanGame(String gameId) {
@@ -76,16 +75,18 @@ public class ChessGameService {
         gameDao.deleteById(gameId);
     }
 
-    public void move(String gameId, MoveCommandDto moveCommandDto) {
-        String from = moveCommandDto.getSource();
-        String to = moveCommandDto.getTarget();
-        getGameStatus(gameId).moveChessmen(new MoveCommand(from, to));
-        saveMove(gameId, moveCommandDto);
+    public void move(String gameId, MoveDto moveDto) {
+        System.out.println(gameId);
+
+        System.out.println("getGameStatus(gameId)" + getGameStatus(gameId));
+        getGameStatus(gameId).moveChessmen(moveDto.toEntity());
+
+        saveMove(gameId, moveDto);
     }
 
-    private void saveMove(String gameId, MoveCommandDto moveCommandDto) {
+    private void saveMove(String gameId, MoveDto moveDto) {
         ChessGame chessGame = getGameStatus(gameId);
-        chessGame.moveChessmen(moveCommandDto.toEntity());
+        chessGame.moveChessmen(moveDto.toEntity());
         boolean forceEndFlag = chessGame.getForceEndFlag();
         Color turn = chessGame.getTurn();
 

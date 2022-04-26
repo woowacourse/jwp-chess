@@ -1,6 +1,7 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.domain.Board;
 import chess.domain.BoardInitializer;
@@ -70,6 +71,7 @@ class SpringGameDaoTest {
     @DisplayName("정상적으로 게임이 생성되는지 확인한다.")
     void saveGame() {
         final ChessGame actual = gameDao.findById(1L).get();
+
         assertThat(actual.getTurn().name()).isEqualTo("WHITE");
     }
 
@@ -77,7 +79,11 @@ class SpringGameDaoTest {
     @DisplayName("정상적으로 게임을 불러오는지 확인한다.")
     void findById() {
         final Optional<ChessGame> game = gameDao.findById(1L);
-        assertThat(game.get().getId()).isEqualTo(1L);
+
+        assertAll(
+                () -> assertThat(game).isNotNull(),
+                () -> assertThat(game.get().getId()).isEqualTo(1L)
+        );
     }
 
     @Test

@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import chess.entity.Room;
 
 @JdbcTest
-class RoomDaoTest {
+class RoomDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

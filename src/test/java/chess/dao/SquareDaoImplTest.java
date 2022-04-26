@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import chess.entity.Square;
 
 @JdbcTest
-class SquareDaoTest {
+class SquareDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

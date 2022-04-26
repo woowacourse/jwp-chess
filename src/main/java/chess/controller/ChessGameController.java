@@ -42,7 +42,7 @@ public class ChessGameController {
 
     @GetMapping("/chess/game/{id}/board")
     @ResponseBody
-    public ResponseEntity<BoardDTO> createBoard(@PathVariable String id) {
+    public ResponseEntity<BoardDTO> showBoard(@PathVariable String id) {
         ChessGame chessGame = chessService.getChessGamePlayed(id);
         return ResponseEntity.ok(new BoardDTO(chessGame));
     }

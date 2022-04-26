@@ -119,8 +119,8 @@ public final class GameService {
         return consoleBoard.calculateScore(color);
     }
 
-    public void end(int roomId, String password) {
-        boardDao.deleteByIdAndPassword(roomId, password);
+    public boolean end(int roomId, String password) {
+        return boardDao.deleteByIdAndPassword(roomId, password) == 1;
     }
 
     public RoomsDto getRooms() {

@@ -42,6 +42,18 @@ class ChessControllerTest {
         chessService.deleteGame(testGameId);
     }
 
+    @DisplayName("GET - 게임 리스트 조회 테스트")
+    @Test
+    void load_Games() {
+        chessService.createGame(testGameId);
+
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/games")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
     @Nested
     @DisplayName("GET - 게임 조회 테스트")
     class LoadTest {

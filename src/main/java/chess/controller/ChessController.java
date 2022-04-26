@@ -4,6 +4,7 @@ import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.EndResponse;
 import chess.controller.dto.response.ErrorResponse;
+import chess.controller.dto.response.GameIdsResponse;
 import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
 import java.net.URI;
@@ -29,6 +30,11 @@ public class ChessController {
 
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
+    }
+
+    @GetMapping("")
+    public GameIdsResponse loadGameList() {
+        return chessService.findAllGameIds();
     }
 
     @GetMapping("/{gameId}")

@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MovementDAO {
 
-    private final RowMapper<Movement> movementRowMapper = (rs, rowNum) -> new Movement(
-            Position.of(rs.getString("m.source_position")),
-            Position.of(rs.getString("m.target_position"))
+    private final RowMapper<Movement> movementRowMapper = (resultSet, rowNumber) -> new Movement(
+            Position.of(resultSet.getString("m.source_position")),
+            Position.of(resultSet.getString("m.target_position"))
     );
     private final JdbcTemplate jdbcTemplate;
 

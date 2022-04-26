@@ -14,10 +14,10 @@ import org.springframework.stereotype.Repository;
 public class ChessGameDAO {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ChessGameRoomInfoDTO> chessGameRoomInfoDTORowMapper = (rs, rowNum) ->
+    private final RowMapper<ChessGameRoomInfoDTO> chessGameRoomInfoDTORowMapper = (resultSet, rowNumber) ->
             new ChessGameRoomInfoDTO(
-                    rs.getString("id"),
-                    rs.getString("name")
+                    resultSet.getString("id"),
+                    resultSet.getString("name")
             );
 
     public ChessGameDAO(final JdbcTemplate jdbcTemplate) {

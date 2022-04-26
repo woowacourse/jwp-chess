@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.position.Position;
-import chess.dto.PieceDto;
+import chess.service.dto.PieceDto;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;

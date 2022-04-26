@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.controller.dto;
 
 import chess.domain.command.MoveCommand;
 

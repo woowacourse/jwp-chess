@@ -1,9 +1,9 @@
-package chess.dto;
+package chess.service.dto;
 
 import chess.domain.piece.PieceColor;
 
-import static chess.dto.GameStatusDto.FINISHED;
-import static chess.dto.GameStatusDto.PLAYING;
+import static chess.service.dto.GameStatusDto.FINISHED;
+import static chess.service.dto.GameStatusDto.PLAYING;
 
 public class GameDto {
 

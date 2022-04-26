@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.position.Position;
-import chess.dto.PieceDto;
+import chess.service.dto.PieceDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;

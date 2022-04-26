@@ -3,8 +3,8 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.dto.GameDto;
-import chess.dto.GameStatusDto;
+import chess.service.dto.GameDto;
+import chess.service.dto.GameStatusDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

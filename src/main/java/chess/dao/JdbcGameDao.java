@@ -1,7 +1,7 @@
 package chess.dao;
 
-import chess.dto.GameDto;
-import chess.dto.GameStatusDto;
+import chess.service.dto.GameDto;
+import chess.service.dto.GameStatusDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

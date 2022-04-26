@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.service.dto;
 
 import java.util.ArrayList;
 import java.util.List;

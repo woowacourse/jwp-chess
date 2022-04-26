@@ -1,4 +1,4 @@
-package chess.serviece;
+package chess.service;
 
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
@@ -9,11 +9,11 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
-import chess.dto.ChessResponseDto;
-import chess.dto.GameDto;
-import chess.dto.GameStatusDto;
-import chess.dto.PieceDto;
-import chess.dto.ScoresDto;
+import chess.service.dto.ChessResponseDto;
+import chess.service.dto.GameDto;
+import chess.service.dto.GameStatusDto;
+import chess.service.dto.PieceDto;
+import chess.service.dto.ScoresDto;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

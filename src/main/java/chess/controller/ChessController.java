@@ -1,10 +1,10 @@
 package chess.controller;
 
 import chess.domain.command.MoveCommand;
-import chess.dto.ChessResponseDto;
-import chess.dto.MoveCommandDto;
-import chess.dto.ScoresDto;
-import chess.serviece.ChessService;
+import chess.service.dto.ChessResponseDto;
+import chess.controller.dto.MoveCommandDto;
+import chess.service.dto.ScoresDto;
+import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/chess-game")
 public class ChessController {
 
-    private ChessService chessService;
+    private final ChessService chessService;
 
     @Autowired
     public ChessController(ChessService chessService) {

@@ -6,6 +6,7 @@ import chess.domain.state.StateType;
 import chess.web.dto.GameDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -16,8 +17,9 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql("classpath:init.sql")
 class GameDaoJdbcImplTest {
 
+    private static final int GAME_ID = 1;
+
     private GameDao gameDao;
-    private static final int gameId = 1;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -29,32 +31,36 @@ class GameDaoJdbcImplTest {
         gameDao.save("체스게임방", "1234", StateType.WHITE_TURN);
     }
 
+    @DisplayName("게임 상태를 변경한다.")
     @Test
     void updateStateById() {
         StateType expected = StateType.BLACK_TURN;
-        gameDao.updateStateById(gameId, expected);
+        gameDao.updateStateById(GAME_ID, expected);
 
-        StateType actual = gameDao.findStateById(gameId);
+        StateType actual = gameDao.findStateById(GAME_ID);
 
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("게임 상태를 가져온다.")
     @Test
     void findStateById() {
-        StateType actual = gameDao.findStateById(gameId);
+        StateType actual = gameDao.findStateById(GAME_ID);
         StateType expected = StateType.WHITE_TURN;
 
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("게임의 비밀번호를 가져온다.")
     @Test
     void findPasswordById() {
-        String actual = gameDao.findPasswordById(gameId);
+        String actual = gameDao.findPasswordById(GAME_ID);
         String expected = "1234";
 
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("게임을 전부 가져온다.")
     @Test
     void findAll() {
         List<GameDto> gameDtos = gameDao.findAll();
@@ -64,9 +70,10 @@ class GameDaoJdbcImplTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("게임을 삭제한다.")
     @Test
     void deleteGameById() {
-       gameDao.deleteGameById(gameId);
+       gameDao.deleteGameById(GAME_ID);
 
         int actual = gameDao.findAll().size();
         int expected = 0;

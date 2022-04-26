@@ -19,14 +19,13 @@ import java.util.List;
 @Service
 public class ChessService {
 
-    @Autowired
     private BoardDao boardDao;
-    @Autowired
     private PieceDao pieceDao;
 
     public ChessService() {
     }
 
+    @Autowired
     public ChessService(BoardDao boardDao, PieceDao pieceDao) {
         this.boardDao = boardDao;
         this.pieceDao = pieceDao;

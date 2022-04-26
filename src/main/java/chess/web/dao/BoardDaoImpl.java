@@ -20,8 +20,7 @@ import java.util.Optional;
 @Repository
 public class BoardDaoImpl implements BoardDao {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Board> boardRowMapper = (resultSet, rowNum) -> {
         Team team = Team.from(resultSet.getString("turn"));
@@ -30,6 +29,10 @@ public class BoardDaoImpl implements BoardDao {
                 new Turn(team)
         );
     };
+
+    public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public Optional<Turn> findTurnById(Long id) {

@@ -12,14 +12,17 @@ import java.util.List;
 @Repository
 public class PieceDaoImpl implements PieceDao {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Piece> piecesRowMapper = (resultSet, rowNum) -> PieceFactory.create(
             resultSet.getString("position"),
             resultSet.getString("team"),
             resultSet.getString("type")
     );
+
+    public PieceDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public void updatePieceByPositionAndBoardId(final String type, final String team, final String position, final Long boardId) {

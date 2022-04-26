@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class ChessController {
 
-    @Autowired
-    private ChessService chessService;
+    private final ChessService chessService;
+
+    public ChessController(ChessService chessService) {
+        this.chessService = chessService;
+    }
 
     @GetMapping("/")
     public String index() {

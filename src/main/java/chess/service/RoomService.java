@@ -34,7 +34,7 @@ public class RoomService {
 	private void validateRoom(RoomDto roomDto) {
 		validateNameSize(roomDto.getName());
 		validateDuplicateName(roomDto.getName());
-		validatePassword(roomDto);
+		validatePassword(roomDto.getPassword());
 	}
 
 	private void validateNameSize(String name) {
@@ -49,8 +49,7 @@ public class RoomService {
 		}
 	}
 
-	private void validatePassword(RoomDto roomDto) {
-		String password = roomDto.getPassword();
+	private void validatePassword(String password) {
 		if (password.isEmpty() || password.isBlank()) {
 			throw new IllegalArgumentException("비밀번호를 입력하세요");
 		}
@@ -66,6 +65,7 @@ public class RoomService {
 
 	@Transactional
 	public void delete(int id, String password) {
+		validatePassword(password);
 		if (!getPassword(id).equals(password)) {
 			throw new IllegalArgumentException("유효하지 않은 비밀번호입니다.");
 		}

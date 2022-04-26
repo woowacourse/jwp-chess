@@ -51,9 +51,9 @@ public class RoomController {
     }
 
     @DeleteMapping("/{roomId}")
-    public String deleteRoom(@PathVariable int roomId, @RequestParam String password) {
+    public ResponseEntity<?> deleteRoom(@PathVariable int roomId, @RequestParam String password) {
         roomService.delete(roomId, password);
-        return "redirect:/";
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{roomId}/start")

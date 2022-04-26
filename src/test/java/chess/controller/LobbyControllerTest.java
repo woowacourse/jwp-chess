@@ -1,6 +1,5 @@
 package chess.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -8,55 +7,55 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import org.junit.jupiter.api.BeforeEach;
+import chess.controller.ChessGameControllerTest.HandlebarConfig;
+import chess.domain.Score;
+import chess.domain.piece.Color;
+import chess.dto.ChessGameDto;
+import chess.dto.GameStatus;
+import chess.service.ChessGameService;
+import com.github.jknack.handlebars.springmvc.HandlebarsViewResolver;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import chess.dao.ChessGameDao;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+@WebMvcTest(LobbyController.class)
+@ContextConfiguration(classes = HandlebarConfig.class)
 public class LobbyControllerTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @TestConfiguration
+    static class HandlebarConfig {
+
+        @Bean
+        public HandlebarsViewResolver handlebarsViewResolver() {
+            HandlebarsViewResolver resolver = new HandlebarsViewResolver();
+            resolver.setPrefix("classpath:/templates");
+            resolver.setSuffix(".hbs");
+            return resolver;
+        }
+    }
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ChessGameDao chessGameDao;
-
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS piece");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS chess_game");
-        jdbcTemplate.execute("CREATE TABLE chess_game\n"
-                + "(\n"
-                + "    id            INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,\n"
-                + "    name          VARCHAR(10) NOT NULL,\n"
-                + "    status        VARCHAR(10) NOT NULL,\n"
-                + "    current_color CHAR(5)     NOT NULL,\n"
-                + "    black_score   VARCHAR(10) NOT NULL,\n"
-                + "    white_score   VARCHAR(10) NOT NULL\n"
-                + ")");
-        jdbcTemplate.execute("CREATE TABLE piece\n"
-                + "(\n"
-                + "    position      CHAR(2)     NOT NULL,\n"
-                + "    chess_game_id INT         NOT NULL,\n"
-                + "    color         CHAR(5)     NOT NULL,\n"
-                + "    type          VARCHAR(10) NOT NULL,\n"
-                + "    PRIMARY KEY (position, chess_game_id),\n"
-                + "    FOREIGN KEY (chess_game_id) REFERENCES chess_game (id)\n"
-                + ")");
-    }
+    @MockBean
+    private ChessGameService chessGameService;
 
     @Test
     void lobby() throws Exception {
+        List<ChessGameDto> dtos = new ArrayList<>();
+        dtos.add(new ChessGameDto(1, "hoho", GameStatus.RUNNING, new Score(), new Score(), Color.BLACK));
+
+        Mockito.when(chessGameService.findAll())
+            .thenReturn(dtos);
+
         mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpectAll(
@@ -74,7 +73,5 @@ public class LobbyControllerTest {
                 .andExpectAll(
                         redirectedUrl("/")
                 );
-
-        assertThat(chessGameDao.existByName("hoho")).isTrue();
     }
 }

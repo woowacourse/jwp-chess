@@ -8,99 +8,101 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import chess.controller.ChessGameControllerTest.HandlebarConfig;
+import chess.domain.Score;
+import chess.domain.piece.Color;
+import chess.dto.ChessGameDto;
+import chess.dto.GameStatus;
+import chess.exception.ChessGameException;
 import chess.service.ChessGameService;
-import org.junit.jupiter.api.BeforeEach;
+import com.github.jknack.handlebars.springmvc.HandlebarsViewResolver;
+import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
+@WebMvcTest(ChessGameController.class)
+@ContextConfiguration(classes = HandlebarConfig.class)
 class ChessGameControllerTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @TestConfiguration
+    static class HandlebarConfig {
+
+        @Bean
+        public HandlebarsViewResolver handlebarsViewResolver() {
+            HandlebarsViewResolver resolver = new HandlebarsViewResolver();
+            resolver.setPrefix("classpath:/templates");
+            resolver.setSuffix(".hbs");
+            return resolver;
+        }
+    }
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
+    @MockBean
     private ChessGameService chessGameService;
-
-    private int chessGameId;
-
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS piece");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS chess_game");
-        jdbcTemplate.execute("CREATE TABLE chess_game\n"
-                + "(\n"
-                + "    id            INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,\n"
-                + "    name          VARCHAR(10) NOT NULL,\n"
-                + "    status        VARCHAR(10) NOT NULL,\n"
-                + "    current_color CHAR(5)     NOT NULL,\n"
-                + "    black_score   VARCHAR(10) NOT NULL,\n"
-                + "    white_score   VARCHAR(10) NOT NULL\n"
-                + ")");
-        jdbcTemplate.execute("CREATE TABLE piece\n"
-                + "(\n"
-                + "    position      CHAR(2)     NOT NULL,\n"
-                + "    chess_game_id INT         NOT NULL,\n"
-                + "    color         CHAR(5)     NOT NULL,\n"
-                + "    type          VARCHAR(10) NOT NULL,\n"
-                + "    PRIMARY KEY (position, chess_game_id),\n"
-                + "    FOREIGN KEY (chess_game_id) REFERENCES chess_game (id)\n"
-                + ")");
-        chessGameId = chessGameService.create("hoho");
-        chessGameService.getOrSaveChessGame(chessGameId);
-    }
 
     @Test
     @DisplayName("체스 게임 방 접속")
     void chessGame() throws Exception {
-        mockMvc.perform(get("/chess-game").param("chess-game-id", String.valueOf(chessGameId)))
+        Mockito.when(chessGameService.getOrSaveChessGame(1))
+            .thenReturn(new ChessGameDto(1, "hoho", GameStatus.RUNNING, new Score(), new Score(), Color.WHITE));
+        Mockito.when(chessGameService.findPieces(1)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/chess-game").param("chess-game-id", String.valueOf(1)))
             .andDo(print())
             .andExpectAll(
-                    status().isOk(),
-                    view().name("chess-game"),
-                    model().attributeExists("pieces"),
-                    model().attributeExists("chessGame")
+                status().isOk(),
+                view().name("chess-game"),
+                model().attributeExists("pieces"),
+                model().attributeExists("chessGame")
             );
     }
 
     @Test
     @DisplayName("정상적인 기물 이동")
     void move() throws Exception {
+        Mockito.when(chessGameService.move(1, new Movement("A2", "A4")))
+            .thenReturn(new ChessGameDto(1, "hoho", GameStatus.RUNNING, new Score(), new Score(), Color.WHITE));
+
         mockMvc.perform(post("/chess-game/move")
-                .param("chess-game-id", String.valueOf(chessGameId))
-                .param("from", "A2")
-                .param("to", "A4"))
-                .andDo(print())
-                .andExpectAll(
-                        status().is3xxRedirection(),
-                        redirectedUrl("/chess-game?chess-game-id=" + chessGameId),
-                        flash().attributeCount(0)
-                );
+            .param("chess-game-id", String.valueOf(1))
+            .param("from", "A2")
+            .param("to", "A4"))
+            .andDo(print())
+            .andExpectAll(
+                status().is3xxRedirection(),
+                redirectedUrl("/chess-game?chess-game-id=" + 1),
+                flash().attributeCount(0)
+            );
+
     }
 
     @Test
     @DisplayName("비정상적인 기물 이동")
     void invalidMove() throws Exception {
+        Mockito.when(chessGameService.move(1, new Movement("A2", "A5")))
+            .thenThrow(new ChessGameException(1, "기물을 A2에서 A5로 이동할 수 없습니다."));
+
         mockMvc.perform(post("/chess-game/move")
-                .param("chess-game-id", String.valueOf(chessGameId))
-                .param("from", "A2")
-                .param("to", "A5"))
-                .andDo(print())
-                .andExpectAll(
-                        status().is3xxRedirection(),
-                        redirectedUrl("/chess-game?chess-game-id=" + chessGameId),
-                        flash().attributeExists("hasError"),
-                        flash().attributeExists("errorMessage")
-                );
+            .param("chess-game-id", String.valueOf(1))
+            .param("from", "A2")
+            .param("to", "A5"))
+            .andDo(print())
+            .andExpectAll(
+                status().is3xxRedirection(),
+                redirectedUrl("/chess-game?chess-game-id=" + 1),
+                flash().attributeExists("hasError"),
+                flash().attributeExists("errorMessage")
+            );
     }
 
 }

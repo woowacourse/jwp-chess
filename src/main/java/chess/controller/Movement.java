@@ -4,6 +4,7 @@ import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Movement {
@@ -47,5 +48,22 @@ public class Movement {
 
     public Position getTo() {
         return to;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Movement)) {
+            return false;
+        }
+        Movement movement = (Movement) o;
+        return Objects.equals(from, movement.from) && Objects.equals(to, movement.to);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(from, to);
     }
 }

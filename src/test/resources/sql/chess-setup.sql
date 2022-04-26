@@ -20,4 +20,3 @@ CREATE TABLE piece
     foreign key (board_id) references board (id) ON DELETE CASCADE ,
     primary key (id, board_id, position)
 );
-

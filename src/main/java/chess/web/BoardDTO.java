@@ -18,7 +18,7 @@ public class BoardDTO {
         return new BoardDTO();
     }
 
-    public void update(Board board) {
+    public void generateUpdatedDTO(Board board) {
         Map<String, Element> model = new HashMap<>();
         Map<Position, Piece> original = board.getPieces();
         for (Position position : original.keySet()) {
@@ -38,16 +38,6 @@ public class BoardDTO {
             model.put(position.getPosition(), Element.from(original.get(position)));
         }
         model.put("score", Element.from(chessScore));
-        this.data = model;
-    }
-
-    public void updateWithMessage(Board board, String message) {
-        Map<String, Element> model = new HashMap<>();
-        Map<Position, Piece> original = board.getPieces();
-        for (Position position : original.keySet()) {
-            model.put(position.getPosition(), Element.from(original.get(position)));
-        }
-        model.put("exception", Element.from(message));
         this.data = model;
     }
 }

@@ -1,12 +1,9 @@
 package chess.controller;
 
-import chess.domain.command.Command;
-import chess.domain.command.CommandConverter;
 import chess.domain.piece.Color;
 import chess.domain.state.State;
 import chess.web.BoardDTO;
 import chess.web.ChessForm;
-import chess.web.RequestParser;
 import chess.web.WebChessGame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,9 +49,9 @@ public class WebChessController {
 
     @PostMapping(value = "/preprocess")
     public String preprocess(ChessForm command, Model model) {
+        String roomId = command.getRoomId();
+        model.addAttribute(ROOM_ID, roomId);
         try {
-            String roomId = command.getRoomId();
-            model.addAttribute(ROOM_ID, roomId);
             webChessGame.searchSavedGame(roomId, boardDTO);
             return preprocessToReady(model, roomId);
         } catch (IllegalArgumentException exception) {
@@ -86,13 +83,11 @@ public class WebChessController {
     }
 
     @PostMapping("/ready")
-    public String readyGame(ChessForm command, Model model) {
+    public String readyGame(ChessForm chessForm, Model model) {
+        model.addAttribute(ROOM_ID, chessForm.getRoomId());
         try {
-            State next = State.create()
-                    .proceed(CommandConverter.convertCommand(RequestParser.from(command.getCommand()).getCommand()));
-            webChessGame.initializeGame(boardDTO, next, command.getRoomId());
-            model.addAttribute(ROOM_ID, command.getRoomId());
-            return readyToRunning(command, model);
+            webChessGame.initializeGame(boardDTO, chessForm);
+            return readyToRunning(chessForm, model);
         } catch (IllegalArgumentException | IllegalStateException | NoSuchElementException exception) {
             model.addAttribute(EXCEPTION, exception.getMessage());
             return READY_EXCEPTION_URL;
@@ -108,25 +103,23 @@ public class WebChessController {
     }
 
     @PostMapping("/move")
-    public String runTurn(ChessForm command, Model model) {
-        State now = webChessGame.getState(command.getRoomId());
-        model.addAttribute(ROOM_ID, command.getRoomId());
+    public String runTurn(ChessForm chessForm, Model model) {
+        State now = webChessGame.getState(chessForm.getRoomId());
+        model.addAttribute(ROOM_ID, chessForm.getRoomId());
         try {
-            Command parsedCommand = CommandConverter.convertCommand(
-                    RequestParser.from(command.getCommand()).getCommand());
-            State next = webChessGame.executeOneTurn(parsedCommand, boardDTO, command.getRoomId());
-            return executeOneTurn(parsedCommand, next, model);
+            State next = webChessGame.executeOneTurn(chessForm, boardDTO);
+            return executeOneTurn(now, next, model);
         } catch (IllegalArgumentException | IllegalStateException | NoSuchElementException exception) {
-            return handleRunningException(command.getRoomId(), now, exception.getMessage(), model);
+            return handleRunningException(chessForm.getRoomId(), now, exception.getMessage(), model);
         }
     }
 
-    private String executeOneTurn(Command command, State next, Model model) {
+    private String executeOneTurn(State now, State next, Model model) {
         if (next.isFinished()) {
             return REDIRECT_FINISHED_URL;
         }
         updateDTO(model);
-        if (command.isStatus()) {
+        if (now.getColor() == next.getColor()) {
             return STATUS_URL;
         }
         return getColorUrl(next.getColor());

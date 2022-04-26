@@ -3,6 +3,7 @@ package chess.web;
 import chess.db.BoardDAO;
 import chess.db.StateDAO;
 import chess.domain.command.Command;
+import chess.domain.command.CommandConverter;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
@@ -30,7 +31,7 @@ public class WebChessGame {
     public void searchSavedGame(String roomId, BoardDTO boardDTO) {
         if (stateDAO.isSaved(roomId)) {
             State now = getState(roomId);
-            boardDTO.update(now.getBoard());
+            boardDTO.generateUpdatedDTO(now.getBoard());
         }
     }
 
@@ -42,12 +43,15 @@ public class WebChessGame {
         return getState(roomId).getColor();
     }
 
-    public void initializeGame(BoardDTO boardDTO, State state, String roomId) {
-        boardDTO.update(state.getBoard());
-        if (state.isRunning()) {
+    public void initializeGame(BoardDTO boardDTO, ChessForm chessForm) {
+        State next = State.create()
+                .proceed(CommandConverter.convertCommand(RequestParser.from(chessForm.getCommand()).getCommand()));
+        boardDTO.generateUpdatedDTO(next.getBoard());
+        String roomId = chessForm.getRoomId();
+        if (next.isRunning()) {
             stateDAO.initializeID(roomId);
             stateDAO.initializeColor(roomId);
-            boardDAO.initializePieces(state, roomId);
+            boardDAO.initializePieces(next, roomId);
         }
     }
 
@@ -55,11 +59,14 @@ public class WebChessGame {
         return stateDAO.findAllUsers();
     }
 
-    public State executeOneTurn(Command command, BoardDTO boardDTO, String roomId) {
-        State next = getState(roomId).proceed(command);
+    public State executeOneTurn(ChessForm chessForm, BoardDTO boardDTO) {
+        Command parsedCommand = CommandConverter.convertCommand(
+                RequestParser.from(chessForm.getCommand()).getCommand());
+        String roomId = chessForm.getRoomId();
+        State next = getState(roomId).proceed(parsedCommand);
         executeWhenFinished(boardDTO, next, roomId);
-        executeWhenShowScore(command, boardDTO, next);
-        executeWhenMoveEnd(command, boardDTO, next, roomId);
+        executeWhenShowScore(parsedCommand, boardDTO, next);
+        executeWhenMoveEnd(parsedCommand, boardDTO, next, roomId);
         return next;
     }
 
@@ -77,13 +84,13 @@ public class WebChessGame {
 
     private void executeWhenFinished(BoardDTO boardDTO, State next, String roomId) {
         if (next.isFinished()) {
-            boardDTO.update(next.getBoard());
+            boardDTO.generateUpdatedDTO(next.getBoard());
             stateDAO.terminateDB(roomId);
         }
     }
 
     private void endTurn(State next, Command command, BoardDTO boardDTO, String roomId) {
-        boardDTO.update(next.getBoard());
+        boardDTO.generateUpdatedDTO(next.getBoard());
         movePieceIntoDB(next, command, roomId);
         if (!next.isWhite()) {
             stateDAO.convertColor(Color.BLACK, roomId);

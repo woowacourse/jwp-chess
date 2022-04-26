@@ -1,27 +1,34 @@
 package chess.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import chess.domain.game.ChessBoard;
 import chess.domain.pieces.Color;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+@JdbcTest
+@Sql({"schema.sql"})
 class WebBoardDaoTest {
 
     @Autowired
-    private WebChessBoardDao dao;
+    NamedParameterJdbcTemplate jdbcTemplate;
+
+    private BoardDao<ChessBoard> dao;
 
     int boardId;
 
     @BeforeEach
     void setup() {
+        dao = new WebChessBoardDao(new WebChessMemberDao(jdbcTemplate), jdbcTemplate);
         final ChessBoard board = dao.save(new ChessBoard("개초보만"));
         this.boardId = board.getId();
     }

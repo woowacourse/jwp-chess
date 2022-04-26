@@ -1,13 +1,16 @@
 package chess.dao;
 
 import chess.domain.game.ChessBoard;
+import chess.domain.member.Member;
 import chess.domain.pieces.Color;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -18,13 +21,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class WebChessBoardDao implements BoardDao<ChessBoard> {
 
-    private final WebChessMemberDao webChessMemberDao;
+    private final MemberDao<Member> memberDao;
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public WebChessBoardDao(WebChessMemberDao webChessMemberDao,
+    public WebChessBoardDao(MemberDao<Member> memberDao,
                             NamedParameterJdbcTemplate jdbcTemplate) {
-        this.webChessMemberDao = webChessMemberDao;
+        this.memberDao = memberDao;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -85,6 +88,6 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
                 resultSet.getInt("id"),
                 resultSet.getString("room_title"),
                 Color.findColor(resultSet.getString("turn")),
-                webChessMemberDao.getAllByBoardId(resultSet.getInt("id")));
+                memberDao.getAllByBoardId(resultSet.getInt("id")));
     }
 }

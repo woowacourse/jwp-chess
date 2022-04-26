@@ -10,21 +10,28 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@JdbcTest
+@Sql({"schema.sql"})
 class WebMemberDaoTest {
 
     @Autowired
-    private WebChessMemberDao dao;
+    NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private WebChessBoardDao boardDao;
+    private MemberDao<Member> dao;
+
+    private BoardDao<ChessBoard> boardDao;
 
     private int boardId;
 
     @BeforeEach
     void setup() {
+        dao = new WebChessMemberDao(jdbcTemplate);
+        boardDao = new WebChessBoardDao(dao, jdbcTemplate);
         final ChessBoard board = boardDao.save(new ChessBoard("에덴파이팅~!"));
         this.boardId = board.getId();
         dao.saveAll(List.of(new Member("쿼리치"), new Member("코린")), boardId);

@@ -7,44 +7,47 @@ import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@JdbcTest
+@Sql({"schema.sql"})
 class WebPieceDaoTest {
 
     @Autowired
-    private WebChessPositionDao webChessPositionDao;
+    NamedParameterJdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private WebChessPieceDao webPieceDao;
+    private PositionDao<Position> positionDao;
 
-    @Autowired
-    private WebChessBoardDao boardDao;
+    private PieceDao<Piece> pieceDao;
 
     private int boardId;
     private int positionId;
 
     @BeforeEach
     void setup() {
+        positionDao = new WebChessPositionDao(jdbcTemplate);
+        pieceDao = new WebChessPieceDao(jdbcTemplate);
+        BoardDao<ChessBoard> boardDao = new WebChessBoardDao(new WebChessMemberDao(jdbcTemplate), jdbcTemplate);
         final ChessBoard board = boardDao.save(new ChessBoard("corinne"));
         this.boardId = board.getId();
-        final Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, board.getId()));
+        final Position position = positionDao.save(new Position(Column.A, Row.TWO, board.getId()));
         this.positionId = position.getId();
-        webPieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
+        pieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
     }
 
     @Test
     void saveTest() {
-        final Piece piece = webPieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
+        final Piece piece = pieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
         assertAll(
                 () -> assertThat(piece.getType()).isInstanceOf(Pawn.class),
                 () -> assertThat(piece.getColor()).isEqualTo(Color.WHITE),
@@ -54,7 +57,7 @@ class WebPieceDaoTest {
 
     @Test
     void findByPositionId() {
-        Piece piece = webPieceDao.findByPositionId(positionId);
+        Piece piece = pieceDao.findByPositionId(positionId);
         assertAll(
                 () -> assertThat(piece.getType()).isInstanceOf(Pawn.class),
                 () -> assertThat(piece.getColor()).isEqualTo(Color.WHITE)
@@ -64,32 +67,27 @@ class WebPieceDaoTest {
     @Test
     void updatePiecePositionId() {
         final int sourcePositionId = positionId;
-        final int targetPositionId = webChessPositionDao.save(new Position(Column.A, Row.TWO, boardId)).getId();
-        int affectedRow = webPieceDao.updatePositionId(sourcePositionId, targetPositionId);
+        final int targetPositionId = positionDao.save(new Position(Column.A, Row.TWO, boardId)).getId();
+        int affectedRow = pieceDao.updatePositionId(sourcePositionId, targetPositionId);
         assertThat(affectedRow).isEqualTo(1);
     }
 
     @Test
     void deletePieceByPositionId() {
-        int affectedRows = webPieceDao.deleteByPositionId(positionId);
+        int affectedRows = pieceDao.deleteByPositionId(positionId);
         assertThat(affectedRows).isEqualTo(1);
     }
 
     @Test
     void getAllPiecesTest() {
-        final List<Piece> pieces = webPieceDao.getAllByBoardId(boardId);
+        final List<Piece> pieces = pieceDao.getAllByBoardId(boardId);
         assertThat(pieces.size()).isEqualTo(1);
     }
 
     @Test
     void countPawnsOnSameColumn() {
-        int pawnCount = webPieceDao.countPawnsOnSameColumn(boardId, Column.A, Color.WHITE);
+        int pawnCount = pieceDao.countPawnsOnSameColumn(boardId, Column.A, Color.WHITE);
 
         assertThat(pawnCount).isEqualTo(1);
-    }
-
-    @AfterEach
-    void setDown() {
-        boardDao.deleteAll();
     }
 }

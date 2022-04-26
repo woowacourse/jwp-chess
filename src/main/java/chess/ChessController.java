@@ -26,7 +26,7 @@ public class ChessController {
 
     @GetMapping("/")
     public String index() {
-        return "roby.html";
+        return "lobby.html";
     }
 
     @GetMapping("/room")

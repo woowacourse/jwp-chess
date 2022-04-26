@@ -4,7 +4,6 @@ import chess.dto.BoardDto;
 import chess.dto.MoveDto;
 import chess.dto.ResultDto;
 import chess.service.GameService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/game")
 public class ChessGameController {
 
-    @Autowired
-    private GameService gameService;
+    private final GameService gameService;
+
+    public ChessGameController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     @GetMapping("")
     public String board() {

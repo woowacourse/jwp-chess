@@ -15,12 +15,12 @@ public class RoomService {
         this.roomDao = roomDao;
     }
 
-    public List<RoomEntity> search() {
+    public List<RoomEntity> searchRooms() {
         return roomDao.findAll();
     }
 
-    public RoomDto create(RoomDto roomDto) {
-        roomDao.insert(roomDto.getName(), roomDto.getPassword());
-        return roomDto;
+    public List<RoomEntity> createRoom(String name, String password) {
+        roomDao.insert(name, password);
+        return roomDao.findAll();
     }
 }

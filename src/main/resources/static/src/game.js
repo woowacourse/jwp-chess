@@ -14,19 +14,6 @@ section.addEventListener("mouseup", (event) => {
     return updateGame()
 })
 
-function saveId() {
-    const ID_PATH_INDEX = 2;
-    gameId = new URL(window.location.href).pathname
-        .split("/")[ID_PATH_INDEX];
-}
-
-function findTagId(event) {
-    if (event.target.nodeName === 'IMG') {
-        return event.target.parentNode.id;
-    }
-    return event.target.id;
-}
-
 async function updateGame() {
     const config = {
         headers: {'Content-Type': 'application/json'},
@@ -42,4 +29,17 @@ async function updateGame() {
         return alert(errorMessage);
     }
     window.location.reload();
+}
+
+function saveId() {
+    const ID_PATH_INDEX = 2;
+    gameId = new URL(window.location.href).pathname
+        .split("/")[ID_PATH_INDEX];
+}
+
+function findTagId(event) {
+    if (event.target.nodeName === 'IMG') {
+        return event.target.parentNode.id;
+    }
+    return event.target.id;
 }

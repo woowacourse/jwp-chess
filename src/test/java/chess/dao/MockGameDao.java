@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.square.Square;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,16 @@ public class MockGameDao implements GameDao {
     }
 
     @Override
-    public void update(ChessGame game) {
+    public void terminate(ChessGame game) {
+        game.terminate();
+        store.put(game.getId(), game);
+    }
+
+    @Override
+    public void updateByMove(final ChessGame game, final String rawFrom, final String rawTo) {
+        final Square from = Square.from(rawFrom);
+        final Square to = Square.from(rawTo);
+        game.move(from, to);
         store.put(game.getId(), game);
     }
 }

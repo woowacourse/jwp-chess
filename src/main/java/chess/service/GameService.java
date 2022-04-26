@@ -107,19 +107,19 @@ public class GameService {
         return result.getBlackScore();
     }
 
-    public void update(final ChessGame chessGame) {
-        gameDao.update(chessGame);
-    }
-
     public void move(final Long gameId, final String rawFrom, final String rawTo) {
         final ChessGame chessGame = findByGameId(gameId);
         chessGame.move(Square.from(rawFrom), Square.from(rawTo));
-        update(chessGame);
+        updateGameByMove(chessGame, rawFrom, rawTo);
     }
 
     public void terminate(final Long gameId) {
-        final ChessGame chessGame = findByGameId(gameId);
-        chessGame.terminate();
-        update(chessGame);
+        final ChessGame game = findByGameId(gameId);
+        game.terminate();
+        gameDao.terminate(game);
+    }
+
+    private void updateGameByMove(final ChessGame chessGame, final String rawFrom, final String rawTo) {
+        gameDao.updateByMove(chessGame, rawFrom, rawTo);
     }
 }

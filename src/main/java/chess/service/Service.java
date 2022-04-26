@@ -29,8 +29,8 @@ public class Service {
     }
 
     public void createGameRoom(final String gameRoomId, final String name, final String password) {
-        GameRoom gameRoom = new GameRoom(gameRoomId, name, password, ChessGame.createBasic());
         gameRoomDao.delete(gameRoomId, password);
+        GameRoom gameRoom = new GameRoom(gameRoomId, name, password, ChessGame.createBasic());
         gameRoomDao.save(new GameRoomEntity(gameRoom));
         chessGameDao.save(new ChessGameEntity(gameRoomId, gameRoom.getChessGame()));
         boardDao.save(BoardEntity.generateBoardEntities(gameRoomId, gameRoom.getChessGame().getCurrentBoard()));
@@ -42,7 +42,7 @@ public class Service {
                 gameRoomEntity.getGameRoomId(),
                 gameRoomEntity.getName(),
                 gameRoomEntity.getPassword(),
-                loadChessGame(gameRoomEntity.getGameRoomId())
+                loadChessGame(gameRoomId)
         );
     }
 
@@ -65,7 +65,19 @@ public class Service {
         return gameRooms;
     }
 
+    public void endChessGame(final String gameRoomId) {
+        ChessGameEntity newChessGameEntity =
+                new ChessGameEntity(gameRoomId, false, chessGameDao.load(gameRoomId).getTeamValueOfTurn());
+        chessGameDao.updateChessGame(newChessGameEntity);
+    }
+
     public void deleteGameRoom(final String gameRoomId, final String password) {
+        if (chessGameDao.load(gameRoomId).getIsOn()) {
+            throw new IllegalStateException("[ERROR] 게임이 진행중인 체스방은 삭제할 수 없습니다.");
+        }
+        if (!gameRoomDao.load(gameRoomId).getPassword().equals(password)) {
+            throw new IllegalArgumentException("[ERROR] 비밀번호가 일치하지 않아 삭제할 수 없습니다.");
+        }
         gameRoomDao.delete(gameRoomId, password);
     }
 

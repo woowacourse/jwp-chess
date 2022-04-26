@@ -52,6 +52,9 @@ public class Controller {
         model.addAttribute("name", gameRoom.getName());
         model.addAttribute("turn", chessGame.getTurn());
         model.addAttribute("result", chessGame.generateResult());
+        if (!gameRoom.getChessGame().isOn()) {
+            return "game-result";
+        }
         return "chess-game";
     }
 
@@ -62,6 +65,12 @@ public class Controller {
                                 entry.getKey().getRow().getValue(),
                         Entry::getValue
                 ));
+    }
+
+    @PostMapping("/end/{gameRoomId}")
+    public RedirectView endChessGame(final @PathVariable String gameRoomId) {
+        service.endChessGame(gameRoomId);
+        return new RedirectView("/game/" + gameRoomId);
     }
 
     @PostMapping("/delete/{gameRoomId}")

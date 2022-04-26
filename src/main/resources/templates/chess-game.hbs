@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>체스 게임</title>
-    <link rel="stylesheet" href="/src/game.css">
+    <link rel="stylesheet" href="/src/chess-game.css">
 </head>
 <body>
 <div>
@@ -349,6 +349,10 @@
             <p>승리 팀 : {{winningTeam.value}} ({{winningTeam.winningType}})</p>
             {{/result}}
         </div>
+        <form class="button" method="post" action="/end/{{gameRoomId}}">
+            <p class="info">👋 게임을 종료합니다.</p>
+            <input type="submit" value="END GAME">
+        </form>
         <form class="button" method="post" action="/reset/{{gameRoomId}}">
             <p class="info">🧨 체스 게임을 리셋합니다.</p>
             <input type="submit" value="RESET GAME">

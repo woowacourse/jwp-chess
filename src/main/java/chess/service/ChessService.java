@@ -1,14 +1,12 @@
 package chess.service;
 
-import chess.domain.board.ChessBoardGenerator;
-import chess.domain.piece.property.Team;
-import chess.domain.position.Position;
 import chess.dao.ChessGame;
 import chess.dao.ChessGameDAO;
 import chess.dao.Movement;
 import chess.dao.MovementDAO;
+import chess.domain.piece.property.Team;
+import chess.domain.position.Position;
 import chess.dto.ChessGameRoomInfoDTO;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +15,6 @@ import org.springframework.stereotype.Service;
 @Service
 public final class ChessService {
 
-//    private static final ChessGameDAO CHESS_GAME_DAO = new ChessGameDAO();
-//    private static final MovementDAO MOVEMENT_DAO = new MovementDAO();
     private final ChessGameDAO chessGameDAO;
     private final MovementDAO movementDAO;
 
@@ -28,24 +24,20 @@ public final class ChessService {
     }
 
     public String addChessGame(final String gameName) {
-        ChessGame chessGame = new ChessGame(new ChessBoardGenerator());
-        chessGame.setName(gameName);
-
+        ChessGame chessGame = ChessGame.fromName(gameName);
         return chessGameDAO.addGame(chessGame);
     }
 
     public ChessGame getChessGamePlayed(final String gameId) {
         List<Movement> movementByGameId = movementDAO.findMovementByGameId(gameId);
-        ChessGame chessGame = ChessGame.initChessGame();
+        ChessGame chessGame = ChessGame.fromId(gameId);
         for (Movement movement : movementByGameId) {
             chessGame.execute(movement);
         }
-        chessGame.setId(gameId);
         return chessGame;
     }
 
-    public ChessGame movePiece(final String gameId, final String source, final String target, final Team team)
-            throws SQLException {
+    public ChessGame movePiece(final String gameId, final String source, final String target, final Team team) {
         final ChessGame chessGame = getChessGamePlayed(gameId);
         validateCurrentTurn(chessGame, team);
         move(chessGame, new Movement(Position.of(source), Position.of(target)), team);

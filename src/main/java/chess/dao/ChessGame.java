@@ -10,31 +10,37 @@ public final class ChessGame {
     private String id;
     private String name;
     private boolean isEnd;
-    private ChessBoard chessBoard;
+    private final ChessBoard chessBoard;
 
-    public ChessGame(final BoardGenerator boardGenerator) {
+    private ChessGame(final String gameName, final BoardGenerator boardGenerator) {
+        this.chessBoard = new ChessBoard(boardGenerator);
+        this.name = gameName;
+    }
+
+    private ChessGame(final BoardGenerator boardGenerator) {
         this.chessBoard = new ChessBoard(boardGenerator);
     }
 
-    public static ChessGame initChessGame() {
+    public static ChessGame fromName(String gameName) {
+        return new ChessGame(gameName, new ChessBoardGenerator());
+    }
+
+    public static ChessGame fromId(final String gameId) {
         ChessGame chessGame = new ChessGame(new ChessBoardGenerator());
+        chessGame.id = gameId;
         return chessGame;
+    }
+
+    public static ChessGame createChessGame() {
+        return new ChessGame(new ChessBoardGenerator());
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(final String name) {
-        this.name = name;
-    }
-
     public String getId() {
         return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
     }
 
     public void execute(final Movement movement) {

@@ -21,8 +21,7 @@ class ChessGameDAOTest {
     @DisplayName("체스 게임방 생성")
     void makeChessGameRoom() {
         ChessGameDAO chessGameDAO = new ChessGameDAO(template);
-        ChessGame chessGame = ChessGame.initChessGame();
-        chessGame.setName("zero");
+        ChessGame chessGame = ChessGame.fromName("zero");
         String gameId = chessGameDAO.addGame(chessGame);
 
         Assertions.assertThat(gameId).isNotNull();

@@ -7,12 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 
-@JdbcTest
 @SpringBootTest
+@ActiveProfiles("test")
 class MovementDAOTest {
 
     @Autowired
@@ -21,8 +21,7 @@ class MovementDAOTest {
     @BeforeEach
     void before() {
         ChessGameDAO chessGameDAO = new ChessGameDAO(jdbcTemplate);
-        ChessGame chessGame = ChessGame.initChessGame();
-        chessGame.setName("zero");
+        ChessGame chessGame = ChessGame.fromName("zero");
         String gameId = chessGameDAO.addGame(chessGame);
 
         org.assertj.core.api.Assertions.assertThat(gameId).isNotNull();
@@ -31,7 +30,7 @@ class MovementDAOTest {
     @Test
     @DisplayName("움직임 확인")
     void checkMovement() {
-        ChessGame chessGame = ChessGame.initChessGame();
+        ChessGame chessGame = ChessGame.createChessGame();
         MovementDAO movementDAO = new MovementDAO(jdbcTemplate);
         Movement movement = new Movement(
                 Position.of("B2"),

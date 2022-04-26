@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+</head>
+
+<body>
+<div>
+    <center>
+        <h1>♟ 웹 체스 게임 ♟</h1>
+        {{#if list}}
+            {{#list.chessGames}}
+                <div>
+                   <A href="/game/{{id}}">{{title}}</A>
+                   <form action="/delete" method="post">
+                       <input type="submit" value="삭제">
+                   </form>
+                </div>
+            {{/list.chessGames}}
+        {{else}}
+        {{/if}}
+    </center>
+</div>
+</body>
+</html>

@@ -16,7 +16,7 @@ public class JdbcTemplateGameStatusDaoTest {
     private JdbcTemplateGameStatusDao jdbcTemplateGameStatusDao;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {

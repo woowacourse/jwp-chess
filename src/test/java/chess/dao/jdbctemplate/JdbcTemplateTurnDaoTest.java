@@ -17,7 +17,7 @@ public class JdbcTemplateTurnDaoTest {
     private JdbcTemplateTurnDao jdbcTemplateTurnDao;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {

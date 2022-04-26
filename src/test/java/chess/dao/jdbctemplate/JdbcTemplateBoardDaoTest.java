@@ -21,7 +21,7 @@ public class JdbcTemplateBoardDaoTest {
     private JdbcTemplateBoardDao jdbcTemplateBoardDao;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {

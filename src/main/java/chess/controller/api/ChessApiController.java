@@ -30,7 +30,7 @@ public class ChessApiController {
 
     @GetMapping(value = "/init", produces = APPLICATION_JSON_VALUE)
     public GameResponse init() {
-        ChessBoard chessBoard = chessService.initAndGetChessBoard();
+        ChessBoard chessBoard = chessService.getChessBoard();
         return new GameResponse(chessBoard);
     }
 

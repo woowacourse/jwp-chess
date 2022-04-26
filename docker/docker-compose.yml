@@ -4,6 +4,7 @@ services:
     image: mysql:8.0.28
     platform: linux/x86_64
     restart: always
+    container_name: chess
     ports:
       - "13306:3306"
     environment:

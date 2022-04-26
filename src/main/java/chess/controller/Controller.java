@@ -1,6 +1,8 @@
 package chess.controller;
 
 import chess.domain.board.Position;
+import chess.domain.game.ChessGame;
+import chess.domain.game.GameRoom;
 import chess.domain.piece.Piece;
 import chess.service.Service;
 import java.util.HashMap;
@@ -29,25 +31,27 @@ public class Controller {
     @GetMapping("/")
     public String getIndexPage(final Model model) {
         Map<String, Object> attributes = new HashMap<>();
-        attributes.put("chessGames", service.loadAllChessGames());
+        attributes.put("gameRooms", service.loadAllGameRooms());
         model.addAllAttributes(attributes);
         return "index";
     }
 
     @PostMapping("/create-chess-game")
-    public RedirectView createChessGame(final @RequestParam String name) {
-        service.createChessGame(name);
-        return new RedirectView("/game/" + name);
+    public RedirectView createChessGame(final @RequestParam String name, final @RequestParam String password) {
+        String gameRoomId = String.valueOf(name.hashCode());
+        service.createGameRoom(gameRoomId, name, password);
+        return new RedirectView("/game/" + gameRoomId);
     }
 
-    @GetMapping("/game/{name}")
-    public String getChessGamePage(final Model model, final @PathVariable String name) {
-        Map<Position, Piece> currentBoard = service.loadChessGame(name).getCurrentBoard();
-        Map<String, Piece> boardForModel = convertBoardForModel(currentBoard);
-        model.addAllAttributes(boardForModel);
-        model.addAttribute("chessGameName", name);
-        model.addAttribute("turn", service.loadChessGame(name).getTurn());
-        model.addAttribute("result", service.loadChessGame(name).generateResult());
+    @GetMapping("/game/{gameRoomId}")
+    public String getChessGamePage(final Model model, final @PathVariable String gameRoomId) {
+        GameRoom gameRoom = service.loadGameRoom(gameRoomId);
+        ChessGame chessGame = gameRoom.getChessGame();
+        model.addAllAttributes(convertBoardForModel(chessGame.getCurrentBoard()));
+        model.addAttribute("gameRoomId", gameRoom.getGameRoomId());
+        model.addAttribute("name", gameRoom.getName());
+        model.addAttribute("turn", chessGame.getTurn());
+        model.addAttribute("result", chessGame.generateResult());
         return "chess-game";
     }
 
@@ -60,26 +64,26 @@ public class Controller {
                 ));
     }
 
-    @PostMapping("/delete/{name}")
-    public RedirectView deleteChessGame(final @PathVariable String name) {
-        service.deleteChessGame(name);
+    @PostMapping("/delete/{gameRoomId}")
+    public RedirectView deleteChessGame(final @PathVariable String gameRoomId, final @RequestParam String password) {
+        service.deleteGameRoom(gameRoomId, password);
         return new RedirectView("/");
     }
 
-    @PostMapping("/move/{chessGameName}")
-    public RedirectView movePiece(final @PathVariable String chessGameName,
+    @PostMapping("/move/{gameRoomId}")
+    public RedirectView movePiece(final @PathVariable String gameRoomId,
                                   final @RequestParam String source,
                                   final @RequestParam String target) {
         char[] sourcesElements = refineInputPosition(source);
         char[] targetElements = refineInputPosition(target);
         service.movePiece(
-                chessGameName,
+                gameRoomId,
                 sourcesElements[COLUMN_INDEX],
                 Character.getNumericValue(sourcesElements[ROW_INDEX]),
                 targetElements[COLUMN_INDEX],
                 Character.getNumericValue(targetElements[ROW_INDEX])
         );
-        return new RedirectView("/game/" + chessGameName);
+        return new RedirectView("/game/" + gameRoomId);
     }
 
     private char[] refineInputPosition(final String position) {
@@ -90,9 +94,9 @@ public class Controller {
         return refinedSource.toCharArray();
     }
 
-    @PostMapping("/reset/{chessGameName}")
-    public RedirectView resetChessGame(final @PathVariable String chessGameName) {
-        service.createChessGame(chessGameName);
-        return new RedirectView("/game/" + chessGameName);
+    @PostMapping("/reset/{gameRoomId}")
+    public RedirectView resetChessGame(final @PathVariable String gameRoomId) {
+        service.resetChessRoom(gameRoomId);
+        return new RedirectView("/game/" + gameRoomId);
     }
 }

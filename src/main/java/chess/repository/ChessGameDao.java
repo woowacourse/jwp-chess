@@ -1,7 +1,6 @@
 package chess.repository;
 
 import chess.repository.entity.ChessGameEntity;
-import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,49 +18,29 @@ public class ChessGameDao {
     }
 
     public void save(final ChessGameEntity chessGameEntity) {
-        String insertSql = "insert into chess_game (name, is_on, team_value_of_turn)"
-                + " values (:name, :isOn, :teamValueOfTurn)";
+        String insertSql = "insert into chess_game (game_room_id, is_on, team_value_of_turn)"
+                + " values (:gameRoomId, :isOn, :teamValueOfTurn)";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(insertSql, source);
     }
 
-    public void delete(final String name) {
-        String deleteSql = "delete from chess_game where name=:name";
-        SqlParameterSource source = new MapSqlParameterSource("name", name);
-        namedParameterJdbcTemplate.update(deleteSql, source);
-    }
-
-    public ChessGameEntity load(final String name) {
-        String selectSql = "select name, is_on, team_value_of_turn from chess_game where name=:name";
-        SqlParameterSource source = new MapSqlParameterSource("name", name);
-        return namedParameterJdbcTemplate.queryForObject(
-                selectSql,
-                source,
-                getChessGameEntityRowMapper());
-    }
-
-    public List<ChessGameEntity> loadAll() {
-        String loadAllSql = "select * from chess_game";
-        return namedParameterJdbcTemplate.query(loadAllSql, getChessGameEntityRowMapper());
+    public ChessGameEntity load(final String gameRoomId) {
+        String selectSql = "select game_room_id, is_on, team_value_of_turn from chess_game where game_room_id=:gameRoomId";
+        SqlParameterSource source = new MapSqlParameterSource("gameRoomId", gameRoomId);
+        return namedParameterJdbcTemplate.queryForObject(selectSql, source, getChessGameEntityRowMapper());
     }
 
     private RowMapper<ChessGameEntity> getChessGameEntityRowMapper() {
         return (rs, rn) -> new ChessGameEntity(
-                rs.getString("name"),
+                rs.getString("game_room_id"),
                 rs.getBoolean("is_on"),
                 rs.getString("team_value_of_turn")
         );
     }
 
     public void updateChessGame(final ChessGameEntity chessGameEntity) {
-        String updateSql = "update chess_game set is_on=:isOn, team_value_of_turn=:teamValueOfTurn where name=:name";
+        String updateSql = "update chess_game set is_on=:isOn, team_value_of_turn=:teamValueOfTurn where game_room_id=:gameRoomId";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(updateSql, source);
-    }
-
-    public int findChessGameIdByName(final String name) {
-        String selectSql = "select chess_game_id from chess_game where name=:name";
-        SqlParameterSource source = new MapSqlParameterSource("name", name);
-        return namedParameterJdbcTemplate.queryForObject(selectSql, source, Integer.class);
     }
 }

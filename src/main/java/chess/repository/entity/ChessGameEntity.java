@@ -4,24 +4,24 @@ import chess.domain.game.ChessGame;
 
 public class ChessGameEntity {
 
-    private final String name;
+    private final String gameRoomId;
     private final boolean isOn;
     private final String teamValueOfTurn;
 
-    public ChessGameEntity(String name, boolean isOn, String teamValueOfTurn) {
-        this.name = name;
+    public ChessGameEntity(String gameRoomId, boolean isOn, String teamValueOfTurn) {
+        this.gameRoomId = gameRoomId;
         this.isOn = isOn;
         this.teamValueOfTurn = teamValueOfTurn;
     }
 
-    public ChessGameEntity(ChessGame chessGame) {
-        this.name = chessGame.getName();
+    public ChessGameEntity(String gameRoomId, ChessGame chessGame) {
+        this.gameRoomId = gameRoomId;
         this.isOn = chessGame.isOn();
         this.teamValueOfTurn = chessGame.getTurn().getNow().getValue();
     }
 
-    public String getName() {
-        return name;
+    public String getGameRoomId() {
+        return gameRoomId;
     }
 
     public boolean getIsOn() {

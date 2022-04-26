@@ -1,6 +1,5 @@
 package chess.dao.jdbctemplate;
 
-import chess.dao.jdbctemplate.JdbcTemplateGameStatusDao;
 import chess.domain.GameStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +23,7 @@ public class JdbcTemplateGameStatusDaoTest {
         jdbcTemplateGameStatusDao.init(GameStatus.READY);
     }
 
-    @DisplayName("초기 값을 확인한다.")
+    @DisplayName("체스게임을 시작하면 처음 상태는 READY 여야 한다.")
     @Test
     void getStatus() {
         // given
@@ -34,7 +33,7 @@ public class JdbcTemplateGameStatusDaoTest {
         Assertions.assertThat(jdbcTemplateGameStatusDao.getStatus()).isEqualTo(initStatus.toString());
     }
 
-    @DisplayName("상태를 변경 후 변경 값을 확인한다.")
+    @DisplayName("상태를 PLAYING 로 변경 후 변경 값을 확인한다.")
     @Test
     void update() {
         // given
@@ -46,7 +45,7 @@ public class JdbcTemplateGameStatusDaoTest {
         Assertions.assertThat(jdbcTemplateGameStatusDao.getStatus()).isEqualTo(nextStatus.toString());
     }
 
-    @DisplayName("리셋을 확인한다.")
+    @DisplayName("리셋을 하면 초기값은 READY 이다.")
     @Test
     void reset() {
         // given

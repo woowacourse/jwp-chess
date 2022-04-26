@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/chess-game")
 public class ChessController {
 
-    private ChessService chessService;
+    private final ChessService chessService;
 
     @Autowired
     public ChessController(ChessService chessService) {

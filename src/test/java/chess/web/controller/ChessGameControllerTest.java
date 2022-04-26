@@ -5,8 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import chess.web.dao.ChessBoardDao;
-import chess.web.dao.PlayerDao;
 import chess.web.dto.MoveDto;
 import chess.web.service.ChessGameService;
 import chess.web.service.fakedao.FakeChessBoardDao;

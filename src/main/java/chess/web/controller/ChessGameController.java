@@ -65,7 +65,7 @@ public class ChessGameController {
     @PostMapping("/create")
     @ResponseBody
     public CreateRoomResultDto createRoom(@RequestBody CreateRoomRequestDto createRoomRequestDto) {
-        return new CreateRoomResultDto("테스트용입니다");
+        return service.createRoom(createRoomRequestDto);
     }
 
     @GetMapping("/rooms")

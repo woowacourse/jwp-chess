@@ -8,7 +8,9 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.position.Position;
 import chess.domain.piece.property.Color;
 import chess.web.dao.ChessBoardDao;
-import chess.web.dao.PlayerDao;
+import chess.web.dao.RoomDao;
+import chess.web.dto.CreateRoomRequestDto;
+import chess.web.dto.CreateRoomResultDto;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
@@ -20,11 +22,11 @@ import org.springframework.stereotype.Service;
 public class ChessGameService {
 
     private final ChessBoardDao chessBoardDao;
-    private final PlayerDao playerDao;
+    private final RoomDao roomDao;
 
-    public ChessGameService(ChessBoardDao chessBoardDao, PlayerDao playerDao) {
+    public ChessGameService(ChessBoardDao chessBoardDao, RoomDao playerDao) {
         this.chessBoardDao = chessBoardDao;
-        this.playerDao = playerDao;
+        this.roomDao = playerDao;
     }
 
     public ChessGame start() {
@@ -75,7 +77,7 @@ public class ChessGameService {
 
     private void removeAll() {
         chessBoardDao.deleteAll();
-        playerDao.deleteAll();
+        roomDao.deleteAll();
     }
 
     private void saveAll(ChessGame chessGame) {
@@ -83,7 +85,7 @@ public class ChessGameService {
         for (Position position : chessBoard.keySet()) {
             chessBoardDao.save(position, chessBoard.get(position));
         }
-        playerDao.save(Color.of(chessGame.getTurn()));
+        roomDao.save(Color.of(chessGame.getTurn()));
     }
 
     public ChessGame getChessGame() {
@@ -95,10 +97,14 @@ public class ChessGameService {
     }
 
     private Player findTurn() {
-        return playerDao.getPlayer();
+        return roomDao.getPlayer();
     }
 
     private boolean isChessGameEnd(ChessGame chessGame) {
         return chessGame.isFinished();
+    }
+
+    public CreateRoomResultDto createRoom(CreateRoomRequestDto createRoomRequestDto) {
+        return new CreateRoomResultDto(roomDao.createRoom(createRoomRequestDto));
     }
 }

@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Piece;
 import chess.web.dao.ChessBoardDao;
-import chess.web.dao.PlayerDao;
+import chess.web.dao.RoomDao;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 public class ChessGameServiceTest {
 
     ChessBoardDao chessBoardDao = new FakeChessBoardDao();
-    PlayerDao playerDao = new FakePlayerDao();
+    RoomDao playerDao = new FakePlayerDao();
     ChessGameService chessGameService = new ChessGameService(chessBoardDao, playerDao);
 
     @Test

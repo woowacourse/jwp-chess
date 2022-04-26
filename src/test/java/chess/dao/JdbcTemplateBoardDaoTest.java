@@ -26,13 +26,6 @@ public class JdbcTemplateBoardDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplateBoardDao = new JdbcTemplateBoardDao(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE board IF EXISTS");
-
-        jdbcTemplate.execute("create table board("
-                + " position varchar(10) not null,"
-                + " piece varchar(20) not null,"
-                + " primary key (position)"
-                + ")");
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
         jdbcTemplateBoardDao.init(board.toMap());

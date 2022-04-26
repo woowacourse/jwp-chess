@@ -20,13 +20,6 @@ public class JdbcTemplateBoardDao implements BoardDao {
 
     @Override
     public void init(Map<String, String> board) {
-        jdbcTemplate.execute("DROP TABLE board IF EXISTS");
-
-        jdbcTemplate.execute("create table board("
-                + " position varchar(10) not null,"
-                + " piece varchar(20) not null,"
-                + " primary key (position)"
-                + ")");
         String sql = "insert into board (position, piece) values (?,?)";
 
         for (Entry<String, String> boardEntry : board.entrySet()) {

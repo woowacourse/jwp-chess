@@ -6,7 +6,6 @@ import chess.dto.BoardDTO;
 import chess.dto.ChessGameRoomInfoDTO;
 import chess.dto.GameCreationDTO;
 import chess.service.ChessService;
-import java.sql.SQLException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -58,8 +57,14 @@ public class ChessGameController {
     public ResponseEntity<BoardDTO> movePiece(@RequestParam String source,
                                               @RequestParam String target,
                                               @RequestParam String team,
-                                              @PathVariable String id) throws SQLException {
+                                              @PathVariable String id) {
         ChessGame chessGame = chessService.movePiece(id, source, target, Team.valueOf(team));
         return ResponseEntity.ok(new BoardDTO(chessGame));
+    }
+
+    @PostMapping(value = "/delete/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String deleteGame(@PathVariable String id, String password) {
+        chessService.deleteGame(id, password);
+        return "redirect:/";
     }
 }

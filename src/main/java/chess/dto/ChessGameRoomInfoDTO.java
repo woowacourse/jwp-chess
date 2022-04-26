@@ -4,10 +4,12 @@ public final class ChessGameRoomInfoDTO {
 
     private final String id;
     private final String name;
+    private final String password;
 
-    public ChessGameRoomInfoDTO(final String id, final String name) {
+    public ChessGameRoomInfoDTO(final String id, final String name, final String password) {
         this.id = id;
         this.name = name;
+        this.password = password;
     }
 
     public String getId() {
@@ -16,6 +18,10 @@ public final class ChessGameRoomInfoDTO {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     @Override

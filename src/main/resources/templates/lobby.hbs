@@ -19,7 +19,13 @@
 <table border="2" width ="500" height="300" align = "center" class="game-list">
     {{#games}}
     <tr>
-       <td><a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a></td>
+       <td>
+           <a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a>
+           <form action="/delete/{{id}}" method="post">
+               <input type="password" name="password" placeholder="password">
+               <input type="submit" value="삭제하기">
+           </form>
+       </td>
     </tr>
     {{/games}}
 </table>

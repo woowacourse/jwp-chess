@@ -1,16 +1,14 @@
 package chess.service;
 
-import chess.domain.board.ChessGame;
 import chess.dao.ChessGameDAO;
-import chess.domain.position.Movement;
 import chess.dao.MovementDAO;
+import chess.domain.board.ChessGame;
 import chess.domain.piece.property.Team;
+import chess.domain.position.Movement;
 import chess.domain.position.Position;
 import chess.dto.ChessGameRoomInfoDTO;
 import chess.dto.GameCreationDTO;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -64,13 +62,6 @@ public final class ChessService {
         }
     }
 
-    private Map<String, Object> result(final ChessGame chessGame) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("winner", chessGame.getChessBoard().calculateWhoWinner().toString());
-
-        return model;
-    }
-
     public List<ChessGameRoomInfoDTO> getGames() {
         return chessGameDAO.findActiveGames();
     }
@@ -79,12 +70,12 @@ public final class ChessService {
         return chessGameDAO.findGameById(id);
     }
 
-    public Map<String, Object> getResult(ChessGame chessGame) {
-        final Map<String, Object> model = new HashMap<>();
-        chessGameDAO.updateGameEnd(chessGame.getId());
-        model.put("gameResult", result(chessGame));
-        model.put("isGameSet", Boolean.TRUE);
+    public void deleteGame(final String gameId, final String password) {
 
-        return model;
+        ChessGameRoomInfoDTO gameInfo = chessGameDAO.findGameById(gameId);
+        if (!gameInfo.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다");
+        }
+        chessGameDAO.deleteGame(gameId);
     }
 }

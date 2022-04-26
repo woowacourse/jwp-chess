@@ -9,10 +9,18 @@ public final class ChessGame {
     private String name;
     private boolean isEnd;
     private String password;
-    private final ChessBoard chessBoard;
+    private BoardGenerator boardGenerator;
+    private ChessBoard chessBoard;
 
     private ChessGame(final BoardGenerator boardGenerator) {
         this.chessBoard = new ChessBoard(boardGenerator);
+    }
+
+    public ChessGame(final String id, final String name, final String password, final BoardGenerator boardGenerator) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.boardGenerator = boardGenerator;
     }
 
     public ChessGame(final String id, final String name, final String password) {
@@ -26,10 +34,6 @@ public final class ChessGame {
         ChessGame chessGame = new ChessGame(new ChessBoardGenerator());
         chessGame.id = gameId;
         return chessGame;
-    }
-
-    public static ChessGame createChessGame() {
-        return new ChessGame(new ChessBoardGenerator());
     }
 
     public String getName() {
@@ -53,5 +57,9 @@ public final class ChessGame {
 
     public boolean isGameSet() {
         return !chessBoard.checkKingExist();
+    }
+
+    public boolean isMatched(final String password) {
+        return this.password.equals(password);
     }
 }

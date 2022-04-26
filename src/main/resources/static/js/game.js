@@ -59,7 +59,6 @@ function update(response) {
     turn = response.currentTurn;
     $currentBlackScore.innerHTML = response.blackScore;
     $currentWhiteScore.innerHTML = response.whiteScore;
-    console.log(response);
     if (response.gameSet) {
         showResult(response)
     }

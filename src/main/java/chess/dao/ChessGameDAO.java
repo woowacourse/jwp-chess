@@ -16,7 +16,8 @@ public class ChessGameDAO {
     private static final RowMapper<ChessGameRoomInfoDTO> CHESS_GAME_ROOM_INFO_DTO_ROW_MAPPER = (resultSet, rowNumber) ->
             new ChessGameRoomInfoDTO(
                     resultSet.getString("id"),
-                    resultSet.getString("name")
+                    resultSet.getString("name"),
+                    resultSet.getString("password")
             );
 
     private final JdbcTemplate jdbcTemplate;
@@ -39,17 +40,26 @@ public class ChessGameDAO {
     }
 
     public List<ChessGameRoomInfoDTO> findActiveGames() {
-        String sql = "SELECT id, name FROM CHESS_GAME WHERE IS_END = false";
+        String sql = "SELECT id, name, password FROM CHESS_GAME WHERE IS_END = false";
         return jdbcTemplate.query(sql, CHESS_GAME_ROOM_INFO_DTO_ROW_MAPPER);
     }
 
     public ChessGameRoomInfoDTO findGameById(final String gameId) {
-        String sql = "SELECT id, name FROM CHESS_GAME WHERE ID = ? AND IS_END = FALSE ORDER BY created_at";
+        String sql = "SELECT id, name, password FROM CHESS_GAME WHERE ID = ? AND IS_END = FALSE ORDER BY created_at";
         return jdbcTemplate.queryForObject(sql, CHESS_GAME_ROOM_INFO_DTO_ROW_MAPPER, gameId);
     }
 
     public void updateGameEnd(final String gameId) {
         String sql = "UPDATE chess_game SET is_end = true WHERE id = ?";
         jdbcTemplate.update(sql, gameId);
+    }
+
+    public void deleteGame(final String gameId) {
+        String sql = "DELETE FROM CHESS_GAME WHERE ID = ?";
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, Long.parseLong(gameId));
+            return statement;
+        });
     }
 }

@@ -1,31 +1,13 @@
 package chess.domain.auth;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
+import static chess.util.HashUtils.hash;
+
 import java.util.Map;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import org.springframework.boot.json.BasicJsonParser;
 
 public class AuthCredentials {
 
-    private static final String HASH_ALGORITHM = "PBKDF2WithHmacSHA1";
-    private static final byte[] SECRET_SALT = "should_be_hidden_before_deployment".getBytes();
-    private static final int HASH_ITERATION_COUNT = 65536;
-    private static final int KEY_BIT_LENGTH = 128;
-
-    private static final SecretKeyFactory hashFactory;
     private static final BasicJsonParser jsonParser = new BasicJsonParser();
-
-    static {
-        try {
-            hashFactory = SecretKeyFactory.getInstance(HASH_ALGORITHM);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            throw new RuntimeException("클래스 생성 과정에서 문제가 발생하였습니다.");
-        }
-    }
 
     private final String name;
     private final String password;
@@ -41,18 +23,7 @@ public class AuthCredentials {
     }
 
     public EncryptedAuthCredentials toEncrypted() {
-        return EncryptedAuthCredentials.of(name, hashPassword());
-    }
-
-    private byte[] hashPassword() {
-        try {
-            KeySpec keySpec = new PBEKeySpec(password.toCharArray(),
-                    SECRET_SALT, HASH_ITERATION_COUNT, KEY_BIT_LENGTH);
-            return hashFactory.generateSecret(keySpec).getEncoded();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-            throw new RuntimeException("비밀번호 암호화 과정에서 문제가 발생했습니다.");
-        }
+        return new EncryptedAuthCredentials(name, hash(password));
     }
 
     @Override

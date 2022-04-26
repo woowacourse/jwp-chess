@@ -7,44 +7,37 @@ import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class ChessController {
+@RequestMapping("/api")
+public class ChessApiController {
 
     private final ChessService chessService;
 
-    public ChessController(ChessService chessService) {
+    public ChessApiController(ChessService chessService) {
         this.chessService = chessService;
     }
 
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
-
-
-    @GetMapping("/api/load")
+    @GetMapping("/load")
     public ResponseEntity<BoardDto> loadGame() {
         Board board = chessService.loadGame(1L);
         return ResponseEntity.ok().body(BoardDto.from(board));
     }
 
-    @GetMapping("api/restart")
+    @GetMapping("/restart")
     public ResponseEntity<BoardDto> initBoard() {
         Board board = chessService.initBoard(1L);
         return ResponseEntity.ok().body(BoardDto.from(board));
     }
 
-    @GetMapping("api/status")
+    @GetMapping("/status")
     public ResponseEntity<ScoreDto> getStatus() {
         ScoreDto status = chessService.getStatus(1L);
         return ResponseEntity.ok().body(status);
     }
 
-    @PostMapping(value = "/api/move")
+    @PostMapping(value = "/move")
     public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto) {
         Board board = chessService.move(moveDto, 1L);
         return ResponseEntity.ok().body(BoardDto.from(board));

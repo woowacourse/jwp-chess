@@ -1,4 +1,4 @@
-package chess.controller.web;
+package chess.controller.view;
 
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;

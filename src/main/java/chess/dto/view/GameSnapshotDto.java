@@ -1,8 +1,9 @@
 package chess.dto.view;
 
-import chess.domain.game.statistics.GameState;
+import chess.domain.game.GameState;
 import chess.dto.view.board.BoardViewDto;
 import chess.dto.view.board.RowDto;
+import chess.util.GameStateDisplayUtil;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +22,7 @@ public class GameSnapshotDto {
     }
 
     public String getStateValue() {
-        return state.toDisplay();
+        return GameStateDisplayUtil.toDisplay(state);
     }
 
     public List<RowDto> getBoard() {

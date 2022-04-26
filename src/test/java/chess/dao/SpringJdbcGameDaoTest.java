@@ -15,25 +15,25 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Sql("classpath:init.sql")
-public class GameDaoImplTest {
+public class SpringJdbcGameDaoTest {
 
-    private GameDaoImpl gameDaoImpl;
+    private SpringJdbcGameDao springJdbcGameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        gameDaoImpl = new GameDaoImpl(jdbcTemplate);
+        springJdbcGameDao = new SpringJdbcGameDao(jdbcTemplate);
     }
 
     @Test
     @DisplayName("전체 게임 데이터 삭제")
     void removeAll() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.saveGame(gameDto);
+        springJdbcGameDao.saveGame(gameDto);
 
-        gameDaoImpl.removeAll();
+        springJdbcGameDao.removeAll();
 
         assertThat(getGameCount()).isEqualTo(0);
     }
@@ -42,7 +42,7 @@ public class GameDaoImplTest {
     @DisplayName("게임 정보 저장")
     void save() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.saveGame(gameDto);
+        springJdbcGameDao.saveGame(gameDto);
 
         assertThat(getGameCount()).isEqualTo(1);
     }
@@ -51,14 +51,14 @@ public class GameDaoImplTest {
     @DisplayName("게임 정보 수정")
     void update() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.saveGame(gameDto);
+        springJdbcGameDao.saveGame(gameDto);
 
         GameDto updatedGameDto = new GameDto("black", "end");
-        gameDaoImpl.updateGame(updatedGameDto);
+        springJdbcGameDao.updateGame(updatedGameDto);
 
         assertAll(
-                () -> assertThat(gameDaoImpl.findGame().getTurn()).isEqualTo("black"),
-                () -> assertThat(gameDaoImpl.findGame().getStatus()).isEqualTo("end")
+                () -> assertThat(springJdbcGameDao.findGame().getTurn()).isEqualTo("black"),
+                () -> assertThat(springJdbcGameDao.findGame().getStatus()).isEqualTo("end")
         );
     }
 
@@ -66,23 +66,23 @@ public class GameDaoImplTest {
     @DisplayName("게임 상태 업데이트")
     void updateStatus() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.saveGame(gameDto);
+        springJdbcGameDao.saveGame(gameDto);
 
         GameStatusDto gameStatusDto = GameStatusDto.FINISHED;
-        gameDaoImpl.updateStatus(gameStatusDto);
+        springJdbcGameDao.updateStatus(gameStatusDto);
 
-        assertThat(gameDaoImpl.findGame().getStatus()).isEqualTo(gameStatusDto.getName());
+        assertThat(springJdbcGameDao.findGame().getStatus()).isEqualTo(gameStatusDto.getName());
     }
 
     @Test
     @DisplayName("게임 정보 조회")
     void find() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.saveGame(gameDto);
+        springJdbcGameDao.saveGame(gameDto);
 
         assertAll(
-                () -> assertThat(gameDaoImpl.findGame().getStatus()).isEqualTo("playing"),
-                () -> assertThat(gameDaoImpl.findGame().getTurn()).isEqualTo("white")
+                () -> assertThat(springJdbcGameDao.findGame().getStatus()).isEqualTo("playing"),
+                () -> assertThat(springJdbcGameDao.findGame().getTurn()).isEqualTo("white")
         );
     }
 

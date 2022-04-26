@@ -17,16 +17,16 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 @JdbcTest
 @Sql("classpath:init.sql")
-public class PieceDaoImplTest {
+public class SpringJdbcPieceDaoTest {
 
-    private PieceDaoImpl pieceDao;
+    private SpringJdbcPieceDao pieceDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        pieceDao = new PieceDaoImpl(jdbcTemplate);
+        pieceDao = new SpringJdbcPieceDao(jdbcTemplate);
     }
 
     @Test

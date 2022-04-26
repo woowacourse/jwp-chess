@@ -2,7 +2,6 @@ package chess.dao;
 
 import chess.domain.position.Position;
 import chess.dto.PieceDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -12,12 +11,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public class PieceDaoImpl implements PieceDao {
+public class SpringJdbcPieceDao implements PieceDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public PieceDaoImpl(JdbcTemplate jdbcTemplate) {
+    public SpringJdbcPieceDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

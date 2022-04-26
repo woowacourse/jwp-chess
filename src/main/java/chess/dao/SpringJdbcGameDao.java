@@ -2,18 +2,16 @@ package chess.dao;
 
 import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class GameDaoImpl implements GameDao {
+public class SpringJdbcGameDao implements GameDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public GameDaoImpl(JdbcTemplate jdbcTemplate) {
+    public SpringJdbcGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

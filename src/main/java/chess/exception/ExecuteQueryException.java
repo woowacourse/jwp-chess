@@ -1,11 +1,10 @@
 package chess.exception;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataAccessException;
 
-public class ExecuteQueryException extends ApplicationException {
+public class ExecuteQueryException extends DataAccessException {
 
     public ExecuteQueryException(String message) {
-        super(HttpStatus.NOT_ACCEPTABLE, message);
+        super(message);
     }
-
 }

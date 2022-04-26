@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorMessageDto> dataAccessException(DataAccessException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessageDto(e.getMessage()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -20,14 +20,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageDto(e.getMessage()));
     }
 
-    @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<ErrorMessageDto> applicationException(ApplicationException e) {
-        return ResponseEntity.status(e.getStatus()).body(new ErrorMessageDto(e.getMessage()));
-    }
-
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessageDto> otherException(Exception e) {
+    public ResponseEntity<ErrorMessageDto> exception(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorMessageDto("서버에서 처리할 수 없는 요청입니다."));
+                .body(new ErrorMessageDto(e.getMessage()));
     }
 }

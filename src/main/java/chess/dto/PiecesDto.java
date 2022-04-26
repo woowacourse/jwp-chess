@@ -29,4 +29,10 @@ public class PiecesDto {
         return pieces;
     }
 
+    @Override
+    public String toString() {
+        return "PiecesDto{" +
+                "pieces=" + pieces +
+                '}';
+    }
 }

@@ -52,11 +52,6 @@ public class ChessGameService {
     }
 
     public void move(String gameId, MoveDto moveDto) {
-        getGameStatus(gameId).moveChessmen(moveDto.toEntity());
-        saveMove(gameId, moveDto);
-    }
-
-    private void saveMove(String gameId, MoveDto moveDto) {
         ChessGame chessGame = getGameStatus(gameId);
         chessGame.moveChessmen(moveDto.toEntity());
         pieceDao.deleteAllByGameId(gameId);

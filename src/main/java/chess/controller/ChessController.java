@@ -1,11 +1,12 @@
 package chess.controller;
 
 import chess.controller.view.BoardView;
-import chess.dto.GamePlayDto;
+import chess.dto.LogInDto;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,25 +18,22 @@ public class ChessController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping("/game/start")
-    public String startGame(@RequestParam String gameId) {
+    @GetMapping("/start")
+    public String startGame(@RequestParam String gameId, @RequestParam String gamePassword) {
         chessGameService.createOrGet(gameId);
         return "redirect:/game/" + gameId;
     }
 
     @GetMapping(path = "/game/{gameId}")
-    public ModelAndView getGame(@PathVariable String gameId,
-                                @RequestParam(value = "message", required = false, defaultValue = "") String message) {
-        return getModel(new GamePlayDto(gameId, message));
+    public ModelAndView getGame(@PathVariable String gameId) {
+        return getModel(gameId);
     }
 
-    private ModelAndView getModel(GamePlayDto gamePlayDto) {
+    private ModelAndView getModel(String gameId) {
         ModelAndView modelAndView = new ModelAndView("game");
-        String gameId = gamePlayDto.getGameId();
         modelAndView.addObject("pieces", BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
         modelAndView.addObject("gameId", gameId);
         modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
-        modelAndView.addObject("gameMessage", gamePlayDto.getGameMessage());
         return modelAndView;
     }
 }

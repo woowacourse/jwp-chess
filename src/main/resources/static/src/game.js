@@ -46,14 +46,3 @@ function findTagId(event) {
   }
   return event.target.id;
 }
-
-//spark를 썼을 때 에러 처리 하려고
-//java에서 생기는 에러를 잡아서
-//다시 js 에러로 바꿔서 날려줌.
-function status(res) {
-  if (!res.ok) {
-    return res.text().then(text => {
-      throw new Error(text)
-    })
-  }
-}

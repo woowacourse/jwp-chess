@@ -2,10 +2,12 @@ package chess.dao;
 
 import chess.domain.db.Game;
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@RequiredArgsConstructor
 public class GameDao {
 
     private static final String IS_EXIST_GAME_DML = "select exists (select game_id from games limit 1 ) as `exists`";
@@ -13,10 +15,6 @@ public class GameDao {
     private static final String SAVE_DML = "insert into games (game_id, last_team, create_at) values (?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
-
-    public GameDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public boolean isExistGame() {
         return jdbcTemplate.queryForObject(IS_EXIST_GAME_DML, Boolean.class);

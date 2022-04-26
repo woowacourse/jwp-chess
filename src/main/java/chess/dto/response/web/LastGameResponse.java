@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import lombok.Getter;
 
+@Getter
 public class LastGameResponse {
 
     private static Map<String, Supplier<? extends Piece>> pieceCreator = new HashMap<>();
@@ -61,13 +63,5 @@ public class LastGameResponse {
 
         this.boardResponse = new BoardResponse(board);
         this.lastTeam = lastTeam;
-    }
-
-    public BoardResponse getBoardResponse() {
-        return boardResponse;
-    }
-
-    public String getLastTeam() {
-        return lastTeam;
     }
 }

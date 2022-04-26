@@ -9,19 +9,16 @@ import chess.domain.db.Game;
 import chess.dto.request.web.SaveRequest;
 import chess.dto.response.web.LastGameResponse;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class ChessService {
 
     private final GameDao gameDao;
     private final BoardPieceDao boardPieceDao;
-
-    public ChessService(GameDao gameDao, BoardPieceDao boardPieceDao) {
-        this.gameDao = gameDao;
-        this.boardPieceDao = boardPieceDao;
-    }
 
     @Transactional(readOnly = true)
     public boolean isExistGame() {

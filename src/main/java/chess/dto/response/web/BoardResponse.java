@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
 public class BoardResponse {
 
-    private List<Map<String, String>> board;
-
-    public BoardResponse(List<Map<String, String>> board) {
-        this.board = board;
-    }
+    private final List<Map<String, String>> board;
 
     public static BoardResponse from(Map<Position, Piece> board) {
 
@@ -37,9 +37,5 @@ public class BoardResponse {
         keyValue.put("team", piece.teamName().toLowerCase());
 
         return keyValue;
-    }
-
-    public List<Map<String, String>> getBoard() {
-        return board;
     }
 }

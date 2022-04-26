@@ -48,9 +48,8 @@ public class ChessService {
             throw new IllegalArgumentException("방이 존재하지 않습니다.");
         }
         final RoomStatusDto statusDto = roomDao.findStatusById(roomId);
-        if (!statusDto.getGameStatus().equals(GameStatus.READY)) {
-            throw new IllegalArgumentException("게임이 이미 시작한 후에는 기물을 초기화 할 수 없습니다.");
-        }
+        statusDto.getGameStatus().checkReady();
+
         final Map<Position, ChessPiece> pieceByPosition = ChessBoardFactory.createInitPieceByPosition();
         final ChessGame chessGame = new ChessGame(new ChessBoard(pieceByPosition));
 

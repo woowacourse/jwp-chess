@@ -219,4 +219,22 @@ class ChessServiceTest {
         final CurrentTurnDto currentTurnDto = roomDao.findCurrentTurnById(roomId);
         assertThat(currentTurnDto.getCurrentTurn()).isEqualTo(initialTurn.toOpposite());
     }
+
+    @Test
+    @DisplayName("결과를 조회하면 방 상태가 END로 변경된다.")
+    void result() {
+        // given
+        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.WHITE, "1234");
+
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        pieceByPosition.put(Position.from("a1"), King.from(Color.WHITE));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
+
+        // when
+        chessService.result(roomId);
+
+        // then
+        final RoomStatusDto statusDto = roomDao.findStatusById(roomId);
+        assertThat(statusDto.getGameStatus()).isEqualTo(GameStatus.END);
+    }
 }

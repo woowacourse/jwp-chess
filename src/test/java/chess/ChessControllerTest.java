@@ -26,10 +26,10 @@ class ChessControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private final JdbcFixture jdbcFixture = new JdbcFixture(jdbcTemplate);
 
     @BeforeEach
     void setUp() {
+        JdbcFixture jdbcFixture = new JdbcFixture(jdbcTemplate);
         RestAssured.port = port;
         jdbcFixture.dropTable("square");
         jdbcFixture.dropTable("room");

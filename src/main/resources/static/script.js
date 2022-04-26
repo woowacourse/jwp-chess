@@ -1,7 +1,8 @@
 let from = "";
 let turn = "";
 let isStart = false;
-let roomName = getParameterByName("name");
+let paramName = "name"
+let roomName = getParameterByName(paramName);
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -12,18 +13,25 @@ function getParameterByName(name) {
 
 async function start() {
     let pieces;
-    await fetch("/start?name=" + roomName)
+    await fetch("/room", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        },
+        body: paramName + "=" + roomName
+    })
         .then(res => res.json())
         .then(data => pieces = data)
+
     turn = pieces.turn;
     isStart = true;
     printPieces(pieces.board);
-    printStatus();
+    await printStatus();
 }
 
 async function load() {
     let pieces;
-    let response = await fetch("/load?name=" + roomName);
+    let response = await fetch("/room/" + roomName);
 
     if (response.status === 400) {
         const errorMessage = await response.json();
@@ -47,7 +55,7 @@ async function load() {
     }
     printPieces(pieces.board);
     isStart = true;
-    printStatus();
+    await printStatus();
 
 }
 
@@ -71,7 +79,7 @@ function end() {
 
 async function printStatus() {
     let stat;
-    await fetch("/status?name=" + roomName)
+    await fetch("/room/" + roomName + "/status")
         .then(res => res.json())
         .then(data => stat = data)
     let status = document.getElementById("chess-status");
@@ -127,14 +135,14 @@ async function selectPiece(pieceDiv) {
     if (from !== "") {
         let sourceClassList = document.getElementById(from).classList;
         sourceClassList.remove('selected');
-        move(from, pieceDiv.id)
+        await move(from, pieceDiv.id)
     }
 }
 
 async function move(fromPosition, toPosition) {
     from = "";
-    let response = await fetch("/move?name=" + roomName, {
-        method: 'POST',
+    let response = await fetch("/room/" + roomName + "/move", {
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },
@@ -145,8 +153,7 @@ async function move(fromPosition, toPosition) {
     })
 
     if (!response.ok) {
-        response.const
-        errorMessage = await response.json();
+        const errorMessage = await response.json();
         alert("[ERROR] " + errorMessage.message);
         return;
     }
@@ -163,6 +170,5 @@ async function move(fromPosition, toPosition) {
         status.innerText = before.toUpperCase() + " 팀이 승리했습니다.\n" +
             "새 게임 혹은 그만하기를 눌러주세요.";
         turnStatus.innerText = "";
-
     }
 }

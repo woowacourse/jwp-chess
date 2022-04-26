@@ -1,11 +1,15 @@
 package chess;
 
+import java.net.URI;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,34 +36,35 @@ public class ChessController {
     @GetMapping("/room")
     public String room(@RequestParam String name,
         Model model) {
-        chessService.createRoom(name);
         model.addAttribute("name", name);
         return "room.html";
     }
 
-    @GetMapping("/start")
+    @PostMapping("/room")
     @ResponseBody
-    public BoardDto start(@RequestParam String name) {
-        return chessService.startNewGame(name);
+    public ResponseEntity<BoardDto> start(@RequestParam String name) {
+        chessService.createRoom(name);
+        return ResponseEntity.created(URI.create("/room/" + name))
+            .body(chessService.startNewGame(name));
     }
 
-    @GetMapping("/load")
+    @GetMapping("/room/{roomName}")
     @ResponseBody
-    public BoardDto load(@RequestParam String name) {
-        return chessService.load(name);
+    public BoardDto load(@PathVariable String roomName) {
+        return chessService.load(roomName);
     }
 
-    @PostMapping("/move")
+    @PutMapping("/room/{roomName}/move")
     @ResponseBody
-    public BoardDto move(@RequestParam String name,
+    public BoardDto move(@PathVariable String roomName,
         @RequestBody MoveDto moveDto) {
-        return chessService.move(name, moveDto);
+        return chessService.move(roomName, moveDto);
     }
 
-    @GetMapping("/status")
+    @GetMapping("/room/{roomName}/status")
     @ResponseBody
-    public Status status(@RequestParam String name) {
-        return chessService.status(name);
+    public Status status(@PathVariable String roomName) {
+        return chessService.status(roomName);
     }
 
     @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})

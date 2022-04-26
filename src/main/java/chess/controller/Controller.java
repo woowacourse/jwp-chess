@@ -36,8 +36,8 @@ public class Controller {
         return "index";
     }
 
-    @PostMapping("/create-chess-game")
-    public RedirectView createChessGame(final @RequestParam String name, final @RequestParam String password) {
+    @PostMapping("/create-game-room")
+    public RedirectView createGameRoom(final @RequestParam String name, final @RequestParam String password) {
         String gameRoomId = String.valueOf(name.hashCode());
         service.createGameRoom(gameRoomId, name, password);
         return new RedirectView("/game/" + gameRoomId);
@@ -74,12 +74,12 @@ public class Controller {
     }
 
     @PostMapping("/delete/{gameRoomId}")
-    public RedirectView deleteChessGame(final @PathVariable String gameRoomId, final @RequestParam String password) {
+    public RedirectView deleteGameRoom(final @PathVariable String gameRoomId, final @RequestParam String password) {
         service.deleteGameRoom(gameRoomId, password);
         return new RedirectView("/");
     }
 
-    @PostMapping("/move/{gameRoomId}")
+    @PostMapping("/move-piece/{gameRoomId}")
     public RedirectView movePiece(final @PathVariable String gameRoomId,
                                   final @RequestParam String source,
                                   final @RequestParam String target) {

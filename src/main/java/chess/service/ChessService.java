@@ -26,4 +26,6 @@ public interface ChessService {
     GameRoomDto findGameById(int id);
 
     int deleteGameById(int id);
+
+    List<GameRoomDto> findGames();
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -115,7 +116,7 @@ public class JDBCTemplateChessDao implements ChessDao {
 
     @Override
     public List<GameRoomDto> findGamesOnPlay() {
-        final String sql = "select id, room_name, white_name, black_name from game where deleted = 0 and winner = ''";
+        final String sql = "select id, room_name, white_name, black_name, IF(finished, 'true', 'false') as finished from game where deleted = 0 and finished = 0";
         return jdbcTemplate.query(sql, gameRoomDtoMapper());
     }
 
@@ -126,7 +127,8 @@ public class JDBCTemplateChessDao implements ChessDao {
                 gameRoomDtos.add(new GameRoomDto(resultSet.getInt("id"),
                         resultSet.getString("room_name"),
                         resultSet.getString("white_name"),
-                        resultSet.getString("black_name")));
+                        resultSet.getString("black_name"),
+                        resultSet.getBoolean("finished")));
             }
             return gameRoomDtos;
         };
@@ -134,15 +136,18 @@ public class JDBCTemplateChessDao implements ChessDao {
 
     @Override
     public GameRoomDto findGameById(int id) {
-        final String sql = "select id, room_name, white_name, black_name from game where id = ?";
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> {
-                    return new GameRoomDto(resultSet.getInt("id"),
-                            resultSet.getString("room_name"),
-                            resultSet.getString("white_name"),
-                            resultSet.getString("black_name"));
-                },
-                id);
+        final String sql = "select id, room_name, white_name, black_name, IF(finished, 'true', 'false') as finished from game where id = ?";
+        return jdbcTemplate.queryForObject(sql, getGameRoomDtoRowMapper(), id);
+    }
+
+    private RowMapper<GameRoomDto> getGameRoomDtoRowMapper() {
+        return (resultSet, rowNum) -> {
+            return new GameRoomDto(resultSet.getInt("id"),
+                    resultSet.getString("room_name"),
+                    resultSet.getString("white_name"),
+                    resultSet.getString("black_name"),
+                    resultSet.getBoolean("finished"));
+        };
     }
 
     @Override
@@ -152,5 +157,17 @@ public class JDBCTemplateChessDao implements ChessDao {
         final String deleteBoardDataSql = "delete from board where game_id = ?";
         jdbcTemplate.update(deleteBoardDataSql, id);
         return id;
+    }
+
+    @Override
+    public void setFinishedById(String gameId) {
+        final String sql = "update game set finished = 1 where id = ?";
+        jdbcTemplate.update(sql, gameId);
+    }
+
+    @Override
+    public List<GameRoomDto> findGames() {
+        final String sql = "select id, room_name, white_name, black_name, IF(finished, 'true', 'false') as finished from game where deleted = 0";
+        return jdbcTemplate.query(sql, getGameRoomDtoRowMapper());
     }
 }

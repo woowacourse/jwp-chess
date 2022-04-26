@@ -43,7 +43,7 @@ public class SpringChessService implements ChessService {
             chessDao.move(moveRequestDto);
         }
         if (moveResult == MoveResult.END) {
-            chessDao.deleteGameById(Integer.parseInt(moveRequestDto.getGameId()));
+            chessDao.setFinishedById(moveRequestDto.getGameId());
         }
         return new MoveResultDto(moveRequestDto.getPiece(), moveRequestDto.getFrom(), moveRequestDto.getTo(),
                 moveResult);
@@ -89,5 +89,11 @@ public class SpringChessService implements ChessService {
     @Override
     public int deleteGameById(int id) {
         return chessDao.deleteGameById(id);
+    }
+
+    @Override
+    public List<GameRoomDto> findGames() {
+        final List<GameRoomDto> games = chessDao.findGames();
+        return games;
     }
 }

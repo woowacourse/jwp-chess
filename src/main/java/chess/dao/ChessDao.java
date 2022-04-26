@@ -20,4 +20,8 @@ public interface ChessDao {
     GameRoomDto findGameById(int id);
 
     int deleteGameById(int id);
+
+    void setFinishedById(String gameId);
+
+    List<GameRoomDto> findGames();
 }

@@ -22,8 +22,8 @@ public class GamesController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GameRoomDto>> findOnPlay() {
-        return new ResponseEntity<>(chessService.findGamesOnPlay(), HttpStatus.FOUND);
+    public ResponseEntity<List<GameRoomDto>> findGames() {
+        return new ResponseEntity<>(chessService.findGames(), HttpStatus.FOUND);
     }
 
     @GetMapping("/{id}")

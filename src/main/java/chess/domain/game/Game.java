@@ -12,11 +12,11 @@ public final class Game {
 
     private static final Color FIRST_TURN = Color.WHITE;
 
-    private final ConsoleBoard board;
+    private final Board board;
     private Color turn = FIRST_TURN;
 
     public Game(final Initializer initializer) {
-        board = new ConsoleBoard(initializer);
+        board = new Board(initializer);
     }
 
     public Optional<Piece> piece(final Position position) {

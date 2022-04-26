@@ -5,7 +5,7 @@ import chess.dao.WebChessMemberDao;
 import chess.dao.WebChessPieceDao;
 import chess.dao.WebChessPositionDao;
 import chess.domain.game.ChessBoard;
-import chess.domain.game.ConsoleBoard;
+import chess.domain.game.Board;
 import chess.domain.game.Initializer;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
@@ -54,10 +54,10 @@ public final class GameService {
                 sourceRawPosition.getRow(), roomId);
         Position targetPosition = positionDao.getByColumnAndRowAndBoardId(targetRawPosition.getColumn(),
                 targetRawPosition.getRow(), roomId);
-        ConsoleBoard consoleBoard = new ConsoleBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
-        consoleBoard.validateMovement(sourcePosition, targetPosition);
+        Board board = new Board(() -> positionDao.findAllPositionsAndPieces(roomId));
+        board.validateMovement(sourcePosition, targetPosition);
         validateTurn(roomId, sourcePosition);
-        updateMovingPiecePosition(sourcePosition, targetPosition, consoleBoard.piece(targetPosition));
+        updateMovingPiecePosition(sourcePosition, targetPosition, board.piece(targetPosition));
         changeTurn(roomId);
     }
 
@@ -101,8 +101,8 @@ public final class GameService {
     }
 
     public boolean isEnd(int roomId) {
-        ConsoleBoard consoleBoard = new ConsoleBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
-        final boolean kingDead = consoleBoard.isEnd();
+        Board board = new Board(() -> positionDao.findAllPositionsAndPieces(roomId));
+        final boolean kingDead = board.isEnd();
         if (kingDead) {
             boardDao.deleteById(roomId);
         }
@@ -115,8 +115,8 @@ public final class GameService {
     }
 
     public double calculateScore(int roomId, final Color color) {
-        ConsoleBoard consoleBoard = new ConsoleBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
-        return consoleBoard.calculateScore(color);
+        Board board = new Board(() -> positionDao.findAllPositionsAndPieces(roomId));
+        return board.calculateScore(color);
     }
 
     public void end(int roomId) {

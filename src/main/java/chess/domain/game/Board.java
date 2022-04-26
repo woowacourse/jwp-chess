@@ -10,14 +10,14 @@ import chess.machine.Result;
 
 import java.util.*;
 
-public final class ConsoleBoard {
+public final class Board {
 
     private static final double PAWN_PENALTY_SCORE = 0.5;
     private static final int KING_TOTAL_COUNT = 2;
 
     private final Map<Position, Piece> pieces;
 
-    public ConsoleBoard(final Initializer initializer) {
+    public Board(final Initializer initializer) {
         pieces = initializer.initialize();
     }
 
@@ -171,4 +171,5 @@ public final class ConsoleBoard {
                 .stream()
                 .anyMatch(piece -> piece.isKing() && piece.isSameColor(color));
     }
+
 }

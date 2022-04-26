@@ -96,10 +96,15 @@ public class SpringChessApplication {
     }
 
     @PostMapping("/room/{roomId}/end")
-    public String endGame(@PathVariable("roomId") int id, @RequestParam("password") String password, Model model) {
-        model.addAttribute("result", gameService.status(id));
-        gameService.end(id, password);
-        return "result";
+    public ResponseEntity<Void> endGame(@PathVariable("roomId") int id, @RequestParam("password") String password) {
+        System.out.println("password" + password);
+        if (!gameService.isEnd(id)) {
+            throw new IllegalArgumentException("진행중인 게임은 삭제할 수 없어~");
+        }
+        if (!gameService.end(id, password)) {
+            throw new IllegalArgumentException("게임 삭제에 실패하였습니다.");
+        }
+        return ResponseEntity.ok(null);
     }
 
     @ResponseBody

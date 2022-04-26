@@ -25,16 +25,17 @@ class ChessControllerTest {
     int port;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
+    private final JdbcFixture jdbcFixture = new JdbcFixture(jdbcTemplate);
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        JdbcFixture.dropTable(jdbcTemplate, "square");
-        JdbcFixture.dropTable(jdbcTemplate, "room");
-        JdbcFixture.createRoomTable(jdbcTemplate);
-        JdbcFixture.createSquareTable(jdbcTemplate);
-        JdbcFixture.insertRoom(jdbcTemplate, "roma", "white");
+        jdbcFixture.dropTable("square");
+        jdbcFixture.dropTable("room");
+        jdbcFixture.createRoomTable();
+        jdbcFixture.createSquareTable();
+        jdbcFixture.insertRoom("roma", "white");
     }
 
     @Test

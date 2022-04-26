@@ -16,18 +16,17 @@ class RoomDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
     private RoomDaoImpl roomDao;
 
     @BeforeEach
     void beforeEach() {
         roomDao = new RoomDaoImpl(jdbcTemplate);
-        JdbcFixture.dropTable(jdbcTemplate, "square");
-        JdbcFixture.dropTable(jdbcTemplate, "room");
 
-        JdbcFixture.createRoomTable(jdbcTemplate);
-
-        JdbcFixture.insertRoom(jdbcTemplate, "sojukang", "white");
+        JdbcFixture jdbcFixture = new JdbcFixture(jdbcTemplate);
+        jdbcFixture.dropTable("square");
+        jdbcFixture.dropTable("room");
+        jdbcFixture.createRoomTable();
+        jdbcFixture.insertRoom("sojukang", "white");
     }
 
     @Test

@@ -6,11 +6,18 @@ import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class JdbcFixture {
-    public static void dropTable(JdbcTemplate jdbcTemplate, String tableName) {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public JdbcFixture(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public void dropTable(String tableName) {
         jdbcTemplate.execute("DROP TABLE " + tableName + " IF EXISTS");
     }
 
-    public static void createRoomTable(JdbcTemplate jdbcTemplate) {
+    public void createRoomTable() {
         jdbcTemplate.execute("create table room ("
             + " id bigint not null auto_increment,"
             + " name VARCHAR(255) not null,"
@@ -19,7 +26,7 @@ public class JdbcFixture {
             + " constraint uniqueName unique (name))");
     }
 
-    public static void createSquareTable(JdbcTemplate jdbcTemplate) {
+    public void createSquareTable() {
         jdbcTemplate.execute(
             "create table square ("
                 + " id bigint not null auto_increment,"
@@ -30,11 +37,11 @@ public class JdbcFixture {
                 + " foreign key (room_id) references room (id))");
     }
 
-    public static void insertRoom(JdbcTemplate jdbcTemplate, String name, String turn) {
+    public void insertRoom(String name, String turn) {
         jdbcTemplate.update("INSERT INTO room(name, turn) VALUES (?,?)", name, turn);
     }
 
-    public static void insertSquares(JdbcTemplate jdbcTemplate, List<String> squares) {
+    public void insertSquares(List<String> squares) {
         List<Object[]> pieces = squares
             .stream()
             .map(piece -> piece.split(","))

@@ -1,9 +1,14 @@
 package chess.domain;
 
-import static chess.domain.piece.Team.BLACK;
-import static chess.domain.piece.Team.WHITE;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
+import static chess.domain.piece.Team.*;
+import static java.util.Arrays.*;
+import static java.util.stream.Collectors.*;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
@@ -12,11 +17,6 @@ import chess.domain.position.Position;
 import chess.domain.position.Rank;
 import chess.domain.state.Ready;
 import chess.domain.state.State;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class ChessGame {
 

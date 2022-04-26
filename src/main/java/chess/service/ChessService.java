@@ -31,9 +31,10 @@ public class ChessService {
         chessGameDao.delete(chessGameId);
     }
 
-    public void save(String gameName, String password) {
+    public int save(String gameName, String password) {
         int savedId = chessGameDao.save(gameName, password);
         createChessBoard(gameName, savedId);
+        return savedId;
     }
 
     private void createChessBoard(String gameName, int chessGameId) {
@@ -70,6 +71,7 @@ public class ChessService {
     public String finish(Command command, int chessGameId) {
         ChessGame chessGame = chessGameDao.findById(chessGameId);
         chessGame.progress(command);
+        chessGameDao.update("end", chessGameId);
         return chessGame.getWinTeamName();
     }
 

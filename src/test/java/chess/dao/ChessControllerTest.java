@@ -1,4 +1,4 @@
-package chess;
+package chess.dao;
 
 import chess.dao.WebChessBoardDao;
 import chess.dao.WebChessPositionDao;
@@ -16,9 +16,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SpringChessApplicationTests {
+@Sql({"schema.sql"})
+class ChessControllerTest {
 
     @Autowired
     WebChessBoardDao boardDao;
@@ -44,7 +46,7 @@ class SpringChessApplicationTests {
     @Test
     void movePiece() {
         RestAssured.given().log().all()
-                .contentType(MediaType.TEXT_PLAIN_VALUE)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .body("command=move a2 a4")
                 .when().post("/room/" + boardId + "/move")
                 .then().log().all()

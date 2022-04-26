@@ -10,8 +10,10 @@ import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
+
 import java.util.List;
 import java.util.Map;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,22 +26,22 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql({"schema.sql"})
 class WebChessPositionDaoTest {
 
-    @Autowired
-    NamedParameterJdbcTemplate jdbcTemplate;
-
-    private PositionDao<Position> positionDao;
-
-    private BoardDao<ChessBoard> boardDao;
+    private final PositionDao<Position> positionDao;
+    private final BoardDao<ChessBoard> boardDao;
+    private final PieceDao<Piece> pieceDao;
 
     private int boardId;
     private int positionId;
 
-    @BeforeEach
-    void setup() {
+    @Autowired
+    WebChessPositionDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
         positionDao = new WebChessPositionDao(jdbcTemplate);
         boardDao = new WebChessBoardDao(new WebChessMemberDao(jdbcTemplate), jdbcTemplate);
-        PieceDao<Piece> pieceDao = new WebChessPieceDao(jdbcTemplate);
+        pieceDao = new WebChessPieceDao(jdbcTemplate);
+    }
 
+    @BeforeEach
+    void setup() {
         final ChessBoard board = boardDao.save(new ChessBoard("코린파이팅"));
         this.boardId = board.getId();
         Position position = positionDao.save(new Position(Column.A, Row.TWO, boardId));

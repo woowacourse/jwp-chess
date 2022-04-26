@@ -19,16 +19,17 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Sql({"schema.sql"})
 class WebBoardDaoTest {
 
-    @Autowired
-    NamedParameterJdbcTemplate jdbcTemplate;
-
-    private BoardDao<ChessBoard> dao;
+    private final BoardDao<ChessBoard> dao;
 
     int boardId;
 
+    @Autowired
+    WebBoardDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
+        dao = new WebChessBoardDao(new WebChessMemberDao(jdbcTemplate), jdbcTemplate);
+    }
+
     @BeforeEach
     void setup() {
-        dao = new WebChessBoardDao(new WebChessMemberDao(jdbcTemplate), jdbcTemplate);
         final ChessBoard board = dao.save(new ChessBoard("개초보만"));
         this.boardId = board.getId();
     }

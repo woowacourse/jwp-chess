@@ -23,21 +23,22 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Sql({"schema.sql"})
 class WebPieceDaoTest {
 
-    @Autowired
-    NamedParameterJdbcTemplate jdbcTemplate;
-
-    private PositionDao<Position> positionDao;
-
-    private PieceDao<Piece> pieceDao;
+    private final PositionDao<Position> positionDao;
+    private final PieceDao<Piece> pieceDao;
+    private final BoardDao<ChessBoard> boardDao;
 
     private int boardId;
     private int positionId;
 
-    @BeforeEach
-    void setup() {
+    @Autowired
+    WebPieceDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
         positionDao = new WebChessPositionDao(jdbcTemplate);
         pieceDao = new WebChessPieceDao(jdbcTemplate);
-        BoardDao<ChessBoard> boardDao = new WebChessBoardDao(new WebChessMemberDao(jdbcTemplate), jdbcTemplate);
+        boardDao = new WebChessBoardDao(new WebChessMemberDao(jdbcTemplate), jdbcTemplate);
+    }
+
+    @BeforeEach
+    void setup() {
         final ChessBoard board = boardDao.save(new ChessBoard("corinne"));
         this.boardId = board.getId();
         final Position position = positionDao.save(new Position(Column.A, Row.TWO, board.getId()));

@@ -1,10 +1,12 @@
 package chess.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.dao.RoomDao;
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
+import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,6 +44,38 @@ class RoomServiceTest {
     }
 
     @Test
+    @DisplayName("방을 생성한다.")
+    void createRoom() {
+        // given
+        final String roomName = "test";
+        final String password = "1234";
+        final RoomCreationRequestDto creationRequestDto = new RoomCreationRequestDto(roomName, password);
+
+        // when
+        final int roomId = roomService.createRoom(creationRequestDto);
+
+        // then
+        assertThat(roomId).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("생성하려는 방 이름이 중복이면 예외가 터진다.")
+    void createRoom_exception() {
+        // given
+        final String roomName = "test";
+        final String password = "1234";
+        roomDao.save(roomName, GameStatus.READY, Color.WHITE, password);
+
+        // when
+        final RoomCreationRequestDto creationRequestDto = new RoomCreationRequestDto(roomName, password);
+
+        // then
+        assertThatThrownBy(() -> roomService.createRoom(creationRequestDto))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이름이 같은 방이 이미 존재합니다.");
+    }
+
+    @Test
     @DisplayName("게임이 진행 중인 방을 삭제하면 예외가 발생한다.")
     void deleteRoom_exception_not_end() {
         // given
@@ -50,9 +84,7 @@ class RoomServiceTest {
         final int roomId = roomDao.save("hi", GameStatus.PLAYING, Color.WHITE, hashPassword);
 
         // then
-        final RoomDeletionRequestDto deletionRequestDto = new RoomDeletionRequestDto();
-        deletionRequestDto.setRoomId(roomId);
-        deletionRequestDto.setPassword(password);
+        final RoomDeletionRequestDto deletionRequestDto = new RoomDeletionRequestDto(roomId, password);
 
         assertThatThrownBy(() -> roomService.deleteRoom(deletionRequestDto))
                 .isInstanceOf(IllegalArgumentException.class)

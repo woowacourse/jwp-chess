@@ -5,19 +5,19 @@ public class RoomDeletionRequestDto {
     private int roomId;
     private String password;
 
+    public RoomDeletionRequestDto() {
+    }
+
+    public RoomDeletionRequestDto(final int roomId, final String password) {
+        this.roomId = roomId;
+        this.password = password;
+    }
+
     public int getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(final int roomId) {
-        this.roomId = roomId;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(final String password) {
-        this.password = password;
     }
 }

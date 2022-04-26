@@ -50,7 +50,7 @@ class PieceRepositoryImplTest {
     @DisplayName("Piece 저장")
     void savePiece() {
         int pieceId = pieceRepository.save(boardId, "a1",
-                PieceDto.from(Position.of("a1"), new Piece(Color.WHITE, new Pawn())));
+            PieceDto.from(Position.of("a1"), new Piece(Color.WHITE, new Pawn())));
         assertThat(pieceId).isGreaterThan(0);
     }
 
@@ -59,9 +59,9 @@ class PieceRepositoryImplTest {
     void saveAll() {
         pieceRepository.saveAll(boardId, board.getPieces());
         Integer count = jdbcTemplate.queryForObject(
-                "select count(*) from piece where board_id = :boardId",
-                Map.of("boardId", this.boardId),
-                Integer.class);
+            "select count(*) from piece where board_id = :boardId",
+            Map.of("boardId", this.boardId),
+            Integer.class);
         assertThat(count).isEqualTo(board.getPieces().size());
     }
 
@@ -70,7 +70,7 @@ class PieceRepositoryImplTest {
     void findOne() {
         pieceRepository.save(boardId, "a2", new PieceDto("a1", "WHITE", "q"));
         PieceDto findPiece = pieceRepository.findOne(boardId, "a2")
-                .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(NoSuchElementException::new);
 
         assertThat(findPiece).isEqualTo(new PieceDto("a2", "WHITE", "q"));
     }

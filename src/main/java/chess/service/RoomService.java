@@ -3,6 +3,7 @@ package chess.service;
 import chess.repository.RoomRepository;
 import chess.web.dto.RoomDto;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -25,15 +26,20 @@ public class RoomService {
 	@Transactional
 	public RoomDto create(String name) {
 		validateNameSize(name);
-		return roomRepository.find(name)
-			.orElseGet(() -> roomRepository.findById(roomRepository.save(name))
-				.orElseThrow(() -> new IllegalStateException("저장된 방 정보를 불러올 수 없습니다."))
-			);
+		validateDuplicateName(name);
+		int roomId = roomRepository.save(name);
+		return new RoomDto(roomId, name);
 	}
 
 	private void validateNameSize(String name) {
 		if (name.length() < NAME_MIN_SIZE || name.length() > NAME_MAX_SIZE) {
 			throw new IllegalArgumentException(ERROR_NAME_SIZE);
+		}
+	}
+
+	private void validateDuplicateName(String name) {
+		if (roomRepository.find(name).isPresent()) {
+			throw new IllegalArgumentException("해당 이름의 방이 이미 존재합니다.");
 		}
 	}
 
@@ -43,5 +49,14 @@ public class RoomService {
 			throw new IllegalArgumentException("유효하지 않은 체스방 주소입니다.");
 		}
 
+	}
+
+	@Transactional
+	public void removeById(int id) {
+		roomRepository.deleteById(id);
+	}
+
+	public List<RoomDto> findAll() {
+		return roomRepository.findAll();
 	}
 }

@@ -60,3 +60,8 @@ button {
 .input-button {
     width: 15%;
 }
+
+.room-names a {
+    color: white;
+    text-decoration: none;
+}

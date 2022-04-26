@@ -2,6 +2,7 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.*;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,12 +21,28 @@ class RoomServiceTest {
 	@Autowired
 	private RoomService roomService;
 
+	private final String testName = "summer";
+
+	@AfterEach
+	void deleteCreated() {
+		roomService.findAll()
+			.forEach(room -> roomService.removeById((int) room.getId()));
+	}
+
 	@Test
 	@DisplayName("이름을 받아 체스 게임 방을 생성한다.")
 	void create() {
-		String name = "summer";
-		RoomDto room = roomService.create(name);
-		assertThat(room.getName()).isEqualTo(name);
+		RoomDto room = roomService.create(testName);
+		assertThat(room.getName()).isEqualTo(testName);
+	}
+
+	@Test
+	@DisplayName("이미 있는 이름으 저장하면 예외가 발생한다.")
+	void validateDuplicateName() {
+		roomService.create(testName);
+
+		assertThatThrownBy(() -> roomService.create(testName))
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@ParameterizedTest

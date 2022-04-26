@@ -27,13 +27,13 @@ public class FakeBoardRepository implements BoardRepository {
     @Override
     public int getBoardIdByRoom(int roomId) {
         return findBoardId(roomId)
-                .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(IllegalArgumentException::new);
     }
 
     private Optional<Integer> findBoardId(int roomId) {
         return database.keySet().stream()
-                .filter(key -> database.get(key).getRoomId() == roomId)
-                .findAny();
+            .filter(key -> database.get(key).getRoomId() == roomId)
+            .findAny();
     }
 
     @Override

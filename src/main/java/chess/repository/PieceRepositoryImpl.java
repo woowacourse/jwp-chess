@@ -25,20 +25,20 @@ public class PieceRepositoryImpl implements PieceRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public PieceRepositoryImpl(DataSource dataSource,
-                               NamedParameterJdbcTemplate jdbcTemplate) {
+        NamedParameterJdbcTemplate jdbcTemplate) {
         this.insertActor = new SimpleJdbcInsert(dataSource)
-                .withTableName(TABLE_NAME)
-                .usingGeneratedKeyColumns(KEY_NAME);
+            .withTableName(TABLE_NAME)
+            .usingGeneratedKeyColumns(KEY_NAME);
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public int save(int boardId, String target, PieceDto pieceDto) {
         Map<String, Object> data = Map.of(
-                "board_id", boardId,
-                "position", target,
-                "color", pieceDto.getColor(),
-                "role", pieceDto.getRole()
+            "board_id", boardId,
+            "position", target,
+            "color", pieceDto.getColor(),
+            "role", pieceDto.getRole()
         );
         return insertActor.executeAndReturnKey(data).intValue();
     }
@@ -46,12 +46,12 @@ public class PieceRepositoryImpl implements PieceRepository {
     @Override
     public void saveAll(int boardId, Map<Position, Piece> pieces) {
         List<Map<String, String>> data = pieces.entrySet().stream()
-                .map(each -> Map.of(
-                        "board_id", String.valueOf(boardId),
-                        "position", each.getKey().name(),
-                        "color", each.getValue().getColor().name(),
-                        "role", each.getValue().symbol()
-                )).collect(Collectors.toList());
+            .map(each -> Map.of(
+                "board_id", String.valueOf(boardId),
+                "position", each.getKey().name(),
+                "color", each.getValue().getColor().name(),
+                "role", each.getValue().symbol()
+            )).collect(Collectors.toList());
         insertActor.executeBatch(SqlParameterSourceUtils.createBatch(data));
     }
 
@@ -77,21 +77,21 @@ public class PieceRepositoryImpl implements PieceRepository {
 
     private RowMapper<PieceDto> getPieceMapper() {
         return (resultSet, rowNum) ->
-                new PieceDto(
-                        resultSet.getString(3),
-                        resultSet.getString(4),
-                        resultSet.getString(5)
-                );
+            new PieceDto(
+                resultSet.getString(3),
+                resultSet.getString(4),
+                resultSet.getString(5)
+            );
     }
 
     @Override
     public void updateOne(int boardId, String afterPosition, PieceDto pieceDto) {
         String sql = "update piece set color = :color, role = :role where board_id = :boardId and position = :position";
         jdbcTemplate.update(sql, Map.of(
-                "color", pieceDto.getColor(),
-                "role", pieceDto.getRole(),
-                "boardId", boardId,
-                "position", afterPosition
+            "color", pieceDto.getColor(),
+            "role", pieceDto.getRole(),
+            "boardId", boardId,
+            "position", afterPosition
         ));
     }
 

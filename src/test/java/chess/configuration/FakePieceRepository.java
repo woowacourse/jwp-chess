@@ -38,17 +38,17 @@ public class FakePieceRepository implements PieceRepository {
     @Override
     public Optional<PieceDto> findOne(int boardId, String position) {
         return database.values().stream()
-                .filter(piece -> piece.getBoardId() == boardId)
-                .filter(piece -> piece.getPosition().equals(position))
-                .map(pieceData -> new PieceDto(position, pieceData.color, pieceData.role))
-                .findAny();
+            .filter(piece -> piece.getBoardId() == boardId)
+            .filter(piece -> piece.getPosition().equals(position))
+            .map(pieceData -> new PieceDto(position, pieceData.color, pieceData.role))
+            .findAny();
     }
 
     @Override
     public List<PieceDto> findAll(int boardId) {
         return database.values().stream()
-                .map(pieceData -> new PieceDto(pieceData.getPosition(), pieceData.color, pieceData.getRole()))
-                .collect(Collectors.toList());
+            .map(pieceData -> new PieceDto(pieceData.getPosition(), pieceData.color, pieceData.getRole()))
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -60,9 +60,9 @@ public class FakePieceRepository implements PieceRepository {
     @Override
     public void deleteOne(int boardId, String position) {
         Optional<Integer> findId = database.keySet().stream()
-                .filter(key -> database.get(key).getPosition().equals(position))
-                .filter(key -> database.get(key).getBoardId() == boardId)
-                .findAny();
+            .filter(key -> database.get(key).getPosition().equals(position))
+            .filter(key -> database.get(key).getBoardId() == boardId)
+            .findAny();
         findId.ifPresent(database::remove);
     }
 

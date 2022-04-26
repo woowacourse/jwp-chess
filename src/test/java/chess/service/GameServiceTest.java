@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,15 +21,22 @@ import chess.web.dto.PieceDto;
 @Import(RepositoryConfiguration.class)
 class GameServiceTest {
 
+	private static final String testName = "summer";
+
 	@Autowired
 	private RoomService roomService;
 	@Autowired
 	private GameService gameService;
-	int roomId;
+	private int roomId;
 
 	@BeforeEach
 	void init() {
-		roomId = (int) roomService.create("summer").getId();
+		roomId = (int) roomService.create(testName).getId();
+	}
+
+	@AfterEach
+	void clear() {
+		roomService.removeById(roomId);
 	}
 
 	@Test

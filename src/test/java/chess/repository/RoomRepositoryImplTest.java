@@ -2,6 +2,8 @@ package chess.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 import chess.web.dto.RoomDto;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @JdbcTest
 public class RoomRepositoryImplTest {
 
+    private static final String testName = "summer";
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
@@ -28,15 +31,34 @@ public class RoomRepositoryImplTest {
     @Test
     @DisplayName("뱡 insert")
     void insert() {
-        int id = roomRepository.save("summer");
+        int id = roomRepository.save(testName);
         assertThat(id).isGreaterThan(0);
     }
 
     @Test
     @DisplayName("방 find")
     void find() {
-        roomRepository.save("pobi");
-        RoomDto room = roomRepository.find("pobi").orElseThrow();
-        assertThat(room.getName()).isEqualTo("pobi");
+        roomRepository.save(testName);
+        RoomDto room = roomRepository.find(testName).orElseThrow();
+        assertThat(room.getName()).isEqualTo(testName);
+    }
+
+    @Test
+    @DisplayName("이름으로 생성된 방을 삭제한다.")
+    void removeByName() {
+        int id = roomRepository.save(testName);
+        roomRepository.deleteById(id);
+
+        assertThat(roomRepository.find(testName)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("저장된 전체 방을 찾아온다.")
+    void findAll() {
+        roomRepository.save(testName);
+        roomRepository.save("does");
+
+        List<RoomDto> rooms = roomRepository.findAll();
+        assertThat(rooms.size()).isEqualTo(2);
     }
 }

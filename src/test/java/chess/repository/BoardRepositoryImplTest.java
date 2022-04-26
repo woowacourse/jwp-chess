@@ -63,7 +63,7 @@ public class BoardRepositoryImplTest {
     @DisplayName("없는 roomId로 조회시 예외 발생")
     void getBoardByRoomIdException() {
         assertThatThrownBy(() -> boardRepository.getBoardIdByRoom(roomId))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -84,6 +84,6 @@ public class BoardRepositoryImplTest {
         boardRepository.deleteByRoom(roomId);
 
         assertThatThrownBy(() -> boardRepository.getBoardIdByRoom(roomId))
-                .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

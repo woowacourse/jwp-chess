@@ -1,10 +1,15 @@
 package chess.repository;
 
 import chess.web.dto.RoomDto;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -21,10 +26,10 @@ public class RoomRepositoryImpl implements RoomRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public RoomRepositoryImpl(DataSource dataSource,
-                              NamedParameterJdbcTemplate jdbcTemplate) {
+        NamedParameterJdbcTemplate jdbcTemplate) {
         this.insertActor = new SimpleJdbcInsert(dataSource)
-                .withTableName(TABLE_NAME)
-                .usingGeneratedKeyColumns(KEY_NAME);
+            .withTableName(TABLE_NAME)
+            .usingGeneratedKeyColumns(KEY_NAME);
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -38,10 +43,10 @@ public class RoomRepositoryImpl implements RoomRepository {
         String sql = "select * from room where name = :name";
         try {
             return Optional.ofNullable(
-                    jdbcTemplate.queryForObject(sql, Map.of("name", name),
-                            (resultSet, rowNum) ->
-                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX))
-                    ));
+                jdbcTemplate.queryForObject(sql, Map.of("name", name),
+                    (resultSet, rowNum) ->
+                        new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX))
+                ));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
@@ -52,12 +57,28 @@ public class RoomRepositoryImpl implements RoomRepository {
         String sql = "select * from room where id = :roomId";
         try {
             return Optional.ofNullable(
-                    jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId),
-                            (resultSet, rowNum) ->
-                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX))
-                    ));
+                jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId),
+                    (resultSet, rowNum) ->
+                        new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX))
+                ));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public void deleteById(int id) {
+        String sql = "delete from room where id = :id";
+        jdbcTemplate.update(sql, Map.of("id", id));
+    }
+
+    @Override
+    public List<RoomDto> findAll() {
+        String sql = "select * from room";
+        return jdbcTemplate.query(sql, getRoomDtoMapper());
+    }
+
+    private RowMapper<RoomDto> getRoomDtoMapper() {
+        return (rs, rowNum) -> new RoomDto(rs.getInt(1), rs.getString(2));
     }
 }

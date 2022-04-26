@@ -19,24 +19,24 @@ public class BoardRepositoryImpl implements BoardRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public BoardRepositoryImpl(DataSource dataSource,
-                              NamedParameterJdbcTemplate jdbcTemplate) {
+        NamedParameterJdbcTemplate jdbcTemplate) {
         this.insertActor = new SimpleJdbcInsert(dataSource)
-                .withTableName(TABLE_NAME)
-                .usingGeneratedKeyColumns(KEY_NAME);
+            .withTableName(TABLE_NAME)
+            .usingGeneratedKeyColumns(KEY_NAME);
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public int save(int roomId, GameStateDto gameStateDto) {
         return insertActor.executeAndReturnKey(Map.of("room_id", roomId, "turn", gameStateDto.getTurn()))
-                .intValue();
+            .intValue();
     }
 
     @Override
     public Color getTurn(int boardId) {
         String sql = "select turn from board where id = :boardId";
         return jdbcTemplate.queryForObject(sql, Map.of("boardId", boardId),
-                (resultSet, rowNum) -> Color.valueOf(resultSet.getString(1).toUpperCase()));
+            (resultSet, rowNum) -> Color.valueOf(resultSet.getString(1).toUpperCase()));
     }
 
     @Override

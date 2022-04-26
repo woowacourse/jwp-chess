@@ -34,7 +34,6 @@ public class ChessControllerTest {
 
     @Test
     void testRedirectWhenCreateGame() {
-
         RestAssured.given()
                 .contentType("application/x-www-form-urlencoded; charset=utf-8")
                 .formParam("name", "test")

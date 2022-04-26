@@ -1,7 +1,8 @@
 package chess.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import chess.dto.GameCreationDTO;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ class ChessServiceTest {
     void cannotDeleteWithWrongPassword() {
         chessService.addChessGame(new GameCreationDTO("test", "1234"));
 
-        Assertions.assertThatThrownBy(() -> chessService.deleteGame("1", "123"))
+        assertThatThrownBy(() -> chessService.deleteGame("1", "123"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

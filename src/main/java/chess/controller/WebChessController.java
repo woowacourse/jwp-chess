@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class WebChessController {
 
-    private static final String CHESS_GAME_URL = "chessGame";
-    private static final String START_URL = "start";
-
-    @Autowired
     private ChessGameService service;
+
+    public WebChessController(ChessGameService service) {
+        this.service = service;
+    }
 
     @GetMapping("/")
     public String main() {
-        return START_URL;
+        return "start";
     }
 
     @GetMapping("/game")
@@ -68,7 +68,7 @@ public class WebChessController {
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
         }
-        return CHESS_GAME_URL;
+        return "chessGame";
     }
 
 }

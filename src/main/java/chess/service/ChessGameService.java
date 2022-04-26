@@ -8,7 +8,6 @@ import chess.dto.ChessGameDto;
 import chess.dto.ScoreDto;
 import chess.piece.Piece;
 import chess.utils.PieceGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -18,9 +17,12 @@ import java.util.stream.Collectors;
 @Service
 public class ChessGameService {
 
-    @Autowired
     private ChessboardDao dao;
     private ChessGame chessGame = new ChessGame();
+
+    public ChessGameService(ChessboardDao dao) {
+        this.dao = dao;
+    }
 
     public void init() {
         if (dao.isDataExist()) {

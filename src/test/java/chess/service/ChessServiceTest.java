@@ -13,9 +13,7 @@ import chess.domain.GameState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 class ChessServiceTest {
 
     private final ChessService chessService = new ChessService(new FakeGameDao(), new FakePieceDao());

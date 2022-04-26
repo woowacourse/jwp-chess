@@ -10,7 +10,6 @@ import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
 import chess.exception.NotFoundException;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,7 +60,7 @@ class RoomDaoTest {
 
     @Test
     @DisplayName("방 이름이 존재하면 true를 반환한다.")
-    void isExistName() {
+    void isExistName_true() {
         // given
         final GameStatus gameStatus = GameStatus.READY;
         final Color currentTurn = Color.WHITE;
@@ -75,6 +74,19 @@ class RoomDaoTest {
 
         // then
         assertThat(actual).isTrue();
+    }
+
+    @Test
+    @DisplayName("방 이름이 존재하지 않으면 false를 반환한다.")
+    void isExistName_false() {
+        // given
+        final String roomName = "hi";
+
+        // when
+        final boolean actual = roomDao.isExistName(roomName);
+
+        // then
+        assertThat(actual).isFalse();
     }
 
     @Test
@@ -148,8 +160,8 @@ class RoomDaoTest {
 
         // then
         assertThatThrownBy(() -> roomDao.findPasswordById(roomId))
-                        .isInstanceOf(NotFoundException.class)
-                        .hasMessage("방 아이디에 해당하는 비밀번호가 존재하지 않습니다.");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("방 아이디에 해당하는 비밀번호가 존재하지 않습니다.");
     }
 
     @Test

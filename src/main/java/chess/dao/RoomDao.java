@@ -40,14 +40,12 @@ public class RoomDao {
 
     public boolean isExistName(final String roomName) {
         final String sql = "SELECT EXISTS(SELECT name FROM room WHERE name = ?)";
-        final String name = jdbcTemplate.queryForObject(sql, String.class, roomName);
-        return name != null;
+        return jdbcTemplate.queryForObject(sql, Boolean.class, roomName);
     }
 
     public boolean isExistId(final int roomId) {
         final String sql = "SELECT EXISTS(SELECT room_id FROM room WHERE room_id = ?)";
-        final Integer result = jdbcTemplate.queryForObject(sql, Integer.class, roomId);
-        return result != 0;
+        return jdbcTemplate.queryForObject(sql, Boolean.class, roomId);
     }
 
     public List<RoomResponseDto> findAll() {

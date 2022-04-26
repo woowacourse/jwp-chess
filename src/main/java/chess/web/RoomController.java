@@ -3,22 +3,22 @@ package chess.web;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import chess.service.GameService;
-import chess.service.RoomService;
-import chess.web.dto.BoardDto;
-import chess.web.dto.RoomDto;
-import chess.web.dto.RoomResponseDto;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import chess.service.GameService;
+import chess.service.RoomService;
+import chess.web.dto.BoardDto;
+import chess.web.dto.RoomDto;
+import chess.web.dto.RoomResponseDto;
+
+@RestController
 @RequestMapping("/rooms")
 public class RoomController {
 
@@ -42,12 +42,6 @@ public class RoomController {
     public String createRoom(@RequestParam String name, @RequestParam String password) {
         RoomDto room = roomService.create(new RoomDto(name, password));
         return "redirect:/rooms/" + room.getId();
-    }
-
-    @GetMapping("/{roomId}")
-    public String board(@PathVariable int roomId) {
-        roomService.validateId(roomId);
-        return "/board.html";
     }
 
     @DeleteMapping("/{roomId}")

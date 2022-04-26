@@ -60,8 +60,7 @@ class RoomControllerTest {
             .formParam("password", password)
             .when().post("/rooms")
             .then().log().all()
-            .statusCode(HttpStatus.FOUND.value())
-            .header("Location", containsString("/rooms/"));
+            .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -119,6 +118,6 @@ class RoomControllerTest {
             .formParam("password", password)
             .when().delete("/rooms/" + room.getId())
             .then().log().all()
-            .header("location", containsString("/"));
+            .statusCode(HttpStatus.OK.value());
     }
 }

@@ -74,4 +74,17 @@ class PieceDaoTest {
         assertThat(pieces.size()).isEqualTo(64);
     }
 
+    @Test
+    @DisplayName("board 식별자에 따라 piece들을 삭제한다.")
+    void deleteByBoardId() {
+
+        //when
+        List<Piece> before = pieceDao.findAllByBoardId(boardId);
+        pieceDao.deleteByBoardId(boardId);
+        List<Piece> board = pieceDao.findAllByBoardId(this.boardId);
+        //then
+        assertThat(before.size()).isEqualTo(64);
+        assertThat(board.size()).isEqualTo(0);
+
+    }
 }

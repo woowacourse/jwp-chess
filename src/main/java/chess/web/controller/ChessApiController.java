@@ -6,10 +6,9 @@ import chess.web.service.dto.BoardDto;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/api")
 public class ChessApiController {
 
@@ -37,7 +36,7 @@ public class ChessApiController {
         return ResponseEntity.ok().body(status);
     }
 
-    @PostMapping(value = "/move")
+    @PostMapping("/move")
     public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto) {
         Board board = chessService.move(moveDto, 1L);
         return ResponseEntity.ok().body(BoardDto.from(board));

@@ -1,7 +1,8 @@
 package chess.controller;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.core.Is.is;
 
+import chess.dto.RoomDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,5 +32,19 @@ class ChessRoomControllerTest {
                 .when().get("/")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("새로운 체스방을 생성한다.")
+    @Test
+    void create() {
+        RoomDto roomDto = new RoomDto("하이체스", "1234");
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(roomDto)
+                .when().post("/create")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(2));
     }
 }

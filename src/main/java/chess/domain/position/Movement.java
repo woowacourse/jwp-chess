@@ -1,7 +1,6 @@
-package chess.dao;
+package chess.domain.position;
 
 import chess.domain.piece.property.Team;
-import chess.domain.position.Position;
 
 public final class Movement {
 

@@ -1,6 +1,6 @@
 package chess.domain.board;
 
-import chess.dao.Movement;
+import chess.domain.position.Movement;
 import chess.domain.position.Position;
 
 public final class ChessGame {

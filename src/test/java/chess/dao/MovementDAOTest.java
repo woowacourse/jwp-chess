@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.domain.board.ChessGame;
 import chess.domain.piece.property.Team;
+import chess.domain.position.Movement;
 import chess.domain.position.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

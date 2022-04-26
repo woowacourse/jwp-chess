@@ -2,7 +2,7 @@ package chess.service;
 
 import chess.domain.board.ChessGame;
 import chess.dao.ChessGameDAO;
-import chess.dao.Movement;
+import chess.domain.position.Movement;
 import chess.dao.MovementDAO;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;

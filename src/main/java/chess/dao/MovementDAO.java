@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.position.Movement;
 import chess.domain.position.Position;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;

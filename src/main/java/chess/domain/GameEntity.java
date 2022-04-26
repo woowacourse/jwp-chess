@@ -1,6 +1,6 @@
 package chess.domain;
 
-public class GameEntry {
+public class GameEntity {
     private String gameID;
     private String gameCode;
 

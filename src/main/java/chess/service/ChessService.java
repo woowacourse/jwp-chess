@@ -3,7 +3,7 @@ package chess.service;
 import chess.db.ChessGameDao;
 import chess.db.PieceDao;
 import chess.domain.ChessGame;
-import chess.domain.GameEntry;
+import chess.domain.GameEntity;
 import chess.domain.GameResult;
 import chess.domain.GameTurn;
 import chess.domain.board.Board;
@@ -24,7 +24,7 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public List<GameEntry> loadGameLists() {
+    public List<GameEntity> loadGameLists() {
         return chessGameDao.findAllGames();
     }
 

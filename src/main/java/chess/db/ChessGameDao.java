@@ -1,7 +1,7 @@
 package chess.db;
 
 import chess.domain.ChessGame;
-import chess.domain.GameEntry;
+import chess.domain.GameEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -47,7 +47,7 @@ public class ChessGameDao {
         return inputPW.equals(gamePW);
     }
 
-    public List<GameEntry> findAllGames() {
+    public List<GameEntity> findAllGames() {
         String sql = "select gameID, gameCode from chessGame";
         return jdbcTemplate.query(sql, new GameMapper());
     }
@@ -60,7 +60,7 @@ public class ChessGameDao {
 
     private static final class GameMapper implements RowMapper {
         public Object mapRow(ResultSet rs, int rowCnt) throws SQLException {
-            GameEntry gameEntry = new GameEntry();
+            GameEntity gameEntry = new GameEntity();
             gameEntry.setGameID(rs.getString("gameID"));
             gameEntry.setGameCode(rs.getString("gameCode"));
             return gameEntry;

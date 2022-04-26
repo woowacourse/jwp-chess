@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 
 public class ScoreCalculatorTest {
 
-    private static final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
     private static final ScoreCalculator scoreCalculator = new ScoreCalculator();
     private Pieces chessmen;
 

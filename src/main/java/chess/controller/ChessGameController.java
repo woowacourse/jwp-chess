@@ -27,7 +27,7 @@ public class ChessGameController {
         return new ModelAndView("game", HttpStatus.OK);
     }
 
-    @PostMapping("/new-game")
+    @PostMapping("/game")
     public ResponseEntity<ChessGameDto> createNewGame(@RequestParam("name") String gameName) {
         final ChessGameDto newChessGame = chessGameService.createNewChessGame(gameName);
         return ResponseEntity.ok(newChessGame);

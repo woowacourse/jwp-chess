@@ -33,12 +33,11 @@ stopButton.addEventListener("click", async function () {
 async function newGame() {
   gameName = document.getElementById('newRoomName').value;
 
-  let chessGame = await fetch("/new-game?name=" + gameName, {
+  let chessGame = await fetch("/game?name=" + gameName, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({}),
+      "Content-Type": "application/x-www-form-urlencoded",
+    }
   }).then(handleErrors)
   .catch(function (error) {
     alert(error.message);

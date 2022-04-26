@@ -1,6 +1,6 @@
 package chess.web;
 
-public class RequestDTO {
+public class ChessForm {
 
     private String roomId;
     private String command;

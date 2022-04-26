@@ -5,7 +5,7 @@ import chess.domain.command.CommandConverter;
 import chess.domain.piece.Color;
 import chess.domain.state.State;
 import chess.web.BoardDTO;
-import chess.web.RequestDTO;
+import chess.web.ChessForm;
 import chess.web.RequestParser;
 import chess.web.WebChessGame;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class WebChessController {
     }
 
     @PostMapping(value = "/preprocess")
-    public String preprocess(RequestDTO command, Model model) {
+    public String preprocess(ChessForm command, Model model) {
         try {
             String roomId = command.getRoomId();
             model.addAttribute(ROOM_ID, roomId);
@@ -86,7 +86,7 @@ public class WebChessController {
     }
 
     @PostMapping("/ready")
-    public String readyGame(RequestDTO command, Model model) {
+    public String readyGame(ChessForm command, Model model) {
         try {
             State next = State.create()
                     .proceed(CommandConverter.convertCommand(RequestParser.from(command.getCommand()).getCommand()));
@@ -99,7 +99,7 @@ public class WebChessController {
         }
     }
 
-    private String readyToRunning(RequestDTO command, Model model) {
+    private String readyToRunning(ChessForm command, Model model) {
         if (webChessGame.isSaved(command.getRoomId())) {
             updateDTO(model);
             return WHITE_TURN_URL;
@@ -108,7 +108,7 @@ public class WebChessController {
     }
 
     @PostMapping("/move")
-    public String runTurn(RequestDTO command, Model model) {
+    public String runTurn(ChessForm command, Model model) {
         State now = webChessGame.getState(command.getRoomId());
         model.addAttribute(ROOM_ID, command.getRoomId());
         try {
@@ -143,7 +143,7 @@ public class WebChessController {
     }
 
     @PostMapping("/backwardToMove")
-    public String backwardToMove(RequestDTO command, Model model) {
+    public String backwardToMove(ChessForm command, Model model) {
         State now = webChessGame.getState(command.getRoomId());
         model.addAttribute(ROOM_ID, command.getRoomId());
         updateDTO(model);
@@ -151,7 +151,7 @@ public class WebChessController {
     }
 
     @PostMapping("/backwardToReady")
-    public String backwardToReady(RequestDTO command, Model model) {
+    public String backwardToReady(ChessForm command, Model model) {
         model.addAttribute(ROOM_ID, command.getRoomId());
         updateDTO(model);
         return NEW_GAME_URL;
@@ -163,7 +163,7 @@ public class WebChessController {
     }
 
     @PostMapping("/saved")
-    public String saveGame(RequestDTO command, Model model) {
+    public String saveGame(ChessForm command, Model model) {
         model.addAttribute(ROOM_ID, command.getRoomId());
         updateDTO(model);
         return SAVED_URL;

@@ -3,6 +3,7 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.controller.dto.response.ChessGameResponse;
+import chess.controller.dto.response.EndResponse;
 import chess.domain.GameState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,4 +56,11 @@ class ChessServiceTest {
 
     @DisplayName("종료 요청이 들어오면 게임을 삭제한다.")
     @Test
+    void end_Game() {
+        chessService.createGame(1);
+
+        EndResponse endResponse = chessService.endGame(1);
+
+        assertThat(endResponse.getMessage()).isEqualTo("게임이 종료되었습니다.");
+    }
 }

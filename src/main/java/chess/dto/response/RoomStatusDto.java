@@ -22,6 +22,13 @@ public class RoomStatusDto {
         );
     }
 
+    public static RoomStatusDto of(final String name, final String gameStatus) {
+        return new RoomStatusDto(
+                name,
+                GameStatus.from(gameStatus)
+        );
+    }
+
     public String getName() {
         return name;
     }

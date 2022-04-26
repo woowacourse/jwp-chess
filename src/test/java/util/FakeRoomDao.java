@@ -6,66 +6,130 @@ import chess.domain.chesspiece.Color;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
-import java.util.ArrayList;
+import chess.exception.NotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FakeRoomDao implements RoomDao {
+
+    private final Map<Integer, Room> storage = new HashMap<>();
+    private int series = 1;
 
     @Override
     public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn,
                     final String password) {
-        return 1;
+        final Room room = new Room(series, roomName, gameStatus, currentTurn, password);
+        storage.put(series, room);
+        return series++;
     }
 
     @Override
     public boolean isExistName(final String roomName) {
-        return false;
+        return storage.values()
+                .stream()
+                .anyMatch(room -> room.name.equals(roomName));
     }
 
     @Override
     public boolean isExistId(final int roomId) {
-        return false;
+        return storage.values()
+                .stream()
+                .anyMatch(room -> room.id == roomId);
     }
 
     @Override
     public List<RoomResponseDto> findAll() {
-        final List<RoomResponseDto> dtos = new ArrayList<>();
-
-        dtos.add(RoomResponseDto.of(1, "test1", GameStatus.READY.getValue()));
-        dtos.add(RoomResponseDto.of(2, "test2", GameStatus.PLAYING.getValue()));
-        dtos.add(RoomResponseDto.of(3, "test3", GameStatus.END.getValue()));
-        dtos.add(RoomResponseDto.of(4, "test4", GameStatus.KING_DIE.getValue()));
-
-        return dtos;
+        return storage.values()
+                .stream()
+                .map(room -> RoomResponseDto.of(room.id, room.name, room.gameStatus.getValue()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public String findPasswordById(final int roomId) {
-        return null;
+        return storage.values()
+                .stream()
+                .filter(room -> room.id == roomId)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("방 아이디에 해당하는 비밀번호가 존재하지 않습니다."))
+                .password;
     }
 
     @Override
     public CurrentTurnDto findCurrentTurnById(final int roomId) {
-        return null;
+        return storage.values()
+                .stream()
+                .filter(room -> room.id == roomId)
+                .findFirst()
+                .map(room -> CurrentTurnDto.of(room.name, room.currentTurn))
+                .orElseThrow(() -> new NotFoundException("방 아이디에 해당하는 턴 정보가 존재하지 않습니다."));
     }
 
     @Override
     public RoomStatusDto findStatusById(final int roomId) {
-        return null;
+        return storage.values()
+                .stream()
+                .filter(room -> room.id == roomId)
+                .findFirst()
+                .map(room -> RoomStatusDto.of(room.name, room.gameStatus.getValue()))
+                .orElseThrow(() -> new NotFoundException("방 아이디에 해당하는 게임 상태가 존재하지 않습니다."));
     }
 
     @Override
     public int deleteById(final int roomId) {
-        return 0;
+        if (!storage.containsKey(roomId)) {
+            return 0;
+        }
+        storage.remove(roomId);
+        return 1;
     }
 
     @Override
     public int updateById(final int roomId, final GameStatus gameStatus, final Color currentTurn) {
-        return 0;
+        if (!storage.containsKey(roomId)) {
+            return 0;
+        }
+
+        final Room room = storage.get(roomId);
+        room.gameStatus = gameStatus;
+        room.currentTurn = currentTurn;
+        storage.put(roomId, room);
+        return 1;
     }
 
     @Override
     public int updateStatusById(final int roomId, final GameStatus gameStatus) {
-        return 0;
+        if (!storage.containsKey(roomId)) {
+            return 0;
+        }
+        final Room room = storage.get(roomId);
+        room.gameStatus = gameStatus;
+        storage.put(roomId, room);
+        return 1;
+    }
+
+    public void deleteAll() {
+        storage.clear();
+        series = 1;
+    }
+
+    private class Room {
+
+        private int id;
+        private String name;
+        private GameStatus gameStatus;
+        private Color currentTurn;
+        private String password;
+
+        public Room(final int id, final String name, final GameStatus gameStatus, final Color currentTurn,
+                    final String password) {
+            this.id = id;
+            this.name = name;
+            this.gameStatus = gameStatus;
+            this.currentTurn = currentTurn;
+            this.password = password;
+        }
     }
 }

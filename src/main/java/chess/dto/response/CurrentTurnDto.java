@@ -21,6 +21,10 @@ public class CurrentTurnDto {
         );
     }
 
+    public static CurrentTurnDto of(final String name, final Color currentTurn) {
+        return new CurrentTurnDto(name, currentTurn);
+    }
+
     public String getName() {
         return name;
     }

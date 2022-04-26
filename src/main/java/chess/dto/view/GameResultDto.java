@@ -1,6 +1,8 @@
 package chess.dto.view;
 
+import chess.domain.game.Game;
 import chess.domain.game.statistics.GameResult;
+import chess.entity.GameEntity;
 import java.util.Objects;
 
 public class GameResultDto {
@@ -11,6 +13,11 @@ public class GameResultDto {
     public GameResultDto(FullGameDto fullGame, GameResult result) {
         this.fullGame = fullGame;
         this.result = result;
+    }
+
+    public static GameResultDto of(GameEntity gameEntity, Game game) {
+        FullGameDto fullGameDto = new FullGameDto(gameEntity.toDto(), game.toSnapshotDto());
+        return new GameResultDto(fullGameDto, game.getResult());
     }
 
     public GameOverviewDto getMetadata() {

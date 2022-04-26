@@ -1,5 +1,7 @@
 package chess.dto.view;
 
+import chess.domain.game.Game;
+import chess.entity.GameEntity;
 import java.util.Objects;
 
 public class FullGameDto {
@@ -10,6 +12,10 @@ public class FullGameDto {
     public FullGameDto(GameOverviewDto metadata, GameSnapshotDto snapshot) {
         this.metadata = metadata;
         this.snapshot = snapshot;
+    }
+
+    public static FullGameDto of(GameEntity gameEntity, Game game) {
+        return new FullGameDto(gameEntity.toDto(), game.toSnapshotDto());
     }
 
     public GameOverviewDto getMetadata() {

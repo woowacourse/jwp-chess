@@ -4,6 +4,7 @@ import chess.domain.Board;
 import chess.domain.ChessGame;
 import chess.domain.Member;
 import chess.domain.Participant;
+import chess.domain.Room;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.detail.PieceType;
@@ -44,7 +45,7 @@ public class ChessGameDao implements GameDao {
 
     @Override
     public Optional<ChessGame> findById(Long id) {
-        final String sql = "select id, turn, white_member_id, black_member_id from Game where id = ?";
+        final String sql = "select id, title, password, turn, white_member_id, black_member_id from Game where id = ?";
         return Optional.ofNullable(
                 jdbcTemplate.queryForObject(
                         sql, (resultSet, rowNum) ->
@@ -55,7 +56,7 @@ public class ChessGameDao implements GameDao {
 
     @Override
     public List<ChessGame> findAll() {
-        final String sql = "select id, turn, white_member_id, black_member_id from Game";
+        final String sql = "select id, title, password, turn, white_member_id, black_member_id from Game";
         return jdbcTemplate.query(
                 sql, (resultSet, rowNum) ->
                         makeChessGame(resultSet.getLong("id"), resultSet));
@@ -63,7 +64,7 @@ public class ChessGameDao implements GameDao {
 
     @Override
     public List<ChessGame> findHistoriesByMemberId(Long memberId) {
-        final String sql = "select id, turn, white_member_id, black_member_id from Game"
+        final String sql = "select id, turn, title, password, white_member_id, black_member_id from Game"
                 + " where turn = ? and (white_member_id = ? or black_member_id = ?)";
         return jdbcTemplate.query(
                 sql, (resultSet, rowNum)
@@ -83,13 +84,16 @@ public class ChessGameDao implements GameDao {
     }
 
     private Long saveGame(ChessGame game) {
-        final String sql = "insert into Game (turn, white_member_id, black_member_id) values (?, ?, ?)";
+        final String sql = "insert into Game (turn, title, password, white_member_id, black_member_id) "
+                + "values (?, ?, ?, ?, ?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, game.getTurn().name());
-            ps.setLong(2, game.getWhiteId());
-            ps.setLong(3, game.getBlackId());
+            ps.setString(2, game.getRoom().getTitle());
+            ps.setString(3, game.getRoom().getPassword());
+            ps.setLong(4, game.getWhiteId());
+            ps.setLong(5, game.getBlackId());
             return ps;
         }, keyHolder);
 
@@ -102,8 +106,10 @@ public class ChessGameDao implements GameDao {
         final Member black = memberDao.findById(resultSet.getLong("black_member_id"))
                 .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
         final String rawTurn = resultSet.getString("turn");
-        return new ChessGame(id, loadBoard(id), Team.valueOf(rawTurn),
-                new Participant(white, black));
+        final String title = resultSet.getString("title");
+        final String password = resultSet.getString("password");
+        final Participant participant = new Participant(white, black);
+        return new ChessGame(id, loadBoard(id), Team.valueOf(rawTurn), new Room(title, password, participant));
     }
 
     private void movePiece(final ChessGame game, final String rawFrom, final String rawTo) {

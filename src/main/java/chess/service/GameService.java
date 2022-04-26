@@ -8,6 +8,7 @@ import chess.domain.ChessGame;
 import chess.domain.Member;
 import chess.domain.Participant;
 import chess.domain.Result;
+import chess.domain.Room;
 import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
 import chess.dto.GameResultDto;
@@ -26,13 +27,14 @@ public class GameService {
         this.memberDao = memberDao;
     }
 
-    public Long createGame(final Long whiteId, final Long blackId) {
+    public Long createGame(final String title, final String password, final Long whiteId, final Long blackId) {
         final Member white = memberDao.findById(whiteId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
         final Member black = memberDao.findById(blackId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
         final Board board = new Board(BoardInitializer.create());
         final Participant participant = new Participant(white, black);
+        final Room room = new Room(title, password, participant);
 
-        return gameDao.save(new ChessGame(board, Team.WHITE, participant));
+        return gameDao.save(new ChessGame(board, Team.WHITE, room));
     }
 
     public List<ChessGame> findPlayingGames() {

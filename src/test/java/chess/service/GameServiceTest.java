@@ -39,15 +39,15 @@ class GameServiceTest {
     @Test
     @DisplayName("게임이 정상적으로 생성되는지 확인한다.")
     void createGame() {
-        assertThat(gameService.createGame(1L, 2L)).isEqualTo(1L);
+        assertThat(gameService.createGame("some", "123", 1L, 2L)).isEqualTo(1L);
     }
 
     @Test
     @DisplayName("진행 중인 게임 수를 반환한다.")
     void findPlayingGames() {
-        gameService.createGame(1L, 2L);
-        gameService.createGame(1L, 2L);
-        gameService.createGame(1L, 2L);
+        gameService.createGame("some", "123", 1L, 2L);
+        gameService.createGame("some", "123", 1L, 2L);
+        gameService.createGame("some", "123", 1L, 2L);
 
         assertThat(gameService.findPlayingGames().size()).isEqualTo(3);
     }
@@ -55,7 +55,7 @@ class GameServiceTest {
     @Test
     @DisplayName("게임 id를 통해 게임을 불러온다.")
     void findByGameId() {
-        final Long gameId = gameService.createGame(1L, 2L);
+        final Long gameId = gameService.createGame("some", "123", 1L, 2L);
         final ChessGame game = gameService.findByGameId(gameId);
 
         assertThat(game.getId()).isEqualTo(gameId);
@@ -65,7 +65,7 @@ class GameServiceTest {
     @Test
     @DisplayName("게임이 정상적으로 종료되는지 확인한다.")
     void terminate() {
-        final Long gameId = gameService.createGame(1L, 2L);
+        final Long gameId = gameService.createGame("some", "123", 1L, 2L);
         gameService.terminate(gameId);
         final ChessGame game = gameService.findByGameId(gameId);
 
@@ -75,8 +75,8 @@ class GameServiceTest {
     @Test
     @DisplayName("멤버별 게임 기록을 반환한다.")
     void findHistoriesByMemberId() {
-        gameService.createGame(1L, 2L);
-        gameService.createGame(1L, 2L);
+        gameService.createGame("some", "123", 1L, 2L);
+        gameService.createGame("some", "123", 1L, 2L);
         gameService.terminate(1L);
         gameService.terminate(2L);
 
@@ -86,7 +86,7 @@ class GameServiceTest {
     @Test
     @DisplayName("말이 이동되는지 확인한다.")
     void move() {
-        final Long gameId = gameService.createGame(1L, 2L);
+        final Long gameId = gameService.createGame("some", "123", 1L, 2L);
         gameService.move(gameId, "a2", "a4");
         final ChessGame game = gameService.findByGameId(gameId);
 

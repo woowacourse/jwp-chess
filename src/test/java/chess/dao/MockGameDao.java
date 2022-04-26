@@ -17,7 +17,7 @@ public class MockGameDao implements GameDao {
 
     @Override
     public Long save(ChessGame game) {
-        game = new ChessGame((long) nextId++, game.getBoard(), game.getTurn(), game.getParticipant());
+        game = new ChessGame((long) nextId++, game.getBoard(), game.getTurn(), game.getRoom());
         store.put(game.getId(), game);
         return game.getId();
     }

@@ -1,7 +1,5 @@
 package chess.controller;
 
-import static org.hamcrest.core.Is.is;
-
 import chess.dao.GameDao;
 import chess.dao.MemberDao;
 import chess.domain.Board;
@@ -9,6 +7,7 @@ import chess.domain.BoardInitializer;
 import chess.domain.ChessGame;
 import chess.domain.Member;
 import chess.domain.Participant;
+import chess.domain.Room;
 import chess.domain.piece.detail.Team;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -58,7 +56,9 @@ class ChessControllerTest {
         final Member one = new Member(1L, "one");
         final Member two = new Member(2L, "two");
         final Board board = new Board(BoardInitializer.create());
-        final ChessGame game = new ChessGame(1L, board, Team.WHITE, new Participant(one, two));
+        final Participant participant = new Participant(one, two);
+        final Room room = new Room("some", "123", participant);
+        final ChessGame game = new ChessGame(2L, board, Team.WHITE, room);
 
         memberDao.save(one);
         memberDao.save(two);
@@ -78,7 +78,9 @@ class ChessControllerTest {
         final Member one = new Member(1L, "one");
         final Member two = new Member(2L, "two");
         final Board board = new Board(BoardInitializer.create());
-        final ChessGame game = new ChessGame(1L, board, Team.WHITE, new Participant(one, two));
+        final Participant participant = new Participant(one, two);
+        final Room room = new Room("some", "123", participant);
+        final ChessGame game = new ChessGame(2L, board, Team.WHITE, room);
 
         memberDao.save(one);
         memberDao.save(two);
@@ -98,7 +100,9 @@ class ChessControllerTest {
         final Member one = new Member(1L, "one");
         final Member two = new Member(2L, "two");
         final Board board = new Board(BoardInitializer.create());
-        final ChessGame game = new ChessGame(1L, board, Team.WHITE, new Participant(one, two));
+        final Participant participant = new Participant(one, two);
+        final Room room = new Room("some", "123", participant);
+        final ChessGame game = new ChessGame(2L, board, Team.WHITE, room);
 
         memberDao.save(one);
         memberDao.save(two);

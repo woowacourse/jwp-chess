@@ -19,14 +19,14 @@
 </div>
 <div class="container" style="flex-direction: column;">
     {{#members}}
-    <div class="card" style="width: 100%; margin-top: 1vh;">
-        <div class="card-body">
-            <h5 class="card-title">{{name}} </h5>
-            <h6 class="card-subtitle mb-2 text-muted">id: {{id}} </h6>
-            <button type="button" class="btn btn-info" onclick="location.href = '/history/{{id}}'">게임 기록</button>
-            <button id="{{id}}" type="button" class="btn btn-danger" onclick="deleteMember(this)">멤버 삭제</button>
+        <div class="card" style="width: 100%; margin-top: 1vh;">
+            <div class="card-body">
+                <h5 class="card-title">{{name}} </h5>
+                <h6 class="card-subtitle mb-2 text-muted">id: {{id}} </h6>
+                <button type="button" class="btn btn-info" onclick="location.href = '/history/{{id}}'">게임 기록</button>
+                <button id="{{id}}" type="button" class="btn btn-danger" onclick="deleteMember(this)">멤버 삭제</button>
+            </div>
         </div>
-    </div>
     {{/members}}
 </div>
 

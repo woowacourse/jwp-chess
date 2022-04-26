@@ -34,14 +34,14 @@
         <tbody style="border: solid 1px black">
 
         {{#ranks}}
-        <tr>
-            <td style="background: black">{{rankLine}}</td>
-            {{#pieces}}
-            <td><img onclick="pieceClickHandler(this)" id="{{rawSquare}}" class="chess-piece-img"
-                     src="/images/{{this.name}}.png"></td>
-            {{/pieces}}
-            <td style="background: black">{{rankLine}}</td>
-        </tr>
+            <tr>
+                <td style="background: black">{{rankLine}}</td>
+                {{#pieces}}
+                    <td><img onclick="pieceClickHandler(this)" id="{{rawSquare}}" class="chess-piece-img"
+                             src="/images/{{this.name}}.png"></td>
+                {{/pieces}}
+                <td style="background: black">{{rankLine}}</td>
+            </tr>
         {{/ranks}}
 
         <tr>

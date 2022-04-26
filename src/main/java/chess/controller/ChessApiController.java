@@ -2,21 +2,24 @@ package chess.controller;
 
 import chess.domain.ChessGame;
 import chess.domain.Result;
+import chess.dto.GameCreationDto;
 import chess.service.GameService;
 import chess.service.MemberService;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class ChessApiController {
 
     private final GameService gameService;
@@ -63,11 +66,27 @@ public class ChessApiController {
 
     @PostMapping("/chessGame")
     @ResponseBody
-    public ResponseEntity<Long> createGame(@RequestParam("whiteId") Long whiteId,
-                                           @RequestParam("blackId") Long blackId) {
-        final Long gameId = gameService.createGame(whiteId, blackId);
+    public ResponseEntity<Long> createGame(@RequestBody final GameCreationDto gameCreationDto) {
+        System.out.println(gameCreationDto);
+        final Long gameId = gameService.createGame(
+                gameCreationDto.getTitle(),
+                gameCreationDto.getPassword(),
+                gameCreationDto.getWhiteId(),
+                gameCreationDto.getBlackId()
+        );
 
         return ResponseEntity.created(URI.create("/chessGame/" + gameId)).body(gameId);
+    }
+
+    @PostMapping("/{gameId}/password")
+    @ResponseBody
+    public ResponseEntity<Boolean> checkPassword(@PathVariable final Long gameId, @RequestParam final String password) {
+        final ChessGame game = gameService.findByGameId(gameId);
+
+        if (game.getRoom().getPassword().equals(password)) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.badRequest().body(false);
     }
 
     @DeleteMapping("/member/{memberId}")

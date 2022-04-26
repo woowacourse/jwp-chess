@@ -7,20 +7,18 @@ import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.ChessGamesResponse;
 import chess.controller.dto.response.EndResponse;
+import chess.dao.FakeGameDao;
+import chess.dao.FakePieceDao;
 import chess.domain.GameState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
 @Transactional
 class ChessServiceTest {
 
-    @Autowired
-    private ChessService chessService;
+    private final ChessService chessService = new ChessService(new FakeGameDao(), new FakePieceDao());
 
     private static final CreateGameRequest CREAT_GAME_REQUEST = new CreateGameRequest("game", "password");
 

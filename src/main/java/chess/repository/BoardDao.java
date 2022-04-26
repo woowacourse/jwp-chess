@@ -7,15 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class BoardDao {
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    public BoardDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void save(ChessBoard chessBoard, Long gameId) {
         String sql = "insert into board (position, symbol, color, game_id) values (?, ?, ?, ?)";

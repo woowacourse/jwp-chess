@@ -1,15 +1,17 @@
 package chess.repository;
 
 import chess.domain.state.State;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class GameDao {
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    public GameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void save(String state) {
         String sql = "insert into game(state) values (?)";

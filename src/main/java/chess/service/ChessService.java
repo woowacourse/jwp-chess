@@ -1,7 +1,5 @@
 package chess.service;
 
-import chess.repository.BoardDao;
-import chess.repository.GameDao;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.command.GameCommand;
 import chess.domain.game.ChessGame;
@@ -14,9 +12,10 @@ import chess.domain.state.State;
 import chess.dto.BoardDto;
 import chess.dto.PieceDto;
 import chess.dto.StatusDto;
+import chess.repository.BoardDao;
+import chess.repository.GameDao;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,6 @@ public class ChessService {
     private final GameDao gameDao;
     private final BoardDao boardDao;
 
-    @Autowired
     public ChessService(GameDao gameDao, BoardDao boardDao) {
         this.gameDao = gameDao;
         this.boardDao = boardDao;

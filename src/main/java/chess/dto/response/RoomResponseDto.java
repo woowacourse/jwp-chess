@@ -24,6 +24,14 @@ public class RoomResponseDto {
         );
     }
 
+    public static RoomResponseDto of(final int roomId, final String roomName, final String gameStatus) {
+        return new RoomResponseDto(
+                roomId,
+                roomName,
+                GameStatus.from(gameStatus)
+        );
+    }
+
     public int getRoomId() {
         return roomId;
     }

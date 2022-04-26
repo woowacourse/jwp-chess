@@ -38,7 +38,7 @@ public class ChessController {
 
     @PostMapping("/{gameId}")
     public ResponseEntity<ChessGameResponse> createGame(@PathVariable long gameId) throws URISyntaxException {
-        return ResponseEntity.created(new URI("/api/games/" + gameId)).body(chessService.createGame(gameId));
+        return ResponseEntity.created(new URI("/games/" + gameId)).body(chessService.createGame(gameId));
     }
 
     @PatchMapping("/{gameId}")

@@ -9,16 +9,15 @@ create table PIECE
 
 create table CHESSGAME
 (
+    id bigint auto_increment primary key,
     game_name varchar(20) not null,
-    turn      varchar(5)  not null,
-    constraint CHESSGAME_pk
-        primary key (game_name)
+    turn      varchar(5)  not null
 );
 
 alter table PIECE
-    add game_name varchar(20) null;
+    add chessgame_id bigint null;
 
 alter table PIECE
     add constraint PIECE_CHESSBOARD__fk
-        foreign key (game_name) references CHESSGAME (game_name)
+        foreign key (chessgame_id) references CHESSGAME (id)
             on update cascade on delete cascade;

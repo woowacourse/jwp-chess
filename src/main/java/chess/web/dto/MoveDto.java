@@ -19,12 +19,4 @@ public class MoveDto {
     public String getTarget() {
         return target;
     }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
-    }
 }

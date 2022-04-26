@@ -1,13 +1,19 @@
 package chess.web.dto;
 
 public class MoveResultDto {
+
     private boolean isMovable;
     private boolean isGameOver;
     private String winner;
 
-    public MoveResultDto() {
-        isMovable = true;
-        isGameOver = false;
+    private MoveResultDto(boolean isMovable, boolean isGameOver, String winner) {
+        this.isMovable = isMovable;
+        this.isGameOver = isGameOver;
+        this.winner = winner;
+    }
+
+    public static MoveResultDto of(boolean isMovable, boolean isGameOver, String winner) {
+        return new MoveResultDto(isMovable, isGameOver, winner);
     }
 
     public boolean getIsMovable() {
@@ -20,17 +26,5 @@ public class MoveResultDto {
 
     public String getWinner() {
         return winner;
-    }
-
-    public void setIsMovable(boolean isMovable) {
-        this.isMovable = isMovable;
-    }
-
-    public void setIsGameOver(boolean gameOver) {
-        isGameOver = gameOver;
-    }
-
-    public void setWinner(String winner) {
-        this.winner = winner;
     }
 }

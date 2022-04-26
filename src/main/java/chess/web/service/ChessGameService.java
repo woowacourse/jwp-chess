@@ -41,22 +41,19 @@ public class ChessGameService {
     public MoveResultDto move(MoveDto moveDto) {
         ChessGame chessGame = getChessGame();
         String turn = chessGame.getTurn();
-        MoveResultDto moveResultDto = new MoveResultDto();
 
         try {
             chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
             if (isChessGameEnd(chessGame)) {
-                moveResultDto.setIsGameOver(true);
-                moveResultDto.setWinner(turn);
-                return moveResultDto;
+                return MoveResultDto.of(true, true, turn);
             }
             removeAll();
             saveAll(chessGame);
         } catch (IllegalArgumentException e) {
-            moveResultDto.setIsMovable(false);
+            return MoveResultDto.of(false, false, null);
         }
 
-        return moveResultDto;
+        return MoveResultDto.of(true, false, null);
     }
 
     public PlayResultDto play() {
@@ -71,7 +68,7 @@ public class ChessGameService {
             boardDto.put(position.toString(), piece);
         }
 
-        return new PlayResultDto(boardDto, findTurn().name());
+        return PlayResultDto.of(boardDto, findTurn().name());
     }
 
     private void removeAll() {

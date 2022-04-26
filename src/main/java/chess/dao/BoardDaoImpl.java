@@ -45,8 +45,7 @@ public class BoardDaoImpl implements BoardDao {
 
             boardValue.put(position, piece);
         }
-
-        System.out.println(boardValue);
+        
         return BoardDto.from(boardValue);
     }
 

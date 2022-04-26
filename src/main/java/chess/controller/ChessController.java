@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import chess.dto.request.MovePieceDto;
@@ -91,7 +90,6 @@ public class ChessController {
         return ResponseEntity.ok(responseValue);
     }
 
-    @ResponseBody
     @PostMapping("/move")
     public CommandResultDto movePiece(@RequestBody MovePieceDto movePieceDto) {
         try {
@@ -105,7 +103,6 @@ public class ChessController {
     }
 
     // TODO: Exception 으로 catch 하면 안됨
-    @ResponseBody
     @PostMapping("/initialize")
     public CommandResultDto initialize() {
         try {

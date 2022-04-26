@@ -9,7 +9,6 @@ import chess.dao.Movement;
 import chess.dao.MovementDAO;
 import chess.dto.ChessGameRoomInfoDTO;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +43,7 @@ public final class ChessService {
         return chessGame;
     }
 
-    public ChessGame movePiece(final String gameId, final String source, final String target, final Team team)
-            throws SQLException {
+    public ChessGame movePiece(final String gameId, final String source, final String target, final Team team){
         final ChessGame chessGame = getChessGamePlayed(gameId);
         validateCurrentTurn(chessGame, team);
         move(chessGame, new Movement(Position.of(source), Position.of(target)), team);

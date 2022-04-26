@@ -4,16 +4,13 @@ import chess.dao.ChessGame;
 import chess.domain.piece.property.Team;
 import chess.dto.BoardDTO;
 import chess.dto.ChessGameRoomInfoDTO;
+import chess.dto.MoveDTO;
 import chess.service.ChessService;
-import java.sql.SQLException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ChessGameController {
@@ -52,11 +49,8 @@ public class ChessGameController {
 
     @PostMapping("/chess/game/{id}/move")
     @ResponseBody
-    public ResponseEntity<BoardDTO> movePiece(@RequestParam String source,
-                                              @RequestParam String target,
-                                              @RequestParam String team,
-                                              @PathVariable String id) throws SQLException {
-        ChessGame chessGame = chessService.movePiece(id, source, target, Team.valueOf(team));
+    public ResponseEntity<BoardDTO> movePiece(MoveDTO moveDTO, @PathVariable String id) {
+        ChessGame chessGame = chessService.movePiece(id, moveDTO.getSource(), moveDTO.getTarget(), Team.valueOf(moveDTO.getTeam()));
         return ResponseEntity.ok(new BoardDTO(chessGame));
     }
 }

@@ -69,8 +69,8 @@ public class ChessService {
 
     public void move(final int roomId, MoveRequestDto requestDto) {
         final ChessGame chessGame = findGameByRoomId(roomId);
-        final Position from = requestDto.getFrom();
-        final Position to = requestDto.getTo();
+        final Position from = Position.from(requestDto.getFrom());
+        final Position to = Position.from(requestDto.getTo());
 
         final MoveResult moveResult = chessGame.move(from, to);
         updatePosition(roomId, from, to);

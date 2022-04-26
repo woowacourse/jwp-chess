@@ -5,7 +5,7 @@ public class RoomCreationRequestDto {
     private String roomName;
     private String password;
 
-    public RoomCreationRequestDto() {
+    protected RoomCreationRequestDto() {
     }
 
     public RoomCreationRequestDto(final String roomName, final String password) {

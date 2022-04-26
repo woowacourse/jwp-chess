@@ -1,15 +1,11 @@
 package chess.dto.request;
 
-import chess.domain.position.Position;
-
 public class MoveRequestDto {
 
-    private final String from;
-    private final String to;
+    private String from;
+    private String to;
 
-    public MoveRequestDto() {
-        this.from = "";
-        this.to = "";
+    protected MoveRequestDto() {
     }
 
     public MoveRequestDto(final String from, final String to) {
@@ -17,11 +13,11 @@ public class MoveRequestDto {
         this.to = to;
     }
 
-    public Position getFrom() {
-        return Position.from(from);
+    public String getFrom() {
+        return from;
     }
 
-    public Position getTo() {
-        return Position.from(to);
+    public String getTo() {
+        return to;
     }
 }

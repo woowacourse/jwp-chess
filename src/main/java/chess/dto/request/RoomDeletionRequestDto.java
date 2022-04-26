@@ -5,7 +5,7 @@ public class RoomDeletionRequestDto {
     private int roomId;
     private String password;
 
-    public RoomDeletionRequestDto() {
+    protected RoomDeletionRequestDto() {
     }
 
     public RoomDeletionRequestDto(final int roomId, final String password) {

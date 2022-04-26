@@ -42,6 +42,9 @@ public class SpringChessService implements ChessService {
         if (moveResult != MoveResult.FAIL) {
             chessDao.move(moveRequestDto);
         }
+        if (moveResult == MoveResult.END) {
+            chessDao.deleteGameById(Integer.parseInt(moveRequestDto.getGameId()));
+        }
         return new MoveResultDto(moveRequestDto.getPiece(), moveRequestDto.getFrom(), moveRequestDto.getTo(),
                 moveResult);
     }

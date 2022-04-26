@@ -147,8 +147,10 @@ public class JDBCTemplateChessDao implements ChessDao {
 
     @Override
     public int deleteGameById(int id) {
-        final String sql = "update game set deleted = 1 where id = ?";
-        jdbcTemplate.update(sql, id);
+        final String changeFlagSql = "update game set deleted = 1 where id = ?";
+        jdbcTemplate.update(changeFlagSql, id);
+        final String deleteBoardDataSql = "delete from board where game_id = ?";
+        jdbcTemplate.update(deleteBoardDataSql, id);
         return id;
     }
 }

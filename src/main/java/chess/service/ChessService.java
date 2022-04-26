@@ -36,12 +36,11 @@ public class ChessService {
         createChessBoard(gameName, savedId);
     }
 
-    private List<String> createChessBoard(String gameName, int chessGameId) {
+    private void createChessBoard(String gameName, int chessGameId) {
         ChessGame chessGame = new ChessGame(gameName);
         chessGame.progress(Command.from("start"));
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
         pieceDao.save(chessGameDto, chessGameId);
-        return chessGame.getChessBoardSymbol();
     }
 
     public List<String> getCurrentChessBoard(int chessGameId) {

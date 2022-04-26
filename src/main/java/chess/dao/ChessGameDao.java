@@ -44,17 +44,8 @@ public class ChessGameDao {
     }
 
     public List<ChessGameDto> findAllChessGames() {
-        String sql = "select id, game_name from chess_game";
-        return jdbcTemplate.query(sql, rowMapper());
-    }
-
-    private RowMapper<ChessGameDto> rowMapper() {
-        return (resultSet, rowNum) -> {
-            return new ChessGameDto(
-                resultSet.getInt("id"),
-                resultSet.getString("game_name")
-            );
-        };
+        String sql = "select id, game_name, turn from chess_game";
+        return jdbcTemplate.query(sql, chessGameDtoMapper());
     }
 
     public void update(String turn, int chessGameId) {
@@ -62,24 +53,34 @@ public class ChessGameDao {
         jdbcTemplate.update(sql, turn, chessGameId);
     }
 
+    private RowMapper<ChessGameDto> chessGameDtoMapper() {
+        return (resultSet, rowNum) -> {
+            return new ChessGameDto(
+                resultSet.getInt("id"),
+                resultSet.getString("game_name"),
+                resultSet.getString("turn")
+            );
+        };
+    }
+
     public ChessGame findById(int chessGameId) {
-            String sql =
-                "select chess_game.turn, chess_game.game_name, piece.type, piece.team, piece.`rank`, piece.file "
-                    + "from chess_game, piece "
-                    + "where chess_game.id = piece.chess_game_id AND chess_game.id = ?";
+        String sql =
+            "select chess_game.turn, chess_game.game_name, piece.type, piece.team, piece.`rank`, piece.file "
+                + "from chess_game, piece "
+                + "where chess_game.id = piece.chess_game_id AND chess_game.id = ?";
 
-            List<ChessGame> result = jdbcTemplate.query(connection -> {
-                PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,
-                        ResultSet.CONCUR_UPDATABLE);
-                preparedStatement.setInt(1, chessGameId);
-                return preparedStatement;
-            }, chessGameRowMapper);
+        List<ChessGame> result = jdbcTemplate.query(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            preparedStatement.setInt(1, chessGameId);
+            return preparedStatement;
+        }, chessGameRowMapper);
 
-            if (result.isEmpty()) {
-                return null;
-            }
+        if (result.isEmpty()) {
+            return null;
+        }
 
-            return result.get(0);
+        return result.get(0);
     }
 
     private final RowMapper<ChessGame> chessGameRowMapper = (resultSet, rowNum) -> new ChessGame(

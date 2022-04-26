@@ -15,6 +15,12 @@ public class ChessGameDto {
         this.gameName = gameName;
     }
 
+    public ChessGameDto(int chessGameId, String gameName, String turn) {
+        this.chessGameId = chessGameId;
+        this.gameName = gameName;
+        this.turn = turn;
+    }
+
     private ChessGameDto(ChessBoardDto chessBoardDto, String gameName, String turn) {
         this.chessBoard = chessBoardDto;
         this.gameName = gameName;

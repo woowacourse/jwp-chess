@@ -31,43 +31,40 @@ public class ChessSpringController {
     @ResponseBody
     @GetMapping("/start")
     public ResponseEntity start() {
-        GameStatusDto gameStatusDto = chessGameService.startChessGame(new WebBasicBoardStrategy());
-        return ResponseEntity.ok().body(gameStatusDto);
+        GameStatusDto status = chessGameService.startChessGame(new WebBasicBoardStrategy());
+        return ResponseEntity.ok().body(status);
     }
 
     @ResponseBody
     @PostMapping("/move")
     public ResponseEntity move(@RequestBody MoveDto moveDto) {
-        GameStatusDto gameStatusDto = null;
         try {
-            gameStatusDto = chessGameService.move(moveDto.getFrom(), moveDto.getTo());
+            GameStatusDto status = chessGameService.move(moveDto.getFrom(), moveDto.getTo());
+            return ResponseEntity.ok().body(status);
         } catch (Exception e) {
             return ResponseEntity.ok().body(new ErrorDto(e.getMessage()));
         }
-        return ResponseEntity.ok().body(gameStatusDto);
     }
 
     @ResponseBody
     @GetMapping("/status")
     public ResponseEntity status() {
-        ScoreDto scoreDto = null;
         try {
-            scoreDto = chessGameService.createScore();
+            ScoreDto score = chessGameService.createScore();
+            return ResponseEntity.ok().body(score);
         } catch (Exception e) {
             return ResponseEntity.ok().body(new ErrorDto(e.getMessage()));
         }
-        return ResponseEntity.ok().body(scoreDto);
     }
 
     @ResponseBody
     @GetMapping("/end")
     public ResponseEntity end() {
-        ScoreDto scoreDto = null;
         try {
-            scoreDto = chessGameService.end();
+            ScoreDto score = chessGameService.end();
+            return ResponseEntity.ok().body(score);
         } catch (Exception e) {
             return ResponseEntity.ok().body(new ErrorDto(e.getMessage()));
         }
-        return ResponseEntity.ok().body(scoreDto);
     }
 }

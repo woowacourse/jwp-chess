@@ -8,21 +8,25 @@ import chess.model.status.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+@DataJdbcTest
+@Sql("test-schema.sql")
 class ChessBoardRepositoryTest {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private ChessBoardRepository chessBoardRepository;
     private Board board;
 
     @BeforeEach
     void setup() {
+        this.chessBoardRepository = new ChessBoardRepository(jdbcTemplate);
         board = chessBoardRepository.save(new Board(new Ready(), Team.WHITE));
     }
 

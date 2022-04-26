@@ -11,27 +11,33 @@ import chess.model.status.Running;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
-@Transactional
+@DataJdbcTest
+@Sql("test-schema.sql")
 class ChessPieceRepositoryTest {
 
-    @Autowired
-    private ChessPieceRepository chessPieceRepository;
+    private final ChessPieceRepository chessPieceRepository;
 
-    @Autowired
-    private ChessSquareRepository chessSquareRepository;
-    @Autowired
-    private ChessBoardRepository chessBoardRepository;
+    private final ChessSquareRepository chessSquareRepository;
+
+    private final ChessBoardRepository chessBoardRepository;
     private int boardId;
     private int squareId;
+
+    @Autowired
+    ChessPieceRepositoryTest(JdbcTemplate jdbcTemplate) {
+        this.chessPieceRepository = new ChessPieceRepository(jdbcTemplate);
+        this.chessSquareRepository = new ChessSquareRepository(jdbcTemplate);
+        this.chessBoardRepository = new ChessBoardRepository(jdbcTemplate);
+    }
 
     @BeforeEach
     void setup() {

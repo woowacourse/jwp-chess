@@ -8,25 +8,30 @@ import chess.model.status.Running;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
-@Transactional
+@DataJdbcTest
+@Sql("test-schema.sql")
 class ChessMemberRepositoryTest {
 
-    @Autowired
-    private ChessMemberRepository chessMemberRepository;
-    @Autowired
-    private ChessBoardRepository chessBoardRepository;
+    private final ChessMemberRepository chessMemberRepository;
+    private final ChessBoardRepository chessBoardRepository;
+    private final ChessRoomRepository chessRoomRepository;
 
     @Autowired
-    private ChessRoomRepository chessRoomRepository;
+    ChessMemberRepositoryTest(JdbcTemplate jdbcTemplate) {
+        chessMemberRepository = new ChessMemberRepository(jdbcTemplate);
+        chessBoardRepository = new ChessBoardRepository(jdbcTemplate);
+        chessRoomRepository = new ChessRoomRepository(jdbcTemplate);
+    }
+
     private int roomId;
 
     @BeforeEach

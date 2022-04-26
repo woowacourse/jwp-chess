@@ -26,7 +26,7 @@ body {
     font-weight: bold;
 }
 
-a, button {
+.a, button {
     border: 1px solid gray;
     border-radius: 10px;
     padding: 7px;
@@ -39,12 +39,12 @@ a, button {
     cursor: pointer;
 }
 
-a:active,
+.a:active,
 button:active {
     background-color: #5d5c5c;
 }
 
-a:hover,
+.a:hover,
 button:hover {
     background-color: black;
 }

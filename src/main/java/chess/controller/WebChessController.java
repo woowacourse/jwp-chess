@@ -3,6 +3,8 @@ package chess.controller;
 import chess.converter.Converter;
 import chess.domain.board.Board;
 import chess.domain.game.StatusCalculator;
+import chess.dto.ExceptionDto;
+import chess.dto.MoveRequestDto;
 import chess.service.ChessService;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,7 +37,7 @@ public class WebChessController {
         Board board = chessService.findBoardByGameId(id);
 
         Map<String, Object> map = Converter.toMap(id, board);
-        org.springframework.web.servlet.ModelAndView modelAndView = new org.springframework.web.servlet.ModelAndView("start");
+        ModelAndView modelAndView = new ModelAndView("start");
         modelAndView.addObject("board", map);
         return modelAndView;
     }
@@ -48,14 +51,22 @@ public class WebChessController {
         return "redirect:/game/" + gameId;
     }
 
+//    @PostMapping("/game/{gameId}/move")
+//    public String move(
+//            @PathVariable("gameId") int gameId,
+//            @RequestParam("from") String from,
+//            @RequestParam("to") String to
+//    ) {
+//        chessService.move(gameId, from, to);
+//        return "redirect:/game/" + gameId;
+//    }
+
     @PostMapping("/game/{gameId}/move")
-    public String move(
-            @PathVariable("gameId") int gameId,
-            @RequestParam("from") String from,
-            @RequestParam("to") String to
-    ) {
-        chessService.move(gameId, from, to);
-        return "redirect:/game/" + gameId;
+    @ResponseBody
+    public ResponseEntity<MoveRequestDto> move(
+            @PathVariable("gameId") int gameId, @RequestBody MoveRequestDto moveRequestDto) {
+        chessService.move(gameId, moveRequestDto);
+        return ResponseEntity.ok(moveRequestDto);
     }
 
     @PostMapping("/stop")
@@ -75,14 +86,14 @@ public class WebChessController {
         Board board = chessService.findBoardByGameId(gameId);
 
         Map<String, Object> map = Converter.toMap(gameId, board, status);
-        org.springframework.web.servlet.ModelAndView modelAndView = new ModelAndView("start");
+        ModelAndView modelAndView = new ModelAndView("start");
         modelAndView.addObject("board", map);
         return modelAndView;
     }
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseBody
-    public ResponseEntity<String> handle(RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ExceptionDto> handle(RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ExceptionDto(e.getMessage()));
     }
 }

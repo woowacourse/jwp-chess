@@ -2,6 +2,7 @@ package chess.service;
 
 import static chess.domain.game.ChessGame.*;
 
+import chess.dto.MoveRequestDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,11 +76,13 @@ public class ChessService {
         }
     }
 
-    public void move(int gameId, String from, String to) {
+    public void move(int gameId, MoveRequestDto moveRequestDto) {
         Board board = findBoardByGameId(gameId);
         GameDto gameDto = gameDao.findById(gameId);
 
         ChessGame chessGame = new ChessGame(board, gameDto.getState());
+        String from = moveRequestDto.getFrom();
+        String to = moveRequestDto.getTo();
         chessGame.move(Coordinate.of(from), Coordinate.of(to));
         changeState(gameId, gameDto, chessGame);
 

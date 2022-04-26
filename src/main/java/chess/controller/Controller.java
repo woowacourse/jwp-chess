@@ -97,8 +97,8 @@ public class Controller {
                                   final @RequestParam String target) {
         validateInputString(source);
         validateInputString(target);
-        char[] sourcesElements = refineInputPosition(source);
-        char[] targetElements = refineInputPosition(target);
+        char[] sourcesElements = source.toLowerCase().toCharArray();
+        char[] targetElements = target.toLowerCase().toCharArray();
         service.movePiece(
                 gameRoomId,
                 sourcesElements[COLUMN_INDEX],
@@ -107,14 +107,6 @@ public class Controller {
                 Character.getNumericValue(targetElements[ROW_INDEX])
         );
         return new RedirectView("/game/" + gameRoomId);
-    }
-
-    private char[] refineInputPosition(final String position) {
-        String refinedSource = position.trim().toLowerCase();
-        if (refinedSource.length() != 2) {
-            throw new IllegalArgumentException("[ERROR] 좌표를 잘못 입력했습니다.");
-        }
-        return refinedSource.toCharArray();
     }
 
     @PostMapping("/reset/{gameRoomId}")

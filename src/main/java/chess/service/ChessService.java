@@ -69,7 +69,7 @@ public class ChessService {
         return chessGame.getChessBoardSymbol();
     }
 
-    public void save(ChessGame chessGame) throws IllegalStateException {
+    private void save(ChessGame chessGame) throws IllegalStateException {
         String gameName = chessGame.getGameName();
         ChessGame chessGameByName = chessGameDao.findByName(gameName);
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);

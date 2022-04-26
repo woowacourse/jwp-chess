@@ -12,6 +12,7 @@ import chess.domain.position.Position;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -59,8 +60,9 @@ public class PieceDaoTest {
         jdbcTemplate.execute("DROP TABLE game IF EXISTS");
     }
 
+    @DisplayName("createAllByGameId 실행시 해당 gameId에 piece 정보들이 추가된다.")
     @Test
-    void createAllById_Piece_생성_성공() {
+    void createAllById() {
         gameDao.createById("1234");
 
         final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
@@ -70,25 +72,26 @@ public class PieceDaoTest {
         assertThat(pieceDao.findAllByGameId("1234").getPieces().size()).isEqualTo(32);
     }
 
+    @DisplayName("updateAllByGameId 실행시 해당 gameId의 piece들의 정보가 바뀐다.")
     @Test
-    void updateAllByGameId_Piece_업데이트_성공() {
+    void updateAllByGameId() {
         gameDao.createById("1234");
         final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
         final List<Piece> pieces = chessmenInitializer.init().getPieces();
         pieceDao.createAllById(pieces, "1234");
 
-        pieces.remove(pieces.size()-1);
+        pieces.remove(pieces.size() - 1);
         pieces.add(new King(Color.BLACK, Position.of("h2")));
 
         pieceDao.updateAllByGameId(pieces, "1234");
         Pieces move = pieceDao.findAllByGameId("1234");
 
-
         assertThat(move.extractPiece(Position.of("h2")).getName()).isEqualTo("king");
     }
 
+    @DisplayName("updateAllByGameId 실행시 해당 gameId의 piece들이 사라진다.")
     @Test
-    void deleteAllByGameId_Piece_삭제_성공() {
+    void deleteAllByGameId() {
         gameDao.createById("1234");
 
         final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();

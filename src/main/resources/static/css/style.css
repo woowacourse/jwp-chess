@@ -92,3 +92,8 @@ div {
 .status {
   font-size: 3vmin;
 }
+
+#game-id-form {
+  display: flex;
+  flex-direction: column;
+}

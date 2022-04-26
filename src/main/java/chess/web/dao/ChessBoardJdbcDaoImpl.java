@@ -7,7 +7,6 @@ import chess.web.dto.ChessBoardDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,8 +18,8 @@ public class ChessBoardJdbcDaoImpl implements ChessBoardDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ChessBoardJdbcDaoImpl(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public ChessBoardJdbcDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     private final RowMapper<ChessBoardDto> actorRowMapper = (resultSet, rowNum) -> {

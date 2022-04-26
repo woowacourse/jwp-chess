@@ -2,7 +2,6 @@ package chess.web.dao;
 
 import chess.domain.game.state.Player;
 import chess.domain.piece.property.Color;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,8 +12,8 @@ public class PlayerDaoJdbcImpl implements PlayerDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public PlayerDaoJdbcImpl(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public PlayerDaoJdbcImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override

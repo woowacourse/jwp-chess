@@ -27,7 +27,7 @@ class SpringMemberDaoTest {
                 + "id bigint auto_increment primary key, "
                 + "name varchar(10) not null)");
 
-        memberDao = new DatabaseMemberDao(jdbcTemplate);
+        memberDao = new ChessMemberDao(jdbcTemplate);
     }
 
     @DisplayName("정상적으로 멤버가 등록되는지 확인한다.")

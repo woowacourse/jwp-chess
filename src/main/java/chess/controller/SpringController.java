@@ -32,11 +32,6 @@ public class SpringController {
         return "index";
     }
 
-    // @GetMapping("/start")
-    // public String start(@RequestParam String gameName) throws UnsupportedEncodingException {
-    //     return "redirect:/game/" + UTF8Converter.encode(gameName);
-    // }
-
     @PostMapping("/save")
     public String save(@RequestParam String gameName, @RequestParam String password) {
         chessService.save(gameName, password);

@@ -33,7 +33,7 @@ public class WebChessController {
     }
 
     @GetMapping("/game/{id}")
-    public org.springframework.web.servlet.ModelAndView game(@PathVariable("id") int id) {
+    public ModelAndView game(@PathVariable("id") int id) {
         Board board = chessService.findBoardByGameId(id);
 
         Map<String, Object> map = Converter.toMap(id, board);
@@ -50,16 +50,6 @@ public class WebChessController {
         int gameId = chessService.findGameIdByUserName(whiteUserName, blackUserName);
         return "redirect:/game/" + gameId;
     }
-
-//    @PostMapping("/game/{gameId}/move")
-//    public String move(
-//            @PathVariable("gameId") int gameId,
-//            @RequestParam("from") String from,
-//            @RequestParam("to") String to
-//    ) {
-//        chessService.move(gameId, from, to);
-//        return "redirect:/game/" + gameId;
-//    }
 
     @PostMapping("/game/{gameId}/move")
     @ResponseBody
@@ -81,7 +71,7 @@ public class WebChessController {
     }
 
     @GetMapping("/game/{gameId}/status")
-    public org.springframework.web.servlet.ModelAndView status(@PathVariable("gameId") int gameId) {
+    public ModelAndView status(@PathVariable("gameId") int gameId) {
         StatusCalculator status = chessService.createStatus(gameId);
         Board board = chessService.findBoardByGameId(gameId);
 

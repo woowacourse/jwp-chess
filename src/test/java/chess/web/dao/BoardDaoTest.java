@@ -74,11 +74,4 @@ class BoardDaoTest {
         boardDao.deleteById(saveId);
 
     }
-
-    @Test
-    @DisplayName("현재 board판만 있고 piece들은 없으므로 size가 0이어야 한다.")
-    void findById() {
-        Board board = boardDao.findById(boardId).get();
-        assertThat(board.getPieces().getPieces().size()).isEqualTo(0);
-    }
 }

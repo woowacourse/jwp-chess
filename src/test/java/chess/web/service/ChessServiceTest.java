@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.board.Board;
+import chess.board.Turn;
 import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
 import chess.web.dao.BoardDao;
+import chess.web.dao.PieceDao;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +18,8 @@ import org.junit.jupiter.api.Test;
 class ChessServiceTest {
 
     private final BoardDao boardDao = new MockBoardDao();
-    private final ChessService chessService = new ChessService(boardDao, new MockPieceDao());
+    private final PieceDao pieceDao = new MockPieceDao();
+    private final ChessService chessService = new ChessService(boardDao, pieceDao);
     private final Long boardId = 1L;
 
 
@@ -30,7 +33,9 @@ class ChessServiceTest {
     @Test
     @DisplayName("초기 보드판에서 from에서 to로 이동하면 처음 from에 있던 piece는 이동 후, to에 있는 piece와 같다.")
     void move() {
-        Board board = boardDao.findById(boardId).get();
+        Pieces pieces = Pieces.from(pieceDao.findAllByBoardId(boardId));
+        Turn turn = boardDao.findTurnById(boardId).get();
+        Board board = Board.create(pieces, turn);
         String from = "a2";
         String to = "a3";
         Piece piece = board.getPieces().findByPosition(Position.from(from));

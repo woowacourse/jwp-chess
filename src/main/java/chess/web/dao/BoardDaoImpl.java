@@ -69,17 +69,6 @@ public class BoardDaoImpl implements BoardDao {
         return keyHolder.getKey().longValue();
     }
 
-    @Override
-    public Optional<Board> findById(Long id) {
-        final String query = "SELECT * " +
-                "FROM board as b " +
-                "JOIN piece as p ON b.id = p.board_id " +
-                "WHERE b.id = ?";
-        List<Board> boards = jdbcTemplate.query(query, boardRowMapper, id);
-        Board board = getBoard(boards);
-        return Optional.of(board);
-    }
-
     private Board getBoard(List<Board> boards) {
         if (boards.isEmpty()) {
             return Board.create(Pieces.from(new ArrayList<>()), Turn.init());

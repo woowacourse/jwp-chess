@@ -4,12 +4,17 @@ import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.ExceptionResponseDto;
 import chess.dto.MoveDto;
+import chess.dto.RoomCreationDto;
+import chess.dto.RoomIdDto;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,6 +24,13 @@ public class ChessApiController {
 
     public ChessApiController(ChessService chessService) {
         this.chessService = chessService;
+    }
+
+    @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RoomIdDto create(@RequestBody RoomCreationDto creationDto) {
+        long roomId = chessService.createRoom(creationDto);
+        return new RoomIdDto(roomId);
     }
 
     @GetMapping("/start")
@@ -42,7 +54,8 @@ public class ChessApiController {
         return chessService.status(name);
     }
 
-    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})
+    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class,
+            DataIntegrityViolationException.class})
     public ResponseEntity<ExceptionResponseDto> handle(RuntimeException exception) {
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponseDto(exception.getMessage()));

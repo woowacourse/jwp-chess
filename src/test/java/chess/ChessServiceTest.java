@@ -8,6 +8,7 @@ import chess.dao.SquareDao;
 import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
+import chess.dto.RoomCreationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,13 +21,13 @@ public class ChessServiceTest {
     @BeforeEach
     void setUp() {
         chessService = new ChessService(roomDao, squareDao);
-        chessService.createRoom("roma");
+        chessService.createRoom(new RoomCreationDto("roma", ""));
     }
 
     @Test
     void createRoom() {
-        boolean actual = chessService.createRoom("sojukang");
-        assertThat(actual).isTrue();
+        long actual = chessService.createRoom(new RoomCreationDto("sojukang", ""));
+        assertThat(actual).isEqualTo(2);
     }
 
     @Test
@@ -42,10 +43,8 @@ public class ChessServiceTest {
 
         BoardDto boardDto = chessService.load("roma");
 
-        assertAll(
-                () -> assertThat(boardDto.getTurn()).isEqualTo("white"),
-                () -> assertThat(boardDto.getBoard()).hasSize(64)
-        );
+        assertAll(() -> assertThat(boardDto.getTurn()).isEqualTo("white"),
+                () -> assertThat(boardDto.getBoard()).hasSize(64));
     }
 
     @Test
@@ -53,11 +52,9 @@ public class ChessServiceTest {
         chessService.startNewGame("roma");
         BoardDto actual = chessService.move("roma", new MoveDto("a2", "a4"));
 
-        assertAll(
-                () -> assertThat(actual.getTurn()).isEqualTo("black"),
+        assertAll(() -> assertThat(actual.getTurn()).isEqualTo("black"),
                 () -> assertThat(actual.getBoard()).containsEntry("a2", "empty"),
-                () -> assertThat(actual.getBoard()).containsEntry("a4", "white_pawn")
-        );
+                () -> assertThat(actual.getBoard()).containsEntry("a4", "white_pawn"));
     }
 
     @Test
@@ -65,9 +62,7 @@ public class ChessServiceTest {
         chessService.startNewGame("roma");
         Status actual = chessService.status("roma");
 
-        assertAll(
-                () -> assertThat(actual.getWhiteScore()).isEqualTo(38.0),
-                () -> assertThat(actual.getBlackScore()).isEqualTo(38.0)
-        );
+        assertAll(() -> assertThat(actual.getWhiteScore()).isEqualTo(38.0),
+                () -> assertThat(actual.getBlackScore()).isEqualTo(38.0));
     }
 }

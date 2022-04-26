@@ -11,6 +11,9 @@
     <div class="container">
         <div class="chess-button-container">
             <div id="turn-status">방에 입장해주세요.</div>
+            <button id="creation-button" class="chess-btn" onclick="create()">방 생성</button>
+        </div>
+        <div class="chess-button-container">
             <form action="/room">
                 <input type="text" id="roomName" name="name">
                 <input type="submit" class="chess-btn" value="방 입장"></input>
@@ -18,5 +21,6 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="/roby.js"></script>
 </body>
 </html>

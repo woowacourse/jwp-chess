@@ -32,9 +32,9 @@ class RoomDaoTest {
     @Test
     @DisplayName("Room을 새로 생성한다.")
     void save() {
-        Room room = new Room("hi");
-        roomDao.save(room);
-        assertThat(roomDao.findByName("hi").get().getName()).isEqualTo("hi");
+        Room room = new Room("hi", "");
+        long savedId = roomDao.save(room);
+        assertThat(savedId).isEqualTo(2);
     }
 
     @Test

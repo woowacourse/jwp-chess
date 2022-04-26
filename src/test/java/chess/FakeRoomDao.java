@@ -16,15 +16,22 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public void save(Room room) {
-        rooms.add(new Room(id++, room.getTurn(), room.getName(), room.getPassword()));
+    public long save(Room room) {
+        rooms.add(new Room(id, room.getTurn(), room.getName(), room.getPassword()));
+        return id++;
     }
 
     @Override
     public Optional<Room> findByName(String name) {
-
         return rooms.stream()
                 .filter(room -> room.getName().equals(name))
+                .findAny();
+    }
+
+    @Override
+    public Optional<Room> findById(long id) {
+        return rooms.stream()
+                .filter(room -> room.getId() == id)
                 .findAny();
     }
 

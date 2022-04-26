@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import chess.dao.JdbcFixture;
 import chess.dto.MoveDto;
+import chess.dto.RoomCreationDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,19 @@ class ChessApiControllerTest {
         JdbcFixture.createRoomTable(jdbcTemplate);
         JdbcFixture.createSquareTable(jdbcTemplate);
         JdbcFixture.insertRoom(jdbcTemplate, "roma", "1234", "white");
+    }
+
+    @Test
+    void create() {
+        RoomCreationDto roomCreationDto = new RoomCreationDto("test", "1234");
+        RestAssured.given().log().all()
+                .body(roomCreationDto)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/create")
+                .then().log().all()
+                .statusCode(HttpStatus.CREATED.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("id", is(2));
     }
 
     @Test

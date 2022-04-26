@@ -9,6 +9,7 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
+import chess.dto.RoomCreationDto;
 import chess.entity.Room;
 import chess.entity.Square;
 import chess.utils.PieceFactory;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +28,7 @@ public class ChessService {
     private static final String NO_ROOM_MESSAGE = "해당 ID와 일치하는 Room이 존재하지 않습니다.";
     private static final String NO_SQUARE_MESSAGE = "해당 방, 위치에 존재하는 Square가 없습니다.";
     private static final String NO_SQUARES_MESSAGE = "해당 ID에 체스게임이 초기화되지 않았습니다.";
+    private static final String ROOM_NAME_DUP_MESSAGE = "해당 이름의 방이 이미 존재합니다.";
 
     private final RoomDao roomDao;
     private final SquareDao squareDao;
@@ -105,13 +108,8 @@ public class ChessService {
         return webChessGame.status();
     }
 
-    public boolean createRoom(String name) {
-        Optional<Room> room = roomDao.findByName(name);
-        if (room.isEmpty()) {
-            Room newRoom = new Room(name);
-            roomDao.save(newRoom);
-            return true;
-        }
-        return false;
+    public long createRoom(RoomCreationDto roomCreationDto) {
+        Room newRoom = new Room(roomCreationDto.getName(), roomCreationDto.getPassword());
+        return roomDao.save(newRoom);
     }
 }

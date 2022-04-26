@@ -145,7 +145,6 @@ async function move(fromPosition, toPosition) {
     })
 
     if (!response.ok) {
-        response.const
         errorMessage = await response.json();
         alert("[ERROR] " + errorMessage.message);
         return;

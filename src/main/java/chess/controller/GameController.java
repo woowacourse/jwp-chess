@@ -4,7 +4,6 @@ import chess.domain.auth.EncryptedAuthCredentials;
 import chess.domain.board.piece.Color;
 import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
-import chess.dto.response.CreatedGameDto;
 import chess.dto.response.SearchResultDto;
 import chess.service.ChessService;
 import chess.util.CookieUtils;
@@ -44,12 +43,11 @@ public class GameController {
     }
 
     @PostMapping
-    public CreatedGameDto createGame(EncryptedAuthCredentials authCredentials,
-                                     HttpServletResponse response) {
-        CreatedGameDto gameDto = chessService.initGame(authCredentials);
-        int newGameId = gameDto.getId();
+    public int createGame(EncryptedAuthCredentials authCredentials,
+                          HttpServletResponse response) {
+        int newGameId = chessService.initGame(authCredentials);
         response.addCookie(CookieUtils.generate(newGameId, Color.WHITE));
-        return gameDto;
+        return newGameId;
     }
 
     @GetMapping("/{id}")

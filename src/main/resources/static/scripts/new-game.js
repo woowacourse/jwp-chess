@@ -16,7 +16,7 @@ const initGameAndGetId = async (e, form) => {
     if (!response.ok) {
         return alert(await response.text());
     }
-    const {id} = await response.json();
+    const id = await response.text();
     window.location.replace(`/game/${id}`);
 }
 

@@ -7,7 +7,6 @@ import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
-import chess.dto.response.CreatedGameDto;
 import chess.dto.response.SearchResultDto;
 import chess.dto.view.FullGameDto;
 import chess.dto.view.GameCountDto;
@@ -65,10 +64,10 @@ public class ChessService {
     }
 
     @Transactional
-    public CreatedGameDto initGame(EncryptedAuthCredentials authCredentials) {
+    public int initGame(EncryptedAuthCredentials authCredentials) {
         int gameId = gameDao.saveAndGetGeneratedId(authCredentials);
         eventDao.save(gameId, new InitEvent());
-        return new CreatedGameDto(gameId);
+        return gameId;
     }
 
     @Transactional

@@ -8,7 +8,6 @@ import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
-import chess.dto.response.CreatedGameDto;
 import chess.dto.response.SearchResultDto;
 import chess.dto.view.FullGameDto;
 import chess.dto.view.GameCountDto;
@@ -65,8 +64,8 @@ class ChessServiceTest {
     @Test
     void initGame_메서드는_새로운_게임을_DB에_저장하고_생성된_게임ID가_담긴_데이터를_반환한다() {
         EncryptedAuthCredentials authCredentials = new EncryptedAuthCredentials("유효한_게임명", "비밀번호");
-        CreatedGameDto actual = service.initGame(authCredentials);
-        CreatedGameDto expected = new CreatedGameDto(4);
+        int actual = service.initGame(authCredentials);
+        int expected = 4;
 
         assertThat(actual).isEqualTo(expected);
     }

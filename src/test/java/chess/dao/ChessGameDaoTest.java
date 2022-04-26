@@ -23,7 +23,7 @@ class ChessGameDaoTest {
     private PieceDao pieceDao;
 
     @AfterEach
-    private void rollback() {
+    void rollback() {
         chessGameDao.remove("test");
     }
 

@@ -42,7 +42,7 @@ class ChessGameRoomControllerTest {
     @DisplayName("체스 게임 삭제")
     void deleteChessGameRoom() {
         String password = "password";
-        long chessGameId = chessGameDao.createChessGame(new ChessGameRoom("title", password));
+        long chessGameId = chessGameDao.createChessGame(ChessGameRoom.createNewChessGameRoom("title", password));
 
         RestAssured.given().log().all()
                 .body(new ChessGameRoomDeleteRequest(password))

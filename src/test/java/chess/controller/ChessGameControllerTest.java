@@ -38,7 +38,7 @@ class ChessGameControllerTest {
     }
 
     private long createNewChessGame() {
-        return chessGameDao.createChessGame(new ChessGameRoom("title", "password"));
+        return chessGameDao.createChessGame(ChessGameRoom.createNewChessGameRoom("title", "password"));
     }
 
     @Test

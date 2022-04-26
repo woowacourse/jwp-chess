@@ -31,7 +31,7 @@ class PieceDaoTest {
     @BeforeEach
     void setUp() {
         pieceDao = new PieceDao(jdbcTemplate);
-        chessGameRoom = new ChessGameRoom("title", "password");
+        chessGameRoom = ChessGameRoom.createNewChessGameRoom("title", "password");
         chessGameId = new ChessGameDao(jdbcTemplate).createChessGame(chessGameRoom);
     }
 

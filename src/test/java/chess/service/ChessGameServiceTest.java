@@ -37,7 +37,7 @@ class ChessGameServiceTest {
         chessGameDao = new ChessGameDao(jdbcTemplate);
         pieceDao = new PieceDao(jdbcTemplate);
         chessGameService = new ChessGameService(pieceDao, chessGameDao);
-        chessGameRoom = new ChessGameRoom("title", "password");
+        chessGameRoom = ChessGameRoom.createNewChessGameRoom("title", "password");
     }
 
     @Test

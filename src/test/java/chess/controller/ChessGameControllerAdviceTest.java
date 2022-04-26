@@ -23,7 +23,6 @@ class ChessGameControllerAdviceTest {
     private ChessGameDao chessGameDao;
 
     private long chessGameId;
-    private long chessGameTitleTag = 1L;
 
     @LocalServerPort
     private int port;
@@ -31,7 +30,7 @@ class ChessGameControllerAdviceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        chessGameId = chessGameDao.createChessGame(new ChessGameRoom("title" + chessGameTitleTag++, "password"));
+        chessGameId = chessGameDao.createChessGame(ChessGameRoom.createNewChessGameRoom("title" , "password"));
     }
 
     @Test

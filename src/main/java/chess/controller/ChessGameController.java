@@ -32,7 +32,7 @@ public class ChessGameController {
 
     @PostMapping
     public ResponseEntity<Long> createNewGame(@RequestBody ChessGameRoomCreateRequest request) {
-        long chessGameId = chessGameService.createNewChessGame(request.toChessGameRoom());
+        long chessGameId = chessGameService.createNewChessGame(request.toNewChessGameRoom());
         return ResponseEntity.created(URI.create("/chessgames/" + chessGameId)).build();
     }
 

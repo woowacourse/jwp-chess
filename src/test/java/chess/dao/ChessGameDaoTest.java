@@ -25,7 +25,7 @@ class ChessGameDaoTest {
     @BeforeEach
     void setup() {
         chessGameDao = new ChessGameDao(jdbcTemplate);
-        chessGameRoom = new ChessGameRoom("title", "password");
+        chessGameRoom = ChessGameRoom.createNewChessGameRoom("title", "password");
     }
 
     @Test

@@ -21,12 +21,13 @@ public class ChessGameDao {
     }
 
     public long createChessGame(ChessGameRoom chessGameRoom) {
-        String sql = "insert into chess_game (title, password) values (?, ?)";
+        String sql = "insert into chess_game (title, password, turn) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
                     PreparedStatement statement = con.prepareStatement(sql, new String[]{"id"});
                     statement.setString(1, chessGameRoom.getTitle());
                     statement.setString(2, chessGameRoom.getPassword());
+                    statement.setString(3, chessGameRoom.getTurn().name());
                     return statement;
                 },
                 keyHolder);
@@ -34,14 +35,15 @@ public class ChessGameDao {
     }
 
     public List<ChessGameRoom> findAllChessGames() {
-        String sql = "select id, title, password from chess_game";
+        String sql = "select id, title, password, turn from chess_game";
         return jdbcTemplate.query(sql, chessGameRoomRowMapper);
     }
 
     private RowMapper<ChessGameRoom> chessGameRoomRowMapper = (resultSet, rowNum) -> new ChessGameRoom(
             resultSet.getLong("id"),
             resultSet.getString("title"),
-            resultSet.getString("password"));
+            resultSet.getString("password"),
+            Turn.valueOf(resultSet.getString("turn")));
 
     public Turn findChessGameTurn(long id) {
         String sql = "select turn from chess_game where id = ?";
@@ -50,7 +52,7 @@ public class ChessGameDao {
     }
 
     public ChessGameRoom findChessGameRoom(long id) {
-        String sql = "select id, title, password from chess_game where id = ?";
+        String sql = "select id, title, password, turn from chess_game where id = ?";
 
         return jdbcTemplate.queryForObject(sql, chessGameRoomRowMapper, id);
     }

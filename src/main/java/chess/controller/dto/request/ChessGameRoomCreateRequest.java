@@ -15,8 +15,8 @@ public class ChessGameRoomCreateRequest {
         this.password = password;
     }
 
-    public ChessGameRoom toChessGameRoom() {
-        return new ChessGameRoom(title, password);
+    public ChessGameRoom toNewChessGameRoom() {
+        return ChessGameRoom.createNewChessGameRoom(title, password);
     }
 
     public String getTitle() {

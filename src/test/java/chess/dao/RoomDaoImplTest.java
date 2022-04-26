@@ -26,15 +26,13 @@ class RoomDaoImplTest {
     @BeforeEach
     void setUp() {
         roomDao = new RoomDaoImpl(jdbcTemplate);
+        roomDao.saveNewRoom("first", "1234");
     }
 
     @ParameterizedTest
     @DisplayName("중복되는 체스방 이름이 있는지 반환한다.")
     @CsvSource({"first, true", "second, false"})
     void hasDuplicatedName(final String roomName, final boolean expected) {
-        //given
-        roomDao.saveNewRoom("first", "1234");
-
         //actual
         final boolean actual = roomDao.hasDuplicatedName(roomName);
 
@@ -48,7 +46,6 @@ class RoomDaoImplTest {
         //given
         final String roomName = "first";
         final String password = "1234";
-        roomDao.saveNewRoom(roomName, password);
 
         //when
         final String actual = roomDao.getPasswordByName(roomName);
@@ -63,7 +60,6 @@ class RoomDaoImplTest {
         //given
         final String roomName = "first";
         final String password = "1234";
-        roomDao.saveNewRoom(roomName, password);
         final String expected = "playing";
 
         //when
@@ -77,8 +73,6 @@ class RoomDaoImplTest {
     void deleteRoomByName() {
         //given
         final String roomName = "first";
-        final String password = "1234";
-        roomDao.saveNewRoom(roomName, password);
         roomDao.deleteRoomByName(roomName);
         //when then
         assertThatThrownBy(() -> roomDao.getGameStateByName(roomName))

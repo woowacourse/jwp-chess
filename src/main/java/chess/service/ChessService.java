@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.domain.piece.Color;
+import chess.dto.GameRoomDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.MoveResultDto;
 import chess.dto.NewGameRequest;
@@ -19,4 +20,6 @@ public interface ChessService {
     Map<Color, Double> getScore(String gameId);
 
     NewGameResponse createNewGame(NewGameRequest newGameRequest);
+
+    List<GameRoomDto> findGamesOnPlay();
 }

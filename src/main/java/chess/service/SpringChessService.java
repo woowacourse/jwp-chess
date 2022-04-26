@@ -6,6 +6,7 @@ import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
 import chess.domain.piece.Color;
 import chess.domain.piece.MoveResult;
+import chess.dto.GameRoomDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.MoveResultDto;
 import chess.dto.NewGameRequest;
@@ -70,5 +71,10 @@ public class SpringChessService implements ChessService {
     @Override
     public NewGameResponse createNewGame(NewGameRequest newGameRequest) {
         return new NewGameResponse(chessDao.createNewGame(newGameRequest));
+    }
+
+    @Override
+    public List<GameRoomDto> findGamesOnPlay() {
+        return chessDao.findGamesOnPlay();
     }
 }

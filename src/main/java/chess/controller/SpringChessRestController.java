@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.domain.piece.Color;
 import chess.dto.ExceptionDto;
+import chess.dto.GameRoomDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.MoveResultDto;
 import chess.dto.NewGameRequest;
@@ -36,6 +37,11 @@ public class SpringChessRestController {
     @PostMapping("/board")
     public ResponseEntity<NewGameResponse> createBoard(@RequestBody NewGameRequest newGameRequest) {
         return new ResponseEntity<>(chessService.createNewGame(newGameRequest), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/games")
+    public ResponseEntity<List<GameRoomDto>> findGamesOnPlay() {
+        return new ResponseEntity<>(chessService.findGamesOnPlay(), HttpStatus.FOUND);
     }
 
     @PostMapping("/move")

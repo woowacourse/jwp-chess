@@ -1,9 +1,12 @@
 package chess.dao;
 
+import chess.dto.GameRoomDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.NewGameRequest;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -108,5 +111,24 @@ public class JDBCTemplateChessDao implements ChessDao {
     private int findRoomIdByRoomName(String roomName) {
         final String sql = "select id from game where room_name = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, roomName);
+    }
+
+    @Override
+    public List<GameRoomDto> findGamesOnPlay() {
+        final String sql = "select id, room_name, white_name, black_name from game where deleted = 0 and winner = ''";
+        return jdbcTemplate.query(sql, gameRoomDtoMapper());
+    }
+
+    private ResultSetExtractor<List<GameRoomDto>> gameRoomDtoMapper() {
+        return (ResultSet resultSet) -> {
+            List<GameRoomDto> gameRoomDtos = new ArrayList<>();
+            while (resultSet.next()) {
+                gameRoomDtos.add(new GameRoomDto(resultSet.getInt("id"),
+                        resultSet.getString("room_name"),
+                        resultSet.getString("white_name"),
+                        resultSet.getString("black_name")));
+            }
+            return gameRoomDtos;
+        };
     }
 }

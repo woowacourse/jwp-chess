@@ -1,7 +1,9 @@
 package chess.dao;
 
+import chess.dto.GameRoomDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.NewGameRequest;
+import java.util.List;
 import java.util.Map;
 
 public interface ChessDao {
@@ -12,4 +14,6 @@ public interface ChessDao {
     String getTurnByGameId(String gameId);
 
     int createNewGame(NewGameRequest newGameRequest);
+
+    List<GameRoomDto> findGamesOnPlay();
 }

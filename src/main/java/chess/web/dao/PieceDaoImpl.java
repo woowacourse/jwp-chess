@@ -2,6 +2,7 @@ package chess.web.dao;
 
 import chess.board.piece.Piece;
 import chess.board.piece.PieceFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -55,6 +56,10 @@ public class PieceDaoImpl implements PieceDao {
     @Override
     public void deleteByBoardId(Long boardId) {
         final String query = "DELETE FROM piece WHERE board_id = ?";
-        jdbcTemplate.update(query, boardId);
+        try {
+            jdbcTemplate.update(query, boardId);
+        } catch (DataAccessException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

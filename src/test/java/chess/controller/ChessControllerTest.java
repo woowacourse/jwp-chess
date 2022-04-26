@@ -6,19 +6,24 @@ import chess.domain.Score;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Color;
 import chess.domain.chesspiece.King;
+import chess.domain.chesspiece.Knight;
 import chess.domain.chesspiece.Queen;
 import chess.domain.chesspiece.Rook;
 import chess.domain.position.Position;
 import chess.domain.result.EndResult;
+import chess.dto.ChessPieceMapper;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
+import chess.dto.response.ChessPieceDto;
 import chess.dto.response.CurrentTurnDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -109,6 +114,34 @@ class ChessControllerTest {
                 .when().delete("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("모든 기물을 조회한다.")
+    void findPieces() throws JsonProcessingException {
+        // given
+        final int roomId = roomDao.save("test", GameStatus.END, Color.WHITE, "1234");
+
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        pieceByPosition.put(Position.from("a1"), King.from(Color.WHITE));
+        pieceByPosition.put(Position.from("a2"), Queen.from(Color.WHITE));
+        pieceByPosition.put(Position.from("a3"), Knight.from(Color.BLACK));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
+
+        final List<ChessPieceDto> dtoList = pieceByPosition.entrySet()
+                .stream()
+                .map(it -> ChessPieceDto.of(
+                        it.getKey(),
+                        ChessPieceMapper.toPieceType(it.getValue()),
+                        it.getValue().color()))
+                .collect(Collectors.toList());
+
+        // then
+        RestAssured.given().log().all()
+                .when().get("/rooms/" + roomId + "/pieces")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(Is.is(objectMapper.writeValueAsString(dtoList)));
     }
 
     @Test

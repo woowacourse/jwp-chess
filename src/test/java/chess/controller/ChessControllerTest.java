@@ -12,6 +12,7 @@ import chess.domain.position.Position;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
+import chess.dto.response.CurrentTurnDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -158,12 +159,32 @@ class ChessControllerTest {
         pieceByPosition.put(Position.from("a2"), Rook.from(Color.BLACK));
         chessPieceDao.saveAll(roomId, pieceByPosition);
 
-        // then
         final Score score = new Score(pieceByPosition);
+
+        // then
         RestAssured.given().log().all()
                 .when().get("/rooms/" + roomId + "/scores")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(Is.is(objectMapper.writeValueAsString(score)));
+    }
+
+    @Test
+    @DisplayName("현재 턴을 조회한다.")
+    void findTurn() throws JsonProcessingException {
+        // given
+        final String roomName = "test";
+        final Color currentTurn = Color.BLACK;
+
+        final int roomId = roomDao.save(roomName, GameStatus.PLAYING, currentTurn, "1234");
+
+        final CurrentTurnDto response = CurrentTurnDto.of(roomName, currentTurn);
+
+        // then
+        RestAssured.given().log().all()
+                .when().get("/rooms/" + roomId + "/turn")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(Is.is(objectMapper.writeValueAsString(response)));
     }
 }

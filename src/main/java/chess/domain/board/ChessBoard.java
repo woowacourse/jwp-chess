@@ -10,7 +10,6 @@ import chess.domain.piece.EmptySpace;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
 import chess.gameflow.GameFlow;
-import chess.gameflow.state.State;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -132,8 +131,8 @@ public class ChessBoard {
                 }).count();
     }
 
-    public State currentState() {
-        return gameFlow.currentState();
+    public String currentStateName() {
+        return gameFlow.currentStateName();
     }
 
     public Map<Position, Piece> getBoard() {

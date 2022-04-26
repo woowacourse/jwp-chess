@@ -52,7 +52,7 @@ public class ChessApiController {
 
     @GetMapping(value = "/current-team", produces = TEXT_HTML_VALUE)
     public String currentTeam() {
-        return chessBoard.currentState().getName();
+        return chessBoard.currentStateName();
     }
 
     @PatchMapping(value = "/move", produces = APPLICATION_JSON_VALUE)

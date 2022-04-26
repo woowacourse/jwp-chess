@@ -23,8 +23,8 @@ public class FixedGameFlow implements GameFlow {
     }
 
     @Override
-    public State currentState() {
-        return currentState;
+    public String currentStateName() {
+        return currentState.name();
     }
 
     @Override

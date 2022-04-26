@@ -23,7 +23,7 @@ public class Finish implements State {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return "";
     }
 

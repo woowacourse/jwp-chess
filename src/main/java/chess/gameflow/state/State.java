@@ -11,7 +11,7 @@ public interface State {
 
     boolean isRunning();
 
-    String getName();
+    String name();
 
     PieceTeam pieceTeam();
 }

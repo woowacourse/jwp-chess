@@ -2,7 +2,6 @@ package chess.gameflow;
 
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
-import chess.gameflow.state.State;
 
 public interface GameFlow {
 
@@ -12,6 +11,6 @@ public interface GameFlow {
 
     boolean isRunning();
 
-    State currentState();
+    String currentStateName();
     PieceTeam currentPieceTeam();
 }

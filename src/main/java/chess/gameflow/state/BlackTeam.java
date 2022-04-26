@@ -22,7 +22,7 @@ public class BlackTeam extends Running {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return name;
     }
 

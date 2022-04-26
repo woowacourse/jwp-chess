@@ -57,6 +57,24 @@ class RoomDaoTest {
     }
 
     @Test
+    @DisplayName("방 이름이 존재하면 true를 반환한다.")
+    void isExistName() {
+        // given
+        final GameStatus gameStatus = GameStatus.READY;
+        final Color currentTurn = Color.WHITE;
+        final String password = "1q2w3e4r";
+        final String roomName = "hi";
+
+        roomDao.save(roomName, gameStatus, currentTurn, password);
+
+        // when
+        final boolean actual = roomDao.isExistName(roomName);
+
+        // then
+        assertThat(actual).isTrue();
+    }
+
+    @Test
     @DisplayName("모든 방을 조회한다.")
     void findAll() {
         // given

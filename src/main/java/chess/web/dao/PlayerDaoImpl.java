@@ -12,7 +12,6 @@ public class PlayerDaoImpl implements PlayerDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public PlayerDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

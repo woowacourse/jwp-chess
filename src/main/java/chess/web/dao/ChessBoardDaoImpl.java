@@ -18,7 +18,6 @@ public class ChessBoardDaoImpl implements ChessBoardDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public ChessBoardDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

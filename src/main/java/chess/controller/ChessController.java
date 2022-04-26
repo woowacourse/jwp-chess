@@ -1,10 +1,9 @@
 package chess.controller;
 
-import chess.dto.ResponseDto;
 import chess.dto.ScoreDto;
 import chess.model.room.Room;
 import chess.service.ChessService;
-import org.eclipse.jetty.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,19 +43,15 @@ public class ChessController {
 
     @PatchMapping("/room/{roomId}/move")
     @ResponseBody
-    public String move(@RequestBody MoveRequest moveRequest, @PathVariable int roomId) {
-        try {
-            chessService.move(moveRequest.getSource(), moveRequest.getTarget(), roomId);
-        } catch (IllegalArgumentException e) {
-            return ResponseDto.of(HttpStatus.BAD_REQUEST_400, e.getMessage(), chessService.isEnd(roomId)).toString();
-        }
-        return ResponseDto.of(HttpStatus.OK_200, null, chessService.isEnd(roomId)).toString();
+    public ResponseEntity<Boolean> move(@RequestBody MoveRequest moveRequest, @PathVariable int roomId) {
+        chessService.move(moveRequest.getSource(), moveRequest.getTarget(), roomId);
+        return ResponseEntity.ok().body(chessService.isEnd(roomId));
     }
 
     @GetMapping("/room/{roomId}/status")
     @ResponseBody
-    public String status(@PathVariable int roomId) {
-        return ScoreDto.from(chessService.status(roomId)).toString();
+    public ResponseEntity<ScoreDto> status(@PathVariable int roomId) {
+        return ResponseEntity.ok().body(ScoreDto.from(chessService.status(roomId)));
     }
 
     @PostMapping("/room/{roomId}/end")

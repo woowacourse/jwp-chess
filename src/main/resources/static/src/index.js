@@ -36,14 +36,15 @@ function checkStatus() {
         headers: {
             "Content-Type": "text/plain",
         }
-    }).then((response) => {
-        response.json().then(data => {
+    }).then((response) => response.json())
+        .then(data => {
+            console.log(data);
+            console.log(JSON.stringify(data));
             document.getElementById("statusResult")
-                .innerHTML = "검은말 : " + data.BLACK + "<br >"
-                + "흰말 : " + data.WHITE + "<br >"
+                .innerHTML = "검은말 : " + data.score.BLACK + "<br >"
+                + "흰말 : " + data.score.WHITE + "<br >"
                 + "우승자 : " + data.winner;
         });
-    });
 }
 
 function sendToServer(first, second) {
@@ -57,18 +58,19 @@ function sendToServer(first, second) {
         },
         body: JSON.stringify(moveCommand)
     }).then((response) => {
-            response.json().then(data => {
-                if (data.status === 400) {
-                    alert(data.errorMessage);
-                }
-                if (data.finished === true) {
-                    alert("게임이 종료되었습니다.");
-                    document.location.href = '/'
-                    return;
-                }
-                location.reload();
-            });
+        if (response.status === 400) {
+            response.text().then(data => {
+                alert(data);
+            })
+            location.reload();
+            return;
         }
-    );
+        response.text().then(data => {
+            if (data === 'true') {
+                alert("게임이 종료되었습니다.");
+                document.location.href = '/'
+            }
+            location.reload();
+        });
+    })
 }
-

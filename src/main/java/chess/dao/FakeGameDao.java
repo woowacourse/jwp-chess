@@ -17,12 +17,16 @@ public class FakeGameDao implements GameDao {
 
     @Override
     public int findGameIdByUserName(String whiteUserName, String blackUserName) {
-        for (Entry<Integer, GameDto> entry : map.entrySet()) {
-            if (entry.getValue().getWhiteUserName() == whiteUserName && entry.getValue().getBlackUserName() == blackUserName) {
-                return entry.getKey();
-            }
-        }
-        return 0;
+        return map.entrySet().stream()
+                .filter(entry -> isMatchingWithUserName(whiteUserName, blackUserName, entry))
+                .findFirst()
+                .map(entry -> entry.getKey())
+                .orElse(0);
+    }
+
+    private boolean isMatchingWithUserName(String whiteUserName, String blackUserName, Entry<Integer, GameDto> entry) {
+        return entry.getValue().getWhiteUserName() == whiteUserName
+                && entry.getValue().getBlackUserName() == blackUserName;
     }
 
     @Override

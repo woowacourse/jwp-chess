@@ -5,6 +5,7 @@ import chess.domain.game.ChessBoard;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.position.Position;
+import chess.dto.GameStatusDto;
 import chess.dto.RequestDto;
 import chess.dto.ResponseDto;
 import chess.dto.StatusDto;
@@ -15,14 +16,19 @@ import java.util.List;
 import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @SpringBootApplication
 @Controller
@@ -34,6 +40,11 @@ public class SpringChessApplication {
     private static final int TARGET_INDEX = 2;
 
     private final GameService gameService;
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleEmailDuplicateException(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 
     public SpringChessApplication(GameService gameService) {
         this.gameService = gameService;
@@ -67,21 +78,15 @@ public class SpringChessApplication {
 
     @ResponseBody
     @PostMapping("/room/{roomId}/move")
-    public ResponseDto movePiece(@PathVariable("roomId") int id, @RequestBody String body) {
+    public ResponseEntity<GameStatusDto> movePiece(@PathVariable("roomId") int id, @RequestBody String body) {
+        if (gameService.isEnd(id)) {
+            throw new IllegalArgumentException("게임이 이미 끝났다.");
+        }
         final String[] split = body.split("=");
         if (Command.isMove(split[1])) {
-            return getResponseDto(id, split[1]);
+            move(id, Arrays.asList(split[1].split(MOVE_DELIMITER)));
         }
-        return new ResponseDto(HttpStatus.BAD_REQUEST_400, "잘못된 명령어 입니다.", gameService.isEnd(id));
-    }
-
-    private ResponseDto getResponseDto(int roomId, String command) {
-        try {
-            move(roomId, Arrays.asList(command.split(MOVE_DELIMITER)));
-        } catch (IllegalArgumentException e) {
-            return new ResponseDto(HttpStatus.BAD_REQUEST_400, e.getMessage(), gameService.isEnd(roomId));
-        }
-        return new ResponseDto(HttpStatus.OK_200, "", gameService.isEnd(roomId));
+        return ResponseEntity.ok(new GameStatusDto(gameService.isEnd(id)));
     }
 
     private void move(int roomId, final List<String> commands) {
@@ -91,9 +96,9 @@ public class SpringChessApplication {
     }
 
     @PostMapping("/room/{roomId}/end")
-    public String endGame(@PathVariable("roomId") int id, Model model) {
+    public String endGame(@PathVariable("roomId") int id, @RequestParam("password") String password, Model model) {
         model.addAttribute("result", gameService.status(id));
-        gameService.end(id);
+        gameService.end(id, password);
         return "result";
     }
 

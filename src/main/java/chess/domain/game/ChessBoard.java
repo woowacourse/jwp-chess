@@ -20,10 +20,13 @@ public final class ChessBoard {
         this.turn = turn;
         this.members = members;
         this.password = password;
+        validate(password);
     }
 
-    public ChessBoard(Integer roomId, String roomTitle, Color turn) {
-        this(roomId, roomTitle, turn, new ArrayList<>(), null);
+    private void validate(String password) {
+        if(password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("비밀번호가 필요합니다.");
+        }
     }
 
     public ChessBoard(Integer roomId, String roomTitle, Color turn, String password) {
@@ -32,10 +35,6 @@ public final class ChessBoard {
 
     public ChessBoard(String roomTitle, Color turn, List<Member> members, String password) {
         this(null, roomTitle, turn, members, password);
-    }
-
-    public ChessBoard(String roomTitle, Color turn, List<Member> members) {
-        this(null, roomTitle, turn, members, null);
     }
 
     public ChessBoard(String roomTitle, Color turn, String password) {

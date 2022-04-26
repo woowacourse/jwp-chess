@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.dao.RoomDao;
+import chess.dao.RoomDaoImpl;
 import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.request.RoomCreationRequestDto;
@@ -31,7 +32,7 @@ class RoomServiceTest {
 
     @BeforeEach
     void setUp() {
-        roomDao = new RoomDao(jdbcTemplate);
+        roomDao = new RoomDaoImpl(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE IF EXISTS room");
         jdbcTemplate.execute(""

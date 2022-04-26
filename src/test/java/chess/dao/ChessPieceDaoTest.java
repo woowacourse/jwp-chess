@@ -32,7 +32,7 @@ class ChessPieceDaoTest {
 
     @BeforeEach
     void setUp() {
-        roomDao = new RoomDao(jdbcTemplate);
+        roomDao = new RoomDaoImpl(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS room");
         jdbcTemplate.execute(""
                 + "CREATE TABLE room"

@@ -38,9 +38,20 @@ public class Controller {
 
     @PostMapping("/create-game-room")
     public RedirectView createGameRoom(final @RequestParam String name, final @RequestParam String password) {
+        validateInputString(name);
+        validateInputString(password);
         String gameRoomId = String.valueOf(name.hashCode());
         service.createGameRoom(gameRoomId, name, password);
         return new RedirectView("/game/" + gameRoomId);
+    }
+
+    private void validateInputString(final String input) {
+        if (input.replace(" ", "").length() != input.length()) {
+            throw new IllegalArgumentException("[ERROR] 공백이 포함될 수 없습니다");
+        }
+        if (input.trim().isEmpty()) {
+            throw new IllegalArgumentException("[ERROR] 입력값이 비어있습니다.");
+        }
     }
 
     @GetMapping("/game/{gameRoomId}")
@@ -75,6 +86,7 @@ public class Controller {
 
     @PostMapping("/delete/{gameRoomId}")
     public RedirectView deleteGameRoom(final @PathVariable String gameRoomId, final @RequestParam String password) {
+        validateInputString(password);
         service.deleteGameRoom(gameRoomId, password);
         return new RedirectView("/");
     }
@@ -83,6 +95,8 @@ public class Controller {
     public RedirectView movePiece(final @PathVariable String gameRoomId,
                                   final @RequestParam String source,
                                   final @RequestParam String target) {
+        validateInputString(source);
+        validateInputString(target);
         char[] sourcesElements = refineInputPosition(source);
         char[] targetElements = refineInputPosition(target);
         service.movePiece(

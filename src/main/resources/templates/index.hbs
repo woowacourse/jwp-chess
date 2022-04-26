@@ -11,8 +11,8 @@
     <div>
         <p class="info">🕹 새 게임 만들기</p>
         <form action="/create-game-room" method="post">
-            <input type="text" name="name" placeholder="name"/>
-            <input type="text" name="password" placeholder="password"/>
+            <input type="text" name="name" placeholder="name" minlength="1" maxlength="20"/>
+            <input type="text" name="password" placeholder="password" minlength="1" maxlength="20"/>
             <input type="submit" value="생성">
         </form>
     </div>
@@ -21,7 +21,7 @@
         {{#gameRooms}}
         <form action="delete/{{gameRoomId}}" method="post">
             <a class="name" href="/game/{{gameRoomId}}">{{name}}</a>
-            <input type="text" name="password" placeholder="password"/>
+            <input type="text" name="password" placeholder="password" minlength="1" maxlength="20"/>
             <input type="submit" value="삭제">
         </form>
         <br/>

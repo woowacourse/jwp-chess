@@ -7,19 +7,14 @@ import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.ChessPieceDto;
 import chess.dto.response.CurrentTurnDto;
-import chess.dto.response.ErrorResponseDto;
 import chess.dto.response.RoomResponseDto;
-import chess.exception.NotFoundException;
 import chess.service.ChessService;
 import chess.service.RoomService;
 import java.net.URI;
 import java.util.List;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -93,17 +88,5 @@ public class ChessController {
     public ResponseEntity<EndResult> findResult(@PathVariable final int roomId) {
         final EndResult endResult = chessService.result(roomId);
         return ResponseEntity.ok(endResult);
-    }
-
-    @ExceptionHandler({IllegalArgumentException.class, DataAccessException.class,
-            InvalidResultSetAccessException.class})
-    public ResponseEntity<ErrorResponseDto> handle(final Exception e) {
-        return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
-    }
-
-    @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<ErrorResponseDto> handleNotFound(final NotFoundException e) {
-        final ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
-        return new ResponseEntity<>(errorResponseDto, HttpStatus.NOT_FOUND);
     }
 }

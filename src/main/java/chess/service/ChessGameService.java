@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class ChessGameService {
 
-    private ChessboardDao dao;
+    private final ChessboardDao dao;
     private ChessGame chessGame = new ChessGame();
 
     public ChessGameService(ChessboardDao dao) {

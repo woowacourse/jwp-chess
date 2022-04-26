@@ -23,9 +23,8 @@ public class ChessGameController {
     }
 
     @GetMapping("/")
-    public ModelAndView root() {
-        ModelAndView modelAndView = new ModelAndView("start");
-        return modelAndView;
+    public String root() {
+        return "index";
     }
 
     @GetMapping("/start")

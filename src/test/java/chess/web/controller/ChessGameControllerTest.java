@@ -28,7 +28,7 @@ public class ChessGameControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Autowired
     private ObjectMapper objectMapper;
 

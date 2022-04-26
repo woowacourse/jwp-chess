@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @SpringBootTest
 class RoomServiceTest {
@@ -36,7 +37,7 @@ class RoomServiceTest {
                 + "    name         VARCHAR(10) NOT NULL UNIQUE,"
                 + "    game_status  VARCHAR(10) NOT NULL,"
                 + "    current_turn VARCHAR(10) NOT NULL,"
-                + "    password     VARCHAR(10) NOT NULL"
+                + "    password     VARCHAR(255) NOT NULL"
                 + ")");
     }
 
@@ -45,7 +46,8 @@ class RoomServiceTest {
     void deleteRoom_exception_not_end() {
         // given
         final String password = "1q2w3e4r";
-        final int roomId = roomDao.save("hi", GameStatus.PLAYING, Color.WHITE, password);
+        final String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        final int roomId = roomDao.save("hi", GameStatus.PLAYING, Color.WHITE, hashPassword);
 
         // then
         final RoomDeletionRequestDto deletionRequestDto = new RoomDeletionRequestDto();

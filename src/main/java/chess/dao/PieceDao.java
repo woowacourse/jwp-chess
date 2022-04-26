@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface PieceDao {
 
-    void remove(Position position);
+    void removeByPosition(Position position);
 
     void removeAll();
 
-    void saveAll(List<PieceDto> pieceDtos);
-
     void save(PieceDto pieceDto);
+
+    void saveAll(List<PieceDto> pieceDtos);
 
     List<PieceDto> findAll();
 
-    void update(Position source, Position target);
+    void updatePosition(Position position, Position updatedPosition);
 }

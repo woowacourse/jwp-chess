@@ -14,12 +14,12 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public void save(GameDto gameDto) {
+    public void saveGame(GameDto gameDto) {
         this.gameDto = gameDto;
     }
 
     @Override
-    public void update(GameDto gameDto) {
+    public void updateGame(GameDto gameDto) {
         this.gameDto = gameDto;
     }
 
@@ -29,7 +29,7 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public GameDto find() {
+    public GameDto findGame() {
         return gameDto;
     }
 }

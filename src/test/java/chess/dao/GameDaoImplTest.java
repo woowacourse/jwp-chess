@@ -37,7 +37,7 @@ public class GameDaoImplTest {
     @DisplayName("전체 게임 데이터 삭제")
     void removeAll() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.save(gameDto);
+        gameDaoImpl.saveGame(gameDto);
 
         gameDaoImpl.removeAll();
 
@@ -48,7 +48,7 @@ public class GameDaoImplTest {
     @DisplayName("게임 정보 저장")
     void save() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.save(gameDto);
+        gameDaoImpl.saveGame(gameDto);
 
         assertThat(getGameCount()).isEqualTo(1);
     }
@@ -57,14 +57,14 @@ public class GameDaoImplTest {
     @DisplayName("게임 정보 수정")
     void update() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.save(gameDto);
+        gameDaoImpl.saveGame(gameDto);
 
         GameDto updatedGameDto = new GameDto("black", "end");
-        gameDaoImpl.update(updatedGameDto);
+        gameDaoImpl.updateGame(updatedGameDto);
 
         assertAll(
-                () -> assertThat(gameDaoImpl.find().getTurn()).isEqualTo("black"),
-                () -> assertThat(gameDaoImpl.find().getStatus()).isEqualTo("end")
+                () -> assertThat(gameDaoImpl.findGame().getTurn()).isEqualTo("black"),
+                () -> assertThat(gameDaoImpl.findGame().getStatus()).isEqualTo("end")
         );
     }
 
@@ -72,23 +72,23 @@ public class GameDaoImplTest {
     @DisplayName("게임 상태 업데이트")
     void updateStatus() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.save(gameDto);
+        gameDaoImpl.saveGame(gameDto);
 
         GameStatusDto gameStatusDto = GameStatusDto.FINISHED;
         gameDaoImpl.updateStatus(gameStatusDto);
 
-        assertThat(gameDaoImpl.find().getStatus()).isEqualTo(gameStatusDto.getName());
+        assertThat(gameDaoImpl.findGame().getStatus()).isEqualTo(gameStatusDto.getName());
     }
 
     @Test
     @DisplayName("게임 정보 조회")
     void find() {
         GameDto gameDto = new GameDto("white", "playing");
-        gameDaoImpl.save(gameDto);
+        gameDaoImpl.saveGame(gameDto);
 
         assertAll(
-                () -> assertThat(gameDaoImpl.find().getStatus()).isEqualTo("playing"),
-                () -> assertThat(gameDaoImpl.find().getTurn()).isEqualTo("white")
+                () -> assertThat(gameDaoImpl.findGame().getStatus()).isEqualTo("playing"),
+                () -> assertThat(gameDaoImpl.findGame().getTurn()).isEqualTo("white")
         );
     }
 

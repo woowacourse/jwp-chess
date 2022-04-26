@@ -9,16 +9,13 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
-import chess.dto.ChessResponseDto;
-import chess.dto.GameDto;
-import chess.dto.GameStatusDto;
-import chess.dto.PieceDto;
-import chess.dto.ScoresDto;
+import chess.dto.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
@@ -38,7 +35,7 @@ public class ChessService {
             gameDao.removeAll();
 
             pieceDao.saveAll(getInitPieceDtos());
-            gameDao.save(GameDto.from(PieceColor.WHITE, true));
+            gameDao.saveGame(GameDto.from(PieceColor.WHITE, true));
         } catch (Exception e) {
             throw new IllegalArgumentException("게임을 초기화할 수 없습니다.");
         }
@@ -48,7 +45,7 @@ public class ChessService {
     public ChessResponseDto getChess() {
         try {
             List<PieceDto> pieceDtos = pieceDao.findAll();
-            GameDto gameDto = gameDao.find();
+            GameDto gameDto = gameDao.findGame();
             return new ChessResponseDto(pieceDtos, gameDto.getTurn(), gameDto.getStatus());
         } catch (Exception e) {
             throw new IllegalArgumentException("체스 정보를 읽어올 수 없습니다.");
@@ -67,9 +64,9 @@ public class ChessService {
         try {
             ChessGame game = getGame();
             game.proceedWith(moveCommand);
-            pieceDao.remove(moveCommand.to());
-            pieceDao.update(moveCommand.from(), moveCommand.to());
-            gameDao.update(GameDto.from(game.getTurnColor(), game.isRunning()));
+            pieceDao.removeByPosition(moveCommand.to());
+            pieceDao.updatePosition(moveCommand.from(), moveCommand.to());
+            gameDao.updateGame(GameDto.from(game.getTurnColor(), game.isRunning()));
             return getChess();
         } catch (Exception e) {
             throw new IllegalArgumentException("기물을 움직일 수 없습니다.");
@@ -79,7 +76,7 @@ public class ChessService {
     private ChessGame getGame() {
         try {
             List<PieceDto> pieceDtos = pieceDao.findAll();
-            GameDto gameDto = gameDao.find();
+            GameDto gameDto = gameDao.findGame();
             Map<Position, Piece> pieces = pieceDtos.stream()
                     .map(PieceDto::toPieceEntry)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

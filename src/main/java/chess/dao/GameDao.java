@@ -8,11 +8,11 @@ public interface GameDao {
 
     void removeAll();
 
-    void save(GameDto gameDto);
+    void saveGame(GameDto gameDto);
 
-    void update(GameDto gameDto);
+    void updateGame(GameDto gameDto);
 
     void updateStatus(GameStatusDto statusDto);
 
-    GameDto find();
+    GameDto findGame();
 }

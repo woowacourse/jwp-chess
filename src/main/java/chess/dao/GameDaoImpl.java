@@ -24,13 +24,13 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public void save(GameDto gameDto) {
+    public void saveGame(GameDto gameDto) {
         final String sql = "insert into game (turn, status) values (?, ?)";
         jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus());
     }
 
     @Override
-    public void update(GameDto gameDto) {
+    public void updateGame(GameDto gameDto) {
         final String sql = "update game set turn = ?, status = ?";
         jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus());
     }
@@ -42,7 +42,7 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public GameDto find() {
+    public GameDto findGame() {
         final String sql = "select * from game";
         try {
             return jdbcTemplate.queryForObject(

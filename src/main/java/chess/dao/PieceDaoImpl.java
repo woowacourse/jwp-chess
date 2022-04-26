@@ -2,13 +2,14 @@ package chess.dao;
 
 import chess.domain.position.Position;
 import chess.dto.PieceDto;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class PieceDaoImpl implements PieceDao {
@@ -21,7 +22,7 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public void remove(Position position) {
+    public void removeByPosition(Position position) {
         final String sql = "delete from piece where position = ?";
         jdbcTemplate.update(sql, position.getName());
     }
@@ -30,6 +31,12 @@ public class PieceDaoImpl implements PieceDao {
     public void removeAll() {
         final String sql = "delete from piece";
         jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public void save(PieceDto pieceDto) {
+        final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
+        jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor());
     }
 
     @Override
@@ -53,12 +60,6 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public void save(PieceDto pieceDto) {
-        final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
-        jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor());
-    }
-
-    @Override
     public List<PieceDto> findAll() {
         final String sql = "select * from piece";
         return jdbcTemplate.query(
@@ -73,8 +74,8 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public void update(Position source, Position target) {
+    public void updatePosition(Position position, Position updatedPosition) {
         final String sql = "update piece set position = ? where position = ?";
-        jdbcTemplate.update(sql, target.getName(), source.getName());
+        jdbcTemplate.update(sql, updatedPosition.getName(), position.getName());
     }
 }

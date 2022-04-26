@@ -40,7 +40,7 @@ public class PieceDaoImplTest {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
         pieceDao.save(pieceDto);
 
-        pieceDao.remove(Position.of("a2"));
+        pieceDao.removeByPosition(Position.of("a2"));
 
         assertThat(getPieceCount()).isEqualTo(0);
     }
@@ -96,7 +96,7 @@ public class PieceDaoImplTest {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
         pieceDao.save(pieceDto);
 
-        pieceDao.update(Position.of("a2"), Position.of("a3"));
+        pieceDao.updatePosition(Position.of("a2"), Position.of("a3"));
 
         assertThatCode(
                 () -> jdbcTemplate.queryForObject(

@@ -14,7 +14,7 @@ public class ChessmenInitializer {
     private static final Rank BLACK_STRONGMEN_INIT_RANK = Rank.EIGHT;
     private static final Rank WHITE_STRONGMEN_INIT_RANK = Rank.ONE;
 
-    public Pieces init() {
+    public static Pieces init() {
         List<Piece> chessmen = Stream.of(
                 initStrongMen(Color.BLACK, BLACK_STRONGMEN_INIT_RANK),
                 initPawns(Color.BLACK, Pawn.BLACK_INIT_RANK),
@@ -27,7 +27,7 @@ public class ChessmenInitializer {
     }
 
 
-    private List<Piece> initStrongMen(Color color, Rank rank) {
+    private static List<Piece> initStrongMen(Color color, Rank rank) {
         return List.of(
             new Rook(color, Position.from(File.A, rank)),
             new Knight(color, Position.from(File.B, rank)),
@@ -39,7 +39,7 @@ public class ChessmenInitializer {
             new Rook(color, Position.from(File.H, rank)));
     }
 
-    private List<Piece> initPawns(Color color, Rank rank) {
+    private static List<Piece> initPawns(Color color, Rank rank) {
         return Arrays.stream(File.values())
             .map(file -> file.getRawFile() + rank.getRawRank())
             .map(positionKey -> new Pawn(color, Position.of(positionKey)))

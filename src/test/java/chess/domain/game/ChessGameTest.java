@@ -1,4 +1,4 @@
-package chess.domain;
+package chess.domain.game;
 
 import static chess.domain.piece.Color.BLACK;
 import static chess.domain.piece.Color.WHITE;
@@ -6,8 +6,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 import chess.domain.command.MoveCommand;
-import chess.domain.game.ChessGame;
-import chess.domain.game.GameResult;
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Color;
 import chess.domain.piece.King;
@@ -29,8 +27,7 @@ public class ChessGameDaoTest {
 
     @BeforeEach
     void setup_chessGame() {
-        chessmenInitializer = new ChessmenInitializer();
-        chessGame = ChessGame.of(chessmenInitializer.init());
+        chessGame = ChessGame.of(ChessmenInitializer.init());
     }
 
     @DisplayName("체스말이 이동할 수 있는 위치면 이동에 성공한다.")

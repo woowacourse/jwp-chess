@@ -2,25 +2,30 @@ package chess.dao;
 
 import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
+@JdbcTest
 @Sql("classpath:init.sql")
 public class GameDaoImplTest {
 
-    @Autowired
     private GameDaoImpl gameDaoImpl;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        gameDaoImpl = new GameDaoImpl(jdbcTemplate);
+    }
 
     @Test
     @DisplayName("전체 게임 데이터 삭제")

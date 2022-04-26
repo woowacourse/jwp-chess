@@ -177,7 +177,7 @@ class ChessControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(requestDto)
-                .when().put("/rooms/" + roomId + "/pieces")
+                .when().patch("/rooms/" + roomId + "/pieces")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }

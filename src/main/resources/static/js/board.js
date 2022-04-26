@@ -24,7 +24,7 @@ async function move() {
         headers: {
             'Content-Type': 'application/json'
         },
-        method: "PUT",
+        method: "PATCH",
         body: JSON.stringify({from: `${from}`, to: `${to}`})
     });
     const data = await res.json();

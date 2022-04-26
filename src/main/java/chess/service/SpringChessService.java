@@ -77,4 +77,14 @@ public class SpringChessService implements ChessService {
     public List<GameRoomDto> findGamesOnPlay() {
         return chessDao.findGamesOnPlay();
     }
+
+    @Override
+    public GameRoomDto findGameById(int id) {
+        return chessDao.findGameById(id);
+    }
+
+    @Override
+    public int deleteGameById(int id) {
+        return chessDao.deleteGameById(id);
+    }
 }

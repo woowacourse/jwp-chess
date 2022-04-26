@@ -22,4 +22,8 @@ public interface ChessService {
     NewGameResponse createNewGame(NewGameRequest newGameRequest);
 
     List<GameRoomDto> findGamesOnPlay();
+
+    GameRoomDto findGameById(int id);
+
+    int deleteGameById(int id);
 }

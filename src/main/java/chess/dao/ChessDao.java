@@ -16,4 +16,8 @@ public interface ChessDao {
     int createNewGame(NewGameRequest newGameRequest);
 
     List<GameRoomDto> findGamesOnPlay();
+
+    GameRoomDto findGameById(int id);
+
+    int deleteGameById(int id);
 }

@@ -5,6 +5,7 @@
     <link rel="shortcut icon" href="/img/favicon.png"/>
     <link rel="stylesheet" href="/css/button.css">
     <link rel="stylesheet" href="/css/roomCreatePopup.css">
+    <link rel="stylesheet" href="/css/room.css">
     <title>체스</title>
 </head>
 <body>
@@ -28,7 +29,10 @@
 
 <script>
     const roomCreateUrl = `/board`;
+    const gamesUrl = `/games`;
 
+
+    const roomContainer = document.getElementById('roomContainer');
     const roomCreatePopup = document.getElementById('roomCreatePopup');
     const roomCreateButton = document.getElementById('roomCreateButton');
     const roomNameInput = document.getElementById('roomNameInput');
@@ -69,6 +73,34 @@
             .then(json => location.href = `/game/${json.id}`);
     });
 
+
+    fetch(gamesUrl)
+        .then(res => res.json())
+        .then(json => {
+            console.log(json);
+            json.forEach(e => roomContainer.appendChild(createRoomElement(e)));
+        });
+
+    const deleteRoom = (event) => {
+        fetch(`${gamesUrl}/${event.target.dataset.id}`, {
+            'method': 'delete',
+            'content-type': 'application/json; charset=utf-8'
+        }).then(res => location.reload());
+    }
+
+    const createRoomElement = (gameRoomDto) => {
+        return new DOMParser()
+            .parseFromString(
+                `<div class="room">
+                    <button class="button-30 deleteRoomButton" onclick="deleteRoom(event)" data-id="${gameRoomDto.id}">X</button>
+                    <span>No. ${gameRoomDto.id} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>${gameRoomDto.whiteName} vs ${gameRoomDto.blackName}</span>
+                    <h3>${gameRoomDto.roomName}</h3>
+                </div>`
+                , "text/html")
+            .body
+            .firstElementChild;
+    }
 </script>
 </body>
 </html>

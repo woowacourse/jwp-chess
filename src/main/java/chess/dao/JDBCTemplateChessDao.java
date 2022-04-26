@@ -131,4 +131,24 @@ public class JDBCTemplateChessDao implements ChessDao {
             return gameRoomDtos;
         };
     }
+
+    @Override
+    public GameRoomDto findGameById(int id) {
+        final String sql = "select id, room_name, white_name, black_name from game where id = ?";
+        return jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNum) -> {
+                    return new GameRoomDto(resultSet.getInt("id"),
+                            resultSet.getString("room_name"),
+                            resultSet.getString("white_name"),
+                            resultSet.getString("black_name"));
+                },
+                id);
+    }
+
+    @Override
+    public int deleteGameById(int id) {
+        final String sql = "delete from game where id = ?";
+        jdbcTemplate.update(sql, id);
+        return id;
+    }
 }

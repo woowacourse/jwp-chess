@@ -6,6 +6,7 @@ import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,10 +40,10 @@ public class ChessGameController {
         return ResponseEntity.ok(status);
     }
 
-    @GetMapping("/finish")
-    public ResponseEntity<StatusDto> finishGame(@RequestParam("name") String gameName) {
-        final StatusDto status = chessGameService.finishGame(gameName);
-        return ResponseEntity.ok(status);
+    @DeleteMapping("/game")
+    public ResponseEntity<Void> finishGame(@RequestParam("name") String gameName) {
+        chessGameService.finishGame(gameName);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/load")

@@ -57,12 +57,10 @@ public class ChessGameService {
         return StatusDto.of(whitePlayerResult, blackPlayerResult);
     }
 
-    public StatusDto finishGame(final String gameName) {
-        final StatusDto status = findStatus(gameName);
+    public void finishGame(final String gameName) {
         final int gameId = findGameIdByGameName(gameName);
         pieceDao.deletePieces(gameId);
         chessGameDao.deleteChessGame(gameId);
-        return status;
     }
 
     public ChessGameDto loadChessGame(final String gameName) {

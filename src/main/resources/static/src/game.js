@@ -91,8 +91,8 @@ async function finish() {
 }
 
 async function deleteAndFinish() {
-  await fetch("/finish?name=" + gameName, {
-    method: "GET",
+  await fetch("/game?name=" + gameName, {
+    method: "DELETE",
   })
   alert("방이 삭제됐습니다.");
   removeAllPieces();

@@ -1,3 +1,11 @@
+create table room
+(
+    id int auto_increment,
+    name varchar(20) not null,
+    password varchar(20) not null,
+    primary key(id)
+);
+
 create table piece
 (
     position varchar(2) not null,

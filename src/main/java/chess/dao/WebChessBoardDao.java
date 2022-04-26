@@ -30,7 +30,7 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
 
     @Override
     public ChessBoard save(ChessBoard board) {
-        final String sql = "INSERT INTO board (room_title, turn, pw) VALUES (:room_title, :turn, :password)";
+        final String sql = "INSERT INTO board (room_title, turn, password) VALUES (:room_title, :turn, :password)";
 
         List<String> keys = List.of("room_title", "turn", "password");
         List<Object> values = List.of(board.getRoomTitle(), board.getTurn().name(), board.getPassword());
@@ -86,6 +86,6 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
                 resultSet.getString("room_title"),
                 Color.findColor(resultSet.getString("turn")),
                 webChessMemberDao.getAllByBoardId(resultSet.getInt("id")),
-                resultSet.getString("pw"));
+                resultSet.getString("password"));
     }
 }

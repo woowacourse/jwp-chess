@@ -8,7 +8,6 @@ import chess.domain.event.Event;
 import chess.domain.event.EventType;
 import chess.domain.event.MoveRoute;
 import chess.domain.game.statistics.GameResult;
-import chess.domain.game.statistics.GameState;
 
 abstract class Running extends Started {
 

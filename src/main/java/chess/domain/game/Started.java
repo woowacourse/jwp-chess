@@ -1,7 +1,6 @@
 package chess.domain.game;
 
 import chess.domain.board.Board;
-import chess.domain.game.statistics.GameState;
 import chess.dto.view.GameSnapshotDto;
 import chess.dto.view.board.BoardViewDto;
 import java.util.Objects;

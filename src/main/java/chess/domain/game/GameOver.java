@@ -4,7 +4,6 @@ import chess.domain.board.Board;
 import chess.domain.event.Event;
 import chess.domain.event.EventType;
 import chess.domain.game.statistics.GameResult;
-import chess.domain.game.statistics.GameState;
 
 final class GameOver extends Started {
 

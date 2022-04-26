@@ -1,11 +1,11 @@
 package chess.domain;
 
-public class RoomInfo {
+public class Room {
     private final String title;
     private final String password;
     private final Participant participant;
 
-    public RoomInfo(final String title, final String password, final Participant participant) {
+    public Room(final String title, final String password, final Participant participant) {
         this.title = title;
         this.password = password;
         this.participant = participant;

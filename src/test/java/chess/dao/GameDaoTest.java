@@ -7,7 +7,7 @@ import chess.domain.BoardInitializer;
 import chess.domain.ChessGame;
 import chess.domain.Member;
 import chess.domain.Participant;
-import chess.domain.RoomInfo;
+import chess.domain.Room;
 import chess.domain.piece.detail.Team;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ class GameDaoTest {
         final Participant participant = new Participant(memberOne, memberTwo);
         final String title = "테스트 방";
         final String password = "1234";
-        final ChessGame game = new ChessGame(board, Team.WHITE, new RoomInfo(title, password, participant));
+        final ChessGame game = new ChessGame(board, Team.WHITE, new Room(title, password, participant));
 
         dao.save(game);
 
@@ -46,9 +46,9 @@ class GameDaoTest {
         final String title = "테스트 방";
         final String password = "1234";
 
-        games.add(new ChessGame(board, Team.WHITE, new RoomInfo(title, password, participant)));
-        games.add(new ChessGame(board, Team.WHITE, new RoomInfo(title, password, participant)));
-        games.add(new ChessGame(board, Team.WHITE, new RoomInfo(title, password, participant)));
+        games.add(new ChessGame(board, Team.WHITE, new Room(title, password, participant)));
+        games.add(new ChessGame(board, Team.WHITE, new Room(title, password, participant)));
+        games.add(new ChessGame(board, Team.WHITE, new Room(title, password, participant)));
 
         for (ChessGame game : games) {
             dao.save(game);

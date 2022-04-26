@@ -5,7 +5,7 @@ import chess.domain.Board;
 import chess.domain.ChessGame;
 import chess.domain.Member;
 import chess.domain.Participant;
-import chess.domain.RoomInfo;
+import chess.domain.Room;
 import chess.domain.piece.Piece;
 import chess.domain.piece.detail.Team;
 import java.sql.PreparedStatement;
@@ -86,7 +86,7 @@ public class SpringJdbcGameDao implements GameDao {
         final String title = resultSet.getString("title");
         final String password = resultSet.getString("password");
         return new ChessGame(id, pieceDao.findBoardByGameId(id), Team.valueOf(rawTurn),
-                new RoomInfo(title, password, new Participant(white, black)));
+                new Room(title, password, new Participant(white, black)));
     }
 
     @Override

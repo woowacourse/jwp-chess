@@ -8,7 +8,7 @@ import chess.domain.ChessGame;
 import chess.domain.Member;
 import chess.domain.Participant;
 import chess.domain.Result;
-import chess.domain.RoomInfo;
+import chess.domain.Room;
 import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
 import chess.dto.GameResultDto;
@@ -39,7 +39,7 @@ public class GameService {
         final Board board = new Board(BoardInitializer.create());
         final Participant participant = new Participant(white, black);
 
-        return gameDao.save(new ChessGame(board, Team.WHITE, new RoomInfo(title, password, participant)));
+        return gameDao.save(new ChessGame(board, Team.WHITE, new Room(title, password, participant)));
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)

@@ -18,8 +18,8 @@
     <div>
         <p class="info">📝 게임 목록</p>
         {{#chess_games}}
-        <form action="delete/{{name}}" method="post">
-            <a class="name" href="/games/{{name}}">{{name}}</a>
+        <form action="delete/{{id}}" method="post">
+            <a class="name" href="/games/{{id}}">{{name}}</a>
             <input type="submit" value="삭제">
         </form>
         <br/>

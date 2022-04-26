@@ -1,4 +1,4 @@
-package chess.dao.spring;
+package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 class ChessGameDaoTest {
 
     private static final String SAVED_NAME = "test";
+    private long savedId;
 
     private ChessGameDao chessGameDao;
 
@@ -32,42 +33,41 @@ class ChessGameDaoTest {
         jdbcTemplate.execute("drop table chess_game if exists");
         jdbcTemplate.execute("create table chess_game\n"
                 + "(\n"
-                + "    chess_game_id      int primary key auto_increment,\n"
+                + "    id      int primary key auto_increment,\n"
                 + "    name               varchar(20) not null unique,\n"
                 + "    is_on              bool        not null,\n"
                 + "    team_value_of_turn varchar(20) not null\n"
                 + ")");
 
-        jdbcTemplate.execute(
-                "insert into chess_game (name, is_on, team_value_of_turn)"
-                        + " values ('" + SAVED_NAME + "', true, 'BLACK')");
+        ChessGameEntity newChessGameEntity = new ChessGameEntity(0, SAVED_NAME, true, "WHITE");
+        savedId = chessGameDao.save(newChessGameEntity).longValue();
     }
 
     @Test
     @DisplayName("ChessGameEntity 로 chess_game table 에 저장한다.")
     void save() {
         String TEST_NAME = "jo";
-        ChessGameEntity newChessGameEntity = new ChessGameEntity(TEST_NAME, true, "WHITE");
+        ChessGameEntity newChessGameEntity = new ChessGameEntity(0, TEST_NAME, true, "WHITE");
 
-        chessGameDao.save(newChessGameEntity);
+        Number savedId = chessGameDao.save(newChessGameEntity);
 
-        ChessGameEntity chessGameEntity = chessGameDao.load(TEST_NAME);
+        ChessGameEntity chessGameEntity = chessGameDao.load(savedId.longValue());
         assertThat(chessGameEntity.getName()).isEqualTo(TEST_NAME);
     }
 
     @Test
-    @DisplayName("name 을 이용해서 chess_game 를 삭제한다")
+    @DisplayName("id 를 이용해서 chess_game 를 삭제한다")
     void delete() {
-        chessGameDao.delete(SAVED_NAME);
+        chessGameDao.delete(savedId);
 
         List<ChessGameEntity> chessGameEntities = chessGameDao.loadAll();
         assertThat(chessGameEntities.size()).isEqualTo(0);
     }
 
     @Test
-    @DisplayName("name 으로 chess_game 를 조회한다.")
+    @DisplayName("id 로 chess_game 를 조회한다.")
     void load() {
-        ChessGameEntity chessGameEntity = chessGameDao.load(SAVED_NAME);
+        ChessGameEntity chessGameEntity = chessGameDao.load(savedId);
 
         assertThat(chessGameEntity.getName()).isEqualTo(SAVED_NAME);
     }
@@ -83,10 +83,10 @@ class ChessGameDaoTest {
     @Test
     @DisplayName("chessGameEntity 를 이용해서 chess_game 을 업데이트 한다.")
     void updatePiece() {
-        ChessGameEntity chessGameEntityForUpdate = new ChessGameEntity(SAVED_NAME, false, "WHITE");
+        ChessGameEntity chessGameEntityForUpdate = new ChessGameEntity(savedId, SAVED_NAME, false, "WHITE");
         chessGameDao.updateIsOnAndTurn(chessGameEntityForUpdate);
 
-        ChessGameEntity chessGameEntity = chessGameDao.load(SAVED_NAME);
+        ChessGameEntity chessGameEntity = chessGameDao.load(savedId);
 
         assertAll(
                 () -> assertThat(chessGameEntity.getIsOn()).isFalse(),

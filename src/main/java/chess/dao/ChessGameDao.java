@@ -1,4 +1,4 @@
-package chess.dao.spring;
+package chess.dao;
 
 import chess.entity.ChessGameEntity;
 import java.util.List;
@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -18,22 +20,24 @@ public class ChessGameDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public void save(final ChessGameEntity chessGameEntity) {
+    public Number save(final ChessGameEntity chessGameEntity) {
         String insertSql = "insert into chess_game (name, is_on, team_value_of_turn)"
                 + " values (:name, :isOn, :teamValueOfTurn)";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
-        namedParameterJdbcTemplate.update(insertSql, source);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(insertSql, source, keyHolder);
+        return keyHolder.getKey();
     }
 
-    public void delete(final String name) {
-        String deleteSql = "delete from chess_game where name=:name";
-        SqlParameterSource source = new MapSqlParameterSource("name", name);
+    public void delete(final long id) {
+        String deleteSql = "delete from chess_game where id=:id";
+        SqlParameterSource source = new MapSqlParameterSource("id", id);
         namedParameterJdbcTemplate.update(deleteSql, source);
     }
 
-    public ChessGameEntity load(final String name) {
-        String selectSql = "select name, is_on, team_value_of_turn from chess_game where name=:name";
-        SqlParameterSource source = new MapSqlParameterSource("name", name);
+    public ChessGameEntity load(final long id) {
+        String selectSql = "select * from chess_game where id=:id";
+        SqlParameterSource source = new MapSqlParameterSource("id", id);
         return namedParameterJdbcTemplate.queryForObject(
                 selectSql,
                 source,
@@ -47,6 +51,7 @@ public class ChessGameDao {
 
     private RowMapper<ChessGameEntity> getChessGameEntityRowMapper() {
         return (rs, rn) -> new ChessGameEntity(
+                rs.getLong(("id")),
                 rs.getString("name"),
                 rs.getBoolean("is_on"),
                 rs.getString("team_value_of_turn")

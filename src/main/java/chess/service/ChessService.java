@@ -10,6 +10,7 @@ import chess.dto.CreateGameRequest;
 import chess.dto.CreateGameResponse;
 import chess.dto.GameCountDto;
 import chess.dto.GameDto;
+import chess.dto.GameInfoDto;
 import chess.dto.GameResultDto;
 import chess.dto.SearchResultDto;
 import java.util.List;
@@ -86,5 +87,9 @@ public class ChessService {
         if (!game.isEnd()) {
             throw new IllegalArgumentException(GAME_NOT_OVER_EXCEPTION_MESSAGE);
         }
+    }
+
+    public List<GameInfoDto> selectAllGames() {
+        return gameDao.selectAll();
     }
 }

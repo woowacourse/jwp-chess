@@ -3,6 +3,8 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.dto.CreateGameRequest;
+import chess.dto.GameInfoDto;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -64,5 +66,11 @@ class GameDaoTest {
         int actual = dao.countRunningGames();
 
         assertThat(actual).isEqualTo(1);
+    }
+
+    @Test
+    void game_목록_전체_조회() {
+        List<GameInfoDto> games = dao.selectAll();
+        assertThat(games.size()).isEqualTo(2);
     }
 }

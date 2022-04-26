@@ -1,9 +1,12 @@
 package chess.controller;
 
 import chess.dto.GameCountDto;
+import chess.dto.GameInfoDto;
+import chess.dto.GamesResponse;
 import chess.dto.SearchResultDto;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
+import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +28,10 @@ public class SearchController {
     @GetMapping
     public ModelAndView renderSearchPage() {
         GameCountDto gameCountDto = chessService.countGames();
-        return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameCountDto);
+        List<GameInfoDto> gameInfoDtos = chessService.selectAllGames();
+        GamesResponse gamesResponse = new GamesResponse(gameCountDto, gameInfoDtos);
+
+        return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gamesResponse);
     }
 
     @GetMapping(params = "game_id")

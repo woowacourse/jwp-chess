@@ -1,6 +1,9 @@
 package chess.dao;
 
 import chess.dto.CreateGameRequest;
+import chess.dto.GameInfoDto;
+import java.util.List;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,6 +18,19 @@ public class GameDao {
 
     public GameDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
+
+    private final RowMapper<GameInfoDto> eventRowMapper = (resultSet, rowNum) ->
+            new GameInfoDto(resultSet.getInt("id"),
+                    resultSet.getString("title"),
+                    resultSet.getString("password"),
+                    resultSet.getBoolean("running")
+            );
+
+    public List<GameInfoDto> selectAll() {
+        final String sql = "SELECT id, title, password, running FROM game";
+        return namedParameterJdbcTemplate.query(sql, new EmptySqlParameterSource(), eventRowMapper);
     }
 
     public int saveAndGetGeneratedId(CreateGameRequest request) {

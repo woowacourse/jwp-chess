@@ -7,19 +7,42 @@
     <link rel="icon" type="image/x-icon" href="/images/favicon.png">
 </head>
 <body>
+{{#response}}
 <section class="header__container">
     <h1>체스 시뮬레이터</h1>
     <p>체스 말의 기초적인 움직임을 테스트하기 위한 사이트</p>
-    <div>총 {{response.totalCount}}개의 게임이 생성되었습니다.</div>
-    <div>현재 {{response.runningCount}}개의 게임이 진행 중입니다.</div>
+    <div>총 {{gameCount.totalCount}}개의 게임이 생성되었습니다.</div>
+    <div>현재 {{gameCount.runningCount}}개의 게임이 진행 중입니다.</div>
 </section>
-<form method="get">
-    <label for="num_input">게임 ID</label>
-    <input type="number" min="1" id="num_input" name="game_id" placeholder="ex) 1"/>
-    <input type="submit" value="제출"/>
-</form>
+
+<br>
+
+<div id="table">
+<table>
+    <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>running</th>
+        <th>password</th>
+        <th>button</th>
+    </tr>
+{{#games}}
+<tr>
+    <form method="get" class="game_form">
+        <td><div class="id">{{id}}</div></td>
+        <td><a href="/game/{{id}}">{{title}}</a></td>
+        <td><div class="running">{{running}}</div></td>
+        <td><input type="password" class="password" min="1" name="password"/></td>
+        <td><button type="submit" class="delete_button">삭제</button></td>
+    </form>
+</tr>
+{{/games}}
+
+</table>
+</div>
+{{/response}}
 <section class="buttons__container">
-    <a href="/">뒤로가기!</a>
+    <a href="/" class="a">뒤로가기!</a>
 </section>
 <script src="/scripts/search-game.js"></script>
 </body>

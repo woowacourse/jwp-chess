@@ -1,26 +1,24 @@
-const onSuccessResponse = ({id, found}) => {
-    if (found) {
-        window.location.replace(`/game/${id}`);
-        return;
-    }
-    alert(`${id}에 해당되는 게임은 아직 만들어지지 않았습니다!`)
-}
+const deleteBoard = async (event, form) => {
+    const {id} = form.parentElement.querySelector(".id").textContent;
 
-const getTargetUrl = (event) => {
-    const inputValue = document.getElementById("num_input").value;
-    return `${event.target.action}?game_id=${inputValue}`;
-}
-
-const searchAndRedirect = async (event) => {
     event.preventDefault();
-    const response = await fetch(getTargetUrl(event));
-    const json = await response.json();
-    onSuccessResponse(json);
+    const response = await fetch("/game/${id}", {
+        headers: {'Content-Type': 'application/json'},
+        method: "delete"
+    });
+
+    if (!response.ok) {
+        return alert(await response.text());
+    }
+
+    form.remove();
 }
 
 const init = () => {
-    const form = document.querySelector("form");
-    form.addEventListener('submit', searchAndRedirect);
+    const gameForm = document.querySelector(".game_form");
+    gameForm.addEventListener("submit",
+        (event) => deleteBoard(event, gameForm)
+    );
 }
 
 init();

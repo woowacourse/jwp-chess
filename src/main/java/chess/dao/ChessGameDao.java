@@ -29,14 +29,15 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(ChessGameDto chessGameDto) {
-        String sql = "insert into chessgame (game_name, turn) values (?, ?)";
+    public Long save(ChessGameDto chessGameDto, String password) {
+        String sql = "insert into chessgame (game_name, turn, password) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, chessGameDto.getGameName());
             ps.setString(2, chessGameDto.getTurn());
+            ps.setString(3, password);
             return ps;
         }, keyHolder);
 

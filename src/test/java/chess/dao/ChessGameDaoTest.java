@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class ChessGameDaoTest {
 
+    private static final String PASSWORD = "password";
     @Autowired
     private ChessGameDao chessGameDao;
     @Autowired
@@ -48,7 +49,7 @@ class ChessGameDaoTest {
 
         //when & then
         assertThat(chessGameDao.findByName("test")).isNull();
-        assertDoesNotThrow(() -> chessGameDao.save(chessGameDto));
+        assertDoesNotThrow(() -> chessGameDao.save(chessGameDto, PASSWORD));
     }
 
     @DisplayName("체스 게임 업데이트 테스트")
@@ -58,7 +59,7 @@ class ChessGameDaoTest {
         ChessGame chessGame = new ChessGame("test");
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
-        Long id = chessGameDao.save(chessGameDto);
+        Long id = chessGameDao.save(chessGameDto, PASSWORD);
         pieceDao.save(id, chessGameDto);
 
         //when

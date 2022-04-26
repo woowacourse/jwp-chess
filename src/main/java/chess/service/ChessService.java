@@ -26,12 +26,12 @@ public class ChessService {
         return chessGame.getChessBoardSymbol();
     }
 
-    public Long save(String gameName) {
+    public Long save(String gameName, String password) {
         ChessGame chessGame = new ChessGame(gameName);
         chessGame.progress(Command.from("start"));
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
-        Long id = chessGameDao.save(chessGameDto);
+        Long id = chessGameDao.save(chessGameDto, password);
         pieceDao.save(id, chessGameDto);
 
         return id;

@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class PieceDaoTest {
+    private static final String PASSWORD = "password";
     @Autowired
     private ChessGameDao chessGameDao;
     @Autowired
@@ -29,7 +30,7 @@ class PieceDaoTest {
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
         //when
-        Long id = chessGameDao.save(chessGameDto);
+        Long id = chessGameDao.save(chessGameDto, PASSWORD);
 
         //then
         Assertions.assertDoesNotThrow(() -> pieceDao.save(id, chessGameDto));

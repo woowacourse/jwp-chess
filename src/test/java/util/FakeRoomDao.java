@@ -14,7 +14,7 @@ public class FakeRoomDao implements RoomDao {
     @Override
     public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn,
                     final String password) {
-        return 0;
+        return 1;
     }
 
     @Override

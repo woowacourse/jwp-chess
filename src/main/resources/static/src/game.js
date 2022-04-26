@@ -1,59 +1,45 @@
 const section = document.querySelector("section");
 
-let fromInput;
-let toInput;
+let sourceInput;
+let targetInput;
 let gameId;
 
 section.addEventListener("mousedown", (event) => {
-  saveId();
-  fromInput = findTagId(event);
+    saveId();
+    sourceInput = findTagId(event);
 })
 
 section.addEventListener("mouseup", (event) => {
 
-  toInput = findTagId(event);
+    targetInput = findTagId(event);
 
-  fetch("/game/"+gameId+"/move", {
-    method: "post",
-    redirect: 'follow',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify({
-      source: fromInput,
-      target: toInput,
-      gameId: gameId
-    }),
-  })
-  .then(res=>{
-     window.location.href = res.url
-   })
-  .catch(error => {
-    alert(error.message)
-  })
+    fetch("/game/${gameId}/move", {
+        method: "post",
+        redirect: 'follow',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            source: sourceInput,
+            target: targetInput
+        }),
+    })
+        .then(res => {
+            window.location.href = res.url;
+        })
+        .catch(error => {
+            alert(error.message + ": 잘못된 이동입니다")
+        })
 })
 
 function saveId() {
-  let url = new URL(window.location.href);
-  gameId = url.pathname.split("/")[2]
-
+    gameId = new URLSearchParams(window.location.search).get("gameId")
 }
 
 function findTagId(event) {
-  if (event.target.nodeName === 'IMG') {
-    return event.target.parentNode.id;
-  }
-  return event.target.id;
-}
-
-//spark를 썼을 때 에러 처리 하려고
-//java에서 생기는 에러를 잡아서
-//다시 js 에러로 바꿔서 날려줌.
-function status(res) {
-  if (!res.ok) {
-    return res.text().then(text => {
-      throw new Error(text)
-    })
-  }
+    if (event.target.nodeName === 'IMG') {
+        return event.target.parentNode.id;
+    }
+    return event.target.id;
 }

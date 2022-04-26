@@ -353,7 +353,7 @@
   <div class="chess-status">
 
     현재 방 번호: {{gameId}}
-    <p>게임 메세지: {{gameMessage}}</p>
+    <p>상태 메세지: {{gameMessage}}</p>
     <div class="status" id="status">
       <label>
         현재 상태: 승자: <a class="winner-name">{{status.winner}}</a> , 백색팀: <a class="white-score">{{status.whiteScore}}</a>점, 흑색팀: <a class="black-score">{{status.blackScore}}</a>점
@@ -363,7 +363,6 @@
     <div class="exit" id="exit">
       <form action="/game/{{gameId}}/exit" method="get">
         <input type="hidden" name="gameId" value="{{gameId}}">
-
         <button type="submit">exit</button>
       </form>
     </div>

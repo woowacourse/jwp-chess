@@ -27,6 +27,12 @@ docker/db/mysql/init/init.sql
 http://localhost:8080/
 ```
 
+4. 테이블 사용
+
+```
+use chess;
+```
+
 ## 요구사항
 
 - Spring Framework를 활용하여 애플리케이션을 구동한다.
@@ -67,7 +73,7 @@ http://localhost:8080/
 - [x] test에서 displayname 적기
 - [x] pieceDao에서 Bulk insert batchUpdate로 구현 & application.properties변경
 - [x] Readme로 실행방법 update.
-- [x] moveCommandDto 변경(gameId삭제)
+- [x] moveDto 변경(gameId삭제)
 - [x] Private method를 public으로 바꾸기. (컨트롤러)
 - [x] 에러 처리 어떻게 할 것인지 고민해보기 -> httpservlet 사용
 - [x] 전체적으로 함수이름, 함수위치 컨벤션 수정

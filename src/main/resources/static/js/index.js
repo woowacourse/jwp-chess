@@ -1,10 +1,25 @@
 const randomStartButton = document.getElementById("random-start-button");
 const gamesDiv = document.getElementById("games");
 
-randomStartButton.addEventListener("click", () => {
+randomStartButton.addEventListener("click", async () => {
   const gameId = Math.floor(Math.random() * 10000);
-  location.href = `/game/${gameId}`;
+
+  const res = await fetch(`/games/${gameId}`);
+  if (!res.ok) {
+    await create(gameId);
+    location.href = `/game/${gameId}`;
+  }
 });
+
+async function create(gameId) {
+  const res = await fetch(`/games/${gameId}`, {
+    method: "post"
+  });
+  if (!res.ok) {
+    const data = await res.json();
+    alert(data.message);
+  }
+}
 
 window.onload = async function () {
   const res = await fetch("/games");

@@ -38,22 +38,11 @@ window.onload = async function () {
 
   const res = await fetch(`/games/${gameId}`);
   if (!res.ok) {
-    await create();
+    alert("존재하지 않는 게임입니다. 초기 화면으로 돌아갑니다.");
+    location.href = "/";
     return;
   }
   const data = await res.json();
-  load(data);
-}
-
-async function create() {
-  const res = await fetch(`/games/${gameId}`, {
-    method: "post"
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    alert(data.message);
-    return;
-  }
   load(data);
 }
 

@@ -9,6 +9,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,7 +53,7 @@ public class SpringChessController {
         return getModelWithGameMessage(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId);
     }
 
-    @GetMapping("/game/{gameId}/exit")
+    @DeleteMapping("/game/{gameId}/exit")
     public String exitAndDeleteGame(@PathVariable String gameId) {
         chessGameService.cleanGame(gameId);
         return "redirect:/";

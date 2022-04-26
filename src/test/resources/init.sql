@@ -1,4 +1,7 @@
-create table Game
+drop table piece if exists;
+drop table game if exists;
+
+create table game
 (
     id       int         not null auto_increment primary key,
     title    varchar(45) not null,

@@ -1,19 +1,21 @@
 package chess.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-
 import chess.domain.position.Position;
 import chess.dto.PieceDto;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 @SpringBootTest
+@Sql("classpath:init.sql")
 public class PieceDaoImplTest {
 
     @Autowired
@@ -21,18 +23,6 @@ public class PieceDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
-        jdbcTemplate.execute("create table piece\n"
-                + "(\n"
-                + "    position varchar(5)  not null,\n"
-                + "    type     varchar(10) not null,\n"
-                + "    color    varchar(20) not null,\n"
-                + "    primary key (position)\n"
-                + ");");
-    }
 
     @Test
     @DisplayName("기물 정보 삭제")

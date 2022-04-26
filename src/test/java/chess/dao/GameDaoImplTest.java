@@ -1,18 +1,19 @@
 package chess.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
+@Sql("classpath:init.sql")
 public class GameDaoImplTest {
 
     @Autowired
@@ -20,18 +21,6 @@ public class GameDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
-        jdbcTemplate.execute("create table game\n"
-                + "(\n"
-                + "    game_id int         not null auto_increment,\n"
-                + "    turn    varchar(20) not null,\n"
-                + "    status    varchar(20) not null,\n"
-                + "    primary key (game_id)\n"
-                + ");");
-    }
 
     @Test
     @DisplayName("전체 게임 데이터 삭제")

@@ -10,14 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 
 import chess.configuration.RepositoryConfiguration;
 import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
 import chess.web.dto.PieceDto;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @Import(RepositoryConfiguration.class)
 class GameServiceTest {
 

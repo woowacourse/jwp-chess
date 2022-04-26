@@ -36,12 +36,12 @@ public class RoomController {
         return "/board.html";
     }
 
-    @GetMapping(value = "/{roomId}", params = "command=start")
+    @GetMapping("/{roomId}/start")
     public ResponseEntity<BoardDto> startNewGame(@PathVariable int roomId) {
         return ResponseEntity.ok(gameService.startNewGame(roomId));
     }
 
-    @GetMapping(value = "/{roomId}", params = "command=load")
+    @GetMapping("/{roomId}/load")
     public ResponseEntity<BoardDto> loadGame(@PathVariable int roomId) {
         return ResponseEntity.ok(gameService.loadGame(roomId));
     }

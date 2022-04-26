@@ -22,18 +22,18 @@ public class BoardController {
         this.gameService = gameService;
     }
 
-    @PostMapping(value = "/{boardId}", params = "command=move")
+    @PostMapping("/{boardId}/move")
     public ResponseEntity<BoardDto> movePiece(@PathVariable int boardId, @RequestBody CommendDto commendDto) {
         gameService.move(boardId, commendDto);
         return ResponseEntity.ok(gameService.gameStateAndPieces(boardId));
     }
 
-    @GetMapping(value = "/{boardId}", params = "command=result")
+    @GetMapping("/{boardId}/result")
     public ResponseEntity<ResultDto> result(@PathVariable int boardId) {
         return ResponseEntity.ok(gameService.gameResult(boardId));
     }
 
-    @GetMapping(value = "/{boardId}", params = "command=end")
+    @GetMapping("/{boardId}/end")
     public ResponseEntity<ResultDto> end(@PathVariable int boardId) {
         return ResponseEntity.ok(gameService.gameFinalResult(boardId));
     }

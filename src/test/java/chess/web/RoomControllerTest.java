@@ -25,10 +25,10 @@ import io.restassured.RestAssured;
 class RoomControllerTest {
 
     @LocalServerPort
-    int port;
+    private int port;
 
     @Autowired
-    ApplicationContext context;
+    private ApplicationContext context;
 
     @Autowired
     private RoomService roomService;
@@ -71,7 +71,7 @@ class RoomControllerTest {
         RoomDto room = roomService.create("summer");
 
         RestAssured.given().log().all()
-            .when().get("/rooms/" + room.getId() + "/?command=start")
+            .when().get("/rooms/" + room.getId() + "/start")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -83,7 +83,7 @@ class RoomControllerTest {
         gameService.startNewGame(roomId);
 
         RestAssured.given().log().all()
-            .when().get("/rooms/" + roomId + "/?command=load")
+            .when().get("/rooms/" + roomId + "/load")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }

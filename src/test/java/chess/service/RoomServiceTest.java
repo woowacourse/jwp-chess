@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
 import chess.configuration.RepositoryConfiguration;
 import chess.web.dto.RoomDto;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @Import(RepositoryConfiguration.class)
 class RoomServiceTest {
 

@@ -22,10 +22,10 @@ import io.restassured.http.ContentType;
 class BoardControllerTest {
 
 	@LocalServerPort
-	int port;
+	private int port;
 
 	@Autowired
-	ApplicationContext context;
+	private ApplicationContext context;
 
 	@Autowired
 	private RoomService roomService;
@@ -46,7 +46,7 @@ class BoardControllerTest {
 		RestAssured.given().log().all()
 			.contentType(ContentType.JSON)
 			.body(new CommendDto("a2", "a3"))
-			.when().post("/boards/" + boardId + "/?command=move")
+			.when().post("/boards/" + boardId + "/move")
 			.then().log().all()
 			.statusCode(HttpStatus.OK.value());
 	}
@@ -55,7 +55,7 @@ class BoardControllerTest {
 	@DisplayName("점수 갱신 요청이 누르면 200응답을 받는다.")
 	void result() {
 		RestAssured.given().log().all()
-			.when().get("/boards/" + boardId + "/?command=result")
+			.when().get("/boards/" + boardId + "/result")
 			.then().log().all()
 			.statusCode(HttpStatus.OK.value());
 	}
@@ -64,7 +64,7 @@ class BoardControllerTest {
 	@DisplayName("게임 종료 요청이 오면 200응답을 받는다.")
 	void end() {
 		RestAssured.given().log().all()
-			.when().get("/boards/" + boardId + "/?command=end")
+			.when().get("/boards/" + boardId + "/end")
 			.then().log().all()
 			.statusCode(HttpStatus.OK.value());
 	}

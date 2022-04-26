@@ -2,16 +2,22 @@ package chess.controller;
 
 import chess.TestConfig;
 import chess.domain.GameStatus;
+import chess.domain.Score;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Color;
 import chess.domain.chesspiece.King;
+import chess.domain.chesspiece.Queen;
+import chess.domain.chesspiece.Rook;
 import chess.domain.position.Position;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import java.util.HashMap;
 import java.util.Map;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +36,8 @@ import util.FakeRoomDao;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Import(TestConfig.class)
 class ChessControllerTest {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @LocalServerPort
     int port;
@@ -137,5 +145,25 @@ class ChessControllerTest {
                 .when().put("/rooms/" + roomId + "/pieces")
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("현재 점수를 계산한다.")
+    void findScore() throws JsonProcessingException {
+        // given
+        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.WHITE, "1234");
+
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        pieceByPosition.put(Position.from("a1"), Queen.from(Color.WHITE));
+        pieceByPosition.put(Position.from("a2"), Rook.from(Color.BLACK));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
+
+        // then
+        final Score score = new Score(pieceByPosition);
+        RestAssured.given().log().all()
+                .when().get("/rooms/" + roomId + "/scores")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body(Is.is(objectMapper.writeValueAsString(score)));
     }
 }

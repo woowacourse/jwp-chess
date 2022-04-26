@@ -10,16 +10,16 @@ public class RankDto {
     private final List<PieceDto> pieces;
     private final int rankLine;
 
-    public RankDto(List<PieceDto> pieces, int rankLine) {
+    public RankDto(final List<PieceDto> pieces, final int rankLine) {
         this.pieces = pieces;
         this.rankLine = rankLine;
     }
 
-    public static RankDto toDto(List<Piece> pieces, int rankLine) {
+    public static RankDto toDto(final List<Piece> pieces, final int rankLine) {
         return new RankDto(toPieceSignature(pieces), rankLine);
     }
 
-    private static List<PieceDto> toPieceSignature(List<Piece> pieces) {
+    private static List<PieceDto> toPieceSignature(final List<Piece> pieces) {
         return pieces.stream()
                 .map(PieceDto::toDto)
                 .collect(Collectors.toCollection(LinkedList::new));

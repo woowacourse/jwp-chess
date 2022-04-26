@@ -8,7 +8,11 @@ public class GameResultDto {
     private final double myScore;
     private final double enemyScore;
 
-    public GameResultDto(String result, String enemyName, String team, double myScore, double enemyScore) {
+    public GameResultDto(final String result,
+                         final String enemyName,
+                         final String team,
+                         final double myScore,
+                         final double enemyScore) {
         this.result = result;
         this.enemyName = enemyName;
         this.team = team;

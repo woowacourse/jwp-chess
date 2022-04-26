@@ -34,7 +34,7 @@ public class ChessGame {
         return new ChessGame(null, new Board(BoardInitializer.create()), Team.WHITE);
     }
 
-    public void move(Square from, Square to) {
+    public void move(final Square from, final Square to) {
         validateTurn(from);
         board.move(from, to);
         this.turn = turn.reverse();
@@ -56,7 +56,7 @@ public class ChessGame {
         return turn == Team.NONE;
     }
 
-    private void validateTurn(Square from) {
+    private void validateTurn(final Square from) {
         if (turn == Team.NONE) {
             throw new IllegalStateException("이미 종료된 게임입니다.");
         }
@@ -100,7 +100,7 @@ public class ChessGame {
         return 0;
     }
 
-    private int pawnCountByFile(List<Piece> pieces) {
+    private int pawnCountByFile(final List<Piece> pieces) {
         return (int) pieces.stream()
                 .map(Piece::getPieceType)
                 .filter(pieceType -> pieceType == PieceType.PAWN)
@@ -132,7 +132,7 @@ public class ChessGame {
     }
 
     public Long getWinnerId() {
-        Result result = createResult();
+        final Result result = createResult();
         final Team team = result.getWinner();
         return getParticipant().getIdByTeam(team);
     }

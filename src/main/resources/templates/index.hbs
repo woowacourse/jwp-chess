@@ -11,12 +11,24 @@
 
 <div id="game-entry">
 
-  <form enctype="text/plain" action="/game/start" method="get">
-    <label for="game-entry">방 번호를 입력하여 시작하기</label>
-    <br>
-    <input type="text" name="gameId" value="1234">
-    <button type="submit">입장하기</button>
-  </form>
+  존재하는 방들
+
+  <ul class="room_list">
+    {{#each rooms}}
+      <form enctype="text/plain" action="/game/start" method="get">
+        <li>방번호: {{id}} | 방이름: {{title}}</li>
+        <input type="hidden" name="gameId" value="{{id}}">
+        <button type="submit">입장하기</button>
+      </form>
+
+
+      <form action="/game/{{id}}/exit" method="post">
+        <input type="hidden" name="_method" value="delete">
+        <button type="submit">삭제하기</button>
+      </form>
+
+    {{/each}}
+  </ul>
 
   <form action="/game/start" method="post">
     <label for="game-entry">방 이름과 비밀번호를 입력하여 시작하기 (없을 시 새로 방 생성)</label>
@@ -25,6 +37,7 @@
     <input type="text" name="password" value="1234">
     <button type="submit">입장하기</button>
   </form>
+
 
 </div>
 

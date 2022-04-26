@@ -1,9 +1,12 @@
 package chess.dao;
 
 import chess.domain.piece.Color;
+import chess.dto.GameRoomDataDto;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -67,5 +70,17 @@ public class GameDao {
 
         jdbcTemplate.update(sql, id);
     }
+
+    //TODO dto말고 다른걸로 바꾸기
+    public List<GameRoomDataDto> findAllIdAndTitle() {
+        final String sql = "select id, title from game";
+
+        return jdbcTemplate.query(sql, actorRowMapper);
+    }
+
+    private final RowMapper<GameRoomDataDto> actorRowMapper = (resultSet, rowNum) -> new GameRoomDataDto(
+        String.valueOf(resultSet.getLong("id")),
+        resultSet.getString("title")
+    );
 
 }

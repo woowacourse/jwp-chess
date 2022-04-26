@@ -35,13 +35,6 @@ public class ChessGameService {
         return gameId;
     }
 
-    public boolean exists(String gameId) {
-        if (!gameDao.exists(gameId)) {
-            throw new IllegalArgumentException("존재하지 않는 게임방입니다.");
-        }
-        return true;
-    }
-
     public ChessGame getGameStatus(long gameId) {
         boolean forceEndFlag = gameDao.findForceEndFlagById(gameId);
         Color turn = gameDao.findTurnById(gameId);

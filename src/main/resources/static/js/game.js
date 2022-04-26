@@ -29,13 +29,14 @@ function initChessBoard() {
 
 function initChessPieces() {
   $.ajax({
-    url: "/chess/board",
+    url: "/chess/init",
     method: "GET",
     dataType: "json",
   })
-    .done(function (json) {
-      placeChessPieces(json.board);
-      currentTeam();
+    .done(function (data) {
+      debugger;
+      placeChessPieces(data.board);
+      setCurrentTeam(data.teamName);
     })
     .fail(function (xhr, status, errorThrown) {
       console.log(xhr);
@@ -50,8 +51,8 @@ function loadLastGame() {
     dataType: "json",
   })
     .done(function (data) {
-      placeChessPieces(data.boardResponse.board);
-      setCurrentTeam(data.lastTeam);
+      placeChessPieces(data.board);
+      setCurrentTeam(data.teamName);
     })
     .fail(function (xhr, status, errorThrown) {
       console.log(xhr);
@@ -102,6 +103,7 @@ function placeChessPiece(position, pieceImage) {
 
 function placeChessPieces(piecePositions) {
   for (let element of piecePositions) {
+    element = element.value;
     let team = element["team"];
     let piece = element["piece"];
     let position = element["position"].toUpperCase();
@@ -124,8 +126,8 @@ function movePiece() {
     .done(function (data) {
       clearChessBoard();
       initChessBoard();
-      currentTeam();
       placeChessPieces(data.board);
+      setCurrentTeam(data.teamName);
     })
     .fail(function (xhr, status, errorThrown) {
       console.log(xhr);
@@ -139,21 +141,6 @@ function clearChessBoard() {
 
 function setCurrentTeam(teamName) {
   $("#current-team").text(teamName);
-}
-
-function currentTeam() {
-  $.ajax({
-    url: "/chess/current-team",
-    method: "GET",
-    dataType: "text",
-  })
-    .done(function (data) {
-      setCurrentTeam(data);
-    })
-    .fail(function (xhr, status, errorThrown) {
-      console.log(xhr);
-      alert(xhr.responseText);
-    });
 }
 
 function isExistPiece(sqaure) {

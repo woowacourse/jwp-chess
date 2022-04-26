@@ -13,14 +13,9 @@ import org.springframework.context.annotation.Scope;
 public class DiConfig {
 
     @Bean
-    public BoardFactory boardFactory() {
-        return RegularBoardFactory.getInstance();
-    }
-
-    @Bean
-    @Scope("prototype")
+    @Scope("session")
     public ChessBoard chessBoard() {
-        BoardFactory boardFactory = boardFactory();
+        BoardFactory boardFactory = RegularBoardFactory.getInstance();
         GameFlow gameFlow = new AlternatingGameFlow();
         return new ChessBoard(boardFactory.create(), gameFlow);
     }

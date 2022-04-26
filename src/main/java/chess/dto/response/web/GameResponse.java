@@ -3,6 +3,8 @@ package chess.dto.response.web;
 import static chess.domain.piece.PieceTeam.BLACK;
 import static chess.domain.piece.PieceTeam.WHITE;
 
+import chess.domain.board.ChessBoard;
+import chess.domain.board.position.Position;
 import chess.domain.db.BoardPiece;
 import chess.domain.piece.Bishop;
 import chess.domain.piece.King;
@@ -19,9 +21,33 @@ import java.util.function.Supplier;
 import lombok.Getter;
 
 @Getter
-public class LastGameResponse {
+public class GameResponse {
 
     private static Map<String, Supplier<? extends Piece>> pieceCreator = new HashMap<>();
+
+    private List<PieceResponse> board;
+    private String teamName;
+
+    public GameResponse(final ChessBoard chessBoardParameter) {
+        List<PieceResponse> board = new ArrayList<>();
+        for (Position position : chessBoardParameter.getBoard().keySet()) {
+            Piece piece = chessBoardParameter.getBoard().get(position);
+            PieceResponse pieceResponse = new PieceResponse(position, piece);
+            board.add(pieceResponse);
+        }
+        this.teamName = chessBoardParameter.currentStateName();
+        this.board = board;
+    }
+
+    public GameResponse(List<BoardPiece> boardPieces, String lastTeam) {
+        final List<PieceResponse> board = new ArrayList<>();
+        for (BoardPiece boardPiece : boardPieces) {
+            Piece piece = pieceCreator.get(boardPiece.getPiece()).get();
+            board.add(new PieceResponse(boardPiece.getPosition(), piece));
+        }
+        this.board = board;
+        this.teamName = lastTeam;
+    }
 
     static {
         initWhitePieceCreator();
@@ -44,24 +70,5 @@ public class LastGameResponse {
         pieceCreator.put("blackRook", () -> new Rook(BLACK));
         pieceCreator.put("blackQueen", () -> new Queen(BLACK));
         pieceCreator.put("blackKing", () -> new King(BLACK));
-    }
-
-    private BoardResponse boardResponse;
-    private String lastTeam;
-
-    public LastGameResponse(List<BoardPiece> boardPieces, String lastTeam) {
-
-        final List<Map<String, String>> board = new ArrayList<>();
-        for (BoardPiece boardPiece : boardPieces) {
-            final Map<String, String> keyValue = new HashMap<>();
-            Piece piece = pieceCreator.get(boardPiece.getPiece()).get();
-            keyValue.put("position", boardPiece.getPosition());
-            keyValue.put("piece", piece.className());
-            keyValue.put("team", piece.teamName());
-            board.add(keyValue);
-        }
-
-        this.boardResponse = new BoardResponse(board);
-        this.lastTeam = lastTeam;
     }
 }

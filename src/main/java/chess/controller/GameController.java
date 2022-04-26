@@ -48,6 +48,15 @@ public class GameController {
         return getGameModelAndView(id);
     }
 
+    @PostMapping("/{id}")
+    public void enterGame(@PathVariable int id,
+                          EncryptedAuthCredentials authCredentials,
+                          HttpServletResponse response) {
+        Cookie cookie = new Cookie(COOKIE_KEY, "dummy_data");
+        cookie.setMaxAge(1000);
+        response.addCookie(cookie);
+    }
+
     @PutMapping("/{id}")
     public ModelAndView updateGame(@PathVariable int id,
                                    @RequestBody MoveRoute moveRoute) {

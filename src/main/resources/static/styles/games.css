@@ -18,7 +18,7 @@
 }
 
 .list__container ul {
-    width: 200px;
+    width: 300px;
 }
 
 .list__container .game_link_box {
@@ -26,12 +26,13 @@
     padding: 3px;
 }
 
-.list__container .game_link_box a {
-    display: block;
+.game_name {
     width: 100%;
-
     text-align: center;
-    font-size: 16px;
+}
+
+.password_input {
+    width: 70px;
 }
 
 .buttons__container {

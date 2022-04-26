@@ -18,9 +18,9 @@ const searchAndRedirect = async (event) => {
     onSuccessResponse(json);
 }
 
-const init = () => {
-    const form = document.querySelector("form");
+const initSearchForm = () => {
+    const form = document.getElementById("search-form");
     form.addEventListener('submit', searchAndRedirect);
 }
 
-init();
+initSearchForm();

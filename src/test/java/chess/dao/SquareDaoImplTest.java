@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import chess.model.Team;
@@ -17,10 +17,9 @@ import chess.model.piece.Pawn;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@JdbcTest
 public class SquareDaoImplTest {
 
-    @Autowired
     private SquareDaoImpl squareDao;
 
     @Autowired

@@ -25,8 +25,12 @@ public class StateDaoImpl implements StateDao {
 
     public State find(final Board board) {
         final String sql = "select name from state";
-        String stateName = jdbcTemplate.queryForObject(sql, String.class);
-        return StringToStateConverter.convert(stateName, board);
+        return jdbcTemplate.queryForObject(
+            sql,
+            (resultSet, rowNum) -> {
+                String name = resultSet.getString("name");
+                return StringToStateConverter.convert(name, board);
+            });
     }
 
     public int delete() {

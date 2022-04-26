@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import chess.model.board.Board;
@@ -14,10 +14,9 @@ import chess.model.state.State;
 import chess.model.state.running.BlackTurn;
 import chess.model.state.running.WhiteTurn;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@JdbcTest
 class StateDaoImplTest {
 
-    @Autowired
     private StateDao stateDao;
 
     @Autowired

@@ -12,4 +12,10 @@ public class ExceptionsController {
         redirectAttributes.addAttribute("message", e.getMessage());
         return "redirect:game";
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public String handle(RedirectAttributes redirectAttributes, RuntimeException e) {
+        redirectAttributes.addAttribute("message", "서버에서 예외 오류가 발생했습니다.");
+        return "redirect:game";
+    }
 }

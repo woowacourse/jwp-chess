@@ -9,7 +9,8 @@
 <h1>ZERO Chess</h1>
 <br><br>
 <form action="/chess/new" method="post">
-    <input type="text" name="gameName" placeholder="NEW GAME">
+    <input type="text" name="gameName" placeholder="NEW GAME NAME" pattern=".{0}|.{1,10}" required title="Either 0 OR (1 to 10 chars)">
+    <input type="password" name="password" placeholder="PASSWORD" pattern=".{0}|.{4,10}" required title="Either 0 OR (4 to 10 chars)">
     <input type="submit" value="NEW GAME START">
 </form>
 
@@ -18,9 +19,12 @@
 <table border="2" width ="500" height="300" align = "center" class="game-list">
     {{#games}}
     <tr>
-       <td><a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a></td>
+        <td><a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a></td>
+        <td><a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a></td>
     </tr>
     {{/games}}
 </table>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="module" src="/js/lobby.js"></script>
 </html>

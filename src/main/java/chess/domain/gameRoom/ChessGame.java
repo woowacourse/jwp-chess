@@ -10,6 +10,7 @@ public final class ChessGame {
 
     private String id;
     private String name;
+    private String password;
     private boolean isEnd;
     private ChessBoard chessBoard;
 
@@ -51,5 +52,13 @@ public final class ChessGame {
 
     public boolean isGameSet() {
         return !chessBoard.checkKingExist();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

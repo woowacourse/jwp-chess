@@ -1,28 +1,51 @@
 package chess.domain.game.dto;
 
-import java.io.Serializable;
+import chess.domain.piece.property.Team;
 
-public class MoveDTO implements Serializable {
-
+public class MoveDTO {
     private String source;
     private String target;
-    private String team;
+    private Team team;
+
+    public MoveDTO() {
+    }
 
     public MoveDTO(String source, String target, String team) {
         this.source = source;
         this.target = target;
-        this.team = team;
+        this.team = Team.valueOf(team);
     }
 
     public String getSource() {
         return source;
     }
 
+    public void setSource(String source) {
+        this.source = source;
+    }
+
     public String getTarget() {
         return target;
     }
 
-    public String getTeam() {
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public Team getTeam() {
         return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = Team.valueOf(team);
+    }
+
+    @Override
+    public String toString() {
+        return "MoveDTO{" +
+                "source='" + source + '\'' +
+                ", target='" + target + '\'' +
+                ", team=" + team +
+                '}';
     }
 }

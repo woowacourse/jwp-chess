@@ -3,15 +3,16 @@ DROP TABLE IF EXISTS chess_game;
 
 CREATE TABLE chess_game
 (
-    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id         BIGINT AUTO_INCREMENT  PRIMARY KEY,
     name       TEXT                   NOT NULL,
+    password   VARCHAR (20)           NOT NULL,
     is_end     BOOLEAN  DEFAULT false NULL,
     created_at DATETIME DEFAULT NOW() NOT NULL
 );
 
 CREATE TABLE movement
 (
-    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id              BIGINT AUTO_INCREMENT  PRIMARY KEY,
     game_id         BIGINT                 NOT NULL,
     source_position VARCHAR(20)            NOT NULL,
     target_position VARCHAR(20)            NOT NULL,

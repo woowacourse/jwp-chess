@@ -31,9 +31,9 @@ function move(source, target, team) {
         type: "POST",
         url: "/chess/game/" + gameId() + "/move",
         data: {
-            "source": source,
-            "target": target,
-            "team": team
+            "source": String(source),
+            "target": String(target),
+            "team": String(team)
         },
         dataType: "json",
         success: update,
@@ -55,8 +55,8 @@ function initBoard() {
 
 function update(response) {
     boardRender(response.board);
-    $currentTurn.innerHTML = response.currentTurn;
     turn = response.currentTurn;
+    $currentTurn.innerHTML = response.currentTurn;
     $currentBlackScore.innerHTML = response.blackScore;
     $currentWhiteScore.innerHTML = response.whiteScore;
     console.log(response);

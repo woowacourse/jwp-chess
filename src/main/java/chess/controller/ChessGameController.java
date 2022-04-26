@@ -22,8 +22,8 @@ public class ChessGameController {
     }
 
     @PostMapping("/chess/new")
-    public String createGame(@RequestParam String gameName) {
-        String gameId = chessService.addChessGame(gameName);
+    public String createGame(@RequestParam String gameName, @RequestParam String password) {
+        String gameId = chessService.addChessGame(gameName, password);
         return "redirect:/chess/game/" + gameId;
     }
 

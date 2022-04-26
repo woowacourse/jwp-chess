@@ -27,12 +27,13 @@ public class ChessGameRoomDAO {
     }
 
     public String addGame(final ChessGame chessGame) {
-        String sql = "INSERT INTO CHESS_GAME (name) VALUES (?)";
+        String sql = "INSERT INTO CHESS_GAME (name, password) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id", "password"});
             statement.setString(1, chessGame.getName());
+            statement.setString(2, chessGame.getPassword());
             return statement;
         }, keyHolder);
         return String.valueOf(keyHolder.getKey().longValue());

@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.domain.board.ChessBoardGenerator;
+import chess.domain.game.dto.MoveDTO;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
 import chess.domain.gameRoom.ChessGame;
@@ -27,9 +28,10 @@ public final class ChessService {
         this.movementDAO = movementDAO;
     }
 
-    public String addChessGame(final String gameName) {
+    public String addChessGame(final String gameName, final String password) {
         ChessGame chessGame = new ChessGame(new ChessBoardGenerator());
         chessGame.setName(gameName);
+        chessGame.setPassword(password);
 
         return chessGameDAO.addGame(chessGame);
     }
@@ -44,8 +46,12 @@ public final class ChessService {
         return chessGame;
     }
 
-    public ChessGame movePiece(final String gameId, final String source, final String target, final Team team){
+    public ChessGame movePiece(final String gameId, final MoveDTO moveDTO){
         final ChessGame chessGame = getChessGamePlayed(gameId);
+        final String source = moveDTO.getSource();
+        final String target = moveDTO.getTarget();
+        final Team team = moveDTO.getTeam();
+
         validateCurrentTurn(chessGame, team);
         move(chessGame, new Movement(Position.of(source), Position.of(target)), team);
         if (chessGame.isGameSet()) {

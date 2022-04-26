@@ -37,8 +37,10 @@ public class PawnTest {
         board.putPiece(Position.of(File.A, Rank.TWO), new StartedPawn(Color.WHITE));
         board.putPiece(Position.of(File.A, Rank.THREE), new StartedPawn(Color.BLACK));
 
-        board.putPiece(Position.of(File.H, Rank.FOUR), new StartedPawn(Color.BLACK));
+        board.putPiece(Position.of(File.H, Rank.FOUR), new MovedPawn(Color.BLACK));
         board.putPiece(Position.of(File.H, Rank.TWO), new StartedPawn(Color.WHITE));
+
+        board.putPiece(Position.of(File.H, Rank.THREE), new MovedPawn(Color.WHITE));
     }
 
     @ParameterizedTest(name = "{index}: {2}")
@@ -71,7 +73,8 @@ public class PawnTest {
             Arguments.of(Position.of(File.D, Rank.TWO), Position.of(File.D, Rank.FOUR), "화이트 폰은 기물을 뛰어넘어 이동할 수 없다."),
             Arguments.of(Position.of(File.D, Rank.SEVEN), Position.of(File.D, Rank.FIVE), "블랙 폰은 기물을 뛰어넘어 이동할 수 없다."),
 
-            Arguments.of(Position.of(File.A, Rank.TWO), Position.of(File.A, Rank.THREE), "폰은 앞에 있는 기물을 잡을 수 없다."),
+            Arguments.of(Position.of(File.A, Rank.TWO), Position.of(File.A, Rank.THREE), "한번도 움직이지 않은 폰은 앞에 있는 기물을 잡을 수 없다."),
+            Arguments.of(Position.of(File.H, Rank.FOUR), Position.of(File.H, Rank.THREE), "한번 움직인 폰은 앞에 있는 기물을 잡을 수 없다."),
             Arguments.of(Position.of(File.H, Rank.FOUR), Position.of(File.H, Rank.TWO), "폰은 두칸 앞에 있는 기물을 잡을 수 없다.")
         );
     }

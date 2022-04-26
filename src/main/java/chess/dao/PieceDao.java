@@ -18,7 +18,7 @@ public class PieceDao {
     }
 
     @Transactional
-    public void createAllByGameId(List<Piece> pieces, String gameId) {
+    public void createAllByGameId(List<Piece> pieces, long gameId) {
         final String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, pieces, pieces.size(),
@@ -26,12 +26,12 @@ public class PieceDao {
                 statement.setString(1, piece.getName());
                 statement.setString(2, piece.getColor().getName());
                 statement.setString(3, piece.getPosition().getPosition());
-                statement.setString(4, gameId);
+                statement.setLong(4, gameId);
             }
         );
     }
 
-    public void updateAllByGameId(List<Piece> pieces, String gameId) {
+    public void updateAllByGameId(List<Piece> pieces, long gameId) {
         final String sql = "UPDATE piece SET position = ? "
             + "WHERE game_id = ? "
             + "AND name = ? "
@@ -40,14 +40,14 @@ public class PieceDao {
         jdbcTemplate.batchUpdate(sql, pieces, pieces.size(),
             (statement, piece) -> {
                 statement.setString(1, piece.getPosition().getPosition());
-                statement.setString(2, gameId);
+                statement.setLong(2, gameId);
                 statement.setString(3, piece.getName());
                 statement.setString(4, piece.getColor().getName());
             }
         );
     }
 
-    public Pieces findAllByGameId(String gameId) {
+    public Pieces findAllByGameId(long gameId) {
         final String sql = "select name, color, position from piece where game_id = ?";
 
         List<Piece> pieces = jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceFactory.of(
@@ -59,7 +59,7 @@ public class PieceDao {
         return new Pieces(pieces);
     }
 
-    public void deleteAllByGameId(String gameId) {
+    public void deleteAllByGameId(long gameId) {
         final String sql = "delete from piece where game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }

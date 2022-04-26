@@ -1,7 +1,11 @@
 package chess.dao;
 
 import chess.domain.piece.Color;
+import java.sql.PreparedStatement;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -13,10 +17,18 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createById(String id) {
-        final String sql = "insert into game (id, turn) values (?, ?)";
+    public long createByTitleAndPassword(String title, String password) {
+        final String sql = "insert into game (title, password) values (?, ?)";
 
-        jdbcTemplate.update(sql, id, Color.BLACK.getName());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, title);
+            ps.setString(2, password);
+            return ps;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public boolean exists(String id) {
@@ -25,32 +37,32 @@ public class GameDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
     }
 
-    public boolean findForceEndFlagById(String id) {
+    public boolean findForceEndFlagById(long id) {
         final String sql = "select force_end_flag from game where id = ?";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
 
-    public Color findTurnById(String id) {
+    public Color findTurnById(long id) {
         final String sql = "select turn from game where id = ?";
 
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                Color.of(resultSet.getString("turn")), id);
+            Color.of(resultSet.getString("turn")), id);
     }
 
-    public void updateTurnById(Color nextTurn, String id) {
+    public void updateTurnById(Color nextTurn, long id) {
         final String sql = "update game set turn = ? where id = ?";
 
         jdbcTemplate.update(sql, nextTurn.getName(), id);
     }
 
-    public void updateForceEndFlagById(boolean forceEndFlag, String id) {
+    public void updateForceEndFlagById(boolean forceEndFlag, long id) {
         final String sql = "update game set force_end_flag = ? where id = ?";
 
         jdbcTemplate.update(sql, forceEndFlag, id);
     }
 
-    public void deleteById(String id) {
+    public void deleteById(long id) {
         final String sql = "delete from game where id = ?";
 
         jdbcTemplate.update(sql, id);

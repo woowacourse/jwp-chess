@@ -27,6 +27,7 @@ public class PieceDaoTest {
     private PieceDao pieceDao;
     private GameDao gameDao;
     private List<Piece> pieces;
+    private long gameId;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -40,9 +41,11 @@ public class PieceDaoTest {
         jdbcTemplate.execute("DROP TABLE game IF EXISTS");
 
         jdbcTemplate.execute("create table game("
-            + "id varchar(100) not null unique, "
-            + "turn varchar(10) not null, "
-            + "force_end_flag tinyint(1) not null default false"
+            + "id int AUTO_INCREMENT PRIMARY KEY, "
+            + "turn varchar(10) not null default 'black',"
+            + "force_end_flag tinyint(1) not null default false,"
+            + "title varchar(100) not null,"
+            + "password varchar(100) not null"
             + ")");
 
         jdbcTemplate.execute("create table piece("
@@ -50,11 +53,11 @@ public class PieceDaoTest {
             + "name varchar(10) not null, "
             + "color varchar(10) not null, "
             + "position varchar(10) not null, "
-            + "game_id varchar(100) not null, "
+            + "game_id int not null, "
             + "foreign key (game_id) references game (id)"
             + ")");
 
-        gameDao.createById("1234");
+        gameId = gameDao.createByTitleAndPassword("게임방제목", "password486");
         pieces = ChessmenInitializer.init().getPieces();
     }
 
@@ -67,20 +70,20 @@ public class PieceDaoTest {
     @DisplayName("createAllByGameId 실행시 해당 gameId에 piece 정보들이 추가된다.")
     @Test
     void createAllById() {
-        pieceDao.createAllByGameId(pieces, "1234");
+        pieceDao.createAllByGameId(pieces, gameId);
 
-        assertThat(pieceDao.findAllByGameId("1234").getPieces().size()).isEqualTo(32);
+        assertThat(pieceDao.findAllByGameId(gameId).getPieces().size()).isEqualTo(32);
     }
 
     @DisplayName("updateAllByGameId 실행시 해당 gameId의 piece들의 정보가 바뀐다.")
     @Test
     void updateAllByGameId() {
-        pieceDao.createAllByGameId(pieces, "1234");
+        pieceDao.createAllByGameId(pieces, gameId);
         pieces.remove(pieces.size() - 1);
         pieces.add(new King(Color.BLACK, Position.of("h2")));
 
-        pieceDao.updateAllByGameId(pieces, "1234");
-        Pieces moved = pieceDao.findAllByGameId("1234");
+        pieceDao.updateAllByGameId(pieces, gameId);
+        Pieces moved = pieceDao.findAllByGameId(gameId);
 
         assertThat(moved.extractPiece(Position.of("h2")).getName()).isEqualTo("king");
     }
@@ -88,10 +91,10 @@ public class PieceDaoTest {
     @DisplayName("updateAllByGameId 실행시 해당 gameId의 piece들이 사라진다.")
     @Test
     void deleteAllByGameId() {
-        pieceDao.createAllByGameId(pieces, "1234");
-        pieceDao.deleteAllByGameId("1234");
+        pieceDao.createAllByGameId(pieces, gameId);
+        pieceDao.deleteAllByGameId(gameId);
 
-        assertThat(pieceDao.findAllByGameId("1234").getPieces().size()).isEqualTo(0);
+        assertThat(pieceDao.findAllByGameId(gameId).getPieces().size()).isEqualTo(0);
     }
 
 }

@@ -12,7 +12,9 @@ import chess.domain.chesspiece.King;
 import chess.domain.chesspiece.Knight;
 import chess.domain.chesspiece.Queen;
 import chess.domain.position.Position;
+import chess.dto.request.MoveRequestDto;
 import chess.dto.response.ChessPieceDto;
+import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomStatusDto;
 import java.util.HashMap;
 import java.util.List;
@@ -170,5 +172,51 @@ class ChessServiceTest {
         // then
         final List<ChessPieceDto> actual = chessPieceDao.findAllByRoomId(roomId);
         assertThat(actual.size()).isEqualTo(32);
+    }
+
+    @Test
+    @DisplayName("기물을 이동하면 이동 시킨 기물의 위치가 변경된다.")
+    void move_updatePosition() {
+        // given
+        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.WHITE, "1234");
+
+        final String from = "a1";
+        final String to = "b2";
+
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        pieceByPosition.put(Position.from(from), King.from(Color.WHITE));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
+
+        // when
+        final MoveRequestDto dto = new MoveRequestDto(from, to);
+        chessService.move(roomId, dto);
+
+        // then
+        final List<ChessPieceDto> allPiece = chessPieceDao.findAllByRoomId(roomId);
+        final ChessPieceDto actual = allPiece.get(0);
+        assertThat(actual.getPosition()).isEqualTo(to);
+    }
+
+    @Test
+    @DisplayName("기물을 이동하면 방의 상태가 변경된다.")
+    void move_updateRoom() {
+        // given
+        final Color initialTurn = Color.WHITE;
+        final int roomId = roomDao.save("test", GameStatus.PLAYING, initialTurn, "1234");
+
+        final String from = "a1";
+        final String to = "b2";
+
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        pieceByPosition.put(Position.from(from), King.from(Color.WHITE));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
+
+        // when
+        final MoveRequestDto dto = new MoveRequestDto(from, to);
+        chessService.move(roomId, dto);
+
+        // then
+        final CurrentTurnDto currentTurnDto = roomDao.findCurrentTurnById(roomId);
+        assertThat(currentTurnDto.getCurrentTurn()).isEqualTo(initialTurn.toOpposite());
     }
 }

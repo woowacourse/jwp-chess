@@ -12,7 +12,8 @@ public class JdbcFixture {
     public static void createRoomTable(JdbcTemplate jdbcTemplate) {
         jdbcTemplate.execute("create table room ("
                 + " id bigint not null auto_increment,"
-                + " name VARCHAR(255) not null,"
+                + " name varchar(255) not null,"
+                + " password varchar(30) not null,"
                 + " turn varchar(10) not null,"
                 + " primary key (id),"
                 + " constraint uniqueName unique (name))");
@@ -29,10 +30,13 @@ public class JdbcFixture {
                         + " foreign key (room_id) references room (id))");
     }
 
-    public static void insertRoom(JdbcTemplate jdbcTemplate, String name, String turn) {
-        jdbcTemplate.update("INSERT INTO room(name, turn) VALUES (?,?)", name, turn);
+    public static void insertRoom(JdbcTemplate jdbcTemplate, String name, String password, String turn) {
+        jdbcTemplate.update("insert into room(name, password, turn) values (?,?,?)", name, password, turn);
     }
 
+    /*
+    * 입력될 때 ["position,piece,room_id",...] 형식으로 받게된다.
+    * */
     public static void insertSquares(JdbcTemplate jdbcTemplate, List<String> squares) {
         List<Object[]> pieces = squares
                 .stream()

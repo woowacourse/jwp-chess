@@ -28,7 +28,7 @@ class SquareDaoTest {
         JdbcFixture.createRoomTable(jdbcTemplate);
         JdbcFixture.createSquareTable(jdbcTemplate);
 
-        JdbcFixture.insertRoom(jdbcTemplate, "sojukang", "white");
+        JdbcFixture.insertRoom(jdbcTemplate, "sojukang", "1234", "white");
         JdbcFixture.insertSquares(jdbcTemplate, List.of(
                 "a1,white_pawn,1",
                 "a2,black_pawn,1",
@@ -73,7 +73,7 @@ class SquareDaoTest {
     @Test
     @DisplayName("해당 RoomId를 참조한 모든 Square를 제거할 수 있다.")
     void removeAll() {
-        JdbcFixture.insertRoom(jdbcTemplate, "test", "white");
+        JdbcFixture.insertRoom(jdbcTemplate, "test", "", "white");
         JdbcFixture.insertSquares(jdbcTemplate, List.of("b1,white_pawn,2"));
 
         squareDao.removeAll(2);

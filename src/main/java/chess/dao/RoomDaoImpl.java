@@ -17,8 +17,8 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public void save(Room room) {
-        String sql = "insert into room (turn, name) values (?, ?)";
-        jdbcTemplate.update(sql, room.getTurn(), room.getName());
+        String sql = "insert into room (turn, password, name) values (?, ?, ?)";
+        jdbcTemplate.update(sql, room.getTurn(), room.getPassword(), room.getName());
     }
 
     @Override
@@ -28,10 +28,11 @@ public class RoomDaoImpl implements RoomDao {
         try {
             Room room = jdbcTemplate.queryForObject(sql,
                     (rs, rowNum) ->
-                        new Room(
-                                rs.getLong("id"),
-                                rs.getString("turn"),
-                                rs.getString("name")),
+                            new Room(
+                                    rs.getLong("id"),
+                                    rs.getString("turn"),
+                                    rs.getString("name"),
+                                    rs.getString("password")),
                     name);
             return Optional.ofNullable(room);
         } catch (EmptyResultDataAccessException exception) {
@@ -40,7 +41,7 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public void update(long id, String turn) {
+    public void updateTurn(long id, String turn) {
         String sql = "update room set turn = ? where id = ?";
         jdbcTemplate.update(sql, turn, id);
     }

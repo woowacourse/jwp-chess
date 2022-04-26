@@ -45,7 +45,7 @@ public class ChessService {
         Map<Position, Piece> board = webChessGame.getBoard();
         List<Square> squares = convertBoardToSquares(board);
         squareDao.saveAll(squares, room.getId());
-        roomDao.update(room.getId(), webChessGame.getTurn());
+        roomDao.updateTurn(room.getId(), webChessGame.getTurn());
         return BoardDto.of(board, webChessGame.getTurn());
     }
 
@@ -62,7 +62,7 @@ public class ChessService {
                 .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         WebChessGame webChessGame = WebChessGame.of(loadChessBoard(room.getId()), room.getTurn());
         webChessGame.move(moveDto.getFrom(), moveDto.getTo());
-        roomDao.update(room.getId(), webChessGame.getTurn());
+        roomDao.updateTurn(room.getId(), webChessGame.getTurn());
         updateMovement(room.getId(), moveDto);
 
         return BoardDto.of(webChessGame.getBoard(), webChessGame.getTurn());

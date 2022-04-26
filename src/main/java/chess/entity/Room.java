@@ -1,24 +1,23 @@
 package chess.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Room {
 
     private long id;
-    private String name;
+    private final String name;
     private final String turn;
-    private final List<Square> board = new ArrayList<>();
+    private final String password;
 
-    public Room(long id, String turn, String name) {
+    public Room(long id, String turn, String name, String password) {
         this.id = id;
         this.turn = turn;
         this.name = name;
+        this.password = password;
     }
 
     public Room(String name) {
         this.name = name;
         this.turn = "empty";
+        this.password = "";
     }
 
     public long getId() {
@@ -31,5 +30,9 @@ public class Room {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

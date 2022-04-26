@@ -26,7 +26,7 @@ class RoomDaoTest {
 
         JdbcFixture.createRoomTable(jdbcTemplate);
 
-        JdbcFixture.insertRoom(jdbcTemplate, "sojukang", "white");
+        JdbcFixture.insertRoom(jdbcTemplate, "sojukang", "1234", "white");
     }
 
     @Test
@@ -47,7 +47,7 @@ class RoomDaoTest {
     @Test
     @DisplayName("Room을 업데이트한다.")
     void update() {
-        roomDao.update(1, "black");
+        roomDao.updateTurn(1, "black");
         assertThat(roomDao.findByName("sojukang").get().getTurn()).isEqualTo("black");
     }
 }

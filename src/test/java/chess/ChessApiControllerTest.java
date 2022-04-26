@@ -33,7 +33,7 @@ class ChessApiControllerTest {
         JdbcFixture.dropTable(jdbcTemplate, "room");
         JdbcFixture.createRoomTable(jdbcTemplate);
         JdbcFixture.createSquareTable(jdbcTemplate);
-        JdbcFixture.insertRoom(jdbcTemplate, "roma", "white");
+        JdbcFixture.insertRoom(jdbcTemplate, "roma", "1234", "white");
     }
 
     @Test

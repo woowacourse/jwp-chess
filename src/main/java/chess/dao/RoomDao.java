@@ -8,5 +8,5 @@ public interface RoomDao {
 
     Optional<Room> findByName(String name);
 
-    void update(long id, String turn);
+    void updateTurn(long id, String turn);
 }

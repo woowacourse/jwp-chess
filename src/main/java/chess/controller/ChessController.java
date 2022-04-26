@@ -5,10 +5,7 @@ import chess.model.dto.MoveDto;
 import chess.model.dto.WebBoardDto;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -29,22 +26,22 @@ public class ChessController {
 
     @GetMapping("/start")
     @ResponseBody
-    public Map<String, String> start() {
-        WebBoardDto board = chessService.start();
+    public Map<String, String> startNewGame(@RequestBody String password) {
+        WebBoardDto board = chessService.createGame(password);
         return board.getWebBoard();
     }
 
-    @PostMapping("/move")
+    @PostMapping("/move/{gameId}")
     @ResponseBody
-    public Map<String, String> move(@RequestBody MoveDto moveCommand) {
-        WebBoardDto board = chessService.move(moveCommand);
+    public Map<String, String> move(@PathVariable Long gameId, @RequestBody MoveDto moveCommand) {
+        WebBoardDto board = chessService.move(gameId, moveCommand);
         return board.getWebBoard();
     }
 
-    @GetMapping(value = "/turn")
+    @GetMapping(value = "/turn/{gameId}")
     @ResponseBody
-    public String turn() {
-        return chessService.getTurn();
+    public String turn(@PathVariable Long gameId) {
+        return chessService.getTurn(gameId);
     }
 
     @GetMapping("/king/dead")

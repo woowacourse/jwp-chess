@@ -6,68 +6,84 @@ import chess.model.MoveType;
 import chess.model.Turn;
 import chess.model.board.Board;
 import chess.model.board.BoardFactory;
+import chess.model.dao.GameDao;
 import chess.model.dao.PieceDao;
-import chess.model.dao.TurnDao;
 import chess.model.dto.MoveDto;
 import chess.model.dto.WebBoardDto;
 import chess.model.piece.Empty;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceFactory;
 import chess.model.position.Position;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
-    private final PieceDao pieceDao;
-    private final TurnDao turnDao;
 
-    public ChessService(PieceDao pieceDao, TurnDao turnDao) {
+    private final PieceDao pieceDao;
+    private final GameDao gameDao;
+
+    public ChessService(PieceDao pieceDao, GameDao gameDao) {
         this.pieceDao = pieceDao;
-        this.turnDao = turnDao;
+        this.gameDao = gameDao;
     }
 
-    public WebBoardDto start() {
-        Board board = initBoard();
-        initTurn();
+    public List<Long> getAllGames() {
+        return gameDao.findAllGameId();
+    }
+
+    public WebBoardDto createGame(String password) {
+        Board board = initBoard(gameDao.saveGame(password));
 
         return WebBoardDto.from(board);
     }
 
-    public WebBoardDto move(MoveDto moveDto) {
+    public WebBoardDto continueGame(Long gameId) {
+        List<PieceEntity> pieceEntities = pieceDao.findAllPiecesByGameId(gameId);
+        Board board = toBoard(pieceEntities);
+
+        return WebBoardDto.from(board);
+    }
+
+    public WebBoardDto move(Long gameId, MoveDto moveDto) {
         Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPosition(moveDto.getSource()));
         Piece targetPiece = PieceFactory.create(pieceDao.findPieceNameByPosition(moveDto.getTarget()));
-        Turn turn = Turn.from(turnDao.findOne().get());
+        Turn turn = Turn.from(getTurn(gameId));
         validateCurrentTurn(turn, sourcePiece);
         try {
-            movePiece(moveDto, sourcePiece, targetPiece, turn);
+            movePiece(gameId, moveDto, sourcePiece, targetPiece, turn);
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
         Board board = toBoard(pieceDao.findAllPieces());
         if (board.isKingDead()) {
-            turnDao.update(turn.finish());
+            gameDao.update(gameId, turn.finish());
         }
 
         return WebBoardDto.from(board);
     }
 
-    private void movePiece(MoveDto moveDto, Piece sourcePiece, Piece targetPiece, Turn turn) {
+    private void movePiece(Long gameId, MoveDto moveDto, Piece sourcePiece, Piece targetPiece, Turn turn) {
         if (canMove(moveDto, sourcePiece, targetPiece)) {
             pieceDao.updateByPosition(moveDto.getTarget(), PieceDao.getPieceName(sourcePiece));
             pieceDao.updateByPosition(moveDto.getSource(), "none-.");
-            turnDao.update(turn.change().getThisTurn());
+            gameDao.update(gameId, turn.change().getThisTurn());
             return;
         }
         throw new IllegalArgumentException("기물을 이동할 수 없습니다.");
     }
 
-    public String getTurn() {
-        return turnDao.findOne().get();
+    public String getTurn(Long gameId) {
+        String turn = gameDao.findTurnByGameId(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 ID 값입니다."));
+        if (turn.equals("start")) {
+            turn = "white";
+        }
+        return turn;
     }
 
     public boolean isKingDead() {
@@ -82,17 +98,18 @@ public class ChessService {
 
     public void exitGame() {
         pieceDao.deleteAll();
-        turnDao.deleteAll();
+        gameDao.deleteAll();
     }
 
-    private Board initBoard() {
-        List<PieceEntity> board = pieceDao.findAllPieces();
+    private Board initBoard(Long gameId) {
+//        List<PieceEntity> board = pieceDao.findAllPieces();
+//
+//        if (board.size() == 0) {
+//            pieceDao.init(BoardFactory.create());
+//        }
+        pieceDao.savePieces(BoardFactory.create(), gameId);
 
-        if (board.size() == 0) {
-            pieceDao.init(BoardFactory.create());
-        }
-
-        return toBoard(pieceDao.findAllPieces());
+        return toBoard(pieceDao.findAllPiecesByGameId(gameId));
     }
 
     private Board toBoard(List<PieceEntity> rawBoard) {
@@ -104,13 +121,13 @@ public class ChessService {
                 ));
     }
 
-    private void initTurn() {
-        Optional<String> turn = turnDao.findOne();
-
-        if (turn.isEmpty()) {
-            turnDao.init();
-        }
-    }
+//    private void initTurn(Long gameId) {
+//        Optional<String> turn = gameDao.findTurnByGameId(gameId);
+//
+//        if (turn.isEmpty()) {
+//            gameDao.saveGame();
+//        }
+//    }
 
     private void validateCurrentTurn(Turn thisTurn, Piece sourcePiece) {
         if (!sourcePiece.isCurrentTurn(thisTurn)) {

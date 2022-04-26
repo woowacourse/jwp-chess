@@ -1,8 +1,6 @@
 package chess.controller;
 
 import chess.controller.view.BoardView;
-import chess.dao.GameDao;
-import chess.dao.PieceDao;
 import chess.dto.MoveCommandDto;
 import chess.service.ChessGameService;
 import java.net.URLDecoder;
@@ -26,8 +24,8 @@ public class SpringChessController {
 
     private final ChessGameService chessGameService;
 
-    public SpringChessController(GameDao gameDao, PieceDao pieceDao) {
-        this.chessGameService = new ChessGameService(pieceDao, gameDao);
+    public SpringChessController(ChessGameService chessGameService) {
+        this.chessGameService = chessGameService;
     }
 
     @ExceptionHandler(Exception.class)

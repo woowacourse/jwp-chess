@@ -1,11 +1,16 @@
 package chess.controller;
 
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.domain.board.piece.Color;
 import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
 import chess.dto.response.CreatedGameDto;
 import chess.dto.response.SearchResultDto;
 import chess.service.ChessService;
+import chess.util.CookieUtils;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,8 +44,12 @@ public class GameController {
     }
 
     @PostMapping
-    public CreatedGameDto createGame(EncryptedAuthCredentials authCredentials) {
-        return chessService.initGame(authCredentials);
+    public CreatedGameDto createGame(EncryptedAuthCredentials authCredentials,
+                                     HttpServletResponse response) {
+        CreatedGameDto gameDto = chessService.initGame(authCredentials);
+        int newGameId = gameDto.getId();
+        response.addCookie(CookieUtils.generate(newGameId, Color.WHITE));
+        return gameDto;
     }
 
     @GetMapping("/{id}")
@@ -52,13 +61,14 @@ public class GameController {
     public void enterGame(@PathVariable int id,
                           EncryptedAuthCredentials authCredentials,
                           HttpServletResponse response) {
-        Cookie cookie = new Cookie(COOKIE_KEY, "dummy_data");
+        Cookie cookie = new Cookie(CookieUtils.KEY, id + "_" + "WHITE");
         cookie.setMaxAge(1000);
         response.addCookie(cookie);
     }
 
     @PutMapping("/{id}")
     public ModelAndView updateGame(@PathVariable int id,
+                                   @CookieValue(value = CookieUtils.KEY, defaultValue = "hello") String cookie,
                                    @RequestBody MoveRoute moveRoute) {
         chessService.playGame(id, new MoveEvent(moveRoute));
         return getGameModelAndView(id);

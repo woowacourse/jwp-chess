@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PieceDaoTest {
 
-    private static final long testGameId = 1;
+    private static long testGameId;
 
     @Autowired
     private GameDao gameDao;
@@ -33,7 +33,9 @@ public class PieceDaoTest {
 
     @BeforeEach
     void createGame() {
-        gameDao.save(testGameId);
+        gameDao.save("name", "password");
+        testGameId = gameDao.load("name", "password")
+                .get().getId();
     }
 
     @DisplayName("기물 저장 테스트")

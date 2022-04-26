@@ -33,7 +33,7 @@ public final class Application {
     private static void playGame(final ChessBoard chessBoard, Command command) {
         try {
             command = InputView.responseUserCommand();
-            if (command.isEnd()){
+            if (command.isEnd()) {
                 return;
             }
             if (command.isStatus()) {
@@ -46,7 +46,7 @@ public final class Application {
                 OutputView.printBoard(chessBoard);
                 playGame(chessBoard, command);
             }
-            if (!chessBoard.checkKingExist()){
+            if (!chessBoard.checkKingExist()) {
                 OutputView.printWinner(chessBoard.calculateWhoWinner());
                 return;
             }

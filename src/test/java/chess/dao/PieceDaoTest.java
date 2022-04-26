@@ -26,6 +26,7 @@ public class PieceDaoTest {
 
     private PieceDao pieceDao;
     private GameDao gameDao;
+    private List<Piece> pieces;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -52,6 +53,9 @@ public class PieceDaoTest {
             + "game_id varchar(100) not null, "
             + "foreign key (game_id) references game (id)"
             + ")");
+
+        gameDao.createById("1234");
+        pieces = ChessmenInitializer.init().getPieces();
     }
 
     @AfterAll
@@ -63,10 +67,6 @@ public class PieceDaoTest {
     @DisplayName("createAllByGameId 실행시 해당 gameId에 piece 정보들이 추가된다.")
     @Test
     void createAllById() {
-        gameDao.createById("1234");
-
-        final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
-        final List<Piece> pieces = chessmenInitializer.init().getPieces();
         pieceDao.createAllByGameId(pieces, "1234");
 
         assertThat(pieceDao.findAllByGameId("1234").getPieces().size()).isEqualTo(32);
@@ -75,27 +75,19 @@ public class PieceDaoTest {
     @DisplayName("updateAllByGameId 실행시 해당 gameId의 piece들의 정보가 바뀐다.")
     @Test
     void updateAllByGameId() {
-        gameDao.createById("1234");
-        final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
-        final List<Piece> pieces = chessmenInitializer.init().getPieces();
         pieceDao.createAllByGameId(pieces, "1234");
-
         pieces.remove(pieces.size() - 1);
         pieces.add(new King(Color.BLACK, Position.of("h2")));
 
         pieceDao.updateAllByGameId(pieces, "1234");
-        Pieces move = pieceDao.findAllByGameId("1234");
+        Pieces moved = pieceDao.findAllByGameId("1234");
 
-        assertThat(move.extractPiece(Position.of("h2")).getName()).isEqualTo("king");
+        assertThat(moved.extractPiece(Position.of("h2")).getName()).isEqualTo("king");
     }
 
     @DisplayName("updateAllByGameId 실행시 해당 gameId의 piece들이 사라진다.")
     @Test
     void deleteAllByGameId() {
-        gameDao.createById("1234");
-
-        final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
-        final List<Piece> pieces = chessmenInitializer.init().getPieces();
         pieceDao.createAllByGameId(pieces, "1234");
         pieceDao.deleteAllByGameId("1234");
 

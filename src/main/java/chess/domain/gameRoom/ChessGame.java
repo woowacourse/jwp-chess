@@ -14,7 +14,7 @@ public final class ChessGame {
     private boolean isEnd;
     private ChessBoard chessBoard;
 
-    public ChessGame(final BoardGenerator boardGenerator) {
+    private ChessGame(final BoardGenerator boardGenerator) {
         this.chessBoard = new ChessBoard(boardGenerator);
     }
 

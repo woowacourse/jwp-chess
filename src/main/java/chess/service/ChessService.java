@@ -29,7 +29,7 @@ public final class ChessService {
     }
 
     public String addChessGame(final String gameName, final String password) {
-        ChessGame chessGame = new ChessGame(new ChessBoardGenerator());
+        ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName(gameName);
         chessGame.setPassword(password);
 

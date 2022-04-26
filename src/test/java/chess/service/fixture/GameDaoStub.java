@@ -1,6 +1,8 @@
 package chess.service.fixture;
 
 import chess.dao.GameDao;
+import chess.dto.CreateGameRequest;
+import chess.dto.GameDataDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,7 +21,7 @@ public class GameDaoStub extends GameDao {
     }
 
     @Override
-    public int saveAndGetGeneratedId() {
+    public int saveAndGetGeneratedId(CreateGameRequest createGameRequest) {
         autoIncrementId++;
         repository.put(autoIncrementId, true);
         return autoIncrementId;

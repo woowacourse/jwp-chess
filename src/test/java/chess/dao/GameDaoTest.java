@@ -2,6 +2,7 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.dto.CreateGameRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +22,8 @@ class GameDaoTest {
 
     @Test
     void saveAndGetGeneratedId_메서드는_저장한_데이터의_id값_반환() {
-        int actual = dao.saveAndGetGeneratedId();
+        CreateGameRequest request = new CreateGameRequest("title", "password");
+        int actual = dao.saveAndGetGeneratedId(request);
 
         assertThat(actual).isEqualTo(3);
     }

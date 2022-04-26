@@ -6,7 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
 import chess.domain.game.NewGame;
-import chess.dto.CreateGameDto;
+import chess.dto.CreateGameRequest;
+import chess.dto.CreateGameResponse;
 import chess.dto.GameCountDto;
 import chess.dto.GameDto;
 import chess.dto.GameResultDto;
@@ -44,8 +45,9 @@ class ChessServiceTest {
 
     @Test
     void initGame_메서드는_새로운_게임을_DB에_저장하고_생성된_게임ID가_담긴_데이터를_반환한다() {
-        CreateGameDto actual = service.initGame();
-        CreateGameDto expected = new CreateGameDto(4);
+        CreateGameRequest request = new CreateGameRequest("title", "password");
+        CreateGameResponse actual = service.initGame(request);
+        CreateGameResponse expected = new CreateGameResponse(4);
 
         assertThat(actual).isEqualTo(expected);
     }

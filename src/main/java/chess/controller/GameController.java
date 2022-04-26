@@ -2,7 +2,8 @@ package chess.controller;
 
 import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
-import chess.dto.CreateGameDto;
+import chess.dto.CreateGameRequest;
+import chess.dto.CreateGameResponse;
 import chess.dto.GameDto;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
@@ -27,8 +28,8 @@ public class GameController {
     }
 
     @PostMapping("/new")
-    public CreateGameDto createGame() {
-        return chessService.initGame();
+    public CreateGameResponse createGame(@RequestBody CreateGameRequest createGameRequest) {
+        return chessService.initGame(createGameRequest);
     }
 
     @GetMapping("/{id}")

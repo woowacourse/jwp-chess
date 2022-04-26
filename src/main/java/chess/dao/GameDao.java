@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dto.CreateGameRequest;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -16,10 +17,16 @@ public class GameDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public int saveAndGetGeneratedId() {
-        final String sql = "INSERT INTO game VALUES ()";
+    public int saveAndGetGeneratedId(CreateGameRequest request) {
+        final String sql = "INSERT INTO game(title, password) VALUES (:title, :password)";
+
+        MapSqlParameterSource paramSource = new MapSqlParameterSource();
+        paramSource.addValue("title", request.getTitle());
+        paramSource.addValue("password", request.getPassword());
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(sql, new EmptySqlParameterSource(), keyHolder);
+        namedParameterJdbcTemplate.update(sql, paramSource, keyHolder);
+
         return keyHolder.getKey().intValue();
     }
 

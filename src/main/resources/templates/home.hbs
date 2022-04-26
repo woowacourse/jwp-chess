@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8"/>
-    <title>체스 시뮬레이터 by bugoverdose</title>
+    <title>체스 시뮬레이터</title>
     <link rel="stylesheet" href="/styles/home.css"/>
     <link rel="icon" type="image/x-icon" href="/images/favicon.png">
 </head>
@@ -14,11 +14,27 @@
         <div>총 {{totalCount}}개의 게임이 생성되었습니다.</div>
         <div>현재 {{runningCount}}개의 게임이 진행 중입니다.</div>
     </section>
+
     <section class="buttons__container">
-        <button id="init_game">새로운 게임 시작</button>
+        <button id="new_game">새로운 게임 시작</button>
         <a href="/search">기존 게임 재개</a>
     </section>
     {{/response}}
+
+    <br><br>
+
+    <section id="new_game_section" class="hide">
+        <form method="post" id="new_game_form">
+            <label for="title">제목: </label>
+            <input type="text" name="title" id="title" placeholder="ex) 함께 체스해요~">
+            <br>
+            <label for="password">비밀번호: </label>
+            <input type="password" name="password" id="password">
+            <br>
+            <button type="submit">start</button>
+        </form>
+    </section>
+
     <script src="/scripts/new-game.js"></script>
 </body>
 </html>

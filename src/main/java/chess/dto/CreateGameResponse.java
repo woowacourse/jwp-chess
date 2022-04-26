@@ -2,11 +2,11 @@ package chess.dto;
 
 import java.util.Objects;
 
-public class CreateGameDto {
+public class CreateGameResponse {
 
     private final int id;
 
-    public CreateGameDto(int id) {
+    public CreateGameResponse(int id) {
         this.id = id;
     }
 
@@ -22,7 +22,7 @@ public class CreateGameDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CreateGameDto that = (CreateGameDto) o;
+        CreateGameResponse that = (CreateGameResponse) o;
         return id == that.id;
     }
 

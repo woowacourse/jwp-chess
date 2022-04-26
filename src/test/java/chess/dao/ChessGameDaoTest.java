@@ -35,6 +35,13 @@ class ChessGameDaoTest {
     }
 
     @Test
+    @DisplayName("체스 게임 삭제")
+    void deleteChessGame() {
+        long chessGameId = chessGameDao.createChessGame(chessGameRoom);
+        assertThat(chessGameDao.deleteChessGame(chessGameId)).isEqualTo(1);
+    }
+
+    @Test
     @DisplayName("체스게임 목록 반환")
     void findAllChessGame() {
         chessGameDao.createChessGame(chessGameRoom);

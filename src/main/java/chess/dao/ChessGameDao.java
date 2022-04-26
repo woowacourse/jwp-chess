@@ -54,4 +54,10 @@ public class ChessGameDao {
 
         return jdbcTemplate.update(sql, turn.name(), id);
     }
+
+    public int deleteChessGame(long id) {
+        String sql = "delete from chess_game where id = ?";
+
+        return jdbcTemplate.update(sql, id);
+    }
 }

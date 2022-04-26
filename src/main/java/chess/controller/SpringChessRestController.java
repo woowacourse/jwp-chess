@@ -1,13 +1,15 @@
 package chess.controller;
 
 import chess.domain.piece.Color;
+import chess.dto.ExceptionDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.MoveResultDto;
 import chess.dto.PositionDto;
 import chess.service.ChessService;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,10 +47,7 @@ public class SpringChessRestController {
     }
 
     @ExceptionHandler(Exception.class)
-    public Map<String, Object> exception(Exception e) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("ok", false);
-        map.put("message", e.getMessage());
-        return map;
+    public ResponseEntity<ExceptionDto> exception(Exception e) {
+        return new ResponseEntity<>(new ExceptionDto(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

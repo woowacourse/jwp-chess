@@ -51,14 +51,15 @@ public class WebChessController {
         });
 
         post("/move", (request,response) -> {
-            List<String> chessBoard = chessService.getCurrentChessBoard();
+            String gameName = request.queryParams("game_name");
+            List<String> chessBoard = chessService.getCurrentChessBoard(gameName);
             String moveCommand = makeCommand(request);
 
             Map<String, Object> model = new HashMap<>();
 
             try {
-                chessBoard = chessService.move(moveCommand);
-                if (chessService.isEnd()) {
+                chessBoard = chessService.move(gameName, moveCommand);
+                if (chessService.isEnd(gameName)) {
                     response.redirect("/end");
                 }
                 model.put("chessboard", chessBoard);
@@ -71,8 +72,9 @@ public class WebChessController {
         });
 
         get("/status", (request, response) -> {
-            Map<Team, Double> score = chessService.getScore();
-            List<String> chessBoard = chessService.getCurrentChessBoard();
+            String gameName = request.queryParams("game_name");
+            Map<Team, Double> score = chessService.getScore(gameName);
+            List<String> chessBoard = chessService.getCurrentChessBoard(gameName);
 
             Map<String, Object> model = new HashMap<>();
             model.put("blackScore", score.get(BLACK));
@@ -82,24 +84,12 @@ public class WebChessController {
         });
 
         get("/end", (request, response) -> {
-            String winTeamName = chessService.finish(Command.from("end"));
-            List<String> chessBoard = chessService.getCurrentChessBoard();
+            String gameName = request.queryParams("game_name");
+            String winTeamName = chessService.finish(gameName, Command.from("end"));
+            List<String> chessBoard = chessService.getCurrentChessBoard(gameName);
 
             Map<String, Object> model = new HashMap<>();
             model.put("winTeam", winTeamName);
-            model.put("chessboard", chessBoard);
-            return render(model, "chess.html");
-        });
-
-        get("/save", (request, response) -> {
-            try {
-                chessService.save();
-            } catch (IllegalStateException e) {
-                response.redirect("/error");
-            }
-            List<String> chessBoard = chessService.getCurrentChessBoard();
-
-            Map<String, Object> model = new HashMap<>();
             model.put("chessboard", chessBoard);
             return render(model, "chess.html");
         });

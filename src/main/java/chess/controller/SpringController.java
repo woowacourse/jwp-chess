@@ -55,8 +55,8 @@ public class SpringController {
         String encodedParam = URLEncoder.encode(gameName, UTF_8);
         try {
             String command = makeCommand(from, to);
-            chessService.move(command);
-            if (chessService.isEnd()) {
+            chessService.move(gameName, command);
+            if (chessService.isEnd(gameName)) {
                 return "redirect:/game/" + encodedParam + "/end";
             }
         } catch (IllegalArgumentException e) {
@@ -70,8 +70,8 @@ public class SpringController {
 
     @GetMapping("/game/{gameName}/end")
     public String end(@PathVariable String gameName, Model model) {
-        String winTeamName = chessService.finish(Command.from("end"));
-        List<String> chessBoard = chessService.getCurrentChessBoard();
+        String winTeamName = chessService.finish(gameName, Command.from("end"));
+        List<String> chessBoard = chessService.getCurrentChessBoard(gameName);
 
         model.addAttribute("winTeam", winTeamName);
         model.addAttribute("chessboard", chessBoard);
@@ -82,8 +82,8 @@ public class SpringController {
 
     @GetMapping("/game/{gameName}/status")
     public String status(@PathVariable String gameName, Model model) {
-        Map<Team, Double> score = chessService.getScore();
-        List<String> chessBoard = chessService.getCurrentChessBoard();
+        Map<Team, Double> score = chessService.getScore(gameName);
+        List<String> chessBoard = chessService.getCurrentChessBoard(gameName);
 
         model.addAttribute("blackScore", score.get(Team.BLACK));
         model.addAttribute("whiteScore", score.get(Team.WHITE));

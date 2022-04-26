@@ -24,7 +24,18 @@ public class ChessGameRoom {
         return new ChessGameRoom(null, title, password, Turn.WHITE_TURN);
     }
 
-    public void checkPassword(String password) {
+    public void checkCanDelete(String password) {
+        checkEndTurn();
+        checkPassword(password);
+    }
+
+    private void checkEndTurn() {
+        if (!turn.isEnd()) {
+            throw new IllegalStateException("삭제는 종료상태에서만 할 수 있습니다.");
+        }
+    }
+
+    private void checkPassword(String password) {
         Objects.requireNonNull(password, "password는 null이 들어올 수 없습니다.");
         if (!this.password.equals(password)) {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");

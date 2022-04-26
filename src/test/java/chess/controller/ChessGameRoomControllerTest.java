@@ -3,6 +3,7 @@ package chess.controller;
 import chess.controller.dto.request.ChessGameRoomDeleteRequest;
 import chess.dao.ChessGameDao;
 import chess.domain.ChessGameRoom;
+import chess.domain.state.Turn;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +43,7 @@ class ChessGameRoomControllerTest {
     @DisplayName("체스 게임 삭제")
     void deleteChessGameRoom() {
         String password = "password";
-        long chessGameId = chessGameDao.createChessGame(ChessGameRoom.createNewChessGameRoom("title", password));
+        long chessGameId = chessGameDao.createChessGame(new ChessGameRoom(null, "title", password, Turn.END));
 
         RestAssured.given().log().all()
                 .body(new ChessGameRoomDeleteRequest(password))

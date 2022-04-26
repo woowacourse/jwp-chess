@@ -21,7 +21,7 @@ public class ChessGameRoomService {
 
     public void deleteChessRoom(long chessGameId, ChessGameRoomDeleteRequest deleteRequest) {
         ChessGameRoom chessGameRoom = chessGameDao.findChessGameRoom(chessGameId);
-        chessGameRoom.checkPassword(deleteRequest.getPassword());
+        chessGameRoom.checkCanDelete(deleteRequest.getPassword());
         chessGameDao.deleteChessGame(chessGameRoom.getId());
     }
 }

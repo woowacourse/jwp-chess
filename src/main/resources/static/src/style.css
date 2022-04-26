@@ -92,8 +92,15 @@ input {
     float: right;
 }
 
-.inlineBtn {
+.inlineBtn{
     display: inline;
+}
+
+.inlineBtn-newgame {
+    display: inline;
+    position:absolute;
+    top:50%; left:50%;
+    transform: translate(-50%, -50%);
 }
 
 .score {
@@ -108,4 +115,48 @@ input {
 
 .invisible {
     display: none;
+}
+
+.room-list-container {
+    text-align: center;
+    height: 100px;
+    position: relative;
+    margin-top: 150px;
+    border-top: 3px solid black;
+}
+
+.room-list {
+    list-style: none;
+}
+
+#room-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid black;
+}
+
+.room {
+    justify-content: space-between;
+}
+
+.room-name{
+    width: 50px;
+    background-color: #ffffe1;
+    font-size: xx-large;
+    text-decoration: none;
+    color: sandybrown;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.room-delete{
+    width: 30px;
+    background-color: #ffffe1;
+    font-size: xx-large;
+    text-decoration: none;
+    color: sandybrown;
+    text-align: center;
+    border: 1px solid black;
 }

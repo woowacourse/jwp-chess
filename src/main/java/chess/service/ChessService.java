@@ -11,6 +11,9 @@ import chess.domain.board.SavedBoardGenerator;
 import chess.domain.position.Square;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class ChessService {
     private final ChessGameDao chessGameDao;
@@ -21,17 +24,25 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
+    public List<String> loadGameLists() {
+        return chessGameDao.findAllGames();
+    }
+
     public ChessGame loadGame(String gameID) {
-        ChessGame chessGame;
-        try {
-            GameTurn gameTurn = getTurn(gameID);
-            checkCanContinue(gameTurn);
-            chessGame = loadSavedChessGame(gameID, gameTurn);
-        } catch (RuntimeException e) {
-            chessGame = loadNewChessGame();
-            startGame(gameID, chessGame);
-        }
-        return chessGame;
+        GameTurn gameTurn = getTurn(gameID);
+        checkCanContinue(gameTurn);
+        return loadSavedChessGame(gameID, gameTurn);
+    }
+
+    public void createGame(String gameID, String gamePW) {
+        ChessGame chessGame = loadNewChessGame();
+        startGame(gameID, gamePW, chessGame);
+        loadPieces(gameID);
+    }
+
+    public void deleteGame(String gameID) {
+        chessGameDao.delete(gameID);
+        pieceDao.deleteAll(gameID);
     }
 
     public GameTurn getTurn(String gameID) {
@@ -52,8 +63,8 @@ public class ChessService {
         return new ChessGame(new InitialBoardGenerator(), GameTurn.READY);
     }
 
-    public void startGame(String gameID, ChessGame chessGame) {
-        chessGameDao.save(gameID, chessGame);
+    public void startGame(String gameID, String gamePW, ChessGame chessGame) {
+        chessGameDao.save(gameID, gamePW, chessGame);
         updateTurn(gameID, chessGame);
     }
 

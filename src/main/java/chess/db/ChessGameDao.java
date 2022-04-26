@@ -14,9 +14,15 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(String gameID, ChessGame chessGame) {
-        String sql = "insert into chessGame (gameID, turn) values (?, ?)";
-        jdbcTemplate.update(sql, gameID, chessGame.getTurn().name());
+    public void save(String gameID, String gamePW, ChessGame chessGame) {
+        String sql = "insert into chessGame (gameID, gamePW, hashValue, turn) values (?, ?, ?, ?)";
+        String hashValue = "hash" + gameID + gamePW + "val";
+        jdbcTemplate.update(sql, gameID, gamePW, hashValue, chessGame.getTurn().name());
+    }
+
+    public void delete(String gameID) {
+        String sql = "delete from chessGame where gameID = ?";
+        jdbcTemplate.update(sql, gameID);
     }
 
     public void updateTurn(String gameID, ChessGame chessGame) {
@@ -28,5 +34,10 @@ public class ChessGameDao {
         String sql = "select turn from chessGame where gameID = ?";
         final List<String> turns = jdbcTemplate.queryForList(sql, String.class, gameID);
         return turns.get(0);
+    }
+
+    public List<String> findAllGames() {
+        String sql = "select gameID from chessGame";
+        return jdbcTemplate.queryForList(sql, String.class);
     }
 }

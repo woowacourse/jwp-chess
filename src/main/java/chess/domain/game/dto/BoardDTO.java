@@ -1,6 +1,7 @@
-package chess.dto;
+package chess.domain.game.dto;
 
-import chess.dao.ChessGame;
+import chess.domain.gameRoom.ChessGame;
+import chess.domain.gameRoom.GameStatus;
 import chess.domain.piece.property.Team;
 import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;

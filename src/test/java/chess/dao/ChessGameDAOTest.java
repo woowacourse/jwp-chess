@@ -1,6 +1,8 @@
 package chess.dao;
 
-import chess.dto.ChessGameRoomInfoDTO;
+import chess.domain.gameRoom.ChessGame;
+import chess.domain.gameRoom.dao.ChessGameRoomDAO;
+import chess.domain.gameRoom.dto.ChessGameRoomInfoDTO;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +28,7 @@ class ChessGameDAOTest {
     }
 
     private String addZero() {
-        ChessGameDAO chessGameDAO = new ChessGameDAO(template);
+        ChessGameRoomDAO chessGameDAO = new ChessGameRoomDAO(template);
         ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName("zero");
         String gameId = chessGameDAO.addGame(chessGame);
@@ -36,7 +38,7 @@ class ChessGameDAOTest {
     @Test
     @DisplayName("체스 게임방 가져오기")
     void findChessGameRoom() {
-        ChessGameDAO chessGameDAO = new ChessGameDAO(template);
+        ChessGameRoomDAO chessGameDAO = new ChessGameRoomDAO(template);
         ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName("zero");
         String gameId = chessGameDAO.addGame(chessGame);

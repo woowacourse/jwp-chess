@@ -1,10 +1,10 @@
 package chess.controller;
 
-import chess.dao.ChessGame;
+import chess.domain.gameRoom.ChessGame;
 import chess.domain.piece.property.Team;
-import chess.dto.BoardDTO;
-import chess.dto.ChessGameRoomInfoDTO;
-import chess.dto.MoveDTO;
+import chess.domain.game.dto.BoardDTO;
+import chess.domain.gameRoom.dto.ChessGameRoomInfoDTO;
+import chess.domain.game.dto.MoveDTO;
 import chess.service.ChessService;
 
 import org.springframework.http.ResponseEntity;

@@ -1,8 +1,9 @@
-package chess.dao;
+package chess.domain.gameRoom;
 
 import chess.domain.board.BoardGenerator;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.ChessBoardGenerator;
+import chess.domain.game.Movement;
 import chess.domain.position.Position;
 
 public final class ChessGame {

@@ -1,8 +1,8 @@
 package chess.view;
 
-import chess.dto.GameStatus;
+import chess.domain.gameRoom.GameStatus;
 import chess.domain.board.ChessBoard;
-import chess.dto.StatusDTO;
+import chess.domain.game.dto.StatusDTO;
 import chess.domain.piece.property.Team;
 import chess.domain.position.XPosition;
 import chess.domain.position.Position;

@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.domain.gameRoom.dto;
 
 public final class ChessGameRoomInfoDTO {
 

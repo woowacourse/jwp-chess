@@ -1,4 +1,6 @@
-package chess.dto;
+package chess.domain.game.dto;
+
+import chess.domain.gameRoom.GameStatus;
 
 public final class StatusDTO {
 

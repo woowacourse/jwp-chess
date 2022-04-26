@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.domain.game;
 
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;

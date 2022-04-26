@@ -1,5 +1,9 @@
 package chess.dao;
 
+import chess.domain.gameRoom.ChessGame;
+import chess.domain.gameRoom.dao.ChessGameRoomDAO;
+import chess.domain.game.Movement;
+import chess.domain.game.dao.MovementDAO;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +24,7 @@ class MovementDAOTest {
 
     @BeforeEach
     void before() {
-        ChessGameDAO chessGameDAO = new ChessGameDAO(jdbcTemplate);
+        ChessGameRoomDAO chessGameDAO = new ChessGameRoomDAO(jdbcTemplate);
         ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName("zero");
         String gameId = chessGameDAO.addGame(chessGame);

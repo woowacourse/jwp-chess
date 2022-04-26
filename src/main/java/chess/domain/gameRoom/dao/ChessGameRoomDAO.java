@@ -1,6 +1,7 @@
-package chess.dao;
+package chess.domain.gameRoom.dao;
 
-import chess.dto.ChessGameRoomInfoDTO;
+import chess.domain.gameRoom.ChessGame;
+import chess.domain.gameRoom.dto.ChessGameRoomInfoDTO;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -12,7 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ChessGameDAO {
+public class ChessGameRoomDAO {
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<ChessGameRoomInfoDTO> chessGameRoomInfoDTORowMapper = (rs, rowNum) ->
@@ -21,7 +22,7 @@ public class ChessGameDAO {
                     rs.getString("name")
             );
 
-    public ChessGameDAO(final JdbcTemplate jdbcTemplate) {
+    public ChessGameRoomDAO(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

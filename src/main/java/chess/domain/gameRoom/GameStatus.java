@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.domain.gameRoom;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.classification.Result;

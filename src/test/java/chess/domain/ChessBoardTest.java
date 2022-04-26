@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.board.ChessBoardGenerator;
-import chess.dto.GameStatus;
+import chess.domain.gameRoom.GameStatus;
 import chess.domain.piece.unit.Bishop;
 import chess.domain.piece.unit.Pawn;
 import chess.domain.piece.unit.Piece;

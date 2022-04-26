@@ -3,11 +3,11 @@ package chess.service;
 import chess.domain.board.ChessBoardGenerator;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
-import chess.dao.ChessGame;
-import chess.dao.ChessGameDAO;
-import chess.dao.Movement;
-import chess.dao.MovementDAO;
-import chess.dto.ChessGameRoomInfoDTO;
+import chess.domain.gameRoom.ChessGame;
+import chess.domain.gameRoom.dao.ChessGameRoomDAO;
+import chess.domain.game.Movement;
+import chess.domain.game.dao.MovementDAO;
+import chess.domain.gameRoom.dto.ChessGameRoomInfoDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 @Service
 public final class ChessService {
 
-    private final ChessGameDAO chessGameDAO;
+    private final ChessGameRoomDAO chessGameDAO;
     private final MovementDAO movementDAO;
 
-    public ChessService(final ChessGameDAO chessGameDAO, final MovementDAO movementDAO) {
+    public ChessService(final ChessGameRoomDAO chessGameDAO, final MovementDAO movementDAO) {
         this.chessGameDAO = chessGameDAO;
         this.movementDAO = movementDAO;
     }

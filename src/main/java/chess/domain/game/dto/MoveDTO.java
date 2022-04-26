@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.domain.game.dto;
 
 import java.io.Serializable;
 

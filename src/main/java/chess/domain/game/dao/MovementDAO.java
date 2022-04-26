@@ -1,5 +1,6 @@
-package chess.dao;
+package chess.domain.game.dao;
 
+import chess.domain.game.Movement;
 import chess.domain.position.Position;
 
 import java.util.List;

@@ -1,13 +1,7 @@
 package chess.controller;
 
-import chess.domain.gameRoom.ChessGame;
-import chess.domain.piece.property.Team;
-import chess.domain.game.dto.BoardDTO;
 import chess.domain.gameRoom.dto.ChessGameRoomInfoDTO;
-import chess.domain.game.dto.MoveDTO;
 import chess.service.ChessService;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,19 +32,5 @@ public class ChessGameController {
         ChessGameRoomInfoDTO chessGameRoomInfoDTO = chessService.findGameById(id);
         model.addAttribute("chessGameRoom", chessGameRoomInfoDTO);
         return "game";
-    }
-
-    @GetMapping("/chess/game/{id}/board")
-    @ResponseBody
-    public ResponseEntity<BoardDTO> showBoard(@PathVariable String id) {
-        ChessGame chessGame = chessService.getChessGamePlayed(id);
-        return ResponseEntity.ok(new BoardDTO(chessGame));
-    }
-
-    @PostMapping("/chess/game/{id}/move")
-    @ResponseBody
-    public ResponseEntity<BoardDTO> movePiece(MoveDTO moveDTO, @PathVariable String id) {
-        ChessGame chessGame = chessService.movePiece(id, moveDTO.getSource(), moveDTO.getTarget(), Team.valueOf(moveDTO.getTeam()));
-        return ResponseEntity.ok(new BoardDTO(chessGame));
     }
 }

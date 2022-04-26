@@ -8,6 +8,7 @@ import chess.domain.event.Event;
 import chess.domain.event.EventType;
 import chess.domain.event.MoveRoute;
 import chess.domain.game.statistics.GameResult;
+import chess.domain.game.statistics.GameState;
 
 abstract class Running extends Started {
 
@@ -15,8 +16,8 @@ abstract class Running extends Started {
     private static final String GAME_NOT_OVER_EXCEPTION_MESSAGE = "아직 종료되지 않은 게임입니다.";
     private static final String NOT_YET_IMPLEMENTED_EXCEPTION_MESSAGE = "아직 구현되지 않은 기능입니다.";
 
-    Running(Board board) {
-        super(board);
+    Running(GameState state, Board board) {
+        super(state, board);
     }
 
     @Override

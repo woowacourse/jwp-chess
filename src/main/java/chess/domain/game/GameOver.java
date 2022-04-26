@@ -11,7 +11,7 @@ final class GameOver extends Started {
     private static final String GAME_NOT_RUNNING_EXCEPTION_MESSAGE = "이미 종료된 게임입니다.";
 
     GameOver(Board board) {
-        super(board);
+        super(GameState.OVER, board);
     }
 
     @Override
@@ -30,15 +30,5 @@ final class GameOver extends Started {
     @Override
     public GameResult getResult() {
         return new GameResult(board.toMap());
-    }
-
-    @Override
-    protected GameState getState() {
-        return GameState.OVER;
-    }
-
-    @Override
-    public String toString() {
-        return "GameOver{" + "board=" + board + '}';
     }
 }

@@ -8,7 +8,7 @@ import java.util.Objects;
 final class WhiteTurn extends Running {
 
     WhiteTurn(Board board) {
-        super(board);
+        super(GameState.WHITE_TURN, board);
     }
 
     @Override
@@ -19,32 +19,5 @@ final class WhiteTurn extends Running {
     @Override
     protected Game continueGame() {
         return new BlackTurn(board);
-    }
-
-    @Override
-    protected GameState getState() {
-        return GameState.WHITE_TURN;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        WhiteTurn whiteTurn = (WhiteTurn) o;
-        return Objects.equals(board, whiteTurn.board);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(board);
-    }
-
-    @Override
-    public String toString() {
-        return "WhiteTurn{" + "board=" + board + '}';
     }
 }

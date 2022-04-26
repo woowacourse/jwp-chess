@@ -111,6 +111,7 @@ function printTurn(data) {
 }
 
 async function start() {
+<<<<<<< HEAD
   const res = await fetch(`/games/${gameId}`, {
     method: "PUT",
   });

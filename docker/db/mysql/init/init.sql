@@ -1,8 +1,10 @@
+
 create table board
 (
     id         int(10)                     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    room_title varchar(10)                 not null,
-    turn       varchar(10) DEFAULT 'WHITE' not null
+    room_title varchar(10)                 NOT NULL,
+    turn       varchar(10) DEFAULT 'WHITE' NOT NULL,
+    pw         varchar(45)                 NOT NULL
 );
 
 create table position

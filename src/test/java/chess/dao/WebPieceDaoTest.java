@@ -34,7 +34,7 @@ class WebPieceDaoTest {
 
     @BeforeEach
     void setup() {
-        final ChessBoard board = boardDao.save(new ChessBoard("corinne"));
+        final ChessBoard board = boardDao.save(new ChessBoard("corinne", "1111"));
         this.boardId = board.getId();
         final Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, board.getId()));
         this.positionId = position.getId();

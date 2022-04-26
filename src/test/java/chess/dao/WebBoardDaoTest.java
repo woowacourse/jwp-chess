@@ -22,29 +22,30 @@ class WebBoardDaoTest {
 
     @BeforeEach
     void setup() {
-        final ChessBoard board = dao.save(new ChessBoard("개초보만"));
+        final ChessBoard board = dao.save(new ChessBoard("개초보만", "1111"));
         this.boardId = board.getId();
     }
 
     @Test
     void saveTest() {
-        final ChessBoard board = dao.save(new ChessBoard("개초보만"));
+        final ChessBoard board = dao.save(new ChessBoard("개초보만", "1111"));
         assertThat(board.getRoomTitle()).isEqualTo("개초보만");
     }
 
     @Test
     void getByIdTest() {
-        final ChessBoard board = dao.save(new ChessBoard("개초보만"));
+        final ChessBoard board = dao.save(new ChessBoard("개초보만", Color.WHITE, "2222"));
         final ChessBoard foundBoard = dao.getById(board.getId());
         assertAll(
                 () -> assertThat(foundBoard.getRoomTitle()).isEqualTo("개초보만"),
-                () -> assertThat(foundBoard.getTurn()).isEqualTo(Color.WHITE)
+                () -> assertThat(foundBoard.getTurn()).isEqualTo(Color.WHITE),
+                () -> assertThat(foundBoard.getPassword()).isEqualTo("2222")
         );
     }
 
     @Test
     void deleteBoard() {
-        final ChessBoard board = dao.save(new ChessBoard("aaa"));
+        final ChessBoard board = dao.save(new ChessBoard("aaa", "1111"));
         int affectedRow = dao.deleteById(board.getId());
         assertThat(affectedRow).isEqualTo(1);
     }

@@ -4,6 +4,7 @@ import chess.domain.board.ChessGame;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Movement;
 import chess.domain.position.Position;
+import chess.dto.GameCreationDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,10 +24,9 @@ class MovementDAOTest {
     @BeforeEach
     void before() {
         ChessGameDAO chessGameDAO = new ChessGameDAO(jdbcTemplate);
-        ChessGame chessGame = ChessGame.fromName("zero");
-        String gameId = chessGameDAO.addGame(chessGame);
+        long id = chessGameDAO.addGame(new GameCreationDTO("zero", "1234"));
 
-        org.assertj.core.api.Assertions.assertThat(gameId).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(id).isNotNull();
     }
 
     @Test

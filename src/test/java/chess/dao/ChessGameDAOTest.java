@@ -1,7 +1,7 @@
 package chess.dao;
 
-import chess.domain.board.ChessGame;
 import chess.dto.ChessGameRoomInfoDTO;
+import chess.dto.GameCreationDTO;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -22,10 +22,9 @@ class ChessGameDAOTest {
     @DisplayName("체스 게임방 생성")
     void makeChessGameRoom() {
         ChessGameDAO chessGameDAO = new ChessGameDAO(template);
-        ChessGame chessGame = ChessGame.fromName("zero");
-        String gameId = chessGameDAO.addGame(chessGame);
+        long id = chessGameDAO.addGame(new GameCreationDTO("zero", "1234"));
 
-        Assertions.assertThat(gameId).isNotNull();
+        Assertions.assertThat(id).isNotNull();
     }
 
     @Test

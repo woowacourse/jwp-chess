@@ -4,12 +4,15 @@ import chess.domain.board.ChessGame;
 import chess.domain.piece.property.Team;
 import chess.dto.BoardDTO;
 import chess.dto.ChessGameRoomInfoDTO;
+import chess.dto.GameCreationDTO;
 import chess.service.ChessService;
 import java.sql.SQLException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,9 +33,9 @@ public class ChessGameController {
         return "lobby";
     }
 
-    @PostMapping("/chess/new")
-    public String createGame(@RequestParam String gameName) {
-        String gameId = chessService.addChessGame(gameName);
+    @PostMapping(value = "/chess/new", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String createGame(@ModelAttribute GameCreationDTO gameCreationDTO) {
+        long gameId = chessService.addChessGame(gameCreationDTO);
         return "redirect:/chess/game/" + gameId;
     }
 

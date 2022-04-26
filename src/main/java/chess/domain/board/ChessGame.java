@@ -8,19 +8,18 @@ public final class ChessGame {
     private String id;
     private String name;
     private boolean isEnd;
+    private String password;
     private final ChessBoard chessBoard;
-
-    private ChessGame(final String gameName, final BoardGenerator boardGenerator) {
-        this.chessBoard = new ChessBoard(boardGenerator);
-        this.name = gameName;
-    }
 
     private ChessGame(final BoardGenerator boardGenerator) {
         this.chessBoard = new ChessBoard(boardGenerator);
     }
 
-    public static ChessGame fromName(String gameName) {
-        return new ChessGame(gameName, new ChessBoardGenerator());
+    public ChessGame(final String id, final String name, final String password) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.chessBoard = new ChessBoard(new ChessBoardGenerator());
     }
 
     public static ChessGame fromId(final String gameId) {

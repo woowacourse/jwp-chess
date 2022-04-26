@@ -7,6 +7,7 @@ import chess.dao.MovementDAO;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
 import chess.dto.ChessGameRoomInfoDTO;
+import chess.dto.GameCreationDTO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +24,8 @@ public final class ChessService {
         this.movementDAO = movementDAO;
     }
 
-    public String addChessGame(final String gameName) {
-        ChessGame chessGame = ChessGame.fromName(gameName);
-        return chessGameDAO.addGame(chessGame);
+    public long addChessGame(final GameCreationDTO gameCreationDTO) {
+        return chessGameDAO.addGame(gameCreationDTO);
     }
 
     public ChessGame getChessGamePlayed(final String gameId) {

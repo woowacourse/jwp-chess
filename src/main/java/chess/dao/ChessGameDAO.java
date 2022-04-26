@@ -1,7 +1,7 @@
 package chess.dao;
 
-import chess.domain.board.ChessGame;
 import chess.dto.ChessGameRoomInfoDTO;
+import chess.dto.GameCreationDTO;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,16 +25,17 @@ public class ChessGameDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public String addGame(final ChessGame chessGame) {
-        String sql = "INSERT INTO CHESS_GAME (name) VALUES (?)";
+    public long addGame(final GameCreationDTO gameCreationDTO) {
+        String sql = "INSERT INTO CHESS_GAME (name, password) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
-            statement.setString(1, chessGame.getName());
+            statement.setString(1, gameCreationDTO.getName());
+            statement.setString(2, gameCreationDTO.getPassword());
             return statement;
         }, keyHolder);
-        return String.valueOf(keyHolder.getKey().longValue());
+        return keyHolder.getKey().longValue();
     }
 
     public List<ChessGameRoomInfoDTO> findActiveGames() {

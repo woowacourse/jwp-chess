@@ -34,10 +34,13 @@ public class ChessControllerTest {
 
     @Test
     void testRedirectWhenCreateGame() {
-        String gameName = "testGame";
 
-        RestAssured.given().log().all()
-                .when().post("/chess/new?gameName={gameName}", gameName)
+        RestAssured.given()
+                .contentType("application/x-www-form-urlencoded; charset=utf-8")
+                .formParam("name", "test")
+                .formParam("password", "1234")
+                .log().all()
+                .when().post("/chess/new")
                 .then().log().all()
                 .statusCode(HttpStatus.FOUND.value())
                 .headers("Location", containsString("chess/game"));

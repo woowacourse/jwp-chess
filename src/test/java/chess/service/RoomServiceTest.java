@@ -22,6 +22,7 @@ class RoomServiceTest {
 	private RoomService roomService;
 
 	private final String testName = "summer";
+	private final String password = "summer";
 
 	@AfterEach
 	void deleteCreated() {
@@ -32,16 +33,16 @@ class RoomServiceTest {
 	@Test
 	@DisplayName("이름을 받아 체스 게임 방을 생성한다.")
 	void create() {
-		RoomDto room = roomService.create(testName);
+		RoomDto room = roomService.create(new RoomDto(testName, password));
 		assertThat(room.getName()).isEqualTo(testName);
 	}
 
 	@Test
 	@DisplayName("이미 있는 이름으 저장하면 예외가 발생한다.")
 	void validateDuplicateName() {
-		roomService.create(testName);
+		roomService.create(new RoomDto(testName, password));
 
-		assertThatThrownBy(() -> roomService.create(testName))
+		assertThatThrownBy(() -> roomService.create(new RoomDto(testName, password)))
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 
@@ -49,7 +50,7 @@ class RoomServiceTest {
 	@ValueSource(strings = {"", "16자를넘는방이름은안되니까돌아가"})
 	@DisplayName("빈 이름이나 16자 초과 이름이 들어오면 예외가 발생한다.")
 	void createException(String name) {
-		assertThatThrownBy(() -> roomService.create(name))
+		assertThatThrownBy(() -> roomService.create(new RoomDto(name, password)))
 			.isInstanceOf(IllegalArgumentException.class);
 	}
 

@@ -7,6 +7,8 @@ import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
 import chess.web.dto.GameStateDto;
+import chess.web.dto.RoomDto;
+
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +32,7 @@ public class BoardRepositoryImplTest {
     void init() {
         boardRepository = new BoardRepositoryImpl(dataSource, jdbcTemplate);
         RoomRepository roomRepository = new RoomRepositoryImpl(dataSource, jdbcTemplate);
-        roomId = roomRepository.save("summer");
+        roomId = roomRepository.save(new RoomDto("summer", "summer"));
     }
 
     @DisplayName("체스판 저장")

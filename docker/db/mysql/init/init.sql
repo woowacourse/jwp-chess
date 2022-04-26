@@ -1,7 +1,8 @@
 create table room
 (
     id   int not null auto_increment primary key,
-    name varchar(16) not null
+    name varchar(16) not null,
+    password varchar(16) not null
 );
 
 create table board

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,9 +35,9 @@ public class RoomController {
     }
 
     @PostMapping
-    public String createRoom(@RequestParam String name) {
-        RoomDto roomDto = roomService.create(name);
-        return "redirect:/rooms/" + roomDto.getId();
+    public String createRoom(@RequestParam String name, @RequestParam String password) {
+        RoomDto room = roomService.create(new RoomDto(name, password));
+        return "redirect:/rooms/" + room.getId();
     }
 
     @GetMapping("/{roomId}")

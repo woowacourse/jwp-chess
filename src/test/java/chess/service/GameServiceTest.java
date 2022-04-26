@@ -16,12 +16,14 @@ import chess.configuration.RepositoryConfiguration;
 import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
 import chess.web.dto.PieceDto;
+import chess.web.dto.RoomDto;
 
 @SpringBootTest
 @Import(RepositoryConfiguration.class)
 class GameServiceTest {
 
 	private static final String testName = "summer";
+	private static final String testPassword = "summer";
 
 	@Autowired
 	private RoomService roomService;
@@ -31,7 +33,7 @@ class GameServiceTest {
 
 	@BeforeEach
 	void init() {
-		roomId = (int) roomService.create(testName).getId();
+		roomId = (int) roomService.create(new RoomDto(testName, testPassword)).getId();
 	}
 
 	@AfterEach

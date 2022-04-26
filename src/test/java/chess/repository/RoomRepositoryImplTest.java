@@ -16,7 +16,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @JdbcTest
 public class RoomRepositoryImplTest {
 
-    private static final String testName = "summer";
+    private static final RoomDto room = new RoomDto("summer", "summer");
+
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
@@ -31,32 +32,32 @@ public class RoomRepositoryImplTest {
     @Test
     @DisplayName("뱡 insert")
     void insert() {
-        int id = roomRepository.save(testName);
+        int id = roomRepository.save(room);
         assertThat(id).isGreaterThan(0);
     }
 
     @Test
     @DisplayName("방 find")
     void find() {
-        roomRepository.save(testName);
-        RoomDto room = roomRepository.find(testName).orElseThrow();
-        assertThat(room.getName()).isEqualTo(testName);
+        roomRepository.save(room);
+        RoomDto findRoom = roomRepository.find(room.getName()).orElseThrow();
+        assertThat(room.getName()).isEqualTo(findRoom.getName());
     }
 
     @Test
     @DisplayName("이름으로 생성된 방을 삭제한다.")
     void removeByName() {
-        int id = roomRepository.save(testName);
+        int id = roomRepository.save(room);
         roomRepository.deleteById(id);
 
-        assertThat(roomRepository.find(testName)).isEmpty();
+        assertThat(roomRepository.find(room.getName())).isEmpty();
     }
 
     @Test
     @DisplayName("저장된 전체 방을 찾아온다.")
     void findAll() {
-        roomRepository.save(testName);
-        roomRepository.save("does");
+        roomRepository.save(room);
+        roomRepository.save(new RoomDto("does", "does"));
 
         List<RoomDto> rooms = roomRepository.findAll();
         assertThat(rooms.size()).isEqualTo(2);

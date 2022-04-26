@@ -24,11 +24,12 @@ public class RoomService {
 	}
 
 	@Transactional
-	public RoomDto create(String name) {
+	public RoomDto create(RoomDto roomDto) {
+		String name = roomDto.getName();
 		validateNameSize(name);
 		validateDuplicateName(name);
-		int roomId = roomRepository.save(name);
-		return new RoomDto(roomId, name);
+		int roomId = roomRepository.save(roomDto);
+		return new RoomDto(roomId, name, roomDto.getPassword());
 	}
 
 	private void validateNameSize(String name) {

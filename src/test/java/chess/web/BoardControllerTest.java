@@ -15,6 +15,7 @@ import chess.configuration.RepositoryConfiguration;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.CommendDto;
+import chess.web.dto.RoomDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
@@ -40,7 +41,7 @@ class BoardControllerTest {
 	@BeforeEach
 	void setUp() {
 		RestAssured.port = port;
-		roomId = (int) roomService.create(testName).getId();
+		roomId = (int) roomService.create(new RoomDto(testName, "1234")).getId();
 		boardId = gameService.startNewGame(roomId).getBoardId();
 	}
 

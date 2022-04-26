@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoomRepository {
-    int save(String name);
+    int save(RoomDto roomDto);
 
     Optional<RoomDto> find(String name);
 

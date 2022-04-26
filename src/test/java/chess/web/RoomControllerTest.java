@@ -27,6 +27,7 @@ import io.restassured.RestAssured;
 class RoomControllerTest {
 
     private static final String testName = "summer";
+    private static final String password = "summer";
 
     @LocalServerPort
     private int port;
@@ -53,9 +54,9 @@ class RoomControllerTest {
     @DisplayName("유효한 이름을 받으면 게임방 입장")
     @Test
     void createRoom() {
-
         RestAssured.given().log().all()
             .formParam("name", testName)
+            .formParam("password", "1234")
             .when().post("/rooms")
             .then().log().all()
             .statusCode(HttpStatus.FOUND.value())
@@ -65,8 +66,8 @@ class RoomControllerTest {
     @Test
     @DisplayName("방 목록을 불러온다.")
     void loadRooms() {
-        roomService.create(testName);
-        roomService.create("does");
+        roomService.create(new RoomDto(testName, password));
+        roomService.create(new RoomDto("does", "does"));
         RestAssured.given().log().all()
             .when().get("/rooms")
             .then().log().all()
@@ -88,7 +89,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("새로운 게임을 시작하면 200 응답을 받는다.")
     void startNewGame() {
-        RoomDto room = roomService.create(testName);
+        RoomDto room = roomService.create(new RoomDto(testName, password));
 
         RestAssured.given().log().all()
             .when().get("/rooms/" + room.getId() + "/start")
@@ -99,7 +100,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("게임을 불러오면 200 응답을 받는다.")
     void loadGame() {
-        int roomId = (int) roomService.create(testName).getId();
+        int roomId = (int) roomService.create(new RoomDto(testName, password)).getId();
         gameService.startNewGame(roomId);
 
         RestAssured.given().log().all()
@@ -111,7 +112,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("방을 삭제한다.")
     void deleteRoom() {
-        RoomDto room = roomService.create(testName);
+        RoomDto room = roomService.create(new RoomDto(testName, password));
 
         RestAssured.given().log().all()
             .when().delete("/rooms/" + room.getId())

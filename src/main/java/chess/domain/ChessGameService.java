@@ -30,7 +30,6 @@ public class ChessGameService {
     private final TurnDao turnDao;
     private final GameStatusDao gameStatusDao;
 
-    @Autowired
     public ChessGameService(BoardDao boardDao, TurnDao turnDao, GameStatusDao gameStatusDao) {
         this.boardDao = boardDao;
         this.turnDao = turnDao;

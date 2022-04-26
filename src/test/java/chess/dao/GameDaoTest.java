@@ -3,6 +3,7 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+import chess.controller.dto.GameDto;
 import chess.domain.GameState;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class GameDaoTest {
 
     private static final long testGameId = 2;
+    private static final String name = "name";
+    private static final String password = "password";
 
     @Autowired
     private GameDao gameDao;
@@ -23,30 +26,31 @@ public class GameDaoTest {
     @DisplayName("게임 저장 테스트")
     @Test
     void save() {
-        gameDao.save(testGameId);
+        gameDao.save(name, password);
     }
 
     @DisplayName("게임 조회 테스트")
     @Test
     void load() {
-        gameDao.save(testGameId);
+        gameDao.save(name, password);
 
-        Optional<GameState> maybeGameState = gameDao.load(testGameId);
-        GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
+        Optional<GameDto> maybeGameState = gameDao.load(name, password);
+        GameDto actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
 
-        assertThat(actual).isEqualTo(GameState.READY);
+        assertThat(actual.getGameState()).isEqualTo(GameState.READY);
     }
 
     @DisplayName("게임 정보 업데이트 테스트")
     @Test
     void update() {
-        gameDao.save(testGameId);
-        gameDao.updateState(testGameId, GameState.WHITE_RUNNING);
+        gameDao.save(name, password);
+        final int gameId = gameDao.load(name, password).get().getId();
+        gameDao.updateState(gameId, GameState.WHITE_RUNNING);
 
-        Optional<GameState> maybeGameState = gameDao.load(testGameId);
-        GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
+        Optional<GameDto> maybeGameState = gameDao.load(name, password);
+        GameDto actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
 
-        assertThat(actual).isEqualTo(GameState.WHITE_RUNNING);
+        assertThat(actual.getGameState()).isEqualTo(GameState.WHITE_RUNNING);
     }
 
     @DisplayName("게임 삭제 테스트")

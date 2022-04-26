@@ -1,13 +1,14 @@
 package chess.dao;
 
+import chess.controller.dto.GameDto;
 import chess.domain.GameState;
 import java.util.Optional;
 
 public interface GameDao {
 
-    void save(long id);
+    void save(String name, String password);
 
-    Optional<GameState> load(long id);
+    Optional<GameDto> load(String name, String password);
 
     void updateState(long id, GameState gameState);
 

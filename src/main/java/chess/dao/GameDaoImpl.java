@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.controller.dto.GameDto;
 import chess.domain.GameState;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,22 +26,27 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public void save(long id) {
+    public void save(String name, String password) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("game_id", id);
+        parameters.put("name", name);
+        parameters.put("password", password);
         parameters.put("state", GameState.READY);
         insertGame.execute(parameters);
     }
 
     @Override
-    public Optional<GameState> load(long id) {
-        String sql = "SELECT state FROM game WHERE game_id = :game_id";
-
-        SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", id);
+    public Optional<GameDto> load(String name, String password) {
+        String sql = "SELECT id, state FROM game WHERE name = :name AND password = :password";
+        SqlParameterSource namedParameters =
+                new MapSqlParameterSource(Map.of("name", name, "password", password));
 
         try {
             return Optional.ofNullable(
-                    namedParameterJdbcTemplate.queryForObject(sql, namedParameters, GameState.class));
+                    namedParameterJdbcTemplate.queryForObject(sql, namedParameters, (res, rowNumber) ->
+                            new GameDto(
+                                    res.getInt("id"),
+                                    GameState.valueOf(res.getString("state"))
+                            )));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -48,7 +54,7 @@ public class GameDaoImpl implements GameDao {
 
     @Override
     public void updateState(long id, GameState gameState) {
-        String query = "UPDATE game SET state = :game_state WHERE game_id = :game_id";
+        String query = "UPDATE game SET state = :game_state WHERE id = :game_id";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("game_state", gameState.name());
         parameters.put("game_id", id);
@@ -57,7 +63,7 @@ public class GameDaoImpl implements GameDao {
 
     @Override
     public void delete(long id) {
-        String query = "DELETE FROM game WHERE game_id = :game_id";
+        String query = "DELETE FROM game WHERE id = :game_id";
         MapSqlParameterSource parameter = new MapSqlParameterSource("game_id", id);
         namedParameterJdbcTemplate.update(query, parameter);
     }

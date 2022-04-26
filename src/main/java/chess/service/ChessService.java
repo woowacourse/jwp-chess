@@ -55,7 +55,7 @@ public class ChessService {
         boardDao.save(boardDtos, gameId);
     }
 
-    public void updateBoard(Piece piece, String position, int gameId) {
+    private void updateBoard(Piece piece, String position, int gameId) {
         BoardDto boardDto = new BoardDto(piece.getSymbol(), piece.getTeam(), position);
 
         boardDao.update(boardDto, gameId);
@@ -107,7 +107,7 @@ public class ChessService {
         gameDao.update(Team.WHITE.name(), gameId);
     }
 
-    public void endGame(int gameId) {
+    private void endGame(int gameId) {
         gameDao.update(END_STATE, gameId);
     }
 
@@ -119,13 +119,9 @@ public class ChessService {
         return gameId == NOT_EXIST_GAME;
     }
 
-    public GameDto findGameByGameId(int gameId) {
-        return gameDao.findById(gameId);
-    }
-
     public StatusCalculator createStatus(int gameId) {
         Board board = findBoardByGameId(gameId);
-        GameDto gameDto = findGameByGameId(gameId);
+        GameDto gameDto = gameDao.findById(gameId);
 
         ChessGame chessGame = new ChessGame(board, gameDto.getState());
         return chessGame.status();

@@ -30,8 +30,9 @@ public class ChessSpringController {
 
     @ResponseBody
     @GetMapping("/start")
-    public GameStatusDto start() {
-        return chessGameService.startChessGame(new WebBasicBoardStrategy());
+    public ResponseEntity start() {
+        GameStatusDto gameStatusDto = chessGameService.startChessGame(new WebBasicBoardStrategy());
+        return ResponseEntity.ok().body(gameStatusDto);
     }
 
     @ResponseBody

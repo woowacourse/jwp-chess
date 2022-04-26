@@ -1,5 +1,4 @@
 let from = "";
-let to = "";
 
 fetchPieces();
 fetchScores();
@@ -8,15 +7,13 @@ fetchTurn();
 chessBoard.addEventListener("click", ({target: {id}}) => {
     if (from === "") {
         from = id;
-    } else if (to === "") {
-        to = id;
-        move();
+    } else {
+        move(from, id);
         from = "";
-        to = "";
     }
 })
 
-async function move() {
+async function move(from, to) {
     document.getElementById("error").innerText = "";
     const pathName = window.location.pathname;
 
@@ -27,10 +24,11 @@ async function move() {
         method: "PATCH",
         body: JSON.stringify({from: `${from}`, to: `${to}`})
     });
-    const data = await res.json();
 
-    if (!res.ok) {
+    if (res.status !== 204) {
+        const data = await res.json();
         document.getElementById("error").innerText = data.message;
+        return;
     }
 
     fetchPieces();

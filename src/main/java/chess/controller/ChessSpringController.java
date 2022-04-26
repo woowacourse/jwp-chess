@@ -24,7 +24,6 @@ public class ChessSpringController {
 
     @GetMapping("/")
     public String enter() {
-        chessGameService.init();
         return "index";
     }
 

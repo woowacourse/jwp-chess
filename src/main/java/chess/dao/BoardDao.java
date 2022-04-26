@@ -6,8 +6,6 @@ import java.util.Map;
 
 public interface BoardDao {
 
-    void init(Map<String, String> board);
-
     void update(String position, String piece);
 
     List<BoardDto> getBoard();

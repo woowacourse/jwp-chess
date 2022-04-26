@@ -20,7 +20,7 @@ public class JdbcTemplateGameStatusDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplateGameStatusDao = new JdbcTemplateGameStatusDao(jdbcTemplate);
-        jdbcTemplateGameStatusDao.init(GameStatus.READY);
+        jdbcTemplateGameStatusDao.reset(GameStatus.READY);
     }
 
     @DisplayName("체스게임을 시작하면 처음 상태는 READY 여야 한다.")

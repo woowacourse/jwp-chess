@@ -15,11 +15,6 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
     }
 
     @Override
-    public void init(GameStatus data) {
-        jdbcTemplate.update("INSERT INTO game_status (status) values (?)", data.toString());
-    }
-
-    @Override
     public void update(String nowStatus, String nextStatus) {
         String sql = "update game_status set status = ? where status = ?";
         jdbcTemplate.update(sql, nextStatus, nowStatus);

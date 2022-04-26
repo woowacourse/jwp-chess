@@ -22,3 +22,6 @@ create table turn
     team varchar(10) not null,
     primary key (team)
 );
+
+
+

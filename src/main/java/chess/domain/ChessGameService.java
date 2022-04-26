@@ -37,23 +37,12 @@ public class ChessGameService {
         this.gameStatusDao = gameStatusDao;
     }
 
-    // todo - 조금 더 고민해보기 (예외는 예외상황 일 때만 사용하자)
-    public void init() {
-        try {
-            turnDao.getTurn();
-        } catch (Exception e) {
-            turnDao.init(Team.WHITE.toString());
-            gameStatusDao.init(GameStatus.READY);
-        }
-    }
-
     public GameStatusDto startChessGame(BoardGenerationStrategy strategy) {
         if (gameStatusDao.getStatus().equals(GameStatus.PLAYING.toString())) {
             return loadChessGame();
         }
         ChessGame chessGame = new ChessGame();
         chessGame.startGame(strategy);
-        boardDao.init(chessGame.toMap());
         gameStatusDao.update(gameStatusDao.getStatus(), chessGame.getGameStatus().toString());
         return GameStatusDto.of(chessGame);
     }

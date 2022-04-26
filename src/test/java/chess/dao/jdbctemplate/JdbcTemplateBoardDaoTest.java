@@ -38,7 +38,8 @@ public class JdbcTemplateBoardDaoTest {
                 + ")");
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
-        jdbcTemplateBoardDao.init(board.toMap());
+
+        jdbcTemplateBoardDao.reset(board.toMap());
     }
 
     @Test

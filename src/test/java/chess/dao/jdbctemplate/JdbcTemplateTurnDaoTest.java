@@ -21,7 +21,7 @@ public class JdbcTemplateTurnDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplateTurnDao = new JdbcTemplateTurnDao(jdbcTemplate);
-        jdbcTemplateTurnDao.init(Team.WHITE.toString());
+        jdbcTemplateTurnDao.reset(Team.WHITE);
     }
 
     @Test

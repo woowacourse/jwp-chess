@@ -15,11 +15,6 @@ public class JdbcTemplateTurnDao implements TurnDao {
     }
 
     @Override
-    public void init(String data) {
-        jdbcTemplate.update("INSERT INTO turn(team) VALUES (?)", data);
-    }
-
-    @Override
     public void update(String nowTurn, String nextTurn) {
         String sql = "update turn set team = ? where team = ?";
         jdbcTemplate.update(sql, nextTurn, nowTurn);

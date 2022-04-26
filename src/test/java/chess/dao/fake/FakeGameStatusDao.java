@@ -8,11 +8,6 @@ public class FakeGameStatusDao implements GameStatusDao {
     private GameStatus status = GameStatus.READY;
 
     @Override
-    public void init(GameStatus data) {
-        status = data;
-    }
-
-    @Override
     public void update(String nowStatus, String nextStatus) {
         status = GameStatus.valueOf(nextStatus);
     }

@@ -15,8 +15,7 @@ public class MockBoardDao implements BoardDao {
     }
 
     @Override
-    public Long save(Long boardId, Turn turn) {
-        mockDb.put(1L, turn.getTeam().value());
+    public Long save(Turn turn) {
         return 1L;
     }
 
@@ -26,8 +25,9 @@ public class MockBoardDao implements BoardDao {
     }
 
     @Override
-    public void updateTurnById(Long id, String newTurn) {
-        mockDb.put(id, newTurn);
+    public Long update(Long boardId, Turn turn) {
+        mockDb.put(1L, turn.getTeam().value());
+        return 1L;
     }
 
     @Override

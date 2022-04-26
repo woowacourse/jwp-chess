@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS piece;
+DROP TABLE IF EXISTS room;
 DROP TABLE IF EXISTS board;
 
 CREATE TABLE board
@@ -8,7 +9,15 @@ CREATE TABLE board
     primary key (id)
 );
 
-INSERT INTO board (turn) VALUES ('white');
+CREATE TABLE room
+(
+    id  INT(10) not null AUTO_INCREMENT,
+    board_id INT(10),
+    title VARCHAR(30) not null,
+    password VARCHAR(30) not null,
+    foreign key (board_id) references board (id) ON DELETE CASCADE ,
+    primary key (id, board_id)
+);
 
 CREATE TABLE piece
 (

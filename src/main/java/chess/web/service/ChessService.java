@@ -68,23 +68,29 @@ public class ChessService {
 
     private Turn changeTurn(Turn turn) {
         Turn change = turn.change();
-        boardDao.updateTurnById(1L, change.getTeam().value());
+        boardDao.update(1L, change);
         return change;
     }
 
     public Board initBoard(Long boardId) {
-        Pieces pieces = Pieces.createInit();
-        Turn turn = Turn.init();
+        initTurn(boardId);
+        initPiece(boardId);
+        return loadGame(boardId);
+    }
 
+    private void initTurn(Long boardId) {
+        boardDao.findTurnById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("없는 체스방 id 입니다."));
+        boardDao.update(boardId, Turn.init());
+    }
+
+    private void initPiece(Long boardId) {
         pieceDao.deleteByBoardId(boardId);
 
-        boardDao.updateTurnById(boardId, turn.getTeam().value());
+        Pieces pieces = Pieces.createInit();
         for (Piece piece : pieces.getPieces()) {
             insertOrUpdatePiece(boardId, piece);
         }
-
-        Pieces savedPieces = Pieces.from(pieceDao.findAllByBoardId(boardId));
-        return Board.create(savedPieces, turn);
     }
 
     private void insertOrUpdatePiece(Long boardId, Piece piece) {

@@ -32,7 +32,7 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public Long save(Long boardId, Turn turn) {
+    public Long save(Turn turn) {
         final String query = "INSERT INTO board (turn) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -57,9 +57,10 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public void updateTurnById(Long id, String newTurn) {
+    public Long update(Long boardId, Turn turn) {
         final String query = "UPDATE board set turn = ? where id = ?";
-        jdbcTemplate.update(query, newTurn, id);
+        jdbcTemplate.update(query, turn.getTeam().value(), boardId);
+        return boardId;
     }
 
     @Override

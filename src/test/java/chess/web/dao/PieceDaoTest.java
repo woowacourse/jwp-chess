@@ -20,6 +20,7 @@ class PieceDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private PieceDao pieceDao;
+    private BoardDao boardDao;
 
     private Long boardId = 1L;
     private Pieces pieces;
@@ -27,6 +28,7 @@ class PieceDaoTest {
     @BeforeEach
     void setUp() {
         pieceDao = new PieceDaoImpl(jdbcTemplate);
+        boardDao = new BoardDaoImpl(jdbcTemplate);
     }
 
     @Sql("/sql/chess-setup.sql")
@@ -34,6 +36,7 @@ class PieceDaoTest {
     @DisplayName("새로운 type과 team으로 바꾸면, db에 저장되고 다시 불러왔을 때 바뀐 type과 team이 나온다.")
     void updatePieceByPosition() {
         pieces = Pieces.createInit();
+        Long boardId = boardDao.save(Turn.init());
         pieceDao.save(pieces.getPieces(), boardId);
 
         Piece piece = pieces.getPieces().get(0);
@@ -53,6 +56,7 @@ class PieceDaoTest {
     @DisplayName("초기값인 체스말 64개가 모두 조회 되야한다.")
     void findAllByBoardId() {
         pieces = Pieces.createInit();
+        Long boardId = boardDao.save(Turn.init());
         pieceDao.save(pieces.getPieces(), boardId);
 
         //when

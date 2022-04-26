@@ -89,7 +89,7 @@ class ChessControllerTest {
 
             RestAssured.given().log().all()
                     .accept(MediaType.APPLICATION_JSON_VALUE)
-                    .when().put("/games/" + testGameId)
+                    .when().patch("/games/" + testGameId)
                     .then().log().all()
                     .statusCode(HttpStatus.OK.value())
                     .body("gameState", Matchers.equalTo("WHITE_RUNNING"));

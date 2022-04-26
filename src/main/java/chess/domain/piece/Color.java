@@ -14,6 +14,13 @@ public enum Color {
         this.name = name;
     }
 
+    public static Color of(String name) {
+        return Arrays.stream(values())
+                .filter(x -> x.name.equals(name))
+                .findFirst()
+                .orElse(NONE);
+    }
+
     public boolean isSameColor(Color color) {
         return this == color;
     }
@@ -31,13 +38,6 @@ public enum Color {
             return BLACK;
         }
         return WHITE;
-    }
-
-    public static Color of(String name) {
-        return Arrays.stream(values())
-            .filter(x -> x.name.equals(name))
-            .findFirst()
-            .orElse(NONE);
     }
 
     public String getName() {

@@ -39,9 +39,9 @@ public class PawnTest {
         Pawn pawn = new Pawn(Color.BLACK, Position.of("a7"));
         Position a8 = Position.of("a8");
 
-        assertThatCode(()-> pawn.move(a8))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이동할 수 없는 위치입니다.");
+        assertThatCode(() -> pawn.move(a8))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이동할 수 없는 위치입니다.");
     }
 
     @DisplayName("백색 폰이 후진하려는 경우, 예외가 발생한다.")
@@ -50,8 +50,8 @@ public class PawnTest {
         Pawn pawn = new Pawn(WHITE, Position.of("a4"));
 
         assertThatCode(() -> pawn.move(Position.of("a3")))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이동할 수 없는 위치입니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이동할 수 없는 위치입니다.");
     }
 
     @DisplayName("폰이 직진 이외의 방향으로 이동하려는 경우, 예외가 발생한다.")
@@ -60,8 +60,8 @@ public class PawnTest {
         Pawn pawn = new Pawn(WHITE, Position.of("a3"));
 
         assertThatCode(() -> pawn.move(Position.of("b4")))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이동할 수 없는 위치입니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이동할 수 없는 위치입니다.");
     }
 
     @DisplayName("초기화된 위치에서는 두칸 전진할 수 있다.")
@@ -81,8 +81,8 @@ public class PawnTest {
         Pawn pawn = new Pawn(WHITE, Position.of("a3"));
 
         assertThatCode(() -> pawn.move(Position.of("a5")))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이동할 수 없는 위치입니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이동할 수 없는 위치입니다.");
     }
 
     @DisplayName("white폰은 attack시 대각선 위 방향으로 한칸 이동할 수 있다.")
@@ -103,8 +103,8 @@ public class PawnTest {
         Pawn pawn = new Pawn(Color.WHITE, Position.of("a2"));
 
         assertThatCode(() -> pawn.attack(Position.of("b1")))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("공격할 수 없는 위치입니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("공격할 수 없는 위치입니다.");
     }
 
     @DisplayName("black폰은 attack시 대각선 아래 방향으로 한칸 이동할 수 있다.")
@@ -124,8 +124,8 @@ public class PawnTest {
         Pawn pawn = new Pawn(Color.BLACK, Position.of("a7"));
 
         assertThatCode(() -> pawn.attack(Position.of("b8")))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("공격할 수 없는 위치입니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("공격할 수 없는 위치입니다.");
     }
 
     @DisplayName("폰이 a2에서 a4로 이동할 시, 사이에 있는 position은 a3이다.")

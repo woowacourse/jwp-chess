@@ -38,7 +38,7 @@ public class King extends Piece {
         int rankDifference = position.rankDifference(toPosition);
 
         return fileDifference <= MAX_MOVE_DIFFERENCE
-            && rankDifference <= MAX_MOVE_DIFFERENCE;
+                && rankDifference <= MAX_MOVE_DIFFERENCE;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class King extends Piece {
         }
         King king = (King) o;
         return color == king.color
-            && position == king.position;
+                && position == king.position;
 
     }
 
@@ -88,9 +88,9 @@ public class King extends Piece {
     @Override
     public String toString() {
         return "King{" +
-            "color=" + color +
-            ", position=" + position +
-            '}';
+                "color=" + color +
+                ", position=" + position +
+                '}';
     }
 
 }

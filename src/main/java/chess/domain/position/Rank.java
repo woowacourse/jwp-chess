@@ -28,24 +28,24 @@ public enum Rank {
 
     public static Rank from(String value) {
         return Arrays.stream(values())
-            .filter(rank -> rank.rawRank.equals(value))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(INVALID_RANK_EXCEPTION_MESSAGE));
+                .filter(rank -> rank.rawRank.equals(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_RANK_EXCEPTION_MESSAGE));
     }
 
     public static Rank of(int valueIdx) {
         return Arrays.stream(values())
-            .filter(rank -> rank.rankIdx == valueIdx)
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(INVALID_RANK_INDEX_EXCEPTION_MESSAGE));
-    }
-
-    public int rawDifference(Rank targetRank) {
-        return targetRank.rankIdx - this.rankIdx;
+                .filter(rank -> rank.rankIdx == valueIdx)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_RANK_INDEX_EXCEPTION_MESSAGE));
     }
 
     public static boolean isMappedRankIdx(String rank, int idx) {
         return from(rank).getRankIdx() == idx;
+    }
+
+    public int rawDifference(Rank targetRank) {
+        return targetRank.rankIdx - this.rankIdx;
     }
 
     public String getRawRank() {
@@ -59,9 +59,9 @@ public enum Rank {
     @Override
     public String toString() {
         return "Rank{" +
-            "rawRank='" + rawRank + '\'' +
-            ", rankIdx=" + rankIdx +
-            '}';
+                "rawRank='" + rawRank + '\'' +
+                ", rankIdx=" + rankIdx +
+                '}';
     }
 
 }

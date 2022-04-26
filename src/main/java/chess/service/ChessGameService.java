@@ -5,7 +5,6 @@ import chess.dao.PieceDao;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameResult;
 import chess.domain.piece.ChessmenInitializer;
-import chess.domain.piece.Color;
 import chess.dto.GameResultDto;
 import chess.dto.MoveDto;
 import chess.dto.PiecesDto;
@@ -13,12 +12,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameService {
-
     private final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
 
     private final PieceDao pieceDao;
     private final GameDao gameDao;
-
 
     public ChessGameService(PieceDao pieceDao, GameDao gameDao) {
         this.pieceDao = pieceDao;
@@ -67,5 +64,4 @@ public class ChessGameService {
         gameDao.updateTurnById(chessGame.getTurn(), gameId);
         gameDao.updateForceEndFlagById(chessGame.getForceEndFlag(), gameId);
     }
-
 }

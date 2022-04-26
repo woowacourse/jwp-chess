@@ -16,7 +16,6 @@ public class BoardView {
 
     public static BoardView of(PiecesDto piecesDto) {
         Map<String, PieceDto> boardView = new HashMap<>();
-
         for (PieceDto pieceDto : piecesDto.getPieces()) {
             boardView.put(pieceDto.getPosition(), pieceDto);
         }

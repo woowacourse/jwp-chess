@@ -28,8 +28,8 @@ public class PieceTest {
         Piece targetPiece = new Queen(Color.WHITE, Position.of("d2"));
 
         assertThatCode(() -> piece.kill(targetPiece))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이동하려는 위치에 아군이 있습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이동하려는 위치에 아군이 있습니다.");
     }
 
     @DisplayName("흑색 piece는 getColor시 black을 보여준다.")

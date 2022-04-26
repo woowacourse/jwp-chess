@@ -40,8 +40,8 @@ public class ChessGameDaoTest {
         chessGame.moveChessmen(command);
 
         Position actual = chessGame.getChessmen()
-            .extractPiece(Position.of("a4"))
-            .getPosition();
+                .extractPiece(Position.of("a4"))
+                .getPosition();
 
         assertThat(actual).isEqualTo(a4);
     }
@@ -52,8 +52,8 @@ public class ChessGameDaoTest {
         MoveCommand command = new MoveCommand("move a2 a5");
 
         assertThatCode(() -> chessGame.moveChessmen(command))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이동할 수 없는 위치입니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이동할 수 없는 위치입니다.");
     }
 
     @DisplayName("체스말의 이동경로에 다른 말이 있으면 예외가 발생한다.")
@@ -62,8 +62,8 @@ public class ChessGameDaoTest {
         MoveCommand command = new MoveCommand("move a1 a3");
 
         assertThatCode(() -> chessGame.moveChessmen(command))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("가는 길목에 다른 말이 있어 이동할 수 없습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("가는 길목에 다른 말이 있어 이동할 수 없습니다.");
     }
 
     @DisplayName("체스말의 이동하려는 위치에 아군말이 있으면 예외가 발생한다.")
@@ -72,8 +72,8 @@ public class ChessGameDaoTest {
         MoveCommand command = new MoveCommand("move a1 a2");
 
         assertThatCode(() -> chessGame.moveChessmen(command))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이동하려는 위치에 아군 말이 있습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이동하려는 위치에 아군 말이 있습니다.");
     }
 
     @DisplayName("체스말의 이동하려는 위치면서 공격가능한 위치면 적군말을 공격한다.")
@@ -110,8 +110,8 @@ public class ChessGameDaoTest {
         MoveCommand command = new MoveCommand("move a7 a6");
 
         assertThatCode(() -> chessGame.moveChessmen(command))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("턴은 백색 말부터 시작해 한번씩 움직일 수 있습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("턴은 백색 말부터 시작해 한번씩 움직일 수 있습니다.");
     }
 
     @DisplayName("같은 색의 말을 연달아 두번 움직이려는 경우 예외가 발생한다.")
@@ -123,8 +123,8 @@ public class ChessGameDaoTest {
         chessGame.moveChessmen(command1);
 
         assertThatCode(() -> chessGame.moveChessmen(command2))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("턴은 백색 말부터 시작해 한번씩 움직일 수 있습니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("턴은 백색 말부터 시작해 한번씩 움직일 수 있습니다.");
     }
 
     @DisplayName("흑, 백 King 모두 죽지 않으면 게임은 끝나지 않는다.")
@@ -149,9 +149,9 @@ public class ChessGameDaoTest {
     @Test
     void calculateGameResult() {
         double actual = GameResult.calculate(chessGame.getChessmen())
-            .getBlackScore();
+                .getBlackScore();
         double expected = new GameResultDto(BLACK.getName(), 38.0, 38.0)
-            .getBlackScore();
+                .getBlackScore();
 
         assertThat(actual).isEqualTo(expected);
     }

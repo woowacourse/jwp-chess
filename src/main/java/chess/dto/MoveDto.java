@@ -7,7 +7,7 @@ public class MoveDto {
     private String source;
     private String target;
 
-    public MoveDto(){
+    public MoveDto() {
     }
 
     public MoveDto(String source, String target) {
@@ -24,7 +24,7 @@ public class MoveDto {
     }
 
     public MoveCommand toEntity() {
-        return new MoveCommand(source,target);
+        return new MoveCommand(source, target);
     }
 
 }

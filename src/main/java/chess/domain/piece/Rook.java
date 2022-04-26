@@ -71,7 +71,7 @@ public class Rook extends Piece {
         }
         Rook rook = (Rook) o;
         return color == rook.color
-            && position == rook.position;
+                && position == rook.position;
     }
 
     @Override
@@ -82,9 +82,9 @@ public class Rook extends Piece {
     @Override
     public String toString() {
         return "Rook{" +
-            "color=" + color +
-            ", position=" + position +
-            '}';
+                "color=" + color +
+                ", position=" + position +
+                '}';
     }
 
 }

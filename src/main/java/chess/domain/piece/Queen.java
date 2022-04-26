@@ -35,7 +35,7 @@ public class Queen extends Piece {
     private boolean isMovablePosition(Position toPosition) {
         Direction direction = Direction.findDirection(position, toPosition);
         return direction.isCrossDirection()
-            || direction.isDiagonalDirection();
+                || direction.isDiagonalDirection();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class Queen extends Piece {
         }
         Queen queen = (Queen) o;
         return color == queen.color
-            && position == queen.position;
+                && position == queen.position;
     }
 
     @Override
@@ -84,9 +84,9 @@ public class Queen extends Piece {
     @Override
     public String toString() {
         return "Queen{" +
-            "color=" + color +
-            ", position=" + position +
-            '}';
+                "color=" + color +
+                ", position=" + position +
+                '}';
     }
 
 }

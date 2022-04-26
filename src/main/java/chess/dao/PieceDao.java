@@ -22,28 +22,28 @@ public class PieceDao {
         final String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, pieces, pieces.size(),
-            (statement, piece) -> {
-                statement.setString(1, piece.getName());
-                statement.setString(2, piece.getColor().getName());
-                statement.setString(3, piece.getPosition().getPosition());
-                statement.setString(4, gameId);
-            }
+                (statement, piece) -> {
+                    statement.setString(1, piece.getName());
+                    statement.setString(2, piece.getColor().getName());
+                    statement.setString(3, piece.getPosition().getPosition());
+                    statement.setString(4, gameId);
+                }
         );
     }
 
     public void updateAllByGameId(List<Piece> pieces, String gameId) {
         final String sql = "UPDATE piece SET position = ? "
-            + "WHERE game_id = ? "
-            + "AND name = ? "
-            + "AND color = ?";
+                + "WHERE game_id = ? "
+                + "AND name = ? "
+                + "AND color = ?";
 
         jdbcTemplate.batchUpdate(sql, pieces, pieces.size(),
-            (statement, piece) -> {
-                statement.setString(1, piece.getPosition().getPosition());
-                statement.setString(2, gameId);
-                statement.setString(3, piece.getName());
-                statement.setString(4, piece.getColor().getName());
-            }
+                (statement, piece) -> {
+                    statement.setString(1, piece.getPosition().getPosition());
+                    statement.setString(2, gameId);
+                    statement.setString(3, piece.getName());
+                    statement.setString(4, piece.getColor().getName());
+                }
         );
     }
 
@@ -51,9 +51,9 @@ public class PieceDao {
         final String sql = "select name, color, position from piece where game_id = ?";
 
         List<Piece> pieces = jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceFactory.of(
-            resultSet.getString("name"),
-            resultSet.getString("color"),
-            resultSet.getString("position")
+                resultSet.getString("name"),
+                resultSet.getString("color"),
+                resultSet.getString("position")
         ), gameId);
 
         return new Pieces(pieces);

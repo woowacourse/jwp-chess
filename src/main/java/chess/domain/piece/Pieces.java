@@ -19,14 +19,14 @@ public class Pieces {
 
     public Piece extractPiece(Position position) {
         return pieces.stream()
-            .filter(piece -> piece.isAt(position))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(NON_PIECE_EXCEPTION_MESSAGE));
+                .filter(piece -> piece.isAt(position))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(NON_PIECE_EXCEPTION_MESSAGE));
     }
 
     public boolean isOccupied(Position position) {
         return pieces.stream()
-            .anyMatch(piece -> piece.isAt(position));
+                .anyMatch(piece -> piece.isAt(position));
     }
 
     public void remove(Piece targetPiece) {
@@ -35,8 +35,8 @@ public class Pieces {
 
     public boolean hasLessThanTotalKingCount() {
         int kingCount = (int) pieces.stream()
-            .filter(Piece::isKing)
-            .count();
+                .filter(Piece::isKing)
+                .count();
 
         return kingCount < TOTAL_KING_COUNT;
     }
@@ -45,16 +45,16 @@ public class Pieces {
         long count = 0;
         for (Position position : positions) {
             count += pieces.stream()
-                .filter(piece -> piece.isAt(position))
-                .count();
+                    .filter(piece -> piece.isAt(position))
+                    .count();
         }
         return count != 0;
     }
 
     public List<Piece> extractPiecesOf(Color color) {
         return pieces.stream()
-            .filter(piece -> piece.isSameColor(color))
-            .collect(Collectors.toUnmodifiableList());
+                .filter(piece -> piece.isSameColor(color))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public List<Piece> getPieces() {
@@ -64,8 +64,8 @@ public class Pieces {
     @Override
     public String toString() {
         return "Pieces{" +
-            "pieces=" + pieces +
-            '}';
+                "pieces=" + pieces +
+                '}';
     }
 
     public Color findKingWinner() {
@@ -74,18 +74,18 @@ public class Pieces {
         }
 
         return pieces
-            .stream()
-            .filter(Piece::isKing)
-            .map(Piece::getColor)
-            .findFirst()
-            .orElseThrow(() -> new IllegalStateException("승자를 찾을 수 없습니다."));
+                .stream()
+                .filter(Piece::isKing)
+                .map(Piece::getColor)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("승자를 찾을 수 없습니다."));
     }
 
     private long findKingCount() {
         return pieces
-            .stream()
-            .filter(Piece::isKing)
-            .count();
+                .stream()
+                .filter(Piece::isKing)
+                .count();
     }
 }
 

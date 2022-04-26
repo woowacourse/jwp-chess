@@ -27,8 +27,8 @@ public class KingTest {
         King king = new King(Color.WHITE, Position.of("e1"));
 
         assertThatCode(() -> king.move(Position.of("c3")))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이동할 수 없는 위치입니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이동할 수 없는 위치입니다.");
     }
 
     @DisplayName("킹은 attack시 move와 같은 방향으로 이동한다.")

@@ -26,8 +26,8 @@ public class RookTest {
         Rook rook = new Rook(Color.WHITE, Position.of("a1"));
 
         assertThatCode(() -> rook.move(Position.of("b3")))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("이동할 수 없는 위치입니다.");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이동할 수 없는 위치입니다.");
     }
 
     @DisplayName("룩은 attack시 move와 같은 방향으로 이동한다.")

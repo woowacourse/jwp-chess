@@ -52,7 +52,6 @@ public class SpringJdbcGameDao implements GameDao {
                             )
             );
         } catch (EmptyResultDataAccessException e) {
-            e.printStackTrace();
             return new GameDto(null, "ready");
         }
     }

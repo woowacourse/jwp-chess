@@ -10,27 +10,8 @@ section.addEventListener("mousedown", (event) => {
 })
 
 section.addEventListener("mouseup", (event) => {
-
     targetInput = findTagId(event);
-
-    fetch("/game/" + gameId + "/move", {
-        method: "post",
-        redirect: 'follow',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-            source: sourceInput,
-            target: targetInput
-        }),
-    })
-        .then(res => {
-            window.location.href = res.url;
-        })
-        .catch(error => {
-            alert(error.message + ": 잘못된 이동입니다")
-        })
+    return updateGame()
 })
 
 function saveId() {
@@ -44,4 +25,21 @@ function findTagId(event) {
         return event.target.parentNode.id;
     }
     return event.target.id;
+}
+
+async function updateGame() {
+    const config = {
+        headers: {'Content-Type': 'application/json'},
+        method: "put",
+        body: JSON.stringify({
+            source : sourceInput,
+            target : targetInput
+        })
+    };
+    const response = await fetch(`/game/${gameId}/move`, config);
+    if (!response.ok) {
+        const errorMessage = await response.text()
+        return alert(errorMessage);
+    }
+    window.location.reload();
 }

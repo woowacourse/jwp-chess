@@ -17,6 +17,12 @@ public class ChessController {
         this.chessGameService = chessGameService;
     }
 
+    @GetMapping("/game/start")
+    public String startGame(@RequestParam String gameId) {
+        chessGameService.createOrGet(gameId);
+        return "redirect:/game/" + gameId;
+    }
+
     @GetMapping(path = "/game/{gameId}")
     public ModelAndView getGame(@PathVariable String gameId,
                                 @RequestParam(value = "message", required = false, defaultValue = "") String message) {

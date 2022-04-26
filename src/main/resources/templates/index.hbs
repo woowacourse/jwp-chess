@@ -8,7 +8,7 @@
             crossorigin="anonymous"></script>
     <link href="/css/chess.css" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>화분 깨먹는 말썽쟁이의 체스</title>
+    <title>알렉스 체스</title>
 </head>
 <body>
 <div class="chess-header">
@@ -24,8 +24,8 @@
                 <h5 class="card-title">{{id}} 번째 게임</h5>
                 <h4 class="card-title">{{title}}</h4>
                 <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
-                <a href="/games/{{id}}/play" class="btn btn-dark">입장</a>
-                <a onclick="deleteGame({{id}})" class="btn btn-danger">삭제</a>
+                <button onclick="checkPassword({{id}})" class="btn btn-dark">입장</button>
+                <button onclick="deleteGame({{id}})" class="btn btn-danger">삭제</button>
             </div>
         </div>
     {{/games}}
@@ -43,7 +43,7 @@
                 <div>방 제목</div>
                 <input type="text" id="title" class="form-control" placeholder="방 제목을 입력하세요.">
                 <div>비밀번호</div>
-                <input type="text" id="password" class="form-control" placeholder="비밀번호를 입력하세요.">
+                <input type="password" id="password" class="form-control" placeholder="비밀번호를 입력하세요.">
                 <div>백팀</div>
                 <select id="white" class="form-control">
                     {{#members}}
@@ -67,6 +67,23 @@
 </body>
 
 <script>
+    const checkPassword = (gameId) => {
+        let password = prompt("비밀번호를 입력하세요");
+        fetch("/games/password", {
+            method: "POST",
+            body: JSON.stringify({gameId: gameId, password: password}),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(async response => {
+            if (response.status === 400) {
+                alert("비밀번호 오류입니다!");
+                return;
+            }
+            location.href = `/games/${gameId}/play`;
+        }).catch(error => alert(error));
+    }
+
     const createGame = () => {
         let title = document.getElementById("title").value;
         let password = document.getElementById("password").value;

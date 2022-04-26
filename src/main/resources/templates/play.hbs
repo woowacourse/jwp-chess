@@ -62,23 +62,6 @@
 </body>
 
 <script>
-    const checkPassword = () => {
-        let password = prompt("비밀번호를 입력하세요");
-        fetch("/games/password", {
-            method: "POST",
-            body: JSON.stringify({gameId: {{gameId}}, password: password}),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }).then(async response => {
-            if (response.status === 400) {
-                alert("비밀번호 오류입니다!");
-                location.replace("/");
-                return;
-            }
-            alert("입장 성공!");
-        }).catch(error => alert(error));
-    }
 
     const getScoreData = async () => {
         let response = await fetch("/games/{{gameId}}/score");

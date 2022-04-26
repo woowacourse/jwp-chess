@@ -1,32 +1,32 @@
 package chess.dao;
 
+import chess.domain.ChessGame;
 import chess.domain.state.Turn;
-import java.sql.PreparedStatement;
-import java.util.Objects;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ChessGameDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertActor;
 
-    public ChessGameDao(JdbcTemplate jdbcTemplate) {
+    public ChessGameDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(dataSource)
+                .withTableName("chess_game")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public long createChessGame(Turn turn) {
-        String sql = "insert into chess_game (turn) values (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-                    PreparedStatement statement = con.prepareStatement(sql, new String[]{"id"});
-                    statement.setString(1, turn.name());
-                    return statement;
-                },
-                keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    public ChessGame createChessGame(ChessGame chessGame) {
+        SqlParameterSource sqlParameterSource = new BeanPropertySqlParameterSource(chessGame);
+        long id = insertActor.executeAndReturnKey(sqlParameterSource).longValue();
+
+        return new ChessGame(id, chessGame.getTurn(), chessGame.getTitle(), chessGame.getPassword());
     }
 
     public Turn findChessGame(long id) {

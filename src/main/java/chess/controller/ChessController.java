@@ -23,7 +23,7 @@ public class ChessController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
+    public ResponseEntity<Void> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
         final RoomResponseDto room = chessService.createRoom(roomRequestDto);
         return ResponseEntity.created(URI.create("/api/chess/rooms/" + room.getId())).build();
     }
@@ -56,7 +56,7 @@ public class ChessController {
     }
 
     @PatchMapping("/{id}/update")
-    public ResponseEntity<?> changeRoomName(@PathVariable Long id,
+    public ResponseEntity<Void> changeRoomName(@PathVariable Long id,
                                          @RequestBody RoomRequestDto roomRequestDto) {
         chessService.updateRoomName(id, roomRequestDto);
         return ResponseEntity.ok().build();

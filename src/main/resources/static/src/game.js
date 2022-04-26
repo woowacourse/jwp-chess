@@ -13,7 +13,7 @@ section.addEventListener("mouseup", (event) => {
 
     targetInput = findTagId(event);
 
-    fetch("/game/${gameId}/move", {
+    fetch("/game/"+ gameId +"/move", {
         method: "post",
         redirect: 'follow',
         headers: {
@@ -34,7 +34,9 @@ section.addEventListener("mouseup", (event) => {
 })
 
 function saveId() {
-    gameId = new URLSearchParams(window.location.search).get("gameId")
+    const ID_PATH_INDEX = 2;
+    gameId = new URL(window.location.href).pathname
+        .split("/")[ID_PATH_INDEX];
 }
 
 function findTagId(event) {

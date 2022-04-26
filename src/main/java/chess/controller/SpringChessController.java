@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping("/game")
 public class SpringChessController {
 
     private static final String WELCOME_MESSAGE = "어서오세요 :)";
@@ -34,24 +36,24 @@ public class SpringChessController {
         return getModelWithGameMessage(e.getMessage(), "redirect:/game/" + gameId);
     }
 
-    @GetMapping("/game/start")
+    @GetMapping("/start")
     public ModelAndView startGame(@RequestParam String gameId) {
         chessGameService.createOrGet(gameId);
         return getModelWithGameMessage(WELCOME_MESSAGE, "redirect:/game/" + gameId);
     }
 
-    @GetMapping("/game/{gameId}")
+    @GetMapping("/{gameId}")
     public ModelAndView getGameByGameId(HttpServletRequest request, @PathVariable String gameId) {
         return getModel(request, gameId);
     }
 
-    @PostMapping(path = "/game/{gameId}/move")
+    @PostMapping(path = "/{gameId}/move")
     public ModelAndView move(@PathVariable String gameId, @RequestBody MoveCommandDto MoveCommandDto) {
         chessGameService.move(gameId, MoveCommandDto);
         return getModelWithGameMessage(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId);
     }
 
-    @DeleteMapping("/game/{gameId}/exit")
+    @DeleteMapping("/{gameId}/exit")
     public String exitAndDeleteGame(@PathVariable String gameId) {
         chessGameService.cleanGame(gameId);
         return "redirect:/";

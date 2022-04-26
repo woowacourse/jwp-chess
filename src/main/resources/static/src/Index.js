@@ -49,7 +49,7 @@ function checkStatus() {
 function sendToServer(first, second) {
     let element = document.getElementById("roomId");
     fetch(`/room/${element.value}/move`, {
-        method: "POST",
+        method: "PUT",
         headers: {
             "Content-Type": "text/plain",
         },

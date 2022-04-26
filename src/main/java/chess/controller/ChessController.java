@@ -66,7 +66,7 @@ public class ChessController {
     }
 
     @ResponseBody
-    @PostMapping("/room/{roomId}/move")
+    @PutMapping("/room/{roomId}/move")
     public ResponseEntity<GameStatusDto> moveByCommand(@PathVariable("roomId") int id, @RequestBody String body) {
         final String[] split = body.split("=");
         if (Command.isMove(split[1])) {

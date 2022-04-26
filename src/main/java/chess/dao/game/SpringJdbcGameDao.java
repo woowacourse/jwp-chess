@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,9 +79,9 @@ public class SpringJdbcGameDao implements GameDao {
 
     private ChessGame makeChessGame(ResultSet resultSet) throws SQLException {
         final Member white = memberDao.findById(resultSet.getLong("white_member_id"))
-                .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("찾는 멤버가 존재하지 않습니다."));
         final Member black = memberDao.findById(resultSet.getLong("black_member_id"))
-                .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("찾는 멤버가 존재하지 않습니다."));
         final Long id = resultSet.getLong("id");
         final String rawTurn = resultSet.getString("turn");
         final String title = resultSet.getString("title");

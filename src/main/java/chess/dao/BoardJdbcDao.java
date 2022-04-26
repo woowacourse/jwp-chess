@@ -14,7 +14,7 @@ import chess.dto.BoardDto;
 @Repository
 public class BoardJdbcDao implements BoardDao {
 
-    private static final RowMapper<BoardDto> BOARD_DTO_ROW_MAPPER = (resultSet, rowNum) ->
+    private final RowMapper<BoardDto> BOARD_DTO_ROW_MAPPER = (resultSet, rowNum) ->
         new BoardDto(resultSet.getString("symbol"),
             resultSet.getString("team"),
             resultSet.getString("position"));

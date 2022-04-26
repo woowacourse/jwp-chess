@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GameJdbcDao implements GameDao {
 
-    private static final RowMapper<GameDto> GAME_DTO_ROW_MAPPER = (resultSet, rowNum) ->
+    private final RowMapper<GameDto> GAME_DTO_ROW_MAPPER = (resultSet, rowNum) ->
             new GameDto(resultSet.getString("white_user_name"),
                     resultSet.getString("black_user_name"),
                     resultSet.getString("state"));

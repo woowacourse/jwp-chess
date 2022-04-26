@@ -4,7 +4,6 @@ import chess.board.Board;
 import chess.board.Team;
 import chess.board.Turn;
 import chess.board.piece.Pieces;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

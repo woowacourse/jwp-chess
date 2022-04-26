@@ -1,12 +1,10 @@
 package chess.web.service.dto;
 
 public class MoveDto {
-    private final String from;
-    private final String to;
+    private String from;
+    private String to;
 
-    MoveDto() {
-        from = null;
-        to = null;
+    public MoveDto() {
     }
 
     public MoveDto(String from, String to) {

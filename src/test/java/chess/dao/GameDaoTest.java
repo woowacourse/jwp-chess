@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import chess.domain.GameState;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GameDaoTest {
 
-    private static final long testGameId = 2;
+    private static final long testGameId = 1;
 
     @Autowired
     private GameDao gameDao;
@@ -35,6 +36,17 @@ public class GameDaoTest {
         GameState actual = maybeGameState.orElseGet(() -> fail("데이터가 없습니다."));
 
         assertThat(actual).isEqualTo(GameState.READY);
+    }
+
+    @DisplayName("전체 게임 id 조회 테스트")
+    @Test
+    void find_All_Game_Id() {
+        gameDao.save(1);
+        gameDao.save(2);
+
+        List<Long> actual = gameDao.findAllGameId();
+
+        assertThat(actual).containsOnly(1L, 2L);
     }
 
     @DisplayName("게임 정보 업데이트 테스트")

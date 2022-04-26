@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.domain.GameState;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -44,6 +45,12 @@ public class GameDaoImpl implements GameDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Long> findAllGameId() {
+        String sql = "SELECT game_id FROM game";
+        return namedParameterJdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getLong("game_id"));
     }
 
     @Override

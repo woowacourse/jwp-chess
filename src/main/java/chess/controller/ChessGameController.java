@@ -33,4 +33,10 @@ public class ChessGameController {
         model.addAttribute("chessGameRoom", chessGameRoomInfoDTO);
         return "game";
     }
+
+    @PostMapping("/chess/delete")
+    public String deleteGame(@RequestParam String gameId, @RequestParam String password) {
+        chessService.deleteGameByIdAndPassword(gameId, password);
+        return "redirect:/";
+    }
 }

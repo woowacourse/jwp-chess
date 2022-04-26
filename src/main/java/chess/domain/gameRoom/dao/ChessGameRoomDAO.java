@@ -53,4 +53,11 @@ public class ChessGameRoomDAO {
         String sql = "UPDATE chess_game SET is_end = true WHERE id = ?";
         jdbcTemplate.update(sql, gameId);
     }
+
+    public void deleteGameByIdAndPassword(String gameId, String password) {
+        String sql = "DELETE FROM CHESS_GAME WHERE ID = ? AND PASSWORD = ?";
+        jdbcTemplate.update(sql,
+                gameId,
+                password);
+    }
 }

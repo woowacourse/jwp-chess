@@ -19,8 +19,16 @@
 <table border="2" width ="500" height="300" align = "center" class="game-list">
     {{#games}}
     <tr>
-        <td><a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a></td>
-        <td><a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a></td>
+        <td>
+            <a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a>
+        </td>
+        <td>
+            <form action="/chess/delete" method="post">
+                <input type="hidden" name="gameId" value="{{id}}">
+                <input type="text" name="password" placeholder="PASSWORD" pattern=".{0}|.{1,10}" required title="Either 0 OR (1 to 10 chars)">
+                <input type="submit" value="DELETE" style="background-color: red">
+            </form>
+        </td>
     </tr>
     {{/games}}
 </table>

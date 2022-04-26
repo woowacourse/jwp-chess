@@ -100,4 +100,8 @@ public final class ChessService {
 
         return model;
     }
+
+    public void deleteGameByIdAndPassword(String gameId, String password) {
+        chessGameDAO.deleteGameByIdAndPassword(gameId, password);
+    }
 }

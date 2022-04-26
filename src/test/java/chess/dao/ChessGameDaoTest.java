@@ -58,14 +58,14 @@ class ChessGameDaoTest {
         ChessGame chessGame = new ChessGame("test");
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
-        chessGameDao.save(chessGameDto);
-        pieceDao.save(chessGameDto);
+        Long id = chessGameDao.save(chessGameDto);
+        pieceDao.save(id, chessGameDto);
 
         //when
         chessGame.progress(Command.from("start"));
         chessGameDto = ChessGameDto.from(chessGame);
 
-        chessGameDao.update(chessGameDto);
+        chessGameDao.update(id, chessGameDto);
 
         //then
         chessGame = chessGameDao.findByName("test");

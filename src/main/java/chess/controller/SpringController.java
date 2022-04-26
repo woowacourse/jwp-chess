@@ -1,12 +1,8 @@
 package chess.controller;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import chess.domain.Command;
 import chess.domain.piece.Team;
 import chess.service.ChessService;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
@@ -28,68 +24,66 @@ public class SpringController {
     @GetMapping("/")
     public String home(Model model) {
         List<String> gameNames = chessService.findAllGameName();
-        for (String gameName : gameNames) {
-            System.out.println("chessGame = " + gameName);
-        }
         model.addAttribute("gameNames", gameNames);
         return "index";
     }
 
     @GetMapping("/start")
-    public String start(@RequestParam("game_name") String gameName) throws UnsupportedEncodingException {
-        String encodedParam = URLEncoder.encode(gameName, UTF_8);
-        return "redirect:/game/" + encodedParam;
+    public String start(@RequestParam("game_name") String gameName) {
+        Long id = chessService.save(gameName);
+
+        return "redirect:/game/" + id;
     }
 
-    @GetMapping("/game/{gameName}")
-    public String game(@PathVariable String gameName, @RequestParam(value = "error", required = false) String error, Model model) {
-        List<String> chessBoard = chessService.findByName(gameName);
+    @GetMapping("/game/{id}")
+    public String game(@PathVariable Long id,
+                       @RequestParam(value = "error", required = false) String error,
+                       Model model) {
+        List<String> chessBoard = chessService.findChessBoardById(id);
 
         model.addAttribute("chessboard", chessBoard);
-        model.addAttribute("gameName", gameName);
+        model.addAttribute("id", id);
         model.addAttribute("error", error);
 
         return "chess";
     }
 
-    @PostMapping("/game/{gameName}/move")
-    public String move(@PathVariable String gameName,
+    @PostMapping("/game/{id}/move")
+    public String move(@PathVariable Long id,
                        @RequestParam("from") String from, @RequestParam("to") String to,
-                       Model model) throws UnsupportedEncodingException {
-        String encodedParam = URLEncoder.encode(gameName, UTF_8);
+                       Model model) {
+        model.addAttribute("id", id);
+
         String command = makeCommand(from, to);
+        chessService.move(id, command);
 
-        chessService.move(gameName, command);
-        if (chessService.isEnd(gameName)) {
-            return "redirect:/game/" + encodedParam + "/end";
+        if (chessService.isEnd(id)) {
+            return "redirect:/game/" + id + "/end";
         }
-
-        model.addAttribute("gameName", gameName);
-
-        return "redirect:/game/" + encodedParam;
+        return "redirect:/game/" + id;
     }
 
-    @GetMapping("/game/{gameName}/end")
-    public String end(@PathVariable String gameName, Model model) {
-        String winTeamName = chessService.finish(gameName, Command.from("end"));
-        List<String> chessBoard = chessService.getCurrentChessBoard(gameName);
+    @GetMapping("/game/{id}/end")
+    public String end(@PathVariable Long id, Model model) {
+        String winTeamName = chessService.finish(id, Command.from("end"));
+        List<String> chessBoard = chessService.getCurrentChessBoard(id);
 
         model.addAttribute("winTeam", winTeamName);
         model.addAttribute("chessboard", chessBoard);
-        model.addAttribute("gameName", gameName);
+        model.addAttribute("id", id);
 
         return "chess";
     }
 
-    @GetMapping("/game/{gameName}/status")
-    public String status(@PathVariable String gameName, Model model) {
-        Map<Team, Double> score = chessService.getScore(gameName);
-        List<String> chessBoard = chessService.getCurrentChessBoard(gameName);
+    @GetMapping("/game/{id}/status")
+    public String status(@PathVariable Long id, Model model) {
+        Map<Team, Double> score = chessService.getScore(id);
+        List<String> chessBoard = chessService.getCurrentChessBoard(id);
 
         model.addAttribute("blackScore", score.get(Team.BLACK));
         model.addAttribute("whiteScore", score.get(Team.WHITE));
         model.addAttribute("chessboard", chessBoard);
-        model.addAttribute("gameName", gameName);
+        model.addAttribute("id", id);
 
         return "chess";
     }

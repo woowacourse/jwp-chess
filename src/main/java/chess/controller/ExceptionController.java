@@ -12,6 +12,10 @@ public class ExceptionController {
     public String handle(RedirectAttributes redirectAttributes, IllegalArgumentException e, HttpServletRequest request) {
         redirectAttributes.addAttribute("error", e.getMessage());
 
-        return "redirect:" + request.getHeader("Referer");
+        String referer = request.getHeader("Referer");
+        String[] split = referer.split("/");
+        String[] result = split[4].split("\\?");
+
+        return "redirect:/game/" + result[0];
     }
 }

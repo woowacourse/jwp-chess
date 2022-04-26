@@ -13,8 +13,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,24 +29,51 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(ChessGameDto chessGameDto) {
+    public Long save(ChessGameDto chessGameDto) {
         String sql = "insert into chessgame (game_name, turn) values (?, ?)";
-        jdbcTemplate.update(sql, chessGameDto.getGameName(), chessGameDto.getTurn());
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, chessGameDto.getGameName());
+            ps.setString(2, chessGameDto.getTurn());
+            return ps;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public void update(ChessGameDto chessGameDto) {
-        String sql = "update chessgame set turn = ? where game_name = ?";
-        jdbcTemplate.update(sql, chessGameDto.getTurn(), chessGameDto.getGameName());
+    public void update(Long id, ChessGameDto chessGameDto) {
+        String sql = "update chessgame set turn = ? where id = ?";
+        jdbcTemplate.update(sql, chessGameDto.getTurn(), id);
     }
 
     public ChessGame findByName(String gameName) {
         String sql = "select CHESSGAME.turn, CHESSGAME.game_name, PIECE.type, PIECE.team, PIECE.`rank`, PIECE.file from CHESSGAME, PIECE\n"
-                + "where CHESSGAME.game_name = PIECE.game_name AND CHESSGAME.game_name = ?;";
+                + "where CHESSGAME.id = PIECE.chessgame_id AND CHESSGAME.game_name = ?;";
 
         List<ChessGame> result = jdbcTemplate.query(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             preparedStatement.setString(1, gameName);
+            return preparedStatement;
+        }, chessGameRowMapper);
+
+        if(result.isEmpty()) {
+            return null;
+        }
+
+        return result.get(0);
+    }
+
+    public ChessGame findById(Long id) {
+        String sql = "select CHESSGAME.turn, CHESSGAME.game_name, PIECE.type, PIECE.team, PIECE.`rank`, PIECE.file from CHESSGAME, PIECE\n"
+                + "where CHESSGAME.id = PIECE.chessgame_id AND CHESSGAME.id = ?;";
+
+        List<ChessGame> result = jdbcTemplate.query(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            preparedStatement.setLong(1, id);
             return preparedStatement;
         }, chessGameRowMapper);
 

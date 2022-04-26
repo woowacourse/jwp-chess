@@ -16,7 +16,7 @@ class ChessBoardDaoTest {
 
     @AfterEach
     void rollback() {
-       chessGameDao.remove("test");
+        chessGameDao.remove("test");
     }
 
     @DisplayName("체스판 저장 테스트")

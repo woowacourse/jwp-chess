@@ -29,9 +29,9 @@ class PieceDaoTest {
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
         //when
-        chessGameDao.save(chessGameDto);
+        Long id = chessGameDao.save(chessGameDto);
 
         //then
-        Assertions.assertDoesNotThrow(() -> pieceDao.save(chessGameDto));
+        Assertions.assertDoesNotThrow(() -> pieceDao.save(id, chessGameDto));
     }
 }

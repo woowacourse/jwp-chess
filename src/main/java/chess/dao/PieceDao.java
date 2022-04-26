@@ -18,16 +18,15 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(ChessGameDto chessGameDto) {
-        String gameName = chessGameDto.getGameName();
+    public void save(Long id, ChessGameDto chessGameDto) {
         ChessBoardDto chessBoard = chessGameDto.getChessBoard();
         Map<PositionDto, PieceDto> cells = chessBoard.getCells();
 
-        updateCells(gameName, cells);
+        updateCells(id, cells);
     }
 
-    private void updateCells(String gameName, Map<PositionDto, PieceDto> cells) {
-        String sql = "insert into piece (type, team, `rank`, file, game_name) values (?, ?, ?, ?, ?)";
+    private void updateCells(Long id, Map<PositionDto, PieceDto> cells) {
+        String sql = "insert into piece (type, team, `rank`, file, chessgame_id) values (?, ?, ?, ?, ?)";
 
         List<Object[]> parameters = new ArrayList<>();
         for (PositionDto positionDto : cells.keySet()) {
@@ -36,19 +35,19 @@ public class PieceDao {
                     cells.get(positionDto).getTeam(),
                     positionDto.getRank(),
                     positionDto.getFile(),
-                    gameName});
+                    id});
         }
 
         jdbcTemplate.batchUpdate(sql, parameters);
     }
 
-    public void delete(ChessGameDto chessGameDto) {
-        String sql = "delete from piece where game_name = ?";
-        jdbcTemplate.update(sql, chessGameDto.getGameName());
+    public void delete(Long id) {
+        String sql = "delete from piece where chessgame_id = ?";
+        jdbcTemplate.update(sql, id);
     }
 
-    public void update(ChessGameDto chessGameDto) {
-        delete(chessGameDto);
-        save(chessGameDto);
+    public void update(Long id, ChessGameDto chessGameDto) {
+        delete(id);
+        save(id, chessGameDto);
     }
 }

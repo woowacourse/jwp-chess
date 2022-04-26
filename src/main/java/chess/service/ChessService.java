@@ -3,6 +3,7 @@ package chess.service;
 import chess.db.ChessGameDao;
 import chess.db.PieceDao;
 import chess.domain.ChessGame;
+import chess.domain.GameEntry;
 import chess.domain.GameResult;
 import chess.domain.GameTurn;
 import chess.domain.board.Board;
@@ -23,7 +24,7 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public List<String> loadGameLists() {
+    public List<GameEntry> loadGameLists() {
         return chessGameDao.findAllGames();
     }
 
@@ -89,5 +90,9 @@ public class ChessService {
         pieceDao.deleteByPosition(new Square(target), gameID);
         pieceDao.updatePosition(new Square(source), new Square(target), gameID);
         pieceDao.insertNone(gameID, new Square(source));
+    }
+
+    public String findGameID(String gameCode) {
+        return chessGameDao.findIDByCode(gameCode);
     }
 }

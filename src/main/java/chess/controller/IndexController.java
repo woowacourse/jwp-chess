@@ -33,8 +33,9 @@ public class IndexController {
     }
 
     @GetMapping("/checkPW")
-    public String checkPassword(@RequestParam String gameID, Model model){
-        model.addAttribute("gameID",gameID);
+    public String checkPassword(@RequestParam String gameCode, Model model){
+        final String gameID = chessService.findGameID(gameCode);
+        model.addAttribute("gameID", gameID);
         model.addAttribute("rooms", chessService.loadGameLists());
         return "delete";
     }

@@ -22,7 +22,8 @@ public class InGameController {
     }
 
     @GetMapping()
-    public String runGame(@RequestParam String gameID, Model model) {
+    public String runGame(@RequestParam String gameCode, Model model) {
+        final String gameID = chessService.findGameID(gameCode);
         ChessGame chessGame = chessService.loadGame(gameID);
         chessService.loadPieces(gameID);
         GameResult gameResult = chessService.getGameResult(gameID);
@@ -31,12 +32,13 @@ public class InGameController {
 
         model.addAllAttributes(chessGame.getEmojis());
         model.addAttribute("msg", "누가 이기나 보자구~!");
-        model.addAttribute("gameID", gameID);
+        model.addAttribute("gameCode", gameCode);
         return "ingame";
     }
 
-    @PostMapping("/{gameID}")
-    public String movePiece(@PathVariable String gameID, @RequestBody String movement, Model model) {
+    @PostMapping("/{gameCode}")
+    public String movePiece(@PathVariable String gameCode, @RequestBody String movement, Model model) {
+        final String gameID = chessService.findGameID(gameCode);
         ChessGame chessGame = chessService.loadSavedChessGame(gameID, chessService.getTurn(gameID));
         List<String> movements = Arrays.asList(movement.split("&"));
 
@@ -53,7 +55,7 @@ public class InGameController {
             model.addAllAttributes(chessGame.getEmojis());
             model.addAttribute("msg", e.getMessage());
         }
-        model.addAttribute("gameID", gameID);
+        model.addAttribute("gameCode", gameCode);
         GameResult gameResult = chessService.getGameResult(gameID);
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));

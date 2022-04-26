@@ -33,6 +33,7 @@ class BoardDaoTest {
     private static final String TEST_ROOM_PASSWORD = "1234";
     private static final String TEST_CREATION_ROOM_NAME = "TESTING22";
     private static final String TEST_CREATION_ROOM_PASSWORD = "4321";
+
     private static GameState state;
 
     @Autowired
@@ -57,22 +58,19 @@ class BoardDaoTest {
         gameDao.create(GameStateDto.of(state), testRoomDto.getId());
         gameDao.create(GameStateDto.of(state), testRoomDto2.getId());
 
-//        gameDao.saveGame(GameStateDto.of(state), TEST_ROOM_NAME);
-//        gameDao.saveGame(GameStateDto.of(state), TEST_CREATION_ROOM_NAME);
-
         boardDao = new SpringBoardDao(jdbcTemplate);
         Board board = Board.of(new InitialBoardGenerator());
-//        boardDao.saveBoard(BoardDto.of(board.getPointPieces()), TEST_ROOM_NAME);
+
         boardDao.saveBoard(BoardDto.of(board.getPointPieces()), testRoomDto.getId());
     }
 
     @Test
     @DisplayName("말의 위치와 종류를 저장한다.")
     public void insert() {
-        // given & when
+
         Board board = Board.of(new InitialBoardGenerator());
         RoomDto roomDto = roomDao.findByName(TEST_CREATION_ROOM_NAME);
-        // then
+
         assertThatCode(
             () -> boardDao.saveBoard(BoardDto.of(board.getPointPieces()), roomDto.getId()))
             .doesNotThrowAnyException();
@@ -82,13 +80,11 @@ class BoardDaoTest {
     @Test
     @DisplayName("말의 위치와 종류를 조회한다.")
     public void select() {
-        // given
-        String roomName = TEST_ROOM_NAME;
+
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
-        // when
-//        BoardDto boardDto = boardDao.readBoard(roomName);
+
         BoardDto boardDto = boardDao.readBoard(roomDto.getId());
-        // then
+
         assertThat(boardDto.getPointPieces().size()).isEqualTo(32);
     }
 
@@ -106,11 +102,9 @@ class BoardDaoTest {
     @Test
     @DisplayName("말의 위치를 움직인다.")
     public void update() {
-        // given & when
-//        String roomName = TEST_ROOM_NAME;
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         Route route = Route.of(List.of("a2", "a4"));
-        // then
+
         assertThatCode(() -> boardDao.updatePiece(RouteDto.of(route), roomDto.getId()))
             .doesNotThrowAnyException();
     }
@@ -118,11 +112,9 @@ class BoardDaoTest {
     @Test
     @DisplayName("말을 삭제한다.")
     public void delete() {
-        // given & when
-        String roomName = TEST_ROOM_NAME;
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         Point point = Point.of("b2");
-        // then
+
         assertThatCode(() -> boardDao.deletePiece(PointDto.of(point), roomDto.getId()))
             .doesNotThrowAnyException();
     }
@@ -131,6 +123,7 @@ class BoardDaoTest {
     void setDown() {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         RoomDto roomDto2 = roomDao.findByName(TEST_CREATION_ROOM_NAME);
+
         boardDao.removeBoard(roomDto.getId());
 
         gameDao.removeGame(roomDto.getId());

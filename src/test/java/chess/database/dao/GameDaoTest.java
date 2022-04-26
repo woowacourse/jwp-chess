@@ -59,17 +59,12 @@ class GameDaoTest {
     @DisplayName("방 이름으로 게임 상태와 턴 색깔을 조회한다.")
     public void insert() {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
-        System.out.println("id " + roomDto.getId());
-        System.out.println("name " + roomDto.getName());
-        System.out.println("pw " + roomDto.getPassword());
-        // given
+
         List<String> stateAndColor = gameDao.readStateAndColor(roomDto.getId());
-        System.out.println("stateAndColor : " + stateAndColor);
-        // when
 
         String stateString = stateAndColor.get(0);
         String colorString = stateAndColor.get(1);
-        // then
+
         Assertions.assertAll(
             () -> assertThat(stateString).isEqualTo("READY"),
             () -> assertThat(colorString).isEqualTo("WHITE")
@@ -79,17 +74,16 @@ class GameDaoTest {
     @Test
     @DisplayName("방 이름으로 게임 상태와 턴 색깔을 수정한다.")
     public void update() {
-        // given
         GameState state = new Ready();
         GameState started = state.start();
-        // when
+
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         gameDao.updateState(GameStateDto.of(started), roomDto.getId());
         List<String> stateAndColor = gameDao.readStateAndColor(roomDto.getId());
 
         String stateString = stateAndColor.get(0);
         String colorString = stateAndColor.get(1);
-        // then
+
         assertThat(stateString).isEqualTo("RUNNING");
         assertThat(colorString).isEqualTo("WHITE");
     }

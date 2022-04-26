@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.service.ChessRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,15 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import chess.domain.game.GameState;
 import chess.dto.GameStateResponse;
-import chess.service.GameService;
 
 @Controller
 public class SpringViewChessController {
 
-    private final GameService gameService;
+    private final ChessRoomService gameService;
 
     @Autowired
-    public SpringViewChessController(GameService gameService) {
+    public SpringViewChessController(ChessRoomService gameService) {
         this.gameService = gameService;
     }
 
@@ -26,8 +26,8 @@ public class SpringViewChessController {
     }
 
     @GetMapping(path = "/main")
-    public String showGame(Model model, @RequestParam("room_name") String roomName) {
-        GameState state = gameService.readGameState(roomName);
+    public String showGame(Model model, @RequestParam("room_id") int roomId) {
+        GameState state = gameService.readGameState(roomId);
         GameStateResponse response = GameStateResponse.of(state);
         model.addAttribute("response", response);
         return "game";

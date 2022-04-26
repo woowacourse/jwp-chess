@@ -1,10 +1,12 @@
 package chess.database.dao.spring;
 
 import chess.database.dto.RoomDto;
-import java.util.ArrayList;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class RoomDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -21,11 +23,24 @@ public class RoomDao {
 
     public RoomDto findByName(String roomName) {
         String sql = "select * from room where name = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
+                int id = resultSet.getInt("id");
+                String password = resultSet.getString("password");
+                return new RoomDto(id, roomName, password);
+            }, roomName);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public RoomDto findById(int roomId) {
+        String sql = "select * from room where id = ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
-            int id = resultSet.getInt("id");
+            String roomName = resultSet.getString("name");
             String password = resultSet.getString("password");
-            return new RoomDto(id, roomName, password);
-        }, roomName);
+            return new RoomDto(roomId, roomName, password);
+        }, roomId);
     }
 
     public void delete(RoomDto roomDto) {
@@ -35,8 +50,8 @@ public class RoomDao {
 
     public List<RoomDto> findAll() {
         String sql = "select id, name from room";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-            List.of(new RoomDto(resultSet.getInt("id"), resultSet.getString("name")))
+        return jdbcTemplate.query(sql, (resultSet, rowNum) ->
+            new RoomDto(resultSet.getInt("id"), resultSet.getString("name"))
         );
     }
 }

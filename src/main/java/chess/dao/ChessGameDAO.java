@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.domain.board.ChessGame;
 import chess.dto.ChessGameRoomInfoDTO;
 import chess.dto.GameCreationDTO;
 import java.sql.PreparedStatement;
@@ -39,14 +40,21 @@ public class ChessGameDAO {
         return keyHolder.getKey().longValue();
     }
 
-    public List<ChessGameRoomInfoDTO> findActiveGames() {
-        String sql = "SELECT id, name, password FROM CHESS_GAME WHERE IS_END = false";
+    public List<ChessGameRoomInfoDTO> findAllGames() {
+        String sql = "SELECT id, name, password FROM CHESS_GAME";
         return jdbcTemplate.query(sql, CHESS_GAME_ROOM_INFO_DTO_ROW_MAPPER);
     }
 
-    public ChessGameRoomInfoDTO findGameById(final String gameId) {
-        String sql = "SELECT id, name, password FROM CHESS_GAME WHERE ID = ? AND IS_END = FALSE ORDER BY created_at";
-        return jdbcTemplate.queryForObject(sql, CHESS_GAME_ROOM_INFO_DTO_ROW_MAPPER, gameId);
+    public ChessGame findGameById(final String gameId) {
+        String sql = "SELECT id, name, password, is_end FROM CHESS_GAME WHERE ID = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNumber) -> new ChessGame(
+                        resultSet.getString("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("password"),
+                        resultSet.getBoolean("is_end")
+                ), gameId);
     }
 
     public void updateGameEnd(final String gameId) {

@@ -65,8 +65,8 @@ function update(response) {
 }
 
 function showResult(response) {
+    console.log(response);
     $winner.innerHTML = response.winner
-
     $gameSetResult.classList.remove("none")
     $board.removeEventListener('click', onClickSquare)
 }

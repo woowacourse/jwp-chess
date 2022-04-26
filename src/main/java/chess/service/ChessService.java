@@ -28,7 +28,7 @@ public final class ChessService {
 
     public ChessGame getChessGamePlayed(final String gameId) {
         List<Movement> movementByGameId = movementDAO.findMovementByGameId(gameId);
-        ChessGame chessGame = ChessGame.fromId(gameId);
+        ChessGame chessGame = chessGameDAO.findGameById(gameId);
         for (Movement movement : movementByGameId) {
             chessGame.execute(movement);
         }
@@ -39,7 +39,7 @@ public final class ChessService {
         final ChessGame chessGame = getChessGamePlayed(gameId);
         validateCurrentTurn(chessGame, team);
         move(chessGame, new Movement(Position.of(source), Position.of(target)), team);
-        if (chessGame.isGameSet()){
+        if (chessGame.isKingDied()){
             chessGameDAO.updateGameEnd(gameId);
         }
         return chessGame;
@@ -63,18 +63,20 @@ public final class ChessService {
     }
 
     public List<ChessGameRoomInfoDTO> getGames() {
-        return chessGameDAO.findActiveGames();
+        return chessGameDAO.findAllGames();
     }
 
     public ChessGameRoomInfoDTO findGameById(String id) {
-        return chessGameDAO.findGameById(id);
+        return ChessGameRoomInfoDTO.from(chessGameDAO.findGameById(id));
     }
 
     public void deleteGame(final String gameId, final String password) {
-
-        ChessGameRoomInfoDTO gameInfo = chessGameDAO.findGameById(gameId);
-        if (!gameInfo.getPassword().equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다");
+        ChessGame chessGame = getChessGamePlayed(gameId);
+        if (!chessGame.isMatched(password)) {
+            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+        }
+        if (!chessGame.isEnd()) {
+            throw new IllegalArgumentException("진행중인 게임은 삭제할 수 없습니다.");
         }
         chessGameDAO.deleteGame(gameId);
     }

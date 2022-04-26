@@ -6,10 +6,12 @@ import chess.dto.BoardDTO;
 import chess.dto.ChessGameRoomInfoDTO;
 import chess.dto.GameCreationDTO;
 import chess.service.ChessService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,9 +64,10 @@ public class ChessGameController {
         return ResponseEntity.ok(new BoardDTO(chessGame));
     }
 
-    @PostMapping(value = "/delete/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String deleteGame(@PathVariable String id, String password) {
+    @DeleteMapping(value = "/chess/{id}")
+    public ResponseEntity<Object> deleteGame(@PathVariable String id, String password) {
         chessService.deleteGame(id, password);
-        return "redirect:/";
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .header("Location", "/").build();
     }
 }

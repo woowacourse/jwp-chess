@@ -16,24 +16,16 @@ public final class ChessGame {
         this.chessBoard = new ChessBoard(boardGenerator);
     }
 
-    public ChessGame(final String id, final String name, final String password, final BoardGenerator boardGenerator) {
+    public ChessGame(final String id, final String name, final String password, final boolean isEnd) {
         this.id = id;
         this.name = name;
         this.password = password;
-        this.boardGenerator = boardGenerator;
-    }
-
-    public ChessGame(final String id, final String name, final String password) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
+        this.isEnd = isEnd;
         this.chessBoard = new ChessBoard(new ChessBoardGenerator());
     }
 
-    public static ChessGame fromId(final String gameId) {
-        ChessGame chessGame = new ChessGame(new ChessBoardGenerator());
-        chessGame.id = gameId;
-        return chessGame;
+    public ChessGame(final String id, final String name, final String password) {
+        this(id, name, password, false);
     }
 
     public String getName() {
@@ -42,6 +34,10 @@ public final class ChessGame {
 
     public String getId() {
         return id;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void execute(final Movement movement) {
@@ -55,8 +51,12 @@ public final class ChessGame {
         return chessBoard;
     }
 
-    public boolean isGameSet() {
+    public boolean isKingDied() {
         return !chessBoard.checkKingExist();
+    }
+
+    public boolean isEnd() {
+        return isEnd;
     }
 
     public boolean isMatched(final String password) {

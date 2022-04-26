@@ -1,5 +1,7 @@
 package chess.dto;
 
+import chess.domain.board.ChessGame;
+
 public final class ChessGameRoomInfoDTO {
 
     private final String id;
@@ -10,6 +12,10 @@ public final class ChessGameRoomInfoDTO {
         this.id = id;
         this.name = name;
         this.password = password;
+    }
+
+    public static ChessGameRoomInfoDTO from(final ChessGame chessGame) {
+        return new ChessGameRoomInfoDTO(chessGame.getId(), chessGame.getName(), chessGame.getPassword());
     }
 
     public String getId() {

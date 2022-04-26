@@ -34,7 +34,7 @@ class ChessGameDAOTest {
     @DisplayName("체스 게임방 가져오기")
     void findChessGameRoom() {
         ChessGameDAO chessGameDAO = new ChessGameDAO(template);
-        List<ChessGameRoomInfoDTO> activeGames = chessGameDAO.findActiveGames();
+        List<ChessGameRoomInfoDTO> activeGames = chessGameDAO.findAllGames();
 
         assertThat(activeGames.size()).isNotEqualTo(0);
     }

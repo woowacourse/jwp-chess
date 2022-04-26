@@ -17,7 +17,7 @@ public class ChessGameController {
 
     private final GameService gameService;
 
-    public ChessGameController(GameService gameService) {
+    public ChessGameController(final GameService gameService) {
         this.gameService = gameService;
     }
 

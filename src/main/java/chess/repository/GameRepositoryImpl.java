@@ -17,18 +17,18 @@ public class GameRepositoryImpl implements GameRepository {
     private final SquareDao squareDao;
     private final StateDao stateDao;
 
-    public GameRepositoryImpl(SquareDao squareDao, StateDao stateDao) {
+    public GameRepositoryImpl(final SquareDao squareDao, final StateDao stateDao) {
         this.squareDao = squareDao;
         this.stateDao = stateDao;
     }
 
-    public void initGameData(State state) {
+    public void initGameData(final State state) {
         deleteGameData();
         stateDao.insert(state);
         insertBoard(state.getBoard());
     }
 
-    public void saveGameData(State nextState, MoveDto moveDto) {
+    public void saveGameData(final State nextState, final MoveDto moveDto) {
         Board board = squareDao.createBoard();
         State nowState = stateDao.find(board);
         stateDao.update(nowState, nextState);
@@ -55,7 +55,7 @@ public class GameRepositoryImpl implements GameRepository {
         return stateDao.find(board);
     }
 
-    private void insertBoard(Map<Position, Piece> board) {
+    private void insertBoard(final Map<Position, Piece> board) {
         board.keySet()
                 .forEach(position -> squareDao.insert(position, board.get(position)));
     }

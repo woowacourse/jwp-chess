@@ -8,7 +8,7 @@ public class ResultDto {
     private final Map<Team, Double> score;
     private final Team winner;
 
-    public ResultDto(Map<Team, Double> score, Team winner) {
+    public ResultDto(final Map<Team, Double> score, final Team winner) {
         this.score = score;
         this.winner = winner;
     }

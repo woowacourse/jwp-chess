@@ -6,7 +6,7 @@ public class RoomEntity {
     private final String name;
     private final String password;
 
-    public RoomEntity(int id, String name, String password) {
+    public RoomEntity(final int id, final String name, final String password) {
         this.id = id;
         this.name = name;
         this.password = password;

@@ -29,14 +29,14 @@ public class SquareDaoImpl implements SquareDao {
         return squareEntity;
     };
 
-    public void insert(Position position, Piece piece) {
+    public void insert(final Position position, final Piece piece) {
         final String sql = "insert into square (position, team, symbol) values (?, ?, ?)";
         jdbcTemplate.update(sql, position.getKey(), piece.getTeam(), piece.getSymbol());
     }
 
     public Board createBoard() {
-        List<SquareEntity> squareEntities = findAll();
-        Map<Position, Piece> squares = new HashMap<>();
+        final List<SquareEntity> squareEntities = findAll();
+        final Map<Position, Piece> squares = new HashMap<>();
         for (SquareEntity squareEntity : squareEntities) {
             Position position = Position.from(squareEntity.getPosition());
             Piece piece = Piece.getPiece(squareEntity.getTeam() + "_" + squareEntity.getSymbol());
@@ -55,7 +55,7 @@ public class SquareDaoImpl implements SquareDao {
         return jdbcTemplate.update(sql);
     }
 
-    public int update(Position position, Piece piece) {
+    public int update(final Position position, final Piece piece) {
         final String sql = "update square set team = ?, symbol = ? where position = ?";
         return jdbcTemplate.update(sql, piece.getTeam(), piece.getSymbol(), position.getKey());
     }

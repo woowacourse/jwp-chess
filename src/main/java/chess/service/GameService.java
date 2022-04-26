@@ -32,12 +32,12 @@ public class GameService {
         return BoardDto.from(board.getBoard());
     }
 
-    public BoardDto move(MoveDto moveDto) {
+    public BoardDto move(final MoveDto moveDto) {
         State state = proceed(moveDto);
         return BoardDto.from(state.getBoard());
     }
 
-    private State proceed(MoveDto moveDto) {
+    private State proceed(final MoveDto moveDto) {
         State nowState = gameRepository.getState();
         State nextState = nowState.proceed(moveDto.getCommand());
         gameRepository.saveGameData(nextState, moveDto);

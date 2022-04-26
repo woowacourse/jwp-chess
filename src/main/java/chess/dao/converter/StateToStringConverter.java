@@ -8,7 +8,7 @@ public class StateToStringConverter {
     private static final String BLACK_TURN = "BLACK_TURN";
     private static final String END = "END";
 
-    public static String convert(State state) {
+    public static String convert(final State state) {
         if (state.isWhiteTurn()) {
             return WHITE_TURN;
         }

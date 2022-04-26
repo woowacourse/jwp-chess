@@ -11,7 +11,7 @@ public class RoomService {
 
     private final RoomDao roomDao;
 
-    public RoomService(RoomDao roomDao) {
+    public RoomService(final RoomDao roomDao) {
         this.roomDao = roomDao;
     }
 
@@ -19,7 +19,7 @@ public class RoomService {
         return roomDao.findAll();
     }
 
-    public List<RoomEntity> createRoom(String name, String password) {
+    public List<RoomEntity> createRoom(final String name, final String password) {
         roomDao.insert(name, password);
         return roomDao.findAll();
     }

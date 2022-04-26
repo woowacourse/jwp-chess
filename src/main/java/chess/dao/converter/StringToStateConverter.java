@@ -12,7 +12,7 @@ public class StringToStateConverter {
     private static final String BLACK_TURN = "BLACK_TURN";
     private static final String END = "END";
 
-    public static State convert(String stateName, Board board) {
+    public static State convert(final String stateName, final Board board) {
         if (WHITE_TURN.equals(stateName)) {
             return new WhiteTurn(board);
         }

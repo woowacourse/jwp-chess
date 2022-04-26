@@ -5,7 +5,7 @@ public class SquareEntity {
     private final String team;
     private final String symbol;
 
-    public SquareEntity(String position, String team, String symbol) {
+    public SquareEntity(final String position, final String team, final String symbol) {
         this.position = position;
         this.team = team;
         this.symbol = symbol;

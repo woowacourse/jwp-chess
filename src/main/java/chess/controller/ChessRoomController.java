@@ -17,7 +17,7 @@ public class ChessRoomController {
 
     private final RoomService roomService;
 
-    public ChessRoomController(RoomService roomService) {
+    public ChessRoomController(final RoomService roomService) {
         this.roomService = roomService;
     }
 

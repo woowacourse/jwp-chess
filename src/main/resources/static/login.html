@@ -79,7 +79,11 @@
                 },
                 body: 'password=' + password
             })
-                .then(res => alert("방이 삭제되었습니다."))
+                .then(res =>{
+                    alert("방이 삭제되었습니다.");
+                    let roomContainer = document.getElementById('roomNames');
+                    roomContainer.innerHTML = "";
+                })
         }
     }
 </script>

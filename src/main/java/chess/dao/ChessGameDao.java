@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ChessGameDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ChessGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

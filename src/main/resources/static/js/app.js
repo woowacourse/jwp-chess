@@ -74,3 +74,12 @@ function makeForm(id, command) {
     document.body.appendChild(form);
     form.submit();
 }
+
+function lobby() {
+    const form = document.createElement("form");
+
+    form.setAttribute("method", "get");
+    form.setAttribute("action", "/");
+    document.body.appendChild(form);
+    form.submit();
+}

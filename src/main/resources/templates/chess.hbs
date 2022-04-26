@@ -472,13 +472,10 @@
     </div>
     <div class="buttons-container">
         <div class="btn-group">
-            <button onclick="restart()" type="submit" class="btn btn-primary">재시작</button>
-            <button type="submit" class="btn btn-success" onclick = "makeForm('{{id}}', 'status')">점수</button>
+            <button type="submit" class="btn btn-primary" onclick = "makeForm('{{id}}', 'status')">점수</button>
             <button type="submit" class="btn btn-danger" onclick = "makeForm('{{id}}', 'end')">게임 종료</button>
+            <button type="submit" class="btn btn-success" onclick = "lobby()">로비로 돌아가기</button>
         </div>
-        <form action="/" method="get">
-            <button type="submit" class="btn btn-secondary" >로비로 돌아가기</button>
-        </form>
         <div class="info">
             <div>
                 {{#if error}}

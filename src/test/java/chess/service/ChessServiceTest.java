@@ -3,22 +3,24 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.domain.auth.AuthCredentials;
+import chess.domain.auth.EncryptedAuthCredentials;
 import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
 import chess.dto.response.CreatedGameDto;
+import chess.dto.response.SearchResultDto;
 import chess.dto.view.FullGameDto;
 import chess.dto.view.GameCountDto;
 import chess.dto.view.GameOverviewDto;
 import chess.dto.view.GameResultDto;
 import chess.dto.view.GameSnapshotDto;
-import chess.dto.response.SearchResultDto;
 import chess.service.fixture.EventDaoStub;
 import chess.service.fixture.GameDaoStub;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,12 +33,13 @@ class ChessServiceTest {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    private GameDaoStub gameDao;
     private ChessService service;
 
     @BeforeEach
     void setup() {
-        service = new ChessService(new GameDaoStub(namedParameterJdbcTemplate),
-                new EventDaoStub(namedParameterJdbcTemplate));
+        gameDao = new GameDaoStub(namedParameterJdbcTemplate);
+        service = new ChessService(gameDao, new EventDaoStub(namedParameterJdbcTemplate));
     }
 
     @Test
@@ -61,7 +64,7 @@ class ChessServiceTest {
 
     @Test
     void initGame_메서드는_새로운_게임을_DB에_저장하고_생성된_게임ID가_담긴_데이터를_반환한다() {
-        AuthCredentials authCredentials = new AuthCredentials("유효한_게임명", "비밀번호");
+        EncryptedAuthCredentials authCredentials = new EncryptedAuthCredentials("유효한_게임명", "비밀번호");
         CreatedGameDto actual = service.initGame(authCredentials);
         CreatedGameDto expected = new CreatedGameDto(4);
 
@@ -133,24 +136,51 @@ class ChessServiceTest {
                 .hasMessage("존재하지 않는 게임입니다.");
     }
 
-    @Test
-    void findGameResult_메서드는_종료된_게임의_승자_및_점수_정보를_계산하여_반환한다() {
-        GameResultDto actual = service.findGameResult(3);
+    @DisplayName("findGameResult 메서드로 종료된 게임의 정보 조회 가능")
+    @Nested
+    class FindGameResultTest {
 
-        Game expectedGame = new NewGame().play(new InitEvent()).play(new MoveEvent("e2 e4"))
-                .play(new MoveEvent("d7 d5")).play(new MoveEvent("f1 b5"))
-                .play(new MoveEvent("a7 a5")).play(new MoveEvent("b5 e8"));
-        FullGameDto fullGame = new FullGameDto(new GameOverviewDto(3, "종료된_게임"), expectedGame.toDtoOf(3));
-        GameResultDto expected = new GameResultDto(fullGame, expectedGame.getResult());
+        @Test
+        void 종료된_게임의_승자_및_점수_정보를_계산하여_반환한다() {
+            GameResultDto actual = service.findGameResult(3);
 
-        assertThat(actual).isEqualTo(expected);
+            Game expectedGame = new NewGame().play(new InitEvent()).play(new MoveEvent("e2 e4"))
+                    .play(new MoveEvent("d7 d5")).play(new MoveEvent("f1 b5"))
+                    .play(new MoveEvent("a7 a5")).play(new MoveEvent("b5 e8"));
+            FullGameDto fullGame = new FullGameDto(new GameOverviewDto(3, "종료된_게임"), expectedGame.toDtoOf(3));
+            GameResultDto expected = new GameResultDto(fullGame, expectedGame.getResult());
+
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        void 게임이_종료되지_않은_경우_예외_발생() {
+            assertThatThrownBy(() -> service.findGameResult(1))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("아직 게임 결과가 산출되지 않았습니다.");
+        }
     }
 
-    @Test
-    void findGameResult_메서드는_게임이_종료되지_않은_경우_예외_발생() {
-        assertThatThrownBy(() -> service.findGameResult(1))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("아직 게임 결과가 산출되지 않았습니다.");
+    @DisplayName("deleteFinishedGame 메서드로 종료된 게임 삭제 가능")
+    @Nested
+    class DeleteFinishedGameTest {
+
+        @Test
+        void 종료된_게임_삭제() {
+            service.deleteFinishedGame(3, new EncryptedAuthCredentials("종료된_게임", "encrypted3"));
+
+            boolean exists = gameDao.checkById(3);
+
+            assertThat(exists).isFalse();
+        }
+
+        @Test
+        void 게임이_종료되지_않은_경우_예외_발생() {
+            assertThatThrownBy(() -> service.deleteFinishedGame(1,
+                    new EncryptedAuthCredentials("진행중인_게임", "encrypted1")))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("아직 진행 중인 게임입니다.");
+        }
     }
 
     private Game currentGameSnapshotOfGameIdOne() {

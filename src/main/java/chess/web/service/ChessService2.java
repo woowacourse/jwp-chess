@@ -12,7 +12,9 @@ import chess.web.dao.GameDao;
 import chess.web.dao.PieceDao2;
 import chess.web.dto.ChessResultDto;
 import chess.web.dto.ChessStatusDto;
-import chess.web.dto.GameDto;
+import chess.web.dto.DeleteGameRequestDto;
+import chess.web.dto.GameResponseDto;
+import chess.web.dto.CreateGameRequestDto;
 import chess.web.dto.MovePositionsDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PieceDto;
@@ -35,9 +37,10 @@ public class ChessService2 {
     }
 
     // 인덱스
-    public void newGame(String title, String password) {
-        int gameId = gameDao.save(title, password, StateType.WHITE_TURN);
+    public int newGame(CreateGameRequestDto createGameRequestDto) {
+        int gameId = gameDao.save(createGameRequestDto, StateType.WHITE_TURN);
         start(gameId);
+        return gameId;
     }
 
     private void start(int gameId) {
@@ -60,14 +63,17 @@ public class ChessService2 {
     }
 
     // 인덱스
-    public List<GameDto> getAllGame() {
+    public List<GameResponseDto> getAllGame() {
         return gameDao.findAll();
     }
 
 
     // 인덱스
-    public void deleteGame(int gameId, String password) {
+    public void deleteGame(DeleteGameRequestDto deleteGameRequestDto) {
+        int gameId = deleteGameRequestDto.getGameId();
+        String password = deleteGameRequestDto.getPassword();
         String realPassword = gameDao.findPasswordById(gameId);
+
         if (realPassword.equals(password) && !getChessGame(gameId).isRunning()) {
             gameDao.deleteGameById(gameId);
         }

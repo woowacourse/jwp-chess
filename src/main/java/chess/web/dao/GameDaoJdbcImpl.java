@@ -1,7 +1,8 @@
 package chess.web.dao;
 
 import chess.domain.state.StateType;
-import chess.web.dto.GameDto;
+import chess.web.dto.GameResponseDto;
+import chess.web.dto.CreateGameRequestDto;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,8 +20,8 @@ public class GameDaoJdbcImpl implements GameDao {
         );
     };
 
-    private static final RowMapper<GameDto> gameDtoRowMapper = (resultSet, rowNum) -> {
-        return new GameDto(
+    private static final RowMapper<GameResponseDto> gameDtoRowMapper = (resultSet, rowNum) -> {
+        return new GameResponseDto(
                 resultSet.getInt("id"),
                 resultSet.getString("title")
         );
@@ -33,14 +34,14 @@ public class GameDaoJdbcImpl implements GameDao {
     }
 
     @Override
-    public int save(String title, String password, StateType stateType) {
+    public int save(CreateGameRequestDto gameRequestDto, StateType stateType) {
         final String sql = "insert into game (title, password, state) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, title);
-            ps.setString(2, password);
+            ps.setString(1, gameRequestDto.getTitle());
+            ps.setString(2, gameRequestDto.getPassword());
             ps.setString(3, stateType.getNotation());
             return ps;
         }, keyHolder);
@@ -67,7 +68,7 @@ public class GameDaoJdbcImpl implements GameDao {
     }
 
     @Override
-    public List<GameDto> findAll() {
+    public List<GameResponseDto> findAll() {
         final String sql = "select id, title from game";
         return jdbcTemplate.query(sql, gameDtoRowMapper);
     }

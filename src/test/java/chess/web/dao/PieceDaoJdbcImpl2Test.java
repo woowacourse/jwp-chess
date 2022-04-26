@@ -7,6 +7,7 @@ import chess.domain.piece.King;
 import chess.domain.piece.Queen;
 import chess.domain.position.Position;
 import chess.domain.state.StateType;
+import chess.web.dto.CreateGameRequestDto;
 import chess.web.dto.PieceDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,7 @@ class PieceDaoJdbcImpl2Test {
         GameDao gameDao = new GameDaoJdbcImpl(jdbcTemplate);
         pieceDao = new PieceDaoJdbcImpl2(jdbcTemplate);
 
-        gameDao.save("체스게임방", "1234", StateType.WHITE_TURN);
+        gameDao.save(new CreateGameRequestDto("체스게임방", "1234"), StateType.WHITE_TURN);
         pieceDao.save(GAME_ID, new PieceDto(new King(Color.WHITE), new Position("a1")));
     }
 

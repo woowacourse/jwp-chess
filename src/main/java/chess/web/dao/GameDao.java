@@ -1,12 +1,13 @@
 package chess.web.dao;
 
 import chess.domain.state.StateType;
-import chess.web.dto.GameDto;
+import chess.web.dto.GameResponseDto;
+import chess.web.dto.CreateGameRequestDto;
 import java.util.List;
 
 public interface GameDao {
 
-    int save(String title, String password, StateType stateType);
+    int save(CreateGameRequestDto createGameRequestDto, StateType stateType);
 
     void updateStateById(int id, StateType stateType);
 
@@ -14,7 +15,7 @@ public interface GameDao {
 
     String findPasswordById(int id);
 
-    List<GameDto> findAll();
+    List<GameResponseDto> findAll();
 
     void deleteGameById(int id);
 }

@@ -3,8 +3,10 @@ package chess.domain.auth;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+import java.util.Map;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import org.springframework.boot.json.BasicJsonParser;
 
 public class AuthCredentials {
 
@@ -12,7 +14,9 @@ public class AuthCredentials {
     private static final byte[] SECRET_SALT = "should_be_hidden_before_deployment".getBytes();
     private static final int HASH_ITERATION_COUNT = 65536;
     private static final int KEY_BIT_LENGTH = 128;
+
     private static final SecretKeyFactory hashFactory;
+    private static final BasicJsonParser jsonParser = new BasicJsonParser();
 
     static {
         try {
@@ -26,9 +30,14 @@ public class AuthCredentials {
     private final String name;
     private final String password;
 
-    public AuthCredentials(String name, String password) {
+    private AuthCredentials(String name, String password) {
         this.name = name;
         this.password = password;
+    }
+
+    public static AuthCredentials of(String json) {
+        Map<String, Object> map = jsonParser.parseMap(json);
+        return new AuthCredentials((String) map.get("name"), (String) map.get("password"));
     }
 
     public EncryptedAuthCredentials toEncrypted() {

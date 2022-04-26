@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.domain.auth.AuthCredentials;
+import chess.domain.auth.EncryptedAuthCredentials;
 import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
 import chess.dto.response.CreatedGameDto;
@@ -39,8 +39,8 @@ public class GameController {
     }
 
     @PostMapping
-    public CreatedGameDto createGame(@RequestBody AuthCredentials authCredentials) {
-        return chessService.initGame(authCredentials.toEncrypted());
+    public CreatedGameDto createGame(EncryptedAuthCredentials authCredentials) {
+        return chessService.initGame(authCredentials);
     }
 
     @GetMapping("/{id}")
@@ -57,8 +57,8 @@ public class GameController {
 
     @DeleteMapping("/{id}")
     public void deleteGame(@PathVariable int id,
-                           @RequestBody AuthCredentials authCredentials) {
-        chessService.deleteFinishedGame(id, authCredentials.toEncrypted());
+                           EncryptedAuthCredentials authCredentials) {
+        chessService.deleteFinishedGame(id, authCredentials);
     }
 
     @GetMapping("/search")

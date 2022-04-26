@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class SpringController {
@@ -51,16 +50,13 @@ public class SpringController {
     @PostMapping("/game/{gameName}/move")
     public String move(@PathVariable String gameName,
                        @RequestParam("from") String from, @RequestParam("to") String to,
-                       Model model, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
+                       Model model) throws UnsupportedEncodingException {
         String encodedParam = URLEncoder.encode(gameName, UTF_8);
-        try {
-            String command = makeCommand(from, to);
-            chessService.move(gameName, command);
-            if (chessService.isEnd(gameName)) {
-                return "redirect:/game/" + encodedParam + "/end";
-            }
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addAttribute("error", e.getMessage());
+        String command = makeCommand(from, to);
+
+        chessService.move(gameName, command);
+        if (chessService.isEnd(gameName)) {
+            return "redirect:/game/" + encodedParam + "/end";
         }
 
         model.addAttribute("gameName", gameName);

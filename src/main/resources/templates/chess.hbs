@@ -476,6 +476,9 @@
             <button type="submit" class="btn btn-success" onclick = "makeForm('{{gameName}}', 'status')">점수</button>
             <button type="submit" class="btn btn-danger" onclick = "makeForm('{{gameName}}', 'end')">게임 종료</button>
         </div>
+        <form action="/" method="get">
+            <button type="submit" class="btn btn-secondary" >로비로 돌아가기</button>
+        </form>
         <div class="info">
             <div>
                 {{#if error}}

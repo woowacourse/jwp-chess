@@ -54,6 +54,11 @@ public class ChessGameDao {
         return result.get(0);
     }
 
+    public List<String> findAllGameName() {
+        String sql = "select CHESSGAME.game_name from CHESSGAME";
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
+
     private final RowMapper<ChessGame> chessGameRowMapper = (resultSet, rowNum) -> new ChessGame(
         getTurn(resultSet),
         resultSet.getString("game_name"),

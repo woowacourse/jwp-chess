@@ -26,7 +26,12 @@ public class SpringController {
     }
 
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+        List<String> gameNames = chessService.findAllGameName();
+        for (String gameName : gameNames) {
+            System.out.println("chessGame = " + gameName);
+        }
+        model.addAttribute("gameNames", gameNames);
         return "index";
     }
 

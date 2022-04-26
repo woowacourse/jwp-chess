@@ -96,4 +96,8 @@ public class ChessService {
         ChessGame chessGame = chessGameDao.findByName(gameName);
         return chessGame.isEnd();
     }
+
+    public List<String> findAllGameName() {
+        return chessGameDao.findAllGameName();
+    }
 }

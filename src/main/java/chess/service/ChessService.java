@@ -3,6 +3,7 @@ package chess.service;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.EndResponse;
+import chess.controller.dto.response.GameIdsResponse;
 import chess.controller.dto.response.PieceResponse;
 import chess.controller.dto.response.StatusResponse;
 import chess.dao.GameDao;
@@ -40,6 +41,28 @@ public class ChessService {
         this.chessGames = new HashMap<>();
     }
 
+    public ChessGameResponse createGame(long gameId) {
+        ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
+        gameDao.save(gameId);
+        saveBoard(gameId, chessGame.getBoard());
+        chessGames.put(gameId, chessGame);
+        return new ChessGameResponse(chessGame);
+    }
+
+    public void saveBoard(long gameId, Map<Position, Piece> board) {
+        board.forEach((position, piece) -> savePiece(gameId, position, piece));
+    }
+
+    private void savePiece(long gameId, Position position, Piece piece) {
+        if (pieceDao.find(gameId, position).isEmpty()) {
+            pieceDao.save(gameId, position, piece);
+        }
+    }
+
+    public GameIdsResponse findAllGameIds() {
+        return new GameIdsResponse(gameDao.findAllIds());
+    }
+
     public ChessGameResponse loadGame(long gameId) {
         Optional<GameState> maybeGameState = gameDao.load(gameId);
         GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
@@ -63,24 +86,6 @@ public class ChessService {
             throw new IllegalArgumentException(NOT_HAVE_GAME);
         }
         return chessGames.get(gameId);
-    }
-
-    public ChessGameResponse createGame(long gameId) {
-        ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
-        gameDao.save(gameId);
-        saveBoard(gameId, chessGame.getBoard());
-        chessGames.put(gameId, chessGame);
-        return new ChessGameResponse(chessGame);
-    }
-
-    public void saveBoard(long gameId, Map<Position, Piece> board) {
-        board.forEach((position, piece) -> savePiece(gameId, position, piece));
-    }
-
-    public void savePiece(long gameId, Position position, Piece piece) {
-        if (pieceDao.find(gameId, position).isEmpty()) {
-            pieceDao.save(gameId, position, piece);
-        }
     }
 
     public ChessGameResponse startGame(long gameId) {

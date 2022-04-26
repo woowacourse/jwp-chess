@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.EndResponse;
+import chess.controller.dto.response.GameIdsResponse;
 import chess.domain.GameState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,17 @@ class ChessServiceTest {
     @Test
     void create_Game() {
         chessService.createGame(1);
+    }
+
+    @DisplayName("생성되어 있는 게임 리스트를 조회할 수 있다.")
+    @Test
+    void load_Game_List() {
+        chessService.createGame(1);
+        chessService.createGame(2);
+
+        GameIdsResponse response = chessService.findAllGameIds();
+
+        assertThat(response.getGameIds()).containsOnly(1L, 2L);
     }
 
     @DisplayName("게임을 불러오면 저장된 상태 그대로 나온다.")

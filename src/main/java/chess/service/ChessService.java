@@ -27,8 +27,8 @@ public class ChessService {
         return chessGameDao.findAllChessGames();
     }
 
-    public void delete(int chessGameId) {
-        chessGameDao.delete(chessGameId);
+    public void delete(String password, int chessGameId) {
+        chessGameDao.delete(password, chessGameId);
     }
 
     public int save(String gameName, String password) {

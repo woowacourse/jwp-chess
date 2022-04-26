@@ -78,7 +78,7 @@ class ChessGameDaoTest {
 
     @Test
     void delete() {
-        chessGameDao.delete(savedId);
+        chessGameDao.delete("1234", savedId);
         List<ChessGameDto> chessGames = chessGameDao.findAllChessGames();
         List<String> chessGameNames = chessGames.stream()
             .map(ChessGameDto::getGameName)

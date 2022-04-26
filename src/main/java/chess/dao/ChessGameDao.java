@@ -123,8 +123,8 @@ public class ChessGameDao {
         return PieceConverter.from(type, team);
     }
 
-    public void delete(int chessGameId) {
-        String sql = "delete from chess_game where id = ?";
-        jdbcTemplate.update(sql, chessGameId);
+    public void delete(String password, int chessGameId) {
+        String sql = "delete from chess_game where password = ? and id = ?";
+        jdbcTemplate.update(sql, password, chessGameId);
     }
 }

@@ -52,3 +52,17 @@
   display: block;
   margin-top: 50px;
 }
+
+.room {
+    margin-bottom: 10px;
+    display: block;
+    width: 200px;
+    font-size: 30px;
+    padding: 30px 20px 30px 20px;
+    border-radius: 5px;
+    background: rgb(204, 204, 204);
+}
+
+.room-form {
+    display: inline-block;
+}

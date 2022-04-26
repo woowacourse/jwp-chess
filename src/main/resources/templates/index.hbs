@@ -14,7 +14,7 @@
 <h2> 새로운 체스게임 생성 </h2>
 <form action="/save" method="post">
     <input name="gameName" type="text" placeholder="게임 이름을 입력해주세요" maxlength="20" size="20" class="from-control" aria-label="default input example"/>
-    <input name="password" type="text" placeholder="비밀번호를 입력해주세요" maxlength="20" size="20" class="from-control" aria-label="default input example"/>
+    <input name="password" type="password" placeholder="비밀번호를 입력해주세요" maxlength="20" size="20" class="from-control" aria-label="default input example"/>
     <button type="submit" class="btn btn-secondary">방 생성</button>
 </form>
 
@@ -24,8 +24,9 @@
         <form action="/game/{{chessGameId}}" class="room-form">
             <input type="submit" value="{{gameName}}" class="room">
         </form>
-        <form action="/delete/{{chessGameId}}" method="post" class="room-form">
-            <input type="submit" value="방 삭제" class="room">
+        <form action="/delete/{{chessGameId}}" method="post">
+        	<input name="password" type="password" placeholder="비밀번호를 입력해주세요.">
+            <input type="submit" value="방 삭제">
         </form>
     </div>
     {{/rooms}}

@@ -39,8 +39,8 @@ public class SpringController {
     }
 
     @PostMapping("/delete/{chessGameId}")
-    public String delete(@PathVariable int chessGameId) {
-        chessService.delete(chessGameId);
+    public String delete(@RequestParam String password, @PathVariable int chessGameId) {
+        chessService.delete(password, chessGameId);
         return "redirect:/";
     }
 

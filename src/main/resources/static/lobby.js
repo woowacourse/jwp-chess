@@ -11,37 +11,70 @@ async function create() {
             name: inputName,
             password: inputPassword
         })
-    })
+    });
 
     if (!response.ok) {
-        errorMessage = await response.json();
+        const errorMessage = await response.json();
         alert("[ERROR] " + errorMessage.message);
         return;
     }
 
     alert("방이 생성되었습니다!");
+    window.location.reload();
+}
+
+function makeRoomList(aRoom, roomList) {
+    let aTag = document.createElement("a");
+    let roomItem = document.createElement("li");
+    let delBtn = document.createElement("button");
+
+    delBtn.id = aRoom.id;
+    delBtn.innerText = "삭제";
+    delBtn.addEventListener('click', function () {
+        deleteRoom(delBtn.id)
+    });
+    delBtn.classList.add("chess-del-btn");
+    roomItem.classList.add("room-items");
+
+    aTag.href = "/rooms/" + aRoom.id;
+    aTag.innerText = aRoom.name;
+
+    roomItem.appendChild(aTag);
+    roomItem.appendChild(delBtn);
+    roomList.appendChild(roomItem);
 }
 
 async function showList() {
-    let rooms;
+    let rooms
     await fetch("/list")
         .then(res => res.json())
-        .then(data => rooms = data)
+        .then(data => rooms = data);
 
-    console.log(rooms)
-    const roomList = document.getElementById("room-list")
+    const roomList = document.getElementById("room-list");
     for (const aRoom of rooms) {
-        let aTag = document.createElement("a");
-        let roomItem = document.createElement("li")
-        let delBtn = document.createElement("button")
-        delBtn.id = aRoom.id
-        delBtn.innerText = "삭제"
-        delBtn.classList.add("chess-del-btn")
-        roomItem.classList.add("room-items")
-        aTag.href = "/rooms/" + aRoom.id
-        aTag.innerText = aRoom.name
-        roomItem.appendChild(aTag)
-        roomItem.appendChild(delBtn)
-        roomList.appendChild(roomItem)
+        makeRoomList(aRoom, roomList);
     }
+}
+
+async function deleteRoom(roomId) {
+    const inputPassword = prompt("생성시 입력한 비밀번호를 입력해주세요.")
+
+    let response = await fetch("/delete?roomId=" + roomId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify({
+            password: inputPassword
+        })
+    });
+
+    if (!response.ok) {
+        const errorMessage = await response.json();
+        alert("[ERROR] " + errorMessage.message);
+        return;
+    }
+
+    alert("삭제 완료되었습니다.");
+    window.location.reload();
 }

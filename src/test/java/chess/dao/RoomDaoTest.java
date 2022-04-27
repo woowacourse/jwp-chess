@@ -34,20 +34,20 @@ class RoomDaoTest {
     void save() {
         Room room = new Room("hi", "");
         long savedId = roomDao.save(room);
-        assertThat(savedId).isEqualTo(2);
-    }
-
-    @Test
-    @DisplayName("Name으로 Room을 가져온다.")
-    void findByName() {
-        Room room = roomDao.findByName("sojukang").get();
-        assertThat(room.getTurn()).isEqualTo("white");
+        assertThat(savedId).isEqualTo(2L);
     }
 
     @Test
     @DisplayName("Room을 업데이트한다.")
     void update() {
-        roomDao.updateTurn(1, "black");
-        assertThat(roomDao.findByName("sojukang").get().getTurn()).isEqualTo("black");
+        roomDao.updateTurn(1L, "black");
+        assertThat(roomDao.findById(1L).get().getTurn()).isEqualTo("black");
+    }
+
+    @Test
+    @DisplayName("Room을 삭제한다.")
+    void delete() {
+        roomDao.deleteRoom(1L);
+        assertThat(roomDao.findAll()).isEmpty();
     }
 }

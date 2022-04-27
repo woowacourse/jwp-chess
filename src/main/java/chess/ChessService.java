@@ -9,6 +9,7 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
+import chess.dto.PasswordDto;
 import chess.dto.RoomCreationDto;
 import chess.dto.RoomDto;
 import chess.entity.Room;
@@ -27,6 +28,8 @@ public class ChessService {
     private static final String NO_ROOM_MESSAGE = "해당 ID와 일치하는 Room이 존재하지 않습니다.";
     private static final String NO_SQUARE_MESSAGE = "해당 방, 위치에 존재하는 Square가 없습니다.";
     private static final String NO_SQUARES_MESSAGE = "해당 ID에 체스게임이 초기화되지 않았습니다.";
+    private static final String NOT_END_GAME_MESSAGE = "게임이 종료되지 않았습니다.";
+    private static final String NO_PASSWORD_MATCHING_MESSAGE = "비밀번호가 일치하지 않습니다.";
 
     private final RoomDao roomDao;
     private final SquareDao squareDao;
@@ -43,9 +46,11 @@ public class ChessService {
         WebChessGame webChessGame = new WebChessGame();
         webChessGame.start();
         squareDao.removeAll(room.getId());
+
         Map<Position, Piece> board = webChessGame.getBoard();
         List<Square> squares = convertBoardToSquares(board);
         squareDao.saveAll(squares, room.getId());
+
         roomDao.updateTurn(room.getId(), webChessGame.getTurn());
         return BoardDto.of(board, webChessGame.getTurn());
     }
@@ -123,5 +128,19 @@ public class ChessService {
         return rooms.stream()
                 .map(room -> new RoomDto(room.getId(), room.getName()))
                 .collect(Collectors.toList());
+    }
+
+    public void delete(long roomId, PasswordDto passwordDto) {
+        Room room = roomDao.findById(roomId)
+                .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
+        if (!room.getPassword().equals(passwordDto.getPassword())) {
+            throw new IllegalArgumentException(NO_PASSWORD_MATCHING_MESSAGE);
+        }
+        if (room.getTurn().equals("empty")) {
+            squareDao.removeAll(roomId);
+            roomDao.deleteRoom(roomId);
+            return;
+        }
+        throw new IllegalStateException(NOT_END_GAME_MESSAGE);
     }
 }

@@ -11,10 +11,13 @@ import chess.dao.SquareDao;
 import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
+import chess.dto.PasswordDto;
 import chess.dto.RoomCreationDto;
 import chess.dto.RoomDto;
+import chess.entity.Room;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -87,5 +90,12 @@ public class ChessServiceTest {
         assertThatThrownBy(() -> chessService.load(1L))
                 .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당 ID에 체스게임이 초기화되지 않았습니다.");
+    }
+
+    @Test
+    void delete() {
+        chessService.delete(1L, new PasswordDto(""));
+        Optional<Room> roomOptional = roomDao.findById(1L);
+        assertThat(roomOptional.isEmpty()).isTrue();
     }
 }

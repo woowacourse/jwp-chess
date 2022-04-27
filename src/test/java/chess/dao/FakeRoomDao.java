@@ -21,13 +21,6 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public Optional<Room> findByName(String name) {
-        return rooms.stream()
-                .filter(room -> room.getName().equals(name))
-                .findAny();
-    }
-
-    @Override
     public Optional<Room> findById(long id) {
         return rooms.stream()
                 .filter(room -> room.getId() == id)
@@ -43,5 +36,13 @@ public class FakeRoomDao implements RoomDao {
     public void updateTurn(long id, String turn) {
         Room room = rooms.get((int) (id - 1));
         rooms.set((int) (id - 1), new Room(id, turn, room.getName(), room.getPassword()));
+    }
+
+    @Override
+    public void deleteRoom(long id) {
+        Room delRoom = rooms.stream()
+                .filter(room -> room.getId() == id)
+                .findAny().orElseThrow();
+        rooms.remove(delRoom);
     }
 }

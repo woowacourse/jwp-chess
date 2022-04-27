@@ -4,6 +4,7 @@ import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.MessageDto;
 import chess.dto.MoveDto;
+import chess.dto.PasswordDto;
 import chess.dto.RoomCreationDto;
 import chess.dto.RoomDto;
 import java.util.List;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ChessApiController {
 
+    private static final String UPDATE_RESULT_MESSAGE = "게임 종료상태로 변경했습니다.";
+    private static final String DELETE_RESULT_MESSAGE = "방을 삭제했습니다.";
     private final ChessService chessService;
 
     public ChessApiController(ChessService chessService) {
@@ -48,7 +51,7 @@ public class ChessApiController {
     @GetMapping("/end")
     public MessageDto end(@RequestParam long roomId) {
         chessService.end(roomId);
-        return new MessageDto("게임 종료상태로 변경했습니다.");
+        return new MessageDto(UPDATE_RESULT_MESSAGE);
     }
 
     @GetMapping("/load")
@@ -65,6 +68,13 @@ public class ChessApiController {
     @GetMapping("/status")
     public Status status(@RequestParam long roomId) {
         return chessService.status(roomId);
+    }
+
+    @PostMapping("/delete")
+    public MessageDto delete(@RequestParam long roomId,
+                             @RequestBody PasswordDto passwordDto) {
+        chessService.delete(roomId, passwordDto);
+        return new MessageDto(DELETE_RESULT_MESSAGE);
     }
 
     @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class,

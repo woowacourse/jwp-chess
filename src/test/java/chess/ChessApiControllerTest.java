@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import chess.dao.JdbcFixture;
 import chess.dto.MoveDto;
+import chess.dto.PasswordDto;
 import chess.dto.RoomCreationDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -166,5 +167,19 @@ class ChessApiControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("message", is("게임 종료상태로 변경했습니다."));
+    }
+
+    @Test
+    void delete() {
+        JdbcFixture.insertRoom(jdbcTemplate, "sojukang", "1111", "empty");
+
+        PasswordDto passwordDto = new PasswordDto("1111");
+        RestAssured.given().log().all()
+                .body(passwordDto)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/delete?roomId=2")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("message", is("방을 삭제했습니다."));
     }
 }

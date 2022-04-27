@@ -1,6 +1,11 @@
-const randomStartButton = document.getElementById("random-start-button");
+const modal = document.getElementById('modal');
 
-randomStartButton.addEventListener("click", () => {
-  const gameId = Math.floor(Math.random() * 10000);
-  location.href = `/game/${gameId}`;
+const modalOpenButton = document.getElementById('find-game-button');
+modalOpenButton.addEventListener('click', () => {
+  modal.style.visibility = 'visible';
+});
+
+const modalCloseButton = document.getElementById('box__close-button');
+modalCloseButton.addEventListener('click', () => {
+  modal.style.visibility = 'hidden';
 });

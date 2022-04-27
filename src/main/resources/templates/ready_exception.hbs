@@ -153,16 +153,14 @@
         </td>
     </tr>
 </table>
-<center>
-    방의 제목을 입력하세요.
-<br />
-저장된 방이라면 저장된 게임을 불러오고, 새로운 방이라면 새로운 게임을 생성합니다.
-    <form action="preprocess" method="post">
-        입력 <input name="roomId" type="text">  <button type="submit"> 제출 </button>
+    <form action="backwardToReady" method="post" >
+        <input type="hidden" name="roomId" value={{roomId}}>
+        {{#exception}}
+        <center>[ERROR] {{message}} </center>
+        {{/exception}}
+        <center>
+            <button type="submit"> 확인 </button>
+        </center>
     </form>
-<br />
-    저장하신 목록입니다.
-    {{users}}
-</center>
 </body>
 </html>

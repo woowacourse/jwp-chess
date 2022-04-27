@@ -153,16 +153,13 @@
         </td>
     </tr>
 </table>
-<center>
-    방의 제목을 입력하세요.
-<br />
-저장된 방이라면 저장된 게임을 불러오고, 새로운 방이라면 새로운 게임을 생성합니다.
-    <form action="preprocess" method="post">
-        입력 <input name="roomId" type="text">  <button type="submit"> 제출 </button>
-    </form>
-<br />
-    저장하신 목록입니다.
-    {{users}}
-</center>
+    <center> 체스게임을 시작하려면 start, 체스게임을 끝내려면 end를 입력하세요. </center>
+    <br />
+    <center>
+        <form action="ready" method="post">
+            <input type="hidden" name="roomId" value={{roomId}}>
+            입력 <input name="command" type="text">  <button type="submit"> 제출 </button>
+        </form>
+    </center>
 </body>
 </html>

@@ -67,10 +67,10 @@ public class ChessGameController {
         chessGameService.cleanGame(gameId);
         return "redirect:/";
     }
-//TODO typo
-    private ModelAndView getModelWithGameMessage(String massage, String url) {
+
+    private ModelAndView getModelWithGameMessage(String message, String url) {
         ModelAndView modelAndView = new ModelAndView(url);
-        modelAndView.addObject("gameMessage", massage);
+        modelAndView.addObject("gameMessage", message);
         return modelAndView;
     }
 

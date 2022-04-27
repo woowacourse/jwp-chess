@@ -1,21 +1,22 @@
 const toBody = (form) => {
     var object = {};
-    object['id'] = form.parentElement.querySelector(".id").textContent;
-    object['title'] = form.parentElement.querySelector("a").text;
-    object['running'] = form.parentElement.querySelector(".running").textContent;
+    object['id'] = form.parentElement.getElementsByClassName("id")[0].textContent;
+    object['title'] = form.parentElement.getElementsByTagName("a")[0].textContent;
+    object['running'] = form.parentElement.getElementsByClassName("running")[0].textContent;
     for (const pair of new FormData(form)) {
         object[pair[0]] = pair[1];
     }
     return JSON.stringify(object);
 }
 
-const deleteBoard = async (event, form) => {
+const deleteBoard = async (event) => {
     event.preventDefault();
-    const id = form.parentElement.querySelector(".id").textContent;
+    const form = event.target;
+    const id = form.parentElement.getElementsByClassName("id")[0].textContent;
     const response = await fetch("/game/"+id, {
         headers: {'Content-Type': 'application/json'},
         method: 'post',
-        body: toBody(form)
+        body: toBody(event.target)
     });
 
     if (!response.ok) {
@@ -29,10 +30,10 @@ const deleteBoard = async (event, form) => {
 }
 
 const init = () => {
-    const gameForm = document.querySelector(".game_form");
-    gameForm.addEventListener("submit",
-        (event) => deleteBoard(event, gameForm)
-    );
+    const gameForm = document.getElementsByClassName("game_form");
+    for (i = 0; i < gameForm.length; i++) {
+        gameForm[i].addEventListener("submit", (event) => deleteBoard(event));
+    }
 }
 
 init();

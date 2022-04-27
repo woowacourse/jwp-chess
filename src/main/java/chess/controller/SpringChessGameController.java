@@ -34,12 +34,20 @@ public class SpringChessGameController {
     @PostMapping("/start")
     public ResponseEntity<?> createGame(@RequestBody RoomRequestDto roomRequestDto) {
         final long roomId = springChessService.makeChessRoom(roomRequestDto);
-        return ResponseEntity.created(URI.create("/" + roomId)).build();
+        return ResponseEntity.created(URI.create("/" + roomId)).body(roomId);
     }
 
     @GetMapping("/load/{id}")
     public ResponseEntity<ChessMap> load(@PathVariable long id) {
         return ResponseEntity.ok(springChessService.load(id));
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<List<RoomDto>> deleteGame(@PathVariable long id,
+                                                    @RequestBody RoomDeleteRequestDto roomDeleteRequestDto) {
+        springChessService.deleteChessRoom(roomDeleteRequestDto, id);
+        final List<RoomDto> roomDtos = springChessService.showRooms();
+        return ResponseEntity.ok(roomDtos);
     }
 
     @GetMapping("/{id}")

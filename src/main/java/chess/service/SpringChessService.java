@@ -38,9 +38,16 @@ public class SpringChessService {
         return roomDao.findAll();
     }
 
-    public long makeChessRoom(final RoomRequestDto roomRequestDto){
-        final ChessRoom chessRoom = ChessRoom.fromRequest(roomRequestDto);
+    public long makeChessRoom(final RoomRequestDto roomRequestDto) {
         return roomDao.makeRoom(roomRequestDto);
+    }
+
+    public void deleteChessRoom(final RoomDeleteRequestDto roomDeleteRequestDto, final long roomId) {
+        RoomDto roomDto = roomDao.findRoomById(roomId);
+        if (roomDeleteRequestDto.getPassword().equals(roomDto.getPassword())) {
+            roomDao.deleteRoom(roomId);
+        }
+        throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
     }
 
     public ChessMap initializeGame(final long roomId) {

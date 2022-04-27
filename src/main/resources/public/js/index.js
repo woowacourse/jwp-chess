@@ -24,10 +24,10 @@ const showRoom = async () => {
         roomNameTag.addEventListener('click', enterRoom);
         const roomRemoveBtnTag = document.createElement("button");
         roomRemoveBtnTag.innerHTML = '삭제';
-        roomRemoveBtnTag.id = 'roomDelete';
+        roomRemoveBtnTag.id = value.id;
         roomRemoveBtnTag.addEventListener('click', deleteRoom);
-        roomNameTag.appendChild(roomRemoveBtnTag);
         roomTag.appendChild(roomNameTag);
+        roomTag.appendChild(roomRemoveBtnTag);
         roomListTag.appendChild(roomTag);
     });
 }
@@ -39,14 +39,8 @@ const getRoomList = async () => {
 }
 
 const makeRoomByRequest = async () => {
-    console.log('안녕하세요');
-    await roomPost();
-    console.log(roomId);
-    initMapEvent();
-    await restartChess();
-}
-
-const roomPost = async () => {
+    const roomName = document.getElementById('roomName').value;
+    const roomPassword = document.getElementById('roomPassword').value;
     const bodyValue = {
         name: roomName,
         password: roomPassword
@@ -59,6 +53,10 @@ const roomPost = async () => {
         },
         body: JSON.stringify(bodyValue)
     });
+    roomId = await roomId.json();
+    await showError(roomId.message);
+    initMapEvent();
+    await restartChess();
 }
 
 const enterRoom = async (e) => {
@@ -71,10 +69,27 @@ const enterRoom = async (e) => {
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
     showChessMenu();
+    document.getElementById('message-info').innerHTML = e.target.innerText + ' 방에 입장하셨습니다!';
 }
 
 const deleteRoom = async (e) => {
-    // fetch로 방 id 받아와서 삭제하기
+    const password = window.prompt('비밀번호를 입력하세요');
+    const bodyValue = {
+        password: password
+    };
+    let response = await fetch('/delete/' + e.target.id, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)
+    });
+    if (response.message) {
+        await showError(response.message);
+        return;
+    }
+    window.location.reload();
 }
 
 const intToFile = (value) => {
@@ -179,6 +194,7 @@ const restartChess = async () => {
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
     showChessMenu();
+    document.getElementById('message-info').innerHTML = '체스게임이 시작됐습니다!';
 }
 
 const showChessMenu = () => {
@@ -208,9 +224,14 @@ const showResult = async () => {
 }
 
 const showError = async (message) => {
-    if (message) {
-        document.getElementById('message-info').innerHTML = message;
+    console.log(message);
+    if (!message) {
+        document.getElementById('message-info').innerHTML = '';
         return;
     }
-    document.getElementById('message-info').innerHTML = '';
+    if (!isRun) {
+        alert(message);
+        return;
+    }
+    document.getElementById('message-info').innerHTML = message;
 }

@@ -20,4 +20,11 @@ public class LogInDto {
         return gamePassword;
     }
 
+    @Override
+    public String toString() {
+        return "LogInDto{" +
+                "gameId='" + gameId + '\'' +
+                ", gamePassword='" + gamePassword + '\'' +
+                '}';
+    }
 }

@@ -8,6 +8,7 @@ import chess.domain.piece.Color;
 import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
+import chess.dto.LogInDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +19,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
 public class PieceDaoTest {
+    private static final LogInDto LOG_IN_DTO = new LogInDto("1234", "1234");
+
 
     private PieceDao pieceDao;
     private GameDao gameDao;
@@ -35,7 +38,7 @@ public class PieceDaoTest {
     @Test
     void createAllById() {
         //given
-        gameDao.createById("1234");
+        gameDao.create(LOG_IN_DTO);
         //when
         pieceDao.createAllById(new ChessmenInitializer().init().getPieces(), "1234");
 
@@ -48,7 +51,7 @@ public class PieceDaoTest {
     @Test
     void updateAllByGameId() {
         //given
-        gameDao.createById("1234");
+        gameDao.create(LOG_IN_DTO);
         final List<Piece> pieces = new ChessmenInitializer().init().getPieces();
         pieceDao.createAllById(pieces, "1234");
         pieces.remove(pieces.size() - 1);
@@ -68,7 +71,7 @@ public class PieceDaoTest {
     @Test
     void deleteAllByGameId() {
         //given
-        gameDao.createById("1234");
+        gameDao.create(LOG_IN_DTO);
         pieceDao.createAllById(new ChessmenInitializer().init().getPieces(), "1234");
 
         //when

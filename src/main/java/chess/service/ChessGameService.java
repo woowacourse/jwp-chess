@@ -6,6 +6,7 @@ import chess.domain.game.ChessGame;
 import chess.domain.game.GameResult;
 import chess.domain.piece.ChessmenInitializer;
 import chess.dto.GameResultDto;
+import chess.dto.LogInDto;
 import chess.dto.MoveDto;
 import chess.dto.PiecesDto;
 import org.springframework.stereotype.Service;
@@ -22,15 +23,18 @@ public class ChessGameService {
         this.gameDao = gameDao;
     }
 
-    public void createOrGet(String gameId) {
-        if (!gameDao.isInId(gameId)) {
-            initGame(gameId);
+    public void createOrGet(LogInDto logInDto) {
+        if (!gameDao.isInId(logInDto.getGameId())) {
+            initGame(logInDto);
+        }
+        if (!gameDao.isValidPassword(logInDto)) {
+            throw new IllegalArgumentException("올바르지 않은 비밀번호 입니다.");
         }
     }
 
-    private void initGame(String gameId) {
-        gameDao.createById(gameId);
-        pieceDao.createAllById(chessmenInitializer.init().getPieces(), gameId);
+    private void initGame(LogInDto logInDto) {
+        gameDao.create(logInDto);
+        pieceDao.createAllById(chessmenInitializer.init().getPieces(), logInDto.getGameId());
     }
 
     public ChessGame getGameStatus(String gameId) {

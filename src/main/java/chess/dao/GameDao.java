@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.piece.Color;
+import chess.dto.LogInDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,10 +14,10 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createById(String gameId) {
-        final String sql = "insert into game (id, turn) values (?, ?)";
+    public void create(LogInDto logInDto) {
+        final String sql = "insert into game (id, password, turn) values (?, ?, ?)";
 
-        jdbcTemplate.update(sql, gameId, Color.BLACK.getName());
+        jdbcTemplate.update(sql, logInDto.getGameId(), logInDto.getGamePassword(), Color.BLACK.getName());
     }
 
     public boolean isInId(String gameId) {
@@ -52,4 +53,8 @@ public class GameDao {
         jdbcTemplate.update(sql, gameId);
     }
 
+    public boolean isValidPassword(LogInDto logInDto) {
+        final String sql = "select count(*) from game where id = ? and password = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, logInDto.getGameId(), logInDto.getGamePassword()) > 0;
+    }
 }

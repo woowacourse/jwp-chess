@@ -8,6 +8,7 @@ import chess.domain.piece.Team;
 import chess.dto.ChessGameDto;
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -79,5 +80,9 @@ public class ChessService {
 
     public List<String> findAllGameName() {
         return chessGameDao.findAllGameName();
+    }
+
+    public Long findByGameNameAndPassword(String gameName, String password) throws EmptyResultDataAccessException {
+        return chessGameDao.findByGameNameAndPassword(gameName,password);
     }
 }

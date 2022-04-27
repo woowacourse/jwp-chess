@@ -22,10 +22,18 @@ public class SpringController {
     }
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(Model model, @RequestParam(value = "error", required = false) String error) {
         List<String> gameNames = chessService.findAllGameName();
         model.addAttribute("gameNames", gameNames);
+        model.addAttribute("error", error);
         return "index";
+    }
+
+    @GetMapping("/continue")
+    public String restart(@RequestParam("game_name") String gameName, @RequestParam("password") String password) {
+        Long id = chessService.findByGameNameAndPassword(gameName, password);
+
+        return "redirect:/game/" + id;
     }
 
     @GetMapping("/start")

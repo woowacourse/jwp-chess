@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -133,5 +134,10 @@ public class ChessGameDao {
     public void remove(String gameName) {
         String sql = "delete from chessgame where game_name = ?";
         jdbcTemplate.update(sql, gameName);
+    }
+
+    public Long findByGameNameAndPassword(String gameName, String password) throws EmptyResultDataAccessException {
+        String sql = "select id from chessgame where game_name = ? and password = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, gameName, password);
     }
 }

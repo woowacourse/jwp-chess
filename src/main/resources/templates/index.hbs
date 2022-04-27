@@ -17,10 +17,14 @@
 </form>
 <br>
 <br>
+{{#if error}}
+    <h3>에러 메시지: {{error}}</h3>
+{{/if}}
 {{#each gameNames}}
     <div style="border: 1px solid #d4ffb5; box-shadow: inset 0 0 8px #84de3a; background-color: #deffb5; width:40%; display: flex; justify-content: center; margin: 0 auto">
-        <form action="/start" method="get">
+        <form action="/continue" method="get">
             <div style="font-weight: bold">{{this}}</div>
+            <input type="hidden" name="game_name" value="{{this}}"/>
             <input name="password" type="text" placeholder="비밀번호를 입력해주세요." maxlength="20" size="20" class="from-control" aria-label="default input example"/>
             <button type="submit" class="btn btn-success">게임 시작</button>
         </form>

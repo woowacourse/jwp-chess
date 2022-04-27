@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import chess.dao.fake.FakeBoardDao;
+import chess.dao.fake.FakeGameDao;
 import chess.dao.fake.FakeGameStatusDao;
 import chess.dao.fake.FakeTurnDao;
 import chess.domain.board.strategy.BasicBoardStrategy;
@@ -25,7 +26,7 @@ public class ChessGameServiceTest {
     @BeforeEach
     void setUp() {
         chessGameService = new ChessGameService(new FakeBoardDao(new BasicBoardStrategy()), new FakeTurnDao(),
-                new FakeGameStatusDao());
+                new FakeGameStatusDao(), new FakeGameDao());
     }
 
     @Test

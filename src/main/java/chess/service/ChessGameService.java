@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.BoardDao;
+import chess.dao.GameDao;
 import chess.dao.GameStatusDao;
 import chess.dao.TurnDao;
 import chess.domain.ChessGame;
@@ -31,12 +32,14 @@ public class ChessGameService {
     private final BoardDao boardDao;
     private final TurnDao turnDao;
     private final GameStatusDao gameStatusDao;
+    private final GameDao gameDao;
 
     @Autowired
-    public ChessGameService(BoardDao boardDao, TurnDao turnDao, GameStatusDao gameStatusDao) {
+    public ChessGameService(BoardDao boardDao, TurnDao turnDao, GameStatusDao gameStatusDao, GameDao gameDao) {
         this.boardDao = boardDao;
         this.turnDao = turnDao;
         this.gameStatusDao = gameStatusDao;
+        this.gameDao = gameDao;
     }
 
     public void init() {

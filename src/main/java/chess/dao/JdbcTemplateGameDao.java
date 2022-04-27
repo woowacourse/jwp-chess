@@ -10,8 +10,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
-public class JdbcTemplateGameDao {
+@Repository
+public class JdbcTemplateGameDao implements GameDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -19,6 +21,7 @@ public class JdbcTemplateGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public int create(String roomTitle, String password) {
         String sql = "insert into game (title, password) values (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -34,6 +37,7 @@ public class JdbcTemplateGameDao {
         return keyHolder.getKey().intValue();
     }
 
+    @Override
     public List<GameDto> find() {
         String sql = "select * from game";
         return jdbcTemplate.query(sql, new RowMapper<GameDto>() {
@@ -44,6 +48,7 @@ public class JdbcTemplateGameDao {
         });
     }
 
+    @Override
     public void delete(int id) {
         String sql = "delete from game where id = ?";
         jdbcTemplate.update(sql, id);

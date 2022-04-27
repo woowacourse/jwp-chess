@@ -9,6 +9,8 @@ import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
+import chess.dto.response.RoomStatusDto;
+import chess.exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,6 +61,34 @@ class RoomServiceTest {
 
         // then
         assertThat(roomId).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("방이 존재하지 않으면 예외가 터진다.")
+    void startGame_exception_room_not_exist() {
+        // given
+        final int roomId = 1;
+
+        // then
+        assertThatThrownBy(() -> roomService.startGame(roomId))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("방 아이디에 해당하는 게임 상태가 존재하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("게임을 시작하면 방의 상태가 PLAYING이 된다.")
+    void startGame() {
+        // given
+        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
+
+        // when;
+        roomService.startGame(roomId);
+
+        // then
+        final RoomStatusDto statusDto = roomDao.findStatusById(roomId);
+        final GameStatus actual = statusDto.getGameStatus();
+
+        assertThat(actual).isEqualTo(GameStatus.PLAYING);
     }
 
     @Test

@@ -38,6 +38,13 @@ public class RoomService {
         return roomDao.save(dto.getRoomName(), GameStatus.READY, Color.WHITE, hashPassword);
     }
 
+    public void startGame(final int roomId) {
+        final RoomStatusDto statusDto = roomDao.findStatusById(roomId);
+        final GameStatus gameStatus = statusDto.getGameStatus();
+        gameStatus.checkReady();
+        roomDao.updateStatusById(roomId, GameStatus.PLAYING);
+    }
+
     public void deleteRoom(final RoomDeletionRequestDto dto) {
         final int roomId = dto.getRoomId();
 

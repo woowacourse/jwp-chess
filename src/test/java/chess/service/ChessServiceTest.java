@@ -138,6 +138,6 @@ class ChessServiceTest {
     void findGameResult_메서드는_게임이_종료되지_않은_경우_예외_발생() {
         assertThatThrownBy(() -> service.findGameResult(1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("아직 게임 결과가 산출되지 않았습니다.");
+                .hasMessage("아직 게임이 종료되지 않았습니다.");
     }
 }

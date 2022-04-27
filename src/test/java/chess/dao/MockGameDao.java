@@ -55,4 +55,9 @@ public class MockGameDao implements GameDao {
         game.move(from, to);
         store.put(game.getId(), game);
     }
+
+    @Override
+    public void deleteGameById(final Long id) {
+        store.remove(id);
+    }
 }

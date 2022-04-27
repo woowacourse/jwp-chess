@@ -26,4 +26,5 @@ create table Piece
     team varchar(10),
     piece_type varchar(10) not null,
     constraint fk_game_id foreign key(game_id) references Game(id)
+    on delete cascade
 );

@@ -2,13 +2,12 @@ package chess.dto;
 
 public class GameCreationDto {
 
-    private final String title;
-    private final String password;
-    private final Long whiteId;
-    private final Long blackId;
+    private String title;
+    private String password;
+    private Long whiteId;
+    private Long blackId;
 
     public GameCreationDto() {
-        this(null, null, null, null);
     }
 
     public GameCreationDto(final String title, final String password, final Long whiteId, final Long blackId) {

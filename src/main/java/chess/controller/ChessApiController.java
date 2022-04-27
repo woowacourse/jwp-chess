@@ -88,9 +88,17 @@ public class ChessApiController {
 
     @DeleteMapping("/member/{memberId}")
     @ResponseBody
-    public ResponseEntity<Long> deleteMember(@PathVariable("memberId") Long memberId) {
+    public ResponseEntity<Long> deleteMember(@PathVariable("memberId") final Long memberId) {
         memberService.deleteMember(memberId);
 
         return ResponseEntity.ok().body(memberId);
+    }
+
+    @DeleteMapping("/{gameId}")
+    public ResponseEntity<Long> deleteGame(@PathVariable("gameId") final Long gameId,
+                                           @RequestParam final String password ) {
+        gameService.deleteGameById(gameId, password);
+
+        return ResponseEntity.ok().body(gameId);
     }
 }

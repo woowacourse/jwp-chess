@@ -85,6 +85,47 @@
             location.href = `/play/${gameId}`;
         }).catch(error => alert(error));
     }
+    const validate2 = (gameId) => {
+        let password = prompt("비밀번호를 입력하세요");
+        fetch(`/${gameId}/password`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `password=${password}`
+        }).then(async response => {
+            if (response.status === 400) {
+                let errorMessage = await response.text();
+                alert(errorMessage);
+                return;
+            }
+        }).catch(error => alert(error));
+    }
+
+    const deleteGame = (gameId) => {
+        let isDelete = confirm("정말 삭제하시겠습니까?");
+        if (!isDelete) {
+            return;
+        }
+        let password = prompt("비밀번호를 입력하세요");
+
+        fetch(`/${gameId}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `password=${password}`
+        }).then(async response => {
+            if (response.ok) {
+                alert("정삭적으로 삭제되었습니다.")
+            }
+            if (response.status === 400) {
+                let errorMessage = await response.text();
+                alert(errorMessage);
+            }
+            location.reload();
+        })
+    }
 
     const createGame = () => {
         let title = document.getElementById("title").value;

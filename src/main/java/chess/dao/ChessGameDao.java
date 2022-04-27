@@ -83,6 +83,13 @@ public class ChessGameDao implements GameDao {
         movePiece(game, rawFrom, rawTo);
     }
 
+    @Override
+    public void deleteGameById(final Long id) {
+        final String sql = "delete from Game where id = ?";
+        jdbcTemplate.update(sql, id);
+
+    }
+
     private Long saveGame(ChessGame game) {
         final String sql = "insert into Game (turn, title, password, white_member_id, black_member_id) "
                 + "values (?, ?, ?, ?, ?)";

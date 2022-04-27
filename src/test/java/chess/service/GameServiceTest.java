@@ -2,6 +2,7 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.dao.MemberDao;
 import chess.domain.ChessGame;
@@ -102,5 +103,26 @@ class GameServiceTest {
         assertThatThrownBy(() -> gameService.validatePassword(gameId, "12"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("끝난 체스 게임을 삭제한다.")
+    void deleteGame() {
+        final Long gameId = gameService.createGame("some", "123", 1L, 2L);
+        final String password = "123";
+        gameService.terminate(gameId);
+
+        assertDoesNotThrow(() -> gameService.deleteGameById(gameId, password));
+    }
+
+    @Test
+    @DisplayName("끝나지 않은 체스 게임을 삭제할 경우 예외를 발생한다.")
+    void cannotDeleteGame() {
+        final Long gameId = gameService.createGame("some", "123", 1L, 2L);
+        final String password = "123";
+
+        assertThatThrownBy(() -> gameService.deleteGameById(gameId, password))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("진행 중인 게임은 삭제할 수 없습니다.");
     }
 }

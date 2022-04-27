@@ -12,8 +12,8 @@ import chess.domain.Room;
 import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
 import chess.dto.GameResultDto;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -126,5 +126,20 @@ public class GameService {
 
     private void updateGameByMove(final ChessGame chessGame, final String rawFrom, final String rawTo) {
         gameDao.updateByMove(chessGame, rawFrom, rawTo);
+    }
+
+    public void deleteGameById(final Long gameId, final String password) {
+        final ChessGame game = gameDao.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("찾는 게임이 존재하지 않습니다."));
+        validatePassword(gameId, password);
+        validateInProgress(game);
+
+        gameDao.deleteGameById(gameId);
+    }
+
+    private void validateInProgress(final ChessGame game) {
+        if (game.isInProgress()) {
+            throw new IllegalStateException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
     }
 }

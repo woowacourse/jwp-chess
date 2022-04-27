@@ -52,6 +52,10 @@ public class ChessGame {
         turn = Team.NONE;
     }
 
+    public boolean isInProgress() {
+        return turn == Team.WHITE || turn == Team.BLACK;
+    }
+
     public boolean isEnd() {
         return turn == Team.NONE;
     }

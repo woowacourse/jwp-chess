@@ -2,14 +2,21 @@
 
 const clickStartButton = () => {
     let roomName = prompt("방 이름");
-    if (roomName === undefined) {
+    //TODO 여기 값 입력 안하면 안넘어가도록 수정
+    if (roomName === null) {
         return;
     }
-    let password = prompt("비밀번호");
-    if (password === undefined ) {
+    const password = prompt("비밀번호");
+    if (password === null ) {
         return;
     }
-    console.log(roomName, password);
+    const roomInfo = {roomName: roomName, password: password};
+    const response = fetch(`/new`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(roomInfo),
+    });
+    response.then(() => getGames());
 }
 
 const getGames = () => {

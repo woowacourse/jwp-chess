@@ -25,7 +25,8 @@ body {
 }
 
 .column-header {
-    font-family: "Avenir Next Condensed", serif;
+    font-family: "Futura", serif;
+    font-weight: bold;
     color: black;
     font-size: 20px;
     text-align: center;
@@ -33,7 +34,8 @@ body {
 }
 
 .row-header {
-    font-family: "Avenir Next Condensed", serif;
+    font-family: "Futura", serif;
+    font-weight: bold;
     color: black;
     font-size: 20px;
     text-align: center;
@@ -64,7 +66,7 @@ body {
 }
 
 #chess-status {
-    font-family: "Avenir Next Condensed", serif;
+    font-family: "Futura", serif;
     font-size: 30px;
     line-height: 30px;
     height: 100px;
@@ -73,20 +75,20 @@ body {
 .chess-header {
     text-align: center;
     font-size: 50px;
-    font-family: "Avenir Next Condensed", serif;
+    font-family: "Futura", serif;
     font-weight: bold;
 }
 
 .chess-btn {
-    width: 100px;
+    width: 120px;
     height: 30px;
     font-size: 20px;
-    font-family: "Avenir Next Condensed", serif;
+    font-family: "Malgun Gothic", serif;
     background-color: floralwhite;
 }
 
 #turn-status {
-    font-family: "Avenir Next Condensed", serif;
+    font-family: "Futura", serif;
     font-size: 35px;
     line-height: 30px;
     height: 40px;

@@ -11,5 +11,7 @@ public interface RoomDao {
 
     Optional<Room> findByNameAndPassword(String name, String password);
 
-    void update(long id, String turn);
+    Optional<Room> findById(Long roomId);
+
+    void update(Long id, String turn);
 }

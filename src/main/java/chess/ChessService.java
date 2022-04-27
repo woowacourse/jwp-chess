@@ -38,8 +38,8 @@ public class ChessService {
         this.squareDao = squareDao;
     }
 
-    public BoardDto startNewGame(String roomName) {
-        Room room = roomDao.findByName(roomName)
+    public BoardDto startNewGame(Long roomId) {
+        Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
 
         ChessGame chessGame = new ChessGame();
@@ -52,16 +52,16 @@ public class ChessService {
         return BoardDto.of(board, chessGame.getTurn());
     }
 
-    public BoardDto load(String roomName) {
-        Room room = roomDao.findByName(roomName)
+    public BoardDto load(Long roomId) {
+        Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
 
         return BoardDto.of(chessBoard.getPieces(), room.getTurn());
     }
 
-    public BoardDto move(String roomName, MoveDto moveDto) {
-        Room room = roomDao.findByName(roomName)
+    public BoardDto move(Long roomId, MoveDto moveDto) {
+        Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessGame chessGame = ChessGame.of(loadChessBoard(room.getId()), room.getTurn());
         chessGame.move(moveDto.getFrom(), moveDto.getTo());
@@ -99,8 +99,8 @@ public class ChessService {
         return new ChessBoard(() -> board);
     }
 
-    public Status status(String roomName) {
-        Room room = roomDao.findByName(roomName)
+    public Status status(Long roomId) {
+        Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
         ChessGame chessGame = ChessGame.of(chessBoard, room.getTurn());
@@ -108,13 +108,13 @@ public class ChessService {
         return chessGame.status();
     }
 
-    public boolean createRoom(String name, String password) {
+    public Room createRoom(String name, String password) {
         Optional<Room> room = roomDao.findByNameAndPassword(name, password);
         if (room.isEmpty()) {
             Room newRoom = new Room(name, password);
             roomDao.save(newRoom);
-            return true;
+            return roomDao.findByNameAndPassword(name, password).get();
         }
-        return false;
+        return room.get();
     }
 }

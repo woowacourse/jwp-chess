@@ -11,37 +11,43 @@ import chess.dao.SquareDao;
 import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
+import chess.entity.Room;
 
 public class ChessServiceTest {
 
     private ChessService chessService;
     private final RoomDao roomDao = new FakeRoomDao();
     private final SquareDao squareDao = new FakeSquareDao();
+    private Long id;
 
     @BeforeEach
     void setUp() {
         chessService = new ChessService(roomDao, squareDao);
-        chessService.createRoom("roma", "pw");
+        Room room = chessService.createRoom("roma", "pw");
+        id = room.getId();
     }
 
     @Test
     void createRoom() {
-        boolean actual = chessService.createRoom("sojukang", "pw");
-        assertThat(actual).isTrue();
+        Room actual = chessService.createRoom("sojukang", "pw");
+        assertAll(
+            () -> assertThat(actual.getName()).isEqualTo("sojukang"),
+            () ->  assertThat(actual.getPassword()).isEqualTo("pw")
+        );
     }
 
     @Test
     void startNewGame() {
-        BoardDto boardDto = chessService.startNewGame("roma");
+        BoardDto boardDto = chessService.startNewGame(id);
 
         assertThat(boardDto.getTurn()).isEqualTo("white");
     }
 
     @Test
     void load() {
-        chessService.startNewGame("roma");
+        chessService.startNewGame(id);
 
-        BoardDto boardDto = chessService.load("roma");
+        BoardDto boardDto = chessService.load(id);
 
         assertAll(
             () -> assertThat(boardDto.getTurn()).isEqualTo("white"),
@@ -51,8 +57,8 @@ public class ChessServiceTest {
 
     @Test
     void move() {
-        chessService.startNewGame("roma");
-        BoardDto actual = chessService.move("roma", new MoveDto("a2", "a4"));
+        chessService.startNewGame(id);
+        BoardDto actual = chessService.move(id, new MoveDto("a2", "a4"));
 
         assertAll(
             () -> assertThat(actual.getTurn()).isEqualTo("black"),
@@ -63,8 +69,8 @@ public class ChessServiceTest {
 
     @Test
     void status() {
-        chessService.startNewGame("roma");
-        Status actual = chessService.status("roma");
+        chessService.startNewGame(id);
+        Status actual = chessService.status(id);
 
         assertAll(
             () -> assertThat(actual.getWhiteScore()).isEqualTo(38.0),

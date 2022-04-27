@@ -23,7 +23,6 @@ public class FakeRoomDao implements RoomDao {
 
     @Override
     public Optional<Room> findByName(String name) {
-
         return rooms.stream()
             .filter(room -> room.getName().equals(name))
             .findAny();
@@ -31,15 +30,20 @@ public class FakeRoomDao implements RoomDao {
 
     @Override
     public Optional<Room> findByNameAndPassword(String name, String password) {
-        Room room = findByName(name).get();
-        if (room.getPassword().equals(password)) {
-            return Optional.of(room);
+        Optional<Room> room = findByName(name);
+        if (room.isPresent() && room.get().getPassword().equals(password)) {
+            return room;
         }
         return Optional.empty();
     }
 
     @Override
-    public void update(long id, String turn) {
+    public Optional<Room> findById(Long roomId) {
+        return Optional.ofNullable(rooms.get((int)(roomId - 1)));
+    }
+
+    @Override
+    public void update(Long id, String turn) {
         Room room = rooms.get((int)(id - 1));
         rooms.set((int)(id - 1), new Room(id, room.getPassword(), turn, room.getName()));
     }

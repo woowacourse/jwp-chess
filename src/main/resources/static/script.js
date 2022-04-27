@@ -2,13 +2,13 @@ let from = "";
 let turn = "";
 let isStart = false;
 let roomName = "";
+let id;
 document.getElementById("start-room").style.display = "none";
 
 async function create() {
     if (roomName === "") {
         roomName = document.getElementById("roomName").value;
     }
-
     await fetch("/room", {
         method: "POST",
         headers: {
@@ -16,7 +16,10 @@ async function create() {
         },
         body: "name=" + roomName + "&password=" + document.getElementById("roomPassword").value
     })
-    document.getElementById("roomPassword").value = "";
+        .then(res => res.text())
+        .then(data => id = data)
+        .then(() => document.getElementById("roomPassword").value = "")
+
     document.getElementById("entrance").style.display = "none";
     document.getElementById("start-room").style.display = "block";
 }
@@ -24,7 +27,7 @@ async function create() {
 async function start() {
     let pieces;
 
-    await fetch("/room/" + roomName, {
+    await fetch("/room/" + id, {
         method: "POST"
     })
         .then(res => res.json())
@@ -40,15 +43,11 @@ async function start() {
 
 async function load() {
     let pieces;
-    let response = await fetch("/room/" + roomName);
+    let response = await fetch("/room/" + id);
 
     if (response.status === 400) {
         const errorMessage = await response.json();
         alert("[ERROR] " + errorMessage.message);
-        return;
-    }
-
-    if (response.status === 500) {
         return;
     }
 
@@ -69,11 +68,14 @@ async function load() {
 }
 
 async function newGame() {
+    end()
+    let status = document.getElementById("chess-status");
+    let turnState = document.getElementById("turn-status");
+    status.innerText = "";
+    turnState.innerText = "";
     roomName = "";
     document.getElementById("start-room").style.display = "none";
     document.getElementById("entrance").style.display = "block";
-
-    await fetch("/")
 }
 
 function end() {
@@ -97,7 +99,7 @@ function end() {
 
 async function printStatus() {
     let stat;
-    await fetch("/room/" + roomName + "/status")
+    await fetch("/room/" + id + "/status")
         .then(res => res.json())
         .then(data => stat = data)
     let status = document.getElementById("chess-status");
@@ -123,12 +125,13 @@ function printPieces(pieces) {
         attachPieceInSquare(piece, img, square);
     }
 
-    function attachPieceInSquare(piece, img, square) {
-        if (piece !== "empty") {
-            img.setAttribute("src", "/images/" + piece + ".png");
-            img.setAttribute("class", "piece");
-            square.appendChild(img);
-        }
+}
+
+function attachPieceInSquare(piece, img, square) {
+    if (piece !== "empty") {
+        img.setAttribute("src", "/images/" + piece + ".png");
+        img.setAttribute("class", "piece");
+        square.appendChild(img);
     }
 }
 
@@ -160,7 +163,7 @@ async function selectPiece(pieceDiv) {
 
 async function move(fromPosition, toPosition) {
     from = "";
-    let response = await fetch("/room/" + roomName + "/move", {
+    let response = await fetch("/room/" + id + "/move", {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -173,11 +176,11 @@ async function move(fromPosition, toPosition) {
 
     if (!response.ok) {
         const errorMessage = await response.json();
-        alert("[ERROR] " + errorMessage.message);
+        await tempAlert("[ERROR] " + errorMessage.message, 500);
         return;
     }
     let pieces = await response.json();
-    printPieces(pieces.board);
+    await changePieces(pieces.board, fromPosition, toPosition);
     const before = turn;
     turn = pieces.turn;
     await printStatus();
@@ -190,4 +193,30 @@ async function move(fromPosition, toPosition) {
             "새 게임 혹은 그만하기를 눌러주세요.";
         turnStatus.innerText = "";
     }
+}
+
+async function changePieces(pieces, fromPosition, toPosition) {
+    const fromPiece = pieces[fromPosition];
+    const toPiece = pieces[toPosition];
+    const fromSquare = document.getElementById(fromPosition);
+    const toSquare = document.getElementById(toPosition);
+    const img = document.createElement("img");
+    removeChildren(fromSquare);
+    removeChildren(toSquare);
+    attachPieceInSquare(toPiece, img, toSquare);
+    attachPieceInSquare(fromPiece, img, fromSquare);
+}
+
+async function tempAlert(message, timeout)
+{
+    const width = 400;
+    const height = 30;
+    const x = window.innerWidth / 2 - (width / 2);
+    const y = window.innerHeight / 2 - (height / 2);
+    const alert = window.open('','',
+        'width=' + width + ',height=' + height +
+        ',left='+ x + ',top=' + y);
+    alert.document.write(message)
+    alert.focus()
+    setTimeout(() => alert.close(), timeout)
 }

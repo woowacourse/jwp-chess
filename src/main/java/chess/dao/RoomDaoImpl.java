@@ -24,6 +24,24 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
+    public Optional<Room> findById(Long roomId) {
+        String sql = "select * from room where id = ?";
+
+        try {
+            Room room = jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> new Room(
+                    rs.getLong("id"),
+                    rs.getString("password"),
+                    rs.getString("turn"),
+                    rs.getString("name")
+                ), roomId);
+            return Optional.ofNullable(room);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public Optional<Room> findByName(String name) {
         String sql = "select * from room where name = ?";
 
@@ -60,7 +78,7 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public void update(long id, String turn) {
+    public void update(Long id, String turn) {
         String sql = "update room set turn = ? where id = ?";
         jdbcTemplate.update(sql, turn, id);
     }

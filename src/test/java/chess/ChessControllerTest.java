@@ -21,6 +21,8 @@ import io.restassured.RestAssured;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ChessControllerTest {
 
+    private final Long id = 1L;
+
     @LocalServerPort
     int port;
 
@@ -50,59 +52,61 @@ class ChessControllerTest {
     @Test
     void room() {
         RestAssured.given().log().all()
-            .when().get("/room?name=roma")
+            .body("name=roma&password=123")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .when().post("/room")
             .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.TEXT_HTML_VALUE);
+            .statusCode(HttpStatus.CREATED.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
 
     @Test
     void start() {
         RestAssured.given().log().all()
-            .when().get("/start?name=roma")
+            .when().post("/room/" + id)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("turn", is("white"))
-            .body("start-room.size()", is(64));
+            .body("board.size()", is(64));
     }
 
     @Test
     void load() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.post("/room/" + id);
 
         RestAssured.given().log().all()
-            .when().get("/load?name=roma")
+            .when().get("/room/" + id)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("turn", is("white"))
-            .body("start-room.size()", is(64));
+            .body("board.size()", is(64));
     }
 
     @Test
     void move() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.post("/room/" + id);
         MoveDto moveDto = new MoveDto("a2", "a4");
 
         RestAssured.given().log().all()
             .body(moveDto)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/move?name=roma")
+            .when().patch("/room/" + id + "/move")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("turn", is("black"))
-            .body("start-room.a2", is("empty"))
-            .body("start-room.a4", is("white_pawn"));
+            .body("board.a2", is("empty"))
+            .body("board.a4", is("white_pawn"));
     }
 
     @Test
     void status() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.post("/room/" + id);
 
         RestAssured.given().log().all()
-            .when().get("/status?name=roma")
+            .when().get("/room/" + id + "/status")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -112,13 +116,13 @@ class ChessControllerTest {
 
     @Test
     void moveExceptionWrongPosition() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.post("/room/" + id);
         MoveDto moveDto = new MoveDto("a2", "a5");
 
         RestAssured.given().log().all()
             .body(moveDto)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/move?name=roma")
+            .when().patch("/room/" + id + "/move")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -127,13 +131,13 @@ class ChessControllerTest {
 
     @Test
     void moveExceptionWrongTurn() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.post("/room/" + id);
         MoveDto moveDto = new MoveDto("a7", "a6");
 
         RestAssured.given().log().all()
             .body(moveDto)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/move?name=roma")
+            .when().patch("/room/" + id + "/move")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -142,13 +146,11 @@ class ChessControllerTest {
 
     @Test
     void loadExceptionBeforeInit() {
-        RestAssured.get("/room?name=sojukang");
-
         RestAssured.given().log().all()
-            .when().get("/load?name=sojukang")
+            .when().get("/room/" + id)
             .then().log().all()
-            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body("error", is("Internal Server Error"));
+            .body("message", is("해당 ID에 체스게임이 초기화되지 않았습니다."));
     }
 }

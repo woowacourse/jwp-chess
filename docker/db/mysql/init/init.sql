@@ -7,8 +7,7 @@ create table room
     name varchar(255) not null,
     turn varchar(10) not null,
     password varchar(255) not null,
-    primary key (id),
-    constraint uniqueName unique (name)
+    primary key (id)
 );
 
 create table square

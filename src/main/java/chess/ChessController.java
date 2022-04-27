@@ -1,6 +1,7 @@
 package chess;
 
 import java.net.URI;
+import java.util.NoSuchElementException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,37 +43,38 @@ public class ChessController {
 
     @PostMapping("/room")
     @ResponseBody
-    public ResponseEntity<BoardDto> create(@RequestParam String name, @RequestParam String password) {
-        chessService.createRoom(name, password);
-        return ResponseEntity.created(URI.create("/room/" + name)).build();
+    public ResponseEntity<Long> create(@RequestParam String name, @RequestParam String password) {
+        long id = chessService.createRoom(name, password).getId();
+        return ResponseEntity.created(URI.create("/room/" + id))
+            .body(id);
     }
 
-    @PostMapping("/room/{roomName}")
+    @PostMapping("/room/{roomId}")
     @ResponseBody
-    public BoardDto start(@PathVariable String roomName) {
-        return chessService.startNewGame(roomName);
+    public BoardDto start(@PathVariable Long roomId) {
+        return chessService.startNewGame(roomId);
     }
 
-    @GetMapping("/room/{roomName}")
+    @GetMapping("/room/{roomId}")
     @ResponseBody
-    public BoardDto load(@PathVariable String roomName) {
-        return chessService.load(roomName);
+    public BoardDto load(@PathVariable Long roomId) {
+        return chessService.load(roomId);
     }
 
-    @PatchMapping("/room/{roomName}/move")
+    @PatchMapping("/room/{roomId}/move")
     @ResponseBody
-    public BoardDto move(@PathVariable String roomName,
+    public BoardDto move(@PathVariable Long roomId,
         @RequestBody MoveDto moveDto) {
-        return chessService.move(roomName, moveDto);
+        return chessService.move(roomId, moveDto);
     }
 
-    @GetMapping("/room/{roomName}/status")
+    @GetMapping("/room/{roomId}/status")
     @ResponseBody
-    public Status status(@PathVariable String roomName) {
-        return chessService.status(roomName);
+    public Status status(@PathVariable Long roomId) {
+        return chessService.status(roomId);
     }
 
-    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})
+    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class, NoSuchElementException.class})
     public ResponseEntity<ExceptionResponseDto> handle(RuntimeException exception) {
         return ResponseEntity.badRequest()
             .body(new ExceptionResponseDto(exception.getMessage()));

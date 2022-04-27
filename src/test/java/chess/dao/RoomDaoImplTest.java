@@ -47,7 +47,7 @@ class RoomDaoImplTest {
     @Test
     @DisplayName("Room을 업데이트한다.")
     void update() {
-        roomDao.update(1, "black");
+        roomDao.update(1L, "black");
         assertThat(roomDao.findByName("sojukang").get().getTurn()).isEqualTo("black");
     }
 }

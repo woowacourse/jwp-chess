@@ -63,6 +63,14 @@ public class WebController {
         return "index";
     }
 
+    @PostMapping(path = "/{roomNumber}/delete")
+    public String deleteRoom(final Model model,
+                       @PathVariable("roomNumber") int roomNumber,
+                       @RequestParam("password") String password) {
+        chessGameService.deleteRoom(roomNumber, password);
+        return "redirect:/";
+    }
+
     @GetMapping(path="/{roomNumber}/status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ScoreDto> status(@PathVariable("roomNumber") int roomNumber) {
         final ScoreDto score = chessGameService.getScore(roomNumber);

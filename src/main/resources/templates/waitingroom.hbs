@@ -19,10 +19,9 @@
                 <tr>
                     <td>{{id}}</td>
                     <td><a href="/{{id}}/board">{{roomName}}</a></td>
-                    <form action="" method="post">
-                        <td><input type="text"></td>
+                    <form action="/{{id}}/delete" method="post">
+                        <td><input type="text" name="password"></td>
                         <td><input type="submit"></td>
-
                     </form>
                 </tr>
             {{/rooms}}

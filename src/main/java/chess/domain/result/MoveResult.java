@@ -1,4 +1,4 @@
-package chess.result;
+package chess.domain.result;
 
 import chess.domain.GameStatus;
 import chess.domain.Score;

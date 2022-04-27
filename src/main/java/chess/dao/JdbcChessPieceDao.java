@@ -6,7 +6,6 @@ import chess.dao.dto.ChessPieceDeleteDto;
 import chess.dao.dto.ChessPieceUpdateDto;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.position.Position;
-import chess.dto.ChessPieceMapper;
 import chess.entity.ChessPieceEntity;
 import java.util.List;
 import java.util.Map;

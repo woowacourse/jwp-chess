@@ -51,7 +51,7 @@ public class ChessController {
         stateService.currentState()
                 .proceed(command);
         stateService.insertCommand(command);
-        redirectAttributes.addAttribute("message", "실행한 명령어: " + command);
+        redirectAttributes.addAttribute("message", command);
         return "redirect:game";
     }
 

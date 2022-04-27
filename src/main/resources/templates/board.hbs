@@ -3,114 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>체스</title>
+    <link rel="stylesheet" href="/css/board.css">
 </head>
-<body style="background: dimgray">
-<style>.outer_box {
-    width: 800px;
-    height: 800px;
-    margin: 50px auto 50px 200px;
-    float: left;
-}
-
-.score_board {
-    width: 300px;
-    height: 600px;
-    margin: 150px 50px;
-    float: left;
-}
-
-.inner_score {
-    width: 300px;
-    height: 50px;
-    margin-bottom: 20px;
-    float: top;
-    text-align: center;
-}
-
-.turn {
-    width: 300px;
-    height: 200px;
-    margin-bottom: 20px;
-    float: top;
-    text-align: center;
-}
-
-.turn_box {
-    width: 130px;
-    height: 130px;
-    float: left;
-    padding: 10px;
-}
-
-.win_text {
-    width: 140px;
-    height: 50px;
-    text-align: center;
-    font-size: xxx-large;
-    font-weight: bolder;
-    visibility: hidden;
-}
-
-.draw_text {
-    width: 300px;
-    height: 50px;
-    padding-top: 160px;
-    text-align: center;
-    font-size: xxx-large;
-    font-weight: bolder;
-    visibility: hidden;
-}
-
-.inner_box {
-    width: 100px;
-    height: 100px;
-    float: left;
-    text-align: center;
-    display: table;
-}
-
-.inner_box > div {
-    vertical-align: middle;
-    display: table-cell
-}
-
-.black {
-    background-color: grey;
-    color: white;
-}
-
-.white {
-    background-color: white;
-    color: black;
-}
-
-.ui-button {
-    width: 100px;
-    height: 50px;
-    font-size: x-large;
-}
-
-.score {
-    font-size: larger;
-    font-weight: bold;
-    text-align: center;
-}
-
-.error {
-    font-size: larger;
-    font-weight: bold;
-    text-align: center;
-    color: darkred;
-}
-
-.piece_img {
-    height: 80px;
-    width: 80px;
-    padding: 5px;
-}
-
-</style>
-
+<body>
 <div id="chessBoard" class="outer_box">
 
     <div class="inner_box white" id="a8"></div>
@@ -234,13 +129,14 @@
         document.getElementById("error").innerText = "";
         const pathName = window.location.pathname;
 
-        const res = await fetch(`${pathName}/pieces`, {
+        const res = await fetch(`/api${pathName}/pieces`, {
             headers: {
                 'Content-Type': 'application/json'
             },
-            method: "PUT",
+            method: "PATCH",
             body: JSON.stringify({from: `${from}`, to: `${to}`})
         });
+
         const data = await res.json();
 
         if (!res.ok) {
@@ -255,7 +151,7 @@
     async function end() {
         const pathName = window.location.pathname;
 
-        const res = await fetch(`${pathName}/result`);
+        const res = await fetch(`/api${pathName}/result`);
         const data = await res.json();
 
         if (!res.ok) {
@@ -288,47 +184,46 @@
         const pathName = window.location.pathname;
         clearBoard();
 
-        const res = await fetch(`${pathName}/pieces`);
-        const datas = await res.json();
+        const res = await fetch(`/api${pathName}/pieces`);
+        const pieces = await res.json();
 
-        datas.forEach(data => {
-            const element = document.getElementById(data.position);
+        pieces.forEach(piece => {
+            const element = document.getElementById(piece.position);
             const img = document.createElement("img");
-            img.src = `/images/${data.pieceType}_${data.color.toLocaleLowerCase()}.png`;
-            img.id = `${data.position}`;
+            img.src = `/images/${piece.pieceType}_${piece.color.toLocaleLowerCase()}.png`;
+            img.id = `${piece.position}`;
             img.alt = "piece";
             img.className = "piece_img";
             element.appendChild(img);
         });
     }
 
-
     async function fetchScores() {
         const pathName = window.location.pathname;
 
-        const res = await fetch(`${pathName}/scores`);
-        const data = await res.json();
+        const res = await fetch(`/api${pathName}/scores`);
+        const score = await res.json();
 
         if (!res.ok) {
             document.getElementById("error").innerText = data.message;
             return;
         }
 
-        document.getElementById('whiteScore').innerText = `WHITE 점수 : ${data.whiteScore}`;
-        document.getElementById('blackScore').innerText = `BLACK 점수 : ${data.blackScore}`;
+        document.getElementById('whiteScore').innerText = `WHITE 점수 : ${score.whiteScore}`;
+        document.getElementById('blackScore').innerText = `BLACK 점수 : ${score.blackScore}`;
     }
 
     async function fetchTurn() {
         const pathName = window.location.pathname;
 
-        let res = await fetch(`${pathName}/turn`);
-        res = await res.json();
+        const res = await fetch(`/api${pathName}`);
+        const room = await res.json();
 
         const turns = document.getElementById("turn");
         for (let i = 0; i < 2; i++) {
             turns.children[i].style.boxShadow = "none";
         }
-        const currentTurn = document.getElementById(res.currentTurn.toLowerCase() + "_turn");
+        const currentTurn = document.getElementById(room.currentTurn.toLowerCase() + "_turn");
         currentTurn.style.boxShadow = "0 0 10px 2px darkred";
     }
 

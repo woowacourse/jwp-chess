@@ -89,7 +89,7 @@
             return;
         }
 
-        await fetch('/api/rooms', {
+        const res = await fetch('/api/rooms', {
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -100,22 +100,32 @@
             })
         });
 
-        // await fetch(`/rooms/${roomName}/pieces`, {method: "POST"});
-        // window.location.href = `/rooms/${roomName}`;
+        const id = await res.json();
+
+        await fetch(`/api/rooms/${id}/pieces`, {method: "POST"});
+        window.location.href = `/rooms/${id}`;
     }
 
     async function removeRoom(id) {
         const res = await fetch(`/api/rooms/${id}`);
         const room = await res.json();
 
-        if (!res.ok || room.gameStatus !== 'end') {
+        if (!res.ok && (room.gameStatus != 'end' || room.gameStatus != 'king_die')) {
             const error = document.getElementById("error");
             error.innerText = "게임이 끝나야 삭제할 수 있습니다!";
             return;
         }
 
+        let password = prompt("비밀 번호를 입력하세요.");
+
         await fetch(`/api/rooms/${id}`, {
-            method: 'DELETE'
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'DELETE',
+            body: JSON.stringify({
+                password: `${password}`
+            })
         });
 
         window.location.href = '/';

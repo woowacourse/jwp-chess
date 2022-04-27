@@ -113,7 +113,14 @@ public class ChessService {
     }
 
     public void deleteGameByGameID(String gameID) {
+        checkCanDelete(GameTurn.find(chessGameDao.findTurnByID(gameID)));
         chessGameDao.deleteByGameID(gameID);
         pieceDao.deleteByGameID(gameID);
+    }
+
+    private void checkCanDelete(GameTurn gameTurn) {
+        if (!GameTurn.FINISHED.equals(gameTurn)) {
+            throw new IllegalArgumentException("아직 게임이 진행 중이라구!! 😡");
+        }
     }
 }

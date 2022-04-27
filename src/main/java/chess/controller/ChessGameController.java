@@ -46,40 +46,40 @@ public class ChessGameController {
     }
 
     @GetMapping("/start")
-    public ModelAndView getGame(@RequestParam String gameId) {
+    public ModelAndView getGame(@RequestParam long gameId) {
         return getModelWithGameMessage(WELCOME_MESSAGE, "redirect:/game/" + gameId);
     }
 
     @GetMapping("/{gameId}")
-    public ModelAndView getGameByGameId(HttpServletRequest request, @PathVariable String gameId) {
+    public ModelAndView getGameByGameId(HttpServletRequest request, @PathVariable long gameId) {
         return getModel(request, gameId);
     }
 
     @PostMapping(path = "/{gameId}/move")
-    public ModelAndView move(@PathVariable String gameId, @RequestBody MoveCommandDto MoveCommandDto) {
+    public ModelAndView move(@PathVariable long gameId, @RequestBody MoveCommandDto MoveCommandDto) {
         //parseLong부분 고치기
-        chessGameService.move(Long.parseLong(gameId), MoveCommandDto);
+        chessGameService.move(gameId, MoveCommandDto);
         return getModelWithGameMessage(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId);
     }
 
     @DeleteMapping("/{gameId}/exit")
-    public String exitAndDeleteGame(@PathVariable String gameId) {
-        chessGameService.cleanGame(Long.parseLong(gameId));
+    public String exitAndDeleteGame(@PathVariable long gameId) {
+        chessGameService.cleanGame(gameId);
         return "redirect:/";
     }
-
+//TODO typo
     private ModelAndView getModelWithGameMessage(String massage, String url) {
         ModelAndView modelAndView = new ModelAndView(url);
         modelAndView.addObject("gameMessage", massage);
         return modelAndView;
     }
 
-    private ModelAndView getModel(HttpServletRequest request, String gameId) {
+    private ModelAndView getModel(HttpServletRequest request, long gameId) {
         ModelAndView modelAndView = new ModelAndView("game");
         modelAndView.addObject("pieces",
-            BoardView.of(chessGameService.getCurrentGame(Long.parseLong(gameId))).getBoardView());
+            BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
         modelAndView.addObject("gameId", gameId);
-        modelAndView.addObject("status", chessGameService.calculateGameResult(Long.parseLong(gameId)));
+        modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
         modelAndView.addObject("gameMessage", getGameMessage(request));
         return modelAndView;
     }

@@ -23,7 +23,6 @@ class GameRepositoryTest {
     @Test
     void save() {
         final ChessGame chessGame = ChessGame.initializeChessGame();
-        chessGame.start();
 
         final Long gameId = gameRepository.save(chessGame).getId();
         assertThat(gameId).isNotEqualTo(0L);
@@ -34,7 +33,6 @@ class GameRepositoryTest {
     @Test
     void findById() {
         final ChessGame expectedChessGame = ChessGame.initializeChessGame();
-        expectedChessGame.start();
 
         final Long gameId = gameRepository.save(expectedChessGame).getId();
         final ChessGame chessGame = gameRepository.findById(gameId);
@@ -50,7 +48,6 @@ class GameRepositoryTest {
     @Test
     void update() {
         final ChessGame chessGame = ChessGame.initializeChessGame();
-        chessGame.start();
 
         final ChessGame expectedChessGame = gameRepository.save(chessGame);
 

@@ -23,7 +23,7 @@ public class GameService {
     }
 
     public ChessGame createNewGame() {
-        final ChessGame chessGame = ChessGame.initializeAndStartChessGame();
+        final ChessGame chessGame = ChessGame.initializeChessGame();
         return gameRepository.save(chessGame);
     }
 

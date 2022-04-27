@@ -11,7 +11,6 @@ import chess.domain.player.Players;
 
 public class ChessGame {
 
-    private static final Color DEFAULT_COLOR = Color.WHITE;
     private static final Long TEMPORARY_PLAYER_ID = 0L;
 
     private final Long id;
@@ -23,7 +22,7 @@ public class ChessGame {
     }
 
     public static ChessGame initializeChessGame() {
-        return new ChessGame(TEMPORARY_PLAYER_ID, new FinishedState(new Players(), DEFAULT_COLOR));
+        return new ChessGame(TEMPORARY_PLAYER_ID, RunningState.createFirstTurnRunning());
     }
 
     public static ChessGame loadChessGame(final Long id, final Players players,
@@ -35,12 +34,6 @@ public class ChessGame {
             return new ChessGame(id, new RunningState(players, currentTurnColor.reverse()));
         }
         return new ChessGame(id, new RunningState(players, currentTurnColor));
-    }
-
-    public static ChessGame initializeAndStartChessGame() {
-        final ChessGame chessGame = initializeChessGame();
-        chessGame.start();
-        return chessGame;
     }
 
     public void start() {

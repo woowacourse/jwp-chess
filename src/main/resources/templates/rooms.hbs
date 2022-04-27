@@ -4,11 +4,6 @@
   <meta charset="UTF-8">
   <title> 체스 게임 </title>
   <link rel="stylesheet" href="/src/index.css">
-  <script src="/src/rooms.js"></script>
-  <link rel="stylesheet"
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        crossorigin="anonymous">
   <style>
     html, body{
     height:100%;
@@ -16,30 +11,86 @@
     .container{
     height:100%;
     }
+    .room-list-title{
+      border-bottom: 1px solid black;
+      margin-bottom: 10px;
+      margin-top: 11px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      font-size: larger;
+      font-weight: bold;
+    }
+    .room-item{
+      background: lightgray;
+      border-radius: 0.3em;
+      border: 1px solid black;
+      padding: 5px;
+      margin-right: 3%;
+      margin-left: 3%;
+    }
+    .game-info-name{
+      font-weight:bold;
+      font-size:large;
+    }
+    .room-list{
+      padding-left: 5%;
+      padding-right: 5%;
+    }
+    .btn{
+      float:right;
+    }
+    .create-box{
+      padding: 5px;
+      border: 1px solid black;
+    }
+    .create-form {
+      padding : 5px;
+    }
+    .input-form{
+      margin: 3px;
+      width : 90%;
+    }
+    .create-room-btn{
+      width : 100%;
+    }
   </style>
+  <script src="/src/rooms.js"></script>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
 </head>
 <body>
-<div class="container" style="background-color:gray;">
+<div class="container">
   <div class="row">
     <div class="col-md-8 room-list-box">
+      <div class="room-list-title">
+        방 목록
+      </div>
       <div class="row room-list">
-
         {{#each roomDtoList}}
-        <div class="col-md-6 room-item">
-          {{this.id}}
-          <div class="game-info" id="gameName" onclick="enter(`{{this.name}}`);">{{this.name}}</div>
-          <button type="button" id="removeBtn" onclick="remove(`{{this.name}}`);" value="">삭제삭제</button>
+        <div class="col-md-5 room-item">
+<!--          <div class="game-info-id" id="gameId">{{this.id}}</div>-->
+          <span class="game-info-name" id="gameName" onclick="enter(`{{this.name}}`);">{{this.name}}</span>
+          <button type="button" class="btn btn-danger" id="removeBtn" onclick="remove(`{{this.name}}`);" value="">삭제</button>
         </div>
         {{/each}}
       </div>
 
     </div>
     <div class="col-md-4">
+      <div class="room-list-title">
+        방 생성
+      </div>
       <div class="create-box">
-        <form action="/rooms/create" method="post" id="create_room_form">
-          <input type="text" name="room_name"  id="room_name" placeholder="게임명">
-          <input type="text" name="room_password" id="room_password" placeholder="비밀번호">
-          <input type="submit" value="방 생성">
+        <form action="/rooms/create" class="form-horizontal" method="post" id="create_room_form">
+          <div class="create-form form-group">
+            <input type="text" class="input-form form-control" name="room_name"  id="room_name" placeholder="게임명">
+            <input type="password" class="input-form form-control" name="room_password" id="room_password" placeholder="비밀번호">
+            <button type="submit" class="btn btn-info create-room-btn">방 생성</button>
+          </div>
+          <div class="create-form form-group">
+          </div>
         </form>
       </div>
     </div>
@@ -47,7 +98,4 @@
 </div>
 <script> setUpIndex(); </script>
 </body>
-<script>
-
-</script>
 </html>

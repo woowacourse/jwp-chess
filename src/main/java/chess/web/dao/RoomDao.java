@@ -7,11 +7,11 @@ import chess.web.dto.ReadRoomResultDto;
 
 public interface RoomDao {
 
-    void save(Color color);
+    void saveTurn(Color color, int roomId);
 
-    Player getPlayer();
+    Player getPlayer(int roomId);
 
-    void deleteAll();
+    void deleteAll(int roomId);
 
     int createRoom(CreateRoomRequestDto createRoomRequestDto);
 

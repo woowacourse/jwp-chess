@@ -15,17 +15,17 @@ public class FakePlayerDao implements RoomDao {
     }};
 
     @Override
-    public void save(Color color) {
+    public void saveTurn(Color color, int roomId) {
         repository.add(color);
     }
 
     @Override
-    public Player getPlayer() {
+    public Player getPlayer(int roomId) {
         return Player.of(repository.get(0));
     }
 
     @Override
-    public void deleteAll() {
+    public void deleteAll(int roomId) {
         repository.clear();
     }
 

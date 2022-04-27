@@ -39,7 +39,7 @@ class PlayerDaoImplTest {
 //
 //
 //    @Test
-//    void save() {
+//    void saveTurn() {
 //        Player player = roomDao.getPlayer();
 //        assertThat(player.name()).isEqualTo(Color.WHITE.name());
 //    }

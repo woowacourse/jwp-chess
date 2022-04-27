@@ -9,6 +9,7 @@ import chess.web.dao.RoomDao;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
+import chess.web.dto.StartResultDto;
 import chess.web.service.fakedao.FakeChessBoardDao;
 import chess.web.service.fakedao.FakePlayerDao;
 import java.util.Map;
@@ -22,14 +23,14 @@ public class ChessGameServiceTest {
 
     @Test
     void start() {
-        ChessGame chessGame = chessGameService.start();
+        StartResultDto startResultDto = chessGameService.start(1);
 
-        assertThat(chessGame.getBoard()).isNotNull();
+        assertThat(startResultDto).isNotNull();
     }
 
     @Test
     void play() {
-        PlayResultDto playResultDto = chessGameService.play();
+        PlayResultDto playResultDto = chessGameService.play(1);
 
         Map<String, Piece> board = playResultDto.getBoard();
         String turn = playResultDto.getTurn();
@@ -40,7 +41,7 @@ public class ChessGameServiceTest {
 
     @Test
     void move() {
-        MoveResultDto moveResultDto = chessGameService.move(new MoveDto("a2", "a4"));
+        MoveResultDto moveResultDto = chessGameService.move(new MoveDto("a2", "a4"), 1);
 
         boolean isGameOver = moveResultDto.getIsGameOver();
         boolean isMovable = moveResultDto.getIsMovable();

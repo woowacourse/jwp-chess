@@ -29,17 +29,17 @@ public class RoomDaoImpl implements RoomDao {
     };
 
     @Override
-    public void save(Color color) {
-        final String sql = "insert into room (title, password, color) values (?, ?, ?) where id = 1";
+    public void saveTurn(Color color, int roomId) {
+        final String sql = "update room set color = (?) where id = (?)";
         this.jdbcTemplate.update(
                 sql,
-                "testTitle", "testPassword", color.name());
+                color.name(), roomId);
     }
 
     @Override
-    public void deleteAll() {
-        final String sql = "delete from room";
-        this.jdbcTemplate.update(sql);
+    public void deleteAll(int roomId) {
+        final String sql = "delete from room where id = (?)";
+        this.jdbcTemplate.update(sql, roomId);
     }
 
     @Override
@@ -63,9 +63,9 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Player getPlayer() {
-        final String sql = "select color from room where id = `1`";
-        String color = jdbcTemplate.queryForObject(sql, String.class);
+    public Player getPlayer(int roomId) {
+        final String sql = "select color from room where id = ?";
+        String color = jdbcTemplate.queryForObject(sql, String.class, roomId);
         return Player.of(Color.of(color));
     }
 }

@@ -35,12 +35,10 @@ public class ChessGameService {
     public ChessGameDto createNewChessGame(final CreateGameDto createGameDto) {
         final String gameName = createGameDto.getChessGameName();
         final String password = createGameDto.getPassword();
-        final boolean isDuplicate = chessGameDao.isDuplicateGameName(gameName);
-        if (isDuplicate) {
-            throw new IllegalArgumentException("중복된 게임 이름입니다.");
-        }
         final ChessGame chessGame = initializeChessGame();
-        final int chessGameId = chessGameDao.createNewChessGame(chessGame, gameName, password);
+
+        chessGameDao.createNewChessGame(chessGame, gameName, password);
+        final int chessGameId = findGameIdByGameName(gameName);
         pieceDao.savePieces(chessGame.getCurrentPlayer(), chessGameId);
         pieceDao.savePieces(chessGame.getOpponentPlayer(), chessGameId);
         return ChessGameDto.of(chessGame, gameName);
@@ -50,14 +48,6 @@ public class ChessGameService {
         final Player whitePlayer = new Player(new WhiteGenerator(), Team.WHITE);
         final Player blackPlayer = new Player(new BlackGenerator(), Team.BLACK);
         return new ChessGame(whitePlayer, blackPlayer);
-    }
-
-    public StatusDto findStatus(final String gameName) {
-        final ChessGame chessGame = findGameByName(gameName);
-        final List<GameResult> gameResult = chessGame.findGameResult();
-        final GameResult whitePlayerResult = gameResult.get(0);
-        final GameResult blackPlayerResult = gameResult.get(1);
-        return StatusDto.of(whitePlayerResult, blackPlayerResult);
     }
 
     public void finishGame(final String gameName) {
@@ -106,5 +96,13 @@ public class ChessGameService {
             pieces.add(createPieceByState(state, position));
         }
         return pieces;
+    }
+
+    public StatusDto findStatus(final String gameName) {
+        final ChessGame chessGame = findGameByName(gameName);
+        final List<GameResult> gameResult = chessGame.findGameResult();
+        final GameResult whitePlayerResult = gameResult.get(0);
+        final GameResult blackPlayerResult = gameResult.get(1);
+        return StatusDto.of(whitePlayerResult, blackPlayerResult);
     }
 }

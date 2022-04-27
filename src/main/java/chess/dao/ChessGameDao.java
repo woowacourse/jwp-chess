@@ -16,28 +16,18 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int findChessGameIdByName(final String gameName) {
-        final String sql = "select id from chess_game where name = (?)";
-        try {
-            return jdbcTemplate.queryForObject(sql, Integer.class, gameName);
-        } catch (DataAccessException e) {
-            throw new ExecuteQueryException("체스 게임 정보 불러오는데 실패했습니다.");
-        }
-    }
-
-    public boolean isDuplicateGameName(final String gameName) {
-        final String sql = "select id from chess_game where name = (?)";
-        try {
-            jdbcTemplate.queryForObject(sql, Integer.class, gameName);
-            return true;
-        } catch (DataAccessException e) {
-            return false;
-        }
-    }
-
-    public int createNewChessGame(final ChessGame chessGame, final String gameName, final String password) {
+    public void createNewChessGame(final ChessGame chessGame, final String gameName, final String password) {
+        validateDuplicate(gameName);
         saveChessGame(gameName, password, chessGame.getTurn());
-        return findChessGameIdByName(gameName);
+    }
+
+    private void validateDuplicate(final String gameName) {
+        final String sql = "select count(*) from chess_game where name = (?)";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, gameName);
+
+        if (count > 0) {
+            throw new IllegalArgumentException("중복된 게임 이름입니다.");
+        }
     }
 
     private void saveChessGame(final String gameName, final String password, final Team turn) {
@@ -46,6 +36,15 @@ public class ChessGameDao {
             jdbcTemplate.update(sql, gameName, password, turn.getName());
         } catch (DataAccessException e) {
             throw new ExecuteQueryException("게임을 저장할 수 없습니다.");
+        }
+    }
+
+    public int findChessGameIdByName(final String gameName) {
+        final String sql = "select id from chess_game where name = (?)";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, gameName);
+        } catch (DataAccessException e) {
+            throw new ExecuteQueryException("체스 게임 정보 불러오는데 실패했습니다.");
         }
     }
 

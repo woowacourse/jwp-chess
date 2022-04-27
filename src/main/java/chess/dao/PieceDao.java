@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface PieceDao {
-    List<PieceDto> findPiecesByRoomIndex(final int roomIndex);
+    List<PieceDto> findPieces(final int roomIndex);
 
     void saveAllPieces(final int roomId, final Map<Position, Piece> board);
 

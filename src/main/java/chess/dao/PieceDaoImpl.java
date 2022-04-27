@@ -25,7 +25,7 @@ public class PieceDaoImpl implements PieceDao {
     );
 
     @Override
-    public List<PieceDto> findPiecesByRoomIndex(final int roomId) {
+    public List<PieceDto> findPieces(final int roomId) {
         final String sql = "select * from piece where roomId = ?";
         return jdbcTemplate.query(sql, actorRowMapper, roomId);
     }

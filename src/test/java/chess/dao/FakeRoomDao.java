@@ -5,72 +5,66 @@ import java.util.Map;
 
 public class FakeRoomDao implements RoomDao {
 
-    private final Map<String, Room> rooms = new HashMap<>();
-    private int roomIndex = 0;
+    private final Map<Integer, Room> rooms = new HashMap<>();
+    private int roomIndex = 1;
 
     @Override
     public void saveNewRoom(final String roomName, final String password) {
-        final Room room = new Room(roomIndex++, password, "ready", "WHITE");
-        rooms.put(roomName, room);
+        final Room room = new Room(roomName, password, "ready", "WHITE");
+        rooms.put(roomIndex++, room);
     }
 
     @Override
     public boolean hasDuplicatedName(final String roomName) {
-        return rooms.keySet()
+        return rooms.values()
                 .stream()
-                .anyMatch(name -> name.equals(roomName));
+                .anyMatch(room -> room.name.equals(roomName));
     }
 
     @Override
-    public String getPasswordByName(final String roomName) {
-        final Room room = rooms.get(roomName);
+    public String getPasswordByName(final int roomId) {
+        final Room room = rooms.get(roomId);
         return room.password;
     }
 
     @Override
-    public String getGameStateByName(final String roomName) {
-        final Room room = rooms.get(roomName);
+    public String getGameStateByName(final int roomId) {
+        final Room room = rooms.get(roomId);
         return room.gameState;
     }
 
     @Override
-    public void deleteRoomByName(final String roomName) {
-        rooms.remove(roomName);
+    public void deleteRoomByName(final int roomId) {
+        rooms.remove(roomId);
     }
 
     @Override
-    public void saveGameState(final String roomName, final String state) {
-        final Room room = rooms.get(roomName);
+    public void saveGameState(final int roomId, final String state) {
+        final Room room = rooms.get(roomId);
         room.gameState = state;
     }
 
     @Override
-    public void saveTurn(final String roomName, final String turn) {
-        final Room room = rooms.get(roomName);
+    public void saveTurn(final int roomId, final String turn) {
+        final Room room = rooms.get(roomId);
         room.turn = turn;
     }
 
     @Override
-    public String getTurn(final String roomName) {
-        final Room room = rooms.get(roomName);
+    public String getTurn(final int roomId) {
+        final Room room = rooms.get(roomId);
         return room.turn;
-    }
-
-    @Override
-    public int getRoomId(final String roomName) {
-        final Room room = rooms.get(roomName);
-        return room.index;
     }
 
     class Room {
 
-        private final int index;
+        private final String name;
         private final String password;
         private String gameState;
         private String turn;
 
-        public Room(final int index, final String password, final String gameState, final String turn) {
-            this.index = index;
+        public Room(final String name, final String password, final String gameState, final String turn) {
+            this.name = name;
             this.password = password;
             this.gameState = gameState;
             this.turn = turn;

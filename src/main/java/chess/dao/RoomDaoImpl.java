@@ -29,43 +29,37 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public String getPasswordByName(final String roomName) {
-        final String sql = "select password from room where name = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, roomName);
+    public String getPasswordByName(final int roomId) {
+        final String sql = "select password from room where roomId = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, roomId);
     }
 
     @Override
-    public String getGameStateByName(final String roomName) {
-        final String sql = "select gameState from room where name = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, roomName);
+    public String getGameStateByName(final int roomId) {
+        final String sql = "select gameState from room where roomId = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, roomId);
     }
 
     @Override
-    public void deleteRoomByName(final String roomName) {
-        final String sql = "delete from room where name = ?";
-        jdbcTemplate.update(sql, roomName);
+    public void deleteRoomByName(final int roomId) {
+        final String sql = "delete from room where roomId = ?";
+        jdbcTemplate.update(sql, roomId);
     }
 
-    public void saveTurn(final String roomName, final String turn) {
-        final String sql = "update room set turn = ? where name = ?";
-        jdbcTemplate.update(sql, turn, roomName);
-    }
-
-    @Override
-    public String getTurn(final String roomName) {
-        final String sql = "select turn from room where name = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, roomName);
+    public void saveTurn(final int roomId, final String turn) {
+        final String sql = "update room set turn = ? where roomId = ?";
+        jdbcTemplate.update(sql, turn, roomId);
     }
 
     @Override
-    public void saveGameState(final String roomName, final String state) {
-        final String sql = "update room set gameState = ? where name = ?";
-        jdbcTemplate.update(sql, state, roomName);
+    public String getTurn(final int roomId) {
+        final String sql = "select turn from room where roomId = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, roomId);
     }
 
     @Override
-    public int getRoomId(final String roomName) {
-        final String sql = "select roomIndex from room where name = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, roomName);
+    public void saveGameState(final int roomId, final String state) {
+        final String sql = "update room set gameState = ? where roomId = ?";
+        jdbcTemplate.update(sql, state, roomId);
     }
 }

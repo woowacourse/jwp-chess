@@ -41,14 +41,14 @@ class RoomDaoImplTest {
     }
 
     @Test
-    @DisplayName("체스방 이름에 따른 비밀번호를 반환한다.")
+    @DisplayName("체스방 번호에 따른 비밀번호를 반환한다.")
     void getPasswordByName() {
         //given
-        final String roomName = "first";
+        final int roomId = 1;
         final String password = "1234";
 
         //when
-        final String actual = roomDao.getPasswordByName(roomName);
+        final String actual = roomDao.getPasswordByName(roomId);
 
         //then
         assertThat(actual).isEqualTo(password);
@@ -58,11 +58,11 @@ class RoomDaoImplTest {
     @DisplayName("체스방 이름에 따른 게임 진행 상태를 반환한다.")
     void getGameStateByName() {
         //given
-        final String roomName = "first";
+        final int roomId = 1;
         final String expected = "ready";
 
         //when
-        final String actual = roomDao.getGameStateByName(roomName);
+        final String actual = roomDao.getGameStateByName(roomId);
         //then
         assertThat(actual).isEqualTo(expected);
     }
@@ -71,10 +71,10 @@ class RoomDaoImplTest {
     @DisplayName("이름에 맞는 체스방을 삭제한다.")
     void deleteRoomByName() {
         //given
-        final String roomName = "first";
-        roomDao.deleteRoomByName(roomName);
+        final int roomId = 1;
+        roomDao.deleteRoomByName(roomId);
         //when then
-        assertThatThrownBy(() -> roomDao.getGameStateByName(roomName))
+        assertThatThrownBy(() -> roomDao.getGameStateByName(roomId))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
@@ -83,10 +83,10 @@ class RoomDaoImplTest {
     void saveTurn() {
         //given
         final String turn = "BLACK";
-        final String roomName = "first";
-        roomDao.saveTurn(roomName, turn);
+        final int roomId = 1;
+        roomDao.saveTurn(roomId, turn);
         //when
-        final String actual = roomDao.getTurn(roomName);
+        final String actual = roomDao.getTurn(roomId);
         //then
         assertThat(actual).isEqualTo(turn);
     }
@@ -95,27 +95,14 @@ class RoomDaoImplTest {
     @DisplayName("게임 상태를 저장한다.")
     void saveGameState() {
         //given
-        final String roomName = "first";
+        final int roomId = 1;
         final String gameState = "ready";
-        roomDao.saveGameState(roomName, gameState);
+        roomDao.saveGameState(roomId, gameState);
 
         //when
-        final String actual = roomDao.getGameStateByName(roomName);
+        final String actual = roomDao.getGameStateByName(roomId);
 
         //then
         assertThat(actual).isEqualTo(gameState);
-    }
-
-    @Test
-    @DisplayName("체스방의 식별번호를 반환한다.")
-    void getRoomId() {
-        //given
-        final String roomName = "first";
-
-        //when
-        final int roomId = roomDao.getRoomId(roomName);
-
-        //then
-        assertThat(roomId).isEqualTo(1);
     }
 }

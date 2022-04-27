@@ -13,7 +13,7 @@ public class FakePieceDao implements PieceDao {
     private final Map<Integer, FakePieces> values = new HashMap<>();
 
     @Override
-    public List<PieceDto> findPiecesByRoomIndex(final int roomIndex) {
+    public List<PieceDto> findPieces(final int roomIndex) {
         final FakePieces fakePieces = values.get(roomIndex);
         return fakePieces.toDtos();
     }

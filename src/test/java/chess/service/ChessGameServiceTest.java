@@ -22,20 +22,20 @@ class ChessGameServiceTest {
 
     private final ChessGameService chessGameService =
             new ChessGameService(new FakePieceDao(), roomDao);
-    private final String roomName = "first";
+    private static final int TEST_ROOM_ID = 1;
 
     @BeforeEach
     void setUp() {
-        roomDao.saveNewRoom(roomName, "1234");
+        roomDao.saveNewRoom("first", "1234");
     }
 
     @Test
     @DisplayName("게임을 시작할 수 있다.")
     void start() {
         //given
-        chessGameService.start(roomName);
+        chessGameService.start(TEST_ROOM_ID);
         //when
-        final Map<Position, Piece> pieces = chessGameService.getPieces(roomName);
+        final Map<Position, Piece> pieces = chessGameService.getPieces(TEST_ROOM_ID);
         //then
         assertThat(pieces).hasSize(32);
     }
@@ -47,7 +47,7 @@ class ChessGameServiceTest {
         final String anySourcePosition = "a2";
         final String anyTargetPosition = "a4";
         //when then
-        assertThatThrownBy(() -> chessGameService.move(roomName, anySourcePosition, anyTargetPosition))
+        assertThatThrownBy(() -> chessGameService.move(TEST_ROOM_ID, anySourcePosition, anyTargetPosition))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("진행중인 게임이 없습니다.");
     }
@@ -56,12 +56,12 @@ class ChessGameServiceTest {
     @DisplayName("기물을 이동시킬 수 있다.")
     void move() {
         //given
-        chessGameService.start(roomName);
+        chessGameService.start(TEST_ROOM_ID);
         final String sourcePosition = "a2";
         final String targetPosition = "a4";
-        chessGameService.move(roomName, sourcePosition, targetPosition);
+        chessGameService.move(TEST_ROOM_ID, sourcePosition, targetPosition);
         //when
-        final Map<Position, Piece> pieces = chessGameService.getPieces(roomName);
+        final Map<Position, Piece> pieces = chessGameService.getPieces(TEST_ROOM_ID);
         final Piece pieceInSourcePosition = pieces.get(Position.from(sourcePosition));
         final Piece pieceInTargetPosition = pieces.get(Position.from(targetPosition));
         //then
@@ -73,13 +73,13 @@ class ChessGameServiceTest {
     @DisplayName("상대 기물을 공격하면서 움직일 수 있다.")
     void moveAttack() {
         //given
-        chessGameService.start(roomName);
-        chessGameService.move(roomName, "b2", "b4");
-        chessGameService.move(roomName, "a7", "a5");
-        chessGameService.move(roomName, "b4", "a5");
+        chessGameService.start(TEST_ROOM_ID);
+        chessGameService.move(TEST_ROOM_ID, "b2", "b4");
+        chessGameService.move(TEST_ROOM_ID, "a7", "a5");
+        chessGameService.move(TEST_ROOM_ID, "b4", "a5");
 
         //when
-        final Map<Position, Piece> pieces = chessGameService.getPieces(roomName);
+        final Map<Position, Piece> pieces = chessGameService.getPieces(TEST_ROOM_ID);
         final int blackPieceCount = (int) pieces.values()
                 .stream()
                 .filter(piece -> piece.isTeamOf(BLACK))
@@ -92,10 +92,10 @@ class ChessGameServiceTest {
     @DisplayName("게임을 종료한다.")
     void end() {
         //given
-        chessGameService.start(roomName);
-        chessGameService.end(roomName);
+        chessGameService.start(TEST_ROOM_ID);
+        chessGameService.end(TEST_ROOM_ID);
         //when
-        final Map<Position, Piece> pieces = chessGameService.getPieces(roomName);
+        final Map<Position, Piece> pieces = chessGameService.getPieces(TEST_ROOM_ID);
         //then
         assertThat(pieces).isEmpty();
     }

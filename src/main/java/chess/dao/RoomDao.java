@@ -6,17 +6,15 @@ public interface RoomDao {
 
     boolean hasDuplicatedName(final String roomName);
 
-    String getPasswordByName(final String roomName);
+    String getPasswordByName(final int roomId);
 
-    String getGameStateByName(final String roomName);
+    String getGameStateByName(final int roomId);
 
-    void saveGameState(final String roomName, final String state);
+    void saveGameState(final int roomId, final String state);
 
-    void deleteRoomByName(final String roomName);
+    void deleteRoomByName(final int roomId);
 
-    void saveTurn(final String roomName, final String turn);
+    void saveTurn(final int roomId, final String turn);
 
-    String getTurn(final String roomName);
-
-    int getRoomId(final String roomName);
+    String getTurn(final int roomId);
 }

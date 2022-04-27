@@ -49,7 +49,7 @@ class PieceDaoImplTest {
         final int roomId = 1;
 
         //when
-        final List<PieceDto> actual = pieceDao.findPiecesByRoomIndex(roomId);
+        final List<PieceDto> actual = pieceDao.findPieces(roomId);
 
         //then
         assertThat(actual).hasSize(expected);
@@ -88,7 +88,7 @@ class PieceDaoImplTest {
 
     private int countPieceConditionOf(final int roomId, final String name,
                                       final String position, final String teamColor) {
-        return (int) pieceDao.findPiecesByRoomIndex(roomId)
+        return (int) pieceDao.findPieces(roomId)
                 .stream()
                 .filter(pieceDto -> pieceDto.getName().equals(name))
                 .filter(pieceDto -> pieceDto.getPosition().equals(position))
@@ -103,7 +103,7 @@ class PieceDaoImplTest {
         pieceDao.removeAllPieces(1);
 
         //when
-        final List<PieceDto> pieces = pieceDao.findPiecesByRoomIndex(1);
+        final List<PieceDto> pieces = pieceDao.findPieces(1);
 
         //then
         assertThat(pieces).isEmpty();

@@ -35,26 +35,29 @@ class RoomServiceTest {
     @DisplayName("일치하는 비밀번호로 게임이 종료된 체스방을 삭제할 수 있다..")
     void deleteRoom_success() {
         //given
-        final String roomName = "first";
+        final int roomId = 1;
+        roomDao.saveGameState(roomId, "end");
+
+        final String newRoomName = "first";
         final String password = "1234";
-        roomDao.saveGameState(roomName, "end");
 
         //when
-        roomService.deleteRoom(roomName, password);
+        roomService.deleteRoom(roomId, password);
 
         //then
         assertThatNoException()
-                .isThrownBy(() -> roomService.saveNewRoom(roomName, password));
+                .isThrownBy(() -> roomService.saveNewRoom(newRoomName, password));
     }
 
     @Test
     @DisplayName("잘못된 비밀번호를 가지고 체스방을 삭제하려고 하면 예외를 발생시킨다.")
     void deleteRoomExceptionByIncorrectPassword() {
         //given
-        final String roomName = "first";
+        final int roomId = 1;
         final String incorrectPassword = "5678";
+
         //when then
-        assertThatThrownBy(() -> roomService.deleteRoom(roomName, incorrectPassword))
+        assertThatThrownBy(() -> roomService.deleteRoom(roomId, incorrectPassword))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호가 일치하지 않습니다.");
     }
@@ -63,11 +66,11 @@ class RoomServiceTest {
     @DisplayName("게임이 진행 중인 체스방을 삭제하려고 하면 예외를 발생시킨다.")
     void deleteRoomExceptionByNotEndGame() {
         //given
-        final String roomName = "first";
+        final int roomId = 1;
         final String passWord = "1234";
-        roomDao.saveGameState(roomName, "playing");
+        roomDao.saveGameState(roomId, "playing");
         //when then
-        assertThatThrownBy(() -> roomService.deleteRoom(roomName, passWord))
+        assertThatThrownBy(() -> roomService.deleteRoom(roomId, passWord))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("게임이 진행중인 체스방은 삭제할 수 없습니다.");
     }

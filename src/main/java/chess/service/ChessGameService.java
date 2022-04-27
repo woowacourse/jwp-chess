@@ -39,9 +39,8 @@ public class ChessGameService {
         this.roomDao = roomDao;
     }
 
-    public Map<Position, Piece> getPieces(final String roomName) {
-        final int roomId = roomDao.getRoomId(roomName);
-        final List<PieceDto> savedPieces = pieceDao.findPiecesByRoomIndex(roomId);
+    public Map<Position, Piece> getPieces(final int roomId) {
+        final List<PieceDto> savedPieces = pieceDao.findPieces(roomId);
         final Map<Position, Piece> pieces = convert(savedPieces);
         return pieces;
     }
@@ -59,51 +58,48 @@ public class ChessGameService {
         return pieces;
     }
 
-    public void start(final String roomName) {
-        final int roomId = roomDao.getRoomId(roomName);
-        roomDao.saveGameState(roomName, "playing");
+    public void start(final int roomId) {
+        roomDao.saveGameState(roomId, "playing");
 
         final Board board = new Board();
         final Map<Position, Piece> pieces = board.getPieces();
         pieceDao.saveAllPieces(roomId, pieces);
     }
 
-    public void move(final String roomName, final String sourcePosition, final String targetPosition) {
-        checkGameIsPlaying(roomName);
-        final Board board = getSavedBoard(roomName);
+    public void move(final int roomId, final String sourcePosition, final String targetPosition) {
+        checkGameIsPlaying(roomId);
+        final Board board = getSavedBoard(roomId);
         final Board movedBoard = board.movePiece(Position.from(sourcePosition), Position.from(targetPosition));
         final Piece piece = movedBoard.getPieces().get(Position.from(targetPosition));
-        roomDao.saveTurn(roomName, movedBoard.getTurn().toString());
+        roomDao.saveTurn(roomId, movedBoard.getTurn().toString());
 
-        final int roomId = roomDao.getRoomId(roomName);
         pieceDao.removePiece(roomId, sourcePosition);
         pieceDao.removePiece(roomId, targetPosition);
         pieceDao.savePiece(roomId, targetPosition, piece);
     }
 
-    public ScoreDto getScore(final String roomName) {
-        checkGameIsPlaying(roomName);
-        final Board board = getSavedBoard(roomName);
+    public ScoreDto getScore(final int roomId) {
+        checkGameIsPlaying(roomId);
+        final Board board = getSavedBoard(roomId);
         return new ScoreDto(board.getTotalPoint(WHITE), board.getTotalPoint(BLACK));
     }
 
-    private void checkGameIsPlaying(final String roomName) {
-        final String gameState = roomDao.getGameStateByName(roomName);
+    private void checkGameIsPlaying(final int roomId) {
+        final String gameState = roomDao.getGameStateByName(roomId);
         if (!gameState.equals("playing")) {
             throw new IllegalStateException("진행중인 게임이 없습니다.");
         }
     }
 
-    public void end(final String roomName) {
-        checkGameIsPlaying(roomName);
-        final int roomId = roomDao.getRoomId(roomName);
+    public void end(final int roomId) {
+        checkGameIsPlaying(roomId);
         pieceDao.removeAllPieces(roomId);
     }
 
-    private Board getSavedBoard(final String roomName) {
-        final String turn = roomDao.getTurn(roomName);
+    private Board getSavedBoard(final int roomId) {
+        final String turn = roomDao.getTurn(roomId);
         final Team turnTeam = TEAM_CREATION_STRATEGY.get(turn);
-        final Map<Position, Piece> pieces = getPieces(roomName);
+        final Map<Position, Piece> pieces = getPieces(roomId);
         return new Board(pieces, turnTeam);
     }
 }

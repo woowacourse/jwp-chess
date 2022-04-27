@@ -19,8 +19,8 @@ public class RoomService {
         return roomDao.findAll();
     }
 
-    public List<RoomEntity> createRoom(final String name, final String password) {
+    public void createRoom(final String name, final String password) {
         roomDao.insert(name, password);
-        return roomDao.findAll();
+        roomDao.findAll();
     }
 }

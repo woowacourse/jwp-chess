@@ -23,12 +23,13 @@ class ChessGameControllerTest {
         RestAssured.port = port;
     }
 
+    //TODO: 테스트를 어떻게 해야 할지 질문드려야함
     @DisplayName("체스 게임을 시작하고 게임보드 데이터가 전송된다.")
     @Test
     void start() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/game/start")
+                .when().post("/game/1/start")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("values.size()", is(64));
@@ -40,7 +41,7 @@ class ChessGameControllerTest {
         start();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/game/end")
+                .when().post("/game/1/end")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("values.size()", is(64));
@@ -51,7 +52,7 @@ class ChessGameControllerTest {
     void status() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/game/status")
+                .when().get("/game/1/status")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("score.size()", is(2));
@@ -63,7 +64,7 @@ class ChessGameControllerTest {
         start();
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/game/load")
+                .when().get("/game/1/load")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("values.size()", is(64));

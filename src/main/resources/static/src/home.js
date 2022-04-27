@@ -11,12 +11,20 @@ async function searchRooms () {
 function printSearchResultsBy(rooms) {
     rooms.forEach(function (value) {
         const room = document.createElement('li');
+        room.className = "room";
         const roomRink = document.createElement('a');
         roomRink.innerText = value.name;
         roomRink.href = "/game/" + value.id;
         room.appendChild(roomRink);
         roomList.appendChild(room);
     })
+}
+
+function closeRooms() {
+    while(roomList.hasChildNodes()) {
+        const room = document.querySelector(".room");
+        roomList.removeChild(room);
+    }
 }
 
 async function createRoom() {
@@ -26,7 +34,7 @@ async function createRoom() {
         alert("방이름과 방 비밀번호중 입력되지 않은 값이 있습니다.")
         return;
     }
-    let rooms = await fetch("/create", {
+    await fetch("/create", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -39,7 +47,13 @@ async function createRoom() {
 }
 
 searchButton.addEventListener("click", function () {
-    searchRooms();
+    if (searchButton.innerText === "Search") {
+        searchRooms();
+        searchButton.innerText = "Close"
+        return;
+    }
+    closeRooms();
+    searchButton.innerText = "Search";
 });
 
 createButton.addEventListener("click", function () {

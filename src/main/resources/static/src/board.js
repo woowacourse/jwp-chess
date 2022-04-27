@@ -11,7 +11,8 @@ async function startChess() {
     while (session.hasChildNodes()) {
         session.removeChild(session.firstChild);
     }
-    let board = await fetch("/game/start", {
+    var startUrl = window.location.pathname + "/start";
+    let board = await fetch(startUrl, {
         method: "POST",
     });
     board = await board.json();
@@ -19,7 +20,8 @@ async function startChess() {
 }
 
 async function endChess() {
-    let board = await fetch("/game/end", {
+    var endUrl = window.location.pathname + "/end";
+    let board = await fetch( endUrl, {
         method: "POST",
     });
     board = await board.json();
@@ -27,7 +29,8 @@ async function endChess() {
 }
 
 async function loadChess() {
-    let board = await fetch("/game/load");
+    var loadUrl = window.location.pathname + "/load";
+    let board = await fetch(loadUrl);
     board = await board.json();
     putPieceInSquare(board);
 }
@@ -70,7 +73,8 @@ function clickPosition(position) {
 }
 
 async function movePiece(source, target) {
-     let board = await fetch("/game/move", {
+    var moveUrl = window.location.pathname + "/move";
+    let board = await fetch(moveUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -85,7 +89,8 @@ async function movePiece(source, target) {
 }
 
 async function printResult() {
-    let board = await fetch("/game/status");
+    var statusUrl = window.location.pathname + "/status";
+    let board = await fetch(statusUrl);
     board = await board.json();
     let session = document.getElementById("result-session");
     const whiteScore = document.createElement("div");

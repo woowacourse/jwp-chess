@@ -7,7 +7,6 @@ import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
 import chess.model.state.State;
-import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 
@@ -22,41 +21,41 @@ public class GameRepositoryImpl implements GameRepository {
         this.stateDao = stateDao;
     }
 
-    public void initGameData(final State state) {
-        deleteGameData();
-        stateDao.insert(state);
-        insertBoard(state.getBoard());
+    public void initGameData(final String id, final State state) {
+        deleteGameDataFrom(id);
+        stateDao.insert(id, state);
+        insertBoard(id, state.getBoard());
     }
 
-    public void saveGameData(final State nextState, final MoveDto moveDto) {
-        Board board = squareDao.createBoard();
-        State nowState = stateDao.find(board);
-        stateDao.update(nowState, nextState);
+    private void insertBoard(final String id, final Map<Position, Piece> board) {
+        board.keySet()
+                .forEach(position -> squareDao.insert(id, position, board.get(position)));
+    }
+
+    public void saveGameData(final String id, final State nextState, final MoveDto moveDto) {
+        Board board = squareDao.createBoardFrom(id);
+        State nowState = stateDao.find(id, board);
+        stateDao.update(id, nowState, nextState);
 
         String source = moveDto.getSource();
         String target = moveDto.getTarget();
         Map<Position, Piece> squares = nextState.getBoard();
 
-        squareDao.update(Position.from(source), squares.get(Position.from(source)));
-        squareDao.update(Position.from(target), squares.get(Position.from(target)));
+        squareDao.update(id, Position.from(source), squares.get(Position.from(source)));
+        squareDao.update(id, Position.from(target), squares.get(Position.from(target)));
     }
 
-    public void deleteGameData() {
-        squareDao.delete();
-        stateDao.delete();
+    public void deleteGameDataFrom(final String id) {
+        squareDao.deleteFrom(id);
+        stateDao.deleteFrom(id);
     }
 
-    public Board getBoard() {
-        return squareDao.createBoard();
+    public Board getBoardFrom(final String id) {
+        return squareDao.createBoardFrom(id);
     }
 
-    public State getState() {
-        Board board = squareDao.createBoard();
-        return stateDao.find(board);
-    }
-
-    private void insertBoard(final Map<Position, Piece> board) {
-        board.keySet()
-                .forEach(position -> squareDao.insert(position, board.get(position)));
+    public State getStateFrom(final String id) {
+        Board board = squareDao.createBoardFrom(id);
+        return stateDao.find(id, board);
     }
 }

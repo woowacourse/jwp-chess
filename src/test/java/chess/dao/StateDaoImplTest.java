@@ -27,36 +27,38 @@ class StateDaoImplTest {
         stateDao = new StateDaoImpl(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS state");
         jdbcTemplate.execute("CREATE TABLE state("
+                + " `id` VARCHAR(2) NOT NULL, "
                 + "  `name` VARCHAR(20) NOT NULL, "
-                + "  PRIMARY KEY (name) "
+                + "  PRIMARY KEY (`id`) "
                 + ");");
 
-        jdbcTemplate.update("insert into state(name) values (?)", "BLACK_TURN");
+        jdbcTemplate.update("insert into state(id, name) values (?, ?)", "1", "BLACK_TURN");
     }
 
     @DisplayName("데이터를 삽입한다.")
     @Test
     void insert() {
+        String id = "2";
         State state = new BlackTurn(Board.init());
-        stateDao.delete();
-        stateDao.insert(state);
 
-        assertThat(stateDao.find(Board.init()).isBlackTurn()).isTrue();
+        assertThat(stateDao.insert(id, state)).isEqualTo(1);
     }
 
     @DisplayName("데이터를 삭제한다.")
     @Test
     void delete() {
-        assertThat(stateDao.delete()).isEqualTo(1);
+        String id = "1";
+        assertThat(stateDao.deleteFrom(id)).isEqualTo(1);
     }
 
     @DisplayName("데이터를 업데이트한다.")
     @Test
     void update() {
+        String id = "1";
         State nowState = new BlackTurn(Board.init());
         State nextState = new WhiteTurn(Board.init());
-        stateDao.update(nowState, nextState);
+        stateDao.update(id, nowState, nextState);
 
-        assertThat(stateDao.find(Board.init()).isWhiteTurn()).isTrue();
+        assertThat(stateDao.find(id, Board.init()).isWhiteTurn()).isTrue();
     }
 }

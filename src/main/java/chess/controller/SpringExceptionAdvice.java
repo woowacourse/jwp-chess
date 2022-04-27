@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class SpringExceptionAdvice {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, String>> handle(RuntimeException exception) {
+    public ResponseEntity<Map<String, String>> handle(Exception exception) {
         return ResponseEntity.badRequest().body(Map.of(
             "exception", exception.getMessage()
         ));

@@ -8,16 +8,17 @@ function changeButton(value) {
     button.innerText = value;
 }
 
-const clickButton = () => {
+const clickButton = (path) => {
+    const id = path.substring(1);
     const button = document.getElementById("game-button");
     const buttonText = button.innerText;
 
     if (buttonText.includes("start")) {
         startGame();
     } else if (buttonText.includes("end")) {
-        endGame();
+        endGame(id);
     } else if (buttonText.includes("status")) {
-        getStatus();
+        getStatus(id);
     }
 }
 
@@ -32,10 +33,10 @@ const startGame = (path) => {
         .then(body => {
             drawBoard(body);
             changeButton("end!");
-            drawTurnBox();
+            drawTurnBox(id);
         });
 
-    movePiece();
+    movePiece(id);
 }
 
 function drawBoard(body) {
@@ -57,9 +58,9 @@ function initBoard() {
     })
 }
 
-function drawTurnBox() {
+function drawTurnBox(id) {
     const turnBox = document.getElementById("turn-box")
-    const response = fetch(`/turn`, {
+    const response = fetch(`/game/${id}/turn`, {
         method: "GET",
         headers: {"Content-Type": "application/json"}
     });
@@ -74,15 +75,15 @@ function drawTurnBox() {
 }
 
 
-const movePiece = () => {
+const movePiece = (id) => {
     const blocks = document.querySelectorAll('#chess-board tr td');
 
     blocks.forEach(block => {
-        block.addEventListener('click', (e) => clickBLock(e, block));
+        block.addEventListener('click', (e) => clickBLock(e, block, id));
     })
 }
 
-const clickBLock = (e, block) => {
+const clickBLock = (e, block, id) => {
     if (block.className.includes('click')) {
         block.className = block.className.replace('click', '')
         deleteMovePosition(block.id);
@@ -92,7 +93,7 @@ const clickBLock = (e, block) => {
     }
 
     if (isMovePositionAllSelected()) {
-        const response = fetch(`/move`, {
+        const response = fetch(`/game/${id}/move`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(movePosition),
@@ -101,13 +102,13 @@ const clickBLock = (e, block) => {
         response.then(data => data.json())
             .then(body => {
                 drawBoard(body)
-                drawTurnBox();
+                drawTurnBox(id);
             })
             .catch(err => {
                 alert("움직일 수 없는 위치입니다.")
             })
         initTurn();
-        setTimeout(kingDeadEndGame);
+        setTimeout(() => kingDeadEndGame(id));
     }
 }
 
@@ -118,8 +119,8 @@ function endGame() {
     turnBox.innerText = "게임 종료";
 }
 
-const kingDeadEndGame = () => {
-    const response = fetch(`/king/dead`, {
+const kingDeadEndGame = (id) => {
+    const response = fetch(`/game/${id}/dead`, {
         method: "GET",
         header: {"Content-Type": "application/json"}
     });

@@ -1,6 +1,7 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.dao.MemberDao;
 import chess.domain.ChessGame;
@@ -91,5 +92,15 @@ class GameServiceTest {
         final ChessGame game = gameService.findByGameId(gameId);
 
         assertThat(game.getBoard().getPieceAt(Square.from("a4"))).isInstanceOf(WhitePawn.class);
+    }
+
+    @Test
+    @DisplayName("비밀번호가 일치하지 않을 경우 예외를 발생시킨다.")
+    void validatePassword() {
+        final Long gameId = gameService.createGame("some", "123", 1L, 2L);
+
+        assertThatThrownBy(() -> gameService.validatePassword(gameId, "12"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("비밀번호가 일치하지 않습니다.");
     }
 }

@@ -22,7 +22,8 @@
         <div class="card" style="width: 100%; margin-top: 1vh;">
             <div class="card-body">
                 <h5 class="card-title">{{room.title}}</h5>
-                <h7 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6><br>
+                <h7 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
+                    <br>
                     <a onclick="validatePassword({{id}})" class="btn btn-dark">입장</a>
                     <a onclick="deleteGame({{id}})" class="btn btn-danger">삭제</a>
             </div>
@@ -77,7 +78,8 @@
             body: `password=${password}`
         }).then(async response => {
             if (response.status === 400) {
-                alert("잘못된 비밀번호입니다.");
+                let errorMessage = await response.text();
+                alert(errorMessage);
                 return;
             }
             location.href = `/play/${gameId}`;

@@ -12,6 +12,7 @@ import chess.domain.Room;
 import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
 import chess.dto.GameResultDto;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -38,10 +39,7 @@ public class GameService {
     }
 
     public List<ChessGame> findPlayingGames() {
-        return gameDao.findAll()
-                .stream()
-                .filter(game -> !game.isEnd())
-                .collect(Collectors.toList());
+        return gameDao.findAll();
     }
 
     public ChessGame findByGameId(final Long gameId) {
@@ -66,6 +64,15 @@ public class GameService {
         final ChessGame game = findByGameId(gameId);
         game.terminate();
         gameDao.terminate(game);
+    }
+
+    public void validatePassword(final Long gameId, final String password) {
+        final ChessGame game = gameDao.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("찾는 게임이 존재하지 않습니다."));
+
+        if (!game.getRoom().getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 
     private GameResultDto toGameResultDTO(final ChessGame game, final Long memberId) {

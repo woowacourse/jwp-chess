@@ -8,7 +8,6 @@ import chess.service.MemberService;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class ChessApiController {
 
     private final GameService gameService;
@@ -80,13 +79,11 @@ public class ChessApiController {
 
     @PostMapping("/{gameId}/password")
     @ResponseBody
-    public ResponseEntity<Boolean> checkPassword(@PathVariable final Long gameId, @RequestParam final String password) {
-        final ChessGame game = gameService.findByGameId(gameId);
+    public ResponseEntity<Boolean> validatePassword(@PathVariable final Long gameId,
+                                                    @RequestParam final String password) {
+        gameService.validatePassword(gameId, password);
 
-        if (game.getRoom().getPassword().equals(password)) {
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.badRequest().body(false);
+        return ResponseEntity.ok(true);
     }
 
     @DeleteMapping("/member/{memberId}")

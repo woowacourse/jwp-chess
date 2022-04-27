@@ -1,6 +1,7 @@
 package chess.domain;
 
 public class Member {
+
     private Long id;
     private final String name;
 

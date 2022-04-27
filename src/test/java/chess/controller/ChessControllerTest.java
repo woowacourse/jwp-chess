@@ -1,5 +1,7 @@
 package chess.controller;
 
+import static org.hamcrest.core.Is.is;
+
 import chess.dao.GameDao;
 import chess.dao.MemberDao;
 import chess.domain.Board;
@@ -40,8 +42,8 @@ class ChessControllerTest {
         RestAssured.port = port;
     }
 
-    @DisplayName("페이지가 반환되는지 확인한다.")
     @Test
+    @DisplayName("페이지가 반환되는지 확인한다.")
     void indexPage() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -50,8 +52,8 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("명령을 입력해 말을 움직일 수 있는지 확인한다.")
     @Test
+    @DisplayName("명령을 입력해 말을 움직일 수 있는지 확인한다.")
     void movePiece() {
         final Member one = new Member(1L, "one");
         final Member two = new Member(2L, "two");
@@ -72,8 +74,8 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("말이 이동할 수 없을 경우 오류코드를 반환한다.")
     @Test
+    @DisplayName("말이 이동할 수 없을 경우 오류코드를 반환한다.")
     void cannotMovePiece() {
         final Member one = new Member(1L, "one");
         final Member two = new Member(2L, "two");
@@ -94,8 +96,8 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-    @DisplayName("결과를 반환한다.")
     @Test
+    @DisplayName("결과를 반환한다.")
     void result() {
         final Member one = new Member(1L, "one");
         final Member two = new Member(2L, "two");
@@ -111,6 +113,28 @@ class ChessControllerTest {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/result/" + 1L)
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    @DisplayName("비밀번호가 일치할 경우 체스 게임을 반환한다.")
+    void correctPassword() {
+        final Member one = new Member(1L, "one");
+        final Member two = new Member(2L, "two");
+        final Board board = new Board(BoardInitializer.create());
+        final Participant participant = new Participant(one, two);
+        final Room room = new Room("some", "123", participant);
+        final ChessGame game = new ChessGame(2L, board, Team.WHITE, room);
+
+        memberDao.save(one);
+        memberDao.save(two);
+        gameDao.save(game);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .body("password=123")
+                .when().post(1L + "/password")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

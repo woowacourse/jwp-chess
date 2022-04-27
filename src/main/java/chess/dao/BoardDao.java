@@ -3,7 +3,6 @@ package chess.dao;
 import chess.domain.pieces.Color;
 
 import java.util.List;
-
 public interface BoardDao<T> {
 
     T save(T target);

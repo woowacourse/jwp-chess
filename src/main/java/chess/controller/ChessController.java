@@ -35,11 +35,6 @@ public class ChessController {
         this.gameService = gameService;
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleEmailDuplicateException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("boards", gameService.getRooms());

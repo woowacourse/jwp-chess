@@ -113,8 +113,9 @@ public class GameDaoTest {
         gameDao.delete(TEST_GAME_ID);
     }
 
+    @DisplayName("게임 이름이 중복되는 경우 DuplicateKeyException 발생 테스트")
     @Test
-    void foo() {
+    void duplicated_Name() {
         gameDao.save(TEST_GAME_ID, "name", "password", "salt");
         assertThatThrownBy(() -> gameDao.save(TEST_GAME_ID, "name", "password", "salt"))
                 .isInstanceOf(DuplicateKeyException.class);

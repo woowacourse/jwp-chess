@@ -1,13 +1,12 @@
 package chess.domain.board;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import chess.database.PieceCache;
 import chess.database.dto.BoardDto;
 import chess.domain.piece.Empty;
 import chess.domain.piece.Piece;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CustomBoardGenerator implements BoardGenerator {
 
@@ -35,8 +34,10 @@ public class CustomBoardGenerator implements BoardGenerator {
     }
 
     private void generateLine(int verticalIndex) {
-        for (int horizontalIndex = LineNumber.MIN; horizontalIndex <= LineNumber.MAX; horizontalIndex++) {
-            pointPieces.computeIfAbsent(Point.of(horizontalIndex, verticalIndex), ignored -> Empty.getInstance());
+        for (int horizontalIndex = LineNumber.MIN; horizontalIndex <= LineNumber.MAX;
+            horizontalIndex++) {
+            pointPieces.computeIfAbsent(Point.of(horizontalIndex, verticalIndex),
+                ignored -> Empty.getInstance());
         }
     }
 }

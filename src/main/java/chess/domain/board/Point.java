@@ -1,11 +1,10 @@
 package chess.domain.board;
 
+import chess.database.dto.PointDto;
+import chess.domain.piece.move.Direction;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import chess.database.dto.PointDto;
-import chess.domain.piece.move.Direction;
 
 public class Point {
 
@@ -45,7 +44,8 @@ public class Point {
 
     private static void validateArgumentSize(String argument) {
         if (argument.length() != LINE_NUMBER_COUNT) {
-            throw new IllegalArgumentException(String.format("[ERROR] 좌표의 크기는 %d 여야 합니다.", DECIMAL));
+            throw new IllegalArgumentException(
+                String.format("[ERROR] 좌표의 크기는 %d 여야 합니다.", DECIMAL));
         }
     }
 
@@ -80,12 +80,15 @@ public class Point {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
-        Point point = (Point)o;
-        return Objects.equals(horizontal, point.horizontal) && Objects.equals(vertical, point.vertical);
+        }
+        Point point = (Point) o;
+        return Objects.equals(horizontal, point.horizontal) && Objects.equals(vertical,
+            point.vertical);
     }
 
     @Override

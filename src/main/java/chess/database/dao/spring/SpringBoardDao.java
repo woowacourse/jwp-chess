@@ -1,18 +1,16 @@
 package chess.database.dao.spring;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
 import chess.database.dao.BoardDao;
 import chess.database.dto.BoardDto;
 import chess.database.dto.PieceDto;
 import chess.database.dto.PointDto;
 import chess.database.dto.RouteDto;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class SpringBoardDao implements BoardDao {
@@ -60,9 +58,7 @@ public class SpringBoardDao implements BoardDao {
 
     private void validateExist(Map<PointDto, PieceDto> pointPieces, int roomId) {
         if (pointPieces.size() == 0) {
-            throw new IllegalArgumentException(
-                String.format("[ERROR] %s에 해당하는 번호의 보드가 없습니다.", roomId)
-            );
+            throw new IllegalArgumentException(String.format("[ERROR] %s에 해당하는 번호의 보드가 없습니다.", roomId));
         }
     }
 

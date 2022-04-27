@@ -15,6 +15,7 @@ import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import chess.dto.Arguments;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -104,9 +105,9 @@ class ChessRoomServiceTest {
     @DisplayName("모든 게임 방을 조회한다.")
     public void findAllRoom() {
         chessRoomService.createNewRoom(TEST_CREATION_ROOM_NAME, TEST_CREATION_ROOM_PASSWORD);
-        List<RoomDto> rooms = chessRoomService.findAllRoom();
-        System.out.println("rooms:  " + rooms);
-        assertThat(rooms.size()).isEqualTo(2);
+        Map<String,String> roomStates = chessRoomService.findAllRoomState();
+        System.out.println("rooms:  " + roomStates);
+        assertThat(roomStates.size()).isEqualTo(2);
     }
 
     @AfterEach

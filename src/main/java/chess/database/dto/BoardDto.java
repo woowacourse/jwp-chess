@@ -1,10 +1,9 @@
 package chess.database.dto;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import chess.domain.board.Point;
 import chess.domain.piece.Piece;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BoardDto {
 

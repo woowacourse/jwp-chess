@@ -1,11 +1,10 @@
 package chess.domain.board;
 
+import chess.domain.piece.Piece;
+import chess.domain.piece.PieceType;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import chess.domain.piece.Piece;
-import chess.domain.piece.PieceType;
 
 public class EmptyPoints {
 

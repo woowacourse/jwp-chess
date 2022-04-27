@@ -1,16 +1,15 @@
 package chess.domain.board;
 
-import static java.util.stream.Collectors.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
+import static java.util.stream.Collectors.toMap;
 
 import chess.domain.Color;
 import chess.domain.piece.Empty;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class Board {
 
@@ -26,9 +25,7 @@ public class Board {
 
     private void validateCounts(Map<Point, Piece> pointPieces) {
         if (pointPieces.size() != TOTAL_PIECE_COUNT) {
-            throw new IllegalArgumentException(
-                String.format("[ERROR] 말의 개수가 %d개가 아닙니다.", TOTAL_PIECE_COUNT)
-            );
+            throw new IllegalArgumentException(String.format("[ERROR] 말의 개수가 %d개가 아닙니다.", TOTAL_PIECE_COUNT));
         }
     }
 

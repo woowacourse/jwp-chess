@@ -1,17 +1,17 @@
 package chess.database;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiFunction;
-
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.game.Finished;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import chess.domain.game.Running;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
 
 public class GameStateGenerator {
+
     private static final Map<String, BiFunction<Board, Color, GameState>> STATE_GENERATOR
         = Map.of(
         "READY", Ready::new,

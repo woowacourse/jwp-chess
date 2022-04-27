@@ -1,8 +1,7 @@
 package chess.database.dto;
 
-import java.util.Objects;
-
 import chess.domain.board.Point;
+import java.util.Objects;
 
 public class PointDto {
 
@@ -35,11 +34,13 @@ public class PointDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
-        PointDto pointDto = (PointDto)o;
+        }
+        PointDto pointDto = (PointDto) o;
         return horizontal == pointDto.horizontal && vertical == pointDto.vertical;
     }
 

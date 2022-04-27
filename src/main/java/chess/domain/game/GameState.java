@@ -1,12 +1,11 @@
 package chess.domain.game;
 
-import java.util.Map;
-
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.Point;
 import chess.domain.piece.Piece;
 import chess.dto.Arguments;
+import java.util.Map;
 
 public abstract class GameState {
 

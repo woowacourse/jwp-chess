@@ -15,11 +15,17 @@ import chess.domain.board.Route;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import chess.dto.Arguments;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessRoomService {
+
+    private static final String RUNNING_STATE = "RUNNING";
+    private static final String DISABLED_OPTION_TRUE = "disabled";
+    private static final String DISABLED_OPTION_FALSE = "";
 
     private final RoomDao roomDao;
     private final GameDao gameDao;
@@ -33,10 +39,7 @@ public class ChessRoomService {
 
     public RoomDto createNewRoom(String roomName, String password) {
         RoomDto roomDto = new RoomDto(roomName, password);
-        if (roomDao.findByName(roomName) != null) {
-            throw new IllegalArgumentException(
-                String.format("[ERROR] %s 이름의 방이 이미 존재합니다.", roomName));
-        }
+        validateDuplicateRoomName(roomName);
         roomDto = roomDao.create(roomDto);
         GameState state = new Ready();
         gameDao.create(GameStateDto.of(state), roomDto.getId());
@@ -57,23 +60,14 @@ public class ChessRoomService {
     public GameState readGameState(int roomId) {
         List<String> stateAndColor = gameDao.readStateAndColor(roomId);
         validateExistGame(stateAndColor, roomId);
-
         BoardDto boardDto = boardDao.readBoard(roomId);
         Board board = Board.of(new CustomBoardGenerator(boardDto));
         return GameStateGenerator.generate(board, stateAndColor);
     }
 
-    private void validateExistGame(List<String> stateAndColor, int roomId) {
-        if (stateAndColor.isEmpty()) {
-            throw new IllegalArgumentException(
-                String.format("[ERROR] %s 이름에 해당하는 방이 없습니다.", roomId));
-        }
-    }
-
     public GameState moveBoard(int roomId, Arguments arguments) {
         GameState movedState = readGameState(roomId).move(arguments);
         gameDao.updateState(GameStateDto.of(movedState), roomId);
-
         Route route = Route.of(arguments);
         boardDao.deletePiece(PointDto.of(route.getDestination()), roomId);
         boardDao.updatePiece(RouteDto.of(route), roomId);
@@ -82,9 +76,31 @@ public class ChessRoomService {
 
     public void removeRoom(int roomId) {
         RoomDto roomDto = roomDao.findById(roomId);
+        validateRoomName(roomDto);
         boardDao.removeBoard(roomId);
         gameDao.removeGame(roomId);
         roomDao.delete(roomDto);
+    }
+
+    public void removeRoom(RoomDto roomDto) {
+        RoomDto findRoomDto = roomDao.findByName(roomDto.getName());
+        validateRoomName(findRoomDto);
+        String state = gameDao.readStateAndColor(findRoomDto.getId()).get(0);
+        validateRunningState(state);
+        validatePassword(roomDto, findRoomDto);
+        boardDao.removeBoard(findRoomDto.getId());
+        gameDao.removeGame(findRoomDto.getId());
+        roomDao.delete(roomDto);
+    }
+
+    public Map<String, String> findAllRoomState() {
+        Map<String, String> roomStates = new HashMap<>();
+        List<RoomDto> roomDtoList = roomDao.findAll();
+        for (RoomDto roomDto : roomDtoList) {
+            String state = gameDao.readStateAndColor(roomDto.getId()).get(0);
+            roomStates.put(roomDto.getName(), checkDisabledOption(state));
+        }
+        return roomStates;
     }
 
     public RoomDto findByName(String roomName) {
@@ -95,19 +111,41 @@ public class ChessRoomService {
         return roomDao.findById(roomId);
     }
 
-    public void removeRoom(RoomDto roomDto) {
-        RoomDto findRoomDto = roomDao.findByName(roomDto.getName());
-        if (findRoomDto.getPassword() != null) {
-            if (!findRoomDto.getPassword().equals(roomDto.getPassword())) {
-                throw new IllegalArgumentException("[ERROR] 비밀번호가 일치하지 않습니다.");
-            }
+    private String checkDisabledOption(String state) {
+        if (state.equals(RUNNING_STATE)) {
+            return DISABLED_OPTION_TRUE;
         }
-        boardDao.removeBoard(roomDto.getId());
-        gameDao.removeGame(roomDto.getId());
-        roomDao.delete(roomDto);
+        return DISABLED_OPTION_FALSE;
     }
 
-    public List<RoomDto> findAllRoom() {
-        return roomDao.findAll();
+    private void validateExistGame(List<String> stateAndColor, int roomId) {
+        if (stateAndColor.isEmpty()) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다.");
+        }
+    }
+
+    private void validateDuplicateRoomName(String roomName) {
+        if (roomDao.findByName(roomName) != null) {
+            throw new IllegalArgumentException(String.format("[ERROR] %s 이름의 방이 이미 존재합니다.",
+                roomName));
+        }
+    }
+
+    private void validateRoomName(RoomDto roomDto) {
+        if (roomDto == null) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 방 이름입니다.");
+        }
+    }
+
+    private void validateRunningState(String state) {
+        if (state.equals(RUNNING_STATE)) {
+            throw new IllegalArgumentException("[ERROR] 진행 중인 게임은 삭제할 수 없습니다.");
+        }
+    }
+
+    private void validatePassword(RoomDto roomDto, RoomDto findRoomDto) {
+        if (!findRoomDto.getPassword().equals(roomDto.getPassword())) {
+            throw new IllegalArgumentException("[ERROR] 비밀번호가 일치하지 않습니다.");
+        }
     }
 }

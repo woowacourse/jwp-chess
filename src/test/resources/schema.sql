@@ -1,7 +1,7 @@
 CREATE TABLE game
 (
     game_id       int          NOT NULL PRIMARY KEY,
-    game_name     varchar(255) NOT NULL,
+    game_name     varchar(255) NOT NULL UNIQUE,
     game_password varchar(255) NOT NULL,
     salt          varchar(255) NOT NULL,
     state         varchar(20)  NOT NULL

@@ -1,6 +1,7 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.fail;
 
 import chess.controller.dto.response.GameIdentifiers;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -109,5 +111,12 @@ public class GameDaoTest {
     @Test
     void delete() {
         gameDao.delete(TEST_GAME_ID);
+    }
+
+    @Test
+    void foo() {
+        gameDao.save(TEST_GAME_ID, "name", "password", "salt");
+        assertThatThrownBy(() -> gameDao.save(TEST_GAME_ID, "name", "password", "salt"))
+                .isInstanceOf(DuplicateKeyException.class);
     }
 }

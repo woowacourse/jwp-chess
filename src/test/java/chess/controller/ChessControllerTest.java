@@ -43,7 +43,8 @@ class ChessControllerTest {
 
     @AfterEach
     void cleanUp() {
-        chessService.deleteGame(TEST_GAME_ID);
+        gameDao.findAllGames()
+                .forEach(gameIdentifiers -> gameDao.delete(gameIdentifiers.getId()));
     }
 
     @DisplayName("GET - 게임 리스트 조회 테스트")
@@ -94,6 +95,20 @@ class ChessControllerTest {
                 .when().post("/games")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("POST - 게임 이름 중복 테스트")
+    @Test
+    void duplicated_Game_Name() {
+        chessService.createGame(TEST_GAME_ID, CREAT_GAME_REQUEST);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .body(CREAT_GAME_REQUEST)
+                .when().post("/games")
+                .then().log().all()
+                .statusCode(HttpStatus.CONFLICT.value());
     }
 
     @DisplayName("PATCH - 게임 시작 테스트")

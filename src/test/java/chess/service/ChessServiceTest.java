@@ -14,6 +14,7 @@ import chess.domain.GameState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DuplicateKeyException;
 
 class ChessServiceTest {
 
@@ -30,6 +31,14 @@ class ChessServiceTest {
     @Test
     void create_Game() {
         chessService.createGame(TEST_GAME_ID_1, CREAT_GAME_REQUEST);
+    }
+
+    @DisplayName("중복된 이름으로는 게임을 생성할 수 없다.")
+    @Test
+    void cannot_Create_Duplicated_Name() {
+        chessService.createGame(TEST_GAME_ID_1, CREAT_GAME_REQUEST);
+        assertThatThrownBy(() -> chessService.createGame(TEST_GAME_ID_2, CREAT_GAME_REQUEST))
+                .isInstanceOf(DuplicateKeyException.class);
     }
 
     @DisplayName("생성되어 있는 게임 리스트를 조회할 수 있다.")

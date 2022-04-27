@@ -25,7 +25,7 @@ public class FakeGameDao implements GameDao {
 
     @Override
     public void save(Long id, String name, String password, String salt) {
-        if (names.containsKey(id)) {
+        if (names.containsKey(id) || names.containsValue(name)) {
             throw new DuplicateKeyException("");
         }
         names.put(id, name);

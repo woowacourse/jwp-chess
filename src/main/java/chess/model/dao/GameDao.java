@@ -55,18 +55,14 @@ public class GameDao {
                 });
     }
 
-    public Optional<String> findOne() {
-        String query = "select turn from turns limit 1";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+    public String findTurnById(Long gameId) {
+        String query = "select turn from games where game_id = ?";
+        return jdbcTemplate.queryForObject(query, String.class, gameId);
     }
 
-    public void update(String nextTurn) {
-        String query = "UPDATE turns SET turn = (?)";
-        jdbcTemplate.update(query, nextTurn);
+    public void update(String nextTurn, Long gameId) {
+        String query = "UPDATE games SET turn = (?) where game_id = ?";
+        jdbcTemplate.update(query, nextTurn, gameId);
     }
 
     public void deleteAll() {

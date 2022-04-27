@@ -62,34 +62,35 @@ public class ChessController {
         return null;
     }
 
-    @PostMapping("/move")
+    @PostMapping("/game/{id}/move")
     @ResponseBody
-    public Map<String, String> move(@RequestBody MoveDto moveCommand) {
-        WebBoardDto board = chessService.move(moveCommand);
+    public Map<String, String> move(@PathVariable Long id, @RequestBody MoveDto moveCommand) {
+        WebBoardDto board = chessService.move(moveCommand, id);
         return board.getWebBoard();
     }
 
-    @GetMapping(value = "/turn")
+    @GetMapping(value = "/game/{id}/turn")
     @ResponseBody
-    public String turn() {
-        return chessService.getTurn();
+    public String turn(@PathVariable Long id) {
+        return chessService.getTurn(id);
     }
 
-    @GetMapping("/king/dead")
+    @GetMapping("/game/{id}/dead")
     @ResponseBody
-    public boolean kingDead() {
-        return chessService.isKingDead();
+    public boolean isKingDead(@PathVariable Long id) {
+        return chessService.isKingDead(id);
     }
 
-    @GetMapping("/status")
+    @GetMapping("/game/{id}/status")
     @ResponseBody
-    public GameResult status() {
-        return chessService.getResult();
+    public GameResult status(@PathVariable Long id) {
+        return chessService.getResult(id);
     }
 
-    @PostMapping("/exit")
-    @ResponseBody
-    public void exit() {
-        chessService.exitGame();
-    }
+    //필요없는 메서드
+//    @PostMapping("/exit")
+//    @ResponseBody
+//    public void exit() {
+//        chessService.exitGame();
+//    }
 }

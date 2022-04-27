@@ -63,9 +63,9 @@ public class PieceDao {
                 }, gameId);
     }
 
-    public String findPieceNameByPosition(String source) {
-        String sql = "select name from pieces where position = (?)";
-        return jdbcTemplate.queryForObject(sql, String.class, source);
+    public String findPieceNameByPositionAndGameId(String source, Long gameId) {
+        String sql = "select name from pieces where position = ? and game_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, source, gameId);
     }
 
     public void updateByPosition(String position, String pieceName) {

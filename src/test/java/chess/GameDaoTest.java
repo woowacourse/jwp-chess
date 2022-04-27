@@ -76,36 +76,28 @@ class GameDaoTest {
     @Test
     @DisplayName("턴이 초기에 저장되었는지 확인한다")
     void init() {
-        gameDao.init();
-        Optional<String> turn = gameDao.findOne();
+        long id = gameDao.initGame("room1", "1234");
+        String turn = gameDao.findTurnById(id);
 
-        assertThat(turn.get()).isEqualToIgnoringCase("white");
+        assertThat(turn).isEqualToIgnoringCase("white");
     }
 
-    @Test
-    @DisplayName("턴이 존재하지 않는 경우 무엇을 반환하는지 확인")
-    void getTurn() {
-        Optional<String> turn = gameDao.findOne();
-
-        assertThat(turn).isEmpty();
-    }
+    //TODO 이거 나중에 예외처리할 때 어떻게 할지 생각해보기
+//    @Test
+//    @DisplayName("턴이 존재하지 않는 경우 무엇을 반환하는지 확인")
+//    void getTurn() {
+//        String turn = gameDao.findTurnById(1L);
+//
+//        assertThat(turn).isEmpty();
+//    }
 
     @Test
     @DisplayName("턴이 update 되는지 확인한다")
     void update() {
-        gameDao.init();
-        gameDao.update("BLACK");
-        Optional<String> turn = gameDao.findOne();
+        long id = gameDao.initGame("room1", "1234");
+        gameDao.update("BLACK", id);
+        String turn = gameDao.findTurnById(id);
 
-        assertThat(turn.get()).isEqualToIgnoringCase("black");
-    }
-
-    @Test
-    @DisplayName("저장된 턴을 모두 삭제한다.")
-    void deleteAll() {
-        gameDao.init();
-        gameDao.deleteAll();
-
-        assertThat(gameDao.findOne()).isEmpty();
+        assertThat(turn).isEqualToIgnoringCase("black");
     }
 }

@@ -26,6 +26,7 @@ class PieceDaoTest {
 
     @BeforeEach
     void initPieceDaoTest() {
+        jdbcTemplate.execute("DROP TABLE PIECES IF EXISTS");
         jdbcTemplate.execute("DROP TABLE GAMES IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE games\n" +
                 "(\n" +
@@ -36,8 +37,6 @@ class PieceDaoTest {
                 "    primary key (game_id)\n" +
                 ");");
         gameDao = new GameDao(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE PIECES IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE pieces\n" +
                 "(\n" +
                 "    piece_id int         not null AUTO_INCREMENT,\n" +
@@ -79,13 +78,15 @@ class PieceDaoTest {
         assertThat(boardMap.size()).isZero();
     }
 
-//    @Test
-//    @DisplayName("체스판이 db에 저장되었는지 확인한다")
-//    void findByPosition() {
-//        String pieceName = pieceDao.findPieceNameByPosition("a2");
-//
-//        assertThat(pieceName).isEqualTo("white-p");
-//    }
+    @Test
+    @DisplayName("체스판에서 위치와 게임 아이디로 piece의 이름을 찾아온다.")
+    void findPieceNameByPositionAndGameId() {
+        long gameId = gameDao.initGame("room1", "1234");
+        pieceDao.init(BoardFactory.create(), gameId);
+        String pieceName = pieceDao.findPieceNameByPositionAndGameId("a2", gameId);
+
+        assertThat(pieceName).isEqualTo("white-p");
+    }
 //
 //    @Test
 //    @DisplayName("체스판의 말을 update하는 것을 확인한다.")

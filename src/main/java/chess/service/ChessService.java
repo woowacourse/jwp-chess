@@ -60,45 +60,45 @@ public class ChessService {
                 .collect(Collectors.toList());
     }
 
-    public WebBoardDto move(MoveDto moveDto) {
-        Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPosition(moveDto.getSource()));
-        Piece targetPiece = PieceFactory.create(pieceDao.findPieceNameByPosition(moveDto.getTarget()));
-        Turn turn = Turn.from(gameDao.findOne().get());
+    public WebBoardDto move(MoveDto moveDto, Long id) {
+        Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPositionAndGameId(moveDto.getSource(), id));
+        Piece targetPiece = PieceFactory.create(pieceDao.findPieceNameByPositionAndGameId(moveDto.getTarget(), id));
+        Turn turn = Turn.from(gameDao.findTurnById(id));
         validateCurrentTurn(turn, sourcePiece);
         try {
-            movePiece(moveDto, sourcePiece, targetPiece, turn);
+            movePiece(moveDto, sourcePiece, targetPiece, turn, id);
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
         Board board = toBoard(pieceDao.findAllPieces());
         if (board.isKingDead()) {
-            gameDao.update(turn.finish());
+            gameDao.update(turn.finish(), id);
         }
 
         return WebBoardDto.from(board);
     }
 
-    private void movePiece(MoveDto moveDto, Piece sourcePiece, Piece targetPiece, Turn turn) {
+    private void movePiece(MoveDto moveDto, Piece sourcePiece, Piece targetPiece, Turn turn, Long id) {
         if (canMove(moveDto, sourcePiece, targetPiece)) {
             pieceDao.updateByPosition(moveDto.getTarget(), PieceDao.getPieceName(sourcePiece));
             pieceDao.updateByPosition(moveDto.getSource(), "none-.");
-            gameDao.update(turn.change().getThisTurn());
+            gameDao.update(turn.change().getThisTurn(), id);
             return;
         }
         throw new IllegalArgumentException("기물을 이동할 수 없습니다.");
     }
 
-    public String getTurn() {
-        return gameDao.findOne().get();
+    public String getTurn(Long id) {
+        return gameDao.findTurnById(id);
     }
 
-    public boolean isKingDead() {
-        Board board = toBoard(pieceDao.findAllPieces());
+    public boolean isKingDead(Long id) {
+        Board board = toBoard(pieceDao.findAllByGameId(id));
         return board.isKingDead();
     }
 
-    public GameResult getResult() {
-        Board board = toBoard(pieceDao.findAllPieces());
+    public GameResult getResult(Long id) {
+        Board board = toBoard(pieceDao.findAllByGameId(id));
         return GameResult.from(board);
     }
 
@@ -108,7 +108,7 @@ public class ChessService {
     }
 
     public void deleteByGameId(Long id) {
-        // 생각해볼 것: 두개가 참조되어 있을 때 뭘 먼저 지워야할지?
+        // 생각해볼 것: 두개가 참조되어 있을 때 뭘 먼저 실행해야할지?
         pieceDao.deleteByGameId(id);
         gameDao.deleteByGameId(id);
     }
@@ -132,13 +132,13 @@ public class ChessService {
                 ));
     }
 
-    private void initTurn() {
-        Optional<String> turn = gameDao.findOne();
-
-        if (turn.isEmpty()) {
-            gameDao.init();
-        }
-    }
+//    private void initTurn() {
+//        Optional<String> turn = gameDao.findTurnById();
+//
+//        if (turn.isEmpty()) {
+//            gameDao.init();
+//        }
+//    }
 
     private void validateCurrentTurn(Turn thisTurn, Piece sourcePiece) {
         if (!sourcePiece.isCurrentTurn(thisTurn)) {

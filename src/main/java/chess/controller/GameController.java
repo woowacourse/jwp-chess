@@ -4,23 +4,16 @@ import chess.dto.ChessGameDto;
 import chess.dto.MovePositionDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-public class ChessGameController {
+public class GameController {
 
     private final ChessGameService chessGameService;
 
-    public ChessGameController(ChessGameService chessGameService) {
+    public GameController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
-    }
-
-    @GetMapping("/")
-    public ModelAndView index() {
-        return new ModelAndView("game", HttpStatus.OK);
     }
 
     @PostMapping("/game")

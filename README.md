@@ -108,9 +108,6 @@ use chess;
     - 필드 주입(@Autuwired)의 취약성(더 공부)
 - [x] [@Controller 와 @RestController 의 차이 공부](https://velog.io/@betterfuture4/Spring-Controller-RestController-Annotations)
 - [x] ResponseBody로 내려주기
-- [ ] 패스워드 포함된 form 값을 받아오는 방법 공부하기
-- [ ] test 코드 DB schema.sql로 초기화(세팅)
+- [x] 패스워드 포함된 form 값을 받아오는 방법 공부하기-> requestParams 사용
+- [x] test 코드 DB schema.sql로 초기화(세팅)
 
-## 질문
-
-- 

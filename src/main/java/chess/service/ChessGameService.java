@@ -11,11 +11,14 @@ import chess.dto.MoveDto;
 import chess.dto.PiecesDto;
 import chess.dto.RoomDto;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameService {
+    private static final String SAME_NAME_ROOM_ERROR_MESSAGE = "이미 해당 이름의 방이 있습니다.";
+    private static final String INCORRECT_PASSWORD_ERROR_MESSAGE = "올바르지 않은 비밀번호 입니다.";
+    private static final String PLAYING_CHESS_ERROR_MESSAGE = "진행중인 체스방은 삭제할 수 없습니다.";
+
     private final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
 
     private final PieceDao pieceDao;
@@ -26,16 +29,21 @@ public class ChessGameService {
         this.gameDao = gameDao;
     }
 
-    public void createOrGet(LogInDto logInDto) {
-        if (!gameDao.isInId(logInDto.getGameId())) {
-            initGame(logInDto);
-        }
-        validatePassword(logInDto);
+    public void createGame(LogInDto logInDto) {
+        validateUniqueId(logInDto);
+        validateLogIn(logInDto);
+        initGame(logInDto);
     }
 
-    private void validatePassword(LogInDto logInDto) {
+    private void validateUniqueId(LogInDto logInDto) {
+        if (gameDao.isInId(logInDto.getGameId())) {
+            throw new IllegalArgumentException(SAME_NAME_ROOM_ERROR_MESSAGE);
+        }
+    }
+
+    public void validateLogIn(LogInDto logInDto) {
         if (!gameDao.isValidPassword(logInDto)) {
-            throw new IllegalArgumentException("올바르지 않은 비밀번호 입니다.");
+            throw new IllegalArgumentException(INCORRECT_PASSWORD_ERROR_MESSAGE);
         }
     }
 
@@ -63,7 +71,7 @@ public class ChessGameService {
     }
 
     public void cleanGame(LogInDto logInDto) {
-        validatePassword(logInDto);
+        validateLogIn(logInDto);
         pieceDao.deleteAllByGameId(logInDto.getGameId());
         gameDao.deleteById(logInDto.getGameId());
     }
@@ -87,7 +95,7 @@ public class ChessGameService {
 
     public void validateEnd(String gameId) {
         if (!gameDao.findForceEndFlag(gameId)) {
-            throw new IllegalArgumentException("진행중인 체스방은 삭제할 수 없습니다.");
+            throw new IllegalArgumentException(PLAYING_CHESS_ERROR_MESSAGE);
         }
     }
 }

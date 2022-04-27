@@ -37,9 +37,15 @@ public class ChessController {
         return "redirect:/";
     }
 
+    @GetMapping("/init")
+    public String initGame(@RequestParam String gameId, @RequestParam String gamePassword) {
+        chessGameService.createGame(new LogInDto(gameId, gamePassword));
+        return "redirect:/game/" + gameId;
+    }
+
     @GetMapping("/start")
     public String startGame(@RequestParam String gameId, @RequestParam String gamePassword) {
-        chessGameService.createOrGet(new LogInDto(gameId, gamePassword));
+        chessGameService.validateLogIn(new LogInDto(gameId, gamePassword));
         return "redirect:/game/" + gameId;
     }
 

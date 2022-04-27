@@ -4,12 +4,32 @@ import chess.chessgame.ChessGame;
 import chess.chessgame.MovingPosition;
 import chess.view.OutputView;
 
+import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.function.BiConsumer;
 
 import static chess.view.InputView.inputCommand;
 import static chess.view.OutputView.printStartMessage;
 
 public class ConsoleChessController {
+
+    private static final Map<String, BiConsumer<StringTokenizer, ChessGame>> command = Map.of(
+            "start", (stringTokenizer, chessGame) -> {
+                chessGame.start();
+                OutputView.printBoard(chessGame.getChessBoard());
+            },
+            "end", (stringTokenizer, chessGame) -> {
+                chessGame.end();
+                OutputView.printBoard(chessGame.getChessBoard());
+            },
+            "move", (stringTokenizer, chessGame) -> {
+                chessGame.move(new MovingPosition(stringTokenizer.nextToken(), stringTokenizer.nextToken()));
+                OutputView.printBoard(chessGame.getChessBoard());
+            },
+            "status", (stringTokenizer, chessGame) -> {
+                OutputView.printScore(chessGame.computeScore());
+            }
+    );
 
     public void run() {
         ChessGame chessGame = new ChessGame();
@@ -21,34 +41,15 @@ public class ConsoleChessController {
     }
 
     private void playTurn(ChessGame chessGame) {
-        String input = inputCommand();
-        StringTokenizer commands = new StringTokenizer(input);
-        String command = commands.nextToken();
+        StringTokenizer stringTokenizer = new StringTokenizer(inputCommand());
+        String inputCommand = stringTokenizer.nextToken();
 
-        if ("start".equals(command)) {
-            chessGame.start();
-            OutputView.printBoard(chessGame.getChessBoard());
-            return;
+        if (!command.containsKey(inputCommand)) {
+            throw new IllegalArgumentException("올바른 명령어를 입력해주세요");
         }
 
-        if ("end".equals(command)) {
-            chessGame.end();
-            OutputView.printBoard(chessGame.getChessBoard());
-            return;
-        }
-
-        if ("move".equals(command)) {
-            chessGame.move(new MovingPosition(commands.nextToken(), commands.nextToken()));
-            OutputView.printBoard(chessGame.getChessBoard());
-            return;
-        }
-
-        if ("status".equals(command)) {
-            OutputView.printScore(chessGame.computeScore());
-            return;
-        }
-
-        throw new IllegalArgumentException("올바른 명령어를 입력해주세요");
+        command.get(inputCommand)
+                .accept(stringTokenizer, chessGame);
     }
 
 

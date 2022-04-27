@@ -2,6 +2,7 @@ package chess.web.dao;
 
 import chess.board.Room;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -51,6 +52,13 @@ public class RoomDaoImpl implements RoomDao {
         } catch (DataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Room> findAll() {
+        final String query = "SELECT * FROM room";
+
+        return jdbcTemplate.query(query, rowMapper);
     }
 
     @Override

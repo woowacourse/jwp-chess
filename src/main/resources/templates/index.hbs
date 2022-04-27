@@ -20,6 +20,20 @@
         </details>
         <br>
     </div>
+    <div>
+        <table>
+            <th>방 제목</th>
+            <th>접속하기</th>
+            <th>방 제거하기</th>
+            {{#rooms}}
+            <tr>
+                <td align="center">{{title}}</td>
+                <td><button class="w-btn w-btn-brown"  type="button">접속</button></td>
+                <td><button class="w-btn w-btn-red"  type="button">삭제</button></td>
+            </tr>
+            {{/rooms}}
+        </table>
+    </div>
 </center>
 <script src="/src/index.js"></script>
 </body>

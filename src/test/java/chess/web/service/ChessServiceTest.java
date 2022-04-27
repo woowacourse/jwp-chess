@@ -14,6 +14,7 @@ import chess.web.dao.PieceDao;
 import chess.web.dao.RoomDao;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -83,5 +84,22 @@ class ChessServiceTest {
         assertThat(room).isPresent();
         assertThat(room.get().getTitle()).isEqualTo(title);
         assertThat(room.get().getPassword()).isEqualTo(password);
+    }
+
+    @Test
+    @DisplayName("생성된 모든 체스 방의 정보를 가져온다.")
+    void getRooms() {
+        String title1 = "title1";
+        String title2 = "title2";
+        String password1 = "password1";
+        String password2 = "password2";
+        chessService.createRoom(boardId, title1, password1);
+        chessService.createRoom(boardId, title2, password2);
+
+        List<Room> rooms = chessService.getRooms();
+
+        assertThat(rooms.size()).isEqualTo(2);
+        assertThat(rooms.get(0).getTitle()).isEqualTo(title1);
+        assertThat(rooms.get(1).getTitle()).isEqualTo(title2);
     }
 }

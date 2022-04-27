@@ -2,6 +2,7 @@ package chess.web.service;
 
 import chess.board.Room;
 import chess.web.dao.RoomDao;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,11 @@ public class MockRoomDao implements RoomDao {
         return mockDb.values().stream()
                 .filter(room -> room.getBoardId() == boardId)
                 .findFirst();
+    }
+
+    @Override
+    public List<Room> findAll() {
+        return new ArrayList<>(mockDb.values());
     }
 
     @Override

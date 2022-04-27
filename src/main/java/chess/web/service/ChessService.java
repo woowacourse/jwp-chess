@@ -128,4 +128,8 @@ public class ChessService {
     public Long createRoom(Long boardId, String title, String password) {
         return roomDao.save(boardId, title, password);
     }
+
+    public List<Room> getRooms() {
+        return roomDao.findAll();
+    }
 }

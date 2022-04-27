@@ -49,6 +49,21 @@ button {
     color: #ffeee4;
 }
 
+.w-btn-red {
+    background-color: #ff0000;
+    color: #ffeee4;
+}
+
+.w-btn-red-outline {
+    border: 3px solid #ff0000;
+    color: #b8b8b8;
+}
+
+.w-btn-red-outline:hover {
+    background-color: #ff0000;
+    color: #ffeee4;
+}
+
 .w-btn:hover {
     letter-spacing: 2px;
     transform: scale(1.2);

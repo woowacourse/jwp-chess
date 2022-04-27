@@ -1,50 +1,28 @@
-let source = "";
-let target = "";
+function deleteGame(gameId) {
+    const password = prompt('비밀번호를 입력하세요.', '');
 
-function clicked(id) {
-    console.log(id);
-    setVariable(id);
-    checkSendToServer();
-}
-
-function setVariable(id) {
-    if (source !== "") {
-        target = id;
-    } else {
-        source = id;
-    }
-}
-
-function checkSendToServer() {
-    if (source !== "" && target !== "") {
-        sendToServer(source, target);
-        source = "";
-        target = "";
-    }
-}
-
-function sendToServer() {
-    fetch('/move', {
+    fetch(`/delete`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            source: source,
-            target: target
+            gameId: gameId,
+            password: password
         })
-    }).then((response) =>{
-        response.json().then(data => {
-            if (data.status ===  400) {
-                alert(data.errorMessage);
-            }
-            if(data.isGameOver === true) {
-                alert("게임이 종료되었습니다.")
-                document.location.href = '/result'
-                return;
-            };
-
+    }).then((response) => {
+        if (response.status === 400) {
+            throw response;
+            return;
+        }
+        if (response.status === 200) {
+            alert("성공적으로 삭제하였습니다.");
             location.reload();
-        });
+        }
+    }).catch(err => {
+        err.text().then(msg => {
+            alert(msg);
+        })
     });
 }
+

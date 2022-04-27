@@ -28,7 +28,7 @@ public class ChessController {
     @GetMapping
     public String showIndex(final Model model) {
         model.addAttribute("games", chessService.getAllGame());
-        return "index2";
+        return "index";
     }
 
     @PostMapping("/")
@@ -55,7 +55,7 @@ public class ChessController {
         }
         model.addAttribute("chessStatus", chessService.getChessStatus(gameId));
 
-        return "index";
+        return "game";
     }
 
     @PatchMapping("/game/{gameId}/move")

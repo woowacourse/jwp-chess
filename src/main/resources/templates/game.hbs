@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chess</title>
+    <link rel="stylesheet" href="/src/game.css">
+    <script type="text/javascript" src="/src/game.js"></script>
+</head>
+
+<body>
+<div class="chess-game">
+    <h1>♗혼돈의 체스 게임♗</h1>
+    {{#chessStatus}}
+    <div>
+        Black 진영 점수 VS White 진영 점수
+        <div class="score">{{blackScore}}&nbsp;&nbsp;&nbsp;&nbsp;{{whiteScore}}</div>
+    </div>
+    <section class="chess-board">
+        {{#piecesDto}}
+        {{#pieces}}
+        <div class="{{position}}" id="{{position}}" onclick="clicked(this.id, {{gameId}})">
+            <img src="images/{{color}}_{{pieceType}}.png" class="img"/>
+        </div>
+        {{/pieces}}
+        {{/piecesDto}}
+    </section>
+    <br/>
+    <form action="/game/{{gameId}}/result" method="get">
+        <button> 게임종료</button>
+    </form>
+    {{/chessStatus}}
+</div>
+</body>
+</html>

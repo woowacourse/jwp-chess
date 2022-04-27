@@ -23,10 +23,6 @@ public class ChessRoom {
         return new ChessRoom(roomDto.getName(), roomDto.getPassword());
     }
 
-    public static ChessRoom fromRequest(final RoomRequestDto roomRequestDto) {
-        return new ChessRoom(roomRequestDto.getName(), roomRequestDto.getPassword());
-    }
-
     private void validateChessRoom() {
         if (name.isBlank() || name.length() > ROOM_NAME_MAX_LENGTH) {
             throw new IllegalArgumentException("체스방 제목은 1자 이상 25자 이하여야 합니다.");

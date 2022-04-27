@@ -1,0 +1,83 @@
+.chess-ui {
+  width: 640px;
+  border: 4px solid slategrey;
+  display: grid;
+  grid-template-columns: repeat(8, 80px);
+  grid-template-rows: repeat(8, 80px);
+}
+
+.white-square {
+  background-color: slategrey;
+  color: white;
+}
+
+.white-square.selected {
+  background-color: rosybrown;
+}
+
+.black-square {
+  background-color: white;
+  color: slategrey;
+}
+
+.black-square.selected {
+  background-color: rosybrown;
+}
+
+.img {
+  width: 80px;
+  height: 80px;
+}
+
+table.select {
+  border-collapse: collapse;
+  text-align: left;
+  line-height: 1;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  margin : 20px 0px;
+  text-align: center;
+}
+table.select th {
+  width: 147px;
+  padding: 10px;
+  font-weight: bold;
+  vertical-align: top;
+  color: #153d73;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+
+}
+table.select td {
+  width: 298px;
+  padding: 10px;
+  vertical-align: top;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+table.turn {
+  border-collapse: collapse;
+  text-align: left;
+  line-height: 1;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  margin : 20px 0px;
+  text-align: center;
+}
+table.turn th {
+  width: 80px;
+  padding: 10px;
+  font-weight: bold;
+  vertical-align: top;
+  color: #153d73;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+
+}
+table.turn td {
+  width: 80px;
+  vertical-align: top;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}

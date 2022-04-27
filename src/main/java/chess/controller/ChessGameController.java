@@ -3,6 +3,7 @@ package chess.controller;
 import chess.controller.dto.request.ChessGameRequest;
 import chess.controller.dto.request.PieceMoveRequest;
 import chess.controller.dto.request.PromotionRequest;
+import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.ChessGameScoreResponse;
 import chess.controller.dto.response.ChessGameStatusResponse;
 import chess.controller.dto.response.ChessGameWinnerResponse;
@@ -33,6 +34,14 @@ public class ChessGameController {
     public ResponseEntity<Long> createNewGame(@RequestBody ChessGameRequest chessGameRequest) {
         long chessGameId = chessGameService.createNewChessGame(chessGameRequest.getTitle(), chessGameRequest.getPassword());
         return ResponseEntity.created(URI.create("/chessgames/" + chessGameId)).build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ChessGameResponse>> findAllChessGame() {
+        List<ChessGameResponse> chessGameResponses = chessGameService.findAllChessGame().stream()
+                .map(ChessGameResponse::of)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(chessGameResponses);
     }
 
     @GetMapping("/{chessGameId}")

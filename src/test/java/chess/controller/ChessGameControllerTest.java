@@ -1,5 +1,7 @@
 package chess.controller;
 
+import static org.hamcrest.core.Is.is;
+
 import chess.controller.dto.request.ChessGameRequest;
 import chess.controller.dto.request.PieceMoveRequest;
 import chess.controller.dto.request.PromotionRequest;
@@ -52,6 +54,19 @@ class ChessGameControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .header("Location", Matchers.matchesRegex("/chessgames/[0-9+]"));
+    }
+
+    @Test
+    @DisplayName("생성된 체스 게임 모두 반환")
+    void findAllChessGames() {
+        chessGameDao.createChessGame(chessGame);
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("chessgames")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
     }
 
     @Test

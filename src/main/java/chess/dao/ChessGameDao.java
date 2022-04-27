@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.domain.ChessGame;
 import chess.domain.state.Turn;
+import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,6 +44,12 @@ public class ChessGameDao {
         } catch (DuplicateKeyException duplicateKeyException){
             throw new IllegalArgumentException("중복된 체스 게임 제목이 이미 존재합니다.");
         }
+    }
+
+    public List<ChessGame> findAllChessGame() {
+        String sql = "select * from chess_game";
+
+        return jdbcTemplate.query(sql, rowMapper());
     }
 
     public ChessGame findChessGame(long id) {

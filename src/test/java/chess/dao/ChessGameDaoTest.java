@@ -50,6 +50,17 @@ class ChessGameDaoTest {
     }
 
     @Test
+    @DisplayName("저장되어 있는 모든 체스 게임 반환")
+    void findAllChessGame() {
+        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), "title", "password");
+        ChessGame otherChessGame = new ChessGame(WHITE_TURN.name(), "title2", "password2");
+        chessGameDao.createChessGame(chessGame);
+        chessGameDao.createChessGame(otherChessGame);
+
+        assertThat(chessGameDao.findAllChessGame()).hasSize(2);
+    }
+
+    @Test
     @DisplayName("id 값을 통해서 체스 게임 반환")
     void findChessGame() {
         ChessGame chessGame = new ChessGame(WHITE_TURN.name(), "title", "password");

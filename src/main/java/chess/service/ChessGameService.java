@@ -13,6 +13,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.state.ChessGameState;
 import chess.domain.state.Turn;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,10 @@ public class ChessGameService {
         ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
         pieceDao.savePieces(savedChessGame.getId(), PieceFactory.createNewChessBoard());
         return savedChessGame.getId();
+    }
+
+    public List<ChessGame> findAllChessGame() {
+        return chessGameDao.findAllChessGame();
     }
 
     public Map<Position, Piece> findChessBoard(long chessGameId) {

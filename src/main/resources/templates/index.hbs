@@ -22,10 +22,14 @@
         <div class="card" style="width: 100%; margin-top: 1vh;">
             <div class="card-body">
                 <h5 class="card-title">{{room.title}}</h5>
-                <h7 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
-                    <br>
-                    <a onclick="validatePassword({{id}})" class="btn btn-dark">입장</a>
-                    <a onclick="deleteGame({{id}})" class="btn btn-danger">삭제</a>
+                <h6 class="card-subtitle mb-2 text-muted">{{room.participant.whiteName}}
+                    vs {{room.participant.blackName}}
+                </h6>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <span class="{{gameProgressBadge}}">{{gameProgress}}</span>
+                </h6>
+                <a onclick="validatePassword({{id}})" class="btn btn-dark">입장</a>
+                <a onclick="deleteGame({{id}})" class="btn btn-danger">삭제</a>
             </div>
         </div>
     {{/games}}

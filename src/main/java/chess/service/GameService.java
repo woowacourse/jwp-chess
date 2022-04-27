@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.dto.ChessGameDto;
 import chess.dao.GameDao;
 import chess.dao.MemberDao;
 import chess.domain.Board;
@@ -37,8 +38,10 @@ public class GameService {
         return gameDao.save(new ChessGame(board, Team.WHITE, room));
     }
 
-    public List<ChessGame> findPlayingGames() {
-        return gameDao.findAll();
+    public List<ChessGameDto> findPlayingGames() {
+        return gameDao.findAll().stream()
+                .map(ChessGameDto::toDto)
+                .collect(Collectors.toList());
     }
 
     public ChessGame findByGameId(final Long gameId) {

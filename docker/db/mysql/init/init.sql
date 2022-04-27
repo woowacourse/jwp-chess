@@ -11,7 +11,9 @@ create table Game
     title varchar(30) not null,
     password varchar(30) not null,
     white_member_id bigint,
-    black_member_id bigint
+    black_member_id bigint,
+    constraint fk_white_member_id foreign key(white_member_id) references Member(id) on delete cascade,
+    constraint fk_black_member_id foreign key(black_member_id) references Member(id) on delete cascade
 );
 
 create table Piece

@@ -5,6 +5,7 @@ import chess.domain.Member;
 import chess.domain.Result;
 import chess.domain.piece.Piece;
 import chess.domain.square.Rank;
+import chess.dto.ChessGameDto;
 import chess.dto.GameResultDto;
 import chess.dto.RankDto;
 import chess.service.GameService;
@@ -29,7 +30,7 @@ public class ChessController {
 
     @GetMapping("/")
     public String index(final Model model) {
-        final List<ChessGame> games = gameService.findPlayingGames();
+        final List<ChessGameDto> games = gameService.findPlayingGames();
         final List<Member> members = memberService.findAllMembers();
         model.addAttribute("games", games);
         model.addAttribute("members", members);

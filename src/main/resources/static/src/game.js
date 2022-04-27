@@ -13,9 +13,7 @@ const clickButton = (path) => {
     const button = document.getElementById("game-button");
     const buttonText = button.innerText;
 
-    if (buttonText.includes("start")) {
-        startGame();
-    } else if (buttonText.includes("end")) {
+    if (buttonText.includes("end")) {
         endGame(id);
     } else if (buttonText.includes("status")) {
         getStatus(id);
@@ -104,11 +102,14 @@ const clickBLock = (e, block, id) => {
                 drawBoard(body)
                 drawTurnBox(id);
             })
+            .then(() => {
+                kingDeadEndGame(id);
+            })
             .catch(err => {
                 alert("움직일 수 없는 위치입니다.")
             })
         initTurn();
-        setTimeout(() => kingDeadEndGame(id));
+
     }
 }
 
@@ -197,5 +198,5 @@ const isMovePositionAllSelected = () => {
 }
 
 const quit = () => {
-    window.location.href="/";
+    window.location.href = "/";
 }

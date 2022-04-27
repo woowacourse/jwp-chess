@@ -119,9 +119,9 @@ public class FakeRoomDao implements RoomDao {
 
         private final int id;
         private final String name;
+        private final String password;
         private GameStatus gameStatus;
         private Color currentTurn;
-        private final String password;
 
         public Room(final int id, final String name, final GameStatus gameStatus, final Color currentTurn,
                     final String password) {

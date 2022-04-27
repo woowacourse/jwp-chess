@@ -5,7 +5,6 @@ import chess.domain.chessboard.ChessBoardFactory;
 import chess.domain.position.Position;
 import chess.domain.result.EndResult;
 import chess.domain.result.MoveResult;
-import chess.domain.result.StartResult;
 
 public class ChessGame {
 
@@ -38,22 +37,17 @@ public class ChessGame {
         return chessBoard.calculateScore();
     }
 
-    public StartResult start() {
+    public void start() {
         gameStatus.checkReady();
         if (gameStatus.isEnd()) {
             chessBoard = ChessBoardFactory.createChessBoard();
         }
         gameStatus = GameStatus.PLAYING;
-        return new StartResult(chessBoard.findAllPiece());
     }
 
     public EndResult end() {
         gameStatus = GameStatus.END;
         final Score score = new Score(chessBoard.findAllPiece());
         return new EndResult(score);
-    }
-
-    public boolean canPlay() {
-        return !gameStatus.isEnd();
     }
 }

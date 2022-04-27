@@ -102,9 +102,9 @@ public class FakeChessPieceDao implements ChessPieceDao {
 
         private final int id;
         private final int roomId;
-        private Position position;
         private final String chessPiece;
         private final Color color;
+        private Position position;
 
         public MockChessPiece(final int id, final int roomId, final Position position, final String chessPiece,
                               final Color color) {

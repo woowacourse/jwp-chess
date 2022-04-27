@@ -50,7 +50,7 @@ public class PieceDao {
                 });
     }
 
-    public List<PieceEntity> findByGameId(long gameId) {
+    public List<PieceEntity> findAllByGameId(long gameId) {
         String sql = "select position, name from pieces where game_id = ?";
         return jdbcTemplate.query(
                 sql,
@@ -76,5 +76,10 @@ public class PieceDao {
     public void deleteAll() {
         String query = "DELETE FROM pieces";
         jdbcTemplate.update(query);
+    }
+
+    public void deleteByGameId(Long id) {
+        String sql = "DELETE FROM pieces WHERE game_id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

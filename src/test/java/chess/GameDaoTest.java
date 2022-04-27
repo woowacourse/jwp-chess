@@ -64,6 +64,16 @@ class GameDaoTest {
     }
 
     @Test
+    @DisplayName("id로 방을 삭제한다.")
+    void deleteByGameId() {
+        long id = gameDao.initGame("room1", "1234");
+
+        gameDao.deleteByGameId(id);
+
+        assertThat(gameDao.findAll().size()).isZero();
+    }
+
+    @Test
     @DisplayName("턴이 초기에 저장되었는지 확인한다")
     void init() {
         gameDao.init();

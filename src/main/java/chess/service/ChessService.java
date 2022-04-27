@@ -42,7 +42,7 @@ public class ChessService {
     }
 
     public WebBoardDto getBoardByGameId(long gameId) {
-        return WebBoardDto.from(toBoard(pieceDao.findByGameId(gameId)));
+        return WebBoardDto.from(toBoard(pieceDao.findAllByGameId(gameId)));
     }
 
     private long makeRoom(RoomDto roomDto) {
@@ -105,6 +105,12 @@ public class ChessService {
     public void exitGame() {
         pieceDao.deleteAll();
         gameDao.deleteAll();
+    }
+
+    public void deleteByGameId(Long id) {
+        // 생각해볼 것: 두개가 참조되어 있을 때 뭘 먼저 지워야할지?
+        pieceDao.deleteByGameId(id);
+        gameDao.deleteByGameId(id);
     }
 
     private Board initBoard() {

@@ -13,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,9 +62,21 @@ class PieceDaoTest {
     void init() {
         long gameId = gameDao.initGame("room", "1234");
         pieceDao.init(BoardFactory.create(), gameId);
-        List<PieceEntity> boardMap = pieceDao.findByGameId(gameId);
+        List<PieceEntity> boardMap = pieceDao.findAllByGameId(gameId);
 
         assertThat(boardMap.size()).isEqualTo(64);
+    }
+
+    @Test
+    @DisplayName("게임 고유 번호에 대한 체스판의 말을 모두 삭제한다.")
+    void deleteByGameId() {
+        long gameId = gameDao.initGame("room", "1234");
+        pieceDao.init(BoardFactory.create(), gameId);
+
+        pieceDao.deleteByGameId(gameId);
+
+        List<PieceEntity> boardMap = pieceDao.findAllPieces();
+        assertThat(boardMap.size()).isZero();
     }
 
 //    @Test

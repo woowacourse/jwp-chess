@@ -48,6 +48,12 @@ public class ChessController {
         return board.getWebBoard();
     }
 
+    @DeleteMapping("/game/{id}")
+    @ResponseBody
+    public void deleteGame(@PathVariable Long id) {
+        chessService.deleteByGameId(id);
+    }
+
     @GetMapping("/start")
     @ResponseBody
     public Map<String, String> start() {

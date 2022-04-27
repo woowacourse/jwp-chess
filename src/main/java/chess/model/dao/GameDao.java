@@ -73,4 +73,9 @@ public class GameDao {
         String query = "DELETE FROM GAMES";
         jdbcTemplate.update(query);
     }
+
+    public void deleteByGameId(Long id) {
+        String sql = "DELETE FROM games where game_id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

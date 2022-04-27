@@ -32,7 +32,7 @@ public class GameService {
         this.memberDao = memberDao;
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public Long createGame(final String title, final String password, final Long whiteId, final Long blackId) {
         final Member white = memberDao.findById(whiteId).orElseThrow(() -> new NoSuchElementException("찾는 멤버가 없음!"));
         final Member black = memberDao.findById(blackId).orElseThrow(() -> new NoSuchElementException("찾는 멤버가 없음!"));
@@ -42,7 +42,7 @@ public class GameService {
         return gameDao.save(new ChessGame(board, Team.WHITE, new Room(title, password, participant)));
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<ChessGame> findPlayingGames() {
         return gameDao.findAll()
                 .stream()
@@ -51,13 +51,13 @@ public class GameService {
     }
 
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public ChessGame findByGameId(final Long gameId) {
         return gameDao.findById(gameId)
                 .orElseThrow(() -> new NoSuchElementException("찾는 게임이 존재하지 않습니다."));
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public List<GameResultDto> findHistoriesByMemberId(final Long memberId) {
         final List<ChessGame> games = gameDao.findHistoriesByMemberId(memberId);
         return games.stream()
@@ -71,7 +71,7 @@ public class GameService {
         final String team = findTeam(game, memberId);
         final double myScore = findMyScore(game, memberId);
         final double enemyScore = findEnemyScore(game, memberId);
-        return new GameResultDto(winResult, enemyName, team, myScore, enemyScore);
+        return new GameResultDto(game.getId(), winResult, enemyName, team, myScore, enemyScore);
     }
 
     private static String findWinResult(final ChessGame game, final Long memberId) {
@@ -115,7 +115,7 @@ public class GameService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public synchronized void move(final Long gameId, final String rawFrom, final String rawTo) {
+    public void move(final Long gameId, final String rawFrom, final String rawTo) {
         final ChessGame chessGame = findByGameId(gameId);
         chessGame.move(Square.from(rawFrom), Square.from(rawTo));
         gameDao.move(chessGame, rawFrom, rawTo);
@@ -128,8 +128,14 @@ public class GameService {
         gameDao.terminate(gameId);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public Long deleteGame(final Long gameId) {
         return gameDao.deleteById(gameId);
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    public List<ChessGame> findAllGames() {
+        return gameDao.findAll();
     }
 }
 

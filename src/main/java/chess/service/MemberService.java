@@ -24,12 +24,12 @@ public class MemberService {
         return memberDao.findAll();
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public Long addMember(final String memberName) {
         return memberDao.save(new Member(memberName));
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteMember(final Long memberId) {
         memberDao.deleteById(memberId);
     }

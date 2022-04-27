@@ -120,6 +120,10 @@ public class GameController {
     @DeleteMapping("/{gameId}")
     @ResponseBody
     public ResponseEntity<Long> deleteGame(@PathVariable Long gameId) {
+        final ChessGame game = gameService.findByGameId(gameId);
+        if (!game.isEnd()) {
+            throw new IllegalStateException("게임이 종료되지 않아서 삭제할 수 없습니다.");
+        }
         final Long deletedId = gameService.deleteGame(gameId);
         return ResponseEntity.ok(deletedId);
     }

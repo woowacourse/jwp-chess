@@ -23,9 +23,12 @@
             <div class="card-body">
                 <h5 class="card-title">{{id}} 번째 게임</h5>
                 <h4 class="card-title">{{title}}</h4>
-                <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
-                <button onclick="checkPassword({{id}})" class="btn btn-dark">입장</button>
-                <button onclick="deleteGame({{id}})" class="btn btn-danger">삭제</button>
+                <h6 class="card-subtitle mb-2 text-muted">{{whiteName}} vs {{blackName}}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <span class="{{progressBadge}}">{{inProgress}}</span>
+                </h6>
+                <a href="/games/{{id}}/play" class="btn btn-dark">입장</a>
+                <button onclick="checkPasswordAndDelete({{id}})" class="btn btn-danger">삭제</button>
             </div>
         </div>
     {{/games}}
@@ -67,23 +70,6 @@
 </body>
 
 <script>
-    const checkPassword = (gameId) => {
-        let password = prompt("비밀번호를 입력하세요");
-        fetch("/games/password", {
-            method: "POST",
-            body: JSON.stringify({gameId: gameId, password: password}),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }).then(async response => {
-            if (response.status === 400) {
-                alert("비밀번호 오류입니다!");
-                return;
-            }
-            location.href = `/games/${gameId}/play`;
-        }).catch(error => alert(error));
-    }
-
     const createGame = () => {
         let title = document.getElementById("title").value;
         let password = document.getElementById("password").value;
@@ -110,19 +96,37 @@
         });
     }
 
+    const checkPasswordAndDelete = (gameId) => {
+        let password = prompt("비밀번호를 입력하세요");
+        fetch("/games/password", {
+            method: "POST",
+            body: JSON.stringify({gameId: gameId, password: password}),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(async response => {
+            if (response.status === 400) {
+                alert("비밀번호 오류입니다!");
+                return;
+            }
+            deleteGame(gameId);
+        }).catch(error => alert(error));
+    }
+
     const deleteGame = (gameId) => {
         fetch(`/games/${gameId}`, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',
             }
-        }).then(response => {
+        }).then(async response => {
             if (response.ok) {
                 alert("게임이 삭제되었습니다.");
                 location.reload();
                 return;
             }
-            alert(response.statusText);
+            let errMsg = await response.text();
+            alert(errMsg);
         })
     }
 </script>

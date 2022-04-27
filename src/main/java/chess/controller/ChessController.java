@@ -25,6 +25,11 @@ public class ChessController {
         return "index";
     }
 
+    @GetMapping("/{id}")
+    public String game(@PathVariable Long id) {
+        return "game";
+    }
+
     @PostMapping("/new")
     @ResponseBody
     public Map<String, String> startNewGame(@RequestBody RoomDto roomDto) {

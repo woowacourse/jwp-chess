@@ -31,11 +31,17 @@ const getGames = () => {
                 console.log(game)
                 games.innerHTML +=
                             `<div>
-                                <div> ${game.name} </div>
+                                <div onclick="continueGame(${game.gameId})"> ${game.name} </div>
                                 <button onclick="deleteGame(${game.gameId})"> 삭제하기 </button>    
                             </div>`
             })
         });
+}
+
+const continueGame = (id) => {
+    console.log("겜 시작 전");
+    window.location.href = `${id}`;
+    console.log("겜 시작 후");
 }
 
 const deleteGame = (id) => {

@@ -21,11 +21,13 @@ const clickButton = () => {
     }
 }
 
-const startGame = () => {
-    const response = fetch(`/start`, {
+const startGame = (path) => {
+    const id = path.substring(1);
+    const response = fetch(`/game/${id}`, {
         method: "GET",
         headers: {"Content-Type": "application/json"}
     });
+
     response.then(data => data.json())
         .then(body => {
             drawBoard(body);

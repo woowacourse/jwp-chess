@@ -8,10 +8,8 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -53,12 +51,11 @@ public class PieceDaoImpl implements PieceDao {
 
     @Override
     public void save(Long gameId, Position position, Piece piece) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("game_id", gameId);
-        parameters.put("position", convertPositionToString(position));
-        parameters.put("piece_type", piece.getPieceType());
-        parameters.put("color", piece.getColor());
-        insertPiece.execute(parameters);
+        SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId)
+                .addValue("position", convertPositionToString(position))
+                .addValue("piece_type", piece.getPieceType())
+                .addValue("color", piece.getColor());
+        insertPiece.execute(namedParameters);
     }
 
     private String convertPositionToString(Position position) {
@@ -70,9 +67,7 @@ public class PieceDaoImpl implements PieceDao {
     @Override
     public List<PieceResponse> findAll(Long gameId) {
         String sql = "SELECT * FROM piece WHERE game_id = :game_id";
-
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId);
-
         try {
             return namedParameterJdbcTemplate.query(sql, namedParameters, pieceResponseRowMapper);
         } catch (EmptyResultDataAccessException e) {
@@ -90,13 +85,11 @@ public class PieceDaoImpl implements PieceDao {
     @Override
     public Optional<Piece> find(Long gameId, Position position) {
         String sql = "SELECT piece_type, color FROM piece WHERE game_id = :game_id AND position = :position";
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("game_id", gameId);
-        parameters.put("position", convertPositionToString(position));
-
+        SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId)
+                .addValue("position", convertPositionToString(position));
         try {
             return Optional.ofNullable(
-                    namedParameterJdbcTemplate.queryForObject(sql, parameters, pieceRowMapper));
+                    namedParameterJdbcTemplate.queryForObject(sql, namedParameters, pieceRowMapper));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -105,19 +98,17 @@ public class PieceDaoImpl implements PieceDao {
     @Override
     public void updatePosition(Long gameId, Position start, Position target) {
         String sql = "UPDATE piece SET position = :target WHERE game_id = :game_id AND position = :start";
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("game_id", gameId);
-        parameters.put("start", convertPositionToString(start));
-        parameters.put("target", convertPositionToString(target));
-        namedParameterJdbcTemplate.update(sql, parameters);
+        SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId)
+                .addValue("start", convertPositionToString(start))
+                .addValue("target", convertPositionToString(target));
+        namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
     @Override
     public void delete(Long gameId, Position position) {
         String sql = "DELETE FROM piece WHERE game_id = :game_id AND position = :position";
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("game_id", gameId);
-        parameters.put("position", convertPositionToString(position));
-        namedParameterJdbcTemplate.update(sql, parameters);
+        SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId)
+                .addValue("position", convertPositionToString(position));
+        namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 }

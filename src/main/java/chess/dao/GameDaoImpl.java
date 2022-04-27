@@ -2,9 +2,7 @@ package chess.dao;
 
 import chess.controller.dto.response.GameIdentifiers;
 import chess.domain.GameState;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -65,7 +63,6 @@ public class GameDaoImpl implements GameDao {
 
     private Optional<String> find(String sql, Long id) {
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", id);
-
         try {
             return Optional.ofNullable(
                     namedParameterJdbcTemplate.queryForObject(sql, namedParameters, String.class));
@@ -77,9 +74,7 @@ public class GameDaoImpl implements GameDao {
     @Override
     public Optional<GameState> findState(Long id) {
         String sql = "SELECT state FROM game WHERE game_id = :game_id";
-
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", id);
-
         try {
             return Optional.ofNullable(
                     namedParameterJdbcTemplate.queryForObject(sql, namedParameters, GameState.class));
@@ -91,10 +86,9 @@ public class GameDaoImpl implements GameDao {
     @Override
     public void updateState(Long id, GameState gameState) {
         String sql = "UPDATE game SET state = :game_state WHERE game_id = :game_id";
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("game_state", gameState.name());
-        parameters.put("game_id", id);
-        namedParameterJdbcTemplate.update(sql, parameters);
+        SqlParameterSource namedParameters = new MapSqlParameterSource("game_state", gameState.name())
+                .addValue("game_id", id);
+        namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
     @Override

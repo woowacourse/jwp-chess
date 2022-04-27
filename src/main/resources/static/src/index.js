@@ -1,27 +1,5 @@
 
 // -------- init start ---------
-function setUpIndex() {
-    const createForm = document.getElementById("create_form");
-    createForm.addEventListener("submit", e => {
-        e.preventDefault();
-        let roomName = new FormData(createForm).get("room_name");
-        send("/create?room_name=" + roomName, {
-            method: 'get'
-        }, relocate);
-    })
-
-    const enterForm = document.getElementById("enter_form");
-    enterForm.addEventListener("submit", e => {
-        e.preventDefault();
-        let roomName = new FormData(enterForm).get("room_name");
-        send("/enter?room_name=" + roomName, {
-            method: 'get'
-        }, relocate);
-    })
-
-    console.log("setupIndex done")
-}
-
 function setUpState(state, forms) {
     const clickable = 'clickable';
     const nonClickable = 'non-clickable';
@@ -90,15 +68,11 @@ function setUpMain(state) {
     setUpState(state, {'status': statusForm, 'start': startForm, 'end': endForm});
     console.log("setup done")
 }
-
 // -------- init end ---------
 
 
 
 // --------- draw start ---------
-
-
-
 let source = null;
 let destination = null;
 
@@ -214,11 +188,6 @@ function toJSON(form) {
         json[key] = value;
     })
     return JSON.stringify(json);
-}
-
-function getCurrentParam(key) {
-    let params = (new URL(document.location)).searchParams;
-    return params.get(key);
 }
 
 function showStatus(responseJson) {

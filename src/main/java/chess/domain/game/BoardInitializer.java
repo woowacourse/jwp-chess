@@ -20,6 +20,7 @@ public final class BoardInitializer implements Initializer {
 
     private final Map<Position, Piece> pieces = new HashMap<>();
 
+    @Override
     public Map<Position, Piece> initialize() {
         if (pieces.isEmpty()) {
             initBoard(pieces);

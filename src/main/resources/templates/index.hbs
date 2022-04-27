@@ -23,9 +23,7 @@
 {{#each gameNames}}
     <div style="border: 1px solid #d4ffb5; box-shadow: inset 0 0 8px #84de3a; background-color: #deffb5; width:40%; display: flex; justify-content: center; margin: 0 auto">
         <form action="/load" method="get">
-            <div style="font-weight: bold">{{this}}</div>
-            <input type="hidden" name="game_name" value="{{this}}"/>
-            <button type="submit" class="btn btn-success">게임 시작</button>
+            <button type="submit" class="btn btn-success" name="game_name" value="{{this}}">{{this}}</button>
             <button type="button" class="btn btn-danger" onclick="deleteGame('{{this}}')">게임 삭제</button>
         </form>
     </div>

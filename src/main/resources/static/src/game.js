@@ -143,8 +143,8 @@ const removeEventListener = () => {
     })
 }
 
-const getStatus = () => {
-    const response = fetch(`/status`, {
+const getStatus = (id) => {
+    const response = fetch(`/game/${id}/status`, {
         method: "GET",
         header: {"Content-Type": "application/json"}
     });

@@ -22,6 +22,8 @@ import java.util.Objects;
 @Repository
 public class WebChessPieceDao implements PieceDao<Piece> {
 
+    private static final int WRONG_COUNT = -1;
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public WebChessPieceDao(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -63,7 +65,6 @@ public class WebChessPieceDao implements PieceDao<Piece> {
     @Override
     public int updatePositionId(int sourcePositionId, int targetPositionId) {
         final String sql = "UPDATE piece SET position_id=:target_position_id WHERE position_id=:source_position_id";
-
         List<String> keys = List.of("target_position_id", "source_position_id");
         List<Object> values = List.of(targetPositionId, sourcePositionId);
         return jdbcTemplate.update(sql, ParameterSourceCreator.makeParameterSource(keys, values));
@@ -99,7 +100,11 @@ public class WebChessPieceDao implements PieceDao<Piece> {
         List<Object> values = List.of(column.value(), boardId, color.name());
         SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
 
-        return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+        Integer wrappedResult = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+        if (wrappedResult == null) {
+            return WRONG_COUNT;
+        }
+        return wrappedResult;
     }
 
     @Override

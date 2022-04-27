@@ -85,4 +85,8 @@ public class ChessService {
     public Long findByGameNameAndPassword(String gameName, String password) throws EmptyResultDataAccessException {
         return chessGameDao.findByGameNameAndPassword(gameName,password);
     }
+
+    public int deleteByGameNameAndPassword(String gameName, String password) {
+        return chessGameDao.deleteByGameNameAndPassword(gameName, password);
+    }
 }

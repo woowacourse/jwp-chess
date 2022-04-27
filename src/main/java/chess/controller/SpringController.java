@@ -29,7 +29,7 @@ public class SpringController {
         return "index";
     }
 
-    @GetMapping("/continue")
+    @GetMapping("/load")
     public String restart(@RequestParam("game_name") String gameName, @RequestParam("password") String password) {
         Long id = chessService.findByGameNameAndPassword(gameName, password);
 
@@ -94,6 +94,13 @@ public class SpringController {
         model.addAttribute("id", id);
 
         return "chess";
+    }
+
+    @PostMapping("/delete")
+    public String delete(@RequestParam(value = "game_name", required = false) String gameName,
+                         @RequestParam(value = "password", required = false) String password) {
+        chessService.deleteByGameNameAndPassword(gameName, password);
+        return "redirect:/";
     }
 
     @GetMapping("/error")

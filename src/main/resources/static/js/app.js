@@ -83,3 +83,16 @@ function lobby() {
     document.body.appendChild(form);
     form.submit();
 }
+
+function deleteGame(gameName) {
+    let password = prompt('비밀번호를 입력하세요.');
+
+    const form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", "/delete");
+    form.appendChild(createInput("game_name", gameName));
+    form.appendChild(createInput("password", password));
+
+    document.body.appendChild(form);
+    form.submit();
+}

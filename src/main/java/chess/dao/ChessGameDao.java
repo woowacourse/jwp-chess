@@ -140,4 +140,9 @@ public class ChessGameDao {
         String sql = "select id from chessgame where game_name = ? and password = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, gameName, password);
     }
+
+    public int deleteByGameNameAndPassword(String gameName, String password) {
+        String sql = "delete from chessgame where game_name =? and password = ?";
+        return jdbcTemplate.update(sql, gameName, password);
+    }
 }

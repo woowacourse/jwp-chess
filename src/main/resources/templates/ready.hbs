@@ -21,6 +21,7 @@
         <form action="/games" method="get" class="inlineBtn">
             room number: {{gameID}}
             <input class="invisible" name="gameID" value="{{gameID}}" type="text">
+            <input type="text" name="restart" class="invisible" value="false" />
             <input type="submit" value="START" class="btn" id="start">
         </form>
         <form action="/" method="post" class="inlineBtn">

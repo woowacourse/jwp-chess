@@ -83,4 +83,13 @@ public class GameDaoTest {
                 .collect(Collectors.toList());
         assertThat(expectedNames).isEqualTo(List.of(name, "n1"));
     }
+
+    @DisplayName("게임 방 비밀번호 조회 테스트")
+    @Test
+    void find_Password() {
+        gameDao.save(name, password);
+        final int gameId = gameDao.find(name, password).get();
+        final String actualPassword = gameDao.findPassword(gameId);
+        assertThat(actualPassword).isEqualTo(password);
+    }
 }

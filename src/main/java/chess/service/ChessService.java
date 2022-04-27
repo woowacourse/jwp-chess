@@ -154,4 +154,8 @@ public class ChessService {
     public List<GameDto> findAllGames() {
         return gameDao.findAll();
     }
+
+    public boolean checkPassword(int gameId, String password) {
+        return password.equals(gameDao.findPassword(gameId));
+    }
 }

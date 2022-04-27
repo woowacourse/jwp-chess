@@ -2,6 +2,7 @@ package chess.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.controller.dto.request.GameAccessRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.dao.GameDao;
 import chess.domain.GameState;
@@ -171,5 +172,45 @@ class ChessControllerTest {
                 .when().get("/games")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @Nested
+    @DisplayName("POST - 방 입장 전 비밀번호 검사 테스트, 비밀번호가 ")
+    class PasswordTest {
+
+        @DisplayName("올바른 비밀번호면 status code 204를 반환한다..")
+        @Test
+        void valid_Password() throws JsonProcessingException {
+            ObjectMapper objectMapper = new ObjectMapper();
+            GameAccessRequest gameAccessRequest = new GameAccessRequest((int) testGameId, "password");
+            String jsonString = objectMapper.writeValueAsString(gameAccessRequest);
+
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .body(jsonString)
+                    .when().post("/games/existed-game/" + testGameId)
+                    .then().log().all()
+                    .statusCode(HttpStatus.NO_CONTENT.value())
+                    .extract();
+        }
+
+        @DisplayName("잘못된 비밀번호면 401 에러를 반환한다")
+        @Test
+        void invalid_Password() throws JsonProcessingException {
+            ObjectMapper objectMapper = new ObjectMapper();
+            GameAccessRequest gameAccessRequest = new GameAccessRequest((int) testGameId, "wrongPassword");
+            String jsonString = objectMapper.writeValueAsString(gameAccessRequest);
+
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .body(jsonString)
+                    .when().post("/games/existed-game/" + testGameId)
+                    .then().log().all()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract();
+        }
+
     }
 }

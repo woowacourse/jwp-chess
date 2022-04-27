@@ -1,7 +1,9 @@
 package chess.service;
 
 import chess.dao.PieceDao;
+import chess.dao.RoomDao;
 import chess.dao.TurnDao;
+import chess.domain.ChessRoom;
 import chess.domain.ChessWebGame;
 import chess.domain.Position;
 import chess.domain.Result;
@@ -24,10 +26,21 @@ public class SpringChessService {
 
     private final PieceDao pieceDao;
     private final TurnDao turnDao;
+    private final RoomDao roomDao;
 
-    public SpringChessService(PieceDao pieceDao, TurnDao turnDao) {
+    public SpringChessService(PieceDao pieceDao, TurnDao turnDao, RoomDao roomDao) {
         this.pieceDao = pieceDao;
         this.turnDao = turnDao;
+        this.roomDao = roomDao;
+    }
+
+    public List<RoomDto> showRooms() {
+        return roomDao.findAll();
+    }
+
+    public long makeChessRoom(final RoomDto roomDto){
+        final ChessRoom chessRoom = ChessRoom.from(roomDto);
+        return roomDao.makeRoom(roomDto);
     }
 
     public ChessMap initializeGame(final long roomId) {
@@ -36,12 +49,17 @@ public class SpringChessService {
         pieceDao.initializePieces(roomId, new Player(new WhiteGenerator(), Team.WHITE));
         turnDao.resetTurn(roomId);
 
-        final ChessWebGame chessWebGame = new ChessWebGame();
+        final RoomDto roomDto = roomDao.findRoomById(roomId);
+        final ChessWebGame chessWebGame = new ChessWebGame(ChessRoom.from(roomDto));
         return chessWebGame.initializeChessGame();
     }
 
-    public ChessMap load(final long roomId) {
-        final ChessWebGame chessWebGame = new ChessWebGame();
+    public ChessMap load(final long roomId, final EnterDto enterDto) {
+        final RoomDto roomDto = roomDao.findRoomById(roomId);
+        if (!roomDto.getPassword().equals(enterDto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        final ChessWebGame chessWebGame = new ChessWebGame(ChessRoom.from(roomDto));
         loadPieces(roomId, chessWebGame);
         loadTurn(roomId, chessWebGame);
 
@@ -111,7 +129,8 @@ public class SpringChessService {
     }
 
     private ChessWebGame loadGame(final long roomId) {
-        final ChessWebGame chessWebGame = new ChessWebGame();
+        final RoomDto roomDto = roomDao.findRoomById(roomId);
+        final ChessWebGame chessWebGame = new ChessWebGame(ChessRoom.from(roomDto));
         loadPieces(roomId, chessWebGame);
         loadTurn(roomId, chessWebGame);
         return chessWebGame;

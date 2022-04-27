@@ -3,7 +3,12 @@ package chess.dao;
 import chess.dto.RoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.util.List;
 
 @Repository
 public class JdbcRoomDao implements RoomDao {
@@ -22,9 +27,22 @@ public class JdbcRoomDao implements RoomDao {
     }
 
     @Override
-    public void makeRoom(final RoomDto roomDto) {
+    public long makeRoom(final RoomDto roomDto) {
         final String sql = "insert into room (name, password) values (?, ?)";
-        jdbcTemplate.update(sql, roomDto.getName(), roomDto.getPassword());
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, roomDto.getName());
+            ps.setString(2, roomDto.getPassword());
+            return ps;
+        }, keyHolder);
+        return keyHolder.getKey().longValue();
+    }
+
+    @Override
+    public List<RoomDto> findAll() {
+        final String sql = "select * from room";
+        return jdbcTemplate.query(sql, roomRowMapper);
     }
 
     @Override

@@ -38,7 +38,9 @@ public class JdbcTurnDao implements TurnDao {
 
     @Override
     public void resetTurn(final long roomId) {
-        final String sql = "update turn set team = 'WHITE' where roomId = ?";
-        jdbcTemplate.update(sql, roomId);
+        final String deleteSql = "delete from turn where roomId = ?";
+        jdbcTemplate.update(deleteSql, roomId);
+        final String sql = "insert into turn (roomId, team) values (?, ?)";
+        jdbcTemplate.update(sql, roomId, "WHITE");
     }
 }

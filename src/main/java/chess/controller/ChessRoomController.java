@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/")
 public class ChessRoomController {
 
@@ -21,18 +22,11 @@ public class ChessRoomController {
         this.roomService = roomService;
     }
 
-    @GetMapping("")
-    public String home() {
-        return "home";
-    }
-
-    @ResponseBody
     @GetMapping("search")
     public List<RoomEntity> search() {
         return roomService.searchRooms();
     }
 
-    @ResponseBody
     @PostMapping("create")
     public List<RoomEntity> create(@RequestBody RoomDto roomDto) {
         return roomService.createRoom(roomDto.getName(), roomDto.getPassword());

@@ -42,15 +42,6 @@ function movePiece() {
     })
 }
 
-function start() {
-    fetch("/start").then(res => {
-        if (res.status === 501) {
-            res.text().then(message => alert(message))
-            return;
-        }
-        location.replace("/chess");
-    })
-}
 
 function end() {
     fetch("/end").then(res => {

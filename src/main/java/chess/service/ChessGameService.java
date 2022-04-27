@@ -6,8 +6,10 @@ import chess.domain.ChessGame;
 import chess.domain.Color;
 import chess.domain.Winner;
 import chess.domain.board.Position;
+import chess.dto.BoardInfoDto;
+import chess.dto.CreateBoardDto;
 import chess.dto.ChessBoardDto;
-import chess.dto.ResponseDto;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,49 +24,57 @@ public class ChessGameService {
         this.boardDao = boardDao;
     }
 
-    public void start() {
+    public int makeBoard(CreateBoardDto boardInfoDto) {
+        return boardDao.makeBoard(Color.WHITE, boardInfoDto);
+    }
+
+    public List<BoardInfoDto> getBoards() {
+         return boardDao.getAllBoardInfo();
+    }
+
+    public void start(int id) {
         chessGame = new ChessGame();
-        if (pieceDao.existPieces()) {
-            chessGame.load(pieceDao.load(), boardDao.findTurn());
+        if (boardDao.existBoard(id)) {
+            chessGame.load(pieceDao.load(), boardDao.findTurn(id));
             return;
         }
         chessGame.start();
     }
 
-    public ResponseCode move(String rawSource, String rawTarget) {
+    public ResponseCode move(String rawSource, String rawTarget, int id) {
         final Position source = Position.from(rawSource);
         final Position target = Position.from(rawTarget);
         chessGame.move(source, target);
-        savePieces(source, target);
+        savePieces(source, target, id);
         if (!isRunning()) {
-            end();
+            end(1);
             return ResponseCode.MOVED_PERMANENTLY;
         }
         return ResponseCode.FOUND;
     }
 
-    private void savePieces(Position source, Position target) {
+    private void savePieces(Position source, Position target, int id) {
         if (pieceDao.existPieces()) {
-            updatePosition(source, target, chessGame.getTurn());
+            updatePosition(source, target, chessGame.getTurn(), id);
             return;
         }
-        save(chessGame.getTurn());
+        save(chessGame.getTurn(), id);
     }
 
-    private void updatePosition(Position source, Position target, Color turn) {
-        boardDao.save(turn);
+    private void updatePosition(Position source, Position target, Color turn, int id) {
+        boardDao.updateTurn(turn, id);
         pieceDao.updatePosition(source.stringName(), target.stringName());
     }
 
-    private void save(Color turn) {
-        boardDao.save(turn);
+    private void save(Color turn, int id) {
+        boardDao.updateTurn(turn, id);
         pieceDao.save(chessGame.getBoard().getPiecesByPosition());
     }
 
-    public void end() {
+    public void end(int id) {
         chessGame.end();
         pieceDao.delete();
-        boardDao.deleteBoard();
+        boardDao.deleteBoard(id);
     }
 
     public ChessBoardDto getBoard() {

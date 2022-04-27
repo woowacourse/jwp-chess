@@ -1,12 +1,21 @@
 package chess.dao;
 
 import chess.domain.Color;
+import chess.dto.BoardInfoDto;
+import chess.dto.CreateBoardDto;
+import java.util.List;
 
 public interface BoardDao {
 
-    void save(Color turn);
+    int makeBoard(Color color, CreateBoardDto boardInfoDto);
 
-    Color findTurn();
+    List<BoardInfoDto> getAllBoardInfo();
 
-    void deleteBoard();
+    void updateTurn(Color turn, int id);
+
+    Color findTurn(int id);
+
+    void deleteBoard(int id);
+
+    boolean existBoard(int id);
 }

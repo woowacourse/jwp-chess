@@ -29,10 +29,10 @@ public class ChessGameServiceTest {
         BoardDao boardDao = new MockBoardDao();
         board.move(Position.of(Column.A, Row.TWO), Position.of(Column.A, Row.FOUR));
         pieceDao.save(board.getPiecesByPosition());
-        boardDao.save(Color.BLACK);
+        boardDao.updateTurn(Color.BLACK,1);
         ChessGameService chessGameService = new ChessGameService(pieceDao, boardDao);
         //when
-        chessGameService.start();
+        chessGameService.start(1);
         //then
         ChessBoardDto chessBoardDto = chessGameService.getBoard();
         Map<String, Piece> pieceMap = chessBoardDto.getBoard();
@@ -47,11 +47,11 @@ public class ChessGameServiceTest {
         PieceDao pieceDao = new MockPieceDao();
         BoardDao boardDao = new MockBoardDao();
         pieceDao.save(board.getPiecesByPosition());
-        boardDao.save(Color.WHITE);
+        boardDao.updateTurn(Color.WHITE, 1);
         ChessGameService chessGameService = new ChessGameService(pieceDao, boardDao);
-        chessGameService.start();
+        chessGameService.start(1);
         //when
-        chessGameService.end();
+        chessGameService.end(1);
         //then
         assertThat(pieceDao.existPieces()).isFalse();
     }

@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.dto.CreateBoardDto;
 import chess.dto.ResultDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,18 +25,24 @@ public class ChessSpringController {
     }
 
     @GetMapping("/")
-    public String home() {
-        return "home";
+    public ModelAndView home() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("boards", chessGameService.getBoards());
+        modelAndView.setViewName("home");
+        return modelAndView;
     }
 
-    @GetMapping("/start")
-    public ResponseEntity<String> start() {
-        chessGameService.start();
-        return ResponseEntity.ok().body("");
+
+    @PostMapping("/make-board")
+    public String makeBoard(String name, String password) {
+        int id = chessGameService.makeBoard(new CreateBoardDto(name, password));
+        chessGameService.start(id);
+
+        return "redirect:chess/?id=" + id;
     }
 
     @GetMapping("/chess")
-    public ModelAndView chess() {
+    public ModelAndView chess(@RequestParam int id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("boardDto", chessGameService.getBoard());
         modelAndView.setViewName("index");
@@ -42,9 +50,10 @@ public class ChessSpringController {
     }
 
     @PostMapping("/move")
-    public @ResponseBody ResponseEntity<String> move(@RequestBody String request) {
+    public @ResponseBody
+    ResponseEntity<String> move(@RequestBody String request) {
         List<String> command = Arrays.asList(request.split(" "));
-        ResponseCode code = chessGameService.move(command.get(0), command.get(1));
+        ResponseCode code = chessGameService.move(command.get(0), command.get(1), 1);
 
         return ResponseEntity.status(code.getHttpStatus()).body("");
     }
@@ -59,9 +68,10 @@ public class ChessSpringController {
     }
 
     @GetMapping("/end")
-    public @ResponseBody  ResponseEntity<String> end() {
-         chessGameService.end();
-         return ResponseEntity.ok().body("");
+    public @ResponseBody
+    ResponseEntity<String> end(@RequestParam int id) {
+        chessGameService.end(id);
+        return ResponseEntity.ok().body("");
     }
 
     @GetMapping("/chess-result")

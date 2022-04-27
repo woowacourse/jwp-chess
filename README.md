@@ -103,7 +103,7 @@ use chess;
 - [x] ChessGameService를 bean으로 주입
 - [x] JdbcTemplate final로 선언
 - [x] default 접근제어자를 private로 변경
-- [x] [스프링 bean 주입 방식 공부]()
+- [x] [스프링 bean 주입 방식 공부](https://velog.io/@betterfuture4/Spring-DI)
 - [x] 생성자 주입 사용 이유
     - 필드 주입(@Autuwired)의 취약성(더 공부)
 - [x] [@Controller 와 @RestController 의 차이 공부](https://velog.io/@betterfuture4/Spring-Controller-RestController-Annotations)

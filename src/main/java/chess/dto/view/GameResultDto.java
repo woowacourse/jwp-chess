@@ -7,25 +7,29 @@ import java.util.Objects;
 
 public class GameResultDto {
 
-    private final FullGameDto fullGame;
+    private final GameOverviewDto metadata;
+    private final GameSnapshotDto snapshot;
     private final GameResult result;
 
-    public GameResultDto(FullGameDto fullGame, GameResult result) {
-        this.fullGame = fullGame;
+    public GameResultDto(GameOverviewDto metadata, GameSnapshotDto snapshot, GameResult result) {
+        this.metadata = metadata;
+        this.snapshot = snapshot;
         this.result = result;
     }
 
     public static GameResultDto of(GameEntity gameEntity, Game game) {
-        FullGameDto fullGameDto = new FullGameDto(gameEntity.toDto(), game.toSnapshotDto());
-        return new GameResultDto(fullGameDto, game.getResult());
+        GameOverviewDto metadata = gameEntity.toDto();
+        GameSnapshotDto snapshot = game.toSnapshotDto();
+        GameResult result = game.getResult();
+        return new GameResultDto(metadata, snapshot, result);
     }
 
     public GameOverviewDto getMetadata() {
-        return fullGame.getMetadata();
+        return metadata;
     }
 
     public GameSnapshotDto getSnapshot() {
-        return fullGame.getSnapshot();
+        return snapshot;
     }
 
     public GameResult getResult() {
@@ -41,17 +45,22 @@ public class GameResultDto {
             return false;
         }
         GameResultDto that = (GameResultDto) o;
-        return Objects.equals(fullGame, that.fullGame)
+        return Objects.equals(metadata, that.metadata)
+                && Objects.equals(snapshot, that.snapshot)
                 && Objects.equals(result, that.result);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fullGame, result);
+        return Objects.hash(metadata, snapshot, result);
     }
 
     @Override
     public String toString() {
-        return "GameResultDto{" + "fullGame=" + fullGame + ", result=" + result + '}';
+        return "GameResultDto{" +
+                "metadata=" + metadata +
+                ", snapshot=" + snapshot +
+                ", result=" + result +
+                '}';
     }
 }

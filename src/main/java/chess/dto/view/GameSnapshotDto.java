@@ -1,20 +1,36 @@
 package chess.dto.view;
 
+import chess.domain.board.Board;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.position.Position;
+import chess.domain.board.position.Rank;
 import chess.domain.game.GameState;
-import chess.dto.view.board.BoardViewDto;
 import chess.dto.view.board.RowDto;
 import chess.util.GameStateDisplayUtil;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class GameSnapshotDto {
 
     private final GameState state;
-    private final BoardViewDto board;
+    private final List<RowDto> board;
 
-    public GameSnapshotDto(GameState state, BoardViewDto board) {
+    public GameSnapshotDto(GameState state, List<RowDto> board) {
         this.state = state;
         this.board = board;
+    }
+
+    public static GameSnapshotDto of(GameState state, Board board) {
+        return new GameSnapshotDto(state, toBoardDisplay(board.toMap()));
+    }
+
+    private static List<RowDto> toBoardDisplay(Map<Position, Piece> board) {
+        return Rank.allRanksDescending()
+                .stream()
+                .map(rank -> new RowDto(board, rank))
+                .collect(Collectors.toList());
     }
 
     public GameState getState() {
@@ -26,7 +42,7 @@ public class GameSnapshotDto {
     }
 
     public List<RowDto> getBoard() {
-        return board.toDisplay();
+        return board;
     }
 
     @Override
@@ -49,9 +65,6 @@ public class GameSnapshotDto {
 
     @Override
     public String toString() {
-        return "GameSnapshotDto{" +
-                "state=" + state +
-                ", board=" + board +
-                '}';
+        return "GameSnapshotDto{" + "state=" + state + ", board=" + board + '}';
     }
 }

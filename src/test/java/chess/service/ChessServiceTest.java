@@ -149,8 +149,8 @@ class ChessServiceTest {
             Game expectedGame = new NewGame().play(new InitEvent()).play(new MoveEvent("e2 e4"))
                     .play(new MoveEvent("d7 d5")).play(new MoveEvent("f1 b5"))
                     .play(new MoveEvent("a7 a5")).play(new MoveEvent("b5 e8"));
-            FullGameDto fullGame = new FullGameDto(new GameOverviewDto(3, "종료된_게임"), expectedGame.toSnapshotDto());
-            GameResultDto expected = new GameResultDto(fullGame, expectedGame.getResult());
+            GameResultDto expected = new GameResultDto(new GameOverviewDto(3, "종료된_게임"),
+                    expectedGame.toSnapshotDto(), expectedGame.getResult());
 
             assertThat(actual).isEqualTo(expected);
         }

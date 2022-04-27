@@ -2,7 +2,6 @@ package chess.domain.game;
 
 import chess.domain.board.Board;
 import chess.dto.view.GameSnapshotDto;
-import chess.dto.view.board.BoardViewDto;
 import java.util.Objects;
 
 public abstract class Started implements Game {
@@ -17,7 +16,7 @@ public abstract class Started implements Game {
 
     @Override
     public GameSnapshotDto toSnapshotDto() {
-        return new GameSnapshotDto(state, new BoardViewDto(board));
+        return GameSnapshotDto.of(state, board);
     }
 
     @Override

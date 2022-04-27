@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
@@ -46,5 +47,13 @@ class GameDaoTest {
         gameDao.insertGame(gameId, "WHITE");
         String turn = gameDao.findTurnById(gameId);
         assertThat(turn).isEqualTo("WHITE");
+    }
+
+    @Test
+    void deleteGameTest() {
+        int gameId = 0;
+        gameDao.deleteGame(gameId);
+        assertThatThrownBy(() -> gameDao.findTurnById(gameId))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

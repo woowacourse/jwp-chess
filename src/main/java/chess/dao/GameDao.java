@@ -25,4 +25,9 @@ public class GameDao {
         String sql = "insert into game (game_id, current_turn) values (?,?)";
         jdbcTemplate.update(sql, gameId, turn);
     }
+
+    public void deleteGame(int gameId) {
+        String sql = "delete from game where game_id = ?";
+        jdbcTemplate.update(sql, gameId);
+    }
 }

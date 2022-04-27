@@ -1,28 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>체스</title>
-    <link rel="stylesheet" href="/style.css">
-</head>
-<body>
-<div class="container">
-    <h1 class="chess-header">🏛ROMA CHESS🏛</h1>
-    <div id="entrance" class="container">
-        <div class="chess-button-container">
-            <div>방에 입장해주세요.</div>
-            방 제목: <input type="text" id="roomName" name="name">
-            비밀번호: <input type="password" id="roomPassword" name="password">
-            <input type="button" class="chess-btn" value="방 입장" onclick="create()">
-        </div>
-    </div>
-
-    <div id="start-room">
         <div class="chess-button-container">
             <div id="chess-status"></div>
             <div id="turn-status"></div>
             <button class="chess-btn" onclick="newGame()">새 게임</button>
-            <button class="chess-btn" onclick="start()">게임 시작</button>
             <button class="chess-btn" onclick="load()">불러오기</button>
             <button class="chess-btn" onclick="end()">그만하기</button>
         </div>
@@ -140,8 +119,4 @@
             <div></div>
 
         </div>
-    </div>
-</div>
-<script type="text/javascript" src="/script.js"></script>
-</body>
-</html>
+

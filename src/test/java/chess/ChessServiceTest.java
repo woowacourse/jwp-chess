@@ -21,12 +21,12 @@ public class ChessServiceTest {
     @BeforeEach
     void setUp() {
         chessService = new ChessService(roomDao, squareDao);
-        chessService.createRoom("roma");
+        chessService.createRoom("roma", "pw");
     }
 
     @Test
     void createRoom() {
-        boolean actual = chessService.createRoom("sojukang");
+        boolean actual = chessService.createRoom("sojukang", "pw");
         assertThat(actual).isTrue();
     }
 

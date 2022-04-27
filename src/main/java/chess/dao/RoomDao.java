@@ -9,5 +9,7 @@ public interface RoomDao {
 
     Optional<Room> findByName(String name);
 
+    Optional<Room> findByNameAndPassword(String name, String password);
+
     void update(long id, String turn);
 }

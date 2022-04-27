@@ -32,7 +32,7 @@ class SquareDaoImplTest {
         jdbcFixture.createRoomTable();
         jdbcFixture.createSquareTable();
 
-        jdbcFixture.insertRoom("sojukang", "white");
+        jdbcFixture.insertRoom("sojukang", "white", "pw");
         jdbcFixture.insertSquares(List.of(
             "a1,white_pawn,1",
             "a2,black_pawn,1",
@@ -77,7 +77,7 @@ class SquareDaoImplTest {
     @Test
     @DisplayName("해당 RoomId를 참조한 모든 Square를 제거할 수 있다.")
     void removeAll() {
-        jdbcFixture.insertRoom("test", "white");
+        jdbcFixture.insertRoom("test", "white", "pw");
         jdbcFixture.insertSquares(List.of("b1,white_pawn,2"));
 
         squareDao.removeAll(2);

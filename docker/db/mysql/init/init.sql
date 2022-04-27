@@ -1,8 +1,12 @@
+drop table if exists square;
+drop table if exists room;
+
 create table room
 (
     id bigint not null auto_increment,
     name varchar(255) not null,
     turn varchar(10) not null,
+    password varchar(255) not null,
     primary key (id),
     constraint uniqueName unique (name)
 );

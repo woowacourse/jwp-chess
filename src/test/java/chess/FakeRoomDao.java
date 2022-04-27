@@ -18,7 +18,7 @@ public class FakeRoomDao implements RoomDao {
 
     @Override
     public void save(Room room) {
-        rooms.add(new Room(id++, room.getTurn(), room.getName()));
+        rooms.add(new Room(id++, room.getPassword(), room.getTurn(), room.getName()));
     }
 
     @Override
@@ -30,8 +30,17 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
+    public Optional<Room> findByNameAndPassword(String name, String password) {
+        Room room = findByName(name).get();
+        if (room.getPassword().equals(password)) {
+            return Optional.of(room);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public void update(long id, String turn) {
         Room room = rooms.get((int)(id - 1));
-        rooms.set((int)(id - 1), new Room(id, turn, room.getName()));
+        rooms.set((int)(id - 1), new Room(id, room.getPassword(), turn, room.getName()));
     }
 }

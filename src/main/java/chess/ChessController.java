@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,7 +31,7 @@ public class ChessController {
 
     @GetMapping("/")
     public String index() {
-        return "lobby.html";
+        return "room.html";
     }
 
     @GetMapping("/room")
@@ -42,10 +43,15 @@ public class ChessController {
 
     @PostMapping("/room")
     @ResponseBody
-    public ResponseEntity<BoardDto> start(@RequestParam String name) {
-        chessService.createRoom(name);
-        return ResponseEntity.created(URI.create("/room/" + name))
-            .body(chessService.startNewGame(name));
+    public ResponseEntity<BoardDto> create(@RequestParam String name, @RequestParam String password) {
+        chessService.createRoom(name, password);
+        return ResponseEntity.created(URI.create("/room/" + name)).build();
+    }
+
+    @PostMapping("/room/{roomName}")
+    @ResponseBody
+    public BoardDto start(@PathVariable String roomName) {
+        return chessService.startNewGame(roomName);
     }
 
     @GetMapping("/room/{roomName}")
@@ -54,7 +60,7 @@ public class ChessController {
         return chessService.load(roomName);
     }
 
-    @PutMapping("/room/{roomName}/move")
+    @PatchMapping("/room/{roomName}/move")
     @ResponseBody
     public BoardDto move(@PathVariable String roomName,
         @RequestBody MoveDto moveDto) {

@@ -15,6 +15,7 @@ import chess.domain.ChessBoard;
 import chess.domain.ChessGame;
 import chess.domain.Status;
 import chess.domain.piece.Piece;
+import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
@@ -107,10 +108,10 @@ public class ChessService {
         return chessGame.status();
     }
 
-    public boolean createRoom(String name) {
-        Optional<Room> room = roomDao.findByName(name);
+    public boolean createRoom(String name, String password) {
+        Optional<Room> room = roomDao.findByNameAndPassword(name, password);
         if (room.isEmpty()) {
-            Room newRoom = new Room(name);
+            Room newRoom = new Room(name, password);
             roomDao.save(newRoom);
             return true;
         }

@@ -19,8 +19,8 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public void save(Room room) {
-        String sql = "insert into room (turn, name) values (?, ?)";
-        jdbcTemplate.update(sql, room.getTurn(), room.getName());
+        String sql = "insert into room (turn, name, password) values (?, ?, ?)";
+        jdbcTemplate.update(sql, room.getTurn(), room.getName(), room.getPassword());
     }
 
     @Override
@@ -29,13 +29,30 @@ public class RoomDaoImpl implements RoomDao {
 
         try {
             Room room = jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> {
-                    return new Room(
-                        rs.getLong("id"),
-                        rs.getString("turn"),
-                        rs.getString("name")
-                    );
-                }, name);
+                (rs, rowNum) -> new Room(
+                    rs.getLong("id"),
+                    rs.getString("password"),
+                    rs.getString("turn"),
+                    rs.getString("name")
+                ), name);
+            return Optional.ofNullable(room);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Room> findByNameAndPassword(String name, String password) {
+        String sql = "select * from room where name = ? AND password = ?";
+
+        try {
+            Room room = jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> new Room(
+                    rs.getLong("id"),
+                    rs.getString("password"),
+                    rs.getString("turn"),
+                    rs.getString("name")
+                ), name, password);
             return Optional.ofNullable(room);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

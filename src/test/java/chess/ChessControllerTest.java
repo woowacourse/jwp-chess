@@ -35,7 +35,7 @@ class ChessControllerTest {
         jdbcFixture.dropTable("room");
         jdbcFixture.createRoomTable();
         jdbcFixture.createSquareTable();
-        jdbcFixture.insertRoom("roma", "white");
+        jdbcFixture.insertRoom("roma", "white", "pw");
     }
 
     @Test
@@ -64,7 +64,7 @@ class ChessControllerTest {
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("turn", is("white"))
-            .body("board.size()", is(64));
+            .body("start-room.size()", is(64));
     }
 
     @Test
@@ -77,7 +77,7 @@ class ChessControllerTest {
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("turn", is("white"))
-            .body("board.size()", is(64));
+            .body("start-room.size()", is(64));
     }
 
     @Test
@@ -93,8 +93,8 @@ class ChessControllerTest {
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("turn", is("black"))
-            .body("board.a2", is("empty"))
-            .body("board.a4", is("white_pawn"));
+            .body("start-room.a2", is("empty"))
+            .body("start-room.a4", is("white_pawn"));
     }
 
     @Test

@@ -22,6 +22,7 @@ public class JdbcFixture {
             + " id bigint not null auto_increment,"
             + " name VARCHAR(255) not null,"
             + " turn varchar(10) not null,"
+            + " password varchar(255) not null,"
             + " primary key (id),"
             + " constraint uniqueName unique (name))");
     }
@@ -37,8 +38,8 @@ public class JdbcFixture {
                 + " foreign key (room_id) references room (id))");
     }
 
-    public void insertRoom(String name, String turn) {
-        jdbcTemplate.update("INSERT INTO room(name, turn) VALUES (?,?)", name, turn);
+    public void insertRoom(String name, String turn, String password) {
+        jdbcTemplate.update("INSERT INTO room(name, turn, password) VALUES (?, ?, ?)", name, turn, password);
     }
 
     public void insertSquares(List<String> squares) {

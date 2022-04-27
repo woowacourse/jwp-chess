@@ -5,16 +5,19 @@ public class Room {
     private final String name;
     private final String turn;
     private long id;
+    private final String password;
 
-    public Room(long id, String turn, String name) {
+    public Room(long id, String password, String turn, String name) {
         this.id = id;
+        this.password = password;
         this.turn = turn;
         this.name = name;
     }
 
-    public Room(String name) {
+    public Room(String name, String password) {
         this.name = name;
-        this.turn = "empty";
+        this.password = password;
+        this.turn = "white";
     }
 
     public long getId() {
@@ -27,5 +30,9 @@ public class Room {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

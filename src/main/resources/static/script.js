@@ -1,31 +1,40 @@
 let from = "";
 let turn = "";
 let isStart = false;
-let paramName = "name"
-let roomName = getParameterByName(paramName);
+let roomName = "";
+document.getElementById("start-room").style.display = "none";
 
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    const regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
+async function create() {
+    if (roomName === "") {
+        roomName = document.getElementById("roomName").value;
+    }
 
-async function start() {
-    let pieces;
     await fetch("/room", {
         method: "POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         },
-        body: paramName + "=" + roomName
+        body: "name=" + roomName + "&password=" + document.getElementById("roomPassword").value
+    })
+    document.getElementById("roomPassword").value = "";
+    document.getElementById("entrance").style.display = "none";
+    document.getElementById("start-room").style.display = "block";
+}
+
+async function start() {
+    let pieces;
+
+    await fetch("/room/" + roomName, {
+        method: "POST"
     })
         .then(res => res.json())
         .then(data => pieces = data)
 
+    document.getElementById("entrance").style.display = "none";
+    document.getElementById("start-room").style.display = "block";
     turn = pieces.turn;
     isStart = true;
-    printPieces(pieces.board);
+    await printPieces(pieces.board);
     await printStatus();
 }
 
@@ -59,6 +68,14 @@ async function load() {
 
 }
 
+async function newGame() {
+    roomName = "";
+    document.getElementById("start-room").style.display = "none";
+    document.getElementById("entrance").style.display = "block";
+
+    await fetch("/")
+}
+
 function end() {
     let whiteSquares = document.getElementsByClassName("white-square");
     let blackSquares = document.getElementsByClassName("black-square");
@@ -76,6 +93,7 @@ function end() {
     status.innerText = "게임이 종료되었습니다. 새 게임을 눌러주세요.";
     turnState.innerText = "";
 }
+
 
 async function printStatus() {
     let stat;
@@ -100,6 +118,7 @@ function printPieces(pieces) {
         const piece = pieces[key];
         const square = document.getElementById(key);
         const img = document.createElement("img");
+        console.log(square);
         removeChildren(square);
         attachPieceInSquare(piece, img, square);
     }
@@ -142,7 +161,7 @@ async function selectPiece(pieceDiv) {
 async function move(fromPosition, toPosition) {
     from = "";
     let response = await fetch("/room/" + roomName + "/move", {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },

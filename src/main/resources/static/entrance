@@ -1,0 +1,6 @@
+        <div class="chess-button-container">
+            <div>방에 입장해주세요.</div>
+                <input type="text" id="roomName" name="name">
+                <input type="password" id="roomPassword" name="password">
+                <input type="button" class="chess-btn" value="방 입장" onclick="start()">
+        </div>

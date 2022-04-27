@@ -1,6 +1,7 @@
 package chess.domain.piece.role;
 
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
 
 public final class Bishop implements Role {
 
@@ -15,7 +16,7 @@ public final class Bishop implements Role {
     @Override
     public void checkMovable(Position source, Position target) {
         if (!source.isDiagonal(target)) {
-            throw new IllegalArgumentException(RULE);
+            throw new IllegalChessRuleException(RULE);
         }
     }
 

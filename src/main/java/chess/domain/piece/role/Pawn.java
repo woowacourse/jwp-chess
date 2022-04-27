@@ -2,6 +2,7 @@ package chess.domain.piece.role;
 
 import chess.domain.position.Position;
 import chess.domain.position.Row;
+import chess.exception.IllegalChessRuleException;
 
 public final class Pawn implements Role {
 
@@ -21,7 +22,7 @@ public final class Pawn implements Role {
         int rowGap = source.rowGap(target);
         int columnGap = source.columnGap(target);
         if (!(isVerticalOneOrTwoSteps(source, rowGap, columnGap) || isDiagonalOneStep(rowGap, columnGap))) {
-            throw new IllegalArgumentException(RULE);
+            throw new IllegalChessRuleException(RULE);
         }
     }
 

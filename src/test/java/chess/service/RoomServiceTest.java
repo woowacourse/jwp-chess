@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
 import chess.configuration.RepositoryConfiguration;
+import chess.exception.UserInputException;
 import chess.web.dto.RoomDto;
 
 @SpringBootTest
@@ -43,7 +44,7 @@ class RoomServiceTest {
 		roomService.create(new RoomDto(testName, password));
 
 		assertThatThrownBy(() -> roomService.create(new RoomDto(testName, password)))
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(UserInputException.class);
 	}
 
 	@ParameterizedTest
@@ -51,14 +52,14 @@ class RoomServiceTest {
 	@DisplayName("빈 이름이나 16자 초과 이름이 들어오면 예외가 발생한다.")
 	void createException(String name) {
 		assertThatThrownBy(() -> roomService.create(new RoomDto(name, password)))
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(UserInputException.class);
 	}
 
 	@Test
 	@DisplayName("없는 id로 방을 조회하면 예외가 발생한다.")
 	void validate() {
 		assertThatThrownBy(() -> roomService.validateId(0))
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(UserInputException.class);
 	}
 
 	@ParameterizedTest
@@ -66,7 +67,7 @@ class RoomServiceTest {
 	@DisplayName("빈 비밀번호를 입력하면 예외가 발생한다.")
 	void passwordException(String password) {
 		assertThatThrownBy(() -> roomService.create(new RoomDto(testName, password)))
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(UserInputException.class);
 	}
 
 	@Test
@@ -75,6 +76,6 @@ class RoomServiceTest {
 		RoomDto room = roomService.create(new RoomDto(testName, password));
 
 		assertThatThrownBy(() -> roomService.delete((int)room.getId(), "1234"))
-			.isInstanceOf(IllegalArgumentException.class);
+			.isInstanceOf(UserInputException.class);
 	}
 }

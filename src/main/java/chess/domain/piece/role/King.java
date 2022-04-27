@@ -1,6 +1,7 @@
 package chess.domain.piece.role;
 
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
 
 public final class King implements Role {
 
@@ -16,7 +17,7 @@ public final class King implements Role {
     @Override
     public void checkMovable(Position source, Position target) {
         if (!isAdjacent(source, target)) {
-            throw new IllegalArgumentException(RULE);
+            throw new IllegalChessRuleException(RULE);
         }
     }
 

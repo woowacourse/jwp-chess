@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.exception.UserInputException;
 import chess.repository.RoomRepository;
 import chess.web.dto.RoomDto;
 
@@ -39,26 +40,26 @@ public class RoomService {
 
 	private void validateNameSize(String name) {
 		if (name.length() < NAME_MIN_SIZE || name.length() > NAME_MAX_SIZE) {
-			throw new IllegalArgumentException("방 이름은 1자 이상, 16자 이하입니다.");
+			throw new UserInputException("방 이름은 1자 이상, 16자 이하입니다.");
 		}
 	}
 
 	private void validateDuplicateName(String name) {
 		if (roomRepository.find(name).isPresent()) {
-			throw new IllegalArgumentException("해당 이름의 방이 이미 존재합니다.");
+			throw new UserInputException("해당 이름의 방이 이미 존재합니다.");
 		}
 	}
 
 	private void validatePassword(String password) {
 		if (password.isEmpty() || password.isBlank()) {
-			throw new IllegalArgumentException("비밀번호를 입력하세요");
+			throw new UserInputException("비밀번호를 입력하세요");
 		}
 	}
 
 	public void validateId(int roomId) {
 		Optional<RoomDto> roomDto = roomRepository.findById(roomId);
 		if (roomDto.isEmpty()) {
-			throw new IllegalArgumentException(NOT_EXIST_ROOM);
+			throw new UserInputException(NOT_EXIST_ROOM);
 		}
 
 	}
@@ -67,7 +68,7 @@ public class RoomService {
 	public void delete(int id, String password) {
 		validatePassword(password);
 		if (!getPassword(id).equals(password)) {
-			throw new IllegalArgumentException("유효하지 않은 비밀번호입니다.");
+			throw new UserInputException("유효하지 않은 비밀번호입니다.");
 		}
 		roomRepository.deleteById(id);
 	}
@@ -78,7 +79,7 @@ public class RoomService {
 			return findRoom.get()
 				.getPassword();
 		}
-		throw new IllegalArgumentException(NOT_EXIST_ROOM);
+		throw new UserInputException(NOT_EXIST_ROOM);
 	}
 
 	public List<RoomDto> findAll() {

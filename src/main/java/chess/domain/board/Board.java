@@ -6,6 +6,8 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,18 +80,18 @@ public final class Board {
 
     private void validatePositionsNotEquals(Position source, Position target) {
         if (source.equals(target)) {
-            throw new IllegalArgumentException(ERROR_SOURCE_AND_TARGET_SAME);
+            throw new IllegalChessRuleException(ERROR_SOURCE_AND_TARGET_SAME);
         }
     }
 
     private Piece pickPiece(Position position) {
         Optional<Piece> piece = findPiece(position);
-        return piece.orElseThrow(() -> new IllegalArgumentException(ERROR_PIECE_NOT_EXIST));
+        return piece.orElseThrow(() -> new IllegalChessRuleException(ERROR_PIECE_NOT_EXIST));
     }
 
     private void validateTargetNotSameColor(Position target, Piece piece) {
         if (pieces.pieceExist(target) && piece.isSameColor(pickPiece(target))) {
-            throw new IllegalArgumentException(ERROR_CANNOT_CATCH_SAME_COLOR);
+            throw new IllegalChessRuleException(ERROR_CANNOT_CATCH_SAME_COLOR);
         }
     }
 
@@ -103,7 +105,7 @@ public final class Board {
 
     private void validateCorrectTurn(Piece piece) {
         if (!piece.isSameColor(turn)) {
-            throw new IllegalArgumentException("지금은 " + turn.text() + "의 턴입니다.");
+            throw new IllegalChessRuleException("지금은 " + turn.text() + "의 턴입니다.");
         }
     }
 
@@ -118,13 +120,13 @@ public final class Board {
 
     private void checkPawnTargetExist(Position target) {
         if (!pieces.pieceExist(target)) {
-            throw new IllegalArgumentException(ERROR_PAWN_GO_DIAGONAL_WHEN_CATCH_OTHER);
+            throw new IllegalChessRuleException(ERROR_PAWN_GO_DIAGONAL_WHEN_CATCH_OTHER);
         }
     }
 
     private void checkPawnTargetNotExist(Position target) {
         if (pieces.pieceExist(target)) {
-            throw new IllegalArgumentException(ERROR_PAWN_CANNOT_GO_THROUGH_OTHER);
+            throw new IllegalChessRuleException(ERROR_PAWN_CANNOT_GO_THROUGH_OTHER);
         }
     }
 
@@ -144,7 +146,7 @@ public final class Board {
 
     private void validatePieceNotExist(Position position) {
         if (pieces.pieceExist(position)) {
-            throw new IllegalArgumentException(ERROR_CANNOT_GO_THROUGH);
+            throw new IllegalChessRuleException(ERROR_CANNOT_GO_THROUGH);
         }
     }
 

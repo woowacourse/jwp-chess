@@ -12,6 +12,7 @@ import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
 import chess.repository.BoardRepository;
 import chess.repository.PieceRepository;
 import chess.web.dto.BoardDto;
@@ -51,7 +52,7 @@ public class GameService {
 		board.move(source, target);
 
 		PieceDto pieceDto = pieceRepository.findOne(boardId, source)
-			.orElseThrow(() -> new IllegalArgumentException("피스가 존재하지 않습니다."));
+			.orElseThrow(() -> new IllegalChessRuleException("피스가 존재하지 않습니다."));
 		pieceRepository.deleteOne(boardId, source);
 		updateMovedPieceToTarget(boardId, target, pieceDto);
 		boardRepository.updateTurn(boardId, GameStateDto.from(board));

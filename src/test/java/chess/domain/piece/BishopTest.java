@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.piece.role.Bishop;
 import chess.domain.piece.role.Role;
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
+
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,7 +39,7 @@ class BishopTest {
     void targetNotOnDiagonal_throwException(Position source, Position target) {
         Role bishop = new Bishop();
         assertThatThrownBy(() -> bishop.checkMovable(source, target))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessageContaining("비숍");
     }
 

@@ -14,6 +14,8 @@ import chess.domain.piece.role.Pawn;
 import chess.domain.piece.role.Queen;
 import chess.domain.piece.role.Rook;
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +35,7 @@ class BoardTest {
     void thrown_sourceNotExist() {
         Board board = new Board(new RegularRuleSetup());
         assertThatThrownBy(() -> board.move("a3", "a4"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("해당 위치에 말이 존재하지 않습니다.");
     }
 
@@ -42,7 +44,7 @@ class BoardTest {
     void thrown_sourceEqualsTarget() {
         Board board = new Board(new RegularRuleSetup());
         assertThatThrownBy(() -> board.move("a3", "a3"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("출발지와 목적지가 동일합니다.");
     }
 
@@ -57,7 +59,7 @@ class BoardTest {
         });
 
         assertThatThrownBy(() -> board.move("a2", "b3"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("폰은 상대 기물을 잡을 때만 대각선으로 이동 가능합니다.");
     }
 
@@ -73,7 +75,8 @@ class BoardTest {
         });
 
         board.move("a2", "b3");
-        assertThat(board.findPiece(Position.of("b3")).get()).isEqualTo(whitePawn);
+        assertThat(board.findPiece(Position.of("b3")).orElseThrow())
+            .isEqualTo(whitePawn);
     }
 
     @Test
@@ -88,7 +91,7 @@ class BoardTest {
         });
 
         assertThatThrownBy(() -> board.move("a2", "a4"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("폰은 직진할 때 상대 기물을 지나치거나 집을 수 없습니다.");
     }
 
@@ -104,7 +107,7 @@ class BoardTest {
         });
 
         assertThatThrownBy(() -> board.move("a2", "a4"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("이동경로에 다른 기물이 있으면 움직일 수 없습니다.");
     }
 
@@ -119,7 +122,7 @@ class BoardTest {
         });
 
         assertThatThrownBy(() -> board.move("b8", "b3"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("목적지에 같은 색의 기물이 있으면 움직일 수 없습니다.");
     }
 
@@ -135,7 +138,7 @@ class BoardTest {
         });
 
         assertThatThrownBy(() -> board.move("b8", "b3"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("이동경로에 다른 기물이 있으면 움직일 수 없습니다.");
     }
 
@@ -151,7 +154,7 @@ class BoardTest {
         });
 
         assertThatThrownBy(() -> board.move("b8", "e5"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("이동경로에 다른 기물이 있으면 움직일 수 없습니다.");
     }
 
@@ -169,7 +172,8 @@ class BoardTest {
         });
 
         board.move("b8", "d7");
-        assertThat(board.findPiece(Position.of("d7")).get()).isEqualTo(piece);
+        assertThat(board.findPiece(Position.of("d7")).orElseThrow())
+            .isEqualTo(piece);
     }
 
     @Test
@@ -184,7 +188,7 @@ class BoardTest {
         });
 
         assertThatThrownBy(() -> board.move("b3", "b8"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("이동경로에 다른 기물이 있으면 움직일 수 없습니다.");
     }
 
@@ -200,7 +204,7 @@ class BoardTest {
         });
 
         assertThatThrownBy(() -> board.move("b3", "f3"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("이동경로에 다른 기물이 있으면 움직일 수 없습니다.");
     }
 
@@ -216,7 +220,7 @@ class BoardTest {
         });
 
         assertThatThrownBy(() -> board.move("g7", "b2"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("이동경로에 다른 기물이 있으면 움직일 수 없습니다.");
     }
 
@@ -289,7 +293,7 @@ class BoardTest {
 
         board.move("a5", "a6");
         assertThatThrownBy(() -> board.move("a4", "a5"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessage("지금은 검은말의 턴입니다.");
     }
 }

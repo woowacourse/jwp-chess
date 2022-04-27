@@ -133,7 +133,7 @@ public final class Position {
 
     private static void generateAllPositions() {
         Arrays.stream(Column.values())
-                .forEach(column -> generateOneColumn(column));
+                .forEach(Position::generateOneColumn);
     }
 
     private static void generateOneColumn(Column column) {

@@ -1,6 +1,7 @@
 package chess.domain.piece.role;
 
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
 
 public final class Queen implements Role {
 
@@ -15,7 +16,7 @@ public final class Queen implements Role {
     @Override
     public void checkMovable(Position source, Position target) {
         if (!(source.isStraight(target) || source.isDiagonal(target))) {
-            throw new IllegalArgumentException(RULE);
+            throw new IllegalChessRuleException(RULE);
         }
     }
 

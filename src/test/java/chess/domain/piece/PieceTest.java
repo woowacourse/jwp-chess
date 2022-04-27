@@ -12,6 +12,8 @@ import chess.domain.piece.role.Pawn;
 import chess.domain.piece.role.Queen;
 import chess.domain.piece.role.Rook;
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
+
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,7 +89,7 @@ class PieceTest {
     void blackPawn_moveAbove_throwException(Position source, Position target) {
         Piece piece = new Piece(Color.BLACK, new Pawn());
         assertThatThrownBy(() -> piece.checkMovable(source, target))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessageContaining("폰");
     }
 
@@ -124,7 +126,7 @@ class PieceTest {
     void whitePawn_moveBelow_throwException(Position source, Position target) {
         Piece piece = new Piece(Color.WHITE, new Pawn());
         assertThatThrownBy(() -> piece.checkMovable(source, target))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessageContaining("폰");
     }
 

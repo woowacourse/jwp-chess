@@ -48,18 +48,20 @@ function createGame(id, name) {
   return game;
 }
 
-document.addEventListener('click', async ({target: {className, id, innerText}}) => {
-  if (className !== 'game__title') {
-    return;
+document.addEventListener('click', async ({target: {className, id}}) => {
+  if (className === 'game__title') {
+    await enterGame(id);
   }
+});
 
-  const password = prompt("Please input chess game password.");
+async function enterGame(gameId) {
+  const password = inputPassword();
   const requestJson = JSON.stringify({
-    "gameId": id,
+    "gameId": gameId,
     password
   });
 
-  const res = await fetch(`/games/existed-game/${id}`, {
+  const res = await fetch(`/games/existed-game/${gameId}`, {
     method: "POST",
     headers: {
       'content-type': 'application/json'
@@ -67,12 +69,17 @@ document.addEventListener('click', async ({target: {className, id, innerText}}) 
     body: requestJson
   });
   if (res.status === 204) {
-    location.href = `/game/${id}`;
+    location.href = `/game/${gameId}`;
     return;
   }
   const {message} = await res.json();
   alert(message);
-});
+}
+
+function inputPassword() {
+  return prompt("Please input chess game password.");
+}
+
 
 
 

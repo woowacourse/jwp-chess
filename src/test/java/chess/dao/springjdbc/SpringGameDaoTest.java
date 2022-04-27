@@ -67,4 +67,16 @@ class SpringGameDaoTest {
         int createdGameId = springGameDao.createGame("testGameName", "testPassword");
         assertThat(createdGameId).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("deleteGame: 게임 id를 받아 해당 게임을 삭제")
+    void deleteGame() {
+        GameFactory.setUpGames(jdbcTemplate, "first", "second");
+        int affectedRows = springGameDao.deleteGame(1);
+        int remainGames = springGameDao.findAll().size();
+        assertAll(() -> {
+            assertThat(affectedRows).isOne();
+            assertThat(remainGames).isOne();
+        });
+    }
 }

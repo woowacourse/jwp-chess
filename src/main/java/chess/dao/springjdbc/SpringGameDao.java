@@ -57,4 +57,10 @@ public class SpringGameDao implements GameDao {
 
         return keyHolder.getKey().intValue();
     }
+
+    @Override
+    public int deleteGame(final int id) {
+        String sql = "DELETE FROM game where id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
 }

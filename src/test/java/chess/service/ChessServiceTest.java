@@ -1,6 +1,7 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.dao.GameEntity;
 import chess.dao.InMemoryGameDao;
@@ -73,5 +74,15 @@ class ChessServiceTest {
         service.initGame(1);
         GamesDto allGames = service.getAllGames();
         assertThat(allGames.getGames().size()).isEqualTo(1);
+    }
+
+    @Test
+    void deleteGame() {
+        int affectedGames = service.deleteGame(1);
+        int remainGames = service.getAllGames().getGames().size();
+        assertAll(() -> {
+            assertThat(affectedGames).isOne();
+            assertThat(remainGames).isZero();
+        });
     }
 }

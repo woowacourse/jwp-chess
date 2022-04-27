@@ -10,4 +10,6 @@ public interface GameDao {
     List<GameEntity> findAll();
 
     int createGame(String name, String password);
+
+    int deleteGame(int id);
 }

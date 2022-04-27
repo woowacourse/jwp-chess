@@ -101,4 +101,8 @@ public class ChessService {
     public BoardDto getBoard(int gameId) {
         return new BoardDto(pieceDao.getBoardByGameId(gameId));
     }
+
+    public int deleteGame(int gameId) {
+        return gameDao.deleteGame(gameId);
+    }
 }

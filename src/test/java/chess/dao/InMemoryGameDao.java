@@ -19,6 +19,12 @@ public class InMemoryGameDao implements GameDao {
     }
 
     @Override
+    public int deleteGame(int id) {
+        gameTable.remove(id);
+        return 1;
+    }
+
+    @Override
     public int update(GameEntity dto) {
         gameTable.put(dto.getId(), dto);
         return 1;

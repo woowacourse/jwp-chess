@@ -42,10 +42,11 @@ public class SpringChessService {
         return roomDao.makeRoom(roomRequestDto);
     }
 
-    public void deleteChessRoom(final RoomDeleteRequestDto roomDeleteRequestDto, final long roomId) {
+    public boolean deleteChessRoom(final RoomDeleteRequestDto roomDeleteRequestDto, final long roomId) {
         RoomDto roomDto = roomDao.findRoomById(roomId);
         if (roomDeleteRequestDto.getPassword().equals(roomDto.getPassword())) {
             roomDao.deleteRoom(roomId);
+            return true;
         }
         throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
     }
@@ -106,7 +107,7 @@ public class SpringChessService {
         final Position destinationPosition = Position.of(moveDto.getDestinationPosition());
         final TurnDto turnDto = turnDao.findTurn(roomId);
 
-        final ChessWebGame chessWebGame = loadGame(roomId);
+        final ChessWebGame chessWebGame = loadChessWebGame(roomId);
         chessWebGame.move(currentPosition, destinationPosition);
         chessWebGame.changeTurn();
         pieceDao.removePieceByCaptured(roomId, moveDto);
@@ -116,7 +117,7 @@ public class SpringChessService {
     }
 
     public ScoreDto getStatus(final long roomId) {
-        final ChessWebGame chessWebGame = loadGame(roomId);
+        final ChessWebGame chessWebGame = loadChessWebGame(roomId);
         final Map<String, Double> scores = chessWebGame.getScoreStatus();
         final Double whiteScore = scores.get(Team.WHITE.getName());
         final Double blackScore = scores.get(Team.BLACK.getName());
@@ -127,12 +128,12 @@ public class SpringChessService {
     }
 
     public ResultDto getResult(final long roomId) {
-        final ChessWebGame chessWebGame = loadGame(roomId);
+        final ChessWebGame chessWebGame = loadChessWebGame(roomId);
         final Result result = chessWebGame.getResult();
         return new ResultDto(result.getResult());
     }
 
-    private ChessWebGame loadGame(final long roomId) {
+    private ChessWebGame loadChessWebGame(final long roomId) {
         final RoomDto roomDto = roomDao.findRoomById(roomId);
         final ChessWebGame chessWebGame = new ChessWebGame(ChessRoom.from(roomDto));
         loadPieces(roomId, chessWebGame);

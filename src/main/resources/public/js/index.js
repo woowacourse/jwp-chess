@@ -2,30 +2,24 @@ let currentClickPosition = '';
 let currentPiece = '';
 let destinationClickPosition = '';
 let isRun = false;
-let roomId = 1;
+let roomId;
 
-const initMapEvent = () => {
-    for (let file = 0; file < 8; file++) {
-        for (let rank = 1; rank <= 8; rank++) {
-            const positionTag = document.getElementById(intToFile(file) + rank);
-            positionTag.addEventListener('click', clickToMove);
-        }
-    }
-}
-
-const showRoom = async () => {
+const showRooms = async () => {
     let rooms = await getRoomList();
     Object.values(rooms).forEach((value) => {
         const roomListTag = document.getElementById("chess-room-list");
         const roomTag = document.createElement("div");
+
         const roomNameTag = document.createElement("a");
         roomNameTag.id = value.id;
         roomNameTag.innerHTML = value.name;
         roomNameTag.addEventListener('click', enterRoom);
+
         const roomRemoveBtnTag = document.createElement("button");
         roomRemoveBtnTag.innerHTML = '삭제';
         roomRemoveBtnTag.id = value.id;
         roomRemoveBtnTag.addEventListener('click', deleteRoom);
+
         roomTag.appendChild(roomNameTag);
         roomTag.appendChild(roomRemoveBtnTag);
         roomListTag.appendChild(roomTag);
@@ -41,6 +35,9 @@ const getRoomList = async () => {
 const makeRoomByRequest = async () => {
     const roomName = document.getElementById('roomName').value;
     const roomPassword = document.getElementById('roomPassword').value;
+    if (!validateRoom(roomName, roomPassword)) {
+        return;
+    }
     const bodyValue = {
         name: roomName,
         password: roomPassword
@@ -54,9 +51,20 @@ const makeRoomByRequest = async () => {
         body: JSON.stringify(bodyValue)
     });
     roomId = await roomId.json();
-    await showError(roomId.message);
     initMapEvent();
     await restartChess();
+}
+
+const validateRoom = (roomName, roomPassword) => {
+    if (roomName.length < 1 || roomName.length > 25) {
+        alert('방 제목을 1자 이상 25자 이하로 입력해주세요');
+        return false;
+    }
+    if (roomPassword.length < 1 || roomPassword.length > 15) {
+        alert('방 비밀번호를 1자 이상 15자 이하로 입력해주세요.');
+        return false;
+    }
+    return true;
 }
 
 const enterRoom = async (e) => {
@@ -72,12 +80,25 @@ const enterRoom = async (e) => {
     document.getElementById('message-info').innerHTML = e.target.innerText + ' 방에 입장하셨습니다!';
 }
 
+const initMapEvent = () => {
+    for (let file = 0; file < 8; file++) {
+        for (let rank = 1; rank <= 8; rank++) {
+            const positionTag = document.getElementById(intToFile(file) + rank);
+            positionTag.addEventListener('click', clickToMove);
+        }
+    }
+}
+
 const deleteRoom = async (e) => {
     const password = window.prompt('비밀번호를 입력하세요');
+    if (password.length < 1 || password.length > 15) {
+        alert('비밀번호를 1자 이상 15자 이하로 입력해주세요');
+        return;
+    }
     const bodyValue = {
         password: password
     };
-    let response = await fetch('/delete/' + e.target.id, {
+    await fetch('/delete/' + e.target.id, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -85,10 +106,6 @@ const deleteRoom = async (e) => {
         },
         body: JSON.stringify(bodyValue)
     });
-    if (response.message) {
-        await showError(response.message);
-        return;
-    }
     window.location.reload();
 }
 
@@ -224,7 +241,6 @@ const showResult = async () => {
 }
 
 const showError = async (message) => {
-    console.log(message);
     if (!message) {
         document.getElementById('message-info').innerHTML = '';
         return;

@@ -43,11 +43,9 @@ public class SpringChessGameController {
     }
 
     @PostMapping("/delete/{id}")
-    public ResponseEntity<List<RoomDto>> deleteGame(@PathVariable long id,
+    public ResponseEntity<Boolean> deleteGame(@PathVariable long id,
                                                     @RequestBody RoomDeleteRequestDto roomDeleteRequestDto) {
-        springChessService.deleteChessRoom(roomDeleteRequestDto, id);
-        final List<RoomDto> roomDtos = springChessService.showRooms();
-        return ResponseEntity.ok(roomDtos);
+        return ResponseEntity.ok(springChessService.deleteChessRoom(roomDeleteRequestDto, id));
     }
 
     @GetMapping("/{id}")

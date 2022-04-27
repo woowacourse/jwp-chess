@@ -2,23 +2,23 @@ window.addEventListener("load", function () {
     createRoomButtonInitializer.initializeCreateButton();
     readRoomListButtonInitializer.initializeReadRoomListButton();
 
-    var section = this.document.querySelector(".chess-ui");
-    var pngs = section.querySelectorAll(".img");
-    var positions = "";
-
-    for (var i = 0; i < pngs.length; i++) {
-        pngs[i].onclick = function (event) {
-            var parentTarget = event.target.parentElement;
-            positions += parentTarget.id;
-
-            if (positions.length == 4) {
-                var source = positions.substring(0, 2);
-                var target = positions.substring(2, 4);
-                JsonSender.sendSourceTarget(source, target);
-                positions = "";
-            }
-        }
-    }
+    // var section = this.document.querySelector(".chess-ui");
+    // var pngs = section.querySelectorAll(".img");
+    // var positions = "";
+    //
+    // for (var i = 0; i < pngs.length; i++) {
+    //     pngs[i].onclick = function (event) {
+    //         var parentTarget = event.target.parentElement;
+    //         positions += parentTarget.id;
+    //
+    //         if (positions.length == 4) {
+    //             var source = positions.substring(0, 2);
+    //             var target = positions.substring(2, 4);
+    //             JsonSender.sendSourceTarget(source, target);
+    //             positions = "";
+    //         }
+    //     }
+    // }
 });
 
 const JsonSender = {
@@ -75,7 +75,6 @@ const createRoomButtonInitializer = {
     }
 }
 
-
 const readRoomListButtonInitializer = {
     initializeReadRoomListButton: function () {
         let roomListButton = document.getElementById('room-list');
@@ -86,7 +85,8 @@ const readRoomListButtonInitializer = {
             httpRequest.onreadystatechange = function () {
                 if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
                     let rooms = JSON.parse(httpRequest.responseText);
-                    console.log(rooms);
+                    roomListDrawer.showRooms(rooms);
+                    roomListDrawer.initTitlesAndButtons();
                 } else {
                     if (httpRequest.readyState === XMLHttpRequest.DONE) {
                         alert('요청을 처리할 수 없습니다');
@@ -100,3 +100,73 @@ const readRoomListButtonInitializer = {
         })
     }
 }
+
+const roomListDrawer = {
+    showRooms: function(rooms) {
+        this.removeAll();
+        let parent = document.getElementById("room-list-container");
+        let tmp = document.createElement('div');
+        rooms = rooms.rooms;
+        for (let i = 0; i < rooms.length; i++) {
+            let roomId = rooms[i].roomId;
+            let roomTitle = rooms[i].roomTitle;
+
+            let roomIdElement = document.createTextNode(roomId);
+            let space = document.createTextNode( '\u00A0\u00A0' )
+            let roomTitleElement = document.createElement("span");
+            roomTitleElement.innerText = roomTitle;
+            roomTitleElement.id = "room-title-" + roomId;
+            roomTitleElement.className = "room-title-play";
+
+            let br = document.createElement('br');
+            let button = document.createElement("button");
+            button.type = "submit";
+            button.innerHTML = "삭제";
+            button.id = "delete-" + roomId;
+            button.className = "delete-room";
+
+            tmp.append(roomIdElement);
+            tmp.append(space);
+            tmp.append(roomTitleElement);
+            tmp.append(button);
+            tmp.append(br);
+            parent.append(tmp);
+        }
+    },
+
+    removeAll: function() {
+        let parent = document.getElementById("room-list-container");
+        let child = parent.firstChild;
+        while (child != null) {
+            parent.removeChild(child);
+            child = parent.firstChild;
+        }
+    },
+
+    initTitlesAndButtons: function () {
+        let playRooms = Array.from(document.getElementsByClassName("room-title-play"));
+        for (let i = 0; i < playRooms.length; i++) {
+            playRooms[i].addEventListener("click", () => {
+                let roomId = playRooms[i].id.split("-")[2];
+                let httpRequest = new XMLHttpRequest();
+
+                httpRequest.onreadystatechange = function() {
+                    if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
+                        window.location.replace("http://localhost:8080/play/" + roomId);
+                    } else {
+                        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+                            alert('요청을 처리할 수 없습니다');
+                            return;
+                        }
+                    }
+                }
+
+                httpRequest.open("GET", "/start/" + roomId);
+                httpRequest.send();
+            })
+        }
+        console.log(playRooms);
+    }
+}
+
+

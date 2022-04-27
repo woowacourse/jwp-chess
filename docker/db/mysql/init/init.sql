@@ -12,6 +12,7 @@ create table board
     board_id int(10) NOT NULL AUTO_INCREMENT,
     position varchar(2) NOT NULL,
     piece varchar(10) NOT NULL,
+    room_id int(10) NOT NULL,
     primary key (board_id),
-    foreign key (board_id) references room (id)
+    foreign key (room_id) references room (id)
 );

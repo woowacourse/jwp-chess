@@ -54,6 +54,11 @@
 
                     let roomName = document.createElement("a");
                     roomName.innerText = json[i].name;
+
+                    if (json[i].end === true) {
+                        roomName.innerText += ' (종료된 게임)';
+                    }
+
                     roomName.href = "http://localhost:8080/rooms/" + json[i].id;
                     nameWrap.appendChild(roomName);
 

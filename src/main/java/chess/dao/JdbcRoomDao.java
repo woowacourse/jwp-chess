@@ -52,7 +52,7 @@ public class JdbcRoomDao {
         return Optional.empty();
     }
 
-    private boolean existsById(final int id) {
+    public boolean existsById(final int id) {
         final String sql = "SELECT COUNT(*) from room where id = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, id) == 1;
     }

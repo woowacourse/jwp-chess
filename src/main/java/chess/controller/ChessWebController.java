@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.service.RoomService;
+import chess.dao.JdbcRoomDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class ChessWebController {
 
-    private final RoomService roomService;
+    private final JdbcRoomDao jdbcRoomDao;
 
-    public ChessWebController(final RoomService roomService) {
-        this.roomService = roomService;
+    public ChessWebController(JdbcRoomDao jdbcRoomDao) {
+        this.jdbcRoomDao = jdbcRoomDao;
     }
 
     @GetMapping("/")
@@ -19,9 +19,9 @@ public class ChessWebController {
         return "index";
     }
 
-    @GetMapping("/rooms/{roomName}")
-    public String room(@PathVariable("roomName") final String roomName) {
-        final boolean roomExist = roomService.isExistRoom(roomName);
+    @GetMapping("/rooms/{id}")
+    public String room(@PathVariable final int id) {
+        boolean roomExist = jdbcRoomDao.existsById(id);
         if (!roomExist) {
             return "redirect:/";
         }

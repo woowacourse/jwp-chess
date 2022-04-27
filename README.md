@@ -7,3 +7,9 @@
   - `.movePiece()` 로직을 변경하여 `SpringChessService` 생성
   - `JdbcTemplate` 를 사용하는 `spring.ChessGameDao`, `spring.BoardDao` 생성
 - `spring.ChessGameDao`, `spring.BoardDao` 에 대한 테스트 클래스 생성
+
+### [2단계]
+- [x] name, password 이용하여 game 생성 
+- [x] password 이용하여 game 삭제
+- [ ] game 이 끝나지 않은 경우 삭제하지 못하도록 하는 기능
+- [ ] password 인코딩 디코딩 기능

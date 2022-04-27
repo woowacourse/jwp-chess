@@ -9,9 +9,7 @@ create table game
     winner        varchar(100) default ''      null,
     looser        varchar(100) default ''      null,
     turn          varchar(10)  default 'white' not null,
-    deleted       tinyint(1)   default 0       null,
-    constraint game_room_name_uindex
-        unique (room_name)
+    deleted       tinyint(1)   default 0       null
 );
 
 create table board

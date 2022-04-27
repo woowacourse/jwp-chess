@@ -24,7 +24,7 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(String gameID) {
+    public void initPieces(String gameID) {
         String sql = "insert into piece (position, type, color, gameID) values (?, ?, ?, ?)";
 
         List<Object[]> data = new ArrayList<>();

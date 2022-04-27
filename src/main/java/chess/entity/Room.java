@@ -1,16 +1,15 @@
-package chess.dto;
+package chess.entity;
 
 import chess.domain.Team;
-import chess.entity.Room;
 
-public class RoomDto {
+public class Room {
     private final Long id;
     private final Team team;
     private final String title;
     private final String password;
     private boolean status;
 
-    public RoomDto(Long id, Team team, String title, String password, boolean status) {
+    public Room(Long id, Team team, String title, String password, boolean status) {
         this.id = id;
         this.team = team;
         this.title = title;
@@ -34,11 +33,7 @@ public class RoomDto {
         return password;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
-    }
-
-    public Room toRoom() {
-        return new Room(id, team, title, password, status);
     }
 }

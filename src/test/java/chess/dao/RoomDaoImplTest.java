@@ -1,14 +1,16 @@
 package chess.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+
 import chess.domain.Team;
+import chess.entity.Room;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @JdbcTest
 public class RoomDaoImplTest {
@@ -23,32 +25,43 @@ public class RoomDaoImplTest {
         roomDaoImpl = new RoomDaoImpl(jdbcTemplate);
 
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS room" +
-                "(" +
-                "  id bigint NOT NULL," +
-                "  status varchar(50) NOT NULL," +
-                " PRIMARY KEY (id)" +
-                ")");
+            "(" +
+            "  id bigint AUTO_INCREMENT," +
+            "  team varchar(50) NOT NULL," +
+            "  title varchar(50) NOT NULL," +
+            "  password varchar(50) NOT NULL," +
+            "  status boolean," +
+            " PRIMARY KEY (id)" +
+            ")");
 
-        jdbcTemplate.update("insert into room (id, status) values(?, ?)", 1, "WHITE");
+        jdbcTemplate.update("insert into room (id, team, title, password, status) values(?, ?, ?, ?, ?)", 1,
+            "WHITE", "제목", "비밀번호", true);
     }
 
     @Test
-    void findRoom() {
+    void findById() {
         assertThat(roomDaoImpl.findById(1L)).isNotNull();
     }
 
     @Test
-    void deleteRoom() {
-        assertThatNoException().isThrownBy(() -> roomDaoImpl.delete(1L));
+    void deleteBy() {
+        assertThatNoException().isThrownBy(() -> roomDaoImpl.deleteBy(1L, "password"));
     }
 
     @Test
-    void saveRoom() {
-        assertThatNoException().isThrownBy(() -> roomDaoImpl.save(2L, Team.WHITE));
+    void save() {
+        Room room = new Room(2L, Team.WHITE, "title", "password", true);
+        assertThatNoException().isThrownBy(() -> roomDaoImpl.save(room));
     }
 
     @Test
     void updateStatus() {
-        assertThatNoException().isThrownBy(() -> roomDaoImpl.updateStatus(Team.WHITE, 1L));
+        assertThatNoException().isThrownBy(() -> roomDaoImpl.updateTeam(Team.WHITE, 1L));
+    }
+
+    @Test
+    void findAll() {
+        List<Room> rooms = roomDaoImpl.findAll();
+        assertThat(rooms.size()).isEqualTo(1);
     }
 }

@@ -12,22 +12,21 @@ public class RoomService {
         this.roomDao = roomDao;
     }
 
-    public RoomServiceMessage saveNewRoom(final String roomName, final String passWord) {
+    public void saveNewRoom(final String roomName, final String passWord) {
         if (roomDao.hasDuplicatedName(roomName)) {
-            return RoomServiceMessage.ROOM_CREATE_FAIL_BY_DUPLICATED_NAME;
+            throw new IllegalArgumentException("이미 동일한 이름의 체스방이 존재합니다.");
         }
         roomDao.saveNewRoom(roomName, passWord);
-        return RoomServiceMessage.ROOM_CREATE_SUCCESS;
     }
 
-    public RoomServiceMessage deleteRoom(final String roomName, final String password) {
+    public void deleteRoom(final String roomName, final String password) {
         if (isIncorrectPassword(roomName, password)) {
-            return RoomServiceMessage.ROOM_DELETE_FAIL_BY_WRONG_PASSWORD;
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         if (isPlayingState(roomName)) {
-            return RoomServiceMessage.ROOM_DELETE_FAIL_BY_NOT_END_GAME;
+            throw new IllegalStateException("게임이 진행중인 체스방은 삭제할 수 없습니다.");
         }
-        return RoomServiceMessage.ROOM_DELETE_SUCCESS;
+        roomDao.deleteRoomByName(roomName);
     }
 
     private boolean isIncorrectPassword(final String roomName, final String password) {

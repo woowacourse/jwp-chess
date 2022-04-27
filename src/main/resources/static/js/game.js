@@ -1,7 +1,15 @@
+const EVEN_COLOR = "#AD8B73";
+const ODD_COLOR = "#CEAB93";
+
 const FILES = ["A", "B", "C", "D", "E", "F", "G", "H"];
 const RANKS = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const REVERSE_RANKS = RANKS.reverse();
+
 const pieceRegExp = /images\/(\w*?)\.png/;
+
+let globalFrom = "";
+let globalTo = "";
+let globalClickedSquare = "";
 
 $(document).ready(function () {
   initChessBoard();
@@ -27,6 +35,21 @@ function initChessBoard() {
   }
 }
 
+function addChessBoardRow() {
+  $("#chess-board").append("<tr>");
+}
+
+function addChessBoardSquare(r, f) {
+  const rank = REVERSE_RANKS[r];
+  const file = FILES[f];
+  const squareId = file + rank;
+  const color = getColor(r, f);
+
+  $("#chess-board tr")
+    .last()
+    .append(`<td id=${squareId} style="background-color: ${color}">`);
+}
+
 function initChessPieces() {
   $.ajax({
     url: "/chess/init",
@@ -34,7 +57,6 @@ function initChessPieces() {
     dataType: "json",
   })
     .done(function (data) {
-      debugger;
       placeChessPieces(data.board);
       setCurrentTeam(data.teamName);
     })
@@ -61,34 +83,28 @@ function loadLastGame() {
 }
 
 function triggerEvents() {
-  $("button#move").click(function () {
-    movePiece();
-  });
-
   $("button#save-game").click(function () {
-    saveGame();
+    saveGameRequest();
+  });
+
+  $("table#chess-board td").click(function () {
+    colorClickedSquare(this);
+    movePiece(this);
   });
 }
 
-function addChessBoardRow() {
-  $("#chess-board").append("<tr>");
-}
-
-function addChessBoardSquare(r, f) {
-  const rank = REVERSE_RANKS[r];
-  const file = FILES[f];
-  const squareId = file + rank;
-  const color = getColor(r, f);
-  $("#chess-board tr")
-    .last()
-    .append(`<td id=${squareId} style="background-color: ${color}">`);
+function colorClickedSquare(thisParam) {
+  debugger;
+  $(globalClickedSquare).removeClass("clicked");
+  $(thisParam).addClass("clicked");
+  globalClickedSquare = thisParam;
 }
 
 function getColor(r, f) {
   if (isEven(r, f)) {
-    return "#AD8B73";
+    return EVEN_COLOR;
   }
-  return "#CEAB93";
+  return ODD_COLOR;
 }
 
 function isEven(r, f) {
@@ -115,17 +131,33 @@ function placeChessPieces(piecePositions) {
   }
 }
 
-function movePiece() {
-  const from = $('input[name="from"]').val();
-  const to = $('input[name="to"]').val();
+function movePiece(square) {
+  if (globalFrom == "") {
+    if (!isExistPiece(square)) {
+      console.log("말을 선택해야 합니다.");
+      return;
+    }
+    globalFrom = square.id;
+    return;
+  }
+  globalTo = square.id;
+  movePieceRequest(globalFrom, globalTo);
+}
+
+function clearFromAndTo() {
+  globalTo = "";
+  globalFrom = "";
+}
+
+function movePieceRequest(from, to) {
+  clearFromAndTo();
   $.ajax({
     url: `/chess/move?from=${from}&to=${to}`,
     method: "PATCH",
     dataType: "json",
   })
     .done(function (data) {
-      clearChessBoard();
-      initChessBoard();
+      clearPieces();
       placeChessPieces(data.board);
       setCurrentTeam(data.teamName);
     })
@@ -135,16 +167,16 @@ function movePiece() {
     });
 }
 
-function clearChessBoard() {
-  $("#chess-board").children().remove();
+function clearPieces() {
+  $("table#chess-board").find("img").remove();
 }
 
 function setCurrentTeam(teamName) {
   $("#current-team").text(teamName);
 }
 
-function isExistPiece(sqaure) {
-  return $("#" + sqaure).find("img").length == true;
+function isExistPiece(square) {
+  return $("#" + square.id).find("img").length == true;
 }
 
 function getPieces() {
@@ -152,7 +184,7 @@ function getPieces() {
 
   $("#chess-board tr td").each(function (index, element) {
     const square = element;
-    if (isExistPiece(square.id)) {
+    if (isExistPiece(square)) {
       const imageName = $(square).find("img").attr("src");
       const piece = imageName.replace(pieceRegExp, `$1`);
       pieces[square.id] = piece;
@@ -164,7 +196,7 @@ function getPieces() {
 
 function convertAndGetCurrentTeam() {}
 
-function saveGame() {
+function saveGameRequest() {
   const gameData = {
     currentTeam: $("#current-team").text(),
     pieces: getPieces(),

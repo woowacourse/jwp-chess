@@ -9,3 +9,7 @@ td img {
     height: 50px;
     text-align: center;
 }
+
+#chess-board td.clicked {
+    background-color: #FCE77D !important;
+}

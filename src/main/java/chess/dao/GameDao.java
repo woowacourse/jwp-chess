@@ -82,4 +82,9 @@ public class GameDao {
         resultSet.getString("title")
     );
 
+    public String findPasswordById(long id) {
+        final String sql = "select password from game where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
 }

@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessGameService {
 
+    private static final String INVALID_ROOM_PASSWORD_EXCEPTION_MESSAGE = "잘못된 방 비밀번호 입니다. 다시 입력해주세요.";
+    private static final String NOT_FINISHED_GAME_STATUS_EXCEPTION_MESSAGE = "아직 게임이 끝나지 않아 삭제할 수 없습니다.";
+
     private final PieceDao pieceDao;
     private final GameDao gameDao;
 
@@ -90,6 +93,26 @@ public class ChessGameService {
         pieceDao.createAllByGameId(chessGame.getChessmen().getPieces(), gameId);
         gameDao.updateTurnById(turn, gameId);
         gameDao.updateForceEndFlagById(forceEndFlag, gameId);
+    }
+
+    public void cleanGameByIdAndPassword(long id, String password) {
+        validatePassword(id, password);
+        validateEnd(id);
+        cleanGame(id);
+    }
+
+    private void validatePassword(long id, String password) {
+        String targetPassword = gameDao.findPasswordById(id);
+        if (!targetPassword.equals(password)) {
+            throw new IllegalArgumentException(INVALID_ROOM_PASSWORD_EXCEPTION_MESSAGE);
+        }
+    }
+
+    private void validateEnd(long id) {
+        boolean forceEndFlag = gameDao.findForceEndFlagById(id);
+        if (!forceEndFlag) {
+            throw new IllegalArgumentException(NOT_FINISHED_GAME_STATUS_EXCEPTION_MESSAGE);
+        }
     }
 
 }

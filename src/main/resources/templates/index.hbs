@@ -10,36 +10,52 @@
 <h1>♟️ 체스 게임 대기방♟</h1>
 
 <div id="game-entry">
-
+  <b>주인장 메세지: {{gameMessage}}</b>
+  <br>
   존재하는 방들
+  <br>
 
   <ul class="room_list">
     {{#each rooms}}
-      <form enctype="text/plain" action="/game/start" method="get">
-        <li>방번호: {{id}} | 방이름: {{title}}</li>
-        <input type="hidden" name="gameId" value="{{id}}">
-        <button type="submit">입장하기</button>
-      </form>
+      <div id="room">
+        <form enctype="text/plain" action="/game/start" method="get">
+          방번호: {{id}} | 방이름: {{title}}
+          <input type="hidden" name="gameId" value="{{id}}">
+          <br>
+          <button type="submit" id="main-button">입장하기</button>
+        </form>
 
-
-      <form action="/game/{{id}}/exit" method="post">
-        <input type="hidden" name="_method" value="delete">
-        <button type="submit">삭제하기</button>
-      </form>
-
+        <form action="/delete" method="post">
+          <input type="hidden" name="_method" value="delete">
+          <div id="box-{{id}}">
+            <input type="button" value="삭제하기" id="main-button" onclick="add_textbox({{id}})">
+            <input type="hidden" name="id" value={{id}}>
+          </div>
+        </form>
+      </div>
     {{/each}}
   </ul>
 
   <form action="/game/start" method="post">
-    <label for="game-entry">방 이름과 비밀번호를 입력하여 시작하기 (없을 시 새로 방 생성)</label>
+    <label for="game-entry">방 이름과 비밀번호를 입력하여 방 만들기</label>
     <br>
     <input type="text" name="title" value="1234">
     <input type="text" name="password" value="1234">
-    <button type="submit">입장하기</button>
+    <button type="submit">방 만들기</button>
   </form>
 
 
 </div>
-
+<script>
+  const add_textbox = (id) => {
+    const box = document.getElementById("box-" + id);
+    const newP = document.createElement('p');
+    newP.innerHTML = "<input type='text' name='password'> <button type='submit' id='main-button'>비밀번호 입력</button>";
+    box.appendChild(newP);
+  }
+  const remove = (obj) => {
+    document.getElementById('box').removeChild(obj.parentNode);
+  }
+</script>
 </body>
 </html>

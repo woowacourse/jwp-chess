@@ -43,34 +43,12 @@ public class GameDaoTest {
         assertThat(gameDao.exists(String.valueOf(gameId))).isTrue();
     }
 
-    //    @DisplayName("존재하는 게임을 조회시 true를 반환한다.")
-//    @Test
-//    void isExistId_true() {
-//        gameDao.createById("1234");
-//        assertThat(gameDao.exists("1234")).isTrue();
-//    }
-//
-//    @DisplayName("존재하지 않는 게임을 조회시 false를 반환한다.")
-//    @Test
-//    void isExistId_false() {
-//        gameDao.createById("1234");
-//        assertThat(gameDao.exists("123")).isFalse();
-//    }
-//
     @DisplayName("게임이 끝나지 않은 경우 force_end_flag는 false이다.")
     @Test
     void findForceEndFlagById_false() {
         assertThat(gameDao.findForceEndFlagById(id)).isFalse();
     }
-//
-//    @DisplayName("존재하지_않는_게임아이디_조회시_예외가_발생한다.")
-//    @Test
-//    void findForceEndFlagById_exception() {
-//        gameDao.createById("1234");
-//        assertThatThrownBy(() -> gameDao.findForceEndFlagById("124"))
-//            .isInstanceOf(EmptyResultDataAccessException.class);
-//    }
-//
+
     @DisplayName("turn칼럼에는 불가능한 turn이 저장되며 초깃값은 black이다.")
     @Test
     void findTurnById() {
@@ -96,12 +74,17 @@ public class GameDaoTest {
     @DisplayName("게임 삭제시 더이상 게임은 존재하지 않는다.")
     @Test
     void deleteById_게임_삭제_성공() {
-//        assertThat(gameDao.exists(id)).isTrue();
-
         gameDao.deleteById(id);
 
         assertThat(gameDao.exists("1234")).isFalse();
     }
 
+    @DisplayName("findPasswordById는 id에 해당하는 password를 반환한다.")
+    @Test
+    void findPasswordById_게임_삭제_성공() {
+        String actual = gameDao.findPasswordById(id);
+
+        assertThat(actual).isEqualTo("password486");
+    }
 
 }

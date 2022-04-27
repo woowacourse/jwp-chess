@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.model.GameResult;
 import chess.model.dto.MoveDto;
+import chess.model.dto.RoomDto;
 import chess.model.dto.WebBoardDto;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;

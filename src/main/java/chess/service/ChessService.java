@@ -9,6 +9,7 @@ import chess.model.board.BoardFactory;
 import chess.model.dao.PieceDao;
 import chess.model.dao.TurnDao;
 import chess.model.dto.MoveDto;
+import chess.model.dto.RoomDto;
 import chess.model.dto.WebBoardDto;
 import chess.model.piece.Empty;
 import chess.model.piece.Piece;

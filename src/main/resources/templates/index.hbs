@@ -16,7 +16,8 @@
             <p>
                 방 제목 : <input id="room-title"></text><br>
                 방 비밀번호 : <input id="room-password"></text><br>
-                <button class="w-btn w-btn-brown" id="create-room-button" type="button" onClick="createRoom()">방 만들기</button>
+                <button class="w-btn w-btn-brown" id="create-room-button" type="button" onClick="createRoom()">방 만들기
+                </button>
             </p>
         </details>
         <br>
@@ -28,11 +29,21 @@
             <th>접속하기</th>
             <th>방 제거하기</th>
             {{#rooms}}
-            <tr>
-                <td align="center"><text onClick="window.open('/chess/' + {{boardId}})">{{title}}</text></td>
-                <td><button class="w-btn w-btn-brown" type="button" onClick="window.open('/chess/' + {{boardId}})">접속</button></td>
-                <td><button class="w-btn w-btn-red" type="button" onclick="deleteRoom({{boardId}}, {{password}})">삭제</button></td>
-            </tr>
+                <tr>
+                    <td align="center">
+                        <text onClick="window.open('/chess/' + {{boardId}})">{{title}}</text>
+                    </td>
+                    <td>
+                        <button class="w-btn w-btn-brown" type="button" onClick="window.open('/chess/' + {{boardId}})">
+                            접속
+                        </button>
+                    </td>
+                    <td>
+                        <button class="w-btn w-btn-red" type="button" onclick="deleteRoom({{boardId}}, {{password}})">
+                            삭제
+                        </button>
+                    </td>
+                </tr>
             {{/rooms}}
         </table>
     </div>

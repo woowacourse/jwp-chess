@@ -8,8 +8,8 @@ import chess.web.service.dto.ScoreDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
 @RequestMapping("/api")
+@RestController
 public class ChessApiController {
 
     private final ChessService chessService;

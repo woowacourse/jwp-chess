@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -64,6 +65,24 @@ public class JdbcGameDao {
             );
         } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException("게임(id=" + id + ")을 찾을 수 없습니다.");
+        }
+    }
+
+    public List<Game> findAll() {
+        final String sql = "select * from game";
+        try {
+            return jdbcTemplate.query(
+                    sql,
+                    (resultSet, rowNum) ->
+                            new Game(
+                                    resultSet.getLong("id"),
+                                    resultSet.getString("title"),
+                                    resultSet.getString("turn"),
+                                    resultSet.getString("status")
+                            )
+            );
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("존재하는 게임이 없습니다.");
         }
     }
 }

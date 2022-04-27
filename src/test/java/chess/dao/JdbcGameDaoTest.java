@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -67,13 +69,32 @@ public class JdbcGameDaoTest {
         Game game = new Game(title, password, turn, status);
         long id = jdbcGameDao.save(game);
 
+        // when
+        Game selectedGame = jdbcGameDao.find(id, password);
+
         // then
         assertAll(
-                () -> assertThat(jdbcGameDao.find(id, password)).isNotNull(),
-                () -> assertThat(jdbcGameDao.find(id, password).getId()).isEqualTo(id),
-                () -> assertThat(jdbcGameDao.find(id, password).getTitle()).isEqualTo(title),
-                () -> assertThat(jdbcGameDao.find(id, password).getTurn()).isEqualTo(turn),
-                () -> assertThat(jdbcGameDao.find(id, password).getStatus()).isEqualTo(status)
+                () -> assertThat(selectedGame).isNotNull(),
+                () -> assertThat(selectedGame.getId()).isEqualTo(id),
+                () -> assertThat(selectedGame.getTitle()).isEqualTo(title),
+                () -> assertThat(selectedGame.getTurn()).isEqualTo(turn),
+                () -> assertThat(selectedGame.getStatus()).isEqualTo(status)
         );
+    }
+
+    @Test
+    @DisplayName("모든 게임 데이터 저장")
+    void findAll() {
+        // given
+        Game game1 = new Game("라라라", "1234", "white", "playing");
+        Game game2 = new Game("룰룰루", "222", "white", "playing");
+        jdbcGameDao.save(game1);
+        jdbcGameDao.save(game2);
+
+        // when
+        List<Game> games = jdbcGameDao.findAll();
+
+        // then
+        assertThat(games.size()).isEqualTo(2);
     }
 }

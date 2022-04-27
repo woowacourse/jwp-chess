@@ -1,8 +1,6 @@
 package chess.dto.response;
 
 import chess.domain.chesspiece.Color;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class CurrentTurnDto {
 
@@ -12,13 +10,6 @@ public class CurrentTurnDto {
     private CurrentTurnDto(final String name, final Color currentTurn) {
         this.name = name;
         this.currentTurn = currentTurn;
-    }
-
-    public static CurrentTurnDto from(final ResultSet resultSet) throws SQLException {
-        return new CurrentTurnDto(
-                resultSet.getString("name"),
-                Color.from(resultSet.getString("current_turn"))
-        );
     }
 
     public static CurrentTurnDto of(final String name, final Color currentTurn) {

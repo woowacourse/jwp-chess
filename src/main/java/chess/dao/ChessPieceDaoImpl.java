@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.chesspiece.ChessPiece;
+import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
 import chess.dto.ChessPieceMapper;
 import chess.dto.response.ChessPieceDto;
@@ -24,7 +25,14 @@ public class ChessPieceDaoImpl implements ChessPieceDao {
     @Override
     public List<ChessPieceDto> findAllByRoomId(final int roomId) {
         final String sql = "SELECT * FROM chess_piece WHERE room_id = ?";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> ChessPieceDto.from(resultSet), roomId);
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> ChessPieceDto.of(
+                        Position.from(resultSet.getString("position")),
+                        resultSet.getString("chess_piece"),
+                        Color.from(resultSet.getString("color"))),
+                roomId
+        );
     }
 
     @Override

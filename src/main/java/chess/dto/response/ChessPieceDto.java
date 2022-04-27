@@ -2,8 +2,6 @@ package chess.dto.response;
 
 import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class ChessPieceDto {
 
@@ -15,14 +13,6 @@ public class ChessPieceDto {
         this.position = position;
         this.pieceType = pieceType;
         this.color = color;
-    }
-
-    public static ChessPieceDto from(final ResultSet resultSet) throws SQLException {
-        return new ChessPieceDto(
-                resultSet.getString("position"),
-                resultSet.getString("chess_piece"),
-                resultSet.getString("color")
-        );
     }
 
     public static ChessPieceDto of(final Position position, final String chessPiece, final Color color) {

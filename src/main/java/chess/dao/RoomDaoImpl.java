@@ -54,7 +54,13 @@ public class RoomDaoImpl implements RoomDao {
     @Override
     public List<RoomResponseDto> findAll() {
         final String sql = "SELECT room_id, name, game_status FROM room";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> RoomResponseDto.from(resultSet));
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> RoomResponseDto.of(
+                        Integer.parseInt(resultSet.getString("room_id")),
+                        resultSet.getString("name"),
+                        resultSet.getString("game_status"))
+        );
     }
 
     @Override
@@ -71,7 +77,13 @@ public class RoomDaoImpl implements RoomDao {
     public CurrentTurnDto findCurrentTurnById(final int roomId) {
         try {
             final String sql = "SELECT name, current_turn FROM room WHERE room_id = ?";
-            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> CurrentTurnDto.from(resultSet), roomId);
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (resultSet, rowNum) -> CurrentTurnDto.of(
+                            resultSet.getString("name"),
+                            Color.from(resultSet.getString("current_turn"))),
+                    roomId
+            );
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("방 아이디에 해당하는 턴 정보가 존재하지 않습니다.");
         }
@@ -81,7 +93,13 @@ public class RoomDaoImpl implements RoomDao {
     public RoomStatusDto findStatusById(final int roomId) {
         try {
             final String sql = "SELECT name, game_status FROM room WHERE room_id = ?";
-            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> RoomStatusDto.from(resultSet), roomId);
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (resultSet, rowNum) -> RoomStatusDto.of(
+                            resultSet.getString("name"),
+                            resultSet.getString("game_status")),
+                    roomId
+            );
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("방 아이디에 해당하는 게임 상태가 존재하지 않습니다.");
         }

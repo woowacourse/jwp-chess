@@ -22,10 +22,9 @@ public class StateDao {
         return jdbcTemplate.update(sql, id, stateName);
     }
 
-    public State find(final String id, final Board board) {
+    public String find(final String id) {
         final String sql = "select name from state where id = ?";
-        final String stateName = jdbcTemplate.queryForObject(sql, String.class, id);
-        return StringToStateConverter.convert(stateName, board);
+        return jdbcTemplate.queryForObject(sql, String.class, id);
     }
 
     public int deleteFrom(final String id) {

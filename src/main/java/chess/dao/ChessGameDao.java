@@ -2,6 +2,9 @@ package chess.dao;
 
 import chess.domain.Score;
 import chess.domain.piece.Color;
+import chess.domain.vo.Room;
+import chess.dto.ChessGameDto;
+import chess.dto.GameStatus;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,8 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import chess.dto.ChessGameDto;
-import chess.dto.GameStatus;
 
 @Repository
 public class ChessGameDao {
@@ -46,17 +47,18 @@ public class ChessGameDao {
                 this::createChessGameDto, id);
     }
 
-    public int saveChessGame(String name, GameStatus status, Color currentColor, Score blackScore, Score whiteScore) {
-        String sql = "INSERT INTO chess_game(name, status, current_color, black_score, white_score) VALUES(?, ?, ?, ?, ?)";
+    public int saveChessGame(Room room, GameStatus status, Color currentColor, Score blackScore, Score whiteScore) {
+        String sql = "INSERT INTO chess_game(name, password, status, current_color, black_score, white_score) VALUES(?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-                    ps.setString(1, name);
-                    ps.setString(2, status.name());
-                    ps.setString(3, currentColor.name());
-                    ps.setString(4, blackScore.getValue().toPlainString());
-                    ps.setString(5, whiteScore.getValue().toPlainString());
+                    ps.setString(1, room.getName());
+                    ps.setString(2, room.getPassword());
+                    ps.setString(3, status.name());
+                    ps.setString(4, currentColor.name());
+                    ps.setString(5, blackScore.getValue().toPlainString());
+                    ps.setString(6, whiteScore.getValue().toPlainString());
                     return ps;
                 }, keyHolder);
         return keyHolder.getKey().intValue();

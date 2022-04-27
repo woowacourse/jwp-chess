@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.domain.Score;
 import chess.domain.piece.Color;
 import chess.domain.position.Position;
+import chess.domain.vo.Room;
 import chess.dto.GameStatus;
 import chess.dto.PieceDto;
 import chess.dto.PieceType;
@@ -55,7 +56,7 @@ class PieceDaoTest {
                 + ")");
 
         chessGameDao = new ChessGameDao(jdbcTemplate);
-        chessGameDao.saveChessGame("chess", GameStatus.RUNNING, Color.WHITE,
+        chessGameDao.saveChessGame(new Room("Chess Game", "1234"), GameStatus.RUNNING, Color.WHITE,
                 new Score(BigDecimal.ONE), new Score(BigDecimal.ONE));
 
         pieceDao = new PieceDao(jdbcTemplate);

@@ -17,7 +17,9 @@ import chess.domain.piece.Rook;
 import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
+import chess.domain.vo.Room;
 import chess.dto.ChessGameDto;
+import chess.dto.ChessGameRequest;
 import chess.dto.GameStatus;
 import chess.dto.PieceDto;
 import chess.exception.ChessGameException;
@@ -58,8 +60,9 @@ public class ChessGameService {
         return updateChessBoard(chessBoard, movement, chessGameDto);
     }
 
-    public int create(String name) {
-        return chessGameDao.saveChessGame(name, GameStatus.READY, Color.WHITE, new Score(), new Score());
+    public int create(ChessGameRequest chessGameRequest) {
+        Room room = new Room(chessGameRequest.getName(), chessGameRequest.getPassword());
+        return chessGameDao.saveChessGame(room, GameStatus.READY, Color.WHITE, new Score(), new Score());
     }
 
     public ChessGameDto prepareChessGame(ChessGameDto chessGameDto) {

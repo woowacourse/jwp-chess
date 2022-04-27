@@ -2,11 +2,11 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-
 import chess.domain.Score;
 import chess.domain.piece.Color;
-import chess.dao.ChessGameDao;
-import chess.dao.PieceDao;
+import chess.domain.vo.Room;
+import chess.dto.ChessGameDto;
+import chess.dto.GameStatus;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -15,8 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import chess.dto.ChessGameDto;
-import chess.dto.GameStatus;
 
 @JdbcTest
 public class ChessGameDaoTest {
@@ -54,7 +52,7 @@ public class ChessGameDaoTest {
 
         chessGameDao = new ChessGameDao(jdbcTemplate);
         chessGameDao.deleteAll();
-        chessGameDao.saveChessGame("Chess Game", GameStatus.RUNNING, Color.WHITE, new Score(new BigDecimal("10.0")),
+        chessGameDao.saveChessGame(new Room("Chess Game", "1234"), GameStatus.RUNNING, Color.WHITE, new Score(new BigDecimal("10.0")),
                 new Score(new BigDecimal("15.0")));
     }
 

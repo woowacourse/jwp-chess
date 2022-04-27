@@ -30,17 +30,17 @@ public class SquareDaoImplTest {
         squareDao = new SquareDaoImpl(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS square");
         jdbcTemplate.execute("CREATE TABLE square(" +
-            "position VARCHAR(2) NOT NULL, "
-            + "team VARCHAR(10) NOT NULL, "
-            + "symbol VARCHAR(10) NOT NULL, "
-            + "PRIMARY KEY (position)"
+            "chess_id int not null,"
+            + "position VARCHAR(2) NOT NULL,"
+            + "team VARCHAR(10) NOT NULL,"
+            + "symbol VARCHAR(10) NOT NULL"
             + ");");
 
         Position position = Position.from("a1");
         Piece piece = new Pawn(BLACK);
 
-        jdbcTemplate.update("insert into square (position, team, symbol) values (?, ?, ?)",
-            position.getKey(), piece.getTeam(), piece.getSymbol());
+        jdbcTemplate.update("insert into square (chess_id, position, team, symbol) values (?, ?, ?, ?)",
+            "1", position.getKey(), piece.getTeam(), piece.getSymbol());
     }
 
     @DisplayName("데이터를 삽입한다.")
@@ -49,8 +49,8 @@ public class SquareDaoImplTest {
         Position position = Position.from("a2");
         Piece piece = new Pawn(Team.WHITE);
 
-        squareDao.insert(position, piece);
-        Board board = squareDao.createBoard();
+        squareDao.insert(1L, position, piece);
+        Board board = squareDao.createBoard(1L);
 
         assertThat(board.getBoard().size()).isEqualTo(2);
     }
@@ -58,7 +58,7 @@ public class SquareDaoImplTest {
     @DisplayName("데이터를 삭제한다.")
     @Test
     void delete() {
-        assertThat(squareDao.delete()).isEqualTo(1);
+        assertThat(squareDao.delete(1L)).isEqualTo(1);
     }
 
     @DisplayName("데이터를 업데이트한다.")
@@ -67,13 +67,13 @@ public class SquareDaoImplTest {
         Position position = Position.from("a1");
         Piece updatedPiece = new King(Team.WHITE);
 
-        assertThat(squareDao.update(position, updatedPiece)).isEqualTo(1);
+        assertThat(squareDao.update(1L, position, updatedPiece)).isEqualTo(1);
     }
 
     @DisplayName("데이터를 모두 가져온다.")
     @Test
     void findAll() {
-        Board board = squareDao.createBoard();
+        Board board = squareDao.createBoard(1L);
 
         assertThat(board.getBoard().size()).isEqualTo(1);
     }

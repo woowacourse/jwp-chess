@@ -6,13 +6,13 @@ import chess.model.state.State;
 
 public interface GameRepository {
 
-    void initGameData(State state);
+    void initGameData(Long id, State state);
 
-    void saveGameData(State nextState, MoveDto moveDto);
+    void saveGameData(Long id, State nextState, MoveDto moveDto);
 
-    void deleteGameData();
+    void deleteGameData(Long id);
 
-    Board getBoard();
+    Board getBoard(Long id);
 
-    State getState();
+    State getState(Long id);
 }

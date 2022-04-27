@@ -28,13 +28,13 @@ public class SquareDaoImpl implements SquareDao {
         resultSet.getString("symbol")
     );
 
-    public void insert(Position position, Piece piece) {
-        final String sql = "insert into square (position, team, symbol) values (?, ?, ?)";
-        jdbcTemplate.update(sql, position.getKey(), piece.getTeam(), piece.getSymbol());
+    public void insert(Long id, Position position, Piece piece) {
+        final String sql = "insert into square (chess_id, position, team, symbol) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, id, position.getKey(), piece.getTeam(), piece.getSymbol());
     }
 
-    public Board createBoard() {
-        List<SquareEntity> squareEntities = findAll();
+    public Board createBoard(Long id) {
+        List<SquareEntity> squareEntities = findAll(id);
         Map<Position, Piece> squares = new HashMap<>();
         for (SquareEntity squareEntity : squareEntities) {
             Position position = Position.from(squareEntity.getPosition());
@@ -44,18 +44,18 @@ public class SquareDaoImpl implements SquareDao {
         return Board.from(squares);
     }
 
-    private List<SquareEntity> findAll() {
-        final String sql = "select position, team, symbol from square";
-        return jdbcTemplate.query(sql, squareEntityRowMapper);
+    private List<SquareEntity> findAll(Long id) {
+        final String sql = "select position, team, symbol from square where chess_id = ?";
+        return jdbcTemplate.query(sql, squareEntityRowMapper, id);
     }
 
-    public int delete() {
-        final String sql = "delete from square";
-        return jdbcTemplate.update(sql);
+    public int delete(Long id) {
+        final String sql = "delete from square where chess_id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 
-    public int update(Position position, Piece piece) {
-        final String sql = "update square set team = ?, symbol = ? where position = ?";
-        return jdbcTemplate.update(sql, piece.getTeam(), piece.getSymbol(), position.getKey());
+    public int update(Long id, Position position, Piece piece) {
+        final String sql = "update square set team = ?, symbol = ? where chess_id = ? and position = ?";
+        return jdbcTemplate.update(sql, piece.getTeam(), piece.getSymbol(), id, position.getKey());
     }
 }

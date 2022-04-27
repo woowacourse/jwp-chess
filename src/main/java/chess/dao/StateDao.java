@@ -5,11 +5,11 @@ import chess.model.state.State;
 
 public interface StateDao {
 
-    void insert(final State state);
+    void insert(Long id, final State state);
 
-    State find(final Board board);
+    State find(Long id, final Board board);
 
-    int delete();
+    int delete(Long id);
 
-    void update(final State nowState, final State nextState);
+    void update(Long id, final State nowState, final State nextState);
 }

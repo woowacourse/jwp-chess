@@ -22,14 +22,14 @@ class ChessGameDaoImplTest {
     @BeforeEach
     void setUp() {
         chessGameDao = new ChessGameDaoImpl(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE IF EXISTS chess");
-        jdbcTemplate.execute("CREATE TABLE chess("
+        jdbcTemplate.execute("DROP TABLE IF EXISTS game");
+        jdbcTemplate.execute("CREATE TABLE game("
             + "id int not null AUTO_INCREMENT PRIMARY KEY,"
             + "title varchar(50) not null,"
             + "password varchar(20) not null"
             + ");");
 
-        jdbcTemplate.update("insert into chess (title, password) values (?, ?)",
+        jdbcTemplate.update("insert into game (title, password) values (?, ?)",
             "제목", "password");
     }
 

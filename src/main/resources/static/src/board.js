@@ -11,7 +11,7 @@ async function startChess() {
     while (session.hasChildNodes()) {
         session.removeChild(session.firstChild);
     }
-    let board = await fetch("/game/start", {
+    let board = await fetch(window.location.href + "/start", {
         method: "POST",
     });
     board = await board.json();
@@ -19,7 +19,7 @@ async function startChess() {
 }
 
 async function endChess() {
-    let board = await fetch("/game/end", {
+    let board = await fetch(window.location.href + "/end", {
         method: "POST",
     });
     board = await board.json();
@@ -27,7 +27,7 @@ async function endChess() {
 }
 
 async function loadChess() {
-    let board = await fetch("/game/load");
+    let board = await fetch(window.location.href + "/load");
     board = await board.json();
     putPieceInSquare(board);
 }
@@ -39,7 +39,7 @@ function putPieceInSquare(board) {
               position.removeChild(position.firstChild);
          }
          const img = document.createElement("img");
-         img.src = "images/" + board.values[key] + ".png";
+         img.src = "/images/" + board.values[key] + ".png";
          img.className = "piece-img"
          position.appendChild(img);
     })
@@ -70,7 +70,7 @@ function clickPosition(position) {
 }
 
 async function movePiece(source, target) {
-     let board = await fetch("/game/move", {
+     let board = await fetch(window.location.href + "/move", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -85,7 +85,7 @@ async function movePiece(source, target) {
 }
 
 async function printResult() {
-    let board = await fetch("/game/status");
+    let board = await fetch(window.location.href + "/status");
     board = await board.json();
     let session = document.getElementById("result-session");
     const whiteScore = document.createElement("div");

@@ -10,7 +10,6 @@ import chess.repository.GamesRepository;
 
 @Service
 public class GamesService {
-
     private final GamesRepository gamesRepository;
 
     public GamesService(final GamesRepository gamesRepository) {
@@ -21,7 +20,7 @@ public class GamesService {
         gamesRepository.save(chessGameDto);
     }
 
-    public List<ChessGameEntity> load() {
+    public List<ChessGameEntity> loadGames() {
         return gamesRepository.getGames();
     }
 }

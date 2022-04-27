@@ -20,39 +20,39 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
-    public BoardDto start() {
+    public BoardDto start(Long id) {
         State state = new WhiteTurn(Board.init());
-        gameRepository.deleteGameData();
-        gameRepository.initGameData(state);
+        gameRepository.deleteGameData(id);
+        gameRepository.initGameData(id, state);
         return BoardDto.from(state.getBoard());
     }
 
-    public BoardDto end() {
-        Board board = gameRepository.getBoard();
-        gameRepository.deleteGameData();
+    public BoardDto end(Long id) {
+        Board board = gameRepository.getBoard(id);
+        gameRepository.deleteGameData(id);
         return BoardDto.from(board.getBoard());
     }
 
-    public BoardDto move(MoveDto moveDto) {
-        State state = proceed(moveDto);
+    public BoardDto move(Long id, MoveDto moveDto) {
+        State state = proceed(id, moveDto);
         return BoardDto.from(state.getBoard());
     }
 
-    private State proceed(MoveDto moveDto) {
-        State nowState = gameRepository.getState();
+    private State proceed(Long id, MoveDto moveDto) {
+        State nowState = gameRepository.getState(id);
         State nextState = nowState.proceed(moveDto.command());
-        gameRepository.saveGameData(nextState, moveDto);
+        gameRepository.saveGameData(id, nextState, moveDto);
         return nextState;
     }
 
-    public ResultDto status() {
-        Board board = gameRepository.getBoard();
+    public ResultDto status(Long id) {
+        Board board = gameRepository.getBoard(id);
         State status = new Status(board);
         return new ResultDto(status.getScores(), status.getWinner());
     }
 
-    public BoardDto load() {
-        Board board = gameRepository.getBoard();
+    public BoardDto load(Long id) {
+        Board board = gameRepository.getBoard(id);
         return BoardDto.from(board.getBoard());
     }
 }

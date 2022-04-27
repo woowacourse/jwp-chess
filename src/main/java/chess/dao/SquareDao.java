@@ -6,11 +6,11 @@ import chess.model.position.Position;
 
 public interface SquareDao {
 
-    void insert(Position position, Piece piece);
+    void insert(Long id, Position position, Piece piece);
 
-    Board createBoard();
+    Board createBoard(Long id);
 
-    int delete();
+    int delete(Long id);
 
-    int update(Position position, Piece piece);
+    int update(Long id, Position position, Piece piece);
 }

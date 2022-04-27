@@ -23,41 +23,41 @@ public class GameRepositoryImpl implements GameRepository {
         this.stateDao = stateDao;
     }
 
-    public void initGameData(State state) {
-        deleteGameData();
-        stateDao.insert(state);
-        insertBoard(state.getBoard());
+    public void initGameData(Long id, State state) {
+        deleteGameData(id);
+        stateDao.insert(id, state);
+        insertBoard(id, state.getBoard());
     }
 
-    public void saveGameData(State nextState, MoveDto moveDto) {
-        Board board = squareDao.createBoard();
-        State nowState = stateDao.find(board);
-        stateDao.update(nowState, nextState);
+    public void saveGameData(Long id, State nextState, MoveDto moveDto) {
+        Board board = squareDao.createBoard(id);
+        State nowState = stateDao.find(id, board);
+        stateDao.update(id, nowState, nextState);
 
         String source = moveDto.getSource();
         String target = moveDto.getTarget();
         Map<Position, Piece> squares = nextState.getBoard();
 
-        squareDao.update(Position.from(source), squares.get(Position.from(source)));
-        squareDao.update(Position.from(target), squares.get(Position.from(target)));
+        squareDao.update(id, Position.from(source), squares.get(Position.from(source)));
+        squareDao.update(id, Position.from(target), squares.get(Position.from(target)));
     }
 
-    public void deleteGameData() {
-        squareDao.delete();
-        stateDao.delete();
+    public void deleteGameData(Long id) {
+        squareDao.delete(id);
+        stateDao.delete(id);
     }
 
-    public Board getBoard() {
-        return squareDao.createBoard();
+    public Board getBoard(Long id) {
+        return squareDao.createBoard(id);
     }
 
-    public State getState() {
-        Board board = squareDao.createBoard();
-        return stateDao.find(board);
+    public State getState(Long id) {
+        Board board = squareDao.createBoard(id);
+        return stateDao.find(id, board);
     }
 
-    private void insertBoard(Map<Position, Piece> board) {
+    private void insertBoard(Long id, Map<Position, Piece> board) {
         board.keySet()
-            .forEach(position -> squareDao.insert(position, board.get(position)));
+            .forEach(position -> squareDao.insert(id, position, board.get(position)));
     }
 }

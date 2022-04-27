@@ -17,31 +17,31 @@ public class StateDaoImpl implements StateDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insert(final State state) {
-        final String sql = "insert into state (name) values (?)";
+    public void insert(Long id, final State state) {
+        final String sql = "insert into state (chess_id, name) values (?, ?)";
         final String stateName = StateToStringConverter.convert(state);
-        jdbcTemplate.update(sql, stateName);
+        jdbcTemplate.update(sql, id, stateName);
     }
 
-    public State find(final Board board) {
-        final String sql = "select name from state";
+    public State find(Long id, final Board board) {
+        final String sql = "select name from state where chess_id = ?";
         return jdbcTemplate.queryForObject(
             sql,
             (resultSet, rowNum) -> {
                 String name = resultSet.getString("name");
                 return StringToStateConverter.convert(name, board);
-            });
+            }, id);
     }
 
-    public int delete() {
-        final String sql = "delete from state";
-        return jdbcTemplate.update(sql);
+    public int delete(Long id) {
+        final String sql = "delete from state where chess_id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 
-    public void update(final State nowState, final State nextState) {
-        final String sql = "update state set name = ? where name = ?";
+    public void update(Long id, final State nowState, final State nextState) {
+        final String sql = "update state set name = ? where chess_id = ? and name = ?";
         final String nowStateName = StateToStringConverter.convert(nowState);
         final String nextStateName = StateToStringConverter.convert(nextState);
-        jdbcTemplate.update(sql, nextStateName, nowStateName);
+        jdbcTemplate.update(sql, nextStateName, id, nowStateName);
     }
 }

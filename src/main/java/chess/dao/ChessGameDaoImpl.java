@@ -26,13 +26,13 @@ public class ChessGameDaoImpl implements ChessGameDao {
 
     @Override
     public void insert(ChessGameDto chessGameDto) {
-        final String sql = "insert into chess (title, password) values (?, ?)";
+        final String sql = "insert into game (title, password) values (?, ?)";
         jdbcTemplate.update(sql, chessGameDto.getTitle(), chessGameDto.getPassword());
     }
 
     @Override
     public ChessGameEntity find(Long id) {
-        final String sql = "select * from chess where id = ?";
+        final String sql = "select * from game where id = ?";
         return jdbcTemplate.queryForObject(
             sql,
             (resultSet, rowNum) -> new ChessGameEntity(
@@ -44,13 +44,13 @@ public class ChessGameDaoImpl implements ChessGameDao {
 
     @Override
     public int delete(Long id) {
-        final String sql = "delete from chess where id = ?";
+        final String sql = "delete from game where id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
     @Override
     public List<ChessGameEntity> findAll() {
-        final String sql = "select * from chess";
+        final String sql = "select * from game";
         return jdbcTemplate.query(sql, chessGameEntityRowMapper);
     }
 }

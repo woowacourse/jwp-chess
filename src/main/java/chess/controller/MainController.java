@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,12 +43,12 @@ public class MainController {
 
     @GetMapping("/list")
     public String list(Model model) {
-        model.addAttribute("list", gamesService.load());
+        model.addAttribute("list", gamesService.loadGames());
         return "list";
     }
 
-    @GetMapping("/game")
-    public String board() {
+    @GetMapping("/game/{id}")
+    public String board(@PathVariable Long id) {
         return "board";
     }
 }

@@ -32,20 +32,24 @@ class ChessGameControllerTest {
     @LocalServerPort
     private int port;
 
+    private static long titleIndex = 1;
+    private String title;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        title = "title" + titleIndex++;
     }
 
     private long createNewChessGame() {
-        return chessGameDao.createChessGame(ChessGameRoom.createNewChessGameRoom("title", "password"));
+        return chessGameDao.createChessGame(ChessGameRoom.createNewChessGameRoom(title, "password"));
     }
 
     @Test
     @DisplayName("새로운 게임 생성")
     void createNewGame() {
         RestAssured.given().log().all()
-                .body(new ChessGameRoomCreateRequest("title", "password"))
+                .body(new ChessGameRoomCreateRequest(title, "password"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("chessgames")
                 .then().log().all()

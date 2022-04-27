@@ -22,7 +22,8 @@ class ChessGameControllerAdviceTest {
     @Autowired
     private ChessGameDao chessGameDao;
 
-    private long chessGameId;
+    private static long chessGameId;
+    private String title;
 
     @LocalServerPort
     private int port;
@@ -30,7 +31,8 @@ class ChessGameControllerAdviceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        chessGameId = chessGameDao.createChessGame(ChessGameRoom.createNewChessGameRoom("title" , "password"));
+        title = "title" + chessGameId++;
+        chessGameId = chessGameDao.createChessGame(ChessGameRoom.createNewChessGameRoom(title , "password"));
     }
 
     @Test

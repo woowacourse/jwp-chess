@@ -9,6 +9,7 @@ import chess.domain.Member;
 import chess.domain.Participant;
 import chess.domain.Room;
 import chess.domain.piece.detail.Team;
+import chess.dto.MoveCommandDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -65,9 +66,9 @@ class ChessControllerTest {
         gameDao.save(game);
 
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .body("rawFrom=a2&rawTo=a4")
-                .when().post("/move/" + 1L)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new MoveCommandDto("a2", "a4"))
+                .when().put("/move/" + 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -86,10 +87,12 @@ class ChessControllerTest {
         memberDao.save(two);
         gameDao.save(game);
 
+        final MoveCommandDto moveCommandDto = new MoveCommandDto("a2", "a5");
+
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .body("rawFrom=a2&rawTo=a5")
-                .when().post("/move/" + 1L)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(moveCommandDto)
+                .when().put("/move/" + 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }

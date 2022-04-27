@@ -3,6 +3,7 @@ package chess.controller;
 import chess.domain.ChessGame;
 import chess.domain.Result;
 import chess.dto.GameCreationDto;
+import chess.dto.MoveCommandDto;
 import chess.service.GameService;
 import chess.service.MemberService;
 import java.net.URI;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -43,15 +45,6 @@ public class ChessApiController {
         return ResponseEntity.created(URI.create("/member/" + memberId)).body(memberId);
     }
 
-    @PostMapping("/move/{gameId}")
-    public ResponseEntity<Long> movePiece(@PathVariable("gameId") final Long gameId,
-                                          @RequestParam("rawFrom") final String rawFrom,
-                                          @RequestParam("rawTo") final String rawTo) {
-        gameService.move(gameId, rawFrom, rawTo);
-
-        return ResponseEntity.ok().body(gameId);
-    }
-
     @PostMapping("/terminate/{gameId}")
     public ResponseEntity<Long> terminateGame(@PathVariable("gameId") final Long gameId) {
         gameService.terminate(gameId);
@@ -78,6 +71,14 @@ public class ChessApiController {
         gameService.validatePassword(gameId, password);
 
         return ResponseEntity.ok(true);
+    }
+
+    @PutMapping("/move/{gameId}")
+    public ResponseEntity<Long> movePiece(@PathVariable("gameId") final Long gameId,
+                                          @RequestBody final MoveCommandDto moveCommandDto) {
+        gameService.move(gameId, moveCommandDto.getRawFrom(), moveCommandDto.getRawTo());
+
+        return ResponseEntity.ok().body(gameId);
     }
 
     @DeleteMapping("/member/{memberId}")

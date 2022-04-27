@@ -81,11 +81,14 @@
         }
 
         fetch("/move/{{gameId}}", {
-            method: "POST",
+            method: "PUT",
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/json'
             },
-            body: `rawFrom=${startPosition}&rawTo=${position}`
+            body: JSON.stringify({
+                rawFrom: startPosition,
+                rawTo: position
+            })
         }).then(async response => {
             if (response.status === 400) {
                 let errorMessage = await response.text();

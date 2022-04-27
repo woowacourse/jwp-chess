@@ -16,7 +16,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -52,9 +51,12 @@ class SpringGameDaoTest {
     @Test
     @DisplayName("정상적으로 게임이 생성되는지 확인한다.")
     void saveGame() {
-        final ChessGame actual = gameDao.findById(1L).get();
+        final Optional<ChessGame> game = gameDao.findById(1L);
 
-        assertThat(actual.getTurn().name()).isEqualTo("WHITE");
+        assertAll(
+                () -> assertThat(game).isNotNull(),
+                () -> assertThat(game.get().getTurn().name()).isEqualTo("WHITE")
+        );
     }
 
     @Test

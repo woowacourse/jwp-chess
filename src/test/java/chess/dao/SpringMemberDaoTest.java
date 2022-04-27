@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
@@ -31,7 +30,7 @@ class SpringMemberDaoTest {
     void saveMember() {
         memberDao.save(new Member(1L, "abc"));
         final Optional<Member> member = memberDao.findById(1L);
-        
+
         assertAll(
                 () -> assertThat(member).isNotNull(),
                 () -> assertThat(member.get().getName()).isEqualTo("abc")

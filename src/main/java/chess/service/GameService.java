@@ -13,7 +13,6 @@ import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
 import chess.dto.GameResultDto;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 

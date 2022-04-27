@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.model.GameResult;
+import chess.model.dto.GameInfoDto;
 import chess.model.dto.MoveDto;
 import chess.model.dto.RoomDto;
 import chess.model.dto.WebBoardDto;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -25,7 +27,7 @@ public class ChessController {
 
     @GetMapping("/")
     public String index() {
-        return "game";
+        return "index";
     }
 
     @PostMapping("/new")
@@ -34,6 +36,12 @@ public class ChessController {
         WebBoardDto board = chessService.start(roomDto);
         return board.getWebBoard();
         // 생각해볼 부분: ResponseEntity의 사용
+    }
+
+    @GetMapping("/games")
+    @ResponseBody
+    public List<GameInfoDto> getAllGames() {
+        return chessService.getAllGames();
     }
 
     @GetMapping("/start")

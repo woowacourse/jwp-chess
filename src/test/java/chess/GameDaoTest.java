@@ -1,5 +1,6 @@
 package chess;
 
+import chess.entity.GameEntity;
 import chess.model.dao.GameDao;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +49,18 @@ class GameDaoTest {
         long gameId = gameDao.initGame(roomName, password);
 
         assertThat(gameId).isOne();
+    }
+
+    @Test
+    @DisplayName("저장된 게임 전체를 찾는다.")
+    void findAllGames() {
+        gameDao.initGame("room1", "1234");
+        gameDao.initGame("room2", "1234");
+        gameDao.initGame("room3", "1234");
+
+        List<GameEntity> gameEntities = gameDao.findAll();
+
+        assertThat(gameEntities.size()).isEqualTo(3);
     }
 
     @Test

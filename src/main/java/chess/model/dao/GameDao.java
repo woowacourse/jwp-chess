@@ -1,5 +1,7 @@
 package chess.model.dao;
 
+import chess.entity.GameEntity;
+import chess.entity.PieceEntity;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -36,6 +39,20 @@ public class GameDao {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public List<GameEntity> findAll() {
+        String sql = "select game_id, name, password, turn from games";
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> {
+                    return new GameEntity(
+                            resultSet.getLong("game_id"),
+                            resultSet.getString("name"),
+                            resultSet.getString("password"),
+                            resultSet.getString("turn")
+                    );
+                });
     }
 
     public Optional<String> findOne() {

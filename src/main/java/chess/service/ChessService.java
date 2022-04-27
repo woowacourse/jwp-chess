@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.entity.GameEntity;
 import chess.entity.PieceEntity;
 import chess.model.GameResult;
 import chess.model.MoveType;
@@ -8,6 +9,7 @@ import chess.model.board.Board;
 import chess.model.board.BoardFactory;
 import chess.model.dao.PieceDao;
 import chess.model.dao.GameDao;
+import chess.model.dto.GameInfoDto;
 import chess.model.dto.MoveDto;
 import chess.model.dto.RoomDto;
 import chess.model.dto.WebBoardDto;
@@ -49,6 +51,13 @@ public class ChessService {
 
     private void makeBoard(Long gameId) {
         pieceDao.init(BoardFactory.create(), gameId);
+    }
+
+    public List<GameInfoDto> getAllGames() {
+        List<GameEntity> games = gameDao.findAll();
+        return games.stream()
+                .map(GameInfoDto::from)
+                .collect(Collectors.toList());
     }
 
     public WebBoardDto move(MoveDto moveDto) {

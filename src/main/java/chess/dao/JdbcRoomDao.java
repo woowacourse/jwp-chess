@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.dao.dto.RoomSaveDto;
 import chess.dao.dto.RoomUpdateDto;
-import chess.entity.Room;
+import chess.entity.RoomEntity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -41,11 +41,11 @@ public class JdbcRoomDao {
         return parameters;
     }
 
-    public Optional<Room> findById(final int id) {
+    public Optional<RoomEntity> findById(final int id) {
         final String sql = "SELECT * FROM room WHERE id = ?";
 
         if (existsById(id)) {
-            Room room = jdbcTemplate.queryForObject(sql, createRoomRowMapper(), id);
+            final RoomEntity room = jdbcTemplate.queryForObject(sql, createRoomRowMapper(), id);
             return Optional.of(room);
         }
 
@@ -57,7 +57,7 @@ public class JdbcRoomDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, id) == 1;
     }
 
-    private RowMapper<Room> createRoomRowMapper() {
+    private RowMapper<RoomEntity> createRoomRowMapper() {
         return (rs, rowNum) -> {
             final String roomId = rs.getString("id");
             final String name = rs.getString("name");
@@ -65,22 +65,22 @@ public class JdbcRoomDao {
             final String gameStatus = rs.getString("game_status");
             final String currentTurn = rs.getString("current_turn");
 
-            return new Room(Integer.parseInt(roomId), name, password, gameStatus, currentTurn);
+            return new RoomEntity(Integer.parseInt(roomId), name, password, gameStatus, currentTurn);
         };
     }
 
     public void update(final RoomUpdateDto updateDto) {
         final String sql = "UPDATE room SET game_status = ?, current_turn = ? WHERE id = ?";
-        int rowCount = jdbcTemplate.update(sql, updateDto.getGameStatus(), updateDto.getCurrentTurn(), updateDto.getId());
+        final int rowCount = jdbcTemplate.update(sql, updateDto.getGameStatus(), updateDto.getCurrentTurn(), updateDto.getId());
 
         if (rowCount == 0) {
             throw new IllegalStateException("수정에 실패 하였습니다.");
         }
     }
 
-    public void deleteById(final int id) {
-        final String sql = "DELETE FROM room WHERE id = ?";
-        int rowCount = jdbcTemplate.update(sql, id);
+    public void deleteByIdAndPassword(final int id, final String password) {
+        final String sql = "DELETE FROM room WHERE id = ? AND password = ?";
+        final int rowCount = jdbcTemplate.update(sql, id, password);
 
         if (rowCount == 0) {
             throw new IllegalStateException("삭제에 실패 하였습니다.");

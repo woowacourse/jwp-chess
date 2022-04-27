@@ -1,6 +1,6 @@
 package chess.entity;
 
-public class ChessPiece {
+public class ChessPieceEntity {
 
     private final int id;
     private final int roomId;
@@ -8,8 +8,8 @@ public class ChessPiece {
     private final String chessPiece;
     private final String color;
 
-    public ChessPiece(final int id, final int roomId, final String position, final String chessPiece,
-                      final String color) {
+    public ChessPieceEntity(final int id, final int roomId, final String position, final String chessPiece,
+                            final String color) {
         this.id = id;
         this.roomId = roomId;
         this.position = position;
@@ -35,5 +35,16 @@ public class ChessPiece {
 
     public String getColor() {
         return color;
+    }
+
+    @Override
+    public String toString() {
+        return "ChessPieceEntity{" +
+                "id=" + id +
+                ", roomId=" + roomId +
+                ", position='" + position + '\'' +
+                ", chessPiece='" + chessPiece + '\'' +
+                ", color='" + color + '\'' +
+                '}';
     }
 }

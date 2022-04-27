@@ -102,4 +102,21 @@ class ChessServiceTest {
         assertThat(rooms.get(0).getTitle()).isEqualTo(title1);
         assertThat(rooms.get(1).getTitle()).isEqualTo(title2);
     }
+
+    @Test
+    @DisplayName("생성된 체스방과 체스게임의 상태를 삭제한다.")
+    void removeRoom() {
+        String title = "title";
+        String password = "password";
+        chessService.createRoom(boardId, title, password);
+
+        chessService.removeRoom(boardId, password);
+
+        long resultCount = chessService.getRooms().stream()
+                .filter(room -> room.getBoardId() == boardId)
+                .filter(room -> room.getTitle().equals(title))
+                .filter(room -> room.getPassword().equals(password))
+                .count();
+        assertThat(resultCount).isZero();
+    }
 }

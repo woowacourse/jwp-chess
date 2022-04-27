@@ -20,3 +20,17 @@ function createRoom() {
             window.open(link);
         });
 }
+
+function deleteRoom(boardId, password) {
+    const request = {
+        password: password
+    };
+
+    fetch('/chess/' + boardId, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+    }).then(() => location.reload());
+}

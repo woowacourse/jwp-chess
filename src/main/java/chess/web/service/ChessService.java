@@ -132,4 +132,10 @@ public class ChessService {
     public List<Room> getRooms() {
         return roomDao.findAll();
     }
+
+    public void removeRoom(Long boardId, String password) {
+        pieceDao.deleteByBoardId(boardId);
+        roomDao.delete(boardId, password);
+        boardDao.deleteById(boardId);
+    }
 }

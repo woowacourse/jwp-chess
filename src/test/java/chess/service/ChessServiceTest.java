@@ -19,7 +19,7 @@ class ChessServiceTest {
     void cannotDeleteWithWrongPassword() {
         chessService.addChessGame(new GameCreationDTO("test", "1234"));
 
-        assertThatThrownBy(() -> chessService.deleteGame("1", "123"))
+        assertThatThrownBy(() -> chessService.deleteGame(1, "123"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

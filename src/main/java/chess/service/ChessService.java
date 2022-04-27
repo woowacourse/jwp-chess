@@ -26,7 +26,7 @@ public final class ChessService {
         return chessGameDAO.addGame(gameCreationDTO);
     }
 
-    public ChessGame loadSavedGame(final String gameId) {
+    public ChessGame loadSavedGame(final long gameId) {
         List<Movement> movementByGameId = movementDAO.findMovementByGameId(gameId);
         ChessGame chessGame = chessGameDAO.findGameById(gameId);
         for (Movement movement : movementByGameId) {
@@ -35,7 +35,7 @@ public final class ChessService {
         return chessGame;
     }
 
-    public ChessGame movePiece(final String gameId, final String source, final String target, final Team team) {
+    public ChessGame movePiece(final long gameId, final String source, final String target, final Team team) {
         final ChessGame chessGame = loadSavedGame(gameId);
         validateCurrentTurn(chessGame, team);
         move(chessGame, new Movement(Position.of(source), Position.of(target)), team);
@@ -66,11 +66,11 @@ public final class ChessService {
         return chessGameDAO.findAllGames();
     }
 
-    public ChessGameRoomInfoDTO findGameById(String id) {
+    public ChessGameRoomInfoDTO findGameById(long id) {
         return ChessGameRoomInfoDTO.from(chessGameDAO.findGameById(id));
     }
 
-    public void deleteGame(final String gameId, final String password) {
+    public void deleteGame(final long gameId, final String password) {
         ChessGame chessGame = loadSavedGame(gameId);
         if (!chessGame.isMatched(password)) {
             throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");

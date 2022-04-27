@@ -38,7 +38,7 @@ public class MovementDAO {
         );
     }
 
-    public List<Movement> findMovementByGameId(final String gameId) {
+    public List<Movement> findMovementByGameId(final long gameId) {
         String sql = "SELECT * FROM CHESS_GAME cg JOIN MOVEMENT m on cg.id = m.game_id WHERE cg.is_end=false AND cg.id=(?) ORDER BY m.created_at";
         return jdbcTemplate.query(
                 sql,

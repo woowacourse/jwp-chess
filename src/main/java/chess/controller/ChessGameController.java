@@ -41,7 +41,7 @@ public class ChessGameController {
     }
 
     @GetMapping("/chess/game/{id}")
-    public String showChessGameRoom(@PathVariable String id, Model model) {
+    public String showChessGameRoom(@PathVariable long id, Model model) {
         ChessGameRoomInfoDTO chessGameRoomInfoDTO = chessService.findGameById(id);
         model.addAttribute("chessGameRoom", chessGameRoomInfoDTO);
         return "game";
@@ -49,7 +49,7 @@ public class ChessGameController {
 
     @GetMapping("/chess/game/{id}/board")
     @ResponseBody
-    public ResponseEntity<BoardDTO> createBoard(@PathVariable String id) {
+    public ResponseEntity<BoardDTO> createBoard(@PathVariable long id) {
         ChessGame chessGame = chessService.loadSavedGame(id);
         return ResponseEntity.ok(new BoardDTO(chessGame));
     }
@@ -59,13 +59,13 @@ public class ChessGameController {
     public ResponseEntity<BoardDTO> movePiece(@RequestParam String source,
                                               @RequestParam String target,
                                               @RequestParam String team,
-                                              @PathVariable String id) {
+                                              @PathVariable long id) {
         ChessGame chessGame = chessService.movePiece(id, source, target, Team.valueOf(team));
         return ResponseEntity.ok(new BoardDTO(chessGame));
     }
 
     @DeleteMapping(value = "/chess/{id}")
-    public ResponseEntity<Object> deleteGame(@PathVariable String id, String password) {
+    public ResponseEntity<Object> deleteGame(@PathVariable long id, String password) {
         chessService.deleteGame(id, password);
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
                 .header("Location", "/").build();

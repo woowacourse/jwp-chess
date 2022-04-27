@@ -48,21 +48,27 @@ public class ChessGameDAO {
         return jdbcTemplate.query(sql, CHESS_GAME_ROW_MAPPER);
     }
 
-    public ChessGame findGameById(final String gameId) {
+    public ChessGame findGameById(final long gameId) {
         String sql = "SELECT id, name, password, is_end FROM CHESS_GAME WHERE ID = ?";
         return jdbcTemplate.queryForObject(sql, CHESS_GAME_ROW_MAPPER, gameId);
     }
 
-    public void updateGameEnd(final String gameId) {
+    public long updateGameEnd(final long gameId) {
         String sql = "UPDATE chess_game SET is_end = true WHERE id = ?";
-        jdbcTemplate.update(sql, gameId);
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
+            statement.setLong(1, gameId);
+            return statement;
+        });
+        return gameId;
     }
 
-    public void deleteGame(final String gameId) {
+    public void deleteGame(final long gameId) {
         String sql = "DELETE FROM CHESS_GAME WHERE ID = ?";
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setLong(1, Long.parseLong(gameId));
+            statement.setLong(1, gameId);
             return statement;
         });
     }

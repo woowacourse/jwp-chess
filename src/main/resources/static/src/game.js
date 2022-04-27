@@ -32,16 +32,29 @@ stopButton.addEventListener("click", async function () {
 
 async function newGame() {
   gameName = document.getElementById('newRoomName').value;
+  const password = document.getElementById('new-room-password').value;
+  const passwordCheck = document.getElementById(
+      'new-room-password-check').value;
 
-  let chessGame = await fetch("/game?name=" + gameName, {
+  if (gameName === '' || password === '' || passwordCheck === '') {
+    alert("방 이름, 패스워드를 입력해주세요.");
+    return;
+  }
+
+  let chessGame = await fetch("/game", {
     method: "POST",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    }
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      chessGameName: gameName,
+      password: password,
+      passwordCheck: passwordCheck
+    }),
   }).then(handleErrors)
   .catch(function (error) {
     alert(error.message);
-  })
+  });
   chessGame = await chessGame.json();
   document.getElementById("turnInfo").innerHTML = "현재 턴: " + chessGame.turn;
   return chessGame.chessMap;

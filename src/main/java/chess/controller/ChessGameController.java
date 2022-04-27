@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.ChessGameDto;
+import chess.dto.CreateGameDto;
 import chess.dto.MovePositionDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
@@ -29,8 +30,8 @@ public class ChessGameController {
     }
 
     @PostMapping("/game")
-    public ResponseEntity<ChessGameDto> createNewGame(@RequestParam("name") String gameName) {
-        final ChessGameDto newChessGame = chessGameService.createNewChessGame(gameName);
+    public ResponseEntity<ChessGameDto> createNewGame(@RequestBody CreateGameDto createGameDto) {
+        final ChessGameDto newChessGame = chessGameService.createNewChessGame(createGameDto);
         return ResponseEntity.ok(newChessGame);
     }
 

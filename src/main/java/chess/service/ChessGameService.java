@@ -14,6 +14,7 @@ import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
 import chess.dto.ChessGameDto;
+import chess.dto.CreateGameDto;
 import chess.dto.PieceDto;
 import chess.dto.StatusDto;
 import java.util.ArrayList;
@@ -31,13 +32,15 @@ public class ChessGameService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGameDto createNewChessGame(final String gameName) {
+    public ChessGameDto createNewChessGame(final CreateGameDto createGameDto) {
+        final String gameName = createGameDto.getChessGameName();
+        final String password = createGameDto.getPassword();
         final boolean isDuplicate = chessGameDao.isDuplicateGameName(gameName);
         if (isDuplicate) {
             throw new IllegalArgumentException("중복된 게임 이름입니다.");
         }
         final ChessGame chessGame = initializeChessGame();
-        final int chessGameId = chessGameDao.createNewChessGame(chessGame, gameName);
+        final int chessGameId = chessGameDao.createNewChessGame(chessGame, gameName, password);
         pieceDao.savePieces(chessGame.getCurrentPlayer(), chessGameId);
         pieceDao.savePieces(chessGame.getOpponentPlayer(), chessGameId);
         return ChessGameDto.of(chessGame, gameName);

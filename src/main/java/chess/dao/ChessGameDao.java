@@ -35,16 +35,15 @@ public class ChessGameDao {
         }
     }
 
-    public int createNewChessGame(final ChessGame chessGame, final String gameName) {
-        saveChessGame(gameName, chessGame.getTurn());
-        final int chessGameId = findChessGameIdByName(gameName);
-        return chessGameId;
+    public int createNewChessGame(final ChessGame chessGame, final String gameName, final String password) {
+        saveChessGame(gameName, password, chessGame.getTurn());
+        return findChessGameIdByName(gameName);
     }
 
-    private void saveChessGame(final String gameName, final Team turn) {
-        final String sql = "insert into chess_game (name, turn) values (?, ?)";
+    private void saveChessGame(final String gameName, final String password, final Team turn) {
+        final String sql = "insert into chess_game (name, password, turn) values (?, ?, ?)";
         try {
-            jdbcTemplate.update(sql, gameName, turn.getName());
+            jdbcTemplate.update(sql, gameName, password, turn.getName());
         } catch (DataAccessException e) {
             throw new ExecuteQueryException("게임을 저장할 수 없습니다.");
         }

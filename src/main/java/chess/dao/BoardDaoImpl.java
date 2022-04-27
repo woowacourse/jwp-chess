@@ -19,7 +19,7 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public List<PieceDto> findAll(long roomId) {
+    public List<PieceDto> findAll(Long roomId) {
         String sql = "select * from board where room_id = ?";
         return jdbcTemplate.query(sql, (rs, rowNum) ->
                 new PieceDto(
@@ -30,7 +30,7 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public void saveAll(Map<Position, Piece> board, long roomId) {
+    public void saveAll(Map<Position, Piece> board, Long roomId) {
         final String sql = "insert into board (position, symbol, room_id) values(?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, board.keySet(), board.size(),
@@ -42,13 +42,13 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public void delete(long roomId) {
+    public void delete(Long roomId) {
         final String sql = "delete from board where room_id = ?";
         jdbcTemplate.update(sql, roomId);
     }
 
     @Override
-    public void updatePosition(String symbol, String position, long roomId) {
+    public void updatePosition(String symbol, String position, Long roomId) {
         final String sql = "update board set symbol = ? where position = ? and room_id = ?";
         jdbcTemplate.update(sql, symbol, position, roomId);
     }

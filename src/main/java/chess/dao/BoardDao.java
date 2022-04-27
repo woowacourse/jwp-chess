@@ -9,11 +9,11 @@ import java.util.Map;
 
 public interface BoardDao {
 
-    List<PieceDto> findAll(long roomId);
+    List<PieceDto> findAll(Long roomId);
 
-    void saveAll(Map<Position, Piece> board, long roomId);
+    void saveAll(Map<Position, Piece> board, Long roomId);
 
-    void delete(long roomId);
+    void delete(Long roomId);
 
-    void updatePosition(String symbol, String position, long roomId);
+    void updatePosition(String symbol, String position, Long roomId);
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,9 +32,10 @@ public class GameController {
         return play(model);
     }
 
-    @GetMapping("/load")
-    public String load(Model model) {
+    @GetMapping("/load/{id}")
+    public String load(Model model, @PathVariable int id) {
         gameService.load();
+        System.out.println("방번호: " + id);
         return play(model);
     }
 
@@ -48,7 +50,7 @@ public class GameController {
 
     private String play(Model model) {
         model.addAllAttributes(gameService.modelPlayingBoard());
-        return "index";
+        return "game";
     }
 
     @GetMapping("/status")

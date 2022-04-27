@@ -10,7 +10,7 @@
     padding: 5px;
 }
 
-.form.start, .form.status, .form.save {
+.form.status, .form.save {
     float: left;
 }
 
@@ -54,4 +54,10 @@ section {
 .player-square img {
     float: left;
     width: 30px;
+}
+
+.room-list {
+    overflow: scroll;
+    width: 350px;
+    height: 150px;
 }

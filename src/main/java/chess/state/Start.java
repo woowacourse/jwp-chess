@@ -28,7 +28,8 @@ public final class Start extends Running {
             return new End(board);
         }
         if (MOVE.startsWith(command)) {
-            return new Turn(command, board, Player.WHITE);
+            movePiece(command);
+            return new Turn(board, Player.WHITE);
         }
         throw new IllegalArgumentException("[ERROR] 올바른 명령을 입력해주세요.");
     }

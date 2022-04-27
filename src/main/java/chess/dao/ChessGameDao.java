@@ -136,9 +136,9 @@ public class ChessGameDao {
         jdbcTemplate.update(sql, gameName);
     }
 
-    public Long findIdByGameNameAndPassword(String gameName, String password) {
-        String sql = "select id from chessgame where game_name = ? and password = ?";
-        return jdbcTemplate.queryForObject(sql, Long.class, gameName, password);
+    public Long findIdByGameName(String gameName) {
+        String sql = "select id from chessgame where game_name = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, gameName);
     }
 
     public int deleteByGameNameAndPassword(String gameName, String password) {

@@ -25,7 +25,6 @@
         <form action="/load" method="get">
             <div style="font-weight: bold">{{this}}</div>
             <input type="hidden" name="game_name" value="{{this}}"/>
-            <input name="password" type="password" minlength="1" placeholder="비밀번호를 입력해주세요." maxlength="20" size="20" class="from-control" aria-label="default input example"/>
             <button type="submit" class="btn btn-success">게임 시작</button>
             <button type="button" class="btn btn-danger" onclick="deleteGame('{{this}}')">게임 삭제</button>
         </form>

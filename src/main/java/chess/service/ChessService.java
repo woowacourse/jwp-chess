@@ -7,6 +7,7 @@ import chess.domain.Command;
 import chess.domain.piece.Team;
 import chess.domain.state.State;
 import chess.dto.ChessGameDto;
+import chess.exception.ExistGameException;
 import chess.exception.IllegalDeleteException;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,10 @@ public class ChessService {
     }
 
     public Long save(String gameName, String password) {
+        ChessGame findChessGame = chessGameDao.findByName(gameName);
+        if (findChessGame != null) {
+            throw new ExistGameException();
+        }
         ChessGame chessGame = new ChessGame(gameName);
         chessGame.progress(Command.from("start"));
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
@@ -83,8 +88,8 @@ public class ChessService {
         return chessGameDao.findAllGameName();
     }
 
-    public Long findIdByGameNameAndPassword(String gameName, String password) {
-        return chessGameDao.findIdByGameNameAndPassword(gameName,password);
+    public Long findIdByGameName(String gameName) {
+        return chessGameDao.findIdByGameName(gameName);
     }
 
     public int deleteByGameNameAndPassword(State state, String gameName, String password) {

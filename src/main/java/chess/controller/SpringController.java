@@ -31,8 +31,8 @@ public class SpringController {
     }
 
     @GetMapping("/load")
-    public String restart(@RequestParam("game_name") String gameName, @RequestParam("password") String password) {
-        Long id = chessService.findIdByGameNameAndPassword(gameName, password);
+    public String restart(@RequestParam("game_name") String gameName) {
+        Long id = chessService.findIdByGameName(gameName);
 
         return "redirect:/game/" + id;
     }

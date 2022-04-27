@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.exception.ExistGameException;
 import chess.exception.IllegalDeleteException;
 import chess.exception.IllegalPasswordException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ExceptionController {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public String handle(RedirectAttributes redirectAttributes, IllegalArgumentException e, HttpServletRequest request) {
+    public String handleMove(RedirectAttributes redirectAttributes, IllegalArgumentException e, HttpServletRequest request) {
         redirectAttributes.addAttribute("error", e.getMessage());
 
         String referer = request.getHeader("Referer");
@@ -30,6 +31,13 @@ public class ExceptionController {
 
     @ExceptionHandler(IllegalDeleteException.class)
     public String handleDelete(RedirectAttributes redirectAttributes, IllegalDeleteException e) {
+        redirectAttributes.addAttribute("error", e.getMessage());
+
+        return "redirect:/";
+    }
+
+    @ExceptionHandler(ExistGameException.class)
+    public String handleExistGame(RedirectAttributes redirectAttributes, ExistGameException e) {
         redirectAttributes.addAttribute("error", e.getMessage());
 
         return "redirect:/";

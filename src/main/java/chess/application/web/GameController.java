@@ -1,6 +1,5 @@
 package chess.application.web;
 
-import chess.dao.GameDao;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,17 +31,17 @@ public class GameController {
         return ResponseEntity.ok().body(listData);
     }
 
-    @GetMapping("/start")
-    public String start(Model model) {
-        gameService.start();
-        return play(model);
+    @PostMapping("/start")
+    public String start(Model model, @RequestParam String title, @RequestParam String password) {
+        long no = gameService.start(title, password);
+        return play(model, no);
     }
 
-    @GetMapping("/load/{id}")
-    public String load(Model model, @PathVariable int id) {
+    @GetMapping("/load/{no}")
+    public String load(Model model, @PathVariable int no) {
         gameService.load();
-        System.out.println("방번호: " + id);
-        return play(model);
+        System.out.println("방번호: " + no);
+        return play(model, no);
     }
 
     @PostMapping("/move")
@@ -51,10 +50,10 @@ public class GameController {
         if (gameService.isGameFinished()) {
             return end(model);
         }
-        return play(model);
+        return play(model, 0L);
     }
 
-    private String play(Model model) {
+    private String play(Model model, long no) {
         model.addAllAttributes(gameService.modelPlayingBoard());
         return "game";
     }

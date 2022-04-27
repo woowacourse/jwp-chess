@@ -48,8 +48,9 @@ public class GameService {
         this.boardDao = boardDao;
     }
 
-    public void start() {
+    public long start(String title, String password) {
         chessGame.start();
+        return gameDao.insertGame(GameDto.fromNewGame(title, password));
     }
 
     public Map<String, Object> modelPlayingBoard() {

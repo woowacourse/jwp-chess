@@ -16,8 +16,10 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceConvertor;
 import chess.domain.piece.Team;
 import chess.domain.position.Position;
+import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
 import chess.dto.ScoreDto;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -40,6 +42,18 @@ public class ChessGameService {
         this.turnDao = turnDao;
         this.gameStatusDao = gameStatusDao;
         this.gameDao = gameDao;
+    }
+
+    public int create(GameDto gameDto) {
+        return gameDao.create(gameDto.getRoomTitle(), gameDto.getPassword());
+    }
+
+    public List<GameDto> find() {
+        return gameDao.find();
+    }
+
+    public void delete(int id) {
+        gameDao.delete(id);
     }
 
     public void init() {

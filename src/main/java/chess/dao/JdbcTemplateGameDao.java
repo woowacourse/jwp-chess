@@ -43,7 +43,7 @@ public class JdbcTemplateGameDao implements GameDao {
         return jdbcTemplate.query(sql, new RowMapper<GameDto>() {
             @Override
             public GameDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new GameDto(rs.getString("title"), rs.getString("password"));
+                return new GameDto(rs.getInt("id"), rs.getString("title"));
             }
         });
     }

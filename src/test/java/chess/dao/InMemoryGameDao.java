@@ -13,7 +13,7 @@ public class InMemoryGameDao implements GameDao {
     private int id = 1;
 
     @Override
-    public int createGame(String name) {
+    public int createGame(String name, String password) {
         gameTable.put(id++, new GameEntity(1, name, DEFAULT_STATUS, DEFAULT_TURN));
         return id;
     }

@@ -9,5 +9,5 @@ public interface GameDao {
 
     List<GameEntity> findAll();
 
-    int createGame(String name);
+    int createGame(String name, String password);
 }

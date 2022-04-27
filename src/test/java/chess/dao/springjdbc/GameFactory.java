@@ -11,6 +11,6 @@ public class GameFactory {
         List<Object[]> params = Arrays.stream(names)
                 .map(name -> new Object[]{name})
                 .collect(Collectors.toList());
-        jdbcTemplate.batchUpdate("INSERT INTO game SET name = ?", params);
+        jdbcTemplate.batchUpdate("INSERT INTO game SET name = ?, password = 'password'", params);
     }
 }

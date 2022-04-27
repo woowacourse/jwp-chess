@@ -22,17 +22,17 @@ class ChessServiceTest {
         boardDao = new InMemoryPieceDao();
         gameDao = new InMemoryGameDao();
         service = new ChessService(boardDao, gameDao);
+        gameDao.createGame("firstGame", "password");
     }
 
     @Test
     void createGame() {
-        service.createGame("firstGame");
-        assertThat(gameDao.getGameTable().size()).isEqualTo(1);
+        service.createGame("secondGame", "password");
+        assertThat(gameDao.getGameTable().size()).isEqualTo(2);
     }
 
     @Test
     void initGame() {
-        service.createGame("firstGame");
         service.initGame(1);
         assertThat(gameDao.getGameTable().size()).isEqualTo(1);
         assertThat(boardDao.getBoardByGameId(1).size()).isEqualTo(64);
@@ -40,7 +40,6 @@ class ChessServiceTest {
 
     @Test
     void move() {
-        service.createGame("firstGame");
         service.initGame(1);
         service.move(1, "a2", "a4");
         GameEntity gameEntity = gameDao.getGameTable().get(1);
@@ -54,7 +53,6 @@ class ChessServiceTest {
 
     @Test
     void endGame() {
-        service.createGame("firstGame");
         service.initGame(1);
         service.endGame(1);
         String status = gameDao.getGameTable().get(1).getStatus();
@@ -63,7 +61,6 @@ class ChessServiceTest {
 
     @Test
     void getResult() {
-        service.createGame("firstGame");
         service.initGame(1);
         GameResultDto result = service.getResult(1);
         assertThat(result.getIsDraw()).isTrue();
@@ -73,7 +70,6 @@ class ChessServiceTest {
 
     @Test
     void getAllGames() {
-        service.createGame("firstGame");
         service.initGame(1);
         GamesDto allGames = service.getAllGames();
         assertThat(allGames.getGames().size()).isEqualTo(1);

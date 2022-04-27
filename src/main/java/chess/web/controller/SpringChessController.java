@@ -43,8 +43,8 @@ public class SpringChessController {
     }
 
     @PostMapping("/board")
-    public String createGame(@RequestParam String name) {
-        chessService.createGame(name.trim());
+    public String createGame(@RequestParam String name, @RequestParam String password) {
+        chessService.createGame(name.trim(), password);
         return "redirect:/";
     }
 

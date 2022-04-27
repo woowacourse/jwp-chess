@@ -45,12 +45,13 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public int createGame(final String name) {
-        String sql = "INSERT INTO game SET name = ?";
+    public int createGame(final String name, final String password) {
+        String sql = "INSERT INTO game SET name = ?, password = ?";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement prepareStatement = con.prepareStatement(sql, new String[]{"id"});
             prepareStatement.setString(1, name);
+            prepareStatement.setString(2, password);
             return prepareStatement;
         }, keyHolder);
 

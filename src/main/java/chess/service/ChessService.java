@@ -86,8 +86,8 @@ public class ChessService {
         return new GamesDto(gameDao.findAll());
     }
 
-    public void createGame(String name) {
-        gameDao.createGame(name);
+    public void createGame(String name, String password) {
+        gameDao.createGame(name, password);
     }
 
     public GameResultDto getResult(int id) {

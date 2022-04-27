@@ -62,9 +62,9 @@ class SpringGameDaoTest {
     }
 
     @Test
-    @DisplayName("createGame: 이름을 받아 게임을 만든 후 id값을 적절하게 반환하는지 확인")
+    @DisplayName("createGame: 이름과 암호를 받아 게임을 만든 후 id값을 적절하게 반환하는지 확인")
     void createGame() {
-        int createdGameId = springGameDao.createGame("testGameName");
+        int createdGameId = springGameDao.createGame("testGameName", "testPassword");
         assertThat(createdGameId).isEqualTo(1);
     }
 }

@@ -39,6 +39,13 @@ public class RoomDaoImplTest {
     }
 
     @Test
+    void createRoom() {
+        Room room = new Room(null, Team.WHITE, "title", "password", true);
+        roomDaoImpl.save(room);
+        assertThat(roomDaoImpl.findAll().size()).isEqualTo(2);
+    }
+
+    @Test
     void findById() {
         assertThat(roomDaoImpl.findById(1L)).isNotNull();
     }

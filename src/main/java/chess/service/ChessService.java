@@ -38,6 +38,10 @@ public class ChessService {
         }
     }
 
+    public void deleteRoom(RoomId roomId) {
+        gameRoomDao.deleteGameRoom(roomId);
+    }
+
     public List<Room> getRooms() {
         return gameRoomDao.getRooms();
     }

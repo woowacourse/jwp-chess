@@ -20,13 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ChessController {
@@ -44,6 +38,12 @@ public class ChessController {
     public void createRoom(@RequestBody CreateRoomDto createRoomDto) {
         Room room = Room.create(createRoomDto.getTitle(), createRoomDto.getPassword());
         chessService.createGame(room);
+    }
+
+    @ResponseBody
+    @DeleteMapping("/rooms/{id}")
+    public void deleteRoom(@PathVariable String id) {
+        chessService.deleteRoom(RoomId.from(id));
     }
 
     @ResponseBody

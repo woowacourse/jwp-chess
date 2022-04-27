@@ -1,5 +1,6 @@
 package chess.controller;
 
+import static chess.ChessGameFixture.createRunningChessGame;
 import static chess.domain.state.Turn.END;
 import static org.hamcrest.core.Is.is;
 
@@ -11,7 +12,6 @@ import chess.dao.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.domain.piece.PieceFactory;
-import chess.domain.state.Turn;
 import io.restassured.RestAssured;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ class ChessGameControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
+        chessGame = createRunningChessGame();
         chessGameDao.deleteChessGame(chessGame);
     }
 

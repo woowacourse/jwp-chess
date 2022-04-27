@@ -1,5 +1,6 @@
 package chess.domain;
 
+import static chess.ChessGameFixture.createRunningChessGame;
 import static chess.domain.state.Turn.WHITE_TURN;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -22,9 +23,7 @@ class ChessGameTest {
     @Test
     @DisplayName("체스 게임의 비밀번호가 틀린 경우")
     void validateWrongPassword(){
-        String title = "title";
-        String password = "password";
-        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), title, password);
+        ChessGame chessGame = createRunningChessGame();
 
         assertThatThrownBy(() -> chessGame.validatePassword("wrong password"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -34,9 +33,7 @@ class ChessGameTest {
     @Test
     @DisplayName("체스 게임이 아직 진행중인 상태에서 게임이 끝났는지 검증")
     void validateEndGame(){
-        String title = "title";
-        String password = "password";
-        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), title, password);
+        ChessGame chessGame = createRunningChessGame();
 
         assertThatThrownBy(chessGame::validateEndGame)
                 .isInstanceOf(IllegalStateException.class)

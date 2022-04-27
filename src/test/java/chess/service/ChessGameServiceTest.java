@@ -1,5 +1,6 @@
 package chess.service;
 
+import static chess.ChessGameFixture.createRunningChessGame;
 import static chess.domain.Color.BLACK;
 import static chess.domain.Color.WHITE;
 import static chess.domain.state.Turn.END;
@@ -15,7 +16,6 @@ import chess.domain.PromotionPiece;
 import chess.domain.piece.Piece;
 import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.single.Knight;
-import chess.domain.state.Turn;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +46,7 @@ class ChessGameServiceTest {
         chessGameDao = new ChessGameDao(jdbcTemplate, dataSource);
         pieceDao = new PieceDao(jdbcTemplate);
         chessGameService = new ChessGameService(pieceDao, chessGameDao);
-        ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
+        ChessGame chessGame = createRunningChessGame();
         ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
         chessGameId = savedChessGame.getId();
     }

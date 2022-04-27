@@ -1,5 +1,6 @@
 package chess.dao;
 
+import static chess.ChessGameFixture.createRunningChessGame;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.ChessBoard;
@@ -10,7 +11,6 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.single.King;
 import chess.domain.piece.single.Knight;
-import chess.domain.state.Turn;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ class PieceDaoTest {
     @BeforeEach
     void setUp() {
         pieceDao = new PieceDao(jdbcTemplate);
-        ChessGame chessGame = new ChessGame(Turn.WHITE_TURN.name(), "title", "password");
+        ChessGame chessGame = createRunningChessGame();
         ChessGame savedChessGame = new ChessGameDao(jdbcTemplate, dataSource).createChessGame(chessGame);
         chessGameId = savedChessGame.getId();
     }

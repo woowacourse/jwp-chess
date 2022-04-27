@@ -3,7 +3,7 @@ USE chess;
 CREATE TABLE room
 (
     room_id      INT          NOT NULL UNIQUE AUTO_INCREMENT,
-    name         VARCHAR(10)  NOT NULL UNIQUE,
+    name         VARCHAR(10)  NOT NULL,
     game_status  VARCHAR(10)  NOT NULL,
     current_turn VARCHAR(10)  NOT NULL,
     password     VARCHAR(255) NOT NULL,

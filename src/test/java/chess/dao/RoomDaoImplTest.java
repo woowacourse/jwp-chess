@@ -34,7 +34,7 @@ class RoomDaoImplTest {
                 + "CREATE TABLE room"
                 + "("
                 + "    room_id      INT         PRIMARY KEY AUTO_INCREMENT,"
-                + "    name         VARCHAR(10) NOT NULL UNIQUE,"
+                + "    name         VARCHAR(10) NOT NULL,"
                 + "    game_status  VARCHAR(10) NOT NULL,"
                 + "    current_turn VARCHAR(10) NOT NULL,"
                 + "    password     VARCHAR(255) NOT NULL,"
@@ -82,6 +82,25 @@ class RoomDaoImplTest {
     void isExistName_false() {
         // given
         final String roomName = "hi";
+
+        // when
+        final boolean actual = roomDao.isExistName(roomName);
+
+        // then
+        assertThat(actual).isFalse();
+    }
+
+    @Test
+    @DisplayName("삭제된 방을 제외하고, 방 이름이 존재하지 않으면 false를 반환한다.")
+    void isExistName_with_out_deleted_room_false() {
+        // given
+        final String roomName = "hi";
+        final GameStatus gameStatus = GameStatus.END;
+        final Color currentTurn = Color.WHITE;
+        final String password = "1q2w3e4r";
+
+        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+        roomDao.deleteById(roomId);
 
         // when
         final boolean actual = roomDao.isExistName(roomName);

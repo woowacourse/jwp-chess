@@ -41,8 +41,8 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public boolean isExistName(final String roomName) {
-        final String sql = "SELECT EXISTS(SELECT name FROM room WHERE name = ?)";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, roomName);
+        final String sql = "SELECT EXISTS(SELECT name FROM (SELECT name FROM room WHERE is_delete = ?) AS r WHERE r.name = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, false, roomName);
     }
 
     @Override

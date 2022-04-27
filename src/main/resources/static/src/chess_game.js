@@ -107,13 +107,18 @@ function displayWinner(response) {
     }
 }
 
-async function scoreButton() {
-    const value = await fetch(gameUri + "/score")
+function scoreButton() {
+    fetch(gameUri + "/score")
         .then(response => handlingException(response))
+        .then(response => response.json())
+        .then(response => alert(`${response[0].color}의 점수는 ${response[0].score}\n${response[1].color}의 점수는 ${response[1].score}`))
         .catch(error => {
             alert(error.message);
         });
-    alert(`${value[0].color}의 점수는 ${value[0].score}\n${value[1].color}의 점수는 ${value[1].score}`);
+}
+
+function mainPageButton() {
+    window.location.href = "/chessgames"
 }
 
 async function handlingException(response) {

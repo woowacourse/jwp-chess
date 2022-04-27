@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+<script src="../static/src/chess_game_list.js"></script>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -84,11 +85,13 @@
         <div id="h1" onclick="clickMove(id)" class="white-square"></div>
     </section>
 </div>
-<h2>체스 form</h2>
+<div>
+    <input type="button" onclick="mainPageButton()" value="mainPage">
+</div>
+<br>
 <div>
     <input type="button" onclick="scoreButton()" value="score">
 </div>
-<br>
 <br>
 <form>
     <input id="promotion" placeholder="promotion 기물이름 (ex. Q)">

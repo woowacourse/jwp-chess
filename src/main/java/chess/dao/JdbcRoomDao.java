@@ -77,19 +77,12 @@ public class JdbcRoomDao {
 
     public void update(final RoomUpdateDto updateDto) {
         final String sql = "UPDATE room SET game_status = ?, current_turn = ? WHERE id = ?";
-        final int rowCount = jdbcTemplate.update(sql, updateDto.getGameStatus(), updateDto.getCurrentTurn(), updateDto.getId());
-
-        if (rowCount == 0) {
-            throw new IllegalStateException("수정에 실패 하였습니다.");
-        }
+        jdbcTemplate.update(sql, updateDto.getGameStatus(), updateDto.getCurrentTurn(),
+                updateDto.getId());
     }
 
     public void deleteByIdAndPassword(final int id, final String password) {
         final String sql = "DELETE FROM room WHERE id = ? AND password = ?";
-        final int rowCount = jdbcTemplate.update(sql, id, password);
-
-        if (rowCount == 0) {
-            throw new IllegalStateException("삭제에 실패 하였습니다.");
-        }
+        jdbcTemplate.update(sql, id, password);
     }
 }

@@ -1,10 +1,10 @@
-package chess.controller.dto;
+package chess.controller.exception;
 
-public class ErrorResponseDto {
+public class ErrorResponse {
 
     private final String message;
 
-    public ErrorResponseDto(final String message) {
+    public ErrorResponse(final String message) {
         this.message = message;
     }
 

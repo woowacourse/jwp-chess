@@ -5,7 +5,6 @@ import static chess.domain.GameStatus.READY;
 import static chess.domain.chesspiece.Color.BLACK;
 import static chess.domain.chesspiece.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.dao.dto.RoomSaveDto;
@@ -109,15 +108,6 @@ class JdbcRoomDaoTest {
         );
     }
 
-    @DisplayName("room 수정을 실패한다.")
-    @Test
-    void room_업데이트_실패한다() {
-        final RoomUpdateDto updateDto = new RoomUpdateDto(26, READY, WHITE);
-
-        assertThatThrownBy(() -> roomDao.update(updateDto))
-                .isInstanceOf(IllegalStateException.class);
-    }
-
     @DisplayName("id를 기반으로 room을 삭제한다.")
     @Test
     void room_삭제한다() {
@@ -127,12 +117,5 @@ class JdbcRoomDaoTest {
         roomDao.deleteByIdAndPassword(id, "123123");
 
         assertThat(roomDao.findById(id).isEmpty()).isTrue();
-    }
-
-    @DisplayName("id를 기반으로 room에 존재하지 않는 것을 삭제할 경우 예외를 던진다.")
-    @Test
-    void room_삭제실패한다() {
-        assertThatThrownBy(() -> roomDao.deleteByIdAndPassword(26, "111"))
-                .isInstanceOf(IllegalStateException.class);
     }
 }

@@ -110,7 +110,7 @@
         const res = await fetch(`/api/rooms/${id}`);
         const room = await res.json();
 
-        if (!res.ok && (room.gameStatus != 'end' || room.gameStatus != 'king_die')) {
+        if (room.gameStatus != 'end' || !res.ok) {
             const error = document.getElementById("error");
             error.innerText = "게임이 끝나야 삭제할 수 있습니다!";
             return;

@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.domain.board.ChessGame;
-import chess.dto.ChessGameRoomInfoDTO;
 import chess.dto.GameCreationDTO;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -14,11 +13,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ChessGameDAO {
 
-    private static final RowMapper<ChessGameRoomInfoDTO> CHESS_GAME_ROOM_INFO_DTO_ROW_MAPPER = (resultSet, rowNumber) ->
-            new ChessGameRoomInfoDTO(
+    private static final RowMapper<ChessGame> CHESS_GAME_ROW_MAPPER = (resultSet, rowNumber) ->
+            new ChessGame(
                     resultSet.getString("id"),
                     resultSet.getString("name"),
-                    resultSet.getString("password")
+                    resultSet.getString("password"),
+                    resultSet.getBoolean("is_end")
             );
 
     private final JdbcTemplate jdbcTemplate;
@@ -40,21 +40,14 @@ public class ChessGameDAO {
         return keyHolder.getKey().longValue();
     }
 
-    public List<ChessGameRoomInfoDTO> findAllGames() {
-        String sql = "SELECT id, name, password FROM CHESS_GAME";
-        return jdbcTemplate.query(sql, CHESS_GAME_ROOM_INFO_DTO_ROW_MAPPER);
+    public List<ChessGame> findAllGames() {
+        String sql = "SELECT id, name, password, is_end FROM CHESS_GAME";
+        return jdbcTemplate.query(sql, CHESS_GAME_ROW_MAPPER);
     }
 
     public ChessGame findGameById(final String gameId) {
         String sql = "SELECT id, name, password, is_end FROM CHESS_GAME WHERE ID = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNumber) -> new ChessGame(
-                        resultSet.getString("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("password"),
-                        resultSet.getBoolean("is_end")
-                ), gameId);
+        return jdbcTemplate.queryForObject(sql, CHESS_GAME_ROW_MAPPER, gameId);
     }
 
     public void updateGameEnd(final String gameId) {

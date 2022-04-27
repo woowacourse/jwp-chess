@@ -62,7 +62,7 @@ public final class ChessService {
         }
     }
 
-    public List<ChessGameRoomInfoDTO> getGames() {
+    public List<ChessGame> getGames() {
         return chessGameDAO.findAllGames();
     }
 

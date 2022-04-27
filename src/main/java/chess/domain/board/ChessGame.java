@@ -9,12 +9,7 @@ public final class ChessGame {
     private String name;
     private boolean isEnd;
     private String password;
-    private BoardGenerator boardGenerator;
     private ChessBoard chessBoard;
-
-    private ChessGame(final BoardGenerator boardGenerator) {
-        this.chessBoard = new ChessBoard(boardGenerator);
-    }
 
     public ChessGame(final String id, final String name, final String password, final boolean isEnd) {
         this.id = id;

@@ -3,7 +3,7 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.dto.ChessGameRoomInfoDTO;
+import chess.domain.board.ChessGame;
 import chess.dto.GameCreationDTO;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -21,21 +21,21 @@ class ChessGameDAOTest {
     @Autowired
     private JdbcTemplate template;
 
-    @Test
-    @DisplayName("체스 게임방 생성")
-    void makeChessGameRoom() {
-        ChessGameDAO chessGameDAO = new ChessGameDAO(template);
-        long id = chessGameDAO.addGame(new GameCreationDTO("zero", "1234"));
+    @Autowired
+    private ChessGameDAO dao;
 
-        assertThat(id).isNotNull();
+    @Test
+    @DisplayName("체스 게임방을 생성한다")
+    void makeChessGameRoom() {
+        long id = dao.addGame(new GameCreationDTO("zero", "1234"));
+        assertThat(id).isEqualTo(1);
     }
 
     @Test
-    @DisplayName("체스 게임방 가져오기")
+    @DisplayName("모든 체스 게임방을 불러온다")
     void findChessGameRoom() {
         ChessGameDAO chessGameDAO = new ChessGameDAO(template);
-        List<ChessGameRoomInfoDTO> activeGames = chessGameDAO.findAllGames();
-
+        List<ChessGame> activeGames = chessGameDAO.findAllGames();
         assertThat(activeGames.size()).isNotEqualTo(0);
     }
 

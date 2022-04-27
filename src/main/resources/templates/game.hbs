@@ -5,11 +5,18 @@
     <title> 체스 게임 </title>
     <link rel="stylesheet" href="/src/index.css">
     <script src="/src/index.js"></script>
+  <style>
+    .room-title {
+      font-size: 30px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
 <div id="app">
     <div id="main-container">
         <h1> 체스 게임 </h1>
+        <h3 class="room-title"> 방 이름 : {{roomName}} </h3>
         <section id="chess-ui">
             <table id="chess-board">
                 <script>
@@ -51,7 +58,6 @@
             {{/each}}
         </section>
     </div>
-
 </div>
 <script>setUpMain('{{response.state}}');</script>
 </body>

@@ -91,6 +91,10 @@ public class ChessRoomService {
         return roomDao.findByName(roomName);
     }
 
+    public RoomDto findById(int roomId) {
+        return roomDao.findById(roomId);
+    }
+
     public void removeRoom(RoomDto roomDto) {
         RoomDto findRoomDto = roomDao.findByName(roomDto.getName());
         if (findRoomDto.getPassword() != null) {

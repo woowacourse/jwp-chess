@@ -8,6 +8,7 @@ import chess.domain.position.Position;
 import chess.domain.position.Rank;
 import chess.domain.state.State;
 import chess.dto.ChessGameDto;
+import chess.exception.ExistGameException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,8 +32,9 @@ public class ChessGameDao {
     }
 
     public Long save(ChessGameDto chessGameDto, String password) {
-        String sql = "insert into chessgame (game_name, turn, password) values (?, ?, ?)";
+        validateDuplicateGameName(chessGameDto.getGameName());
 
+        String sql = "insert into chessgame (game_name, turn, password) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -43,6 +45,16 @@ public class ChessGameDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    private void validateDuplicateGameName(String gameName) {
+        String sql = "select count(*) from CHESSGAME where game_name = ?";
+
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, gameName);
+
+        if (count >= 1) {
+            throw new ExistGameException();
+        }
     }
 
     public void update(Long id, ChessGameDto chessGameDto) {

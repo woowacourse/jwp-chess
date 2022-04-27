@@ -141,7 +141,7 @@ async function updateRoomName(id) {
         password: password
     }
 
-    await fetch("/api/chess/rooms/" + id + "/update",{
+    await fetch("/api/chess/rooms/" + id,{
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',

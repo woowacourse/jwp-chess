@@ -45,7 +45,6 @@ class ChessControllerTest {
 
     @AfterEach
     void cleanUp() {
-//        chessService.deleteGame(testGameId);
         gameDao.delete(testGameId);
     }
 
@@ -162,5 +161,15 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
 
         assertThat(chessService.loadGame(testGameId).getGameState()).isEqualTo(GameState.FINISHED);
+    }
+
+    @DisplayName("GET - 모든 게임 방 조회 테스트")
+    @Test
+    void find_All_Games() {
+        RestAssured.given().log().all()
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/games")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
     }
 }

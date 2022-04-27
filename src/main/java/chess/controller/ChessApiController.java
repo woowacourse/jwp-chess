@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,14 +38,12 @@ public class ChessApiController {
 
     @PostMapping("/member")
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
     public ResponseEntity<Long> addMember(@RequestParam("memberName") final String memberName) {
         final Long memberId = memberService.addMember(memberName);
         return ResponseEntity.created(URI.create("/member/" + memberId)).body(memberId);
     }
 
     @PostMapping("/move/{gameId}")
-    @ResponseBody
     public ResponseEntity<Long> movePiece(@PathVariable("gameId") final Long gameId,
                                           @RequestParam("rawFrom") final String rawFrom,
                                           @RequestParam("rawTo") final String rawTo) {
@@ -56,7 +53,6 @@ public class ChessApiController {
     }
 
     @PostMapping("/terminate/{gameId}")
-    @ResponseBody
     public ResponseEntity<Long> terminateGame(@PathVariable("gameId") final Long gameId) {
         gameService.terminate(gameId);
 
@@ -64,7 +60,6 @@ public class ChessApiController {
     }
 
     @PostMapping("/chessGame")
-    @ResponseBody
     public ResponseEntity<Long> createGame(@RequestBody final GameCreationDto gameCreationDto) {
         System.out.println(gameCreationDto);
         final Long gameId = gameService.createGame(
@@ -78,7 +73,6 @@ public class ChessApiController {
     }
 
     @PostMapping("/{gameId}/password")
-    @ResponseBody
     public ResponseEntity<Boolean> validatePassword(@PathVariable final Long gameId,
                                                     @RequestParam final String password) {
         gameService.validatePassword(gameId, password);
@@ -87,7 +81,6 @@ public class ChessApiController {
     }
 
     @DeleteMapping("/member/{memberId}")
-    @ResponseBody
     public ResponseEntity<Long> deleteMember(@PathVariable("memberId") final Long memberId) {
         memberService.deleteMember(memberId);
 
@@ -96,7 +89,7 @@ public class ChessApiController {
 
     @DeleteMapping("/{gameId}")
     public ResponseEntity<Long> deleteGame(@PathVariable("gameId") final Long gameId,
-                                           @RequestParam final String password ) {
+                                           @RequestParam final String password) {
         gameService.deleteGameById(gameId, password);
 
         return ResponseEntity.ok().body(gameId);

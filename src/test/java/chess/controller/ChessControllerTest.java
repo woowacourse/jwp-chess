@@ -1,7 +1,5 @@
 package chess.controller;
 
-import static org.hamcrest.core.Is.is;
-
 import chess.dao.GameDao;
 import chess.dao.MemberDao;
 import chess.domain.Board;

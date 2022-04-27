@@ -4,6 +4,7 @@ import chess.domain.game.state.Player;
 import chess.domain.piece.property.Color;
 import chess.web.dto.CreateRoomRequestDto;
 import chess.web.dto.ReadRoomResultDto;
+import chess.web.dto.RoomDto;
 
 public interface RoomDao {
 
@@ -16,4 +17,12 @@ public interface RoomDao {
     int createRoom(CreateRoomRequestDto createRoomRequestDto);
 
     ReadRoomResultDto findAll();
+
+    void changeTurn(int roomId);
+
+    boolean roomExist(int roomId);
+
+    void finish(int roomId);
+
+    RoomDto isStartable(int roomId);
 }

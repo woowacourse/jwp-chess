@@ -9,6 +9,7 @@ import chess.web.dao.RoomDao;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
+import chess.web.dto.RoomDto;
 import chess.web.dto.StartResultDto;
 import chess.web.service.fakedao.FakeChessBoardDao;
 import chess.web.service.fakedao.FakePlayerDao;
@@ -23,9 +24,9 @@ public class ChessGameServiceTest {
 
     @Test
     void start() {
-        StartResultDto startResultDto = chessGameService.start(1);
+        RoomDto roomDto = chessGameService.start(1);
 
-        assertThat(startResultDto).isNotNull();
+        assertThat(roomDto).isNotNull();
     }
 
     @Test

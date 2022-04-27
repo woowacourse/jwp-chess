@@ -6,7 +6,7 @@ import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
 import chess.web.dto.ReadRoomResultDto;
-import chess.web.dto.StartResultDto;
+import chess.web.dto.RoomDto;
 import chess.web.service.ChessGameService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +24,7 @@ public class ChessGameRestController {
     }
 
     @GetMapping("/start/{roomId}")
-    public StartResultDto start(@PathVariable("roomId") int roomId) {
+    public RoomDto start(@PathVariable("roomId") int roomId) {
         return service.start(roomId);
     }
 

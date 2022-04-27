@@ -15,7 +15,7 @@ import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
 import chess.web.dto.ReadRoomResultDto;
-import chess.web.dto.StartResultDto;
+import chess.web.dto.RoomDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Service;
@@ -31,38 +31,33 @@ public class ChessGameService {
         this.roomDao = playerDao;
     }
 
-    public StartResultDto start(int roomId) {
-        ChessGame chessGame = new ChessGame();
-        chessGame.start();
-
-        removeAll(roomId);
-        saveAll(chessGame, roomId);
-
-        return new StartResultDto(roomId);
+    public RoomDto start(int roomId) {
+        boolean roomExist = chessBoardDao.boardExistInRoom(roomId);
+        if (!roomExist) {
+            ChessGame chessGame = new ChessGame();
+            chessGame.start();
+            saveAll(chessGame, roomId);
+        }
+        return roomDao.isStartable(roomId);
     }
 
     public MoveResultDto move(MoveDto moveDto, int roomId) {
         ChessGame chessGame = getChessGame(roomId);
         String turn = chessGame.getTurn();
 
-        Map<Position, Piece> board = findAllBoard(roomId);
-        Map<String, Piece> boardDto = new HashMap<>();
-        for (Position position : board.keySet()) {
-            Piece piece = board.get(position);
-            boardDto.put(position.toString(), piece);
-        }
-
+        Map<String, Piece> boardDto = createBoardDto(roomId);
         MoveResultDto moveResultDto = new MoveResultDto(boardDto);
 
         try {
             chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
-            removeAll(roomId);
+            chessBoardDao.movePiece(moveDto, roomId);
+            roomDao.changeTurn(roomId);
             if (isChessGameEnd(chessGame)) {
                 moveResultDto.setIsGameOver(true);
                 moveResultDto.setWinner(turn);
+                roomDao.finish(roomId);
                 return moveResultDto;
             }
-            saveAll(chessGame, roomId);
         } catch (IllegalArgumentException e) {
             moveResultDto.setIsMovable(false);
         }
@@ -70,23 +65,19 @@ public class ChessGameService {
         return moveResultDto;
     }
 
-    public PlayResultDto play(int roomId) {
+    private Map<String, Piece> createBoardDto(int roomId) {
         Map<Position, Piece> board = findAllBoard(roomId);
-        if (board.isEmpty()) {
-            start(roomId);
-        }
-
         Map<String, Piece> boardDto = new HashMap<>();
         for (Position position : board.keySet()) {
             Piece piece = board.get(position);
             boardDto.put(position.toString(), piece);
         }
-        return new PlayResultDto(boardDto, findTurn(roomId).name());
+        return boardDto;
     }
 
-    private void removeAll(int roomId) {
-        chessBoardDao.deleteAll(roomId);
-        //roomDao.deleteAll(roomId);
+    public PlayResultDto play(int roomId) {
+        Map<String, Piece> boardDto = createBoardDto(roomId);
+        return new PlayResultDto(boardDto, findTurn(roomId).name());
     }
 
     private void saveAll(ChessGame chessGame, int roomId) {

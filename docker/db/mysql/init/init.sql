@@ -4,6 +4,8 @@ create table room
     title varchar(255),
     password varchar(255) NOT NULL,
     color varchar(5) NOT NULL DEFAULT 'WHITE',
+    finished boolean default 0,
+    deleted boolean default 0,
     primary key (id)
 );
 

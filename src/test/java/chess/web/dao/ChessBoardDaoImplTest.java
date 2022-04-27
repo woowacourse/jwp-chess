@@ -6,11 +6,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.StartedPawn;
 import chess.domain.piece.position.Position;
 import chess.domain.piece.property.Color;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,23 +35,23 @@ class ChessBoardDaoImplTest {
         Position position = Position.of("a2");
         Piece piece = new StartedPawn(Color.WHITE);
 
-        chessBoardDao.save(position, piece);
+        chessBoardDao.save(position, piece, 1);
 
-        Map<Position, Piece> board = chessBoardDao.findAll();
+        Map<Position, Piece> board = chessBoardDao.findAll(1);
         assertThat(board).hasSize(1);
     }
 
     @Test
     void deleteAll() {
-        chessBoardDao.deleteAll();
+        chessBoardDao.deleteAll(1);
 
-        Map<Position, Piece> board = chessBoardDao.findAll();
+        Map<Position, Piece> board = chessBoardDao.findAll(1);
         assertThat(board).hasSize(0);
     }
 
     @Test
     void findAll() {
-        Map<Position, Piece> board = chessBoardDao.findAll();
+        Map<Position, Piece> board = chessBoardDao.findAll(1);
 
         assertThat(board).isNotNull();
     }

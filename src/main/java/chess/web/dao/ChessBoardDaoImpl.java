@@ -4,6 +4,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.piece.position.Position;
 import chess.web.dto.ChessCellDto;
+import chess.web.dto.MoveDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class ChessBoardDaoImpl implements ChessBoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<ChessCellDto> actorRowMapper = (resultSet, rowNum) -> {
+    private final RowMapper<ChessCellDto> ChessCellMapper = (resultSet, rowNum) -> {
         ChessCellDto board = new ChessCellDto(
                 resultSet.getString("position"),
                 resultSet.getString("piece")
@@ -47,15 +48,40 @@ public class ChessBoardDaoImpl implements ChessBoardDao {
     @Override
     public Map<Position, Piece> findAll(int roomId) {
         final String sql = "select position, piece from board where room_id = (?)";
-        List<ChessCellDto> chessBoardDtos = jdbcTemplate.query(sql, actorRowMapper, roomId);
+        List<ChessCellDto> chessCellDtos = jdbcTemplate.query(sql, ChessCellMapper, roomId);
 
         Map<Position, Piece> board = new HashMap<>();
-        for (ChessCellDto boardDto : chessBoardDtos) {
-            String position = boardDto.getPosition();
-            String piece = boardDto.getPiece();
+        for (ChessCellDto chessCellDto : chessCellDtos) {
+            String position = chessCellDto.getPosition();
+            String piece = chessCellDto.getPiece();
             board.put(Position.of(position), PieceFactory.of(position, piece));
         }
 
         return board;
     }
+
+    @Override
+    public void movePiece(MoveDto moveDto, int roomId) {
+        ChessCellDto sourceCellDto = findByPosition(roomId, moveDto.getSource());
+
+        final String deleteSql = "DELETE FROM board WHERE position = (?) AND room_id = (?);";
+        this.jdbcTemplate.update(deleteSql, moveDto.getTarget(), roomId);
+
+        final String updateSql = "UPDATE board SET position = (?), piece = (?) WHERE position = (?) AND room_id = (?);";
+        this.jdbcTemplate.update(updateSql, moveDto.getTarget(), sourceCellDto.getPiece(), moveDto.getSource(), roomId);
+    }
+
+    @Override
+    public ChessCellDto findByPosition(int roomId, String position) {
+        final String sql = "SELECT position, piece FROM board WHERE position = (?) AND room_id = (?)";
+        return jdbcTemplate.queryForObject(sql, ChessCellMapper, position, roomId);
+    }
+
+    @Override
+    public boolean boardExistInRoom(int roomId) {
+        final String sql = "select count(*) from board where room_id = (?)";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, roomId);
+        return count > 0;
+    }
 }
+

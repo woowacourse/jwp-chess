@@ -1,24 +1,6 @@
 window.addEventListener("load", function () {
     createRoomButtonInitializer.initializeCreateButton();
     readRoomListButtonInitializer.initializeReadRoomListButton();
-
-    // var section = this.document.querySelector(".chess-ui");
-    // var pngs = section.querySelectorAll(".img");
-    // var positions = "";
-    //
-    // for (var i = 0; i < pngs.length; i++) {
-    //     pngs[i].onclick = function (event) {
-    //         var parentTarget = event.target.parentElement;
-    //         positions += parentTarget.id;
-    //
-    //         if (positions.length == 4) {
-    //             var source = positions.substring(0, 2);
-    //             var target = positions.substring(2, 4);
-    //             JsonSender.sendSourceTarget(source, target);
-    //             positions = "";
-    //         }
-    //     }
-    // }
 });
 
 const JsonSender = {
@@ -152,7 +134,12 @@ const roomListDrawer = {
 
                 httpRequest.onreadystatechange = function() {
                     if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
-                        window.location.replace("http://localhost:8080/play/" + roomId);
+                        let room = JSON.parse(httpRequest.responseText);
+                        if (room.finished === true) {
+                            alert("이미 종료된 게임입니다");
+                        } else {
+                            window.location.replace("http://localhost:8080/play/" + roomId);
+                        }
                     } else {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {
                             alert('요청을 처리할 수 없습니다');

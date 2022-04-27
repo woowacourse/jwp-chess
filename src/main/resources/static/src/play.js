@@ -38,12 +38,11 @@ const JsonSender = {
                 return response.json().then((data) => {
                     if (data.isGameOver === true) {
                         alert(data.winner + "가 승리하였습니다!!!");
-                        window.location.replace("end");
+                        window.location.replace("http://localhost:8080/");
                     } else if (data.isMovable === false) {
                         alert('이동할 수 없습니다.');
                     } else {
                         boardDrawer.loadBoard();
-                        //boardDrawer.draw(data.board);
                     }
                 });
             });
@@ -57,6 +56,7 @@ const boardDrawer = {
         httpRequest.onreadystatechange = function() {
             if (httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200) {
                 let chessBoard = JSON.parse(httpRequest.responseText);
+                console.log(chessBoard);
                 boardDrawer.draw(chessBoard.board);
             } else {
                 if (httpRequest.readyState === XMLHttpRequest.DONE) {

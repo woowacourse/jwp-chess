@@ -40,7 +40,7 @@ public class ChessService {
     }
 
     private void initBoard(String gameID) {
-        pieceDao.deleteAll(gameID);
+        pieceDao.deleteByGameID(gameID);
         pieceDao.initPieces(gameID);
     }
 
@@ -110,5 +110,10 @@ public class ChessService {
         return chessGameDao.findAllGame().stream()
                 .map(ChessGameVO::new)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteGameByGameID(String gameID) {
+        chessGameDao.deleteByGameID(gameID);
+        pieceDao.deleteByGameID(gameID);
     }
 }

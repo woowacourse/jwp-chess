@@ -40,4 +40,9 @@ public class ChessGameDao {
         String sql = "select gameID from chessGame";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getString("gameID"));
     }
+
+    public void deleteByGameID(String gameID) {
+        String sql = "delete from chessGame where gameID = ?";
+        jdbcTemplate.update(sql, gameID);
+    }
 }

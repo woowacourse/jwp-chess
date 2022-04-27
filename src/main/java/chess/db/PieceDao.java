@@ -62,7 +62,7 @@ public class PieceDao {
         jdbcTemplate.update(sql, source.getName(), InitialPositionPieceGenerator.NONE.name(), Color.NONE.name(), gameID);
     }
 
-    public void deleteAll(String gameID) {
+    public void deleteByGameID(String gameID) {
         String sql = "delete from piece where gameID = ?";
         jdbcTemplate.update(sql, gameID);
     }

@@ -129,11 +129,3 @@ async function scoreButton() {
         alert("게임을 로드하지 않았습니다.");
     }
 }
-
-async function handlingException(response) {
-    if (response.ok) {
-        return response;
-    }
-    const error = await response.json();
-    throw Error(error.message);
-}

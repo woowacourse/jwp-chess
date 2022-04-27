@@ -15,4 +15,9 @@ public class ChessGameViewController {
     public String play() {
         return "play";
     }
+
+    @GetMapping("/games")
+    public String games() {
+        return "games";
+    }
 }

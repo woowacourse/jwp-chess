@@ -1,0 +1,14 @@
+.select_board {
+    width: 100%;
+    text-align: center;
+    padding-top: 10%;
+    padding-bottom: 10%;
+}
+
+span {
+    font-size: 17px;
+}
+
+button {
+    margin: 10px;
+}

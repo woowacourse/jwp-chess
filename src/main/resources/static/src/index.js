@@ -23,10 +23,26 @@ async function startChessGame() {
         });
 }
 
-async function handlingException(response) {
-    if (response.ok) {
-        return response;
+async function openLoadGameWindowPop(url, title) {
+    let options = "top=10, left=10, width=500, height=600, status=no, menubar=no, toolbar=no, resizable=no";
+    let win = window.open(url, title, options);
+
+    win.loadGame = function (id) {
+        win.close();
+        loadChessGamePage("/chessgames/" + id);
     }
-    const error = await response.json();
-    throw Error(error.message);
+
+    win.deleteGame = function (id) {
+        win.close();
+        fetch('/game/' + id, {
+            method: 'DELETE',
+        }).then(handleErrors)
+            .catch(function (error) {
+                alert(error.message)
+            })
+    }
+}
+
+async function findAllChessGames() {
+    await openLoadGameWindowPop('/games', '게임 목록 불러오기')
 }

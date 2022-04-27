@@ -10,5 +10,13 @@ public interface RoomDao {
 
     String getGameStateByName(final String roomName);
 
+    void saveGameState(final String roomName, final String state);
+
     void deleteRoomByName(final String roomName);
+
+    void saveTurn(final String roomName, final String turn);
+
+    String getTurn(final String roomName);
+
+    int getRoomId(final String roomName);
 }

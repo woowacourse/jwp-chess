@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class RoomDaoImpl implements RoomDao {
 
+    private static final String DEFAULT_GAME_STATE = "ready";
+    private static final String FIRST_TURN = "WHITE";
+
     private final JdbcTemplate jdbcTemplate;
 
     public RoomDaoImpl(final JdbcTemplate jdbcTemplate) {
@@ -15,7 +18,7 @@ public class RoomDaoImpl implements RoomDao {
     @Override
     public void saveNewRoom(final String roomName, final String password) {
         final String sql = "insert into room (name, password, gameState, turn) values (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, roomName, password, "playing", "WHITE");
+        jdbcTemplate.update(sql, roomName, password, DEFAULT_GAME_STATE, FIRST_TURN);
     }
 
     @Override
@@ -41,5 +44,28 @@ public class RoomDaoImpl implements RoomDao {
     public void deleteRoomByName(final String roomName) {
         final String sql = "delete from room where name = ?";
         jdbcTemplate.update(sql, roomName);
+    }
+
+    public void saveTurn(final String roomName, final String turn) {
+        final String sql = "update room set turn = ? where name = ?";
+        jdbcTemplate.update(sql, turn, roomName);
+    }
+
+    @Override
+    public String getTurn(final String roomName) {
+        final String sql = "select turn from room where name = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, roomName);
+    }
+
+    @Override
+    public void saveGameState(final String roomName, final String state) {
+        final String sql = "update room set gameState = ? where name = ?";
+        jdbcTemplate.update(sql, state, roomName);
+    }
+
+    @Override
+    public int getRoomId(final String roomName) {
+        final String sql = "select roomIndex from room where name = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, roomName);
     }
 }

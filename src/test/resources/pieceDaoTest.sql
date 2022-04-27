@@ -1,8 +1,10 @@
-DROP TABLE piece IF EXISTS;
+drop table piece if exists;
 create table piece
 (
-    position varchar(2) not null,
-    team     varchar(5) not null,
-    name     varchar(6) not null,
-    primary key (position)
+    pieceId   int(10) not null AUTO_INCREMENT,
+    roomId    int(10) not null,
+    name      varchar(10) not null,
+    position  varchar(10) not null,
+    teamColor varchar(10) not null,
+    primary key (pieceId)
 );

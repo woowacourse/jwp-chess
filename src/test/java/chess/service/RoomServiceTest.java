@@ -40,6 +40,7 @@ class RoomServiceTest {
     void deleteRoom_fail(final String password, final RoomServiceMessage expected) {
         //given
         final String roomName = "first";
+        roomDao.saveGameState(roomName, "playing");
 
         //when
         final RoomServiceMessage actual = roomService.deleteRoom(roomName, password);
@@ -55,7 +56,7 @@ class RoomServiceTest {
         final String roomName = "first";
         final String password = "1234";
         roomService.saveNewRoom(roomName, password);
-        roomDao.updateGameState(roomName, "end");
+        roomDao.saveGameState(roomName, "end");
 
         //when
         final RoomServiceMessage actual = roomService.deleteRoom(roomName, password);

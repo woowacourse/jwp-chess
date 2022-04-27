@@ -1,7 +1,5 @@
 package chess.controller;
 
-import chess.dao.GameStateDao;
-
 public class FakeGameStateDao implements GameStateDao {
 
     private String gameState;

@@ -1,9 +1,7 @@
 package chess.controller;
 
-import chess.dao.PieceDao;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Piece;
-import chess.dto.PieceDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

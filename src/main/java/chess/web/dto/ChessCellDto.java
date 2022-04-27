@@ -1,10 +1,10 @@
 package chess.web.dto;
 
-public class ChessBoardDto {
+public class ChessCellDto {
     private String position;
     private String piece;
 
-    public ChessBoardDto(String position, String piece) {
+    public ChessCellDto(String position, String piece) {
         this.position = position;
         this.piece = piece;
     }

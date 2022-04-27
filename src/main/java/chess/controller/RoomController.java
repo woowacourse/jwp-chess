@@ -28,7 +28,7 @@ public class RoomController {
     @Autowired
     private ChessRoomService chessRoomService;
 
-    @GetMapping("/rooms")
+    @GetMapping("/")
     public String showRooms(Model model) {
         List<RoomDto> roomDtoList = chessRoomService.findAllRoom();
         Map<String, String> roomStates = new HashMap<>();
@@ -91,7 +91,7 @@ public class RoomController {
     @GetMapping(path = "/rooms/{roomId}/end")
     public ResponseEntity<PathResponse> end(@PathVariable("roomId") int roomId) {
         chessRoomService.finishGame(roomId);
-        return respondPath("/rooms");
+        return respondPath("/");
     }
 
     @GetMapping(path = "/rooms/{roomId}/status")
@@ -116,7 +116,7 @@ public class RoomController {
             throw new IllegalArgumentException("[ERROR] 비밀번호가 일치하지 않습니다.");
         }
         chessRoomService.removeRoom(findRoomName);
-        return respondPath("/rooms");
+        return respondPath("/");
     }
 
     private ResponseEntity<PathResponse> respondPath(String path) {

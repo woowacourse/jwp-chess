@@ -15,20 +15,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest
+@JdbcTest
 @TestPropertySource("classpath:application-test.properties")
 @Sql("classpath:init.sql")
 class SpringGameDaoTest {
 
-    @Autowired
-    private MemberDao memberDao;
+    private final MemberDao memberDao;
+    private final GameDao gameDao;
 
     @Autowired
-    private GameDao gameDao;
+    private SpringGameDaoTest(JdbcTemplate jdbcTemplate) {
+        this.memberDao = new ChessMemberDao(jdbcTemplate);
+        this.gameDao = new ChessGameDao(jdbcTemplate, new ChessPieceDao(jdbcTemplate), memberDao);
+    }
 
     @BeforeEach
     void setup() {

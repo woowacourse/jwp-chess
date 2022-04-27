@@ -53,11 +53,11 @@ public class ChessGameService {
     }
 
     public PlayResultDto play() {
-        Map<Position, Piece> board = findAllBoard();
-        if (board.isEmpty()) {
+        if (findAllBoard().isEmpty()) {
             start();
         }
 
+        Map<Position, Piece> board = findAllBoard();
         Map<String, Piece> boardDto = new HashMap<>();
         for (Position position : board.keySet()) {
             Piece piece = board.get(position);

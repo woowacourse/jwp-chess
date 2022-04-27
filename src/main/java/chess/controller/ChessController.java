@@ -20,7 +20,6 @@ public class ChessController {
 
     private final ChessService chessService;
 
-    @Autowired
     public ChessController(ChessService chessService) {
         this.chessService = chessService;
     }

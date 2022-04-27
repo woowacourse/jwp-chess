@@ -7,15 +7,17 @@
     <script> window.addEventListener('DOMContentLoaded', () => getGames());</script>
 </head>
 <body>
-<h1> 체스 게임 입장하기 </h1>
-<button class="button" id="new-room-button" onclick="clickStartButton()"> 새로운 방 만들기 </button>
-
-<section>
-    <h3> 존재하는 방 정보 </h3>
-    <div id="existed-game-info">
-    </div>
-</section>
-
+<div id="section">
+    <section>
+    <h1> ! 체스 게임 ! </h1>
+    <h2> 체스 게임 입장하기 </h2>
+    <button class="button" id="new-room-button" onclick="clickStartButton()"> 새로운 방 만들기</button>
+        <h2> 존재하는 방 정보 </h2>
+        <h4> 방 이름을 클릭하여 입장하세요</h4>
+        <div id="existed-game-info">
+        </div>
+    </section>
+</div>
 <script src="/src/index.js"></script>
 </body>
 </html>

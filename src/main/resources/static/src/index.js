@@ -1,5 +1,4 @@
 
-
 const clickStartButton = () => {
     let roomName = prompt("방 이름");
     //TODO 여기 값 입력 안하면 안넘어가도록 수정
@@ -35,20 +34,17 @@ const getGames = () => {
                 games.innerHTML = `<div> 존재하는 방이 없습니다. </div>`
             }
             body.gameInfos.map(game => {
-                console.log(game)
                 games.innerHTML +=
                             `<div>
-                                <div onclick="continueGame(${game.gameId})"> ${game.name} </div>
-                                <button onclick="deleteGame(${game.gameId})"> 삭제하기 </button>    
+                                <button id="room-name" onclick="continueGame(${game.gameId})"> ${game.name} </button>
+                                <button id="delete-button" class="button" onclick="deleteGame(${game.gameId})"> 삭제하기 </button>    
                             </div>`
             })
         });
 }
 
 const continueGame = (id) => {
-    console.log("겜 시작 전");
     window.location.href = `${id}`;
-    console.log("겜 시작 후");
 }
 
 const deleteGame = (id) => {

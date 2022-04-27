@@ -38,11 +38,11 @@ public class ChessService {
         long gameId = makeRoom(roomDto);
         makeBoard(gameId);
 
-        return WebBoardDto.from(getBoard(gameId));
+        return getBoardByGameId(gameId);
     }
 
-    private Board getBoard(long gameId) {
-        return toBoard(pieceDao.findByGameId(gameId));
+    public WebBoardDto getBoardByGameId(long gameId) {
+        return WebBoardDto.from(toBoard(pieceDao.findByGameId(gameId)));
     }
 
     private long makeRoom(RoomDto roomDto) {

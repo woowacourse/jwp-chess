@@ -35,4 +35,9 @@ public class ChessGameDao {
         final List<String> turns = jdbcTemplate.queryForList(sql, String.class, gameID);
         return turns.get(0);
     }
+
+    public List<String> findAllGame() {
+        String sql = "select gameID from chessGame";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getString("gameID"));
+    }
 }

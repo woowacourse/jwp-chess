@@ -1,7 +1,11 @@
 package chess.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
+import chess.ChessGameVO;
 import chess.db.ChessGameDao;
 import chess.db.PieceDao;
 import chess.domain.ChessGame;
@@ -100,5 +104,11 @@ public class ChessService {
     public GameResult getGameResult(String gameID) {
         Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameID(gameID)));
         return new GameResult(board);
+    }
+
+    public List<ChessGameVO> getGameIDs() {
+        return chessGameDao.findAllGame().stream()
+                .map(ChessGameVO::new)
+                .collect(Collectors.toList());
     }
 }

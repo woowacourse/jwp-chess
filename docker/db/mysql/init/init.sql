@@ -1,20 +1,22 @@
 USE chess;
 
-CREATE TABLE room
+CREATE TABLE rooms
 (
-    name         VARCHAR(10) NOT NULL UNIQUE,
-    game_status  VARCHAR(10) NOT NULL,
-    current_turn VARCHAR(10) NOT NULL,
-    PRIMARY KEY (name)
+    id       BIGINT       NOT NULL AUTO_INCREMENT,
+    name     VARCHAR(10)  NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    status   VARCHAR(10)  NOT NULL,
+    turn     VARCHAR(10)  NOT NULL,
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE chess_piece
+CREATE TABLE pieces
 (
-    chess_piece_id INT         NOT NULL UNIQUE AUTO_INCREMENT,
-    room_name      VARCHAR(10) NOT NULL,
-    position       VARCHAR(10) NOT NULL,
-    chess_piece    VARCHAR(10) NOT NULL,
-    color          VARCHAR(10) NOT NULL,
-    PRIMARY KEY (chess_piece_id),
-    FOREIGN KEY (room_name) REFERENCES Room (name) ON DELETE CASCADE
+    id       BIGINT      NOT NULL AUTO_INCREMENT,
+    room_id  BIGINT      NOT NULL,
+    position VARCHAR(10) NOT NULL,
+    type     VARCHAR(10) NOT NULL,
+    color    VARCHAR(10) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (room_id) REFERENCES rooms (id) ON DELETE CASCADE
 );

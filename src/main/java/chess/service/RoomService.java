@@ -23,7 +23,7 @@ public class RoomService {
     }
 
     public void createRoom(final RoomNameDto roomNameDto) {
-        roomDao.save(roomNameDto.getName(), GameStatus.READY, Color.WHITE);
+//        roomDao.save(roomNameDto.getName(), GameStatus.READY, Color.WHITE);
     }
 
     public void deleteRoom(final String roomName) {

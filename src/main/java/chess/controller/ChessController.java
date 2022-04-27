@@ -5,7 +5,6 @@ import chess.dto.ChessResponseDto;
 import chess.dto.MoveCommandDto;
 import chess.dto.ScoresDto;
 import chess.serviece.ChessService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

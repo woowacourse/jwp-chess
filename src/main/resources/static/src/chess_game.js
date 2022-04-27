@@ -1,4 +1,6 @@
 const gameUri = window.location.href;
+let source = "";
+let target = "";
 
 async function displayBoard() {
     Array.from(pieces).forEach(
@@ -52,9 +54,26 @@ async function promotionButton() {
     document.getElementById("promotion").value = "";
 }
 
-async function moveButton() {
-    const source = document.getElementById("source").value;
-    const target = document.getElementById("target").value;
+async function clickMove(id) {
+    if (source === "") {
+        source = id;
+        document.getElementById(source).style.backgroundColor = 'yellow';
+        return;
+    }
+    if (source === id) {
+        document.getElementById(source).style.backgroundColor = '';
+        source = "";
+        return;
+    }
+    target = id;
+    console.log(target)
+    document.getElementById(source).style.backgroundColor = '';
+    await moveButton(source, target);
+    source = "";
+    target = "";
+}
+
+async function moveButton(source, target) {
     const move = {
         source: source,
         target: target
@@ -69,7 +88,6 @@ async function moveButton() {
         .then(reload)
         .then(checkEndGame)
         .catch(error => {
-            console.log(error)
             alert(error.message);
         });
     document.getElementById("source").value = "";
@@ -110,7 +128,6 @@ async function scoreButton() {
 }
 
 async function handlingException(response) {
-    console.log(response)
     if (response.ok) {
         return response;
     }

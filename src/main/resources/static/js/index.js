@@ -47,3 +47,32 @@ function createGame(id, name) {
     `;
   return game;
 }
+
+document.addEventListener('click', async ({target: {className, id, innerText}}) => {
+  if (className !== 'game__title') {
+    return;
+  }
+
+  const password = prompt("Please input chess game password.");
+  const requestJson = JSON.stringify({
+    "gameId": id,
+    password
+  });
+
+  const res = await fetch(`/games/existed-game/${id}`, {
+    method: "POST",
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: requestJson
+  });
+  if (res.status === 204) {
+    location.href = `/game/${id}`;
+    return;
+  }
+  const {message} = await res.json();
+  alert(message);
+});
+
+
+

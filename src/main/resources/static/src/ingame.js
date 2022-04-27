@@ -12,26 +12,22 @@ $(document).ready(function () {
 
         var form = document.createElement('form');
         form.setAttribute('method', 'post');
-        form.setAttribute('action', '/ingame');
-
-        var codeField = document.createElement('input');
-        codeField.setAttribute('name', 'gameCode');
-        codeField.value = $('.gameCodeBox').attr('value');
+        form.setAttribute('action', $('.textBoxWrapper').attr('value'));
 
         var sourceField = document.createElement('input');
         sourceField.setAttribute('name', 'source');
+        sourceField.setAttribute('type', 'hidden');
         sourceField.value = from;
 
         var targetField = document.createElement('input');
         targetField.setAttribute('name', 'target');
+        targetField.setAttribute('type', 'hidden');
         targetField.value = to;
 
-        form.appendChild(codeField);
         form.appendChild(sourceField);
         form.appendChild(targetField);
 
         document.body.appendChild(form);
         form.submit();
-
     });
 });

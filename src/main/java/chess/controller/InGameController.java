@@ -42,15 +42,14 @@ public class InGameController {
         return "ingame";
     }
 
-    @PostMapping()
-    public String movePiece(@RequestBody String param, Model model) {
-        List<String> params = Arrays.asList(param.split("&"));
-        String gameCode = getPosition(params.get(0));
+    @PostMapping("/{gameCode}")
+    public String movePiece(@PathVariable String gameCode, @RequestBody String movement, Model model) {
         String gameID = chessService.findGameID(gameCode);
         ChessGame chessGame = chessService.loadSavedChessGame(gameID, chessService.getTurn(gameID));
 
-        String source = getPosition(params.get(1));
-        String target = getPosition(params.get(2));
+        List<String> movements = Arrays.asList(movement.split("&"));
+        String source = getPosition(movements.get(0));
+        String target = getPosition(movements.get(1));
 
         try {
             chessGame.move(new Square(source), new Square(target));

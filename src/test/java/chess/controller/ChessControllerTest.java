@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -60,7 +61,7 @@ class ChessControllerTest {
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andExpect(header().string("Location", "/api/chess/rooms/1"));
+            .andExpect(header().string(HttpHeaders.LOCATION, "/api/chess/rooms/1"));
     }
 
     @DisplayName("진행 중인 모든 방을 조회하고 200 ok 를 반환한다.")
@@ -245,7 +246,7 @@ class ChessControllerTest {
         String request = objectMapper.writeValueAsString(roomRequestDto);
 
         doNothing().when(chessService).updateRoomName(1L, roomRequestDto);
-        mockMvc.perform(patch(DEFAULT_API + "/1/update")
+        mockMvc.perform(patch(DEFAULT_API + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request)
         ).andExpect(status().isOk());
@@ -263,7 +264,7 @@ class ChessControllerTest {
         doThrow(new IllegalArgumentException(ERROR_FINISHED))
                 .when(chessService)
                 .updateRoomName(any(), any(RoomRequestDto.class));
-        mockMvc.perform(patch(DEFAULT_API + "/1/update")
+        mockMvc.perform(patch(DEFAULT_API + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request)
         ).andExpect(status().isBadRequest())
@@ -282,7 +283,7 @@ class ChessControllerTest {
         doThrow(new IllegalArgumentException(ERROR_PASSWORD_WRONG))
                 .when(chessService)
                 .updateRoomName(any(), any(RoomRequestDto.class));
-        mockMvc.perform(patch(DEFAULT_API + "/1/update")
+        mockMvc.perform(patch(DEFAULT_API + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request)
         ).andExpect(status().isBadRequest())

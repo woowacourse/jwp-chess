@@ -6,9 +6,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.ChessGamesResponse;
-import chess.controller.dto.response.EndResponse;
 import chess.dao.FakeGameDao;
 import chess.dao.FakePieceDao;
+import chess.dao.GameDao;
+import chess.dao.PieceDao;
 import chess.domain.GameState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +17,10 @@ import org.junit.jupiter.api.Test;
 
 class ChessServiceTest {
 
-    private final ChessService chessService = new ChessService(new FakeGameDao(), new FakePieceDao());
+    private final GameDao gameDao = new FakeGameDao();
+    private final PieceDao pieceDao = new FakePieceDao();
+
+    private final ChessService chessService = new ChessService(gameDao, pieceDao);
 
     private static final CreateGameRequest CREAT_GAME_REQUEST = new CreateGameRequest("game", "password");
     private static final Long TEST_GAME_ID_1 = 1L;
@@ -73,22 +77,33 @@ class ChessServiceTest {
     @DisplayName("DELETE - 게임 삭제 테스트")
     class DeleteTest {
 
-        @DisplayName("올바른 종료 요청이 들어오면 게임을 삭제한다.")
+        @DisplayName("올바른 삭제 요청이 들어오면 게임을 삭제한다.")
         @Test
-        void end_Game_Success() {
+        void delete_Game_Success() {
+            chessService.createGame(TEST_GAME_ID_1, CREAT_GAME_REQUEST);
+            gameDao.updateState(TEST_GAME_ID_1, GameState.FINISHED);
+
+            chessService.deleteGame(TEST_GAME_ID_1, "password");
+
+            assertThat(chessService.findAllGameIds().getGames().size()).isEqualTo(0);
+        }
+
+        @DisplayName("게임이 종료되지 않은 상태에서는 삭제할 수 없다.")
+        @Test
+        void cannot_Delete_Game() {
             chessService.createGame(TEST_GAME_ID_1, CREAT_GAME_REQUEST);
 
-            EndResponse endResponse = chessService.endGame(TEST_GAME_ID_1, "password");
-
-            assertThat(endResponse.getMessage()).isEqualTo("게임이 종료되었습니다.");
+            assertThatThrownBy(() -> chessService.deleteGame(TEST_GAME_ID_1, "password"))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("게임이 종료되기 전에는 삭제할 수 없습니다.");
         }
 
         @DisplayName("비밀번호가 틀리면 종료할 수 없다.")
         @Test
-        void end_Game_Fail() {
+        void authentication_Fail() {
             chessService.createGame(TEST_GAME_ID_1, CREAT_GAME_REQUEST);
 
-            assertThatThrownBy(() -> chessService.endGame(TEST_GAME_ID_1, "wrong"))
+            assertThatThrownBy(() -> chessService.deleteGame(TEST_GAME_ID_1, "wrong"))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("비밀번호가 일치하지 않습니다.");
         }

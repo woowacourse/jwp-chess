@@ -4,7 +4,6 @@ import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.ChessGamesResponse;
-import chess.controller.dto.response.EndResponse;
 import chess.controller.dto.response.PieceResponse;
 import chess.controller.dto.response.StatusResponse;
 import chess.dao.GameDao;
@@ -119,10 +118,14 @@ public class ChessService {
         return new StatusResponse(chessGame.createStatus());
     }
 
-    public EndResponse endGame(Long gameId, String password) {
+    public void deleteGame(Long gameId, String password) {
         authenticate(gameId, password);
+        Optional<GameState> maybeGameState = gameDao.findState(gameId);
+        GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
+        if (!gameState.isFinished()) {
+            throw new IllegalArgumentException("게임이 종료되기 전에는 삭제할 수 없습니다.");
+        }
         gameDao.delete(gameId);
-        return new EndResponse("게임이 종료되었습니다.");
     }
 
     private void authenticate(Long gameId, String password) {

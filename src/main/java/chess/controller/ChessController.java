@@ -4,7 +4,6 @@ import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.ChessGamesResponse;
-import chess.controller.dto.response.EndResponse;
 import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
 import java.net.URI;
@@ -72,9 +71,10 @@ public class ChessController {
     }
 
     @DeleteMapping("/{gameId}")
-    public EndResponse endGame(@PathVariable Long gameId, @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<Void> endGame(@PathVariable Long gameId, @RequestHeader HttpHeaders headers) {
         String password = headers.getFirst("Authorization");
-        return chessService.endGame(gameId, password);
+        chessService.deleteGame(gameId, password);
+        return ResponseEntity.noContent().build();
     }
 }
 

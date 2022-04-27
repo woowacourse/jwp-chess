@@ -2,6 +2,8 @@ package chess.controller;
 
 import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.request.MoveRequest;
+import chess.dao.GameDao;
+import chess.domain.GameState;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +32,9 @@ class ChessControllerTest {
 
     @Autowired
     private ChessService chessService;
+
+    @Autowired
+    private GameDao gameDao;
 
     @BeforeEach
     void setUp() {
@@ -149,19 +154,17 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("DELETE - 게임 종료 기능 테스트")
+    @DisplayName("DELETE - 게임 삭제 테스트")
     @Test
     void end() {
         chessService.createGame(TEST_GAME_ID, CREAT_GAME_REQUEST);
-        chessService.startGame(TEST_GAME_ID);
+        gameDao.updateState(TEST_GAME_ID, GameState.FINISHED);
 
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .header("Authorization", "password")
                 .when().delete("/games/" + TEST_GAME_ID)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("message", Matchers.equalTo("게임이 종료되었습니다."));
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

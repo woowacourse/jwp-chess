@@ -11,7 +11,7 @@ public enum GameState {
     }
 
     public boolean isFinished() {
-        return this == FINISHED;
+        return this == FINISHED || this == WHITE_WIN || this == BLACK_WIN;
     }
 
     public GameState changeTurn() {

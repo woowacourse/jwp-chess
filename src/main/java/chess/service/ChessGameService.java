@@ -10,6 +10,7 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.dto.GameResultDto;
+import chess.dto.GameRoomDto;
 import chess.dto.MoveCommandDto;
 import chess.dto.PieceDto;
 import chess.dto.PiecesDto;
@@ -26,6 +27,10 @@ public class ChessGameService {
     public ChessGameService(PieceDao pieceDao, GameDao gameDao) {
         this.pieceDao = pieceDao;
         this.gameDao = gameDao;
+    }
+
+    public List<GameRoomDto> getAllGames() {
+        return gameDao.findAllIdAndTitle();
     }
 
     public long create(String title, String password) {

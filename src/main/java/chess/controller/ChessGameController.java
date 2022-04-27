@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,14 +35,15 @@ public class ChessGameController {
 
     @ExceptionHandler(Exception.class)
     public ModelAndView exception(HttpServletRequest request, Exception e) {
-        String gameId = request.getRequestURI().split("/")[2];
+        long gameId = Long.parseLong(request.getRequestURI().split("/")[2]);
         return getModelWithGameMessage(e.getMessage(), "redirect:/game/" + gameId);
     }
 
     @PostMapping(path = "/start", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public ModelAndView createGame(GameRoomDto gameRoomDto) {
+    public ModelAndView createGame(@ModelAttribute GameRoomDto gameRoomDto) {
         long gameId = chessGameService.create(gameRoomDto.getTitle(),
             gameRoomDto.getPassword());
+
         return getModelWithGameMessage(WELCOME_MESSAGE, "redirect:/game/" + gameId);
     }
 
@@ -57,7 +59,6 @@ public class ChessGameController {
 
     @PostMapping(path = "/{gameId}/move")
     public ModelAndView move(@PathVariable long gameId, @RequestBody MoveCommandDto MoveCommandDto) {
-        //parseLong부분 고치기
         chessGameService.move(gameId, MoveCommandDto);
         return getModelWithGameMessage(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId);
     }

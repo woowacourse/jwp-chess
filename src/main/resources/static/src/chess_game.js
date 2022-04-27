@@ -53,10 +53,7 @@ async function clickMove(id) {
     console.log(target)
     document.getElementById(source).style.backgroundColor = '';
     await moveButton()
-        .then(function () {
-            source = "";
-            target = "";
-        });
+        .then(resetPosition);
 }
 
 async function moveButton() {
@@ -74,8 +71,14 @@ async function moveButton() {
         .then(checkEndGame)
         .then(reload)
         .catch(error => {
+            resetPosition();
             alert(error.message);
         });
+}
+
+function resetPosition() {
+    source = "";
+    target = "";
 }
 
 async function reload() {

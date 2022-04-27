@@ -1,48 +1,55 @@
 # 웹 체스게임
 Spark 기반의 웹 체스게임을 Spring으로 대체하는 프로젝트입니다.
 
-## 🚀 1단계 - Spring 적용하기
+## 프로젝트 설명
+동시에 여러 게임을 진행할 수 있도록 체스방을 만들고 각 방에서 체스 게임을 할 수 있습니다.
 
-### 요구사항
-- Spring Framework를 활용하여 애플리케이션을 구동한다.
-- Spark를 대체하여 Spring MVC를 활용하여 요청을 받고 응답을 한다.
-- Spring JDBC를 활용하여 DB 접근하던 기존 로직을 대체한다.
+## 요구사항
+- 체스 게임을 진행할 수 있는 방을 만들어서 동시에 여러 게임이 가능하도록 하기
+## 기능 요구사항
+### 체스방 만들기
+- localhost:8080 요청 시 노출되는 페이지에 체스방을 만들 수 있는 버튼이 있다.
+- 체스방 만들기 버튼을 누르고 체스방 제목과 비밀번호를 입력하면 새로운 체스판이 만들어진다.
+- 체스방에는 고유식별값이 부여된다. (이 고유 식별값은 체스방 주소에서 사용 됨)
+### 체스방 목록 조회하기
+- localhost:8080 요청 시 체스방 목록을 조회할 수 있다
+- 체스방 목록에는 체스방 제목과 체스방을 삭제할 수 있는 버튼이 표시된다.
+### 체스방 참여하기
+- 체스방 목록에서 체스방 제목을 클릭하면 체스 게임을 이어서 진행할 수 있다.
+### 체스방 삭제하기
+- 체스방 목록에서 체스방 삭제 버튼을 클릭하고 체스방 생성시 설정한 비밀번호를 입력하면 체스 게임을 삭제할 수 있다.
+- 진행중인 체스방은 삭제할 수 없다.
+## 프로그래밍 요구사항
+- 예외가 발생했을 때 사용자가 이해할 수 있는 명시적인 메시지를 응답한다.
 
-### 프로그래밍 요구사항
-- 스프링 애플리케이션으로 체스가 실행 가능 해야한다.
-- @Controller나 @RestController를 활용하여 요청을 받아야 한다.
-- Spring JDBC에서 제공하는 JdbcTemplate를 이용하여 Connection을 직접 만들어 주는 로직을 대체한다.
-- JdbcTemplate는 매번 새로 생성하지 않고 빈 주입을 받아서 사용한다.
-
-### 데이터베이스 설정
-- docker-compose.yml을 실행시켜 Mysql 기반의 데이터베이스를 docker 컨테이너로 띄워준다.
-
-- WebApplication을 실행하기 전 데이터베이스에 command 테이블을 생성해준다.
+## DB 스키마
 ```sql
-create table command
+create table rooms
 (
-    command varchar(20) not null
+    room_id int not null identity(1,1) primary key,
+    name varchar(20) not null,
+    password varchar(20) not null
+);
+
+create table commands
+(
+    command_id int not null identity(1,1) primary key,
+    command varchar(20) not null,
+    room_id int foreign key references rooms(room_id);
 );
 ```
 
-
-### HTTP API
-- `/`
-  - get: 체스 게임 초기화면
-- `/chess/start`
-  - post: 체스판을 초기화한다.
-- `/chess`
-  - get: 체스판을 출력한다.
-    - [예외] 예외 발생 시 예외 메시지와 함께 출력한다.
-  - post: 기물을 움직인다.
-- `/chess/result`
-  - get: 체스판과 점수 결과를 출력한다.
-- [예외] 사용자의 잘못된 입력 외의 예외가 발생했을 때 페이지를 출력한다.
-
-### 리팩토링이 필요한 부분
-- [x]  컨트롤러가 state 상태를 갖는 로직 수정
-  - [x]  모든 명령어를 가져와서 state에 적용시키고 출력하는 방법으로 한다.
-- [x]  docker property 파일 추가
-- [x]  도메인 테스트 코드 옮겨오기
-- [x]  예외처리 → handler 활용
-- [x]  mapping url 수정
+## HTTP API
+- [ ] `localhost:8080`
+  - GET: 체스방의 목록을 보여주고 체스방을 추가, 참가, 삭제할 수 있는 버튼이 있다.
+- [ ] `/chess`
+  - POST: 이름과 비밀번호를 가진 체스방을 만든다.
+- [ ] `/chess/{id}`
+  - DELETE: header에 담긴 비밀번호가 일치하면 id 주소값을 가진 체스방과 관련된 체스판 명령어를 삭제한다.
+- [ ] `/chess/{id}/board`
+  - GET: id 주소값을 가진 체스방이 가진 체스판을 출력한다.
+  - POST: id 주소값을 가진 체스방이 가진 체스판의 기물을 움직인다.
+- [ ] `/chess/{id}/result`
+  - GET: id 주소값을 가진 체스방의 결과를 알려준다.
+- [예외] 사용자가 잘못된 입력을 했을 땐 예외 메시지를 출력한다.
+- [예외] 사용자의 잘못된 입력 외의 예외가 발생했을 땐 예외 페이지를 출력한다.

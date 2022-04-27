@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.controller.dto.GameDto;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.PieceResponse;
@@ -15,6 +16,7 @@ import chess.domain.board.Row;
 import chess.domain.board.strategy.CreateCompleteBoardStrategy;
 import chess.domain.piece.Piece;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -147,5 +149,9 @@ public class ChessService {
         final Column column = Column.from(separatedPosition[ROW_INDEX]);
         final Row row = Row.from(separatedPosition[COLUMN_INDEX]);
         return new Position(column, row);
+    }
+
+    public List<GameDto> findAllGames() {
+        return gameDao.findAll();
     }
 }

@@ -2,8 +2,11 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.controller.dto.GameDto;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.domain.GameState;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,5 +52,15 @@ class ChessServiceTest {
         ChessGameResponse chessGameResponse = chessService.restartGame(gameId);
 
         assertThat(chessGameResponse.getGameState()).isEqualTo(GameState.READY);
+    }
+
+    @DisplayName("모든 게임 방의 이름들을 가져온다.")
+    @Test
+    void find_All_Games() {
+        List<GameDto> games = chessService.findAllGames();
+        List<String> expectedNames = games.stream()
+                .map(GameDto::getName)
+                .collect(Collectors.toList());
+        assertThat(expectedNames).isEqualTo(List.of("name"));
     }
 }

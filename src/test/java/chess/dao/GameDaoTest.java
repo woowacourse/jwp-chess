@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.fail;
 
 import chess.controller.dto.GameDto;
 import chess.domain.GameState;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +70,17 @@ public class GameDaoTest {
     @Test
     void delete() {
         gameDao.delete(testGameId);
+    }
+
+    @DisplayName("게임 방 조회 테스트")
+    @Test
+    void findAll() {
+        gameDao.save(name, password);
+        gameDao.save("n1", "p1");
+        final List<GameDto> games = gameDao.findAll();
+        final List<String> expectedNames = games.stream()
+                .map(GameDto::getName)
+                .collect(Collectors.toList());
+        assertThat(expectedNames).isEqualTo(List.of(name, "n1"));
     }
 }

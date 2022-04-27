@@ -1,7 +1,9 @@
 package chess.dao;
 
+import chess.controller.dto.GameDto;
 import chess.domain.GameState;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -70,5 +72,11 @@ public class GameDao {
         String query = "DELETE FROM game WHERE id = :game_id";
         MapSqlParameterSource parameter = new MapSqlParameterSource("game_id", id);
         namedParameterJdbcTemplate.update(query, parameter);
+    }
+
+    public List<GameDto> findAll() {
+        String query = "SELECT id, name FROM game";
+        return namedParameterJdbcTemplate.query(query, (resultSet, rowNum) ->
+                new GameDto(resultSet.getInt("id"), resultSet.getString("name")));
     }
 }

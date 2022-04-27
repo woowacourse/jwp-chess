@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.GameDto;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.ErrorResponse;
@@ -7,6 +8,7 @@ import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -55,6 +57,11 @@ public class ChessController {
     @GetMapping("/{gameId}/end")
     public ChessGameResponse endGame(@PathVariable long gameId) {
         return chessService.end(gameId);
+    }
+
+    @GetMapping("")
+    public List<GameDto> findAllGames() {
+        return chessService.findAllGames();
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

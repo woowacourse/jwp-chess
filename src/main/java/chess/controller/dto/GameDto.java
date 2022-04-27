@@ -5,20 +5,20 @@ import chess.domain.GameState;
 public class GameDto {
 
     private int id;
-    private GameState gameState;
+    private String name;
 
     public GameDto(){}
 
-    public GameDto(int id, GameState state) {
+    public GameDto(int id, String name) {
         this.id = id;
-        this.gameState = state;
+        this.name = name;
     }
 
     public int getId() {
         return id;
     }
 
-    public GameState getGameState() {
-        return gameState;
+    public String getName() {
+        return name;
     }
 }

@@ -32,8 +32,9 @@ public class ChessRoomController {
         return roomService.searchRooms();
     }
 
+    @ResponseBody
     @PostMapping("create")
-    public void create(@RequestBody RoomDto roomDto) {
-        roomService.createRoom(roomDto.getName(), roomDto.getPassword());
+    public List<RoomEntity> create(@RequestBody RoomDto roomDto) {
+        return roomService.createRoom(roomDto.getName(), roomDto.getPassword());
     }
 }

@@ -5,10 +5,14 @@ const roomList = document.querySelector("#roomList");
 async function searchRooms () {
     let rooms = await fetch("/search");
     rooms = await rooms.json();
-    printSearchResultsBy(rooms);
+    print(rooms);
 }
 
-function printSearchResultsBy(rooms) {
+function print(rooms) {
+    while(roomList.hasChildNodes()) {
+        const room = document.querySelector(".room");
+        roomList.removeChild(room);
+    }
     rooms.forEach(function (value) {
         const room = document.createElement('li');
         room.className = "room";
@@ -34,7 +38,7 @@ async function createRoom() {
         alert("방이름과 방 비밀번호중 입력되지 않은 값이 있습니다.")
         return;
     }
-    await fetch("/create", {
+    let rooms = await fetch("/create", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -43,7 +47,13 @@ async function createRoom() {
             name: roomName.value,
             password: roomPassword.value,
         }),
-    })
+    }).then(
+        roomName.value = "",
+        roomPassword.value = ""
+    )
+    rooms = await rooms.json();
+    searchButton.innerText = "Close";
+    print(rooms);
 }
 
 searchButton.addEventListener("click", function () {

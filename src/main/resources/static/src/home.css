@@ -2,4 +2,25 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 50px;
+}
+
+#newRoom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#rooms {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

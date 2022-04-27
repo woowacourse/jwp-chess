@@ -76,6 +76,7 @@ class ChessGameControllerTest {
                 .getId();
 
         RestAssured.given().log().all()
+                .body(new ChessGameRequest("title", "password"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("chessgames/" + chessGameId)
                 .then().log().all()

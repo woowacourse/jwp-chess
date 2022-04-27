@@ -18,4 +18,16 @@ class ChessGameTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("체스 게임의 제목은 20자 이하입니다.");
     }
+
+    @Test
+    @DisplayName("체스 게임의 비밀번호가 틀린 경우")
+    void validateWrongPassword(){
+        String title = "title";
+        String password = "password";
+        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), title, password);
+
+        assertThatThrownBy(() -> chessGame.validatePassword("wrong password"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("체스 게임의 비밀번호가 틀렸습니다.");
+    }
 }

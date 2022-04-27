@@ -29,6 +29,12 @@ public class ChessGame {
         }
     }
 
+    public void validatePassword(String password) {
+        if (!this.password.equals(password)) {
+            throw new IllegalArgumentException("체스 게임의 비밀번호가 틀렸습니다.");
+        }
+    }
+
     public long getId() {
         return id;
     }

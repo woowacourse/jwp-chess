@@ -41,8 +41,10 @@ public class ChessGameService {
         return chessGameDao.findAllChessGame();
     }
 
-    public Map<Position, Piece> findChessBoard(long chessGameId) {
-        return findChessGameState(chessGameId).pieces();
+    public Map<Position, Piece> findChessBoard(long chessGameId, String password) {
+        ChessGame chessGame = chessGameDao.findChessGame(chessGameId);
+        chessGame.validatePassword(password);
+        return pieceDao.findChessBoardByChessGameId(chessGameId).getPieces();
     }
 
     public void move(long chessGameId, Position source, Position target) {

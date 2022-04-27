@@ -32,7 +32,8 @@ public class ChessGameController {
 
     @PostMapping
     public ResponseEntity<Long> createNewGame(@RequestBody ChessGameRequest chessGameRequest) {
-        long chessGameId = chessGameService.createNewChessGame(chessGameRequest.getTitle(), chessGameRequest.getPassword());
+        long chessGameId = chessGameService.createNewChessGame(chessGameRequest.getTitle(),
+                chessGameRequest.getPassword());
         return ResponseEntity.created(URI.create("/chessgames/" + chessGameId)).build();
     }
 
@@ -45,8 +46,9 @@ public class ChessGameController {
     }
 
     @GetMapping("/{chessGameId}")
-    public ResponseEntity<List<PieceResponse>> loadChessGame(@PathVariable long chessGameId) {
-        List<PieceResponse> pieceResponses = chessGameService.findChessBoard(chessGameId)
+    public ResponseEntity<List<PieceResponse>> loadChessGame(@PathVariable long chessGameId,
+                                                             @RequestBody ChessGameRequest chessGameRequest) {
+        List<PieceResponse> pieceResponses = chessGameService.findChessBoard(chessGameId, chessGameRequest.getPassword())
                 .entrySet()
                 .stream()
                 .map(PieceResponse::from)

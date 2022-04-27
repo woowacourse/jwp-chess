@@ -5,9 +5,10 @@ CREATE TABLE chess_game
 (
     id       bigint                                   NOT NULL AUTO_INCREMENT,
     turn     enum ('WHITE_TURN', 'BLACK_TURN', 'END') NOT NULL,
-    title     varchar(10)                              NULL,
-    password varchar(50)                              NULL,
-    primary key (id)
+    title    varchar(10)                              NOT NULL,
+    password varchar(50)                              NOT NULL,
+    primary key (id),
+    CONSTRAINT TITLE_UNIQUE_KEY UNIQUE (title)
 );
 
 CREATE TABLE piece

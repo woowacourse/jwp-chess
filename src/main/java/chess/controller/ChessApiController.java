@@ -42,6 +42,7 @@ public class ChessApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Long> addMember(@RequestParam("memberName") final String memberName) {
         final Long memberId = memberService.addMember(memberName);
+
         return ResponseEntity.created(URI.create("/member/" + memberId)).body(memberId);
     }
 
@@ -54,7 +55,6 @@ public class ChessApiController {
 
     @PostMapping("/chessGame")
     public ResponseEntity<Long> createGame(@RequestBody final GameCreationDto gameCreationDto) {
-        System.out.println(gameCreationDto);
         final Long gameId = gameService.createGame(
                 gameCreationDto.getTitle(),
                 gameCreationDto.getPassword(),

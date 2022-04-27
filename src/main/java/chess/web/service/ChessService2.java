@@ -38,12 +38,13 @@ public class ChessService2 {
 
     // 인덱스
     public int newGame(CreateGameRequestDto createGameRequestDto) {
-        int gameId = gameDao.save(createGameRequestDto, StateType.WHITE_TURN);
+        int gameId = gameDao.save(createGameRequestDto, StateType.READY);
         start(gameId);
         return gameId;
     }
 
-    private void start(int gameId) {
+    public void start(int gameId) {
+        gameDao.updateStateById(gameId, StateType.WHITE_TURN);
         ChessBoard chessBoard = new ChessBoard(new InitBoardGenerator());
         initChessBoard(chessBoard.getBoard(), gameId);
     }
@@ -89,7 +90,7 @@ public class ChessService2 {
         return pieceDao.findAllByGameId(gameId);
     }
 
-    private StateType getStateType(int gameId) {
+    public StateType getStateType(int gameId) {
         return gameDao.findStateById(gameId);
     }
 
@@ -129,6 +130,10 @@ public class ChessService2 {
     public ChessResultDto getChessResult(int gameId) {
         ChessGame chessGame = getChessGame(gameId);
         endGame(chessGame);
+
+        pieceDao.deleteAllByGameId(gameId);
+        gameDao.updateStateById(gameId, StateType.END);
+
         return new ChessResultDto(getScore(gameId, Color.BLACK), getScore(gameId, Color.WHITE), chessGame.result());
     }
 

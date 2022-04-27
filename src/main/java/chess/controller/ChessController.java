@@ -12,10 +12,13 @@ import chess.dto.request.MovePieceDto;
 import chess.dto.response.CommandResultDto;
 import chess.dto.response.ErrorDto;
 import chess.dto.response.PieceColorDto;
+import chess.dto.response.RoomDto;
 import chess.dto.response.ScoreResultDto;
 import chess.service.ChessService;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +44,15 @@ public class ChessController {
     public void createRoom(@RequestBody CreateRoomDto createRoomDto) {
         Room room = Room.create(createRoomDto.getTitle(), createRoomDto.getPassword());
         chessService.createGame(room);
+    }
+
+    @ResponseBody
+    @GetMapping("/rooms")
+    public List<RoomDto> getRooms() {
+        return chessService.getRooms()
+                .stream()
+                .map(RoomDto::from)
+                .collect(Collectors.toList());
     }
 
     @ResponseBody

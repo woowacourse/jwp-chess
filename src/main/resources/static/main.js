@@ -9,7 +9,7 @@ let from = null;
 let to = null;
 
 async function fetchAsGet(path) {
-    const response = await fetch(`${API_HOST}/rooms/${roomId}/${path}`, {
+    const response = await fetch(`${API_HOST}${path}`, {
         method: "GET"
     });
 
@@ -26,20 +26,24 @@ async function fetchAsPost(path, body) {
     });
 }
 
+const fetchRooms = async () => {
+    return fetchAsGet("/rooms");
+}
+
 const fetchBoard = async () => {
-    return fetchAsGet("board");
+    return fetchAsGet(`/rooms/${roomId}/board`);
 }
 
 const fetchCurrentTurn = async () => {
-    return fetchAsGet("turn");
+    return fetchAsGet(`/rooms/${roomId}/turn`);
 }
 
 const fetchScore = async () => {
-    return fetchAsGet("score");
+    return fetchAsGet(`/rooms/${roomId}/score`);
 }
 
 const fetchWinner = async () => {
-    return fetchAsGet("winner");
+    return fetchAsGet(`/rooms/${roomId}/winner`);
 }
 
 const move = async (from, to) => {
@@ -51,6 +55,7 @@ const renderBoard = async () => {
     clear();
 
     const board = await fetchBoard(roomId);
+
     let html = "";
     Y_AXES.forEach((yAxis) => {
         html += "<div class='row'>";
@@ -130,9 +135,20 @@ const renderWinner = async () => {
 
 const clear = () => {
     document.getElementById("board").innerHTML = "";
+    document.getElementById("lobby").innerHTML = "";
     document.getElementById("turn").innerHTML = "";
     document.getElementById("score").innerHTML = "";
     document.getElementById("winner").innerHTML = "";
+}
+
+const renderLobby = async () => {
+    clear();
+    let rooms = await fetchRooms();
+
+    rooms.forEach((room) => {
+        document.getElementById("lobby").innerHTML +=
+            `<li class="room" onclick="enterRoom('${room.id}')"> ${room.title} </li>`;
+    });
 }
 
 const render = async () => {
@@ -144,8 +160,10 @@ const render = async () => {
 }
 
 window.onload = async () => {
-    if (roomId !== "null") {
+    if (roomId) {
         await render();
+    } else {
+        await renderLobby();
     }
 }
 
@@ -156,8 +174,13 @@ const createRoom = async () => {
     await fetchAsPost(`rooms`, {title, password});
 }
 
-const enterRoom = async () => {
-    roomId = prompt("방 아이디 입력");
-    localStorage.setItem("roomId", roomId);
+const enterRoom = async (id) => {
+    await localStorage.setItem("roomId", id);
+    roomId = localStorage.getItem("roomId");
     await render();
+}
+
+const exitRoom = async () => {
+    localStorage.clear();
+    await renderLobby();
 }

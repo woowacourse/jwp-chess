@@ -3,6 +3,15 @@
     flex-direction: column;
 }
 
+.room {
+    cursor: pointer;
+    list-style: none;
+}
+
+.room:hover {
+    font-weight: bold;
+}
+
 .row {
     display: flex;
 }

@@ -21,7 +21,7 @@ public class RoomTitle {
 
     private void validateLengthLimit(String value) {
         if (value.length() >= TITLE_LENGTH_LIMIT) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("빈 제목으로 생성할 수 없습니다.");
         }
     }
 

@@ -10,6 +10,7 @@ import chess.domain.game.score.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
+import java.util.List;
 import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,10 @@ public class ChessService {
 
             boardDao.createPiece(room.getId(), position, piece);
         }
+    }
+
+    public List<Room> getRooms() {
+        return gameRoomDao.getRooms();
     }
 
     public void movePiece(RoomId roomId, Position from, Position to) {

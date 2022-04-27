@@ -1,5 +1,7 @@
 package chess.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +37,20 @@ public class GameRoomDaoImplTest {
     @Test
     void createGame() {
         gameDao.createGameRoom(TEST_GAME_ROOM);
+    }
+
+    @DisplayName("게임 목록을 가져온다.")
+    @Test
+    void getRooms() {
+        // given & when
+        gameDao.createGameRoom(Room.create("test", "1234"));
+        gameDao.createGameRoom(Room.create("test2", "1234"));
+
+        // when
+        int actual = gameDao.getRooms().size();
+
+        // then
+        assertThat(actual).isEqualTo(2);
     }
 
     @DisplayName("게임을 game 테이블로부터 제거한다.")

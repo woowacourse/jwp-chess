@@ -3,8 +3,10 @@ package chess.dao;
 import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
 import chess.domain.piece.PieceColor;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,6 +16,14 @@ public class GameRoomDaoImpl implements GameRoomDao {
     private static final String BLACK_TURN = "BLACK";
 
     private final JdbcTemplate jdbcTemplate;
+
+    private RowMapper<Room> roomRowMapper =
+            (resultSet, rowNum) -> {
+                String id = resultSet.getString("id");
+                String title = resultSet.getString("title");
+                String password = resultSet.getString("password");
+                return Room.from(id, title, password);
+            };
 
     @Autowired
     public GameRoomDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -25,6 +35,12 @@ public class GameRoomDaoImpl implements GameRoomDao {
         String query = String.format("INSERT INTO %s VALUES (?, ?, ?, 'WHITE')", TABLE_NAME);
         jdbcTemplate.update(query, room.getId().getValue(), room.getRoomTitle().getValue(),
                 room.getPassword().getValue());
+    }
+
+    @Override
+    public List<Room> getRooms() {
+        String query = String.format("SELECT id, title, password FROM %s", TABLE_NAME);
+        return jdbcTemplate.query(query, roomRowMapper);
     }
 
     @Override

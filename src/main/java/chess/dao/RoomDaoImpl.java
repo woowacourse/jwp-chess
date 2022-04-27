@@ -107,8 +107,8 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public int deleteById(final int roomId) {
-        final String sql = "DELETE FROM room WHERE room_id = ?";
-        return jdbcTemplate.update(sql, roomId);
+        final String sql = "UPDATE room SET is_delete = ? WHERE room_id = ?";
+        return jdbcTemplate.update(sql, true, roomId);
     }
 
     @Override

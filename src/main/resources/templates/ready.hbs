@@ -14,5 +14,22 @@
     GAME ID : <input type="text" name="gameID" class="gameIDBox"/>
     <input type="submit" value="START" class="btn" id="start">
 </form>
+<br>
+<br>
+{{#games}}
+    <div class="textBoxWrapper">
+        <form action="/games" method="get" class="inlineBtn">
+            room number: {{gameID}}
+            <input class="invisible" name="gameID" value="{{gameID}}" type="text">
+            <input type="submit" value="START" class="btn" id="start">
+        </form>
+        <form action="/" method="post" class="inlineBtn">
+            <input class="invisible" name="gameID" value="{{gameID}}" type="text">
+            <input type="submit" value="DELETE" class="btn" id="delete">
+        </form>
+    </div>
+    <br>
+    <br>
+{{/games}}
 </body>
 </html>

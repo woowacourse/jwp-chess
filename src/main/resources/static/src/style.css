@@ -23,6 +23,10 @@ body {
     float: right;
 }
 
+#delete {
+    float: right;
+}
+
 #continue {
     width: fit-content;
     margin: 20px auto;

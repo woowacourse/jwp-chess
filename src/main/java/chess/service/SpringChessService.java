@@ -38,9 +38,9 @@ public class SpringChessService {
         return roomDao.findAll();
     }
 
-    public long makeChessRoom(final RoomDto roomDto){
-        final ChessRoom chessRoom = ChessRoom.from(roomDto);
-        return roomDao.makeRoom(roomDto);
+    public long makeChessRoom(final RoomRequestDto roomRequestDto){
+        final ChessRoom chessRoom = ChessRoom.fromRequest(roomRequestDto);
+        return roomDao.makeRoom(roomRequestDto);
     }
 
     public ChessMap initializeGame(final long roomId) {
@@ -54,11 +54,8 @@ public class SpringChessService {
         return chessWebGame.initializeChessGame();
     }
 
-    public ChessMap load(final long roomId, final EnterDto enterDto) {
+    public ChessMap load(final long roomId) {
         final RoomDto roomDto = roomDao.findRoomById(roomId);
-        if (!roomDto.getPassword().equals(enterDto.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
         final ChessWebGame chessWebGame = new ChessWebGame(ChessRoom.from(roomDto));
         loadPieces(roomId, chessWebGame);
         loadTurn(roomId, chessWebGame);

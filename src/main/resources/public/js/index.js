@@ -2,6 +2,7 @@ let currentClickPosition = '';
 let currentPiece = '';
 let destinationClickPosition = '';
 let isRun = false;
+let roomId = 1;
 
 const initMapEvent = () => {
     for (let file = 0; file < 8; file++) {
@@ -12,16 +13,67 @@ const initMapEvent = () => {
     }
 }
 
-const makeRoom = async () => {
-    // fetch로 방 생성하기
+const showRoom = async () => {
+    let rooms = await getRoomList();
+    Object.values(rooms).forEach((value) => {
+        const roomListTag = document.getElementById("chess-room-list");
+        const roomTag = document.createElement("div");
+        const roomNameTag = document.createElement("a");
+        roomNameTag.id = value.id;
+        roomNameTag.innerHTML = value.name;
+        roomNameTag.addEventListener('click', enterRoom);
+        const roomRemoveBtnTag = document.createElement("button");
+        roomRemoveBtnTag.innerHTML = '삭제';
+        roomRemoveBtnTag.id = 'roomDelete';
+        roomRemoveBtnTag.addEventListener('click', deleteRoom);
+        roomNameTag.appendChild(roomRemoveBtnTag);
+        roomTag.appendChild(roomNameTag);
+        roomListTag.appendChild(roomTag);
+    });
+}
+
+const getRoomList = async () => {
+    let rooms = await fetch('/rooms');
+    rooms = await rooms.json();
+    return rooms;
+}
+
+const makeRoomByRequest = async () => {
+    console.log('안녕하세요');
+    await roomPost();
+    console.log(roomId);
+    initMapEvent();
     await restartChess();
 }
 
-const enterRoom = async () => {
-    // fetch로 방 id 받아와서 이동하기
+const roomPost = async () => {
+    const bodyValue = {
+        name: roomName,
+        password: roomPassword
+    };
+    roomId = await fetch('/start', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)
+    });
 }
 
-const deleteRoom = async () => {
+const enterRoom = async (e) => {
+    isRun = true;
+    roomId = e.target.id;
+    let chessMap = await fetch('/load/' + roomId);
+    initMapEvent();
+    currentClickPosition = '';
+    destinationClickPosition = '';
+    chessMap = await chessMap.json();
+    showChessMap(chessMap.chessMap);
+    showChessMenu();
+}
+
+const deleteRoom = async (e) => {
     // fetch로 방 id 받아와서 삭제하기
 }
 
@@ -50,6 +102,9 @@ const markPiece = (position, pieceKind) => {
 }
 
 const clickToMove = async (e) => {
+    if (!isRun) {
+        return;
+    }
     if (currentClickPosition === '' && e.target.classList.contains('chess-piece')) {
         markCurrentPiece(e);
         return;
@@ -95,7 +150,7 @@ const movePiece = async () => {
         currentPosition: currentClickPosition.id,
         destinationPosition: destinationClickPosition.id
     };
-    let chessMap = await fetch('/move', {
+    let chessMap = await fetch('/' + roomId + '/move', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -113,21 +168,14 @@ const movePiece = async () => {
 const checkEndGame = (isRunning) => {
     if (!isRunning) {
         alert('게임 종료');
+        isRun = false;
         return showResult();
     }
 }
 
-const load = async () => {
-    isRun = true;
-    let chessMap = await fetch('/load');
-    chessMap = await chessMap.json();
-    showChessMap(chessMap.chessMap);
-    showChessMenu();
-}
-
 const restartChess = async () => {
     isRun = true;
-    let chessMap = await fetch('/start');
+    let chessMap = await fetch('/' + roomId);
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
     showChessMenu();
@@ -143,7 +191,7 @@ const showStatus = async () => {
         alert('먼저 게임을 시작하거나 이어해주세요.');
         return;
     }
-    let status = await fetch('/status');
+    let status = await fetch('/' + roomId + '/status');
     status = await status.json();
     alert(status.scoreStatus);
 }
@@ -153,7 +201,7 @@ const showResult = async () => {
         alert('먼저 게임을 시작하거나 이어해주세요.');
         return;
     }
-    let result = await fetch('/end');
+    let result = await fetch('/' + roomId + '/end');
     result = await result.json();
     alert(result.result);
     await restartChess();

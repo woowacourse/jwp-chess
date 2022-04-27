@@ -28,7 +28,7 @@ public class GameDaoTest {
         jdbcTemplate.execute("create table game("
             + "id int AUTO_INCREMENT PRIMARY KEY, "
             + "turn varchar(10) not null default 'black',"
-            + "force_end_flag tinyint(1) not null default false,"
+            + "end_flag tinyint(1) not null default false,"
             + "title varchar(100) not null,"
             + "password varchar(100) not null"
             + ")");
@@ -43,10 +43,10 @@ public class GameDaoTest {
         assertThat(gameDao.exists(String.valueOf(gameId))).isTrue();
     }
 
-    @DisplayName("게임이 끝나지 않은 경우 force_end_flag는 false이다.")
+    @DisplayName("게임이 끝나지 않은 경우 end_flag는 false이다.")
     @Test
-    void findForceEndFlagById_false() {
-        assertThat(gameDao.findForceEndFlagById(id)).isFalse();
+    void findEndFlagById_false() {
+        assertThat(gameDao.findEndFlagById(id)).isFalse();
     }
 
     @DisplayName("turn칼럼에는 불가능한 turn이 저장되며 초깃값은 black이다.")
@@ -63,12 +63,12 @@ public class GameDaoTest {
         assertThat(gameDao.findTurnById(id)).isEqualTo(Color.WHITE);
     }
 
-    @DisplayName("force_end_flag 업데이트 성공")
+    @DisplayName("end_flag 업데이트 성공")
     @Test
-    void updateForceEndFlagById() {
-        gameDao.updateForceEndFlagById(true, id);
+    void updateEndFlagById() {
+        gameDao.updateEndFlagById(true, id);
 
-        assertThat(gameDao.findForceEndFlagById(id)).isEqualTo(true);
+        assertThat(gameDao.findEndFlagById(id)).isEqualTo(true);
     }
 
     @DisplayName("게임 삭제시 더이상 게임은 존재하지 않는다.")

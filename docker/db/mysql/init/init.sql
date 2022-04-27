@@ -2,7 +2,7 @@ create table game
 (
     id             int          not null unique auto_increment,
     turn           varchar(10)  not null default 'black',
-    force_end_flag tinyint(1) not null default false,
+    end_flag tinyint(1) not null default false,
     title          varchar(100) not null,
     password       varchar(100) not null
 );

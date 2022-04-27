@@ -63,4 +63,5 @@ public class PieceDao {
         final String sql = "delete from piece where game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }
+
 }

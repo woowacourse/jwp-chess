@@ -43,7 +43,7 @@ public class PieceDaoTest {
         jdbcTemplate.execute("create table game("
             + "id int AUTO_INCREMENT PRIMARY KEY, "
             + "turn varchar(10) not null default 'black',"
-            + "force_end_flag tinyint(1) not null default false,"
+            + "end_flag tinyint(1) not null default false,"
             + "title varchar(100) not null,"
             + "password varchar(100) not null"
             + ")");

@@ -44,10 +44,10 @@ public class ChessGameService {
     }
 
     public ChessGame getGameStatus(long gameId) {
-        boolean forceEndFlag = gameDao.findForceEndFlagById(gameId);
+        boolean endFlag = gameDao.findEndFlagById(gameId);
         Color turn = gameDao.findTurnById(gameId);
         Pieces chessmen = pieceDao.findAllByGameId(gameId);
-        return new ChessGame(forceEndFlag, chessmen, turn);
+        return new ChessGame(endFlag, chessmen, turn);
     }
 
     public PiecesDto getCurrentGame(long gameId) {
@@ -81,18 +81,21 @@ public class ChessGameService {
         String to = moveCommandDto.getTarget();
         getGameStatus(gameId).moveChessmen(new MoveCommand(from, to));
         saveMove(gameId, moveCommandDto);
+        if (getGameStatus(gameId).isEnd()) {
+            gameDao.updateEndFlagById(true, gameId);
+        }
     }
 
     private void saveMove(long gameId, MoveCommandDto moveCommandDto) {
         ChessGame chessGame = getGameStatus(gameId);
         chessGame.moveChessmen(moveCommandDto.toEntity());
-        boolean forceEndFlag = chessGame.getForceEndFlag();
+        boolean endFlag = chessGame.getEndFlag();
         Color turn = chessGame.getTurn();
 
         pieceDao.deleteAllByGameId(gameId);
         pieceDao.createAllByGameId(chessGame.getChessmen().getPieces(), gameId);
         gameDao.updateTurnById(turn, gameId);
-        gameDao.updateForceEndFlagById(forceEndFlag, gameId);
+        gameDao.updateEndFlagById(endFlag, gameId);
     }
 
     public void cleanGameByIdAndPassword(long id, String password) {
@@ -109,8 +112,8 @@ public class ChessGameService {
     }
 
     private void validateEnd(long id) {
-        boolean forceEndFlag = gameDao.findForceEndFlagById(id);
-        if (!forceEndFlag) {
+        boolean endFlag = gameDao.findEndFlagById(id);
+        if (!endFlag) {
             throw new IllegalArgumentException(NOT_FINISHED_GAME_STATUS_EXCEPTION_MESSAGE);
         }
     }

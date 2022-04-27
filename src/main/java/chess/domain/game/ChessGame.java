@@ -16,22 +16,22 @@ public class ChessGame {
 
     private final Pieces chessmen;
     private Color turn;
-    private final boolean forceEndFlag;
+    private final boolean endFlag;
 
-    public ChessGame(boolean forceEndFlag, Pieces chessmen, Color turn) {
-        this.forceEndFlag = forceEndFlag;
+    public ChessGame(boolean endFlag, Pieces chessmen, Color turn) {
+        this.endFlag = endFlag;
         this.chessmen = chessmen;
         this.turn = turn;
     }
 
     private ChessGame(Pieces chessmen) {
-        this.forceEndFlag = false;
+        this.endFlag = false;
         this.chessmen = chessmen;
         this.turn = Color.BLACK;
     }
 
     public ChessGame() {
-        forceEndFlag = false;
+        endFlag = false;
         this.chessmen = new Pieces(List.of());
     }
 
@@ -106,7 +106,7 @@ public class ChessGame {
     }
 
     public boolean isEnd() {
-        return forceEndFlag || chessmen.hasLessThanTotalKingCount();
+        return chessmen.hasLessThanTotalKingCount();
     }
 
     public Pieces getChessmen() {
@@ -117,8 +117,8 @@ public class ChessGame {
         return turn;
     }
 
-    public boolean getForceEndFlag() {
-        return forceEndFlag;
+    public boolean getEndFlag() {
+        return endFlag;
     }
 
     @Override

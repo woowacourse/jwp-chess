@@ -40,8 +40,8 @@ public class GameDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
     }
 
-    public boolean findForceEndFlagById(long id) {
-        final String sql = "select force_end_flag from game where id = ?";
+    public boolean findEndFlagById(long id) {
+        final String sql = "select end_flag from game where id = ?";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, id);
     }
@@ -59,10 +59,10 @@ public class GameDao {
         jdbcTemplate.update(sql, nextTurn.getName(), id);
     }
 
-    public void updateForceEndFlagById(boolean forceEndFlag, long id) {
-        final String sql = "update game set force_end_flag = ? where id = ?";
+    public void updateEndFlagById(boolean endFlag, long id) {
+        final String sql = "update game set end_flag = ? where id = ?";
 
-        jdbcTemplate.update(sql, forceEndFlag, id);
+        jdbcTemplate.update(sql, endFlag, id);
     }
 
     public void deleteById(long id) {

@@ -2,11 +2,12 @@ USE chess;
 
 CREATE TABLE room
 (
-    room_id      INT         NOT NULL UNIQUE AUTO_INCREMENT,
-    name         VARCHAR(10) NOT NULL UNIQUE,
-    game_status  VARCHAR(10) NOT NULL,
-    current_turn VARCHAR(10) NOT NULL,
+    room_id      INT          NOT NULL UNIQUE AUTO_INCREMENT,
+    name         VARCHAR(10)  NOT NULL UNIQUE,
+    game_status  VARCHAR(10)  NOT NULL,
+    current_turn VARCHAR(10)  NOT NULL,
     password     VARCHAR(255) NOT NULL,
+    is_delete    BOOLEAN      NOT NULL DEFAULT FALSE,
     PRIMARY KEY (room_id)
 );
 

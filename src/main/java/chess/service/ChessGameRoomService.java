@@ -26,9 +26,17 @@ public class ChessGameRoomService {
     }
 
     public long createNewChessGame(ChessGameRoom chessGameRoom) {
+        checkExistChessGameTitle(chessGameRoom);
+
         long chessGameId = chessGameDao.createChessGame(chessGameRoom);
         pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
         return chessGameId;
+    }
+
+    private void checkExistChessGameTitle(ChessGameRoom chessGameRoom) {
+        if (chessGameDao.isExistGameTitle(chessGameRoom.getTitle())) {
+            throw new IllegalStateException("이미 존재중인 title입니다.");
+        }
     }
 
     public void deleteChessRoom(long chessGameId, ChessGameRoomDeleteRequest deleteRequest) {

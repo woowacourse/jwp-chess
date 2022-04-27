@@ -67,6 +67,11 @@ class ChessGameDaoTest {
         void notExistTitle() {
             assertThat(chessGameDao.isExistGameTitle(chessGameRoom.getTitle())).isFalse();
         }
+
+        @Test
+        void test() {
+            assertThat(chessGameDao.isExistGameTitle(null)).isFalse();
+        }
     }
 
     @Test

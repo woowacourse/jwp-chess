@@ -16,8 +16,7 @@ function createRoom() {
     }).then(res => res.json())
         .then(value => {
             alert("생성된 방 번호는 " + value + "입니다.")
-            let link = "/chess/" + value;
-            window.open(link);
+            location.reload();
         });
 }
 

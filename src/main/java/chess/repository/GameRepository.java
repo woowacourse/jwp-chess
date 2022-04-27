@@ -2,11 +2,13 @@ package chess.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
 import chess.dao.GameDao;
 import chess.dao.dto.GameDto;
+import chess.dao.dto.GameFinishedDto;
 import chess.dao.dto.GameUpdateDto;
 import chess.domain.Color;
 import chess.domain.game.ChessGame;
@@ -45,7 +47,12 @@ public class GameRepository {
     }
 
     public Map<Long, Boolean> findIdAndFinished() {
-        return gameDao.findIdAndFinished();
+        final List<GameFinishedDto> gameFinishedDtos = gameDao.findIdAndFinished();
+        return gameFinishedDtos.stream()
+                .collect(Collectors.toUnmodifiableMap(
+                        GameFinishedDto::getId,
+                        GameFinishedDto::getFinished
+                ));
     }
 
     public ChessGame update(final ChessGame chessGame) {

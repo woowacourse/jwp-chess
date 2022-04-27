@@ -1,10 +1,7 @@
 package chess.dao;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
 
 import chess.dao.dto.GameDto;
+import chess.dao.dto.GameFinishedDto;
 import chess.dao.dto.GameUpdateDto;
 
 @Component
@@ -49,20 +47,13 @@ public class GameDao {
                 ), id);
     }
 
-    public Map<Long, Boolean> findIdAndFinished() {
+    public List<GameFinishedDto> findIdAndFinished() {
         final String query = "SELECT id, finished FROM Game ORDER BY id DESC";
-        return jdbcTemplate.queryForObject(query,
-                (resultSet, rowNum) -> loadGameStates(resultSet));
-    }
-
-    private Map<Long, Boolean> loadGameStates(final ResultSet resultSet) throws SQLException {
-        final Map<Long, Boolean> gameStates = new LinkedHashMap<>();
-        do {
-            final Long gameId = resultSet.getLong("id");
-            final Boolean finished = resultSet.getBoolean("finished");
-            gameStates.put(gameId, finished);
-        } while (resultSet.next());
-        return gameStates;
+        return jdbcTemplate.query(query,
+                (resultSet, rowNum) -> new GameFinishedDto(
+                        resultSet.getLong(1),
+                        resultSet.getBoolean(2)
+                ));
     }
 
     public void update(final GameUpdateDto gameUpdateDto) {

@@ -7,6 +7,7 @@ import chess.model.position.File;
 import chess.model.position.Position;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.counting;
@@ -71,5 +72,22 @@ public class Board {
             return count * 1.0;
         }
         return count * 0.5;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Board board1 = (Board) o;
+        return Objects.equals(board, board1.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board);
     }
 }

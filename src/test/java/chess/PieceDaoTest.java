@@ -1,20 +1,20 @@
 package chess;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.entity.PieceEntity;
+import chess.model.board.Board;
 import chess.model.board.BoardFactory;
 import chess.model.dao.PieceDao;
-import org.junit.jupiter.api.AfterEach;
+import chess.model.piece.PieceFactory;
+import chess.model.position.Position;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.util.List;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 class PieceDaoTest {
@@ -26,62 +26,55 @@ class PieceDaoTest {
     @BeforeEach
     void initPieceDaoTest() {
         jdbcTemplate.execute("DROP TABLE PIECES IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE GAMES IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE games\n" +
-                "(\n" +
-                "    game_id  int        not null AUTO_INCREMENT,\n" +
-                "    turn     varchar(5) not null,\n" +
-                "    primary key (game_id)\n" +
-                ");");
         jdbcTemplate.execute("CREATE TABLE pieces\n" +
                 "(\n" +
                 "    piece_id int         not null AUTO_INCREMENT,\n" +
+                "    game_id int         not null,\n" +
                 "    position varchar(4)  not null,\n" +
                 "    name    varchar(10) not null,\n" +
                 "    primary key (piece_id)\n" +
                 ");");
 
         pieceDao = new PieceDao(jdbcTemplate);
-        pieceDao.init(BoardFactory.create());
-    }
-
-    @AfterEach
-    void cleanDB() {
-        pieceDao.deleteAll();
     }
 
     @Test
-    @DisplayName("체스판이 db에 저장되었는지 확인한다")
-    void init() {
-        List<PieceEntity> boardMap = pieceDao.findAllPieces();
+    void savePieces() {
+        Board board = BoardFactory.create();
+        pieceDao.savePieces(board, 1L);
+        List<PieceEntity> rawBoard = pieceDao.findAllPiecesByGameId(1L);
 
-        assertThat(boardMap.size()).isEqualTo(64);
+        Board resultBoard = new Board(rawBoard.stream()
+                .collect(Collectors.toMap(
+                        piece -> Position.from(piece.getPosition()),
+                        piece -> PieceFactory.create(piece.getName()))
+                ));
+
+        assertThat(resultBoard).isEqualTo(board);
     }
 
     @Test
-    @DisplayName("체스판이 db에 저장되었는지 확인한다")
-    void findByPosition() {
-        String pieceName = pieceDao.findPieceNameByPosition("a2");
+    void findNameByPositionAndGameId() {
+        pieceDao.savePieces(BoardFactory.create(), 1L);
+        String pieceName = pieceDao.findNameByPositionAndGameId("a2", 1L);
 
         assertThat(pieceName).isEqualTo("white-p");
     }
 
     @Test
-    @DisplayName("체스판의 말을 update하는 것을 확인한다.")
-    void updatePieceNameByPosition() {
-        pieceDao.updateByPosition("a2", "none-.");
+    void updateByPositionAndGameId() {
+        pieceDao.savePieces(BoardFactory.create(), 1L);
+        pieceDao.updateByPositionAndGameId("black-b", "c3", 1L);
+        String pieceName = pieceDao.findNameByPositionAndGameId("c3", 1L);
 
-        String pieceName = pieceDao.findPieceNameByPosition("a2");
-
-        assertThat(pieceName).isEqualTo("none-.");
+        assertThat(pieceName).isEqualTo("black-b");
     }
 
     @Test
-    @DisplayName("체스판의 말을 모두 삭제한다.")
-    void deleteAll() {
-        pieceDao.deleteAll();
+    void deleteByGameId() {
+        pieceDao.savePieces(BoardFactory.create(), 1L);
+        pieceDao.deleteByGameId(1L);
 
-        List<PieceEntity> boardMap = pieceDao.findAllPieces();
-        assertThat(boardMap.size()).isZero();
+        assertThat(pieceDao.findAllPiecesByGameId(1L)).isEmpty();
     }
 }

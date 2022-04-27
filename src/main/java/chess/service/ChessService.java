@@ -40,6 +40,12 @@ public class ChessService {
         return WebBoardDto.from(board);
     }
 
+    private Board initBoard(Long gameId) {
+        pieceDao.savePieces(BoardFactory.create(), gameId);
+
+        return toBoard(pieceDao.findAllPiecesByGameId(gameId));
+    }
+
     public WebBoardDto continueGame(Long gameId) {
         List<PieceEntity> pieceEntities = pieceDao.findAllPiecesByGameId(gameId);
         Board board = toBoard(pieceEntities);
@@ -47,32 +53,33 @@ public class ChessService {
         return WebBoardDto.from(board);
     }
 
-    public WebBoardDto move(Long gameId, MoveDto moveDto) {
-        Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPosition(moveDto.getSource()));
-        Piece targetPiece = PieceFactory.create(pieceDao.findPieceNameByPosition(moveDto.getTarget()));
-        Turn turn = Turn.from(getTurn(gameId));
-        validateCurrentTurn(turn, sourcePiece);
-        try {
-            movePiece(gameId, moveDto, sourcePiece, targetPiece, turn);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
-        Board board = toBoard(pieceDao.findAllPieces());
-        if (board.isKingDead()) {
-            gameDao.updateTurnByGameId(gameId, turn.finish());
-        }
-
-        return WebBoardDto.from(board);
+    private Board toBoard(List<PieceEntity> rawBoard) {
+        return new Board(rawBoard.stream()
+                .collect(Collectors.toMap(
+                        piece -> Position.from(piece.getPosition()),
+                        piece -> PieceFactory.create(piece.getName()))
+                ));
     }
 
-    private void movePiece(Long gameId, MoveDto moveDto, Piece sourcePiece, Piece targetPiece, Turn turn) {
-        if (canMove(moveDto, sourcePiece, targetPiece)) {
-            pieceDao.updateByPosition(moveDto.getTarget(), PieceDao.getPieceName(sourcePiece));
-            pieceDao.updateByPosition(moveDto.getSource(), "none-.");
-            gameDao.updateTurnByGameId(gameId, turn.change().getThisTurn());
-            return;
-        }
-        throw new IllegalArgumentException("기물을 이동할 수 없습니다.");
+    public WebBoardDto move(Long gameId, MoveDto moveDto) {
+        String srcPosition = moveDto.getSource();
+        String dstPosition = moveDto.getTarget();
+        Piece sourcePiece = PieceFactory.create(pieceDao.findNameByPositionAndGameId(srcPosition, gameId));
+        Piece targetPiece = PieceFactory.create(pieceDao.findNameByPositionAndGameId(dstPosition, gameId));
+
+        return move(gameId, srcPosition, dstPosition, sourcePiece, targetPiece);
+    }
+
+    public WebBoardDto move(Long gameId, String srcPosition, String dstPosition, Piece sourcePiece, Piece targetPiece) {
+        Turn turn = Turn.from(getTurn(gameId));
+        validateCurrentTurn(turn, sourcePiece);
+
+        movePiece(gameId, srcPosition, dstPosition, sourcePiece, targetPiece, turn);
+
+        Board board = toBoard(pieceDao.findAllPiecesByGameId(gameId));
+        checkKingDead(gameId, turn, board);
+
+        return WebBoardDto.from(board);
     }
 
     public String getTurn(Long gameId) {
@@ -84,74 +91,69 @@ public class ChessService {
         return turn;
     }
 
-    public boolean isKingDead() {
-        Board board = toBoard(pieceDao.findAllPieces());
-        return board.isKingDead();
-    }
-
-    public GameResult getResult() {
-        Board board = toBoard(pieceDao.findAllPieces());
-        return GameResult.from(board);
-    }
-
-    public void exitGame(Long gamaId) {
-        gameDao.updateTurnByGameId(gamaId, "start");
-//        pieceDao.initPieces(gameId);
-    }
-
-    public void deleteGame(Long gameId, String password) {
-        if (gameDao.findPasswordByGameId(gameId).equals(password)){
-            gameDao.deleteByGameId(gameId);
-        }
-    }
-
-    private Board initBoard(Long gameId) {
-//        List<PieceEntity> board = pieceDao.findAllPieces();
-//
-//        if (board.size() == 0) {
-//            pieceDao.init(BoardFactory.create());
-//        }
-        pieceDao.savePieces(BoardFactory.create(), gameId);
-
-        return toBoard(pieceDao.findAllPiecesByGameId(gameId));
-    }
-
-    private Board toBoard(List<PieceEntity> rawBoard) {
-
-        return new Board(rawBoard.stream()
-                .collect(Collectors.toMap(
-                        piece -> Position.from(piece.getPosition()),
-                        piece -> PieceFactory.create(piece.getName()))
-                ));
-    }
-
-//    private void initTurn(Long gameId) {
-//        Optional<String> turn = gameDao.findTurnByGameId(gameId);
-//
-//        if (turn.isEmpty()) {
-//            gameDao.saveGame();
-//        }
-//    }
-
     private void validateCurrentTurn(Turn thisTurn, Piece sourcePiece) {
         if (!sourcePiece.isCurrentTurn(thisTurn)) {
             throw new IllegalArgumentException("본인의 말을 움직여야 합니다.");
         }
     }
 
-    private boolean canMove(MoveDto moveDto, Piece sourcePiece, Piece targetPiece) {
-        Position sourcePosition = Position.from(moveDto.getSource());
-        Position targetPosition = Position.from(moveDto.getTarget());
+    private void movePiece(Long gameId, String srcPosition, String dstPosition,
+                           Piece sourcePiece, Piece targetPiece, Turn turn) {
+        if (canMove(gameId, srcPosition, dstPosition, sourcePiece, targetPiece)) {
+            pieceDao.updateByPositionAndGameId(srcPosition, PieceDao.getPieceName(sourcePiece), gameId);
+            pieceDao.updateByPositionAndGameId(dstPosition, "none-.", gameId);
+            gameDao.updateTurnByGameId(gameId, turn.change().getThisTurn());
+            return;
+        }
+        throw new IllegalArgumentException("기물을 이동할 수 없습니다.");
+    }
+
+    private boolean canMove(Long gameId, String srcPosition, String dstPosition, Piece sourcePiece, Piece targetPiece) {
+        Position sourcePosition = Position.from(srcPosition);
+        Position targetPosition = Position.from(dstPosition);
         MoveType moveType = MoveType.of(sourcePiece, targetPiece);
 
         return sourcePiece.isMovable(sourcePosition, targetPosition, moveType)
-                && !hasBlock(sourcePosition, targetPosition, sourcePiece);
+                && !hasBlock(gameId, sourcePosition, targetPosition, sourcePiece);
     }
 
-    private boolean hasBlock(Position source, Position target, Piece sourcePiece) {
-        Board board = toBoard(pieceDao.findAllPieces());
-        List<Position> positions = sourcePiece.getIntervalPosition(source, target);
+    private boolean hasBlock(Long gameId, Position sourcePosition, Position targetPosition, Piece sourcePiece) {
+        Board board = toBoard(pieceDao.findAllPiecesByGameId(gameId));
+        List<Position> positions = sourcePiece.getIntervalPosition(sourcePosition, targetPosition);
+
         return positions.stream()
                 .anyMatch(position -> !board.get(position).equals(new Empty()));
+    }
+
+    private void checkKingDead(Long gameId, Turn turn, Board board) {
+        if (board.isKingDead()) {
+            gameDao.updateTurnByGameId(gameId, turn.finish());
+        }
+    }
+
+    public boolean isKingDead(Long gameId) {
+        Board board = toBoard(pieceDao.findAllPiecesByGameId(gameId));
+        return board.isKingDead();
+    }
+
+    public GameResult getResult(Long gameId) {
+        Board board = toBoard(pieceDao.findAllPiecesByGameId(gameId));
+        return GameResult.from(board);
+    }
+    public void exitGame(Long gameId) {
+        gameDao.updateTurnByGameId(gameId, "start");
+        pieceDao.deleteByGameId(gameId);
+        pieceDao.savePieces(BoardFactory.create(), gameId);
+    }
+
+    public void deleteGame(Long gameId, String password) {
+        if (canDeleteGame(gameId, password)){
+            pieceDao.deleteByGameId(gameId);
+            gameDao.deleteByGameId(gameId);
+        }
+    }
+
+    private boolean canDeleteGame(Long gameId, String password) {
+        return getTurn(gameId).equals("start") && gameDao.findPasswordByGameId(gameId).equals(password);
     }
 }

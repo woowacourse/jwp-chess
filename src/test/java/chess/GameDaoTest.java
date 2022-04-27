@@ -1,17 +1,15 @@
 package chess;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.model.dao.GameDao;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 class GameDaoTest {
@@ -29,6 +27,7 @@ class GameDaoTest {
                 "    turn     varchar(5) not null,\n" +
                 "    primary key (game_id)\n" +
                 ");");
+
         gameDao = new GameDao(jdbcTemplate); // @JdbcTest는 일반적인 @ConfigurationProperties와 @Component 빈들은 스캔되지 않는다.
     }
 

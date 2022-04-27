@@ -24,10 +24,17 @@ public class ChessController {
         return "index";
     }
 
-    @GetMapping("/start")
+    @PostMapping("/start")
     @ResponseBody
     public Map<String, String> startNewGame(@RequestBody String password) {
         WebBoardDto board = chessService.createGame(password);
+        return board.getWebBoard();
+    }
+
+    @GetMapping("/start/{gameId}")
+    @ResponseBody
+    public Map<String, String> startGame(@PathVariable Long gameId) {
+        WebBoardDto board = chessService.continueGame(gameId);
         return board.getWebBoard();
     }
 
@@ -44,16 +51,16 @@ public class ChessController {
         return chessService.getTurn(gameId);
     }
 
-    @GetMapping("/king/dead")
+    @GetMapping("/king/dead/{gameId}")
     @ResponseBody
-    public boolean kingDead() {
-        return chessService.isKingDead();
+    public boolean kingDead(@PathVariable Long gameId) {
+        return chessService.isKingDead(gameId);
     }
 
-    @GetMapping("/status")
+    @GetMapping("/status/{gameId}")
     @ResponseBody
-    public GameResult status() {
-        return chessService.getResult();
+    public GameResult status(@PathVariable Long gameId) {
+        return chessService.getResult(gameId);
     }
 
     @PostMapping("/exit/{gameId}")

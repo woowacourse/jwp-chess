@@ -63,15 +63,10 @@ class RoomDaoImplTest {
     @DisplayName("방 이름이 존재하면 true를 반환한다.")
     void isExistName_true() {
         // given
-        final GameStatus gameStatus = GameStatus.READY;
-        final Color currentTurn = Color.WHITE;
-        final String password = "1q2w3e4r";
-        final String roomName = "hi";
-
-        roomDao.save(roomName, gameStatus, currentTurn, password);
+        createRoom();
 
         // when
-        final boolean actual = roomDao.isExistName(roomName);
+        final boolean actual = roomDao.isExistName("hi");
 
         // then
         assertThat(actual).isTrue();
@@ -94,16 +89,11 @@ class RoomDaoImplTest {
     @DisplayName("삭제된 방을 제외하고, 방 이름이 존재하지 않으면 false를 반환한다.")
     void isExistName_with_out_deleted_room_false() {
         // given
-        final String roomName = "hi";
-        final GameStatus gameStatus = GameStatus.END;
-        final Color currentTurn = Color.WHITE;
-        final String password = "1q2w3e4r";
-
-        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+        final int roomId = createRoom();
         roomDao.deleteById(roomId);
 
         // when
-        final boolean actual = roomDao.isExistName(roomName);
+        final boolean actual = roomDao.isExistName("hi");
 
         // then
         assertThat(actual).isFalse();
@@ -131,18 +121,13 @@ class RoomDaoImplTest {
     @DisplayName("방 id로 현재 턴을 조회한다.")
     void findCurrentTurnById() {
         // given
-        final String roomName = "hi";
-        final GameStatus gameStatus = GameStatus.READY;
-        final Color currentTurn = Color.WHITE;
-        final String password = "1q2w3e4r";
-
-        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+        final int roomId = createRoom();
 
         // when
         final CurrentTurnDto dto = roomDao.findCurrentTurnById(roomId);
 
         // then
-        assertThat(dto.getCurrentTurn()).isEqualTo(currentTurn);
+        assertThat(dto.getCurrentTurn()).isEqualTo(Color.WHITE);
     }
 
     @Test
@@ -161,48 +146,26 @@ class RoomDaoImplTest {
     @DisplayName("방 id로 비밀번호를 조회한다.")
     void findPasswordById() {
         // given
-        final String roomName = "hi";
-        final GameStatus gameStatus = GameStatus.READY;
-        final Color currentTurn = Color.WHITE;
-        final String password = "1q2w3e4r";
-
-        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+        final int roomId = createRoom();
 
         // when
         final String actual = roomDao.findPasswordById(roomId);
 
         // then
-        assertThat(actual).isEqualTo(password);
-    }
-
-    @Test
-    @DisplayName("방 id에 해당하는 비밀번호가 존재하지 않으면 예외가 터진다.")
-    void findPasswordById_exception() {
-        // given
-        final int roomId = 1;
-
-        // then
-        assertThatThrownBy(() -> roomDao.findPasswordById(roomId))
-                .isInstanceOf(NotFoundException.class)
-                .hasMessage("방 아이디에 해당하는 비밀번호가 존재하지 않습니다.");
+        assertThat(actual).isEqualTo("1q2w3e4r");
     }
 
     @Test
     @DisplayName("방 id로 현재 상태을 조회한다.")
     void findStatusById() {
         // given
-        final String roomName = "hi";
-        final GameStatus gameStatus = GameStatus.READY;
-        final Color currentTurn = Color.WHITE;
-        final String password = "1q2w3e4r";
-
-        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+        final int roomId = createRoom();
 
         // when
         final RoomStatusDto dto = roomDao.findStatusById(roomId);
 
         // then
-        assertThat(dto.getGameStatus()).isEqualTo(gameStatus);
+        assertThat(dto.getGameStatus()).isEqualTo(GameStatus.READY);
     }
 
     @Test
@@ -221,12 +184,7 @@ class RoomDaoImplTest {
     @DisplayName("방 id로 방을 삭제한다.")
     void deleteById() {
         // given
-        final String roomName = "hi";
-        final GameStatus gameStatus = GameStatus.READY;
-        final Color currentTurn = Color.WHITE;
-        final String password = "1q2w3e4r";
-
-        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+        final int roomId = createRoom();
 
         // when
         final int deletedRow = roomDao.deleteById(roomId);
@@ -239,15 +197,10 @@ class RoomDaoImplTest {
     @DisplayName("방 id로 정보를 갱신한다.")
     void updateById() {
         // given
-        final String roomName = "hi";
-        final GameStatus gameStatus = GameStatus.READY;
-        final Color currentTurn = Color.WHITE;
-        final String password = "1q2w3e4r";
-
         final GameStatus updatedStatus = GameStatus.PLAYING;
         final Color updatedCurrentTurn = Color.BLACK;
 
-        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+        final int roomId = createRoom();
 
         // when
         final int updatedRow = roomDao.updateById(roomId, updatedStatus, updatedCurrentTurn);
@@ -264,14 +217,9 @@ class RoomDaoImplTest {
     @DisplayName("방 id로 상태를 갱신한다.")
     void updateStatusById() {
         // given
-        final String roomName = "hi";
-        final GameStatus gameStatus = GameStatus.READY;
-        final Color currentTurn = Color.WHITE;
-        final String password = "1q2w3e4r";
-
         final GameStatus updatedStatus = GameStatus.PLAYING;
 
-        final int roomId = roomDao.save(roomName, gameStatus, currentTurn, password);
+        final int roomId = createRoom();
 
         // when
         final int updatedRow = roomDao.updateStatusById(roomId, updatedStatus);
@@ -280,5 +228,14 @@ class RoomDaoImplTest {
         // then
         assertThat(updatedRow).isEqualTo(1);
         assertThat(updatedStatusDto.getGameStatus()).isEqualTo(updatedStatus);
+    }
+
+    private int createRoom() {
+        final String roomName = "hi";
+        final GameStatus gameStatus = GameStatus.READY;
+        final Color currentTurn = Color.WHITE;
+        final String password = "1q2w3e4r";
+
+        return roomDao.save(roomName, gameStatus, currentTurn, password);
     }
 }

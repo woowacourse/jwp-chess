@@ -8,21 +8,22 @@ import static chess.domain.position.Rank.TWO;
 import chess.domain.ChessBoard;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
+import chess.exception.IllegalMoveException;
 
 public final class PawnMoveStrategy implements MoveStrategy {
 
     @Override
     public void isMovable(Position source, Position target, ChessBoard chessBoard) {
         if (source.isSameRank(target)) {
-            throw new IllegalArgumentException("제자리에 머무를 수 없습니다.");
+            throw new IllegalMoveException("제자리에 머무를 수 없습니다.");
         }
 
         if (!checkPawnMoveDistance(source, target, chessBoard)) {
-            throw new IllegalArgumentException("잘못된 이동입니다.");
+            throw new IllegalMoveException("잘못된 이동입니다.");
         }
 
         if (source.isDiagonal(target) && (chessBoard.findTeam(source) == chessBoard.findTeam(target))) {
-            throw new IllegalArgumentException("잘못된 이동입니다.");
+            throw new IllegalMoveException("잘못된 이동입니다.");
         }
 
         checkPawnDirection(source, target, chessBoard);
@@ -39,11 +40,11 @@ public final class PawnMoveStrategy implements MoveStrategy {
 
     private void checkPawnDirection(Position source, Position target, ChessBoard chessBoard) {
         if (chessBoard.findTeam(source) == WHITE && source.isReductionRank(target)) {
-            throw new IllegalArgumentException("잘못된 이동입니다.");
+            throw new IllegalMoveException("잘못된 이동입니다.");
         }
 
         if (chessBoard.findTeam(source) == BLACK && source.isIncreaseRank(target)) {
-            throw new IllegalArgumentException("잘못된 이동입니다.");
+            throw new IllegalMoveException("잘못된 이동입니다.");
         }
     }
 
@@ -51,7 +52,7 @@ public final class PawnMoveStrategy implements MoveStrategy {
         Direction direction = Direction.of(source, target);
 
         if (chessBoard.isExist(target) && direction.isLinearDirection()) {
-            throw new IllegalArgumentException("잘못된 이동입니다.");
+            throw new IllegalMoveException("잘못된 이동입니다.");
         }
     }
 }

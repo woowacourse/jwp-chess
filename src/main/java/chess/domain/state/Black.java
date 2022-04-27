@@ -7,6 +7,7 @@ import chess.domain.Command;
 import chess.domain.piece.Team;
 import chess.domain.position.Position;
 import chess.domain.position.Positions;
+import chess.exception.IllegalMoveException;
 
 public class Black implements State {
 
@@ -52,7 +53,7 @@ public class Black implements State {
         Team team = chessBoard.findTeam(source);
 
         if (!(team == BLACK)) {
-            throw new IllegalArgumentException("흰팀 말은 검은색 팀이 옮길 수 없습니다.");
+            throw new IllegalMoveException("흰팀 말은 검은색 팀이 옮길 수 없습니다.");
         }
     }
 }

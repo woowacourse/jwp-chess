@@ -4,6 +4,7 @@ import chess.domain.ChessBoard;
 import chess.domain.piece.Team;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
+import chess.exception.IllegalMoveException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public abstract class CommonMovingStrategy implements MoveStrategy {
 
     private void checkStay(Position source, Position target) {
         if (source.equals(target)) {
-            throw new IllegalArgumentException("제자리에 머무를 수 없습니다.");
+            throw new IllegalMoveException("제자리에 머무를 수 없습니다.");
         }
     }
 
@@ -29,7 +30,7 @@ public abstract class CommonMovingStrategy implements MoveStrategy {
         paths.remove(target);
 
         if (chessBoard.isContainPiece(paths)) {
-            throw new IllegalArgumentException("경로상에 말이 존재합니다.");
+            throw new IllegalMoveException("경로상에 말이 존재합니다.");
         }
     }
 
@@ -55,7 +56,7 @@ public abstract class CommonMovingStrategy implements MoveStrategy {
         Team targetTeam = chessBoard.findTeam(target);
 
         if (sourceTeam == targetTeam) {
-            throw new IllegalArgumentException("경로상에 말이 존재합니다.");
+            throw new IllegalMoveException("경로상에 말이 존재합니다.");
         }
     }
 }

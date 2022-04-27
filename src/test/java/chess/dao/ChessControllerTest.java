@@ -1,12 +1,9 @@
 package chess.dao;
 
-import chess.dao.WebChessBoardDao;
-import chess.dao.WebChessPositionDao;
 import chess.domain.game.ChessBoard;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import io.restassured.RestAssured;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +14,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql({"schema.sql"})

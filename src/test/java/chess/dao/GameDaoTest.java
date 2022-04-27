@@ -29,10 +29,7 @@ class GameDaoTest {
     void findAll_메서드로_존재하는_모든_게임_정보를_조회가능() {
         List<GameEntity> actual = dao.findAll();
 
-        List<GameEntity> expected = List.of(
-                new GameEntity(1, "진행중인_게임", true),
-                new GameEntity(2, "종료된_게임", false),
-                new GameEntity(3, "이미_존재하는_게임명", true));
+        List<GameEntity> expected = findAllTestData();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -95,7 +92,7 @@ class GameDaoTest {
             int actual = dao.saveAndGetGeneratedId(
                     new EncryptedAuthCredentials("name", "passwordHash"));
 
-            assertThat(actual).isGreaterThan(3);
+            assertThat(actual).isGreaterThan(findAllTestData().size());
         }
 
         @Test
@@ -146,5 +143,12 @@ class GameDaoTest {
             assertThatThrownBy(() -> dao.deleteGame(existingGameData))
                     .hasMessage("게임을 삭제하는 데 실패하였습니다!");
         }
+    }
+
+    private List<GameEntity> findAllTestData() {
+        return List.of(
+                new GameEntity(1, "진행중인_게임", true),
+                new GameEntity(2, "종료된_게임", false),
+                new GameEntity(3, "이미_존재하는_게임명", true));
     }
 }

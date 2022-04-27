@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
 import chess.domain.game.Game;
@@ -33,12 +34,14 @@ class ChessServiceTest {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private GameDaoStub gameDao;
+    private EventDaoStub eventDao;
     private ChessService service;
 
     @BeforeEach
     void setup() {
         gameDao = new GameDaoStub(namedParameterJdbcTemplate);
-        service = new ChessService(gameDao, new EventDaoStub(namedParameterJdbcTemplate));
+        eventDao = new EventDaoStub(namedParameterJdbcTemplate);
+        service = new ChessService(gameDao, eventDao);
     }
 
     @Test
@@ -165,12 +168,21 @@ class ChessServiceTest {
     class DeleteFinishedGameTest {
 
         @Test
-        void 종료된_게임_삭제() {
+        void 종료된_게임은_삭제_가능() {
             service.deleteFinishedGame(3, new EncryptedAuthCredentials("종료된_게임", "encrypted3"));
 
             boolean exists = gameDao.checkById(3);
 
             assertThat(exists).isFalse();
+        }
+
+        @Test
+        void 종료된_게임_삭제시_이벤트도_전부_삭제() {
+            service.deleteFinishedGame(3, new EncryptedAuthCredentials("종료된_게임", "encrypted3"));
+
+             List<Event> relatedEvents = eventDao.findAllByGameId(3);
+
+            assertThat(relatedEvents).isEmpty();
         }
 
         @Test

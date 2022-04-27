@@ -117,6 +117,22 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("게임을 시작한다.")
+    void startGame() {
+        // given
+        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
+
+        // when
+
+        // then
+        RestAssured.given().log().all()
+                .when().patch("/rooms/" + roomId + "/status")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+    }
+
+    @Test
     @DisplayName("모든 기물을 조회한다.")
     void findPieces() throws JsonProcessingException {
         // given
@@ -148,7 +164,7 @@ class ChessControllerTest {
     @DisplayName("기물을 초기화한다.")
     void createPieces() {
         // given
-        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
+        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.WHITE, "1234");
 
         // then
         RestAssured.given().log().all()

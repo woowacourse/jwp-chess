@@ -53,6 +53,12 @@ public class ChessController {
         roomService.deleteRoom(dto);
     }
 
+    @PatchMapping("/{roomId}/status")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void startGame(@PathVariable final int roomId) {
+        roomService.startGame(roomId);
+    }
+
     @GetMapping("/{roomId}/pieces")
     public ResponseEntity<List<ChessPieceDto>> findPieces(@PathVariable final int roomId) {
         final List<ChessPieceDto> chessPieces = chessService.findAllPiece(roomId);

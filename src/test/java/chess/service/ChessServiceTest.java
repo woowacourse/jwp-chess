@@ -20,6 +20,17 @@ class ChessServiceTest {
         chessService.addChessGame(new GameCreationDTO("test", "1234"));
 
         assertThatThrownBy(() -> chessService.deleteGame(1, "123"))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("비밀번호");
+    }
+
+    @Test
+    @DisplayName("진행중인 게임방을 삭제할 수 없다")
+    void cannotDeleteRunningGame() {
+        chessService.addChessGame(new GameCreationDTO("test", "1234"));
+
+        assertThatThrownBy(() -> chessService.deleteGame(1, "1234"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("진행중인 게임");
     }
 }

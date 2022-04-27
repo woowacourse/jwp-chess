@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,36 +36,36 @@ public class ChessWebController {
         return ResponseEntity.ok().body(newId);
     }
 
-    @GetMapping("/chess")
-    public String chess() {
+    @GetMapping("/chess/{boardId}")
+    public String chess(@PathVariable String boardId) {
         return "chess";
     }
 
-    @GetMapping(value = "/api/chess/load", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/chess/{boardId}/load", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<BoardDto> loadGame() {
-        Board board = chessService.loadGame(1L);
+    public ResponseEntity<BoardDto> loadGame(@PathVariable Long boardId) {
+        Board board = chessService.loadGame(boardId);
         return ResponseEntity.ok().body(BoardDto.from(board));
     }
 
-    @GetMapping(value = "/api/chess/restart", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/chess/{boardId}/restart", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<BoardDto> initBoard() {
-        Board board = chessService.initBoard(1L);
+    public ResponseEntity<BoardDto> initBoard(@PathVariable Long boardId) {
+        Board board = chessService.initBoard(boardId);
         return ResponseEntity.ok().body(BoardDto.from(board));
     }
 
-    @GetMapping(value = "/api/chess/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/chess/{boardId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<ScoreDto> getStatus() {
-        ScoreDto status = chessService.getStatus(1L);
+    public ResponseEntity<ScoreDto> getStatus(@PathVariable Long boardId) {
+        ScoreDto status = chessService.getStatus(boardId);
         return ResponseEntity.ok().body(status);
     }
 
-    @PostMapping(value = "/api/chess/move", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/chess/{boardId}/move", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto) {
-        Board board = chessService.move(moveDto, 1L);
+    public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto, @PathVariable Long boardId) {
+        Board board = chessService.move(moveDto, boardId);
         return ResponseEntity.ok().body(BoardDto.from(board));
     }
 }

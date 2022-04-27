@@ -1,6 +1,7 @@
 const start = document.getElementById('start-button');
 const status = document.getElementById('status-button');
-const IMAGE_PATH = "./images/";
+const IMAGE_PATH = "/images/";
+const path = window.location.pathname;
 const BOARD = document.querySelector("#board");
 const CURRENT_TEAM = document.querySelector("#current-team");
 const SYMBOL_TO_IMAGE_PATH = {
@@ -30,7 +31,7 @@ function showStatusButton() {
 }
 
 function initBoard() {
-    fetch('/api/chess/restart')
+    fetch(path + '/restart')
         .then(res => res.json())
         .then(imageSetting)
 }
@@ -56,13 +57,13 @@ function getStatus(scoreResponse) {
 }
 
 status.addEventListener('click', function () {
-    fetch('/api/chess/status')
+    fetch(path + '/status')
         .then(res => res.json())
         .then(getStatus)
 })
 
 function loadBoard() {
-    fetch('/api/chess/load')
+    fetch(path + '/load')
         .then(res => res.json())
         .then(imageSetting)
 }
@@ -159,7 +160,7 @@ function movePiece(from, to) {
         to: to
     }
 
-    fetch('/api/chess/move', {
+    fetch(path + '/move', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

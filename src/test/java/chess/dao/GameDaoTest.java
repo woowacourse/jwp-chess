@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class GameDaoTest {
 
     private static final String NOT_HAVE_DATA = "데이터가 없습니다.";
-    private static final long TEST_GAME_ID = 1;
+    private static final Long TEST_GAME_ID = 1L;
 
     @Autowired
     private GameDao gameDao;

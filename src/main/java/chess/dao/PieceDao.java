@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public interface PieceDao {
 
-    void save(long gameId, Position position, Piece piece);
+    void save(Long gameId, Position position, Piece piece);
 
-    List<PieceResponse> findAll(long gameId);
+    List<PieceResponse> findAll(Long gameId);
 
-    Optional<Piece> find(long gameId, Position position);
+    Optional<Piece> find(Long gameId, Position position);
 
-    void updatePosition(long gameId, Position start, Position target);
+    void updatePosition(Long gameId, Position start, Position target);
 
-    void delete(long gameId, Position position);
+    void delete(Long gameId, Position position);
 }

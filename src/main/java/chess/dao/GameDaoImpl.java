@@ -27,7 +27,7 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public void save(long id, String name, String password, String salt) {
+    public void save(Long id, String name, String password, String salt) {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("game_id", id)
                 .addValue("game_name", name)
@@ -46,24 +46,24 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public Optional<String> findName(long id) {
+    public Optional<String> findName(Long id) {
         String sql = "SELECT game_name FROM game WHERE game_id = :game_id";
         return find(sql, id);
     }
 
     @Override
-    public Optional<String> findPassword(long id) {
+    public Optional<String> findPassword(Long id) {
         String sql = "SELECT game_password FROM game WHERE game_id = :game_id";
         return find(sql, id);
     }
 
     @Override
-    public Optional<String> findSalt(long id) {
+    public Optional<String> findSalt(Long id) {
         String sql = "SELECT salt FROM game WHERE game_id = :game_id";
         return find(sql, id);
     }
 
-    private Optional<String> find(String sql, long id) {
+    private Optional<String> find(String sql, Long id) {
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", id);
 
         try {
@@ -75,7 +75,7 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public Optional<GameState> findState(long id) {
+    public Optional<GameState> findState(Long id) {
         String sql = "SELECT state FROM game WHERE game_id = :game_id";
 
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", id);
@@ -89,7 +89,7 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public void updateState(long id, GameState gameState) {
+    public void updateState(Long id, GameState gameState) {
         String sql = "UPDATE game SET state = :game_state WHERE game_id = :game_id";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("game_state", gameState.name());
@@ -98,7 +98,7 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         String sql = "DELETE FROM game WHERE game_id = :game_id";
         MapSqlParameterSource parameter = new MapSqlParameterSource("game_id", id);
         namedParameterJdbcTemplate.update(sql, parameter);

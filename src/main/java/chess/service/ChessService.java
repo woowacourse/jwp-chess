@@ -40,11 +40,11 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGameResponse createGame(long gameId, CreateGameRequest createGameRequest) {
+    public ChessGameResponse createGame(Long gameId, CreateGameRequest createGameRequest) {
         return createGame(gameId, createGameRequest.getGameName(), createGameRequest.getPassword());
     }
 
-    private ChessGameResponse createGame(long gameId, String gameName, String password) {
+    private ChessGameResponse createGame(Long gameId, String gameName, String password) {
         String salt = PasswordEncryptor.generateSalt();
         ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
         gameDao.save(gameId, gameName, PasswordEncryptor.encrypt(password, salt), salt);
@@ -52,11 +52,11 @@ public class ChessService {
         return new ChessGameResponse(chessGame);
     }
 
-    public void saveBoard(long gameId, Map<Position, Piece> board) {
+    public void saveBoard(Long gameId, Map<Position, Piece> board) {
         board.forEach((position, piece) -> savePiece(gameId, position, piece));
     }
 
-    private void savePiece(long gameId, Position position, Piece piece) {
+    private void savePiece(Long gameId, Position position, Piece piece) {
         if (pieceDao.find(gameId, position).isEmpty()) {
             pieceDao.save(gameId, position, piece);
         }
@@ -66,11 +66,11 @@ public class ChessService {
         return new ChessGamesResponse(gameDao.findAllGames());
     }
 
-    public ChessGameResponse loadGame(long gameId) {
+    public ChessGameResponse loadGame(Long gameId) {
         return new ChessGameResponse(createChessGameObject(gameId));
     }
 
-    private ChessGame createChessGameObject(long gameId) {
+    private ChessGame createChessGameObject(Long gameId) {
         Optional<GameState> maybeGameState = gameDao.findState(gameId);
         GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
         Board board = createBoard(gameId);
@@ -87,12 +87,12 @@ public class ChessService {
         return new Board(() -> pieces);
     }
 
-    public ChessGameResponse startGame(long gameId) {
+    public ChessGameResponse startGame(Long gameId) {
         gameDao.updateState(gameId, GameState.WHITE_RUNNING);
         return loadGame(gameId);
     }
 
-    public ChessGameResponse resetGame(long gameId) {
+    public ChessGameResponse resetGame(Long gameId) {
         Optional<String> maybeGameName = gameDao.findName(gameId);
         String gameName = maybeGameName.orElseThrow(NoSuchElementException::new);
         Optional<String> maybePassword = gameDao.findPassword(gameId);
@@ -101,7 +101,7 @@ public class ChessService {
         return createGame(gameId, gameName, password);
     }
 
-    public ChessGameResponse move(long gameId, MoveRequest moveRequest) {
+    public ChessGameResponse move(Long gameId, MoveRequest moveRequest) {
         ChessGame chessGame = createChessGameObject(gameId);
         Position start = parseStringToPosition(moveRequest.getStart());
         Position target = parseStringToPosition(moveRequest.getTarget());
@@ -114,18 +114,18 @@ public class ChessService {
         return new ChessGameResponse(chessGame);
     }
 
-    public StatusResponse status(long gameId) {
+    public StatusResponse status(Long gameId) {
         ChessGame chessGame = createChessGameObject(gameId);
         return new StatusResponse(chessGame.createStatus());
     }
 
-    public EndResponse endGame(long gameId, String password) {
+    public EndResponse endGame(Long gameId, String password) {
         authenticate(gameId, password);
         gameDao.delete(gameId);
         return new EndResponse("게임이 종료되었습니다.");
     }
 
-    private void authenticate(long gameId, String password) {
+    private void authenticate(Long gameId, String password) {
         Optional<String> maybeSalt = gameDao.findSalt(gameId);
         String salt = maybeSalt.orElseThrow(NoSuchElementException::new);
         Optional<String> maybePassword = gameDao.findPassword(gameId);
@@ -136,7 +136,7 @@ public class ChessService {
         }
     }
 
-    public void deleteGame(long gameId) {
+    public void deleteGame(Long gameId) {
         gameDao.delete(gameId);
     }
 

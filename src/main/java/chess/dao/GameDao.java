@@ -7,19 +7,19 @@ import java.util.Optional;
 
 public interface GameDao {
 
-    void save(long id, String name, String password, String salt);
+    void save(Long id, String name, String password, String salt);
 
     List<GameIdentifiers> findAllGames();
 
-    Optional<String> findName(long id);
+    Optional<String> findName(Long id);
 
-    Optional<String> findPassword(long id);
+    Optional<String> findPassword(Long id);
 
-    Optional<String> findSalt(long id);
+    Optional<String> findSalt(Long id);
 
-    Optional<GameState> findState(long id);
+    Optional<GameState> findState(Long id);
 
-    void updateState(long id, GameState gameState);
+    void updateState(Long id, GameState gameState);
 
-    void delete(long id);
+    void delete(Long id);
 }

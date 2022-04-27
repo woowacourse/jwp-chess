@@ -52,7 +52,7 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public void save(long gameId, Position position, Piece piece) {
+    public void save(Long gameId, Position position, Piece piece) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("game_id", gameId);
         parameters.put("position", convertPositionToString(position));
@@ -68,7 +68,7 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public List<PieceResponse> findAll(long gameId) {
+    public List<PieceResponse> findAll(Long gameId) {
         String sql = "SELECT * FROM piece WHERE game_id = :game_id";
 
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId);
@@ -80,15 +80,15 @@ public class PieceDaoImpl implements PieceDao {
         }
     }
 
-    private Position parseStringToPosition(final String rawPosition) {
-        final String[] separatedPosition = rawPosition.split("");
-        final Column column = Column.from(separatedPosition[ROW_INDEX]);
-        final Row row = Row.from(separatedPosition[COLUMN_INDEX]);
+    private Position parseStringToPosition(String rawPosition) {
+        String[] separatedPosition = rawPosition.split("");
+        Column column = Column.from(separatedPosition[ROW_INDEX]);
+        Row row = Row.from(separatedPosition[COLUMN_INDEX]);
         return new Position(column, row);
     }
 
     @Override
-    public Optional<Piece> find(long gameId, Position position) {
+    public Optional<Piece> find(Long gameId, Position position) {
         String sql = "SELECT piece_type, color FROM piece WHERE game_id = :game_id AND position = :position";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("game_id", gameId);
@@ -103,7 +103,7 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public void updatePosition(long gameId, Position start, Position target) {
+    public void updatePosition(Long gameId, Position start, Position target) {
         String sql = "UPDATE piece SET position = :target WHERE game_id = :game_id AND position = :start";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("game_id", gameId);
@@ -113,7 +113,7 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public void delete(long gameId, Position position) {
+    public void delete(Long gameId, Position position) {
         String sql = "DELETE FROM piece WHERE game_id = :game_id AND position = :position";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("game_id", gameId);

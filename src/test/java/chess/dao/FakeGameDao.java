@@ -24,7 +24,7 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public void save(long id, String name, String password, String salt) {
+    public void save(Long id, String name, String password, String salt) {
         if (names.containsKey(id)) {
             throw new DuplicateKeyException("");
         }
@@ -42,7 +42,7 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public Optional<String> findName(long id) {
+    public Optional<String> findName(Long id) {
         if (names.containsKey(id)) {
             return Optional.of(names.get(id));
         }
@@ -50,7 +50,7 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public Optional<String> findPassword(long id) {
+    public Optional<String> findPassword(Long id) {
         if (passwords.containsKey(id)) {
             return Optional.of(passwords.get(id));
         }
@@ -58,7 +58,7 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public Optional<String> findSalt(long id) {
+    public Optional<String> findSalt(Long id) {
         if (salts.containsKey(id)) {
             return Optional.of(salts.get(id));
         }
@@ -66,7 +66,7 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public Optional<GameState> findState(long id) {
+    public Optional<GameState> findState(Long id) {
         if (states.containsKey(id)) {
             return Optional.of(states.get(id));
         }
@@ -74,12 +74,12 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public void updateState(long id, GameState gameState) {
+    public void updateState(Long id, GameState gameState) {
         states.put(id, gameState);
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(Long id) {
         names.remove(id);
         passwords.remove(id);
         salts.remove(id);

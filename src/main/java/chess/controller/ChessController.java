@@ -39,7 +39,7 @@ public class ChessController {
     }
 
     @GetMapping("/{gameId}")
-    public ChessGameResponse loadGame(@PathVariable long gameId) {
+    public ChessGameResponse loadGame(@PathVariable Long gameId) {
         return chessService.loadGame(gameId);
     }
 
@@ -52,27 +52,27 @@ public class ChessController {
     }
 
     @PatchMapping("/{gameId}")
-    public ChessGameResponse startGame(@PathVariable long gameId) {
+    public ChessGameResponse startGame(@PathVariable Long gameId) {
         return chessService.startGame(gameId);
     }
 
     @PutMapping("/{gameId}")
-    public ChessGameResponse resetGame(@PathVariable long gameId) {
+    public ChessGameResponse resetGame(@PathVariable Long gameId) {
         return chessService.resetGame(gameId);
     }
 
     @PatchMapping("/{gameId}/pieces")
-    public ChessGameResponse movePiece(@PathVariable long gameId, @RequestBody MoveRequest moveRequest) {
+    public ChessGameResponse movePiece(@PathVariable Long gameId, @RequestBody MoveRequest moveRequest) {
         return chessService.move(gameId, moveRequest);
     }
 
     @GetMapping("/{gameId}/status")
-    public StatusResponse status(@PathVariable long gameId) {
+    public StatusResponse status(@PathVariable Long gameId) {
         return chessService.status(gameId);
     }
 
     @DeleteMapping("/{gameId}")
-    public EndResponse endGame(@PathVariable long gameId, @RequestHeader HttpHeaders headers) {
+    public EndResponse endGame(@PathVariable Long gameId, @RequestHeader HttpHeaders headers) {
         String password = headers.getFirst("Authorization");
         return chessService.endGame(gameId, password);
     }

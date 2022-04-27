@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PieceDaoTest {
 
     private static final String NOT_HAVE_DATA = "해당하는 기물이 없습니다.";
-    private static final long TEST_GAME_ID = 1;
+    private static final Long TEST_GAME_ID = 1L;
 
     @Autowired
     private GameDao gameDao;
@@ -89,7 +89,7 @@ public class PieceDaoTest {
         pieceDao.save(TEST_GAME_ID, a2, new Pawn(Color.WHITE));
 
         pieceDao.delete(TEST_GAME_ID, a2);
-        Optional<Piece> maybePiece = pieceDao.find(1, a2);
+        Optional<Piece> maybePiece = pieceDao.find(TEST_GAME_ID, a2);
 
         assertThat(maybePiece.isPresent()).isFalse();
     }
@@ -98,7 +98,7 @@ public class PieceDaoTest {
     @Test
     void deleteAll() {
         gameDao.delete(TEST_GAME_ID);
-        List<PieceResponse> pieces = pieceDao.findAll(1);
+        List<PieceResponse> pieces = pieceDao.findAll(TEST_GAME_ID);
 
         assertThat(pieces).isEmpty();
     }

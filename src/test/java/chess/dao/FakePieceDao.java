@@ -18,7 +18,7 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public void save(long gameId, Position position, Piece piece) {
+    public void save(Long gameId, Position position, Piece piece) {
         if (!pieces.containsKey(gameId)) {
             pieces.put(gameId, new HashMap<>());
         }
@@ -26,7 +26,7 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public List<PieceResponse> findAll(long gameId) {
+    public List<PieceResponse> findAll(Long gameId) {
         Map<Position, Piece> piecesInGame = pieces.getOrDefault(gameId, new HashMap<>());
         return piecesInGame.entrySet()
                 .stream()
@@ -35,7 +35,7 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public Optional<Piece> find(long gameId, Position position) {
+    public Optional<Piece> find(Long gameId, Position position) {
         Map<Position, Piece> piecesInGame = pieces.getOrDefault(gameId, new HashMap<>());
         if (piecesInGame.containsKey(position)) {
             return Optional.of(piecesInGame.get(position));
@@ -44,7 +44,7 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public void updatePosition(long gameId, Position start, Position target) {
+    public void updatePosition(Long gameId, Position start, Position target) {
         Map<Position, Piece> piecesInGame = pieces.getOrDefault(gameId, new HashMap<>());
         Piece piece = piecesInGame.get(start);
         piecesInGame.remove(start);
@@ -52,7 +52,7 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public void delete(long gameId, Position position) {
+    public void delete(Long gameId, Position position) {
         pieces.get(gameId).remove(position);
     }
 }

@@ -42,4 +42,9 @@ public class PieceDao {
         String sql = "DELETE FROM piece WHERE game_id = ? and position = ?";
         jdbcTemplate.update(sql, gameId, position);
     }
+
+    public void updatePiecePosition(int gameId, String from, String to) {
+        String sql = "UPDATE piece SET position = ? WHERE position = ? AND game_id = ?";
+        jdbcTemplate.update(sql, to, from, gameId);
+    }
 }

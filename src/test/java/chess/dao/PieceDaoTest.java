@@ -79,4 +79,16 @@ public class PieceDaoTest {
         List<BoardElementDto> pieces = pieceDao.findAllPieceById(gameId);
         assertThat(pieces.isEmpty()).isTrue();
     }
+
+    @Test
+    void updatePiecePositionTest() {
+        int gameId = 0;
+        String from = "a2";;
+        String to = "a3";
+        BoardElementDto boardElementDto = new BoardElementDto("p", "WHITE", from);
+        pieceDao.savePiece(gameId, boardElementDto);
+        pieceDao.updatePiecePosition(gameId, from, to);
+        BoardElementDto piece = pieceDao.findAllPieceById(gameId).get(0);
+        assertThat(piece.getPosition()).isEqualTo(to);
+    }
 }

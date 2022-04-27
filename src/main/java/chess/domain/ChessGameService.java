@@ -3,6 +3,7 @@ package chess.domain;
 import chess.dao.BoardDao;
 import chess.dao.GameStatusDao;
 import chess.dao.TurnDao;
+import chess.dao.RoomDao;
 import chess.domain.board.Board;
 import chess.domain.board.Result;
 import chess.domain.board.strategy.BoardGenerationStrategy;
@@ -15,6 +16,7 @@ import chess.domain.piece.Team;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.GameStatusDto;
+import chess.dto.RoomResponseDto;
 import chess.dto.ScoreDto;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +32,22 @@ public class ChessGameService {
     private final BoardDao boardDao;
     private final TurnDao turnDao;
     private final GameStatusDao gameStatusDao;
+    private final RoomDao roomDao;
 
-    public ChessGameService(BoardDao boardDao, TurnDao turnDao, GameStatusDao gameStatusDao) {
+    public ChessGameService(BoardDao boardDao, TurnDao turnDao, GameStatusDao gameStatusDao,
+                            RoomDao roomDao) {
         this.boardDao = boardDao;
         this.turnDao = turnDao;
         this.gameStatusDao = gameStatusDao;
+        this.roomDao = roomDao;
+    }
+
+    public void createRoom(String name, String pw) {
+        roomDao.create(name, pw);
+    }
+
+    public List<RoomResponseDto> getRooms() {
+        return roomDao.getRooms();
     }
 
     public GameStatusDto startChessGame(BoardGenerationStrategy strategy) {

@@ -23,5 +23,15 @@ create table turn
     primary key (team)
 );
 
+DROP TABLE room IF EXISTS;
+
+create table room
+(
+    id int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name varchar(20) not null,
+    pw varchar(20) not null ,
+    primary key (id)
+);
+
 
 

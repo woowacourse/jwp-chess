@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>수달이 만든 체스게임</title>
+    <link rel="stylesheet" href="/src/index.css"/>
+    <script type="text/javascript" src="/src/enter.js" defer></script>
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="title">
+    <img src="/images/title.png" class="img"></div>
+
+<div class="list">
+        <h1> 게임 진행중인 방 목록 </h1>
+        <div class ="list_line">
+            <table id ="start">
+                <tr>
+                    <td class ="title_table"> 제목</td>
+                    <td class ="delete_table"> 제거 </td>
+                </tr>
+             </table>
+       </div>
+</div>
+
+<div class="menu">
+    <div onclick="openPop()"><img src="/images/create.png" class="img"></div>
+</div>
+
+<div class="popup_layer" id="popup_layer" style="display: none;">
+  <div class="popup_box">
+      <div style="height: 10px; width: 375px; float: top;">
+      </div>
+      <!--팝업 컨텐츠 영역-->
+      <div class="popup_cont">
+          <h1>방 만들기 </h1>
+           <form action="/" method="POST">
+              <p> 방 제목  : <input type="text" name="name" required id = "name" /></p>
+              <p> 비밀번호 : <input type="password" name="pw"  required id = "pw" /></p>
+            <button type="submit" style = "width: 100%;">등록</button>
+            </form>
+      </div>
+      <!--팝업 버튼 영역-->
+
+      <div class="popup_btn" style="float: bottom; margin-top: 100px; ">
+             <form action="/" method="GET">
+          <button type="submit" style = "width:100%">나가기</button>
+      </div>
+  </div>
+</div>

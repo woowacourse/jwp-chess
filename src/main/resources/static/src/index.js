@@ -1,6 +1,8 @@
+
 const start = document.querySelector("#start")
 const score = document.querySelector("#status")
 const end = document.querySelector("#end")
+
 
 let from = ""
 let to = ""
@@ -135,3 +137,4 @@ async function endGame() {
         window.location.replace("/");
     }
 }
+

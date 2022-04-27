@@ -8,6 +8,7 @@ import chess.domain.state.Turn;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -47,6 +48,25 @@ class ChessGameDaoTest {
         chessGameDao.createChessGame(chessGameRoom);
         List<ChessGameRoom> chessGameRooms = chessGameDao.findAllChessGames();
         assertThat(chessGameRooms).hasSize(1);
+    }
+
+    @Nested
+    @DisplayName("체스 게임 존재 여부 반환")
+    class IsExistGameTitle {
+
+        @Test
+        @DisplayName("true")
+        void existTitle() {
+            chessGameDao.createChessGame(chessGameRoom);
+
+            assertThat(chessGameDao.isExistGameTitle(chessGameRoom.getTitle())).isTrue();
+        }
+
+        @Test
+        @DisplayName("false")
+        void notExistTitle() {
+            assertThat(chessGameDao.isExistGameTitle(chessGameRoom.getTitle())).isFalse();
+        }
     }
 
     @Test

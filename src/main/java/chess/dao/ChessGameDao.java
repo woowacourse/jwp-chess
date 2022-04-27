@@ -57,6 +57,12 @@ public class ChessGameDao {
         return jdbcTemplate.queryForObject(sql, chessGameRoomRowMapper, id);
     }
 
+    public boolean isExistGameTitle(String title) {
+        String sql = "select exists(select * from chess_game where title = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, title);
+    }
+
     public int changeChessGameTurn(long id, Turn turn) {
         String sql = "update chess_game set turn = ? where id = ?";
 

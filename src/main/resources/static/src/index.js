@@ -37,8 +37,8 @@ const JsonSender = {
                 if (data.isGameOver === true) {
                     alert(data.winner + "가 승리하였습니다!!!");
                     window.location.replace("end");
-                } else if (data.isMovable === false) {
-                    alert('이동할 수 없습니다.');
+                } else if (data.errorMessage) {
+                    alert(data.errorMessage);
                 } else {
                     window.location.reload();
                 }

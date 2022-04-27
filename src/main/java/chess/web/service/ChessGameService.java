@@ -42,18 +42,14 @@ public class ChessGameService {
         ChessGame chessGame = getChessGame();
         String turn = chessGame.getTurn();
 
-        try {
-            chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
-            if (isChessGameEnd(chessGame)) {
-                return MoveResultDto.of(true, true, turn);
-            }
-            removeAll();
-            saveAll(chessGame);
-        } catch (IllegalArgumentException e) {
-            return MoveResultDto.of(false, false, null);
+        chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
+        if (isChessGameEnd(chessGame)) {
+            return MoveResultDto.of(true, turn);
         }
+        removeAll();
+        saveAll(chessGame);
 
-        return MoveResultDto.of(true, false, null);
+        return MoveResultDto.of(false, null);
     }
 
     public PlayResultDto play() {

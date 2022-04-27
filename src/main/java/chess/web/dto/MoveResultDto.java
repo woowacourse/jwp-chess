@@ -2,22 +2,16 @@ package chess.web.dto;
 
 public class MoveResultDto {
 
-    private boolean isMovable;
     private boolean isGameOver;
     private String winner;
 
-    private MoveResultDto(boolean isMovable, boolean isGameOver, String winner) {
-        this.isMovable = isMovable;
+    private MoveResultDto(boolean isGameOver, String winner) {
         this.isGameOver = isGameOver;
         this.winner = winner;
     }
 
-    public static MoveResultDto of(boolean isMovable, boolean isGameOver, String winner) {
-        return new MoveResultDto(isMovable, isGameOver, winner);
-    }
-
-    public boolean getIsMovable() {
-        return isMovable;
+    public static MoveResultDto of(boolean isGameOver, String winner) {
+        return new MoveResultDto(isGameOver, winner);
     }
 
     public boolean getIsGameOver() {

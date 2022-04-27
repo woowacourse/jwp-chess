@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.domain.event.MoveEvent;
 import chess.dto.CreateGameRequest;
 import chess.dto.CreateGameResponse;
 import chess.dto.DeleteGameRequest;
@@ -41,9 +40,8 @@ public class GameController {
 
     @PostMapping("/move")
     public ModelAndView playGame(@RequestBody MoveRouteDto moveRoute) {
-        int id = moveRoute.getId();
-        chessService.playGame(id, new MoveEvent(moveRoute.toMoveRoute()));
-        GameDto gameDto = chessService.findGame(id);
+        chessService.playGame(moveRoute);
+        GameDto gameDto = chessService.findGame(moveRoute.getId());
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
     }
 

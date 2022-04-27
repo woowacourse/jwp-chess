@@ -4,6 +4,7 @@ import chess.dao.EventDao;
 import chess.dao.GameDao;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
+import chess.domain.event.MoveEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
 import chess.dto.CreateGameRequest;
@@ -13,6 +14,7 @@ import chess.dto.GameCountDto;
 import chess.dto.GameDto;
 import chess.dto.GameInfoDto;
 import chess.dto.GameResultDto;
+import chess.dto.MoveRouteDto;
 import chess.dto.SearchResultDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -57,7 +59,10 @@ public class ChessService {
     }
 
     @Transactional
-    public GameDto playGame(int gameId, Event moveEvent) {
+    public GameDto playGame(MoveRouteDto moveRoute) {
+        int gameId = moveRoute.getId();
+        Event moveEvent = new MoveEvent(moveRoute.toMoveRoute());
+
         Game game = currentSnapShotOf(gameId).play(moveEvent);
 
         eventDao.save(gameId, moveEvent);

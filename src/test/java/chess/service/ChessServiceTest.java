@@ -11,6 +11,7 @@ import chess.dto.CreateGameResponse;
 import chess.dto.GameCountDto;
 import chess.dto.GameDto;
 import chess.dto.GameResultDto;
+import chess.dto.MoveRouteDto;
 import chess.dto.SearchResultDto;
 import chess.service.fixture.EventDaoStub;
 import chess.service.fixture.GameDaoStub;
@@ -90,7 +91,8 @@ class ChessServiceTest {
 
     @Test
     void playGame_메서드는_이동_명령에_따라_이동시킨_후_그_결과를_반환한다() {
-        GameDto actual = service.playGame(1, new MoveEvent("a7 a5"));
+        MoveRouteDto moveRouteDto = new MoveRouteDto(1, "a7", "a5");
+        GameDto actual = service.playGame(moveRouteDto);
 
         GameDto expected = new NewGame().play(new InitEvent())
                 .play(new MoveEvent("e2 e4"))
@@ -104,7 +106,8 @@ class ChessServiceTest {
 
     @Test
     void playGame_메서드는_이동_명령에_따라_이동시키며_게임이_종료된_경우_OVER로_상태를_변경한다() {
-        service.playGame(2, new MoveEvent("b5 e8"));
+        MoveRouteDto moveRouteDto = new MoveRouteDto(2, "b5", "e8");
+        service.playGame(moveRouteDto);
 
         GameCountDto actual = service.countGames();
         GameCountDto expected = new GameCountDto(3, 2 - 1);

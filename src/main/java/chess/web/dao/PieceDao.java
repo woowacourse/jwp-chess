@@ -5,11 +5,11 @@ import java.util.List;
 
 public interface PieceDao {
 
-    void save(PieceDto pieceDto);
+    void save(int gameId, PieceDto pieceDto);
 
-    void deleteAll();
+    void updateByGameId(int gameId, PieceDto pieceDto);
 
-    void update(PieceDto pieceDto);
+    List<PieceDto> findAllByGameId(int gameId);
 
-    List<PieceDto> findAll();
+    void deleteAllByGameId(int gameId);
 }

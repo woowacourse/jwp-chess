@@ -9,9 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PieceDaoJdbcImpl implements PieceDao {
 
-    private final JdbcTemplate jdbcTemplate;
-
-    private final RowMapper<PieceDto> pieceDtoRowMapper = (resultSet, rowNum) -> {
+    private static final RowMapper<PieceDto> pieceDtoRowMapper = (resultSet, rowNum) -> {
         return new PieceDto(
                 resultSet.getString("piece_type"),
                 resultSet.getString("position"),
@@ -19,32 +17,34 @@ public class PieceDaoJdbcImpl implements PieceDao {
         );
     };
 
+    private final JdbcTemplate jdbcTemplate;
+
     public PieceDaoJdbcImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void save(PieceDto pieceDto) {
-        final String sql = "insert into piece (piece_type, position, color) values (?, ?, ?)";
-        jdbcTemplate.update(sql, pieceDto.getPieceType(), pieceDto.getPosition(), pieceDto.getColor());
+    public void save(int gameId, PieceDto pieceDto) {
+        final String sql = "insert into piece (game_id, piece_type, position, color) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, gameId, pieceDto.getPieceType(), pieceDto.getPosition(), pieceDto.getColor());
     }
 
     @Override
-    public void deleteAll() {
-        final String sql = "delete from piece";
-        jdbcTemplate.update(sql);
-    }
-
-    @Override
-    public void update(PieceDto pieceDto) {
-        final String sql = "update piece set piece_type=?, position=?, color=? where position=?";
+    public void updateByGameId(int gameId, PieceDto pieceDto) {
+        final String sql = "update piece set piece_type = ?, position = ?, color = ? where game_id = ? and position = ?";
         jdbcTemplate.update(sql,
-                pieceDto.getPieceType(), pieceDto.getPosition(), pieceDto.getColor(), pieceDto.getPosition());
+                pieceDto.getPieceType(), pieceDto.getPosition(), pieceDto.getColor(), gameId, pieceDto.getPosition());
     }
 
     @Override
-    public List<PieceDto> findAll() {
-        final String sql = "select * from piece";
-        return jdbcTemplate.query(sql, pieceDtoRowMapper);
+    public List<PieceDto> findAllByGameId(int gameId) {
+        final String sql = "select piece_type, position, color from piece where game_id = ?";
+        return jdbcTemplate.query(sql, pieceDtoRowMapper, gameId);
+    }
+
+    @Override
+    public void deleteAllByGameId(int gameId) {
+        final String sql = "delete from piece where game_id = ?";
+        jdbcTemplate.update(sql, gameId);
     }
 }

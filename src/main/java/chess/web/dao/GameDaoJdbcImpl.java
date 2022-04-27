@@ -2,7 +2,6 @@ package chess.web.dao;
 
 import chess.domain.state.StateType;
 import chess.web.dto.GameResponseDto;
-import chess.web.dto.CreateGameRequestDto;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,14 +33,14 @@ public class GameDaoJdbcImpl implements GameDao {
     }
 
     @Override
-    public int save(CreateGameRequestDto gameRequestDto, StateType stateType) {
+    public int save(String title, String password, StateType stateType) {
         final String sql = "insert into game (title, password, state) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, gameRequestDto.getTitle());
-            ps.setString(2, gameRequestDto.getPassword());
+            ps.setString(1, title);
+            ps.setString(2, password);
             ps.setString(3, stateType.getNotation());
             return ps;
         }, keyHolder);

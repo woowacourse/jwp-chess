@@ -2,12 +2,11 @@ package chess.web.dao;
 
 import chess.domain.state.StateType;
 import chess.web.dto.GameResponseDto;
-import chess.web.dto.CreateGameRequestDto;
 import java.util.List;
 
 public interface GameDao {
 
-    int save(CreateGameRequestDto createGameRequestDto, StateType stateType);
+    int save(String title, String password, StateType stateType);
 
     void updateStateById(int id, StateType stateType);
 

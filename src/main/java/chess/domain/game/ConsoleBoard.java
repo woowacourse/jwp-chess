@@ -6,7 +6,6 @@ import chess.domain.position.Column;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import chess.machine.Result;
 
 import java.util.*;
 
@@ -26,13 +25,6 @@ public final class ConsoleBoard {
             return Optional.of(pieces.get(position));
         }
         return Optional.empty();
-    }
-
-    public void move(final Position sourcePosition, final Position targetPosition) {
-        final Piece piece = findPiece(sourcePosition);
-        validateMovement(sourcePosition, targetPosition);
-        pieces.remove(sourcePosition);
-        pieces.put(targetPosition, piece);
     }
 
     private Piece findPiece(final Position sourcePosition) {
@@ -135,40 +127,5 @@ public final class ConsoleBoard {
                 .map(row -> piece(Position.valueOf(column, row)))
                 .filter(piece -> piece.isPresent() && piece.get().isPawn() && piece.get().isSameColor(color))
                 .count();
-    }
-
-    public Map<Result, Color> calculateFinalWinner() {
-        if (isKingAlive(Color.WHITE) && isKingAlive(Color.BLACK)) {
-            return calculateScoreWinner();
-        }
-        return calculateWinnerWithKing();
-    }
-
-    public Map<Result, Color> calculateScoreWinner() {
-        Map<Result, Color> gameResult = new HashMap<>();
-        if (calculateScore(Color.WHITE) > calculateScore(Color.BLACK)) {
-            gameResult.put(Result.WIN, Color.WHITE);
-        }
-        if (calculateScore(Color.WHITE) < calculateScore(Color.BLACK)) {
-            gameResult.put(Result.WIN, Color.BLACK);
-        }
-        return gameResult;
-    }
-
-    private Map<Result, Color> calculateWinnerWithKing() {
-        Map<Result, Color> gameResult = new HashMap<>();
-        if (isKingAlive(Color.WHITE)) {
-            gameResult.put(Result.WIN, Color.WHITE);
-        }
-        if (isKingAlive(Color.BLACK)) {
-            gameResult.put(Result.WIN, Color.BLACK);
-        }
-        return gameResult;
-    }
-
-    private boolean isKingAlive(final Color color) {
-        return pieces.values()
-                .stream()
-                .anyMatch(piece -> piece.isKing() && piece.isSameColor(color));
     }
 }

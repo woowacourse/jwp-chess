@@ -1,9 +1,5 @@
 package chess.dto;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class RequestDto {
 
     private final String title;

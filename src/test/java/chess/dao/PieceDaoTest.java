@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import chess.dto.BoardElementDto;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,6 @@ public class PieceDaoTest {
         gameDao = new GameDao(jdbcTemplate);
         pieceDao = new PieceDao(jdbcTemplate);
 
-        jdbcTemplate.execute("drop table piece if exists");
-        jdbcTemplate.execute("drop table game if exists");
-
         jdbcTemplate.execute("create table game("
                 + "game_id int primary key not null,"
                 + " current_turn varchar(10) default'WHITE')");
@@ -39,6 +37,12 @@ public class PieceDaoTest {
                 + "piece_color varchar(10) not null,"
                 + "position varchar(2) not null,"
                 + "foreign key (game_id) references game(game_id))");
+    }
+
+    @AfterEach
+    void clean() {
+        jdbcTemplate.execute("drop table piece if exists");
+        jdbcTemplate.execute("drop table game if exists");
     }
 
     @Test

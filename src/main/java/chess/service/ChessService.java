@@ -1,6 +1,7 @@
 package chess.service;
 
-import chess.dao.ChessDao;
+import chess.dao.GameDao;
+import chess.dao.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.board.Board;
 import chess.domain.board.BoardInitializer;
@@ -18,40 +19,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static chess.dao.ChessDao.GAME_ID;
-
 @Service
 public final class ChessService {
+    private static final int GAME_ID = 0;
 
-    private final ChessDao chessDao;
+    private final GameDao gameDao;
+    private final PieceDao pieceDao;
     private ChessGame chessGame;
 
-    public ChessService(ChessDao chessDao) {
-        this.chessDao = chessDao;
+    public ChessService(GameDao gameDao, PieceDao pieceDao) {
+        this.gameDao = gameDao;
+        this.pieceDao = pieceDao;
     }
 
     public ChessGameDto newGame() {
         deleteOldData(GAME_ID);
         initNewChessGame(GAME_ID);
         chessGame = new ChessGame(new Running(getColorFromStorage(GAME_ID), getBoardFromStorage(GAME_ID)));
-        return new ChessGameDto(chessDao.findBoard(GAME_ID), chessGame.status());
+        return new ChessGameDto(pieceDao.findAllPieceById(GAME_ID), chessGame.status());
     }
 
     private void deleteOldData(int gameId) {
-        chessDao.deleteAllPiece(gameId);
-        chessDao.deleteGame(gameId);
+        pieceDao.deleteAllPieceById(gameId);
+        gameDao.deleteGame(gameId);
     }
 
     private void initNewChessGame(int gameId) {
-        chessDao.initGame(GAME_ID);
-        chessDao.updateTurn(gameId, "WHITE");
+        gameDao.insertGame(gameId, "WHITE");
         saveAllPieceToStorage(gameId, new BoardInitializer().init());
     }
 
     private void saveAllPieceToStorage(int gameId, Map<Position, Piece> boardElements) {
         List<BoardElementDto> boardElementDtos = toBoardDtos(boardElements);
         for (BoardElementDto boardElementDto : boardElementDtos) {
-            chessDao.savePiece(gameId, boardElementDto);
+            pieceDao.savePiece(gameId, boardElementDto);
         }
     }
 
@@ -77,25 +78,25 @@ public final class ChessService {
         chessGame.move(Position.from(from), Position.from(to));
         final var nextColor = getColorFromStorage(GAME_ID).next();
         updateBoard(from, to, GAME_ID, nextColor.name());
-        return new ChessGameDto(chessDao.findBoard(GAME_ID), chessGame.status());
+        return new ChessGameDto(pieceDao.findAllPieceById(GAME_ID), chessGame.status());
     }
 
-    private void updateBoard(String from, String to, int gameId, String color) {
-        chessDao.deletePiece(to);
-        chessDao.updatePiece(gameId, from, to);
-        chessDao.updateTurn(gameId, color);
+    private void updateBoard(String from, String to, int gameId, String turn) {
+        pieceDao.deletePieceByIdAndPosition(gameId, to);
+        pieceDao.updatePiecePosition(gameId, from, to);
+        gameDao.updateTurn(gameId, turn);
     }
 
     public ChessGameDto loadGame() {
         chessGame = new ChessGame(StateFactory.of(getColorFromStorage(GAME_ID), getBoardFromStorage(GAME_ID)));
-        return new ChessGameDto(chessDao.findBoard(GAME_ID), chessGame.status());
+        return new ChessGameDto(pieceDao.findAllPieceById(GAME_ID), chessGame.status());
     }
 
     private Color getColorFromStorage(int gameId) {
-        return Color.from(chessDao.findCurrentColor(gameId));
+        return Color.from(gameDao.findTurnById(gameId));
     }
 
     private Board getBoardFromStorage(int gameId) {
-        return convertToBoard(chessDao.findBoard(gameId));
+        return convertToBoard(pieceDao.findAllPieceById(gameId));
     }
 }

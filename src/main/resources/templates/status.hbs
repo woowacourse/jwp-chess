@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>체스 게임 종료</title>
-    <link rel="stylesheet" href="src/board.css"/>
+    <link rel="stylesheet" href="/src/board.css"/>
 </head>
 <body>
     <div class="chess">
-        <img src ="images/chessBoard.png" id="chessBoard"/>
+        <img src ="/images/chessBoard.png" id="chessBoard"/>
         <div class="pieces">
             {{#this.squares}}
-            <img src="images/{{this.symbol}}.png" id="{{this.position}}"/>
+            <img src="/images/{{this.symbol}}.png" id="{{this.position}}"/>
             {{/this.squares}}
         </div>
+        흰색 플레이어 점수: {{this.whiteScore}}
+        <br />
+        검은색 플레이어 점수: {{this.blackScore}}
+        <br />
         <form action="/" method="get">
-            흰색 플레이어 점수: {{this.whiteScore}}
-            <br />
-            검은색 플레이어 점수: {{this.blackScore}}
-            <br />
                 <input type="submit" value="처음으로"/>
         </form>
     </div>

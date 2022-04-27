@@ -11,7 +11,7 @@ public class ExceptionsController {
     @ExceptionHandler(IllegalArgumentException.class)
     public String handle(RedirectAttributes redirectAttributes, IllegalArgumentException e) {
         redirectAttributes.addAttribute("message", e.getMessage());
-        return "redirect:game";
+        return "redirect:chess";
     }
 
     @ExceptionHandler(RuntimeException.class)

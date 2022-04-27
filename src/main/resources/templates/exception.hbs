@@ -7,7 +7,13 @@
 </head>
 <body>
     <h1>{{this.message}}</h1>
-    <form action="/game" method="get">
+    <form action="/" method="get">
+        <input type="submit" value="처음으로"/>
+    </form>
+    <form action="/chess/start" method="post">
+        <input type="submit" value="새로 하기">
+    </form>
+    <form action="/chess" method="get">
         <input type="submit" value="이어 하기" name="message">
     </form>
 </body>

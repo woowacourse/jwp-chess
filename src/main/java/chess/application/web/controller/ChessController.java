@@ -27,14 +27,14 @@ public class ChessController {
         return "index";
     }
 
-    @PostMapping("/start")
+    @PostMapping("/chess/start")
     public String startChessGame(RedirectAttributes redirectAttributes) {
         stateService.initCommandRecord();
         redirectAttributes.addAttribute("message", "게임을 시작합니다.");
-        return "redirect:game";
+        return "redirect:/chess";
     }
 
-    @GetMapping(path = "/game")
+    @GetMapping(path = "/chess")
     public ModelAndView printCurrentBoard(@RequestParam String message) {
         State state = stateService.currentState();
         StateDto stateDto = StateDto.of(state);
@@ -46,16 +46,16 @@ public class ChessController {
         return modelAndView;
     }
 
-    @PostMapping(path = "/game")
+    @PostMapping(path = "/chess")
     public String movePiece(RedirectAttributes redirectAttributes, @RequestParam("command") String command) {
         stateService.currentState()
                 .proceed(command);
         stateService.insertCommand(command);
         redirectAttributes.addAttribute("message", command);
-        return "redirect:game";
+        return "redirect:chess";
     }
 
-    @GetMapping(path = "/result")
+    @GetMapping(path = "/chess/result")
     public ModelAndView printResult() {
         ModelAndView modelAndView = new ModelAndView("status");
         StatusDto statusDto = StatusDto.of(stateService.currentState().proceed("status"));
@@ -67,7 +67,7 @@ public class ChessController {
 
     private String getViewName(State state) {
         if (state.isRunning()) {
-            return "game";
+            return "chess";
         }
         return "finished";
     }

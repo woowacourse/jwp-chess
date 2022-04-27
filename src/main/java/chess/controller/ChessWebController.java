@@ -23,7 +23,7 @@ public class ChessWebController {
     public String room(@PathVariable final int id) {
         boolean roomExist = jdbcRoomDao.existsById(id);
         if (!roomExist) {
-            return "redirect:/";
+            return "error/404";
         }
 
         return "board";

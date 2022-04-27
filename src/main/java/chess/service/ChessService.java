@@ -17,7 +17,7 @@ public class ChessService {
     private final ChessGameDao chessGameDao;
     private final PieceDao pieceDao;
 
-    public ChessService(final ChessGameDao chessGameDao, final PieceDao pieceDao) {
+    public ChessService(ChessGameDao chessGameDao, PieceDao pieceDao) {
         this.chessGameDao = chessGameDao;
         this.pieceDao = pieceDao;
     }

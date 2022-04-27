@@ -13,7 +13,7 @@ import chess.service.ChessService;
 public class ResultController {
     private final ChessService chessService;
 
-    public ResultController(final ChessService chessService) {
+    public ResultController(ChessService chessService) {
         this.chessService = chessService;
     }
 

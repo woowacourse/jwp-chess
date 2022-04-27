@@ -23,7 +23,7 @@ import chess.service.ChessService;
 public class InGameController {
     private final ChessService chessService;
 
-    public InGameController(final ChessService chessService) {
+    public InGameController(ChessService chessService) {
         this.chessService = chessService;
     }
 

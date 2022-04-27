@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import chess.dao.dto.RoomSaveDto;
 import chess.dao.dto.RoomUpdateDto;
 import chess.entity.RoomEntity;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,28 @@ class JdbcRoomDaoTest {
         final boolean result = roomDao.findById(26).isEmpty();
 
         assertThat(result).isTrue();
+    }
+
+    @DisplayName("room 존재 여부를 확인한다.")
+    @Test
+    void room_존재_여부를_확인한다() {
+        int id = roomDao.save(ROOM_SAVE_DTO);
+
+        boolean result = roomDao.existsById(id);
+
+        assertThat(result).isTrue();
+    }
+
+    @DisplayName("모든 room을 조회한다.")
+    @Test
+    void room_모두_조회한다() {
+        roomDao.save(ROOM_SAVE_DTO);
+        roomDao.save(ROOM_SAVE_DTO);
+        roomDao.save(ROOM_SAVE_DTO);
+
+        List<RoomEntity> rooms = roomDao.findAll();
+
+        assertThat(rooms.size()).isEqualTo(3);
     }
 
     @DisplayName("room을 수정 한다.")

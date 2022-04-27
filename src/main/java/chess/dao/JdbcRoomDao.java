@@ -4,6 +4,7 @@ import chess.dao.dto.RoomSaveDto;
 import chess.dao.dto.RoomUpdateDto;
 import chess.entity.RoomEntity;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -55,6 +56,11 @@ public class JdbcRoomDao {
     public boolean existsById(final int id) {
         final String sql = "SELECT COUNT(*) from room where id = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, id) == 1;
+    }
+
+    public List<RoomEntity> findAll() {
+        final String sql = "SELECT * FROM room";
+        return jdbcTemplate.query(sql, createRoomRowMapper());
     }
 
     private RowMapper<RoomEntity> createRoomRowMapper() {

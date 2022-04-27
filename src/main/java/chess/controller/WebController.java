@@ -19,9 +19,14 @@ public class WebController {
     }
 
     @GetMapping("/")
+    public String showChessRoomListPage() {
+        return "roomlist";
+    }
+
+    /*@GetMapping("/")
     public String showFirstPage() {
         return "index";
-    }
+    }*/
 
     @GetMapping("/start")
     @ResponseBody

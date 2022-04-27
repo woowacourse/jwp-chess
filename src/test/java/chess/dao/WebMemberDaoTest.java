@@ -32,7 +32,7 @@ class WebMemberDaoTest {
 
     @BeforeEach
     void setup() {
-        final ChessBoard board = boardDao.save(new ChessBoard("에덴파이팅~!"));
+        final ChessBoard board = boardDao.save(new ChessBoard("에덴파이팅~!", "1234"));
         this.boardId = board.getId();
         dao.saveAll(List.of(new Member("쿼리치"), new Member("코린")), boardId);
     }
@@ -59,7 +59,6 @@ class WebMemberDaoTest {
                 () -> assertThat(members.get(0).getName()).isEqualTo("쿼리치"),
                 () -> assertThat(members.get(1).getName()).isEqualTo("코린")
         );
-
     }
 
     @AfterEach

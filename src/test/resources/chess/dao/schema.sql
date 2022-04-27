@@ -7,7 +7,8 @@ create table board
 (
     id         int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     room_title varchar(10)                 not null,
-    turn       varchar(10) DEFAULT 'WHITE' not null
+    turn       varchar(10) DEFAULT 'WHITE' not null,
+    password   varchar(45)                 not null
 );
 
 create table position

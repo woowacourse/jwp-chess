@@ -47,7 +47,7 @@ public class ChessController {
     @PostMapping("/room")
     public String createRoom(@ModelAttribute RequestDto requestDto) {
         final ChessBoard board = new ChessBoard(requestDto.getTitle(), Color.WHITE,
-                List.of(new Member(requestDto.getFirstMemberName()), new Member(requestDto.getSecondMemberName())));
+                List.of(new Member(requestDto.getFirstMemberName()), new Member(requestDto.getSecondMemberName())), requestDto.getPassword());
         int roomId = gameService.saveBoard(board, new BoardInitializer()).getId();
         return "redirect:/room/" + roomId;
     }

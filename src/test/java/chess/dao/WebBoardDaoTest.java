@@ -30,19 +30,19 @@ class WebBoardDaoTest {
 
     @BeforeEach
     void setup() {
-        final ChessBoard board = dao.save(new ChessBoard("개초보만"));
+        final ChessBoard board = dao.save(new ChessBoard("개초보만", "1234"));
         this.boardId = board.getId();
     }
 
     @Test
     void saveTest() {
-        final ChessBoard board = dao.save(new ChessBoard("개초보만"));
+        final ChessBoard board = dao.save(new ChessBoard("개초보만", "1234"));
         assertThat(board.getRoomTitle()).isEqualTo("개초보만");
     }
 
     @Test
     void getByIdTest() {
-        final ChessBoard board = dao.save(new ChessBoard("개초보만"));
+        final ChessBoard board = dao.save(new ChessBoard("개초보만", "1234"));
         final ChessBoard foundBoard = dao.getById(board.getId());
         assertAll(
                 () -> assertThat(foundBoard.getRoomTitle()).isEqualTo("개초보만"),
@@ -52,7 +52,7 @@ class WebBoardDaoTest {
 
     @Test
     void deleteBoard() {
-        final ChessBoard board = dao.save(new ChessBoard("aaa"));
+        final ChessBoard board = dao.save(new ChessBoard("aaa", "1234"));
         int affectedRow = dao.deleteById(board.getId());
         assertThat(affectedRow).isEqualTo(1);
     }

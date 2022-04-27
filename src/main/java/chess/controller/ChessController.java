@@ -28,11 +28,19 @@ public class ChessController {
         return "game";
     }
 
+    @GetMapping("/new")
+    @ResponseBody
+    public Map<String, String> startNewGame(@RequestBody RoomDto roomDto) {
+        WebBoardDto board = chessService.start(roomDto);
+        return board.getWebBoard();
+    }
+
     @GetMapping("/start")
     @ResponseBody
     public Map<String, String> start() {
-        WebBoardDto board = chessService.start();
-        return board.getWebBoard();
+//        WebBoardDto board = chessService.start();
+//        return board.getWebBoard();
+        return null;
     }
 
     @PostMapping("/move")

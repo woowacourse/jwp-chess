@@ -32,15 +32,7 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public WebBoardDto start() {
-        Board board = initBoard();
-        initTurn();
-
-        return WebBoardDto.from(board);
-    }
-
-    //TODO 후에 이름 start() 로 변경
-    public WebBoardDto startNewGame(RoomDto roomDto) {
+    public WebBoardDto start(RoomDto roomDto) {
         long gameId = makeRoom(roomDto);
         makeBoard(gameId);
 

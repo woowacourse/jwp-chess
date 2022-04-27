@@ -5,10 +5,11 @@ import chess.dao.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.Command;
 import chess.domain.piece.Team;
+import chess.domain.state.State;
 import chess.dto.ChessGameDto;
+import chess.exception.IllegalDeleteException;
 import java.util.List;
 import java.util.Map;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -82,11 +83,18 @@ public class ChessService {
         return chessGameDao.findAllGameName();
     }
 
-    public Long findByGameNameAndPassword(String gameName, String password) throws EmptyResultDataAccessException {
-        return chessGameDao.findByGameNameAndPassword(gameName,password);
+    public Long findIdByGameNameAndPassword(String gameName, String password) {
+        return chessGameDao.findIdByGameNameAndPassword(gameName,password);
     }
 
-    public int deleteByGameNameAndPassword(String gameName, String password) {
+    public int deleteByGameNameAndPassword(State state, String gameName, String password) {
+        if (!state.isEnd()) {
+            throw new IllegalDeleteException();
+        }
         return chessGameDao.deleteByGameNameAndPassword(gameName, password);
+    }
+
+    public State findStateByGameNameAndPassword(String gameName, String password) {
+        return chessGameDao.findStateByGameNameAndPassword(gameName, password);
     }
 }

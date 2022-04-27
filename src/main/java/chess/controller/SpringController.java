@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.domain.Command;
 import chess.domain.piece.Team;
+import chess.domain.state.State;
 import chess.service.ChessService;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class SpringController {
 
     @GetMapping("/load")
     public String restart(@RequestParam("game_name") String gameName, @RequestParam("password") String password) {
-        Long id = chessService.findByGameNameAndPassword(gameName, password);
+        Long id = chessService.findIdByGameNameAndPassword(gameName, password);
 
         return "redirect:/game/" + id;
     }
@@ -99,7 +100,9 @@ public class SpringController {
     @PostMapping("/delete")
     public String delete(@RequestParam(value = "game_name", required = false) String gameName,
                          @RequestParam(value = "password", required = false) String password) {
-        chessService.deleteByGameNameAndPassword(gameName, password);
+        State state = chessService.findStateByGameNameAndPassword(gameName, password);
+        chessService.deleteByGameNameAndPassword(state, gameName, password);
+
         return "redirect:/";
     }
 

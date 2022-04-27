@@ -6,6 +6,7 @@ import chess.domain.piece.Piece;
 import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
+import chess.domain.state.State;
 import chess.dto.ChessGameDto;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -136,7 +136,7 @@ public class ChessGameDao {
         jdbcTemplate.update(sql, gameName);
     }
 
-    public Long findByGameNameAndPassword(String gameName, String password) throws EmptyResultDataAccessException {
+    public Long findIdByGameNameAndPassword(String gameName, String password) {
         String sql = "select id from chessgame where game_name = ? and password = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, gameName, password);
     }
@@ -144,5 +144,14 @@ public class ChessGameDao {
     public int deleteByGameNameAndPassword(String gameName, String password) {
         String sql = "delete from chessgame where game_name =? and password = ?";
         return jdbcTemplate.update(sql, gameName, password);
+    }
+
+    public State findStateByGameNameAndPassword(String gameName, String password) {
+        String sql = "select CHESSGAME.turn from CHESSGAME\n"
+                + "where CHESSGAME.game_name = ? AND CHESSGAME.password = ?;";
+
+        String turn = jdbcTemplate.queryForObject(sql, String.class, gameName, password);
+
+        return State.getState(turn);
     }
 }

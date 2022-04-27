@@ -1,6 +1,5 @@
 package chess.service;
 
-import chess.domain.board.ChessBoardGenerator;
 import chess.domain.game.dto.MoveDTO;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import chess.exception.InvalidDBFailException;
 import chess.exception.InvalidMoveException;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +62,7 @@ public final class ChessService {
 
     private void validateCurrentTurn(final ChessGame chessGame, final Team team) {
         if (!chessGame.getChessBoard().getCurrentTurn().equals(team)) {
-            throw new InvalidMoveException("플레이어의 턴이 아닙니다");
+            throw new InvalidMoveException("[ERROR] 플레이어의 턴이 아닙니다");
         }
     }
 
@@ -70,10 +70,10 @@ public final class ChessService {
         chessGame.execute(movement);
         movement.setGameId(chessGame.getId());
         movement.setTeam(team);
-        int insertedRowCount = movementDAO.addMoveCommand(movement);
+        int successUpdate = movementDAO.addMoveCommand(movement);
 
-        if (insertedRowCount == 0) {
-            throw new InvalidMoveException("플레이어의 턴이 아닙니다");
+        if (successUpdate == 0) {
+            throw new InvalidDBFailException("[ERROR] DB UPDATE를 실패하였습니다.");
         }
     }
 
@@ -101,7 +101,13 @@ public final class ChessService {
         return model;
     }
 
-    public void deleteGameByIdAndPassword(String gameId, String password) {
-        chessGameDAO.deleteGameByIdAndPassword(gameId, password);
+    public int deleteGameByIdAndPassword(String gameId, String password) {
+        int successDelete = chessGameDAO.deleteGameByIdAndPassword(gameId, password);
+
+        if (successDelete == 0) {
+            throw new InvalidDBFailException("[ERROR] DELETE를 실패하였습니다.");
+        }
+
+        return successDelete;
     }
 }

@@ -4,6 +4,7 @@ import chess.domain.game.dto.BoardDTO;
 import chess.domain.game.dto.MoveDTO;
 import chess.domain.gameRoom.ChessGame;
 import chess.service.ChessService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -32,8 +33,15 @@ public class ChessGameApiController implements WebMvcConfigurer {
 
     @PostMapping("/chess/game/{id}/move")
     public ResponseEntity<BoardDTO> movePiece(@PathVariable String id, MoveDTO moveDTO) {
-        System.out.println("출력 : " + moveDTO);
         ChessGame chessGame = chessService.movePiece(id, moveDTO);
         return ResponseEntity.ok(new BoardDTO(chessGame));
+    }
+
+    @DeleteMapping("/chess/delete/{id}")
+    public ResponseEntity<Integer> deleteGame(@PathVariable String id, @RequestParam String password) {
+        return new ResponseEntity<>(
+                chessService.deleteGameByIdAndPassword(id, password),
+                HttpStatus.NO_CONTENT
+        );
     }
 }

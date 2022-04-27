@@ -4,10 +4,7 @@ import chess.domain.gameRoom.dto.ChessGameRoomInfoDTO;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class ChessGameController {
@@ -35,11 +32,5 @@ public class ChessGameController {
         ChessGameRoomInfoDTO chessGameRoomInfoDTO = chessService.findGameById(id);
         model.addAttribute("chessGameRoom", chessGameRoomInfoDTO);
         return "game";
-    }
-
-    @PostMapping("/chess/delete")
-    public String deleteGame(@RequestParam String gameId, @RequestParam String password) {
-        chessService.deleteGameByIdAndPassword(gameId, password);
-        return "redirect:/";
     }
 }

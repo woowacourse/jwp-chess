@@ -16,21 +16,36 @@
 
 <br>
 <h2>CLICK ON THE ROOM</h2>
+<table border="2" width ="600" height="100" align = "center" class="game-list">
+    <tr>
+        <td width ="100">
+            Number
+        </td>
+        <td width ="400">
+            GAME NAME
+        </td>
+        <td width ="100">
+            DELETE
+        </td>
+    </tr>
+</table>
 <table border="2" width ="600" height="300" align = "center" class="game-list">
     {{#games}}
     <tr>
-        <td width ="300">
-            <a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a>
+        <td width ="100">
+            {{id}}
         </td>
-        <td width ="300">
-            <form action="/chess/delete" method="post">
-                <input type="hidden" name="gameId" value="{{id}}">
-                <input type="text" name="password" placeholder="PASSWORD" pattern=".{0}|.{1,10}" required title="Either 0 OR (1 to 10 chars)">
-                <input type="submit" value="DELETE" style="background-color: red">
-            </form>
+        <td width ="400">
+            <a href="/chess/game/{{id}}" class="game-item">{{name}}</a>
+        </td>
+        <td width ="100">
+            <input type="button" onclick="func({{id}})" VALUE="DELETE" style="background-color: red">
         </td>
     </tr>
     {{/games}}
 </table>
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/lobby.js"></script>
 </html>

@@ -16,7 +16,7 @@ import chess.domain.position.Square;
 import chess.service.ChessService;
 
 @Controller
-@RequestMapping("/ingame")
+@RequestMapping("/games")
 public class InGameController {
     private final ChessService chessService;
 

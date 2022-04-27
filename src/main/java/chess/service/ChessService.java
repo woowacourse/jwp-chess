@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dao.ChessPieceDao;
+import chess.dao.PieceDao;
 import chess.dao.RoomDao;
 import chess.domain.ChessGame;
 import chess.domain.GameStatus;
@@ -27,10 +27,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessService {
 
-    private final ChessPieceDao chessPieceDao;
+    private final PieceDao chessPieceDao;
     private final RoomDao roomDao;
 
-    public ChessService(final ChessPieceDao chessPieceDao, final RoomDao roomDao) {
+    public ChessService(final PieceDao chessPieceDao, final RoomDao roomDao) {
         this.chessPieceDao = chessPieceDao;
         this.roomDao = roomDao;
     }

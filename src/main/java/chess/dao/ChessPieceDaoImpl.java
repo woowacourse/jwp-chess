@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ChessPieceDaoImpl implements ChessPieceDao {
@@ -48,6 +49,7 @@ public class ChessPieceDaoImpl implements ChessPieceDao {
     }
 
     @Override
+    @Transactional
     public int saveAll(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {
         String sql = "INSERT INTO chess_piece (room_id, position, chess_piece, color) VALUES (?, ?, ?, ?)";
         final List<Object[]> batchArguments = toBatchArguments(roomId, pieceByPosition);

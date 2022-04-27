@@ -31,7 +31,7 @@ public class ChessRoomService {
         this.boardDao = boardDao;
     }
 
-    public void createNewRoom(String roomName, String password) {
+    public RoomDto createNewRoom(String roomName, String password) {
         RoomDto roomDto = new RoomDto(roomName, password);
         if (roomDao.findByName(roomName) != null) {
             throw new IllegalArgumentException(
@@ -41,6 +41,7 @@ public class ChessRoomService {
         GameState state = new Ready();
         gameDao.create(GameStateDto.of(state), roomDto.getId());
         boardDao.saveBoard(BoardDto.of(state.getPointPieces()), roomDto.getId());
+        return roomDto;
     }
 
     public void startGame(int roomId) {
@@ -84,6 +85,10 @@ public class ChessRoomService {
         boardDao.removeBoard(roomId);
         gameDao.removeGame(roomId);
         roomDao.delete(roomDto);
+    }
+
+    public RoomDto findByName(String roomName) {
+        return roomDao.findByName(roomName);
     }
 
     public void removeRoom(RoomDto roomDto) {

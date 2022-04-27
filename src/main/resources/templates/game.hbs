@@ -26,15 +26,21 @@
                 <script> drawTurn('{{response.color}}'); </script>
             </h3>
             <form id="start_form" action="/start" method="get" class="main-form">
+                <input type="text" id="roomId" hidden value="{{roomId}}">
                 <input type="submit" value="start" class="button">
             </form>
 
             <form id="status_form" action="/status" method="get" class="main-form">
+                <input type="text" id="roomId" hidden value="{{roomId}}">
                 <input type="submit" value="status" class="button">
             </form>
 
             <form id="end_form" action="/end" method="get" class="main-form">
                 <input type="submit" value="end" class="button">
+            </form>
+
+            <form id="back_form" action="/rooms" method="get" class="main-form">
+              <input type="submit" value="back" class="button">
             </form>
         </section>
 

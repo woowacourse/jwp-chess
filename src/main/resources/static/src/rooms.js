@@ -1,22 +1,17 @@
 
 // -------- init start ---------
 function setUpIndex() {
-    const createForm = document.getElementById("create_form");
-    createForm.addEventListener("submit", e => {
-        e.preventDefault();
-        let roomName = new FormData(createForm).get("room_name");
-        send("/create?room_name=" + roomName, {
-            method: 'get'
-        }, relocate);
-    })
 
-    const enterForm = document.getElementById("enter_form");
-    enterForm.addEventListener("submit", e => {
+    const createRoomForm = document.getElementById("create_room_form");
+    createRoomForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = new FormData(enterForm).get("room_name");
-        send("/enter?room_name=" + roomName, {
-            method: 'get'
-        }, relocate);
+        let roomName = new FormData(createRoomForm).get("room_name");
+        let roomPassword = new FormData(createRoomForm).get("room_password");
+        send("/rooms/create", {
+                method: 'post',
+                body: JSON.stringify({'roomName': roomName, 'roomPassword': roomPassword}),
+                headers: new Headers({'Content-Type': 'application/json'})
+            }, relocate);
     })
 
     console.log("setupIndex done")
@@ -63,17 +58,17 @@ function setUpMain(state) {
     const statusForm = document.getElementById("status_form");
     statusForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomId = document.getElementById('roomId').value;
-        send("/rooms/"+roomId+"/status", {
-                    method: 'get'
-                }, showStatus);
+        let roomName = getCurrentParam("room_name");
+        send("/status?room_name=" + roomName, {
+            method: 'get'
+        }, showStatus);
     });
 
     const startForm = document.getElementById("start_form");
     startForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomId = document.getElementById('roomId').value;
-        send("/rooms/"+roomId+"/start", {
+        let roomName = getCurrentParam("room_name");
+        send("/start?room_name=" + roomName, {
             method: 'get'
         }, relocate);
     });
@@ -81,8 +76,8 @@ function setUpMain(state) {
     const endForm = document.getElementById("end_form");
     endForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomId = document.getElementById('roomId').value;
-        send("/rooms/"+roomId+"/end", {
+        let roomName = getCurrentParam("room_name");
+        send("/end?room_name=" + roomName, {
             method: 'get'
         }, relocate);
     });
@@ -121,7 +116,7 @@ function moveByClick(source, destination) {
     }
     console.log('move by click called', source, destination);
 
-    let roomId = document.getElementById('roomId').value;
+    let roomId = getCurrentParam("roomId");
     send("/rooms/"+roomId+"/move", {
         method: 'post',
         body: JSON.stringify({'source': source.id, 'destination': destination.id}),
@@ -221,6 +216,21 @@ function getCurrentParam(key) {
     return params.get(key);
 }
 
+function remove(roomName) {
+    var roomPassword = prompt("비밀번호를 입력해주세요.");
+    send("/rooms/remove", {
+        method: 'post',
+        body: JSON.stringify({'roomName': roomName, 'roomPassword': roomPassword}),
+        headers: new Headers({'Content-Type': 'application/json'})
+    }, relocate);
+}
+
+function enter(roomName) {
+    send("/rooms/enter/" + roomName, {
+        method: 'get'
+    }, relocate);
+}
+
 function showStatus(responseJson) {
     let string = 'WHITE SCORE = ' + responseJson['score']['WHITE'] +
         '\n' +
@@ -237,6 +247,7 @@ async function send(path, fetchBody, handler) {
         }
         return responseJson;
     }
+
     let response = await fetch(path, fetchBody);
     let responseJson = await response.json();
     if (await alertIfException(responseJson)) {

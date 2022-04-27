@@ -2,7 +2,6 @@ package chess.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 @Component
 public class JdbcGameStateDao implements GameStateDao {
@@ -16,48 +15,48 @@ public class JdbcGameStateDao implements GameStateDao {
     }
 
     @Override
-    public boolean hasPlayingGame() {
-        final String sql = "select count(*) from game";
-        final int count = jdbcTemplate.queryForObject(sql, Integer.class);
+    public boolean hasPlayingGame(int roomNumber) {
+        final String sql = "select count(*) from game where roomnumber=?";
+        final int count = jdbcTemplate.queryForObject(sql, Integer.class, roomNumber);
         return count > 0;
     }
 
     @Override
-    public void saveState(final String state) {
-        String sql = "insert into game (state) values (?)";
-        if (hasPlayingGame()) {
-            sql = "update game set state = (?)";
+    public void saveState(int roomNumber, final String state) {
+        String sql = "insert into game(roomNumber, state) values (?, ?)";
+        if (hasPlayingGame(roomNumber)) {
+            sql = "update game set state = (?) where roomnumber=?";
         }
-        jdbcTemplate.update(sql, state);
+        jdbcTemplate.update(sql, roomNumber, state);
     }
 
     @Override
-    public void saveTurn(final String turn) {
-        String sql = "insert into game (turn) values (?)";
-        if (hasPlayingGame()) {
-            sql = "update game set turn = (?)";
+    public void saveTurn(int roomNumber, final String turn) {
+        String sql = "insert into game(turn, roomnumber) values (?, ?)";
+        if (hasPlayingGame(roomNumber)) {
+            sql = "update game set turn=(?) where roomnumber=?";
         }
-        jdbcTemplate.update(sql, turn);
+        jdbcTemplate.update(sql, turn, roomNumber);
     }
 
     @Override
-    public String getGameState() {
-        final String sql = "select state from game";
-        if (hasPlayingGame()) {
-            return jdbcTemplate.queryForObject(sql, String.class);
+    public String getGameState(int roomNumber) {
+        final String sql = "select state from game where roomNumber=?";
+        if (hasPlayingGame(roomNumber)) {
+            return jdbcTemplate.queryForObject(sql, String.class, roomNumber);
         }
         return DATABASE_EMPTY_SYMBOL;
     }
 
     @Override
-    public String getTurn() {
-        final String sql = "select turn from game";
-        return jdbcTemplate.queryForObject(sql, String.class);
+    public String getTurn(int roomNumber) {
+        final String sql = "select turn from game where roomnumber=?";
+        return jdbcTemplate.queryForObject(sql, String.class, roomNumber);
     }
 
     @Override
-    public void removeGameState() {
-        final String sql = "delete from game";
-        jdbcTemplate.update(sql);
+    public void removeGameState(int roomNumber) {
+        final String sql = "delete from game where roomnumber=?";
+        jdbcTemplate.update(sql, roomNumber);
     }
 }

@@ -11,10 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class WebController {
@@ -26,46 +23,63 @@ public class WebController {
     }
 
     @GetMapping(path = "/")
-    public String index(final Model model) {
-        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.getPieces());
+    public String waitingRoom(final Model model) {
+        model.addAttribute("rooms", chessGameService.getRooms());
+        return "waitingroom";
+    }
+
+    @PostMapping(path = "/")
+    public String createWaitingRoom(@RequestParam("roomname") String name,
+                                    @RequestParam("password") String password,
+                                    final Model model) {
+        model.addAttribute("rooms", chessGameService.createRoom(name, password));
+        return "waitingroom";
+    }
+
+    @GetMapping(path = "/{roomNumber}/board")
+    public String gameRoom(@PathVariable("roomNumber") int roomNumber, final Model model) {
+        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.getPieces(roomNumber));
+        model.addAttribute("id", roomNumber);
         model.addAllAttributes(pieces);
         return "index";
     }
 
-    @GetMapping(path = "/start")
-    public String start(final Model model) {
-        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.start());
+    @GetMapping(path = "/{roomNumber}/start")
+    public String start(@PathVariable("roomNumber") int roomNumber, final Model model) {
+        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.start(roomNumber));
+        model.addAttribute("id", roomNumber);
         model.addAllAttributes(pieces);
         return "index";
     }
 
-    @PostMapping(path = "/move")
+    @PostMapping(path = "/{roomNumber}/move")
     public String move(final Model model,
-                     @RequestParam("source") String source,
-                     @RequestParam("target") String target) {
-        final Map<Position, Piece> pieces = chessGameService.move(source, target);
+                       @PathVariable("roomNumber") int roomNumber,
+                       @RequestParam("source") String source,
+                       @RequestParam("target") String target) {
+        final Map<Position, Piece> pieces = chessGameService.move(roomNumber, source, target);
+        model.addAttribute("id", roomNumber);
         model.addAllAttributes(convertToWebViewPiece(pieces));
         return "index";
     }
 
-    @GetMapping(path="/status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ScoreDto> status() {
-        final ScoreDto score = chessGameService.getScore();
+    @GetMapping(path="/{roomNumber}/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ScoreDto> status(@PathVariable("roomNumber") int roomNumber) {
+        final ScoreDto score = chessGameService.getScore(roomNumber);
         return ResponseEntity.ok(score);
     }
 
-    @GetMapping(path = "/end")
-    public String end(final Model model) {
-        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.end());
+    @GetMapping(path = "/{roomNumber}/end")
+    public String end(@PathVariable("roomNumber") int roomNumber, final Model model) {
+        final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.end(roomNumber));
+        model.addAttribute("id", roomNumber);
         model.addAllAttributes(pieces);
         return "index";
     }
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
     public String exception(Exception exception, Model model) {
-        final Map<Position, Piece> pieces = chessGameService.getPieces();
-        model.addAllAttributes(convertToWebViewPiece(pieces));
         model.addAttribute("error", exception.getMessage());
-        return "index";
+        return "errorpage";
     }
 }

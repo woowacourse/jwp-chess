@@ -21,6 +21,8 @@ public class JdbcRoomDaoTest {
     @BeforeEach
     public void setUp() {
         jdbcRoomDao = new JdbcRoomDao(jdbcTemplate);
+        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
+        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
         jdbcTemplate.execute("DROP TABLE room IF EXISTS");
         jdbcTemplate.execute("create table room("
                 + "id int auto_increment, name varchar(20) not null,"

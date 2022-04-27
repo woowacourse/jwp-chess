@@ -14,7 +14,7 @@ public class FakePieceDao implements PieceDao {
     private List<PieceDto> pieces = new ArrayList<>();
 
     @Override
-    public void saveAllPieces(final Map<Position, Piece> board) {
+    public void saveAllPieces(int roomNumber, final Map<Position, Piece> board) {
         for (Position position : board.keySet()) {
             final Piece piece = board.get(position);
             final PieceDto pieceDto = new PieceDto(position.toString(), piece.getTeam(), piece.getName());
@@ -23,12 +23,12 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public List<PieceDto> findAllPieces() {
+    public List<PieceDto> findAllPieces(int roomNumber) {
         return pieces;
     }
 
     @Override
-    public void removePieceByPosition(final String position) {
+    public void removePieceByPosition(int roomNumber, final String position) {
         final Optional<PieceDto> any = pieces.stream()
                 .filter(savedPiece -> savedPiece.getPosition().equals(position))
                 .findAny();
@@ -36,14 +36,14 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public void savePiece(final String position, final Piece piece) {
+    public void savePiece(int roomNumber, final String position, final Piece piece) {
         PieceDto pieceDto = new PieceDto(position, piece.getTeam(), piece.getName());
-        removePieceByPosition(position);
+        removePieceByPosition(roomNumber, position);
         pieces.add(pieceDto);
     }
 
     @Override
-    public void removeAllPieces() {
+    public void removeAllPieces(int roomNumber) {
         pieces = new ArrayList<>();
     }
 }

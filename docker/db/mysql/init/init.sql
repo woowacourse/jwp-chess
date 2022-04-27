@@ -8,14 +8,19 @@ create table room
 
 create table piece
 (
+    roomnumber int not null,
     position varchar(2) not null,
     team     varchar(5) not null,
     name     varchar(6) not null,
-    primary key (position)
+    foreign key (roomnumber) references room(id),
+    primary key (roomnumber, position)
 );
 
 create table game
 (
+    roomnumber int not null,
     state varchar(7),
-    turn  varchar(5)
+    turn  varchar(5),
+    foreign key (roomnumber) references room(id),
+    primary key (roomnumber)
 );

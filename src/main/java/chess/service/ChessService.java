@@ -139,10 +139,6 @@ public class ChessService {
         }
     }
 
-    public void deleteGame(Long gameId) {
-        gameDao.delete(gameId);
-    }
-
     private Position parseStringToPosition(final String rawPosition) {
         final String[] separatedPosition = rawPosition.split("");
         final Column column = Column.from(separatedPosition[ROW_INDEX]);

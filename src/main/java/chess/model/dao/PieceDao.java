@@ -24,9 +24,9 @@ public class PieceDao {
     }
 
     public void init(Board board) {
-        String query = "insert into pieces (position, name) values (?, ?)";
+        String query = "insert into pieces (position, name, game_id) values (?, ?, ?)";
         for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
-            jdbcTemplate.update(query, entry.getKey().getPosition(), getPieceName(entry.getValue()));
+            jdbcTemplate.update(query, entry.getKey().getPosition(), getPieceName(entry.getValue()), 1);
         }
     }
 

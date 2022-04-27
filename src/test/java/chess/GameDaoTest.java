@@ -1,6 +1,6 @@
 package chess;
 
-import chess.model.dao.TurnDao;
+import chess.model.dao.GameDao;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,36 +14,46 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-class TurnDaoTest {
-    TurnDao turnDao;
+class GameDaoTest {
+    GameDao gameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void initPieceDaoTest() {
-        jdbcTemplate.execute("DROP TABLE TURNS IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE TURNS\n" +
+        jdbcTemplate.execute("DROP TABLE GAMES IF EXISTS");
+        jdbcTemplate.execute("CREATE TABLE games\n" +
                 "(\n" +
-                "    turn_id  int        not null AUTO_INCREMENT,\n" +
-                "    turn     varchar(5) not null,\n" +
-                "    primary key (turn_id)\n" +
+                "    game_id  int         not null AUTO_INCREMENT,\n" +
+                "    name     varchar(64) not null,\n" +
+                "    password varchar(64) not null,\n" +
+                "    turn     varchar(5)  not null,\n" +
+                "    primary key (game_id)\n" +
                 ");");
-        turnDao = new TurnDao(jdbcTemplate);
-
-
+        gameDao = new GameDao(jdbcTemplate);
     }
 
     @AfterEach
     void cleanDB() {
-        turnDao.deleteAll();
+        gameDao.deleteAll();
+    }
+
+    @Test
+    @DisplayName("룸 이름과 비밀번호를 받아 방을 생성한다.")
+    void initNewGame() {
+        String roomName = "room";
+        String password = "1234";
+        long gameId = gameDao.initGame(roomName, password);
+
+        assertThat(gameId).isOne();
     }
 
     @Test
     @DisplayName("턴이 초기에 저장되었는지 확인한다")
     void init() {
-        turnDao.init();
-        Optional<String> turn = turnDao.findOne();
+        gameDao.init();
+        Optional<String> turn = gameDao.findOne();
 
         assertThat(turn.get()).isEqualToIgnoringCase("white");
     }
@@ -51,7 +61,7 @@ class TurnDaoTest {
     @Test
     @DisplayName("턴이 존재하지 않는 경우 무엇을 반환하는지 확인")
     void getTurn() {
-        Optional<String> turn = turnDao.findOne();
+        Optional<String> turn = gameDao.findOne();
 
         assertThat(turn).isEmpty();
     }
@@ -59,9 +69,9 @@ class TurnDaoTest {
     @Test
     @DisplayName("턴이 update 되는지 확인한다")
     void update() {
-        turnDao.init();
-        turnDao.update("BLACK");
-        Optional<String> turn = turnDao.findOne();
+        gameDao.init();
+        gameDao.update("BLACK");
+        Optional<String> turn = gameDao.findOne();
 
         assertThat(turn.get()).isEqualToIgnoringCase("black");
     }
@@ -69,9 +79,9 @@ class TurnDaoTest {
     @Test
     @DisplayName("저장된 턴을 모두 삭제한다.")
     void deleteAll() {
-        turnDao.init();
-        turnDao.deleteAll();
+        gameDao.init();
+        gameDao.deleteAll();
 
-        assertThat(turnDao.findOne()).isEmpty();
+        assertThat(gameDao.findOne()).isEmpty();
     }
 }

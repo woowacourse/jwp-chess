@@ -1,0 +1,59 @@
+package chess.model.dao;
+
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Optional;
+
+@Repository
+public class GameDao {
+    private static final String INIT_TURN = "WHITE";
+    private final JdbcTemplate jdbcTemplate;
+
+    public GameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public void init() {
+        String query = "insert into games (turn) values (?)";
+        jdbcTemplate.update(query, "WHITE");
+    }
+
+    public long initGame(String name, String password) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String sql = "insert into games (name, password, turn) values (?, ?, ?)";
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"game_id"});
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, password);
+            preparedStatement.setString(3, INIT_TURN);
+            return preparedStatement;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
+    }
+
+    public Optional<String> findOne() {
+        String query = "select turn from turns limit 1";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
+    }
+
+    public void update(String nextTurn) {
+        String query = "UPDATE turns SET turn = (?)";
+        jdbcTemplate.update(query, nextTurn);
+    }
+
+    public void deleteAll() {
+        String query = "DELETE FROM GAMES";
+        jdbcTemplate.update(query);
+    }
+}

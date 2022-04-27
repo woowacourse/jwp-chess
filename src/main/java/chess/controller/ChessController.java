@@ -25,7 +25,7 @@ public class ChessController {
 
     @GetMapping("/")
     public String index() {
-        return "index";
+        return "game";
     }
 
     @GetMapping("/start")

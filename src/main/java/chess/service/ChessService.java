@@ -7,7 +7,7 @@ import chess.model.Turn;
 import chess.model.board.Board;
 import chess.model.board.BoardFactory;
 import chess.model.dao.PieceDao;
-import chess.model.dao.TurnDao;
+import chess.model.dao.GameDao;
 import chess.model.dto.MoveDto;
 import chess.model.dto.RoomDto;
 import chess.model.dto.WebBoardDto;
@@ -18,7 +18,6 @@ import chess.model.position.Position;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,11 +25,11 @@ import java.util.stream.Collectors;
 public class ChessService {
 
     private final PieceDao pieceDao;
-    private final TurnDao turnDao;
+    private final GameDao gameDao;
 
-    public ChessService(PieceDao pieceDao, TurnDao turnDao) {
+    public ChessService(PieceDao pieceDao, GameDao gameDao) {
         this.pieceDao = pieceDao;
-        this.turnDao = turnDao;
+        this.gameDao = gameDao;
     }
 
     public WebBoardDto start() {
@@ -43,7 +42,7 @@ public class ChessService {
     public WebBoardDto move(MoveDto moveDto) {
         Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPosition(moveDto.getSource()));
         Piece targetPiece = PieceFactory.create(pieceDao.findPieceNameByPosition(moveDto.getTarget()));
-        Turn turn = Turn.from(turnDao.findOne().get());
+        Turn turn = Turn.from(gameDao.findOne().get());
         validateCurrentTurn(turn, sourcePiece);
         try {
             movePiece(moveDto, sourcePiece, targetPiece, turn);
@@ -52,7 +51,7 @@ public class ChessService {
         }
         Board board = toBoard(pieceDao.findAllPieces());
         if (board.isKingDead()) {
-            turnDao.update(turn.finish());
+            gameDao.update(turn.finish());
         }
 
         return WebBoardDto.from(board);
@@ -62,14 +61,14 @@ public class ChessService {
         if (canMove(moveDto, sourcePiece, targetPiece)) {
             pieceDao.updateByPosition(moveDto.getTarget(), PieceDao.getPieceName(sourcePiece));
             pieceDao.updateByPosition(moveDto.getSource(), "none-.");
-            turnDao.update(turn.change().getThisTurn());
+            gameDao.update(turn.change().getThisTurn());
             return;
         }
         throw new IllegalArgumentException("기물을 이동할 수 없습니다.");
     }
 
     public String getTurn() {
-        return turnDao.findOne().get();
+        return gameDao.findOne().get();
     }
 
     public boolean isKingDead() {
@@ -84,7 +83,7 @@ public class ChessService {
 
     public void exitGame() {
         pieceDao.deleteAll();
-        turnDao.deleteAll();
+        gameDao.deleteAll();
     }
 
     private Board initBoard() {
@@ -106,11 +105,15 @@ public class ChessService {
                 ));
     }
 
+    private long startGame(RoomDto roomDto) {
+        return gameDao.initGame(roomDto.getRoomName(), roomDto.getPassword());
+    }
+
     private void initTurn() {
-        Optional<String> turn = turnDao.findOne();
+        Optional<String> turn = gameDao.findOne();
 
         if (turn.isEmpty()) {
-            turnDao.init();
+            gameDao.init();
         }
     }
 

@@ -7,6 +7,7 @@ import chess.domain.board.position.Position;
 import chess.dto.request.web.SaveRequest;
 import chess.dto.response.web.GameResponse;
 import chess.service.ChessService;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,18 +30,24 @@ public class ChessApiController {
     private final ChessService chessService;
 
     @GetMapping(value = "/init", produces = APPLICATION_JSON_VALUE)
-    public GameResponse init() {
-        ChessBoard chessBoard = chessService.getChessBoard();
+    public GameResponse init(HttpSession session) {
+
+        ChessBoard chessBoard = chessService.initAndGetChessBoard(session);
+
         return new GameResponse(chessBoard);
     }
 
     @PatchMapping(value = "/move", produces = APPLICATION_JSON_VALUE)
-    public GameResponse move(@RequestParam("from") String fromString,
-                                      @RequestParam("to") String toString) {
+    public GameResponse move(HttpSession session,
+                             @RequestParam("from") String fromString,
+                             @RequestParam("to") String toString) {
+
+        System.out.println("move session = " + session);
+
         Position from = Position.of(fromString);
         Position to = Position.of(toString);
-        chessService.movePiece(from, to);
-        return new GameResponse(chessService.getChessBoard());
+        chessService.movePiece(session, from, to);
+        return new GameResponse(chessService.getChessBoard(session));
     }
 
     @PutMapping(value = "/save-game", consumes = APPLICATION_JSON_VALUE)

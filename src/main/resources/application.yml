@@ -1,9 +1,13 @@
 spring:
   datasource:
+    schema: classpath*:schema.sql
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:13306/woowa-chess
     username: woowa-chess
     password: 1234
+    sql:
+      init:
+        mode: always
 #  h2:
 #    console:
 #      enabled: true

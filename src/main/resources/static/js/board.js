@@ -36,7 +36,29 @@ async function move(from, to) {
     fetchTurn();
 }
 
-async function end() {
+async function startGame() {
+    const pathName = window.location.pathname;
+
+    const startResponse = await fetch(`${pathName}/status`, {method: "PATCH"});
+    const errorElement = document.getElementById("error");
+    if (startResponse.status !== 204) {
+        errorElement.innerText = data.message;
+        return;
+    }
+    const initPieceResponse = await fetch(`${pathName}/pieces`, {method: "POST"});
+    if (initPieceResponse.status !== 201) {
+        errorElement.innerText = data.message;
+        return;
+    }
+
+    errorElement.innerText = null;
+
+    fetchPieces();
+    fetchScores();
+    fetchTurn();
+}
+
+async function endGame() {
     const pathName = window.location.pathname;
 
     const res = await fetch(`${pathName}/result`);
@@ -60,10 +82,6 @@ async function end() {
         element = document.getElementById(winColor + "_win");
     }
     element.style.visibility = "visible";
-}
-
-function exitRoom() {
-    window.location.href = "/";
 }
 
 async function fetchPieces() {

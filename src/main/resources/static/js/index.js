@@ -1,6 +1,6 @@
 fetchRoomList();
 
-async function start() {
+async function createRoom() {
     const roomName = document.getElementById("roomNameInput").value;
     const password = document.getElementById("passwordInput").value;
     if (/^\s*$/.test(roomName)) {

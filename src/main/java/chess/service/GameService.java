@@ -1,12 +1,10 @@
 package chess.service;
 
-import chess.dao.WebChessBoardDao;
-import chess.dao.WebChessMemberDao;
-import chess.dao.WebChessPieceDao;
-import chess.dao.WebChessPositionDao;
+import chess.dao.*;
 import chess.domain.game.ChessBoard;
 import chess.domain.game.Board;
 import chess.domain.game.Initializer;
+import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
@@ -15,40 +13,49 @@ import chess.dto.RoomDto;
 import chess.dto.RoomsDto;
 import chess.dto.StatusDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public final class GameService {
+public class GameService {
 
-    private final WebChessBoardDao boardDao;
-    private final WebChessPositionDao positionDao;
-    private final WebChessPieceDao pieceDao;
-    private final WebChessMemberDao memberDao;
+    private final BoardDao<ChessBoard> boardDao;
+    private final PositionDao<Position> positionDao;
+    private final PieceDao<Piece> pieceDao;
+    private final MemberDao<Member> memberDao;
 
-    public GameService(WebChessBoardDao boardDao, WebChessPositionDao positionDao, WebChessPieceDao pieceDao,
-                       WebChessMemberDao memberDao) {
+    public GameService(BoardDao<ChessBoard> boardDao, PositionDao<Position> positionDao, PieceDao<Piece> pieceDao,
+                       MemberDao<Member> memberDao) {
         this.boardDao = boardDao;
         this.positionDao = positionDao;
         this.pieceDao = pieceDao;
         this.memberDao = memberDao;
     }
 
+    @Transactional
     public ChessBoard saveBoard(final ChessBoard board, final Initializer initializer) {
         final ChessBoard savedBoard = boardDao.save(board);
         final Map<Position, Piece> initialize = initializer.initialize();
         positionDao.saveAll(savedBoard.getId());
-        for (Position position : initialize.keySet()) {
-            int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),
-                    savedBoard.getId());
-            final Piece piece = initialize.get(position);
-            pieceDao.save(new Piece(piece.getColor(), piece.getType(), lastPositionId));
-        }
+        pieceDao.saveAll(makePieces(savedBoard, initialize));
         memberDao.saveAll(board.getMembers(), savedBoard.getId());
         return savedBoard;
     }
 
+    private List<Piece> makePieces(ChessBoard savedBoard, Map<Position, Piece> initialize) {
+        List<Piece> pieces = new ArrayList<>();
+        for (Position position : initialize.keySet()) {
+            int lastPositionId = positionDao.getByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),
+                    savedBoard.getId()).getId();
+            Piece piece = initialize.get(position);
+            pieces.add(new Piece(piece.getColor(), piece.getType(), lastPositionId));
+        }
+        return pieces;
+    }
+
+    @Transactional
     public void move(final int roomId, final Position sourceRawPosition, final Position targetRawPosition) {
         Position sourcePosition = positionDao.getByColumnAndRowAndBoardId(sourceRawPosition.getColumn(),
                 sourceRawPosition.getRow(), roomId);

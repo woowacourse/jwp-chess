@@ -67,7 +67,6 @@ public class WebChessPositionDao implements PositionDao<Position> {
         }
         return jdbcTemplate.batchUpdate(sql, batchValues.toArray(new Map[boardSize])).length;
     }
-
     private void saveColumnLine(int boardId, Row[] rows, List<Map<String, Object>> batchValues, Column column) {
         for (Row row : rows) {
             batchValues.add(
@@ -77,6 +76,7 @@ public class WebChessPositionDao implements PositionDao<Position> {
                             .getValues());
         }
     }
+
 
     @Override
     public int getIdByColumnAndRowAndBoardId(Column column, Row row, int boardId) {

@@ -19,4 +19,6 @@ public interface PieceDao<T> {
     List<T> getAllByBoardId(int boardId);
 
     int countPawnsOnSameColumn(int boardId, Column column, Color color);
+
+    void saveAll(List<Piece> pieces);
 }

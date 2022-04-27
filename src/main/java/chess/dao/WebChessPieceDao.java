@@ -4,15 +4,19 @@ import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.Symbol;
 import chess.domain.position.Column;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Repository
@@ -96,5 +100,26 @@ public class WebChessPieceDao implements PieceDao<Piece> {
         SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
 
         return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+    }
+
+    @Override
+    public void saveAll(List<Piece> pieces) {
+        final String sql = "INSERT INTO piece (type, color, position_id) VALUES (:type, :color, :position_id)";
+
+        List<Map<String, Object>> batchValues = makeBatchValues(pieces);
+        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(batchValues);
+        jdbcTemplate.batchUpdate(sql, batch);
+    }
+
+    private List<Map<String, Object>> makeBatchValues(List<Piece> pieces) {
+        List<Map<String, Object>> batchValues = new ArrayList<>(pieces.size());
+        for (Piece piece : pieces) {
+            batchValues.add(
+                    new MapSqlParameterSource("type", piece.getType().symbol().name())
+                            .addValue("color", piece.getColor().name())
+                            .addValue("position_id", piece.getPositionId())
+                            .getValues());
+        }
+        return batchValues;
     }
 }

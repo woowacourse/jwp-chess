@@ -4,6 +4,11 @@ import chess.entity.PieceEntity;
 import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -23,10 +28,15 @@ public class PieceDao {
     }
 
     public void savePieces(Board board, Long gameId) {
-        String query = "insert into pieces (position, name, game_id) values (?, ?, ?)";
+        String sql = "insert into pieces (position, name, game_id) values (?, ?, ?)";
+
+        List<Object[]> batch = new ArrayList<>();
         for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
-            jdbcTemplate.update(query, entry.getKey().getPosition(), getPieceName(entry.getValue()), gameId);
+            Object[] values = new Object[]{entry.getKey().getPosition(), getPieceName(entry.getValue())};
+            batch.add(values);
         }
+
+        jdbcTemplate.batchUpdate(sql, batch);
     }
 
     public List<PieceEntity> findAllPiecesByGameId(Long gameId) {

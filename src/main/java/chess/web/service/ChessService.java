@@ -13,9 +13,11 @@ import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional(readOnly = true)
 @Service
 public class ChessService {
 
@@ -36,6 +38,7 @@ public class ChessService {
         return Board.create(Pieces.from(pieces), turn);
     }
 
+    @Transactional
     public Board move(final MoveDto moveDto, final Long boardId) {
         Turn turn = boardDao.findTurnById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 정보입니다."));
@@ -68,6 +71,7 @@ public class ChessService {
         return change;
     }
 
+    @Transactional
     public Board initBoard(Long boardId) {
         Pieces pieces = Pieces.createInit();
         Board board = Board.create(pieces, Turn.init());
@@ -85,5 +89,8 @@ public class ChessService {
         double blackScore = pieces.getTotalScore(Team.BLACK);
         double whiteScore = pieces.getTotalScore(Team.WHITE);
         return new ScoreDto(blackScore, whiteScore);
+    }
+    public List<Long> getRoomList(){
+        return boardDao.findAllId();
     }
 }

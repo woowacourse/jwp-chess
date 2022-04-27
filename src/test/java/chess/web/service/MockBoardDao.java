@@ -6,9 +6,7 @@ import chess.board.Turn;
 import chess.board.piece.Pieces;
 import chess.web.dao.BoardDao;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class MockBoardDao implements BoardDao {
     private final Map<Long, String> mockDb = new HashMap<>();
@@ -40,5 +38,10 @@ public class MockBoardDao implements BoardDao {
     @Override
     public void deleteById(Long id) {
         mockDb.remove(id);
+    }
+
+    @Override
+    public List<Long> findAllId() {
+        return new ArrayList<>(mockDb.keySet());
     }
 }

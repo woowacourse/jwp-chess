@@ -82,4 +82,12 @@ public class BoardDaoImpl implements BoardDao {
         final String query = "DELETE FROM board WHERE id = ?";
         jdbcTemplate.update(query, id);
     }
+
+    @Override
+    public List<Long> findAllId() {
+        final String query = "SELECT id FROM board";
+        return jdbcTemplate.query(
+                query,
+                (resultSet, rowNum) -> resultSet.getLong("id"));
+    }
 }

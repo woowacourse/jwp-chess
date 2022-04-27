@@ -3,9 +3,7 @@ package chess.controller;
 import chess.controller.view.BoardView;
 import chess.dto.LogInDto;
 import chess.service.ChessGameService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +26,7 @@ public class ChessController {
 
     @PostMapping("/exit")
     public String deleteGame(@RequestParam String gameId, @RequestParam String gamePassword) {
+        chessGameService.validateEnd(gameId);
         chessGameService.cleanGame(new LogInDto(gameId, gamePassword));
         return "redirect:/";
     }

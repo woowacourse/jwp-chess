@@ -78,8 +78,16 @@ public class ChessGameService {
     }
 
     public List<RoomDto> getRooms() {
-        return gameDao.findAllGame().stream()
-                .filter(roomDto -> !roomDto.isForce_end_flag())
-                .collect(Collectors.toList());
+        return gameDao.findAllGame();
+    }
+
+    public void changeToEnd(String gameId) {
+        gameDao.updateForceEndFlagById(true, gameId);
+    }
+
+    public void validateEnd(String gameId) {
+        if (!gameDao.findForceEndFlag(gameId)) {
+            throw new IllegalArgumentException("진행중인 체스방은 삭제할 수 없습니다.");
+        }
     }
 }

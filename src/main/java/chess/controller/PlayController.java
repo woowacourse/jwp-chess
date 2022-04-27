@@ -22,6 +22,10 @@ public class PlayController {
     @PutMapping("/{gameId}/move")
     public ResponseEntity<String> move(@PathVariable String gameId, @RequestBody MoveDto moveDto) {
         chessGameService.move(gameId, moveDto);
+
+        if (!chessGameService.calculateGameResult(gameId).getWinner().equals("없음")) {
+            chessGameService.changeToEnd(gameId);
+        }
         return ResponseEntity.ok().build();
     }
 

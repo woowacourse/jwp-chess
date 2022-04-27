@@ -34,7 +34,12 @@ public class PieceDao {
     }
 
     public void deleteAllPieceById(int gameId) {
-        final var sql = "DELETE FROM piece WHERE game_id = ?";
+        String sql = "DELETE FROM piece WHERE game_id = ?";
         jdbcTemplate.update(sql, gameId);
+    }
+
+    public void deletePieceByIdAndPosition(int gameId, String position) {
+        String sql = "DELETE FROM piece WHERE game_id = ? and position = ?";
+        jdbcTemplate.update(sql, gameId, position);
     }
 }

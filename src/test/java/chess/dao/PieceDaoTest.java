@@ -68,4 +68,15 @@ public class PieceDaoTest {
         List<BoardElementDto> pieces = pieceDao.findAllPieceById(gameId);
         assertThat(pieces.isEmpty()).isTrue();
     }
+
+    @Test
+    void deletePieceByIdAndPositionTest() {
+        int gameId = 0;
+        String position = "a2";
+        BoardElementDto boardElementDto = new BoardElementDto("p", "WHITE", position);
+        pieceDao.savePiece(gameId, boardElementDto);
+        pieceDao.deletePieceByIdAndPosition(gameId, position);
+        List<BoardElementDto> pieces = pieceDao.findAllPieceById(gameId);
+        assertThat(pieces.isEmpty()).isTrue();
+    }
 }

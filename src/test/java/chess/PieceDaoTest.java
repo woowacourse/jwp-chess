@@ -15,26 +15,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("/initPieces.sql")
 class PieceDaoTest {
-    static PieceDao pieceDao;
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private PieceDao pieceDao;
+
     @BeforeEach
     void initPieceDaoTest() {
-        jdbcTemplate.execute("DROP TABLE PIECES IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE pieces\n" +
-                "(\n" +
-                "    piece_id int         not null AUTO_INCREMENT,\n" +
-                "    game_id int         not null,\n" +
-                "    position varchar(4)  not null,\n" +
-                "    name    varchar(10) not null,\n" +
-                "    primary key (piece_id)\n" +
-                ");");
-
         pieceDao = new PieceDao(jdbcTemplate);
     }
 

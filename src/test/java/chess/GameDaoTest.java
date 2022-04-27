@@ -10,24 +10,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 @JdbcTest
+@Sql("/initGames.sql")
 class GameDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     private GameDao gameDao;
 
     @BeforeEach
     void initPieceDaoTest() {
-        jdbcTemplate.execute("DROP TABLE GAMES IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE GAMES\n" +
-                "(\n" +
-                "    game_id  int        not null AUTO_INCREMENT,\n" +
-                "    password varchar(25) not null,\n" +
-                "    turn     varchar(5) not null,\n" +
-                "    primary key (game_id)\n" +
-                ");");
-
         gameDao = new GameDao(jdbcTemplate); // @JdbcTest는 일반적인 @ConfigurationProperties와 @Component 빈들은 스캔되지 않는다.
     }
 

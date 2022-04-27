@@ -7,6 +7,9 @@ import java.util.*;
 
 public class Chessboard {
 
+    private static final int NUMBER_OF_KINGS_FOR_OVER = 1;
+    private static final int NUMBER_OF_PAWNS_FOR_MINUS = 2;
+
     private final Map<Position, Piece> board;
 
     public Chessboard(ChessboardGenerator chessboardGenerator) {
@@ -19,10 +22,12 @@ public class Chessboard {
     }
 
     public boolean isOver() {
-        return (int) board.values()
+        int count = (int) board.values()
                 .stream()
                 .filter(piece -> piece.isSameType(Type.KING))
-                .count() == 1;
+                .count();
+
+        return count == NUMBER_OF_KINGS_FOR_OVER;
     }
 
     public double computeScore(Color color, double minusScoreOfSameYPawn) {
@@ -120,7 +125,7 @@ public class Chessboard {
 
     private double computeMinusScoreOfY(int y, Color color, double minusScoreOfSameYPawn) {
         int pawnCount = computePawnCount(y, color);
-        if (pawnCount >= 2) {
+        if (pawnCount >= NUMBER_OF_PAWNS_FOR_MINUS) {
             return pawnCount * minusScoreOfSameYPawn;
         }
         return 0;

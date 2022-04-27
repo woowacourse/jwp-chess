@@ -26,7 +26,7 @@ public class ChessGame {
     }
 
     public ChessGame(String state, String turn, Map<Position, Piece> boards) {
-        this.state = computeState(state, new Chessboard(() -> boards));
+        this.state = convertToState(state, new Chessboard(() -> boards));
         this.turn = new Turn(turn);
     }
 
@@ -81,7 +81,7 @@ public class ChessGame {
         return turn.getColor();
     }
 
-    private State computeState(String state, Chessboard chessboard) {
+    private State convertToState(String state, Chessboard chessboard) {
         if (state.equals("Play")) {
             return new Play(chessboard);
         }

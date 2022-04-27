@@ -7,6 +7,9 @@ import java.util.List;
 
 public class MovingPosition {
 
+    private static final int INCLINATION_OF_RIGHT_UP = -1;
+    private static final int INCLINATION_OF_RIGHT_DOWN = 1;
+
     private final Position from;
     private final Position to;
 
@@ -49,37 +52,37 @@ public class MovingPosition {
 
     public List<Position> computeLinearMiddle() {
         if (from.isSameX(to)) {
-            return x();
+            return computeBetweenSameX();
         }
         if (from.isSameY(to)) {
-            return y();
+            return computeBetweenSameY();
         }
         return new ArrayList<>();
     }
 
     public List<Position> computeCrossMiddle() {
-        if (from.computeInclination(to) == -1) {
-            return rightUp();
+        if (from.computeInclination(to) == INCLINATION_OF_RIGHT_UP) {
+            return computeBetweenRightUp();
         }
-        if (from.computeInclination(to) == 1) {
-            return rightDown();
+        if (from.computeInclination(to) == INCLINATION_OF_RIGHT_DOWN) {
+            return computeBetweenRightDown();
         }
         return new ArrayList<>();
     }
 
-    private List<Position> x() {
+    private List<Position> computeBetweenSameX() {
         return from.computeBetweenSameX(to);
     }
 
-    private List<Position> y() {
+    private List<Position> computeBetweenSameY() {
         return from.computeBetweenSameY(to);
     }
 
-    private List<Position> rightUp() {
+    private List<Position> computeBetweenRightUp() {
         return from.computeBetweenRightUp(to);
     }
 
-    private List<Position> rightDown() {
+    private List<Position> computeBetweenRightDown() {
         return from.computeBetweenRightDown(to);
     }
 

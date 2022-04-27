@@ -20,4 +20,9 @@ public class GameDao {
         String sql = "select current_turn from game where game_id = ?";
         return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }
+
+    public void insertGame(int gameId, String turn) {
+        String sql = "insert into game (game_id, current_turn) values (?,?)";
+        jdbcTemplate.update(sql, gameId, turn);
+    }
 }

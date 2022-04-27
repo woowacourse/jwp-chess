@@ -39,4 +39,12 @@ class GameDaoTest {
         String turn = gameDao.findTurnById(gameId);
         assertThat(turn).isEqualTo("WHITE");
     }
+
+    @Test
+    void insertGameTest() {
+        int gameId = 1;
+        gameDao.insertGame(gameId, "WHITE");
+        String turn = gameDao.findTurnById(gameId);
+        assertThat(turn).isEqualTo("WHITE");
+    }
 }

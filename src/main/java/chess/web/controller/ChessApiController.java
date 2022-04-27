@@ -18,27 +18,27 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/load")
-    public ResponseEntity<BoardDto> loadGame() {
-        Board board = chessService.loadGame(1L);
+    @GetMapping("/load/{id}")
+    public ResponseEntity<BoardDto> loadGame(@PathVariable Long id) {
+        Board board = chessService.loadGame(id);
         return ResponseEntity.ok().body(BoardDto.from(board));
     }
 
-    @GetMapping("/restart")
-    public ResponseEntity<BoardDto> initBoard() {
-        Board board = chessService.initBoard(1L);
+    @GetMapping("/restart/{id}")
+    public ResponseEntity<BoardDto> initBoard(@PathVariable Long id) {
+        Board board = chessService.initBoard(id);
         return ResponseEntity.ok().body(BoardDto.from(board));
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<ScoreDto> getStatus() {
-        ScoreDto status = chessService.getStatus(1L);
+    @GetMapping("/status/{id}")
+    public ResponseEntity<ScoreDto> getStatus(@PathVariable Long id) {
+        ScoreDto status = chessService.getStatus(id);
         return ResponseEntity.ok().body(status);
     }
 
-    @PostMapping("/move")
-    public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto) {
-        Board board = chessService.move(moveDto, 1L);
+    @PostMapping("/move/{id}")
+    public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto, @PathVariable Long id) {
+        Board board = chessService.move(moveDto, id);
         return ResponseEntity.ok().body(BoardDto.from(board));
     }
 }

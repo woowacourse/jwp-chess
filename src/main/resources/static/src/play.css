@@ -1,3 +1,20 @@
+.background {
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.chess-board {
+    margin: 20px;
+    width: 650px;
+}
+
+.chess-buttons {
+    width: 400px;
+    text-align: center;
+}
+
 .chess-ui {
     width: 640px;
     border: 4px solid slategrey;

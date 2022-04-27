@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class PieceDaoTest {
     private static final String PASSWORD = "password";
+    private static final String GAME_NAME = "test";
     @Autowired
     private ChessGameDao chessGameDao;
     @Autowired
@@ -19,14 +20,14 @@ class PieceDaoTest {
 
     @AfterEach
     void rollback() {
-        chessGameDao.remove("test");
+        chessGameDao.remove(GAME_NAME);
     }
 
     @DisplayName("피스들 저장 테스트")
     @Test
     public void save() {
         //given
-        ChessGame chessGame = new ChessGame("test");
+        ChessGame chessGame = new ChessGame(GAME_NAME);
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
         //when

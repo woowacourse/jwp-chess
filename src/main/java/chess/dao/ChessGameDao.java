@@ -62,24 +62,6 @@ public class ChessGameDao {
         jdbcTemplate.update(sql, chessGameDto.getTurn(), id);
     }
 
-    public ChessGame findByName(String gameName) {
-        String sql = "select CHESSGAME.turn, CHESSGAME.game_name, PIECE.type, PIECE.team, PIECE.`rank`, PIECE.file from CHESSGAME, PIECE\n"
-                + "where CHESSGAME.id = PIECE.chessgame_id AND CHESSGAME.game_name = ?;";
-
-        List<ChessGame> result = jdbcTemplate.query(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            preparedStatement.setString(1, gameName);
-            return preparedStatement;
-        }, chessGameRowMapper);
-
-        if(result.isEmpty()) {
-            return null;
-        }
-
-        return result.get(0);
-    }
-
     public ChessGame findById(Long id) {
         String sql = "select CHESSGAME.turn, CHESSGAME.game_name, PIECE.type, PIECE.team, PIECE.`rank`, PIECE.file from CHESSGAME, PIECE\n"
                 + "where CHESSGAME.id = PIECE.chessgame_id AND CHESSGAME.id = ?;";

@@ -18,9 +18,29 @@
         <br>
         비밀번호 <input type="text" name="gamePassword" value="1234">
         <br>
-        <button type="submit">입장하기</button>
+        <button type="submit">새로운 방 생성</button>
     </form>
     {{msg}}
 </div>
+
+<div class="rooms">
+    {{#each rooms}}
+        <div class="room">
+            <form action="/start" method="get">
+                <input type="hidden" name="gameId" value="{{this.gameId}}">
+                <input type="hidden" name="gamePassword" value="{{this.gamePassword}}">
+                <button type="submit" >{{this.gameId}} 입장하기</button>
+            </form>
+
+            <form action="/exit" method="post">
+                <input type="hidden" name="gameId" value="{{this.gameId}}">
+                비밀번호
+                <input type="text" name="gamePassword" value="">
+                <button type="submit" >삭제하기</button>
+            </form>
+        </div>
+    {{/each}}
+</div>
+
 </body>
 </html>

@@ -27,7 +27,8 @@ section.addEventListener("mouseup", (event) => {
     return updateGame()
 })
 
-async function exit(gameId) {
+async function exitGame(gameId) {
+    console.log("exit");
     await fetch(`/game/${gameId}/exit`, {method: "get"})
     window.location.replace("/");
 }

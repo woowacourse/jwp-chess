@@ -357,9 +357,11 @@
             <div class="white-score">백색팀: {{status.whiteScore}} 점</div>
             <div class="black-score">흑색팀: {{status.blackScore}} 점</div>
         </div>
-        <div class="exit">
-            <button type="button" onclick="exit({{gameId}})">exit</button>
-        </div>
+
+        <form action="/exit" method="get">
+            <input type="hidden" name="gameId" value="{{gameId}}">
+            <button type="submit">exit</button>
+        </form>
     </div>
 
 </div>

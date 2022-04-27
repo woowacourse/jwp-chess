@@ -9,6 +9,9 @@ import chess.dto.GameResultDto;
 import chess.dto.LogInDto;
 import chess.dto.MoveDto;
 import chess.dto.PiecesDto;
+import chess.dto.RoomDto;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +30,10 @@ public class ChessGameService {
         if (!gameDao.isInId(logInDto.getGameId())) {
             initGame(logInDto);
         }
+        validatePassword(logInDto);
+    }
+
+    private void validatePassword(LogInDto logInDto) {
         if (!gameDao.isValidPassword(logInDto)) {
             throw new IllegalArgumentException("올바르지 않은 비밀번호 입니다.");
         }
@@ -55,6 +62,12 @@ public class ChessGameService {
         gameDao.deleteById(gameId);
     }
 
+    public void cleanGame(LogInDto logInDto) {
+        validatePassword(logInDto);
+        pieceDao.deleteAllByGameId(logInDto.getGameId());
+        gameDao.deleteById(logInDto.getGameId());
+    }
+
     public void move(String gameId, MoveDto moveDto) {
         ChessGame chessGame = getGameStatus(gameId);
         chessGame.moveChessmen(moveDto.toEntity());
@@ -62,5 +75,11 @@ public class ChessGameService {
         pieceDao.createAllById(chessGame.getChessmen().getPieces(), gameId);
         gameDao.updateTurnById(chessGame.getTurn(), gameId);
         gameDao.updateForceEndFlagById(chessGame.getForceEndFlag(), gameId);
+    }
+
+    public List<RoomDto> getRooms() {
+        return gameDao.findAllGame().stream()
+                .filter(roomDto -> !roomDto.isForce_end_flag())
+                .collect(Collectors.toList());
     }
 }

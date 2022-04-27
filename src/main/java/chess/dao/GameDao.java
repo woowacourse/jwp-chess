@@ -2,6 +2,8 @@ package chess.dao;
 
 import chess.domain.piece.Color;
 import chess.dto.LogInDto;
+import chess.dto.RoomDto;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -56,5 +58,14 @@ public class GameDao {
     public boolean isValidPassword(LogInDto logInDto) {
         final String sql = "select count(*) from game where id = ? and password = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, logInDto.getGameId(), logInDto.getGamePassword()) > 0;
+    }
+
+    public List<RoomDto> findAllGame() {
+        final String sql = "select id, password, force_end_flag from game";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new RoomDto(
+                rs.getString("id"),
+                rs.getString("password"),
+                rs.getBoolean("force_end_flag")
+                ));
     }
 }

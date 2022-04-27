@@ -31,7 +31,7 @@ public class PieceDao {
         );
     }
 
-    public void updateAllByGameId(List<Piece> pieces, String gameId) {
+    public void updateAllByGameId(List<Piece> pieces, String  gameId) {
         final String sql = "UPDATE piece SET position = ? "
                 + "WHERE game_id = ? "
                 + "AND name = ? "

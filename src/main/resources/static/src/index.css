@@ -1,4 +1,11 @@
 
+.room {
+    border: 4px solid #C48F27;
+    width: 640px;
+    height: 120px;
+    background:#FFEDC9;
+}
+
 .chess-ui {
     float: left;
     width: 640px;
@@ -48,17 +55,14 @@ img {
 }
 
 button {
-    font-size: 25px;
     margin: 1%;
-    width: 150px;
-    height: 50px;
+    height: 30px;
     color: sienna;
     background-color: antiquewhite;
     border-color: unset;
 }
 
 #game-entry {
-    float: left;
     width: 640px;
     height: 320px;
     margin-left: 0.1%;

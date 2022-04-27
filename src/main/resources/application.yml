@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    group:
+      "default": "default"
+      "test": "test"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "default"
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:13306/chess
+    username: root
+    password: root
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "test"
+
+  h2:
+    console:
+      enabled: true

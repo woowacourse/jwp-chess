@@ -14,6 +14,7 @@ import chess.web.dao.RoomDao;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class ChessService {
 
     public Board loadGame(Long boardId) {
         Turn turn = boardDao.findTurnById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("없는 차례입니다."));
+                .orElseThrow(() -> new NoSuchElementException("없는 차례입니다."));
 
         List<Piece> pieces = pieceDao.findAllByBoardId(boardId);
         Board board = Board.create(Pieces.from(pieces), turn);

@@ -19,6 +19,4 @@ public class RoomRequestDto {
     public String getPassword() {
         return password;
     }
-
-
 }

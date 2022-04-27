@@ -13,10 +13,10 @@ import java.util.Map;
 
 public class ChessWebGame {
 
+    private final ChessRoom chessRoom;
     private Player whitePlayer;
     private Player blackPlayer;
     private Team turn;
-    private final ChessRoom chessRoom;
 
     public ChessWebGame(Player whitePlayer, Player blackPlayer, ChessRoom chessRoom) {
         this.whitePlayer = whitePlayer;

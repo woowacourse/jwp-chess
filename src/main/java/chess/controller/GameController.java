@@ -1,11 +1,11 @@
 package chess.controller;
 
 import chess.domain.event.MoveEvent;
-import chess.domain.event.MoveRoute;
 import chess.dto.CreateGameRequest;
 import chess.dto.CreateGameResponse;
 import chess.dto.DeleteGameRequest;
 import chess.dto.GameDto;
+import chess.dto.MoveRouteDto;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,10 +39,10 @@ public class GameController {
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
     }
 
-    @PostMapping(value = "/{id}", params = {"source", "target"})
-    public ModelAndView playGame(@PathVariable int id,
-                                 @RequestBody MoveRoute moveRoute) {
-        chessService.playGame(id, new MoveEvent(moveRoute));
+    @PostMapping("/move")
+    public ModelAndView playGame(@RequestBody MoveRouteDto moveRoute) {
+        int id = moveRoute.getId();
+        chessService.playGame(id, new MoveEvent(moveRoute.toMoveRoute()));
         GameDto gameDto = chessService.findGame(id);
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
     }

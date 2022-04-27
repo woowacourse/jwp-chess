@@ -2,8 +2,11 @@ package chess.dto;
 
 public class CreateGameRequest {
 
-    private final String title;
-    private final String password;
+    private String title;
+    private String password;
+
+    public CreateGameRequest() {
+    }
 
     public CreateGameRequest(String title, String password) {
         this.title = title;

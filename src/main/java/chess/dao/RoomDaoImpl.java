@@ -53,13 +53,14 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public List<RoomResponseDto> findAll() {
-        final String sql = "SELECT room_id, name, game_status FROM room";
+        final String sql = "SELECT room_id, name, game_status FROM room WHERE is_delete = ?";
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> RoomResponseDto.of(
                         Integer.parseInt(resultSet.getString("room_id")),
                         resultSet.getString("name"),
-                        resultSet.getString("game_status"))
+                        resultSet.getString("game_status")),
+                false
         );
     }
 

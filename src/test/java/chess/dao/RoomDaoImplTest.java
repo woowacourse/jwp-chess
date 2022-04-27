@@ -110,12 +110,15 @@ class RoomDaoImplTest {
     }
 
     @Test
-    @DisplayName("모든 방을 조회한다.")
+    @DisplayName("삭제된 방은 제외하고, 모든 방을 조회한다.")
     void findAll() {
         // given
         roomDao.save("name1", GameStatus.READY, Color.WHITE, "123");
         roomDao.save("name2", GameStatus.PLAYING, Color.BLACK, "1234");
         roomDao.save("name3", GameStatus.END, Color.WHITE, "12345");
+
+        final int roomId = roomDao.save("name4", GameStatus.END, Color.WHITE, "12345");
+        roomDao.deleteById(roomId);
 
         // when
         final List<RoomResponseDto> result = roomDao.findAll();

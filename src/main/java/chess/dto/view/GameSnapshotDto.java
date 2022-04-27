@@ -17,7 +17,7 @@ public class GameSnapshotDto {
     private final GameState state;
     private final List<RowDto> board;
 
-    public GameSnapshotDto(GameState state, List<RowDto> board) {
+    private GameSnapshotDto(GameState state, List<RowDto> board) {
         this.state = state;
         this.board = board;
     }

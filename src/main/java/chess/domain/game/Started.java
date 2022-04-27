@@ -4,7 +4,7 @@ import chess.domain.board.Board;
 import chess.dto.view.GameSnapshotDto;
 import java.util.Objects;
 
-public abstract class Started implements Game {
+abstract class Started implements Game {
 
     protected final GameState state;
     protected final Board board;

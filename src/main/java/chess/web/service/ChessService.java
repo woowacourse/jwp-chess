@@ -64,16 +64,16 @@ public class ChessService {
     }
 
     private Turn updatePieces(MoveDto moveDto, Turn turn, Piece piece, final Long boardId) {
-        Turn changedTurn = changeTurn(turn);
+        Turn changedTurn = changeTurn(turn, boardId);
         Empty empty = new Empty(Position.from(moveDto.getFrom()));
         pieceDao.updatePieceByPositionAndBoardId(empty.getType(), empty.getTeam().value(), moveDto.getFrom(), boardId);
         pieceDao.updatePieceByPositionAndBoardId(piece.getType(), piece.getTeam().value(), moveDto.getTo(), boardId);
         return changedTurn;
     }
 
-    private Turn changeTurn(Turn turn) {
+    private Turn changeTurn(Turn turn, Long boardId) {
         Turn change = turn.change();
-        boardDao.update(1L, change);
+        boardDao.update(boardId, change);
         return change;
     }
 

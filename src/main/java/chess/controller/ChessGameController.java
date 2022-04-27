@@ -23,7 +23,7 @@ public class ChessGameController {
         return new ModelAndView("game", HttpStatus.OK);
     }
 
-    @PostMapping("/new-game")
+    @PostMapping("/game")
     public ResponseEntity<ChessGameDto> createNewGame(@RequestParam("name") String gameName) {
         final ChessGameDto newChessGame = chessGameService.createNewChessGame(gameName);
         return ResponseEntity.ok(newChessGame);
@@ -35,13 +35,13 @@ public class ChessGameController {
         return ResponseEntity.ok(status);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/game")
     public ResponseEntity<StatusDto> deleteGame(@RequestParam("name") String gameName) {
         final StatusDto status = chessGameService.deleteGame(gameName);
         return ResponseEntity.ok(status);
     }
 
-    @GetMapping("/load")
+    @GetMapping("/game")
     public ResponseEntity<ChessGameDto> loadGame(@RequestParam("name") String gameName) {
         final ChessGameDto loadChessGame = chessGameService.loadChessGame(gameName);
         return ResponseEntity.ok(loadChessGame);

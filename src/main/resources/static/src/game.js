@@ -33,7 +33,7 @@ stopButton.addEventListener("click", async function () {
 async function newGame() {
     gameName = document.getElementById('newRoomName').value;
 
-    let chessGame = await fetch("/new-game?name=" + gameName, {
+    let chessGame = await fetch("/game?name=" + gameName, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -51,7 +51,7 @@ async function newGame() {
 async function resumeGame() {
     gameName = document.getElementById('existRoomName').value;
 
-    let boardAndTurnInfo = await fetch("/load?name=" + gameName, {
+    let boardAndTurnInfo = await fetch("/game?name=" + gameName, {
         method: "GET"
     }).then(handleErrors)
         .catch(function (error) {
@@ -92,7 +92,7 @@ async function finish() {
 }
 
 async function deleteAndFinish() {
-    await fetch("/delete?name=" + gameName, {
+    await fetch("/game?name=" + gameName, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

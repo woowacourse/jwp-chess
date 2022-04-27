@@ -6,17 +6,15 @@ import chess.piece.Color;
 public class ChessGameDto {
 
     private final int id;
-    private final String name;
     private final GameStatus status;
     private final Score blackScore;
     private final Score whiteScore;
     private final Color currentColor;
     private final String winner;
 
-    public ChessGameDto(int id, String name, GameStatus status, Score blackScore, Score whiteScore,
+    public ChessGameDto(int id, GameStatus status, Score blackScore, Score whiteScore,
                         Color currentColor) {
         this.id = id;
-        this.name = name;
         this.status = status;
         this.blackScore = blackScore;
         this.whiteScore = whiteScore;
@@ -24,10 +22,9 @@ public class ChessGameDto {
         this.winner = "";
     }
 
-    public ChessGameDto(int id, String name, GameStatus status, Score blackScore, Score whiteScore, Color currentColor,
+    public ChessGameDto(int id, GameStatus status, Score blackScore, Score whiteScore, Color currentColor,
                         String winner) {
         this.id = id;
-        this.name = name;
         this.status = status;
         this.blackScore = blackScore;
         this.whiteScore = whiteScore;
@@ -37,10 +34,6 @@ public class ChessGameDto {
 
     public int getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public GameStatus getStatus() {

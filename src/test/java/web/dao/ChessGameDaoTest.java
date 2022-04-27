@@ -31,7 +31,6 @@ public class ChessGameDaoTest {
         jdbcTemplate.execute("CREATE TABLE chess_game\n"
                 + "(\n"
                 + "    id            INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,\n"
-                + "    name          VARCHAR(10) NOT NULL,\n"
                 + "    status        VARCHAR(10) NOT NULL,\n"
                 + "    current_color CHAR(5)     NOT NULL,\n"
                 + "    black_score   VARCHAR(10) NOT NULL,\n"
@@ -52,7 +51,7 @@ public class ChessGameDaoTest {
 
         chessGameDao = new ChessGameDao(jdbcTemplate);
         chessGameDao.deleteAll();
-        chessGameDao.saveChessGame("Chess Game", GameStatus.RUNNING, Color.WHITE, new Score(new BigDecimal("10.0")),
+        chessGameDao.saveChessGame(GameStatus.RUNNING, Color.WHITE, new Score(new BigDecimal("10.0")),
                 new Score(new BigDecimal("15.0")));
     }
 
@@ -68,7 +67,6 @@ public class ChessGameDaoTest {
 
         assertAll(() -> {
             assertThat(chessGameDto.getStatus()).isEqualTo(GameStatus.RUNNING);
-            assertThat(chessGameDto.getName()).isEqualTo("Chess Game");
             assertThat(chessGameDto.getCurrentColor()).isEqualTo(Color.WHITE);
             assertThat(chessGameDto.getBlackScore()).isEqualTo(new Score(new BigDecimal("10.0")));
             assertThat(chessGameDto.getWhiteScore()).isEqualTo(new Score(new BigDecimal("15.0")));
@@ -79,7 +77,7 @@ public class ChessGameDaoTest {
     void updateChessGame() {
         ChessGameDto chessGameDto = chessGameDao.findById(getChessGameId());
         ChessGameDto newChessGameDto = new ChessGameDto(
-                chessGameDto.getId(), chessGameDto.getName(), GameStatus.FINISHED,
+                chessGameDto.getId(), GameStatus.FINISHED,
                 new Score(new BigDecimal("20.0")), new Score(new BigDecimal("12.5")), Color.BLACK);
         chessGameDao.updateChessGame(newChessGameDto);
 

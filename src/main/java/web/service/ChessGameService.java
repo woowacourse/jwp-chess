@@ -94,7 +94,7 @@ public class ChessGameService {
     }
 
     private ChessGameDto createNewChessGameDto(ChessBoard chessBoard, ChessGameDto chessGameDto) {
-        GameStatus status = chessGameDto.getStatus();
+        GameStatus status = GameStatus.RUNNING;
         String winner = chessGameDto.getWinner();
 
         if (chessBoard.isFinished()) {
@@ -102,7 +102,7 @@ public class ChessGameService {
             winner = chessBoard.getWinner().name();
         }
 
-        return new ChessGameDto(chessGameDto.getId(), chessGameDto.getName(), status, chessBoard.getScore(Color.BLACK),
+        return new ChessGameDto(chessGameDto.getId(), status, chessBoard.getScore(Color.BLACK),
                 chessBoard.getScore(Color.WHITE), chessBoard.getCurrentColor(), winner);
     }
 
@@ -113,14 +113,14 @@ public class ChessGameService {
 
     private ChessGameDto prepareChessGame(ChessGameDto chessGameDto) {
         Score initialScore = new Score(new BigDecimal("38.0"));
-        ChessGameDto newChessGameDto = new ChessGameDto(chessGameDto.getId(), chessGameDto.getName(),
-                GameStatus.RUNNING, initialScore, initialScore, Color.WHITE, chessGameDto.getWinner());
+        ChessGameDto newChessGameDto = new ChessGameDto(chessGameDto.getId(),
+                GameStatus.READY, initialScore, initialScore, Color.WHITE, chessGameDto.getWinner());
         chessGameDao.updateChessGame(newChessGameDto);
         return newChessGameDto;
     }
 
     private void preparePieces(ChessGameDto chessGameDto) {
-        pieceDao.deleteAll(chessGameDto.getId());
+        pieceDao.deleteByChessGameId(chessGameDto.getId());
         pieceDao.savePieces(chessGameDto.getId(), createPieces());
     }
 

@@ -29,8 +29,12 @@ class PieceDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     private PieceDao pieceDao;
+
     private ChessGameDao chessGameDao;
+
+    private int chessGameId;
 
     @BeforeEach
     void setUp() {
@@ -39,7 +43,6 @@ class PieceDaoTest {
         jdbcTemplate.execute("CREATE TABLE chess_game\n"
                 + "(\n"
                 + "    id            INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,\n"
-                + "    name          VARCHAR(10) NOT NULL,\n"
                 + "    status        VARCHAR(10) NOT NULL,\n"
                 + "    current_color CHAR(5)     NOT NULL,\n"
                 + "    black_score   VARCHAR(10) NOT NULL,\n"
@@ -55,13 +58,14 @@ class PieceDaoTest {
                 + "    FOREIGN KEY (chess_game_id) REFERENCES chess_game (id)\n"
                 + ")");
 
+
         chessGameDao = new ChessGameDao(jdbcTemplate);
-        chessGameDao.saveChessGame("chess", GameStatus.RUNNING, Color.WHITE,
+        chessGameId = chessGameDao.saveChessGame(GameStatus.RUNNING, Color.WHITE,
                 new Score(BigDecimal.ONE), new Score(BigDecimal.ONE));
 
         pieceDao = new PieceDao(jdbcTemplate);
-        pieceDao.deleteAll(getChessGameId());
-        pieceDao.savePieces(getChessGameId(), List.of(
+        pieceDao.deleteByChessGameId(chessGameId);
+        pieceDao.savePieces(chessGameId, List.of(
                 new PieceDto(new Position(A, EIGHT), PieceType.KING, Color.WHITE),
                 new PieceDto(new Position(A, SEVEN), PieceType.QUEEN, Color.WHITE),
                 new PieceDto(new Position(B, EIGHT), PieceType.PAWN, Color.WHITE),
@@ -72,18 +76,14 @@ class PieceDaoTest {
         ));
     }
 
-    private int getChessGameId() {
-        return chessGameDao.findAll().get(0).getId();
-    }
-
     @AfterEach
     void tearDown() {
-        pieceDao.deleteAll(getChessGameId());
+        pieceDao.deleteByChessGameId(chessGameId);
     }
 
     @Test
     void findPieces() {
-        assertThat(pieceDao.findPieces(getChessGameId())).containsExactlyInAnyOrder(
+        assertThat(pieceDao.findPieces(chessGameId)).containsExactlyInAnyOrder(
                 new PieceDto(new Position(A, EIGHT), PieceType.KING, Color.WHITE),
                 new PieceDto(new Position(A, SEVEN), PieceType.QUEEN, Color.WHITE),
                 new PieceDto(new Position(B, EIGHT), PieceType.PAWN, Color.WHITE),
@@ -96,9 +96,9 @@ class PieceDaoTest {
 
     @Test
     void deletePieceByPosition() {
-        pieceDao.deletePieceByPosition(getChessGameId(), new Position(A, SEVEN));
-        pieceDao.deletePieceByPosition(getChessGameId(), new Position(D, SIX));
-        assertThat(pieceDao.findPieces(getChessGameId())).containsExactlyInAnyOrder(
+        pieceDao.deletePieceByPosition(chessGameId, new Position(A, SEVEN));
+        pieceDao.deletePieceByPosition(chessGameId, new Position(D, SIX));
+        assertThat(pieceDao.findPieces(chessGameId)).containsExactlyInAnyOrder(
                 new PieceDto(new Position(A, EIGHT), PieceType.KING, Color.WHITE),
                 new PieceDto(new Position(B, EIGHT), PieceType.PAWN, Color.WHITE),
                 new PieceDto(new Position(C, EIGHT), PieceType.BISHOP, Color.WHITE),

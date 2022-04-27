@@ -24,7 +24,7 @@ import web.dao.ChessGameDao;
 import web.dto.GameStatus;
 import web.service.ChessGameService;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
 class ChessGameControllerTest {
 
@@ -45,11 +45,11 @@ class ChessGameControllerTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("DROP TABLE IF EXISTS piece");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS room");
         jdbcTemplate.execute("DROP TABLE IF EXISTS chess_game");
         jdbcTemplate.execute("CREATE TABLE chess_game\n"
                 + "(\n"
                 + "    id            INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,\n"
-                + "    name          VARCHAR(10) NOT NULL,\n"
                 + "    status        VARCHAR(10) NOT NULL,\n"
                 + "    current_color CHAR(5)     NOT NULL,\n"
                 + "    black_score   VARCHAR(10) NOT NULL,\n"
@@ -65,7 +65,7 @@ class ChessGameControllerTest {
                 + "    FOREIGN KEY (chess_game_id) REFERENCES chess_game (id)\n"
                 + ")");
 
-        chessGameId = chessGameDao.saveChessGame("hoho", GameStatus.READY, Color.WHITE, new Score(new BigDecimal("38")),
+        chessGameId = chessGameDao.saveChessGame(GameStatus.READY, Color.WHITE, new Score(new BigDecimal("38")),
                 new Score(new BigDecimal("38")));
         chessGameService.prepareNewChessGame(chessGameDao.findById(chessGameId));
     }

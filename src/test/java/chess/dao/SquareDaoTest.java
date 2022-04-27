@@ -3,12 +3,13 @@ package chess.dao;
 import static chess.model.Team.BLACK;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.entity.SquareEntity;
 import chess.model.Team;
-import chess.model.board.Board;
 import chess.model.piece.King;
 import chess.model.piece.Pawn;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,8 +77,8 @@ public class SquareDaoTest {
     @Test
     void findAll() {
         String id = "1";
-        Board board = squareDao.createBoardFrom(id);
+        List<SquareEntity> squareEntities = squareDao.findSquaresFrom(id);
 
-        assertThat(board.getBoard().size()).isEqualTo(1);
+        assertThat(squareEntities.size()).isEqualTo(1);
     }
 }

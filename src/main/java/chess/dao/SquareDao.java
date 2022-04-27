@@ -1,12 +1,9 @@
 package chess.dao;
 
 import chess.entity.SquareEntity;
-import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -34,18 +31,7 @@ public class SquareDao {
         return jdbcTemplate.update(sql, id, position.getKey(), piece.getTeam(), piece.getSymbol());
     }
 
-    public Board createBoardFrom(final String id) {
-        final List<SquareEntity> squareEntities = findSquaresFrom(id);
-        final Map<Position, Piece> squares = new HashMap<>();
-        for (SquareEntity squareEntity : squareEntities) {
-            Position position = Position.from(squareEntity.getPosition());
-            Piece piece = Piece.getPiece(squareEntity.getTeam() + "_" + squareEntity.getSymbol());
-            squares.put(position, piece);
-        }
-        return Board.from(squares);
-    }
-
-    private List<SquareEntity> findSquaresFrom(final String id) {
+    public List<SquareEntity> findSquaresFrom(final String id) {
         final String sql = "select position, team, symbol from square where id = ?";
         return jdbcTemplate.query(sql, actorRowMapper, id);
     }

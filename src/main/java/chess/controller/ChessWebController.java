@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/")
-public class ChessViewController {
+public class ChessWebController {
 
     @GetMapping("")
     public String home() {

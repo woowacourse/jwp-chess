@@ -6,11 +6,10 @@ import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.position.Position;
 import chess.dto.GameStatusDto;
+import chess.dto.MoveDto;
 import chess.dto.RequestDto;
 import chess.dto.StatusDto;
-import chess.mapper.Command;
 import chess.service.GameService;
-import java.util.Arrays;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,11 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ChessController {
-
-    private static final String MOVE_DELIMITER = " ";
-    private static final int MOVE_COMMAND_SIZE = 3;
-    private static final int SOURCE_INDEX = 1;
-    private static final int TARGET_INDEX = 2;
 
     private final GameService gameService;
 
@@ -62,21 +56,12 @@ public class ChessController {
 
     @ResponseBody
     @PostMapping("/room/{roomId}/move")
-    public ResponseEntity<GameStatusDto> movePiece(@PathVariable("roomId") int id, @RequestBody String body) {
+    public ResponseEntity<GameStatusDto> movePiece(@PathVariable("roomId") int id, @RequestBody MoveDto moveDto) {
         if (gameService.isEnd(id)) {
             throw new IllegalArgumentException("게임이 이미 끝났다.");
         }
-        final String[] split = body.split("=");
-        if (Command.isMove(split[1])) {
-            move(id, Arrays.asList(split[1].split(MOVE_DELIMITER)));
-        }
+        gameService.move(id, Position.of(moveDto.getStart()), Position.of(moveDto.getTarget()));
         return ResponseEntity.ok(new GameStatusDto(gameService.isEnd(id)));
-    }
-
-    private void move(int roomId, final List<String> commands) {
-        if (commands.size() == MOVE_COMMAND_SIZE) {
-            gameService.move(roomId, Position.of(commands.get(SOURCE_INDEX)), Position.of(commands.get(TARGET_INDEX)));
-        }
     }
 
     @PostMapping("/room/{roomId}/end")

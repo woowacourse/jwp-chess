@@ -28,7 +28,7 @@ public class PieceDao {
                 boardElementDto.getPosition());
     }
 
-    public List<BoardElementDto> findAllPiece(int gameId) {
+    public List<BoardElementDto> findAllPieceById(int gameId) {
         String sql = "SELECT * FROM piece WHERE game_id=?";
         return jdbcTemplate.query(sql, boardDtoRowMapper, gameId);
     }

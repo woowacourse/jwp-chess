@@ -45,7 +45,18 @@ public class PieceDaoTest {
         int gameId = 0;
         BoardElementDto boardElementDto = new BoardElementDto("p", "WHITE", "a2");
         pieceDao.savePiece(gameId, boardElementDto);
-        List<BoardElementDto> pieces = pieceDao.findAllPiece(gameId);
+        List<BoardElementDto> pieces = pieceDao.findAllPieceById(gameId);
         assertThat(pieces.contains(boardElementDto)).isTrue();
+    }
+
+    @Test
+    void findAllPieceByIdTest() {
+        int gameId = 0;
+        BoardElementDto boardElementDto1 = new BoardElementDto("p", "WHITE", "a2");
+        BoardElementDto boardElementDto2 = new BoardElementDto("k", "BLACK", "c7");
+        pieceDao.savePiece(gameId, boardElementDto1);
+        pieceDao.savePiece(gameId, boardElementDto2);
+        List<BoardElementDto> pieces = pieceDao.findAllPieceById(gameId);
+        assertThat(pieces.contains(boardElementDto1) && pieces.contains(boardElementDto2)).isTrue();
     }
 }

@@ -23,28 +23,37 @@ async function startChessGame() {
         });
 }
 
+async function requestPassword(win) {
+    let password = win.prompt("비밀번호를 입력 해주세요.");
+    if (password != null) {
+        return password;
+    }
+    alert("비밀번호를 입력해야 합니다.");
+}
+
+async function deleteChessGame(id, password){
+    fetch('/chessgames/' + id + "?password=" + password, {
+        method: 'DELETE',
+    }).then(response => handlingException(response))
+        .catch(function (error) {
+            alert(error.message)
+        })
+}
+
 async function openLoadGameWindowPop(url, title) {
     let options = "top=10, left=10, width=500, height=600, status=no, menubar=no, toolbar=no, resizable=no";
     let win = window.open(url, title, options);
 
     win.loadGame = function (id) {
-        let password = win.prompt("비밀번호를 입력 해주세요.");
-        if (password != null) {
-            win.close();
-            loadChessGamePage("/chessgames/" + id, password);
-            return;
-        }
-        alert("비밀번호를 입력해야 합니다.");
+        requestPassword(win)
+            .then(password => loadChessGamePage("/chessgames/" + id, password));
+        win.close();
     }
 
     win.deleteGame = function (id) {
+        requestPassword(win)
+            .then(password => deleteChessGame(id ,password));
         win.close();
-        fetch('/game/' + id, {
-            method: 'DELETE',
-        }).then(response => handlingException(response))
-            .catch(function (error) {
-                alert(error.message)
-            })
     }
 }
 

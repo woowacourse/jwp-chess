@@ -118,7 +118,7 @@ div {
   align-items: center;
 }
 
-#modal__game-list {
+#modal__games {
   height: 300px;
   width: 450px;
   border: solid 2px lavender;
@@ -135,4 +135,13 @@ div {
 
 #box__title {
   margin-top: 0;
+}
+
+.games__game {
+  width: 100%;
+  height: 20px;
+  border-bottom: solid 2px #cadebf;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

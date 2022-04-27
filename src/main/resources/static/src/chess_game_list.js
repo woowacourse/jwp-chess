@@ -19,8 +19,29 @@ function deleteGame(gameId) {
 }
 
 function loadGame(gameId){
-    const url = "/chessgames/" + gameId;
-    window.location.href = url
+    window.location.href = "/chessgames/" + gameId
+}
+
+async function startNewGame() {
+    const inputTitle = prompt("체스방 이름을 입력해주세요");
+    const inputPassword = prompt("체스방 비밀번호를 입력해주세요");
+    const request = {
+        title : inputTitle,
+        password : inputPassword
+    }
+    await fetch("/chessgames", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(request)
+    }).then(response => handlingException(response))
+        .then(function (response) {
+            window.location.href = response.headers.get('Location');
+        })
+        .catch(error => {
+            alert(error.message);
+        });
 }
 
 async function handlingException(response) {

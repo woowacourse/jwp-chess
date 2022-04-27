@@ -18,22 +18,6 @@ async function displayBoard() {
     )
 }
 
-// async function startChessGame() {
-//     await fetch("/chessgames", {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json;charset=utf-8'
-//         }
-//     }).then(response => handlingException(response))
-//         .then(function (response) {
-//             gameUri = response.headers.get('Location');
-//         })
-//         .then(refreshAndDisplayBoard)
-//         .catch(error => {
-//             alert(error.message);
-//         });
-// }
-
 async function promotionButton() {
     const promotionPiece = document.getElementById("promotion").value;
     const promotion = {
@@ -68,12 +52,14 @@ async function clickMove(id) {
     target = id;
     console.log(target)
     document.getElementById(source).style.backgroundColor = '';
-    await moveButton(source, target);
-    source = "";
-    target = "";
+    await moveButton()
+        .then(function () {
+            source = "";
+            target = "";
+        });
 }
 
-async function moveButton(source, target) {
+async function moveButton() {
     const move = {
         source: source,
         target: target
@@ -85,13 +71,11 @@ async function moveButton(source, target) {
         },
         body: JSON.stringify(move)
     }).then(response => handlingException(response))
-        .then(reload)
         .then(checkEndGame)
+        .then(reload)
         .catch(error => {
             alert(error.message);
         });
-    document.getElementById("source").value = "";
-    document.getElementById("target").value = "";
 }
 
 async function reload() {
@@ -99,32 +83,34 @@ async function reload() {
 }
 
 async function checkEndGame() {
-    const gameStatus = await fetch(gameUri + "/status")
-        .then((response) => response.json())
+    await fetch(gameUri + "/status")
+        .then(response => handlingException(response))
+        .then(response => response.json())
+        .then(response => displayWinner(response))
+        .catch(error => {
+            alert(error.message);
+        });
+}
 
-    if (gameStatus.isEnd) {
-        await fetch(gameUri + "/winner")
+function displayWinner(response) {
+    if (response.end) {
+        fetch(gameUri + "/winner")
             .then(response => handlingException(response))
-            .then(response => displayWinner(response))
+            .then(response => response.json())
+            .then(response => alert(`우승자는 ${response.winner}입니다.`))
             .catch(error => {
                 alert(error.message);
             });
     }
 }
 
-async function displayWinner(response) {
-    const result = await response.json();
-    alert(`우승자는 ${result.winner}입니다.`);
-}
-
 async function scoreButton() {
     const value = await fetch(gameUri + "/score")
-        .then((response) => response.json());
-    if (gameUri !== "") {
-        alert(`${value[0].color}의 점수는 ${value[0].score}\n${value[1].color}의 점수는 ${value[1].score}`);
-    } else {
-        alert("게임을 로드하지 않았습니다.");
-    }
+        .then(response => handlingException(response))
+        .catch(error => {
+            alert(error.message);
+        });
+    alert(`${value[0].color}의 점수는 ${value[0].score}\n${value[1].color}의 점수는 ${value[1].score}`);
 }
 
 async function handlingException(response) {

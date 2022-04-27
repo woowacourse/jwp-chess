@@ -8,7 +8,6 @@
 </head>
 
 <body onload="displayBoard()">
-<button onclick="reload()">sdfdsfsdf</button>
 <div id="app">
     <h1>♟️ 체스</h1>
     <section class="chess-ui">
@@ -87,26 +86,15 @@
 </div>
 <h2>체스 form</h2>
 <div>
-    <input type="button" onclick="startChessGame()" value="start">
     <input type="button" onclick="scoreButton()" value="score">
 </div>
 <br>
-<form>
-    <input id="gameId" placeholder="체스게임 id입력">
-    <input type="button" onclick="loadButton()" value="load game">
-</form>
-<br>
-<form>
-    <input id="source" placeholder="source 위치 (ex. a5)">
-    <input id="target" placeholder="target 위치 (ex. a5)">
-    <input type="button" onclick="moveButton()" value="move">
-</form>
 <br>
 <form>
     <input id="promotion" placeholder="promotion 기물이름 (ex. Q)">
     <input type="button" onclick="promotionButton()" value="promotion">
 </form>
-<script type="text/javascript" th:src="@{/src/chess_game.js}"></script>
+<script type="text/javascript" src="/src/chess_game.js"></script>
 <script th:inline="javascript">
     const pieces = [[${pieces}]];
 </script>

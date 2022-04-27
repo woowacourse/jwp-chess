@@ -28,50 +28,37 @@ public class BoardDaoImpl implements BoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private class PositionAndPiece {
-        private final Position position;
-        private final Piece piece;
-
-        public PositionAndPiece(Position position, Piece piece) {
-            this.position = position;
-            this.piece = piece;
-        }
-
-        public Position getPosition() {
-            return position;
-        }
-
-        public Piece getPiece() {
-            return piece;
-        }
-    }
-
     @Override
     public BoardDto getBoard(String gameId) {
         Map<Position, Piece> boardValue = new HashMap<>();
 
-        List<PositionAndPiece> positionAndPieces = getPositionAndPieceByGameId(gameId);
-
-        for (PositionAndPiece positionAndPiece : positionAndPieces) {
-            boardValue.put(positionAndPiece.getPosition(), positionAndPiece.getPiece());
+        for (Position position : getPositionsByGameId(gameId)) {
+            String query = String.format(
+                "SELECT piece_type, piece_color FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
+            boardValue.put(position, getPieceByGameIdAndPosition(query, gameId, position));
         }
 
         return BoardDto.from(boardValue);
     }
 
-    private List<PositionAndPiece> getPositionAndPieceByGameId(String gameId) {
-        String query = String.format("SELECT x_axis, y_axis, piece_type, piece_color FROM %s WHERE game_id = ?",
+    private List<Position> getPositionsByGameId(String gameId) {
+        String query = String.format("SELECT x_axis, y_axis FROM %s WHERE game_id = ?",
             TABLE_NAME);
-        List<PositionAndPiece> positionAndPieces = jdbcTemplate.query(query, (resultSet, rowNum) -> {
+        List<Position> positions = jdbcTemplate.query(query, (resultSet, rowNum) -> {
             XAxis xAxis = XAxis.getByValue(resultSet.getString("x_axis"));
             YAxis yAxis = YAxis.getByValue(resultSet.getString("y_axis"));
+            Position position = Position.of(xAxis, yAxis);
+            return position;
+        }, gameId);
+        return positions;
+    }
+
+    private Piece getPieceByGameIdAndPosition(String sql, String gameId, Position position) {
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
             PieceType pieceType = PieceType.valueOf(resultSet.getString("piece_type"));
             PieceColor pieceColor = PieceColor.valueOf(resultSet.getString("piece_color"));
-            Position position = Position.of(xAxis, yAxis);
-            Piece piece = new Piece(pieceType, pieceColor);
-            return new PositionAndPiece(position, piece);
-        }, gameId);
-        return positionAndPieces;
+            return new Piece(pieceType, pieceColor);
+        }, gameId, position.getXAxis().getValueAsString(), position.getYAxis().getValueAsString());
     }
 
     @Override

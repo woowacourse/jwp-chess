@@ -5,12 +5,21 @@ CREATE TABLE room
     password varchar(8)  not null
 );
 
+CREATE TABLE game
+(
+    roomId int        not null primary key,
+    state   varchar(3) not null,
+    foreign key (roomId) REFERENCES room (id)
+        on delete cascade
+);
+
+
 CREATE TABLE turn
 (
     roomId int        not null primary key,
     team   varchar(5) not null,
-    foreign key (roomId) REFERENCES room (id),
-    on delete cascade
+    foreign key (roomId) REFERENCES room (id)
+        on delete cascade
 );
 
 CREATE TABLE piece

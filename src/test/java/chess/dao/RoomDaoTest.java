@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dto.RoomDto;
+import chess.dto.RoomRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,10 +34,10 @@ class RoomDaoTest {
     @Test
     @DisplayName("체스룸을 생성한다.")
     void makeRoom() {
-        final RoomDto roomDto = new RoomDto("chessRoom", "abcd");
+        final RoomRequestDto roomRequestDto = new RoomRequestDto("chessRoom", "abcd");
         final long expected = 1L;
 
-        final long actual = roomDao.makeRoom(roomDto);
+        final long actual = roomDao.makeRoom(roomRequestDto);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -45,8 +46,8 @@ class RoomDaoTest {
     @DisplayName("체스룸 제목으로 방 id를 찾는다.")
     void findIdByRoomName() {
         final String roomName = "chessRoom";
-        final RoomDto roomDto = new RoomDto(roomName, "abcd");
-        roomDao.makeRoom(roomDto);
+        final RoomRequestDto roomRequestDto = new RoomRequestDto(roomName, "abcd");
+        roomDao.makeRoom(roomRequestDto);
         final long expected = 1L;
 
         final long actual = roomDao.findIdByRoomName(roomName);
@@ -57,21 +58,21 @@ class RoomDaoTest {
     @Test
     @DisplayName("체스룸 id로 방을 찾는다.")
     void findRoomById() {
-        final RoomDto roomDto1 = new RoomDto("chessRoom", "abcd");
-        final RoomDto roomDto2 = new RoomDto("chessRoom2", "1234");
-        roomDao.makeRoom(roomDto1);
-        roomDao.makeRoom(roomDto2);
+        final RoomRequestDto roomRequestDto1 = new RoomRequestDto("chessRoom", "abcd");
+        final RoomRequestDto roomRequestDto2 = new RoomRequestDto("chessRoom2", "1234");
+        roomDao.makeRoom(roomRequestDto1);
+        roomDao.makeRoom(roomRequestDto2);
 
         final RoomDto actual = roomDao.findRoomById(2L);
 
-        assertThat(actual).isEqualTo(roomDto2);
+        assertThat(actual.getId()).isEqualTo(2L);
     }
 
     @Test
     @DisplayName("체스룸을 삭제한다.")
     void deleteRoom() {
-        final RoomDto roomDto = new RoomDto("chessRoom", "abcd");
-        roomDao.makeRoom(roomDto);
+        final RoomRequestDto roomRequestDto = new RoomRequestDto("chessRoom", "abcd");
+        roomDao.makeRoom(roomRequestDto);
         roomDao.deleteRoom(1L);
         final String sql = "select count(*) from room";
         final int expected = 0;

@@ -1,11 +1,12 @@
 package chess.dao;
 
 import chess.dto.RoomDto;
+import chess.dto.RoomRequestDto;
 
 import java.util.List;
 
 public interface RoomDao {
-    long makeRoom(final RoomDto roomDto);
+    long makeRoom(final RoomRequestDto roomRequestDto);
 
     List<RoomDto> findAll();
 

@@ -11,7 +11,8 @@ public class RoomDto {
     public RoomDto() {
     }
 
-    public RoomDto(String name, String password) {
+    public RoomDto(long id, String name, String password) {
+        this.id = id;
         this.name = name;
         this.password = password;
     }

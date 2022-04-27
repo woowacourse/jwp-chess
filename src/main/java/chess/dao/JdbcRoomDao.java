@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dto.RoomDto;
+import chess.dto.RoomRequestDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,6 +16,7 @@ public class JdbcRoomDao implements RoomDao {
 
     private final RowMapper<RoomDto> roomRowMapper = (resultSet, rowNum) -> {
         return new RoomDto(
+                resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("password")
         );
@@ -27,13 +29,13 @@ public class JdbcRoomDao implements RoomDao {
     }
 
     @Override
-    public long makeRoom(final RoomDto roomDto) {
+    public long makeRoom(final RoomRequestDto roomRequestDto) {
         final String sql = "insert into room (name, password) values (?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, roomDto.getName());
-            ps.setString(2, roomDto.getPassword());
+            ps.setString(1, roomRequestDto.getName());
+            ps.setString(2, roomRequestDto.getPassword());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -57,7 +59,7 @@ public class JdbcRoomDao implements RoomDao {
 
     @Override
     public RoomDto findRoomById(final long id) {
-        final String sql = "select name, password from room where id = ?";
+        final String sql = "select * from room where id = ?";
         return jdbcTemplate.queryForObject(sql, roomRowMapper, id);
     }
 

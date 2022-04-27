@@ -42,14 +42,6 @@ public class ChessService {
         return WebBoardDto.from(toBoard(pieceDao.findAllByGameId(gameId)));
     }
 
-    private long makeRoom(RoomDto roomDto) {
-        return gameDao.initGame(roomDto.getRoomName(), roomDto.getPassword());
-    }
-
-    private void makeBoard(Long gameId) {
-        pieceDao.init(BoardFactory.create(), gameId);
-    }
-
     public GameInfosDto getAllGames() {
         List<GameEntity> games = gameDao.findAll();
         return new GameInfosDto(games.stream()
@@ -67,7 +59,7 @@ public class ChessService {
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
-        Board board = toBoard(pieceDao.findAllPieces());
+        Board board = toBoard(pieceDao.findAllByGameId(id));
         if (board.isKingDead()) {
             gameDao.update(turn.finish(), id);
         }
@@ -76,7 +68,7 @@ public class ChessService {
     }
 
     private void movePiece(MoveDto moveDto, Piece sourcePiece, Piece targetPiece, Turn turn, Long id) {
-        if (canMove(moveDto, sourcePiece, targetPiece)) {
+        if (canMove(moveDto, sourcePiece, targetPiece, id)) {
             pieceDao.updateByPosition(moveDto.getTarget(), PieceDao.getPieceName(sourcePiece));
             pieceDao.updateByPosition(moveDto.getSource(), "none-.");
             gameDao.update(turn.change().getThisTurn(), id);
@@ -99,25 +91,18 @@ public class ChessService {
         return GameResult.from(board);
     }
 
-    public void exitGame() {
-        pieceDao.deleteAll();
-        gameDao.deleteAll();
-    }
-
     public void deleteByGameId(Long id) {
         // 생각해볼 것: 두개가 참조되어 있을 때 뭘 먼저 실행해야할지?
         pieceDao.deleteByGameId(id);
         gameDao.deleteByGameId(id);
     }
 
-    private Board initBoard() {
-        List<PieceEntity> board = pieceDao.findAllPieces();
+    private long makeRoom(RoomDto roomDto) {
+        return gameDao.initGame(roomDto.getRoomName(), roomDto.getPassword());
+    }
 
-        if (board.size() == 0) {
-            pieceDao.init(BoardFactory.create());
-        }
-
-        return toBoard(pieceDao.findAllPieces());
+    private void makeBoard(Long gameId) {
+        pieceDao.init(BoardFactory.create(), gameId);
     }
 
     private Board toBoard(List<PieceEntity> rawBoard) {
@@ -129,31 +114,23 @@ public class ChessService {
                 ));
     }
 
-//    private void initTurn() {
-//        Optional<String> turn = gameDao.findTurnById();
-//
-//        if (turn.isEmpty()) {
-//            gameDao.init();
-//        }
-//    }
-
     private void validateCurrentTurn(Turn thisTurn, Piece sourcePiece) {
         if (!sourcePiece.isCurrentTurn(thisTurn)) {
             throw new IllegalArgumentException("본인의 말을 움직여야 합니다.");
         }
     }
 
-    private boolean canMove(MoveDto moveDto, Piece sourcePiece, Piece targetPiece) {
+    private boolean canMove(MoveDto moveDto, Piece sourcePiece, Piece targetPiece, Long id) {
         Position sourcePosition = Position.from(moveDto.getSource());
         Position targetPosition = Position.from(moveDto.getTarget());
         MoveType moveType = MoveType.of(sourcePiece, targetPiece);
 
         return sourcePiece.isMovable(sourcePosition, targetPosition, moveType)
-                && !hasBlock(sourcePosition, targetPosition, sourcePiece);
+                && !hasBlock(sourcePosition, targetPosition, sourcePiece, id);
     }
 
-    private boolean hasBlock(Position source, Position target, Piece sourcePiece) {
-        Board board = toBoard(pieceDao.findAllPieces());
+    private boolean hasBlock(Position source, Position target, Piece sourcePiece, Long id) {
+        Board board = toBoard(pieceDao.findAllByGameId(id));
         List<Position> positions = sourcePiece.getIntervalPosition(source, target);
         return positions.stream()
                 .anyMatch(position -> !board.get(position).equals(new Empty()));

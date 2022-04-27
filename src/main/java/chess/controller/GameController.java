@@ -1,14 +1,11 @@
 package chess.controller;
 
 import chess.domain.auth.EncryptedAuthCredentials;
-import chess.domain.board.piece.Color;
 import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
 import chess.dto.response.SearchResultDto;
 import chess.service.ChessService;
-import chess.util.CookieUtils;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,11 +39,11 @@ public class GameController {
     }
 
     @PostMapping
-    public int createGame(EncryptedAuthCredentials authCredentials,
-                          HttpServletResponse response) {
-        int newGameId = chessService.initGame(authCredentials);
-        response.addCookie(CookieUtils.generate(newGameId, Color.WHITE));
-        return newGameId;
+    public int createGame(EncryptedAuthCredentials authCredentials
+                          /*, HttpServletResponse response*/) {
+        return chessService.initGame(authCredentials);
+        // TODO: 추가 미션 요구사항 관련.
+        // response.addCookie(CookieUtils.generate(gameId, Color.WHITE));
     }
 
     @GetMapping("/{id}")
@@ -54,17 +51,18 @@ public class GameController {
         return getGameModelAndView(id);
     }
 
+    // TODO: 추가 미션 요구사항 관련.
     @PostMapping("/{id}")
     public void enterGame(@PathVariable int id,
                           EncryptedAuthCredentials authCredentials,
                           HttpServletResponse response) {
         // TODO: create Opponent(BLACK) or validate Player(WHITE/BLACK) password
-        response.addCookie(CookieUtils.generate(id, Color.BLACK));
+        // response.addCookie(CookieUtils.generate(id, Color.BLACK));
     }
 
     @PutMapping("/{id}")
     public ModelAndView updateGame(@PathVariable int id,
-                                   @CookieValue(value = CookieUtils.KEY) String cookie,
+                                    /* @CookieValue(value = CookieUtils.KEY) String cookie, */
                                    @RequestBody MoveRoute moveRoute) {
         chessService.playGame(id, new MoveEvent(moveRoute));
         return getGameModelAndView(id);

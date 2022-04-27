@@ -12,7 +12,6 @@ import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
 import chess.domain.result.EndResult;
 import chess.domain.result.MoveResult;
-import chess.domain.result.StartResult;
 import chess.dto.ChessPieceMapper;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.response.ChessPieceDto;
@@ -43,19 +42,18 @@ public class ChessService {
     }
 
     public void initPiece(final int roomId) {
-        final boolean roomExist = roomDao.isExistId(roomId);
-        if (!roomExist) {
-            throw new IllegalArgumentException("방이 존재하지 않습니다.");
-        }
         final RoomStatusDto statusDto = roomDao.findStatusById(roomId);
-        statusDto.getGameStatus().checkReady();
+        final GameStatus gameStatus = statusDto.getGameStatus();
+        gameStatus.checkPlaying();
+
+        final List<ChessPieceDto> chessPieceDtos = chessPieceDao.findAllByRoomId(roomId);
+        if (!chessPieceDtos.isEmpty()) {
+            throw new IllegalArgumentException("기물이 이미 초기화 되었습니다.");
+        }
 
         final Map<Position, ChessPiece> pieceByPosition = ChessBoardFactory.createInitPieceByPosition();
-        final ChessGame chessGame = new ChessGame(new ChessBoard(pieceByPosition));
 
-        final StartResult startResult = chessGame.start();
-        updateChessPiece(roomId, startResult.getPieceByPosition());
-        updateRoomStatusTo(roomId, GameStatus.PLAYING);
+        updateChessPiece(roomId, pieceByPosition);
     }
 
     private void updateChessPiece(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {

@@ -17,6 +17,7 @@ import chess.dto.request.MoveRequestDto;
 import chess.dto.response.ChessPieceDto;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomStatusDto;
+import chess.exception.NotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,20 +119,20 @@ class ChessServiceTest {
 
         // then
         assertThatThrownBy(() -> chessService.initPiece(roomId))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("방이 존재하지 않습니다.");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("방 아이디에 해당하는 게임 상태가 존재하지 않습니다.");
     }
 
     @Test
-    @DisplayName("게임이 이미 시작된 후 기물을 초기화 하면 예외가 터진다.")
-    void initPiece_already_start() {
+    @DisplayName("게임이 시작되기 전에 기물을 초기화 하면 예외가 터진다.")
+    void initPiece_before_start() {
         // given
-        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.WHITE, "1234");
+        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
 
         // then
         assertThatThrownBy(() -> chessService.initPiece(roomId))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("게임이 이미 시작되었습니다.");
+                .hasMessage("게임이 시작되지 않았습니다.");
     }
 
     @ParameterizedTest
@@ -148,24 +149,25 @@ class ChessServiceTest {
     }
 
     @Test
-    @DisplayName("기물을 초기화 하면 방의 상태가 PLAYING이 된다.")
-    void initPiece_gameStatus() {
+    @DisplayName("기물이 이미 초기화된 이후 후 기물을 초기화 하면 예외가 터진다.")
+    void initPiece_already_init() {
         // given
-        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
-
-        // when
-        chessService.initPiece(roomId);
+        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.WHITE, "1234");
+        final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
+        pieceByPosition.put(Position.from("a1"), King.from(Color.WHITE));
+        chessPieceDao.saveAll(roomId, pieceByPosition);
 
         // then
-        final RoomStatusDto actual = roomDao.findStatusById(roomId);
-        assertThat(actual.getGameStatus()).isEqualTo(GameStatus.PLAYING);
+        assertThatThrownBy(() -> chessService.initPiece(roomId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("기물이 이미 초기화 되었습니다.");
     }
 
     @Test
     @DisplayName("기물을 초기화 하면 방에 32개의 기물이 존재한다.")
     void initPiece_pieces() {
         // given
-        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
+        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.WHITE, "1234");
 
         // when
         chessService.initPiece(roomId);

@@ -78,8 +78,8 @@ public class ChessGame {
         return turn.getColor();
     }
 
-    private State convertToState(String state, Chessboard chessboard) {
-        return StateFactory.valueOf(state)
+    private State convertToState(String stateName, Chessboard chessboard) {
+        return StateFactory.valueOf(stateName)
                 .create(chessboard);
     }
 

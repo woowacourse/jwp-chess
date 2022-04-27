@@ -60,7 +60,7 @@ class RoomControllerTest {
             .formParam("password", password)
             .when().post("/rooms")
             .then().log().all()
-            .statusCode(HttpStatus.OK.value());
+            .header("Location", containsString("/rooms/"));
     }
 
     @Test
@@ -69,7 +69,7 @@ class RoomControllerTest {
         roomService.create(new RoomDto(testName, password));
         roomService.create(new RoomDto("does", password));
         RestAssured.given().log().all()
-            .when().get("/rooms")
+            .when().get("/api/rooms")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("size()", is(2));
@@ -92,7 +92,7 @@ class RoomControllerTest {
         RoomDto room = roomService.create(new RoomDto(testName, password));
 
         RestAssured.given().log().all()
-            .when().get("/rooms/" + room.getId() + "/start")
+            .when().get("/api/rooms/" + room.getId() + "/start")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -104,7 +104,7 @@ class RoomControllerTest {
         gameService.startNewGame(roomId);
 
         RestAssured.given().log().all()
-            .when().get("/rooms/" + roomId + "/load")
+            .when().get("/api/rooms/" + roomId + "/load")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -116,7 +116,7 @@ class RoomControllerTest {
 
         RestAssured.given().log().all()
             .formParam("password", password)
-            .when().delete("/rooms/" + room.getId())
+            .when().delete("/api/rooms/" + room.getId())
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }

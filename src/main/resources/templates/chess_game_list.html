@@ -10,6 +10,7 @@
 
 <body>
 <table id="chessGameTable">
+<!--    <button onclick="startNewGame()">dsfdsfdsf</button>-->
     <thead>
     <tr>
         <th>id</th>
@@ -20,7 +21,7 @@
     <tbody>
     <tr th:each="game : ${chessGames}">
         <td th:text="${game.id}">id</td>
-        <td th:text="${game.title}">title</td>
+        <td th:text="${game.title}" th:attr="onclick=|loadGame('${game.id}')|">title</td>
         <td><button th:attr="onclick=|deleteGame('${game.id}')|">삭제</button></td>
     </tr>
     </tbody>

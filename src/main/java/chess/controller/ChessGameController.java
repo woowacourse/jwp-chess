@@ -5,7 +5,6 @@ import chess.controller.dto.request.PromotionRequest;
 import chess.controller.dto.response.ChessGameScoreResponse;
 import chess.controller.dto.response.ChessGameStatusResponse;
 import chess.controller.dto.response.ChessGameWinnerResponse;
-import chess.controller.dto.response.PieceResponse;
 import chess.service.ChessGameService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,16 +24,6 @@ public class ChessGameController {
 
     public ChessGameController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
-    }
-
-    @GetMapping("/{chessGameId}")
-    public ResponseEntity<List<PieceResponse>> loadChessGame(@PathVariable long chessGameId) {
-        List<PieceResponse> pieceResponses = chessGameService.findChessBoard(chessGameId)
-                .entrySet()
-                .stream()
-                .map(PieceResponse::from)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(pieceResponses);
     }
 
     @PatchMapping("/{chessGameId}/move")

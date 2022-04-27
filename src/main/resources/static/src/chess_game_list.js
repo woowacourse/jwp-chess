@@ -18,6 +18,11 @@ function deleteGame(gameId) {
         });
 }
 
+function loadGame(gameId){
+    const url = "/chessgames/" + gameId;
+    window.location.href = url
+}
+
 async function handlingException(response) {
     console.log(response)
     if (response.ok) {

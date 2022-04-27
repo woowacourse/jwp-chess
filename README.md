@@ -75,8 +75,9 @@
 |GET     |/                        |메인 페이지                     |
 |GET     |/rooms                   |모든 방 조회                    |
 |POST    |/rooms                   |새로운 방 생성                  |
-|DELETE  |/rooms                   |방 삭제                        |
-|GET     |/rooms/{roomId}          |이름이 {roomId}인 방 조회        |
+|DELETE  |/rooms                   |방 삭제                       |
+|GET     |/rooms/{roomId}          |ID가 {roomId}인 방 조회        |
+|PATCH   |/rooms/{roomId}/status   |ID가 {roomId}인 방의 상태 변경   |
 |GET     |/rooms/{roomId}/pieces   |{roomId} 방이 소유한 모든 기물 조회|
 |POST    |/rooms/{roomId}/pieces   |{roomId} 방의 기물 등록         |
 |PATCH   |/rooms/{roomId}/pieces   |{roomId} 방의 기물 위치 변경     |

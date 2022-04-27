@@ -28,11 +28,12 @@ public class ChessController {
         return "game";
     }
 
-    @GetMapping("/new")
+    @PostMapping("/new")
     @ResponseBody
     public Map<String, String> startNewGame(@RequestBody RoomDto roomDto) {
         WebBoardDto board = chessService.start(roomDto);
         return board.getWebBoard();
+        // 생각해볼 부분: ResponseEntity의 사용
     }
 
     @GetMapping("/start")

@@ -4,13 +4,16 @@ public class RoomDto {
     private int roomId;
     private String roomTitle;
     private boolean finished;
+    private boolean deleted;
 
     public RoomDto() {
     }
-    public RoomDto(int roomId, String roomTitle, boolean finished) {
+
+    public RoomDto(int roomId, String roomTitle, boolean finished, boolean deleted) {
         this.roomId = roomId;
         this.roomTitle = roomTitle;
         this.finished = finished;
+        this.deleted = deleted;
     }
 
     public int getRoomId() {
@@ -25,6 +28,10 @@ public class RoomDto {
         return finished;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
     public void setRoomId(int roomId) {
         this.roomId = roomId;
     }
@@ -35,5 +42,9 @@ public class RoomDto {
 
     public void setFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

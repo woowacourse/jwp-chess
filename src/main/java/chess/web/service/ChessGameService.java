@@ -11,6 +11,8 @@ import chess.web.dao.ChessBoardDao;
 import chess.web.dao.RoomDao;
 import chess.web.dto.CreateRoomRequestDto;
 import chess.web.dto.CreateRoomResultDto;
+import chess.web.dto.DeleteDto;
+import chess.web.dto.DeleteResultDto;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
@@ -110,5 +112,9 @@ public class ChessGameService {
 
     public ReadRoomResultDto findAllRooms() {
         return roomDao.findAll();
+    }
+
+    public DeleteResultDto delete(int roomId, DeleteDto deleteDto) {
+        return roomDao.delete(roomId, deleteDto);
     }
 }

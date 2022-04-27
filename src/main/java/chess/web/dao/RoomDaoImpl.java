@@ -3,6 +3,9 @@ package chess.web.dao;
 import chess.domain.game.state.Player;
 import chess.domain.piece.property.Color;
 import chess.web.dto.CreateRoomRequestDto;
+import chess.web.dto.DeleteDto;
+import chess.web.dto.DeleteResultDto;
+import chess.web.dto.FinishResultDto;
 import chess.web.dto.ReadRoomResultDto;
 import chess.web.dto.RoomDto;
 import java.sql.PreparedStatement;
@@ -77,16 +80,28 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public void finish(int roomId) {
+    public FinishResultDto finish(int roomId) {
         final String sql = "update room set finished = 1 where id = (?)";
         this.jdbcTemplate.update(
                 sql, roomId);
+        return new FinishResultDto(roomId, true);
     }
 
     @Override
     public RoomDto isStartable(int roomId) {
         final String sql = "select id, title, finished from room where id = ?";
         return jdbcTemplate.queryForObject(sql, roomDtoRowMapper, roomId);
+    }
+
+    @Override
+    public DeleteResultDto delete(int roomId, DeleteDto deleteDto) {
+        final String sql = "update room set deleted = 1 where id = (?) AND password = (?)";
+        int update = this.jdbcTemplate.update(
+                sql, roomId, deleteDto.getPassword());
+        if (update == 1) {
+            return new DeleteResultDto(roomId, true);
+        }
+        return new DeleteResultDto(roomId, false);
     }
 
     @Override

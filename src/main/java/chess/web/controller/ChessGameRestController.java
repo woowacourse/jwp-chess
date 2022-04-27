@@ -2,12 +2,15 @@ package chess.web.controller;
 
 import chess.web.dto.CreateRoomRequestDto;
 import chess.web.dto.CreateRoomResultDto;
+import chess.web.dto.DeleteDto;
+import chess.web.dto.DeleteResultDto;
 import chess.web.dto.MoveDto;
 import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
 import chess.web.dto.ReadRoomResultDto;
 import chess.web.dto.RoomDto;
 import chess.web.service.ChessGameService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,5 +49,10 @@ public class ChessGameRestController {
     @GetMapping("/rooms")
     public ReadRoomResultDto readRooms() {
         return service.findAllRooms();
+    }
+
+    @PostMapping("/room/{roomId}")
+    public DeleteResultDto delete(@PathVariable("roomId") int roomId, @RequestBody DeleteDto deleteDto) {
+        return service.delete(roomId, deleteDto);
     }
 }

@@ -9,6 +9,7 @@ import chess.service.ChessService;
 import chess.view.ChessMap;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,14 +32,14 @@ public class SpringChessGameController {
     }
 
     @PostMapping("/room")
-    public String makeRoom(@RequestBody RoomDto roomDto) {
+    public ResponseEntity<String> makeRoom(@RequestBody RoomDto roomDto) {
         chessService.createRoom(roomDto);
-        return "/";
+        return ResponseEntity.ok("방이 생성되었습니다.");
 
     }
 
     @PostMapping("/room/{roomId}")
-    public ResponseEntity<ChessMap> start(@PathVariable("roomId") int roomId, @RequestBody RoomDto roomDto) {
+    public ResponseEntity<ChessMap> startRoom(@PathVariable("roomId") int roomId, @RequestBody RoomDto roomDto) {
         if (roomDto.getId() != roomId) {
             throw new IllegalArgumentException("올바르지 않은 접근입니다.");
         }
@@ -63,9 +64,20 @@ public class SpringChessGameController {
 
     @PostMapping("/end/{roomId}")
     public ResponseEntity<ResultDto> end(@PathVariable("roomId") int roomId) {
+        chessService.endGame(roomId);
         final ResultDto resultDto = chessService.getResult(roomId);
         return ResponseEntity.ok(resultDto);
     }
+
+    @DeleteMapping("/room/{roomId}")
+    public ResponseEntity<String> delete(@PathVariable("roomId") int roomId, @RequestBody RoomDto roomDto) {
+        if (roomDto.getId() != roomId) {
+            throw new IllegalArgumentException("올바르지 않은 접근입니다.");
+        }
+        chessService.deleteRoom(roomDto);
+        return ResponseEntity.ok("방이 삭제되었습니다.");
+    }
+
 
     @ExceptionHandler
     public ResponseEntity<ErrorMessageDto> handle(Exception e) {

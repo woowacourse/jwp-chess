@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.dao.RoomDao;
 import chess.dao.TurnDao;
@@ -36,11 +37,13 @@ public class ChessService {
     private final PieceDao pieceDao;
     private final TurnDao turnDao;
     private final RoomDao roomDao;
+    private final GameDao gameDao;
 
-    public ChessService(PieceDao pieceDao, TurnDao turnDao, RoomDao roomDao) {
+    public ChessService(PieceDao pieceDao, TurnDao turnDao, RoomDao roomDao, GameDao gameDao) {
         this.pieceDao = pieceDao;
         this.turnDao = turnDao;
         this.roomDao = roomDao;
+        this.gameDao = gameDao;
     }
 
     public ChessMap initializeGame(int roomId) {
@@ -48,6 +51,7 @@ public class ChessService {
         pieceDao.initializePieces(roomId, new Player(new BlackGenerator(), Team.BLACK));
         pieceDao.initializePieces(roomId, new Player(new WhiteGenerator(), Team.WHITE));
         turnDao.initializeTurn(roomId);
+        gameDao.startGame(roomId);
 
         final ChessWebGame chessWebGame = new ChessWebGame();
         return chessWebGame.initializeChessGame();
@@ -142,6 +146,21 @@ public class ChessService {
     public void checkPassword(RoomDto roomDto) {
         if (!roomDao.matchPassword(roomDto.getId(), roomDto.getPassword())) {
             throw new IllegalArgumentException("올바르지 않은 비밀번호 입니다.");
+        }
+    }
+
+    public void endGame(int roomId) {
+        gameDao.endGame(roomId);
+    }
+
+    public void deleteRoom(RoomDto roomDto) {
+        checkGameState(roomDto.getId());
+        roomDao.deleteRoom(roomDto);
+    }
+
+    private void checkGameState(int roomId) {
+        if (!gameDao.getState(roomId).equals("end")) {
+            throw new IllegalArgumentException("종료된 게임만 삭제할 수 있습니다.");
         }
     }
 }

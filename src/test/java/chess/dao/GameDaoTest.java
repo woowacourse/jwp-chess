@@ -10,7 +10,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-class JdbcGaTmeDaoTest {
+class GameDaoTest {
 
     private GameDao gameDao;
 

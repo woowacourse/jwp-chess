@@ -1,25 +1,24 @@
 package chess.controller.spark;
 
-import static spark.Spark.delete;
-import static spark.Spark.get;
-import static spark.Spark.post;
-import static spark.Spark.staticFiles;
+import static spark.Spark.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import chess.domain.ChessGame;
 import chess.domain.Member;
 import chess.domain.Result;
 import chess.domain.piece.Piece;
 import chess.domain.square.Rank;
+import chess.dto.CreateGameRequestDto;
 import chess.dto.GameResultDto;
 import chess.dto.RankDto;
 import chess.dto.ResponseDto;
 import chess.service.GameService;
 import chess.service.MemberService;
 import chess.util.JsonUtil;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -156,9 +155,11 @@ public class SparkWebController {
     private String createGame(final Request req, final Response res) {
         final String body = req.body();
         final String[] ids = body.split(",");
-        final Long whiteId = Long.valueOf(ids[0]);
-        final Long blackId = Long.valueOf(ids[1]);
-        gameService.createGame(whiteId, blackId);
+        final String title = ids[0];
+        final String password = ids[1];
+        final Long whiteId = Long.valueOf(ids[2]);
+        final Long blackId = Long.valueOf(ids[3]);
+        gameService.createGame(new CreateGameRequestDto(title, password, whiteId, blackId));
         return "OK";
     }
 

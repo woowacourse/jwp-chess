@@ -2,16 +2,18 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import chess.domain.Board;
 import chess.domain.BoardInitializer;
 import chess.domain.ChessGame;
 import chess.domain.Member;
 import chess.domain.Participant;
 import chess.domain.piece.detail.Team;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 class GameDaoTest {
 
@@ -25,7 +27,7 @@ class GameDaoTest {
         final Participant participant = new Participant(memberOne, memberTwo);
         final ChessGame game = new ChessGame(board, Team.WHITE, participant);
 
-        dao.save(game);
+        dao.save(game, null, null);
 
         assertThat(dao.findById(1L).get().getTurn()).isEqualTo(game.getTurn());
     }
@@ -46,7 +48,7 @@ class GameDaoTest {
         games.add(new ChessGame(board, Team.WHITE, participant));
 
         for (ChessGame game : games) {
-            dao.save(game);
+            dao.save(game, null, null);
         }
 
         assertThat(dao.findAll().size()).isEqualTo(games.size());

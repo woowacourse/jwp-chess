@@ -1,12 +1,13 @@
 package chess.dao.game;
 
-import chess.domain.ChessGame;
 import java.util.List;
 import java.util.Optional;
 
+import chess.domain.ChessGame;
+
 public interface GameDao {
 
-    Long save(final ChessGame game);
+    Long save(final ChessGame game, final String title, final String password);
 
     Optional<ChessGame> findById(final Long id);
 

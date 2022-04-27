@@ -1,7 +1,5 @@
 package chess.dao;
 
-import chess.dao.game.GameDao;
-import chess.domain.ChessGame;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,13 +8,16 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import chess.dao.game.GameDao;
+import chess.domain.ChessGame;
+
 public class MockGameDao implements GameDao {
 
     private final static Map<Long, ChessGame> store = new ConcurrentHashMap<>();
     private static int nextId = 1;
 
     @Override
-    public Long save(ChessGame game) {
+    public Long save(ChessGame game, String title, String password) {
         game = new ChessGame((long) nextId++, game.getBoard(), game.getTurn(), game.getParticipant());
         store.put(game.getId(), game);
         return game.getId();

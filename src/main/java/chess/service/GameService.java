@@ -1,7 +1,12 @@
 package chess.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import chess.dao.game.GameDao;
-import chess.dao.game.PieceDao;
 import chess.dao.member.MemberDao;
 import chess.domain.Board;
 import chess.domain.BoardInitializer;
@@ -11,11 +16,8 @@ import chess.domain.Participant;
 import chess.domain.Result;
 import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
+import chess.dto.CreateGameRequestDto;
 import chess.dto.GameResultDto;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
@@ -29,13 +31,19 @@ public class GameService {
         this.memberDao = memberDao;
     }
 
-    public Long createGame(final Long whiteId, final Long blackId) {
-        final Member white = memberDao.findById(whiteId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
-        final Member black = memberDao.findById(blackId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
+    public Long createGame(final CreateGameRequestDto createGameRequestDto) {
+        final Member white = memberDao.findById(createGameRequestDto.getWhiteId())
+            .orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
+        final Member black = memberDao.findById(createGameRequestDto.getBlackId())
+            .orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
         final Board board = new Board(BoardInitializer.create());
         final Participant participant = new Participant(white, black);
 
-        return gameDao.save(new ChessGame(board, Team.WHITE, participant));
+        return gameDao.save(
+            new ChessGame(board, Team.WHITE, participant),
+            createGameRequestDto.getTitle(),
+            createGameRequestDto.getPassword()
+        );
     }
 
     public List<ChessGame> findPlayingGames() {

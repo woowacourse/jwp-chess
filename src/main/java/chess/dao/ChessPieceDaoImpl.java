@@ -7,6 +7,7 @@ import chess.dto.response.ChessPieceDto;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -49,13 +50,17 @@ public class ChessPieceDaoImpl implements ChessPieceDao {
     private List<Object[]> toBatchArguments(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {
         return pieceByPosition.entrySet()
                 .stream()
-                .map(entry -> new Object[]{
-                        roomId,
-                        entry.getKey().getValue(),
-                        ChessPieceMapper.toPieceType(entry.getValue()),
-                        entry.getValue().color().getValue()
-                })
+                .map(entry -> toBatchArgument(roomId, entry))
                 .collect(Collectors.toList());
+    }
+
+    private Object[] toBatchArgument(final int roomId, final Entry<Position, ChessPiece> entry) {
+        return new Object[]{
+                roomId,
+                entry.getKey().getValue(),
+                ChessPieceMapper.toPieceType(entry.getValue()),
+                entry.getValue().color().getValue()
+        };
     }
 
     @Override

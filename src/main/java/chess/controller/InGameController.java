@@ -1,14 +1,11 @@
 package chess.controller;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -42,13 +39,11 @@ public class InGameController {
         return "ingame";
     }
 
-    @PostMapping("/{gameID}")
-    public String movePiece(@PathVariable String gameID, @RequestBody String movement, Model model) {
+    @PostMapping(value = "/{gameID}")
+    public String movePiece(@PathVariable String gameID, @ModelAttribute MovementRequest movement, Model model) {
         ChessGame chessGame = chessService.loadSavedChessGame(gameID, chessService.getTurn(gameID));
-        List<String> movements = Arrays.asList(movement.split("&"));
-
-        String source = getPosition(movements.get(0));
-        String target = getPosition(movements.get(1));
+        String source = movement.getSource();
+        String target = movement.getTarget();
 
         try {
             chessGame.move(new Square(source), new Square(target));
@@ -70,9 +65,5 @@ public class InGameController {
         }
 
         return "ingame";
-    }
-
-    private String getPosition(String input) {
-        return input.split("=")[1];
     }
 }

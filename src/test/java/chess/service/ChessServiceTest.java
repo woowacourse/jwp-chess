@@ -2,10 +2,6 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +12,7 @@ import chess.db.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.GameTurn;
 import chess.domain.board.InitialBoardGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -39,7 +35,7 @@ public class ChessServiceTest {
         chessGameDao.save("test", new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
 
         PieceDao pieceDao = new PieceDao(jdbcTemplate);
-        pieceDao.save("test");
+        pieceDao.initPieces("test");
     }
 
     @AfterEach

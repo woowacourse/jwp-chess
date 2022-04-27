@@ -23,9 +23,27 @@ public class ChessService {
     }
 
     public ChessGame loadChessGame(String gameID, String restart) {
-        loadPieces(gameID);
+        try {
+            pieceDao.findByGameID(gameID);
+        } catch (IllegalArgumentException e) {
+            initBoard(gameID);
+        }
+        if ("true".equals(restart)) {
+            initBoard(gameID);
+        }
         loadTurn(gameID, restart);
         return loadGame(gameID);
+    }
+
+    private void initBoard(String gameID) {
+        pieceDao.deleteAll(gameID);
+        pieceDao.initPieces(gameID);
+    }
+
+    private void loadTurn(String gameID, String restart) {
+        if ("true".equals(restart)) {
+            chessGameDao.initTurn(gameID);
+        }
     }
 
     private ChessGame loadGame(String gameID) {
@@ -62,17 +80,6 @@ public class ChessService {
     private void startGame(String gameID, ChessGame chessGame) {
         chessGameDao.save(gameID, chessGame);
         updateTurn(gameID, chessGame);
-    }
-
-    private void loadTurn(String gameID, String restart) {
-        if ("true".equals(restart)) {
-            chessGameDao.initTurn(gameID);
-        }
-    }
-
-    private void loadPieces(String gameID) {
-        pieceDao.deleteAll(gameID);
-        pieceDao.save(gameID);
     }
 
     public void movePiece(String gameID, ChessGame chessGame, String source, String target) {

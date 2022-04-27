@@ -30,7 +30,6 @@ public class ChessService {
 
     public ChessGame loadGame(String gameID) {
         GameTurn gameTurn = getTurn(gameID);
-        checkCanContinue(gameTurn);
         return loadSavedChessGame(gameID, gameTurn);
     }
 
@@ -53,10 +52,9 @@ public class ChessService {
         return GameTurn.find(chessGameDao.findTurnByID(gameID));
     }
 
-    private void checkCanContinue(GameTurn gameTurn) {
-        if (GameTurn.FINISHED.equals(gameTurn)) {
-            throw new IllegalArgumentException();
-        }
+    public boolean isFinished(String gameID) {
+        GameTurn gameTurn = getTurn(gameID);
+        return GameTurn.FINISHED.equals(gameTurn);
     }
 
     public ChessGame loadSavedChessGame(String gameID, GameTurn gameTurn) {
@@ -94,5 +92,10 @@ public class ChessService {
 
     public String findGameID(String gameCode) {
         return chessGameDao.findIDByCode(gameCode);
+    }
+
+    public void restartGame(String gameID) {
+        ChessGame chessGame = loadNewChessGame();
+        updateTurn(gameID, chessGame);
     }
 }

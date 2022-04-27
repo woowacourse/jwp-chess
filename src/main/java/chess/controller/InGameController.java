@@ -26,37 +26,46 @@ public class InGameController {
         final String gameID = chessService.findGameID(gameCode);
         ChessGame chessGame = chessService.loadGame(gameID);
         chessService.loadPieces(gameID);
+        model.addAllAttributes(chessGame.getEmojis());
         GameResult gameResult = chessService.getGameResult(gameID);
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
 
-        model.addAllAttributes(chessGame.getEmojis());
+        if (chessService.isFinished(gameID)) {
+            model.addAttribute("msg", "킹 잡았다!! 게임 끝~!~!");
+            return "finished";
+        }
+
+        model.addAttribute("turn", chessService.getTurn(gameID));
         model.addAttribute("msg", "누가 이기나 보자구~!");
         model.addAttribute("gameCode", gameCode);
         return "ingame";
     }
 
-    @PostMapping("/{gameCode}")
-    public String movePiece(@PathVariable String gameCode, @RequestBody String movement, Model model) {
-        final String gameID = chessService.findGameID(gameCode);
+    @PostMapping()
+    public String movePiece(@RequestBody String param, Model model) {
+        List<String> params = Arrays.asList(param.split("&"));
+        String gameCode = getPosition(params.get(0));
+        String gameID = chessService.findGameID(gameCode);
         ChessGame chessGame = chessService.loadSavedChessGame(gameID, chessService.getTurn(gameID));
-        List<String> movements = Arrays.asList(movement.split("&"));
 
-        String source = getPosition(movements.get(0));
-        String target = getPosition(movements.get(1));
+        String source = getPosition(params.get(1));
+        String target = getPosition(params.get(2));
 
         try {
             chessGame.move(new Square(source), new Square(target));
             chessService.movePiece(gameID, source, target);
             chessService.updateTurn(gameID, chessGame);
-            model.addAllAttributes(chessGame.getEmojis());
             model.addAttribute("msg", "누가 이기나 보자구~!");
         } catch (IllegalArgumentException e) {
-            model.addAllAttributes(chessGame.getEmojis());
             model.addAttribute("msg", e.getMessage());
         }
+
+        model.addAllAttributes(chessGame.getEmojis());
         model.addAttribute("gameCode", gameCode);
+
         GameResult gameResult = chessService.getGameResult(gameID);
+        model.addAttribute("turn", chessService.getTurn(gameID));
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
 
@@ -64,11 +73,26 @@ public class InGameController {
             model.addAttribute("msg", "킹 잡았다!! 게임 끝~!~!");
             return "finished";
         }
-
         return "ingame";
     }
 
     private String getPosition(String input) {
         return input.split("=")[1];
+    }
+
+    @GetMapping("/restart")
+    public String restartGame(@RequestParam String gameCode, Model model) {
+        final String gameID = chessService.findGameID(gameCode);
+        chessService.restartGame(gameID);
+        ChessGame chessGame = chessService.loadSavedChessGame(gameID, chessService.getTurn(gameID));
+        chessService.loadPieces(gameID);
+        model.addAllAttributes(chessGame.getEmojis());
+        GameResult gameResult = chessService.getGameResult(gameID);
+        model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
+        model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
+        model.addAttribute("turn", chessService.getTurn(gameID));
+        model.addAttribute("msg", "누가 이기나 보자구~!");
+        model.addAttribute("gameCode", gameCode);
+        return "redirect:/ingame?gameCode="+gameCode;
     }
 }

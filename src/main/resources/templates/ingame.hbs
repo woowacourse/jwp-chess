@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <link rel="stylesheet" href="/src/style.css">
+    <script src="/src/ingame.js"></script>
     <title>야호의 체스 - 쉿! 게임 중이에요^0^</title>
     <meta charset="UTF-8">
 </head>
@@ -10,98 +12,98 @@
 <form action="/" method="get" class="inlineBtn">
     <input type="submit" value="SAVE" class="btn" id="end"/>
 </form>
-<form action="/ingame" method="get" class="inlineBtn">
+<form action="/ingame/restart" method="get" class="inlineBtn">
     <input type="text" name="gameCode" class="invisible" value={{gameCode}} />
     <input type="submit" value="RESTART" class="btn" id="restart">
 </form>
 <table class="chess-board">
     <tbody>
     <tr>
-        <td class="light">{{A8}}</td>
-        <td class="dark">{{B8}}</td>
-        <td class="light">{{C8}}</td>
-        <td class="dark">{{D8}}</td>
-        <td class="light">{{E8}}</td>
-        <td class="dark">{{F8}}</td>
-        <td class="light">{{G8}}</td>
-        <td class="dark">{{H8}}</td>
+        <td id="a8" class="light">{{A8}}</td>
+        <td id="b8" class="dark">{{B8}}</td>
+        <td id="c8" class="light">{{C8}}</td>
+        <td id="d8" class="dark">{{D8}}</td>
+        <td id="e8" class="light">{{E8}}</td>
+        <td id="f8" class="dark">{{F8}}</td>
+        <td id="g8" class="light">{{G8}}</td>
+        <td id="h8" class="dark">{{H8}}</td>
         <th>8</th>
     </tr>
     <tr>
-        <td class="dark">{{A7}}</td>
-        <td class="light">{{B7}}</td>
-        <td class="dark">{{C7}}</td>
-        <td class="light">{{D7}}</td>
-        <td class="dark">{{E7}}</td>
-        <td class="light">{{F7}}</td>
-        <td class="dark">{{G7}}</td>
-        <td class="light">{{H7}}</td>
+        <td id="a7" class="dark">{{A7}}</td>
+        <td id="b7" class="light">{{B7}}</td>
+        <td id="c7" class="dark">{{C7}}</td>
+        <td id="d7" class="light">{{D7}}</td>
+        <td id="e7" class="dark">{{E7}}</td>
+        <td id="f7" class="light">{{F7}}</td>
+        <td id="g7" class="dark">{{G7}}</td>
+        <td id="h7" class="light">{{H7}}</td>
         <th>7</th>
     </tr>
     <tr>
-        <td class="light">{{A6}}</td>
-        <td class="dark">{{B6}}</td>
-        <td class="light">{{C6}}</td>
-        <td class="dark">{{D6}}</td>
-        <td class="light">{{E6}}</td>
-        <td class="dark">{{F6}}</td>
-        <td class="light">{{G6}}</td>
-        <td class="dark">{{H6}}</td>
+        <td id="a6" class="light">{{A6}}</td>
+        <td id="b6" class="dark">{{B6}}</td>
+        <td id="c6" class="light">{{C6}}</td>
+        <td id="d6" class="dark">{{D6}}</td>
+        <td id="e6" class="light">{{E6}}</td>
+        <td id="f6" class="dark">{{F6}}</td>
+        <td id="g6" class="light">{{G6}}</td>
+        <td id="h6" class="dark">{{H6}}</td>
         <th>6</th>
     </tr>
     <tr>
-        <td class="dark">{{A5}}</td>
-        <td class="light">{{B5}}</td>
-        <td class="dark">{{C5}}</td>
-        <td class="light">{{D5}}</td>
-        <td class="dark">{{E5}}</td>
-        <td class="light">{{F5}}</td>
-        <td class="dark">{{G5}}</td>
-        <td class="light">{{H5}}</td>
+        <td id="a5" class="dark">{{A5}}</td>
+        <td id="b5" class="light">{{B5}}</td>
+        <td id="c5" class="dark">{{C5}}</td>
+        <td id="d5" class="light">{{D5}}</td>
+        <td id="e5" class="dark">{{E5}}</td>
+        <td id="f5" class="light">{{F5}}</td>
+        <td id="g5" class="dark">{{G5}}</td>
+        <td id="h5" class="light">{{H5}}</td>
         <th>5</th>
     </tr>
     <tr>
-        <td class="light">{{A4}}</td>
-        <td class="dark">{{B4}}</td>
-        <td class="light">{{C4}}</td>
-        <td class="dark">{{D4}}</td>
-        <td class="light">{{E4}}</td>
-        <td class="dark">{{F4}}</td>
-        <td class="light">{{G4}}</td>
-        <td class="dark">{{H4}}</td>
+        <td id="a4" class="light">{{A4}}</td>
+        <td id="b4" class="dark">{{B4}}</td>
+        <td id="c4" class="light">{{C4}}</td>
+        <td id="d4" class="dark">{{D4}}</td>
+        <td id="e4" class="light">{{E4}}</td>
+        <td id="f4" class="dark">{{F4}}</td>
+        <td id="g4" class="light">{{G4}}</td>
+        <td id="h4" class="dark">{{H4}}</td>
         <th>4</th>
     </tr>
     <tr>
-        <td class="dark">{{A3}}</td>
-        <td class="light">{{B3}}</td>
-        <td class="dark">{{C3}}</td>
-        <td class="light">{{D3}}</td>
-        <td class="dark">{{E3}}</td>
-        <td class="light">{{F3}}</td>
-        <td class="dark">{{G3}}</td>
-        <td class="light">{{H3}}</td>
+        <td id="a3" class="dark">{{A3}}</td>
+        <td id="b3" class="light">{{B3}}</td>
+        <td id="c3" class="dark">{{C3}}</td>
+        <td id="d3" class="light">{{D3}}</td>
+        <td id="e3" class="dark">{{E3}}</td>
+        <td id="f3" class="light">{{F3}}</td>
+        <td id="g3" class="dark">{{G3}}</td>
+        <td id="h3" class="light">{{H3}}</td>
         <th>3</th>
     </tr>
     <tr>
-        <td class="light">{{A2}}</td>
-        <td class="dark">{{B2}}</td>
-        <td class="light">{{C2}}</td>
-        <td class="dark">{{D2}}</td>
-        <td class="light">{{E2}}</td>
-        <td class="dark">{{F2}}</td>
-        <td class="light">{{G2}}</td>
-        <td class="dark">{{H2}}</td>
+        <td id="a2" class="light">{{A2}}</td>
+        <td id="b2" class="dark">{{B2}}</td>
+        <td id="c2" class="light">{{C2}}</td>
+        <td id="d2" class="dark">{{D2}}</td>
+        <td id="e2" class="light">{{E2}}</td>
+        <td id="f2" class="dark">{{F2}}</td>
+        <td id="g2" class="light">{{G2}}</td>
+        <td id="h2" class="dark">{{H2}}</td>
         <th>2</th>
     </tr>
     <tr>
-        <td class="dark">{{A1}}</td>
-        <td class="light">{{B1}}</td>
-        <td class="dark">{{C1}}</td>
-        <td class="light">{{D1}}</td>
-        <td class="dark">{{E1}}</td>
-        <td class="light">{{F1}}</td>
-        <td class="dark">{{G1}}</td>
-        <td class="light">{{H1}}</td>
+        <td id="a1" class="dark">{{A1}}</td>
+        <td id="b1" class="light">{{B1}}</td>
+        <td id="c1" class="dark">{{C1}}</td>
+        <td id="d1" class="light">{{D1}}</td>
+        <td id="e1" class="dark">{{E1}}</td>
+        <td id="f1" class="light">{{F1}}</td>
+        <td id="g1" class="dark">{{G1}}</td>
+        <td id="h1" class="light">{{H1}}</td>
         <th>1</th>
     </tr>
     <tr>
@@ -116,13 +118,17 @@
         <th></th>
     </tbody>
 </table>
-<form action="/ingame/{{gameCode}}" method="post" class="textBoxWrapper">
+<form action="/ingame" method="post" class="textBoxWrapper">
+    <input type="hidden" name="gameCode" value ="{{gameCode}}" class="gameCodeBox"/>
     FROM : <input type="text" name="source" class="textBox"/>
     TO : <input type="text" name="target" class="textBox"/>
     <input type="submit" value="MOVE" class="btn" id="move"/>
 </form>
 <br>
 <div>
+    <span class="score">
+        현재 순서 : {{turn}}
+    </span><br/>
     <span class="score">
         화이트 팀 : {{whiteScore}} 점
     </span>

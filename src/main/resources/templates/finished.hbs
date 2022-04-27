@@ -109,10 +109,15 @@
         <th></th>
     </tbody>
 </table>
-<form action="/status" method="get" class="inlineBtn">
-    <input type="text" name="gameID" class="invisible" value={{gameID}} />
-    <input type="submit" value="STATUS" class="btn" id="status"/>
-</form>
+<br>
+<div>
+    <span class="score">
+        화이트 팀 : {{whiteScore}} 점
+    </span>
+    <span class="score">
+        블랙 팀 : {{blackScore}} 점
+    </span>
+</div>
 <form action="/" method="get" class="inlineBtn">
     <input type="submit" value="END" class="btn" id="end"/>
 </form>

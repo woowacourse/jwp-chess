@@ -1,7 +1,8 @@
 body {
     font-family: 'BMHANNAPro', monospace;
-    position:absolute;
-    top:50%; left:50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
 }
 
@@ -61,11 +62,32 @@ input {
     padding: 0 20px;
 }
 
-.chess-board { border-spacing: 0; border-collapse: collapse; text-align: center; margin: 20px; }
-.chess-board th { padding: .5em; font-size: 35px; }
-.chess-board td { border: 0 solid; width: 80px; height: 80px; font-size: 70px; }
-.chess-board .light { background: #ffffe1; }
-.chess-board .dark { background: #e0e0ff; }
+.chess-board {
+    border-spacing: 0;
+    border-collapse: collapse;
+    text-align: center;
+    margin: 20px;
+}
+
+.chess-board th {
+    padding: .5em;
+    font-size: 35px;
+}
+
+.chess-board td {
+    border: 0 solid;
+    width: 80px;
+    height: 80px;
+    font-size: 60px;
+}
+
+.chess-board .light {
+    background: #ffffe1;
+}
+
+.chess-board .dark {
+    background: #e0e0ff;
+}
 
 .btn {
     font-family: 'BMHANNAPro', monospace;
@@ -92,14 +114,15 @@ input {
     float: right;
 }
 
-.inlineBtn{
+.inlineBtn {
     display: inline;
 }
 
 .inlineBtn-newgame {
     display: inline;
-    position:absolute;
-    top:50%; left:50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
 }
 
@@ -141,7 +164,7 @@ input {
     justify-content: space-between;
 }
 
-.room-name{
+.room-name {
     width: 50px;
     background-color: #ffffe1;
     font-size: xx-large;
@@ -151,7 +174,7 @@ input {
     border: 1px solid black;
 }
 
-.room-delete{
+.room-delete {
     width: 30px;
     background-color: #ffffe1;
     font-size: xx-large;
@@ -159,4 +182,9 @@ input {
     color: sandybrown;
     text-align: center;
     border: 1px solid black;
+}
+
+td:hover {
+    background-color: deepskyblue;
+    font-size: 300%;
 }

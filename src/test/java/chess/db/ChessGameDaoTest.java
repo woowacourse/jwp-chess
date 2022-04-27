@@ -39,7 +39,7 @@ public class ChessGameDaoTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
         ChessGameDao chessGameDao = new ChessGameDao(jdbcTemplate);
         ChessGame chessGame = new ChessGame(new InitialBoardGenerator(), GameTurn.BLACK);
-        chessGameDao.save("test", chessGame);
+        chessGameDao.save("test", "test", chessGame);
 
         assertThat(chessGameDao.findTurnByID("test")).isEqualTo("BLACK");
     }

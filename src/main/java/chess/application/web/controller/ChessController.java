@@ -1,6 +1,7 @@
 package chess.application.web.controller;
 
 import chess.application.web.dao.CommandDao;
+import chess.application.web.dao.RoomsDao;
 import chess.chessboard.position.Position;
 import chess.game.Player;
 import chess.piece.Piece;
@@ -8,7 +9,6 @@ import chess.state.Start;
 import chess.state.State;
 import chess.state.Status;
 import chess.view.Square;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,15 +25,29 @@ import java.util.Map;
 public class ChessController {
 
     private final CommandDao commandDao;
+    private final RoomsDao roomsDao;
 
-    public ChessController(CommandDao commandDao) {
+    public ChessController(CommandDao commandDao, RoomsDao roomsDao) {
         this.commandDao = commandDao;
+        this.roomsDao = roomsDao;
     }
 
     @GetMapping("/")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("index");
         return modelAndView;
+    }
+
+    @GetMapping("/create")
+    public ModelAndView rooms() {
+        ModelAndView modelAndView = new ModelAndView("create");
+        return modelAndView;
+    }
+
+    @PostMapping("/create")
+    public String createRoom(@RequestParam("name") String name, @RequestParam("password") String password) {
+        roomsDao.insertRoom(name, password);
+        return "redirect:create";
     }
 
     @PostMapping("/start")

@@ -53,4 +53,8 @@ public final class BlackTurn extends Running {
         }
         return new WhiteTurn(board);
     }
+
+    public String getSymbol() {
+        return "BLACK_TURN";
+    }
 }

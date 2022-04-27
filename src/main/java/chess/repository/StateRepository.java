@@ -1,7 +1,7 @@
 package chess.repository;
 
 import chess.dao.StateDao;
-import chess.dao.converter.StringToStateConverter;
+import chess.dao.converter.StateConverter;
 import chess.model.board.Board;
 import chess.model.state.State;
 import org.springframework.stereotype.Repository;
@@ -25,7 +25,7 @@ public class StateRepository {
     }
 
     public State getStateFrom(final String id, final Board board) {
-        return StringToStateConverter.convert(stateDao.find(id), board);
+        return StateConverter.convertToState(stateDao.find(id), board);
     }
 
     public void deleteStateDataFrom(final String id) {

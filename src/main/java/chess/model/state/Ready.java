@@ -66,4 +66,9 @@ public final class Ready implements State {
     public Team getWinner() {
         throw new IllegalArgumentException("[ERROR] 아직 게임이 시작되지 않아 승자를 확인 할 수 없습니다.");
     }
+
+    @Override
+    public String getSymbol() {
+        return "READY";
+    }
 }

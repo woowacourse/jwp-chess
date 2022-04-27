@@ -24,4 +24,9 @@ public final class End extends Finished {
     public Team getWinner() {
         throw new IllegalArgumentException("[ERROR] 게임이 종료되어 승자를 확인 할 수 없습니다.");
     }
+
+    @Override
+    public String getSymbol() {
+        return "END";
+    }
 }

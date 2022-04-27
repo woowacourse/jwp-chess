@@ -42,7 +42,7 @@ public class SquareRepository {
         final Map<Position, Piece> squares = new HashMap<>();
         for (SquareEntity squareEntity : squareEntities) {
             Position position = Position.from(squareEntity.getPosition());
-            Piece piece = Piece.getPiece(squareEntity.getTeam() + "_" + squareEntity.getSymbol());
+            Piece piece = Piece.getPiece(squareEntity.getTeam(), squareEntity.getSymbol());
             squares.put(position, piece);
         }
         return Board.from(squares);

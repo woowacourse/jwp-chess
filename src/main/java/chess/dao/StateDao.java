@@ -1,8 +1,6 @@
 package chess.dao;
 
-import chess.dao.converter.StateToStringConverter;
-import chess.dao.converter.StringToStateConverter;
-import chess.model.board.Board;
+import chess.dao.converter.StateConverter;
 import chess.model.state.State;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,7 +16,7 @@ public class StateDao {
 
     public int insert(final String id, final State state) {
         final String sql = "insert into state (id, name) values (?, ?)";
-        final String stateName = StateToStringConverter.convert(state);
+        final String stateName = StateConverter.convertToString(state);
         return jdbcTemplate.update(sql, id, stateName);
     }
 
@@ -34,8 +32,8 @@ public class StateDao {
 
     public void update(final String id, final State nowState, final State nextState) {
         final String sql = "update state set name = ? where name = ? and id = ?";
-        final String nowStateName = StateToStringConverter.convert(nowState);
-        final String nextStateName = StateToStringConverter.convert(nextState);
+        final String nowStateName = StateConverter.convertToString(nowState);
+        final String nextStateName = StateConverter.convertToString(nextState);
         jdbcTemplate.update(sql, nextStateName, nowStateName, id);
     }
 }

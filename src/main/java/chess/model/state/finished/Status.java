@@ -28,4 +28,9 @@ public final class Status extends Finished {
     public Team getWinner() {
         return gameResult.pickWinnerTeam();
     }
+
+    @Override
+    public String getSymbol() {
+        return "STATUS";
+    }
 }

@@ -30,7 +30,8 @@ public abstract class Piece {
         cache.put("NONE_NONE", new Blank());
     }
 
-    public static Piece getPiece(String key) {
+    public static Piece getPiece(final String teamName, final String symbolName) {
+        final String key = teamName + "_" + symbolName;
         return cache.get(key);
     }
 

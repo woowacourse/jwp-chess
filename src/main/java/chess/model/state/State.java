@@ -25,4 +25,6 @@ public interface State {
     boolean isWhiteTurn();
 
     boolean isBlackTurn();
+
+    String getSymbol();
 }

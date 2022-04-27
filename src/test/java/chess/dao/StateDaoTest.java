@@ -59,6 +59,6 @@ class StateDaoTest {
         State nextState = new WhiteTurn(Board.init());
         stateDao.update(id, nowState, nextState);
 
-        assertThat(stateDao.find(id, Board.init()).isWhiteTurn()).isTrue();
+        assertThat(stateDao.find(id)).isEqualTo("WHITE_TURN");
     }
 }

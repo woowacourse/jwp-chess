@@ -18,9 +18,8 @@ public class GlobalExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @ExceptionHandler({IllegalArgumentException.class, DataAccessException.class,
-            InvalidResultSetAccessException.class})
-    public ResponseEntity<ErrorResponseDto> handle(final Exception e) {
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<ErrorResponseDto> handleBadRequest(final Exception e) {
         return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
     }
 
@@ -28,6 +27,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleNotFound(final NotFoundException e) {
         final ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
         return new ResponseEntity<>(errorResponseDto, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({DataAccessException.class})
+    public ResponseEntity<ErrorResponseDto> handleSqlException(final DataAccessException e,
+                                                               final HttpServletRequest request) {
+        logger.error(createLogMessage(request), e);
+        return ResponseEntity.badRequest().body(new ErrorResponseDto("요청을 다시 확인해주세요."));
     }
 
     @ExceptionHandler({Exception.class})

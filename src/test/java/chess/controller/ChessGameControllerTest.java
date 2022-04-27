@@ -1,5 +1,6 @@
 package chess.controller;
 
+import static chess.domain.state.Turn.END;
 import static org.hamcrest.core.Is.is;
 
 import chess.controller.dto.request.ChessGameRequest;
@@ -88,6 +89,7 @@ class ChessGameControllerTest {
     void deleteChessGame() {
         long chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
+        chessGameDao.changeChessGameTurn(chessGameId, END);
 
         RestAssured.given().log().all()
                 .param("password", "password")

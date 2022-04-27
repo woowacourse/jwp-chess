@@ -30,4 +30,16 @@ class ChessGameTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("체스 게임의 비밀번호가 틀렸습니다.");
     }
+
+    @Test
+    @DisplayName("체스 게임이 아직 진행중인 상태에서 게임이 끝났는지 검증")
+    void validateEndGame(){
+        String title = "title";
+        String password = "password";
+        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), title, password);
+
+        assertThatThrownBy(chessGame::validateEndGame)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("아직 체스 게임이 진행 중이기에 삭제할 수 없습니다.");
+    }
 }

@@ -2,6 +2,7 @@ package chess.service;
 
 import static chess.domain.Color.BLACK;
 import static chess.domain.Color.WHITE;
+import static chess.domain.state.Turn.END;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -139,6 +140,7 @@ class ChessGameServiceTest {
         pieceDao.savePieces(chessGameId, Map.of(
                 source, new Piece(WHITE, new Pawn(WHITE))
         ));
+        chessGameDao.changeChessGameTurn(chessGameId, END);
 
         // when
         chessGameService.deleteChessGame(chessGameId, "password");

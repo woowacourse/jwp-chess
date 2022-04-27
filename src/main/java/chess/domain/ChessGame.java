@@ -1,5 +1,7 @@
 package chess.domain;
 
+import static chess.domain.state.Turn.END;
+
 import java.util.Objects;
 
 public class ChessGame {
@@ -32,6 +34,12 @@ public class ChessGame {
     public void validatePassword(String password) {
         if (!this.password.equals(password)) {
             throw new IllegalArgumentException("체스 게임의 비밀번호가 틀렸습니다.");
+        }
+    }
+
+    public void validateEndGame() {
+        if (!END.name().equals(this.turn)) {
+            throw new IllegalStateException("아직 체스 게임이 진행 중이기에 삭제할 수 없습니다.");
         }
     }
 

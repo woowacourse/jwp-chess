@@ -82,6 +82,7 @@ public class ChessGameService {
     public void deleteChessGame(long chessGameId, String password){
         ChessGame chessGame = chessGameDao.findChessGame(chessGameId);
         chessGame.validatePassword(password);
+        chessGame.validateEndGame();
 
         chessGameDao.deleteChessGame(chessGame);
     }

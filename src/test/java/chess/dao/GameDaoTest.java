@@ -23,14 +23,6 @@ public class GameDaoTest {
     @BeforeEach
     void setUp() {
         gameDao = new GameDao(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
-
-        jdbcTemplate.execute("create table game("
-                + "id varchar(100) not null unique, "
-                + "turn varchar(10) not null, "
-                + "force_end_flag tinyint(1) not null default false"
-                + ")");
     }
 
     @DisplayName("createById로 새 게임을 생성한다")

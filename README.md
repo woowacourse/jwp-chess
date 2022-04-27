@@ -84,9 +84,10 @@ use chess;
 - [x] 생성자 주입 사용 이유
     - 필드 주입(@Autuwired)의 취약성(더 공부)
 - [x] [@Controller 와 @RestController 의 차이 공부](https://velog.io/@betterfuture4/Spring-Controller-RestController-Annotations)
-- [ ] ResponseBody로 내려주는 방법 고려하기
+- [x] ResponseBody로 내려주기
+- [ ] 패스워드 포함된 form 값을 받아오는 방법 공부하기
+- [ ] test 코드 DB schema.sql로 초기화(세팅)
 
 ## 질문
 
-- 현재 service 단에서 bean으로 주입한 방식이 맞는지
 - 

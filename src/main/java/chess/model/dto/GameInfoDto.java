@@ -14,4 +14,12 @@ public class GameInfoDto {
     public static GameInfoDto from(GameEntity gameEntity) {
         return new GameInfoDto(gameEntity.getGameId(), gameEntity.getName());
     }
+
+    public Long getGameId() {
+        return gameId;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

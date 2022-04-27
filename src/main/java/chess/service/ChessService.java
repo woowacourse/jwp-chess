@@ -9,10 +9,7 @@ import chess.model.board.Board;
 import chess.model.board.BoardFactory;
 import chess.model.dao.PieceDao;
 import chess.model.dao.GameDao;
-import chess.model.dto.GameInfoDto;
-import chess.model.dto.MoveDto;
-import chess.model.dto.RoomDto;
-import chess.model.dto.WebBoardDto;
+import chess.model.dto.*;
 import chess.model.piece.Empty;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceFactory;
@@ -53,11 +50,11 @@ public class ChessService {
         pieceDao.init(BoardFactory.create(), gameId);
     }
 
-    public List<GameInfoDto> getAllGames() {
+    public GameInfosDto getAllGames() {
         List<GameEntity> games = gameDao.findAll();
-        return games.stream()
+        return new GameInfosDto(games.stream()
                 .map(GameInfoDto::from)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     public WebBoardDto move(MoveDto moveDto, Long id) {

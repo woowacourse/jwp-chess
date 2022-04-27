@@ -1,11 +1,9 @@
 package chess.controller;
 
 import chess.model.GameResult;
-import chess.model.dto.GameInfoDto;
-import chess.model.dto.MoveDto;
-import chess.model.dto.RoomDto;
-import chess.model.dto.WebBoardDto;
+import chess.model.dto.*;
 import chess.service.ChessService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +35,8 @@ public class ChessController {
 
     @GetMapping("/games")
     @ResponseBody
-    public List<GameInfoDto> getAllGames() {
-        return chessService.getAllGames();
+    public ResponseEntity<GameInfosDto> getAllGames() {
+        return ResponseEntity.ok(chessService.getAllGames());
     }
 
     @GetMapping("/game/{id}")

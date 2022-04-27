@@ -4,11 +4,18 @@
     <meta charset="UTF-8">
     <title>체스 게임</title>
     <link href="/src/index.css" rel="stylesheet">
+    <script> window.addEventListener('DOMContentLoaded', () => getGames());</script>
 </head>
 <body>
 <h1> 체스 게임 입장하기 </h1>
 <button class="button" id="new-room-button" onclick="clickStartButton()"> 새로운 방 만들기 </button>
 
+<section>
+    <h3> 존재하는 방 정보 </h3>
+    <div id="existed-game-info">
+    </div>
+</section>
+
 <script src="/src/index.js"></script>
 </body>
-</html>]
+</html>

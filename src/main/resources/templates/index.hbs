@@ -10,9 +10,17 @@
     <h1 class="centered">체스 게임</h1>
 
     <div class="button-group">
-        <button class="w-btn w-btn-brown" id="create-room-button" type="button">방 만들기</button>
+        <details>
+            <summary>체스방 만들기</summary>
+            <p>
+                방 제목 : <input id="room-title"></text><br>
+                방 비밀번호 : <input id="room-password"></text><br>
+                <button class="w-btn w-btn-brown" id="create-room-button" type="button" onClick="createRoom()">방 만들기</button>
+            </p>
+        </details>
         <br>
     </div>
 </center>
+<script src="/src/index.js"></script>
 </body>
 </html>

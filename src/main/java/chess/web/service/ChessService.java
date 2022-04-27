@@ -1,6 +1,7 @@
 package chess.web.service;
 
 import chess.board.Board;
+import chess.board.Room;
 import chess.board.Team;
 import chess.board.Turn;
 import chess.board.piece.Empty;
@@ -9,6 +10,7 @@ import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
 import chess.web.dao.BoardDao;
 import chess.web.dao.PieceDao;
+import chess.web.dao.RoomDao;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import java.util.List;
@@ -20,11 +22,13 @@ public class ChessService {
 
     private final BoardDao boardDao;
     private final PieceDao pieceDao;
+    private final RoomDao roomDao;
 
     @Autowired
-    public ChessService(BoardDao boardDao, PieceDao pieceDao) {
+    public ChessService(BoardDao boardDao, PieceDao pieceDao, RoomDao roomDao) {
         this.boardDao = boardDao;
         this.pieceDao = pieceDao;
+        this.roomDao = roomDao;
     }
 
     public Board loadGame(Long boardId) {
@@ -112,5 +116,15 @@ public class ChessService {
         double blackScore = pieces.getTotalScore(Team.BLACK);
         double whiteScore = pieces.getTotalScore(Team.WHITE);
         return new ScoreDto(blackScore, whiteScore);
+    }
+
+    public Long createGame() {
+        Long boardId = boardDao.save(Turn.init());
+        pieceDao.save(Pieces.createInit().getPieces(), boardId);
+        return boardId;
+    }
+
+    public Long createRoom(Long boardId, String title, String password) {
+        return roomDao.save(boardId, title, password);
     }
 }

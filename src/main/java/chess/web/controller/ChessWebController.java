@@ -3,6 +3,7 @@ package chess.web.controller;
 import chess.board.Board;
 import chess.web.service.ChessService;
 import chess.web.service.dto.BoardDto;
+import chess.web.service.dto.CreateRoomDto;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import org.springframework.http.MediaType;
@@ -25,6 +26,13 @@ public class ChessWebController {
     @GetMapping("/")
     public String index() {
         return "index";
+    }
+
+    @PostMapping("/chess")
+    public ResponseEntity<Long> createChess(@RequestBody CreateRoomDto createRoomDto) {
+        Long boardId = chessService.createGame();
+        Long newId = chessService.createRoom(boardId, createRoomDto.getTitle(), createRoomDto.getPassword());
+        return ResponseEntity.ok().body(newId);
     }
 
     @GetMapping("/chess")

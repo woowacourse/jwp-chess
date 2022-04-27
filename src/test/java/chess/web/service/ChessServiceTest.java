@@ -4,14 +4,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.board.Board;
+import chess.board.Room;
 import chess.board.Turn;
 import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
 import chess.web.dao.BoardDao;
 import chess.web.dao.PieceDao;
+import chess.web.dao.RoomDao;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +22,8 @@ class ChessServiceTest {
 
     private final BoardDao boardDao = new MockBoardDao();
     private final PieceDao pieceDao = new MockPieceDao();
-    private final ChessService chessService = new ChessService(boardDao, pieceDao);
+    private final RoomDao roomDao = new MockRoomDao();
+    private final ChessService chessService = new ChessService(boardDao, pieceDao, roomDao);
     private final Long boardId = 1L;
 
 
@@ -65,5 +69,19 @@ class ChessServiceTest {
         ScoreDto status = chessService.getStatus(boardId);
         assertThat(status.getBlackTeamScore()).isEqualTo(38D);
         assertThat(status.getWhiteTeamScore()).isEqualTo(38D);
+    }
+
+    @Test
+    @DisplayName("입력한 방이름과 비밀번호로 새로운 체스방이 만들어진다.")
+    void createRoom() {
+        String title = "title";
+        String password = "password";
+
+        chessService.createRoom(boardId, title, password);
+
+        Optional<Room> room = roomDao.findByBoardId(boardId);
+        assertThat(room).isPresent();
+        assertThat(room.get().getTitle()).isEqualTo(title);
+        assertThat(room.get().getPassword()).isEqualTo(password);
     }
 }

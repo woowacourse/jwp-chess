@@ -25,25 +25,29 @@ public class ConsoleChessController {
         StringTokenizer commands = new StringTokenizer(input);
         String command = commands.nextToken();
 
-        if (command.equals("start")) {
+        if ("start".equals(command)) {
             chessGame.start();
             OutputView.printBoard(chessGame.getChessBoard());
             return;
         }
-        if (command.equals("end")) {
+
+        if ("end".equals(command)) {
             chessGame.end();
             OutputView.printBoard(chessGame.getChessBoard());
             return;
         }
-        if (command.equals("move")) {
+
+        if ("move".equals(command)) {
             chessGame.move(new MovingPosition(commands.nextToken(), commands.nextToken()));
             OutputView.printBoard(chessGame.getChessBoard());
             return;
         }
-        if (command.equals("status")) {
+
+        if ("status".equals(command)) {
             OutputView.printScore(chessGame.computeScore());
             return;
         }
+
         throw new IllegalArgumentException("올바른 명령어를 입력해주세요");
     }
 

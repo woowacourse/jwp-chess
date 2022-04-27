@@ -9,6 +9,7 @@ import chess.dto.PathResponse;
 import chess.service.ChessRoomService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,16 @@ public class RoomController {
     @GetMapping("/rooms")
     public String showRooms(Model model) {
         List<RoomDto> roomDtoList = chessRoomService.findAllRoom();
-        model.addAttribute("roomDtoList", roomDtoList);
+        Map<String, String> roomStates = new HashMap<>();
+        for(RoomDto roomDto : roomDtoList){
+            String state = chessRoomService.readGameState(roomDto.getId()).getState();
+            if(state.equals("RUNNING")){
+                roomStates.put(roomDto.getName(), "disabled");
+                continue;
+            }
+            roomStates.put(roomDto.getName(), "");
+        }
+        model.addAttribute("roomStates", roomStates);
         return "rooms";
     }
 
@@ -95,6 +105,10 @@ public class RoomController {
         String roomName = jsonObject.get("roomName").getAsString();
         String roomPassword = jsonObject.get("roomPassword").getAsString();
         RoomDto findRoomName = chessRoomService.findByName(roomName);
+        GameState state = chessRoomService.readGameState(findRoomName.getId());
+        if(state.getState().equals("RUNNING")){
+            throw new IllegalArgumentException("[ERROR] 진행 중인 게임은 삭제할 수 없습니다.");
+        }
         if (!findRoomName.getPassword().equals(roomPassword)) {
             throw new IllegalArgumentException("[ERROR] 비밀번호가 일치하지 않습니다.");
         }

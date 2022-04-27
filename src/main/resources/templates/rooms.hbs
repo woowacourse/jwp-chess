@@ -53,6 +53,9 @@
     .create-room-btn{
       width : 100%;
     }
+    .btn-state-FINISHED{
+
+    }
   </style>
   <script src="/src/rooms.js"></script>
   <link rel="stylesheet"
@@ -68,12 +71,11 @@
         방 목록
       </div>
       <div class="row room-list">
-        {{#each roomDtoList}}
-        <div class="col-md-5 room-item">
-<!--          <div class="game-info-id" id="gameId">{{this.id}}</div>-->
-          <span class="game-info-name" id="gameName" onclick="enter(`{{this.name}}`);">{{this.name}}</span>
-          <button type="button" class="btn btn-danger" id="removeBtn" onclick="remove(`{{this.name}}`);" value="">삭제</button>
-        </div>
+        {{#each roomStates}}
+          <div class="col-md-5 room-item">
+            <span class="game-info-name" id="gameName" onclick="enter(`{{@key}}`);">{{@key}}</span>
+            <button type="button" class="btn btn-danger" id="removeBtn" onclick="remove(`{{@key}}`);" {{this}} >삭제</button>
+          </div>
         {{/each}}
       </div>
 

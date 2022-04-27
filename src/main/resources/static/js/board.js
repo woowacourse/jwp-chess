@@ -42,12 +42,14 @@ async function startGame() {
     const startResponse = await fetch(`${pathName}/status`, {method: "PATCH"});
     const errorElement = document.getElementById("error");
     if (startResponse.status !== 204) {
-        errorElement.innerText = data.message;
+        const startResponseData = startResponse.json();
+        errorElement.innerText = startResponseData.message;
         return;
     }
     const initPieceResponse = await fetch(`${pathName}/pieces`, {method: "POST"});
     if (initPieceResponse.status !== 201) {
-        errorElement.innerText = data.message;
+        const initPieceResponseData = initPieceResponse.json();
+        errorElement.innerText = initPieceResponseData.message;
         return;
     }
 

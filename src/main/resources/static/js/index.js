@@ -34,6 +34,7 @@ async function createRoom() {
         window.location.href = location;
         return;
     }
+    const data = await res.json();
     document.getElementById("error").innerText = data.message;
 }
 

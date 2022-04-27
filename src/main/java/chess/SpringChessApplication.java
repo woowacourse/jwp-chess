@@ -14,9 +14,4 @@ public class SpringChessApplication {
         staticFileLocation("/public");
         SpringApplication.run(SpringChessApplication.class, args);
     }
-
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
 }

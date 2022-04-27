@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.dto.RoomDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -38,6 +39,7 @@ public class RoomDaoTest {
     }
 
     @Test
+
     void matchPassword() {
         RoomDto roomDto = new RoomDto("title", "password");
         roomDao.createRoom(roomDto);
@@ -45,6 +47,7 @@ public class RoomDaoTest {
     }
 
     @Test
+    @DisplayName("password가 일치하지 않을 때")
     void misMatchPassword() {
         RoomDto roomDto = new RoomDto("title", "password");
         roomDao.createRoom(roomDto);
@@ -52,13 +55,15 @@ public class RoomDaoTest {
     }
 
     @Test
+    @DisplayName("id가 일치하지 않을 때")
     void misMatchId() {
         RoomDto roomDto = new RoomDto("title", "password");
         roomDao.createRoom(roomDto);
-        assertThat(roomDao.matchPassword(2, "password")).isTrue();
+        assertThat(roomDao.matchPassword(2, "password")).isFalse();
     }
 
     @Test
+
     void getRooms() {
         RoomDto roomDto1 = new RoomDto("1", "1234");
         RoomDto roomDto2 = new RoomDto("2", "2341");
@@ -77,7 +82,7 @@ public class RoomDaoTest {
         roomDao.createRoom(roomDto);
         assertThat(roomDao.getRooms()).hasSize(1);
 
-        RoomDto newRoomDto = new RoomDto(roomDto.getTitle(), roomDto.getPassword(), roomDao.getRecentRoomId());
+        RoomDto newRoomDto = new RoomDto( roomDao.getRecentRoomId(), roomDto.getTitle(), roomDto.getPassword());
         roomDao.deleteRoom(newRoomDto);
         assertThat(roomDao.getRooms()).hasSize(0);
     }

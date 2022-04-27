@@ -19,24 +19,38 @@ public class JdbcTurnDao implements TurnDao {
     }
 
     @Override
-    public TurnDto findTurn() {
-        final String sql = "select * from turn";
-        return jdbcTemplate.queryForObject(sql, turnRowMapper);
+    public TurnDto findTurn(int roomId) {
+        final String sql = "select * from turn where roomId = ?";
+        return jdbcTemplate.queryForObject(sql, turnRowMapper, roomId);
     }
 
     @Override
-    public void updateTurn(final String turn) {
-        final String sql = "update turn set team = ? where team = ?";
+    public void updateTurn(int roomId, final String turn) {
+        final String sql = "update turn set team = ? where roomId = ? and team = ?";
         if (turn.equals(Team.WHITE.getName())) {
-            jdbcTemplate.update(sql, Team.BLACK.getName(), Team.WHITE.getName());
+            jdbcTemplate.update(sql, Team.BLACK.getName(), roomId, Team.WHITE.getName());
             return;
         }
-        jdbcTemplate.update(sql, Team.WHITE.getName(), Team.BLACK.getName());
+        jdbcTemplate.update(sql, Team.WHITE.getName(), roomId, Team.BLACK.getName());
     }
 
     @Override
-    public void resetTurn() {
-        final String sql = "update turn set team = 'WHITE'";
-        jdbcTemplate.execute(sql);
+    public void initializeTurn(int roomId) {
+        if (isExistId(roomId)) {
+            resetTurn(roomId);
+            return;
+        }
+        final String sql = "insert into turn(roomId, team) values(?, 'WHITE')";
+        jdbcTemplate.update(sql, roomId);
+    }
+
+    private void resetTurn(int roomId) {
+        final String sql = "update turn set team = 'WHITE' where roomId = ?";
+        jdbcTemplate.update(sql, roomId);
+    }
+
+    private boolean isExistId(int roomId) {
+        final String sql = "select count(*) from turn where roomId = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, roomId) == 1;
     }
 }

@@ -2,11 +2,15 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.dao.JdbcRoomDao;
 import chess.dao.PieceDao;
 import chess.dao.JdbcPieceDao;
+import chess.dao.RoomDao;
 import chess.dao.TurnDao;
 import chess.dao.JdbcTurnDao;
 import chess.dto.MoveDto;
+import chess.dto.RoomDto;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +29,8 @@ class ChessServiceTest {
     void setUp() {
         PieceDao pieceDao = new JdbcPieceDao(jdbcTemplate);
         TurnDao turnDao = new JdbcTurnDao(jdbcTemplate);
-        this.chessService = new ChessService(pieceDao, turnDao);
+        RoomDao roomDao = new JdbcRoomDao(jdbcTemplate);
+        this.chessService = new ChessService(pieceDao, turnDao, roomDao);
 
         jdbcTemplate.execute("drop table piece if exists");
         jdbcTemplate.execute("CREATE TABLE piece (\n" +
@@ -34,33 +39,42 @@ class ChessServiceTest {
                 "    team varchar(5) not null)");
         jdbcTemplate.execute("drop table turn if exists");
         jdbcTemplate.execute("CREATE TABLE turn (team varchar(5) not null primary key)");
-        jdbcTemplate.execute("insert into turn (team) values ('WHITE')");
 
-        chessService.initializeGame();
+        RoomDto roomDto = chessService.createRoom(new RoomDto("title", "password"));
+        chessService.initializeGame(roomDto.getId());
     }
 
     @Test
     void initializeGame() {
-        assertThat(chessService.initializeGame()).isNotNull();
+        List<RoomDto> roomList = chessService.getRooms();
+        assertThat(chessService.initializeGame(roomList.get(0).getId())).isNotNull();
     }
 
     @Test
     void load() {
-        assertThat(chessService.load()).isNotNull();
+        List<RoomDto> roomList = chessService.getRooms();
+        RoomDto roomDto = roomList.get(0);
+        assertThat(chessService.load(roomDto.getId())).isNotNull();
     }
 
     @Test
     void move() {
-        assertThat(chessService.move(new MoveDto("a2", "a3"))).isNotNull();
+        List<RoomDto> roomList = chessService.getRooms();
+        RoomDto roomDto = roomList.get(0);
+        assertThat(chessService.move(roomDto.getId(), new MoveDto("a2", "a3"))).isNotNull();
     }
 
     @Test
     void getStatus() {
-        assertThat(chessService.getStatus().getScoreStatus()).isEqualTo("WHITE: 38.0\n" + "BLACK: 38.0");
+        List<RoomDto> roomList = chessService.getRooms();
+        RoomDto roomDto = roomList.get(0);
+        assertThat(chessService.getStatus(roomDto.getId()).getScoreStatus()).isEqualTo("WHITE: 38.0\n" + "BLACK: 38.0");
     }
 
     @Test
     void getResult() {
-        assertThat(chessService.getResult().getResult()).isEqualTo("무승부입니다!");
+        List<RoomDto> roomList = chessService.getRooms();
+        RoomDto roomDto = roomList.get(0);
+        assertThat(chessService.getResult(roomDto.getId()).getResult()).isEqualTo("무승부입니다!");
     }
 }

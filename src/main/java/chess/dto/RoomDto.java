@@ -2,26 +2,26 @@ package chess.dto;
 
 public class RoomDto {
 
+    private int id;
     private String title;
     private String password;
 
-    private int id;
 
     public RoomDto() {
     }
 
-    public RoomDto(String title, String password, int id) {
+    public RoomDto(int id, String title, String password) {
+        this.id = id;
         this.title = title;
         this.password = password;
-        this.id = id;
     }
 
     public RoomDto(String title, String password) {
-        this(title, password, 0);
+        this(0, title, password);
     }
 
-    public RoomDto(String title, int id) {
-        this(title, "", id);
+    public RoomDto(int id, String title) {
+        this(id, title, "");
     }
 
     public String getTitle() {

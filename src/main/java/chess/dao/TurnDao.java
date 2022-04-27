@@ -4,9 +4,9 @@ import chess.dto.TurnDto;
 
 public interface TurnDao {
 
-    TurnDto findTurn();
+    TurnDto findTurn(final int roomId);
 
-    void updateTurn(final String turn);
+    void updateTurn(final int roomId, final String turn);
 
-    void resetTurn();
+    void initializeTurn(final int roomId);
 }

@@ -4,15 +4,17 @@ import chess.dto.RoomDto;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JdbcRoomDao implements RoomDao {
 
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<RoomDto> actorRowMapper = (resultSet, rowNum) -> {
         return new RoomDto(
-                resultSet.getString("title"),
-                resultSet.getInt("id")
+                resultSet.getInt("id"),
+                resultSet.getString("title")
         );
     };
 
@@ -36,7 +38,7 @@ public class JdbcRoomDao implements RoomDao {
     @Override
     public boolean matchPassword(int id, String password) {
         String sql = "select count(*) from room where id = ? and password = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, 1, password) == 1;
+        return jdbcTemplate.queryForObject(sql, Integer.class, id, password) == 1;
     }
 
     @Override

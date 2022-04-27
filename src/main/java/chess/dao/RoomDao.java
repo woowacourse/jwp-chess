@@ -8,7 +8,7 @@ public interface RoomDao {
 
     int getRecentRoomId();
 
-    boolean matchPassword(int id, String password);
+    boolean matchPassword(int roomId, String password);
 
     List<RoomDto> getRooms();
 

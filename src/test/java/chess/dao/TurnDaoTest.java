@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dto.TurnDto;
+import chess.service.ChessService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,14 +24,19 @@ class TurnDaoTest {
         turnDao = new JdbcTurnDao(jdbcTemplate);
 
         jdbcTemplate.execute("drop table turn if exists");
-        jdbcTemplate.execute("CREATE TABLE turn (team varchar(5) not null primary key)");
-        jdbcTemplate.execute("insert into turn (team) values ('WHITE')");
+        jdbcTemplate.execute("CREATE TABLE turn (\n"
+                + "    roomId int not null primary key,\n"
+                + "    team varchar(5) not null"
+                + ")");
+
+        turnDao.initializeTurn(1);
     }
 
     @Test
     @DisplayName("db에서 현재 턴을 찾는다.")
     void findTurn() {
-        final TurnDto turnDto = turnDao.findTurn();
+
+        final TurnDto turnDto = turnDao.findTurn(1);
         final String expected = "WHITE";
 
         final String actual = turnDto.getTurn();
@@ -41,10 +47,10 @@ class TurnDaoTest {
     @Test
     @DisplayName("db에서 턴을 업데이트해준다.")
     void updateTurn() {
-        turnDao.updateTurn("WHITE");
+        turnDao.updateTurn(1, "WHITE");
         final String expected = "BLACK";
 
-        final String actual = turnDao.findTurn().getTurn();
+        final String actual = turnDao.findTurn(1).getTurn();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -52,12 +58,14 @@ class TurnDaoTest {
     @Test
     @DisplayName("db에서 턴을 화이트로 리셋해준다.")
     void resetTurn() {
-        turnDao.updateTurn("WHITE");
-        turnDao.resetTurn();
+        turnDao.updateTurn(1, "WHITE");
+        turnDao.initializeTurn(1);
         final String expected = "WHITE";
 
-        final String actual = turnDao.findTurn().getTurn();
+        final String actual = turnDao.findTurn(1).getTurn();
 
         assertThat(actual).isEqualTo(expected);
     }
+
+
 }

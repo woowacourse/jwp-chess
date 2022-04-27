@@ -13,6 +13,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,6 +55,12 @@ public class ChessGameController {
                 .map(PieceResponse::from)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(pieceResponses);
+    }
+
+    @DeleteMapping("/{chessGameId}")
+    public ResponseEntity<Void> deleteChessGame(@PathVariable long chessGameId, @RequestParam String password) {
+        chessGameService.deleteChessGame(chessGameId, password);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{chessGameId}/move")

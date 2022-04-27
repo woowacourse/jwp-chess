@@ -79,6 +79,13 @@ public class ChessGameService {
         return chessBoard.winner();
     }
 
+    public void deleteChessGame(long chessGameId, String password){
+        ChessGame chessGame = chessGameDao.findChessGame(chessGameId);
+        chessGame.validatePassword(password);
+
+        chessGameDao.deleteChessGame(chessGame);
+    }
+
     private ChessGameState findChessGameState(long chessGameId) {
         Turn currentTurn = findChessGameTurn(chessGameId);
         ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);

@@ -84,6 +84,20 @@ class ChessGameControllerTest {
     }
 
     @Test
+    @DisplayName("체스 게임 삭제")
+    void deleteChessGame() {
+        long chessGameId = chessGameDao.createChessGame(chessGame)
+                .getId();
+
+        RestAssured.given().log().all()
+                .param("password", "password")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("chessgames/" + chessGameId)
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
     @DisplayName("체스 기물 이동")
     void movePiece() {
         long chessGameId = chessGameDao.createChessGame(chessGame)

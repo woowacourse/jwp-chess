@@ -3,6 +3,7 @@ package chess.service;
 import static chess.domain.Color.BLACK;
 import static chess.domain.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.dao.ChessGameDao;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
@@ -126,6 +128,26 @@ class ChessGameServiceTest {
         assertAll(
                 () -> assertThat(piece.name()).isEqualTo("bishop"),
                 () -> assertThat(piece.color()).isEqualTo(WHITE)
+        );
+    }
+
+    @Test
+    @DisplayName("체스 게임 삭제 후 체스 기물들 삭제 확인")
+    void deleteChessGameAndPieces() {
+        // given
+        Position source = Position.of('a', '8');
+        pieceDao.savePieces(chessGameId, Map.of(
+                source, new Piece(WHITE, new Pawn(WHITE))
+        ));
+
+        // when
+        chessGameService.deleteChessGame(chessGameId, "password");
+
+        // then
+        assertAll(
+                () -> assertThatThrownBy(() -> chessGameDao.findChessGame(chessGameId))
+                        .isInstanceOf(EmptyResultDataAccessException.class),
+                () -> assertThat(pieceDao.findChessBoardByChessGameId(chessGameId).getPieces()).hasSize(0)
         );
     }
 }

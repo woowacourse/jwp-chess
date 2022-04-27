@@ -1,67 +1,131 @@
 package chess.domain.game;
 
-import chess.domain.member.Member;
 import chess.domain.pieces.Color;
+import chess.domain.pieces.Piece;
+import chess.domain.position.Column;
+import chess.domain.position.Direction;
+import chess.domain.position.Position;
+import chess.domain.position.Row;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public final class ChessBoard {
 
-    private final Integer id;
-    private final String roomTitle;
-    private final Color turn;
-    private final List<Member> members;
-    private final String password;
+    private static final double PAWN_PENALTY_SCORE = 0.5;
+    private static final int KING_TOTAL_COUNT = 2;
 
-    public ChessBoard(Integer id, String roomTitle, Color turn, List<Member> members, String password) {
-        this.id = id;
-        this.roomTitle = roomTitle;
-        this.turn = turn;
-        this.members = members;
-        this.password = password;
-        validate(password);
+    private final Map<Position, Piece> pieces;
+
+    public ChessBoard(final Initializer initializer) {
+        pieces = initializer.initialize();
     }
 
-    private void validate(String password) {
-        if(password == null || password.isEmpty()) {
-            throw new IllegalArgumentException("비밀번호가 필요합니다.");
+    public Optional<Piece> piece(final Position position) {
+        if (pieces.containsKey(position)) {
+            return Optional.of(pieces.get(position));
+        }
+        return Optional.empty();
+    }
+
+    private Piece findPiece(final Position sourcePosition) {
+        final Optional<Piece> wrappedPiece = piece(sourcePosition);
+        if (wrappedPiece.isEmpty()) {
+            throw new IllegalArgumentException("말이 존재하지 않습니다.");
+        }
+        return wrappedPiece.get();
+    }
+
+    public void validateMovement(Position sourcePosition, Position targetPosition) {
+        validateNotEquals(sourcePosition, targetPosition);
+        validateTargetNotSameColor(targetPosition, findPiece(sourcePosition));
+        findPiece(sourcePosition).validateMovement(sourcePosition, targetPosition);
+        checkPawnMovement(sourcePosition, targetPosition, findPiece(sourcePosition));
+        validatePathEmpty(sourcePosition, targetPosition);
+    }
+
+    private void validateNotEquals(final Position sourcePosition, final Position targetPosition) {
+        if (sourcePosition.equals(targetPosition)) {
+            throw new IllegalArgumentException("출발지와 목적지가 동일할 수 없습니다.");
         }
     }
 
-    public ChessBoard(Integer roomId, String roomTitle, Color turn, String password) {
-        this(roomId, roomTitle, turn, new ArrayList<>(), password);
+    private void validateTargetNotSameColor(final Position targetPosition, final Piece piece) {
+        if (pieces.containsKey(targetPosition) && piece.isSameColorPiece(findPiece(targetPosition))) {
+            throw new IllegalArgumentException("목적지에 같은 색의 기물이 있으면 움직일 수 없습니다.");
+        }
     }
 
-    public ChessBoard(String roomTitle, Color turn, List<Member> members, String password) {
-        this(null, roomTitle, turn, members, password);
+    private void validatePathEmpty(final Position source, final Position target) {
+        final Direction direction = Direction.calculate(source, target);
+        if (!direction.isIgnore()) {
+            List<Position> positions = source.calculatePath(target, direction);
+            validatePiecesNotExistOnPath(positions);
+        }
     }
 
-    public ChessBoard(String roomTitle, Color turn, String password) {
-        this(null, roomTitle, turn, new ArrayList<>(), password);
+    private void validatePiecesNotExistOnPath(final List<Position> positions) {
+        for (Position position : positions) {
+            validatePieceNotExist(position);
+        }
     }
 
-    public ChessBoard(String roomTitle, String password) {
-        this(null, roomTitle, Color.WHITE, password);
+    private void validatePieceNotExist(final Position position) {
+        if (pieces.containsKey(position)) {
+            throw new IllegalArgumentException("이동경로에 다른 기물이 있으면 움직일 수 없습니다.");
+        }
     }
 
-    public int getId() {
-        return id;
+    private void checkPawnMovement(final Position sourcePosition, final Position targetPosition, final Piece piece) {
+        if (piece.isPawn() && Direction.calculate(sourcePosition, targetPosition).isDiagonal()) {
+            checkPawnTargetExist(targetPosition);
+        }
+        if (piece.isPawn() && Direction.calculate(sourcePosition, targetPosition).isVertical()) {
+            checkPawnTargetNotExist(targetPosition);
+        }
     }
 
-    public String getRoomTitle() {
-        return roomTitle;
+    private void checkPawnTargetExist(final Position targetPosition) {
+        if (!pieces.containsKey(targetPosition)) {
+            throw new IllegalArgumentException("폰은 상대기물이 목적지에 존재해야 대각선으로 움직일 수 있습니다.");
+        }
     }
 
-    public Color getTurn() {
-        return turn;
+    private void checkPawnTargetNotExist(final Position targetPosition) {
+        if (pieces.containsKey(targetPosition)) {
+            throw new IllegalArgumentException("목적지에 다른 기물이 존재하면 움직일 수 없습니다.");
+        }
     }
 
-    public List<Member> getMembers() {
-        return members;
+    public boolean isEnd() {
+        return pieces.values()
+                .stream()
+                .filter(Piece::isKing)
+                .count() != KING_TOTAL_COUNT;
     }
 
-    public String getPassword() {
-        return password;
+    public double calculateScore(final Color color) {
+        return calculateDefaultScore(color) - countPawnsOnSameColumns(color) * PAWN_PENALTY_SCORE;
+    }
+
+    private double calculateDefaultScore(final Color color) {
+        return pieces.values()
+                .stream()
+                .filter(piece -> piece.isSameColor(color))
+                .mapToDouble(Piece::score)
+                .sum();
+    }
+
+    private int countPawnsOnSameColumns(final Color color) {
+        return Arrays.stream(Column.values())
+                .mapToInt(column -> countPawnsOnSameColumn(column, color))
+                .filter(count -> count > 1)
+                .sum();
+    }
+
+    private int countPawnsOnSameColumn(final Column column, final Color color) {
+        return (int) Arrays.stream(Row.values())
+                .map(row -> piece(Position.valueOf(column, row)))
+                .filter(piece -> piece.isPresent() && piece.get().isPawn() && piece.get().isSameColor(color))
+                .count();
     }
 }

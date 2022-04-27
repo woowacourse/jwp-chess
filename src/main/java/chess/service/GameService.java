@@ -5,15 +5,15 @@ import chess.dao.WebChessMemberDao;
 import chess.dao.WebChessPieceDao;
 import chess.dao.WebChessPositionDao;
 import chess.domain.game.BoardInitializer;
+import chess.domain.game.ChessGame;
 import chess.domain.game.ChessBoard;
-import chess.domain.game.ConsoleBoard;
 import chess.domain.game.Initializer;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
-import chess.dto.RequestDto;
+import chess.dto.NewGameInfoDto;
 import chess.dto.RoomDto;
 import chess.dto.RoomsDto;
 import chess.dto.StatusDto;
@@ -41,15 +41,15 @@ public final class GameService {
         this.memberDao = memberDao;
     }
 
-    public ChessBoard createBoard(final RequestDto requestDto) {
-        final ChessBoard board = new ChessBoard(requestDto.getTitle(), Color.WHITE,
+    public ChessGame createBoard(final NewGameInfoDto requestDto) {
+        final ChessGame board = new ChessGame(requestDto.getTitle(), Color.WHITE,
                 List.of(new Member(requestDto.getFirstMemberName()), new Member(requestDto.getSecondMemberName())),
                 requestDto.getPassword());
         return saveBoard(board, new BoardInitializer());
     }
 
-    public ChessBoard saveBoard(final ChessBoard board, final Initializer initializer) {
-        final ChessBoard savedBoard = boardDao.save(board);
+    public ChessGame saveBoard(final ChessGame board, final Initializer initializer) {
+        final ChessGame savedBoard = boardDao.save(board);
         final Map<Position, Piece> initialize = initializer.initialize();
         positionDao.saveAll(savedBoard.getId());
         for (Position position : initialize.keySet()) {
@@ -67,10 +67,10 @@ public final class GameService {
                 sourceRawPosition.getRow(), roomId);
         Position targetPosition = positionDao.getByColumnAndRowAndBoardId(targetRawPosition.getColumn(),
                 targetRawPosition.getRow(), roomId);
-        ConsoleBoard consoleBoard = new ConsoleBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
-        consoleBoard.validateMovement(sourcePosition, targetPosition);
+        ChessBoard chessBoard = new ChessBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
+        chessBoard.validateMovement(sourcePosition, targetPosition);
         validateTurn(roomId, sourcePosition);
-        updateMovingPiecePosition(sourcePosition, targetPosition, consoleBoard.piece(targetPosition));
+        updateMovingPiecePosition(sourcePosition, targetPosition, chessBoard.piece(targetPosition));
         changeTurn(roomId);
     }
 
@@ -100,7 +100,7 @@ public final class GameService {
     }
 
     public BoardDto getBoard(int roomId) {
-        final ChessBoard board = boardDao.getById(roomId);
+        final ChessGame board = boardDao.getById(roomId);
         final Map<Position, Piece> allPositionsAndPieces = positionDao.findAllPositionsAndPieces(roomId);
         Map<String, Piece> pieces = mapPositionToString(allPositionsAndPieces);
         return BoardDto.of(pieces, board.getRoomTitle(), board.getMembers().get(0), board.getMembers().get(1));
@@ -114,8 +114,8 @@ public final class GameService {
     }
 
     public boolean isEnd(int roomId) {
-        ConsoleBoard consoleBoard = new ConsoleBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
-        final boolean kingDead = consoleBoard.isEnd();
+        ChessBoard chessBoard = new ChessBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
+        final boolean kingDead = chessBoard.isEnd();
         return kingDead;
     }
 
@@ -125,8 +125,8 @@ public final class GameService {
     }
 
     public double calculateScore(int roomId, final Color color) {
-        ConsoleBoard consoleBoard = new ConsoleBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
-        return consoleBoard.calculateScore(color);
+        ChessBoard chessBoard = new ChessBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
+        return chessBoard.calculateScore(color);
     }
 
     public boolean end(int roomId, String password) {
@@ -135,8 +135,8 @@ public final class GameService {
 
     public RoomsDto getRooms() {
         List<RoomDto> boardsDto = new ArrayList<>();
-        List<ChessBoard> boards = boardDao.findAll();
-        for (ChessBoard board : boards) {
+        List<ChessGame> boards = boardDao.findAll();
+        for (ChessGame board : boards) {
             boardsDto.add(new RoomDto(board.getId(), board.getRoomTitle(), board.getMembers().get(0),
                     board.getMembers().get(1)));
         }

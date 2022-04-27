@@ -1,13 +1,13 @@
 package chess.dto;
 
-public class RequestDto {
+public class NewGameInfoDto {
 
     private final String title;
     private final String firstMemberName;
     private final String secondMemberName;
     private final String password;
 
-    private RequestDto(String title, String firstMemberName, String secondMemberName, String password) {
+    private NewGameInfoDto(String title, String firstMemberName, String secondMemberName, String password) {
         this.title = title;
         this.firstMemberName = firstMemberName;
         this.secondMemberName = secondMemberName;

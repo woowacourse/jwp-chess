@@ -2,7 +2,7 @@ package chess.controller;
 
 import chess.dto.GameStatusDto;
 import chess.dto.MoveDto;
-import chess.dto.RequestDto;
+import chess.dto.NewGameInfoDto;
 import chess.dto.StatusDto;
 import chess.service.GameService;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +33,8 @@ public class ChessController {
     }
 
     @PostMapping("/room")
-    public String createRoom(@ModelAttribute RequestDto requestDto) {
-        int roomId = gameService.createBoard(requestDto).getId();
+    public String createRoom(@ModelAttribute NewGameInfoDto newGameInfoDto) {
+        int roomId = gameService.createBoard(newGameInfoDto).getId();
         return "redirect:/room/" + roomId;
     }
 

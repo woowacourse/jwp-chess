@@ -2,7 +2,7 @@ package chess;
 
 import chess.dao.WebChessBoardDao;
 import chess.dao.WebChessPositionDao;
-import chess.domain.game.ChessBoard;
+import chess.domain.game.ChessGame;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import io.restassured.RestAssured;
@@ -34,8 +34,8 @@ class SpringChessApplicationTests {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        ChessBoard board = boardDao.save(
-                new ChessBoard("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린")), "1111"));
+        ChessGame board = boardDao.save(
+                new ChessGame("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린")), "1111"));
         this.boardId = board.getId();
         positionDao.saveAll(boardId);
     }

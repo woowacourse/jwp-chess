@@ -3,7 +3,7 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.domain.game.ChessBoard;
+import chess.domain.game.ChessGame;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Pawn;
 import chess.domain.pieces.Piece;
@@ -35,7 +35,7 @@ class WebChessPositionDaoTest {
 
     @BeforeEach
     void setup() {
-        final ChessBoard board = boardDao.save(new ChessBoard("코린파이팅", "1111"));
+        final ChessGame board = boardDao.save(new ChessGame("코린파이팅", "1111"));
         this.boardId = board.getId();
         Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, boardId));
         this.positionId = position.getId();

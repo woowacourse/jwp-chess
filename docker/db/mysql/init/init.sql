@@ -10,6 +10,6 @@ CREATE TABLE pieces
 
 CREATE TABLE gameInfos
 (
-    state ENUM('Ready','Play','Finish'),
+    state ENUM('READY','PLAY','FINISH'),
     turn  ENUM('BLACK','WHITE')
 );

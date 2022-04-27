@@ -34,11 +34,6 @@ public class Finish implements State {
     }
 
     @Override
-    public boolean isPlaying() {
-        return false;
-    }
-
-    @Override
     public boolean isFinished() {
         return true;
     }
@@ -46,6 +41,11 @@ public class Finish implements State {
     @Override
     public double computeScore(Color color, double minusScoreOfSameColumnPawn) {
         return chessboard.computeScore(color, minusScoreOfSameColumnPawn);
+    }
+
+    @Override
+    public String getStateToString() {
+        return "FINISH";
     }
 
 }

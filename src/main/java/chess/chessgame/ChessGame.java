@@ -3,10 +3,7 @@ package chess.chessgame;
 import chess.dto.ScoreDto;
 import chess.piece.Color;
 import chess.piece.Piece;
-import chess.state.Finish;
-import chess.state.Play;
-import chess.state.Ready;
-import chess.state.State;
+import chess.state.*;
 import chess.utils.UnicodeConverter;
 
 import java.util.List;
@@ -73,8 +70,8 @@ public class ChessGame {
                 .collect(Collectors.toList());
     }
 
-    public State getState() {
-        return state;
+    public String getStateToString() {
+        return state.getStateToString();
     }
 
     public String getColorOfTurn() {
@@ -82,13 +79,8 @@ public class ChessGame {
     }
 
     private State convertToState(String state, Chessboard chessboard) {
-        if (state.equals("Play")) {
-            return new Play(chessboard);
-        }
-        if (state.equals("Finish")) {
-            return new Finish(chessboard);
-        }
-        return new Ready();
+        return StateFactory.valueOf(state)
+                .create(chessboard);
     }
 
 }

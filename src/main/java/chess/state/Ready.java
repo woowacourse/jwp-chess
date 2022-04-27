@@ -30,15 +30,14 @@ public class Ready implements State {
         throw new UnsupportedOperationException(UNSUPPORTED_STATE);
     }
 
+    @Override
+    public String getStateToString() {
+        return "READY";
+    }
 
     @Override
     public Chessboard getChessboard() {
         return chessboard;
-    }
-
-    @Override
-    public boolean isPlaying(){
-        return false;
     }
 
     @Override

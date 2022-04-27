@@ -52,13 +52,13 @@ public class Play implements State {
     }
 
     @Override
-    public boolean isPlaying() {
-        return true;
+    public double computeScore(Color color, double minusScoreOfSameColumnPawn) {
+        return chessboard.computeScore(color, minusScoreOfSameColumnPawn);
     }
 
     @Override
-    public double computeScore(Color color, double minusScoreOfSameColumnPawn) {
-        return chessboard.computeScore(color, minusScoreOfSameColumnPawn);
+    public String getStateToString() {
+        return "PLAY";
     }
 
 }

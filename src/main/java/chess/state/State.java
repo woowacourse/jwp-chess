@@ -17,10 +17,10 @@ public interface State {
 
     State end();
 
-    boolean isPlaying();
-
     boolean isFinished();
 
     double computeScore(Color color, double minusScoreOfSameColumnPawn);
+
+    String getStateToString();
 
 }

@@ -1,5 +1,7 @@
 package chess.dao;
 
+import chess.domain.board.ChessBoard;
+import chess.domain.board.ChessBoardGenerator;
 import chess.domain.board.ChessGame;
 import chess.dto.GameCreationDTO;
 import java.sql.PreparedStatement;
@@ -18,7 +20,8 @@ public class ChessGameDAO {
                     resultSet.getString("id"),
                     resultSet.getString("name"),
                     resultSet.getString("password"),
-                    resultSet.getBoolean("is_end")
+                    resultSet.getBoolean("is_end"),
+                    new ChessBoard(new ChessBoardGenerator())
             );
 
     private final JdbcTemplate jdbcTemplate;

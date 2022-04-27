@@ -11,16 +11,13 @@ public final class ChessGame {
     private String password;
     private ChessBoard chessBoard;
 
-    public ChessGame(final String id, final String name, final String password, final boolean isEnd) {
+    public ChessGame(final String id, final String name, final String password, final boolean isEnd,
+                     ChessBoard chessBoard) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.isEnd = isEnd;
-        this.chessBoard = new ChessBoard(new ChessBoardGenerator());
-    }
-
-    public ChessGame(final String id, final String name, final String password) {
-        this(id, name, password, false);
+        this.chessBoard = chessBoard;
     }
 
     public String getName() {

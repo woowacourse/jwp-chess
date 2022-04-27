@@ -1,3 +1,4 @@
+let gamePassword = new URLSearchParams(window.location.search).get("password");
 let gameUri = new URLSearchParams(window.location.search).get("location");
 
 window.onload= async function () {
@@ -37,8 +38,13 @@ async function displayBoard() {
 }
 
 function getBoard() {
-    return fetch(gameUri)
-        .then((response) => response.json());
+    return fetch(gameUri + "?password=" + gamePassword)
+        .then(response => handlingException(response))
+        .then((response) => response.json())
+        .catch(error => {
+            alert(error.message);
+            location.href = "/";
+        });
 }
 
 async function startChessGame() {

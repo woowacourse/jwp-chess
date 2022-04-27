@@ -2,10 +2,6 @@ window.onload= async function () {
     await findAllChessGames();
 }
 
-function loadChessGamePage(uri) {
-    location.href = "/play?location=" + uri;
-}
-
 function showAllChessGames(chessGames){
     Array.from(chessGames).forEach(
         function (element) {

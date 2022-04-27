@@ -1,5 +1,5 @@
-function loadChessGamePage(uri) {
-    location.href = "/play?location=" + uri;
+function loadChessGamePage(uri, password) {
+    location.href = "/play?location=" + uri + "&password=" + password;
 }
 
 async function startChessGame() {
@@ -17,7 +17,7 @@ async function startChessGame() {
         },
         body: JSON.stringify(game)
     }).then(response => handlingException(response))
-        .then(response => loadChessGamePage(response.headers.get('Location')))
+        .then(response => loadChessGamePage(response.headers.get('Location'), password))
         .catch(error => {
             alert(error.message);
         });
@@ -28,15 +28,20 @@ async function openLoadGameWindowPop(url, title) {
     let win = window.open(url, title, options);
 
     win.loadGame = function (id) {
-        win.close();
-        loadChessGamePage("/chessgames/" + id);
+        let password = win.prompt("비밀번호를 입력 해주세요.");
+        if (password != null) {
+            win.close();
+            loadChessGamePage("/chessgames/" + id, password);
+            return;
+        }
+        alert("비밀번호를 입력해야 합니다.");
     }
 
     win.deleteGame = function (id) {
         win.close();
         fetch('/game/' + id, {
             method: 'DELETE',
-        }).then(handleErrors)
+        }).then(response => handlingException(response))
             .catch(function (error) {
                 alert(error.message)
             })

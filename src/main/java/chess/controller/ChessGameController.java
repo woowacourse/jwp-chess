@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,9 +47,8 @@ public class ChessGameController {
     }
 
     @GetMapping("/{chessGameId}")
-    public ResponseEntity<List<PieceResponse>> loadChessGame(@PathVariable long chessGameId,
-                                                             @RequestBody ChessGameRequest chessGameRequest) {
-        List<PieceResponse> pieceResponses = chessGameService.findChessBoard(chessGameId, chessGameRequest.getPassword())
+    public ResponseEntity<List<PieceResponse>> loadChessGame(@PathVariable long chessGameId, @RequestParam String password) {
+        List<PieceResponse> pieceResponses = chessGameService.findChessBoard(chessGameId, password)
                 .entrySet()
                 .stream()
                 .map(PieceResponse::from)

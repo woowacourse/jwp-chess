@@ -42,7 +42,7 @@ public class ChessGameRoom {
         }
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

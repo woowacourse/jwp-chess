@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,10 +23,11 @@ class ChessServiceTest {
     private ChessService chessService;
 
     private int gameId;
+    private final String password = "password";
 
     @BeforeEach
     void create_Account() {
-        gameId = chessService.getGameId("name", "password");
+        gameId = chessService.getGameId("name", password);
     }
 
     @DisplayName("게임 생성 테스트")
@@ -62,5 +64,22 @@ class ChessServiceTest {
                 .map(GameDto::getName)
                 .collect(Collectors.toList());
         assertThat(expectedNames).isEqualTo(List.of("name"));
+    }
+
+    @DisplayName("선택한 게임 방의 비밀번호가")
+    @Nested
+    class PasswordTest {
+
+        @DisplayName("올바른 비밀번호면 ture 를 반환한다.")
+        @Test
+        void valid_Password_Test() {
+            assertThat(chessService.checkPassword(gameId, password)).isTrue();
+        }
+
+        @DisplayName("올바르지 않은 비밀번호면 false 를 반환한다.")
+        @Test
+        void invalid_Password_Test() {
+            assertThat(chessService.checkPassword(gameId, "wrongPassword")).isFalse();
+        }
     }
 }

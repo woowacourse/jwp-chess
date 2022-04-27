@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.controller.dto.GameDto;
+import chess.controller.dto.request.GameAccessRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.ErrorResponse;
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("/games")
@@ -62,6 +65,14 @@ public class ChessController {
     @GetMapping("")
     public List<GameDto> findAllGames() {
         return chessService.findAllGames();
+    }
+
+    @PostMapping("/existed-game/?")
+    public ResponseEntity<ErrorResponse> comparePassword(@RequestBody GameAccessRequest game) {
+        if (chessService.checkPassword(game.getGameId(), game.getPassword())) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("잘못된 비밀번호 입니다."));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

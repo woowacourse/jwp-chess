@@ -81,7 +81,7 @@ class ChessServiceTest {
         @Test
         void delete_Game_Success() {
             chessService.createGame(TEST_GAME_ID_1, CREAT_GAME_REQUEST);
-            gameDao.updateState(TEST_GAME_ID_1, GameState.FINISHED);
+            gameDao.updateState(TEST_GAME_ID_1, GameState.WHITE_WIN);
 
             chessService.deleteGame(TEST_GAME_ID_1, "password");
 

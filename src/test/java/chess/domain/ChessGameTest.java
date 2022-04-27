@@ -1,6 +1,5 @@
 package chess.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.board.Board;
@@ -29,15 +28,5 @@ public class ChessGameTest {
         assertThatThrownBy(() -> chessGame.move(CachedPosition.a1, CachedPosition.a2))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("현재 실행할 수 없는 명령입니다.");
-    }
-
-    @DisplayName("end를 호출하면 게임이 종료된다.")
-    @Test
-    void end() {
-        ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
-
-        chessGame.end();
-
-        assertThat(chessGame.isFinished()).isTrue();
     }
 }

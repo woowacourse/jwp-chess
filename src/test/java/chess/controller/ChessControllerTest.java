@@ -158,7 +158,7 @@ class ChessControllerTest {
     @Test
     void end() {
         chessService.createGame(TEST_GAME_ID, CREAT_GAME_REQUEST);
-        gameDao.updateState(TEST_GAME_ID, GameState.FINISHED);
+        gameDao.updateState(TEST_GAME_ID, GameState.WHITE_WIN);
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)

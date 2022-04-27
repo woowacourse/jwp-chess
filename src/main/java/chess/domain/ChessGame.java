@@ -51,10 +51,6 @@ public class ChessGame {
         return gameState;
     }
 
-    public void end() {
-        gameState = GameState.FINISHED;
-    }
-
     public Status createStatus() {
         if (gameState.isRunning() || gameState.isFinished()) {
             return new Status(board);

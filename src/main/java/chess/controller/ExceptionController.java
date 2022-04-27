@@ -16,10 +16,9 @@ public class ExceptionController {
         redirectAttributes.addAttribute("error", e.getMessage());
 
         String referer = request.getHeader("Referer");
-        String[] split = referer.split("/");
-        String[] result = split[4].split("\\?");
+        String[] split = referer.split("\\?");
 
-        return "redirect:/game/" + result[0];
+        return "redirect:" + split[0];
     }
 
     @ExceptionHandler(IllegalPasswordException.class)

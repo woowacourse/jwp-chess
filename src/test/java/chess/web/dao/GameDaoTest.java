@@ -3,7 +3,6 @@ package chess.web.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.state.StateType;
-import chess.web.dto.CreateGameRequestDto;
 import chess.web.dto.GameResponseDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 @Sql("classpath:init.sql")
-class GameDaoJdbcImplTest {
+class GameDaoTest {
 
     private static final int GAME_ID = 1;
 
@@ -29,7 +28,7 @@ class GameDaoJdbcImplTest {
     void setUp() {
         gameDao = new GameDaoJdbcImpl(jdbcTemplate);
 
-        gameDao.save(new CreateGameRequestDto("체스게임방", "1234"), StateType.WHITE_TURN);
+        gameDao.save("체스게임방", "1234", StateType.WHITE_TURN);
     }
 
     @DisplayName("게임 상태를 변경한다.")
@@ -74,7 +73,7 @@ class GameDaoJdbcImplTest {
     @DisplayName("게임을 삭제한다.")
     @Test
     void deleteGameById() {
-       gameDao.deleteGameById(GAME_ID);
+        gameDao.deleteGameById(GAME_ID);
 
         int actual = gameDao.findAll().size();
         int expected = 0;

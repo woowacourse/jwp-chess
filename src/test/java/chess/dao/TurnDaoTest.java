@@ -26,7 +26,7 @@ class TurnDaoTest {
         jdbcTemplate.execute("drop table turn if exists");
         jdbcTemplate.execute("drop table room if exists");
         jdbcTemplate.execute("CREATE TABLE room (\n" +
-                "    id long not null auto_increment primary key,\n" +
+                "    id bigint not null auto_increment primary key,\n" +
                 "    name varchar(30) not null,\n" +
                 "    password varchar(20) not null)"
         );

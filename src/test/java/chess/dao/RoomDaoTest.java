@@ -24,7 +24,7 @@ class RoomDaoTest {
 
         jdbcTemplate.execute("drop table room if exists");
         jdbcTemplate.execute("CREATE TABLE room (\n" +
-                "    id long not null auto_increment primary key,\n" +
+                "    id bigint not null auto_increment primary key,\n" +
                 "    name varchar(30) not null,\n" +
                 "    password varchar(20) not null)"
         );
@@ -34,11 +34,9 @@ class RoomDaoTest {
     @DisplayName("체스룸을 생성한다.")
     void makeRoom() {
         final RoomDto roomDto = new RoomDto("chessRoom", "abcd");
-        roomDao.makeRoom(roomDto);
-        final String sql = "select count(*) from room";
-        final int expected = 1;
+        final long expected = 1L;
 
-        final int actual = jdbcTemplate.queryForObject(sql, Integer.class);
+        final long actual = roomDao.makeRoom(roomDto);
 
         assertThat(actual).isEqualTo(expected);
     }

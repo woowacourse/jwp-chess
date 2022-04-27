@@ -23,7 +23,7 @@ public class ChessWebController {
     public String room(@PathVariable final int roomId) {
         final boolean roomExist = roomService.isExistRoom(roomId);
         if (!roomExist) {
-            return "index";
+            return "notFound";
         }
 
         return "board";

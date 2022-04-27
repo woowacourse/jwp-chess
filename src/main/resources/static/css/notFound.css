@@ -1,0 +1,14 @@
+.main_container {
+    margin-top: 100px;
+    float: top;
+    text-align: center;
+}
+
+.redirect_message {
+    margin-top: 20px;
+}
+
+.anchor {
+    color: black;
+    font-weight: bold;
+}

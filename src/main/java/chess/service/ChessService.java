@@ -35,7 +35,7 @@ public class ChessService {
 
     public void createGame(String gameID, String gamePW) {
         ChessGame chessGame = loadNewChessGame();
-        startGame(gameID, gamePW, chessGame);
+        saveNewGame(gameID, gamePW, chessGame);
         loadPieces(gameID);
     }
 
@@ -65,7 +65,7 @@ public class ChessService {
         return new ChessGame(new InitialBoardGenerator(), GameTurn.READY);
     }
 
-    public void startGame(String gameID, String gamePW, ChessGame chessGame) {
+    public void saveNewGame(String gameID, String gamePW, ChessGame chessGame) {
         chessGameDao.save(gameID, gamePW, chessGame);
         updateTurn(gameID, chessGame);
     }
@@ -96,6 +96,11 @@ public class ChessService {
 
     public void restartGame(String gameID) {
         ChessGame chessGame = loadNewChessGame();
+        updateTurn(gameID, chessGame);
+    }
+
+    public void startGame(String gameID, ChessGame chessGame) {
+        chessGame.startGame();
         updateTurn(gameID, chessGame);
     }
 }

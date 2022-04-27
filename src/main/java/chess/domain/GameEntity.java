@@ -3,6 +3,7 @@ package chess.domain;
 public class GameEntity {
     private String gameID;
     private String gameCode;
+    private boolean isFinished;
 
     public void setGameID(String gameID) {
         this.gameID = gameID;
@@ -12,11 +13,19 @@ public class GameEntity {
         this.gameCode = gameCode;
     }
 
+    public void setIsFinished(String turn) {
+        this.isFinished = (turn.equals("FINISHED") || turn.equals("READY"));
+    }
+
     public String getGameID() {
         return gameID;
     }
 
     public String getGameCode() {
         return gameCode;
+    }
+
+    public boolean getIsFinished() {
+        return isFinished;
     }
 }

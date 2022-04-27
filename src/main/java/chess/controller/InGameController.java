@@ -25,6 +25,7 @@ public class InGameController {
     public String runGame(@RequestParam String gameCode, Model model) {
         final String gameID = chessService.findGameID(gameCode);
         ChessGame chessGame = chessService.loadGame(gameID);
+        chessService.startGame(gameID, chessGame);
         chessService.loadPieces(gameID);
         model.addAllAttributes(chessGame.getEmojis());
         GameResult gameResult = chessService.getGameResult(gameID);

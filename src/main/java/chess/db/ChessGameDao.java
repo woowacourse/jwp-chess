@@ -48,7 +48,7 @@ public class ChessGameDao {
     }
 
     public List<GameEntity> findAllGames() {
-        String sql = "select gameID, gameCode from chessGame";
+        String sql = "select gameID, gameCode, turn from chessGame";
         return jdbcTemplate.query(sql, new GameMapper());
     }
 
@@ -63,6 +63,7 @@ public class ChessGameDao {
             GameEntity gameEntry = new GameEntity();
             gameEntry.setGameID(rs.getString("gameID"));
             gameEntry.setGameCode(rs.getString("gameCode"));
+            gameEntry.setIsFinished(rs.getString("turn"));
             return gameEntry;
         }
 

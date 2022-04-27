@@ -18,7 +18,9 @@
         {{#rooms}}
             <li class="room">
                 <a class="room-name" href="./ingame?gameCode={{gameCode}}">{{gameID}}</a>
-                <a class="room-delete" href="./checkPW?gameCode={{gameCode}}">삭제</a>
+                {{#if isFinished}}
+                    <a class="room-delete" href="./checkPW?gameCode={{gameCode}}">삭제</a>
+                {{/if}}
             </li>
         {{/rooms}}
     </ul>

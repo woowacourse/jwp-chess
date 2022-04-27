@@ -1,10 +1,11 @@
 package chess.service;
 
 import chess.dao.BoardDao;
-import chess.dao.GameDao;
+import chess.dao.GameRoomDao;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
-import chess.domain.game.GameId;
+import chess.domain.game.room.Room;
+import chess.domain.game.room.RoomId;
 import chess.domain.game.score.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
@@ -15,56 +16,51 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
-    private final GameDao gameDao;
+    private final GameRoomDao gameRoomDao;
     private final BoardDao boardDao;
 
     @Autowired
-    public ChessService(GameDao gameDao, BoardDao boardDao) {
-        this.gameDao = gameDao;
+    public ChessService(GameRoomDao gameRoomDao, BoardDao boardDao) {
+        this.gameRoomDao = gameRoomDao;
         this.boardDao = boardDao;
     }
 
-    public void initializeGame(GameId gameId) {
-        gameDao.deleteGame(gameId);
-        createGame(gameId);
-    }
-
-    public void createGame(GameId gameId) {
-        gameDao.createGame(gameId);
+    public void createGame(Room room) {
+        gameRoomDao.createGameRoom(room);
 
         Board initializedBoard = Board.createInitializedBoard();
         for (Entry<Position, Piece> entry : initializedBoard.getValue().entrySet()) {
             Position position = entry.getKey();
             Piece piece = entry.getValue();
 
-            boardDao.createPiece(gameId, position, piece);
+            boardDao.createPiece(room.getId(), position, piece);
         }
     }
 
-    public void movePiece(GameId gameId, Position from, Position to) {
-        ChessGame chessGame = generateChessGame(gameId);
+    public void movePiece(RoomId roomId, Position from, Position to) {
+        ChessGame chessGame = generateChessGame(roomId);
         chessGame.movePiece(from, to);
 
-        updateGameTurn(gameId, chessGame);
-        updatePiecePosition(gameId, from, to);
+        updateGameTurn(roomId, chessGame);
+        updatePiecePosition(roomId, from, to);
     }
 
-    private void updatePiecePosition(GameId gameId, Position from, Position to) {
-        boardDao.deletePiece(gameId, to);
-        boardDao.updatePiecePosition(gameId, from, to);
+    private void updatePiecePosition(RoomId roomId, Position from, Position to) {
+        boardDao.deletePiece(roomId, to);
+        boardDao.updatePiecePosition(roomId, from, to);
     }
 
-    private void updateGameTurn(GameId gameId, ChessGame chessGame) {
+    private void updateGameTurn(RoomId roomId, ChessGame chessGame) {
         if (chessGame.isWhiteTurn()) {
-            gameDao.updateTurnToWhite(gameId);
+            gameRoomDao.updateTurnToWhite(roomId);
             return;
         }
 
-        gameDao.updateTurnToBlack(gameId);
+        gameRoomDao.updateTurnToBlack(roomId);
     }
 
-    public PieceColor getCurrentTurn(GameId gameId) {
-        ChessGame chessGame = generateChessGame(gameId);
+    public PieceColor getCurrentTurn(RoomId roomId) {
+        ChessGame chessGame = generateChessGame(roomId);
         if (chessGame.isWhiteTurn()) {
             return PieceColor.WHITE;
         }
@@ -72,30 +68,30 @@ public class ChessService {
         return PieceColor.BLACK;
     }
 
-    public Score getScore(GameId gameId, PieceColor pieceColor) {
-        ChessGame chessGame = generateChessGame(gameId);
+    public Score getScore(RoomId roomId, PieceColor pieceColor) {
+        ChessGame chessGame = generateChessGame(roomId);
         return chessGame.getStatus().getScoreByPieceColor(pieceColor);
     }
 
-    public PieceColor getWinColor(GameId gameId) {
-        ChessGame chessGame = generateChessGame(gameId);
+    public PieceColor getWinColor(RoomId roomId) {
+        ChessGame chessGame = generateChessGame(roomId);
         return chessGame.getWinColor();
     }
 
-    private ChessGame generateChessGame(GameId gameId) {
-        Board board = boardDao.getBoard(gameId);
-        PieceColor currentTurn = gameDao.getCurrentTurn(gameId);
+    private ChessGame generateChessGame(RoomId roomId) {
+        Board board = boardDao.getBoard(roomId);
+        PieceColor currentTurn = gameRoomDao.getCurrentTurn(roomId);
         return ChessGame.of(board, currentTurn);
     }
 
-    public Board getBoard(GameId gameId) {
-        return boardDao.getBoard(gameId);
+    public Board getBoard(RoomId roomId) {
+        return boardDao.getBoard(roomId);
     }
 
     @Override
     public String toString() {
         return "ChessService{" +
-                "gameDao=" + gameDao +
+                "gameDao=" + gameRoomDao +
                 ", boardDao=" + boardDao +
                 '}';
     }

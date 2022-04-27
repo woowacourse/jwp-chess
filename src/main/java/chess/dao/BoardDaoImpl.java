@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.board.Board;
-import chess.domain.game.GameId;
+import chess.domain.game.room.RoomId;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceType;
@@ -40,13 +40,14 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public Board getBoard(GameId gameId) {
+    public Board getBoard(RoomId roomId) {
         Map<Position, Piece> boardValue = new HashMap<>();
         String query = String.format(
-                "SELECT piece_type, piece_color FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
+                "SELECT piece_type, piece_color FROM %s WHERE game_room_id = ? AND x_axis = ? AND y_axis = ?",
+                TABLE_NAME);
 
-        for (Position position : getPositionsByGameId(gameId)) {
-            Piece piece = jdbcTemplate.queryForObject(query, pieceRowMapper, gameId.getGameId(),
+        for (Position position : getPositionsByRoomId(roomId)) {
+            Piece piece = jdbcTemplate.queryForObject(query, pieceRowMapper, roomId.getValue(),
                     position.getXAxis().getValueAsString(), position.getYAxis().getValueAsString());
             boardValue.put(position, piece);
         }
@@ -54,32 +55,34 @@ public class BoardDaoImpl implements BoardDao {
         return Board.from(boardValue);
     }
 
-    private List<Position> getPositionsByGameId(GameId gameId) {
-        String query = String.format("SELECT x_axis, y_axis FROM %s WHERE game_id = ?", TABLE_NAME);
-        return jdbcTemplate.query(query, positionMapper, gameId.getGameId());
+    private List<Position> getPositionsByRoomId(RoomId roomId) {
+        String query = String.format("SELECT x_axis, y_axis FROM %s WHERE game_room_id = ?", TABLE_NAME);
+        return jdbcTemplate.query(query, positionMapper, roomId.getValue());
     }
 
     @Override
-    public void createPiece(GameId gameId, Position position, Piece piece) {
+    public void createPiece(RoomId roomId, Position position, Piece piece) {
         String query = String.format(
-                "INSERT INTO %s(game_id, x_axis, y_axis, piece_type, piece_color) VALUES(?, ?, ?, ?, ?)", TABLE_NAME);
-        jdbcTemplate.update(query, gameId.getGameId(), position.getXAxis().getValueAsString(),
+                "INSERT INTO %s(game_room_id, x_axis, y_axis, piece_type, piece_color) VALUES(?, ?, ?, ?, ?)",
+                TABLE_NAME);
+        jdbcTemplate.update(query, roomId.getValue(), position.getXAxis().getValueAsString(),
                 position.getYAxis().getValueAsString(), piece.getPieceType().name(), piece.getPieceColor().name());
     }
 
     @Override
-    public void deletePiece(GameId gameid, Position position) {
+    public void deletePiece(RoomId roomId, Position position) {
         String query = String.format(
-                "DELETE FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
-        jdbcTemplate.update(query, gameid.getGameId(), position.getXAxis().getValueAsString(),
+                "DELETE FROM %s WHERE game_room_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
+        jdbcTemplate.update(query, roomId.getValue(), position.getXAxis().getValueAsString(),
                 position.getYAxis().getValueAsString());
     }
 
     @Override
-    public void updatePiecePosition(GameId gameId, Position from, Position to) {
+    public void updatePiecePosition(RoomId roomId, Position from, Position to) {
         String query = String.format(
-                "UPDATE %s SET x_axis = ?, y_axis = ? WHERE x_axis = ? AND y_axis = ? AND game_id = ?", TABLE_NAME);
+                "UPDATE %s SET x_axis = ?, y_axis = ? WHERE x_axis = ? AND y_axis = ? AND game_room_id = ?",
+                TABLE_NAME);
         jdbcTemplate.update(query, to.getXAxis().getValueAsString(), to.getYAxis().getValueAsString(),
-                from.getXAxis().getValueAsString(), from.getYAxis().getValueAsString(), gameId.getGameId());
+                from.getXAxis().getValueAsString(), from.getYAxis().getValueAsString(), roomId.getValue());
     }
 }

@@ -1,11 +1,13 @@
 package chess.controller;
 
 import chess.domain.board.Board;
-import chess.domain.game.GameId;
+import chess.domain.game.room.Room;
+import chess.domain.game.room.RoomId;
 import chess.domain.game.score.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
+import chess.dto.request.CreateRoomDto;
 import chess.dto.request.MovePieceDto;
 import chess.dto.response.CommandResultDto;
 import chess.dto.response.ErrorDto;
@@ -17,6 +19,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ChessController {
-    private static final GameId GAME_ID = GameId.from("game-id"); // TODO: 여러 게임 방 기능 구현시 제거
     private static final String PIECE_NAME_FORMAT = "%s_%s";
 
     private final ChessService chessService;
@@ -35,53 +37,50 @@ public class ChessController {
     }
 
     @ResponseBody
-    @GetMapping("/board")
-    public Map<String, String> getBoard() {
-        Board board = chessService.getBoard(GAME_ID);
+    @PostMapping("/rooms")
+    public void createRoom(@RequestBody CreateRoomDto createRoomDto) {
+        Room room = Room.create(createRoomDto.getTitle(), createRoomDto.getPassword());
+        chessService.createGame(room);
+    }
+
+    @ResponseBody
+    @GetMapping("/rooms/{id}/board")
+    public Map<String, String> getBoard(@PathVariable String id) {
+        Board board = chessService.getBoard(RoomId.from(id));
         return boardToRaw(board);
     }
 
     @ResponseBody
-    @GetMapping("/turn")
-    public PieceColorDto getTurn() {
-        PieceColor currentTurn = chessService.getCurrentTurn(GAME_ID);
+    @GetMapping("/rooms/{id}/turn")
+    public PieceColorDto getTurn(@PathVariable String id) {
+        PieceColor currentTurn = chessService.getCurrentTurn(RoomId.from(id));
         return PieceColorDto.from(currentTurn);
     }
 
     @ResponseBody
-    @GetMapping("/score")
-    public ScoreResultDto getScore() {
-        Score whiteScore = chessService.getScore(GAME_ID, PieceColor.WHITE);
-        Score blackScore = chessService.getScore(GAME_ID, PieceColor.BLACK);
+    @GetMapping("/rooms/{id}/score")
+    public ScoreResultDto getScore(@PathVariable String id) {
+        RoomId roomId = RoomId.from(id);
+        Score whiteScore = chessService.getScore(roomId, PieceColor.WHITE);
+        Score blackScore = chessService.getScore(roomId, PieceColor.BLACK);
         return ScoreResultDto.of(whiteScore, blackScore);
     }
 
     @ResponseBody
-    @GetMapping("/winner")
-    public PieceColorDto getWinner() {
-        PieceColor winColor = chessService.getWinColor(GAME_ID);
+    @GetMapping("/rooms/{id}/winner")
+    public PieceColorDto getWinner(@PathVariable String id) {
+        PieceColor winColor = chessService.getWinColor(RoomId.from(id));
         return PieceColorDto.from(winColor);
     }
 
+
     @ResponseBody
-    @PostMapping("/move")
-    public CommandResultDto movePiece(@RequestBody MovePieceDto movePieceDto) {
+    @PostMapping("/rooms/{id}/move")
+    public CommandResultDto movePiece(@PathVariable String id, @RequestBody MovePieceDto movePieceDto) {
         try {
-            chessService.movePiece(GAME_ID, movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition());
+            chessService.movePiece(RoomId.from(id), movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition());
             return CommandResultDto.createSuccess();
         } catch (IllegalStateException e) {
-            return CommandResultDto.createFail(e.getMessage());
-        }
-    }
-
-    // TODO: Exception 으로 catch 하면 안됨
-    @ResponseBody
-    @PostMapping("/initialize")
-    public CommandResultDto initialize() {
-        try {
-            chessService.initializeGame(GAME_ID);
-            return CommandResultDto.createSuccess();
-        } catch (Exception e) {
             return CommandResultDto.createFail(e.getMessage());
         }
     }

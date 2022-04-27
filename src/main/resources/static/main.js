@@ -3,15 +3,27 @@ const API_HOST = "http://localhost:8080"
 const X_AXES = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const Y_AXES = ["8", "7", "6", "5", "4", "3", "2", "1"];
 
+let roomId = localStorage.getItem("roomId");
+
 let from = null;
 let to = null;
 
 async function fetchAsGet(path) {
-    const response = await fetch(`${API_HOST}/${path}`, {
+    const response = await fetch(`${API_HOST}/rooms/${roomId}/${path}`, {
         method: "GET"
     });
 
     return response.json();
+}
+
+async function fetchAsPost(path, body) {
+    await fetch(`${API_HOST}/rooms/${roomId}/${path}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+    });
 }
 
 const fetchBoard = async () => {
@@ -31,27 +43,14 @@ const fetchWinner = async () => {
 }
 
 const move = async (from, to) => {
-    await fetch("move", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({from, to})
-    });
-    await render();
-}
-
-const initialize = async () => {
-    await fetch("initialize", {
-        method: "POST"
-    })
+    await fetchAsPost("move", {from, to})
     await render();
 }
 
 const renderBoard = async () => {
     clear();
 
-    const board = await fetchBoard();
+    const board = await fetchBoard(roomId);
     let html = "";
     Y_AXES.forEach((yAxis) => {
         html += "<div class='row'>";
@@ -87,7 +86,7 @@ const handleClickTile = async (coordinate) => {
 }
 
 const renderCurrentTurn = async () => {
-    const currentTurn = await fetchCurrentTurn();
+    const currentTurn = await fetchCurrentTurn(roomId);
 
     let turn = "";
     if (currentTurn.pieceColor === "WHITE") {
@@ -102,7 +101,7 @@ const renderCurrentTurn = async () => {
 }
 
 const renderScore = async () => {
-    const score = await fetchScore();
+    const score = await fetchScore(roomId);
 
     let html = "";
     html += `백: ${score.whiteScore}<br/>`;
@@ -113,7 +112,7 @@ const renderScore = async () => {
 
 const renderWinner = async () => {
     try {
-        const winner = await fetchWinner();
+        const winner = await fetchWinner(roomId);
 
         if (winner.pieceColor) {
             let color;
@@ -145,6 +144,20 @@ const render = async () => {
 }
 
 window.onload = async () => {
-    await render();
+    if (roomId !== "null") {
+        await render();
+    }
 }
 
+const createRoom = async () => {
+    let title = prompt("방 제목 입력");
+    let password = prompt("방 비밀번호 입력");
+
+    await fetchAsPost(`rooms`, {title, password});
+}
+
+const enterRoom = async () => {
+    roomId = prompt("방 아이디 입력");
+    localStorage.setItem("roomId", roomId);
+    await render();
+}

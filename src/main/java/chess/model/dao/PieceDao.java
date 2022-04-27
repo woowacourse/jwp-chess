@@ -30,6 +30,13 @@ public class PieceDao {
         }
     }
 
+    public void init(Board board, Long gameId) {
+        String query = "insert into pieces (position, name, game_id) values (?, ?, ?)";
+        for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
+            jdbcTemplate.update(query, entry.getKey().getPosition(), getPieceName(entry.getValue()), gameId);
+        }
+    }
+
     public List<PieceEntity> findAllPieces() {
         String sql = "select position, name from pieces";
         return jdbcTemplate.query(
@@ -41,6 +48,19 @@ public class PieceDao {
                     );
                     return pieceEntity;
                 });
+    }
+
+    public List<PieceEntity> findByGameId(long gameId) {
+        String sql = "select position, name from pieces where game_id = ?";
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> {
+                    PieceEntity pieceEntity = new PieceEntity(
+                            resultSet.getString("name"),
+                            resultSet.getString("position")
+                    );
+                    return pieceEntity;
+                }, gameId);
     }
 
     public String findPieceNameByPosition(String source) {

@@ -39,6 +39,26 @@ public class ChessService {
         return WebBoardDto.from(board);
     }
 
+    //TODO 후에 이름 start() 로 변경
+    public WebBoardDto startNewGame(RoomDto roomDto) {
+        long gameId = makeRoom(roomDto);
+        makeBoard(gameId);
+
+        return WebBoardDto.from(getBoard(gameId));
+    }
+
+    private Board getBoard(long gameId) {
+        return toBoard(pieceDao.findByGameId(gameId));
+    }
+
+    private long makeRoom(RoomDto roomDto) {
+        return gameDao.initGame(roomDto.getRoomName(), roomDto.getPassword());
+    }
+
+    private void makeBoard(Long gameId) {
+        pieceDao.init(BoardFactory.create(), gameId);
+    }
+
     public WebBoardDto move(MoveDto moveDto) {
         Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPosition(moveDto.getSource()));
         Piece targetPiece = PieceFactory.create(pieceDao.findPieceNameByPosition(moveDto.getTarget()));
@@ -103,10 +123,6 @@ public class ChessService {
                         piece -> Position.from(piece.getPosition()),
                         piece -> PieceFactory.create(piece.getName()))
                 ));
-    }
-
-    private long startGame(RoomDto roomDto) {
-        return gameDao.initGame(roomDto.getRoomName(), roomDto.getPassword());
     }
 
     private void initTurn() {

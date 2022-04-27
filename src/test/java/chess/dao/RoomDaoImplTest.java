@@ -2,7 +2,10 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.dto.RoomDto;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -104,5 +107,24 @@ class RoomDaoImplTest {
 
         //then
         assertThat(actual).isEqualTo(gameState);
+    }
+
+    @Test
+    @DisplayName("방들의 이름을 반환한다.")
+    void getRoomNames() {
+        //given
+        roomDao.saveNewRoom("second", "1234");
+        roomDao.saveNewRoom("third", "1234");
+        //when
+        final List<RoomDto> roomNames = roomDao.getRoomNames();
+        //then
+        assertAll(
+                () -> assertThat(roomNames.get(0).getRoomName()).isEqualTo("first"),
+                () -> assertThat(roomNames.get(1).getRoomName()).isEqualTo("second"),
+                () -> assertThat(roomNames.get(2).getRoomName()).isEqualTo("third"),
+                () -> assertThat(roomNames.get(0).getRoomId()).isEqualTo(1),
+                () -> assertThat(roomNames.get(1).getRoomId()).isEqualTo(2),
+                () -> assertThat(roomNames.get(2).getRoomId()).isEqualTo(3)
+        );
     }
 }

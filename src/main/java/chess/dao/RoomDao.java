@@ -1,5 +1,8 @@
 package chess.dao;
 
+import chess.dto.RoomDto;
+import java.util.List;
+
 public interface RoomDao {
 
     void saveNewRoom(final String roomName, final String password);
@@ -17,4 +20,6 @@ public interface RoomDao {
     void saveTurn(final int roomId, final String turn);
 
     String getTurn(final int roomId);
+
+    List<RoomDto> getRoomNames();
 }

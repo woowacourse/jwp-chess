@@ -1,7 +1,11 @@
 package chess.service;
 
 import chess.dao.RoomDao;
+import chess.dto.RoomDto;
+import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RoomService {
 
     private static final String PLAYING_STATE_SYMBOL = "playing";
@@ -37,5 +41,9 @@ public class RoomService {
     private boolean isPlayingState(final int roomId) {
         final String savedGameState = roomDao.getGameStateByName(roomId);
         return savedGameState.equals(PLAYING_STATE_SYMBOL);
+    }
+
+    public List<RoomDto> getRoomNames() {
+        return roomDao.getRoomNames();
     }
 }

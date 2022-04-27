@@ -1,6 +1,9 @@
 package chess.dao;
 
+import chess.dto.RoomDto;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,6 +17,12 @@ public class RoomDaoImpl implements RoomDao {
     public RoomDaoImpl(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private static final RowMapper<RoomDto> actorRowMapper = (resultSet, rowNum) -> new RoomDto(
+            resultSet.getString("name"),
+            resultSet.getInt("roomId")
+    );
+
 
     @Override
     public void saveNewRoom(final String roomName, final String password) {
@@ -61,5 +70,11 @@ public class RoomDaoImpl implements RoomDao {
     public void saveGameState(final int roomId, final String state) {
         final String sql = "update room set gameState = ? where roomId = ?";
         jdbcTemplate.update(sql, state, roomId);
+    }
+
+    @Override
+    public List<RoomDto> getRoomNames() {
+        final String sql = "select name, roomID from room";
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 }

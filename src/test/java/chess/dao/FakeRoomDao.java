@@ -1,7 +1,10 @@
 package chess.dao;
 
+import chess.dto.RoomDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FakeRoomDao implements RoomDao {
 
@@ -54,6 +57,14 @@ public class FakeRoomDao implements RoomDao {
     public String getTurn(final int roomId) {
         final Room room = rooms.get(roomId);
         return room.turn;
+    }
+
+    @Override
+    public List<RoomDto> getRoomNames() {
+        return rooms.keySet()
+                .stream()
+                .map(roomId -> new RoomDto(rooms.get(roomId).name, roomId))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     class Room {

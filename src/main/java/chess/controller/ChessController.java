@@ -59,11 +59,7 @@ public class ChessController {
     @ResponseBody
     @PatchMapping("/room/{roomId}/move")
     public ResponseEntity<GameStatusDto> moveByCommand(@PathVariable("roomId") int id, @RequestBody MoveForm moveForm) {
-        try {
-            gameService.move(id, Position.of(moveForm.getSource()), Position.of(moveForm.getTarget()));
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
+        gameService.move(id, Position.of(moveForm.getSource()), Position.of(moveForm.getTarget()));
         return new ResponseEntity<>(new GameStatusDto(gameService.isEnd(id)), HttpStatus.OK);
     }
 

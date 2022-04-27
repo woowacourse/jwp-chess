@@ -31,13 +31,15 @@ class ChessServiceTest {
     @Test
     @DisplayName("64개의 piece를 갖고 있는 게임을 불러왔을 떄, 그떄의 piece 개수도 64개여야한다.")
     void loadGame() {
+        chessService.initBoard(boardId);
         Board board = chessService.loadGame(boardId);
         assertThat(board.getPieces().getPieces().size()).isEqualTo(64);
     }
 
     @Test
-    @DisplayName("초기 보드판에서 from에서 to로 이동하면 처음 from에 있던 piece는 이동 후, to에 있는 piece와 같다.")
+    @DisplayName("보드판에서 from에서 to로 이동하면 처음 from에 있던 piece는 이동 후, to에 있는 piece와 같다.")
     void move() {
+        chessService.initBoard(boardId);
         Pieces pieces = Pieces.from(pieceDao.findAllByBoardId(boardId));
         Turn turn = boardDao.findTurnById(boardId).get();
         Board board = Board.create(pieces, turn);
@@ -45,7 +47,9 @@ class ChessServiceTest {
         String to = "a3";
         Piece piece = board.getPieces().findByPosition(Position.from(from));
         MoveDto moveDto = new MoveDto(from, to);
+
         Board movedBoard = chessService.move(moveDto, boardId);
+
         Piece movedPiece = movedBoard.getPieces().findByPosition(Position.from(to));
         assertAll(
                 () -> assertThat(piece.getType()).isEqualTo(movedPiece.getType()),
@@ -59,7 +63,9 @@ class ChessServiceTest {
     @DisplayName("64개의 말들이 초기화된다.")
     void initBoard() {
         Long boardId = boardDao.save(Turn.init());
+
         Board initBoard = chessService.initBoard(boardId);
+
         Pieces pieces = initBoard.getPieces();
         assertThat(pieces.getPieces().size()).isEqualTo(64);
     }
@@ -67,7 +73,10 @@ class ChessServiceTest {
     @Test
     @DisplayName("초기 board들의 점수는 black, white팀 모두 38이다.")
     void getStatus() {
+        chessService.initBoard(boardId);
+
         ScoreDto status = chessService.getStatus(boardId);
+
         assertThat(status.getBlackTeamScore()).isEqualTo(38D);
         assertThat(status.getWhiteTeamScore()).isEqualTo(38D);
     }
@@ -110,13 +119,33 @@ class ChessServiceTest {
         String password = "password";
         chessService.createRoom(boardId, title, password);
 
-        chessService.removeRoom(boardId, password);
+        boolean result = chessService.removeRoom(boardId, password);
 
         long resultCount = chessService.getRooms().stream()
                 .filter(room -> room.getBoardId() == boardId)
                 .filter(room -> room.getTitle().equals(title))
                 .filter(room -> room.getPassword().equals(password))
                 .count();
+        assertThat(result).isTrue();
         assertThat(resultCount).isZero();
+    }
+
+    @Test
+    @DisplayName("게임이 진행 중이라면 생성된 체스방을 삭제할 수 없다.")
+    void removeRoomFailInRunningGame() {
+        String title = "title";
+        String password = "password";
+        chessService.createRoom(boardId, title, password);
+        chessService.initBoard(boardId);
+
+        boolean result = chessService.removeRoom(boardId, password);
+
+        long resultCount = chessService.getRooms().stream()
+                .filter(room -> room.getBoardId() == boardId)
+                .filter(room -> room.getTitle().equals(title))
+                .filter(room -> room.getPassword().equals(password))
+                .count();
+        assertThat(result).isFalse();
+        assertThat(resultCount).isOne();
     }
 }

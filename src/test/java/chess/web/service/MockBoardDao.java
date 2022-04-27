@@ -10,13 +10,15 @@ import java.util.Optional;
 public class MockBoardDao implements BoardDao {
     private final Map<Long, String> mockDb = new HashMap<>();
 
+    private long sequenceId = 1L;
+
     public MockBoardDao() {
-        mockDb.put(1L, "white");
     }
 
     @Override
     public Long save(Turn turn) {
-        return 1L;
+        mockDb.put(sequenceId++, turn.getTeam().value());
+        return sequenceId - 1;
     }
 
     @Override
@@ -26,8 +28,8 @@ public class MockBoardDao implements BoardDao {
 
     @Override
     public Long update(Long boardId, Turn turn) {
-        mockDb.put(1L, turn.getTeam().value());
-        return 1L;
+        mockDb.put(boardId, turn.getTeam().value());
+        return boardId;
     }
 
     @Override

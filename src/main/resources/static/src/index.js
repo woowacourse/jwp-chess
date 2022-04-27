@@ -32,5 +32,14 @@ function deleteRoom(boardId, password) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(request),
-    }).then(() => location.reload());
+    }).then(res => res.json())
+        .then(value => {
+            if (value) {
+                alert(boardId + " 방이 삭제되었습니다.");
+                location.reload();
+                return;
+            }
+            alert("게임이 진행중입니다.");
+            location.reload();
+        });
 }

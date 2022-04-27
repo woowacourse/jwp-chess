@@ -133,9 +133,25 @@ public class ChessService {
         return roomDao.findAll();
     }
 
-    public void removeRoom(Long boardId, String password) {
+    public boolean removeRoom(Long boardId, String password) {
+        if (!hasRoom(boardId) || isRunningChess(boardId)) {
+            return false;
+        }
         pieceDao.deleteByBoardId(boardId);
         roomDao.delete(boardId, password);
         boardDao.deleteById(boardId);
+        return true;
+    }
+
+    private boolean hasRoom(Long boardId) {
+        return roomDao.findByBoardId(boardId).isPresent();
+    }
+
+    private boolean isRunningChess(Long boardId) {
+        long kingCount = pieceDao.findAllByBoardId(boardId).stream()
+                .filter(Piece::isKing)
+                .count();
+
+        return kingCount == 2;
     }
 }

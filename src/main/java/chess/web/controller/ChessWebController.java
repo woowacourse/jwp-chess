@@ -79,7 +79,8 @@ public class ChessWebController {
     }
 
     @DeleteMapping("/chess/{boardId}")
-    public void deleteRoom(@RequestBody String password, @PathVariable Long boardId) {
-        chessService.removeRoom(boardId, password);
+    public ResponseEntity<Boolean> deleteRoom(@RequestBody String password, @PathVariable Long boardId) {
+        boolean result = chessService.removeRoom(boardId, password);
+        return ResponseEntity.ok().body(result);
     }
 }

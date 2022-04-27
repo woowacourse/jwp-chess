@@ -15,12 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/chess-game")
-public class ChessController {
+public class GameController {
 
     private final ChessService chessService;
 
-    public ChessController(ChessService chessService) {
+    public GameController(ChessService chessService) {
         this.chessService = chessService;
+    }
+
+    @GetMapping
+    public String init() {
+        return "game";
     }
 
     @GetMapping("/load")

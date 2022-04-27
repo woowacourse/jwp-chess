@@ -21,7 +21,7 @@ class GameDaoTest {
 
         jdbcTemplate.execute("drop table game if exists");
         jdbcTemplate.execute("create table game("
-                + "game_id int primary key not null, current_turn varchar(10) default'white')");
+                + "game_id int primary key not null, current_turn varchar(10) default'WHITE')");
 
         jdbcTemplate.update("insert into game(game_id, current_turn) values (?,?)", 0, "WHITE");
     }
@@ -31,5 +31,12 @@ class GameDaoTest {
         int gameId = 0;
         gameDao.updateTurn(gameId, "BLACK");
         assertThat(gameDao.findTurnById(gameId)).isEqualTo("BLACK");
+    }
+
+    @Test
+    void findTurnByIdTest() {
+        int gameId = 0;
+        String turn = gameDao.findTurnById(gameId);
+        assertThat(turn).isEqualTo("WHITE");
     }
 }

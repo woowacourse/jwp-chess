@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Sql("classpath:init.sql")
@@ -28,8 +30,34 @@ public class JdbcGameDaoTest {
     @Test
     @DisplayName("게임 데이터 저장")
     void save() {
+        // given
         Game game = new Game("라라라", "1234", "white", "playing");
+
+        // when
         long id = jdbcGameDao.save(game);
+
+        // then
         assertThat(id).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("게임 데이터 저장")
+    void find() {
+        // given
+        String title = "라라라";
+        String password = "1234";
+        String turn = "white";
+        String status = "playing";
+        Game game = new Game(title, password, turn, status);
+        long id = jdbcGameDao.save(game);
+
+        // then
+        assertAll(
+                () -> assertThat(jdbcGameDao.find(id, password)).isNotNull(),
+                () -> assertThat(jdbcGameDao.find(id, password).getId()).isEqualTo(id),
+                () -> assertThat(jdbcGameDao.find(id, password).getTitle()).isEqualTo(title),
+                () -> assertThat(jdbcGameDao.find(id, password).getTurn()).isEqualTo(turn),
+                () -> assertThat(jdbcGameDao.find(id, password).getStatus()).isEqualTo(status)
+        );
     }
 }

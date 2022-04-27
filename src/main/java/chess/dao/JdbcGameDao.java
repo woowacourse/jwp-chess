@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.entity.Game;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -34,5 +35,25 @@ public class JdbcGameDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public Game find(long id, String password) {
+        final String sql = "select * from game where id = ? and password = ?";
+        try {
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (resultSet, rowNum) ->
+                            new Game(
+                                    resultSet.getLong("id"),
+                                    resultSet.getString("title"),
+                                    resultSet.getString("turn"),
+                                    resultSet.getString("status")
+                            ),
+                    id,
+                    password
+            );
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("게임(id=" + id + ")을 찾을 수 없습니다.");
+        }
     }
 }

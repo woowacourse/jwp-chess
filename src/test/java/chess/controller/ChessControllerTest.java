@@ -1,8 +1,12 @@
 package chess.controller;
 
 
+import static org.hamcrest.core.Is.is;
+
 import chess.SpringChessApplication;
+import chess.domain.Team;
 import chess.dto.MoveDto;
+import chess.dto.RoomDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,8 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(classes = SpringChessApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ChessControllerTest {
@@ -25,15 +27,36 @@ public class ChessControllerTest {
         RestAssured.port = port;
     }
 
+    @DisplayName("Room - POST")
+    @Test
+    void createRoom() {
+        RoomDto roomDto = new RoomDto(1L, Team.WHITE, "title", "password", true);
+        RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(roomDto)
+            .when().post("/room")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("Room - GET")
+    @Test
+    void getRooms() {
+        RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/room")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value());
+    }
+
     @DisplayName("Board - GET")
     @Test
     void getBoard() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/board")
+                .when().get("/room/1")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
+                .statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("move - POST")
@@ -43,7 +66,7 @@ public class ChessControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveDto)
-                .when().post("/move")
+                .when().post("/room/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));
@@ -54,7 +77,7 @@ public class ChessControllerTest {
     void status() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/status")
+                .when().get("/room/1/status")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));
@@ -66,7 +89,7 @@ public class ChessControllerTest {
     void reset() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/reset")
+                .when().post("/room/1/reset")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));
@@ -77,9 +100,8 @@ public class ChessControllerTest {
     void end() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/end")
+                .when().post("/room/1/end")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
+                .statusCode(HttpStatus.OK.value());
     }
 }

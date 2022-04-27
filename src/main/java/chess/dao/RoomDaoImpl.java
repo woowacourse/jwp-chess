@@ -40,8 +40,8 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public Long save(Room room) {
-        final String sql = "insert into room (id, team, title, password, status) values(?, ?, ?, ?, ?)";
-        return (long) jdbcTemplate.update(sql, room.getId(), room.getTeam().name(), room.getTitle(),
+        final String sql = "insert into room (team, title, password, status) values(?, ?, ?, ?)";
+        return (long) jdbcTemplate.update(sql, room.getTeam().name(), room.getTitle(),
             room.getPassword(), room.getStatus());
     }
 

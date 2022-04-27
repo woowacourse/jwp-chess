@@ -23,14 +23,15 @@ public class PieceDaoTest {
         gameDao = new GameDao(jdbcTemplate);
         pieceDao = new PieceDao(jdbcTemplate);
 
+        jdbcTemplate.execute("drop table piece if exists");
         jdbcTemplate.execute("drop table game if exists");
+
         jdbcTemplate.execute("create table game("
                 + "game_id int primary key not null,"
                 + " current_turn varchar(10) default'WHITE')");
         jdbcTemplate.update("insert into game(game_id, current_turn) values (?,?)",
                 0, "WHITE");
 
-        jdbcTemplate.execute("drop table piece if exists");
         jdbcTemplate.execute("create table piece("
                 + "piece_id int primary key auto_increment,"
                 + "game_id int not null,"
@@ -58,5 +59,13 @@ public class PieceDaoTest {
         pieceDao.savePiece(gameId, boardElementDto2);
         List<BoardElementDto> pieces = pieceDao.findAllPieceById(gameId);
         assertThat(pieces.contains(boardElementDto1) && pieces.contains(boardElementDto2)).isTrue();
+    }
+
+    @Test
+    void deleteAllPieceByIdTest() {
+        int gameId = 0;
+        pieceDao.deleteAllPieceById(gameId);
+        List<BoardElementDto> pieces = pieceDao.findAllPieceById(gameId);
+        assertThat(pieces.isEmpty()).isTrue();
     }
 }

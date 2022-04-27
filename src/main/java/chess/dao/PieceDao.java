@@ -32,4 +32,9 @@ public class PieceDao {
         String sql = "SELECT * FROM piece WHERE game_id=?";
         return jdbcTemplate.query(sql, boardDtoRowMapper, gameId);
     }
+
+    public void deleteAllPieceById(int gameId) {
+        final var sql = "DELETE FROM piece WHERE game_id = ?";
+        jdbcTemplate.update(sql, gameId);
+    }
 }

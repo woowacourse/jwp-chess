@@ -29,7 +29,8 @@ public class ChessController {
         Room room = chessService.init(
                 messageBody.getRoomName(),
                 messageBody.getWhiteName(),
-                messageBody.getBlackName());
+                messageBody.getBlackName(),
+                messageBody.getPassword());
 
         return "redirect:/room/" + room.getId();
     }
@@ -59,5 +60,12 @@ public class ChessController {
         model.addAttribute("result", ScoreDto.from(chessService.status(roomId)));
         chessService.end(roomId);
         return "result";
+    }
+
+    @DeleteMapping("/room/{roomId}")
+    @ResponseBody
+    public ResponseEntity<String> deleteRoom(@RequestBody String password, @PathVariable int roomId) {
+        chessService.deleteRoom(roomId, password);
+        return ResponseEntity.ok().build();
     }
 }

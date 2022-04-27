@@ -69,6 +69,7 @@ function sendToServer(first, second) {
             if (data === 'true') {
                 alert("게임이 종료되었습니다.");
                 document.location.href = '/'
+                return;
             }
             location.reload();
         });

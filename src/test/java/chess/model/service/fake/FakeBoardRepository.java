@@ -20,7 +20,7 @@ public class FakeBoardRepository implements BoardRepository<Board> {
     }
 
     @Override
-    public int deleteById(int id) {
+    public int deleteByRoomId(int id) {
         return 0;
     }
 

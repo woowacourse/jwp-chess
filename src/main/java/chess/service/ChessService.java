@@ -1,11 +1,15 @@
 package chess.service;
 
 import chess.dto.BoardDto;
+import chess.dto.RoomContentDto;
 import chess.dto.RoomDto;
 import chess.dto.RoomsDto;
 import chess.model.board.Board;
 import chess.model.member.Member;
-import chess.model.piece.*;
+import chess.model.piece.Empty;
+import chess.model.piece.Initializer;
+import chess.model.piece.Piece;
+import chess.model.piece.Team;
 import chess.model.room.Room;
 import chess.model.square.File;
 import chess.model.square.Square;
@@ -43,12 +47,12 @@ public class ChessService {
         this.chessMemberRepository = chessMemberRepository;
     }
 
-    public Room init(String roomTitle, String member1, String member2) {
+    public Room init(String roomTitle, String member1, String member2, String password) {
         Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
         Map<Square, Piece> startingPieces = Initializer.initialize();
         chessSquareRepository.saveAllSquares(board.getId(), startingPieces.keySet());
         chessPieceRepository.saveAllPieces(mapToPieces(board.getId(), startingPieces));
-        Room room = chessRoomRepository.save(new Room(roomTitle, board.getId()));
+        Room room = chessRoomRepository.save(new Room(roomTitle, board.getId()), password);
         chessMemberRepository.saveAll(List.of(new Member(member1), new Member(member2)), room.getId());
         return room;
     }
@@ -65,11 +69,11 @@ public class ChessService {
 
     public RoomsDto getRooms() {
         List<RoomDto> roomsDto = new ArrayList<>();
-        List<Room> rooms = chessRoomRepository.findAllByBoardStatus(new Running());
-        for (Room room : rooms) {
-            List<Member> membersByRoom = chessMemberRepository.findMembersByRoomId(room.getId());
+        List<RoomContentDto> roomContentDtos = chessRoomRepository.findAll();
+        for (RoomContentDto roomContentDto : roomContentDtos) {
+            List<Member> membersByRoom = chessMemberRepository.findMembersByRoomId(roomContentDto.getId());
             roomsDto.add(
-                    new RoomDto(room.getId(), room.getTitle(), membersByRoom));
+                    new RoomDto(roomContentDto.getId(), roomContentDto.getTitle(), membersByRoom, roomContentDto.getStatus()));
         }
         return new RoomsDto(roomsDto);
     }
@@ -150,5 +154,16 @@ public class ChessService {
     public void end(int roomId) {
         Room room = chessRoomRepository.getById(roomId);
         chessBoardRepository.updateStatus(room.getBoardId(), new End());
+    }
+
+    public void deleteRoom(int roomId, String password) {
+        validatePassword(chessRoomRepository.getPasswordById(roomId), password);
+        chessBoardRepository.deleteByRoomId(roomId);
+    }
+
+    private void validatePassword(String password, String inputPassword) {
+        if (!password.equals(inputPassword)) {
+            throw new IllegalArgumentException("비밀번호가 맞지 않습니다.");
+        }
     }
 }

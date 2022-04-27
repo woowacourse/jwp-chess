@@ -1,5 +1,6 @@
 package chess.repository;
 
+import chess.dto.RoomContentDto;
 import chess.model.board.Board;
 import chess.model.piece.Team;
 import chess.model.room.Room;
@@ -8,11 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,7 +36,7 @@ class ChessRoomRepositoryTest {
         this.chessBoardRepository = new ChessBoardRepository(jdbcTemplate);
         final Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
         this.boardId = board.getId();
-        this.room = chessRoomRepository.save(new Room("개초보만", boardId));
+        this.room = chessRoomRepository.save(new Room("개초보만", boardId), "password");
     }
 
     @Test
@@ -51,8 +49,8 @@ class ChessRoomRepositoryTest {
 
     @Test
     void findAllByStatus() {
-        chessRoomRepository.save(new Room("왕허접만", boardId));
-        final List<Room> rooms = chessRoomRepository.findAllByBoardStatus(new Running());
+        chessRoomRepository.save(new Room("왕허접만", boardId), "password");
+        final List<RoomContentDto> rooms = chessRoomRepository.findAll();
         assertThat(rooms.size()).isEqualTo(2);
     }
 

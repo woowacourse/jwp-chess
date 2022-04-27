@@ -36,7 +36,7 @@ class ChessServiceTest {
 
     @Test
     void init() {
-        Room room = chessService.init(fakeTitle, fakeName, "corinne");
+        Room room = chessService.init(fakeTitle, fakeName, "corinne", "password");
 
         assertThat(room.getTitle()).isEqualTo(fakeTitle);
     }

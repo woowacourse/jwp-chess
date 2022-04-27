@@ -7,7 +7,7 @@ public interface BoardRepository<T> {
 
     T save(T board);
 
-    int deleteById(int id);
+    int deleteByRoomId(int id);
 
     T getById(int id);
 

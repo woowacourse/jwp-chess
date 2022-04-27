@@ -40,8 +40,9 @@ public class ChessBoardRepository implements BoardRepository<Board> {
     }
 
     @Override
-    public int deleteById(int id) {
-        return jdbcTemplate.update("DELETE FROM board WHERE id=?", id);
+    public int deleteByRoomId(int id) {
+        return jdbcTemplate.update("DELETE b FROM board b " +
+                "JOIN room r ON r.board_id=b.id WHERE r.id=?", id);
     }
 
     @Override

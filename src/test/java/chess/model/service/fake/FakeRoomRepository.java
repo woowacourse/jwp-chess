@@ -1,7 +1,7 @@
 package chess.model.service.fake;
 
+import chess.dto.RoomContentDto;
 import chess.model.room.Room;
-import chess.model.status.Status;
 import chess.repository.RoomRepository;
 
 import java.util.List;
@@ -19,12 +19,12 @@ public class FakeRoomRepository implements RoomRepository<Room> {
     }
 
     @Override
-    public List<Room> findAllByBoardStatus(Status status) {
-        return List.of(new Room(fakeAutoIncrementId, fakeTitle, boardId));
+    public List<RoomContentDto> findAll() {
+        return List.of(new RoomContentDto(fakeAutoIncrementId, fakeTitle, boardId, "running"));
     }
 
     @Override
-    public Room save(Room room) {
+    public Room save(Room room, String password) {
         Room savedRoom = new Room(fakeAutoIncrementId, room.getTitle(), room.getBoardId());
         this.fakeAutoIncrementId++;
         return savedRoom;
@@ -33,5 +33,10 @@ public class FakeRoomRepository implements RoomRepository<Room> {
     @Override
     public Room getById(int roomId) {
         return new Room(fakeAutoIncrementId, fakeTitle, boardId);
+    }
+
+    @Override
+    public String getPasswordById(int roomId) {
+        return null;
     }
 }

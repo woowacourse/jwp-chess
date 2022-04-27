@@ -1,15 +1,16 @@
 package chess.repository;
 
-import chess.model.room.Room;
-import chess.model.status.Status;
+import chess.dto.RoomContentDto;
 
 import java.util.List;
 
 public interface RoomRepository<T> {
 
-    List<Room> findAllByBoardStatus(Status status);
+    List<RoomContentDto> findAll();
 
-    T save(T room);
+    T save(T room, String password);
 
     T getById(int roomId);
+
+    String getPasswordById(int roomId);
 }

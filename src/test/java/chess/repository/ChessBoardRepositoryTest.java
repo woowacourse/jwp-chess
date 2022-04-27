@@ -37,13 +37,6 @@ class ChessBoardRepositoryTest {
     }
 
     @Test
-    void deleteBoard() {
-        int affectedRow = chessBoardRepository.deleteById(board.getId());
-
-        assertThat(affectedRow).isEqualTo(1);
-    }
-
-    @Test
     void getByIdTest() {
         final Board foundBoard = chessBoardRepository.getById(board.getId());
 

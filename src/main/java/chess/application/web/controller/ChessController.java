@@ -23,9 +23,8 @@ public class ChessController {
     }
 
     @GetMapping("/")
-    public ModelAndView index() {
-        ModelAndView modelAndView = new ModelAndView("index");
-        return modelAndView;
+    public String index() {
+        return "index";
     }
 
     @PostMapping("/start")
@@ -36,7 +35,7 @@ public class ChessController {
     }
 
     @GetMapping(path = "/game")
-    public ModelAndView printCurrentBoard(@RequestParam("message") String message) {
+    public ModelAndView printCurrentBoard(@RequestParam String message) {
         State state = stateService.currentState();
         StateDto stateDto = StateDto.of(state);
         ModelAndView modelAndView = new ModelAndView(getViewName(state));

@@ -1,5 +1,6 @@
 package chess.application.web;
 
+import chess.dao.GameDao;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,9 +22,14 @@ public class GameController {
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAllAttributes(gameService.modelReady());
+    public String index() {
         return "index";
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<String> list() {
+        String listData = jsonTransformer.render(gameService.list());
+        return ResponseEntity.ok().body(listData);
     }
 
     @GetMapping("/start")

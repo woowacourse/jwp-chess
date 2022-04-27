@@ -7,8 +7,11 @@ drop table if exists game cascade;
 
 create table game
 (
-    no         int     not null auto_increment,
-    white_turn boolean not null,
+    no          int         not null auto_increment,
+    running     boolean     not null,
+    white_turn  boolean     not null,
+    title       varchar(50) not null,
+    password    varchar(20) not null,
     primary key (no)
 );
 

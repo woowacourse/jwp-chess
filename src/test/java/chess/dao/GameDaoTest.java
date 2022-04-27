@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
 
 import chess.domain.Camp;
+import chess.dto.GameDto;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +31,13 @@ public class GameDaoTest {
         gameDao.save();
 
         assertThat(gameDao.isWhiteTurn()).isFalse();
+    }
+
+    @DisplayName("게임 목록을 조회할 수 있다.")
+    @Test
+    void selectGames() {
+        gameDao.save();
+        List<GameDto> games = gameDao.selectGames();
+        assertThat(games.get(0).getTitle()).isEqualTo("방이름1");
     }
 }

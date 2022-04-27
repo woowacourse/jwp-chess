@@ -8,7 +8,7 @@ CREATE TABLE chess_game
     title    varchar(10)                              NOT NULL,
     password varchar(50)                              NOT NULL,
     primary key (id),
-    CONSTRAINT TITLE_UNIQUE_KEY UNIQUE (title)
+    unique key title_unique_key (title)
 );
 
 CREATE TABLE piece

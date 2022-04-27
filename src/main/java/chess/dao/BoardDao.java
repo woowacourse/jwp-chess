@@ -12,7 +12,7 @@ public interface BoardDao<T> {
 
     List<T> findAll();
 
-    int deleteById(int id);
+    int deleteByIdAndPassword(int id, String password);
 
     void deleteAll();
 

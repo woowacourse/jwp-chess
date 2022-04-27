@@ -31,11 +31,13 @@ public class ChessController {
     @Value("index")
     private String roomView;
 
-    @Value("result")
-    private String resultView;
-
     public ChessController(GameService gameService) {
         this.gameService = gameService;
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleEmailDuplicateException(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @GetMapping("/")
@@ -71,10 +73,14 @@ public class ChessController {
     }
 
     @PostMapping("/room/{roomId}/end")
-    public String endGame(@PathVariable("roomId") int id, Model model) {
-        model.addAttribute("result", gameService.status(id));
-        gameService.end(id);
-        return resultView;
+    public ResponseEntity<Void> endGame(@PathVariable("roomId") int id, @RequestParam("password") String password) {
+        if (!gameService.isEnd(id)) {
+            throw new IllegalArgumentException("진행중인 게임은 삭제할 수 없습니다.");
+        }
+        if (!gameService.end(id, password)) {
+            throw new IllegalArgumentException("게임 삭제에 실패하였습니다.");
+        }
+        return ResponseEntity.ok(null);
     }
 
     @ResponseBody

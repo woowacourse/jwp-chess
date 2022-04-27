@@ -57,12 +57,11 @@ function sendToServer(first, second) {
         },
         body: JSON.stringify(moveCommand)
     }).then((response) => {
+        if (response.status === 400) {
+            throw response;
+        }
         response.json()
             .then(data => {
-                console.log(data);
-                if (response.status === 400) {
-                    alert(data.message);
-                }
                 if (data.finished === true) {
                     alert("게임이 종료되었습니다.");
                     document.location.href = `/`
@@ -71,8 +70,11 @@ function sendToServer(first, second) {
                 location.reload();
             })
     })
-        .catch((error) => {
-            console.log(error);
+        .catch((err) => {
+            err.text().then(msg => {
+                alert(msg);
+                location.reload();
+            });
         });
 }
 

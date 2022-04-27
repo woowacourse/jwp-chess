@@ -102,11 +102,7 @@ public final class GameService {
 
     public boolean isEnd(int roomId) {
         Board board = new Board(() -> positionDao.findAllPositionsAndPieces(roomId));
-        final boolean kingDead = board.isEnd();
-        if (kingDead) {
-            boardDao.deleteById(roomId);
-        }
-        return kingDead;
+        return board.isEnd();
     }
 
     public StatusDto status(int roomId) {
@@ -119,8 +115,8 @@ public final class GameService {
         return board.calculateScore(color);
     }
 
-    public void end(int roomId) {
-        boardDao.deleteById(roomId);
+    public boolean end(int roomId, String password) {
+        return boardDao.deleteByIdAndPassword(roomId, password) == 1;
     }
 
     public RoomsDto getRooms() {

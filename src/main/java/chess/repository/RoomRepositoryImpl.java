@@ -29,8 +29,8 @@ public class RoomRepositoryImpl implements RoomRepository {
     }
 
     @Override
-    public int save(String name) {
-        return insertActor.executeAndReturnKey(Map.of("name", name)).intValue();
+    public int save(String name, String password) {
+        return insertActor.executeAndReturnKey(Map.of("name", name, "password", password)).intValue();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RoomRepositoryImpl implements RoomRepository {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(sql, Map.of("name", name),
                             (resultSet, rowNum) ->
-                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX))
+                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX), resultSet.getString(2))
                     ));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -54,7 +54,7 @@ public class RoomRepositoryImpl implements RoomRepository {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId),
                             (resultSet, rowNum) ->
-                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX))
+                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX), resultSet.getString(2))
                     ));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

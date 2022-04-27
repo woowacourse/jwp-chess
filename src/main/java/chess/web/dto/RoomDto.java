@@ -4,10 +4,12 @@ public class RoomDto {
 
     private final long id;
     private final String name;
+    private final String password;
 
-    public RoomDto(long id, String name) {
+    public RoomDto(long id, String name, String password) {
         this.id = id;
         this.name = name;
+        this.password = password;
     }
 
     public long getId() {
@@ -16,5 +18,9 @@ public class RoomDto {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

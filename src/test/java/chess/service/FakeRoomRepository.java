@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public class FakeRoomRepository implements RoomRepository {
 
-    private final Map<Integer, String> database = new HashMap<>();
+    private final Map<Integer, Room> database = new HashMap<>();
     private int autoIncrementId = 0;
 
     @Override
-    public int save(String name) {
+    public int save(String name, String password) {
         autoIncrementId++;
-        database.put(autoIncrementId, name);
+        database.put(autoIncrementId, new Room(name, password));
         return autoIncrementId;
     }
 
@@ -22,13 +22,23 @@ public class FakeRoomRepository implements RoomRepository {
     public Optional<RoomDto> find(String name) {
         return database.keySet().stream()
                 .filter(key -> database.get(key).equals(name))
-                .map(key -> new RoomDto(key, database.get(key)))
+                .map(key -> new RoomDto(key, database.get(key).name, database.get(key).password))
                 .findAny();
     }
 
     @Override
     public Optional<RoomDto> findById(int roomId) {
         return Optional.ofNullable(database.get(roomId))
-                .map(name -> new RoomDto(roomId, name));
+                .map(room -> new RoomDto(roomId, room.name, room.password));
+    }
+
+    private static class Room {
+        private String name;
+        private String password;
+
+        public Room(String name, String password) {
+            this.name = name;
+            this.password = password;
+        }
     }
 }

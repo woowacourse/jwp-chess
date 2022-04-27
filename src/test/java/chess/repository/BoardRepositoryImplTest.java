@@ -30,7 +30,7 @@ public class BoardRepositoryImplTest {
     void init() {
         boardRepository = new BoardRepositoryImpl(dataSource, jdbcTemplate);
         RoomRepository roomRepository = new RoomRepositoryImpl(dataSource, jdbcTemplate);
-        roomId = roomRepository.save("summer");
+        roomId = roomRepository.save("summer", "password");
     }
 
     @DisplayName("체스판 저장")

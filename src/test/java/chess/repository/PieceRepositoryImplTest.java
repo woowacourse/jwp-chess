@@ -40,7 +40,7 @@ class PieceRepositoryImplTest {
     void init() {
         BoardRepository boardRepository = new BoardRepositoryImpl(dataSource, jdbcTemplate);
         RoomRepository roomRepository = new RoomRepositoryImpl(dataSource, jdbcTemplate);
-        roomId = roomRepository.save("summer");
+        roomId = roomRepository.save("summer", "password");
         boardId = boardRepository.save(roomId, GameStateDto.from(board));
 
         pieceRepository = new PieceRepositoryImpl(dataSource, jdbcTemplate);

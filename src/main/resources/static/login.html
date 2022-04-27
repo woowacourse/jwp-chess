@@ -6,6 +6,22 @@
     <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
+    <div class="modal-wrap" id="room-modal">
+        <div class="modal-align">
+            <div class="modal-content">
+                <div class="modal-content-box">
+                    <span>새로운 방 생성하기</span>
+                    <form id="room-form" onsubmit="return checkNameNotEmpty();">
+                    <input type="text" id="name" name="name" placeholder="방 이름" class="input-name">
+                    <input type="password" id="password" name="password" placeholder="비밀번호" class="input-name">
+                    <span id="error-message"></span>
+                    <button type="button" onclick="fetchNewRoom()">생성</button>
+                    <button type="button">취소</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="login-container">
         <div class="login-title-wrap">
             <img src="images/white_q.png" class="icon-image">
@@ -14,12 +30,14 @@
             <h2 class="login-title">Welcome Chess</h2>
             <img src="images/black_k.png" class="icon-image">
         </div>
-        <form action="http://localhost:8080/rooms" onsubmit="return checkNameNotEmpty();" method="post">
-            <input type="text" id="name" name="name" placeholder="방 이름" class="input-name">
-            <button type="submit" class="input-button">입장</button>
-        </form>
-        <span id="error-message"></span>
+<!--        <form action="http://localhost:8080/rooms" onsubmit="return checkNameNotEmpty();" method="post">-->
+<!--            <input type="text" id="name" name="name" placeholder="방 이름" class="input-name">-->
+<!--            <button type="submit" class="input-button">입장</button>-->
+<!--        </form>-->
+<!--        <span id="error-message"></span>-->
+        <button type="button" id="room-modal-open">새로운 방 만들기</button>
     </div>
+    <script type="text/javascript" src="/js/login.js"></script>
 </body>
 <script type="text/javascript">
     function checkNameNotEmpty() {

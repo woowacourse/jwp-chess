@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.domain.Room;
 import chess.repository.RoomRepository;
 import chess.web.dto.RoomDto;
 import java.util.Optional;
@@ -18,13 +19,9 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public RoomDto create(String name) {
-        validateNameSize(name);
-        Optional<RoomDto> roomDto = roomRepository.find(name);
-        if (roomDto.isEmpty()) {
-            roomRepository.save(name);
-        }
-        return roomRepository.find(name).get();
+    public RoomDto create(Room room) {
+        int id = roomRepository.save(room.getName(), room.getPassword());
+        return roomRepository.findById(id).get();
     }
 
     private void validateNameSize(String name) {

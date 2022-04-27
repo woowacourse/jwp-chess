@@ -5,6 +5,7 @@ import static org.hamcrest.core.StringContains.containsString;
 import chess.service.FakeRoomRepository;
 import chess.repository.RoomRepository;
 import io.restassured.RestAssured;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,9 +47,10 @@ class SpringChessControllerTest {
     @Test
     void createRoom() {
         final String name = "summer";
+        final String password = "password";
 
         RestAssured.given().log().all()
-                .formParam("name", name)
+                .formParams(Map.of("name", name, "password", password))
                 .when().post("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.FOUND.value())
@@ -59,8 +61,10 @@ class SpringChessControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {"", "16자를넘는방이름은안되니까돌아가"})
     void nameException(String name) {
+        final String password = "password";
+
         RestAssured.given().log().all()
-                .formParam("name", name)
+                .formParam("name", name, "password", password)
                 .when().post("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());

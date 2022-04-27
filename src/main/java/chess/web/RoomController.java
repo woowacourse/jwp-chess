@@ -1,9 +1,11 @@
 package chess.web;
 
+import chess.domain.Room;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.BoardDto;
 import chess.web.dto.RoomDto;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +27,9 @@ public class RoomController {
     }
 
     @PostMapping
-    public String createRoom(@RequestParam String name) {
-        RoomDto roomDto = roomService.create(name);
-        return "redirect:/rooms/" + roomDto.getId();
+    public ResponseEntity<Map<String, String>> createRoom(Room room) {
+        RoomDto roomDto = roomService.create(room);
+        return ResponseEntity.ok(Map.of("url","/rooms/" + roomDto.getId()));
     }
 
     @GetMapping("/{roomId}")

@@ -28,14 +28,14 @@ public class RoomRepositoryImplTest {
     @Test
     @DisplayName("뱡 insert")
     void insert() {
-        int id = roomRepository.save("summer");
+        int id = roomRepository.save("summer", "password");
         assertThat(id).isGreaterThan(0);
     }
 
     @Test
     @DisplayName("방 find")
     void find() {
-        roomRepository.save("pobi");
+        roomRepository.save("pobi", "password");
         RoomDto room = roomRepository.find("pobi").orElseThrow();
         assertThat(room.getName()).isEqualTo("pobi");
     }

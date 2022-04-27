@@ -1,15 +1,10 @@
 package chess.controller;
 
-import chess.domain.game.BoardInitializer;
-import chess.domain.game.ChessBoard;
-import chess.domain.member.Member;
-import chess.domain.pieces.Color;
 import chess.dto.GameStatusDto;
 import chess.dto.MoveDto;
 import chess.dto.RequestDto;
 import chess.dto.StatusDto;
 import chess.service.GameService;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,10 +34,7 @@ public class ChessController {
 
     @PostMapping("/room")
     public String createRoom(@ModelAttribute RequestDto requestDto) {
-        final ChessBoard board = new ChessBoard(requestDto.getTitle(), Color.WHITE,
-                List.of(new Member(requestDto.getFirstMemberName()), new Member(requestDto.getSecondMemberName())),
-                requestDto.getPassword());
-        int roomId = gameService.saveBoard(board, new BoardInitializer()).getId();
+        int roomId = gameService.createBoard(requestDto).getId();
         return "redirect:/room/" + roomId;
     }
 

@@ -4,13 +4,16 @@ import chess.dao.WebChessBoardDao;
 import chess.dao.WebChessMemberDao;
 import chess.dao.WebChessPieceDao;
 import chess.dao.WebChessPositionDao;
+import chess.domain.game.BoardInitializer;
 import chess.domain.game.ChessBoard;
 import chess.domain.game.ConsoleBoard;
 import chess.domain.game.Initializer;
+import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
+import chess.dto.RequestDto;
 import chess.dto.RoomDto;
 import chess.dto.RoomsDto;
 import chess.dto.StatusDto;
@@ -36,6 +39,13 @@ public final class GameService {
         this.positionDao = positionDao;
         this.pieceDao = pieceDao;
         this.memberDao = memberDao;
+    }
+
+    public ChessBoard createBoard(final RequestDto requestDto) {
+        final ChessBoard board = new ChessBoard(requestDto.getTitle(), Color.WHITE,
+                List.of(new Member(requestDto.getFirstMemberName()), new Member(requestDto.getSecondMemberName())),
+                requestDto.getPassword());
+        return saveBoard(board, new BoardInitializer());
     }
 
     public ChessBoard saveBoard(final ChessBoard board, final Initializer initializer) {

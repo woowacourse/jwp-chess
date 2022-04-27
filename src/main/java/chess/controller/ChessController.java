@@ -1,18 +1,14 @@
 package chess.controller;
 
+import chess.dto.RoomRequestDto;
 import chess.dto.ResponseDto;
 import chess.dto.ScoreDto;
 import org.eclipse.jetty.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import chess.model.room.Room;
 import chess.service.ChessService;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class ChessController {
@@ -26,19 +22,18 @@ public class ChessController {
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("rooms", chessService.getRooms());
+        System.out.println("here");
+        System.out.println(chessService.getRooms());
         return "home";
     }
 
-    @PostMapping("/room")
-    public String room(@RequestBody String messageBody) {
-        final List<String> createRoomInput = Arrays.stream(messageBody.strip().split("\n"))
-                .map(s -> s.split("=")[1])
-                .collect(Collectors.toList());
-
+    @PostMapping(value = "/room")
+    public String room(@ModelAttribute RoomRequestDto roomDto) {
         Room room = chessService.init(
-                createRoomInput.get(0),
-                createRoomInput.get(1),
-                createRoomInput.get(2));
+                roomDto.getRoomName(),
+                roomDto.getPassword(),
+                roomDto.getWhiteName(),
+                roomDto.getBlackName());
 
         return "redirect:/room/" + room.getId();
     }
@@ -52,7 +47,7 @@ public class ChessController {
 
     @PostMapping("/room/{roomId}/move")
     @ResponseBody
-    public String move(@RequestBody String messageBody, @PathVariable(value = "roomId") String roomId) {
+    public String move(@RequestBody String messageBody, @PathVariable String roomId) {
         final String[] split = messageBody.strip().split("=")[1].split(" ");
         String source = split[0];
         String target = split[1];
@@ -72,10 +67,9 @@ public class ChessController {
     }
 
     @PostMapping("/room/{roomId}/end")
-    public String end(Model model, @PathVariable(value = "roomId") String roomId) {
-        int id = Integer.parseInt(roomId);
-        model.addAttribute("result", ScoreDto.from(chessService.status(id)));
-        chessService.end(id);
+    public String end(Model model, @PathVariable int roomId) {
+        model.addAttribute("result", ScoreDto.from(chessService.status(roomId)));
+        chessService.end(roomId);
         return "result";
     }
 }

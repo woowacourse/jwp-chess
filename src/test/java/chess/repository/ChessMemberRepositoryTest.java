@@ -32,7 +32,7 @@ class ChessMemberRepositoryTest {
     @BeforeEach
     void setup() {
         final Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
-        final Room room = chessRoomRepository.save(new Room("초보만", board.getId()));
+        final Room room = chessRoomRepository.save(new Room("초보만", "비밀번호", board.getId()));
         this.roomId = room.getId();
         chessMemberRepository.save("eden", roomId);
     }

@@ -31,6 +31,7 @@ public class ChessRoomRepository implements RoomRepository<Room> {
             rooms.add(new Room(
                     sqlRowSet.getInt("id"),
                     sqlRowSet.getString("title"),
+                    sqlRowSet.getString("password"),
                     sqlRowSet.getInt("board_id"))
             );
         }
@@ -44,10 +45,11 @@ public class ChessRoomRepository implements RoomRepository<Room> {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("title", room.getTitle());
+        parameters.put("password", room.getPassword());
         parameters.put("board_id", room.getBoardId());
 
         Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return new Room(number.intValue(), room.getTitle(), room.getBoardId());
+        return new Room(number.intValue(), room.getTitle(), room.getPassword(), room.getBoardId());
     }
 
     @Override
@@ -59,6 +61,7 @@ public class ChessRoomRepository implements RoomRepository<Room> {
         return (resultSet, rowNum) -> new Room(
                 resultSet.getInt("id"),
                 resultSet.getString("title"),
+                resultSet.getString("password"),
                 resultSet.getInt("board_id")
         );
     }

@@ -31,7 +31,7 @@ class ChessRoomRepositoryTest {
     void setup() {
         final Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
         this.boardId = board.getId();
-        this.room = chessRoomRepository.save(new Room("개초보만", boardId));
+        this.room = chessRoomRepository.save(new Room("개초보만", "비밀번호", boardId));
     }
 
     @Test
@@ -44,7 +44,7 @@ class ChessRoomRepositoryTest {
 
     @Test
     void findAllByStatus() {
-        chessRoomRepository.save(new Room("왕허접만", boardId));
+        chessRoomRepository.save(new Room("왕허접만", "비밀번호", boardId));
         final List<Room> rooms = chessRoomRepository.findAllByBoardStatus(new Running());
         assertThat(room).isEqualTo(2);
     }

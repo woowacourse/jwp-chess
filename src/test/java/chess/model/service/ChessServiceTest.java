@@ -15,6 +15,7 @@ class ChessServiceTest {
     private final int fakeRoomId = 11;
     private final int fakeMemberId = 1;
     private final String fakeTitle = "woowa";
+    private final String fakePassword = "asdf1234";
     private final String fakeName = "eden";
 
     private FakeBoardRepository fakeBoardRepository;
@@ -29,14 +30,15 @@ class ChessServiceTest {
         fakeBoardRepository = new FakeBoardRepository(fakeBoardId);
         fakeSquareRepository = new FakeSquareRepository();
         fakePieceRepository = new FakePieceRepository();
-        fakeRoomRepository = new FakeRoomRepository(fakeRoomId, fakeTitle, fakeBoardId);
+        fakeRoomRepository = new FakeRoomRepository(fakeRoomId, fakeTitle, fakePassword, fakeBoardId);
         fakeMemberRepository = new FakeMemberRepository(fakeMemberId, fakeName);
-        chessService = new ChessService(fakeBoardRepository, fakeSquareRepository, fakePieceRepository, fakeRoomRepository, fakeMemberRepository);
+        chessService = new ChessService(fakeBoardRepository, fakeSquareRepository, fakePieceRepository,
+                fakeRoomRepository, fakeMemberRepository);
     }
 
     @Test
     void init() {
-        Room room = chessService.init(fakeTitle, fakeName, "corinne");
+        Room room = chessService.init(fakeTitle, fakePassword, fakeName, "corinne");
 
         assertThat(room.getTitle()).isEqualTo(fakeTitle);
     }

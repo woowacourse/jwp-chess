@@ -9,14 +9,19 @@
 <div align="center">
     <div>
         <h3>방 만들기</h3>
-        <form id="roomForm" enctype="text/plain" action="/room" method="POST">
+        <form id="roomForm" action="/room" method="POST">
             <div>
                 <label> 방이름
                     <input type="text" id="roomName" name="roomName"/>
                 </label>
             </div>
             <div>
-                <label> 흰&nbsp;말
+                <label> 비밀번호
+                    <input type="text" id="password" name="password"/>
+                </label>
+            </div>
+            <div>
+                <label> 흰말
                     <input type="text" id="whiteName" name="whiteName"/>
                 </label>
             </div>

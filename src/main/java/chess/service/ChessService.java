@@ -43,12 +43,12 @@ public class ChessService {
         this.chessMemberRepository = chessMemberRepository;
     }
 
-    public Room init(String roomTitle, String member1, String member2) {
+    public Room init(String roomTitle, String password, String member1, String member2) {
         Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
         Map<Square, Piece> startingPieces = Initializer.initialize();
         chessSquareRepository.saveAllSquares(board.getId(), startingPieces.keySet());
         chessPieceRepository.saveAllPieces(mapToPieces(board.getId(), startingPieces));
-        Room room = chessRoomRepository.save(new Room(roomTitle, board.getId()));
+        Room room = chessRoomRepository.save(new Room(roomTitle, password, board.getId()));
         chessMemberRepository.saveAll(List.of(new Member(member1), new Member(member2)), room.getId());
         return room;
     }
@@ -69,14 +69,15 @@ public class ChessService {
         for (Room room : rooms) {
             List<Member> membersByRoom = chessMemberRepository.findMembersByRoomId(room.getId());
             roomsDto.add(
-                    new RoomDto(room.getId(), room.getTitle(), membersByRoom));
+                    new RoomDto(room.getId(), room.getTitle(), room.getPassword(), membersByRoom));
         }
         return new RoomsDto(roomsDto);
     }
 
     public BoardDto getBoard(int roomId) {
         final Room room = chessRoomRepository.getById(roomId);
-        final Map<Square, Piece> allPositionsAndPieces = chessSquareRepository.findAllSquaresAndPieces(room.getBoardId());
+        final Map<Square, Piece> allPositionsAndPieces = chessSquareRepository.findAllSquaresAndPieces(
+                room.getBoardId());
         List<Member> members = chessMemberRepository.findMembersByRoomId(roomId);
         return BoardDto.of(
                 allPositionsAndPieces,

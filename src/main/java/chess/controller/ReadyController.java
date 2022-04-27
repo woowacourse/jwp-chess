@@ -19,12 +19,18 @@ public class ReadyController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("games", chessService.getGameIDs());
+        model.addAttribute("msg", "CLICK TO START! 😝");
         return "ready";
     }
 
     @PostMapping("/")
     public String delete(@RequestParam String gameID, Model model) {
-        chessService.deleteGameByGameID(gameID);
-        return index(model);
+        try {
+            chessService.deleteGameByGameID(gameID);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("msg", e.getMessage());
+        }
+        model.addAttribute("games", chessService.getGameIDs());
+        return "ready";
     }
 }

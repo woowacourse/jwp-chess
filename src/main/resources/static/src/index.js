@@ -19,6 +19,7 @@ const getGames = () => {
         method: "GET",
         headers: {"Content-Type": "application/json"}
     });
+    games.innerHTML = null;
 
     response
         .then(data => data.json())
@@ -27,7 +28,21 @@ const getGames = () => {
                 games.innerHTML = `<div> 존재하는 방이 없습니다. </div>`
             }
             body.gameInfos.map(game => {
-                games.innerHTML += `<li> ${game.name} </li>`
+                console.log(game)
+                games.innerHTML +=
+                            `<div>
+                                <div> ${game.name} </div>
+                                <button onclick="deleteGame(${game.gameId})"> 삭제하기 </button>    
+                            </div>`
             })
         });
+}
+
+const deleteGame = (id) => {
+    const response = fetch(`/game/${id}`, {
+        method: "DELETE",
+        headers: {"Content-Type": "application/json"}
+    });
+
+    response.then(() => getGames());
 }

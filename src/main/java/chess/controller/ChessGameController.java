@@ -6,7 +6,6 @@ import chess.dto.BoardDTO;
 import chess.dto.ChessGameRoomInfoDTO;
 import chess.dto.GameCreationDTO;
 import chess.service.ChessService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -67,7 +66,6 @@ public class ChessGameController {
     @DeleteMapping(value = "/chess/{id}")
     public ResponseEntity<Object> deleteGame(@PathVariable long id, String password) {
         chessService.deleteGame(id, password);
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .header("Location", "/").build();
+        return ResponseEntity.noContent().build();
     }
 }

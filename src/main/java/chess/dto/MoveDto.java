@@ -1,5 +1,7 @@
 package chess.dto;
 
+import chess.domain.position.Position;
+
 public class MoveDto {
 
     private String start;
@@ -13,11 +15,11 @@ public class MoveDto {
         this.target = target;
     }
 
-    public String getStart() {
-        return start;
+    public Position getStart() {
+        return Position.of(start);
     }
 
-    public String getTarget() {
-        return target;
+    public Position getTarget() {
+        return Position.of(target);
     }
 }

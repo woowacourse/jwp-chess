@@ -4,7 +4,6 @@ import chess.domain.game.BoardInitializer;
 import chess.domain.game.ChessBoard;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
-import chess.domain.position.Position;
 import chess.dto.GameStatusDto;
 import chess.dto.MoveDto;
 import chess.dto.RequestDto;
@@ -60,7 +59,7 @@ public class ChessController {
         if (gameService.isEnd(id)) {
             throw new IllegalArgumentException("게임이 이미 끝났다.");
         }
-        gameService.move(id, Position.of(moveDto.getStart()), Position.of(moveDto.getTarget()));
+        gameService.move(id, moveDto.getStart(), moveDto.getTarget());
         return ResponseEntity.ok(new GameStatusDto(gameService.isEnd(id)));
     }
 

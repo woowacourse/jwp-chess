@@ -15,10 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 class GameDaoTest {
-    GameDao gameDao;
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private GameDao gameDao;
 
     @BeforeEach
     void initPieceDaoTest() {
@@ -32,11 +31,6 @@ class GameDaoTest {
                 ");");
         gameDao = new GameDao(jdbcTemplate); // @JdbcTest는 일반적인 @ConfigurationProperties와 @Component 빈들은 스캔되지 않는다.
     }
-
-//    @AfterEach
-//    void cleanDB() {
-//        gameDao.deleteAll();
-//    }
 
     @Test
     void saveGame() {
@@ -54,31 +48,27 @@ class GameDaoTest {
         assertThat(turn.get()).isEqualTo("start");
     }
 
-//    @Test
-//    @DisplayName("턴이 존재하지 않는 경우 무엇을 반환하는지 확인")
-//    void getTurn() {
-//        Optional<String> turn = gameDao.findOne();
-//
-//        assertThat(turn).isEmpty();
-//    }
+    @Test
+    void updateTurnByGameId() {
+        Long gameId = gameDao.saveGame("pw1234");
+        gameDao.updateTurnByGameId(gameId, "white");
 
-//    @Test
-//    @DisplayName("턴이 update 되는지 확인한다")
-//    void update() {
-//        gameDao.init();
-//
-//        gameDao.update("BLACK");
-//        Optional<String> turn = gameDao.findOne();
-//
-//        assertThat(turn.get()).isEqualToIgnoringCase("black");
-//    }
-//
-//    @Test
-//    @DisplayName("저장된 턴을 모두 삭제한다.")
-//    void deleteAll() {
-//        gameDao.init();
-//        gameDao.deleteAll();
-//
-//        assertThat(gameDao.findOne()).isEmpty();
-//    }
+        assertThat(gameDao.findTurnByGameId(gameId).get()).isEqualTo("white");
+    }
+
+    @Test
+    void deleteByGameId() {
+        Long gameId = gameDao.saveGame("pw1234");
+        gameDao.deleteByGameId(gameId);
+
+        assertThat(gameDao.findAllGameId()).doesNotContain(gameId);
+    }
+
+    @Test
+    void findPasswordByGameId() {
+        Long gameId = gameDao.saveGame("pw1234");
+        String password = gameDao.findPasswordByGameId(gameId);
+
+        assertThat(password).isEqualTo("pw1234");
+    }
 }

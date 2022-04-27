@@ -56,9 +56,9 @@ public class ChessController {
         return chessService.getResult();
     }
 
-    @PostMapping("/exit")
+    @PostMapping("/exit/{gameId}")
     @ResponseBody
-    public void exit() {
-        chessService.exitGame();
+    public void exit(@PathVariable Long gameId) {
+        chessService.exitGame(gameId);
     }
 }

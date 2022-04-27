@@ -20,9 +20,9 @@ public class GameDao {
 
     public Long saveGame(String password) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = "insert into GAMES (password, turn) values (?, 'start')";
+        String sql = "insert into GAMES (password, turn) values (?, 'start')";
         jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"game_id"});
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"game_id"});
             preparedStatement.setString(1, password);
             return  preparedStatement;
         }, keyHolder);
@@ -35,21 +35,26 @@ public class GameDao {
     }
 
     public Optional<String> findTurnByGameId(Long gameId) {
-        String query = "select turn from games where game_id = (?) limit 1";
+        String sql = "select turn from games where game_id = (?) limit 1";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, String.class, gameId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, String.class, gameId));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }
 
-    public void update(Long gameId, String nextTurn) {
-        String query = "UPDATE turns SET turn = (?) where game_id = (?)";
-        jdbcTemplate.update(query, nextTurn, gameId);
+    public void updateTurnByGameId(Long gameId, String nextTurn) {
+        String sql = "update games set turn = (?) where game_id = (?)";
+        jdbcTemplate.update(sql, nextTurn, gameId);
     }
 
-    public void deleteAll() {
-        String query = "DELETE FROM turns";
-        jdbcTemplate.update(query);
+    public void deleteByGameId(Long gameId) {
+        String sql = "delete from games where game_id = (?)";
+        jdbcTemplate.update(sql, gameId);
+    }
+
+    public String findPasswordByGameId(Long gameId) {
+        String sql = "select password from games where game_id = (?)";
+        return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }
 }

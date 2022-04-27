@@ -14,11 +14,9 @@ import chess.model.piece.Empty;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceFactory;
 import chess.model.position.Position;
-import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +59,7 @@ public class ChessService {
         }
         Board board = toBoard(pieceDao.findAllPieces());
         if (board.isKingDead()) {
-            gameDao.update(gameId, turn.finish());
+            gameDao.updateTurnByGameId(gameId, turn.finish());
         }
 
         return WebBoardDto.from(board);
@@ -71,7 +69,7 @@ public class ChessService {
         if (canMove(moveDto, sourcePiece, targetPiece)) {
             pieceDao.updateByPosition(moveDto.getTarget(), PieceDao.getPieceName(sourcePiece));
             pieceDao.updateByPosition(moveDto.getSource(), "none-.");
-            gameDao.update(gameId, turn.change().getThisTurn());
+            gameDao.updateTurnByGameId(gameId, turn.change().getThisTurn());
             return;
         }
         throw new IllegalArgumentException("기물을 이동할 수 없습니다.");
@@ -96,9 +94,15 @@ public class ChessService {
         return GameResult.from(board);
     }
 
-    public void exitGame() {
-        pieceDao.deleteAll();
-        gameDao.deleteAll();
+    public void exitGame(Long gamaId) {
+        gameDao.updateTurnByGameId(gamaId, "start");
+//        pieceDao.initPieces(gameId);
+    }
+
+    public void deleteGame(Long gameId, String password) {
+        if (gameDao.findPasswordByGameId(gameId).equals(password)){
+            gameDao.deleteByGameId(gameId);
+        }
     }
 
     private Board initBoard(Long gameId) {

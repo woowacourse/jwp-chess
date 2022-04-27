@@ -33,17 +33,21 @@ public class InMemoryPieceDao implements PieceDao {
     }
 
     @Override
-    public void update(PieceEntity replacePiece, int gameId) {
+    public int update(PieceEntity replacePiece, int gameId) {
         List<PieceEntity> pieces = boardTable.get(gameId);
+        int affectedRows = 0;
         for (int i = 0; i < pieces.size(); i++) {
-            replaceIfSquareEquals(replacePiece, pieces, i);
+            affectedRows += replaceIfSquareEquals(replacePiece, pieces, i);
         }
+        return affectedRows;
     }
 
-    private void replaceIfSquareEquals(PieceEntity replacePiece, List<PieceEntity> pieces, int i) {
+    private int replaceIfSquareEquals(PieceEntity replacePiece, List<PieceEntity> pieces, int i) {
         if (replacePiece.getSquare().equals(pieces.get(i).getSquare())) {
             pieces.set(i, replacePiece);
+            return 1;
         }
+        return 0;
     }
 
     public Map<Integer, List<PieceEntity>> getBoardTable() {

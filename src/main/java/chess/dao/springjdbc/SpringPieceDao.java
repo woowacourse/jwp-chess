@@ -43,8 +43,8 @@ public class SpringPieceDao implements PieceDao {
     }
 
     @Override
-    public void update(final PieceEntity piece, final int gameId) {
+    public int update(final PieceEntity piece, final int gameId) {
         String sql = "UPDATE piece SET piece_type = ?, piece_color = ? WHERE square = ? AND game_id = ?";
-        jdbcTemplate.update(sql, piece.getType(), piece.getColor(), piece.getSquare(), gameId);
+        return jdbcTemplate.update(sql, piece.getType(), piece.getColor(), piece.getSquare(), gameId);
     }
 }

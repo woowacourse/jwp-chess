@@ -27,9 +27,9 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public void update(final GameEntity game) {
+    public int update(final GameEntity game) {
         String sql = "UPDATE game SET status = ?, turn = ? WHERE id = ?";
-        jdbcTemplate.update(sql, game.getStatus(), game.getTurn(), game.getId());
+        return jdbcTemplate.update(sql, game.getStatus(), game.getTurn(), game.getId());
     }
 
     @Override

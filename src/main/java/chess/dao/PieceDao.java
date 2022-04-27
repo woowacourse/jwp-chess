@@ -9,5 +9,5 @@ public interface PieceDao {
 
     void remove(int id);
 
-    void update(PieceEntity piece, int gameId);
+    int update(PieceEntity piece, int gameId);
 }

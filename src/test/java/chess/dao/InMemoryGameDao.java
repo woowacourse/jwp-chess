@@ -19,8 +19,9 @@ public class InMemoryGameDao implements GameDao {
     }
 
     @Override
-    public void update(GameEntity dto) {
+    public int update(GameEntity dto) {
         gameTable.put(dto.getId(), dto);
+        return 1;
     }
 
     @Override

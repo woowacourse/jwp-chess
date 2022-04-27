@@ -8,22 +8,29 @@ import chess.controller.dto.response.GameIdentifiers;
 import chess.domain.GameState;
 import chess.util.PasswordEncryptor;
 import java.util.List;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
+@JdbcTest
 public class GameDaoTest {
 
     private static final String NOT_HAVE_DATA = "데이터가 없습니다.";
     private static final Long TEST_GAME_ID = 1L;
 
     @Autowired
+    private DataSource dataSource;
+
     private GameDao gameDao;
+
+    @BeforeEach
+    void setUp() {
+        gameDao = new GameDaoImpl(dataSource);
+    }
 
     @DisplayName("게임 저장 테스트")
     @Test

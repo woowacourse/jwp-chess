@@ -13,28 +13,31 @@ import chess.domain.piece.Piece;
 import chess.util.PasswordEncryptor;
 import java.util.List;
 import java.util.Optional;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
-@SpringBootTest
-@Transactional
+@JdbcTest
 public class PieceDaoTest {
 
     private static final String NOT_HAVE_DATA = "해당하는 기물이 없습니다.";
     private static final Long TEST_GAME_ID = 1L;
 
     @Autowired
+    private DataSource dataSource;
+
     private GameDao gameDao;
-    @Autowired
     private PieceDao pieceDao;
 
     @BeforeEach
-    void createGame() {
+    void setUp() {
+        gameDao = new GameDaoImpl(dataSource);
+        pieceDao = new PieceDaoImpl(dataSource);
+
         String salt = PasswordEncryptor.generateSalt();
         String password = PasswordEncryptor.encrypt("password", salt);
         gameDao.save(TEST_GAME_ID, "game", password, salt);

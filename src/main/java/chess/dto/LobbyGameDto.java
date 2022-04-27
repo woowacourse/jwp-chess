@@ -22,14 +22,14 @@ public class LobbyGameDto {
     }
 
     private String createInProgress(final boolean isEnd) {
-        if(isEnd) {
+        if (isEnd) {
             return "게임 종료";
         }
         return "게임 진행 중";
     }
 
     private String createProgressBadge(final boolean isEnd) {
-        if(isEnd) {
+        if (isEnd) {
             return "badge bg-danger";
         }
         return "badge bg-success";

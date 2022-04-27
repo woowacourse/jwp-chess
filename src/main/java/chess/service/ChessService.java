@@ -38,7 +38,7 @@ public final class ChessService {
     public ChessGame movePiece(final long gameId, final String source, final String target, final Team team) {
         final ChessGame chessGame = loadSavedGame(gameId);
         validateCurrentTurn(chessGame, team);
-        move(chessGame, new Movement(Position.of(source), Position.of(target)), team);
+        move(chessGame, new Movement(Position.of(source), Position.of(target), chessGame.getId(), team));
         if (chessGame.isKingDied()){
             chessGameDAO.updateGameEnd(gameId);
         }
@@ -51,10 +51,8 @@ public final class ChessService {
         }
     }
 
-    private void move(final ChessGame chessGame, final Movement movement, final Team team) {
+    private void move(final ChessGame chessGame, final Movement movement) {
         chessGame.execute(movement);
-        movement.setGameId(chessGame.getId());
-        movement.setTeam(team);
         int insertedRowCount = movementDAO.addMoveCommand(movement);
 
         if (insertedRowCount == 0) {

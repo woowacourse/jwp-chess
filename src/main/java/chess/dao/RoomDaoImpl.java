@@ -2,8 +2,11 @@ package chess.dao;
 
 import chess.entity.Room;
 import java.sql.PreparedStatement;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -61,7 +64,6 @@ public class RoomDaoImpl implements RoomDao {
     @Override
     public Optional<Room> findById(long id) {
         String sql = "select * from room where id = ?";
-
         try {
             Room room = jdbcTemplate.queryForObject(sql,
                     (rs, rowNum) ->
@@ -75,6 +77,21 @@ public class RoomDaoImpl implements RoomDao {
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Room> findAll() {
+        String sql = "select * from room";
+        return jdbcTemplate.query(
+                sql,
+                (rs, rowNum) ->
+                        new Room(
+                                rs.getLong("id"),
+                                rs.getString("turn"),
+                                rs.getString("name"),
+                                rs.getString("password")
+                        )
+        );
     }
 
     @Override

@@ -5,7 +5,8 @@ import chess.dto.BoardDto;
 import chess.dto.ExceptionResponseDto;
 import chess.dto.MoveDto;
 import chess.dto.RoomCreationDto;
-import chess.dto.RoomIdDto;
+import chess.dto.RoomDto;
+import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +29,14 @@ public class ChessApiController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public RoomIdDto create(@RequestBody RoomCreationDto creationDto) {
+    public RoomDto create(@RequestBody RoomCreationDto creationDto) {
         long roomId = chessService.createRoom(creationDto);
-        return new RoomIdDto(roomId);
+        return new RoomDto(roomId, creationDto.getName());
+    }
+
+    @GetMapping("/list")
+    public List<RoomDto> list() {
+        return chessService.list();
     }
 
     @GetMapping("/start")
@@ -55,7 +61,7 @@ public class ChessApiController {
     }
 
     @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class,
-            DataIntegrityViolationException.class})
+            DataIntegrityViolationException.class, RuntimeException.class})
     public ResponseEntity<ExceptionResponseDto> handle(RuntimeException exception) {
         return ResponseEntity.badRequest()
                 .body(new ExceptionResponseDto(exception.getMessage()));

@@ -145,4 +145,17 @@ class ChessApiControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("error", is("Internal Server Error"));
     }
+
+    @Test
+    void list() {
+        JdbcFixture.insertRoom(jdbcTemplate, "roma2", "1234", "white");
+        JdbcFixture.insertRoom(jdbcTemplate, "roma3", "1234", "white");
+
+        RestAssured.given().log().all()
+                .when().get("/list")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("size()", is(3));
+    }
 }

@@ -7,14 +7,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class ChessController {
 
-    private final ChessService chessService;
-
-    public ChessController(ChessService chessService) {
-        this.chessService = chessService;
-    }
-
     @GetMapping("/")
     public String index() {
-        return "/roby.html";
+        return "/lobby.html";
+    }
+
+    @GetMapping("/rooms/{roomId}")
+    public String room(@PathVariable Long roomId) {
+        return "/room.html";
     }
 }

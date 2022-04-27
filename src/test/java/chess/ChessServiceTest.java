@@ -3,12 +3,16 @@ package chess;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.dao.FakeRoomDao;
+import chess.dao.FakeSquareDao;
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
 import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
 import chess.dto.RoomCreationDto;
+import chess.dto.RoomDto;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -64,5 +68,13 @@ public class ChessServiceTest {
 
         assertAll(() -> assertThat(actual.getWhiteScore()).isEqualTo(38.0),
                 () -> assertThat(actual.getBlackScore()).isEqualTo(38.0));
+    }
+
+    @Test
+    void list() {
+        chessService.createRoom(new RoomCreationDto("sojukang", ""));
+
+        List<RoomDto> list = chessService.list();
+        assertThat(list).hasSize(2);
     }
 }

@@ -5,7 +5,7 @@
     <title>체스</title>
     <link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body onload="showList()">
 <div class="container">
     <h1 class="chess-header">🏛ROMA CHESS🏛</h1>
     <div class="container">
@@ -13,14 +13,12 @@
             <div id="turn-status">방에 입장해주세요.</div>
             <button id="creation-button" class="chess-btn" onclick="create()">방 생성</button>
         </div>
-        <div class="chess-button-container">
-            <form action="/room">
-                <input type="text" id="roomName" name="name">
-                <input type="submit" class="chess-btn" value="방 입장"></input>
-            </form>
+        <div id="list-container">
+            <h3 class="list-header">방 목록</h3>
+            <ul id="room-list"></ul>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/roby.js"></script>
+<script type="text/javascript" src="/lobby.js"></script>
 </body>
 </html>

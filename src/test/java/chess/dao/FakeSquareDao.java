@@ -1,6 +1,5 @@
-package chess;
+package chess.dao;
 
-import chess.dao.SquareDao;
 import chess.entity.Square;
 import java.util.HashMap;
 import java.util.List;

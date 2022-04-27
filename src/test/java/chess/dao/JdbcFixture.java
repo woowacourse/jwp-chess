@@ -35,8 +35,8 @@ public class JdbcFixture {
     }
 
     /*
-    * 입력될 때 ["position,piece,room_id",...] 형식으로 받게된다.
-    * */
+     * 입력될 때 ["position,piece,room_id",...] 형식으로 받게된다.
+     * */
     public static void insertSquares(JdbcTemplate jdbcTemplate, List<String> squares) {
         List<Object[]> pieces = squares
                 .stream()

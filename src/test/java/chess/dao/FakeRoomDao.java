@@ -1,6 +1,5 @@
-package chess;
+package chess.dao;
 
-import chess.dao.RoomDao;
 import chess.entity.Room;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,11 @@ public class FakeRoomDao implements RoomDao {
         return rooms.stream()
                 .filter(room -> room.getId() == id)
                 .findAny();
+    }
+
+    @Override
+    public List<Room> findAll() {
+        return rooms;
     }
 
     @Override

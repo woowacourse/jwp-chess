@@ -15,6 +15,9 @@ public class Room {
     }
 
     public Room(String name, String password) {
+        if (name.isBlank()) {
+            throw new IllegalArgumentException("방 제목은 빈 문자열일 수 없습니다.");
+        }
         this.name = name;
         this.password = password;
         this.turn = "empty";

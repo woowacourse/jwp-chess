@@ -9,9 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping("/chessgames")
 public class ChessGameViewController {
 
     private final ChessGameRoomService chessGameRoomService;
@@ -22,7 +24,7 @@ public class ChessGameViewController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ModelAndView mainPage() {
         ModelAndView modelAndView = new ModelAndView("chess_game_list");
         List<ChessGameRoomTitleResponse> chessGameRoomTitleResponses = chessGameRoomService.findAllChessGameRooms()
@@ -33,7 +35,7 @@ public class ChessGameViewController {
         return modelAndView;
     }
 
-    @GetMapping("/chessgames/{chessGameId}")
+    @GetMapping("/{chessGameId}")
     public ModelAndView loadChessGame(@PathVariable long chessGameId) {
         ModelAndView modelAndView = new ModelAndView("chess_game");
         List<PieceResponse> pieceResponses = chessGameService.findChessBoard(chessGameId)

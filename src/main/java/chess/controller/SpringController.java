@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import chess.domain.Command;
 import chess.domain.piece.Team;
 import chess.dto.ChessGameDto;
+import chess.dto.PieceDto;
 import chess.service.ChessService;
 
 @Controller
@@ -26,9 +27,10 @@ public class SpringController {
     }
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(Model model, @RequestParam(required = false) String error) {
         List<ChessGameDto> chessGameDtos = chessService.findAllChessGames();
         model.addAttribute("rooms", chessGameDtos);
+        model.addAttribute("error", error);
         return "index";
     }
 
@@ -39,8 +41,15 @@ public class SpringController {
     }
 
     @PostMapping("/delete/{chessGameId}")
-    public String delete(@RequestParam String password, @PathVariable int chessGameId) {
-        chessService.delete(password, chessGameId);
+    public String delete(
+        @RequestParam String password,
+        @PathVariable int chessGameId,
+        RedirectAttributes redirectAttributes) {
+        try {
+            chessService.delete(password, chessGameId);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addAttribute("error", e.getMessage());
+        }
         return "redirect:/";
     }
 
@@ -51,7 +60,10 @@ public class SpringController {
         @RequestParam(value = "error", required = false) String error,
         Model model) {
         List<String> chessBoard = chessService.findChessBoardById(chessGameId);
+        List<PieceDto> pieceDtos = chessService.getPieces(chessGameId);
+
         model.addAttribute("chessboard", chessBoard);
+        model.addAttribute("pieces", pieceDtos);
         model.addAttribute("chessGameId", chessGameId);
         model.addAttribute("error", error);
 
@@ -82,10 +94,12 @@ public class SpringController {
     public String end(@PathVariable int chessGameId, Model model) {
         String winTeamName = chessService.finish(Command.from("end"), chessGameId);
         List<String> chessBoard = chessService.getCurrentChessBoard(chessGameId);
+        List<PieceDto> pieceDtos = chessService.getPieces(chessGameId);
 
         model.addAttribute("winTeam", winTeamName);
         model.addAttribute("chessboard", chessBoard);
         model.addAttribute("chessGameId", chessGameId);
+        model.addAttribute("pieces", pieceDtos);
 
         return "chess";
     }
@@ -94,11 +108,13 @@ public class SpringController {
     public String status(@PathVariable int chessGameId, Model model) {
         Map<Team, Double> score = chessService.getScore(chessGameId);
         List<String> chessBoard = chessService.getCurrentChessBoard(chessGameId);
+        List<PieceDto> pieceDtos = chessService.getPieces(chessGameId);
 
         model.addAttribute("blackScore", score.get(Team.BLACK));
         model.addAttribute("whiteScore", score.get(Team.WHITE));
         model.addAttribute("chessboard", chessBoard);
         model.addAttribute("chessGameId", chessGameId);
+        model.addAttribute("pieces", pieceDtos);
 
         return "chess";
     }

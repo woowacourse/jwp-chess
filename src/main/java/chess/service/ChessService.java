@@ -9,8 +9,11 @@ import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.Command;
+import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
+import chess.domain.position.Position;
 import chess.dto.ChessGameDto;
+import chess.dto.PieceDto;
 
 @Service
 public class ChessService {
@@ -28,7 +31,11 @@ public class ChessService {
     }
 
     public void delete(String password, int chessGameId) {
-        chessGameDao.delete(password, chessGameId);
+        if (isEnd(chessGameId)) {
+            chessGameDao.delete(password, chessGameId);
+            return;
+        }
+        throw new IllegalArgumentException("게임이 진행중 입니다.");
     }
 
     public int save(String gameName, String password) {
@@ -82,5 +89,11 @@ public class ChessService {
     public boolean isEnd(int chessGameId) {
         ChessGame chessGame = chessGameDao.findById(chessGameId);
         return chessGame.isEnd();
+    }
+
+    public List<PieceDto> getPieces(int chessGameId) {
+        ChessGame chessGame = chessGameDao.findById(chessGameId);
+        Map<Position, Piece> cells = chessGame.getCells();
+        return PieceDto.getOnBoard(cells);
     }
 }

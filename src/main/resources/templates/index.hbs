@@ -30,4 +30,10 @@
         </form>
     </div>
     {{/rooms}}
+
+	{{#if error}}
+		<script type="text/javascript">
+			alert("{{error}}")
+		</script>
+	{{/if}}
 </body>

@@ -1,6 +1,9 @@
 package chess.domain.position;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public enum Rank {
     ONE(1),
@@ -47,5 +50,11 @@ public enum Rank {
 
     public int getRank() {
         return rank;
+    }
+
+    public static List<Rank> reverseValues() {
+        return Arrays.stream(Rank.values())
+            .sorted(Comparator.reverseOrder())
+            .collect(Collectors.toList());
     }
 }

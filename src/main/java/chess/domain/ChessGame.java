@@ -2,6 +2,7 @@ package chess.domain;
 
 import static chess.domain.piece.Team.*;
 import static java.util.Arrays.*;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.*;
 
 import java.util.Collections;
@@ -152,5 +153,9 @@ public class ChessGame {
 
     public String getGameName() {
         return this.gameName;
+    }
+
+    public Map<Position, Piece> getCells() {
+        return unmodifiableMap(chessBoard.getCells());
     }
 }

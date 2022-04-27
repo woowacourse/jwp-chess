@@ -9,7 +9,7 @@ import chess.service.ChessService;
 public class ReadyController {
     private final ChessService chessService;
 
-    public ReadyController(final ChessService chessService) {
+    public ReadyController(ChessService chessService) {
         this.chessService = chessService;
     }
 

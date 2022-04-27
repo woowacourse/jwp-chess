@@ -3,7 +3,8 @@ package chess.domain;
 public enum Color {
 
     BLACK("검은말"),
-    WHITE("흰말");
+    WHITE("흰말"),
+    NONE("");
 
     private final String text;
 

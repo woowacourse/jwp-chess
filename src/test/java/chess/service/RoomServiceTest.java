@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 
 import chess.configuration.RepositoryConfiguration;
 import chess.exception.UserInputException;
+import chess.repository.RoomRepository;
 import chess.web.dto.RoomDto;
 
 @SpringBootTest
@@ -21,14 +22,16 @@ class RoomServiceTest {
 
 	@Autowired
 	private RoomService roomService;
+	@Autowired
+	private RoomRepository roomRepository;
 
 	private final String testName = "summer";
 	private final String password = "summer";
 
 	@AfterEach
 	void deleteCreated() {
-		roomService.findAll()
-			.forEach(room -> roomService.delete((int) room.getId(), password));
+		roomRepository.findAll()
+			.forEach(room -> roomRepository.deleteById((int) room.getId()));
 	}
 
 	@Test
@@ -72,7 +75,7 @@ class RoomServiceTest {
 
 	@Test
 	@DisplayName("id와 비밀번호가 맞지 않으면 삭제하지 못한다.")
-	void removeException() {
+	void removeExceptionPassword() {
 		RoomDto room = roomService.create(new RoomDto(testName, password));
 
 		assertThatThrownBy(() -> roomService.delete((int)room.getId(), "1234"))

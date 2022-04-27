@@ -107,22 +107,26 @@ async function initPieces(pieces) {
 }
 
 function toggleState(state) {
-    turn = state.turn;
+    console.log(state);
+    let turn = state.turn;
     let whiteIcon = document.getElementById('white-icon');
     let blackIcon = document.getElementById('black-icon');
 
-    if (turn === 'white') {
+    if (turn === 'WHITE') {
         whiteIcon.className = 'room-icon on';
         blackIcon.className = 'room-icon off';
-    } else {
+    }
+
+    if (turn === 'BLACK') {
         whiteIcon.className = 'room-icon off';
         blackIcon.className = 'room-icon on';
     }
 
     document.getElementById('white-message').innerHTML = '';
     document.getElementById('black-message').innerHTML = '';
-    end = state.end;
-    if (end === 'true') {
+
+    let end = state.end;
+    if (end === 'end') {
         disableLoadGame();
         return;
     }
@@ -130,7 +134,7 @@ function toggleState(state) {
 }
 
 function showErrorMessage(message) {
-    if (turn === 'white') {
+    if (turn === 'WHITE') {
         document.getElementById('white-message').innerHTML = message;
         return;
     }
@@ -146,7 +150,7 @@ function updateResult(result) {
 }
 
 function checkEnd(state) {
-    if (state.end === 'true') {
+    if (state.end === 'end') {
         fetchFinalResult();
     }
 }

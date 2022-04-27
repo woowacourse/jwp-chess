@@ -1,7 +1,7 @@
 package chess.repository;
 
 import chess.domain.Color;
-import chess.web.dto.GameStateDto;
+import chess.domain.GameState;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -27,8 +27,8 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public int save(int roomId, GameStateDto gameStateDto) {
-        return insertActor.executeAndReturnKey(Map.of("room_id", roomId, "turn", gameStateDto.getTurn()))
+    public int save(int roomId, GameState gameState) {
+        return insertActor.executeAndReturnKey(Map.of("room_id", roomId, "turn", gameState.getTurn()))
             .intValue();
     }
 
@@ -50,9 +50,9 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public void updateTurn(int boardId, GameStateDto gameStateDto) {
+    public void updateTurn(int boardId, GameState gameState) {
         String sql = "update board set turn = :turn where id = :boardId";
-        jdbcTemplate.update(sql, Map.of("turn", gameStateDto.getTurn(), "boardId", boardId));
+        jdbcTemplate.update(sql, Map.of("turn", gameState.getTurn(), "boardId", boardId));
     }
 
     @Override

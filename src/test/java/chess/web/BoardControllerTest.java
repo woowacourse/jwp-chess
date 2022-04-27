@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 import chess.configuration.RepositoryConfiguration;
+import chess.configuration.ServiceConfiguration;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.CommendDto;
@@ -20,7 +21,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(RepositoryConfiguration.class)
+@Import({RepositoryConfiguration.class, ServiceConfiguration.class})
 class BoardControllerTest {
 
 	private static final String testName = "summer";

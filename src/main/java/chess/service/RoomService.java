@@ -1,14 +1,14 @@
 package chess.service;
 
-import chess.exception.UserInputException;
-import chess.repository.RoomRepository;
-import chess.web.dto.RoomDto;
-
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import chess.exception.UserInputException;
+import chess.repository.RoomRepository;
+import chess.web.dto.RoomDto;
 
 @Service
 @Transactional(readOnly = true)
@@ -18,9 +18,11 @@ public class RoomService {
 	private static final int NAME_MAX_SIZE = 16;
 	private static final String NOT_EXIST_ROOM = "유효하지 않은 체스방 주소입니다.";
 
+	private final GameService gameService;
 	private final RoomRepository roomRepository;
 
-	public RoomService(RoomRepository roomRepository) {
+	public RoomService(GameService gameService, RoomRepository roomRepository) {
+		this.gameService = gameService;
 		this.roomRepository = roomRepository;
 	}
 
@@ -65,12 +67,15 @@ public class RoomService {
 	}
 
 	@Transactional
-	public void delete(int id, String password) {
+	public void delete(int roomId, String password) {
 		validatePassword(password);
-		if (!getPassword(id).equals(password)) {
+		if (!getPassword(roomId).equals(password)) {
 			throw new UserInputException("유효하지 않은 비밀번호입니다.");
 		}
-		roomRepository.deleteById(id);
+		if (!gameService.isEnd(roomId)) {
+			throw new UserInputException("게임이 끝나지 않아 삭제할 수 없습니다.");
+		}
+		roomRepository.deleteById(roomId);
 	}
 
 	private String getPassword(int id) {

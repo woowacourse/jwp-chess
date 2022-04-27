@@ -1,16 +1,16 @@
 package chess.repository;
 
 import chess.domain.Color;
-import chess.web.dto.GameStateDto;
+import chess.domain.GameState;
 
 public interface BoardRepository {
-    int save(int roomId, GameStateDto gameStateDto);
+    int save(int roomId, GameState gameState);
 
     Color getTurn(int boardId);
 
     int getBoardIdByRoom(int roomId);
 
-    void updateTurn(int boardId, GameStateDto gameStateDto);
+    void updateTurn(int boardId, GameState gameState);
 
     void deleteByRoom(int roomId);
 }

@@ -22,7 +22,8 @@
     </form>
     <span id="error-message"></span>
 
-    <br><button onclick="fetchRoomNames()">방 목록</button>
+    <br>
+    <button onclick="fetchRoomNames()">방 목록</button>
     <div id="roomNames" class="room-names"></div>
 </div>
 </body>
@@ -79,16 +80,19 @@
                 },
                 body: 'password=' + password
             })
-                .then(res =>{
-                    let errorMessage = document.getElementById('error-message');
-                    errorMessage.innerHTML = "";
+                .then(res => {
+                        let errorMessage = document.getElementById('error-message');
+                        errorMessage.innerHTML = "";
 
-                    if (res.status === 400) {
-                        errorMessage.innerHTML = '비밀번호가 일치하지 않습니다.';
+                        if (!res.ok) {
+                            res.json().then(function (err) {
+                                    errorMessage.innerHTML = err.message;
+                                }
+                            );
+                        }
+                        fetchRoomNames();
                     }
-
-                    fetchRoomNames();
-                })
+                )
         }
     }
 </script>

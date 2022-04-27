@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
 import chess.configuration.RepositoryConfiguration;
+import chess.exception.UserInputException;
+import chess.repository.RoomRepository;
 import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
 import chess.web.dto.PieceDto;
@@ -29,16 +31,18 @@ class GameServiceTest {
 	private RoomService roomService;
 	@Autowired
 	private GameService gameService;
+	@Autowired
+	private RoomRepository roomRepository;
 	private int roomId;
 
 	@BeforeEach
 	void init() {
-		roomId = (int) roomService.create(new RoomDto(testName, testPassword)).getId();
+		roomId = roomRepository.save(new RoomDto(testName, testPassword));
 	}
 
 	@AfterEach
 	void clear() {
-		roomService.delete(roomId, testPassword);
+		roomRepository.deleteById(roomId);
 	}
 
 	@Test
@@ -59,5 +63,14 @@ class GameServiceTest {
 			.filter(piece -> piece.getPosition().equals("h3"))
 			.findAny();
 		assertThat(findPiece).isPresent();
+	}
+
+	@Test
+	@DisplayName("종료되지 않은 게임의 방은 삭제하지 못한다.")
+	void removeExceptionNotEnd() {
+		gameService.startNewGame(roomId);
+
+		assertThatThrownBy(() -> roomService.delete(roomId, testPassword))
+			.isInstanceOf(UserInputException.class);
 	}
 }

@@ -17,7 +17,7 @@ import chess.repository.BoardRepository;
 import chess.repository.PieceRepository;
 import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
-import chess.web.dto.GameStateDto;
+import chess.domain.GameState;
 import chess.web.dto.PieceDto;
 import chess.web.dto.ResultDto;
 
@@ -39,7 +39,7 @@ public class GameService {
 
 		boardRepository.deleteByRoom(roomId);
 
-		int boardId = boardRepository.save(roomId, GameStateDto.from(board));
+		int boardId = boardRepository.save(roomId, GameState.from(board));
 		pieceRepository.saveAll(boardId, board.getPieces());
 		return gameStateAndPieces(boardId);
 	}
@@ -55,7 +55,7 @@ public class GameService {
 			.orElseThrow(() -> new IllegalChessRuleException("피스가 존재하지 않습니다."));
 		pieceRepository.deleteOne(boardId, source);
 		updateMovedPieceToTarget(boardId, target, pieceDto);
-		boardRepository.updateTurn(boardId, GameStateDto.from(board));
+		boardRepository.updateTurn(boardId, GameState.from(board));
 	}
 
 	private void updateMovedPieceToTarget(int boardId, String target, PieceDto pickedPieceDto) {
@@ -83,6 +83,11 @@ public class GameService {
 		int whiteScore = (int) board.calculateScore(Color.WHITE);
 		int blackScore = (int) board.calculateScore(Color.BLACK);
 		return new ResultDto(whiteScore, blackScore, board.gameResult());
+	}
+
+	public boolean isEnd(int roomId) {
+		int boardId = boardRepository.getBoardIdByRoom(roomId);
+		return loadBoard(boardId).isEnd();
 	}
 
 	private Board loadBoard(int boardId) {

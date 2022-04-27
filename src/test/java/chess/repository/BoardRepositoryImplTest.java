@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
-import chess.web.dto.GameStateDto;
+import chess.domain.GameState;
 import chess.web.dto.RoomDto;
 
 import javax.sql.DataSource;
@@ -39,7 +39,7 @@ public class BoardRepositoryImplTest {
     @Test
     void save() {
         Board board = new Board(new RegularRuleSetup());
-        int id = boardRepository.save(roomId, GameStateDto.from(board));
+        int id = boardRepository.save(roomId, GameState.from(board));
         assertThat(id).isGreaterThan(0);
     }
 
@@ -47,7 +47,7 @@ public class BoardRepositoryImplTest {
     @DisplayName("boardIdfh 차례를 조회한다.")
     void getTurn() {
         Board board = new Board(new RegularRuleSetup());
-        int boardId = boardRepository.save(roomId, GameStateDto.from(board));
+        int boardId = boardRepository.save(roomId, GameState.from(board));
         Color findTurn = boardRepository.getTurn(boardId);
         assertThat(findTurn).isEqualTo(board.getTurn());
     }
@@ -56,7 +56,7 @@ public class BoardRepositoryImplTest {
     @DisplayName("roomId로 board 조회")
     void getBoardByRoomId() {
         Board board = new Board(new RegularRuleSetup());
-        int boardId = boardRepository.save(roomId, GameStateDto.from(board));
+        int boardId = boardRepository.save(roomId, GameState.from(board));
         int findBoardId = boardRepository.getBoardIdByRoom(roomId);
         assertThat(boardId).isEqualTo(findBoardId);
     }
@@ -72,9 +72,9 @@ public class BoardRepositoryImplTest {
     @DisplayName("새로운 turn을 업데이트")
     void updateTurn() {
         Board board = new Board(new RegularRuleSetup());
-        int boardId = boardRepository.save(roomId, GameStateDto.from(board));
+        int boardId = boardRepository.save(roomId, GameState.from(board));
         board.loadTurn(Color.BLACK);
-        boardRepository.updateTurn(boardId, GameStateDto.from(board));
+        boardRepository.updateTurn(boardId, GameState.from(board));
         assertThat(board.getTurn()).isEqualTo(boardRepository.getTurn(boardId));
     }
 
@@ -82,7 +82,7 @@ public class BoardRepositoryImplTest {
     @DisplayName("roomId로 체스판을 삭제한다.")
     void deleteByRoomId() {
         Board board = new Board(new RegularRuleSetup());
-        boardRepository.save(roomId, GameStateDto.from(board));
+        boardRepository.save(roomId, GameState.from(board));
         boardRepository.deleteByRoom(roomId);
 
         assertThatThrownBy(() -> boardRepository.getBoardIdByRoom(roomId))

@@ -11,12 +11,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 import chess.configuration.RepositoryConfiguration;
+import chess.configuration.ServiceConfiguration;
+import chess.repository.BoardRepository;
+import chess.repository.PieceRepository;
+import chess.repository.RoomRepository;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.RoomDto;
@@ -24,7 +30,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(RepositoryConfiguration.class)
+@Import({RepositoryConfiguration.class, ServiceConfiguration.class})
 class RoomControllerTest {
 
     private static final String testName = "summer";
@@ -40,6 +46,8 @@ class RoomControllerTest {
     private RoomService roomService;
     @Autowired
     private GameService gameService;
+    @Autowired
+    private RoomRepository roomRepository;
 
     @BeforeEach
     void setUp() {
@@ -48,8 +56,8 @@ class RoomControllerTest {
 
     @AfterEach
     void deleteCreated() {
-        roomService.findAll()
-            .forEach(room -> roomService.delete((int) room.getId(), password));
+        roomRepository.findAll()
+            .forEach(room -> roomRepository.deleteById((int) room.getId()));
     }
 
     @DisplayName("유효한 이름을 받으면 게임방 입장")

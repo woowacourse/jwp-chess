@@ -8,7 +8,7 @@ import chess.domain.board.RegularRuleSetup;
 import chess.domain.piece.Piece;
 import chess.domain.piece.role.Pawn;
 import chess.domain.position.Position;
-import chess.web.dto.GameStateDto;
+import chess.domain.GameState;
 import chess.web.dto.PieceDto;
 import chess.web.dto.RoomDto;
 
@@ -43,7 +43,7 @@ class PieceRepositoryImplTest {
         BoardRepository boardRepository = new BoardRepositoryImpl(dataSource, jdbcTemplate);
         RoomRepository roomRepository = new RoomRepositoryImpl(dataSource, jdbcTemplate);
         roomId = roomRepository.save(new RoomDto("summer", "summer"));
-        boardId = boardRepository.save(roomId, GameStateDto.from(board));
+        boardId = boardRepository.save(roomId, GameState.from(board));
 
         pieceRepository = new PieceRepositoryImpl(dataSource, jdbcTemplate);
     }

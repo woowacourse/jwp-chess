@@ -31,7 +31,6 @@ public class ChessGameService {
 
     public void createGame(LogInDto logInDto) {
         validateUniqueId(logInDto);
-        validateLogIn(logInDto);
         initGame(logInDto);
     }
 

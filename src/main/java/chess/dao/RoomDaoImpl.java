@@ -67,8 +67,8 @@ public class RoomDaoImpl implements RoomDao {
     @Override
     public String findPasswordById(final int roomId) {
         try {
-            final String sql = "SELECT password FROM room WHERE room_id = ?";
-            return jdbcTemplate.queryForObject(sql, String.class, roomId);
+            final String sql = "SELECT password FROM room WHERE room_id = ? AND is_delete = ?";
+            return jdbcTemplate.queryForObject(sql, String.class, roomId, false);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("방 아이디에 해당하는 비밀번호가 존재하지 않습니다.");
         }
@@ -77,13 +77,13 @@ public class RoomDaoImpl implements RoomDao {
     @Override
     public CurrentTurnDto findCurrentTurnById(final int roomId) {
         try {
-            final String sql = "SELECT name, current_turn FROM room WHERE room_id = ?";
+            final String sql = "SELECT name, current_turn FROM room WHERE room_id = ? AND is_delete = ?";
             return jdbcTemplate.queryForObject(
                     sql,
                     (resultSet, rowNum) -> CurrentTurnDto.of(
                             resultSet.getString("name"),
                             Color.from(resultSet.getString("current_turn"))),
-                    roomId
+                    roomId, false
             );
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("방 아이디에 해당하는 턴 정보가 존재하지 않습니다.");
@@ -93,13 +93,13 @@ public class RoomDaoImpl implements RoomDao {
     @Override
     public RoomStatusDto findStatusById(final int roomId) {
         try {
-            final String sql = "SELECT name, game_status FROM room WHERE room_id = ?";
+            final String sql = "SELECT name, game_status FROM room WHERE room_id = ? AND is_delete = ?";
             return jdbcTemplate.queryForObject(
                     sql,
                     (resultSet, rowNum) -> RoomStatusDto.of(
                             resultSet.getString("name"),
                             resultSet.getString("game_status")),
-                    roomId
+                    roomId, false
             );
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("방 아이디에 해당하는 게임 상태가 존재하지 않습니다.");

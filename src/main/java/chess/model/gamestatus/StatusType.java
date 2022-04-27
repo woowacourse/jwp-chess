@@ -5,13 +5,16 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 public enum StatusType {
-    READY(board -> new Ready()),
-    PLAYING(Playing::new),
-    END(End::new);
+    READY(Ready.class, board -> new Ready()),
+    PLAYING(Playing.class, Playing::new),
+    END(End.class, End::new);
 
+    private final Class<? extends Status> statusClass;
     private final Function<Board, Status> statusFunction;
 
-    StatusType(Function<Board, Status> statusFunction) {
+    StatusType(final Class<? extends Status> statusClass,
+               final Function<Board, Status> statusFunction) {
+        this.statusClass = statusClass;
         this.statusFunction = statusFunction;
     }
 
@@ -25,12 +28,16 @@ public enum StatusType {
 
     public static StatusType findByStatus(final Status status) {
         return Arrays.stream(values())
-                .filter(type -> type.hasSameName(status.getClass().getSimpleName()))
+                .filter(type -> type.isMatched(status.getClass()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("맞는 상태 타입을 찾지 못했습니다."));
     }
 
     private boolean hasSameName(final String compareName) {
         return this.name().equals(compareName.toUpperCase());
+    }
+
+    private boolean isMatched(final Class<? extends Status> compareClass) {
+        return this.statusClass.isAssignableFrom(compareClass);
     }
 }

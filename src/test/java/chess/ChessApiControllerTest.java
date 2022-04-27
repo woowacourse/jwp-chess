@@ -53,7 +53,7 @@ class ChessApiControllerTest {
     @Test
     void start() {
         RestAssured.given().log().all()
-                .when().get("/start?name=roma")
+                .when().get("/start?roomId=1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -63,10 +63,10 @@ class ChessApiControllerTest {
 
     @Test
     void load() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.get("/start?roomId=1");
 
         RestAssured.given().log().all()
-                .when().get("/load?name=roma")
+                .when().get("/load?roomId=1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -76,13 +76,13 @@ class ChessApiControllerTest {
 
     @Test
     void move() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.get("/start?roomId=1");
         MoveDto moveDto = new MoveDto("a2", "a4");
 
         RestAssured.given().log().all()
                 .body(moveDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/move?name=roma")
+                .when().post("/move?roomId=1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -93,10 +93,10 @@ class ChessApiControllerTest {
 
     @Test
     void status() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.get("/start?roomId=1");
 
         RestAssured.given().log().all()
-                .when().get("/status?name=roma")
+                .when().get("/status?roomId=1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -106,13 +106,13 @@ class ChessApiControllerTest {
 
     @Test
     void moveExceptionWrongPosition() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.get("/start?roomId=1");
         MoveDto moveDto = new MoveDto("a2", "a5");
 
         RestAssured.given().log().all()
                 .body(moveDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/move?name=roma")
+                .when().post("/move?roomId=1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -121,13 +121,13 @@ class ChessApiControllerTest {
 
     @Test
     void moveExceptionWrongTurn() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.get("/start?roomId=1");
         MoveDto moveDto = new MoveDto("a7", "a6");
 
         RestAssured.given().log().all()
                 .body(moveDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/move?name=roma")
+                .when().post("/move?roomId=1")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -136,14 +136,14 @@ class ChessApiControllerTest {
 
     @Test
     void loadExceptionBeforeInit() {
-        RestAssured.get("/room?name=sojukang");
+        JdbcFixture.insertRoom(jdbcTemplate, "roma2", "1234", "white");
 
         RestAssured.given().log().all()
-                .when().get("/load?name=sojukang")
+                .when().get("/load?roomId=2")
                 .then().log().all()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("error", is("Internal Server Error"));
+                .body("message", is("해당 ID에 체스게임이 초기화되지 않았습니다."));
     }
 
     @Test
@@ -157,5 +157,14 @@ class ChessApiControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("size()", is(3));
+    }
+
+    @Test
+    void end() {
+        RestAssured.given().log().all()
+                .when().get("/end?roomId=1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("message", is("게임 종료상태로 변경했습니다."));
     }
 }

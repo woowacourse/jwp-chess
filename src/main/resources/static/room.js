@@ -1,18 +1,11 @@
 let from = "";
 let turn = "";
 let isStart = false;
-let roomName = getParameterByName("name");
-
-function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    const regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
+const roomId = window.location.pathname.split("/")[2];
 
 async function start() {
     let pieces;
-    await fetch("/start?name=" + roomName)
+    await fetch("/start?roomId=" + roomId)
         .then(res => res.json())
         .then(data => pieces = data)
     turn = pieces.turn;
@@ -23,7 +16,7 @@ async function start() {
 
 async function load() {
     let pieces;
-    let response = await fetch("/load?name=" + roomName);
+    let response = await fetch("/load?roomId=" + roomId);
 
     if (response.status === 400) {
         const errorMessage = await response.json();
@@ -48,10 +41,17 @@ async function load() {
     printPieces(pieces.board);
     isStart = true;
     printStatus();
-
 }
 
-function end() {
+async function end() {
+    let response = await fetch("/end?roomId=" + roomId);
+
+    if (response.status === 400) {
+        const errorMessage = await response.json();
+        alert("[ERROR] " + errorMessage.message);
+        return;
+    }
+
     let whiteSquares = document.getElementsByClassName("white-square");
     let blackSquares = document.getElementsByClassName("black-square");
     for (let square of whiteSquares) {
@@ -71,7 +71,7 @@ function end() {
 
 async function printStatus() {
     let stat;
-    await fetch("/status?name=" + roomName)
+    await fetch("/status?roomId=" + roomId)
         .then(res => res.json())
         .then(data => stat = data)
     let status = document.getElementById("chess-status");
@@ -133,7 +133,7 @@ async function selectPiece(pieceDiv) {
 
 async function move(fromPosition, toPosition) {
     from = "";
-    let response = await fetch("/move?name=" + roomName, {
+    let response = await fetch("/move?roomId=" + roomId, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -163,5 +163,11 @@ async function move(fromPosition, toPosition) {
             "새 게임 혹은 그만하기를 눌러주세요.";
         turnStatus.innerText = "";
 
+        let response = await fetch("/end?roomId=" + roomId);
+
+        if (response.status === 400) {
+            const errorMessage = await response.json();
+            alert("[ERROR] " + errorMessage.message);
+        }
     }
 }

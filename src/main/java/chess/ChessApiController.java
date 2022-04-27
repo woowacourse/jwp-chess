@@ -2,11 +2,12 @@ package chess;
 
 import chess.domain.Status;
 import chess.dto.BoardDto;
-import chess.dto.ExceptionResponseDto;
+import chess.dto.MessageDto;
 import chess.dto.MoveDto;
 import chess.dto.RoomCreationDto;
 import chess.dto.RoomDto;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,30 +41,36 @@ public class ChessApiController {
     }
 
     @GetMapping("/start")
-    public BoardDto start(@RequestParam String name) {
-        return chessService.startNewGame(name);
+    public BoardDto start(@RequestParam long roomId) {
+        return chessService.startNewGame(roomId);
+    }
+
+    @GetMapping("/end")
+    public MessageDto end(@RequestParam long roomId) {
+        chessService.end(roomId);
+        return new MessageDto("게임 종료상태로 변경했습니다.");
     }
 
     @GetMapping("/load")
-    public BoardDto load(@RequestParam String name) {
-        return chessService.load(name);
+    public BoardDto load(@RequestParam long roomId) {
+        return chessService.load(roomId);
     }
 
     @PostMapping("/move")
-    public BoardDto move(@RequestParam String name,
+    public BoardDto move(@RequestParam long roomId,
                          @RequestBody MoveDto moveDto) {
-        return chessService.move(name, moveDto);
+        return chessService.move(roomId, moveDto);
     }
 
     @GetMapping("/status")
-    public Status status(@RequestParam String name) {
-        return chessService.status(name);
+    public Status status(@RequestParam long roomId) {
+        return chessService.status(roomId);
     }
 
     @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class,
-            DataIntegrityViolationException.class, RuntimeException.class})
-    public ResponseEntity<ExceptionResponseDto> handle(RuntimeException exception) {
+            DataIntegrityViolationException.class, NoSuchElementException.class})
+    public ResponseEntity<MessageDto> handle(RuntimeException exception) {
         return ResponseEntity.badRequest()
-                .body(new ExceptionResponseDto(exception.getMessage()));
+                .body(new MessageDto(exception.getMessage()));
     }
 }

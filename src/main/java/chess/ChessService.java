@@ -36,8 +36,8 @@ public class ChessService {
         this.squareDao = squareDao;
     }
 
-    public BoardDto startNewGame(String roomName) {
-        Room room = roomDao.findByName(roomName)
+    public BoardDto startNewGame(long roomId) {
+        Room room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
 
         WebChessGame webChessGame = new WebChessGame();
@@ -50,16 +50,23 @@ public class ChessService {
         return BoardDto.of(board, webChessGame.getTurn());
     }
 
-    public BoardDto load(String roomName) {
-        Room room = roomDao.findByName(roomName)
+    public void end(long roomId) {
+        Room room = roomDao.findById(roomId)
+                .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
+        roomDao.updateTurn(room.getId(), "empty");
+        squareDao.removeAll(roomId);
+    }
+
+    public BoardDto load(long roomId) {
+        Room room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
 
         return BoardDto.of(chessBoard.getPieces(), room.getTurn());
     }
 
-    public BoardDto move(String roomName, MoveDto moveDto) {
-        Room room = roomDao.findByName(roomName)
+    public BoardDto move(long roomId, MoveDto moveDto) {
+        Room room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         WebChessGame webChessGame = WebChessGame.of(loadChessBoard(room.getId()), room.getTurn());
         webChessGame.move(moveDto.getFrom(), moveDto.getTo());
@@ -97,8 +104,8 @@ public class ChessService {
         return new ChessBoard(() -> board);
     }
 
-    public Status status(String roomName) {
-        Room room = roomDao.findByName(roomName)
+    public Status status(long roomId) {
+        Room room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
         WebChessGame webChessGame = WebChessGame.of(chessBoard, room.getTurn());

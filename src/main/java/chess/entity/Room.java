@@ -8,19 +8,21 @@ public class Room {
     private final String password;
 
     public Room(long id, String turn, String name, String password) {
+        validateEmpty(name);
         this.id = id;
         this.turn = turn;
         this.name = name;
         this.password = password;
     }
 
-    public Room(String name, String password) {
+    private void validateEmpty(String name) {
         if (name.isBlank()) {
             throw new IllegalArgumentException("방 제목은 빈 문자열일 수 없습니다.");
         }
-        this.name = name;
-        this.password = password;
-        this.turn = "empty";
+    }
+
+    public Room(String name, String password) {
+        this(0L, "empty", name, password);
     }
 
     public long getId() {

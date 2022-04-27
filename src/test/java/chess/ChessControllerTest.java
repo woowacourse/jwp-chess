@@ -45,7 +45,7 @@ class ChessControllerTest {
     @Test
     void room() {
         RestAssured.given().log().all()
-                .when().get("/room?name=roma")
+                .when().get("/rooms/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.TEXT_HTML_VALUE);

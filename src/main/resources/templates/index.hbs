@@ -11,7 +11,8 @@
     <div>
         <p class="info">🕹 새 게임 만들기</p>
         <form action="/game" method="post">
-            <input type="text" name="name"/>
+            <input type="text" name="name" placeholder="game name please"/>
+            <input type="text" name="password" placeholder="password please"/>
             <input type="submit" value="생성">
         </form>
     </div>
@@ -20,6 +21,7 @@
         {{#chess_games}}
         <form action="delete/{{id}}" method="post">
             <a class="name" href="/games/{{id}}">{{name}}</a>
+            <input type="text" name="password" placeholder="password">
             <input type="submit" value="삭제">
         </form>
         <br/>

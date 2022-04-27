@@ -19,7 +19,6 @@ public class ResultTest {
     void setUp() {
         board = BoardFactory.createInitChessBoard();
         chessGame = new ChessGame(
-                "ChessGame",
                 board,
                 new GameSwitch(true),
                 new Turn(Team.WHITE)

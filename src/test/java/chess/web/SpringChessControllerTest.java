@@ -58,9 +58,7 @@ class SpringChessControllerTest {
     @DisplayName("부적절한 이름이 입력되면 400 에러 발생")
     @ParameterizedTest
     @ValueSource(strings = {"", "16자를넘는방이름은안되니까돌아가"})
-    void nameException() {
-        final String name = "";
-
+    void nameException(String name) {
         RestAssured.given().log().all()
                 .formParam("name", name)
                 .when().post("/rooms")

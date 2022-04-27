@@ -41,6 +41,22 @@ public class JdbcGameDaoTest {
     }
 
     @Test
+    @DisplayName("게임 데이터 삭제")
+    void remove() {
+        // given
+        Game game = new Game("라라라", "1234", "white", "playing");
+        long id = jdbcGameDao.save(game);
+
+        // when
+        Game deleteGame = new Game(id, "1234");
+        jdbcGameDao.remove(deleteGame);
+
+        // then
+        assertThatThrownBy(() -> jdbcGameDao.find(id, "1234"))
+                .isInstanceOfAny(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("게임 데이터 저장")
     void find() {
         // given

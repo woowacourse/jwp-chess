@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.entity.Game;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -35,6 +36,15 @@ public class JdbcGameDao {
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
+    }
+
+    public void remove(Game game) {
+        final String sql = "delete from game where id = ? and password = ?";
+        try {
+            jdbcTemplate.update(sql, game.getId(), game.getPassword());
+        } catch (DataAccessException e) {
+            throw new IllegalArgumentException("게임을 삭제할 수 없습니다.");
+        }
     }
 
     public Game find(long id, String password) {

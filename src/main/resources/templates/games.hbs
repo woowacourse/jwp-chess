@@ -25,11 +25,7 @@
     <ul>
         {{#games}}
         <li class="game_link_box">
-            <form action="/game/{{id}}" method="post" id="{{id}}" class="enter-form">
-                <div class="game_name">{{name}}</div>
-                <input type="password" min="1" class="password_input" name="password" placeholder="비밀번호"/>
-                <input type="submit" value="참여!"/>
-            </form>
+            <a href="/game/{{id}}">{{name}}</a>
         </li>
         {{/games}}
     </ul>
@@ -38,6 +34,5 @@
     <a href="/">뒤로가기!</a>
 </section>
 <script src="/scripts/search-game.js"></script>
-<script src="/scripts/enter-game.js"></script>
 </body>
 </html>

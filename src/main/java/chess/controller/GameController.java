@@ -5,7 +5,6 @@ import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
 import chess.dto.response.SearchResultDto;
 import chess.service.ChessService;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,25 +38,13 @@ public class GameController {
     }
 
     @PostMapping
-    public int createGame(EncryptedAuthCredentials authCredentials
-                          /*, HttpServletResponse response*/) {
+    public int createGame(EncryptedAuthCredentials authCredentials) {
         return chessService.initGame(authCredentials);
-        // TODO: 추가 미션 요구사항 관련.
-        // response.addCookie(CookieUtils.generate(gameId, Color.WHITE));
     }
 
     @GetMapping("/{id}")
     public ModelAndView findAndRenderGame(@PathVariable int id) {
         return getGameModelAndView(id);
-    }
-
-    // TODO: 추가 미션 요구사항 관련.
-    @PostMapping("/{id}")
-    public void enterGame(@PathVariable int id,
-                          EncryptedAuthCredentials authCredentials,
-                          HttpServletResponse response) {
-        // TODO: create Opponent(BLACK) or validate Player(WHITE/BLACK) password
-        // response.addCookie(CookieUtils.generate(id, Color.BLACK));
     }
 
     @PutMapping("/{id}")

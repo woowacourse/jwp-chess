@@ -1,7 +1,9 @@
 package chess.dao;
 
 import chess.entity.ChessGameEntity;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -21,17 +23,17 @@ public class ChessGameDao {
     }
 
     public Number save(final ChessGameEntity chessGameEntity) {
-        String insertSql = "insert into chess_game (name, is_on, team_value_of_turn)"
-                + " values (:name, :isOn, :teamValueOfTurn)";
+        String insertSql = "insert into chess_game (name, password, is_on, team_value_of_turn)"
+                + " values (:name, :password, :isOn, :teamValueOfTurn)";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(insertSql, source, keyHolder);
         return keyHolder.getKey();
     }
 
-    public void delete(final long id) {
-        String deleteSql = "delete from chess_game where id=:id";
-        SqlParameterSource source = new MapSqlParameterSource("id", id);
+    public void delete(final ChessGameEntity chessGameEntity) {
+        String deleteSql = "delete from chess_game where id=:id and password=:password";
+        SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(deleteSql, source);
     }
 
@@ -51,8 +53,9 @@ public class ChessGameDao {
 
     private RowMapper<ChessGameEntity> getChessGameEntityRowMapper() {
         return (rs, rn) -> new ChessGameEntity(
-                rs.getLong(("id")),
+                rs.getLong("id"),
                 rs.getString("name"),
+                rs.getString("password"),
                 rs.getBoolean("is_on"),
                 rs.getString("team_value_of_turn")
         );

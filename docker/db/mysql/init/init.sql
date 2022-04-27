@@ -2,6 +2,7 @@ create table chess_game
 (
     id      int primary key auto_increment,
     name               varchar(20) not null unique,
+    password           varchar(20) not null,
     is_on              bool        not null,
     team_value_of_turn varchar(20) not null
 )

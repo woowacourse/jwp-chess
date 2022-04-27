@@ -1,12 +1,7 @@
 package chess.controller;
 
-import chess.domain.game.ChessGame;
-import chess.domain.piece.Piece;
+import chess.dto.ChessGameDto;
 import chess.service.ChessGameService;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,23 +24,13 @@ public class GameController {
 
     @GetMapping("/games/{chessGameId}")
     public String getChessGamePage(final Model model, final @PathVariable long chessGameId) {
-        ChessGame chessGame = chessGameService.loadChessGame(chessGameId);
-        Map<String, Piece> boardForHtml = convertBoardForHtml(chessGame);
-        model.addAllAttributes(boardForHtml);
-        model.addAttribute("id",chessGameId);
-        model.addAttribute("chess_game_name", chessGame.getName());
-        model.addAttribute("turn", chessGame.getTurn());
-        model.addAttribute("result", chessGame.generateResult());
+        ChessGameDto chessGameDto = chessGameService.loadChessGame(chessGameId);
+        model.addAllAttributes(chessGameDto.getBoardForHtml());
+        model.addAttribute("id", chessGameId);
+        model.addAttribute("chess_game_name", chessGameDto.getName());
+        model.addAttribute("turn", chessGameDto.getTurn());
+        model.addAttribute("result", chessGameDto.getResult());
         return "chess_game";
-    }
-
-    private Map<String, Piece> convertBoardForHtml(final ChessGame chessGame) {
-        return chessGame.getCurrentBoard().entrySet().stream()
-                .collect(Collectors.toMap(
-                        entry -> String.valueOf(entry.getKey().getColumn().getValue()) +
-                                entry.getKey().getRow().getValue(),
-                        Entry::getValue
-                ));
     }
 
     @PostMapping("/move/{chessGameId}")

@@ -29,14 +29,14 @@ public class HomeController {
     }
 
     @PostMapping("/game")
-    public RedirectView createChessGame(final @RequestParam String name) {
-        long chessGameId = chessGameService.createChessGame(name);
+    public RedirectView createChessGame(final @RequestParam String name, final @RequestParam String password) {
+        long chessGameId = chessGameService.createChessGame(name, password);
         return new RedirectView("/games/" + chessGameId);
     }
 
     @PostMapping("/delete/{chessGameId}")
-    public RedirectView deleteChessGame(final @PathVariable long chessGameId) {
-        chessGameService.deleteChessGame(chessGameId);
+    public RedirectView deleteChessGame(final @PathVariable long chessGameId, final @RequestParam String password) {
+        chessGameService.deleteChessGame(chessGameId, password);
         return new RedirectView("/");
     }
 }

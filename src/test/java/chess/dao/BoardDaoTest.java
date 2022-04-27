@@ -39,6 +39,7 @@ public class BoardDaoTest {
                 + "(\n"
                 + "    id      int primary key auto_increment,\n"
                 + "    name               varchar(20) not null unique,\n"
+                + "    password           varchar(20) not null,\n"
                 + "    is_on              bool        not null,\n"
                 + "    team_value_of_turn varchar(20) not null\n"
                 + ")");
@@ -53,13 +54,9 @@ public class BoardDaoTest {
                 + "    FOREIGN KEY (chess_game_id) REFERENCES chess_game(id)\n"
                 + ")");
 
-        savedId = chessGameDao.save(new ChessGameEntity(0, "juri", true, "BLACK")).longValue();
-        jdbcTemplate.execute(
-                "insert into board(chess_game_id, position_column_value, position_row_value, piece_name, piece_team_value)"
-                        + " values (" + savedId + ", 'a', 2, 'KING', 'BLACK')");
-        jdbcTemplate.execute(
-                "insert into board(chess_game_id, position_column_value, position_row_value, piece_name, piece_team_value)"
-                        + " values (" + savedId + ", 'b', 3, 'QUEEN', 'WHITE')");
+        savedId = chessGameDao.save(new ChessGameEntity(0, "juri", "juri", true, "BLACK")).longValue();
+        boardDao.save(List.of(new BoardEntity(savedId, "a", 2, "KING", "BLACK"),
+                new BoardEntity(savedId, "b", 3, "QUEEN", "WHITE")));
     }
 
     @Test
@@ -87,7 +84,7 @@ public class BoardDaoTest {
     }
 
     @Test
-    @DisplayName("id 로 board 를 조회한다.")
+    @DisplayName("chess_game_id 로 board 를 조회한다.")
     void load() {
         List<BoardEntity> boardEntities = boardDao.load(savedId);
 

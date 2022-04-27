@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class WebBoardDto {
-    private Turn turn;
+
     private Map<String, String> webBoard;
 
     public WebBoardDto(Map<String, String> webBoard) {

@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-class RoomDaoImplTest {
+class RoomDaoTest {
 
     @Autowired
     private RoomDao roomDao;
@@ -20,7 +20,7 @@ class RoomDaoImplTest {
 
     @BeforeEach
     void setUp() {
-        roomDao = new RoomDaoImpl(jdbcTemplate);
+        roomDao = new RoomDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS room");
         jdbcTemplate.execute("CREATE TABLE room("
                 + "id INT NOT NULL AUTO_INCREMENT,"

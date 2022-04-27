@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-class StateDaoImplTest {
+class StateDaoTest {
 
     @Autowired
     private StateDao stateDao;
@@ -24,7 +24,7 @@ class StateDaoImplTest {
 
     @BeforeEach
     void setUp() {
-        stateDao = new StateDaoImpl(jdbcTemplate);
+        stateDao = new StateDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS state");
         jdbcTemplate.execute("CREATE TABLE state("
                 + " `id` VARCHAR(2) NOT NULL, "

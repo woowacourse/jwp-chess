@@ -17,17 +17,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class SquareDaoImplTest {
+public class SquareDaoTest {
 
     @Autowired
-    private SquareDaoImpl squareDao;
+    private SquareDao squareDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        squareDao = new SquareDaoImpl(jdbcTemplate);
+        squareDao = new SquareDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS square");
         jdbcTemplate.execute("CREATE TABLE square("
                 + "id VARCHAR(2) NOT NULL, "

@@ -4,6 +4,7 @@ import chess.domain.event.MoveEvent;
 import chess.domain.event.MoveRoute;
 import chess.dto.CreateGameRequest;
 import chess.dto.CreateGameResponse;
+import chess.dto.DeleteGameRequest;
 import chess.dto.GameDto;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
@@ -38,11 +39,16 @@ public class GameController {
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping(value = "/{id}", params = {"source", "target"})
     public ModelAndView playGame(@PathVariable int id,
                                  @RequestBody MoveRoute moveRoute) {
         chessService.playGame(id, new MoveEvent(moveRoute));
         GameDto gameDto = chessService.findGame(id);
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
+    }
+
+    @PostMapping("/{id}")
+    public void delete(@RequestBody DeleteGameRequest deleteGameRequest) {
+        chessService.deleteGame(deleteGameRequest);
     }
 }

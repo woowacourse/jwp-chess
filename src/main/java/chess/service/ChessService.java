@@ -8,6 +8,7 @@ import chess.domain.game.Game;
 import chess.domain.game.NewGame;
 import chess.dto.CreateGameRequest;
 import chess.dto.CreateGameResponse;
+import chess.dto.DeleteGameRequest;
 import chess.dto.GameCountDto;
 import chess.dto.GameDto;
 import chess.dto.GameInfoDto;
@@ -20,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ChessService {
 
-    private static final String GAME_NOT_OVER_EXCEPTION_MESSAGE = "아직 게임 결과가 산출되지 않았습니다.";
+    private static final String GAME_NOT_OVER_EXCEPTION_MESSAGE = "아직 게임이 종료되지 않았습니다.";
+    private static final String PASSWORD_EXCEPTION_MESSAGE = "비밀번호가 일치하지 않습니다.";
+    private static final String DELETE_FAILED_EXCEPTION_MESSAGE = "삭제가 되지 않았습니다.";
 
     private final GameDao gameDao;
     private final EventDao eventDao;
@@ -91,5 +94,23 @@ public class ChessService {
 
     public List<GameInfoDto> selectAllGames() {
         return gameDao.selectAll();
+    }
+
+    @Transactional
+    public void deleteGame(DeleteGameRequest deleteGameRequest) {
+        GameInfoDto gameInfoDto = gameDao.findById(deleteGameRequest.getId());
+
+        if (gameInfoDto.isRunning()) {
+            throw new IllegalArgumentException(GAME_NOT_OVER_EXCEPTION_MESSAGE);
+        }
+
+        if (!gameInfoDto.getPassword().equals(deleteGameRequest.getPassword())) {
+            throw new IllegalArgumentException(PASSWORD_EXCEPTION_MESSAGE);
+        }
+
+        int result = gameDao.delete(deleteGameRequest.getId());
+        if(result == 0) {
+            throw new IllegalArgumentException(DELETE_FAILED_EXCEPTION_MESSAGE);
+        }
     }
 }

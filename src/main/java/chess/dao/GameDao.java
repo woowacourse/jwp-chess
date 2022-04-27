@@ -20,7 +20,6 @@ public class GameDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-
     private final RowMapper<GameInfoDto> eventRowMapper = (resultSet, rowNum) ->
             new GameInfoDto(resultSet.getInt("id"),
                     resultSet.getString("title"),
@@ -31,6 +30,13 @@ public class GameDao {
     public List<GameInfoDto> selectAll() {
         final String sql = "SELECT id, title, password, running FROM game";
         return namedParameterJdbcTemplate.query(sql, new EmptySqlParameterSource(), eventRowMapper);
+    }
+
+    public GameInfoDto findById(int id) {
+        final String sql = "SELECT id, title, password, running FROM game WHERE id = :id";
+        MapSqlParameterSource paramSource = new MapSqlParameterSource();
+        paramSource.addValue("id", id);
+        return namedParameterJdbcTemplate.queryForObject(sql, paramSource, eventRowMapper);
     }
 
     public int saveAndGetGeneratedId(CreateGameRequest request) {
@@ -70,5 +76,11 @@ public class GameDao {
     public int countRunningGames() {
         final String sql = "SELECT COUNT(*) FROM game WHERE running = true";
         return namedParameterJdbcTemplate.queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
+    }
+
+    public int delete(int id) {
+        final String sql = "delete from game where id = :id";
+        MapSqlParameterSource paramSource = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.update(sql, paramSource);
     }
 }

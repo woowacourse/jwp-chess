@@ -2,9 +2,11 @@ package chess.service.fixture;
 
 import chess.dao.GameDao;
 import chess.dto.CreateGameRequest;
-import chess.dto.GameDataDto;
+import chess.dto.GameInfoDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class GameDaoStub extends GameDao {
@@ -18,6 +20,27 @@ public class GameDaoStub extends GameDao {
 
     public GameDaoStub(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         super(namedParameterJdbcTemplate);
+    }
+
+    @Override
+    public List<GameInfoDto> selectAll() {
+        return repository.entrySet()
+                .stream()
+                .map(entry -> new GameInfoDto(entry.getKey(), "title", "password", entry.getValue()))
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public GameInfoDto findById(int id) {
+        return new GameInfoDto(id, "title", "password", repository.get(id));
+    }
+
+    @Override
+    public int delete(int id) {
+        if (repository.remove(id) != null) {
+            return 0;
+        }
+        return 1;
     }
 
     @Override

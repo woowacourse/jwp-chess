@@ -60,14 +60,14 @@ public class GameDao {
         return jdbcTemplate.queryForObject(query, String.class, gameId);
     }
 
+    public String findPwdById(Long gameId) {
+        String query = "select password from games where game_id = ?";
+        return jdbcTemplate.queryForObject(query, String.class, gameId);
+    }
+
     public void update(String nextTurn, Long gameId) {
         String query = "UPDATE games SET turn = (?) where game_id = ?";
         jdbcTemplate.update(query, nextTurn, gameId);
-    }
-
-    public void deleteAll() {
-        String query = "DELETE FROM GAMES";
-        jdbcTemplate.update(query);
     }
 
     public void deleteByGameId(Long id) {

@@ -36,11 +36,6 @@ class GameDaoTest {
         gameDao = new GameDao(jdbcTemplate);
     }
 
-    @AfterEach
-    void cleanDB() {
-        gameDao.deleteAll();
-    }
-
     @Test
     @DisplayName("룸 이름과 비밀번호를 받아 방을 생성한다.")
     void initNewGame() {

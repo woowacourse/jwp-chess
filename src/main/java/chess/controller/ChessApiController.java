@@ -39,8 +39,8 @@ public class ChessApiController {
     }
 
     @DeleteMapping("/game/{id}")
-    public void deleteGame(@PathVariable Long id) {
-        chessService.deleteByGameId(id);
+    public void deleteGame(@PathVariable Long id, @RequestBody String confirmPwd) {
+        chessService.deleteByGameId(confirmPwd, id);
     }
 
     @PostMapping("/game/{id}/move")

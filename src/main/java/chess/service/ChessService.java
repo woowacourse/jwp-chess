@@ -91,10 +91,16 @@ public class ChessService {
         return GameResult.from(board);
     }
 
-    public void deleteByGameId(Long id) {
-        // 생각해볼 것: 두개가 참조되어 있을 때 뭘 먼저 실행해야할지?
-        pieceDao.deleteByGameId(id);
-        gameDao.deleteByGameId(id);
+    public void deleteByGameId(String confirmPassword, Long id) {
+        String storedPassword = gameDao.findPwdById(id);
+
+        if (confirmPassword.equals(storedPassword)) {
+            // 생각해볼 것: 두개가 참조되어 있을 때 뭘 먼저 실행해야할지?
+            pieceDao.deleteByGameId(id);
+            gameDao.deleteByGameId(id);
+            return;
+        }
+        throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
     }
 
     private long makeRoom(RoomDto roomDto) {

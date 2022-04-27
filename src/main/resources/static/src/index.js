@@ -48,9 +48,12 @@ const continueGame = (id) => {
 }
 
 const deleteGame = (id) => {
+    const password = prompt("삭제하기 위해서는 비밀번호를 입력하세요")
+
     const response = fetch(`/game/${id}`, {
         method: "DELETE",
-        headers: {"Content-Type": "application/json"}
+        headers: {"Content-Type": "application/json"},
+        body: password
     });
 
     response.then(() => getGames());

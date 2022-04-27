@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,10 +21,13 @@ public class JDBCTemplateChessDao implements ChessDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final PasswordEncoder passwordEncoder;
 
-    public JDBCTemplateChessDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public JDBCTemplateChessDao(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                                PasswordEncoder passwordEncoder) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -101,10 +105,11 @@ public class JDBCTemplateChessDao implements ChessDao {
     }
 
     @Override
-    public int createNewGame(NewGameRequest newGameRequest) {
-        final String sql = "insert into game(room_name, room_password, white_name, black_name) values(:roomName, :roomPassword, :whiteName, :blackName)";
-        namedParameterJdbcTemplate.update(sql, new BeanPropertySqlParameterSource(newGameRequest));
-        final int newRoomId = findRoomIdByRoomName(newGameRequest.getRoomName());
+    public int createNewGame(NewGameRequest request) {
+        final String sql = "insert into game(room_name, room_password, white_name, black_name) values(?, ?, ?, ?)";
+        jdbcTemplate.update(sql, request.getRoomName(), passwordEncoder.encode(request.getRoomPassword()),
+                request.getWhiteName(), request.getBlackName());
+        final int newRoomId = findRoomIdByRoomName(request.getRoomName());
         insertPiecesOnPositions(String.valueOf(newRoomId));
         return newRoomId;
     }

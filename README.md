@@ -20,18 +20,18 @@
 
 - [x]  체스 게임을 진행할 수 있는 방을 만들어서 동시에 여러 게임이 가능하도록 한다.
 - [x]  체스방을 만들 수 있다.
-   - [x]  [localhost:8080](http://localhost:8080) 요청 시 노출되는 페이지에는 체스방을 만들 수 있는 버튼이 있다.
-   - [x]  체스방 만들기 버튼을 누르고 체스방 제목과 비밀번호를 입력하면 새로운 체스판이 만들어진다.
-   - [x]  체스방에는 고유 식별값이 부여된다.
+    - [x]  [localhost:8080](http://localhost:8080) 요청 시 노출되는 페이지에는 체스방을 만들 수 있는 버튼이 있다.
+    - [x]  체스방 만들기 버튼을 누르고 체스방 제목과 비밀번호를 입력하면 새로운 체스판이 만들어진다.
+    - [x]  체스방에는 고유 식별값이 부여된다.
 - [x]  체스방 목록 조회하기
-   - [x]  [localhost:8080](http://localhost:8080) 요청 시 체스방 목록을 조회할 수 있다.
-   - [x]  체스방 목록에는 체스방 제목과 체스방을 삭제할 수 있는 버튼이 표시된다.
+    - [x]  [localhost:8080](http://localhost:8080) 요청 시 체스방 목록을 조회할 수 있다.
+    - [x]  체스방 목록에는 체스방 제목과 체스방을 삭제할 수 있는 버튼이 표시된다.
 - [x]  체스방 참여하기
-   - [x]  체스방 목록에서 체스방 제목을 클릭하면 체스 게임을 이어서 진행할 수 있다.
+    - [x]  체스방 목록에서 체스방 제목을 클릭하면 체스 게임을 이어서 진행할 수 있다.
 - [x]  체스방 삭제하기
-   - [x]  체스방 목록에서 체스방 삭제 버튼을 클릭하고 체스방 생성 시 설정한 비밀번호를 입력하면 체스 게임을 삭제할 수 있다.
-   - [x]  진행중인 체스방은 삭제할 수 없다.
-- [ ]  예외가 발생했을 때 사용자가 이해할 수 있는 명시적인 메시지를 응답해야 한다.
+    - [x]  체스방 목록에서 체스방 삭제 버튼을 클릭하고 체스방 생성 시 설정한 비밀번호를 입력하면 체스 게임을 삭제할 수 있다.
+    - [x]  진행중인 체스방은 삭제할 수 없다.
+- [x]  예외가 발생했을 때 사용자가 이해할 수 있는 명시적인 메시지를 응답해야 한다.
 
 ---
 
@@ -65,7 +65,7 @@
 
     ```shell
     cd docker;
-    docker-compose -p chess -up
+    docker-compose -p chess up -d
     ```
 
 5. `WebApplication`을 실행한 후, <a href="http://localhost:8080" target="_blank">http://localhost:8080 </a>로 접속합니다 🤗
@@ -76,18 +76,26 @@
 
 ---
 
-| Method |           Url           |         Description         |
-|--------|-------------------------|-----------------------------|
-|GET     |/                        |메인 페이지                     |
-|GET     |/rooms/{name}            |이름이 {name}인 방 조회          |
-|POST    |/rooms/{name}            |새로운 방 생성                  |
-|DELETE  |/rooms/{name}            |방 삭제                        |
-|GET     |/rooms/{name}/pieces     |{name} 방이 소유한 모든 기물 조회  |
-|POST    |/rooms/{name}/pieces     |{name} 방의 기물 등록           |
-|PUT     |/rooms/{name}/pieces     |{name} 방의 기물 위치 변경       |
-|GET     |/rooms/{name}/scores     |{name} 방의 점수 조회           |
-|GET     |/rooms/{name}/turn       |{name} 방 현재 턴 조회          |
-|GET     |/rooms/{name}/result     |{name} 방의 result 조회        |
+## 페이지 조회
+
+| Method | Url         | Description       |
+|--------|-------------|-------------------|
+|GET     | /           | 메인 페이지            |
+|GET     | /rooms/{id} | 방 고유값이 {id}인 방 조회 |
+
+## API 명세
+
+| Method | Url                    | Description                          |
+|--------|------------------------|--------------------------------------|
+| POST   | /api/rooms             | 방 생성                                 |
+| GET    | /api/rooms             | 방 전체 조회                              |
+| GET    | /api/rooms/{id}        | 방 고유값이 {id}인 방 조회                    |
+| DELETE | /api/rooms/{id}        | 방 고유값이 {id}인 방 조회                    |
+| POST   | /api/rooms/{id}/pieces | 방 고유값이 {id}인 방의 pieces 생성            |
+| GET    | /api/rooms/{id}/pieces | 방 고유값이 {id}인 방의 pieces 조회            |
+| PATCH  | /api/rooms/{id}/pieces | 방 고유값이 {id}인 방의 pieces 일부 수정 (기물 이동) |
+| GET    | /api/rooms/{id}/scores | 방 고유값이 {id}인 방의 진영별 점수 조회            |
+| GET    | /api/rooms/{id}/result | 방 고유값이 {id}인 방의 결과 조회                |
 
 ## Wiki 📚
 

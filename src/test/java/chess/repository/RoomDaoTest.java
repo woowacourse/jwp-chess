@@ -26,7 +26,8 @@ public class RoomDaoTest {
         final RoomEntity roomEntity = new RoomEntity(1L, "room1", "1234");
         final RoomEntity insertRoom = roomDao.insert(roomEntity);
         // then
-        assertThat(insertRoom).isEqualTo(roomEntity);
+        assertThat(insertRoom.getName()).isEqualTo("room1");
+        assertThat(insertRoom.getPassword()).isEqualTo("1234");
     }
 
     @DisplayName("id로 체스방을 조회한다.")

@@ -31,13 +31,13 @@
     <div class="rooms">
         {{#each rooms}}
             <div class="room">
-                <form action="/start" method="post">
+                <form class="inContent" action="/start" method="post">
                     <input type="hidden" name="gameId" value="{{this.gameId}}">
                     <input type="hidden" name="gamePassword" value="{{this.gamePassword}}">
-                    <button type="submit" >{{this.gameId}} 입장하기</button>
+                    방 : {{this.gameId}}<button type="submit" >입장하기</button>
                 </form>
 
-                <form action="/exit" method="post">
+                <form class="inContent" action="/exit" method="post">
                     <input type="hidden" name="gameId" value="{{this.gameId}}">
                     비밀번호
                     <input type="password" name="gamePassword" value="">

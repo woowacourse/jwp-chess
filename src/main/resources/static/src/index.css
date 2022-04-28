@@ -21,7 +21,7 @@ h1 {
 }
 
 .inContent {
-    margin: 10px;
+    margin: 8px;
 }
 
 .room {
@@ -86,7 +86,7 @@ button {
     font-size: 18px;
     color: sienna;
     background-color: antiquewhite;
-    border-color: unset;
+    border-color: #C48F27;
 }
 
 #game-entry {

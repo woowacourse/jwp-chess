@@ -12,6 +12,6 @@ create table piece
     piece_type varchar(1) not null,
     position   varchar(2) not null,
     color      varchar(5) not null,
-    foreign key (game_id) references Game(id)
+    foreign key (game_id) references Game(id) on delete cascade
 );
 

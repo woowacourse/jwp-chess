@@ -130,3 +130,17 @@ function showBoard() {
     location.replace(`/board?id=${boardId}`);
 }
 
+function deleteBoard(id) {
+    fetch(`/board/delete?id=${id}`, {
+        method: "DELETE"
+    }).then(res => {
+        res.json().then(data => {
+            if (data.statusCode === 201) {
+                location.reload();
+            } else{
+                alert(data.errorMessage);
+            }
+        })
+    })
+}
+

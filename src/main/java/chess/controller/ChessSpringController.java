@@ -8,6 +8,7 @@ import chess.service.ChessGameService;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -86,7 +87,7 @@ public class ChessSpringController {
         return chessGameService.restart(id);
     }
 
-    @PostMapping("/board/delete")
+    @DeleteMapping("/board/delete")
     @ResponseBody
     public ResponseDto delete(@RequestParam(name = "id") Long id) {
         return chessGameService.delete(id);

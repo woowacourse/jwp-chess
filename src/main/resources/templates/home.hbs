@@ -17,6 +17,7 @@
             <div>
                 {{this.title}}
                 <button type="button" onclick="join({{this.boardId}})"> 게임 참여 </button>
+                <button type="button" onclick="deleteBoard({{this.boardId}})"> 게임 삭제</button>
             </div>
         {{/each}}
     {{/roomsDto}}

@@ -33,7 +33,6 @@ public class ChessApiController {
 
     @GetMapping(value = "/init", produces = APPLICATION_JSON_VALUE)
     public GameResponse init(HttpSession session) {
-
         ChessBoard chessBoard = chessService.initAndGetChessBoard(session);
 
         double white = chessBoard.calculateScoreByTeam(PieceTeam.WHITE);
@@ -48,7 +47,6 @@ public class ChessApiController {
     public GameResponse move(HttpSession session,
                              @RequestParam("from") String fromString,
                              @RequestParam("to") String toString) {
-
         Position from = Position.of(fromString);
         Position to = Position.of(toString);
 

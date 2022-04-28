@@ -20,7 +20,6 @@ public class BoardPieceDao {
     private final JdbcTemplate jdbcTemplate;
 
     public void save(String gameId, Map<String, String> piecesByPositions) {
-
         final Set<String> positions = piecesByPositions.keySet();
 
         List<Object[]> boardData = new ArrayList<>();

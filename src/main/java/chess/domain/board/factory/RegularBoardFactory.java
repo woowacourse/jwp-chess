@@ -56,7 +56,6 @@ public class RegularBoardFactory extends BoardFactory {
     }
 
     private static void placeAllEmptyPieces() {
-
         Map<Position, Piece> emptyPiecesByPositions = Arrays.stream(Rank.values())
                 .flatMap(rank -> Arrays.stream(File.values()).map(file -> Position.of(file, rank)))
                 .collect(Collectors.toMap((position) -> position, (piece) -> EMPTY_SPACE));
@@ -82,7 +81,6 @@ public class RegularBoardFactory extends BoardFactory {
     }
 
     private static void placeRemainPiecesExceptPawn(PieceTeam color, Rank rank) {
-
         ListIterator<Piece> piecesIterator = PIECES_CREATOR_BY_COLOR.apply(color).listIterator();
 
         for (File file : File.values()) {
@@ -93,7 +91,6 @@ public class RegularBoardFactory extends BoardFactory {
 
     @Override
     public Map<Position, Piece> create() {
-
         placeAllEmptyPieces();
         placeBlackPieces();
         placeWhitePieces();

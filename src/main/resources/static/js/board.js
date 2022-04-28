@@ -117,12 +117,12 @@ const restartChess = async (id) => {
     showChessMap(chessMap.chessMap);
 }
 
-const showStatus = async () => {
+const showStatus = async (id) => {
     if (!isRun) {
         alert('먼저 게임을 시작하거나 이어해주세요.');
         return;
     }
-    let status = await fetch('/status');
+    let status = await fetch('/status/' + id);
     status = await status.json();
     alert(status.scoreStatus);
 }

@@ -7,9 +7,9 @@ import chess.dao.GameEntity;
 import chess.dao.InMemoryGameDao;
 import chess.dao.InMemoryPieceDao;
 import chess.dao.PieceEntity;
-import chess.service.dto.DeleteGameResponse;
-import chess.service.dto.GameResultDto;
-import chess.service.dto.GamesDto;
+import chess.service.dto.response.DeleteGameResponse;
+import chess.service.dto.response.GameResultDto;
+import chess.service.dto.response.GamesDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class ChessServiceTest {
         boardDao = new InMemoryPieceDao();
         gameDao = new InMemoryGameDao();
         service = new ChessService(boardDao, gameDao);
-        gameDao.createGame("firstGame", "password");
+        service.createGame("firstGame", "password");
     }
 
     @Test
@@ -79,7 +79,7 @@ class ChessServiceTest {
 
     @Test
     void deleteGame() {
-        DeleteGameResponse affectedGames = service.deleteGame(1, "pw");
+        DeleteGameResponse affectedGames = service.deleteGame(1, "password");
         int remainGames = service.getAllGames().getGames().size();
         assertAll(() -> {
             assertThat(affectedGames.isSuccess()).isTrue();

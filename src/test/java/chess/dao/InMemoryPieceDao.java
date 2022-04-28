@@ -4,6 +4,7 @@ import chess.model.board.ChessInitializer;
 import chess.model.board.Square;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class InMemoryPieceDao implements PieceDao {
 
     @Override
     public List<PieceEntity> getBoardByGameId(int gameId) {
-        return boardTable.get(gameId);
+        return boardTable.getOrDefault(gameId, Collections.emptyList());
     }
 
     @Override

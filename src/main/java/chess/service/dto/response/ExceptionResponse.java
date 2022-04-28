@@ -1,6 +1,7 @@
-package chess.service.dto;
+package chess.service.dto.response;
 
 public class ExceptionResponse {
+    private boolean ok = false;
     private String message;
 
     public ExceptionResponse() {
@@ -12,5 +13,9 @@ public class ExceptionResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public boolean isOk() {
+        return ok;
     }
 }

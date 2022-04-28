@@ -8,13 +8,15 @@ public class GameEntity {
     private final String turn;
     private final int id;
     private String name;
+    private String password;
 
     public GameEntity(final int id, final String name,
-                      final String status, final String turn) {
+                      final String status, final String turn, final String password) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.turn = turn;
+        this.password = password;
     }
 
     public GameEntity(final int id, final ChessGame chessGame) {
@@ -37,5 +39,9 @@ public class GameEntity {
 
     public int getId() {
         return id;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

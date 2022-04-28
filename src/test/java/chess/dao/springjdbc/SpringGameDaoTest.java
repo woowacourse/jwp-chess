@@ -44,7 +44,7 @@ class SpringGameDaoTest {
     @DisplayName("게임의 상태와 턴을 업데이트 하는지 확인")
     void update() {
         GameFactory.setUpGames(jdbcTemplate, "first");
-        int affectedRows = springGameDao.update(new GameEntity(1, "first", "READY", "BLACK"));
+        int affectedRows = springGameDao.update(new GameEntity(1, "first", "READY", "BLACK", "password"));
         GameEntity foundGame = springGameDao.findById(1);
         assertAll(() -> {
             assertThat(affectedRows).isEqualTo(1);

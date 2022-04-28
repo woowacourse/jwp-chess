@@ -1,9 +1,11 @@
 package chess.web.controller;
 
 import chess.service.ChessService;
-import chess.service.dto.BoardDto;
-import chess.service.dto.DeleteGameResponse;
-import chess.service.dto.ExceptionResponse;
+import chess.service.dto.response.BoardDto;
+import chess.service.dto.response.DeleteGameResponse;
+import chess.service.dto.response.EndGameResponse;
+import chess.service.dto.response.ExceptionResponse;
+import chess.service.dto.response.GameResultDto;
 import chess.service.dto.request.DeleteGameRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,9 +46,9 @@ public class ApiChessController {
     }
 
     @PutMapping("/game-end/{gameId}")
-    public ResponseEntity<Object> requestEndGame(@PathVariable int gameId) {
-        chessService.endGame(gameId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<EndGameResponse> requestEndGame(@PathVariable int gameId) {
+        EndGameResponse endGameResponse = chessService.endGame(gameId);
+        return new ResponseEntity<>(endGameResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/game")
@@ -55,7 +57,14 @@ public class ApiChessController {
                 , HttpStatus.OK);
     }
 
-    @ExceptionHandler(RuntimeException.class)
+    @GetMapping("/status/{gameId}")
+    public ResponseEntity<GameResultDto> renderStatus(@PathVariable int gameId) {
+        GameResultDto status = chessService.getResult(gameId);
+        chessService.endGame(gameId);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleError(Exception ex) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
     }

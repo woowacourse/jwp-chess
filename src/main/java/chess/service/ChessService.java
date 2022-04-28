@@ -15,10 +15,11 @@ import chess.model.gamestatus.Status;
 import chess.model.gamestatus.StatusType;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
-import chess.service.dto.BoardDto;
-import chess.service.dto.DeleteGameResponse;
-import chess.service.dto.GameResultDto;
-import chess.service.dto.GamesDto;
+import chess.service.dto.response.BoardDto;
+import chess.service.dto.response.DeleteGameResponse;
+import chess.service.dto.response.GameResultDto;
+import chess.service.dto.response.GamesDto;
+import chess.service.dto.response.EndGameResponse;
 import java.util.List;
 import java.util.Map;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -78,10 +79,11 @@ public class ChessService {
         return StatusType.createStatus(statusName, board);
     }
 
-    public void endGame(int id) {
+    public EndGameResponse endGame(int id) {
         ChessGame game = getGameFromDao(id);
         game.end();
         gameDao.update(new GameEntity(id, game));
+        return new EndGameResponse(id);
     }
 
     public GamesDto getAllGames() {
@@ -97,24 +99,28 @@ public class ChessService {
         return GameResultDto.of(getGameFromDao(id).getResult());
     }
 
-    public boolean isEnd(int gameId) {
-        return getGameFromDao(gameId).isEnd();
-    }
-
     public BoardDto getBoard(int gameId) {
         return new BoardDto(pieceDao.getBoardByGameId(gameId));
     }
 
     public DeleteGameResponse deleteGame(int gameId, String password) {
         String hashedPassword = gameDao.findPasswordById(gameId);
-        if (!BCrypt.checkpw(password, hashedPassword)) {
-            throw new IllegalArgumentException("암호가 틀렸어용");
-        }
+        throwDifferentPassword(password, hashedPassword);
         ChessGame game = getGameFromDao(gameId);
+        throwPlayingGame(game);
+        gameDao.deleteGame(gameId);
+        return new DeleteGameResponse(gameId, true);
+    }
+
+    private void throwPlayingGame(ChessGame game) {
         if (game.isPlaying()) {
             throw new IllegalArgumentException("게임 실행중에는 삭제할 수 없습니다.");
         }
-        gameDao.deleteGame(gameId);
-        return new DeleteGameResponse(gameId, true);
+    }
+
+    private void throwDifferentPassword(String password, String hashedPassword) {
+        if (!BCrypt.checkpw(password, hashedPassword)) {
+            throw new IllegalArgumentException("암호가 다릅니다.");
+        }
     }
 }

@@ -14,7 +14,7 @@ public class InMemoryGameDao implements GameDao {
 
     @Override
     public int createGame(String name, String password) {
-        gameTable.put(id++, new GameEntity(1, name, DEFAULT_STATUS, DEFAULT_TURN));
+        gameTable.put(id++, new GameEntity(1, name, DEFAULT_STATUS, DEFAULT_TURN, password));
         return id;
     }
 
@@ -24,9 +24,9 @@ public class InMemoryGameDao implements GameDao {
         return 1;
     }
 
-    @Override //TODO:비번처리
+    @Override
     public String findPasswordById(int gameId) {
-        return null;
+        return gameTable.get(gameId).getPassword();
     }
 
     @Override

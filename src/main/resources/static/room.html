@@ -13,9 +13,23 @@
             <div>방에 입장해주세요.</div>
             방 제목: <input type="text" id="roomName" name="name">
             비밀번호: <input type="password" id="roomPassword" name="password">
-            <input type="button" class="chess-btn" value="방 입장" onclick="create()">
+            <input type="button" id="enter-room" class="chess-btn" value="방 입장" onclick="create()">
+            <input type="button" class="chess-btn" value="방 목록" onclick="rooms()">
         </div>
     </div>
+
+    <table id="rooms">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Turn</th>
+            <th>Name</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
 
     <div id="start-room">
         <div class="chess-button-container">

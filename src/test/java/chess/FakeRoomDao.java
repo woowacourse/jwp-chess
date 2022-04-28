@@ -3,8 +3,10 @@ package chess;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import chess.dao.RoomDao;
+import chess.dto.RoomDto;
 import chess.entity.Room;
 
 public class FakeRoomDao implements RoomDao {
@@ -46,5 +48,21 @@ public class FakeRoomDao implements RoomDao {
     public void update(Long id, String turn) {
         Room room = rooms.get((int)(id - 1));
         rooms.set((int)(id - 1), new Room(id, room.getPassword(), turn, room.getName()));
+    }
+
+    @Override
+    public List<RoomDto> findAll() {
+        return rooms.stream()
+            .map(room -> new RoomDto(room.getId(), room.getTurn(), room.getName()))
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Override
+    public Optional<Room> findByIdAndPassword(Long id, String password) {
+        Room room = rooms.get((int) (id - 1));
+        if (room.getPassword().equals(password)) {
+            return Optional.of(room);
+        }
+        return Optional.empty();
     }
 }

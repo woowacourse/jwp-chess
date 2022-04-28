@@ -4,8 +4,10 @@ let isStart = false;
 let roomName = "";
 let id;
 document.getElementById("start-room").style.display = "none";
+document.getElementById("rooms").style.display = "none";
 
 async function create() {
+    document.getElementById("rooms").style.display = "none";
     if (roomName === "") {
         roomName = document.getElementById("roomName").value;
     }
@@ -219,4 +221,38 @@ async function tempAlert(message, timeout)
     alert.document.write(message)
     alert.focus()
     setTimeout(() => alert.close(), timeout)
+}
+
+async function rooms() {
+    document.getElementById("rooms").style.display = "block";
+    let rooms;
+    removeChildren(document.querySelector("tbody"));
+    await fetch("/rooms", {
+        method: "GET",
+    })
+        .then(res => res.json())
+        .then(data => rooms = data)
+
+    for (let aRoom in rooms) {
+        let tr = document.createElement("tr");
+        for (let column in rooms[aRoom]) {
+            let td = document.createElement("td");
+            td.innerHTML = rooms[aRoom][column]
+            tr.appendChild(td);
+        }
+        let roomId = rooms[aRoom]["id"];
+        let button = document.createElement("button");
+        button.innerHTML = `<input type=\"button\" id=\"enter-room/${roomId}\" class=\"chess-btn\" value=\"방 입장\" onclick=\"enter(this)\">`
+        tr.appendChild(button);
+        document.querySelector("tbody").appendChild(tr);
+    }
+}
+
+async function enter(self) {
+    id = self.id.split("/")[1];
+
+    document.getElementById("rooms").style.display = "none";
+    await load();
+    document.getElementById("entrance").style.display = "none";
+    document.getElementById("start-room").style.display = "block";
 }

@@ -1,6 +1,7 @@
 package chess;
 
 import java.net.URI;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.ExceptionResponseDto;
 import chess.dto.MoveDto;
+import chess.dto.RoomDto;
 
 @Controller
 public class ChessController {
@@ -31,13 +33,6 @@ public class ChessController {
 
     @GetMapping("/")
     public String index() {
-        return "room.html";
-    }
-
-    @GetMapping("/room")
-    public String room(@RequestParam String name,
-        Model model) {
-        model.addAttribute("name", name);
         return "room.html";
     }
 
@@ -72,6 +67,12 @@ public class ChessController {
     @ResponseBody
     public Status status(@PathVariable Long roomId) {
         return chessService.status(roomId);
+    }
+
+    @GetMapping("/rooms")
+    @ResponseBody
+    public List<RoomDto> rooms() {
+        return chessService.loadRooms();
     }
 
     @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class, NoSuchElementException.class})

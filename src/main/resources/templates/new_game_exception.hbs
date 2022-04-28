@@ -153,14 +153,12 @@
         </td>
     </tr>
 </table>
-    <form action="backwardToReady" method="post" >
-        <input type="hidden" name="roomId" value={{roomId}}>
-        {{#exception}}
-        <center>[ERROR] {{message}} </center>
-        {{/exception}}
-        <center>
-            <button type="submit"> 확인 </button>
-        </center>
-    </form>
+    <center> [ERROR] {{exception}} </center>
+    <br />
+    <center>
+        <form action="newGame" method="get">
+             <button type="submit"> 새로운 게임 생성 </button>
+        </form>
+    </center>
 </body>
 </html>

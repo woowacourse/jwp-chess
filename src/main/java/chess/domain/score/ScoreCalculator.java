@@ -1,14 +1,9 @@
 package chess.domain.score;
 
-import chess.domain.ChessScore;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class ScoreCalculator {
 

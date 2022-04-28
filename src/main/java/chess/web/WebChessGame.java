@@ -1,12 +1,15 @@
 package chess.web;
 
 import chess.db.BoardDAO;
+import chess.db.RoomDAO;
 import chess.db.StateDAO;
+import chess.domain.board.Board;
 import chess.domain.command.Command;
-import chess.domain.command.CommandConverter;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
+import chess.domain.score.ChessScore;
+import chess.domain.score.ScoreCalculator;
 import chess.domain.state.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,94 +19,73 @@ import java.util.Map;
 @Service
 public class WebChessGame {
 
+    private static final String DUPLICATED_ROOM_NAME = "이미 만들어진 방 이름입니다.";
+    private static final String CANNOT_MOVE_OPPONENT_PIECE = "상대 말을 움직이게 할 수 없습니다.";
+
     @Autowired
     private BoardDAO boardDAO;
 
     @Autowired
     private StateDAO stateDAO;
 
-    public State getState(String roomId) {
-        Color color = stateDAO.findColor(roomId);
-        Map<Position, Piece> pieces = boardDAO.findAllPieces(roomId);
-        return State.create(pieces, color);
-    }
+    @Autowired
+    private RoomDAO roomDAO;
 
-    public void searchSavedGame(String roomId, BoardDTO boardDTO) {
-        if (stateDAO.isSaved(roomId)) {
-            State now = getState(roomId);
-            boardDTO.generateUpdatedDTO(now.getBoard());
-        }
-    }
-
-    public boolean isSaved(String roomId) {
-        return stateDAO.isSaved(roomId);
-    }
-
-    public Color getColor(String roomId) {
-        return getState(roomId).getColor();
-    }
+    private final Board board = new Board();
 
     public void initializeGame(BoardDTO boardDTO, ChessForm chessForm) {
-        State next = State.create()
-                .proceed(CommandConverter.convertCommand(RequestParser.from(chessForm.getCommand()).getCommand()));
-        boardDTO.generateUpdatedDTO(next.getBoard());
-        String roomId = chessForm.getRoomId();
-        if (next.isRunning()) {
-            stateDAO.initializeID(roomId);
-            stateDAO.initializeColor(roomId);
-            boardDAO.initializePieces(next, roomId);
+        String roomName = chessForm.getRoomName();
+        boardDTO.generateUpdatedDTO(board);
+        stateDAO.initializeRoom(roomName, chessForm.getPassword());
+        String roomId = roomDAO.findIdByName(roomName);
+        stateDAO.initializeColor(roomId);
+    }
+
+    public void validateDuplicateName(ChessForm chessForm) {
+        if (roomDAO.isNameDuplicated(chessForm.getRoomName())) {
+            throw new IllegalArgumentException(DUPLICATED_ROOM_NAME);
         }
     }
 
-    public String findAllUsers() {
-        return stateDAO.findAllUsers();
-    }
-
-    public State executeOneTurn(ChessForm chessForm, BoardDTO boardDTO) {
-        Command parsedCommand = CommandConverter.convertCommand(
-                RequestParser.from(chessForm.getCommand()).getCommand());
-        String roomId = chessForm.getRoomId();
-        State next = getState(roomId).proceed(parsedCommand);
-        executeWhenFinished(boardDTO, next, roomId);
-        executeWhenShowScore(parsedCommand, boardDTO, next);
-        executeWhenMoveEnd(parsedCommand, boardDTO, next, roomId);
-        return next;
-    }
-
-    private void executeWhenMoveEnd(Command command, BoardDTO boardDTO, State next, String roomId) {
-        if (command.isMove()) {
-            endTurn(next, command, boardDTO, roomId);
+    private void validateMoveOpponentPiece(ChessForm chessForm, MoveForm moveForm) {
+        String roomName = chessForm.getRoomName();
+        String roomId = roomDAO.findIdByName(roomName);
+        Color nowColor = stateDAO.findColor(roomId);
+        if (board.findPiece(new Position(moveForm.getSource())).isSameColor(nowColor.invert())) {
+            throw new IllegalArgumentException(CANNOT_MOVE_OPPONENT_PIECE);
         }
     }
 
-    private void executeWhenShowScore(Command command, BoardDTO boardDTO, State next) {
-        if (command.isStatus()) {
-            boardDTO.updateWithScore(next.getBoard(), next.generateScore());
-        }
+    public void executeOneTurn(ChessForm chessForm, MoveForm moveForm, BoardDTO boardDTO) {
+        String roomName = chessForm.getRoomName();
+        String roomId = roomDAO.findIdByName(roomName);
+        Color nowColor = stateDAO.findColor(roomId);
+        Color nextColor = nowColor.invert();
+        validateMoveOpponentPiece(chessForm, moveForm);
+        board.movePiece(new Position(moveForm.getSource()), new Position(moveForm.getDest()));
+        boardDTO.generateUpdatedDTO(board);
+        stateDAO.convertColor(nextColor, roomId);
     }
 
-    private void executeWhenFinished(BoardDTO boardDTO, State next, String roomId) {
-        if (next.isFinished()) {
-            boardDTO.generateUpdatedDTO(next.getBoard());
-            stateDAO.terminateDB(roomId);
+    public String getColor(String roomName) {
+        String roomId = roomDAO.findIdByName(roomName);
+        if (stateDAO.findColor(roomId) == Color.WHITE) {
+            return "백";
         }
+        return "흑";
     }
 
-    private void endTurn(State next, Command command, BoardDTO boardDTO, String roomId) {
-        boardDTO.generateUpdatedDTO(next.getBoard());
-        movePieceIntoDB(next, command, roomId);
-        if (!next.isWhite()) {
-            stateDAO.convertColor(Color.BLACK, roomId);
-            return;
-        }
-        stateDAO.convertColor(Color.WHITE, roomId);
+    public ChessScore calculateScore() {
+        return ScoreCalculator.calculateChessScore(board.getPieces());
     }
 
-    private void movePieceIntoDB(State next, Command command, String roomId) {
-        Position from = command.getFromPosition();
-        Position to = command.getToPosition();
-        boardDAO.delete(from, roomId);
-        boardDAO.delete(to, roomId);
-        boardDAO.insert(to, next.getBoard().findPiece(to), roomId);
+    public boolean isKingDead(ChessForm chessForm) {
+        String roomId = roomDAO.findIdByName(chessForm.getRoomName());
+        return board.isKingNotExist(stateDAO.findColor(roomId));
+    }
+
+    public void terminateState(String name) {
+        String roomId = roomDAO.findIdByName(name);
+        stateDAO.terminateState(roomId);
     }
 }

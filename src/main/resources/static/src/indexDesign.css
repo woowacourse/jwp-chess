@@ -28,5 +28,10 @@ td.white-box {
 }
 
 div {
-    text-align; center;
+    text-align;
+    center;
+}
+
+button {
+    margin-right: 10px;
 }

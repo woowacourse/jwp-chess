@@ -17,6 +17,10 @@ public class Board {
         this.pieces = new HashMap<>(pieces);
     }
 
+    public Board() {
+        this.pieces = BoardInitializer.generate();
+    }
+
     public Piece findPiece(Position now) {
         if (pieces.containsKey(now)) {
             return pieces.get(now);

@@ -1,6 +1,6 @@
 package chess.web;
 
-import chess.domain.ChessScore;
+import chess.domain.score.ChessScore;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;

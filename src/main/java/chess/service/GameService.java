@@ -28,6 +28,10 @@ public class GameService {
         this.boardRepository = boardRepository;
     }
 
+    public Optional<Integer> findByRoomId(int roomId) {
+        return boardRepository.findBoardIdByRoom(roomId);
+    }
+
     public BoardDto startNewGame(int roomId) {
         Board board = new Board(new RegularRuleSetup());
 
@@ -52,7 +56,7 @@ public class GameService {
     }
 
     public BoardDto loadGame(int roomId) {
-        int boardId = boardRepository.getBoardIdByRoom(roomId);
+        int boardId = boardRepository.findBoardIdByRoom(roomId).get();
         Board board = loadBoard(boardId);
         board.loadTurn(boardRepository.getTurn(boardId));
         return gameStateAndPieces(boardId);

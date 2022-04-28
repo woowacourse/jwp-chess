@@ -4,9 +4,11 @@ import chess.domain.Room;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.BoardDto;
+import chess.web.dto.ResultDto;
 import chess.web.dto.RoomDto;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,6 +49,16 @@ public class RoomController {
 
     @DeleteMapping("/{roomId}")
     public ResponseEntity<Map<String, String>> deleteRoom(@PathVariable int roomId, @RequestParam String password) {
+        Optional<Integer> boardId = gameService.findByRoomId(roomId);
+        if (boardId.isEmpty()) {
+            roomService.delete(roomId, password);
+            return ResponseEntity.ok(Map.of("url","/"));
+        }
+        BoardDto boardDto = gameService.loadGame(roomId);
+        BoardDto boardDto1 = gameService.gameStateAndPieces(boardDto.getBoardId());
+        if (boardDto1.getState().getEnd().equals("false")) {
+            throw new IllegalArgumentException("진행 중인 게임방은 삭제할 수 없습니다.");
+        }
         roomService.delete(roomId, password);
         return ResponseEntity.ok(Map.of("url","/"));
     }

@@ -63,7 +63,7 @@ public class RoomRepositoryImpl implements RoomRepository {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId),
                             (resultSet, rowNum) ->
-                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX), resultSet.getString(2))
+                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX), resultSet.getString(3))
                     ));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();

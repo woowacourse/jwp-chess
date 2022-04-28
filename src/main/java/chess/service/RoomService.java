@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.domain.Room;
+import chess.repository.BoardRepository;
 import chess.repository.RoomRepository;
 import chess.web.dto.RoomDto;
 import java.util.List;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Service;
 public class RoomService {
 
     private final RoomRepository roomRepository;
+    private final BoardRepository boardRepository;
 
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository, BoardRepository boardRepository) {
         this.roomRepository = roomRepository;
+        this.boardRepository = boardRepository;
     }
 
     public RoomDto create(Room room) {
@@ -24,7 +27,8 @@ public class RoomService {
     }
 
     public void delete(int roomId, String password) {
-        if (roomRepository.findById(roomId).get().getPassword().equals(password)) {
+        Optional<RoomDto> room = roomRepository.findById(roomId);
+        if (room.get().getPassword().equals(password)) {
             roomRepository.delete(roomId);
             return;
         }

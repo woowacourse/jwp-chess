@@ -25,9 +25,8 @@ public class FakeBoardRepository implements BoardRepository {
     }
 
     @Override
-    public int getBoardIdByRoom(int roomId) {
-        return findBoardId(roomId)
-                .orElseThrow(IllegalArgumentException::new);
+    public Optional<Integer> findBoardIdByRoom(int roomId) {
+        return findBoardId(roomId);
     }
 
     private Optional<Integer> findBoardId(int roomId) {

@@ -55,14 +55,14 @@ public class BoardRepositoryImplTest {
     void getBoardByRoomId() {
         Board board = new Board(new RegularRuleSetup());
         int boardId = boardRepository.save(roomId, GameStateDto.from(board));
-        int findBoardId = boardRepository.getBoardIdByRoom(roomId);
+        int findBoardId = boardRepository.findBoardIdByRoom(roomId).get();
         assertThat(boardId).isEqualTo(findBoardId);
     }
 
     @Test
     @DisplayName("없는 roomId로 조회시 예외 발생")
     void getBoardByRoomIdException() {
-        assertThatThrownBy(() -> boardRepository.getBoardIdByRoom(roomId))
+        assertThatThrownBy(() -> boardRepository.findBoardIdByRoom(roomId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -83,7 +83,7 @@ public class BoardRepositoryImplTest {
         boardRepository.save(roomId, GameStateDto.from(board));
         boardRepository.deleteByRoom(roomId);
 
-        assertThatThrownBy(() -> boardRepository.getBoardIdByRoom(roomId))
+        assertThatThrownBy(() -> boardRepository.findBoardIdByRoom(roomId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

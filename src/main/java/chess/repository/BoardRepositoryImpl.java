@@ -3,6 +3,7 @@ package chess.repository;
 import chess.domain.Color;
 import chess.web.dto.GameStateDto;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -40,12 +41,13 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public int getBoardIdByRoom(int roomId) {
+    public Optional<Integer> findBoardIdByRoom(int roomId) {
         String sql = "select id from board where room_id = :roomId";
         try {
-            return jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId), Integer.class);
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId), Integer.class));
         } catch (EmptyResultDataAccessException exception) {
-            throw new IllegalArgumentException("체스판이 존재하지 않습니다.");
+            return Optional.empty();
         }
     }
 

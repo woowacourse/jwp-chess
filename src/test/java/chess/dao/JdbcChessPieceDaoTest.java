@@ -16,7 +16,6 @@ import chess.entity.ChessPieceEntity;
 import chess.entity.RoomEntity;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,40 +35,35 @@ class JdbcChessPieceDaoTest {
             Position.of(D, TWO), Pawn.from(WHITE)
     );
 
-    private static int ROOM_ID;
+    private final JdbcChessPieceDao chessPieceDao;
+    private final JdbcRoomDao roomDao;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    private JdbcChessPieceDao chessPieceDao;
-    private JdbcRoomDao roomDao;
-
-    @BeforeEach
-    void setUp() {
-        chessPieceDao = new JdbcChessPieceDao(jdbcTemplate);
-        roomDao = new JdbcRoomDao(jdbcTemplate);
-
-        ROOM_ID = roomDao.save(ROOM_ENTITY);
+    public JdbcChessPieceDaoTest(JdbcTemplate jdbcTemplate) {
+        this.chessPieceDao = new JdbcChessPieceDao(jdbcTemplate);
+        this.roomDao = new JdbcRoomDao(jdbcTemplate);
     }
 
     @DisplayName("chess piece들을 저장한다.")
     @Test
     void chess_pieces_저장한다() {
-        chessPieceDao.saveAll(ROOM_ID, PIECES_BY_POSITION);
+        final int roomId = roomDao.save(ROOM_ENTITY);
+        chessPieceDao.saveAll(roomId, PIECES_BY_POSITION);
 
-        final List<ChessPieceEntity> chessPieces = chessPieceDao.findByRoomId(ROOM_ID);
-        chessPieces.forEach(System.out::println);
+        final List<ChessPieceEntity> chessPieces = chessPieceDao.findByRoomId(roomId);
+
         assertThat(chessPieces.size()).isEqualTo(4);
     }
 
     @DisplayName("chess piece를 수정한다.")
     @Test
     void chess_piece_수정한다() {
-        chessPieceDao.saveAll(ROOM_ID, PIECES_BY_POSITION);
+        final int roomId = roomDao.save(ROOM_ENTITY);
+        chessPieceDao.saveAll(roomId, PIECES_BY_POSITION);
 
-        chessPieceDao.update(ROOM_ID, "a2", "a4");
+        chessPieceDao.update(roomId, "a2", "a4");
 
-        final boolean result = chessPieceDao.findByRoomId(ROOM_ID)
+        final boolean result = chessPieceDao.findByRoomId(roomId)
                 .stream()
                 .anyMatch(chessPieceEntity -> chessPieceEntity.getPosition().equals("a4"));
         assertThat(result).isTrue();
@@ -78,20 +72,22 @@ class JdbcChessPieceDaoTest {
     @DisplayName("room id와 position을 기반으로 기물을 삭제한다.")
     @Test
     void 기물_삭제한다() {
-        chessPieceDao.saveAll(ROOM_ID, PIECES_BY_POSITION);
+        final int roomId = roomDao.save(ROOM_ENTITY);
+        chessPieceDao.saveAll(roomId, PIECES_BY_POSITION);
 
-        chessPieceDao.deleteByRoomIdAndPosition(ROOM_ID, "a2");
+        chessPieceDao.deleteByRoomIdAndPosition(roomId, "a2");
 
-        assertThat(chessPieceDao.findByRoomId(ROOM_ID).size()).isEqualTo(3);
+        assertThat(chessPieceDao.findByRoomId(roomId).size()).isEqualTo(3);
     }
 
     @DisplayName("room id를 기반으로 기물을 모두 삭제한다.")
     @Test
     void 기물_전부_삭제한다() {
-        chessPieceDao.saveAll(ROOM_ID, PIECES_BY_POSITION);
+        final int roomId = roomDao.save(ROOM_ENTITY);
+        chessPieceDao.saveAll(roomId, PIECES_BY_POSITION);
 
-        chessPieceDao.deleteByRoomId(ROOM_ID);
+        chessPieceDao.deleteByRoomId(roomId);
 
-        assertThat(chessPieceDao.findByRoomId(ROOM_ID).size()).isEqualTo(0);
+        assertThat(chessPieceDao.findByRoomId(roomId).size()).isEqualTo(0);
     }
 }

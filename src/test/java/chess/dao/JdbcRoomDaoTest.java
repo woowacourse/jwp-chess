@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.entity.RoomEntity;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,11 @@ class JdbcRoomDaoTest {
     private static final RoomEntity ROOM_ENTITY = new RoomEntity(0, "매트의 체스", "123123",
             READY.getValue(), WHITE.getValue());
 
+    private final JdbcRoomDao roomDao;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    private JdbcRoomDao roomDao;
-
-    @BeforeEach
-    void setUp() {
-        roomDao = new JdbcRoomDao(jdbcTemplate);
+    public JdbcRoomDaoTest(JdbcTemplate jdbcTemplate) {
+        this.roomDao = new JdbcRoomDao(jdbcTemplate);
     }
 
     @DisplayName("RoomSaveDto를 전달 받아 room entity를 저장한다.")

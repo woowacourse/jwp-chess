@@ -42,9 +42,13 @@ public class FakeBoardDao implements BoardDao {
     @Override
     public void updatePosition(String symbol, String destination, long roomId) {
         for (Long idx : boards.keySet()) {
-            if (boards.get(idx).getPosition().equals(destination) && boards.get(idx).getRoomId() == roomId) {
-                boards.put(idx, new FakePiece(symbol, destination, roomId));
-            }
+            updateIfAvailable(symbol, destination, roomId, idx);
+        }
+    }
+
+    private void updateIfAvailable(String symbol, String destination, long roomId, Long idx) {
+        if (boards.get(idx).getPosition().equals(destination) && boards.get(idx).getRoomId() == roomId) {
+            boards.put(idx, new FakePiece(symbol, destination, roomId));
         }
     }
 

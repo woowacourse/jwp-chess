@@ -62,10 +62,14 @@ public class FakeRoomDao implements RoomDao {
     @Override
     public void updateStatus(Team team, long roomId) {
         for (Long idx : games.keySet()) {
-            if (games.get(idx).getId() == roomId) {
-                games.put(idx, new RoomResponse(games.get(idx).getId(),
-                        team, games.get(idx).getName(), games.get(idx).getPassword()));
-            }
+            updateIfAvailable(team, roomId, idx);
+        }
+    }
+
+    private void updateIfAvailable(Team team, long roomId, Long idx) {
+        if (games.get(idx).getId() == roomId) {
+            games.put(idx, new RoomResponse(games.get(idx).getId(),
+                    team, games.get(idx).getName(), games.get(idx).getPassword()));
         }
     }
 

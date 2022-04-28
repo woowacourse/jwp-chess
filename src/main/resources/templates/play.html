@@ -87,13 +87,13 @@
     </div>
     <div class="chess-buttons">
         <img src="/images/chess_logo.png" width="250px" height="250px">
-        <br>
-        <br>
-        <h3>현재 점수 확인</h3>
+        <h3>현재 게임</h3>
+        <p id="title"></p>
+
+        <h3>점수 확인</h3>
         <div>
             <input type="button" onclick="scoreButton()" value="score">
         </div>
-        <br>
         <form>
             <h3>기물 Promotion</h3>
             <label for="queen">Queen</label>
@@ -108,7 +108,6 @@
             <br>
             <input type="button" onclick="promotionButton()" value="promotion">
         </form>
-        <br>
         <h3>게임 종료</h3>
         <div>
             <input type="button" onclick="endButton()" value="게임 끝내기">

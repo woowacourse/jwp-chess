@@ -1,8 +1,8 @@
-window.onload= async function () {
+window.onload = async function () {
     await findAllChessGames();
 }
 
-function showAllChessGames(chessGames){
+function showAllChessGames(chessGames) {
     Array.from(chessGames).forEach(
         function (element) {
             let board = document.getElementById("games");
@@ -13,11 +13,11 @@ function showAllChessGames(chessGames){
             titleTag.textContent = element.title;
 
             const loadButton = document.createElement("button");
-            loadButton.setAttribute("onclick", "loadGame(" + element.id +")");
+            loadButton.setAttribute("onclick", "loadGame(" + element.id + ", " + element.title + ")");
             loadButton.textContent = "입장하기";
 
             const deleteButton = document.createElement("button");
-            deleteButton.setAttribute("onclick", "deleteGame(" + element.id +")");
+            deleteButton.setAttribute("onclick", "deleteGame(" + element.id + ")");
             deleteButton.textContent = "삭제";
 
             gameDiv.appendChild(titleTag);

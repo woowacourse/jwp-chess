@@ -1,3 +1,4 @@
+let gameTitle = new URLSearchParams(window.location.search).get("title");
 let gamePassword = new URLSearchParams(window.location.search).get("password");
 let gameUri = new URLSearchParams(window.location.search).get("location");
 
@@ -13,6 +14,9 @@ async function refreshAndDisplayBoard() {
 }
 
 async function refreshBoard() {
+    const titleText = document.getElementById("title");
+    titleText.innerText = gameTitle;
+
     const board = document.getElementsByClassName("chess-ui")[0].childNodes;
     board.forEach(await function (value) {
         if (value.hasChildNodes()) {

@@ -20,12 +20,14 @@ const CreateRoom = () => {
     }
 
     return (
-        <React.Fragment>
-            <TextField type="text" onChange={handleTitleChange}/>
-            <TextField type="password" onChange={handlePasswordChange}/>
+        <PageWrapper>
+            <Title> 방 생성하기 </Title>
+
+            <TextField type="text" placeholder="방 이름" onChange={handleTitleChange}/>
+            <TextField type="password" placeholder="방 비밀번호" onChange={handlePasswordChange}/>
 
             <Button onClick={handleCreateClick}> 방 생성하기 </Button>
-        </React.Fragment>
+        </PageWrapper>
     );
 };
 

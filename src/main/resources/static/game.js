@@ -5,14 +5,19 @@ const getColorName = (pieceColor) => {
     return pieceColor === "WHITE" ? "백" : "흑";
 }
 
+const GamePageWrapper = styled.div`
+    margin: 0 auto;
+    margin-top: 100px;
+    max-width: 600px;
+`
+
 const Cell = window.styled.div`
     display: inline-flex;
     justify-content: center;
     align-items: center;
     background-color: ${props => props.alt ? "#D38948" : "#FFCDA1"};
-    width: 80px;
-    height: 80px;
     cursor: pointer;
+    aspect-ratio: 1 / 1;
     transition: all 0.2s;
     
     &:hover {
@@ -24,8 +29,8 @@ const Cell = window.styled.div`
 
 const CellWrapper = window.styled.div`
     display: grid;
-    grid-template-columns: repeat(8, 80px);
-    grid-template-rows: repeat(8, 80px);
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
 `;
 
 const Board = ({board, onCellClick}) => {
@@ -54,26 +59,67 @@ const Board = ({board, onCellClick}) => {
     );
 }
 
+const Status = styled.div`
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 30px;
+`
+
 const CurrentTurn = ({turn}) => {
     return (
-        <div> 현재 차례 : {getColorName(turn)} </div>
+        <div> {getColorName(turn)}의 차례 </div>
     );
 }
 
 const Score = ({score}) => {
     return (
-        <React.Fragment>
-            <div> 백: {score.whiteScore} </div>
-            <div> 흑: {score.blackScore} </div>
-        </React.Fragment>
+        <div>
+            <div> 백: {score.whiteScore}점</div>
+            <div> 흑: {score.blackScore}점</div>
+        </div>
     );
 }
 
-const Winner = ({winner}) => {
+const WinnerWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    backdrop-filter: blur(5px);
+    
+    & > div:nth-child(1) {
+        margin-bottom: 5px;
+        font-size: 30px;
+    }
+    
+    & > div:nth-child(2) {
+        margin-bottom: 15px;
+        font-size: 100px;
+    }
+    
+    & > div:nth-child(3) {
+        font-size: 30px;
+    }
+`;
+
+const Winner = ({winner, score}) => {
     if (!winner) return null;
 
     return (
-        <div> 승자는 {getColorName(winner)} </div>
+        <WinnerWrapper>
+            <div>게임이 끝났습니다</div>
+            <div>승자는 {getColorName(winner)}!</div>
+            <div>백은 {score.whiteScore}점, 흑은 {score.blackScore}점</div>
+        </WinnerWrapper>
     );
 }
 
@@ -132,12 +178,15 @@ const Game = () => {
     }
 
     return (
-        <React.Fragment>
+        <GamePageWrapper>
             <Board id={id} board={board} onCellClick={handleCellClick}/>
-            <CurrentTurn id={id} turn={turn}/>
-            <Score id={id} score={score}/>
-            <Winner id={id} winner={winner}/>
-        </React.Fragment>
+
+            <Status>
+                <Score id={id} score={score}/>
+                <CurrentTurn id={id} turn={turn}/>
+            </Status>
+            <Winner id={id} winner={winner} score={score}/>
+        </GamePageWrapper>
     );
 };
 

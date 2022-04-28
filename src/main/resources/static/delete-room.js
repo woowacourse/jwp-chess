@@ -10,16 +10,19 @@ const DeleteRoom = () => {
 
         try {
             await deleteRoom(id, password);
+            location.href = "/";
         } catch (e) {
             alert(e.message);
         }
     }
 
     return (
-        <React.Fragment>
-            <TextField type="password" onChange={handlePasswordChange}/>
+        <PageWrapper>
+            <Title> 방 제거하기 </Title>
+
+            <TextField type="password" placeholder="방 비밀번호" onChange={handlePasswordChange}/>
             <Button onClick={handleDeleteClick}> 방 제거하기 </Button>
-        </React.Fragment>
+        </PageWrapper>
     );
 };
 

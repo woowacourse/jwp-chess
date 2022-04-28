@@ -1,74 +1,52 @@
 package chess.web.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.core.Is.is;
 
-import chess.web.dto.MoveDto;
-import chess.web.service.ChessGameService;
-import chess.web.service.fakedao.FakeChessBoardDao;
-import chess.web.service.fakedao.FakePlayerDao;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ChessGameControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    @LocalServerPort
+    int port;
 
     @BeforeEach
-    void setup() {
-        ChessGameService chessGameService = new ChessGameService(new FakeChessBoardDao(), new FakePlayerDao());
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new ChessGameController(chessGameService)).build();
+    void setUp() {
+        RestAssured.port = port;
     }
 
     @Test
-    void getRoot() throws Exception {
-        this.mockMvc.perform(get("/").accept(MediaType.TEXT_HTML))
-                .andExpect(status().isOk());
+    void getRoot() {
+        RestAssured.given().log().all()
+                .when().get("/")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(ContentType.HTML);
     }
 
     @Test
-    void getStart() throws Exception {
-        this.mockMvc.perform(get("/start").accept(MediaType.TEXT_HTML))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrl("/play"));
+    void getPlay() {
+        RestAssured.given().log().all()
+                .when().get("/play/1")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(ContentType.HTML);
     }
 
     @Test
-    void getPlay() throws Exception {
-        this.mockMvc.perform(get("/play").accept(MediaType.TEXT_HTML))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void postMove() throws Exception {
-        String content = objectMapper.writeValueAsString(new MoveDto("a2", "a4"));
-
-        this.mockMvc.perform(post("/move")
-                        .content(content)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void getEnd() throws Exception {
-        this.mockMvc.perform(get("/end").accept(MediaType.TEXT_HTML))
-                .andExpect(status().isOk());
+    void getEnd() {
+        RestAssured.given().log().all()
+                .when().get("/end")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(ContentType.HTML);
     }
 }

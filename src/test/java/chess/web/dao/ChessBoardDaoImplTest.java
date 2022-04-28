@@ -37,21 +37,13 @@ class ChessBoardDaoImplTest {
 
         chessBoardDao.save(position, piece, 1);
 
-        Map<Position, Piece> board = chessBoardDao.findAll(1);
+        Map<Position, Piece> board = chessBoardDao.findAllPieces(1);
         assertThat(board).hasSize(1);
     }
 
     @Test
-    void deleteAll() {
-        chessBoardDao.deleteAll(1);
-
-        Map<Position, Piece> board = chessBoardDao.findAll(1);
-        assertThat(board).hasSize(0);
-    }
-
-    @Test
-    void findAll() {
-        Map<Position, Piece> board = chessBoardDao.findAll(1);
+    void findAllPieces() {
+        Map<Position, Piece> board = chessBoardDao.findAllPieces(1);
 
         assertThat(board).isNotNull();
     }

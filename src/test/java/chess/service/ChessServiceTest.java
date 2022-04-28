@@ -23,7 +23,6 @@ class ChessServiceTest {
     private ChessService chessService;
     private int savedId;
 
-    // Fake 객체로 바꾸기
     @Autowired
     private ChessGameDao chessGameDao;
     @Autowired
@@ -49,7 +48,7 @@ class ChessServiceTest {
     @DisplayName("게임을 생성하면 말의 개수가 32개여야 합니다.")
     void testPiecesOfGames() {
         int savedId = chessService.save("test_game4", "1234");
-        List<String> chessBoard = chessService.getCurrentChessBoard(savedId);
+        List<String> chessBoard = chessService.findChessBoardById(savedId);
         List<String> existPieces = chessBoard.stream()
             .filter(piece -> !piece.equals(""))
             .collect(Collectors.toList());

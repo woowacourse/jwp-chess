@@ -51,11 +51,6 @@ public class ChessService {
         pieceDao.save(chessGameDto, chessGameId);
     }
 
-    public List<String> getCurrentChessBoard(int chessGameId) {
-        ChessGame chessGame = chessGameDao.findById(chessGameId);
-        return chessGame.getChessBoardSymbol();
-    }
-
     public List<String> move(String from, String to, int chessGameId) {
         ChessGame chessGame = chessGameDao.findById(chessGameId);
         Command command = Command.from(makeCommand(from, to));

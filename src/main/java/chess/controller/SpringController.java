@@ -60,9 +60,8 @@ public class SpringController {
         @RequestParam(value = "error", required = false) String error,
         Model model) {
         List<String> chessBoard = chessService.findChessBoardById(chessGameId);
-        List<PieceDto> pieceDtos = chessService.getPieces(chessGameId);
-
         model.addAttribute("chessboard", chessBoard);
+        List<PieceDto> pieceDtos = chessService.getPieces(chessGameId);
         model.addAttribute("pieces", pieceDtos);
         model.addAttribute("chessGameId", chessGameId);
         model.addAttribute("error", error);
@@ -93,11 +92,11 @@ public class SpringController {
     @GetMapping("/game/{chessGameId}/end")
     public String end(@PathVariable int chessGameId, Model model) {
         String winTeamName = chessService.finish(Command.from("end"), chessGameId);
-        List<String> chessBoard = chessService.getCurrentChessBoard(chessGameId);
+        // List<String> chessBoard = chessService.getCurrentChessBoard(chessGameId);
         List<PieceDto> pieceDtos = chessService.getPieces(chessGameId);
 
         model.addAttribute("winTeam", winTeamName);
-        model.addAttribute("chessboard", chessBoard);
+        // model.addAttribute("chessboard", chessBoard);
         model.addAttribute("chessGameId", chessGameId);
         model.addAttribute("pieces", pieceDtos);
 
@@ -107,12 +106,10 @@ public class SpringController {
     @GetMapping("/game/{chessGameId}/status")
     public String status(@PathVariable int chessGameId, Model model) {
         Map<Team, Double> score = chessService.getScore(chessGameId);
-        List<String> chessBoard = chessService.getCurrentChessBoard(chessGameId);
         List<PieceDto> pieceDtos = chessService.getPieces(chessGameId);
 
         model.addAttribute("blackScore", score.get(Team.BLACK));
         model.addAttribute("whiteScore", score.get(Team.WHITE));
-        model.addAttribute("chessboard", chessBoard);
         model.addAttribute("chessGameId", chessGameId);
         model.addAttribute("pieces", pieceDtos);
 

@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.dao.TurnDao;
 import chess.domain.piece.Team;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,8 +14,8 @@ public class JdbcTemplateTurnDao implements TurnDao {
     }
 
     @Override
-    public void init() {
-        jdbcTemplate.update("INSERT INTO turn(team) VALUES (?)", "white");
+    public void init(int gameId) {
+        jdbcTemplate.update("INSERT INTO turn(team, game_id) VALUES (?, ?)", "white", gameId);
     }
 
     @Override

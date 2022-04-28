@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.dao.GameStatusDao;
 import chess.domain.GameStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,8 +14,8 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
     }
 
     @Override
-    public void init() {
-        jdbcTemplate.update("INSERT INTO game_status (status) values (?)", "READY");
+    public void init(int gameId) {
+        jdbcTemplate.update("INSERT INTO game_status (status, game_id) values (?, ?)", "READY", gameId);
     }
 
     @Override

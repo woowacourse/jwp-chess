@@ -2,7 +2,7 @@ package chess.dao;
 
 public interface TurnDao {
 
-    void init();
+    void init(int gameId);
 
     void update(String nowTurn, String nextTurn);
 

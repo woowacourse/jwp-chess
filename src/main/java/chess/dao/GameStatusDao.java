@@ -2,7 +2,7 @@ package chess.dao;
 
 public interface GameStatusDao {
 
-    void init();
+    void init(int gameId);
 
     void update(String nowStatus, String nextStatus);
 

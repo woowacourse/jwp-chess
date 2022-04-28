@@ -56,12 +56,12 @@ public class ChessGameService {
         gameDao.delete(id);
     }
 
-    public void init() {
+    public void init(int gameId) {
         try {
             turnDao.getTurn();
         } catch (Exception e) {
-            turnDao.init();
-            gameStatusDao.init();
+            turnDao.init(gameId);
+            gameStatusDao.init(gameId);
         }
     }
 

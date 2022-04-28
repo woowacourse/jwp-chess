@@ -8,7 +8,7 @@ public class FakeGameStatusDao implements GameStatusDao {
     private GameStatus status = GameStatus.READY;
 
     @Override
-    public void init() {
+    public void init(int gameId) {
         status = GameStatus.READY;
     }
 

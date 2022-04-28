@@ -36,9 +36,8 @@ public class ChessWebController {
 
     @PostMapping("/chess")
     public ResponseEntity<Long> createChess(@RequestBody CreateRoomDto createRoomDto) {
-        Long boardId = chessService.createGame();
-        Long newId = chessService.createRoom(boardId, createRoomDto.getTitle(), createRoomDto.getPassword());
-        return ResponseEntity.created(URI.create("/chess/" + boardId)).body(newId);
+        Long roomId = chessService.createRoom(createRoomDto.getTitle(), createRoomDto.getPassword());
+        return ResponseEntity.created(URI.create("/chess/" + roomId)).body(roomId);
     }
 
     @GetMapping("/chess/{boardId}")

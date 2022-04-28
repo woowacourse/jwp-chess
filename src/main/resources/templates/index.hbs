@@ -31,15 +31,15 @@
             {{#rooms}}
                 <tr>
                     <td align="center">
-                        <text onClick="window.open('/chess/' + {{boardId}})">{{title}}</text>
+                        <text onClick="window.open('/chess/' + {{id}})">{{title}}</text>
                     </td>
                     <td>
-                        <button class="w-btn w-btn-brown" type="button" onClick="window.open('/chess/' + {{boardId}})">
+                        <button class="w-btn w-btn-brown" type="button" onClick="window.open('/chess/' + {{id}})">
                             접속
                         </button>
                     </td>
                     <td>
-                        <button class="w-btn w-btn-red" type="button" onclick="deleteRoom({{boardId}})">
+                        <button class="w-btn w-btn-red" type="button" onclick="deleteRoom({{id}})">
                             삭제
                         </button>
                     </td>

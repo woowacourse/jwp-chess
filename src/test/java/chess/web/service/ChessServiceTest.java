@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.board.Board;
 import chess.board.Room;
+import chess.board.Team;
 import chess.board.Turn;
 import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
-import chess.web.dao.BoardDao;
 import chess.web.dao.PieceDao;
 import chess.web.dao.RoomDao;
 import chess.web.service.dto.MoveDto;
@@ -21,34 +21,33 @@ import org.junit.jupiter.api.Test;
 
 class ChessServiceTest {
 
-    private final BoardDao boardDao = new MockBoardDao();
     private final PieceDao pieceDao = new MockPieceDao();
     private final RoomDao roomDao = new MockRoomDao();
-    private final ChessService chessService = new ChessService(boardDao, pieceDao, roomDao);
-    private final Long boardId = 1L;
-
+    private final ChessService chessService = new ChessService(pieceDao, roomDao);
 
     @Test
     @DisplayName("64개의 piece를 갖고 있는 게임을 불러왔을 떄, 그떄의 piece 개수도 64개여야한다.")
     void loadGame() {
-        chessService.initBoard(boardId);
-        Board board = chessService.loadGame(boardId);
+        Long roomId = chessService.createRoom("title", "password");
+        chessService.initBoard(roomId);
+        Board board = chessService.loadGame(roomId);
         assertThat(board.getPieces().getPieces().size()).isEqualTo(64);
     }
 
     @Test
     @DisplayName("보드판에서 from에서 to로 이동하면 처음 from에 있던 piece는 이동 후, to에 있는 piece와 같다.")
     void move() {
-        chessService.initBoard(boardId);
-        Pieces pieces = Pieces.from(pieceDao.findAllByBoardId(boardId));
-        Turn turn = boardDao.findTurnById(boardId).get();
+        Long roomId = chessService.createRoom("title", "password");
+        chessService.initBoard(roomId);
+        Pieces pieces = Pieces.from(pieceDao.findAllByRoomId(roomId));
+        Turn turn = new Turn(Team.from(roomDao.findById(roomId).get().getTurn()));
         Board board = Board.create(pieces, turn);
         String from = "a2";
         String to = "a3";
         Piece piece = board.getPieces().findByPosition(Position.from(from));
         MoveDto moveDto = new MoveDto(from, to);
 
-        Board movedBoard = chessService.move(moveDto, boardId);
+        Board movedBoard = chessService.move(moveDto, roomId);
 
         Piece movedPiece = movedBoard.getPieces().findByPosition(Position.from(to));
         assertAll(
@@ -62,9 +61,9 @@ class ChessServiceTest {
     @Test
     @DisplayName("64개의 말들이 초기화된다.")
     void initBoard() {
-        Long boardId = boardDao.save(Turn.init());
+        Long roomId = chessService.createRoom("title", "password");;
 
-        Board initBoard = chessService.initBoard(boardId);
+        Board initBoard = chessService.initBoard(roomId);
 
         Pieces pieces = initBoard.getPieces();
         assertThat(pieces.getPieces().size()).isEqualTo(64);
@@ -73,9 +72,10 @@ class ChessServiceTest {
     @Test
     @DisplayName("초기 board들의 점수는 black, white팀 모두 38이다.")
     void getStatus() {
-        chessService.initBoard(boardId);
+        Long roomId = chessService.createRoom("title", "password");
+        chessService.initBoard(roomId);
 
-        ScoreDto status = chessService.getStatus(boardId);
+        ScoreDto status = chessService.getStatus(roomId);
 
         assertThat(status.getBlackTeamScore()).isEqualTo(38D);
         assertThat(status.getWhiteTeamScore()).isEqualTo(38D);
@@ -87,9 +87,9 @@ class ChessServiceTest {
         String title = "title";
         String password = "password";
 
-        chessService.createRoom(boardId, title, password);
+        Long roomId = chessService.createRoom(title, password);
 
-        Optional<Room> room = roomDao.findByBoardId(boardId);
+        Optional<Room> room = roomDao.findById(roomId);
         assertThat(room).isPresent();
         assertThat(room.get().getTitle()).isEqualTo(title);
         assertThat(room.get().getPassword()).isEqualTo(password);
@@ -102,8 +102,8 @@ class ChessServiceTest {
         String title2 = "title2";
         String password1 = "password1";
         String password2 = "password2";
-        chessService.createRoom(boardId, title1, password1);
-        chessService.createRoom(boardId, title2, password2);
+        chessService.createRoom(title1, password1);
+        chessService.createRoom(title2, password2);
 
         List<Room> rooms = chessService.getRooms();
 
@@ -117,12 +117,17 @@ class ChessServiceTest {
     void removeRoom() {
         String title = "title";
         String password = "password";
-        chessService.createRoom(boardId, title, password);
+        Long roomId = chessService.createRoom(title, password);
+        chessService.move(new MoveDto("e2", "e3"), roomId);
+        chessService.move(new MoveDto("f7", "f6"), roomId);
+        chessService.move(new MoveDto("d1", "h5"), roomId);
+        chessService.move(new MoveDto("a7", "a6"), roomId);
+        chessService.move(new MoveDto("h5", "e8"), roomId);
 
-        boolean result = chessService.removeRoom(boardId, password);
+        boolean result = chessService.removeRoom(roomId, password);
 
         long resultCount = chessService.getRooms().stream()
-                .filter(room -> room.getBoardId() == boardId)
+                .filter(room -> room.getId().equals(roomId))
                 .filter(room -> room.getTitle().equals(title))
                 .filter(room -> room.getPassword().equals(password))
                 .count();
@@ -135,13 +140,13 @@ class ChessServiceTest {
     void removeRoomFailInRunningGame() {
         String title = "title";
         String password = "password";
-        chessService.createRoom(boardId, title, password);
-        chessService.initBoard(boardId);
+        Long roomId = chessService.createRoom(title, password);
+        chessService.initBoard(roomId);
 
-        boolean result = chessService.removeRoom(boardId, password);
+        boolean result = chessService.removeRoom(roomId, password);
 
         long resultCount = chessService.getRooms().stream()
-                .filter(room -> room.getBoardId() == boardId)
+                .filter(room -> room.getId().equals(roomId))
                 .filter(room -> room.getTitle().equals(title))
                 .filter(room -> room.getPassword().equals(password))
                 .count();

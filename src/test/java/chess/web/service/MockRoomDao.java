@@ -6,27 +6,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
 public class MockRoomDao implements RoomDao {
 
     private final Map<Long, Room> mockDb = new HashMap<>();
 
-    private long index = 1;
+    private long sequenceId = 1;
 
     @Override
-    public Long save(Long boardId, String title, String password) {
-        long key = index;
-        mockDb.put(index++, new Room(boardId.intValue(), title, password));
-        return key;
+    public Long save(String turn, String title, String password) {
+        mockDb.put(sequenceId, new Room(sequenceId, turn, title, password));
+        sequenceId++;
+        return sequenceId - 1;
     }
 
     @Override
-    public Optional<Room> findByBoardId(Long boardId) {
-        return mockDb.values().stream()
-                .filter(room -> room.getBoardId() == boardId)
-                .findFirst();
+    public Long updateTurnById(Long id, String turn) {
+        Room room = mockDb.get(id);
+        mockDb.put(id, new Room(id, turn, room.getTitle(), room.getPassword()));
+        return id;
+    }
+
+    @Override
+    public Optional<Room> findById(Long id) {
+        return Optional.ofNullable(mockDb.get(id));
     }
 
     @Override
@@ -35,13 +39,10 @@ public class MockRoomDao implements RoomDao {
     }
 
     @Override
-    public void delete(Long boardId, String password) {
-        Optional<Long> key = mockDb.entrySet().stream()
-                .filter(entry -> entry.getValue().getBoardId() == boardId)
-                .filter(entry -> entry.getValue().getPassword().equals(password))
-                .map(Entry::getKey)
-                .findFirst();
-
-        key.ifPresent(mockDb::remove);
+    public void delete(Long id, String password) {
+        Optional<Room> optionalRoom = Optional.ofNullable(mockDb.get(id));
+        if (optionalRoom.isPresent() && optionalRoom.get().getPassword().equals(password)) {
+            mockDb.remove(id);
+        }
     }
 }

@@ -8,49 +8,47 @@ import chess.board.piece.Empty;
 import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
-import chess.web.dao.BoardDao;
 import chess.web.dao.PieceDao;
 import chess.web.dao.RoomDao;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
 
-    private final BoardDao boardDao;
     private final PieceDao pieceDao;
     private final RoomDao roomDao;
 
     @Autowired
-    public ChessService(BoardDao boardDao, PieceDao pieceDao, RoomDao roomDao) {
-        this.boardDao = boardDao;
+    public ChessService(PieceDao pieceDao, RoomDao roomDao) {
         this.pieceDao = pieceDao;
         this.roomDao = roomDao;
     }
 
-    public Board loadGame(Long boardId) {
-        Turn turn = boardDao.findTurnById(boardId)
+    public Board loadGame(Long roomId) {
+        Room room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException("없는 차례입니다."));
+        Turn turn = new Turn(Team.from(room.getTurn()));
 
-        List<Piece> pieces = pieceDao.findAllByBoardId(boardId);
+        List<Piece> pieces = pieceDao.findAllByRoomId(roomId);
         Board board = Board.create(Pieces.from(pieces), turn);
 
         if (board.isDeadKing() || pieces.isEmpty()) {
-            return initBoard(boardId);
+            return initBoard(roomId);
         }
         return board;
     }
 
-    public Board move(final MoveDto moveDto, final Long boardId) {
-        Turn turn = boardDao.findTurnById(boardId)
+    public Board move(final MoveDto moveDto, final Long roomId) {
+        Room room = roomDao.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 정보입니다."));
+        Turn turn = new Turn(Team.from(room.getTurn()));
 
-        Board board = Board.create(Pieces.from(pieceDao.findAllByBoardId(boardId)), turn);
+        Board board = Board.create(Pieces.from(pieceDao.findAllByRoomId(roomId)), turn);
         Pieces pieces = board.getPieces();
 
         Piece piece = pieces.findByPosition(Position.from(moveDto.getFrom()));
@@ -59,60 +57,60 @@ public class ChessService {
         } catch (IllegalArgumentException exception) {
             return board;
         }
-        Turn changedTurn = updatePieces(moveDto, turn, piece, boardId);
+        Turn changedTurn = updatePieces(moveDto, turn, piece, roomId);
 
         return Board.create(pieces, changedTurn);
     }
 
-    private Turn updatePieces(MoveDto moveDto, Turn turn, Piece piece, final Long boardId) {
-        Turn changedTurn = changeTurn(turn, boardId);
+    private Turn updatePieces(MoveDto moveDto, Turn turn, Piece piece, final Long roomId) {
+        Turn changedTurn = changeTurn(turn, roomId);
         Empty empty = new Empty(Position.from(moveDto.getFrom()));
-        pieceDao.updatePieceByPositionAndBoardId(empty.getType(), empty.getTeam().value(), moveDto.getFrom(), boardId);
-        pieceDao.updatePieceByPositionAndBoardId(piece.getType(), piece.getTeam().value(), moveDto.getTo(), boardId);
+        pieceDao.updatePieceByPositionAndRoomId(empty.getType(), empty.getTeam().value(), moveDto.getFrom(), roomId);
+        pieceDao.updatePieceByPositionAndRoomId(piece.getType(), piece.getTeam().value(), moveDto.getTo(), roomId);
         return changedTurn;
     }
 
-    private Turn changeTurn(Turn turn, Long boardId) {
+    private Turn changeTurn(Turn turn, Long roomId) {
         Turn change = turn.change();
-        boardDao.update(boardId, change);
+        roomDao.updateTurnById(roomId, change.getTeam().value());
         return change;
     }
 
-    public Board initBoard(Long boardId) {
-        initTurn(boardId);
-        initPiece(boardId);
-        return loadGame(boardId);
+    public Board initBoard(Long roomId) {
+        initTurn(roomId);
+        initPiece(roomId);
+        return loadGame(roomId);
     }
 
-    private void initTurn(Long boardId) {
-        boardDao.findTurnById(boardId)
+    private void initTurn(Long roomId) {
+        roomDao.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 체스방 id 입니다."));
-        boardDao.update(boardId, Turn.init());
+        roomDao.updateTurnById(roomId, Turn.init().getTeam().value());
     }
 
-    private void initPiece(Long boardId) {
-        pieceDao.deleteByBoardId(boardId);
+    private void initPiece(Long roomId) {
+        pieceDao.deleteAllByRoomId(roomId);
 
         Pieces pieces = Pieces.createInit();
         for (Piece piece : pieces.getPieces()) {
-            insertOrUpdatePiece(boardId, piece);
+            insertOrUpdatePiece(roomId, piece);
         }
     }
 
-    private void insertOrUpdatePiece(Long boardId, Piece piece) {
+    private void insertOrUpdatePiece(Long roomId, Piece piece) {
         String position = piece.getPosition().name();
         String type = piece.getType();
         String team = piece.getTeam().value();
 
-        if (pieceDao.findByPositionAndBoardId(position, boardId).isPresent()) {
-            pieceDao.updatePieceByPositionAndBoardId(type, team, position, boardId);
+        if (pieceDao.findByPositionAndRoomId(position, roomId).isPresent()) {
+            pieceDao.updatePieceByPositionAndRoomId(type, team, position, roomId);
             return;
         }
-        pieceDao.save(piece, boardId);
+        pieceDao.save(piece, roomId);
     }
 
-    public ScoreDto getStatus(Long boardId) {
-        List<Piece> found = pieceDao.findAllByBoardId(boardId);
+    public ScoreDto getStatus(Long roomId) {
+        List<Piece> found = pieceDao.findAllByRoomId(roomId);
         Pieces pieces = Pieces.from(found);
 
         double blackScore = pieces.getTotalScore(Team.BLACK);
@@ -120,44 +118,39 @@ public class ChessService {
         return new ScoreDto(blackScore, whiteScore);
     }
 
-    public Long createGame() {
-        Long boardId = boardDao.save(Turn.init());
-        pieceDao.save(Pieces.createInit().getPieces(), boardId);
-        return boardId;
-    }
-
-    public Long createRoom(Long boardId, String title, String password) {
-        return roomDao.save(boardId, title, password);
+    public Long createRoom(String title, String password) {
+        Long id = roomDao.save(Turn.init().getTeam().value(), title, password);
+        pieceDao.save(Pieces.createInit().getPieces(), id);
+        return id;
     }
 
     public List<Room> getRooms() {
         return roomDao.findAll();
     }
 
-    public boolean removeRoom(Long boardId, String password) {
-        if (!hasRoom(boardId) || isRunningChess(boardId) || !matchPassword(boardId, password)) {
+    public boolean removeRoom(Long roomId, String password) {
+        if (!hasRoom(roomId) || isRunningChess(roomId) || !matchPassword(roomId, password)) {
             return false;
         }
-        pieceDao.deleteByBoardId(boardId);
-        roomDao.delete(boardId, password);
-        boardDao.deleteById(boardId);
+        pieceDao.deleteAllByRoomId(roomId);
+        roomDao.delete(roomId, password);
         return true;
     }
 
-    private boolean hasRoom(Long boardId) {
-        return roomDao.findByBoardId(boardId).isPresent();
+    private boolean hasRoom(Long roomId) {
+        return roomDao.findById(roomId).isPresent();
     }
 
-    private boolean isRunningChess(Long boardId) {
-        long kingCount = pieceDao.findAllByBoardId(boardId).stream()
+    private boolean isRunningChess(Long roomId) {
+        long kingCount = pieceDao.findAllByRoomId(roomId).stream()
                 .filter(Piece::isKing)
                 .count();
 
         return kingCount == 2;
     }
 
-    private boolean matchPassword(Long boardId, String password) {
-        Room room = roomDao.findByBoardId(boardId).get();
+    private boolean matchPassword(Long roomId, String password) {
+        Room room = roomDao.findById(roomId).get();
         return password.equals(room.getPassword());
     }
 }

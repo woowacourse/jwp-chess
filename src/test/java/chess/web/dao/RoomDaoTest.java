@@ -20,25 +20,23 @@ class RoomDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     private RoomDao roomDao;
-    private BoardDao boardDao;
 
     @BeforeEach
     void setUp() {
         roomDao = new RoomDaoImpl(jdbcTemplate);
-        boardDao = new BoardDaoImpl(jdbcTemplate);
     }
 
     @Sql("/sql/chess-setup.sql")
     @Test
     @DisplayName("체스방을 저장한다.")
     void save() {
-        Long boardId = boardDao.save(Turn.init());
+        Turn turn = Turn.init();
         String title = "title";
         String password = "password";
 
-        roomDao.save(boardId, title, password);
+        Long id = roomDao.save(turn.getTeam().value(), title, password);
 
-        Optional<Room> optionalRoom = roomDao.findByBoardId(boardId);
+        Optional<Room> optionalRoom = roomDao.findById(id);
         assertThat(optionalRoom).isPresent();
         assertThat(optionalRoom.get().getTitle()).isEqualTo(title);
         assertThat(optionalRoom.get().getPassword()).isEqualTo(password);
@@ -48,12 +46,12 @@ class RoomDaoTest {
     @Test
     @DisplayName("체스방을 찾는다.")
     void findByBoardId() {
-        Long boardId = boardDao.save(Turn.init());
+        Turn turn = Turn.init();
         String title = "title";
         String password = "password";
-        Long id = roomDao.save(boardId, title, password);
+        Long id = roomDao.save(turn.getTeam().value(), title, password);
 
-        Optional<Room> optionalRoom = roomDao.findByBoardId(id);
+        Optional<Room> optionalRoom = roomDao.findById(id);
 
         assertThat(optionalRoom).isPresent();
         assertThat(optionalRoom.get().getTitle()).isEqualTo(title);
@@ -64,14 +62,14 @@ class RoomDaoTest {
     @Test
     @DisplayName("체스방을 제거한다.")
     void delete() {
-        Long boardId = boardDao.save(Turn.init());
+        Turn turn = Turn.init();
         String title = "title";
         String password = "password";
-        Long id = roomDao.save(boardId, title, password);
+        Long id = roomDao.save(turn.getTeam().value(), title, password);
 
         roomDao.delete(id, password);
 
-        Optional<Room> optionalRoom = roomDao.findByBoardId(id);
+        Optional<Room> optionalRoom = roomDao.findById(id);
         assertThat(optionalRoom).isNotPresent();
     }
 
@@ -79,14 +77,14 @@ class RoomDaoTest {
     @Test
     @DisplayName("비밀번호가 틀리면 체스방을 제거할 수 없다.")
     void deleteWrongPassword() {
-        Long boardId = boardDao.save(Turn.init());
+        Turn turn = Turn.init();
         String title = "title";
         String password = "password";
-        Long id = roomDao.save(boardId, title, password);
+        Long id = roomDao.save(turn.getTeam().value(), title, password);
 
         roomDao.delete(id, "test");
 
-        Optional<Room> optionalRoom = roomDao.findByBoardId(id);
+        Optional<Room> optionalRoom = roomDao.findById(id);
         assertThat(optionalRoom).isPresent();
         assertThat(optionalRoom.get().getTitle()).isEqualTo(title);
         assertThat(optionalRoom.get().getPassword()).isEqualTo(password);

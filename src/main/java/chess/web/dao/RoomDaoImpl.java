@@ -18,7 +18,8 @@ public class RoomDaoImpl implements RoomDao {
 
     private final RowMapper<Room> rowMapper = (resultSet, rowNum) -> {
         return new Room(
-                resultSet.getInt("board_id"),
+                resultSet.getLong("id"),
+                resultSet.getString("turn"),
                 resultSet.getString("title"),
                 resultSet.getString("password")
         );
@@ -29,12 +30,12 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Long save(Long boardId, String title, String password) {
-        String query = "INSERT INTO room (board_id, title, password) VALUES (?, ?, ?)";
+    public Long save(String turn, String title, String password) {
+        String query = "INSERT INTO room (turn, title, password) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setLong(1, boardId);
+            preparedStatement.setString(1, turn);
             preparedStatement.setString(2, title);
             preparedStatement.setString(3, password);
             return preparedStatement;
@@ -44,11 +45,19 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Optional<Room> findByBoardId(Long boardId) {
-        final String query = "SELECT * FROM room WHERE board_id = ?";
+    public Long updateTurnById(Long id, String turn) {
+        final String query = "UPDATE room SET turn = ? WHERE id = ?";
+
+        jdbcTemplate.update(query, turn, id);
+        return id;
+    }
+
+    @Override
+    public Optional<Room> findById(Long roomId) {
+        final String query = "SELECT * FROM room WHERE id = ?";
 
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper, boardId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper, roomId));
         } catch (DataAccessException exception) {
             return Optional.empty();
         }
@@ -62,8 +71,8 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public void delete(Long boardId, String password) {
-        final String query = "DELETE FROM room WHERE board_id = ? AND password = ?";
-        jdbcTemplate.update(query, boardId, password);
+    public void delete(Long roomId, String password) {
+        final String query = "DELETE FROM room WHERE id = ? AND password = ?";
+        jdbcTemplate.update(query, roomId, password);
     }
 }

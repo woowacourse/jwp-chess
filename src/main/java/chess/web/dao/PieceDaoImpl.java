@@ -26,33 +26,33 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public void save(Piece piece, Long boardId) {
-        String query = "INSERT INTO piece (position, board_id, type, team) VALUES (?, ?, ?, ?);";
+    public void save(Piece piece, Long roomId) {
+        String query = "INSERT INTO piece (position, room_id, type, team) VALUES (?, ?, ?, ?);";
 
         String position = piece.getPosition().name();
         String type = piece.getType();
         String team = piece.getTeam().value();
-        jdbcTemplate.update(query, position, boardId, type, team);
+        jdbcTemplate.update(query, position, roomId, type, team);
     }
 
     @Override
-    public void updatePieceByPositionAndBoardId(
+    public void updatePieceByPositionAndRoomId(
             final String type,
             final String team,
             final String position,
-            final Long boardId
+            final Long roomId
     ) {
-        String query = "UPDATE piece SET type =?, team =? WHERE position = ? AND board_id = ?";
+        String query = "UPDATE piece SET type =?, team =? WHERE position = ? AND room_id = ?";
 
-        jdbcTemplate.update(query, type, team, position, boardId);
+        jdbcTemplate.update(query, type, team, position, roomId);
     }
 
     @Override
-    public Optional<Piece> findByPositionAndBoardId(final String position, final Long boardId) {
-        String query = "SELECT * FROM piece WHERE position = ? AND board_id = ?";
+    public Optional<Piece> findByPositionAndRoomId(final String position, final Long roomId) {
+        String query = "SELECT * FROM piece WHERE position = ? AND room_id = ?";
 
         try {
-            List<Piece> findQuery = jdbcTemplate.query(query, piecesRowMapper, position, boardId);
+            List<Piece> findQuery = jdbcTemplate.query(query, piecesRowMapper, position, roomId);
             Piece piece = DataAccessUtils.nullableSingleResult(findQuery);
             return Optional.ofNullable(piece);
         } catch (DataAccessException exception) {
@@ -61,20 +61,20 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public List<Piece> findAllByBoardId(final Long boardId) {
-        String query = "select position, team, type from piece WHERE board_id = ?";
+    public List<Piece> findAllByRoomId(final Long roomId) {
+        String query = "select position, team, type from piece WHERE room_id = ?";
 
-        return jdbcTemplate.query(query, piecesRowMapper, boardId);
+        return jdbcTemplate.query(query, piecesRowMapper, roomId);
     }
 
     @Override
-    public void save(List<Piece> pieces, Long boardId) {
-        final String query = "INSERT INTO piece (position, board_id, type, team) VALUES ( ?, ?, ?, ?)";
+    public void save(List<Piece> pieces, Long roomId) {
+        final String query = "INSERT INTO piece (position, room_id, type, team) VALUES ( ?, ?, ?, ?)";
         for (Piece piece : pieces) {
             jdbcTemplate.update(
                     query,
                     piece.getPosition().name(),
-                    boardId,
+                    roomId,
                     piece.getType(),
                     piece.getTeam().value()
             );
@@ -82,8 +82,8 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public void deleteByBoardId(Long boardId) {
-        final String query = "DELETE FROM piece WHERE board_id = ?";
-        jdbcTemplate.update(query, boardId);
+    public void deleteAllByRoomId(Long roomId) {
+        final String query = "DELETE FROM piece WHERE room_id = ?";
+        jdbcTemplate.update(query, roomId);
     }
 }

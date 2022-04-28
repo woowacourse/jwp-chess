@@ -54,7 +54,8 @@
         - 3xx : 리다이렉션 상태를 나타내어 사용자에게 대안을 제시함
         - 4xx : 클라이언트의 문제로 에러가 발생함
         - 5xx : 서버의 문제로 에러가 발생함
-- [ ] ChessWebController의 `createRoom`의 newId는 board의 id 인지 room의 id 인지 명확하면 좋을 것 같다
+- [x] ChessWebController의 `createRoom`의 newId는 board의 id 인지 room의 id 인지 명확하면 좋을 것 같다
+    - board, room 테이블을 합치면서 room의 id를 사용하도록 수정했다.
 - [ ] 보통 자원을 지울때는 pk로 지우게 되는데 Room을 지울 때 pk가 아닌 boardId 값으로 지우게 된다. 혹시 같은 boardId를 여러 자원이 가진다면 모두 지우게 되는 것이 의도한 것일까?
 - [ ] 여러 DAO를 사용하여 자원을 처리하다가 에러가 발생해서 프로그램이 중단된다면 게임의 데이터는 어떤 상태로 유지 될까요?
     - 원자성과 트랜잭션을 키워드로 학습해보고 문제를 해결해볼까요?

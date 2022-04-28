@@ -6,11 +6,13 @@ import java.util.Optional;
 
 public interface RoomDao {
 
-    Long save(Long boardId, String title, String password);
+    Long save(String turn, String title, String password);
 
-    Optional<Room> findByBoardId(Long boardId);
+    Long updateTurnById(Long id, String turn);
+
+    Optional<Room> findById(Long id);
 
     List<Room> findAll();
 
-    void delete(Long boardId, String password);
+    void delete(Long id, String password);
 }

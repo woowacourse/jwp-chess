@@ -8,45 +8,28 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Sql("/data.sql")
 @SpringBootTest
 class PieceDaoTest {
 
     @Autowired
     private PieceDao pieceDao;
     @Autowired
-    private BoardDao boardDao;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private RoomDao roomDao;
 
     private Long boardId;
     private Pieces pieces;
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS piece");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS board");
-
-        jdbcTemplate.execute("CREATE TABLE board (" +
-                " id   INT(10) not null AUTO_INCREMENT," +
-                " turn VARCHAR (5) not null," +
-                " primary key (id))");
-
-        jdbcTemplate.execute("CREATE TABLE piece (" +
-                " id       INT(10) not null AUTO_INCREMENT," +
-                " board_id INT(10)," +
-                " position CHAR(2)," +
-                " type     VARCHAR (20) not null," +
-                " team     VARCHAR (10) not null," +
-                " foreign key (board_id) references board (id) ON DELETE CASCADE ," +
-                " primary key (id))");
-
         pieces = Pieces.createInit();
-        boardId = boardDao.save();
+        boardId = roomDao.save("첫번쨰 방제목", "123");
         pieceDao.save(pieces.getPieces(), boardId);
     }
 

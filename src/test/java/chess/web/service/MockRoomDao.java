@@ -4,14 +4,14 @@ import chess.board.Board;
 import chess.board.Team;
 import chess.board.Turn;
 import chess.board.piece.Pieces;
-import chess.web.dao.BoardDao;
+import chess.web.dao.RoomDao;
 
 import java.util.*;
 
-public class MockBoardDao implements BoardDao {
+public class MockRoomDao implements RoomDao {
     private final Map<Long, String> mockDb = new HashMap<>();
 
-    public MockBoardDao() {
+    public MockRoomDao() {
         mockDb.put(1L, "white");
     }
 
@@ -26,7 +26,7 @@ public class MockBoardDao implements BoardDao {
     }
 
     @Override
-    public Long save() {
+    public Long save(String title, String password) {
         return 1L;
     }
 

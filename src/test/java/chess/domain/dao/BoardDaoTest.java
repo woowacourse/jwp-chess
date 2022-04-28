@@ -24,6 +24,7 @@ class BoardDaoTest {
         this.boardDao = boardDao;
         this.gameDao = gameDao;
     }
+
     @BeforeEach
     void set() {
         boardDao.deleteAll();

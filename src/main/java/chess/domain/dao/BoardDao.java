@@ -60,7 +60,7 @@ public class BoardDao {
         final String sql = "delete from Board";
         try {
             jdbcTemplate.update(sql);
-            jdbcTemplate.update("alter table game auto_increment = 1");
+            jdbcTemplate.update("alter table Board alter column id restart with 1");
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");

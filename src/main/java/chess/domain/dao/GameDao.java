@@ -111,7 +111,7 @@ public class GameDao {
         final String sql = "delete from game";
         try {
             jdbcTemplate.update(sql);
-            jdbcTemplate.update("alter table game auto_increment = 1");
+            jdbcTemplate.update("alter table Game alter column id restart with 1");
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");

@@ -3,7 +3,6 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.*;
 
 import chess.dto.RoomDto;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-public class RoomDaoTest {
+class RoomDaoTest {
     private GameDao gameDao;
     private RoomDao roomDao;
 
@@ -53,5 +52,12 @@ public class RoomDaoTest {
         RoomDto roomDto = roomDao.findById(gameId);
         assertThat(roomDto.getName().equals("josh") && roomDto.getPassword().equals("0000"))
                 .isTrue();
+    }
+
+    @Test
+    void findPasswordById() {
+        int gameId = 0;
+        String password = roomDao.findPasswordById(gameId);
+        assertThat(password.equals("0000")).isTrue();
     }
 }

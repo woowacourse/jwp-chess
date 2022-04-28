@@ -58,6 +58,16 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
+    public Optional<String> findPasswordById(Long roomId) {
+        String sql = "SELECT password FROM game WHERE id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, String.class, roomId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public Long saveGame(GameStateDto gameStateDto, String roomName, String password) {
         Map<String, Object> parameters = Map.of(
             "room_name", roomName,

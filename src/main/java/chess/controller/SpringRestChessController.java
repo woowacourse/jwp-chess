@@ -46,6 +46,12 @@ public class SpringRestChessController {
         return respondPath(String.format(MAIN_PATH_FORMAT, roomId));
     }
 
+    @PostMapping(path = "/delete/{roomId}")
+    public ResponseEntity<PathResponse> delete(@PathVariable Long roomId, @RequestBody RoomRequest roomRequest) {
+        gameService.deleteGame(roomId, roomRequest);
+        return respondPath(ROOT_PATH);
+    }
+
     @GetMapping(path = "/start/{roomId}")
     public ResponseEntity<PathResponse> start(@PathVariable Long roomId) {
         gameService.startGame(roomId);

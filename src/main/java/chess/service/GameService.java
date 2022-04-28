@@ -1,6 +1,5 @@
 package chess.service;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -95,6 +94,20 @@ public class GameService {
     }
 
     public Map<Long,String> readGameRooms() {
-        return gameDao.readGameRoomNames();
+        return gameDao.readGameRoomIdAndNames();
+    }
+
+    public void deleteGame(Long roomId, RoomRequest roomRequest) {
+        final String foundPassword = gameDao.findPasswordById(roomId)
+            .orElseThrow(() -> new IllegalArgumentException("해당하는 방이 없습니다."));
+        validatePassword(roomRequest.getPassword(), foundPassword);
+        boardDao.removeBoard(roomId);
+        gameDao.removeGame(roomId);
+    }
+
+    private void validatePassword(String password, String foundPassword) {
+        if (!foundPassword.equals(password)) {
+            throw new IllegalArgumentException("패스워드가 올바르지 않습니다.");
+        }
     }
 }

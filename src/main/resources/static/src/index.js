@@ -216,7 +216,25 @@ function createRoom(roomId, roomName) {
     const form = document.createElement("form");
     const enterAnchor = Object.assign(document.createElement('a'),
         {href: `/main/${roomId}`, innerText: roomName});
+
+    const deleteButton = Object.assign(document.createElement('img'),
+        {
+            src: '/images/X_BUTTON.png',
+            height: '15',
+            style: "cursor: pointer;",
+            width: '15'
+        });
+    deleteButton.onclick = function () {
+        const password = prompt("패스워드를 입력하세요 : ");
+        send(`/delete/${roomId}`, {
+                method: 'post',
+                body: JSON.stringify({password: password}),
+                headers: new Headers({'Content-Type': 'application/json'})
+            }, relocate);
+    }
+
     form.appendChild(enterAnchor);
+    form.appendChild(deleteButton);
     return form;
 }
 

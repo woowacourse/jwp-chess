@@ -61,7 +61,12 @@ public class ChessGameService {
     }
 
     public void deleteRoom(final long roomId, final String inputPassword) {
-        String roomPassword = roomDao.findRoomPasswordById(roomId);
+        final ChessGame chessGame = findChessGameById(roomId);
+        if (chessGame.isRunning()) {
+            throw new IllegalArgumentException("끝나지 않은 게임은 삭제가 불가능합니다.");
+        }
+
+        final String roomPassword = roomDao.findRoomPasswordById(roomId);
         if (!inputPassword.equals(roomPassword)) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }

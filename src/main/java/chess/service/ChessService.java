@@ -166,7 +166,7 @@ public class ChessService {
         return gameDao.findAll();
     }
 
-    public boolean checkPassword(int gameId, String password) {
+    public boolean checkPassword(long gameId, String password) {
         return password.equals(gameDao.findPassword(gameId));
     }
 }

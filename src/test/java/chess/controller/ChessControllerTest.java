@@ -49,10 +49,6 @@ class ChessControllerTest {
         gameDao.delete(testGameId);
     }
 
-    void deleteGame() {
-        gameDao.delete(testGameId);
-    }
-
     @Nested
     @DisplayName("GET - 게임 조회 테스트")
     class LoadTest {
@@ -187,7 +183,7 @@ class ChessControllerTest {
         @Test
         void valid_Password() throws JsonProcessingException {
             ObjectMapper objectMapper = new ObjectMapper();
-            GameAccessRequest gameAccessRequest = new GameAccessRequest((int) testGameId, "password");
+            GameAccessRequest gameAccessRequest = new GameAccessRequest(testGameId, "password");
             String jsonString = objectMapper.writeValueAsString(gameAccessRequest);
 
             RestAssured.given().log().all()
@@ -203,7 +199,7 @@ class ChessControllerTest {
         @Test
         void invalid_Password() throws JsonProcessingException {
             ObjectMapper objectMapper = new ObjectMapper();
-            GameAccessRequest gameAccessRequest = new GameAccessRequest((int) testGameId, "wrongPassword");
+            GameAccessRequest gameAccessRequest = new GameAccessRequest(testGameId, "wrongPassword");
             String jsonString = objectMapper.writeValueAsString(gameAccessRequest);
 
             RestAssured.given().log().all()
@@ -227,7 +223,7 @@ class ChessControllerTest {
             final int gameId = gameDao.find("n", "p").get();
             gameDao.updateState(gameId, GameState.FINISHED);
             ObjectMapper objectMapper = new ObjectMapper();
-            GameAccessRequest gameAccessRequest = new GameAccessRequest((int) gameId, "p");
+            GameAccessRequest gameAccessRequest = new GameAccessRequest(gameId, "p");
             String jsonString = objectMapper.writeValueAsString(gameAccessRequest);
 
             RestAssured.given().log().all()
@@ -246,7 +242,7 @@ class ChessControllerTest {
             gameDao.updateState(testGameId, GameState.FINISHED);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            GameAccessRequest gameAccessRequest = new GameAccessRequest((int) testGameId, "wrongPassword");
+            GameAccessRequest gameAccessRequest = new GameAccessRequest(testGameId, "wrongPassword");
             String jsonString = objectMapper.writeValueAsString(gameAccessRequest);
 
             RestAssured.given().log().all()
@@ -263,7 +259,7 @@ class ChessControllerTest {
         @Test
         void game_Status_Is_Not_End() throws JsonProcessingException {
             ObjectMapper objectMapper = new ObjectMapper();
-            GameAccessRequest gameAccessRequest = new GameAccessRequest((int) testGameId, "password");
+            GameAccessRequest gameAccessRequest = new GameAccessRequest(testGameId, "password");
             String jsonString = objectMapper.writeValueAsString(gameAccessRequest);
 
             RestAssured.given().log().all()

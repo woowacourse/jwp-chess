@@ -22,12 +22,18 @@
 
 - 새로운 체스 게임을 생성 
   - POST "/chessgames"
+- 체스 게임 목록 로딩
+  - GET "/chessgames"
 - 체스 게임 로딩
   - GET "/chessgames/{id}"
+- 체스 게임 삭제
+  - DELETE "/chessgames/{id}"
+- 체스 게임 종료
+  - PATCH "/chessgames/{id}/end"
 - 피스 이동
-  - POST "/chessgames/{id}/move"
+  - PATCH "/chessgames/{id}/move"
 - 피스 프로모션
-  - POST "/chessgames/{id}/promotion"
+  - PATCH "/chessgames/{id}/promotion"
 - 체스 게임 스코어 계산
   - GET "/chessgames/{id}/score"
 - 체스 게임 종료 여부

@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import chess.database.GameStateGenerator;
 import chess.database.dao.FakeBoardDao;
 import chess.database.dao.FakeGameDao;
 import chess.database.dto.GameStateDto;
@@ -127,6 +128,22 @@ class GameServiceTest {
         // then
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> service.deleteGame(id, new RoomRequest(null, password)));
+    }
+
+    @Test
+    @DisplayName("진행중인 게임은 삭제할 수 없다.")
+    public void deleteRunningGame() {
+
+        // given & when
+        String password = "TEST-PASSWORD";
+        service.startGame(id);
+
+        // when
+        assertThatExceptionOfType(IllegalStateException.class)
+            .isThrownBy(() -> service.deleteGame(id, new RoomRequest(null, password)));
+
+
+        // then
     }
 
     @AfterEach

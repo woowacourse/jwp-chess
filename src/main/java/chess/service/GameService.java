@@ -102,16 +102,25 @@ public class GameService {
     }
 
     public void deleteGame(Long roomId, RoomRequest roomRequest) {
-        final String foundPassword = gameDao.findPasswordById(roomId)
-            .orElseThrow(() -> new IllegalArgumentException("해당하는 방이 없습니다."));
-        validatePassword(roomRequest.getPassword(), foundPassword);
+        validatePassword(roomId, roomRequest.getPassword());
+        validateGameNotRunning(roomId);
         boardDao.removeBoard(roomId);
         gameDao.removeGame(roomId);
     }
 
-    private void validatePassword(String password, String foundPassword) {
+    private void validateGameNotRunning(Long roomId) {
+        final GameStateDto gameStateDto = gameDao.findGameById(roomId)
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당하는 방이 없습니다."));
+        if ("RUNNING".equals(gameStateDto.getState())) {
+            throw new IllegalStateException("[ERROR] 진행중인 게임은 삭제할 수 없습니다.");
+        }
+    }
+
+    private void validatePassword(Long roomId, String password) {
+        final String foundPassword = gameDao.findPasswordById(roomId)
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당하는 방이 없습니다."));
         if (!encoder.matches(password, foundPassword)) {
-            throw new IllegalArgumentException("패스워드가 올바르지 않습니다.");
+            throw new IllegalArgumentException("[ERROR] 패스워드가 올바르지 않습니다.");
         }
     }
 }

@@ -7,52 +7,58 @@ import chess.dao.MockBoardDao;
 import chess.dao.MockPieceDao;
 import chess.dao.PieceDao;
 import chess.domain.Color;
-import chess.domain.board.Board;
-import chess.domain.board.Column;
-import chess.domain.board.Position;
-import chess.domain.board.Row;
-import chess.domain.piece.Pawn;
-import chess.domain.piece.Piece;
-import chess.dto.ChessBoardDto;
-import java.util.Map;
+import chess.domain.board.BoardInitializer;
+import chess.dto.CreateBoardDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ChessGameServiceTest {
+    private BoardDao boardDao;
+    private PieceDao pieceDao;
 
-    @Test
-    @DisplayName("게임 시작 시 저장된 체스가 있으면 불러온다.")
-    void initial_start() {
-        //given
-        Board board = new Board();
-        PieceDao pieceDao = new MockPieceDao();
-        BoardDao boardDao = new MockBoardDao();
-        board.move(Position.of(Column.A, Row.TWO), Position.of(Column.A, Row.FOUR));
-        pieceDao.save(board.getPiecesByPosition());
-        boardDao.updateTurn(Color.BLACK,1);
-        ChessGameService chessGameService = new ChessGameService(pieceDao, boardDao);
-        //when
-        chessGameService.start(1);
-        //then
-        ChessBoardDto chessBoardDto = chessGameService.getBoard();
-        Map<String, Piece> pieceMap = chessBoardDto.getBoard();
-        assertThat(pieceMap.get("a4")).isInstanceOf(Pawn.class);
+    @BeforeEach
+    void init(){
+        boardDao = new MockBoardDao();
+        pieceDao = new MockPieceDao();
     }
 
     @Test
-    @DisplayName("게임을 종료하면 저장된 게임이 삭제된다.")
-    void delete() {
+    @DisplayName("이름과 비밀번호로 보드를 만들 수 있다.")
+    void initial_start() {
+        int id = boardDao.makeBoard(Color.WHITE, new CreateBoardDto("name", "password"));
+        pieceDao.save(BoardInitializer.createBoard(), id);
+
+        assertThat(id).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("board의 turn을 update할 수 있다.")
+    void updateBoardTurn() {
         //given
-        Board board = new Board();
-        PieceDao pieceDao = new MockPieceDao();
-        BoardDao boardDao = new MockBoardDao();
-        pieceDao.save(board.getPiecesByPosition());
-        boardDao.updateTurn(Color.WHITE, 1);
-        ChessGameService chessGameService = new ChessGameService(pieceDao, boardDao);
-        chessGameService.start(1);
+        int id = boardDao.makeBoard(Color.WHITE, new CreateBoardDto("name", "password"));
+        pieceDao.save(BoardInitializer.createBoard(), id);
+
         //when
-        chessGameService.end(1);
+        boardDao.updateTurn(Color.BLACK, id);
+
         //then
-        assertThat(pieceDao.existPieces()).isFalse();
+        assertThat(boardDao.findTurn(id)).isEqualTo(Color.BLACK);
+    }
+
+    @Test
+    @DisplayName("id값으로 보드를 가져올 수 있다.")
+    void getBoard() {
+        boardDao.makeBoard(Color.WHITE, new CreateBoardDto("name", "password"));
+        pieceDao.save(BoardInitializer.createBoard(), 1);
+
+        assertThat(pieceDao.load(1)).containsAllEntriesOf(BoardInitializer.createBoard());
+    }
+
+    @Test
+    @DisplayName("id값으로 보드의 현재 turn을 가져올 수 있다.")
+    void getTurn() {
+        boardDao.makeBoard(Color.WHITE, new CreateBoardDto("name", "password"));
+        assertThat(boardDao.findTurn(1)).isEqualTo(Color.WHITE);
     }
 }

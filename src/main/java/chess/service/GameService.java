@@ -3,6 +3,7 @@ package chess.service;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import chess.database.GameStateGenerator;
@@ -25,10 +26,13 @@ public class GameService {
 
     private final GameDao gameDao;
     private final BoardDao boardDao;
+    private final PasswordEncoder encoder;
 
-    public GameService(GameDao gameDao, BoardDao boardDao) {
+    public GameService(GameDao gameDao, BoardDao boardDao,
+        PasswordEncoder encoder) {
         this.gameDao = gameDao;
         this.boardDao = boardDao;
+        this.encoder = encoder;
     }
 
     public Long createNewGame(RoomRequest roomRequest) {
@@ -37,7 +41,7 @@ public class GameService {
         Long gameId = gameDao.saveGame(
             GameStateDto.of(state),
             roomRequest.getRoomName(),
-            roomRequest.getPassword()
+            encoder.encode(roomRequest.getPassword())
         );
         boardDao.saveBoard(BoardDto.of(state.getPointPieces()), gameId);
         return gameId;
@@ -106,7 +110,7 @@ public class GameService {
     }
 
     private void validatePassword(String password, String foundPassword) {
-        if (!foundPassword.equals(password)) {
+        if (!encoder.matches(password, foundPassword)) {
             throw new IllegalArgumentException("패스워드가 올바르지 않습니다.");
         }
     }

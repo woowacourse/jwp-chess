@@ -86,4 +86,9 @@ public class FakeGameDao implements GameDao {
     public Map<Long, String> readGameRoomIdAndNames() {
         return null;
     }
+
+    @Override
+    public Optional<String> findPasswordById(Long roomId) {
+        return Optional.empty();
+    }
 }

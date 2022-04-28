@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import chess.database.dao.FakeBoardDao;
 import chess.database.dao.FakeGameDao;
@@ -21,8 +23,11 @@ class GameServiceTest {
 
     private final FakeGameDao gameDao = new FakeGameDao();
     private final FakeBoardDao boardDao = new FakeBoardDao();
-    
-    private final GameService service = new GameService(gameDao, boardDao);
+
+    @Autowired
+    private PasswordEncoder encoder;
+
+    private final GameService service = new GameService(gameDao, boardDao, encoder);
     private Long id;
 
     @BeforeEach

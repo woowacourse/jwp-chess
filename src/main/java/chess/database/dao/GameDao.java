@@ -17,4 +17,6 @@ public interface GameDao {
     Map<Long, String> readGameRoomIdAndNames();
 
     Optional<GameStateDto> findGameByRoomName(String roomName);
+
+    Optional<String> findPasswordById(Long roomId);
 }

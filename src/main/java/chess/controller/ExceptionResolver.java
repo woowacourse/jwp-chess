@@ -12,6 +12,7 @@ public class ExceptionResolver {
 
     @ExceptionHandler
     public ResponseEntity<String> handleException(Exception e) {
+        e.printStackTrace();
         return new ResponseEntity<>(DEFAULT_SERVER_EXCEPTION_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

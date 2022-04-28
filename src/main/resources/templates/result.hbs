@@ -2,17 +2,19 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8"/>
-    <title>게임 결과 | 체스 시뮬레이터</title>
+    <title>결과 조회 | 체스 시뮬레이터</title>
     <link rel="stylesheet" href="/styles/result.css"/>
     <link rel="icon" type="image/x-icon" href="/images/favicon.png">
 </head>
 <body>
 {{#response}}
+{{#metadata}}
 <section class="header__container">
-    <h1>체스 시뮬레이터</h1>
+    <h1 id="game_name">{{name}}</h1>
     <div class="game_info__container">
         <div>
-            <span>게임 ID: {{gameInfo.game.id}} | </span>
+            <span>게임 ID: {{id}} | </span>
+            {{/metadata}}
             {{#result}}
             <span class="bold">승자: {{winner}}</span>
         </div>
@@ -21,8 +23,9 @@
         {{/result}}
     </div>
 </section>
+{{#snapshot}}
 <section id="chess_board">
-    {{#gameInfo.board}}
+    {{#board}}
     <div class="row">
         {{#squares}}
         <div class="square">
@@ -30,11 +33,18 @@
         </div>
         {{/squares}}
     </div>
-    {{/gameInfo.board}}
+    {{/board}}
 </section>
+{{/snapshot}}
+<form action="/game/{{metadata.id}}">
+    <label for="password_input">비밀번호</label>
+    <input type="password" required id="password_input" name="password"/>
+    <input type="submit" value="삭제"/>
+</form>
 <section class="buttons__container">
     <a href="/">홈으로 돌아가기!</a>
 </section>
 {{/response}}
+<script src="/scripts/delete-game.js"></script>
 </body>
 </html>

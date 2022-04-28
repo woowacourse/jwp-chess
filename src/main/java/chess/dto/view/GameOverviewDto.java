@@ -1,24 +1,23 @@
-package chess.dto;
+package chess.dto.view;
 
-import chess.domain.game.statistics.GameState;
 import java.util.Objects;
 
-public class GameDataDto {
+public class GameOverviewDto {
 
     private final int id;
-    private final GameState state;
+    private final String name;
 
-    public GameDataDto(int id, GameState state) {
+    public GameOverviewDto(int id, String name) {
         this.id = id;
-        this.state = state;
+        this.name = name;
     }
 
     public int getId() {
         return id;
     }
 
-    public GameState getState() {
-        return state;
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -29,18 +28,18 @@ public class GameDataDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        GameDataDto that = (GameDataDto) o;
+        GameOverviewDto that = (GameOverviewDto) o;
         return id == that.id
-                && state == that.state;
+                && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, state);
+        return Objects.hash(id, name);
     }
 
     @Override
     public String toString() {
-        return "GameDataDto{" + "id=" + id + ", state=" + state + '}';
+        return "GameOverviewDto{" + "id=" + id + ", name='" + name + '\'' + '}';
     }
 }

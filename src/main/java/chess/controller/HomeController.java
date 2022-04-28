@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.GameCountDto;
+import chess.dto.view.GameCountDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +19,7 @@ public class HomeController {
     }
 
     @GetMapping
-    public ModelAndView home() {
+    public ModelAndView renderHome() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
         GameCountDto gameCountDto = chessService.countGames();

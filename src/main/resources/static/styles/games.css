@@ -1,0 +1,40 @@
+@import "global.css";
+@import "simple_form.css";
+
+.list__container {
+    width: 100%;
+    margin-top: 16px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.list__container .title {
+    width: 200px;
+    font-size: 24px;
+    text-align: center;
+}
+
+.list__container ul {
+    width: 300px;
+}
+
+.list__container .game_link_box {
+    width: 100%;
+    height: 45px;
+    padding: 10px;
+    text-align: center;
+}
+
+.buttons__container {
+    width: 100%;
+    height: 50px;
+    margin-top: 20px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}

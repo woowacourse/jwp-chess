@@ -1,6 +1,16 @@
 package chess.domain.event;
 
+import chess.entity.EventEntity;
+
 public abstract class Event {
+
+    private final EventType type;
+    private final String description;
+
+    protected Event(EventType type, String description) {
+        this.type = type;
+        this.description = description;
+    }
 
     public static Event of(String type, String description) {
         EventType eventType = EventType.valueOf(type);
@@ -10,13 +20,13 @@ public abstract class Event {
         return new InitEvent();
     }
 
-    public abstract boolean isInit();
-
-    public abstract boolean isMove();
+    public boolean hasTypeOf(EventType type) {
+        return this.type == type;
+    }
 
     public abstract MoveRoute toMoveRoute();
 
-    public abstract String getType();
-
-    public abstract String getDescription();
+    public EventEntity toEntityOf(int gameId) {
+        return new EventEntity(gameId, type, description);
+    }
 }

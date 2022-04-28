@@ -4,28 +4,21 @@ public final class InitEvent extends Event {
 
     private static final String INIT_DESCRIPTION = "";
 
-    public boolean isInit() {
-        return true;
-    }
-
-    public boolean isMove() {
-        return false;
+    public InitEvent() {
+        super(EventType.INIT, INIT_DESCRIPTION);
     }
 
     public MoveRoute toMoveRoute() {
         throw new UnsupportedOperationException("이동 이벤트가 아닙니다.");
     }
 
-    public String getType() {
-        return EventType.INIT.name();
-    }
-
-    public String getDescription() {
-        return INIT_DESCRIPTION;
-    }
-
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return "InitEvent{}";
     }
 }

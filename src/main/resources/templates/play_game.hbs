@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko">
+{{#response}}
+{{#metadata}}
 <head>
     <meta charset="UTF-8"/>
-    <title>게임 {{id}} | 체스 시뮬레이터</title>
+    <title>{{name}} | 체스 시뮬레이터</title>
     <link rel="stylesheet" href="/styles/game.css"/>
     <link rel="icon" type="image/x-icon" href="/images/favicon.png">
 </head>
 <body>
-{{#response}}
 <section class="header__container">
-    <h1>체스 시뮬레이터</h1>
+    <h1>{{name}}</h1>
     <div class="game_info__container">
-        <span>게임 ID: {{game.id}} | 게임 상태: </span>
-        <span class="bold">{{game.state.value}}</span>
+        <span>게임 ID: {{id}} | 게임 상태: </span>
+        {{/metadata}}
+        {{#snapshot}}
+        <span class="bold">{{stateValue}}</span>
     </div>
 </section>
 <section id="chess_board">
@@ -33,10 +36,11 @@
 <section>
     <a href="/">뒤로가기!</a>
 </section>
-<section id={{game.state}} class="popup">
+<section id={{state}} class="popup">
+{{/snapshot}}
     <div class="popup__container">
         <div class="popup__title">게임이 종료되었습니다!</div>
-        <a href="/result/{{game.id}}">게임결과 보러 가기!</a>
+        <a href="/result/{{metadata.id}}">게임결과 보러 가기!</a>
     </div>
 </section>
 {{/response}}

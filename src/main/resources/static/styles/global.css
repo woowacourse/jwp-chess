@@ -2,7 +2,6 @@ body {
     padding: 0;
     margin: 0;
     border: none;
-    overflow: hidden;
 }
 
 * {
@@ -24,6 +23,13 @@ body {
 
 .bold {
     font-weight: bold;
+}
+
+ul, li {
+    list-style-type: none;
+    list-style-position: inside;
+    margin:0;
+    padding:0;
 }
 
 a, button {

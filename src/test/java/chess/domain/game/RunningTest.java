@@ -10,7 +10,7 @@ import chess.domain.board.piece.Piece;
 import chess.domain.board.position.Position;
 import chess.domain.event.Event;
 import chess.domain.event.MoveEvent;
-import chess.util.BoardMapGeneratorUtil;
+import chess.domain.board.BoardFactory;
 import java.util.HashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -96,7 +96,7 @@ class RunningTest {
 
     @Test
     void 보드_정보가_동일하더라도_턴이_다르면_별개의_인스턴스() {
-        Board board = new Board(BoardMapGeneratorUtil.initFullChessBoard());
+        Board board = BoardFactory.init();
         Game whiteTurn = new WhiteTurn(board);
         Game blackTurn = new BlackTurn(board);
 

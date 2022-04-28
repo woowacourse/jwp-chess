@@ -2,16 +2,17 @@
 
 form {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-form > label{
-    margin-right: 8px;
-}
+form > div {
+    width: 220px;
+    padding-bottom: 10px;
 
-form > #num_input{
-    margin-right: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .buttons__container {

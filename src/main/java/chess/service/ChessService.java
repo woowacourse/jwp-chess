@@ -2,16 +2,19 @@ package chess.service;
 
 import chess.dao.EventDao;
 import chess.dao.GameDao;
+import chess.domain.auth.EncryptedAuthCredentials;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
-import chess.dto.CreateGameDto;
-import chess.dto.GameCountDto;
-import chess.dto.GameDto;
-import chess.dto.GameResultDto;
-import chess.dto.SearchResultDto;
+import chess.dto.response.SearchResultDto;
+import chess.dto.view.FullGameDto;
+import chess.dto.view.GameCountDto;
+import chess.dto.view.GameOverviewDto;
+import chess.dto.view.GameResultDto;
+import chess.entity.GameEntity;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,30 @@ public class ChessService {
         this.eventDao = eventDao;
     }
 
+    public List<GameOverviewDto> findGames() {
+        return gameDao.findAll()
+                .stream()
+                .map(GameEntity::toDto)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    public FullGameDto findGame(int gameId) {
+        GameEntity gameEntity = gameDao.findById(gameId);
+        Game game = currentSnapShotOf(gameId);
+        return FullGameDto.of(gameEntity, game);
+    }
+
+    public GameResultDto findGameResult(int gameId) {
+        GameEntity gameEntity = gameDao.findById(gameId);
+        Game game = currentSnapShotOf(gameId);
+        validateGameOver(game);
+        return GameResultDto.of(gameEntity, game);
+    }
+
+    public SearchResultDto searchGame(int gameId) {
+        return new SearchResultDto(gameId, gameDao.checkById(gameId));
+    }
+
     public GameCountDto countGames() {
         int totalCount = gameDao.countAll();
         int runningCount = gameDao.countRunningGames();
@@ -36,40 +63,30 @@ public class ChessService {
     }
 
     @Transactional
-    public CreateGameDto initGame() {
-        int gameId = gameDao.saveAndGetGeneratedId();
+    public int initGame(EncryptedAuthCredentials authCredentials) {
+        int gameId = gameDao.saveAndGetGeneratedId(authCredentials);
         eventDao.save(gameId, new InitEvent());
-        return new CreateGameDto(gameId);
-    }
-
-    public SearchResultDto searchGame(int gameId) {
-        return new SearchResultDto(gameId, gameDao.checkById(gameId));
-    }
-
-    public GameDto findGame(int gameId) {
-        Game game = currentSnapShotOf(gameId);
-        return game.toDtoOf(gameId);
+        return gameId;
     }
 
     @Transactional
-    public GameDto playGame(int gameId, Event moveEvent) {
+    public void playGame(int gameId, Event moveEvent) {
         Game game = currentSnapShotOf(gameId).play(moveEvent);
 
         eventDao.save(gameId, moveEvent);
-        updateGameState(gameId, game);
-        return game.toDtoOf(gameId);
+        finishGameOnEnd(gameId, game);
     }
 
-    private void updateGameState(int gameId, Game game) {
+    private void finishGameOnEnd(int gameId, Game game) {
         if (game.isEnd()) {
             gameDao.finishGame(gameId);
         }
     }
 
-    public GameResultDto findGameResult(int gameId) {
-        Game game = currentSnapShotOf(gameId);
-        validateGameOver(game);
-        return new GameResultDto(gameId, game);
+    @Transactional
+    public void deleteFinishedGame(int gameId, EncryptedAuthCredentials authCredentials) {
+        gameDao.deleteGame(authCredentials);
+        eventDao.deleteAllByGameId(gameId);
     }
 
     private Game currentSnapShotOf(int gameId) {

@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.dto.GameResultDto;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +21,10 @@ public class ResultController {
     }
 
     @GetMapping("/{id}")
-    public ModelAndView result(@PathVariable int id) {
+    public ModelAndView findAndRenderResult(@PathVariable int id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(HTML_TEMPLATE_PATH);
-        GameResultDto gameResultDto = chessService.findGameResult(id);
-        modelAndView.addObject(RESPONSE_MODEL_KEY, gameResultDto);
+        modelAndView.addObject(RESPONSE_MODEL_KEY, chessService.findGameResult(id));
         return modelAndView;
     }
 }

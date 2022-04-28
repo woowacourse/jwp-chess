@@ -7,6 +7,7 @@ public final class MoveEvent extends Event {
     private final MoveRoute moveRoute;
 
     public MoveEvent(MoveRoute moveRoute) {
+        super(EventType.MOVE, moveRoute.toDescription());
         this.moveRoute = moveRoute;
     }
 
@@ -14,24 +15,8 @@ public final class MoveEvent extends Event {
         this(MoveRoute.ofEventDescription(description));
     }
 
-    public boolean isInit() {
-        return false;
-    }
-
-    public boolean isMove() {
-        return true;
-    }
-
     public MoveRoute toMoveRoute() {
         return moveRoute;
-    }
-
-    public String getType() {
-        return EventType.MOVE.name();
-    }
-
-    public String getDescription() {
-        return moveRoute.toDescription();
     }
 
     @Override
@@ -53,6 +38,6 @@ public final class MoveEvent extends Event {
 
     @Override
     public String toString() {
-        return "MoveEvent{" + "description='" + moveRoute + '\'' + '}';
+        return "MoveEvent{" + "moveRoute=" + moveRoute + '}';
     }
 }

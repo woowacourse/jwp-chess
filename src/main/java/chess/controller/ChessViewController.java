@@ -19,13 +19,13 @@ public class ChessViewController {
     public String index(Model model) {
         model.addAttribute("games", chessService.getAllGames());
 
-        return "game-room";
+        return "index";
     }
 
     @GetMapping("/enter/{gameId}")
     public String start(@PathVariable Long gameId, Model model) {
         model.addAttribute("gameId", gameId);
 
-        return "index";
+        return "game-room";
     }
 }

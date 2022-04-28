@@ -10,6 +10,10 @@ function changeButton(value) {
 
 function createNewGame() {
     const password = prompt("방 비밀번호를 입력해주세요.");
+    if (password === null) {
+        return;
+    }
+
     fetch("/start/new", {
         method: "post",
         body: password
@@ -17,6 +21,26 @@ function createNewGame() {
         let gameId = await response.text();
         enterGame(gameId);
     })
+}
+
+function deleteGame(gameId) {
+    const password = prompt("방 비밀번호를 입력해주세요.");
+    console.log(password);
+    if (password === null) {
+        return;
+    }
+
+    fetch("/delete/room/" + gameId, {
+        method : "delete",
+        body : password
+    }).then(response => {
+        if (!response.ok) {
+            alert("게임이 진행중이거나 비밀번호가 맞지 않습니다.");
+            return;
+        }
+        alert("삭제되었습니다.");
+        location.href = "/";
+    });
 }
 
 function enterGame(gameId) {

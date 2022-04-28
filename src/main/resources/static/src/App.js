@@ -1,9 +1,5 @@
-const URLSearch = new URLSearchParams(location.search);
 let source = null;
 let target = null;
-
-function create() {
-}
 
 function start() {
     fetch('/start', {
@@ -25,13 +21,14 @@ function start() {
 }
 
 function end() {
-    fetch('/end')
+    fetch('/end/'+getGameId())
         .then(response => {
-            if (response.ok) {
+            if (!response.ok) {
                 response.json()
                     .then(body => alert(body.message));
-                location.replace("/")
+                return
             }
+            location.replace("/")
         });
 }
 

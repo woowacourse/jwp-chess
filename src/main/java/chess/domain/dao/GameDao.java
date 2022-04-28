@@ -132,4 +132,13 @@ public class GameDao {
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
+
+    public void updateStatus(int gameId) {
+        final String sql = "update Game set status = ? where id = ?";
+        try {
+            jdbcTemplate.update(sql, false, gameId);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+        }
+    }
 }

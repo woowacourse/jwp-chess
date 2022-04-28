@@ -39,7 +39,7 @@ public class SpringWebChessController {
     public String play(Model model, @PathVariable int gameId) {
         ChessBoard chessBoard = chessService.findBoard(gameId);
         if (chessService.checkStatus(chessBoard, Status.END)) {
-            return "redirect:result";
+            return "redirect:/result/" + gameId;
         }
         model.addAttribute("play", true);
         model.addAttribute("board", chessService.currentBoardForUI(chessBoard));
@@ -69,37 +69,21 @@ public class SpringWebChessController {
         chessService.deleteGame(gameId, removeRequestDto.getPassword());
         return "lobby";
     }
-//    @PostMapping("/start")
-//    public ResponseEntity<ResponseDto> start() throws Exception {
-//        chessService.start();
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
 
-//
+    @GetMapping("/end/{gameId}")
+    public ResponseEntity<ResponseDto> end(@PathVariable int gameId) throws SQLException, IllegalArgumentException {
+        chessService.end(gameId);
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
-
-//
-//    @PostMapping("/save")
-//    public String save() {
-//        if (chessService.checkStatus(chessBoard, Status.PLAYING)) {
-//            chessService.save();
-//        }
-//        return "redirect:/play";
-//    }
-//
-//    @GetMapping("/end")
-//    public ResponseEntity<ResponseDto> end() throws SQLException, IllegalArgumentException {
-//        chessService.end();
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/result")
-//    public String result(Model model) throws SQLException {
-//        chessService.end();
-//        model.addAttribute("play", true);
-//        model.addAttribute("status", chessService.status());
-//        model.addAttribute("board", chessService.currentBoardForUI());
-//        model.addAttribute("winner", chessService.findWinner());
-//        return "game";
-//    }
+    @GetMapping("/result/{gameId}")
+    public String result(Model model, @PathVariable int gameId) throws SQLException {
+        ChessBoard chessBoard = chessService.findBoard(gameId);
+        chessService.end(gameId);
+        model.addAttribute("play", true);
+        model.addAttribute("status", chessService.status(chessBoard));
+        model.addAttribute("board", chessService.currentBoardForUI(chessBoard));
+        model.addAttribute("winner", chessService.findWinner(chessBoard));
+        return "game";
+    }
 }

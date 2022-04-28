@@ -7,6 +7,7 @@ import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
 import chess.domain.game.status.End;
+import chess.domain.game.status.GameStatus;
 import chess.domain.game.status.Playing;
 import chess.domain.piece.ChessPiece;
 import chess.domain.piece.Type;
@@ -122,19 +123,15 @@ public class ChessService {
     public void move(String source, String target, int gameId) throws SQLException {
         ChessBoard chessBoard = findBoard(gameId);
 
-        if (checkStatus(chessBoard, Status.END)) {
-            end(gameId);
-        }
-
         if (chessBoard.compareStatus(Status.PLAYING)) {
             chessBoard.move(new Position(source), new Position(target));
         }
         updateBoard(gameId, source, target);
-        updateTurn(chessBoard.getCurrentTurn().name(), gameId);
-    }
+        gameDao.updateTurn(chessBoard.getCurrentTurn().name(), gameId);
 
-    private void updateTurn(String turn, int gameId) {
-        gameDao.updateTurn(turn, gameId);
+        if (checkStatus(chessBoard, Status.END)) {
+            gameDao.updateStatus(gameId);
+        }
     }
 
     public Map<String, Double> status(ChessBoard chessBoard) {
@@ -143,12 +140,11 @@ public class ChessService {
     }
 
     public void end(int gameId) throws SQLException {
-        chessBoard.changeStatus(new End());
         boardDao.delete(gameId);
         gameDao.delete(gameId);
     }
 
-    public String findWinner() {
+    public String findWinner(ChessBoard chessBoard) {
         return chessBoard.decideWinner().name();
     }
 
@@ -171,7 +167,7 @@ public class ChessService {
         for (PieceDto pieceDto : boardInfo) {
             board.put(new Position(pieceDto.getPosition()), Type.from(pieceDto.getPiece()).createPiece(Color.from(pieceDto.getColor())));
         }
-        return new ChessBoard(board, new Playing(), game.getTurn());
+        return new ChessBoard(board, game.getStatus(), game.getTurn());
     }
 
     public void deleteGame(int gameId, int password) {

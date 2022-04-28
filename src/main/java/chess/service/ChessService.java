@@ -56,12 +56,12 @@ public class ChessService {
 
     public RoomEntity enterRoom(final Long roomId) {
         final RoomEntity roomEntity = roomRepository.findById(roomId);
-        validateGameOver(roomEntity);
         return roomEntity;
     }
 
     public GameResponseDto getCurrentBoard(final Long roomId) {
         final RoomEntity room = roomRepository.findById(roomId);
+        validateGameOver(room);
         final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
         return GameResponseDto.of(room, BoardsDto.of(boards));
     }

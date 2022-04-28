@@ -6,7 +6,6 @@ import chess.dto.request.RoomRequestDto;
 import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
-import chess.entity.RoomEntity;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,15 +41,6 @@ public class WebChessController {
         return ResponseEntity.ok(chessService.findRooms());
     }
 
-    @GetMapping("/{id}/enter")
-    public ResponseEntity<Object> enterRoom(@PathVariable Long id) {
-        final RoomEntity roomEntity = chessService.enterRoom(id);
-        if (roomEntity == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<GameResponseDto> getCurrentBoard(@PathVariable Long id) {
         return ResponseEntity.ok(chessService.getCurrentBoard(id));
@@ -65,7 +55,7 @@ public class WebChessController {
     @PatchMapping("/{id}")
     public ResponseEntity<Object> finishGame(@PathVariable Long id) {
         chessService.endRoom(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/status")

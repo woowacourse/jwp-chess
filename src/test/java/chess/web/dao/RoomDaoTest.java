@@ -1,14 +1,13 @@
 package chess.web.dao;
 
-import chess.board.Board;
-import chess.board.Team;
-import chess.board.Turn;
+import chess.domain.board.Board;
+import chess.domain.board.Team;
+import chess.domain.board.Turn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;

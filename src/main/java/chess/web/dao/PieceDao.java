@@ -1,6 +1,6 @@
 package chess.web.dao;
 
-import chess.board.piece.Piece;
+import chess.domain.board.piece.Piece;
 
 import java.util.List;
 

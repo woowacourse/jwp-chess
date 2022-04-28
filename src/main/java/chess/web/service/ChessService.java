@@ -1,12 +1,13 @@
 package chess.web.service;
 
-import chess.board.Board;
-import chess.board.Team;
-import chess.board.Turn;
-import chess.board.piece.Empty;
-import chess.board.piece.Piece;
-import chess.board.piece.Pieces;
-import chess.board.piece.position.Position;
+import chess.domain.Room;
+import chess.domain.board.Board;
+import chess.domain.board.Team;
+import chess.domain.board.Turn;
+import chess.domain.board.piece.Empty;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.piece.Pieces;
+import chess.domain.board.piece.position.Position;
 import chess.web.controller.dto.RoomRequestDto;
 import chess.web.dao.RoomDao;
 import chess.web.dao.PieceDao;
@@ -100,7 +101,7 @@ public class ChessService {
         return id;
     }
 
-    public List<Long> getRoomList(){
-        return roomDao.findAllId();
+    public List<Room> getRoomList(){
+        return roomDao.findAll();
     }
 }

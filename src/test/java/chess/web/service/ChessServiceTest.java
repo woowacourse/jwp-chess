@@ -1,9 +1,9 @@
 package chess.web.service;
 
-import chess.board.Board;
-import chess.board.piece.Piece;
-import chess.board.piece.Pieces;
-import chess.board.piece.position.Position;
+import chess.domain.board.Board;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.piece.Pieces;
+import chess.domain.board.piece.position.Position;
 import chess.web.controller.dto.RoomRequestDto;
 import chess.web.dao.RoomDao;
 import chess.web.controller.dto.MoveDto;

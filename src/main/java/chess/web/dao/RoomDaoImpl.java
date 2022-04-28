@@ -1,9 +1,10 @@
 package chess.web.dao;
 
-import chess.board.Board;
-import chess.board.Team;
-import chess.board.Turn;
-import chess.board.piece.Pieces;
+import chess.domain.Room;
+import chess.domain.board.Board;
+import chess.domain.board.Team;
+import chess.domain.board.Turn;
+import chess.domain.board.piece.Pieces;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -86,10 +87,14 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public List<Long> findAllId() {
-        final String query = "SELECT id FROM room";
+    public List<Room> findAll() {
+        final String query = "SELECT title, password FROM room";
         return jdbcTemplate.query(
                 query,
-                (resultSet, rowNum) -> resultSet.getLong("id"));
+                (resultSet, rowNum) -> new Room(
+                        resultSet.getString("title"),
+                        resultSet.getString("password")
+                )
+        );
     }
 }

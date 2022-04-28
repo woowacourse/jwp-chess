@@ -1,13 +1,12 @@
 package chess.web.dao;
 
-import chess.board.piece.Piece;
-import chess.board.piece.Pieces;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.piece.Pieces;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;

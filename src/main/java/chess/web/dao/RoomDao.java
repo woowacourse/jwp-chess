@@ -1,7 +1,8 @@
 package chess.web.dao;
 
-import chess.board.Board;
-import chess.board.Turn;
+import chess.domain.Room;
+import chess.domain.board.Board;
+import chess.domain.board.Turn;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,5 +19,5 @@ public interface RoomDao {
 
     void deleteById(Long id);
 
-    List<Long> findAllId();
+    List<Room> findAll();
 }

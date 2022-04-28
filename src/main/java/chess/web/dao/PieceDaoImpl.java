@@ -1,7 +1,7 @@
 package chess.web.dao;
 
-import chess.board.piece.Piece;
-import chess.board.piece.PieceFactory;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.piece.PieceFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

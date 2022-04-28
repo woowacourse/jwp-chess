@@ -1,6 +1,6 @@
 package chess.web.controller;
 
-import chess.board.Board;
+import chess.domain.board.Board;
 import chess.web.controller.dto.RoomRequestDto;
 import chess.web.service.ChessService;
 import chess.web.controller.dto.BoardDto;

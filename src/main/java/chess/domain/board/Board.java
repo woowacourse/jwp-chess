@@ -1,9 +1,9 @@
-package chess.board;
+package chess.domain.board;
 
-import chess.board.piece.Empty;
-import chess.board.piece.Piece;
-import chess.board.piece.Pieces;
-import chess.board.piece.position.Position;
+import chess.domain.board.piece.Empty;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.piece.Pieces;
+import chess.domain.board.piece.position.Position;
 
 import java.util.List;
 

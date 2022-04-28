@@ -1,7 +1,7 @@
 package chess.web.service;
 
-import chess.board.piece.Piece;
-import chess.board.piece.PieceFactory;
+import chess.domain.board.piece.Piece;
+import chess.domain.board.piece.PieceFactory;
 import chess.web.dao.PieceDao;
 
 import java.util.HashMap;

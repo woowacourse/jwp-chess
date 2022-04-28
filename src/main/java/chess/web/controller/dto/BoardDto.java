@@ -1,7 +1,7 @@
 package chess.web.controller.dto;
 
-import chess.board.Board;
-import chess.board.piece.Piece;
+import chess.domain.board.Board;
+import chess.domain.board.piece.Piece;
 
 import java.util.Map;
 import java.util.stream.Collectors;

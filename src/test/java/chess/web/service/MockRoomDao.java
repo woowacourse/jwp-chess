@@ -1,9 +1,9 @@
 package chess.web.service;
 
-import chess.board.Board;
-import chess.board.Team;
-import chess.board.Turn;
-import chess.board.piece.Pieces;
+import chess.domain.board.Board;
+import chess.domain.board.Team;
+import chess.domain.board.Turn;
+import chess.domain.board.piece.Pieces;
 import chess.web.dao.RoomDao;
 
 import java.util.*;

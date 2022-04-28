@@ -2,55 +2,76 @@ package chess.domain;
 
 import chess.domain.board.Board;
 import chess.domain.board.Position;
-import chess.domain.gamestate.Ready;
-import chess.domain.gamestate.State;
-import chess.domain.piece.Piece;
-import java.util.Map;
 
 public class ChessGame {
-    private State state;
+    private final Long id;
+    private final Board board;
+    private final Room room;
 
-    public ChessGame() {
-        this.state = new Ready();
+    public ChessGame(Long id, Board board, Room room) {
+        this.id = id;
+        this.board = board;
+        this.room = room;
     }
 
-    public void start() {
-        state = state.start();
+    public ChessGame(Long id, Board board) {
+        this(id, board, null);
+    }
+
+    private ChessGame(Board board, Room room) {
+        this(null, board, room);
+    }
+
+    public static ChessGame create(Room room) {
+        return new ChessGame(new Board(), room);
     }
 
     public void move(Position beforePosition, Position afterPosition) {
-        state = state.move(beforePosition, afterPosition);
+        board.move(beforePosition, afterPosition);
     }
 
-    public void end() {
-        state = state.end();
+    public boolean hasKingCaptured() {
+        return board.hasKingCaptured();
     }
 
-    public double statusOfBlack() {
-        return state.statusOfBlack();
+    public double scoreOfWhite() {
+        return board.scoreOfWhite();
     }
 
-    public double statusOfWhite() {
-        return state.statusOfWhite();
-    }
-
-    public boolean isRunning() {
-        return state.isRunning();
-    }
-
-    public Board getBoard() {
-        return state.getBoard();
+    public double scoreOfBlack() {
+        return board.scoreOfBlack();
     }
 
     public Winner findWinner() {
-        return state.findWinner();
+        if (board.hasBlackKingCaptured()) {
+            return Winner.WHITE;
+        }
+        if (board.hasWhiteKingCaptured()) {
+            return Winner.BLACK;
+        }
+        return findWinnerByScore();
     }
 
-    public void load(Map<Position, Piece> board, Color turn) {
-        state = state.load(board, turn);
+    private Winner findWinnerByScore() {
+        final int compared = Double.compare(board.scoreOfBlack(), board.scoreOfWhite());
+        if (compared > 0) {
+            return Winner.BLACK;
+        }
+        if (compared < 0) {
+            return Winner.WHITE;
+        }
+        return Winner.DRAW;
     }
 
-    public Color getTurn() {
-        return state.getTurn();
+    public Long getId() {
+        return id;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public Room getRoom() {
+        return room;
     }
 }

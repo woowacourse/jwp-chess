@@ -2,7 +2,7 @@ package chess.service;
 
 import chess.dao.BoardDao;
 import chess.dao.PieceDao;
-import chess.domain.ChessGame2;
+import chess.domain.ChessGame;
 import chess.domain.Color;
 import chess.domain.Room;
 import chess.domain.Winner;
@@ -34,9 +34,9 @@ public class ChessGameService {
             if (boardDao.existsBoardByName(title)) {
                 return new ResponseDto(401, "이미 존재하는 방입니다.");
             }
-            final ChessGame2 chessGame2 = ChessGame2.create(room);
-            final Long boardId = boardDao.save(chessGame2);
-            pieceDao.save(chessGame2.getBoard().getPiecesByPosition(), boardId);
+            final ChessGame chessGame = ChessGame.create(room);
+            final Long boardId = boardDao.save(chessGame);
+            pieceDao.save(chessGame.getBoard().getPiecesByPosition(), boardId);
             return new ResponseDto(200, "");
         } catch (Exception e) {
             return new ResponseDto(501, e.getMessage());
@@ -50,10 +50,10 @@ public class ChessGameService {
             final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
             final Color turn = boardDao.findTurn(boardId);
             final Board board = new Board(loadedBoard, turn);
-            final ChessGame2 chessGame2 = new ChessGame2(boardId, board);
-            chessGame2.move(source, target);
-            savePieces(chessGame2, source, target);
-            if(chessGame2.hasKingCaptured()){
+            final ChessGame chessGame = new ChessGame(boardId, board);
+            chessGame.move(source, target);
+            savePieces(chessGame, source, target);
+            if (chessGame.hasKingCaptured()) {
                 boardDao.updateTurn(boardId, Color.NONE);
                 return new ResponseDto(301, "");
             }
@@ -63,9 +63,9 @@ public class ChessGameService {
         }
     }
 
-    private void savePieces(ChessGame2 chessGame2, Position source, Position target) {
-        boardDao.updateTurn(chessGame2.getId(), chessGame2.getBoard().getTurn());
-        pieceDao.updatePosition(chessGame2.getId(), source.stringName(), target.stringName());
+    private void savePieces(ChessGame chessGame, Position source, Position target) {
+        boardDao.updateTurn(chessGame.getId(), chessGame.getBoard().getTurn());
+        pieceDao.updatePosition(chessGame.getId(), source.stringName(), target.stringName());
     }
 
     public ChessBoardDto getBoard(Long boardId) {
@@ -76,34 +76,34 @@ public class ChessGameService {
         final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
         final Color turn = boardDao.findTurn(boardId);
         final Board board = new Board(loadedBoard, turn);
-        final ChessGame2 chessGame2 = new ChessGame2(boardId, board);
+        final ChessGame chessGame = new ChessGame(boardId, board);
 
-        return chessGame2.scoreOfWhite();
+        return chessGame.scoreOfWhite();
     }
 
     public double statusOfBlack(Long boardId) {
         final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
         final Color turn = boardDao.findTurn(boardId);
         final Board board = new Board(loadedBoard, turn);
-        final ChessGame2 chessGame2 = new ChessGame2(boardId, board);
+        final ChessGame chessGame = new ChessGame(boardId, board);
 
-        return chessGame2.scoreOfBlack();
+        return chessGame.scoreOfBlack();
     }
 
     public Winner findWinner(Long boardId) {
         final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
         final Color turn = boardDao.findTurn(boardId);
         final Board board = new Board(loadedBoard, turn);
-        final ChessGame2 chessGame2 = new ChessGame2(boardId, board);
+        final ChessGame chessGame = new ChessGame(boardId, board);
 
-        return chessGame2.findWinner();
+        return chessGame.findWinner();
     }
 
     public ResponseDto end(Long boardId) {
         try {
             boardDao.updateTurn(boardId, Color.NONE);
             return new ResponseDto(200, "");
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseDto(501, e.getMessage());
         }
     }
@@ -136,7 +136,7 @@ public class ChessGameService {
             pieceDao.delete(boardId);
             boardDao.deleteBoard(boardId);
             return new ResponseDto(201, "");
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseDto(501, e.getMessage());
         }
     }

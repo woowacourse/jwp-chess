@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.ChessGame2;
+import chess.domain.ChessGame;
 import chess.domain.Color;
 import chess.dto.RoomDto;
 import java.util.List;
@@ -13,7 +13,7 @@ public interface BoardDao {
 
     boolean existsBoardByName(String title);
 
-    Long save(ChessGame2 chessGame2);
+    Long save(ChessGame chessGame);
 
     void updateTurn(Long boardId, Color turn);
 

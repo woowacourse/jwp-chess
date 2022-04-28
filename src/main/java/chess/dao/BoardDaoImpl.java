@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.ChessGame2;
+import chess.domain.ChessGame;
 import chess.domain.Color;
 import chess.dto.RoomDto;
 import java.sql.PreparedStatement;
@@ -42,14 +42,14 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public Long save(ChessGame2 chessGame2) {
+    public Long save(ChessGame chessGame) {
         final String sql = "insert into board (turn, title, password) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, chessGame2.getBoard().getTurn().name());
-            ps.setString(2, chessGame2.getRoom().getTitle());
-            ps.setString(3, chessGame2.getRoom().getPassword());
+            ps.setString(1, chessGame.getBoard().getTurn().name());
+            ps.setString(2, chessGame.getRoom().getTitle());
+            ps.setString(3, chessGame.getRoom().getPassword());
             return ps;
         }, keyHolder);
         return Long.valueOf(keyHolder.getKey().longValue());

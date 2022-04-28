@@ -5,6 +5,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException
 
 import chess.domain.Camp;
 import chess.domain.ChessGame;
+import chess.dto.GameDto;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,13 @@ class GameDaoTest {
     void create() {
         ChessGame chessGame = new ChessGame("test", "test");
         assertThatNoException().isThrownBy(() -> gameDao.create(chessGame));
+    }
+
+    @DisplayName("저장된 모든 게임을 조회한다.")
+    @Test
+    void findAll() {
+        List<GameDto> result = gameDao.findAll();
+        assertThat(result).isNotEmpty();
     }
 
     @DisplayName("기존에 저장된 game이 있어도 data를 덮어쓸 수 있다.")

@@ -11,6 +11,7 @@ import chess.domain.board.Position;
 import chess.domain.gamestate.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Type;
+import chess.dto.GameDto;
 import chess.dto.PieceDto;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -55,6 +56,10 @@ public class GameService {
 
     public void start() {
         chessGame.start();
+    }
+
+    public List<GameDto> loadGames() {
+        return gameDao.findAll();
     }
 
     public Map<String, Object> modelPlayingBoard() {

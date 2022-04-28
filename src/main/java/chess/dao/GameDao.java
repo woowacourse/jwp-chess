@@ -2,7 +2,9 @@ package chess.dao;
 
 import chess.domain.Camp;
 import chess.domain.ChessGame;
+import chess.dto.GameDto;
 import java.sql.ResultSet;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -42,5 +44,14 @@ public class GameDao {
         final String sql = "select white_turn from game";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class);
+    }
+
+    public List<GameDto> findAll() {
+        final String sql = "select no, title from game";
+
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new GameDto(
+                resultSet.getInt("no"),
+                resultSet.getString("title")
+        ));
     }
 }

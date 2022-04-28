@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chess Games</title>
+</head>
+
+<body>
+<h1>♟️ 체스</h1>
+    <div>
+        <button id="create-game">체스방 생성하기</button>
+    </div><br>
+    <table border="1">
+        {{#each games}}
+            <tr>
+                <td>{{title}}</td>
+                <td><button>enter</button></td>
+                <td><button>delete</button></td>
+            </tr>
+        {{/each}}
+    </table>
+</body>
+<script type="text/javascript">
+    document.getElementById("create-game").onclick = function () {
+        location.href = "/create";
+    }
+</script>
+</html>

@@ -15,6 +15,18 @@ public class ViewController {
         this.gameService = gameService;
     }
 
+    @GetMapping("/")
+    public String games(Model model) {
+        model.addAttribute("games", gameService.loadGames());
+        return "games";
+    }
+
+    @GetMapping("/index")
+    public String index(Model model) {
+        model.addAllAttributes(gameService.modelReady());
+        return "index";
+    }
+
     @GetMapping("/create")
     public String create() {
         return "create";
@@ -26,12 +38,6 @@ public class ViewController {
         String password = request.get("password");
         gameService.create(title, password);
         return "redirect:/";
-    }
-
-    @GetMapping("/index")
-    public String index(Model model) {
-        model.addAllAttributes(gameService.modelReady());
-        return "index";
     }
 
     @GetMapping("/start")

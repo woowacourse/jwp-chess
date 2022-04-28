@@ -6,6 +6,7 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
+import chess.dto.GameIdDto;
 import chess.dto.PieceDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,14 +40,15 @@ class BoardDaoTest {
 
         jdbcTemplate.execute("DROP TABLE board IF EXISTS");
         jdbcTemplate.execute("DROP TABLE room IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE room" +
-                "(" +
-                "  id bigint NOT NULL AUTO_INCREMENT," +
-                "  status varchar(50) NOT NULL," +
+        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS room(" +
+                "  id bigint NOT NULL AUTO_INCREMENT,\n" +
+                "  status varchar(50) NOT NULL,\n" +
+                "  name varchar(50) NOT NULL,\n" +
+                "  password varchar(20) NOT NULL,\n" +
                 "  PRIMARY KEY (id)" +
                 ")");
 
-        jdbcTemplate.update("insert into room (status) values(?)", "WHITE");
+        jdbcTemplate.update("insert into room (id, status, name, password) values(?, ?, ?, ?)", 1000, "WHITE", "green", "1234");
 
         jdbcTemplate.execute("CREATE TABLE board(\n" +
                 "  id bigint NOT NULL AUTO_INCREMENT,\n" +
@@ -65,7 +67,7 @@ class BoardDaoTest {
     }
 
     private Long roomId() {
-        return roomDao.findById().getId();
+        return roomDao.findById(new GameIdDto(1000L)).getId();
     }
 
     @Test

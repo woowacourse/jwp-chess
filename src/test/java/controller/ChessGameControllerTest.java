@@ -4,7 +4,10 @@ package controller;
 import chess.SpringChessApplication;
 import chess.dto.MoveDto;
 
+import chess.dto.RoomTempDto;
+import chess.service.ChessService;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -21,9 +24,20 @@ public class ChessSpringControllerTest {
     @LocalServerPort
     int port;
 
+    @Autowired
+    private ChessService chessService;
+
+    private long id;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        id = chessService.makeGame(new RoomTempDto("green green", "1234"));
+    }
+
+    @AfterEach
+    void delete() {
+        chessService.endGame(id);
     }
 
     @DisplayName("Board - GET")
@@ -32,30 +46,31 @@ public class ChessSpringControllerTest {
     void getBoard() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/board")
+                .when().get("/loadBoard/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
+                .body("size()", is(3));
     }
 
     @DisplayName("move - POST")
     @Test
     @Order(2)
-    void move() {
+    void movePiece() {
         MoveDto moveDto = new MoveDto("f2", "f3");
+
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveDto)
-                .when().post("/move")
+                .when().post("/move/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));
     }
 
-    @DisplayName("status - GET")
+    @DisplayName("game status - GET")
     @Test
     @Order(3)
-    void status() {
+    void statusGame() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("/status")
@@ -64,25 +79,37 @@ public class ChessSpringControllerTest {
                 .body("size()", is(2));
     }
 
-    @DisplayName("reset - POST")
+    @DisplayName("game reset - POST")
     @Test
     @Order(4)
-    void reset() {
+    void resetGame() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/reset")
+                .when().post("/reset/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
+                .body("size()", is(3));
     }
 
-    @DisplayName("end - POST")
+    @DisplayName("game lists - GET")
     @Test
     @Order(5)
-    void end() {
+    void getGameList() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/end")
+                .when().get("/loadGames")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
+    }
+
+    @DisplayName("game end - POST")
+    @Test
+    @Order(6)
+    void endGame() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/end/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));

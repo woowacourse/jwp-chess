@@ -18,15 +18,20 @@ public class ChessSpringController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/board")
-    public ResponseEntity<BoardDto> initBoard() {
-        BoardDto initialBoard = chessService.getBoard();
+    @GetMapping("/loadBoard/{id}")
+    public ResponseEntity<BoardDto> loadBoard(@PathVariable Long id) {
+        BoardDto initialBoard = chessService.getBoard(id);
         return ResponseEntity.ok().body(initialBoard);
     }
 
-    @PostMapping(value = "/move")
-    public ResponseEntity<GameStateDto> move(@RequestBody MoveDto moveDto) {
-        return ResponseEntity.ok().body(chessService.move(moveDto));
+    @GetMapping("/loadGames")
+    public ResponseEntity<GamesTempDto> loadGames() {
+        return ResponseEntity.ok().body(new GamesTempDto(chessService.getGameList()));
+    }
+
+    @PostMapping(value = "/move/{id}")
+    public ResponseEntity<GameStateDto> move(@PathVariable Long id, @RequestBody MoveDto moveDto) {
+        return ResponseEntity.ok().body(chessService.move(id, moveDto));
     }
 
     @GetMapping("/status")
@@ -34,15 +39,15 @@ public class ChessSpringController {
         return ResponseEntity.ok().body(chessService.getStatus());
     }
 
-    @PostMapping("/reset")
-    public ResponseEntity<BoardDto> reset() {
-        chessService.resetBoard();
-        return ResponseEntity.ok().body(chessService.getBoard());
+    @PostMapping("/reset/{id}")
+    public ResponseEntity<BoardDto> resetGame(@PathVariable Long id) {
+        chessService.resetBoard(chessService.findRoom(id), id);
+        return ResponseEntity.ok().body(chessService.getBoard(id));
     }
 
-    @PostMapping("/end")
-    public ResponseEntity<GameStateDto> end() {
-        chessService.endGame();
+    @PostMapping("/end/{id}")
+    public ResponseEntity<GameStateDto> endGame(@PathVariable Long id) {
+        chessService.updateEndStatus(id);
         return ResponseEntity.ok().body(chessService.findWinner());
     }
 

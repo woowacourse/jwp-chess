@@ -2,6 +2,8 @@ CREATE TABLE room
 (
     id bigint NOT NULL AUTO_INCREMENT,
     status varchar(50) NOT NULL,
+    name varchar(50) NOT NULL,
+    password varchar(20) NOT NULL,
     PRIMARY KEY (id)
 );
 

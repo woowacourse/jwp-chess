@@ -1,8 +1,11 @@
 package chess.dao;
 
-import chess.dto.ChessGameDto;
-import chess.dto.GameInfoDto;
-import chess.dto.PieceDto;
+import chess.chessgame.ChessGame;
+import chess.chessgame.Position;
+import chess.piece.Color;
+import chess.piece.Piece;
+import chess.piece.Type;
+import chess.utils.PieceGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,9 +26,10 @@ public class ChessboardDaoTest {
     @Autowired
     private ChessboardDao chessboardDao;
 
-    private ChessGameDto chessGameDto = new ChessGameDto(
-            List.of(new PieceDto("BLACK", "p", 0, 0)),
-            new GameInfoDto("Play", "WHITE")
+    private ChessGame chessGame = new ChessGame(
+            "PLAY",
+            "WHITE",
+            Map.of(new Position(0, 0), PieceGenerator.generate("p", "BLACK"))
     );
 
     @BeforeEach
@@ -45,7 +49,7 @@ public class ChessboardDaoTest {
 
         jdbcTemplate.execute("CREATE TABLE gameInfos\n" +
                 "(\n" +
-                "    state ENUM('Ready','Play','Finish'),\n" +
+                "    state ENUM('READY','PLAY','FINISH'),\n" +
                 "    turn  ENUM('BLACK','WHITE')\n" +
                 ")");
     }
@@ -53,7 +57,7 @@ public class ChessboardDaoTest {
     @Test
     @DisplayName("데이터가 존재한다면 true 반환")
     void isDataExistWhenTrue() {
-        jdbcTemplate.update("insert into gameInfos values (?,?)", "Play", "BLACK");
+        jdbcTemplate.update("insert into gameInfos values (?,?)", "PLAY", "BLACK");
         assertThat(chessboardDao.isDataExist()).isTrue();
     }
 
@@ -66,14 +70,14 @@ public class ChessboardDaoTest {
     @Test
     @DisplayName("데이터 저장")
     void save() {
-        chessboardDao.save(chessGameDto);
+        chessboardDao.save(chessGame);
         assertThat(chessboardDao.isDataExist()).isTrue();
     }
 
     @Test
     @DisplayName("데이터 전체 삭제")
     void truncateAll() {
-        chessboardDao.save(chessGameDto);
+        chessboardDao.save(chessGame);
         chessboardDao.truncateAll();
         assertThat(chessboardDao.isDataExist()).isFalse();
     }
@@ -81,28 +85,26 @@ public class ChessboardDaoTest {
     @Test
     @DisplayName("저장된 데이터를 잘 불러오는지 확인")
     void load() {
-        chessboardDao.save(chessGameDto);
-        ChessGameDto loadedChessGameDto = chessboardDao.load();
+        chessboardDao.save(chessGame);
+        ChessGame loadedChessGame = chessboardDao.load();
 
-        checkPieces(loadedChessGameDto.getPieces(), chessGameDto.getPieces());
-        checkGameInfo(loadedChessGameDto.getGameInfo(), chessGameDto.getGameInfo());
-        assertThat(loadedChessGameDto.getState()).isEqualTo(chessGameDto.getState());
-        assertThat(loadedChessGameDto.getTurn()).isEqualTo(chessGameDto.getTurn());
+        checkPieces(loadedChessGame.getChessBoard());
+        checkGameInfo(loadedChessGame);
     }
 
-    private void checkPieces(List<PieceDto> source, List<PieceDto> target) {
-        PieceDto s = source.get(0);
-        PieceDto t = target.get(0);
+    private void checkPieces(Map<Position, Piece> pieces) {
+        Position position = pieces.keySet().iterator().next();
+        Piece piece = pieces.get(position);
 
-        assertThat(s.getColor()).isEqualTo(t.getColor());
-        assertThat(s.getType()).isEqualTo(t.getType());
-        assertThat(s.getX()).isEqualTo(t.getX());
-        assertThat(s.getY()).isEqualTo(t.getY());
+        assertThat(position.getX()).isEqualTo(0);
+        assertThat(position.getY()).isEqualTo(0);
+        assertThat(piece.getColor()).isEqualTo(Color.BLACK);
+        assertThat(piece.getType()).isEqualTo(Type.PAWN);
     }
 
-    private void checkGameInfo(GameInfoDto source, GameInfoDto target) {
-        assertThat(source.getState()).isEqualTo(target.getState());
-        assertThat(source.getTurn()).isEqualTo(target.getTurn());
+    private void checkGameInfo(ChessGame chessGame) {
+        assertThat(chessGame.getStateToString()).isEqualTo("PLAY");
+        assertThat(chessGame.getColorOfTurn()).isEqualTo("WHITE");
     }
 
 }

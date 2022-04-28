@@ -1,14 +1,18 @@
 package chess.dao;
 
-import chess.dto.ChessGameDto;
+import chess.chessgame.ChessGame;
+import chess.chessgame.Position;
 import chess.dto.GameInfoDto;
 import chess.dto.PieceDto;
+import chess.piece.Piece;
+import chess.utils.PieceGenerator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +43,9 @@ public class ChessboardDao {
         return count != null && count > 0;
     }
 
-    public void save(ChessGameDto chessGameDto) {
+    public void save(ChessGame chessGame) {
         truncateAll();
-        addAll(chessGameDto);
+        addAll(chessGame);
     }
 
     public void truncateAll() {
@@ -52,20 +56,40 @@ public class ChessboardDao {
         namedParameterJdbcTemplate.update(truncateGameInfos, Map.of());
     }
 
-    public ChessGameDto load() {
-        final String gameInfo_sql = "SELECT * FROM gameInfos";
+    public ChessGame load() {
         final String pieces_sql = "SELECT * FROM pieces ORDER BY x ASC, y ASC";
-
         List<PieceDto> pieces = namedParameterJdbcTemplate.query(pieces_sql, Map.of(), pieceRowMapper);
-        GameInfoDto gameInfo = namedParameterJdbcTemplate.queryForObject(gameInfo_sql, Map.of(), gameInfoRowMapper);
 
-        return new ChessGameDto(pieces, gameInfo);
+        final String gameInfo_sql = "SELECT * FROM gameInfos";
+        
+
+
+        return new ChessGame(gameInfo.getState(), gameInfo.getTurn(), loadPieces());
     }
 
-    private void addAll(ChessGameDto chessGameDto) {
-        chessGameDto.getPieces()
-                .forEach(this::addBoard);
-        addGameInfos(chessGameDto.getGameInfo());
+    private Map<Position, Piece> loadPieces() {
+
+        Map<Position, Piece> convertedPieces = new LinkedHashMap<>();
+        for (PieceDto piece : pieces) {
+            convertedPieces.put(new Position(piece.getX(), piece.getY()), PieceGenerator.generate(piece.getType(), piece.getColor()));
+        }
+
+        return convertedPieces;
+    }
+
+    private GameInfoDto loadGameInfo(){
+        final String pieces_sql = "SELECT * FROM pieces ORDER BY x ASC, y ASC";
+        List<PieceDto> pieces = namedParameterJdbcTemplate.query(pieces_sql, Map.of(), pieceRowMapper);
+    }
+
+    private void addAll(ChessGame chessGame) {
+        Map<Position, Piece> chessboard = chessGame.getChessBoard();
+
+        for (Position position : chessboard.keySet()) {
+            addBoard(new PieceDto(chessboard.get(position), position));
+        }
+
+        addGameInfos(new GameInfoDto(chessGame.getStateToString(), chessGame.getColorOfTurn()));
     }
 
     private void addBoard(PieceDto pieceDto) {

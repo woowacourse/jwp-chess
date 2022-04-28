@@ -26,7 +26,8 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGame loadChessGame(String gameID, String password, String restart) {
+    public ChessGame loadChessGame(ChessGameVO chessGameVO, String restart) {
+        String gameID = chessGameVO.getGameID();
         try {
             pieceDao.findByGameID(gameID);
         } catch (IllegalArgumentException e) {
@@ -36,7 +37,7 @@ public class ChessService {
             initBoard(gameID);
         }
         loadTurn(gameID, restart);
-        return loadGame(gameID, password);
+        return loadGame(chessGameVO);
     }
 
     private void initBoard(String gameID) {
@@ -50,15 +51,16 @@ public class ChessService {
         }
     }
 
-    private ChessGame loadGame(String gameID, String password) {
+    private ChessGame loadGame(ChessGameVO chessGameVO) {
+        String gameID = chessGameVO.getGameID();
         ChessGame chessGame;
         try {
             GameTurn gameTurn = getTurn(gameID);
             checkCanContinue(gameTurn);
-            chessGame = loadSavedChessGame(gameID, gameTurn);
+            chessGame = loadSavedChessGame(chessGameVO);
         } catch (RuntimeException e) {
             chessGame = loadNewChessGame();
-            startGame(gameID, password, chessGame);
+            startGame(gameID, chessGameVO.getPassword(), chessGame);
         }
         return chessGame;
     }
@@ -73,8 +75,8 @@ public class ChessService {
         }
     }
 
-    public ChessGame loadSavedChessGame(String gameID, GameTurn gameTurn) {
-        return new ChessGame(new SavedBoardGenerator(pieceDao.findByGameID(gameID)), gameTurn);
+    public ChessGame loadSavedChessGame(ChessGameVO chessGameVO) {
+        return new ChessGame(new SavedBoardGenerator(pieceDao.findByGameID(chessGameVO.getGameID())), getTurn(chessGameVO.getGameID()));
     }
 
     private ChessGame loadNewChessGame() {
@@ -86,7 +88,8 @@ public class ChessService {
         updateTurn(gameID, chessGame);
     }
 
-    public void movePiece(String gameID, ChessGame chessGame, String source, String target) {
+    public void movePiece(ChessGameVO chessGameVO, ChessGame chessGame, String source, String target) {
+        String gameID = chessGameVO.getGameID();
         updateTurn(gameID, chessGame);
         updatePosition(gameID, source, target);
     }
@@ -101,8 +104,8 @@ public class ChessService {
         pieceDao.insertNone(gameID, new Square(source));
     }
 
-    public GameResult getGameResult(String gameID) {
-        Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameID(gameID)));
+    public GameResult getGameResult(ChessGameVO chessGameVO) {
+        Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameID(chessGameVO.getGameID())));
         return new GameResult(board);
     }
 
@@ -112,7 +115,9 @@ public class ChessService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteGameByGameID(String gameID, String password) {
+    public void deleteGameByGameID(ChessGameVO chessGameVO) {
+        String gameID = chessGameVO.getGameID();
+        String password = chessGameVO.getPassword();
         checkPassword(gameID, password);
         checkCanDelete(GameTurn.find(chessGameDao.findTurnByID(gameID)));
         chessGameDao.deleteByGameID(gameID, password);

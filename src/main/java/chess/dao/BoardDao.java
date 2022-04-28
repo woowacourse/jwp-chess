@@ -18,4 +18,6 @@ public interface BoardDao {
     void updateTurn(Long boardId, Color turn);
 
     List<RoomDto> findAllRooms();
+
+    String findPasswordById(Long boardId);
 }

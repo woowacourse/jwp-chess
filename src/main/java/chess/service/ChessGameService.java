@@ -123,8 +123,12 @@ public class ChessGameService {
         }
     }
 
-    public ResponseDto delete(Long boardId) {
+    public ResponseDto delete(Long boardId, String password) {
         try {
+            final String loadedPassword = boardDao.findPasswordById(boardId);
+            if (!password.equals(loadedPassword)) {
+                return new ResponseDto(402, "비밀번호가 일치하지 않습니다.");
+            }
             final Color turn = boardDao.findTurn(boardId);
             if (!(turn == Color.NONE)) {
                 return new ResponseDto(401, "종료하지 않은 게임은 삭제할 수 없습니다.");

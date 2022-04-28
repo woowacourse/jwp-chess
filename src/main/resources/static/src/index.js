@@ -131,8 +131,13 @@ function showBoard() {
 }
 
 function deleteBoard(id) {
+    const inputPassword = prompt('비밀번호를 입력하세요');
     fetch(`/board/delete?id=${id}`, {
-        method: "DELETE"
+        method: "DELETE",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: inputPassword
     }).then(res => {
         res.json().then(data => {
             if (data.statusCode === 201) {

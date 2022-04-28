@@ -89,7 +89,7 @@ public class ChessSpringController {
 
     @DeleteMapping("/board/delete")
     @ResponseBody
-    public ResponseDto delete(@RequestParam(name = "id") Long id) {
-        return chessGameService.delete(id);
+    public ResponseDto delete(@RequestParam(name = "id") Long id, @RequestBody String request) {
+        return chessGameService.delete(id, request);
     }
 }

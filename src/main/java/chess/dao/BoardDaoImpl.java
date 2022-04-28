@@ -67,4 +67,10 @@ public class BoardDaoImpl implements BoardDao {
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> new RoomDto(resultSet.getLong("id"), resultSet.getString("title")));
     }
+
+    @Override
+    public String findPasswordById(Long boardId) {
+        final String sql = "select password from board where id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, boardId);
+    }
 }

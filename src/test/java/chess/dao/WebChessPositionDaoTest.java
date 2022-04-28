@@ -11,6 +11,7 @@ import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
 import chess.entities.ChessPiece;
+import chess.entities.ChessPosition;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -38,26 +39,26 @@ class WebChessPositionDaoTest {
     void setup() {
         final ChessGame board = boardDao.save(new ChessGame("코린파이팅", "1111"));
         this.boardId = board.getId();
-        Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, boardId));
-        this.positionId = position.getId();
-        pieceDao.save(new ChessPiece(Color.WHITE, new Pawn(), position.getId()));
+        ChessPosition chessPosition = webChessPositionDao.save(new ChessPosition(Column.A, Row.TWO, boardId));
+        this.positionId = chessPosition.getId();
+        pieceDao.save(new ChessPiece(Color.WHITE, new Pawn(), chessPosition.getId()));
     }
 
     @Test
     void save() {
-        final Position Position = webChessPositionDao.save(new Position(Column.B, Row.TWO, boardId));
+        final ChessPosition chessPosition = webChessPositionDao.save(new ChessPosition(Column.B, Row.TWO, boardId));
         assertAll(
-                () -> assertThat(Position.getColumn()).isEqualTo(Column.B),
-                () -> assertThat(Position.getRow()).isEqualTo(Row.TWO)
+                () -> assertThat(chessPosition.getColumn()).isEqualTo(Column.B),
+                () -> assertThat(chessPosition.getRow()).isEqualTo(Row.TWO)
         );
     }
 
     @Test
     void findByColumnAndRowAndBoardId() {
-        Position Position = webChessPositionDao.getByColumnAndRowAndBoardId(Column.A, Row.TWO, boardId);
+        ChessPosition chessPosition = webChessPositionDao.getByColumnAndRowAndBoardId(Column.A, Row.TWO, boardId);
         assertAll(
-                () -> assertThat(Position.getColumn()).isEqualTo(Column.A),
-                () -> assertThat(Position.getRow()).isEqualTo(Row.TWO)
+                () -> assertThat(chessPosition.getColumn()).isEqualTo(Column.A),
+                () -> assertThat(chessPosition.getRow()).isEqualTo(Row.TWO)
         );
     }
 
@@ -85,8 +86,8 @@ class WebChessPositionDaoTest {
 
     @Test
     void getPaths() {
-        List<Position> positions = List.of(new Position(Column.A, Row.TWO, boardId));
-        List<Position> paths = webChessPositionDao.getPaths(positions, boardId);
+        List<ChessPosition> positions = List.of(new ChessPosition(Column.A, Row.TWO, boardId));
+        List<ChessPosition> paths = webChessPositionDao.getPaths(positions, boardId);
 
         assertThat(paths.get(0).getId()).isEqualTo(positionId);
     }

@@ -14,6 +14,7 @@ import chess.domain.position.Position;
 import chess.dto.response.StatusDto;
 import chess.entities.ChessGame;
 import chess.entities.ChessPiece;
+import chess.entities.ChessPosition;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -58,14 +59,14 @@ public final class GameService {
     }
 
     public void move(final int roomId, final Position sourceRawPosition, final Position targetRawPosition) {
-        Position sourcePosition = positionDao.getByColumnAndRowAndBoardId(sourceRawPosition.getColumn(),
+        ChessPosition sourcePosition = positionDao.getByColumnAndRowAndBoardId(sourceRawPosition.getColumn(),
                 sourceRawPosition.getRow(), roomId);
-        Position targetPosition = positionDao.getByColumnAndRowAndBoardId(targetRawPosition.getColumn(),
+        ChessPosition targetPosition = positionDao.getByColumnAndRowAndBoardId(targetRawPosition.getColumn(),
                 targetRawPosition.getRow(), roomId);
         ChessBoard chessBoard = new ChessBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
-        chessBoard.validateMovement(sourcePosition, targetPosition);
-        validateTurn(roomId, sourcePosition);
-        updateMovingPiecePosition(sourcePosition, targetPosition, chessBoard.piece(targetPosition));
+        chessBoard.validateMovement(sourceRawPosition, targetRawPosition);
+        validateTurn(roomId, new Position(sourcePosition.getColumn(), sourcePosition.getRow()));
+        updateMovingPiecePosition(sourcePosition, targetPosition, chessBoard.piece(targetRawPosition));
         changeTurn(roomId);
     }
 
@@ -82,7 +83,7 @@ public final class GameService {
         }
     }
 
-    private void updateMovingPiecePosition(Position sourcePosition, Position targetPosition,
+    private void updateMovingPiecePosition(ChessPosition sourcePosition, ChessPosition targetPosition,
                                            Optional<Piece> targetPiece) {
         if (targetPiece.isPresent()) {
             pieceDao.deleteByPositionId(targetPosition.getId());

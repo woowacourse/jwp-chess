@@ -6,6 +6,7 @@ import chess.domain.pieces.Symbol;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
+import chess.entities.ChessPosition;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,11 +31,12 @@ public class WebChessPositionDao implements PositionDao<Position> {
     }
 
     @Override
-    public Position save(Position position) {
+    public ChessPosition save(ChessPosition chessPosition) {
         final String sql = "INSERT INTO position (position_column, position_row, board_id) VALUES (:position_column, :position_row, :board_id)";
 
         List<String> keys = List.of("position_column", "position_row", "board_id");
-        List<Object> values = List.of(position.getColumn().value(), position.getRow().value(), position.getBoardId());
+        List<Object> values = List.of(chessPosition.getColumn().value(), chessPosition.getRow().value(),
+                chessPosition.getBoardId());
         SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -42,11 +44,11 @@ public class WebChessPositionDao implements PositionDao<Position> {
         jdbcTemplate.update(sql, namedParameters, keyHolder);
 
         int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
-        return new Position(id, position.getColumn(), position.getRow(), position.getBoardId());
+        return new ChessPosition(id, chessPosition.getColumn(), chessPosition.getRow(), chessPosition.getBoardId());
     }
 
     @Override
-    public Position getByColumnAndRowAndBoardId(Column column, Row row, int boardId) {
+    public ChessPosition getByColumnAndRowAndBoardId(Column column, Row row, int boardId) {
         final String sql = "SELECT id, position_column, position_row, board_id " +
                 "FROM position " +
                 "WHERE position_column=:position_column AND position_row=:position_row AND board_id=:board_id";
@@ -108,12 +110,10 @@ public class WebChessPositionDao implements PositionDao<Position> {
     }
 
     private Position makePosition(Map<String, Object> map) {
-        int position_id = (int) map.get("po_id");
         int position_column = (int) map.get("position_column");
         int position_row = (int) map.get("position_row");
-        int board_id = (int) map.get("board_id");
 
-        return new Position(position_id, Column.findColumn(position_column), Row.findRow(position_row), board_id);
+        return new Position(Column.findColumn(position_column), Row.findRow(position_row));
     }
 
     private Piece makePiece(Map<String, Object> map) {
@@ -124,16 +124,16 @@ public class WebChessPositionDao implements PositionDao<Position> {
     }
 
     @Override
-    public List<Position> getPaths(List<Position> positions, int roomId) {
-        List<Position> realPositions = new ArrayList<>();
-        for (Position position : positions) {
-            realPositions.add(getByColumnAndRowAndBoardId(position.getColumn(), position.getRow(), roomId));
+    public List<ChessPosition> getPaths(List<ChessPosition> chessPositions, int roomId) {
+        List<ChessPosition> realPositions = new ArrayList<>();
+        for (ChessPosition chessPosition : chessPositions) {
+            realPositions.add(getByColumnAndRowAndBoardId(chessPosition.getColumn(), chessPosition.getRow(), roomId));
         }
         return realPositions;
     }
 
-    private Position makePosition(ResultSet resultSet, String idLabel) throws SQLException {
-        return new Position(
+    private ChessPosition makePosition(ResultSet resultSet, String idLabel) throws SQLException {
+        return new ChessPosition(
                 resultSet.getInt(idLabel),
                 Column.findColumn(resultSet.getInt("position_column")),
                 Row.findRow(resultSet.getInt("position_row")),

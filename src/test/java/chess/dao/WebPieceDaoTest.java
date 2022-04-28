@@ -3,14 +3,14 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.entities.ChessGame;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Pawn;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
-import chess.domain.position.Position;
 import chess.domain.position.Row;
+import chess.entities.ChessGame;
 import chess.entities.ChessPiece;
+import chess.entities.ChessPosition;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +37,7 @@ class WebPieceDaoTest {
     void setup() {
         final ChessGame board = boardDao.save(new ChessGame("corinne", "1111"));
         this.boardId = board.getId();
-        final Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, board.getId()));
+        final ChessPosition position = webChessPositionDao.save(new ChessPosition(Column.A, Row.TWO, board.getId()));
         this.positionId = position.getId();
         final ChessPiece chessPiece = webPieceDao.save(new ChessPiece(Color.WHITE, new Pawn(), positionId));
     }
@@ -64,7 +64,7 @@ class WebPieceDaoTest {
     @Test
     void updatePiecePositionId() {
         final int sourcePositionId = positionId;
-        final int targetPositionId = webChessPositionDao.save(new Position(Column.A, Row.TWO, boardId)).getId();
+        final int targetPositionId = webChessPositionDao.save(new ChessPosition(Column.A, Row.TWO, boardId)).getId();
         int affectedRow = webPieceDao.updatePositionId(sourcePositionId, targetPositionId);
         assertThat(affectedRow).isEqualTo(1);
     }

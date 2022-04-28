@@ -4,14 +4,15 @@ import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Row;
 
+import chess.entities.ChessPosition;
 import java.util.List;
 import java.util.Map;
 
 public interface PositionDao<T> {
 
-    T save(T position);
+    ChessPosition save(ChessPosition position);
 
-    T getByColumnAndRowAndBoardId(Column column, Row row, int boardId);
+    ChessPosition getByColumnAndRowAndBoardId(Column column, Row row, int boardId);
 
     int saveAll(int boardId);
 
@@ -19,7 +20,7 @@ public interface PositionDao<T> {
 
     Map<T, Piece> findAllPositionsAndPieces(int boardId);
 
-    List<T> getPaths(List<T> positions, int roomId);
+    List<ChessPosition> getPaths(List<ChessPosition> positions, int roomId);
 
     void deleteAll();
 }

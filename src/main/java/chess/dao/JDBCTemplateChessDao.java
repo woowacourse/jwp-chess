@@ -73,7 +73,9 @@ public class JDBCTemplateChessDao implements ChessDao {
 
     @Override
     public List<GameDto> findAll() {
-        final String sql = "select id, room_name, white_name, black_name, IF(finished, 'true', 'false') as finished from game where deleted = 0";
+        final String sql = "select id, room_name, white_name, black_name, "
+                + "case when finished = 1 then 'true' when finished = 0 then 'false' end as finished "
+                + "from game where deleted = 0";
         return jdbcTemplate.query(sql, getGameRoomDtoRowMapper());
     }
 
@@ -144,7 +146,9 @@ public class JDBCTemplateChessDao implements ChessDao {
 
     @Override
     public GameDto findById(int id) {
-        final String sql = "select id, room_name, white_name, black_name, IF(finished, 'true', 'false') as finished from game where id = ?";
+        final String sql = "select id, room_name, white_name, black_name, "
+                + "case when finished = 1 then 'true' when finished = 0 then 'false' end as finished "
+                + "from game where id = ?";
         return jdbcTemplate.queryForObject(sql, getGameRoomDtoRowMapper(), id);
     }
 

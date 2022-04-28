@@ -51,4 +51,21 @@ public class MainController {
     public String board(@PathVariable Long id) {
         return "board";
     }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, Model model) {
+        model.addAttribute("id", id);
+        return "delete";
+    }
+
+    @PostMapping("/delete/complete/{id}")
+    public String deleteComplete(@PathVariable Long id, @RequestParam Map<String, String> map) {
+        if (!gamesService.checkGameState(id)) {
+            return "redirect:/list";
+        }
+        if (gamesService.checkGamePassword(id, map.get("password"))) {
+            gamesService.delete(id);
+        }
+        return "redirect:/list";
+    }
 }

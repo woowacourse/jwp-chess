@@ -52,15 +52,20 @@ public class ChessSpringControllerTest {
                 .andExpect(content().json(responseDto.toJson()));
     }
 
-//    @DisplayName("start Test- GET")
-//    @Test
-//    void get_start() throws Exception {
-//        ResponseDto responseDto = new ResponseDto(200, "");
-//        given(chessGameService.start()).willReturn(new ResponseDto(200, ""));
-//
-//        mockMvc.perform(get("/start"))
-//                .andExpect(content().json(responseDto.toJson()));
-//    }
+    @Test
+    @DisplayName("POST /board/move 테스트")
+    void post_move() throws Exception {
+        final ResponseDto responseDto = new ResponseDto(302, "");
+        final Long boardId = 1L;
+        final String requestString = "a2 a4";
+
+        given(chessGameService.move(boardId, "a2", "a4")).willReturn(responseDto);
+
+        mockMvc.perform(post("/board/move")
+                .queryParam("id", "1")
+                .content(requestString))
+                .andExpect(content().json(responseDto.toJson()));
+    }
 
 //    @DisplayName("chess Test- GET")
 //    @Test

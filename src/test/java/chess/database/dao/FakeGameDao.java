@@ -3,6 +3,7 @@ package chess.database.dao;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import chess.database.dto.GameStateDto;
 
@@ -84,11 +85,17 @@ public class FakeGameDao implements GameDao {
 
     @Override
     public Map<Long, String> readGameRoomIdAndNames() {
-        return null;
+        return memoryDatabase.entrySet()
+            .stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getRoomName()));
     }
 
     @Override
     public Optional<String> findPasswordById(Long roomId) {
-        return Optional.empty();
+        final FakeTable row = memoryDatabase.get(roomId);
+        if (row == null) {
+            return Optional.empty();
+        }
+        return Optional.of(row.getPassword());
     }
 }

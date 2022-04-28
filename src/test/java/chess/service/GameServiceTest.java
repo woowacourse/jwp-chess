@@ -2,6 +2,9 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Map;
+import java.util.Optional;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +12,8 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import chess.database.dao.FakeBoardDao;
@@ -19,6 +24,7 @@ import chess.domain.game.Ready;
 import chess.dto.Arguments;
 import chess.dto.RoomRequest;
 
+@SpringBootTest
 class GameServiceTest {
 
     private final FakeGameDao gameDao = new FakeGameDao();
@@ -27,11 +33,12 @@ class GameServiceTest {
     @Autowired
     private PasswordEncoder encoder;
 
-    private final GameService service = new GameService(gameDao, boardDao, encoder);
+    private GameService service;
     private Long id;
 
     @BeforeEach
     void setUp() {
+        service = new GameService(gameDao, boardDao, encoder);
         id = service.createNewGame(new RoomRequest("TEST-GAME", "TEST-PASSWORD"));
     }
 
@@ -89,6 +96,37 @@ class GameServiceTest {
         // then
         assertThatCode(() -> service.finishGame(roomId))
             .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("게임 목록을 얻는다.")
+    public void readGames() {
+        // given & when
+        final Map<Long, String> roomIdAndNames = service.readGameRooms();
+        // then
+        assertThat(roomIdAndNames).containsExactly(Map.entry(1L, "TEST-GAME"));
+    }
+
+    @Test
+    @DisplayName("게임을 삭제한다.")
+    public void deleteGame() {
+        // given & when
+        String password = "TEST-PASSWORD";
+
+        // then
+        assertThatCode(() -> service.deleteGame(id, new RoomRequest(null, password)))
+            .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("잘못된 패스워드를 입력하면 게임을 삭제할 수 없다.")
+    public void deleteGameWithWrongPassword() {
+        // given
+        String password = "WRONG-PASSWORD";
+
+        // then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> service.deleteGame(id, new RoomRequest(null, password)));
     }
 
     @AfterEach

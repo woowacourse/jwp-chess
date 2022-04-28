@@ -53,7 +53,7 @@ public class SpringChessControllerTest {
         Long roomId = id;
 
         RestAssured.given().log().all()
-            .when().get("/main" + roomId)
+            .when().get("/main/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -79,10 +79,10 @@ public class SpringChessControllerTest {
         Long roomId = id;
 
         RestAssured.given().log().all()
-            .when().get("/enter" + roomId)
+            .when().get("/enter/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
-            .body("url", is("/main" + roomId));
+            .body("url", is("/main/" + roomId));
     }
 
     @Test
@@ -91,10 +91,10 @@ public class SpringChessControllerTest {
         Long roomId = id;
 
         RestAssured.given().log().all()
-            .when().get("/start" + roomId)
+            .when().get("/start/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
-            .body("url", is("/main" + roomId));
+            .body("url", is("/main/" + roomId));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class SpringChessControllerTest {
         service.startGame(roomId);
 
         RestAssured.given().log().all()
-            .when().get("/end" + roomId)
+            .when().get("/end/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("url", is("/"));
@@ -122,7 +122,7 @@ public class SpringChessControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(arguments)
-            .when().post("/move" + roomId)
+            .when().post("/move/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -135,7 +135,7 @@ public class SpringChessControllerTest {
         service.startGame(roomId);
 
         RestAssured.given().log().all()
-            .when().get("/status" + roomId)
+            .when().get("/status/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -151,7 +151,7 @@ public class SpringChessControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(arguments)
-            .when().post("/move" + roomId)
+            .when().post("/move/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }

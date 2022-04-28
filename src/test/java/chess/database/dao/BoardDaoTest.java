@@ -108,6 +108,12 @@ class BoardDaoTest {
             .doesNotThrowAnyException();
     }
 
+    @Test
+    @DisplayName("ID로 보드 전체를 삭제한다.")
+    public void deleteEntireBoard() {
+        assertThatCode(() -> dao.removeBoard(testId)).doesNotThrowAnyException();
+    }
+
     @AfterEach
     void setDown() {
         dao.removeBoard(testId);

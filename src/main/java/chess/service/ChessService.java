@@ -93,6 +93,11 @@ public class ChessService {
 
     public void deleteByGameId(String confirmPassword, Long id) {
         String storedPassword = gameDao.findPwdById(id);
+        Turn turn = Turn.from(gameDao.findTurnById(id));
+
+        if (turn.isNotEnd()) {
+            throw new IllegalArgumentException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
 
         if (confirmPassword.equals(storedPassword)) {
             // 생각해볼 것: 두개가 참조되어 있을 때 뭘 먼저 실행해야할지?

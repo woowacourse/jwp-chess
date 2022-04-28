@@ -44,4 +44,8 @@ public class Turn {
     public String finish() {
         return TURN_NONE.getThisTurn();
     }
+
+    public boolean isNotEnd() {
+        return !TURN_NONE.equals(this);
+    }
 }

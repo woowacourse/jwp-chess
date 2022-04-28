@@ -26,6 +26,7 @@ public class ChessHomeController {
         WebBoardDto board = chessService.start(roomDto);
         return board.getWebBoard();
         // 생각해볼 부분: ResponseEntity의 사용
+        // 얘가 board를 반환할 필요가 있는가?
     }
 
     @GetMapping("/games")

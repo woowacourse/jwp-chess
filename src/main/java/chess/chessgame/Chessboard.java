@@ -16,6 +16,10 @@ public class Chessboard {
         board = chessboardGenerator.generate();
     }
 
+    public Chessboard(Map<Position, Piece> board) {
+        this.board = board;
+    }
+
     public void move(MovingPosition movingPosition, Turn turn) {
         validate(movingPosition, turn);
         movePiece(movingPosition);

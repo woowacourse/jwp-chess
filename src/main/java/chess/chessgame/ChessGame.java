@@ -23,7 +23,7 @@ public class ChessGame {
     }
 
     public ChessGame(String state, String turn, Map<Position, Piece> boards) {
-        this.state = convertToState(state, new Chessboard(() -> boards));
+        this.state = convertToState(state, new Chessboard(boards));
         this.turn = new Turn(turn);
     }
 

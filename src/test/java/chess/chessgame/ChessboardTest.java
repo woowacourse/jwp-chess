@@ -113,11 +113,11 @@ public class ChessboardTest {
     @Test
     @DisplayName("같은 세로줄에 같은 폰이 있는 경우 0.5점으로 계산하는지 확인")
     void computeScorePawn() {
-        chessboard = new Chessboard(() -> Map.of(
+        chessboard = new Chessboard(Map.of(
                 new Position(1, 0), new Pawn(Color.BLACK),
                 new Position(2, 0), new Pawn(Color.BLACK),
                 new Position(3, 0), new Pawn(Color.BLACK)
-        ));
+        );
         assertThat(chessboard.computeScore(Color.BLACK, 0.5))
                 .isEqualTo(1.5);
     }

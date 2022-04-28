@@ -61,10 +61,10 @@ public class MovingPosition {
     }
 
     public List<Position> computeCrossMiddle() {
-        if (from.computeInclination(to) == INCLINATION_OF_RIGHT_UP) {
+        if (isRightUp()) {
             return computeBetweenRightUp();
         }
-        if (from.computeInclination(to) == INCLINATION_OF_RIGHT_DOWN) {
+        if (isRightDown()) {
             return computeBetweenRightDown();
         }
         return new ArrayList<>();
@@ -88,5 +88,13 @@ public class MovingPosition {
 
     private boolean isTarget(Position coordinate) {
         return from.isTarget(coordinate, to);
+    }
+
+    private boolean isRightUp() {
+        return from.computeInclination(to) == INCLINATION_OF_RIGHT_UP;
+    }
+
+    private boolean isRightDown() {
+        return from.computeInclination(to) == INCLINATION_OF_RIGHT_DOWN;
     }
 }

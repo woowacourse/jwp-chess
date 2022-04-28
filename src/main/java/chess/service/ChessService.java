@@ -85,6 +85,10 @@ public class ChessService {
         }
     }
 
+    private void updateBoard(int gameId, String source, String target) {
+        boardDao.updateMovePiece(gameId, source, target);
+    }
+
     private String getPosition(Map.Entry<String, ChessPiece> entry) {
         return entry.getKey();
     }
@@ -115,10 +119,22 @@ public class ChessService {
         return Color.from(pieceDto.getColor());
     }
 
-    public void move(String source, String target) {
+    public void move(String source, String target, int gameId) throws SQLException {
+        ChessBoard chessBoard = findBoard(gameId);
+
+        if (checkStatus(chessBoard, Status.END)) {
+            end();
+        }
+
         if (chessBoard.compareStatus(Status.PLAYING)) {
             chessBoard.move(new Position(source), new Position(target));
         }
+        updateBoard(gameId, source, target);
+        updateTurn(chessBoard.getCurrentTurn().name(),gameId);
+    }
+
+    private void updateTurn(String turn, int gameId) {
+        gameDao.updateTurn(turn, gameId);
     }
 
     public Map<String, Double> status() {
@@ -140,7 +156,7 @@ public class ChessService {
         return chessBoard.convertToImageName();
     }
 
-    public boolean checkStatus(Status status) {
+    public boolean checkStatus(ChessBoard chessBoard, Status status) {
         return chessBoard.compareStatus(status);
     }
 

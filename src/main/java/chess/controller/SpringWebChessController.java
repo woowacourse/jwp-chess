@@ -47,12 +47,9 @@ public class SpringWebChessController {
         return "game";
     }
 
-    @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDto> move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException, IllegalArgumentException {
-        chessService.move(moveRequestDto.getSource(), moveRequestDto.getTarget());
-        if (chessService.checkStatus(Status.END)) {
-            chessService.end();
-        }
+    @PostMapping(value = "/move/{gameId}")
+    public ResponseEntity<ResponseDto> move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int gameId) throws SQLException, IllegalArgumentException {
+        chessService.move(moveRequestDto.getSource(), moveRequestDto.getTarget(), gameId);
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -66,28 +63,28 @@ public class SpringWebChessController {
         }
         return "redirect:/end";
     }
-
-    @PostMapping("/save")
-    public String save() {
-        if (chessService.checkStatus(Status.PLAYING)) {
-            chessService.save();
-        }
-        return "redirect:/play";
-    }
-
-    @GetMapping("/end")
-    public ResponseEntity<ResponseDto> end() throws SQLException, IllegalArgumentException {
-        chessService.end();
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    @GetMapping("/result")
-    public String result(Model model) throws SQLException {
-        chessService.end();
-        model.addAttribute("play", true);
-        model.addAttribute("status", chessService.status());
-        model.addAttribute("board", chessService.currentBoardForUI());
-        model.addAttribute("winner", chessService.findWinner());
-        return "game";
-    }
+//
+//    @PostMapping("/save")
+//    public String save() {
+//        if (chessService.checkStatus(chessBoard, Status.PLAYING)) {
+//            chessService.save();
+//        }
+//        return "redirect:/play";
+//    }
+//
+//    @GetMapping("/end")
+//    public ResponseEntity<ResponseDto> end() throws SQLException, IllegalArgumentException {
+//        chessService.end();
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/result")
+//    public String result(Model model) throws SQLException {
+//        chessService.end();
+//        model.addAttribute("play", true);
+//        model.addAttribute("status", chessService.status());
+//        model.addAttribute("board", chessService.currentBoardForUI());
+//        model.addAttribute("winner", chessService.findWinner());
+//        return "game";
+//    }
 }

@@ -1,15 +1,19 @@
 package chess.domain.dao;
 
-import chess.service.dto.GameDto;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
+import chess.service.dto.GameDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class GameDao {
@@ -116,6 +120,15 @@ public class GameDao {
             return jdbcTemplate.query(sql, (rs, rowNum) -> makeGameDto(rs));
         } catch (EmptyResultDataAccessException noResult) {
             return null;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+        }
+    }
+
+    public void updateTurn(String turn , int gameId) {
+        final String sql = "update Game set turn = ? where id = ?";
+        try {
+            jdbcTemplate.update(sql, turn, gameId);
         } catch (Exception e) {
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }

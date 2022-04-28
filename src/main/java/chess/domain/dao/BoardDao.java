@@ -2,7 +2,6 @@ package chess.domain.dao;
 
 import chess.service.dto.PieceDto;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -79,5 +78,15 @@ public class BoardDao {
 
     private boolean isSavedGameExist(int gameId) {
         return gameId == EMPTY_RESULT;
+    }
+
+    public void updateMovePiece(int gameId, String source, String target) {
+        String sql = "update Board set position = ? where game_id = ? and position = ?";
+        try {
+            jdbcTemplate.update(sql, target, gameId, source);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+        }
     }
 }

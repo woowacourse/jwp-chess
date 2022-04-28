@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
-
 @JdbcTest
 class ChessBoardDaoTest {
 
@@ -93,7 +92,5 @@ class ChessBoardDaoTest {
    void deleteAllPiece() {
         assertThatNoException().isThrownBy(() ->
                 chessBoardDao.deleteBoard());
-
    }
 }
-

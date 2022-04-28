@@ -1,6 +1,5 @@
 package controller;
 
-
 import chess.SpringChessApplication;
 import chess.dto.request.MakeRoomRequest;
 import chess.dto.response.MoveResponse;

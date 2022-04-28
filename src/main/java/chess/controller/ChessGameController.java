@@ -21,7 +21,7 @@ public class ChessGameController {
         return ResponseEntity.ok().body(initialBoard);
     }
 
-    @PostMapping(value = "/move/{id}")
+    @PostMapping( "/move/{id}")
     public ResponseEntity<GameStateResponse> move(@PathVariable Long id, @RequestBody MoveResponse moveResponse) {
         return ResponseEntity.ok().body(chessService.move(id, moveResponse));
     }

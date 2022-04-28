@@ -1,6 +1,6 @@
-package chess.controller;
+package chess.dto;
 
-class MovementRequest {
+public class MovementRequest {
     private String source;
     private String target;
 

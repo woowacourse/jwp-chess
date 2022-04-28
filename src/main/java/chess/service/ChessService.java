@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import chess.ChessGameVO;
+import chess.dto.ChessGameDto;
 import chess.db.ChessGameDao;
 import chess.db.PieceDao;
 import chess.domain.ChessGame;
@@ -26,8 +26,8 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGame loadChessGame(ChessGameVO chessGameVO, String restart) {
-        String gameID = chessGameVO.getGameID();
+    public ChessGame loadChessGame(ChessGameDto chessGameDto, String restart) {
+        String gameID = chessGameDto.getGameID();
         try {
             pieceDao.findByGameID(gameID);
         } catch (IllegalArgumentException e) {
@@ -37,7 +37,7 @@ public class ChessService {
             initBoard(gameID);
         }
         loadTurn(gameID, restart);
-        return loadGame(chessGameVO);
+        return loadGame(chessGameDto);
     }
 
     private void initBoard(String gameID) {
@@ -51,16 +51,16 @@ public class ChessService {
         }
     }
 
-    private ChessGame loadGame(ChessGameVO chessGameVO) {
-        String gameID = chessGameVO.getGameID();
+    private ChessGame loadGame(ChessGameDto chessGameDto) {
+        String gameID = chessGameDto.getGameID();
         ChessGame chessGame;
         try {
             GameTurn gameTurn = getTurn(gameID);
             checkCanContinue(gameTurn);
-            chessGame = loadSavedChessGame(chessGameVO);
+            chessGame = loadSavedChessGame(chessGameDto);
         } catch (RuntimeException e) {
             chessGame = loadNewChessGame();
-            startGame(gameID, chessGameVO.getPassword(), chessGame);
+            startGame(gameID, chessGameDto.getPassword(), chessGame);
         }
         return chessGame;
     }
@@ -75,8 +75,9 @@ public class ChessService {
         }
     }
 
-    public ChessGame loadSavedChessGame(ChessGameVO chessGameVO) {
-        return new ChessGame(new SavedBoardGenerator(pieceDao.findByGameID(chessGameVO.getGameID())), getTurn(chessGameVO.getGameID()));
+    public ChessGame loadSavedChessGame(ChessGameDto chessGameDto) {
+        return new ChessGame(new SavedBoardGenerator(pieceDao.findByGameID(chessGameDto.getGameID())),
+                getTurn(chessGameDto.getGameID()));
     }
 
     private ChessGame loadNewChessGame() {
@@ -88,8 +89,8 @@ public class ChessService {
         updateTurn(gameID, chessGame);
     }
 
-    public void movePiece(ChessGameVO chessGameVO, ChessGame chessGame, String source, String target) {
-        String gameID = chessGameVO.getGameID();
+    public void movePiece(ChessGameDto chessGameDto, ChessGame chessGame, String source, String target) {
+        String gameID = chessGameDto.getGameID();
         updateTurn(gameID, chessGame);
         updatePosition(gameID, source, target);
     }
@@ -104,20 +105,20 @@ public class ChessService {
         pieceDao.insertNone(gameID, new Square(source));
     }
 
-    public GameResult getGameResult(ChessGameVO chessGameVO) {
-        Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameID(chessGameVO.getGameID())));
+    public GameResult getGameResult(ChessGameDto chessGameDto) {
+        Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameID(chessGameDto.getGameID())));
         return new GameResult(board);
     }
 
-    public List<ChessGameVO> getGameIDs() {
+    public List<ChessGameDto> getGameIDs() {
         return chessGameDao.findAllGame().stream()
-                .map(ChessGameVO::new)
+                .map(ChessGameDto::new)
                 .collect(Collectors.toList());
     }
 
-    public void deleteGameByGameID(ChessGameVO chessGameVO) {
-        String gameID = chessGameVO.getGameID();
-        String password = chessGameVO.getPassword();
+    public void deleteGameByGameID(ChessGameDto chessGameDto) {
+        String gameID = chessGameDto.getGameID();
+        String password = chessGameDto.getPassword();
         checkPassword(gameID, password);
         checkCanDelete(GameTurn.find(chessGameDao.findTurnByID(gameID)));
         chessGameDao.deleteByGameID(gameID, password);
@@ -136,7 +137,7 @@ public class ChessService {
         }
     }
 
-    public boolean isValidPassword(ChessGameVO chessGameVO) {
-        return chessGameDao.findPasswordByGameID(chessGameVO.getGameID(), chessGameVO.getPassword());
+    public boolean isValidPassword(ChessGameDto chessGameDto) {
+        return chessGameDao.findPasswordByGameID(chessGameDto.getGameID(), chessGameDto.getPassword());
     }
 }

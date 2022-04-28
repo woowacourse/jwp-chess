@@ -1,6 +1,7 @@
 package chess.repository;
 
 import chess.web.dto.RoomDto;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -31,6 +32,14 @@ public class RoomRepositoryImpl implements RoomRepository {
     @Override
     public int save(String name, String password) {
         return insertActor.executeAndReturnKey(Map.of("name", name, "password", password)).intValue();
+    }
+
+    @Override
+    public List<RoomDto> findAll() {
+        String sql = "select * from room";
+        return jdbcTemplate.query(sql,
+                (resultSet, rowNum) ->
+                new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX), resultSet.getString(2)));
     }
 
     @Override

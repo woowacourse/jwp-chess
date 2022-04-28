@@ -3,8 +3,10 @@ package chess.service;
 import chess.repository.RoomRepository;
 import chess.web.dto.RoomDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FakeRoomRepository implements RoomRepository {
 
@@ -16,6 +18,13 @@ public class FakeRoomRepository implements RoomRepository {
         autoIncrementId++;
         database.put(autoIncrementId, new Room(name, password));
         return autoIncrementId;
+    }
+
+    @Override
+    public List<RoomDto> findAll() {
+        return database.keySet().stream()
+                .map(key -> new RoomDto(key, database.get(key).name, database.get(key).password))
+                .collect(Collectors.toList());
     }
 
     @Override

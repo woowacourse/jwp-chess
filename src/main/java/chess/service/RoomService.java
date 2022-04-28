@@ -3,15 +3,14 @@ package chess.service;
 import chess.domain.Room;
 import chess.repository.RoomRepository;
 import chess.web.dto.RoomDto;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RoomService {
-
-    private static final int NAME_MIN_SIZE = 1;
-    private static final int NAME_MAX_SIZE = 16;
-    private static final String ERROR_NAME_SIZE = "방 이름은 1자 이상, 16자 이하입니다.";
 
     private final RoomRepository roomRepository;
 
@@ -24,10 +23,11 @@ public class RoomService {
         return roomRepository.findById(id).get();
     }
 
-    private void validateNameSize(String name) {
-        if (name.length() < NAME_MIN_SIZE || name.length() > NAME_MAX_SIZE) {
-            throw new IllegalArgumentException(ERROR_NAME_SIZE);
-        }
+    public List<Map<String, String>> findRooms() {
+        List<RoomDto> data = roomRepository.findAll();
+        return data.stream()
+                .map(room -> Map.of("id", String.valueOf(room.getId()), "name", room.getName()))
+                .collect(Collectors.toList());
     }
 
     public void validateId(int roomId) {

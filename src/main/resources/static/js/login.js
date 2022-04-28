@@ -10,10 +10,43 @@ window.onload = function () {
             e.target === w ? modal.classList.remove('show-modal') : false;
         })
     })
+
+    fetchRooms();
 }
 
 function showErrorMessage(message) {
     document.getElementById('error-message').innerHTML = message;
+}
+
+function toRoomPage(id) {
+    window.location.href = '/rooms/' + id;
+}
+
+function fetchRooms() {
+    fetch('http://localhost:8080/rooms', {
+        method: 'GET'
+    })
+        .then(res => res.json())
+        .then(res => {
+            for (const data of res) {
+                let roomWrap = document.createElement('div');
+                roomWrap.className = 'room-item-wrap';
+                let room = document.createElement('li');
+                room.className = 'room-item';
+                room.id = 'room-item-' + data.id;
+                room.innerHTML = data.name;
+                room.addEventListener('click', (e) => {
+                    e.target === room ? toRoomPage(data.id) : false;
+                })
+                let button = document.createElement('button');
+                button.className = 'room-delete-button';
+                button.id = 'room-delete-' + data.id;
+                button.innerHTML = '삭제';
+                roomWrap.append(room);
+                roomWrap.append(button);
+                document.getElementById('rooms-list-container').append(roomWrap);
+            }
+        })
 }
 
 function fetchNewRoom() {

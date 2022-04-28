@@ -5,6 +5,7 @@ import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.BoardDto;
 import chess.web.dto.RoomDto;
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,11 @@ public class RoomController {
     public RoomController(RoomService roomService, GameService gameService) {
         this.roomService = roomService;
         this.gameService = gameService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Map<String, String>>> findRooms() {
+        return ResponseEntity.ok(roomService.findRooms());
     }
 
     @PostMapping

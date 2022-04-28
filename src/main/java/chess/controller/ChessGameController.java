@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.ChessGameDto;
+import chess.dto.MoveRequest;
 import chess.exception.ChessGameException;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -32,16 +34,14 @@ public class ChessGameController {
     }
 
     @PostMapping("/chess-game/move")
-    public String move(@RequestParam("chess-game-id") int chessGameId,
-                       @RequestParam String from,
-                       @RequestParam String to,
+    public String move(@ModelAttribute MoveRequest moveRequest,
                        RedirectAttributes attributes) {
-        ChessGameDto chessGameDto = chessGameService.move(chessGameId, new Movement(from, to));
+        ChessGameDto chessGameDto = chessGameService.move(moveRequest);
         if (chessGameDto.getStatus().isFinished()) {
             attributes.addFlashAttribute("isFinished", true);
             attributes.addFlashAttribute("winner", chessGameDto.getWinner());
         }
-        return "redirect:/chess-game?chess-game-id=" + chessGameId;
+        return "redirect:/chess-game?chess-game-id=" + chessGameDto.getId();
     }
 
     @DeleteMapping("/chess-game/{id}")

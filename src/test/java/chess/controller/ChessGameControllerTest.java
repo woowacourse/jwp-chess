@@ -1,5 +1,6 @@
 package chess.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -13,6 +14,7 @@ import chess.domain.Score;
 import chess.domain.piece.Color;
 import chess.dto.ChessGameDto;
 import chess.dto.GameStatus;
+import chess.dto.MoveRequest;
 import chess.exception.ChessGameException;
 import chess.service.ChessGameService;
 import java.util.Collections;
@@ -24,6 +26,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @WebMvcTest(ChessGameController.class)
 @ContextConfiguration(classes = HandlebarConfig.class)
@@ -55,13 +59,16 @@ class ChessGameControllerTest {
     @Test
     @DisplayName("정상적인 기물 이동")
     void move() throws Exception {
-        Mockito.when(chessGameService.move(1, new Movement("A2", "A4")))
+        Mockito.when(chessGameService.move(any()))
             .thenReturn(new ChessGameDto(1, "hoho", GameStatus.RUNNING, new Score(), new Score(), Color.WHITE));
 
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("chessGameId", "1");
+        params.add("from", "A2");
+        params.add("to", "A4");
+
         mockMvc.perform(post("/chess-game/move")
-            .param("chess-game-id", String.valueOf(1))
-            .param("from", "A2")
-            .param("to", "A4"))
+            .params(params))
             .andDo(print())
             .andExpectAll(
                 status().is3xxRedirection(),
@@ -74,11 +81,11 @@ class ChessGameControllerTest {
     @Test
     @DisplayName("비정상적인 기물 이동")
     void invalidMove() throws Exception {
-        Mockito.when(chessGameService.move(1, new Movement("A2", "A5")))
+        Mockito.when(chessGameService.move(any()))
             .thenThrow(new ChessGameException(1, "기물을 A2에서 A5로 이동할 수 없습니다."));
 
         mockMvc.perform(post("/chess-game/move")
-            .param("chess-game-id", String.valueOf(1))
+            .param("chessGameId", String.valueOf(1))
             .param("from", "A2")
             .param("to", "A5"))
             .andDo(print())

@@ -21,6 +21,7 @@ import chess.domain.vo.Room;
 import chess.dto.ChessGameDto;
 import chess.dto.ChessGameRequest;
 import chess.dto.GameStatus;
+import chess.dto.MoveRequest;
 import chess.dto.PieceDto;
 import chess.exception.ChessGameException;
 import java.util.List;
@@ -52,7 +53,9 @@ public class ChessGameService {
         return pieceDao.findPieces(chessGameId);
     }
 
-    public ChessGameDto move(int chessGameId, Movement movement) {
+    public ChessGameDto move(MoveRequest moveRequest) {
+        int chessGameId = moveRequest.getChessGameId();
+        Movement movement = new Movement(moveRequest.getFrom(), moveRequest.getTo());
         List<PieceDto> pieces = pieceDao.findPieces(chessGameId);
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
         if (chessGameDto.getStatus().isFinished()) {

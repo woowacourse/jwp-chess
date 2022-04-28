@@ -1,20 +1,24 @@
 package chess.dao.game;
 
-import chess.domain.Board;
-import chess.domain.piece.Piece;
-import chess.domain.piece.PieceFactory;
-import chess.domain.piece.detail.PieceType;
-import chess.domain.piece.detail.Team;
-import chess.domain.square.Square;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import chess.domain.Board;
+import chess.domain.BoardInitializer;
+import chess.domain.piece.Piece;
+import chess.domain.piece.PieceFactory;
+import chess.domain.piece.detail.PieceType;
+import chess.domain.piece.detail.Team;
+import chess.domain.square.Square;
 
 @Repository
 public class SpringJdbcPieceDao implements PieceDao {
@@ -79,7 +83,11 @@ public class SpringJdbcPieceDao implements PieceDao {
                 + "from Piece "
                 + "where game_id = ?";
 
-        return jdbcTemplate.queryForObject(sql, boardRowMapper, gameId);
+        try {
+            return jdbcTemplate.queryForObject(sql, boardRowMapper, gameId);
+        } catch (EmptyResultDataAccessException e) {
+            return new Board(BoardInitializer.create());
+        }
     }
 
     @Override

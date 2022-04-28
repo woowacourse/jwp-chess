@@ -31,6 +31,7 @@ class ChessGameTest {
     @BeforeEach
     void init() {
         chessGame = new ChessGame(
+            1L,
             new Board(BoardInitializer.create()),
             null,
             null,
@@ -112,7 +113,7 @@ class ChessGameTest {
         board.put(Square.from("e1"), new Bishop(WHITE, Square.from("e1"))); // Score : 13
         board.put(Square.from("f1"), new Queen(WHITE, Square.from("f1"))); // Score : 22
 
-        final ChessGame chessGame = new ChessGame(new Board(board), null, null, WHITE, null);
+        final ChessGame chessGame = new ChessGame(1L, new Board(board), null, null, WHITE, null);
         final Result result = chessGame.createResult();
 
         assertAll(
@@ -127,7 +128,7 @@ class ChessGameTest {
         Map<Square, Piece> board = new HashMap<>();
         board.put(Square.from("a1"), new King(WHITE, Square.from("a1")));
         board.put(Square.from("a2"), new King(BLACK, Square.from("a2")));
-        final ChessGame chessGame = new ChessGame(new Board(board), null, null, WHITE, null);
+        final ChessGame chessGame = new ChessGame(1L, new Board(board), null, null, WHITE, null);
 
         chessGame.move(Square.from("a1"), Square.from("a2"));
 
@@ -141,7 +142,7 @@ class ChessGameTest {
         board.put(Square.from("a1"), new King(WHITE, Square.from("a1")));
         board.put(Square.from("a2"), new King(BLACK, Square.from("a2")));
 
-        final ChessGame chessGame = new ChessGame(new Board(board), null, null, WHITE, null);
+        final ChessGame chessGame = new ChessGame(1L, new Board(board), null, null, WHITE, null);
         chessGame.move(Square.from("a1"), Square.from("a2"));
         final Result result = chessGame.createResult();
 

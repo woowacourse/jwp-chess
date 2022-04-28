@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import chess.domain.ChessGame;
+import chess.dto.CreateGameRequestDto;
 
 public interface GameDao {
 
-    Long save(final ChessGame game);
+    Long save(final CreateGameRequestDto createGameRequestDto);
 
     Optional<ChessGame> findById(final Long id);
 

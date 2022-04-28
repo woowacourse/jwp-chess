@@ -4,14 +4,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,6 +23,7 @@ import chess.domain.Member;
 import chess.domain.Participant;
 import chess.domain.piece.Piece;
 import chess.domain.piece.detail.Team;
+import chess.dto.CreateGameRequestDto;
 
 @Repository
 public class SpringJdbcGameDao implements GameDao {
@@ -40,22 +39,16 @@ public class SpringJdbcGameDao implements GameDao {
                 .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
         final Member black = memberDao.findById(resultSet.getLong("black_member_id"))
                 .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
-        final String title = resultSet.getString("title");
-        final String password = resultSet.getString("password");
         final Long id = resultSet.getLong("id");
         final String rawTurn = resultSet.getString("turn");
-        return new ChessGame(pieceDao.findBoardByGameId(id), title, password, Team.valueOf(rawTurn),
-                new Participant(white, black));
-    }
-
-    private final RowMapper<List<ChessGame>> gamesRowMapper = (resultSet, rowNumber) -> makeAllChessGame(resultSet);
-
-    private List<ChessGame> makeAllChessGame(final ResultSet resultSet) throws SQLException {
-        final List<ChessGame> games = new ArrayList<>();
-        while (resultSet.next()) {
-            games.add(makeChessGame(resultSet));
-        }
-        return games;
+        return new ChessGame(
+            id,
+            pieceDao.findBoardByGameId(id),
+            resultSet.getString("title"),
+            resultSet.getString("password"),
+            Team.valueOf(rawTurn),
+            new Participant(white, black)
+        );
     }
 
     @Autowired
@@ -66,22 +59,23 @@ public class SpringJdbcGameDao implements GameDao {
     }
 
     @Override
-    public Long save(final ChessGame game) {
-        final Long gameId = saveGame(game);
-        savePieces(gameId, game.getBoard());
+    public Long save(final CreateGameRequestDto createGameRequestDto) {
+        final Long gameId = saveGame(createGameRequestDto);
+        Optional<ChessGame> chessGame = findById(gameId);
+        savePieces(gameId, chessGame.get().getBoard());
         return gameId;
     }
 
-    private Long saveGame(final ChessGame game) {
+    private Long saveGame(final CreateGameRequestDto createGameRequestDto) {
         final String sql = "insert into Game (title, password, turn, white_member_id, black_member_id) values (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, game.getTitle());
-            statement.setString(2, game.getPassword());
-            statement.setString(3, game.getTurn().name());
-            statement.setLong(4, game.getWhiteId());
-            statement.setLong(5, game.getBlackId());
+            statement.setString(1, createGameRequestDto.getTitle());
+            statement.setString(2, createGameRequestDto.getPassword());
+            statement.setString(3, Team.WHITE.name());
+            statement.setLong(4, memberDao.findById(createGameRequestDto.getWhiteId()).get().getId());
+            statement.setLong(5, memberDao.findById(createGameRequestDto.getBlackId()).get().getId());
             return statement;
         }, keyHolder);
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -96,7 +90,7 @@ public class SpringJdbcGameDao implements GameDao {
 
     @Override
     public Optional<ChessGame> findById(final Long id) {
-        final String sql = "select id, turn, white_member_id, black_member_id from Game where id = ?";
+        final String sql = "select id, title, password, turn, white_member_id, black_member_id from Game where id = ?";
         final ChessGame game = jdbcTemplate.queryForObject(sql, gameRowMapper, id);
         return Optional.ofNullable(game);
     }
@@ -104,11 +98,7 @@ public class SpringJdbcGameDao implements GameDao {
     @Override
     public List<ChessGame> findAll() {
         final String sql = "select id, title, password, turn, white_member_id, black_member_id from Game";
-        try {
-            return jdbcTemplate.queryForObject(sql, gamesRowMapper);
-        } catch (EmptyResultDataAccessException e) {
-            return new ArrayList<>();
-        }
+        return jdbcTemplate.query(sql, gameRowMapper);
     }
 
     @Override

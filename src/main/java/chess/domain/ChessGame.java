@@ -11,6 +11,7 @@ import chess.domain.square.Square;
 
 public class ChessGame {
 
+    private final Long id;
     private final Board board;
     private final String title;
     private final String password;
@@ -18,7 +19,8 @@ public class ChessGame {
     private final Participant participant;
 
 
-    public ChessGame(final Board board, final String title, final String password, final Team turn, final Participant participant) {
+    public ChessGame(final Long id, final Board board, final String title, final String password, final Team turn, final Participant participant) {
+        this.id = id;
         this.board = board;
         this.title = title;
         this.password = password;
@@ -97,6 +99,10 @@ public class ChessGame {
                 .map(Piece::getPieceType)
                 .filter(pieceType -> pieceType == PieceType.PAWN)
                 .count();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Board getBoard() {

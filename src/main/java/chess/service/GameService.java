@@ -7,14 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import chess.dao.game.GameDao;
-import chess.dao.member.MemberDao;
-import chess.domain.Board;
-import chess.domain.BoardInitializer;
 import chess.domain.ChessGame;
-import chess.domain.Member;
-import chess.domain.Participant;
 import chess.domain.Result;
-import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
 import chess.dto.CreateGameRequestDto;
 import chess.dto.GameResultDto;
@@ -23,25 +17,14 @@ import chess.dto.GameResultDto;
 public class GameService {
 
     private final GameDao gameDao;
-    private final MemberDao memberDao;
 
     @Autowired
-    public GameService(final GameDao gameDao, final MemberDao memberDao) {
+    public GameService(final GameDao gameDao) {
         this.gameDao = gameDao;
-        this.memberDao = memberDao;
     }
 
     public Long createGame(final CreateGameRequestDto createGameRequestDto) {
-        final Member white = memberDao.findById(createGameRequestDto.getWhiteId())
-            .orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
-        final Member black = memberDao.findById(createGameRequestDto.getBlackId())
-            .orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
-        final Board board = new Board(BoardInitializer.create());
-        final String title = createGameRequestDto.getTitle();
-        final String password = createGameRequestDto.getPassword();
-        final Participant participant = new Participant(white, black);
-
-        return gameDao.save(new ChessGame(board, title, password, Team.WHITE, participant));
+        return gameDao.save(createGameRequestDto);
     }
 
     public List<ChessGame> findPlayingGames() {

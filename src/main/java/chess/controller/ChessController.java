@@ -6,6 +6,7 @@ import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,17 +38,23 @@ public class ChessController {
         return "redirect:/";
     }
 
-    @GetMapping("/init")
-    public String initGame(@RequestParam String gameId, @RequestParam String gamePassword) {
-        chessGameService.createGame(new LogInDto(gameId, gamePassword));
-        return "redirect:/game/" + gameId;
+    @PostMapping("/init")
+    public String initGame(@ModelAttribute LogInDto logInDto) {
+        chessGameService.createGame(logInDto);
+        return "redirect:/game/" + logInDto.getGameId();
     }
 
-    @GetMapping("/start")
-    public String startGame(@RequestParam String gameId, @RequestParam String gamePassword) {
-        chessGameService.validateLogIn(new LogInDto(gameId, gamePassword));
-        return "redirect:/game/" + gameId;
+    @PostMapping("/start")
+    public String startGame(@ModelAttribute LogInDto logInDto) {
+        chessGameService.validateLogIn(logInDto);
+        return "redirect:/game/" + logInDto.getGameId();
     }
+
+//    @GetMapping("/start")
+//    public String startGame(@RequestParam String gameId, @RequestParam String gamePassword) {
+//        chessGameService.validateLogIn(new LogInDto(gameId, gamePassword));
+//        return "redirect:/game/" + gameId;
+//    }
 
     @GetMapping(path = "/game/{gameId}")
     public ModelAndView getGame(@PathVariable String gameId) {

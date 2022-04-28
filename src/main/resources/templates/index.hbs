@@ -11,7 +11,7 @@
 
 <div id="game-entry">
 
-    <form enctype="text/plain" action="/init" method="get">
+    <form action="/init" method="post">
         <label for="game-entry">방 번호를 입력하여 시작하기</label>
         <br>
         방 제목 <input type="text" name="gameId" value="1234">
@@ -26,7 +26,7 @@
 <div class="rooms">
     {{#each rooms}}
         <div class="room">
-            <form action="/start" method="get">
+            <form action="/start" method="post">
                 <input type="hidden" name="gameId" value="{{this.gameId}}">
                 <input type="hidden" name="gamePassword" value="{{this.gamePassword}}">
                 <button type="submit" >{{this.gameId}} 입장하기</button>

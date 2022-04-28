@@ -157,3 +157,8 @@ const showError = async (message) => {
     }
     document.getElementById('message-info').innerHTML = '';
 }
+
+const goHome = async () => {
+    location.href = "/";
+    return;
+}

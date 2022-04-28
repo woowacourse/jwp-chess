@@ -1,6 +1,6 @@
 package chess.web.dao;
 
-import chess.domain.Room;
+import chess.domain.entity.Room;
 import chess.domain.board.Board;
 import chess.domain.board.Turn;
 

@@ -1,12 +1,18 @@
-package chess.domain;
+package chess.domain.entity;
 
 public class Room {
+    private final Long id;
     private final String title;
     private final String password;
 
-    public Room(String title, String password) {
+    public Room(Long id, String title, String password) {
+        this.id = id;
         this.title = title;
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getTitle() {

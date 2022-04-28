@@ -1,6 +1,6 @@
 package chess.web.dao;
 
-import chess.domain.Room;
+import chess.domain.entity.Room;
 import chess.domain.board.Board;
 import chess.domain.board.Team;
 import chess.domain.board.Turn;
@@ -88,10 +88,11 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public List<Room> findAll() {
-        final String query = "SELECT title, password FROM room";
+        final String query = "SELECT id, title, password FROM room";
         return jdbcTemplate.query(
                 query,
                 (resultSet, rowNum) -> new Room(
+                        resultSet.getLong("id"),
                         resultSet.getString("title"),
                         resultSet.getString("password")
                 )

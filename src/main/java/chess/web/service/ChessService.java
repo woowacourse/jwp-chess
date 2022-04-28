@@ -1,6 +1,6 @@
 package chess.web.service;
 
-import chess.domain.Room;
+import chess.domain.entity.Room;
 import chess.domain.board.Board;
 import chess.domain.board.Team;
 import chess.domain.board.Turn;

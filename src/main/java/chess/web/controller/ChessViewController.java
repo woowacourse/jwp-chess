@@ -1,6 +1,6 @@
 package chess.web.controller;
 
-import chess.domain.Room;
+import chess.domain.entity.Room;
 import chess.domain.board.Board;
 import chess.web.controller.dto.RoomResponseDto;
 import chess.web.service.ChessService;
@@ -24,9 +24,10 @@ public class ChessViewController {
     @GetMapping("/")
     public String getRoomList(Model model) {
         List<Room> rooms = chessService.getRoomList();
-        List<RoomResponseDto.Title> titles = rooms.stream().
-                map(RoomResponseDto.Title::new)
+        List<RoomResponseDto.TitleAndId> titles = rooms.stream().
+                map(RoomResponseDto.TitleAndId::new)
                 .collect(Collectors.toList());
+
         model.addAttribute("list", titles);
         return "index";
     }

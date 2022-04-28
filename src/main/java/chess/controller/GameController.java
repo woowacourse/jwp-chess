@@ -25,7 +25,9 @@ public class GameController {
     @GetMapping("/games/{chessGameId}")
     public String getChessGamePage(final Model model, final @PathVariable long chessGameId) {
         ChessGameDto chessGameDto = chessGameService.loadChessGame(chessGameId);
-        model.addAllAttributes(chessGameDto.getBoardForHtml());
+        if (chessGameDto.isOn()) {
+            model.addAllAttributes(chessGameDto.getBoardForHtml());
+        }
         model.addAttribute("id", chessGameId);
         model.addAttribute("chess_game_name", chessGameDto.getName());
         model.addAttribute("turn", chessGameDto.getTurn());

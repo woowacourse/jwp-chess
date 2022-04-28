@@ -1,7 +1,9 @@
 package chess.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.entity.RoomEntity;
-import org.assertj.core.api.Assertions;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +22,11 @@ public class RoomDaoTest {
     @DisplayName("체스방을 추가한다.")
     @Test
     void insert() {
+        //given, when
         final RoomEntity roomEntity = new RoomEntity(1L, "room1", "1234");
         final RoomEntity insertRoom = roomDao.insert(roomEntity);
-
-        Assertions.assertThat(insertRoom).isEqualTo(roomEntity);
+        // then
+        assertThat(insertRoom).isEqualTo(roomEntity);
     }
 
     @DisplayName("id로 체스방을 조회한다.")
@@ -34,8 +37,21 @@ public class RoomDaoTest {
         // when
         RoomEntity actual = roomDao.findById(expected.getId());
         // then
-        Assertions.assertThat(actual.getName()).isEqualTo("room1");
-        Assertions.assertThat(actual.getPassword()).isEqualTo("1234");
+        assertThat(actual.getName()).isEqualTo("room1");
+        assertThat(actual.getPassword()).isEqualTo("1234");
+    }
 
+    @DisplayName("모든 체스방을 조회한다.")
+    @Test
+    void findAll() {
+        // given
+        roomDao.insert(new RoomEntity(1L, "room1", "1234"));
+        roomDao.insert(new RoomEntity(2L, "room2", "1234"));
+        roomDao.insert(new RoomEntity(3L, "room3", "1234"));
+
+        //given, when
+        final List<RoomEntity> rooms = roomDao.findAll();
+        // then
+        assertThat(rooms.size()).isEqualTo(3);
     }
 }

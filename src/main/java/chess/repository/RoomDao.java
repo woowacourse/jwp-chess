@@ -1,6 +1,7 @@
 package chess.repository;
 
 import chess.entity.RoomEntity;
+import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,6 +32,11 @@ public class RoomDao {
     public RoomEntity findById(long id) {
         final String sql = "select * from rooms where room_id = ?;";
         return jdbcTemplate.queryForObject(sql, rowMapper(), id);
+    }
+
+    public List<RoomEntity> findAll() {
+        final String sql = "select * from rooms;";
+        return jdbcTemplate.query(sql, rowMapper());
     }
 
     private RowMapper<RoomEntity> rowMapper() {

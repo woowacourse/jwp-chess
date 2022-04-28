@@ -9,6 +9,6 @@ public class ExceptionAdvice {
 
     @ExceptionHandler
     public ResponseEntity<String> getException(final Exception exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage() + "\n뒤로 가시면 됩니당.");
+        return ResponseEntity.internalServerError().body(exception.getMessage() + "\n\n뒤로 가기 후 제대로 입력해보세용");
     }
 }

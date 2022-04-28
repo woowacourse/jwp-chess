@@ -6,7 +6,7 @@ public class RoomDto {
     private final String roomName;
     private final String password;
 
-    public RoomDto(int id, String roomName, String password) {
+    public RoomDto(final int id, final String roomName, final String password) {
         this.id = id;
         this.roomName = roomName;
         this.password = password;

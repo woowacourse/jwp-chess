@@ -46,7 +46,7 @@ public class ChessGameService {
         this.roomDao = roomDao;
     }
 
-    public Map<Position, Piece> getPieces(int roomNumber) {
+    public Map<Position, Piece> getPieces(final int roomNumber) {
         final String gameState = gameStateDao.getGameState(roomNumber);
 
         if (gameState.equals(EMPTY_GAME_STATE)) {
@@ -56,7 +56,7 @@ public class ChessGameService {
         return convertToPiecesByPosition(roomNumber);
     }
 
-    public Map<Position, Piece> start(int roomNumber) {
+    public Map<Position, Piece> start(final int roomNumber) {
         validatePlayingGame(roomNumber);
         final Board board = new Board();
         final String turn = board.getTurn()
@@ -67,13 +67,13 @@ public class ChessGameService {
         return board.getPieces();
     }
 
-    private void validatePlayingGame(int roomNumber) {
+    private void validatePlayingGame(final int roomNumber) {
         if (gameStateDao.hasPlayingGame(roomNumber)) {
             throw new IllegalStateException("이미 진행 중인 게임이 있습니다.");
         }
     }
 
-    public Map<Position, Piece> move(int roomNumber, final String sourcePosition, final String targetPosition) {
+    public Map<Position, Piece> move(final int roomNumber, final String sourcePosition, final String targetPosition) {
         checkPlayingGame(roomNumber);
         Board board = getSavedBoard(roomNumber);
         final Board movedBoard = board.movePiece(Position.from(sourcePosition), Position.from(targetPosition));
@@ -87,20 +87,20 @@ public class ChessGameService {
         return movedBoard.getPieces();
     }
 
-    private void checkPlayingGame(int roomNumber) {
+    private void checkPlayingGame(final int roomNumber) {
         if (!gameStateDao.hasPlayingGame(roomNumber)) {
             throw new IllegalStateException("진행 중인 게임이 없습니다.");
         }
     }
 
-    private Board getSavedBoard(int roomNumber) {
+    private Board getSavedBoard(final int roomNumber) {
         final String turn = gameStateDao.getTurn(roomNumber);
         final Team turnTeam = TEAM_CREATION_STRATEGY.get(turn);
         final Map<Position, Piece> pieces = convertToPiecesByPosition(roomNumber);
         return new Board(pieces, turnTeam);
     }
 
-    private Map<Position, Piece> convertToPiecesByPosition(int roomNumber) {
+    private Map<Position, Piece> convertToPiecesByPosition(final int roomNumber) {
         final List<PieceDto> allPieces = pieceDao.findAllPieces(roomNumber);
         final Map<Position, Piece> pieces = new HashMap<>();
 
@@ -115,13 +115,13 @@ public class ChessGameService {
         return pieces;
     }
 
-    public ScoreDto getScore(int roomNumber) {
+    public ScoreDto getScore(final int roomNumber) {
         checkPlayingGame(roomNumber);
         final Board board = getSavedBoard(roomNumber);
         return new ScoreDto(board.getTotalPoint(WHITE), board.getTotalPoint(BLACK));
     }
 
-    public Map<Position, Piece> end(int roomNumber) {
+    public Map<Position, Piece> end(final int roomNumber) {
         final Board board = getSavedBoard(roomNumber);
         checkPlayingGame(roomNumber);
         gameStateDao.removeGameState(roomNumber);
@@ -133,19 +133,18 @@ public class ChessGameService {
         return roomDao.findAllRoom();
     }
 
-    public List<RoomDto> createRoom(String name, String password) {
+    public List<RoomDto> createRoom(final String name, final String password) {
         roomDao.createRoom(name, password);
         return roomDao.findAllRoom();
     }
 
-    public List<RoomDto> deleteRoom(int roomNumber, String password) {
-        String currentGameState = gameStateDao.getGameState(roomNumber);
+    public void deleteRoom(final int roomNumber, final String password) {
+        final String currentGameState = gameStateDao.getGameState(roomNumber);
         if (currentGameState != null && currentGameState.equals("playing")) {
             throw new IllegalStateException("진행 중인 게임은 종료할 수 없습니다.");
         }
         pieceDao.removeAllPieces(roomNumber);
         gameStateDao.removeGameState(roomNumber);
         roomDao.deleteRoom(roomNumber, password);
-        return roomDao.findAllRoom();
     }
 }

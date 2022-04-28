@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PieceDao {
 
-    void saveAllPieces(int roomNumber, final Map<Position, Piece> board);
+    void saveAllPieces(final int roomNumber, final Map<Position, Piece> board);
 
-    List<PieceDto> findAllPieces(int roomNumber);
+    List<PieceDto> findAllPieces(final int roomNumber);
 
-    void removePieceByPosition(int roomNumber, final String position);
+    void removePieceByPosition(final int roomNumber, final String position);
 
-    void savePiece(int roomNumber, final String position, final Piece piece);
+    void savePiece(final int roomNumber, final String position, final Piece piece);
 
-    void removeAllPieces(int roomNumber);
+    void removeAllPieces(final int roomNumber);
 }

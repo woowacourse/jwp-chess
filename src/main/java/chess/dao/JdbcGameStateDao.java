@@ -15,14 +15,14 @@ public class JdbcGameStateDao implements GameStateDao {
     }
 
     @Override
-    public boolean hasPlayingGame(int roomNumber) {
+    public boolean hasPlayingGame(final int roomNumber) {
         final String sql = "select count(*) from game where roomnumber=?";
         final int count = jdbcTemplate.queryForObject(sql, Integer.class, roomNumber);
         return count > 0;
     }
 
     @Override
-    public void saveState(int roomNumber, final String state) {
+    public void saveState(final int roomNumber, final String state) {
         String sql = "insert into game(state, roomNumber) values (?, ?)";
         if (hasPlayingGame(roomNumber)) {
             sql = "update game set state=(?) where roomnumber=?";
@@ -31,7 +31,7 @@ public class JdbcGameStateDao implements GameStateDao {
     }
 
     @Override
-    public void saveTurn(int roomNumber, final String turn) {
+    public void saveTurn(final int roomNumber, final String turn) {
         String sql = "insert into game(turn, roomnumber) values (?, ?)";
         if (hasPlayingGame(roomNumber)) {
             sql = "update game set turn=(?) where roomnumber=?";
@@ -40,7 +40,7 @@ public class JdbcGameStateDao implements GameStateDao {
     }
 
     @Override
-    public String getGameState(int roomNumber) {
+    public String getGameState(final int roomNumber) {
         final String sql = "select state from game where roomNumber=?";
         if (hasPlayingGame(roomNumber)) {
             return jdbcTemplate.queryForObject(sql, String.class, roomNumber);
@@ -49,13 +49,13 @@ public class JdbcGameStateDao implements GameStateDao {
     }
 
     @Override
-    public String getTurn(int roomNumber) {
+    public String getTurn(final int roomNumber) {
         final String sql = "select turn from game where roomnumber=?";
         return jdbcTemplate.queryForObject(sql, String.class, roomNumber);
     }
 
     @Override
-    public void removeGameState(int roomNumber) {
+    public void removeGameState(final int roomNumber) {
         final String sql = "delete from game where roomnumber=?";
         jdbcTemplate.update(sql, roomNumber);
     }

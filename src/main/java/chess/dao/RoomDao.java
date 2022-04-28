@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface RoomDao {
 
-    void createRoom(String roomName, String password);
+    void createRoom(final String roomName, final String password);
 
-    void deleteRoom(int roomId, String password);
+    void deleteRoom(final int roomId, final String password);
 
     List<RoomDto> findAllRoom();
 }

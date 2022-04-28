@@ -14,12 +14,14 @@ public class ChessGameDto {
     private final String name;
     private final String turn;
     private final Result result;
+    private final boolean isOn;
 
     public ChessGameDto(final String name, final ChessGame chessGame) {
         this.boardForHtml = convertBoardForHtml(chessGame.getCurrentBoard());
         this.name = name;
         this.turn = chessGame.getTurn().getNow().getValue();
         this.result = chessGame.generateResult();
+        this.isOn = chessGame.isOn();
     }
 
     private Map<String, Piece> convertBoardForHtml(final Map<Position, Piece> board) {
@@ -45,5 +47,9 @@ public class ChessGameDto {
 
     public Result getResult() {
         return result;
+    }
+
+    public boolean isOn() {
+        return isOn;
     }
 }

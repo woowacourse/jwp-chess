@@ -63,8 +63,19 @@ async function startChessGame() {
         });
 }
 
+function checkOnlyOne(element) {
+    const checkboxes = document.getElementsByName("promotion");
+    checkboxes.forEach((cb) => {
+        cb.checked = false;
+    })
+    element.checked = true;
+}
+
 async function promotionButton() {
-    const promotionPiece = document.getElementById("promotion").value;
+    const query = 'input[name="promotion"]:checked';
+    const selectedEl = document.querySelector(query);
+    const promotionPiece = selectedEl.value;
+    console.log(promotionPiece);
     const promotion = {
         promotionValue: promotionPiece
     }

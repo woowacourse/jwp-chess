@@ -104,7 +104,17 @@
         </form>
         <br>
         <form>
-            <input id="promotion" placeholder="promotion 기물이름 (ex. Q)">
+            <h3>기물 Promotion</h3>
+            <label for ="queen">Queen</label>
+            <input type="checkbox" id="queen" name="promotion" value="Q" onclick="checkOnlyOne(this)">
+            <label for ="bishop">Bishop</label>
+            <input type="checkbox" id="bishop" name="promotion" value="B" onclick="checkOnlyOne(this)">
+            <label for ="knight">Knight</label>
+            <input type="checkbox" id="knight" name="promotion" value="N" onclick="checkOnlyOne(this)">
+            <label for ="rook">Rook</label>
+            <input type="checkbox" id="rook" name="promotion" value="R" onclick="checkOnlyOne(this)">
+            <br>
+            <br>
             <input type="button" onclick="promotionButton()" value="promotion">
         </form>
         <br>

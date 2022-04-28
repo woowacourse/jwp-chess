@@ -3,6 +3,7 @@ package chess.web.controller;
 import chess.service.ChessService;
 import chess.service.dto.BoardDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,12 @@ public class ApiChessController {
     public ResponseEntity<Object> requestEndGame(@PathVariable int gameId) {
         chessService.endGame(gameId);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/game/{gameId}")
+    public ResponseEntity<Integer> deleteGame(@PathVariable int gameId) {
+        int affectedRows = chessService.deleteGame(gameId);
+        return ResponseEntity.ok(affectedRows);
     }
 
     @ExceptionHandler(RuntimeException.class)

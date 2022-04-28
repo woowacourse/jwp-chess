@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.dto.ResponseDto;
 import chess.dto.ResultDto;
+import chess.dto.RoomInfoDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,26 +28,38 @@ public class ChessSpringController {
         return "home";
     }
 
-    @GetMapping("/start")
-    public @ResponseBody
-    ResponseDto start() {
-        return chessGameService.start();
+//    @GetMapping("/start")
+//    public @ResponseBody
+//    ResponseDto start() {
+//        return chessGameService.start();
+//    }
+
+    @PostMapping("/create")
+    @ResponseBody
+    ResponseDto create(@RequestBody RoomInfoDto roomInfoDto) {
+        return chessGameService.create(roomInfoDto.getTitle(), roomInfoDto.getPassword());
     }
 
+//    @GetMapping("/chess")
+//    public ModelAndView chess() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.addObject("boardDto", chessGameService.getBoard());
+//        modelAndView.setViewName("index");
+//        return modelAndView;
+//    }
+//
+//    @PostMapping("/move")
+//    public @ResponseBody
+//    ResponseDto move(@RequestBody String request) {
+//        List<String> command = Arrays.asList(request.split(" "));
+//        return chessGameService.move(command.get(0), command.get(1));
+//    }
 
-    @GetMapping("/chess")
-    public ModelAndView chess() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("boardDto", chessGameService.getBoard());
-        modelAndView.setViewName("index");
-        return modelAndView;
-    }
-
-    @PostMapping("/move")
-    public @ResponseBody
-    ResponseDto move(@RequestBody String request) {
+    @PostMapping("/board/move")
+    @ResponseBody
+    public ResponseDto move(@RequestParam(name = "id") Long id, @RequestBody String request) {
         List<String> command = Arrays.asList(request.split(" "));
-        return chessGameService.move(command.get(0), command.get(1));
+        return chessGameService.move(id, command.get(0), command.get(1));
     }
 
     @GetMapping("/chess-status")

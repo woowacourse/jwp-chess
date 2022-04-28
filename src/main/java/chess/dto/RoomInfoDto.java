@@ -1,19 +1,12 @@
-package chess.dao;
+package chess.dto;
 
-public class FakeBoard {
-
-    private final String turn;
+public class RoomInfoDto {
     private final String title;
     private final String password;
 
-    public FakeBoard(String turn, String title, String password) {
-        this.turn = turn;
+    public RoomInfoDto(String title, String password) {
         this.title = title;
         this.password = password;
-    }
-
-    public String getTurn() {
-        return turn;
     }
 
     public String getTitle() {

@@ -14,18 +14,18 @@ public class MockPieceDao implements PieceDao {
     private Map<Integer, FakePiece> fakePiece = new HashMap<>();
 
     @Override
-    public void save(Map<Position, Piece> board) {
+    public void save(Map<Position, Piece> board, Long boardId) {
         int index = 1;
         for (Entry<Position, Piece> positionPieceEntry : board.entrySet()) {
             Position position = positionPieceEntry.getKey();
             Piece piece = positionPieceEntry.getValue();
             fakePiece.put(index++,
-                    new FakePiece(1, position.stringName(), piece.getSymbol(), piece.getColor().name()));
+                    new FakePiece(boardId, position.stringName(), piece.getSymbol(), piece.getColor().name()));
         }
     }
 
     @Override
-    public Map<Position, Piece> load() {
+    public Map<Position, Piece> load(Long boardId) {
         Map<Position, Piece> pieces = new TreeMap<>();
         for (FakePiece fakePiece : fakePiece.values()) {
             Position position = Position.from(fakePiece.getPosition());
@@ -37,17 +37,27 @@ public class MockPieceDao implements PieceDao {
     }
 
     @Override
-    public boolean existPieces() {
-        return fakePiece.size() > 0;
-    }
-
-    @Override
     public void delete() {
         fakePiece = new HashMap<>();
     }
 
     @Override
-    public void updatePosition(String source, String target) {
-
+    public void updatePosition(Long boardId, String source, String target) {
+        FakePiece sourcePiece = null;
+        for (Entry<Integer, FakePiece> fakePieceEntry : fakePiece.entrySet()) {
+            if (fakePieceEntry.getValue().getPosition().equals(source)) {
+                sourcePiece = fakePieceEntry.getValue();
+            }
+        }
+        final String color = sourcePiece.getColor();
+        final String type = sourcePiece.getType();
+        for (Entry<Integer, FakePiece> fakePieceEntry : fakePiece.entrySet()) {
+            if (fakePieceEntry.getValue().getPosition().equals(target)) {
+                Integer key = fakePieceEntry.getKey();
+                fakePiece.remove(key);
+                fakePiece.put(key, new FakePiece(boardId, target, type, color));
+                return;
+            }
+        }
     }
 }

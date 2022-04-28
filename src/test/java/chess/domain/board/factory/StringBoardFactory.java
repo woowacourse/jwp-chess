@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class StringBoardFactory extends BoardFactory {
+    public class StringBoardFactory extends BoardFactory {
 
     private static final int BOARD_RANK_SIZE = 8;
     private static final int BOARD_FILE_SIZE = 8;

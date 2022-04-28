@@ -13,4 +13,6 @@ public interface PieceDao {
     void save(Map<Position, Piece> board, Long boardId);
 
     Map<Position, Piece> load(Long boardId);
+
+    void updateAll(Map<Position, Piece> board, Long boardId);
 }

@@ -60,4 +60,10 @@ public class MockPieceDao implements PieceDao {
             }
         }
     }
+
+    @Override
+    public void updateAll(Map<Position, Piece> board, Long boardId) {
+        fakePiece = new HashMap<>();
+        save(board, boardId);
+    }
 }

@@ -97,4 +97,10 @@ public class ChessSpringController {
     public ResponseDto end(@RequestParam(name = "id") Long id) {
         return chessGameService.end(id);
     }
+
+    @PostMapping("/board/restart")
+    @ResponseBody
+    public ResponseDto restart(@RequestParam(name = "id") Long id) {
+        return chessGameService.restart(id);
+    }
 }

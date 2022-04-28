@@ -108,6 +108,18 @@ public class ChessGameServiceTest {
         //then
         final Color turn = chessGameService.getTurn(1L);
         assertThat(turn).isEqualTo(Color.NONE);
+    }
 
+    @Test
+    @DisplayName("게임 재시작 기능을 호출하면 turn이 Color.WHITE로 변경")
+    void restart_game() {
+        //given
+        chessGameService.create(title, password);
+        chessGameService.end(1L);
+        //when
+        chessGameService.restart(1L);
+        //then
+        final Color turn = chessGameService.getTurn(1L);
+        assertThat(turn).isEqualTo(Color.WHITE);
     }
 }

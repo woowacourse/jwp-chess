@@ -55,7 +55,7 @@ public class BoardDaoImpl implements BoardDao{
 
     @Override
     public void updateTurn(Long boardId, Color turn) {
-        final String sql = "update board set turn = ?";
-        jdbcTemplate.update(sql, turn.name());
+        final String sql = "update board set turn = ? where id = ?";
+        jdbcTemplate.update(sql, turn.name(), boardId);
     }
 }

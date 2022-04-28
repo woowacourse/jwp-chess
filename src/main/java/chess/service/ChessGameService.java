@@ -108,4 +108,15 @@ public class ChessGameService {
     public Color getTurn(Long boardId) {
         return boardDao.findTurn(boardId);
     }
+
+    public ResponseDto restart(Long boardId) {
+        try {
+            boardDao.updateTurn(boardId, Color.WHITE);
+            final Board board = new Board();
+            pieceDao.updateAll(board.getPiecesByPosition(), boardId);
+            return new ResponseDto(301, "");
+        } catch (Exception e) {
+            return new ResponseDto(501, e.getMessage());
+        }
+    }
 }

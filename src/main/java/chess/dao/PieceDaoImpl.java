@@ -42,13 +42,6 @@ public class PieceDaoImpl implements PieceDao {
         return query;
     }
 
-//    @Override
-//    public boolean existPieces() {
-//        final String sql = "select count(*) from piece where board_id = 1";
-//        final Integer numOfPiece = jdbcTemplate.queryForObject(sql, Integer.class);
-//        return !numOfPiece.equals(0);
-//    }
-
     @Override
     public void delete() {
         final String sql = "delete from piece where board_id = 1";
@@ -84,5 +77,15 @@ public class PieceDaoImpl implements PieceDao {
         final Position position = positionPieceEntry.getKey();
         final Piece piece = positionPieceEntry.getValue();
         jdbcTemplate.update(sql, boardId, position.stringName(), piece.getSymbol(), piece.getColor().name());
+    }
+
+    @Override
+    public void updateAll(Map<Position, Piece> board, Long boardId) {
+        final String sql = "update piece set type = ?, color = ? where position = ? and board_id = ?";
+        for (Entry<Position, Piece> boardEntry : board.entrySet()) {
+            final Position position = boardEntry.getKey();
+            final Piece piece = boardEntry.getValue();
+            jdbcTemplate.update(sql, piece.getSymbol(), piece.getColor().name(), position.stringName(), boardId);
+        }
     }
 }

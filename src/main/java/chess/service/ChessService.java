@@ -137,7 +137,7 @@ public class ChessService {
         gameDao.updateTurn(turn, gameId);
     }
 
-    public Map<String, Double> status() {
+    public Map<String, Double> status(ChessBoard chessBoard) {
         return chessBoard.calculateScore().entrySet().stream()
                 .collect(Collectors.toMap(m -> m.getKey().name(), Map.Entry::getValue));
     }

@@ -3,15 +3,14 @@ package chess.controller;
 import chess.controller.dto.MoveRequestDto;
 import chess.controller.dto.ResponseDto;
 import chess.domain.game.Status;
+import chess.domain.game.board.ChessBoard;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
@@ -53,12 +52,26 @@ public class SpringWebChessController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/status")
-    public String status(Model model) {
-        if (chessService.checkStatus(Status.PLAYING)) {
+//    @PostMapping("/start")
+//    public ResponseEntity<ResponseDto> start() throws Exception {
+//        chessService.start();
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
+//
+//    @PostMapping("/select-game")
+//    public ResponseEntity<ResponseDto> loadGame(@RequestBody Integer gameId){
+//        chessService.loadGame(gameId);
+//        return new ResponseEntity<>(HttpStatus.OK);
+
+//    }
+//
+    @GetMapping("/status/{gameId}")
+    public String status(Model model, @PathVariable int gameId) {
+        ChessBoard chessBoard = chessService.findBoard(gameId);
+        if (chessService.checkStatus(chessBoard, Status.PLAYING)) {
             model.addAttribute("play", true);
-            model.addAttribute("status", chessService.status());
-            model.addAttribute("board", chessService.currentBoardForUI());
+            model.addAttribute("status", chessService.status(chessBoard));
+            model.addAttribute("board", chessService.currentBoardForUI(chessBoard));
             return "game";
         }
         return "redirect:/end";

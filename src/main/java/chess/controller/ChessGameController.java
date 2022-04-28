@@ -49,11 +49,4 @@ public class ChessGameController {
         chessGameService.deleteRoom(chessGameId, password);
         return "redirect:/";
     }
-
-    @ExceptionHandler(ChessGameException.class)
-    public String exceptionHandler(ChessGameException e, RedirectAttributes attributes) {
-        attributes.addFlashAttribute("hasError", true);
-        attributes.addFlashAttribute("errorMessage", e.getMessage());
-        return "redirect:/chess-game?chess-game-id=" + e.getChessGameId();
-    }
 }

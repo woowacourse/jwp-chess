@@ -1,0 +1,1 @@
+const Button = window.styled.button``;

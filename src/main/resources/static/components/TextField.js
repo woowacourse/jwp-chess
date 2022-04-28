@@ -1,0 +1,1 @@
+const TextField = window.styled.input``;

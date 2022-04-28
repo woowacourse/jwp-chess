@@ -41,13 +41,6 @@ const move = async (from, to) => {
     await render();
 }
 
-const initialize = async () => {
-    await fetch("initialize", {
-        method: "POST"
-    })
-    await render();
-}
-
 const renderBoard = async () => {
     clear();
 

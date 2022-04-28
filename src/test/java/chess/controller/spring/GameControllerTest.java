@@ -119,15 +119,37 @@ class GameControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("게임 id를 주면서 게임 삭제를 요청하면 게임이 삭제된다.")
+    @DisplayName("종료되지 않은 게임에 삭제요청하면 400 상태코드를 반환한다.")
     @Test
-    void deleteGame() {
+    void deletePlayingGame() {
         final Long member1Id = memberService.addMember("알렉스");
         final Long member2Id = memberService.addMember("짱구");
         final String title = "테스트 방";
         final String password = "1234";
 
         final Long gameId = gameService.createGame(title, password, member1Id, member2Id);
+
+        final CreateGameRequestDto createGameRequestDto = new CreateGameRequestDto(title, password, member1Id,
+                member2Id);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(createGameRequestDto)
+                .when().delete("/games/" + gameId)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @DisplayName("종료된 게임에 삭제요청하면 게임이 삭제된다.")
+    @Test
+    void deleteEndGame() {
+        final Long member1Id = memberService.addMember("알렉스");
+        final Long member2Id = memberService.addMember("짱구");
+        final String title = "테스트 방";
+        final String password = "1234";
+
+        final Long gameId = gameService.createGame(title, password, member1Id, member2Id);
+
+        gameService.terminate(gameId);
 
         final CreateGameRequestDto createGameRequestDto = new CreateGameRequestDto(title, password, member1Id,
                 member2Id);

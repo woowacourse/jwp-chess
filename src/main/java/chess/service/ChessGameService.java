@@ -2,31 +2,25 @@ package chess.service;
 
 import chess.chessgame.ChessGame;
 import chess.chessgame.MovingPosition;
-import chess.chessgame.Position;
-import chess.dao.ChessboardDao;
-import chess.dto.ChessGameDto;
+import chess.repository.ChessboardRepository;
 import chess.dto.ScoreDto;
-import chess.piece.Piece;
-import chess.utils.PieceGenerator;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ChessGameService {
 
-    private final ChessboardDao dao;
+    private final ChessboardRepository dao;
     private ChessGame chessGame = new ChessGame();
 
-    public ChessGameService(ChessboardDao dao) {
+    public ChessGameService(ChessboardRepository dao) {
         this.dao = dao;
     }
 
     public void init() {
         if (dao.isDataExist()) {
-            setChessGameByDto(dao.load());
+            chessGame = dao.load();
             return;
         }
         chessGame = new ChessGame();
@@ -50,7 +44,7 @@ public class ChessGameService {
     }
 
     public void save() {
-        dao.save(ChessGameDto.of(chessGame));
+        dao.save(chessGame);
     }
 
     public void end() {
@@ -63,20 +57,6 @@ public class ChessGameService {
 
     public ChessGame getChessGame() {
         return chessGame;
-    }
-
-    private void setChessGameByDto(ChessGameDto dto) {
-        LinkedHashMap<Position, Piece> boards = dto.getPieces()
-                .stream()
-                .collect(Collectors.toMap(
-                                pieceDto -> new Position(pieceDto.getX(), pieceDto.getY()),
-                                pieceDto -> PieceGenerator.generate(pieceDto.getType(), pieceDto.getColor()),
-                                (key1, key2) -> key1,
-                                LinkedHashMap::new
-                        )
-                );
-
-        chessGame = new ChessGame(dto.getState(), dto.getTurn(), boards);
     }
 
 }

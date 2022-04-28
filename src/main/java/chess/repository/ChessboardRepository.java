@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.repository;
 
 import chess.chessgame.ChessGame;
 import chess.chessgame.Position;
@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class ChessboardDao {
+public class ChessboardRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public ChessboardDao(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public ChessboardRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
@@ -61,25 +61,19 @@ public class ChessboardDao {
         List<PieceDto> pieces = namedParameterJdbcTemplate.query(pieces_sql, Map.of(), pieceRowMapper);
 
         final String gameInfo_sql = "SELECT * FROM gameInfos";
-        
+        GameInfoDto gameInfo = namedParameterJdbcTemplate.queryForObject(gameInfo_sql, Map.of(), gameInfoRowMapper);
 
-
-        return new ChessGame(gameInfo.getState(), gameInfo.getTurn(), loadPieces());
+        return new ChessGame(gameInfo.getState(), gameInfo.getTurn(), convertPieces(pieces));
     }
 
-    private Map<Position, Piece> loadPieces() {
-
+    private Map<Position, Piece> convertPieces(List<PieceDto> pieces) {
         Map<Position, Piece> convertedPieces = new LinkedHashMap<>();
+
         for (PieceDto piece : pieces) {
             convertedPieces.put(new Position(piece.getX(), piece.getY()), PieceGenerator.generate(piece.getType(), piece.getColor()));
         }
 
         return convertedPieces;
-    }
-
-    private GameInfoDto loadGameInfo(){
-        final String pieces_sql = "SELECT * FROM pieces ORDER BY x ASC, y ASC";
-        List<PieceDto> pieces = namedParameterJdbcTemplate.query(pieces_sql, Map.of(), pieceRowMapper);
     }
 
     private void addAll(ChessGame chessGame) {

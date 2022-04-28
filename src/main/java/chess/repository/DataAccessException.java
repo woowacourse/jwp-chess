@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.repository;
 
 public class DataAccessException extends RuntimeException {
     private final static String MESSAGE = "쿼리 실행에 실패했습니다.";

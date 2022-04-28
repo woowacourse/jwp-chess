@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.repository;
 
 import chess.chessgame.ChessGame;
 import chess.chessgame.Position;
@@ -18,13 +18,13 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class ChessboardDaoTest {
+public class ChessboardRepositoryTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ChessboardDao chessboardDao;
+    private ChessboardRepository chessboardRepository;
 
     private ChessGame chessGame = new ChessGame(
             "PLAY",
@@ -58,35 +58,35 @@ public class ChessboardDaoTest {
     @DisplayName("데이터가 존재한다면 true 반환")
     void isDataExistWhenTrue() {
         jdbcTemplate.update("insert into gameInfos values (?,?)", "PLAY", "BLACK");
-        assertThat(chessboardDao.isDataExist()).isTrue();
+        assertThat(chessboardRepository.isDataExist()).isTrue();
     }
 
     @Test
     @DisplayName("데이터가 존재하지 않는다면 false 반환")
     void isDataExistWhenFalse() {
-        assertThat(chessboardDao.isDataExist()).isFalse();
+        assertThat(chessboardRepository.isDataExist()).isFalse();
     }
 
     @Test
     @DisplayName("데이터 저장")
     void save() {
-        chessboardDao.save(chessGame);
-        assertThat(chessboardDao.isDataExist()).isTrue();
+        chessboardRepository.save(chessGame);
+        assertThat(chessboardRepository.isDataExist()).isTrue();
     }
 
     @Test
     @DisplayName("데이터 전체 삭제")
     void truncateAll() {
-        chessboardDao.save(chessGame);
-        chessboardDao.truncateAll();
-        assertThat(chessboardDao.isDataExist()).isFalse();
+        chessboardRepository.save(chessGame);
+        chessboardRepository.truncateAll();
+        assertThat(chessboardRepository.isDataExist()).isFalse();
     }
 
     @Test
     @DisplayName("저장된 데이터를 잘 불러오는지 확인")
     void load() {
-        chessboardDao.save(chessGame);
-        ChessGame loadedChessGame = chessboardDao.load();
+        chessboardRepository.save(chessGame);
+        ChessGame loadedChessGame = chessboardRepository.load();
 
         checkPieces(loadedChessGame.getChessBoard());
         checkGameInfo(loadedChessGame);

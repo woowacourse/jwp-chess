@@ -1,14 +1,13 @@
 package chess.controller;
 
-import chess.dto.MoveRequestDto;
 import chess.dto.ScoreDto;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class WebChessController {
@@ -61,7 +60,7 @@ public class WebChessController {
         return CHESS_GAME_URL;
     }
 
-    @GetMapping("status")
+    @GetMapping("/status")
     public String status(Model model) {
         ScoreDto score = service.status();
         model.addAttribute("pieces", service.getPiecesByUnicode());
@@ -70,8 +69,8 @@ public class WebChessController {
     }
 
     @PostMapping("/move")
-    public String move(@ModelAttribute MoveRequestDto moveRequest, Model model) {
-        service.move(moveRequest.getFrom(), moveRequest.getTo());
+    public String move(@RequestParam String from, @RequestParam String to, Model model) {
+        service.move(from, to);
         model.addAttribute("pieces", service.getPiecesByUnicode());
         return CHESS_GAME_URL;
     }

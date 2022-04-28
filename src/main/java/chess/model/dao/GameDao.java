@@ -20,7 +20,7 @@ public class GameDao {
 
     public Long saveGame(String password) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into GAMES (password, turn) values (?, 'start')";
+        String sql = "insert into GAMES (password, turn) values (?, 'white')";
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"game_id"});
             preparedStatement.setString(1, password);

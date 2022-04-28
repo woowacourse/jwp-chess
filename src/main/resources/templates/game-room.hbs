@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link href="/src/index.css" rel="stylesheet">
+</head>
+<script src="/src/index.js"></script>
+<body>
+<h1> 체스 게임 목록 </h1>
+<table>
+    <tr>
+        <td style="background-color:#C5E7E4;padding:5px" onclick="createNewGame()"> New Game </td>
+        <td> + </td>
+    </tr>
+    {{#each games}}
+    <tr>
+        <td style="background-color:#C5E7E4;padding:5px" onclick="enterGame(this.id)" id="{{this}}"> Room {{this}} </td>
+        <td onclick="deleteGame(this.id)" id="{{this}}"> 삭제 </td>
+    </tr>
+    {{/each}}
+</table>
+</body>
+</html>

@@ -34,16 +34,11 @@ public class ChessService {
         return gameDao.findAllGameId();
     }
 
-    public WebBoardDto createGame(String password) {
-        Board board = initBoard(gameDao.saveGame(password));
-
-        return WebBoardDto.from(board);
-    }
-
-    private Board initBoard(Long gameId) {
+    public Long createGame(String password) {
+        Long gameId = gameDao.saveGame(password);
         pieceDao.savePieces(BoardFactory.create(), gameId);
 
-        return toBoard(pieceDao.findAllPiecesByGameId(gameId));
+        return gameId;
     }
 
     public WebBoardDto continueGame(Long gameId) {
@@ -85,9 +80,6 @@ public class ChessService {
     public String getTurn(Long gameId) {
         String turn = gameDao.findTurnByGameId(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 ID 값입니다."));
-        if (turn.equals("start")) {
-            turn = "white";
-        }
         return turn;
     }
 
@@ -100,8 +92,8 @@ public class ChessService {
     private void movePiece(Long gameId, String srcPosition, String dstPosition,
                            Piece sourcePiece, Piece targetPiece, Turn turn) {
         if (canMove(gameId, srcPosition, dstPosition, sourcePiece, targetPiece)) {
-            pieceDao.updateByPositionAndGameId(srcPosition, PieceDao.getPieceName(sourcePiece), gameId);
-            pieceDao.updateByPositionAndGameId(dstPosition, "none-.", gameId);
+            pieceDao.updateByPositionAndGameId(PieceDao.getPieceName(sourcePiece), dstPosition, gameId);
+            pieceDao.updateByPositionAndGameId("none-.", srcPosition, gameId);
             gameDao.updateTurnByGameId(gameId, turn.change().getThisTurn());
             return;
         }
@@ -141,19 +133,25 @@ public class ChessService {
         return GameResult.from(board);
     }
     public void exitGame(Long gameId) {
-        gameDao.updateTurnByGameId(gameId, "start");
+        gameDao.updateTurnByGameId(gameId, "end");
+    }
+
+    public void restartGame(Long gameId) {
         pieceDao.deleteByGameId(gameId);
         pieceDao.savePieces(BoardFactory.create(), gameId);
+        gameDao.updateTurnByGameId(gameId, "white");
     }
 
     public void deleteGame(Long gameId, String password) {
         if (canDeleteGame(gameId, password)){
             pieceDao.deleteByGameId(gameId);
             gameDao.deleteByGameId(gameId);
+            return;
         }
+        throw new IllegalArgumentException("방 비밀번호가 맞지 않습니다.");
     }
 
     private boolean canDeleteGame(Long gameId, String password) {
-        return getTurn(gameId).equals("start") && gameDao.findPasswordByGameId(gameId).equals(password);
+        return getTurn(gameId).equals("end") && gameDao.findPasswordByGameId(gameId).equals(password);
     }
 }

@@ -4,7 +4,10 @@ import chess.model.GameResult;
 import chess.model.dto.MoveDto;
 import chess.model.dto.WebBoardDto;
 import chess.service.ChessService;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -20,15 +23,25 @@ public class ChessController {
     }
 
     @GetMapping("/")
-    public String index() {
+    public String index(Model model) {
+        List<Long> games = chessService.getAllGames();
+        model.addAttribute("games", games);
+
+        return "game-room";
+    }
+
+    @GetMapping("/enter/{gameId}")
+    public String start(@PathVariable Long gameId, Model model) {
+        model.addAttribute("gameId", gameId);
+
         return "index";
     }
 
-    @PostMapping("/start")
+    @PostMapping("/start/new")
     @ResponseBody
-    public Map<String, String> startNewGame(@RequestBody String password) {
-        WebBoardDto board = chessService.createGame(password);
-        return board.getWebBoard();
+    public String startNewGame(@RequestBody String password) {
+        Long gameId = chessService.createGame(password);
+        return gameId.toString();
     }
 
     @GetMapping("/start/{gameId}")
@@ -38,17 +51,17 @@ public class ChessController {
         return board.getWebBoard();
     }
 
+    @GetMapping(value = "/turn/{gameId}")
+    @ResponseBody
+    public String turn(@PathVariable Long gameId) {
+        return chessService.getTurn(gameId);
+    }
+
     @PostMapping("/move/{gameId}")
     @ResponseBody
     public Map<String, String> move(@PathVariable Long gameId, @RequestBody MoveDto moveCommand) {
         WebBoardDto board = chessService.move(gameId, moveCommand);
         return board.getWebBoard();
-    }
-
-    @GetMapping(value = "/turn/{gameId}")
-    @ResponseBody
-    public String turn(@PathVariable Long gameId) {
-        return chessService.getTurn(gameId);
     }
 
     @GetMapping("/king/dead/{gameId}")
@@ -67,5 +80,16 @@ public class ChessController {
     @ResponseBody
     public void exit(@PathVariable Long gameId) {
         chessService.exitGame(gameId);
+    }
+
+    @GetMapping("/restart/{gameId}")
+    @ResponseBody
+    public void restartGame(@PathVariable Long gameId) {
+        chessService.restartGame(gameId);
+    }
+
+    @PostMapping("/delete/room/{gameId}")
+    public void deleteGame(@PathVariable Long gameId, @RequestBody String password) {
+        chessService.deleteGame(gameId, password);
     }
 }

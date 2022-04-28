@@ -12,11 +12,11 @@ public class Room {
     }
 
     public static Room from(String roomId, String roomTitle, String roomPassword) {
-        return new Room(RoomId.from(roomId), RoomTitle.from(roomTitle), RoomPassword.from(roomPassword));
+        return new Room(RoomId.from(roomId), RoomTitle.from(roomTitle), RoomPassword.createByPlainText(roomPassword));
     }
 
     public static Room create(String roomTitle, String roomPassword) {
-        return new Room(RoomId.random(), RoomTitle.from(roomTitle), RoomPassword.from(roomPassword));
+        return new Room(RoomId.random(), RoomTitle.from(roomTitle), RoomPassword.createByPlainText(roomPassword));
     }
 
     public RoomId getId() {

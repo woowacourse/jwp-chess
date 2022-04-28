@@ -12,7 +12,7 @@ public class RoomPassword {
         this.value = value;
     }
 
-    public static RoomPassword from(String roomPassword) {
+    public static RoomPassword createByPlainText(String roomPassword) {
         try {
             String hashedPassword = Sha256.encrypt(roomPassword);
             return new RoomPassword(hashedPassword);

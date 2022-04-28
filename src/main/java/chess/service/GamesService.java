@@ -12,6 +12,9 @@ import chess.repository.GamesRepository;
 @Service
 public class GamesService {
 
+    private static final String GAME_IS_NOT_FINISHED_ERROR = "[ERROR] 게임이 종료되지 않았습니다.";
+    private static final String PASSWORD_NOT_EQUAL_ERROR = "[ERROR] 비밀번호가 틀렸습니다.";
+
     private final GamesRepository gamesRepository;
 
     public GamesService(final GamesRepository gamesRepository) {
@@ -26,17 +29,23 @@ public class GamesService {
         return gamesRepository.getGames();
     }
 
-    public void delete(Long id) {
+    public void delete(Long id, String password) {
+        checkGameState(id);
+        checkGamePassword(id, password);
         gamesRepository.delete(id);
     }
 
-    public boolean checkGamePassword(Long id, String password) {
+    public void checkGamePassword(Long id, String password) {
         ChessGameEntity chessGameEntity = gamesRepository.getGame(id);
-        return password.equals(chessGameEntity.getPassword());
+        if (!password.equals(chessGameEntity.getPassword())) {
+            throw new IllegalArgumentException(PASSWORD_NOT_EQUAL_ERROR);
+        }
     }
 
-    public boolean checkGameState(Long id) {
+    public void checkGameState(Long id) {
         State state = gamesRepository.getState(id);
-        return state.isFinished();
+        if (!state.isFinished()) {
+            throw new IllegalArgumentException(GAME_IS_NOT_FINISHED_ERROR);
+        }
     }
 }

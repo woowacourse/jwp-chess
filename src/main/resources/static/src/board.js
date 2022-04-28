@@ -14,6 +14,11 @@ async function startChess() {
     let board = await fetch(window.location.href + "/start", {
         method: "POST",
     });
+    if (board.status !== 200) {
+        const data = await board.json();
+        alert(data.message);
+        return;
+    }
     board = await board.json();
     putPieceInSquare(board);
 }
@@ -22,12 +27,22 @@ async function endChess() {
     let board = await fetch(window.location.href + "/end", {
         method: "POST",
     });
+    if (board.status !== 200) {
+        const data = await board.json();
+        alert(data.message);
+        return;
+    }
     board = await board.json();
     removePieceInSquare(board);
 }
 
 async function loadChess() {
     let board = await fetch(window.location.href + "/load");
+    if (board.status !== 200) {
+        const data = await board.json();
+        alert(data.message);
+        return;
+    }
     board = await board.json();
     putPieceInSquare(board);
 }
@@ -80,12 +95,22 @@ async function movePiece(source, target) {
             target: target,
         }),
     })
+    if (board.status !== 200) {
+        const data = await board.json();
+        alert(data.message);
+        return;
+    }
     board = await board.json();
     putPieceInSquare(board);
 }
 
 async function printResult() {
     let board = await fetch(window.location.href + "/status");
+    if (board.status !== 200) {
+        const data = await board.json();
+        alert(data.message);
+        return;
+    }
     board = await board.json();
     let session = document.getElementById("result-session");
     const whiteScore = document.createElement("div");

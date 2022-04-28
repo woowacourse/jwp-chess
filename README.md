@@ -12,5 +12,5 @@
 - [x] name, password 이용하여 game 생성 
 - [x] password 이용하여 game 삭제
 - [x] game 이 끝나지 않은 경우 삭제하지 못하도록 하는 기능
-- [ ] checkmate 가 되지 않아도 끝낼 수 있는 버튼 생성
+- [x] checkmate 가 되지 않아도 끝낼 수 있는 버튼 생성
 - [ ] password 인코딩 디코딩 기능

@@ -38,6 +38,11 @@ public class ChessGameEntity {
         this.password = password;
     }
 
+    public ChessGameEntity(final long id, final boolean isOn) {
+        this.id = id;
+        this.isOn = isOn;
+    }
+
     public long getId() {
         return id;
     }

@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dao.dto.GameDto;
+import chess.dto.GameStatusDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ public class JdbcGameDaoTest {
         jdbcGameDao.remove(deleteGameDto);
 
         // then
-        assertThatThrownBy(() -> jdbcGameDao.find(id, "1234"))
+        assertThatThrownBy(() -> jdbcGameDao.findById(id))
                 .isInstanceOfAny(IllegalArgumentException.class);
     }
 
@@ -70,7 +71,7 @@ public class JdbcGameDaoTest {
         long id = jdbcGameDao.save(gameDto);
 
         // when
-        GameDto selectedGameDto = jdbcGameDao.find(id, password);
+        GameDto selectedGameDto = jdbcGameDao.findById(id);
 
         // then
         assertAll(
@@ -96,5 +97,38 @@ public class JdbcGameDaoTest {
 
         // then
         assertThat(gameDtos.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("게임 정보 수정")
+    void update() {
+        // given
+        GameDto gameDto = new GameDto("라라라", "1234", "white", "playing");
+        long id = jdbcGameDao.save(gameDto);
+
+        // when
+        GameDto updatedGameDto = new GameDto(id, "라라라", "1234", "black", "end");
+        jdbcGameDao.updateGame(updatedGameDto);
+
+        // then
+        assertAll(
+                () -> assertThat(jdbcGameDao.findById(id).getTurn()).isEqualTo("black"),
+                () -> assertThat(jdbcGameDao.findById(id).getStatus()).isEqualTo("end")
+        );
+    }
+
+    @Test
+    @DisplayName("게임 상태 업데이트")
+    void updateStatus() {
+        // given
+        GameDto gameDto = new GameDto("라라라", "1234", "white", "playing");
+        long id = jdbcGameDao.save(gameDto);
+
+        // when
+        GameStatusDto gameStatusDto = GameStatusDto.FINISHED;
+        jdbcGameDao.updateStatus(id, gameStatusDto);
+
+        // then
+        assertThat(jdbcGameDao.findById(id).getStatus()).isEqualTo(gameStatusDto.getName());
     }
 }

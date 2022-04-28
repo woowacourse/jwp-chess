@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dao.dto.GameDto;
+import chess.dto.GameStatusDto;
 
 import java.util.List;
 
@@ -10,7 +11,11 @@ public interface SpringGameDao {
 
     void remove(GameDto gameDto);
 
-    GameDto find(Long id, String password);
+    GameDto findById(Long id);
 
     List<GameDto> findAll();
+
+    void updateGame(GameDto gameDto);
+
+    void updateStatus(Long gameId, GameStatusDto statusDto);
 }

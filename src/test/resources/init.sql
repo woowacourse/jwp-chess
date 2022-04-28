@@ -1,5 +1,5 @@
-DROP TABLE gameDto IF EXISTS;
 DROP TABLE piece IF EXISTS;
+DROP TABLE game IF EXISTS;
 
 create table game
 (

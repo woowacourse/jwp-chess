@@ -11,8 +11,6 @@ import chess.controller.dto.RoomSaveRequest;
 import chess.dao.ChessPieceMapper;
 import chess.dao.JdbcChessPieceDao;
 import chess.dao.JdbcRoomDao;
-import chess.dao.dto.ChessPieceDeleteDto;
-import chess.dao.dto.ChessPieceUpdateDto;
 import chess.domain.ChessGame;
 import chess.domain.GameStatus;
 import chess.domain.Score;
@@ -123,8 +121,10 @@ public class ChessApiController {
         final Position to = Position.from(request.getTo());
 
         final MoveResult moveResult = chessGame.move(from, to);
-        jdbcChessPieceDao.deleteByRoomIdAndPosition(new ChessPieceDeleteDto(roomEntity.getId(), to));
-        jdbcChessPieceDao.update(new ChessPieceUpdateDto(roomEntity.getId(), from, to));
+
+        jdbcChessPieceDao.deleteByRoomIdAndPosition(roomEntity.getId(), request.getTo());
+        jdbcChessPieceDao.update(roomEntity.getId(), request.getFrom(), request.getTo());
+
         jdbcRoomDao.update(new RoomEntity(roomEntity.getId(), roomEntity.getName(), roomEntity.getPassword(),
                 moveResult.getGameStatus().getValue(), moveResult.getCurrentTurn().getValue()));
 

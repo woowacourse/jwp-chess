@@ -2,8 +2,6 @@ package chess.dao;
 
 import static java.util.stream.Collectors.toList;
 
-import chess.dao.dto.ChessPieceDeleteDto;
-import chess.dao.dto.ChessPieceUpdateDto;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.position.Position;
 import chess.entity.ChessPieceEntity;
@@ -65,14 +63,14 @@ public class JdbcChessPieceDao {
         };
     }
 
-    public void update(final ChessPieceUpdateDto updateDto) {
+    public void update(final int roomId, final String from, final String to) {
         final String sql = "UPDATE chess_piece SET position = ? WHERE room_id = ? AND position = ?";
-        jdbcTemplate.update(sql, updateDto.getTo(), updateDto.getRoomId(), updateDto.getFrom());
+        jdbcTemplate.update(sql, to, roomId, from);
     }
 
-    public void deleteByRoomIdAndPosition(final ChessPieceDeleteDto deleteDto) {
+    public void deleteByRoomIdAndPosition(final int roomId, final String to) {
         final String sql = "DELETE FROM chess_piece WHERE room_id = ? AND position  = ?";
-        jdbcTemplate.update(sql, deleteDto.getRoomId(), deleteDto.getPosition());
+        jdbcTemplate.update(sql, roomId, to);
     }
 
     public void deleteByRoomId(final int roomId) {

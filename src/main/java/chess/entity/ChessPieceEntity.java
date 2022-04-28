@@ -36,15 +36,4 @@ public class ChessPieceEntity {
     public String getColor() {
         return color;
     }
-
-    @Override
-    public String toString() {
-        return "ChessPieceEntity{" +
-                "id=" + id +
-                ", roomId=" + roomId +
-                ", position='" + position + '\'' +
-                ", chessPiece='" + chessPiece + '\'' +
-                ", color='" + color + '\'' +
-                '}';
-    }
 }

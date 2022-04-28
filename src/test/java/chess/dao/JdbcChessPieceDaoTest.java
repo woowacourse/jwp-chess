@@ -9,8 +9,6 @@ import static chess.domain.position.File.D;
 import static chess.domain.position.Rank.TWO;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.dao.dto.ChessPieceDeleteDto;
-import chess.dao.dto.ChessPieceUpdateDto;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Pawn;
 import chess.domain.position.Position;
@@ -68,15 +66,12 @@ class JdbcChessPieceDaoTest {
     @Test
     void chess_piece_수정한다() {
         chessPieceDao.saveAll(ROOM_ID, PIECES_BY_POSITION);
-        final Position from = Position.from("a2");
-        final Position to = Position.from("a4");
-        final ChessPieceUpdateDto updateDto = new ChessPieceUpdateDto(ROOM_ID, from, to);
 
-        chessPieceDao.update(updateDto);
+        chessPieceDao.update(ROOM_ID, "a2", "a4");
 
         final boolean result = chessPieceDao.findByRoomId(ROOM_ID)
                 .stream()
-                .anyMatch(chessPieceEntity -> chessPieceEntity.getPosition().equals(to.getValue()));
+                .anyMatch(chessPieceEntity -> chessPieceEntity.getPosition().equals("a4"));
         assertThat(result).isTrue();
     }
 
@@ -84,9 +79,8 @@ class JdbcChessPieceDaoTest {
     @Test
     void 기물_삭제한다() {
         chessPieceDao.saveAll(ROOM_ID, PIECES_BY_POSITION);
-        final ChessPieceDeleteDto deleteDto = new ChessPieceDeleteDto(ROOM_ID, Position.from("a2"));
 
-        chessPieceDao.deleteByRoomIdAndPosition(deleteDto);
+        chessPieceDao.deleteByRoomIdAndPosition(ROOM_ID, "a2");
 
         assertThat(chessPieceDao.findByRoomId(ROOM_ID).size()).isEqualTo(3);
     }

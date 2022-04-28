@@ -25,8 +25,8 @@ public class CommandDaoTest {
     @DisplayName("체스방에 실행한 명령어를 저장한다.")
     @Test
     void insert() {
-        RoomEntity roomEntity = roomDao.insert(new RoomEntity(1L, "room1", "1234"));
-        CommandEntity expected = new CommandEntity(1L, roomEntity.getId(), "move b2 b4");
+        RoomEntity roomEntity = roomDao.insert(new RoomEntity("room1", "1234"));
+        CommandEntity expected = new CommandEntity(roomEntity.getId(), "move b2 b4");
         CommandEntity actual = commandDao.insert(expected);
         assertThat(actual.getRoomId()).isEqualTo(roomEntity.getId());
         assertThat(actual.getCommand()).isEqualTo("move b2 b4");
@@ -35,10 +35,10 @@ public class CommandDaoTest {
     @DisplayName("체스방에 실행된 모든 명령어를 가져온다.")
     @Test
     void findAll() {
-        RoomEntity roomEntity = roomDao.insert(new RoomEntity(1L, "room1", "1234"));
-        commandDao.insert(new CommandEntity(1L, roomEntity.getId(), "move b2 b4"));
-        commandDao.insert(new CommandEntity(1L, roomEntity.getId(), "move b7 b5"));
-        commandDao.insert(new CommandEntity(1L, roomEntity.getId(), "move c2 b4"));
+        RoomEntity roomEntity = roomDao.insert(new RoomEntity("room1", "1234"));
+        commandDao.insert(new CommandEntity(roomEntity.getId(), "move b2 b4"));
+        commandDao.insert(new CommandEntity(roomEntity.getId(), "move b7 b5"));
+        commandDao.insert(new CommandEntity(roomEntity.getId(), "move c2 b4"));
         assertThat(commandDao.findAllByRoomId(roomEntity.getId()).size()).isEqualTo(3);
     }
 }

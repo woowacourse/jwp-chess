@@ -23,7 +23,7 @@ public class RoomDaoTest {
     @Test
     void insert() {
         //given, when
-        final RoomEntity roomEntity = new RoomEntity(1L, "room1", "1234");
+        final RoomEntity roomEntity = new RoomEntity("room1", "1234");
         final RoomEntity insertRoom = roomDao.insert(roomEntity);
         // then
         assertThat(insertRoom.getName()).isEqualTo("room1");
@@ -34,7 +34,7 @@ public class RoomDaoTest {
     @Test
     void findById() {
         // given
-        final RoomEntity expected = roomDao.insert(new RoomEntity(1L, "room1", "1234"));
+        final RoomEntity expected = roomDao.insert(new RoomEntity("room1", "1234"));
         // when
         RoomEntity actual = roomDao.findById(expected.getId());
         // then
@@ -46,9 +46,9 @@ public class RoomDaoTest {
     @Test
     void findAll() {
         // given
-        roomDao.insert(new RoomEntity(1L, "room1", "1234"));
-        roomDao.insert(new RoomEntity(2L, "room2", "1234"));
-        roomDao.insert(new RoomEntity(3L, "room3", "1234"));
+        roomDao.insert(new RoomEntity("room1", "1234"));
+        roomDao.insert(new RoomEntity("room2", "1234"));
+        roomDao.insert(new RoomEntity("room3", "1234"));
 
         //given, when
         final List<RoomEntity> rooms = roomDao.findAll();
@@ -60,7 +60,7 @@ public class RoomDaoTest {
     @Test
     void deleteById() {
         // given
-        RoomEntity room1 = roomDao.insert(new RoomEntity(1L, "room1", "1234"));
+        RoomEntity room1 = roomDao.insert(new RoomEntity("room1", "1234"));
         // when
         roomDao.deleteById(room1.getId());
         //then

@@ -1,7 +1,8 @@
 package chess.controller;
 
-import chess.chessgame.ChessGame;
-import chess.chessgame.MovingPosition;
+import chess.domain.ChessGame;
+import chess.domain.MovingPosition;
+import chess.utils.ScoreCalculator;
 import chess.view.OutputView;
 
 import java.util.Map;
@@ -27,7 +28,7 @@ public class ConsoleChessController {
                 OutputView.printBoard(chessGame.getChessBoard());
             },
             "status", (stringTokenizer, chessGame) -> {
-                OutputView.printScore(chessGame.computeScore());
+                OutputView.printScore(ScoreCalculator.computeScore(chessGame.getChessBoard()));
             }
     );
 
@@ -37,7 +38,7 @@ public class ConsoleChessController {
         while (!chessGame.isFinished()) {
             playTurn(chessGame);
         }
-        OutputView.printScore(chessGame.computeScore());
+        OutputView.printScore(ScoreCalculator.computeScore(chessGame.getChessBoard()));
     }
 
     private void playTurn(ChessGame chessGame) {

@@ -1,6 +1,7 @@
 package chess.view;
 
-import chess.chessgame.Position;
+import chess.domain.Chessboard;
+import chess.domain.Position;
 import chess.dto.ScoreDto;
 import chess.piece.Piece;
 
@@ -21,9 +22,11 @@ public class OutputView {
         System.out.println("> 게임 이동 : move source위치 target위치 - 예. move b2 b3");
     }
 
-    public static void printBoard(Map<Position, Piece> chessboard) {
+    public static void printBoard(Chessboard chessboard) {
+        Map<Position, Piece> board = chessboard.getBoard();
+
         for (int i = 0; i < 8; i++) {
-            printBoardLine(chessboard, i);
+            printBoardLine(board, i);
         }
         System.out.println();
     }

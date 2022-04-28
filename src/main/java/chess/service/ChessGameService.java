@@ -1,9 +1,10 @@
 package chess.service;
 
-import chess.chessgame.ChessGame;
-import chess.chessgame.MovingPosition;
+import chess.domain.ChessGame;
+import chess.domain.MovingPosition;
 import chess.repository.ChessboardRepository;
 import chess.dto.ScoreDto;
+import chess.utils.ScoreCalculator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class ChessGameService {
     }
 
     public ScoreDto status() {
-        return chessGame.computeScore();
+        return ScoreCalculator.computeScore(chessGame.getChessBoard());
     }
 
     public void save() {

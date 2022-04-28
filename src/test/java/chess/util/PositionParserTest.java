@@ -1,6 +1,6 @@
 package chess.util;
 
-import chess.chessgame.Position;
+import chess.domain.Position;
 import chess.utils.PositionParser;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.DisplayName;

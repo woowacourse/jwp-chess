@@ -1,21 +1,19 @@
 package chess.state;
 
-import chess.chessgame.Chessboard;
-
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 public enum StateFactory {
-    READY(chessboard -> new Ready()),
-    PLAY(Play::new),
-    FINISH(Finish::new);
+    READY(() -> new Ready()),
+    PLAY(() -> new Play()),
+    FINISH(() -> new Finish());
 
-    private final Function<Chessboard, State> creator;
+    private final Supplier<State> creator;
 
-    StateFactory(Function<Chessboard, State> creator) {
+    StateFactory(Supplier<State> creator) {
         this.creator = creator;
     }
 
-    public State create(Chessboard chessboard) {
-        return creator.apply(chessboard);
+    public State create() {
+        return creator.get();
     }
 }

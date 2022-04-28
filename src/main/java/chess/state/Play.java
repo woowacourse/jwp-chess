@@ -1,23 +1,11 @@
 package chess.state;
 
-import chess.chessgame.Chessboard;
-import chess.chessgame.MovingPosition;
-import chess.chessgame.Turn;
-import chess.piece.Color;
-import chess.utils.InitializedChessboardGenerator;
+import chess.domain.Chessboard;
+import chess.domain.MovingPosition;
+import chess.domain.Turn;
 
 
 public class Play implements State {
-
-    private final Chessboard chessboard;
-
-    public Play() {
-        this.chessboard = new Chessboard(new InitializedChessboardGenerator());
-    }
-
-    public Play(Chessboard chessboard) {
-        this.chessboard = chessboard;
-    }
 
     @Override
     public State start() {
@@ -25,35 +13,25 @@ public class Play implements State {
     }
 
     @Override
-    public State move(MovingPosition movingPosition, Turn turn) {
+    public State move(Chessboard chessboard, MovingPosition movingPosition, Turn turn) {
         chessboard.move(movingPosition, turn);
 
         if (chessboard.isOver()) {
-            return new Finish(chessboard);
+            return new Finish();
         }
 
         turn.nextTurn();
-        return new Play(chessboard);
-    }
-
-    @Override
-    public Chessboard getChessboard() {
-        return chessboard;
+        return new Play();
     }
 
     @Override
     public State end() {
-        return new Finish(chessboard);
+        return new Finish();
     }
 
     @Override
     public boolean isFinished() {
         return false;
-    }
-
-    @Override
-    public double computeScore(Color color, double minusScoreOfSameColumnPawn) {
-        return chessboard.computeScore(color, minusScoreOfSameColumnPawn);
     }
 
     @Override

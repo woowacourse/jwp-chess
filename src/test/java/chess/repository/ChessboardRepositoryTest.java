@@ -1,7 +1,8 @@
 package chess.repository;
 
-import chess.chessgame.ChessGame;
-import chess.chessgame.Position;
+import chess.domain.ChessGame;
+import chess.domain.Chessboard;
+import chess.domain.Position;
 import chess.piece.Color;
 import chess.piece.Piece;
 import chess.piece.Type;
@@ -26,7 +27,7 @@ public class ChessboardRepositoryTest {
     @Autowired
     private ChessboardRepository chessboardRepository;
 
-    private ChessGame chessGame = new ChessGame(
+    private final ChessGame chessGame = new ChessGame(
             "PLAY",
             "WHITE",
             Map.of(new Position(0, 0), PieceGenerator.generate("p", "BLACK"))
@@ -86,15 +87,16 @@ public class ChessboardRepositoryTest {
     @DisplayName("저장된 데이터를 잘 불러오는지 확인")
     void load() {
         chessboardRepository.save(chessGame);
-        ChessGame loadedChessGame = chessboardRepository.load();
+        ChessGame loadedChessGame = chessboardRepository.find();
 
         checkPieces(loadedChessGame.getChessBoard());
         checkGameInfo(loadedChessGame);
     }
 
-    private void checkPieces(Map<Position, Piece> pieces) {
-        Position position = pieces.keySet().iterator().next();
-        Piece piece = pieces.get(position);
+    private void checkPieces(Chessboard chessboard) {
+        Map<Position, Piece> board = chessboard.getBoard();
+        Position position = board.keySet().iterator().next();
+        Piece piece = board.get(position);
 
         assertThat(position.getX()).isEqualTo(0);
         assertThat(position.getY()).isEqualTo(0);

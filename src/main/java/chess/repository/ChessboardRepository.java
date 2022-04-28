@@ -1,7 +1,8 @@
 package chess.repository;
 
-import chess.chessgame.ChessGame;
-import chess.chessgame.Position;
+import chess.domain.ChessGame;
+import chess.domain.Chessboard;
+import chess.domain.Position;
 import chess.piece.Piece;
 import chess.utils.PieceGenerator;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,7 +30,7 @@ public class ChessboardRepository {
 
     private final RowMapper<Piece> pieceMapper = (resultSet, rowNum)
             -> PieceGenerator.generate(
-                    resultSet.getString("type"),
+            resultSet.getString("type"),
             resultSet.getString("color")
     );
 
@@ -88,10 +89,12 @@ public class ChessboardRepository {
         namedParameterJdbcTemplate.update(sql, Map.of("state", state, "turn", turn));
     }
 
-    private void saveBoard(Map<Position, Piece> board) {
+    private void saveBoard(Chessboard chessboard) {
         final String sql = "INSERT INTO boards(piece_id,position_id) values (" +
                 "(SELECT id FROM pieces WHERE type=:type AND color=:color)," +
                 "(SELECT id FROM positions WHERE x=:x AND y=:y))";
+
+        Map<Position, Piece> board = chessboard.getBoard();
 
         for (Position position : board.keySet()) {
             Piece piece = board.get(position);

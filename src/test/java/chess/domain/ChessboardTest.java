@@ -1,4 +1,4 @@
-package chess.chessgame;
+package chess.domain;
 
 import chess.piece.*;
 import chess.utils.InitializedChessboardGenerator;

@@ -21,7 +21,7 @@ CREATE TABLE boards
     piece_id    int,
     PRIMARY KEY (id),
     FOREIGN KEY (position_id) REFERENCES positions (id),
-    FOREIGN KEY (piece_id) REFERENCES pieces (id)q
+    FOREIGN KEY (piece_id) REFERENCES pieces (id)
 );
 
 CREATE TABLE games

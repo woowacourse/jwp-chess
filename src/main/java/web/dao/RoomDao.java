@@ -13,8 +13,7 @@ import web.dto.RoomDto;
 @Repository
 public class RoomDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<RoomDto> rowMapper = (rs, rn) -> {
+    private static final RowMapper<RoomDto> ROW_MAPPER = (rs, rn) -> {
         int id = rs.getInt("id");
         int chessGameId = rs.getInt("chess_game_id");
         String name = rs.getString("name");
@@ -22,18 +21,20 @@ public class RoomDao {
         return new RoomDto(id, chessGameId, name, password);
     };
 
+    private final JdbcTemplate jdbcTemplate;
+
     public RoomDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<RoomDto> findAll() {
-        return jdbcTemplate.query("SELECT id, chess_game_id, name, password FROM room", rowMapper);
+        return jdbcTemplate.query("SELECT id, chess_game_id, name, password FROM room", ROW_MAPPER);
     }
 
     public RoomDto findByName(String name) {
         try {
             return jdbcTemplate.queryForObject("SELECT id, chess_game_id, name, password FROM room WHERE name = ?",
-                    rowMapper, name);
+                    ROW_MAPPER, name);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -42,7 +43,7 @@ public class RoomDao {
     public RoomDto findById(int id) {
         try {
             return jdbcTemplate.queryForObject("SELECT id, chess_game_id, name, password FROM room WHERE id = ?",
-                    rowMapper, id);
+                    ROW_MAPPER, id);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }

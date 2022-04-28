@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 방 생성</title>
+
+    <script>
+        function onSubmit() {
+            const name = document.getElementsByName("name")[0].value;
+            const password = document.getElementsByName("password")[0].value;
+
+            console.log(name, password);
+
+            fetch("/room", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({name, password})
+            }).then((res) => {
+                console.log("전송완료", res)
+            }).catch((e) => {
+                // ...
+            })
+        }
+    </script>
+</head>
+<body>
+<!--<form action="/room" method="post">-->
+제목: <input type="text" name="name"><br>
+비밀번호: <input type="text" name="password"><br>
+<input type="submit" value="생성하기" onclick="onSubmit()">
+<!--</form>-->
+</body>
+</html>

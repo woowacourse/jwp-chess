@@ -35,7 +35,7 @@ public class GameController {
         return "chess_game";
     }
 
-    @PostMapping("/move/{chessGameId}")
+    @PostMapping("/games/move/{chessGameId}")
     public RedirectView movePiece(final @PathVariable long chessGameId,
                                   final @RequestParam String source,
                                   final @RequestParam String target) {
@@ -51,13 +51,13 @@ public class GameController {
         return new RedirectView("/games/" + chessGameId);
     }
 
-    @PostMapping("/reset/{chessGameId}")
+    @PostMapping("/games/reset/{chessGameId}")
     public RedirectView resetChessGame(final @PathVariable long chessGameId) {
         chessGameService.resetChessGame(chessGameId);
         return new RedirectView("/games/" + chessGameId);
     }
 
-    @PostMapping("/end/{chessGameId}")
+    @PostMapping("/games/end/{chessGameId}")
     public RedirectView endChessGame(final @PathVariable long chessGameId) {
         chessGameService.endChessGame(chessGameId);
         return new RedirectView("/games/" + chessGameId);

@@ -14,12 +14,10 @@ import chess.dto.request.web.SaveRequest;
 import chess.dto.response.web.GameResponse;
 import chess.gameflow.AlternatingGameFlow;
 import chess.gameflow.GameFlow;
-import java.util.HashMap;
+import chess.repository.SessionToChessRepository;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +27,12 @@ public class ChessService {
 
     private final GameDao gameDao;
     private final BoardPieceDao boardPieceDao;
-    private Map<HttpSession, ChessBoard> sessionToChessBoard = new HashMap<>();
+    private final SessionToChessRepository sessionToChessRepository;
 
     public ChessBoard initAndGetChessBoard(HttpSession session) {
         ChessBoard chessBoard = createChessBoard();
-        sessionToChessBoard.put(session, chessBoard);
+
+        sessionToChessRepository.add(session, chessBoard);
         return chessBoard;
     }
 
@@ -44,16 +43,13 @@ public class ChessService {
     }
 
     public ChessBoard getChessBoard(HttpSession session) {
-        return sessionToChessBoard.get(session);
+        return sessionToChessRepository.get(session);
     }
 
     public void movePiece(HttpSession session,
                           Position from,
                           Position to) {
-        ChessBoard chessBoard = sessionToChessBoard.get(session);
-
-
-
+        ChessBoard chessBoard = sessionToChessRepository.get(session);
         chessBoard.movePiece(from, to);
     }
 
@@ -76,10 +72,5 @@ public class ChessService {
         String lastTeam = lastGame.getLastTeam();
         List<BoardPiece> lastBoardPieces = boardPieceDao.findLastBoardPiece(lastGameId);
         return new GameResponse(lastBoardPieces, lastTeam);
-    }
-
-    @Scheduled(cron = "0/3 * * * * MON-FRI")
-    public void scheduled() {
-        System.out.println("ChessService.scheduled");
     }
 }

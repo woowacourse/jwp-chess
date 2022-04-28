@@ -42,7 +42,7 @@ public class ChessGameService {
 
     public ChessGameDto getOrSaveChessGame(int chessGameId) {
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
-        if (!chessGameDto.getStatus().isRunning()) {
+        if (chessGameDto.getStatus().isReady()) {
             return prepareNewChessGame(chessGameDto);
         }
         return chessGameDto;
@@ -73,6 +73,10 @@ public class ChessGameService {
 
     public List<ChessGameDto> findAll() {
         return chessGameDao.findAll();
+    }
+
+    public void deleteRoom(int chessGameId, String password) {
+        chessGameDao.deleteByIdAndPassword(chessGameId, password);
     }
 
     private ChessBoard createChessBoard(List<PieceDto> pieces, ChessGameDto chessGameDto) {

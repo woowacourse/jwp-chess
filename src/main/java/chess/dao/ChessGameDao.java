@@ -67,9 +67,18 @@ public class ChessGameDao {
     public void updateChessGame(ChessGameDto chessGameDto) {
         jdbcTemplate.update(
                 "UPDATE chess_game SET status=?, current_color=?, black_score=?, white_score=? WHERE id = ?",
-                chessGameDto.getStatus().name(), chessGameDto.getCurrentColor().name(),
+                chessGameDto.getStatus().name(),
+                chessGameDto.getCurrentColor().name(),
                 chessGameDto.getBlackScore().getValue().toPlainString(),
                 chessGameDto.getWhiteScore().getValue().toPlainString(), chessGameDto.getId());
+    }
+
+    public void deleteByIdAndPassword(int chessGameId, String password) {
+        jdbcTemplate.update(
+            "DELETE FROM chess_game WHERE chess_game.id = ? and chess_game.password = ?",
+            chessGameId,
+            password
+        );
     }
 
     public void deleteAll() {

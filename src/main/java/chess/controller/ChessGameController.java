@@ -5,9 +5,12 @@ import chess.exception.ChessGameException;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,8 +40,15 @@ public class ChessGameController {
         if (chessGameDto.getStatus().isFinished()) {
             attributes.addFlashAttribute("isFinished", true);
             attributes.addFlashAttribute("winner", chessGameDto.getWinner());
+            return "redirect:/chess-game?chess-game-id=" + chessGameId;
         }
         return "redirect:/chess-game?chess-game-id=" + chessGameId;
+    }
+
+    @DeleteMapping("/chess-game/{id}")
+    public String delete(@PathVariable("id") int chessGameId, @RequestHeader(value = "Authorization") String password) {
+        chessGameService.deleteRoom(chessGameId, password);
+        return "redirect:/";
     }
 
     @ExceptionHandler(ChessGameException.class)

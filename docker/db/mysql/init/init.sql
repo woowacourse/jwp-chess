@@ -19,5 +19,5 @@ CREATE TABLE piece
     color         CHAR(5)     NOT NULL,
     type          VARCHAR(10) NOT NULL,
     PRIMARY KEY (position, chess_game_id),
-    FOREIGN KEY (chess_game_id) REFERENCES chess_game (id)
+    FOREIGN KEY (chess_game_id) REFERENCES chess_game (id) ON DELETE CASCADE
 );

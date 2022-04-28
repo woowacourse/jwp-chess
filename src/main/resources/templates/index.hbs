@@ -30,6 +30,9 @@
                 <td>
                     <input type="button" value="참가" onclick="joinRoom('{{id}}')"/>
                 </td>
+                <td>
+                    <input type="button" value="삭제" onclick="deleteRoom('{{id}}')"/>
+                </td>
             </tr>
             {{/chess-games}}
         </table>
@@ -40,6 +43,19 @@
 <script>
     function joinRoom(id) {
         window.location.replace("/chess-game?chess-game-id=" + id);
+    }
+
+    async function deleteRoom(id) {
+        const password = prompt('비밀번호를 입력해주세요.', "비밀번호를 입력해주세요.");
+        password.style.visibility = "hidden";
+
+        await fetch("/chess-game/" + id, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": password,
+            },
+        });
+        window.location.replace("/");
     }
 </script>
 </html>

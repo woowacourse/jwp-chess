@@ -1,6 +1,9 @@
 let gamePassword = new URLSearchParams(window.location.search).get("password");
 let gameUri = new URLSearchParams(window.location.search).get("location");
 
+let source = "";
+let target = "";
+
 window.onload = async function () {
     await refreshAndDisplayBoard();
 }
@@ -75,7 +78,6 @@ async function promotionButton() {
     const query = 'input[name="promotion"]:checked';
     const selectedEl = document.querySelector(query);
     const promotionPiece = selectedEl.value;
-    console.log(promotionPiece);
     const promotion = {
         promotionValue: promotionPiece
     }
@@ -91,17 +93,40 @@ async function promotionButton() {
         .catch(error => {
             alert(error.message);
         });
-    document.getElementById("promotion").value = "";
+
+    const checkboxes = document.getElementsByName("promotion");
+    checkboxes.forEach((cb) => {
+        cb.checked = false;
+    })
 }
 
-async function moveButton() {
-    const source = document.getElementById("source").value;
-    const target = document.getElementById("target").value;
+function move(element) {
+    if (source === "") {
+        if (element.childNodes.length === 0) {
+            return;
+        }
+        source = element.id;
+        document.getElementById(source).style.backgroundColor = 'orange';
+        return;
+    }
+
+    if (source !== "" && target === "") {
+        target = element.id;
+        document.getElementById(source).style.backgroundColor = '';
+        movePiece(source, target);
+        source = "";
+        target = "";
+    }
+}
+
+function movePiece(source, target) {
+    if (source === target) {
+        return;
+    }
     const move = {
         source: source,
         target: target
     }
-
     fetch(gameUri + "/move", {
         method: 'POST',
         headers: {
@@ -114,8 +139,6 @@ async function moveButton() {
         .catch(error => {
             alert(error.message);
         });
-    document.getElementById("source").value = "";
-    document.getElementById("target").value = "";
 }
 
 async function checkEndGame() {
@@ -138,12 +161,16 @@ async function displayWinner(response) {
 }
 
 async function scoreButton() {
-    const value = await fetch(gameUri + "/score")
+    await fetch(gameUri + "/score")
         .then(handlingException)
         .then((response) => response.json())
+        .then(showScore)
         .catch(error => {
             alert(error.message);
         });
+}
+
+function showScore(value){
     if (gameUri !== "") {
         alert(`${value[0].color}의 점수는 ${value[0].score}\n${value[1].color}의 점수는 ${value[1].score}`);
     } else {

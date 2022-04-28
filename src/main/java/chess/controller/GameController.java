@@ -2,7 +2,7 @@ package chess.controller;
 
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.domain.event.MoveEvent;
-import chess.domain.event.MoveRoute;
+import chess.dto.request.MoveRouteDto;
 import chess.dto.response.SearchResultDto;
 import chess.service.ChessService;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,9 +49,8 @@ public class GameController {
 
     @PutMapping("/{id}")
     public ModelAndView updateGame(@PathVariable int id,
-                                    /* @CookieValue(value = CookieUtils.KEY) String cookie, */
-                                   @RequestBody MoveRoute moveRoute) {
-        chessService.playGame(id, new MoveEvent(moveRoute));
+                                   @RequestBody MoveRouteDto moveRoute) {
+        chessService.playGame(id, new MoveEvent(moveRoute.toDomain()));
         return getGameModelAndView(id);
     }
 

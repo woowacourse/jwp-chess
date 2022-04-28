@@ -13,12 +13,12 @@ public class FakeGameStatusDao implements GameStatusDao {
     }
 
     @Override
-    public void update(String nowStatus, String nextStatus) {
+    public void update(String nowStatus, String nextStatus, int gameId) {
         status = GameStatus.valueOf(nextStatus);
     }
 
     @Override
-    public String getStatus() {
+    public String getStatus(int id) {
         return status.name();
     }
 

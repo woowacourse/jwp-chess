@@ -25,9 +25,9 @@ public class JdbcTemplateTurnDao implements TurnDao {
     }
 
     @Override
-    public String getTurn() {
-        String sql = "select * from turn";
-        return jdbcTemplate.queryForObject(sql, String.class);
+    public String getTurn(int gameId) {
+        String sql = "select team from turn where game_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }
 
     @Override

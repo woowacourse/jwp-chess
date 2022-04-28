@@ -17,7 +17,7 @@ public class FakeTurnDao implements TurnDao {
     }
 
     @Override
-    public String getTurn() {
+    public String getTurn(int gameId) {
         return turn;
     }
 

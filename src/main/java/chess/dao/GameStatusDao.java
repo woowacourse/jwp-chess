@@ -4,9 +4,9 @@ public interface GameStatusDao {
 
     void init(int gameId);
 
-    void update(String nowStatus, String nextStatus);
+    void update(String nowStatus, String nextStatus, int gameId);
 
-    String getStatus();
+    String getStatus(int gameId);
 
     void reset();
 }

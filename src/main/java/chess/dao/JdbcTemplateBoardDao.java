@@ -18,18 +18,18 @@ public class JdbcTemplateBoardDao implements BoardDao {
     }
 
     @Override
-    public void init(Map<String, String> board) {
-        String sql = "insert into board (position, piece) values (?,?)";
+    public void init(Map<String, String> board, int gameId) {
+        String sql = "insert into board (position, piece, game_id) values (?, ? ,?)";
 
         for (Entry<String, String> boardEntry : board.entrySet()) {
-            jdbcTemplate.update(sql, boardEntry.getKey(), boardEntry.getValue());
+            jdbcTemplate.update(sql, boardEntry.getKey(), boardEntry.getValue(), gameId);
         }
     }
 
     @Override
-    public void update(String position, String piece) {
-        String sql = "update board set piece = ? where position = ?";
-        jdbcTemplate.update(sql, piece, position);
+    public void update(String position, String piece, int gameId) {
+        String sql = "update board set piece = ? where position = ? and game_id = ?";
+        jdbcTemplate.update(sql, piece, position, gameId);
     }
 
     @Override

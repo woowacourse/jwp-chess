@@ -20,27 +20,27 @@ public class JdbcTemplateTurnDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplateTurnDao = new JdbcTemplateTurnDao(jdbcTemplate);
-        jdbcTemplateTurnDao.init();
+        jdbcTemplateTurnDao.init(1);
     }
 
 
     @Test
     @DisplayName("초기 값을 확인한다.")
     void getTurn() {
-        assertThat(jdbcTemplateTurnDao.getTurn()).isEqualTo("white");
+        assertThat(jdbcTemplateTurnDao.getTurn(1)).isEqualTo("white");
     }
 
     @Test
     @DisplayName("차례를 변경 후, 변경 값을 확인한다.")
     void update() {
         jdbcTemplateTurnDao.update("white", "black");
-        assertThat(jdbcTemplateTurnDao.getTurn()).isEqualTo("black");
+        assertThat(jdbcTemplateTurnDao.getTurn(1)).isEqualTo("black");
     }
 
     @Test
     @DisplayName("리셋을 확인한다.")
     void reset() {
         jdbcTemplateTurnDao.reset();
-        assertThat(jdbcTemplateTurnDao.getTurn()).isEqualTo("white");
+        assertThat(jdbcTemplateTurnDao.getTurn(1)).isEqualTo("white");
     }
 }

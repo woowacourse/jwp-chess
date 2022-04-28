@@ -19,15 +19,15 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
     }
 
     @Override
-    public void update(String nowStatus, String nextStatus) {
-        String sql = "update game_status set status = ? where status = ?";
-        jdbcTemplate.update(sql, nextStatus, nowStatus);
+    public void update(String nowStatus, String nextStatus, int gameId) {
+        String sql = "update game_status set status = ? where game_id = ? and status = ?";
+        jdbcTemplate.update(sql, nextStatus, gameId, nowStatus);
     }
 
     @Override
-    public String getStatus() {
-        final String sql = "select * from game_status";
-        return jdbcTemplate.queryForObject(sql, String.class);
+    public String getStatus(int gameId) {
+        final String sql = "select status from game_status where game_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }
 
     @Override

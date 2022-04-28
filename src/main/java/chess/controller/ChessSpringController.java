@@ -7,8 +7,10 @@ import chess.dto.ErrorDto;
 import chess.dto.GameStatusDto;
 import chess.dto.MoveDto;
 import chess.dto.ScoreDto;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,14 +28,16 @@ public class ChessSpringController {
     }
 
     @GetMapping("/")
-    public String enter() {
+    public String enter(Model model) {
+        List<GameDto> gameDtos = chessGameService.find();
+        model.addAttribute("games", gameDtos);
         return "home";
     }
 
     @PostMapping("/create")
     public String create(@ModelAttribute GameDto gameDto) {
         int gameId = chessGameService.create(gameDto);
-        return "redirect:/game/" + gameId;
+        return "redirect:/";
     }
 
     @GetMapping("/game/{gameId}")
@@ -43,25 +47,21 @@ public class ChessSpringController {
     }
 
     @ResponseBody
-    @GetMapping("/start")
-    public GameStatusDto start() {
-        return chessGameService.startChessGame(new WebBasicBoardStrategy());
+    @GetMapping("/game/{gameId}/start")
+    public GameStatusDto start(@PathVariable int gameId) {
+        return chessGameService.startChessGame(new WebBasicBoardStrategy(), gameId);
     }
 
     @ResponseBody
-    @PostMapping("/move")
-    public ResponseEntity move(@RequestBody MoveDto moveDto) {
+    @PostMapping("/game/{gameId}/move")
+    public ResponseEntity move(@RequestBody MoveDto moveDto, @PathVariable int gameId) {
         GameStatusDto gameStatusDto = null;
-        try {
-            gameStatusDto = chessGameService.move(moveDto.getFrom(), moveDto.getTo());
-        } catch (Exception e) {
-            return ResponseEntity.ok().body(new ErrorDto(e.getMessage()));
-        }
+            gameStatusDto = chessGameService.move(moveDto.getFrom(), moveDto.getTo(), gameId);
         return ResponseEntity.ok().body(gameStatusDto);
     }
 
     @ResponseBody
-    @GetMapping("/status")
+    @GetMapping("/game/{gameId}/status")
     public ResponseEntity status() {
         ScoreDto scoreDto = null;
         try {
@@ -73,11 +73,11 @@ public class ChessSpringController {
     }
 
     @ResponseBody
-    @GetMapping("/end")
-    public ResponseEntity end() {
+    @GetMapping("/game/{gameId}/end")
+    public ResponseEntity end(@PathVariable int gameId) {
         ScoreDto scoreDto = null;
         try {
-            scoreDto = chessGameService.end();
+            scoreDto = chessGameService.end(gameId);
         } catch (Exception e) {
             return ResponseEntity.ok().body(new ErrorDto(e.getMessage()));
         }

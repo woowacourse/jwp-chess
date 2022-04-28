@@ -14,7 +14,13 @@
     <input type="submit" value="방 생성" class=""/>
 </form>
 
-<div>
-</div>
+{{#each games}}
+    <ul>
+        <li>
+            <button onclick="location.href = '/game/{{this.id}}'">{{this.roomTitle}}</button>
+        </li>
+    </ul>
+    <br>
+{{/each}}
 </body>
 </html>

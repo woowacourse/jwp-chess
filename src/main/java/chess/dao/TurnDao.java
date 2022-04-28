@@ -6,7 +6,7 @@ public interface TurnDao {
 
     void update(String nowTurn, String nextTurn);
 
-    String getTurn();
+    String getTurn(int gameId);
 
     void reset();
 }

@@ -35,8 +35,8 @@ class BoardDaoTest {
     @Test
     @DisplayName("이동 업데이트 로직을 확인한다.")
     void update() {
-        boardDao.update("a3", "white_pawn");
-        boardDao.update("a2", "blank");
+        boardDao.update("a3", "white_pawn", 1);
+        boardDao.update("a2", "blank", 1);
 
         Board board = new Board();
         board.initBoard(new BasicBoardStrategy());
@@ -49,8 +49,8 @@ class BoardDaoTest {
     @Test
     @DisplayName("리셋을 확인한다.")
     void reset() {
-        boardDao.update("a3", "white_pawn");
-        boardDao.update("a2", "blank");
+        boardDao.update("a3", "white_pawn", 1);
+        boardDao.update("a2", "blank", 1);
 
         Board board = new Board();
 

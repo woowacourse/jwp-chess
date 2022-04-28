@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface PieceDao {
 
-    void delete();
+    void delete(Long boardId);
 
     void updatePosition(Long boardId, String source, String target);
 

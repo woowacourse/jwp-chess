@@ -26,10 +26,10 @@ public class BoardDaoImpl implements BoardDao{
     }
 
     @Override
-    public void deleteBoard() {
-        final String sql = "delete from board where id = 1";
+    public void deleteBoard(Long boardId) {
+        final String sql = "delete from board where id = ?";
 
-        jdbcTemplate.update(sql);
+        jdbcTemplate.update(sql, boardId);
     }
 
     @Override

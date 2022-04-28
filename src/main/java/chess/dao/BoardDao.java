@@ -7,7 +7,7 @@ public interface BoardDao {
 
     Color findTurn(Long boardId);
 
-    void deleteBoard();
+    void deleteBoard(Long boardId);
 
     boolean existsBoardByName(String title);
 

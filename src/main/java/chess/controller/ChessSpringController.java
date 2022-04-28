@@ -103,4 +103,10 @@ public class ChessSpringController {
     public ResponseDto restart(@RequestParam(name = "id") Long id) {
         return chessGameService.restart(id);
     }
+
+    @PostMapping("/board/delete")
+    @ResponseBody
+    public ResponseDto delete(@RequestParam(name = "id") Long id) {
+        return chessGameService.delete(id);
+    }
 }

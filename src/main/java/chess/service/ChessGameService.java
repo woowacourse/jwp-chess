@@ -119,4 +119,18 @@ public class ChessGameService {
             return new ResponseDto(501, e.getMessage());
         }
     }
+
+    public ResponseDto delete(Long boardId) {
+        try {
+            final Color turn = boardDao.findTurn(boardId);
+            if (!(turn == Color.NONE)) {
+                return new ResponseDto(401, "종료하지 않은 게임은 삭제할 수 없습니다.");
+            }
+            pieceDao.delete(boardId);
+            boardDao.deleteBoard(boardId);
+            return new ResponseDto(201, "");
+        } catch (Exception e){
+            return new ResponseDto(501, e.getMessage());
+        }
+    }
 }

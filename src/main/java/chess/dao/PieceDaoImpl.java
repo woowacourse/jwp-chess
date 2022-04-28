@@ -43,9 +43,9 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public void delete() {
-        final String sql = "delete from piece where board_id = 1";
-        jdbcTemplate.update(sql);
+    public void delete(Long boardId) {
+        final String sql = "delete from piece where board_id = ?";
+        jdbcTemplate.update(sql, boardId);
     }
 
     @Override

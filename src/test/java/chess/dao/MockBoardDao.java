@@ -18,7 +18,7 @@ public class MockBoardDao implements BoardDao {
     }
 
     @Override
-    public void deleteBoard() {
+    public void deleteBoard(Long boardId) {
         fakeBoard = new HashMap<>();
     }
 

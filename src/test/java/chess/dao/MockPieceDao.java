@@ -37,7 +37,7 @@ public class MockPieceDao implements PieceDao {
     }
 
     @Override
-    public void delete() {
+    public void delete(Long boardId) {
         fakePiece = new HashMap<>();
     }
 

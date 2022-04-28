@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>체스</title>
+    <script type="text/javascript" src="/home.js"></script>
+</head>
+<body>
+<div align="center">
+    <div>
+        <h3>방 만들기</h3>
+        <form id="roomForm" enctype="text/plain" action="/makeRoom" method="GET">
+            <div>
+                <label> 방이름
+                    <input type="text" id="roomName" name="roomName"/>
+                </label>
+            </div>
+            <div>
+                <label> 비밀번호
+                    <input type="text" id="password" name="password"/>
+                </label>
+            </div>
+            <button type="submit">방만들기</button>
+        </form>
+    </div>
+
+    <h3>방 목록</h3>
+    <ul>
+        {{#each rooms}}
+            <li>
+                <form action="/{{this.roomId}}" method="GET">
+                    <button>{{this.roomName}}</button>
+                </form>
+
+
+                <form action="/deleteRoom/{{this.roomId}}" method="POST">
+                    <label> 비밀번호
+                        <input type="text" id="password" name="password">
+                    </label>
+
+                    <button type="submit">삭제</button>
+                </form>
+            </li>
+        {{/each}}
+    </ul>
+</div>
+</body>
+</html>

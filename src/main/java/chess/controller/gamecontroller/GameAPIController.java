@@ -1,24 +1,25 @@
-package chess.controller;
+package chess.controller.gamecontroller;
 
 import chess.dto.ScoreDto;
 import chess.service.ChessGameService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class APIController {
+public class GameAPIController {
 
     private final ChessGameService chessGameService;
 
-    public APIController(final ChessGameService chessGameService) {
+    public GameAPIController(final ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping(path="/status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ScoreDto> status() {
-        final ScoreDto score = chessGameService.getScore();
+    @GetMapping(path = "/{roomId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ScoreDto> status(@PathVariable int roomId) {
+        final ScoreDto score = chessGameService.getScore(roomId);
         return ResponseEntity.ok(score);
     }
 }

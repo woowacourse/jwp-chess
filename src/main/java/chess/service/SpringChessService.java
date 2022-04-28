@@ -2,98 +2,110 @@ package chess.service;
 
 import chess.dao.ChessDao;
 import chess.domain.board.Board;
-import chess.domain.board.BoardFactory;
 import chess.domain.board.Position;
 import chess.domain.piece.Color;
 import chess.domain.piece.MoveResult;
-import chess.dto.GameRoomDto;
-import chess.dto.MoveRequestDto;
-import chess.dto.MoveResultDto;
-import chess.dto.NewGameRequest;
-import chess.dto.NewGameResponse;
+import chess.domain.piece.Piece;
+import chess.dto.GameCreateRequest;
+import chess.dto.GameCreateResponse;
+import chess.dto.GameDeleteRequest;
+import chess.dto.GameDeleteResponse;
+import chess.dto.GameDto;
+import chess.dto.MoveRequest;
+import chess.dto.MoveResponse;
 import chess.dto.PositionDto;
+import chess.exception.DeleteFailOnPlayingException;
+import chess.exception.PasswordNotMatchedException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SpringChessService implements ChessService {
 
     private final ChessDao chessDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public SpringChessService(ChessDao chessDao) {
+    public SpringChessService(ChessDao chessDao, PasswordEncoder passwordEncoder) {
         this.chessDao = chessDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public List<PositionDto> getBoardByGameId(String gameId) {
-        return chessDao.getBoardByGameId(gameId)
-                .entrySet()
+    public GameCreateResponse create(GameCreateRequest gameCreateRequest) {
+        return new GameCreateResponse(chessDao.create(gameCreateRequest));
+    }
+
+    @Override
+    public List<GameDto> findAll() {
+        return chessDao.findAll();
+    }
+
+    @Override
+    public GameDto findById(int id) {
+        return chessDao.findById(id);
+    }
+
+    @Override
+    public Map<Color, Double> findScoreById(int gameId) {
+        final Board board = chessDao.findBoardByGameId(gameId);
+        return board.getScore();
+    }
+
+    @Override
+    public List<PositionDto> findPositionsById(int gameId) {
+        final Board boardByGameId = chessDao.findBoardByGameId(gameId);
+        final Map<Position, Piece> board = boardByGameId.getBoard();
+
+        return board.entrySet()
                 .stream()
-                .map(entry -> PositionDto.of(entry.getKey(), entry.getValue()))
+                .map(entry -> PositionDto.of(entry.getKey().getName(), entry.getValue().getName()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MoveResultDto move(MoveRequestDto moveRequestDto) {
-        final Board board = findBoardByGameId(moveRequestDto.getGameId());
-        MoveResult moveResult = move(board, moveRequestDto);
+    public MoveResponse updateBoard(MoveRequest moveRequest) {
+        final Board board = chessDao.findBoardByGameId(moveRequest.getGameId());
+        MoveResult moveResult = move(board, moveRequest);
         if (moveResult != MoveResult.FAIL) {
-            chessDao.move(moveRequestDto);
+            chessDao.updateBoardByMove(moveRequest);
+            chessDao.changeTurnByGameId(moveRequest.getGameId());
         }
         if (moveResult == MoveResult.END) {
-            chessDao.setFinishedById(moveRequestDto.getGameId());
+            chessDao.finishBoardById(moveRequest.getGameId());
         }
-        return new MoveResultDto(moveRequestDto.getPiece(), moveRequestDto.getFrom(), moveRequestDto.getTo(),
+        return new MoveResponse(moveRequest.getPiece(), moveRequest.getFrom(), moveRequest.getTo(),
                 moveResult);
     }
 
-    private Board findBoardByGameId(String gameId) {
-        final Map<String, String> boardByGameId = chessDao.getBoardByGameId(gameId);
-        final Color color = Color.from(chessDao.getTurnByGameId(gameId));
-        return BoardFactory.newInstance(boardByGameId, color);
-    }
-
-    private MoveResult move(Board board, MoveRequestDto moveRequestDto) {
-        return board.move(Position.from(moveRequestDto.getFrom()), Position.from(moveRequestDto.getTo()));
+    private MoveResult move(Board board, MoveRequest moveRequest) {
+        return board.move(Position.from(moveRequest.getFrom()), Position.from(moveRequest.getTo()));
     }
 
     @Override
-    public boolean isFinished(String gameId) {
-        final Map<String, String> boardByGameId = chessDao.getBoardByGameId(gameId);
-        final Board board = BoardFactory.newInstance(boardByGameId, Color.WHITE);
-        return board.isFinished();
+    public GameDeleteResponse deleteById(GameDeleteRequest gameDeleteRequest) {
+        validateFinished(gameDeleteRequest.getId());
+        validatePassword(gameDeleteRequest.getId(), gameDeleteRequest.getPassword());
+        return chessDao.deleteById(gameDeleteRequest.getId());
     }
 
-    @Override
-    public Map<Color, Double> getScore(String gameId) {
-        return findBoardByGameId(gameId).getScore();
+    private void validateFinished(int id) {
+        final Board boardByGameId = chessDao.findBoardByGameId(id);
+        if (boardByGameId.isFinished()) {
+            return;
+        }
+
+        throw new DeleteFailOnPlayingException();
     }
 
-    @Override
-    public NewGameResponse createNewGame(NewGameRequest newGameRequest) {
-        return new NewGameResponse(chessDao.createNewGame(newGameRequest));
-    }
+    private void validatePassword(int id, String password) {
+        String hash = chessDao.findPasswordById(id);
+        if (passwordEncoder.matches(password, hash)) {
+            return;
+        }
 
-    @Override
-    public List<GameRoomDto> findGamesOnPlay() {
-        return chessDao.findGamesOnPlay();
-    }
-
-    @Override
-    public GameRoomDto findGameById(int id) {
-        return chessDao.findGameById(id);
-    }
-
-    @Override
-    public int deleteGameById(int id) {
-        return chessDao.deleteGameById(id);
-    }
-
-    @Override
-    public List<GameRoomDto> findGames() {
-        final List<GameRoomDto> games = chessDao.findGames();
-        return games;
+        throw new PasswordNotMatchedException();
     }
 }

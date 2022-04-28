@@ -6,27 +6,27 @@ import chess.domain.player.Team;
 
 public class ChessGameDto {
 
-    private final String gameName;
+    private final String roomName;
     private final char[][] chessMap;
     private final String turn;
     private final boolean isRunning;
 
-    private ChessGameDto(String gameName, char[][] chessMap, String turn, boolean isRunning) {
-        this.gameName = gameName;
+    private ChessGameDto(String roomName, char[][] chessMap, String turn, boolean isRunning) {
+        this.roomName = roomName;
         this.chessMap = chessMap;
         this.turn = turn;
         this.isRunning = isRunning;
     }
 
-    public static ChessGameDto of(final ChessGame chessGame, final String gameName) {
+    public static ChessGameDto of(final ChessGame chessGame, final String roomName) {
         final ChessMap chessMap = chessGame.createMap();
         final Team turn = chessGame.getTurn();
         final boolean isRunning = chessGame.isRunning();
-        return new ChessGameDto(gameName, chessMap.getChessMap(), turn.getName(), isRunning);
+        return new ChessGameDto(roomName, chessMap.getChessMap(), turn.getName(), isRunning);
     }
 
-    public String getGameName() {
-        return gameName;
+    public String getRoomName() {
+        return roomName;
     }
 
     public char[][] getChessMap() {

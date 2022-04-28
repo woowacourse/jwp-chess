@@ -32,7 +32,7 @@ class PieceDaoTest {
 
     @BeforeEach
     void beforeEach() {
-        pieceDao.savePieces(whitePlayer, gameId);
+        pieceDao.saveAllPieces(whitePlayer, gameId);
     }
 
     @Test
@@ -46,7 +46,7 @@ class PieceDaoTest {
     @Test
     @DisplayName("말들을 올바르게 저장한다.")
     void savePieces() {
-        pieceDao.savePieces(blackPlayer, gameId);
+        pieceDao.saveAllPieces(blackPlayer, gameId);
         List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(gameId, Team.BLACK.getName());
 
         assertThat(blackPieces.size()).isEqualTo(16);
@@ -55,7 +55,7 @@ class PieceDaoTest {
     @Test
     @DisplayName("말들을 올바르게 삭제한다.")
     void deletePieces() {
-        pieceDao.deletePieces(gameId);
+        pieceDao.deleteAllPiecesByRoomId(gameId);
         List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(gameId, teamWhite);
 
         assertThat(whitePieces.size()).isEqualTo(0);
@@ -65,7 +65,7 @@ class PieceDaoTest {
     @DisplayName("특정 위치의 말을 삭제한다.")
     void deletePieceByGameIdAndPositionAndTeam() {
         String deletePosition = "a2";
-        pieceDao.deletePieceByGameIdAndPositionAndTeam(gameId, deletePosition, teamWhite);
+        pieceDao.deletePieceByRoomIdAndPositionAndTeam(gameId, deletePosition, teamWhite);
         List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(gameId, teamWhite);
 
         Optional<PieceDto> result = whitePieces.stream()
@@ -80,7 +80,7 @@ class PieceDaoTest {
     void updatePiecePositionByGameId() {
         String currentPosition = "a2";
         String destinationPosition = "a4";
-        pieceDao.updatePiecePositionByGameId(gameId, currentPosition, destinationPosition, teamWhite);
+        pieceDao.updatePiecePositionByRoomIdAndTeam(gameId, currentPosition, destinationPosition, teamWhite);
         List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(gameId, teamWhite);
 
         Optional<PieceDto> result = whitePieces.stream()
@@ -92,6 +92,6 @@ class PieceDaoTest {
 
     @AfterEach
     void afterEach() {
-        pieceDao.deletePieces(gameId);
+        pieceDao.deleteAllPiecesByRoomId(gameId);
     }
 }

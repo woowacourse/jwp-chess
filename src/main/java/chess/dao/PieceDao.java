@@ -18,12 +18,12 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void savePieces(final Player player, final int chessGameId) {
-        final String sql = "insert into piece (position, name, team, chess_game_id) values (?, ?, ?, ?)";
+    public void saveAllPieces(final Player player, final long roomId) {
+        final String sql = "insert into piece (position, name, team, room_id) values (?, ?, ?, ?)";
         final List<Piece> pieces = player.findAll();
         for (Piece piece : pieces) {
             jdbcTemplate.update(sql, toPositionString(piece.getPosition()), String.valueOf(piece.getName()),
-                    player.getTeamName(), chessGameId);
+                    player.getTeamName(), roomId);
         }
     }
 
@@ -33,29 +33,29 @@ public class PieceDao {
         return String.valueOf(file) + rank;
     }
 
-    public List<PieceDto> findAllPieceByIdAndTeam(final int chessGameId, final String team) {
-        final String sql = "select * from piece where chess_game_id = (?) and team = (?)";
+    public List<PieceDto> findAllPieceByIdAndTeam(final long roomId, final String team) {
+        final String sql = "select * from piece where room_id = (?) and team = (?)";
         return jdbcTemplate.query(sql,
                 (resultSet, count) -> new PieceDto(
                         resultSet.getString("position"),
                         resultSet.getString("name")
-                ), chessGameId, team);
+                ), roomId, team);
 
     }
 
-    public void deletePieces(final int chessGameId) {
-        final String sql = "delete from piece where chess_game_id = (?)";
-        jdbcTemplate.update(sql, chessGameId);
+    public void deleteAllPiecesByRoomId(final long roomId) {
+        final String sql = "delete from piece where room_id = (?)";
+        jdbcTemplate.update(sql, roomId);
     }
 
-    public void deletePieceByGameIdAndPositionAndTeam(final int gameId, final String position, final String team) {
-        final String sql = "delete from piece where chess_game_id = (?) and position = (?) and team = (?)";
-        jdbcTemplate.update(sql, gameId, position, team);
+    public void deletePieceByRoomIdAndPositionAndTeam(final long roomId, final String position, final String team) {
+        final String sql = "delete from piece where room_id = (?) and position = (?) and team = (?)";
+        jdbcTemplate.update(sql, roomId, position, team);
     }
 
-    public void updatePiecePositionByGameId(final int gameId, final String current,
-                                            final String destination, final String team) {
-        final String sql = "update piece set position = (?) where chess_game_id = (?) and position = (?) and team = (?)";
-        jdbcTemplate.update(sql, destination, gameId, current, team);
+    public void updatePiecePositionByRoomIdAndTeam(final long roomId, final String current,
+                                                   final String destination, final String team) {
+        final String sql = "update piece set position = (?) where room_id = (?) and position = (?) and team = (?)";
+        jdbcTemplate.update(sql, destination, roomId, current, team);
     }
 }

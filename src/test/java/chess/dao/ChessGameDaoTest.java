@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ChessGameDaoTest {
 
     @Autowired
-    private ChessGameDao chessGameDao;
+    private RoomDao chessGameDao;
 
     private final String gameName = "rex_game";
     private final int gameId = 1;
@@ -24,7 +24,7 @@ class ChessGameDaoTest {
     @Test
     @DisplayName("게임의 아이디를 올바르게 찾아온다.")
     void findChessGameIdByName() {
-        int id = chessGameDao.findChessGameIdByName(gameName).get();
+        int id = chessGameDao.findRoomIdByName(gameName).get();
 
         assertThat(id).isEqualTo(gameId);
     }
@@ -35,8 +35,8 @@ class ChessGameDaoTest {
         String newGameName = "new Game";
         Team turn = Team.WHITE;
 
-        chessGameDao.saveChessGame(newGameName, turn);
-        Optional<Integer> id = chessGameDao.findChessGameIdByName(newGameName);
+        chessGameDao.save(newGameName, turn);
+        Optional<Integer> id = chessGameDao.findRoomIdByName(newGameName);
 
         assertThat(id.isPresent()).isTrue();
     }
@@ -44,7 +44,7 @@ class ChessGameDaoTest {
     @Test
     @DisplayName("게임의 아이디를 통해 현재 턴을 찾아온다.")
     void findCurrentTurn() {
-        String currentTurn = chessGameDao.findCurrentTurn(gameId);
+        String currentTurn = chessGameDao.findTurn(gameId);
         String expected = Team.WHITE.getName();
 
         assertThat(currentTurn).isEqualTo(expected);
@@ -54,9 +54,9 @@ class ChessGameDaoTest {
     @DisplayName("턴 정보를 업데이트 한다.")
     void updateGameTurn() {
         Team nextTurn = Team.BLACK;
-        chessGameDao.updateGameTurn(gameId, nextTurn);
+        chessGameDao.updateTurn(gameId, nextTurn);
 
-        String currentTurn = chessGameDao.findCurrentTurn(gameId);
+        String currentTurn = chessGameDao.findTurn(gameId);
 
         assertThat(currentTurn).isEqualTo(nextTurn.getName());
     }
@@ -64,9 +64,9 @@ class ChessGameDaoTest {
     @Test
     @DisplayName("게임을 삭제한다.")
     void deleteChessGame() {
-        chessGameDao.deleteChessGame(gameId);
+        chessGameDao.delete(gameId);
 
-        boolean result = chessGameDao.findChessGameIdByName(gameName).isPresent();
+        boolean result = chessGameDao.findRoomIdByName(gameName).isPresent();
 
         assertThat(result).isFalse();
     }

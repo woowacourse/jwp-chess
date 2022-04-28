@@ -50,18 +50,15 @@ public class ChessGameService {
         Map<String, Piece> boardDto = createBoardDto(roomId);
         MoveResultDto moveResultDto = new MoveResultDto(boardDto);
 
-        try {
-            chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
-            chessBoardDao.movePiece(moveDto, roomId);
-            roomDao.changeTurn(roomId);
-            if (isChessGameEnd(chessGame)) {
-                moveResultDto.setIsGameOver(true);
-                moveResultDto.setWinner(turn);
-                roomDao.finish(roomId);
-                return moveResultDto;
-            }
-        } catch (IllegalArgumentException e) {
-            moveResultDto.setIsMovable(false);
+        chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
+        chessBoardDao.movePiece(moveDto, roomId);
+        roomDao.changeTurn(roomId);
+
+        if (isChessGameEnd(chessGame)) {
+            moveResultDto.setIsGameOver(true);
+            moveResultDto.setWinner(turn);
+            roomDao.finish(roomId);
+            return moveResultDto;
         }
 
         return moveResultDto;
@@ -95,7 +92,7 @@ public class ChessGameService {
     }
 
     private Map<Position, Piece> findAllBoard(int roomId) {
-        return chessBoardDao.findAll(roomId);
+        return chessBoardDao.findAllPieces(roomId);
     }
 
     private Player findTurn(int roomId) {

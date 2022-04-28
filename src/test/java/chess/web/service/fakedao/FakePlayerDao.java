@@ -4,6 +4,8 @@ import chess.domain.game.state.Player;
 import chess.domain.piece.property.Color;
 import chess.web.dao.RoomDao;
 import chess.web.dto.CreateRoomRequestDto;
+import chess.web.dto.DeleteDto;
+import chess.web.dto.DeleteResultDto;
 import chess.web.dto.FinishResultDto;
 import chess.web.dto.ReadRoomResultDto;
 import chess.web.dto.RoomDto;
@@ -28,11 +30,6 @@ public class FakePlayerDao implements RoomDao {
     }
 
     @Override
-    public void deleteAll(int roomId) {
-        repository.clear();
-    }
-
-    @Override
     public int createRoom(CreateRoomRequestDto createRoomRequestDto) {
 
         return 0;
@@ -45,12 +42,6 @@ public class FakePlayerDao implements RoomDao {
 
     @Override
     public void changeTurn(int roomId) {
-
-    }
-
-    @Override
-    public boolean roomExist(int roomId) {
-        return true;
     }
 
     @Override
@@ -60,6 +51,11 @@ public class FakePlayerDao implements RoomDao {
 
     @Override
     public RoomDto isStartable(int roomId) {
+        return null;
+    }
+
+    @Override
+    public DeleteResultDto delete(int roomId, DeleteDto deleteDto) {
         return null;
     }
 }

@@ -61,12 +61,8 @@ public class GameService {
     private BoardDto convertToBoardDto(final Map<Position, Piece> board) {
         Map<String, String> squares = new HashMap<>();
         for (Position position : board.keySet()) {
-            squares.put(position.getKey(), pieceName(board.get(position)));
+            squares.put(position.getKey(), Piece.getKey(board.get(position)));
         }
         return BoardDto.from(squares);
-    }
-
-    private String pieceName(Piece piece) {
-        return piece.getTeam() + "_" + piece.getSymbol();
     }
 }

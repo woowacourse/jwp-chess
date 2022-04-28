@@ -1,7 +1,6 @@
 package chess.service;
 
 import chess.dao.RoomDao;
-import chess.dto.RoomDto;
 import chess.entity.RoomEntity;
 import java.util.List;
 import org.springframework.stereotype.Service;

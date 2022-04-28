@@ -53,8 +53,10 @@ public class Score {
 
     private List<Position> searchPositionOfPawns(Team team, Map<Position, Piece> board) {
         return board.keySet().stream()
-                .filter(position -> board.get(position).isSameTeam(team))
-                .filter(position -> board.get(position).isPawn())
+                .filter(position -> board.get(position)
+                        .isSameTeam(team))
+                .filter(position -> board.get(position)
+                        .isPawn())
                 .collect(Collectors.toList());
     }
 
@@ -67,6 +69,7 @@ public class Score {
 
     private LongStream calculateSameRankCount(Position position, List<Position> positionOfPawns) {
         return LongStream.of(positionOfPawns.stream()
-                .filter(otherPosition -> otherPosition.isSameFile(position)).count());
+                .filter(otherPosition -> otherPosition.isSameFile(position))
+                .count());
     }
 }

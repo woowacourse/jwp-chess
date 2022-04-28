@@ -8,8 +8,6 @@ import java.util.Map;
 
 public interface State {
 
-    boolean isStatus();
-
     State proceed(MoveDto moveDto);
 
     Map<Position, Piece> getBoard();

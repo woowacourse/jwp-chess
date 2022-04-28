@@ -40,7 +40,8 @@ public class PawnMove implements MoveStrategy {
     private List<Position> searchBaseMovePositions(Position source, Map<Position, Piece> board) {
         Direction direction = Direction.pawnMoveDirection(team);
         Position nextPosition = source.createPositionTo(direction);
-        if (board.get(nextPosition).isSameTeam(NONE)) {
+        if (board.get(nextPosition)
+                .isSameTeam(NONE)) {
             return List.of(nextPosition);
         }
         return new ArrayList<>();
@@ -53,7 +54,10 @@ public class PawnMove implements MoveStrategy {
         Direction direction = Direction.pawnMoveDirection(team);
         Position firstMovedPosition = source.createPositionTo(direction);
         Position secondMovedPosition = firstMovedPosition.createPositionTo(direction);
-        if (board.get(firstMovedPosition).isSameTeam(NONE) && board.get(secondMovedPosition).isSameTeam(NONE)) {
+        if (board.get(firstMovedPosition)
+                .isSameTeam(NONE)
+                && board.get(secondMovedPosition)
+                .isSameTeam(NONE)) {
             return List.of(secondMovedPosition);
         }
         return new ArrayList<>();

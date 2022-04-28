@@ -8,6 +8,7 @@ import chess.model.Team;
 import chess.model.position.Position;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 public abstract class Piece {
@@ -33,6 +34,16 @@ public abstract class Piece {
     public static Piece getPiece(final String teamName, final String symbolName) {
         final String key = teamName + "_" + symbolName;
         return cache.get(key);
+    }
+
+    public static String getKey(final Piece piece) {
+        return cache.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue()
+                        .equals(piece))
+                .findAny()
+                .map(Entry::getKey)
+                .orElseThrow();
     }
 
     protected final Team team;

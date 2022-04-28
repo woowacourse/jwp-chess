@@ -15,11 +15,6 @@ public final class Status extends Finished {
     }
 
     @Override
-    public boolean isStatus() {
-        return true;
-    }
-
-    @Override
     public Map<Team, Double> getScores() {
         return gameResult.getTeamScores();
     }

@@ -9,19 +9,10 @@ import java.util.Map;
 
 public abstract class Running implements State {
 
-    protected static final int COMMAND_INDEX = 0;
-    protected static final int SOURCE_OPTION_INDEX = 1;
-    protected static final int TARGET_OPTION_INDEX = 2;
-
     protected final Board board;
 
     public Running(Board board) {
         this.board = board;
-    }
-
-    @Override
-    public boolean isStatus() {
-        return false;
     }
 
     @Override

@@ -22,6 +22,7 @@ stopButton.addEventListener("click", async function () {
     } else {
         await deleteAndFinish();
     }
+    location.href = "/";
 });
 
 async function loadGame() {
@@ -43,8 +44,10 @@ async function loadGame() {
 }
 
 async function getStatus() {
-    let status = await fetch("/status?name=" + roomName)
-        .then(handleErrors)
+    console.log(roomId)
+    let status = await fetch("/status/" + roomId, {
+        method: "GET"
+    }).then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         });
@@ -71,7 +74,7 @@ async function finish() {
 }
 
 async function deleteAndFinish() {
-    await fetch("/game?name=" + roomName, {
+    await fetch("/game/" + roomId, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -117,7 +120,7 @@ async function requestMovePiece(current, destination) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            chessGameName: roomName,
+            roomId: roomId,
             current: current,
             destination: destination,
         }),

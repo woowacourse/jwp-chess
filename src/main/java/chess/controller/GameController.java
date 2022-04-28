@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.net.URI;
 
 @RestController
 public class GameController {
@@ -24,19 +23,18 @@ public class GameController {
     public ResponseEntity createNewGame(@RequestBody NewRoomInfo newChessGameInfo, HttpSession session) {
         final Long roomId = chessGameService.createNewRoom(newChessGameInfo);
         session.setAttribute("roomId", roomId);
-        session.getAttribute("roomId");
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<StatusDto> findStatusByGameName(@RequestParam("name") String gameName) {
-        final StatusDto status = chessGameService.findStatus(gameName);
+    @GetMapping("/status/{roomId}")
+    public ResponseEntity<StatusDto> findStatusByGameName(@PathVariable Long roomId) {
+        final StatusDto status = chessGameService.findStatus(roomId);
         return ResponseEntity.ok(status);
     }
 
-    @DeleteMapping("/game")
-    public ResponseEntity<StatusDto> deleteGame(@RequestParam("name") String gameName) {
-        final StatusDto status = chessGameService.deleteRoom(gameName);
+    @DeleteMapping("/game/{roomId}")
+    public ResponseEntity<StatusDto> deleteGame(@PathVariable Long roomId) {
+        final StatusDto status = chessGameService.deleteRoom(roomId);
         return ResponseEntity.ok(status);
     }
 
@@ -48,11 +46,11 @@ public class GameController {
     }
 
     @PutMapping("/move")
-    public ResponseEntity<ChessGameDto> move(@RequestBody MovePositionDto movePositionDto) {
-        final String chessGameName = movePositionDto.getRoomName();
+    public ResponseEntity<ChessGameDto> move(@RequestBody MovePositionDto movePositionDto, HttpSession session) {
+        final long roomId = (long) session.getAttribute("roomId");
         final String currentPosition = movePositionDto.getCurrent();
         final String destinationPosition = movePositionDto.getDestination();
-        final ChessGameDto chessGame = chessGameService.move(chessGameName, currentPosition, destinationPosition);
+        final ChessGameDto chessGame = chessGameService.move(roomId, currentPosition, destinationPosition);
         return ResponseEntity.ok(chessGame);
     }
 }

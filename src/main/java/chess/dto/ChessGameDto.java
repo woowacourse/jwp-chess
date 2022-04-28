@@ -27,6 +27,13 @@ public class ChessGameDto {
         return new ChessGameDto(roomId, roomName, chessMap.getChessMap(), turn.getName(), isRunning);
     }
 
+    public static ChessGameDto of(final long roomId, final ChessGame chessGame) {
+        final ChessMap chessMap = chessGame.createMap();
+        final Team turn = chessGame.getTurn();
+        final boolean isRunning = chessGame.isRunning();
+        return new ChessGameDto(roomId, null, chessMap.getChessMap(), turn.getName(), isRunning);
+    }
+
     public Long getRoomId() {
         return roomId;
     }

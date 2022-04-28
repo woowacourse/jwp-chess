@@ -56,16 +56,14 @@ public class ChessGameService {
         return roomId;
     }
 
-    public StatusDto deleteRoom(final String roomName) {
-        final StatusDto status = findStatus(roomName);
-        final long roomId = findRoomIdByName(roomName);
-        pieceDao.deleteAllPiecesByRoomId(roomId);
+    public StatusDto deleteRoom(final long roomId) {
+        final StatusDto status = findStatus(roomId);
         roomDao.delete(roomId);
         return status;
     }
 
-    public StatusDto findStatus(final String roomName) {
-        final ChessGame chessGame = findRoomByName(roomName);
+    public StatusDto findStatus(final long roomId) {
+        final ChessGame chessGame = findChessGameById(roomId);
         final List<GameResult> gameResult = chessGame.findGameResult();
         final GameResult whitePlayerResult = gameResult.get(0);
         final GameResult blackPlayerResult = gameResult.get(1);
@@ -84,16 +82,15 @@ public class ChessGameService {
         return ChessGameDto.of(roomId, game, gameNameAndTurn.getName());
     }
 
-    public ChessGameDto move(final String roomName, final String current, final String destination) {
-        final long roomId = findRoomIdByName(roomName);
-        final ChessGame chessGame = findRoomByName(roomName);
+    public ChessGameDto move(final long roomId, final String current, final String destination) {
+        final ChessGame chessGame = findChessGameById(roomId);
         final Player currentPlayer = chessGame.getCurrentPlayer();
         final Player opponentPlayer = chessGame.getOpponentPlayer();
         chessGame.move(currentPlayer, opponentPlayer, new Position(current), new Position(destination));
         roomDao.updateTurn(roomId, chessGame.getTurn());
         updatePiece(roomId, current, destination, currentPlayer.getTeamName(),
                 opponentPlayer.getTeamName());
-        return ChessGameDto.of(1, chessGame, roomName);
+        return ChessGameDto.of(roomId, chessGame);
     }
 
     public void updatePiece(final long roomId, final String current, final String destination,
@@ -107,21 +104,15 @@ public class ChessGameService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
     }
 
-    private ChessGame findRoomByName(final String roomName) {
-        final long roomId = findRoomIdByName(roomName);
-        final ChessGameUpdateDto gameUpdateDto = findChessGame(roomId);
-
-        final Player whitePlayer = new Player(toPieces(gameUpdateDto.getWhitePieces()), Team.WHITE);
-        final Player blackPlayer = new Player(toPieces(gameUpdateDto.getBlackPieces()), Team.BLACK);
-        final Team turn = Team.from(gameUpdateDto.getTurn());
-        return new ChessGame(whitePlayer, blackPlayer, turn);
-    }
-
-    private ChessGameUpdateDto findChessGame(final long roomId) {
+    private ChessGame findChessGameById(final long roomId) {
         final String turn = roomDao.findTurn(roomId);
         final List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(roomId, Team.WHITE.getName());
         final List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(roomId, Team.BLACK.getName());
-        return new ChessGameUpdateDto(turn, whitePieces, blackPieces);
+
+        final Player whitePlayer = new Player(toPieces(whitePieces), Team.WHITE);
+        final Player blackPlayer = new Player(toPieces(blackPieces), Team.BLACK);
+        final Team gameTurn = Team.from(turn);
+        return new ChessGame(whitePlayer, blackPlayer, gameTurn);
     }
 
     private List<Piece> toPieces(final List<PieceDto> piecesDto) {

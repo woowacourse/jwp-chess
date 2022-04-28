@@ -23,6 +23,14 @@ public class RoomService {
         return roomRepository.findById(id).get();
     }
 
+    public void delete(int roomId, String password) {
+        if (roomRepository.findById(roomId).get().getPassword().equals(password)) {
+            roomRepository.delete(roomId);
+            return;
+        }
+        throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+    }
+
     public List<Map<String, String>> findRooms() {
         List<RoomDto> data = roomRepository.findAll();
         return data.stream()

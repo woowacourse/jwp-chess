@@ -41,6 +41,11 @@ public class FakeRoomRepository implements RoomRepository {
                 .map(room -> new RoomDto(roomId, room.name, room.password));
     }
 
+    @Override
+    public void delete(int roomId) {
+        database.remove(roomId);
+    }
+
     private static class Room {
         private String name;
         private String password;

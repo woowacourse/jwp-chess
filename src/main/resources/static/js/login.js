@@ -1,3 +1,5 @@
+let targetRoomId;
+
 window.onload = function () {
     let modalButton = document.getElementById('room-modal-open');
     modalButton.onclick = function () {
@@ -59,6 +61,7 @@ function fetchRooms() {
                 button.id = 'room-delete-' + data.id;
                 button.innerHTML = '삭제';
                 button.onclick = function () {
+                    targetRoomId = data.id;
                     document.getElementById('password-modal').classList.add('show-modal');
                 }
                 roomWrap.append(room);
@@ -83,5 +86,24 @@ function fetchNewRoom() {
         })
         .catch(err => {
             showErrorMessage(err.message);
+        })
+}
+
+function fetchDeleteRoom() {
+    let id = targetRoomId;
+    let password = document.getElementById('confirm-password').value;
+    fetch("http://localhost:8080/rooms/" + id + '?password=' + password, {
+        method: 'DELETE'
+    })
+        .then(res => res.json())
+        .then(res => {
+            if (res.message) {
+                throw new Error(res.message);
+            }
+            window.location.href = res.url;
+        })
+        .catch(err => {
+            document.getElementById('confirm-password').value = '';
+            alert(err.message);
         })
 }

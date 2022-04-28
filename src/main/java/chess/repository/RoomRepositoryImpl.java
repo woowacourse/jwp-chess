@@ -69,4 +69,10 @@ public class RoomRepositoryImpl implements RoomRepository {
             return Optional.empty();
         }
     }
+
+    @Override
+    public void delete(int roomId) {
+        String sql = "delete from room where id = :roomId";
+        jdbcTemplate.update(sql, Map.of("roomId", roomId));
+    }
 }

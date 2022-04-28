@@ -15,4 +15,12 @@ public class ChessGameVO {
     public String getPassword() {
         return password;
     }
+
+    public void setGameID(String gameID) {
+        this.gameID = gameID;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

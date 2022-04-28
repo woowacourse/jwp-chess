@@ -28,10 +28,12 @@ public class InGameController {
     @GetMapping()
     public String runGame(@ModelAttribute ChessGameVO chessGameVO, @RequestParam(name = "restart") String restart,
             Model model) {
-        ChessGame chessGame = chessService.loadChessGame(chessGameVO.getGameID(), chessGameVO.getPassword(), restart);
-        GameResult gameResult = chessService.getGameResult(chessGameVO.getGameID());
+        System.err.println(chessGameVO.getGameID());
+        System.err.println(chessGameVO.getPassword());
+        ChessGame chessGame = chessService.loadChessGame(chessGameVO, restart);
+        GameResult gameResult = chessService.getGameResult(chessGameVO);
 
-        model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
+        model.addAttribute("whiteScore", gameResult.calculateScore( Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
 
         model.addAllAttributes(chessGame.getEmojis());
@@ -41,22 +43,22 @@ public class InGameController {
     }
 
     @PostMapping(value = "/{gameID}")
-    public String movePiece(@PathVariable String gameID, @ModelAttribute MovementRequest movement, Model model) {
-        ChessGame chessGame = chessService.loadSavedChessGame(gameID, chessService.getTurn(gameID));
+    public String movePiece(@ModelAttribute ChessGameVO chessGameVO, @ModelAttribute MovementRequest movement, Model model) {
+        ChessGame chessGame = chessService.loadSavedChessGame(chessGameVO);
         String source = movement.getSource();
         String target = movement.getTarget();
 
         try {
             chessGame.move(new Square(source), new Square(target));
-            chessService.movePiece(gameID, chessGame, source, target);
+            chessService.movePiece(chessGameVO, chessGame, source, target);
             model.addAllAttributes(chessGame.getEmojis());
             model.addAttribute("msg", "누가 이기나 보자구~!");
         } catch (IllegalArgumentException e) {
             model.addAllAttributes(chessGame.getEmojis());
             model.addAttribute("msg", e.getMessage());
         }
-        model.addAttribute("gameID", gameID);
-        GameResult gameResult = chessService.getGameResult(gameID);
+        model.addAttribute("gameID", chessGameVO.getGameID());
+        GameResult gameResult = chessService.getGameResult(chessGameVO);
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
 

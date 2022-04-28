@@ -1,0 +1,8 @@
+.game-list-container {
+    width: 380px;
+    height: 20px;
+    padding: 5px;
+    border: solid 1px;
+    display :flex;
+    justify-content: space-between;
+}

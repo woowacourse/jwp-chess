@@ -1,15 +1,13 @@
 package chess.web.controller;
 
-import chess.web.dto.MovePositionsDto;
-import chess.web.dto.MoveResultDto;
+import chess.domain.state.StateType;
 import chess.web.service.ChessService;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ChessController {
@@ -20,29 +18,37 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String showIndex(final Model model) {
-        try {
-            model.addAttribute("chessStatus", chessService.getChessStatus());
-        } catch (EmptyResultDataAccessException e) {
-            chessService.start();
-            showIndex(model);
-        }
-
+        model.addAttribute("games", chessService.getAllGame());
         return "index";
     }
 
-    @ResponseBody
-    @PostMapping("/move")
-    public MoveResultDto movePiece(@RequestBody MovePositionsDto movePositionsDto) {
-        return chessService.getMoveResult(movePositionsDto);
+    @PostMapping
+    public String createGame(@RequestParam String title, @RequestParam String password) {
+        int gameId = chessService.newGame(title, password);
+        return "redirect:/game/" + gameId;
     }
 
-    @GetMapping("/result")
-    public String showResult(final Model model) {
-        model.addAttribute("result", chessService.getChessResult());
-        chessService.restart();
+    @GetMapping("/game/{gameId}")
+    public String showGame(@PathVariable int gameId, final Model model) {
+        if (chessService.getStateType(gameId) == StateType.END) {
+            return "redirect:/game/" + gameId + "/result";
+        }
+        model.addAttribute("chessStatus", chessService.getBoard(gameId));
 
+        return "game";
+    }
+
+    @GetMapping("/game/{gameId}/result")
+    public String showResult(@PathVariable int gameId, final Model model) {
+        model.addAttribute("result", chessService.getChessResult(gameId));
         return "result";
+    }
+
+    @GetMapping("/game/{gameId}/restart")
+    public String restartGame(@PathVariable int gameId) {
+        chessService.restart(gameId);
+        return "redirect:/game/" + gameId;
     }
 }

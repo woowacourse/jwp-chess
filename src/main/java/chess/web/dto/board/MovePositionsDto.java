@@ -1,4 +1,4 @@
-package chess.web.dto;
+package chess.web.dto.board;
 
 public class MovePositionsDto {
 

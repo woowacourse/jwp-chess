@@ -4,7 +4,6 @@ let gameId = "";
 
 function clicked(id, fb) {
     gameId = fb;
-    console.log(gameId);
     setVariable(id);
     checkSendToServer();
 }
@@ -36,10 +35,11 @@ function sendToServer() {
             target: target
         })
     }).then((response) =>{
+        if (response.status === 400) {
+            throw response;
+        }
+
         response.json().then(data => {
-            if (data.status ===  400) {
-                alert(data.errorMessage);
-            }
             if(data.isGameOver === true) {
                 alert("게임이 종료되었습니다.")
                 document.location.href = gameId+'/result'
@@ -47,6 +47,10 @@ function sendToServer() {
             };
 
             location.reload();
-        });
+        })
+    }).catch(err => {
+        err.text().then(msg => {
+            alert(msg);
+        })
     });
 }

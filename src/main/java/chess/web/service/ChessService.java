@@ -15,6 +15,7 @@ import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -134,7 +135,7 @@ public class ChessService {
     }
 
     public boolean removeRoom(Long boardId, String password) {
-        if (!hasRoom(boardId) || isRunningChess(boardId)) {
+        if (!hasRoom(boardId) || isRunningChess(boardId) || !matchPassword(boardId, password)) {
             return false;
         }
         pieceDao.deleteByBoardId(boardId);
@@ -153,5 +154,10 @@ public class ChessService {
                 .count();
 
         return kingCount == 2;
+    }
+
+    private boolean matchPassword(Long boardId, String password) {
+        Room room = roomDao.findByBoardId(boardId).get();
+        return password.equals(room.getPassword());
     }
 }

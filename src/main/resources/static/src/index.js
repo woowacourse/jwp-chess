@@ -20,17 +20,15 @@ function createRoom() {
         });
 }
 
-function deleteRoom(boardId, password) {
-    const request = {
-        password: password
-    };
+function deleteRoom(boardId) {
+    let password = prompt("비밀번호를 입력하세요");
 
     fetch('/chess/' + boardId, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(request),
+        body: password,
     }).then(res => res.json())
         .then(value => {
             if (value) {

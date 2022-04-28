@@ -25,8 +25,6 @@ import java.util.stream.Collectors;
 @Service
 public class ChessService {
 
-    private static final int EMPTY_RESULT = 0;
-
     private final BoardDao boardDao;
     private final GameDao gameDao;
     private ChessBoard chessBoard = null;
@@ -49,45 +47,9 @@ public class ChessService {
         return gameId;
     }
 
-//    public void start() {
-//        int lastGameId = gameDao.findLastGameId();
-//        if (isNotSaved(lastGameId)) {
-//            makeNewGame();
-//            return;
-//        }
-//        loadLastGame(lastGameId);
-//    }
-
-    public void loadGame(int gameId) {
-        gameDao.findById(gameId);
-        if (isNotSaved(gameId)) {
-            return;
-        }
-        loadLastGame(gameId);
-    }
-
-    private boolean isNotSaved(int lastGameId) {
-        return lastGameId == EMPTY_RESULT;
-    }
-
     private void makeNewGame() {
         chessBoard = ChessBoardFactory.initBoard();
         chessBoard.changeStatus(new Playing());
-    }
-
-    public void save() {
-        int gameId = gameDao.save(chessBoard);
-        for (Map.Entry<String, ChessPiece> entry : chessBoard.convertToMap().entrySet()) {
-            boardDao.save(
-                    gameId,
-                    getPosition(entry),
-                    getPiece(entry),
-                    getColor(entry));
-        }
-    }
-
-    private void updateBoard(int gameId, String source, String target) {
-        boardDao.updateMovePiece(gameId, source, target);
     }
 
     private String getPosition(Map.Entry<String, ChessPiece> entry) {
@@ -102,22 +64,18 @@ public class ChessService {
         return entry.getValue().getColor().name();
     }
 
-    private void loadLastGame(int lastGameId) {
+    public List<GameDto> findAllGame() {
+        return gameDao.findAll();
+    }
+
+    public ChessBoard findBoard(int gameId) {
+        GameDto game = gameDao.findById(gameId);
+        List<PieceDto> boardInfo = boardDao.findByGameId(gameId);
         HashMap<Position, ChessPiece> board = new HashMap<>();
-        for (PieceDto pieceDto : boardDao.findByGameId(lastGameId)) {
-            ChessPiece piece = makePiece(pieceDto);
-            board.put(new Position(pieceDto.getPosition()), piece);
+        for (PieceDto pieceDto : boardInfo) {
+            board.put(new Position(pieceDto.getPosition()), Type.from(pieceDto.getPiece()).createPiece(Color.from(pieceDto.getColor())));
         }
-        GameDto game = gameDao.findById(lastGameId);
-        chessBoard = new ChessBoard(board, new Playing(), game.getTurn());
-    }
-
-    private ChessPiece makePiece(PieceDto pieceDto) {
-        return Type.from(pieceDto.getPiece()).createPiece(getPieceColor(pieceDto));
-    }
-
-    private Color getPieceColor(PieceDto pieceDto) {
-        return Color.from(pieceDto.getColor());
+        return new ChessBoard(board, game.getStatus(), game.getTurn());
     }
 
     public void move(String source, String target, int gameId) throws SQLException {
@@ -126,7 +84,7 @@ public class ChessService {
         if (chessBoard.compareStatus(Status.PLAYING)) {
             chessBoard.move(new Position(source), new Position(target));
         }
-        updateBoard(gameId, source, target);
+        boardDao.updateMovePiece(gameId, source, target);
         gameDao.updateTurn(chessBoard.getCurrentTurn().name(), gameId);
 
         if (checkStatus(chessBoard, Status.END)) {
@@ -148,26 +106,8 @@ public class ChessService {
         return chessBoard.decideWinner().name();
     }
 
-    public Map<String, String> currentBoardForUI(ChessBoard chessBoard) {
-        return chessBoard.convertToImageName();
-    }
-
     public boolean checkStatus(ChessBoard chessBoard, Status status) {
         return chessBoard.compareStatus(status);
-    }
-
-    public List<GameDto> findAllGame() {
-        return gameDao.findAll();
-    }
-
-    public ChessBoard findBoard(int gameId) {
-        GameDto game = gameDao.findById(gameId);
-        List<PieceDto> boardInfo = boardDao.findByGameId(gameId);
-        HashMap<Position, ChessPiece> board = new HashMap<>();
-        for (PieceDto pieceDto : boardInfo) {
-            board.put(new Position(pieceDto.getPosition()), Type.from(pieceDto.getPiece()).createPiece(Color.from(pieceDto.getColor())));
-        }
-        return new ChessBoard(board, game.getStatus(), game.getTurn());
     }
 
     public void deleteGame(int gameId, int password) {
@@ -181,5 +121,9 @@ public class ChessService {
         if (gameDto.getPassword() != password) {
             throw new IllegalArgumentException("올바르지 않은 비밀번호입니다.");
         }
+    }
+
+    public Map<String, String> currentBoardForUI(ChessBoard chessBoard) {
+        return chessBoard.convertToImageName();
     }
 }

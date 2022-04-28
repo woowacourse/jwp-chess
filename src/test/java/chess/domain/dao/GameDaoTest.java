@@ -30,8 +30,8 @@ class GameDaoTest {
         return chessBoard;
     }
 
-    private int gameSave() {
-        return gameDao.save(chessBoard);
+    private int gameCreate() {
+        return gameDao.create(chessBoard,"test",1212);
     }
 
     @BeforeEach
@@ -42,41 +42,31 @@ class GameDaoTest {
     @Test
     @DisplayName("게임을 저장한다.")
     void save() {
-        assertDoesNotThrow(() -> gameSave());
+        assertDoesNotThrow(() -> gameCreate());
     }
 
-    @Test
-    @DisplayName("가장 최근 게임을 불러온다")
-    void findLastGame() {
-        //given
-        gameSave();
-        gameSave();
-        //when
-        int actual = gameDao.findLastGameId();
-        //then
-        assertThat(actual).isEqualTo(2);
-    }
 
     @Test
     @DisplayName("id로 게임을 불러온다")
     void findById() {
         //given
-        gameSave();
+        gameCreate();
         //when
         GameDto actual = gameDao.findById(1);
         //then
         assertThat(actual.getId()).isEqualTo(1);
+        assertThat(actual.getTitle()).isEqualTo("test");
     }
 
     @Test
     @DisplayName("지정 아이디를 가진 게임을 삭제한다.")
     void delete() {
         //given
-        gameSave();
+        gameCreate();
         //when
         gameDao.delete(1);
         //then
-        assertThat(gameDao.findLastGameId()).isEqualTo(0);
+        assertThat(gameDao.findById(1)).isNull();
     }
 
 }

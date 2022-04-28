@@ -28,7 +28,7 @@ class BoardDaoTest {
     void set() {
         boardDao.deleteAll();
         gameDao.deleteAll();
-        gameDao.save(ChessBoardFactory.initBoard());
+        gameDao.create(ChessBoardFactory.initBoard(),"test",1212);
     }
 
     @Test
@@ -41,26 +41,24 @@ class BoardDaoTest {
     }
 
     @Test
-    @DisplayName("가장 최근 게임의 기물 정보를 삭제한다.")
+    @DisplayName("지정 아이디를 가진 게임의 기물 정보를 삭제한다.")
     void delete() {
         //given
-        boardDao.save(gameDao.findLastGameId(), "a1", "Pawn", "WHITE");
-        boardDao.save(gameDao.findLastGameId(), "a2", "Pawn", "WHITE");
+        boardDao.save(1, "a1", "Pawn", "WHITE");
         //when
-        int lastGameId = gameDao.findLastGameId();
-        boardDao.delete(lastGameId);
+        boardDao.delete(1);
         //then
-        assertThat(boardDao.findByGameId(lastGameId).size()).isEqualTo(0);
+        assertThat(boardDao.findByGameId(1).size()).isEqualTo(0);
     }
 
     @Test
     @DisplayName("게임 id로 기물을 찾는다.")
     void findByGameId() {
         //given
-        boardDao.save(gameDao.findLastGameId(), "a1", "Pawn", "WHITE");
-        boardDao.save(gameDao.findLastGameId(), "a2", "Pawn", "WHITE");
+        boardDao.save(1, "a1", "Pawn", "WHITE");
+        boardDao.save(1, "a2", "Pawn", "WHITE");
         //when
-        List<PieceDto> actual = boardDao.findByGameId(gameDao.findLastGameId());
+        List<PieceDto> actual = boardDao.findByGameId(1);
         //then
         assertThat(actual.size()).isEqualTo(2);
         assertThat(actual.get(0).getGameId()).isEqualTo(1);

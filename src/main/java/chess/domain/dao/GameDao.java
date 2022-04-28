@@ -26,17 +26,6 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int save(ChessBoard chessBoard) {
-        final String sql = "insert into Game (status, turn) values( ?, ?)";
-        try {
-            jdbcTemplate.update(sql, chessBoard.compareStatus(Status.PLAYING), chessBoard.getCurrentTurn().name());
-            return findLastGameId();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
-        }
-    }
-
     public int create(ChessBoard chessBoard, String title, int password) {
         final String sql = "insert into Game (status, turn, title, password) values( ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -56,15 +45,13 @@ public class GameDao {
         }
     }
 
-    public int findLastGameId() {
-        final String sql = "SELECT id FROM Game ORDER BY id DESC LIMIT 1";
+    public List<GameDto> findAll() {
+        final String sql = "select * from game";
         try {
-            Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
-            return result;
-        } catch (EmptyResultDataAccessException exception) {
-            return EMPTY_RESULT;
-        } catch (Exception exception) {
-            exception.printStackTrace();
+            return jdbcTemplate.query(sql, (rs, rowNum) -> makeGameDto(rs));
+        } catch (EmptyResultDataAccessException noResult) {
+            return null;
+        } catch (Exception e) {
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
@@ -92,6 +79,24 @@ public class GameDao {
         );
     }
 
+    public void updateTurn(String turn , int gameId) {
+        final String sql = "update Game set turn = ? where id = ?";
+        try {
+            jdbcTemplate.update(sql, turn, gameId);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+        }
+    }
+
+    public void updateStatus(int gameId) {
+        final String sql = "update Game set status = ? where id = ?";
+        try {
+            jdbcTemplate.update(sql, false, gameId);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+        }
+    }
+
     public void delete(int gameId) {
         final String sql = "delete from game where id = ?";
         try {
@@ -109,35 +114,6 @@ public class GameDao {
             jdbcTemplate.update("alter table game auto_increment = 1");
         } catch (Exception exception) {
             exception.printStackTrace();
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
-        }
-    }
-
-    public List<GameDto> findAll() {
-        final String sql = "select * from game";
-        try {
-            return jdbcTemplate.query(sql, (rs, rowNum) -> makeGameDto(rs));
-        } catch (EmptyResultDataAccessException noResult) {
-            return null;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
-        }
-    }
-
-    public void updateTurn(String turn , int gameId) {
-        final String sql = "update Game set turn = ? where id = ?";
-        try {
-            jdbcTemplate.update(sql, turn, gameId);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
-        }
-    }
-
-    public void updateStatus(int gameId) {
-        final String sql = "update Game set status = ? where id = ?";
-        try {
-            jdbcTemplate.update(sql, false, gameId);
-        } catch (Exception e) {
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }

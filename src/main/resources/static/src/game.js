@@ -38,7 +38,6 @@ async function loadGame() {
 
     roomId = response.roomId;
     roomName = response.roomName;
-    history.pushState(null, null, "/game/" + roomId);
     document.getElementById("roomInfo").innerHTML = "♟️ "+ roomName + "체스 게임"
     return response.chessMap;
 }

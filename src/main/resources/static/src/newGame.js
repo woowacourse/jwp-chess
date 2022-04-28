@@ -19,7 +19,8 @@ createGame.addEventListener("click", async function () {
         .catch(function (error) {
             alert(error.message);
         })
-    location.href = "/game";
+    response = await response.json();
+    location.href = "/game/"+ response.id;
 })
 
 async function handleErrors(response) {

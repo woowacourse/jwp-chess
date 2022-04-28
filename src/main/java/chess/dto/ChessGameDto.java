@@ -6,13 +6,13 @@ import chess.domain.player.Team;
 
 public class ChessGameDto {
 
-    private final Long roomId;
+    private final long roomId;
     private final String roomName;
     private final char[][] chessMap;
     private final String turn;
     private final boolean isRunning;
 
-    public ChessGameDto(Long roomId, String roomName, char[][] chessMap, String turn, boolean isRunning) {
+    public ChessGameDto(long roomId, String roomName, char[][] chessMap, String turn, boolean isRunning) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.chessMap = chessMap;
@@ -34,7 +34,7 @@ public class ChessGameDto {
         return new ChessGameDto(roomId, null, chessMap.getChessMap(), turn.getName(), isRunning);
     }
 
-    public Long getRoomId() {
+    public long getRoomId() {
         return roomId;
     }
 

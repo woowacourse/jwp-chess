@@ -1,9 +1,6 @@
 package chess.controller;
 
-import chess.dto.ChessGameDto;
-import chess.dto.MovePositionDto;
-import chess.dto.NewRoomInfo;
-import chess.dto.StatusDto;
+import chess.dto.*;
 import chess.service.ChessGameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,20 +17,20 @@ public class GameController {
     }
 
     @PostMapping("/game/create")
-    public ResponseEntity createNewGame(@RequestBody NewRoomInfo newChessGameInfo, HttpSession session) {
-        final Long roomId = chessGameService.createNewRoom(newChessGameInfo);
-        session.setAttribute("roomId", roomId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<RoomIdDto> createNewGame(@RequestBody NewRoomInfo newChessGameInfo) {
+        final long roomId = chessGameService.createNewRoom(newChessGameInfo);
+        final RoomIdDto roomIdDto = new RoomIdDto(roomId);
+        return ResponseEntity.ok(roomIdDto);
     }
 
     @GetMapping("/status/{roomId}")
-    public ResponseEntity<StatusDto> findStatusByGameName(@PathVariable Long roomId) {
+    public ResponseEntity<StatusDto> findStatusByGameName(@PathVariable long roomId) {
         final StatusDto status = chessGameService.findStatus(roomId);
         return ResponseEntity.ok(status);
     }
 
     @DeleteMapping("/game/{roomId}")
-    public ResponseEntity<StatusDto> deleteGame(@PathVariable Long roomId) {
+    public ResponseEntity<StatusDto> deleteGame(@PathVariable long roomId) {
         final StatusDto status = chessGameService.deleteRoom(roomId);
         return ResponseEntity.ok(status);
     }

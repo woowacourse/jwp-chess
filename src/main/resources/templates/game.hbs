@@ -133,14 +133,18 @@ statusButton.addEventListener("click", async function () {
 });
 
 stopButton.addEventListener("click", async function () {
+    requestRemove()
+});
+
+async function requestRemove() {
     if (!confirm("방을 삭제하시겠습니까?")) {
-        await finish();
+        alert("방을 유지한채 게임이 종료되었습니다.");
+        location.href = "/";
     } else {
         let password = prompt("방 비밀번호를 입력해주세요.");
         await deleteAndFinish(password);
     }
-    location.href = "/";
-});
+}
 
 async function loadGame() {
     let response = await fetch("/game/load", {
@@ -179,18 +183,11 @@ async function getStatus() {
         + "<br><br>[Black 팀] <br> 점수 : " + blackPlayerScore + "<br> 결과 : "
         + blackPlayerResult;
 
-    alert("현재 점수를 표시합니다.");
-
     document.getElementById("score").innerHTML = result;
 }
 
-async function finish() {
-    alert("방을 유지한채 게임이 종료되었습니다.");
-    removeAllPieces();
-}
-
 async function deleteAndFinish(password) {
-    await fetch("/game", {
+    let response = await fetch("/game", {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -203,18 +200,10 @@ async function deleteAndFinish(password) {
         .catch(function (error) {
             alert(error.message);
         })
-    alert("방이 삭제됐습니다.");
-    removeAllPieces();
-}
 
-function removeAllPieces() {
-    for (const horizontal of horizontalId) {
-        for (const vertical of verticalId) {
-            let pointId = document.getElementById(horizontal + vertical);
-            if (pointId.hasChildNodes()) {
-                pointId.removeChild(pointId.firstChild);
-            }
-        }
+    if (response.status === 204) {
+        alert("방이 삭제되었습니다.");
+        location.href = "/";
     }
 }
 
@@ -255,6 +244,7 @@ async function requestMovePiece(current, destination) {
     let isRunning = boardAndTurnInfo.running;
     if (isRunning !== true) {
         alert("킹이 죽어 게임이 종료됩니다.");
+        requestRemove();
     }
     document.getElementById("turnInfo").innerHTML = "현재 턴: "
         + boardAndTurnInfo.turn;

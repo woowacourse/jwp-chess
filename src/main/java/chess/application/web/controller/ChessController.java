@@ -36,6 +36,7 @@ public class ChessController {
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("rooms", roomsDao.findAll());
+        modelAndView.addObject("roomCount", roomsDao.countRooms());
         return modelAndView;
     }
 

@@ -39,7 +39,7 @@ public class RoomsDao {
         return roomId;
     }
 
-    private int countRooms() {
+    public int countRooms() {
         final String sql = "select count(*) from rooms";
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }

@@ -84,10 +84,4 @@ public class WebController {
         model.addAllAttributes(pieces);
         return "index";
     }
-
-    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-    public String exception(Exception exception, Model model) {
-        model.addAttribute("error", exception.getMessage());
-        return "errorpage";
-    }
 }

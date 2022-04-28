@@ -75,6 +75,7 @@ public class ChessGameService {
     public void move(final int roomId, final String sourcePosition, final String targetPosition) {
         checkGameIsPlaying(roomId);
         final Board board = getSavedBoard(roomId);
+        checkGameIsOver(board);
         final Board movedBoard = board.movePiece(Position.from(sourcePosition), Position.from(targetPosition));
         final Piece piece = movedBoard.getPieces().get(Position.from(targetPosition));
         roomDao.saveTurn(roomId, movedBoard.getTurn().toString());
@@ -82,6 +83,12 @@ public class ChessGameService {
         pieceDao.removePiece(roomId, sourcePosition);
         pieceDao.removePiece(roomId, targetPosition);
         pieceDao.savePiece(roomId, targetPosition, piece);
+    }
+
+    private void checkGameIsOver(final Board board) {
+        if (board.hasOneKing()) {
+            throw new IllegalStateException("King이 죽어 게임이 종료되었습니다.");
+        }
     }
 
     public ScoreDto getScore(final int roomId) {
@@ -101,6 +108,7 @@ public class ChessGameService {
         checkGameIsPlaying(roomId);
         pieceDao.removeAllPieces(roomId);
         roomDao.saveGameState(roomId, "ready");
+        roomDao.saveTurn(roomId, "WHITE");
     }
 
     private Board getSavedBoard(final int roomId) {

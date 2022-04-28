@@ -100,6 +100,22 @@ class ChessGameServiceTest {
     }
 
     @Test
+    @DisplayName("한 왕이 죽었는데, 기물을 이동시키려하면 예외를 발생시킨다.")
+    void moveExceptionByOneKing() {
+        //given
+        chessGameService.start(TEST_ROOM_ID);
+        chessGameService.move(TEST_ROOM_ID, "e2", "e4");
+        chessGameService.move(TEST_ROOM_ID, "d7", "d6");
+        chessGameService.move(TEST_ROOM_ID, "d1", "g4");
+        chessGameService.move(TEST_ROOM_ID, "e8", "d7");
+        chessGameService.move(TEST_ROOM_ID, "g4", "e7");
+        //when then
+        assertThatThrownBy(() -> chessGameService.move(TEST_ROOM_ID, "a7", "a5"))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("King이 죽어 게임이 종료되었습니다.");
+    }
+
+    @Test
     @DisplayName("게임을 종료한다.")
     void end() {
         //given

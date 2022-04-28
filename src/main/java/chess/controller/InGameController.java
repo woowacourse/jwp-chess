@@ -28,8 +28,11 @@ public class InGameController {
     @GetMapping()
     public String runGame(@ModelAttribute ChessGameVO chessGameVO, @RequestParam(name = "restart") String restart,
             Model model) {
-        System.err.println(chessGameVO.getGameID());
-        System.err.println(chessGameVO.getPassword());
+        if (!chessService.isValidPassword(chessGameVO)) {
+            model.addAttribute("msg", "비밀 번호 틀렸지롱~ 🤪");
+            model.addAttribute("games", chessService.getGameIDs());
+            return "ready";
+        }
         ChessGame chessGame = chessService.loadChessGame(chessGameVO, restart);
         GameResult gameResult = chessService.getGameResult(chessGameVO);
 

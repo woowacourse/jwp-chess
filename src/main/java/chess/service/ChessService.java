@@ -135,4 +135,8 @@ public class ChessService {
             throw new IllegalArgumentException("아직 게임이 진행 중이라구!! 😡");
         }
     }
+
+    public boolean isValidPassword(ChessGameVO chessGameVO) {
+        return chessGameDao.findPasswordByGameID(chessGameVO.getGameID(), chessGameVO.getPassword());
+    }
 }

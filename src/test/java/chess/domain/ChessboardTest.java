@@ -23,7 +23,7 @@ public class ChessboardTest {
 
     @BeforeEach
     void setUp() {
-        chessboard = new Chessboard(new InitializedChessboardGenerator());
+        chessboard = new Chessboard(InitializedChessboardGenerator.generate());
     }
 
     @ParameterizedTest

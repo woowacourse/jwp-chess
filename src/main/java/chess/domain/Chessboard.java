@@ -1,7 +1,6 @@
 package chess.domain;
 
 import chess.piece.*;
-import chess.utils.ChessboardGenerator;
 
 import java.util.*;
 
@@ -11,8 +10,8 @@ public class Chessboard {
 
     private final Map<Position, Piece> board;
 
-    public Chessboard(ChessboardGenerator chessboardGenerator) {
-        board = chessboardGenerator.generate();
+    public Chessboard(){
+        board = new HashMap<>();
     }
 
     public Chessboard(Map<Position, Piece> board) {

@@ -8,7 +8,6 @@ import chess.state.StateFactory;
 import chess.utils.InitializedChessboardGenerator;
 import chess.utils.UnicodeConverter;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ public class ChessGame {
     public ChessGame() {
         state = new Ready();
         turn = new Turn();
-        chessboard = new Chessboard(HashMap::new);
+        chessboard = new Chessboard();
     }
 
     public ChessGame(String state, String turn, Map<Position, Piece> boards) {
@@ -33,7 +32,7 @@ public class ChessGame {
 
     public void start() {
         state = state.start();
-        chessboard = new Chessboard(new InitializedChessboardGenerator());
+        chessboard = new Chessboard(InitializedChessboardGenerator.generate());
     }
 
     public void move(MovingPosition movingPosition) {

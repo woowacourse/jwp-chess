@@ -58,7 +58,7 @@ public class GameDaoTest {
     void updateEndFlagById() {
         gameDao.updateEndFlagById(true, id);
 
-        assertThat(gameDao.findEndFlagById(id)).isEqualTo(true);
+        assertThat(gameDao.findEndFlagById(id)).isTrue();
     }
 
     @DisplayName("게임 삭제시 더이상 게임은 존재하지 않는다.")

@@ -1,7 +1,8 @@
 package chess.dao;
 
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Color;
@@ -45,7 +46,7 @@ public class PieceDaoTest {
     void createAllById() {
         pieceDao.createAllByGameId(pieces, gameId);
 
-        assertThat(pieceDao.findAllByGameId(gameId).getPieces().size()).isEqualTo(32);
+        assertThat(pieceDao.findAllByGameId(gameId).getPieces()).hasSize(32);
     }
 
     @DisplayName("updateAllByGameId 실행시 해당 gameId의 piece들의 정보가 바뀐다.")
@@ -68,7 +69,7 @@ public class PieceDaoTest {
 
         pieceDao.deleteAllByGameId(gameId);
 
-        assertThat(pieceDao.findAllByGameId(gameId).getPieces().size()).isEqualTo(0);
+        assertThat(pieceDao.findAllByGameId(gameId).getPieces()).hasSize(0);
     }
 
 }

@@ -6,24 +6,12 @@ import java.util.Objects;
 
 public final class Piece {
 
-    private final Integer id;
     private final Color color;
     private final Type type;
-    private final Integer positionId;
 
-    public Piece(Integer id, Color color, Type type, Integer positionId) {
-        this.id = id;
+    public Piece(Color color, Type type) {
         this.color = color;
         this.type = type;
-        this.positionId = positionId;
-    }
-
-    public Piece(Color color, Type type, int positionId) {
-        this(null, color, type, positionId);
-    }
-
-    public Piece(final Color color, final Type type) {
-        this(null, color, type, null);
     }
 
     public String symbol() {
@@ -81,18 +69,14 @@ public final class Piece {
         return type;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public int getPositionId() {
-        return positionId;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Piece)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Piece)) {
+            return false;
+        }
         Piece piece = (Piece) o;
         return color == piece.color && piece.type.getClass() == type.getClass();
     }

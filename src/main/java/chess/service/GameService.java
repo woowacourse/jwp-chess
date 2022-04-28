@@ -13,6 +13,7 @@ import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
 import chess.dto.response.StatusDto;
 import chess.entities.ChessGame;
+import chess.entities.ChessPiece;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public final class GameService {
             int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),
                     savedBoard.getId());
             final Piece piece = initialize.get(position);
-            pieceDao.save(new Piece(piece.getColor(), piece.getType(), lastPositionId));
+            pieceDao.save(new ChessPiece(piece.getColor(), piece.getType(), lastPositionId));
         }
         memberDao.saveAll(board.getMembers(), savedBoard.getId());
         return savedBoard;

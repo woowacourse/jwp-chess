@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.member.Member;
+import chess.entities.Member;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;

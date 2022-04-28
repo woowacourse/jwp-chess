@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.domain.member.Member;
+import chess.entities.Member;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;

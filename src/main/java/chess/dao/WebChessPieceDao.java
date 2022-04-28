@@ -4,6 +4,7 @@ import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.Symbol;
 import chess.domain.position.Column;
+import chess.entities.ChessPiece;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -24,18 +25,23 @@ public class WebChessPieceDao implements PieceDao<Piece> {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public Piece save(Piece piece) {
+    public ChessPiece save(ChessPiece chessPiece) {
         final String sql = "INSERT INTO piece (type, color, position_id) VALUES (:type, :color, :position_id)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         List<String> keys = List.of("type", "color", "position_id");
-        List<Object> values = List.of(piece.getType().symbol().name(), piece.getColor().name(), piece.getPositionId());
+        List<Object> values = List.of(chessPiece.getType().symbol().name(), chessPiece.getColor().name(),
+                chessPiece.getPositionId());
 
         jdbcTemplate.update(sql, ParameterSourceCreator.makeParameterSource(keys, values), keyHolder);
         int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
 
-        return new Piece(id, piece.getColor(), piece.getType(), piece.getPositionId());
+        return new ChessPiece(id, chessPiece.getColor(), chessPiece.getType(), chessPiece.getPositionId());
+    }
+
+    @Override
+    public Piece save(Piece piece) {
+        return null;
     }
 
     @Override
@@ -53,10 +59,8 @@ public class WebChessPieceDao implements PieceDao<Piece> {
 
     private Piece makePiece(ResultSet resultSet) throws SQLException {
         return new Piece(
-                resultSet.getInt("id"),
                 Color.findColor(resultSet.getString("color")),
-                Symbol.findSymbol(resultSet.getString("type")).type(),
-                resultSet.getInt("position_id")
+                Symbol.findSymbol(resultSet.getString("type")).type()
         );
     }
 

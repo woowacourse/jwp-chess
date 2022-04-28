@@ -10,6 +10,7 @@ import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
+import chess.entities.ChessPiece;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -39,7 +40,7 @@ class WebChessPositionDaoTest {
         this.boardId = board.getId();
         Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, boardId));
         this.positionId = position.getId();
-        pieceDao.save(new Piece(Color.WHITE, new Pawn(), position.getId()));
+        pieceDao.save(new ChessPiece(Color.WHITE, new Pawn(), position.getId()));
     }
 
     @Test

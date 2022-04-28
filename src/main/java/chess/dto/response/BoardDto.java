@@ -1,6 +1,6 @@
 package chess.dto.response;
 
-import chess.domain.member.Member;
+import chess.entities.Member;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Row;

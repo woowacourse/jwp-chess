@@ -10,6 +10,7 @@ import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
+import chess.entities.ChessPiece;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,16 +39,16 @@ class WebPieceDaoTest {
         this.boardId = board.getId();
         final Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, board.getId()));
         this.positionId = position.getId();
-        final Piece piece = webPieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
+        final ChessPiece chessPiece = webPieceDao.save(new ChessPiece(Color.WHITE, new Pawn(), positionId));
     }
 
     @Test
     void saveTest() {
-        final Piece piece = webPieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
+        final ChessPiece chessPiece = webPieceDao.save(new ChessPiece(Color.WHITE, new Pawn(), positionId));
         assertAll(
-                () -> assertThat(piece.getType()).isInstanceOf(Pawn.class),
-                () -> assertThat(piece.getColor()).isEqualTo(Color.WHITE),
-                () -> assertThat(piece.getPositionId()).isEqualTo(positionId)
+                () -> assertThat(chessPiece.getType()).isInstanceOf(Pawn.class),
+                () -> assertThat(chessPiece.getColor()).isEqualTo(Color.WHITE),
+                () -> assertThat(chessPiece.getPositionId()).isEqualTo(positionId)
         );
     }
 

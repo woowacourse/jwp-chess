@@ -1,4 +1,4 @@
-package chess.domain.member;
+package chess.entities;
 
 public class Member {
 

@@ -117,12 +117,10 @@ public class WebChessPositionDao implements PositionDao<Position> {
     }
 
     private Piece makePiece(Map<String, Object> map) {
-        int piece_id = (int) map.get("pi_id");
         String type = (String) map.get("type");
         String color = (String) map.get("color");
-        int position_id = (int) map.get("position_id");
 
-        return new Piece(piece_id, Color.findColor(color), Symbol.findSymbol(type).type(), position_id);
+        return new Piece(Color.findColor(color), Symbol.findSymbol(type).type());
     }
 
     @Override

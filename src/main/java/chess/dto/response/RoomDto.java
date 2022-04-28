@@ -1,6 +1,6 @@
 package chess.dto.response;
 
-import chess.domain.member.Member;
+import chess.entities.Member;
 
 public class RoomDto {
 

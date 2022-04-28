@@ -5,7 +5,8 @@ import chess.dao.WebChessPieceDao;
 import chess.dao.WebChessPositionDao;
 import chess.domain.game.BoardMapper;
 import chess.domain.game.Mapper;
-import chess.domain.member.Member;
+import chess.entities.ChessPiece;
+import chess.entities.Member;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
@@ -54,7 +55,7 @@ class SpringChessApplicationTests {
             int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),
                     board.getId());
             final Piece piece = initialize.get(position);
-            pieceDao.save(new Piece(piece.getColor(), piece.getType(), lastPositionId));
+            pieceDao.save(new ChessPiece(piece.getColor(), piece.getType(), lastPositionId));
         }
     }
 

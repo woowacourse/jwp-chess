@@ -211,7 +211,7 @@ class ChessControllerTest {
                     .body(jsonString)
                     .when().post("/games/existed-game/" + testGameId)
                     .then().log().all()
-                    .statusCode(HttpStatus.CREATED.value())
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .extract();
         }
     }
@@ -255,7 +255,7 @@ class ChessControllerTest {
                     .body(jsonString)
                     .when().delete("/games/existed-game/" + testGameId)
                     .then().log().all()
-                    .statusCode(HttpStatus.CREATED.value())
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .extract();
         }
 
@@ -272,7 +272,7 @@ class ChessControllerTest {
                     .body(jsonString)
                     .when().delete("/games/existed-game/" + testGameId)
                     .then().log().all()
-                    .statusCode(HttpStatus.CREATED.value())
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
                     .extract();
         }
 

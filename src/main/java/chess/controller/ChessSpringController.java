@@ -65,10 +65,10 @@ public class ChessSpringController {
                 board.getTurn(), id);
 
         if (board.hasKingCaptured()) {
-            return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).body("");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("");
         }
 
-        return ResponseEntity.status(HttpStatus.FOUND).body("");
+        return ResponseEntity.ok().body("");
     }
 
     private Board getBoard(int id) {

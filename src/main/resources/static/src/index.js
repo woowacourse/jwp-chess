@@ -29,14 +29,14 @@ function movePiece() {
         document.getElementById(target).style.backgroundColor = '';
         source = '';
         target = '';
-        if (res.status === 301) {
+        if (res.status === 202) {
             alert("킹이 잡혀 게임이 종료 되었습니다!")
             end();
         }
-        if (res.status === 302) {
+        if (res.status === 200) {
             location.replace("/chess" + window.location.search);
         }
-        if (res.status === 501) {
+        if (res.status === 400) {
             res.text().then(message => alert(message))
         }
     })
@@ -44,7 +44,7 @@ function movePiece() {
 
 function chess(id) {
     fetch("/chess?id=" + id).then(res => {
-        if (res.status === 501) {
+        if (res.status === 400) {
             res.text().then(message => {
                 if (message !== "이미 완료된 게임입니다") {
                     alert(message);
@@ -61,12 +61,12 @@ function chess(id) {
     })
 }
 
-function deleteBoard(id){
+function deleteBoard(id) {
     const input = prompt("비밀번호를 입력해주세요.");
-    fetch("/delete" + "?id=" + id + "&password="+input, {
+    fetch("/delete" + "?id=" + id + "&password=" + input, {
         method: "DELETE",
     }).then((res) => {
-        if (res.status === 501) {
+        if (res.status !== 200) {
             res.text().then(message => alert(message))
             return;
         }
@@ -77,7 +77,7 @@ function deleteBoard(id){
 
 function end() {
     fetch("/end" + window.location.search).then(res => {
-        if (res.status === 501) {
+        if (res.status !== 200) {
             res.text().then(message => alert(message))
             return;
         }

@@ -41,7 +41,12 @@ public class ChessService {
         return gameId;
     }
 
-    public void start(int gameId) {
+    public void restart(int gameId) {
+        pieceDao.deleteAllByGameId(gameId);
+        start(gameId);
+    }
+
+    private void start(int gameId) {
         gameDao.updateStateById(gameId, StateType.WHITE_TURN);
         ChessBoard chessBoard = new ChessBoard(new InitBoardGenerator());
         initChessBoard(chessBoard.getBoard(), gameId);
@@ -132,7 +137,6 @@ public class ChessService {
         double blackScore = getScore(gameId, Color.BLACK);
         double whiteScore = getScore(gameId, Color.WHITE);
 
-        pieceDao.deleteAllByGameId(gameId);
         gameDao.updateStateById(gameId, StateType.END);
 
         return new ChessResultDto(gameId, blackScore, whiteScore, chessGame.result());

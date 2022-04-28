@@ -72,7 +72,7 @@ public class ChessController {
 
     @GetMapping("/game/{gameId}/restart")
     public String restartGame(@PathVariable int gameId) {
-        chessService.start(gameId);
+        chessService.restart(gameId);
         return "redirect:/game/" + gameId;
     }
 }

@@ -23,11 +23,11 @@ public class JdbcGameStateDao implements GameStateDao {
 
     @Override
     public void saveState(int roomNumber, final String state) {
-        String sql = "insert into game(roomNumber, state) values (?, ?)";
+        String sql = "insert into game(state, roomNumber) values (?, ?)";
         if (hasPlayingGame(roomNumber)) {
-            sql = "update game set state = (?) where roomnumber=?";
+            sql = "update game set state=(?) where roomnumber=?";
         }
-        jdbcTemplate.update(sql, roomNumber, state);
+        jdbcTemplate.update(sql, state, roomNumber);
     }
 
     @Override

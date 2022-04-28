@@ -138,8 +138,14 @@ public class ChessGameService {
         return roomDao.findAllRoom();
     }
 
-    public List<RoomDto> deleteRoom(int id, String password) {
-        roomDao.deleteRoom(id, password);
+    public List<RoomDto> deleteRoom(int roomNumber, String password) {
+        String currentGameState = gameStateDao.getGameState(roomNumber);
+        if (currentGameState != null && currentGameState.equals("playing")) {
+            throw new IllegalStateException("진행 중인 게임은 종료할 수 없습니다.");
+        }
+        pieceDao.removeAllPieces(roomNumber);
+        gameStateDao.removeGameState(roomNumber);
+        roomDao.deleteRoom(roomNumber, password);
         return roomDao.findAllRoom();
     }
 }

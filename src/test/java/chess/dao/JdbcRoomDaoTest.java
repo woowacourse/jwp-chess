@@ -7,8 +7,6 @@ import static chess.domain.chesspiece.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.dao.dto.RoomSaveDto;
-import chess.dao.dto.RoomUpdateDto;
 import chess.entity.RoomEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +19,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class JdbcRoomDaoTest {
 
-    private static final RoomSaveDto ROOM_SAVE_DTO = new RoomSaveDto("매트의 체스", "123123", READY, WHITE);
+    private static final RoomEntity ROOM_ENTITY = new RoomEntity(0, "매트의 체스", "123123",
+            READY.getValue(), WHITE.getValue());
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -36,9 +35,7 @@ class JdbcRoomDaoTest {
     @DisplayName("RoomSaveDto를 전달 받아 room entity를 저장한다.")
     @Test
     void room_저장한다() {
-        final RoomSaveDto saveDto = ROOM_SAVE_DTO;
-
-        final int id = roomDao.save(saveDto);
+        final int id = roomDao.save(ROOM_ENTITY);
 
         assertThat(roomDao.findById(id).isPresent()).isTrue();
     }
@@ -46,8 +43,7 @@ class JdbcRoomDaoTest {
     @DisplayName("room id를 활용하여 entity를 조회한다.")
     @Test
     void room_조회한다() {
-        final RoomSaveDto saveDto = ROOM_SAVE_DTO;
-        final int id = roomDao.save(saveDto);
+        final int id = roomDao.save(ROOM_ENTITY);
 
         final RoomEntity room = roomDao.findById(id).get();
 
@@ -71,7 +67,7 @@ class JdbcRoomDaoTest {
     @DisplayName("room 존재 여부를 확인한다.")
     @Test
     void room_존재_여부를_확인한다() {
-        int id = roomDao.save(ROOM_SAVE_DTO);
+        int id = roomDao.save(ROOM_ENTITY);
 
         boolean result = roomDao.existsById(id);
 
@@ -81,9 +77,9 @@ class JdbcRoomDaoTest {
     @DisplayName("모든 room을 조회한다.")
     @Test
     void room_모두_조회한다() {
-        roomDao.save(ROOM_SAVE_DTO);
-        roomDao.save(ROOM_SAVE_DTO);
-        roomDao.save(ROOM_SAVE_DTO);
+        roomDao.save(ROOM_ENTITY);
+        roomDao.save(ROOM_ENTITY);
+        roomDao.save(ROOM_ENTITY);
 
         List<RoomEntity> rooms = roomDao.findAll();
 
@@ -93,11 +89,10 @@ class JdbcRoomDaoTest {
     @DisplayName("room을 수정 한다.")
     @Test
     void room_업데이트한다() {
-        final RoomSaveDto saveDto = ROOM_SAVE_DTO;
-        int id = roomDao.save(saveDto);
+        int id = roomDao.save(ROOM_ENTITY);
 
-        final RoomUpdateDto updateDto = new RoomUpdateDto(id, PLAYING, BLACK);
-        roomDao.update(updateDto);
+        roomDao.update(new RoomEntity(id, ROOM_ENTITY.getName(), ROOM_ENTITY.getPassword(), PLAYING.getValue(),
+                BLACK.getValue()));
 
         final RoomEntity room = roomDao.findById(id).get();
 
@@ -111,8 +106,7 @@ class JdbcRoomDaoTest {
     @DisplayName("id를 기반으로 room을 삭제한다.")
     @Test
     void room_삭제한다() {
-        final RoomSaveDto saveDto = ROOM_SAVE_DTO;
-        final int id = roomDao.save(saveDto);
+        final int id = roomDao.save(ROOM_ENTITY);
 
         roomDao.deleteByIdAndPassword(id, "123123");
 

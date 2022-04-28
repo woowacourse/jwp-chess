@@ -11,11 +11,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.dao.dto.ChessPieceDeleteDto;
 import chess.dao.dto.ChessPieceUpdateDto;
-import chess.dao.dto.RoomSaveDto;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Pawn;
 import chess.domain.position.Position;
 import chess.entity.ChessPieceEntity;
+import chess.entity.RoomEntity;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class JdbcChessPieceDaoTest {
 
-    private static final RoomSaveDto ROOM_SAVE_DTO = new RoomSaveDto("매트의 체스", "123123", READY, WHITE);
+    private static final RoomEntity ROOM_ENTITY = new RoomEntity(0, "매트의 체스", "123123",
+            READY.getValue(), WHITE.getValue());
+
     private static final Map<Position, ChessPiece> PIECES_BY_POSITION = Map.of(
             Position.of(A, TWO), Pawn.from(WHITE),
             Position.of(B, TWO), Pawn.from(WHITE),
@@ -49,8 +51,7 @@ class JdbcChessPieceDaoTest {
         chessPieceDao = new JdbcChessPieceDao(jdbcTemplate);
         roomDao = new JdbcRoomDao(jdbcTemplate);
 
-        final RoomSaveDto roomSaveDto = JdbcChessPieceDaoTest.ROOM_SAVE_DTO;
-        ROOM_ID = roomDao.save(roomSaveDto);
+        ROOM_ID = roomDao.save(ROOM_ENTITY);
     }
 
     @DisplayName("chess piece들을 저장한다.")

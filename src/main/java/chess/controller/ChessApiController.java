@@ -13,8 +13,6 @@ import chess.dao.JdbcChessPieceDao;
 import chess.dao.JdbcRoomDao;
 import chess.dao.dto.ChessPieceDeleteDto;
 import chess.dao.dto.ChessPieceUpdateDto;
-import chess.dao.dto.RoomSaveDto;
-import chess.dao.dto.RoomUpdateDto;
 import chess.domain.ChessGame;
 import chess.domain.GameStatus;
 import chess.domain.Score;
@@ -47,6 +45,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/rooms", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ChessApiController {
 
+    private static final int DEFAULT_ROOM_ID = 0;
+
     private final JdbcRoomDao jdbcRoomDao;
     private final JdbcChessPieceDao jdbcChessPieceDao;
 
@@ -74,8 +74,10 @@ public class ChessApiController {
 
     @PostMapping
     public ResponseEntity<Integer> createRoom(@RequestBody final RoomSaveRequest request) {
-        int id = jdbcRoomDao.save(
-                new RoomSaveDto(request.getName(), request.getPassword(), GameStatus.READY, Color.WHITE));
+        final RoomEntity roomEntity = new RoomEntity(DEFAULT_ROOM_ID, request.getName(), request.getPassword(),
+                GameStatus.READY.getValue(), Color.WHITE.getValue());
+
+        final int id = jdbcRoomDao.save(roomEntity);
 
         return ResponseEntity.created(URI.create("/api/rooms/" + id)).body(id);
     }
@@ -95,7 +97,8 @@ public class ChessApiController {
         final StartResult startResult = chessGame.start();
         jdbcChessPieceDao.deleteByRoomId(roomEntity.getId());
         jdbcChessPieceDao.saveAll(roomEntity.getId(), startResult.getPieceByPosition());
-        jdbcRoomDao.update(new RoomUpdateDto(roomEntity.getId(), GameStatus.PLAYING, Color.WHITE));
+        jdbcRoomDao.update(new RoomEntity(roomEntity.getId(), roomEntity.getName(), roomEntity.getPassword(),
+                GameStatus.PLAYING.getValue(), Color.WHITE.getValue()));
 
         return ResponseEntity.created(URI.create("/api/rooms/" + id + "/pieces")).build();
     }
@@ -122,8 +125,8 @@ public class ChessApiController {
         final MoveResult moveResult = chessGame.move(from, to);
         jdbcChessPieceDao.deleteByRoomIdAndPosition(new ChessPieceDeleteDto(roomEntity.getId(), to));
         jdbcChessPieceDao.update(new ChessPieceUpdateDto(roomEntity.getId(), from, to));
-        jdbcRoomDao.update(
-                new RoomUpdateDto(roomEntity.getId(), moveResult.getGameStatus(), moveResult.getCurrentTurn()));
+        jdbcRoomDao.update(new RoomEntity(roomEntity.getId(), roomEntity.getName(), roomEntity.getPassword(),
+                moveResult.getGameStatus().getValue(), moveResult.getCurrentTurn().getValue()));
 
         return ResponseEntity.ok(moveResult);
     }
@@ -140,8 +143,8 @@ public class ChessApiController {
         final RoomEntity roomEntity = getRoomEntity(id);
         final ChessGame chessGame = getChessGame(roomEntity);
         final EndResult endResult = chessGame.end();
-
-        jdbcRoomDao.update(new RoomUpdateDto(roomEntity.getId(), GameStatus.END, Color.WHITE));
+        jdbcRoomDao.update(new RoomEntity(roomEntity.getId(), roomEntity.getName(), roomEntity.getPassword(),
+                GameStatus.END.getValue(), Color.WHITE.getValue()));
 
         return ResponseEntity.ok(endResult);
     }

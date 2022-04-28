@@ -1,7 +1,5 @@
 package chess.dao;
 
-import chess.dao.dto.RoomSaveDto;
-import chess.dao.dto.RoomUpdateDto;
 import chess.entity.RoomEntity;
 import java.util.HashMap;
 import java.util.List;
@@ -25,19 +23,19 @@ public class JdbcRoomDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public int save(final RoomSaveDto saveDto) {
-        final Map<String, Object> parameters = fillParameters(saveDto);
+    public int save(final RoomEntity roomEntity) {
+        final Map<String, Object> parameters = fillParameters(roomEntity);
         final Number id = insertActor.executeAndReturnKey(parameters);
 
         return id.intValue();
     }
 
-    private Map<String, Object> fillParameters(final RoomSaveDto saveDto) {
+    private Map<String, Object> fillParameters(final RoomEntity roomEntity) {
         final Map<String, Object> parameters = new HashMap<>();
-        parameters.put("name", saveDto.getName());
-        parameters.put("password", saveDto.getPassword());
-        parameters.put("game_status", saveDto.getGameStatus());
-        parameters.put("current_turn", saveDto.getCurrentTurn());
+        parameters.put("name", roomEntity.getName());
+        parameters.put("password", roomEntity.getPassword());
+        parameters.put("game_status", roomEntity.getGameStatus());
+        parameters.put("current_turn", roomEntity.getCurrentTurn());
 
         return parameters;
     }
@@ -75,10 +73,9 @@ public class JdbcRoomDao {
         };
     }
 
-    public void update(final RoomUpdateDto updateDto) {
+    public void update(final RoomEntity roomEntity) {
         final String sql = "UPDATE room SET game_status = ?, current_turn = ? WHERE id = ?";
-        jdbcTemplate.update(sql, updateDto.getGameStatus(), updateDto.getCurrentTurn(),
-                updateDto.getId());
+        jdbcTemplate.update(sql, roomEntity.getGameStatus(), roomEntity.getCurrentTurn(), roomEntity.getId());
     }
 
     public void deleteByIdAndPassword(final int id, final String password) {

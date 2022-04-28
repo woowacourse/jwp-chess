@@ -45,4 +45,9 @@ public class Ready implements Status {
     public Map<Square, Piece> getBoard() {
         return Map.copyOf(board.getBoard());
     }
+
+    @Override
+    public boolean isPlaying() {
+        return false;
+    }
 }

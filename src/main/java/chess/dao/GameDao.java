@@ -12,4 +12,6 @@ public interface GameDao {
     int createGame(String name, String password);
 
     int deleteGame(int id);
+
+    String findPasswordById(int gameId);
 }

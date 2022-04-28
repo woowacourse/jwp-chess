@@ -3,6 +3,7 @@ package chess.web.controller;
 import chess.service.ChessService;
 import chess.service.dto.BoardDto;
 import chess.service.dto.DeleteGameResponse;
+import chess.service.dto.ExceptionResponse;
 import chess.service.dto.request.DeleteGameRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ public class ApiChessController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleError(Exception ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<ExceptionResponse> handleError(Exception ex) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
     }
 }

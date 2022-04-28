@@ -6,7 +6,7 @@ CREATE TABLE game
 (
     id     INT NOT NULL AUTO_INCREMENT UNIQUE,
     name   VARCHAR(20) NOT NULL,
-    password VARCHAR(20) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     status VARCHAR(10) NOT NULL DEFAULT 'ready',
     turn   VARCHAR(10) NOT NULL DEFAULT 'white',
     PRIMARY KEY (id)

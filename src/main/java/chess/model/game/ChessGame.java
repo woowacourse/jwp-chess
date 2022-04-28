@@ -58,4 +58,8 @@ public class ChessGame {
     public Status getStatus() {
         return status;
     }
+
+    public boolean isPlaying() {
+        return status.isPlaying();
+    }
 }

@@ -63,4 +63,10 @@ public class SpringGameDao implements GameDao {
         String sql = "DELETE FROM game where id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public String findPasswordById(int gameId) {
+        String sql = "SELECT password FROM game WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, gameId);
+    }
 }

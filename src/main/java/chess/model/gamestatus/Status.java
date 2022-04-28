@@ -19,4 +19,6 @@ public interface Status {
     boolean isEnd();
 
     Map<Square, Piece> getBoard();
+
+    boolean isPlaying();
 }

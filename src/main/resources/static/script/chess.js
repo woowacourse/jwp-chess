@@ -76,9 +76,9 @@ async function onClick(event) {
         if (squareIdList.length === 2) {
             const res = await postMove()
             if (!res.ok) {
-                const message = await res.text();
-                console.log(message)
-                alert(message)
+                const data = await res.json();
+                console.log(data.message)
+                alert(data.message)
             }
             await allocateAllPiece()
         }

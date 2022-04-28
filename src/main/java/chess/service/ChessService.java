@@ -21,6 +21,7 @@ import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
 import java.util.List;
 import java.util.Map;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -88,7 +89,8 @@ public class ChessService {
     }
 
     public void createGame(String name, String password) {
-        gameDao.createGame(name, password);
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        gameDao.createGame(name, hashedPassword);
     }
 
     public GameResultDto getResult(int id) {
@@ -104,7 +106,14 @@ public class ChessService {
     }
 
     public DeleteGameResponse deleteGame(int gameId, String password) {
-        //password가 맞는지 확인해야됨
+        String hashedPassword = gameDao.findPasswordById(gameId);
+        if (!BCrypt.checkpw(password, hashedPassword)) {
+            throw new IllegalArgumentException("암호가 틀렸어용");
+        }
+        ChessGame game = getGameFromDao(gameId);
+        if (game.isPlaying()) {
+            throw new IllegalArgumentException("게임 실행중에는 삭제할 수 없습니다.");
+        }
         gameDao.deleteGame(gameId);
         return new DeleteGameResponse(gameId, true);
     }

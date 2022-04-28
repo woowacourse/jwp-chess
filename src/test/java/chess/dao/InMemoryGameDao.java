@@ -24,6 +24,11 @@ public class InMemoryGameDao implements GameDao {
         return 1;
     }
 
+    @Override //TODO:비번처리
+    public String findPasswordById(int gameId) {
+        return null;
+    }
+
     @Override
     public int update(GameEntity dto) {
         gameTable.put(dto.getId(), dto);

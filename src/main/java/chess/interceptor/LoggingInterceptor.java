@@ -33,7 +33,10 @@ public class LoggingInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) throws Exception {
-        log.info("modelAndView = [{}]", modelAndView);
+
+        String requestId = (String) request.getAttribute(REQUEST_ID);
+
+        log.info("Response = [{}] modelAndView = [{}]", requestId, modelAndView);
     }
 
     @Override

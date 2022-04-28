@@ -6,7 +6,7 @@ import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.BoardDto;
 
 public interface BoardDao {
-    BoardDto getBoard(String gameId);
+    BoardDto getBoard(int gameId);
 
     void createPiece(CreatePieceDto createPieceDto);
 

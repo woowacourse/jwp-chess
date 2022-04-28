@@ -22,7 +22,7 @@ import chess.service.ChessService;
 
 @RestController
 public class ChessController {
-    private static final String GAME_ID = "game-id"; // TODO: 여러 게임 방 기능 구현시 제거
+    private static final int GAME_ID = 1; // TODO: 여러 게임 방 기능 구현시 제거
     private static final String PIECE_NAME_FORMAT = "%s_%s";
     private static final String WHITE_PIECE_COLOR_NAME = "WHITE";
     private static final String BLACK_PIECE_COLOR_NAME = "BLACK";
@@ -101,15 +101,6 @@ public class ChessController {
     }
 
     // TODO: Exception 으로 catch 하면 안됨
-    @PostMapping("/initialize")
-    public CommandResultDto initialize() {
-        try {
-            chessService.initializeGame(GAME_ID);
-        } catch (Exception e) {
-            return CommandResultDto.of(false, e.getMessage());
-        }
-        return CommandResultDto.of(true, "성공하였습니다.");
-    }
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
     public ResponseEntity<String> handle(RuntimeException e) {

@@ -1,13 +1,15 @@
 CREATE TABLE game
 (
-    id   VARCHAR(36) NOT NULL,
-    turn ENUM('WHITE', 'BLACK'),
+    id       INT         NOT NULL AUTO_INCREMENT,
+    turn     ENUM('WHITE', 'BLACK'),
+    name     VARCHAR(10) NOT NULL,
+    password VARCHAR(10) NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE board
 (
-    game_id     VARCHAR(36) NOT NULL,
+    game_id     INT NOT NULL,
     x_axis      ENUM('1', '2', '3', '4', '5', '6', '7', '8'),
     y_axis      ENUM('1', '2', '3', '4', '5', '6', '7', '8'),
     piece_type  ENUM('PAWN', 'ROOK', 'KNIGHT', 'BISHOP', 'QUEEN', 'KING'),

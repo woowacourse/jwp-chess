@@ -3,13 +3,13 @@ package chess.dao;
 import chess.dto.response.ChessGameDto;
 
 public interface GameDao {
-    ChessGameDto getGame(String gameId);
+    ChessGameDto getGame(int gameId);
 
-    void createGame(String gameId);
+    int createGame(String gameName, String gamePassword);
 
-    void deleteGame(String gameId);
+    void deleteGame(int gameId);
 
-    void updateTurnToWhite(String gameId);
+    void updateTurnToWhite(int gameId);
 
-    void updateTurnToBlack(String gameId);
+    void updateTurnToBlack(int gameId);
 }

@@ -29,7 +29,7 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public BoardDto getBoard(String gameId) {
+    public BoardDto getBoard(int gameId) {
         Map<Position, Piece> boardValue = new HashMap<>();
 
         for (Position position : getPositionsByGameId(gameId)) {
@@ -41,7 +41,7 @@ public class BoardDaoImpl implements BoardDao {
         return BoardDto.from(boardValue);
     }
 
-    private List<Position> getPositionsByGameId(String gameId) {
+    private List<Position> getPositionsByGameId(int gameId) {
         String query = String.format("SELECT x_axis, y_axis FROM %s WHERE game_id = ?",
             TABLE_NAME);
         List<Position> positions = jdbcTemplate.query(query, (resultSet, rowNum) -> {
@@ -53,7 +53,7 @@ public class BoardDaoImpl implements BoardDao {
         return positions;
     }
 
-    private Piece getPieceByGameIdAndPosition(String sql, String gameId, Position position) {
+    private Piece getPieceByGameIdAndPosition(String sql, int gameId, Position position) {
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
             PieceType pieceType = PieceType.valueOf(resultSet.getString("piece_type"));
             PieceColor pieceColor = PieceColor.valueOf(resultSet.getString("piece_color"));

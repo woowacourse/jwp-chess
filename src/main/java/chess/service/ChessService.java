@@ -22,32 +22,28 @@ import chess.dto.response.ScoreResultDto;
 public class ChessService {
     private final GameDao gameDao;
     private final BoardDao boardDao;
-    
+
     public ChessService(GameDao gameDao, BoardDao boardDao) {
         this.gameDao = gameDao;
         this.boardDao = boardDao;
     }
 
-    public void initializeGame(String gameId) {
-        gameDao.deleteGame(gameId);
-        createGame(gameId);
-    }
-
-    public void createGame(String gameId) {
-        gameDao.createGame(gameId);
+    public int createGame(String gameName, String gamePassword) {
+        int id = gameDao.createGame(gameName, gamePassword);
 
         Board initializedBoard = Board.createInitializedBoard();
         for (Entry<Position, Piece> entry : initializedBoard.getValue().entrySet()) {
             Position position = entry.getKey();
             Piece piece = entry.getValue();
 
-            CreatePieceDto createPieceDto = CreatePieceDto.of(gameId, position, piece);
+            CreatePieceDto createPieceDto = CreatePieceDto.of(id, position, piece);
             boardDao.createPiece(createPieceDto);
         }
+        return id;
     }
 
     public void movePiece(UpdatePiecePositionDto updatePiecePositionDto) {
-        String gameId = updatePiecePositionDto.getGameId();
+        int gameId = updatePiecePositionDto.getGameId();
 
         ChessGame chessGame = generateChessGame(gameId);
         chessGame.movePiece(updatePiecePositionDto.getFrom(), updatePiecePositionDto.getTo());
@@ -56,12 +52,12 @@ public class ChessService {
         updatePiecePosition(updatePiecePositionDto, gameId);
     }
 
-    private void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto, String gameId) {
+    private void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto, int gameId) {
         boardDao.deletePiece(DeletePieceDto.of(gameId, updatePiecePositionDto.getTo()));
         boardDao.updatePiecePosition(updatePiecePositionDto);
     }
 
-    private void updateGameTurn(String gameId, ChessGame chessGame) {
+    private void updateGameTurn(int gameId, ChessGame chessGame) {
         if (chessGame.isWhiteTurn()) {
             gameDao.updateTurnToWhite(gameId);
             return;
@@ -70,27 +66,27 @@ public class ChessService {
         gameDao.updateTurnToBlack(gameId);
     }
 
-    public PieceColorDto getCurrentTurn(String gameId) {
+    public PieceColorDto getCurrentTurn(int gameId) {
         return PieceColorDto.from(generateChessGame(gameId));
     }
 
-    public ScoreResultDto getScore(String gameId) {
+    public ScoreResultDto getScore(int gameId) {
         return ScoreResultDto.from(generateChessGame(gameId));
     }
 
-    public PieceColorDto getWinColor(String gameId) {
+    public PieceColorDto getWinColor(int gameId) {
         ChessGame chessGame = generateChessGame(gameId);
         return PieceColorDto.from(chessGame.getWinColor());
     }
 
-    private ChessGame generateChessGame(String gameId) {
+    private ChessGame generateChessGame(int gameId) {
         BoardDto boardDto = boardDao.getBoard(gameId);
         ChessGameDto chessGameDto = gameDao.getGame(gameId);
 
         return ChessGame.of(boardDto.toBoard(), chessGameDto.getCurrentTurnAsPieceColor());
     }
 
-    public BoardDto getBoard(String gameId) {
+    public BoardDto getBoard(int gameId) {
         return boardDao.getBoard(gameId);
     }
 

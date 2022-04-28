@@ -3,15 +3,15 @@ package chess.dto.response;
 import chess.domain.piece.PieceColor;
 
 public class ChessGameDto {
-    private final String gameId;
+    private final int gameId;
     private final PieceColorDto currentTurn;
 
-    public ChessGameDto(String gameId, PieceColorDto currentTurn) {
+    public ChessGameDto(int gameId, PieceColorDto currentTurn) {
         this.gameId = gameId;
         this.currentTurn = currentTurn;
     }
 
-    public static ChessGameDto of(String gameId, String turn) {
+    public static ChessGameDto of(int gameId, String turn) {
         return new ChessGameDto(gameId, PieceColorDto.from(turn));
     }
 
@@ -22,8 +22,8 @@ public class ChessGameDto {
     @Override
     public String toString() {
         return "ChessGameDto{" +
-                "gameId='" + gameId + '\'' +
-                ", currentTurn=" + currentTurn +
-                '}';
+            "gameId='" + gameId + '\'' +
+            ", currentTurn=" + currentTurn +
+            '}';
     }
 }

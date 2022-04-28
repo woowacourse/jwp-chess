@@ -9,7 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
 public class GameDaoImplTest {
-    private static final String TEST_GAME_ID = "TEST-GAME-ID";
+    private static final String TEST_GAME_NAME = "test";
+    private static final String TEST_GAME_PASSWORD = "password";
 
     private GameDaoImpl gameDao;
 
@@ -22,8 +23,10 @@ public class GameDaoImplTest {
 
         jdbcTemplate.execute("DROP TABLE game IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE game("
-            + "id   VARCHAR(36) NOT NULL,"
+            + "id   INT NOT NULL AUTO_INCREMENT,"
             + "turn ENUM('WHITE', 'BLACK'),"
+            + "name VARCHAR(10) NOT NULL,"
+            + "password VARCHAR(10) NOT NULL,"
             + "PRIMARY KEY (id))"
         );
     }
@@ -31,36 +34,36 @@ public class GameDaoImplTest {
     @DisplayName("새로운 게임을 game 테이블에 생성한다.")
     @Test
     void createGame() {
-        gameDao.createGame(TEST_GAME_ID);
+        System.out.println(gameDao.createGame(TEST_GAME_NAME, TEST_GAME_PASSWORD));
     }
 
     @DisplayName("게임을 game 테이블로부터 제거한다.")
     @Test
     void deleteGame() {
         // given & when
-        gameDao.createGame(TEST_GAME_ID);
+        int id = gameDao.createGame(TEST_GAME_NAME, TEST_GAME_PASSWORD);
 
         // then
-        gameDao.deleteGame(TEST_GAME_ID);
+        gameDao.deleteGame(id);
     }
 
     @DisplayName("게임의 턴을 흰색으로 변경한다.")
     @Test
     void updateTurnToWhite() {
         // given & when
-        gameDao.createGame(TEST_GAME_ID);
+        int id = gameDao.createGame(TEST_GAME_NAME, TEST_GAME_PASSWORD);
 
         // then
-        gameDao.updateTurnToWhite(TEST_GAME_ID);
+        gameDao.updateTurnToWhite(id);
     }
 
     @DisplayName("게임의 턴을 검정색으로 변경한다.")
     @Test
     void updateTurnToBlack() {
         // given & when
-        gameDao.createGame(TEST_GAME_ID);
+        int id = gameDao.createGame(TEST_GAME_NAME, TEST_GAME_PASSWORD);
 
         // then
-        gameDao.updateTurnToBlack(TEST_GAME_ID);
+        gameDao.updateTurnToBlack(id);
     }
 }

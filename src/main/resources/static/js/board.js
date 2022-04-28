@@ -2,8 +2,10 @@ let currentClickPosition = '';
 let currentPiece = '';
 let destinationClickPosition = '';
 let isRun = false;
+let roomId;
 
-const initMapEvent = () => {
+const initMapEvent = (id) => {
+    roomId = id;
     for (let file = 0; file < 8; file++) {
         for (let rank = 1; rank <= 8; rank++) {
             const positionTag = document.getElementById(intToFile(file) + rank);
@@ -78,11 +80,15 @@ const showChessMap = (chessMap) => {
 }
 
 const movePiece = async () => {
+    if(!isRun) {
+        return;
+    }
+
     const bodyValue = {
         currentPosition: currentClickPosition.id,
         destinationPosition: destinationClickPosition.id
     };
-    let chessMap = await fetch('/move', {
+    let chessMap = await fetch('/move/' + roomId, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -112,6 +118,7 @@ const load = async (id) => {
 }
 
 const restartChess = async (id) => {
+    isRun = true;
     let chessMap = await fetch('/make-piece/' + id);
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
@@ -127,15 +134,20 @@ const showStatus = async (id) => {
     alert(status.scoreStatus);
 }
 
-const showResult = async () => {
+const showResult = async (id) => {
     if (!isRun) {
         alert('먼저 게임을 시작하거나 이어해주세요.');
         return;
     }
-    let result = await fetch('/end');
+    let result = await fetch('/end/' + id, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        }
+    });
     result = await result.json();
     alert(result.result);
-    await restartChess();
 }
 
 const showError = async (message) => {

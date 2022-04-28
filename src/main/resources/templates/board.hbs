@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/css/board.css">
     <script src="/js/board.js"></script>
 </head>
-<body onload="initMapEvent()">
+<body onload="initMapEvent({{roomId}})">
 <div id="main">
     <div class="chess-board-margin">
         <div class="chess-board" id="chess-board">
@@ -88,7 +88,7 @@
     </div>
     <div class="chess-menu" id="chess-menu">
         <div class="message-info" id="message-info">
-            체스
+            {{roomId}}
         </div>
         <button class="btn" id="start" onclick="restartChess({{roomId}})">새로하기</button>
         <button class="btn" id="save" onclick="load({{roomId}})">이어하기</button>

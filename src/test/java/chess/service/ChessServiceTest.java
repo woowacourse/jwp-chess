@@ -52,7 +52,7 @@ class ChessServiceTest {
         assertThat(roomsResponseDto.getRoomResponseDtos()).hasSize(2);
     }
 
-    @DisplayName("체스 초보만 방이 정보를 가져온다.")
+    @DisplayName("체스 초보만 방의 정보를 가져온다.")
     @Test
     void enterRoom() {
         final Long id = createTestRoom("체스 초보만").getId();

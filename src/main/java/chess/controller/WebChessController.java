@@ -8,7 +8,7 @@ import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
 import chess.entity.RoomEntity;
 import chess.service.ChessService;
-import java.net.URI;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,9 +29,12 @@ public class WebChessController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
+    public ResponseEntity<RoomResponseDto> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
         final RoomResponseDto room = chessService.createRoom(roomRequestDto);
-        return ResponseEntity.created(URI.create("/api/chess/rooms/" + room.getId())).build();
+        if (room == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(room);
     }
 
     @GetMapping
@@ -62,7 +65,6 @@ public class WebChessController {
     @PatchMapping("/{id}")
     public ResponseEntity<Object> finishGame(@PathVariable Long id) {
         chessService.endRoom(id);
-//        return ResponseEntity.ok(chessService.createStatus(id));
         return ResponseEntity.noContent().build();
     }
 

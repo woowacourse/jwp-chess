@@ -47,4 +47,9 @@ public class RoomDao {
             return new RoomEntity(id, name, password);
         };
     }
+
+    public void deleteById(Long id) {
+        final String sql = "delete from rooms where room_id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

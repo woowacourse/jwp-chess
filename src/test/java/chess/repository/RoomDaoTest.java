@@ -54,4 +54,15 @@ public class RoomDaoTest {
         // then
         assertThat(rooms.size()).isEqualTo(3);
     }
+
+    @DisplayName("해당 id를 가진 체스방을 삭제한다.")
+    @Test
+    void deleteById() {
+        // given
+        RoomEntity room1 = roomDao.insert(new RoomEntity(1L, "room1", "1234"));
+        // when
+        roomDao.deleteById(room1.getId());
+        //then
+        assertThat(roomDao.findAll()).isEmpty();
+    }
 }

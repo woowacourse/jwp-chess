@@ -62,18 +62,20 @@ public class ChessService {
     }
 
     public GameResponseDto getCurrentBoard(final Long roomId) {
-        final RoomEntity room = roomRepository.findById(roomId);
-        validateGameOver(room);
+        final RoomEntity room = getValidRoom(roomId);
         final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
         return GameResponseDto.of(room, BoardsDto.of(boards));
     }
 
-    public GameResponseDto move(final Long id, final MoveRequestDto moveRequestDto) {
+    private RoomEntity getValidRoom(final Long id) {
         final RoomEntity room = roomRepository.findById(id);
         validateGameOver(room);
-        final List<BoardEntity> boardEntity = boardRepository.findBoardByRoomId(id);
+        return room;
+    }
 
-        final ChessGame chessGame = new ChessGame(toBoard(boardEntity), new Turn(Team.of(room.getTeam())));
+    public GameResponseDto move(final Long id, final MoveRequestDto moveRequestDto) {
+        final ChessGame chessGame = new ChessGame(getBoard(id), new Turn(Team.of(getValidRoom(id).getTeam())));
+
         final String sourcePosition = moveRequestDto.getSource();
         final String targetPosition = moveRequestDto.getTarget();
 
@@ -97,11 +99,11 @@ public class ChessService {
         }
     }
 
-    private Board toBoard(final List<BoardEntity> boardEntity) {
+    private Board getBoard(final Long id) {
+        final List<BoardEntity> boardEntity = boardRepository.findBoardByRoomId(id);
         final Map<Position, Piece> board = boardEntity.stream()
             .collect(Collectors.toMap(it -> Position.valueOf(it.getPosition()),
                 it -> PieceFactory.createPiece(it.getPiece())));
-
         return new Board(board);
     }
 
@@ -119,13 +121,12 @@ public class ChessService {
     }
 
     public void endRoom(final Long id) {
-        final RoomEntity room = roomRepository.findById(id);
-        validateGameOver(room);
+        getValidRoom(id);
         roomRepository.updateGameOver(id);
     }
 
     public StatusResponseDto createStatus(final Long id) {
-        final Board board = toBoard(boardRepository.findBoardByRoomId(id));
+        final Board board = getBoard(id);
         return StatusResponseDto.of(new Score(board.getBoard()));
     }
 

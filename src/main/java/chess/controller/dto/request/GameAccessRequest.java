@@ -2,19 +2,19 @@ package chess.controller.dto.request;
 
 public class GameAccessRequest {
 
-    private int gameId;
+    private long gameId;
     private String password;
 
     public GameAccessRequest() {
 
     }
 
-    public GameAccessRequest(int gameId, String password) {
+    public GameAccessRequest(long gameId, String password) {
         this.gameId = gameId;
         this.password = password;
     }
 
-    public int getGameId() {
+    public long getGameId() {
         return gameId;
     }
 

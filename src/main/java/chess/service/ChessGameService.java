@@ -20,7 +20,7 @@ public class ChessGameService {
 
     public void init() {
         if (dao.isDataExist()) {
-            chessGame = dao.load();
+            chessGame = dao.find();
             return;
         }
         chessGame = new ChessGame();

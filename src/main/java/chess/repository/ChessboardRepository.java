@@ -2,18 +2,14 @@ package chess.repository;
 
 import chess.chessgame.ChessGame;
 import chess.chessgame.Position;
-import chess.dto.GameInfoDto;
-import chess.dto.PieceDto;
 import chess.piece.Piece;
 import chess.utils.PieceGenerator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -25,79 +21,87 @@ public class ChessboardRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    private final RowMapper<PieceDto> pieceRowMapper = (resultSet, rowNum) -> new PieceDto(
-            resultSet.getString("color"),
-            resultSet.getString("type"),
-            resultSet.getInt("x"),
-            resultSet.getInt("y")
-    );
+    private final RowMapper<Position> positionMapper = (resultSet, rowNum) ->
+            new Position(
+                    resultSet.getInt("x"),
+                    resultSet.getInt("y")
+            );
 
-    private final RowMapper<GameInfoDto> gameInfoRowMapper = (resultSet, rowNum) -> new GameInfoDto(
-            resultSet.getString("state"),
-            resultSet.getString("turn")
+    private final RowMapper<Piece> pieceMapper = (resultSet, rowNum)
+            -> PieceGenerator.generate(
+                    resultSet.getString("type"),
+            resultSet.getString("color")
     );
 
     public boolean isDataExist() {
-        final String sql = "SELECT count(*) FROM gameInfos";
+        final String sql = "SELECT count(*) FROM games";
         Integer count = namedParameterJdbcTemplate.queryForObject(sql, Map.of(), Integer.class);
         return count != null && count > 0;
     }
 
     public void save(ChessGame chessGame) {
         truncateAll();
-        addAll(chessGame);
+        saveGame(chessGame.getStateToString(), chessGame.getColorOfTurn());
+        saveBoard(chessGame.getChessBoard());
     }
 
     public void truncateAll() {
-        final String truncatePieces = "TRUNCATE TABLE pieces";
-        final String truncateGameInfos = "TRUNCATE TABLE gameInfos";
+        final String truncatePieces = "TRUNCATE TABLE boards";
+        final String truncateGameInfos = "TRUNCATE TABLE games";
 
         namedParameterJdbcTemplate.update(truncatePieces, Map.of());
         namedParameterJdbcTemplate.update(truncateGameInfos, Map.of());
     }
 
-    public ChessGame load() {
-        final String pieces_sql = "SELECT * FROM pieces ORDER BY x ASC, y ASC";
-        List<PieceDto> pieces = namedParameterJdbcTemplate.query(pieces_sql, Map.of(), pieceRowMapper);
+    public ChessGame find() {
+        final String gameSql = "SELECT * FROM games";
+        SqlRowSet rowSet = namedParameterJdbcTemplate.queryForRowSet(gameSql, Map.of());
 
-        final String gameInfo_sql = "SELECT * FROM gameInfos";
-        GameInfoDto gameInfo = namedParameterJdbcTemplate.queryForObject(gameInfo_sql, Map.of(), gameInfoRowMapper);
-
-        return new ChessGame(gameInfo.getState(), gameInfo.getTurn(), convertPieces(pieces));
+        rowSet.next();
+        return new ChessGame(rowSet.getString("state"), rowSet.getString("turn"), findBoard());
     }
 
-    private Map<Position, Piece> convertPieces(List<PieceDto> pieces) {
-        Map<Position, Piece> convertedPieces = new LinkedHashMap<>();
+    private Map<Position, Piece> findBoard() {
+        final String boardsSql = "SELECT * FROM boards ORDER BY position_id ASC";
+        SqlRowSet rowSet = namedParameterJdbcTemplate.queryForRowSet(boardsSql, Map.of());
 
-        for (PieceDto piece : pieces) {
-            convertedPieces.put(new Position(piece.getX(), piece.getY()), PieceGenerator.generate(piece.getType(), piece.getColor()));
+        Map<Position, Piece> board = new LinkedHashMap<>();
+        while (rowSet.next()) {
+            board.put(findPositionById(rowSet.getInt("position_id")), findPieceById(rowSet.getInt("piece_id")));
         }
 
-        return convertedPieces;
+        return board;
     }
 
-    private void addAll(ChessGame chessGame) {
-        Map<Position, Piece> chessboard = chessGame.getChessBoard();
+    private Position findPositionById(int id) {
+        final String positionSql = "SELECT * FROM positions WHERE id = :id";
+        return namedParameterJdbcTemplate.queryForObject(positionSql, Map.of("id", id), positionMapper);
+    }
 
-        for (Position position : chessboard.keySet()) {
-            addBoard(new PieceDto(chessboard.get(position), position));
+    private Piece findPieceById(int id) {
+        final String pieceSql = "SELECT * FROM pieces WHERE id = :id";
+        return namedParameterJdbcTemplate.queryForObject(pieceSql, Map.of("id", id), pieceMapper);
+    }
+
+    private void saveGame(String state, String turn) {
+        final String sql = "INSERT INTO games(state,turn) values (:state,:turn)";
+        namedParameterJdbcTemplate.update(sql, Map.of("state", state, "turn", turn));
+    }
+
+    private void saveBoard(Map<Position, Piece> board) {
+        final String sql = "INSERT INTO boards(piece_id,position_id) values (" +
+                "(SELECT id FROM pieces WHERE type=:type AND color=:color)," +
+                "(SELECT id FROM positions WHERE x=:x AND y=:y))";
+
+        for (Position position : board.keySet()) {
+            Piece piece = board.get(position);
+            namedParameterJdbcTemplate.update(sql, Map.of(
+                    "x", position.getX(),
+                    "y", position.getY(),
+                    "type", piece.getTypeToString(),
+                    "color", piece.getColorToString())
+            );
         }
-
-        addGameInfos(new GameInfoDto(chessGame.getStateToString(), chessGame.getColorOfTurn()));
-    }
-
-    private void addBoard(PieceDto pieceDto) {
-        final String sql = "INSERT INTO pieces (color,type,x,y) VALUES (:color,:type,:x,:y)";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(pieceDto);
-
-        namedParameterJdbcTemplate.update(sql, namedParameters);
-    }
-
-    private void addGameInfos(GameInfoDto gameInfo) {
-        String sql = "INSERT INTO gameInfos (state,turn) VALUES (:state,:turn)";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(gameInfo);
-
-        namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
 }

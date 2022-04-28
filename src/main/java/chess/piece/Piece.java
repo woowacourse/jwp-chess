@@ -41,4 +41,12 @@ public abstract class Piece {
     public Type getType() {
         return type;
     }
+
+    public String getColorToString(){
+        return color.getColor();
+    }
+
+    public String getTypeToString(){
+        return type.getSymbol();
+    }
 }

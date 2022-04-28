@@ -2,9 +2,9 @@ package chess.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +25,7 @@ public class InGameController {
         this.chessService = chessService;
     }
 
-    @GetMapping()
+    @PostMapping()
     public String runGame(@ModelAttribute ChessGameVO chessGameVO, @RequestParam(name = "restart") String restart,
             Model model) {
         if (!chessService.isValidPassword(chessGameVO)) {
@@ -36,7 +36,7 @@ public class InGameController {
         ChessGame chessGame = chessService.loadChessGame(chessGameVO, restart);
         GameResult gameResult = chessService.getGameResult(chessGameVO);
 
-        model.addAttribute("whiteScore", gameResult.calculateScore( Color.WHITE));
+        model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
 
         model.addAllAttributes(chessGame.getEmojis());
@@ -45,8 +45,9 @@ public class InGameController {
         return "ingame";
     }
 
-    @PostMapping(value = "/{gameID}")
-    public String movePiece(@ModelAttribute ChessGameVO chessGameVO, @ModelAttribute MovementRequest movement, Model model) {
+    @PostMapping(value = "/{gameID}/move")
+    public String movePiece(@ModelAttribute ChessGameVO chessGameVO, @ModelAttribute MovementRequest movement,
+            Model model) {
         ChessGame chessGame = chessService.loadSavedChessGame(chessGameVO);
         String source = movement.getSource();
         String target = movement.getTarget();

@@ -11,12 +11,12 @@
     <div id="app">
         <h1>♟️ 체스</h1>
         <div class="form start">
-            <form action="/start" method="post">
+            <form id="create-form" action="/create" method="post">
                 <label for="title">방 제목</label>
-                <input type="text" name="title">
+                <input type="text" id="title" name="title">
                 <label for="password">비밀번호</label>
-                <input type="password" name="password">
-                <input type="submit" value="새로운 게임">
+                <input type="password" id="password" name="password">
+                <button id="create-button">방 생성</button>
             </form>
         </div>
         <div class="room-list">
@@ -40,6 +40,7 @@
 
     function initializeRoomList(games) {
         const table = document.getElementById("room-table");
+        table.innerHTML = "";
         games.forEach(game => table.appendChild(createGameTr(game)));
     }
 
@@ -66,6 +67,25 @@
         button.innerHTML = '삭제';
         td.appendChild(button);
         return td;
+    }
+
+    document.forms['create-form'].addEventListener('submit', (event) => {
+        event.preventDefault();
+        fetch(event.target.action, {
+            method: 'POST',
+            body: new URLSearchParams(new FormData(event.target))
+        }).then((response) => response.status)
+        .then((status) => alertCreateResult(status))
+        .then(() => loadGames());
+    });
+
+    function alertCreateResult(status) {
+        console.log(status);
+        if (status !== 201) {
+            window.alert("생성하지 못했습니다.");
+            return;
+        }
+        window.alert("방 생성에 성공하였습니다.");
     }
 
     window.onload = function() {

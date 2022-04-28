@@ -7,6 +7,7 @@ import chess.dao.BoardDao;
 import chess.dao.GameDao;
 import chess.domain.Camp;
 import chess.domain.ChessGame;
+import chess.domain.board.BoardInitializer;
 import chess.domain.board.Position;
 import chess.domain.gamestate.Score;
 import chess.domain.piece.Piece;
@@ -48,9 +49,19 @@ public class GameService {
         this.boardDao = boardDao;
     }
 
-    public long start(String title, String password) {
-        chessGame.start();
-        return gameDao.insertGame(GameDto.fromNewGame(title, password));
+    public void createRoom(String title, String password) {
+        long gameNo = gameDao.insertGame(GameDto.fromNewGame(title, password));
+        boardDao.insertBoard(gameNo, BoardInitializer.get().getSquares());
+    }
+
+    public void load() {
+        List<PieceDto> rawBoard = boardDao.load();
+        Map<Position, Piece> board = rawBoard.stream()
+                .collect(Collectors.toMap(
+                        pieceDto2 -> parsePosition(pieceDto2.getPosition()),
+                        this::parsePiece
+                ));
+        chessGame.load(board, gameDao.isWhiteTurn());
     }
 
     public Map<String, Object> modelPlayingBoard() {
@@ -63,16 +74,6 @@ public class GameService {
         model.put(KEY_STARTED, true);
         model.put(KEY_READY, false);
         return model;
-    }
-
-    public void load() {
-        List<PieceDto> rawBoard = boardDao.load();
-        Map<Position, Piece> board = rawBoard.stream()
-                .collect(Collectors.toMap(
-                        pieceDto2 -> parsePosition(pieceDto2.getPosition()),
-                        this::parsePiece
-                ));
-        chessGame.load(board, gameDao.isWhiteTurn());
     }
 
     private Piece parsePiece(PieceDto piece) {

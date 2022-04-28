@@ -31,10 +31,10 @@ public class GameController {
         return ResponseEntity.ok().body(listData);
     }
 
-    @PostMapping("/start")
-    public String start(Model model, @RequestParam String title, @RequestParam String password) {
-        long no = gameService.start(title, password);
-        return play(model, no);
+    @PostMapping("/create")
+    public ResponseEntity<Void> create(@RequestParam String title, @RequestParam String password) {
+        gameService.createRoom(title, password);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/load/{no}")

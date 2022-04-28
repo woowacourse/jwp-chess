@@ -19,6 +19,19 @@ public class BoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void insertBoard(long gameNo, Map<Position, Piece> board) {
+        String sql = "insert into piece (game_no, type, white, position) values (?, ?, ?, ?)";
+
+        for (Entry<Position, Piece> entry : board.entrySet()) {
+            Piece piece = entry.getValue();
+            String type = piece.getType().toString();
+            boolean isWhite = piece.isCamp(Camp.WHITE);
+            String position = entry.getKey().toString();
+
+            jdbcTemplate.update(sql, gameNo, type, isWhite, position);
+        }
+    }
+
     public void save(Map<Position, Piece> board) {
         final String sql = chooseSaveSql();
 

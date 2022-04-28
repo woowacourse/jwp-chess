@@ -8,7 +8,6 @@ import java.util.*;
 public class Chessboard {
 
     private static final int NUMBER_OF_KINGS_FOR_OVER = 1;
-    private static final int NUMBER_OF_PAWNS_FOR_MINUS = 2;
 
     private final Map<Position, Piece> board;
 
@@ -32,12 +31,6 @@ public class Chessboard {
                 .count();
 
         return count == NUMBER_OF_KINGS_FOR_OVER;
-    }
-
-    public double computeScore(Color color, double minusScoreOfSameYPawn) {
-        double score = computeTotalScore(color);
-        score += computeMinusScore(minusScoreOfSameYPawn);
-        return score;
     }
 
     public Map<Position, Piece> getBoard() {
@@ -108,40 +101,6 @@ public class Chessboard {
 
         board.put(to, board.get(from));
         board.put(from, new Blank());
-    }
-
-    private double computeTotalScore(Color color) {
-        return board.values()
-                .stream()
-                .filter(piece -> piece.isSameColor(color))
-                .mapToDouble(Piece::getScore)
-                .sum();
-    }
-
-    private double computeMinusScore(double minusScoreOfSameYPawn) {
-        double minusScore = 0;
-        for (int i = 0; i < board.size(); i++) {
-            minusScore -= computeMinusScoreOfY(i, Color.BLACK, minusScoreOfSameYPawn);
-            minusScore -= computeMinusScoreOfY(i, Color.WHITE, minusScoreOfSameYPawn);
-        }
-        return minusScore;
-    }
-
-    private double computeMinusScoreOfY(int y, Color color, double minusScoreOfSameYPawn) {
-        int pawnCount = computePawnCount(y, color);
-        if (pawnCount >= NUMBER_OF_PAWNS_FOR_MINUS) {
-            return pawnCount * minusScoreOfSameYPawn;
-        }
-        return 0;
-    }
-
-    private int computePawnCount(int y, Color color) {
-        return (int) board.keySet()
-                .stream()
-                .filter(position -> position.isSameY(y))
-                .map(board::get)
-                .filter(piece -> piece.isSameColor(color) && piece.isSameType(Type.PAWN))
-                .count();
     }
 
 }

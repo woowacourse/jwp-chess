@@ -35,30 +35,13 @@ public class ChessboardRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS pieces");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS gameInfos");
-
-        jdbcTemplate.execute("CREATE TABLE pieces\n" +
-                "(\n" +
-                "    piece_index int NOT NULL AUTO_INCREMENT,\n" +
-                "    type        ENUM('k','q','b','n','r','p','.'),\n" +
-                "    color       ENUM('BLACK','WHITE','NONE'),\n" +
-                "    x           int NOT NULL,\n" +
-                "    y           int NOT NULL,\n" +
-                "    PRIMARY KEY (piece_index)\n" +
-                ")");
-
-        jdbcTemplate.execute("CREATE TABLE gameInfos\n" +
-                "(\n" +
-                "    state ENUM('READY','PLAY','FINISH'),\n" +
-                "    turn  ENUM('BLACK','WHITE')\n" +
-                ")");
+        chessboardRepository.truncateAll();
     }
 
     @Test
     @DisplayName("데이터가 존재한다면 true 반환")
     void isDataExistWhenTrue() {
-        jdbcTemplate.update("insert into gameInfos values (?,?)", "PLAY", "BLACK");
+        jdbcTemplate.update("insert into games(state,turn) values (?,?)", "PLAY", "BLACK");
         assertThat(chessboardRepository.isDataExist()).isTrue();
     }
 

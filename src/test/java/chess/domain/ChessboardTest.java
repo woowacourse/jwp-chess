@@ -1,6 +1,8 @@
 package chess.domain;
 
-import chess.piece.*;
+import chess.piece.Color;
+import chess.piece.Piece;
+import chess.piece.Type;
 import chess.utils.InitializedChessboardGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +12,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -94,32 +95,6 @@ public class ChessboardTest {
         assertThatThrownBy(() -> chessboard.move(new MovingPosition("a1", "a3"), turn))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("가로막는 기물이 있습니다.");
-    }
-
-    @Test
-    @DisplayName("올바르게 점수를 계산하는지 확인")
-    void computeScore() {
-        chessboard = new Chessboard(() -> Map.of(
-                new Position(0, 1), new Queen(Color.BLACK),
-                new Position(0, 2), new Rook(Color.BLACK),
-                new Position(0, 3), new Bishop(Color.BLACK),
-                new Position(0, 4), new Knight(Color.BLACK),
-                new Position(0, 5), new Pawn(Color.BLACK)
-        ));
-        assertThat(chessboard.computeScore(Color.BLACK, 0.5))
-                .isEqualTo(20.5);
-    }
-
-    @Test
-    @DisplayName("같은 세로줄에 같은 폰이 있는 경우 0.5점으로 계산하는지 확인")
-    void computeScorePawn() {
-        chessboard = new Chessboard(Map.of(
-                new Position(1, 0), new Pawn(Color.BLACK),
-                new Position(2, 0), new Pawn(Color.BLACK),
-                new Position(3, 0), new Pawn(Color.BLACK)
-        );
-        assertThat(chessboard.computeScore(Color.BLACK, 0.5))
-                .isEqualTo(1.5);
     }
 
     private static Stream<Arguments> pieces() {

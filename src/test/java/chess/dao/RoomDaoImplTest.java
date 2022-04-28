@@ -1,7 +1,5 @@
 package chess.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
 import chess.domain.game.room.RoomPassword;
@@ -12,19 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@JdbcTest
-public class GameRoomDaoImplTest {
-    private static final String TEST_GAME_ROOM_ID = "TEST-GAME-ID";
-    private static final Room TEST_GAME_ROOM = Room.from(TEST_GAME_ROOM_ID, "test game room", "1234");
+import static org.assertj.core.api.Assertions.assertThat;
 
-    private GameRoomDaoImpl gameDao;
+@JdbcTest
+public class RoomDaoImplTest {
+    private static final String TEST_ROOM_ID = "TEST-GAME-ID";
+    private static final Room TEST_ROOM = Room.from(TEST_ROOM_ID, "test game room", "1234");
+
+    private RoomDaoImpl gameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        gameDao = new GameRoomDaoImpl(jdbcTemplate);
+        gameDao = new RoomDaoImpl(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE game IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE game("
@@ -37,15 +37,15 @@ public class GameRoomDaoImplTest {
     @DisplayName("새로운 게임을 game 테이블에 생성한다.")
     @Test
     void createGame() {
-        gameDao.createGameRoom(TEST_GAME_ROOM);
+        gameDao.createRoom(TEST_ROOM);
     }
 
     @DisplayName("게임 목록을 가져온다.")
     @Test
     void getRooms() {
         // given & when
-        gameDao.createGameRoom(Room.create("test", "1234"));
-        gameDao.createGameRoom(Room.create("test2", "1234"));
+        gameDao.createRoom(Room.create("test", "1234"));
+        gameDao.createRoom(Room.create("test2", "1234"));
 
         // when
         int actual = gameDao.getRooms().size();
@@ -58,29 +58,29 @@ public class GameRoomDaoImplTest {
     @Test
     void deleteGame() {
         // given & when
-        gameDao.createGameRoom(TEST_GAME_ROOM);
+        gameDao.createRoom(TEST_ROOM);
 
         // then
-        gameDao.deleteGameRoom(RoomId.from(TEST_GAME_ROOM_ID), RoomPassword.from("1234"));
+        gameDao.deleteRoom(RoomId.from(TEST_ROOM_ID), RoomPassword.createByPlainText("1234"));
     }
 
     @DisplayName("게임의 턴을 흰색으로 변경한다.")
     @Test
     void updateTurnToWhite() {
         // given & when
-        gameDao.createGameRoom(TEST_GAME_ROOM);
+        gameDao.createRoom(TEST_ROOM);
 
         // then
-        gameDao.updateTurnToWhite(RoomId.from(TEST_GAME_ROOM_ID));
+        gameDao.updateTurnToWhite(RoomId.from(TEST_ROOM_ID));
     }
 
     @DisplayName("게임의 턴을 검정색으로 변경한다.")
     @Test
     void updateTurnToBlack() {
         // given & when
-        gameDao.createGameRoom(TEST_GAME_ROOM);
+        gameDao.createRoom(TEST_ROOM);
 
         // then
-        gameDao.updateTurnToBlack(RoomId.from(TEST_GAME_ROOM_ID));
+        gameDao.updateTurnToBlack(RoomId.from(TEST_ROOM_ID));
     }
 }

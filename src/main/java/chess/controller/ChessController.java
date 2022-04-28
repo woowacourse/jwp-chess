@@ -35,7 +35,7 @@ public class ChessController {
     @PostMapping("/rooms")
     public void createRoom(@RequestBody CreateRoomDto createRoomDto) {
         Room room = Room.create(createRoomDto.getTitle(), createRoomDto.getPassword());
-        chessService.createGame(room);
+        chessService.createRoom(room);
     }
 
     // TODO: DELETE 메소드는 payload를 실어보낼 수 없음. 패스워드를 전송하기 위해 임시로 POST 메소드 사용.

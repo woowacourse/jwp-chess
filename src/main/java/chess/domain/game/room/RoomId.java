@@ -43,8 +43,8 @@ public class RoomId {
 
     @Override
     public String toString() {
-        return "GameId{" +
-                "gameId='" + roomId + '\'' +
+        return "RoomId{" +
+                "roomId='" + roomId + '\'' +
                 '}';
     }
 }

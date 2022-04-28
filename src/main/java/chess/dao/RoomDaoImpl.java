@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class GameRoomDaoImpl implements GameRoomDao {
-    private static final String TABLE_NAME = "game_room";
+public class RoomDaoImpl implements RoomDao {
+    private static final String TABLE_NAME = "room";
     private static final String WHITE_TURN = "WHITE";
     private static final String BLACK_TURN = "BLACK";
 
@@ -28,12 +28,12 @@ public class GameRoomDaoImpl implements GameRoomDao {
             };
 
     @Autowired
-    public GameRoomDaoImpl(JdbcTemplate jdbcTemplate) {
+    public RoomDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void createGameRoom(Room room) {
+    public void createRoom(Room room) {
         String query = String.format("INSERT INTO %s VALUES (?, ?, ?, 'WHITE')", TABLE_NAME);
         jdbcTemplate.update(query, room.getId().getValue(), room.getRoomTitle().getValue(),
                 room.getPassword().getValue());
@@ -46,7 +46,7 @@ public class GameRoomDaoImpl implements GameRoomDao {
     }
 
     @Override
-    public void deleteGameRoom(RoomId roomId, RoomPassword roomPassword) {
+    public void deleteRoom(RoomId roomId, RoomPassword roomPassword) {
         String query = String.format("DELETE FROM %s WHERE id = ? AND password = ?", TABLE_NAME);
         jdbcTemplate.update(query, roomId.getValue(), roomPassword.getValue());
     }

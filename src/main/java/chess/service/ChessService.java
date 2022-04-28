@@ -1,7 +1,7 @@
 package chess.service;
 
 import chess.dao.BoardDao;
-import chess.dao.GameRoomDao;
+import chess.dao.RoomDao;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.game.room.Room;
@@ -19,17 +19,17 @@ import java.util.Map.Entry;
 
 @Service
 public class ChessService {
-    private final GameRoomDao gameRoomDao;
+    private final RoomDao roomDao;
     private final BoardDao boardDao;
 
     @Autowired
-    public ChessService(GameRoomDao gameRoomDao, BoardDao boardDao) {
-        this.gameRoomDao = gameRoomDao;
+    public ChessService(RoomDao roomDao, BoardDao boardDao) {
+        this.roomDao = roomDao;
         this.boardDao = boardDao;
     }
 
-    public void createGame(Room room) {
-        gameRoomDao.createGameRoom(room);
+    public void createRoom(Room room) {
+        roomDao.createRoom(room);
 
         Board initializedBoard = Board.createInitializedBoard();
         for (Entry<Position, Piece> entry : initializedBoard.getValue().entrySet()) {
@@ -45,11 +45,11 @@ public class ChessService {
             throw new IllegalStateException("게임이 끝나지 않아서 방을 삭제할 수 없습니다.");
         }
 
-        gameRoomDao.deleteGameRoom(roomId, roomPassword);
+        roomDao.deleteRoom(roomId, roomPassword);
     }
 
     public List<Room> getRooms() {
-        return gameRoomDao.getRooms();
+        return roomDao.getRooms();
     }
 
     public void movePiece(RoomId roomId, Position from, Position to) {
@@ -67,11 +67,11 @@ public class ChessService {
 
     private void updateGameTurn(RoomId roomId, ChessGame chessGame) {
         if (chessGame.isWhiteTurn()) {
-            gameRoomDao.updateTurnToWhite(roomId);
+            roomDao.updateTurnToWhite(roomId);
             return;
         }
 
-        gameRoomDao.updateTurnToBlack(roomId);
+        roomDao.updateTurnToBlack(roomId);
     }
 
     public PieceColor getCurrentTurn(RoomId roomId) {
@@ -95,7 +95,7 @@ public class ChessService {
 
     private ChessGame generateChessGame(RoomId roomId) {
         Board board = boardDao.getBoard(roomId);
-        PieceColor currentTurn = gameRoomDao.getCurrentTurn(roomId);
+        PieceColor currentTurn = roomDao.getCurrentTurn(roomId);
         return ChessGame.of(board, currentTurn);
     }
 
@@ -106,7 +106,7 @@ public class ChessService {
     @Override
     public String toString() {
         return "ChessService{" +
-                "gameDao=" + gameRoomDao +
+                "gameDao=" + roomDao +
                 ", boardDao=" + boardDao +
                 '}';
     }

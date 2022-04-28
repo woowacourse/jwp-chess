@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dao.GameRoomDao;
+import chess.dao.RoomDao;
 import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
 import chess.domain.game.room.RoomPassword;
@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GameRoomDaoFake implements GameRoomDao {
+public class RoomDaoFake implements RoomDao {
     private final Map<Room, PieceColor> fakeGame = new HashMap<>();
 
     @Override
-    public void createGameRoom(Room room) {
+    public void createRoom(Room room) {
         fakeGame.put(room, PieceColor.WHITE);
     }
 
@@ -25,7 +25,7 @@ public class GameRoomDaoFake implements GameRoomDao {
     }
 
     @Override
-    public void deleteGameRoom(RoomId roomId, RoomPassword roomPassword) {
+    public void deleteRoom(RoomId roomId, RoomPassword roomPassword) {
         if (getRoomByRoomId(roomId).getPassword().equals(roomPassword)) {
             fakeGame.remove(getRoomByRoomId(roomId));
         }

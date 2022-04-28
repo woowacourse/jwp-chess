@@ -42,6 +42,8 @@ public final class Board {
 
     private void validateTurn(Turn thisTurn, Piece sourcePiece) {
         if (sourcePiece.isNotCurrentTurn(thisTurn)) {
+            System.out.println("말의 색 >> " + sourcePiece.getTeam().value());
+            System.out.println("현재 턴 >> " + thisTurn.getTeam().value());
             throw new IllegalArgumentException("[ERROR] 현재 차례가 아닙니다.");
         }
     }

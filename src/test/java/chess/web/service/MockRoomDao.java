@@ -4,6 +4,7 @@ import chess.domain.board.Board;
 import chess.domain.board.Team;
 import chess.domain.board.Turn;
 import chess.domain.board.piece.Pieces;
+import chess.domain.entity.Room;
 import chess.web.dao.RoomDao;
 
 import java.util.*;
@@ -41,7 +42,7 @@ public class MockRoomDao implements RoomDao {
     }
 
     @Override
-    public List<Long> findAllId() {
-        return new ArrayList<>(mockDb.keySet());
+    public List<Room> findAll() {
+        return null;
     }
 }

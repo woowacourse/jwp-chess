@@ -1,6 +1,6 @@
 const start = document.getElementById('start-button');
 const status = document.getElementById('status-button');
-const IMAGE_PATH = "./images/";
+const IMAGE_PATH = ".././images/";
 const BOARD = document.querySelector("#board");
 const CURRENT_TEAM = document.querySelector("#current-team");
 const SYMBOL_TO_IMAGE_PATH = {
@@ -21,13 +21,14 @@ const SYMBOL_TO_IMAGE_PATH = {
 let boardInfo = "";
 let isChoiced = false;
 let currentTurn = "";
-
-function showStatusButton() {
+let gameId = "";
+function showStatusButton(id) {
+    gameId = id;
     status.style.visibility = 'visible';
 }
 
 function initBoard() {
-    fetch('/api/restart')
+    fetch('/api/restart/' + gameId)
         .then(res => res.json())
         .then(imageSetting)
 }
@@ -51,13 +52,13 @@ function getStatus(scoreResponse) {
 }
 
 status.addEventListener('click', function () {
-    fetch('/api/status')
+    fetch('/api/status/' + gameId)
         .then(res => res.json())
         .then(getStatus)
 })
 
 function loadBoard() {
-    fetch('/api/load/{id}')
+    fetch('/api/load/' + gameId)
         .then(res => res.json())
         .then(imageSetting)
 }
@@ -68,7 +69,6 @@ function imageSetting(response) {
     pieces = response["board"];
     for (const div of divs) {
         const key = div.getAttribute("id");
-
         if (SYMBOL_TO_IMAGE_PATH[pieces[key]] !== undefined) {
             div.style.backgroundImage = "url(" + SYMBOL_TO_IMAGE_PATH[pieces[key]] + ")";
         } else {
@@ -146,7 +146,7 @@ function movePiece(from, to) {
         to: to
     }
 
-    fetch('/api/move', {
+    fetch('/api/move/' + gameId, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -1,8 +1,8 @@
 package chess.web.dao;
 
-import chess.domain.entity.Room;
 import chess.domain.board.Board;
 import chess.domain.board.Turn;
+import chess.domain.entity.Room;
 
 import java.util.List;
 import java.util.Optional;

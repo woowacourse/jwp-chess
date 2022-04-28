@@ -1,10 +1,10 @@
 package chess.web.dao;
 
-import chess.domain.entity.Room;
 import chess.domain.board.Board;
 import chess.domain.board.Team;
 import chess.domain.board.Turn;
 import chess.domain.board.piece.Pieces;
+import chess.domain.entity.Room;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

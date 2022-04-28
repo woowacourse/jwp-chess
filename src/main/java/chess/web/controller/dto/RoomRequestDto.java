@@ -5,7 +5,9 @@ public class RoomRequestDto {
     private String title;
     private String password;
 
-    private RoomRequestDto(){};
+    private RoomRequestDto() {
+    };
+
     public RoomRequestDto(String title, String password) {
         this.title = title;
         this.password = password;

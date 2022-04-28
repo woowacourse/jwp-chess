@@ -3,7 +3,7 @@ package chess.web.controller.dto;
 import chess.domain.entity.Room;
 
 public class RoomResponseDto {
-    public static class TitleAndId{
+    public static class TitleAndId {
         private final String title;
         private final Long id;
 

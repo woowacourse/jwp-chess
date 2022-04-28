@@ -1,6 +1,5 @@
 package chess.web.service;
 
-import chess.domain.entity.Room;
 import chess.domain.board.Board;
 import chess.domain.board.Team;
 import chess.domain.board.Turn;
@@ -8,11 +7,12 @@ import chess.domain.board.piece.Empty;
 import chess.domain.board.piece.Piece;
 import chess.domain.board.piece.Pieces;
 import chess.domain.board.piece.position.Position;
-import chess.web.controller.dto.RoomRequestDto;
-import chess.web.dao.RoomDao;
-import chess.web.dao.PieceDao;
+import chess.domain.entity.Room;
 import chess.web.controller.dto.MoveDto;
+import chess.web.controller.dto.RoomRequestDto;
 import chess.web.controller.dto.ScoreDto;
+import chess.web.dao.PieceDao;
+import chess.web.dao.RoomDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,32 +44,25 @@ public class ChessService {
     public Board move(final MoveDto moveDto, final Long boardId) {
         Turn turn = roomDao.findTurnById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 정보입니다."));
-
         Board board = Board.create(Pieces.from(pieceDao.findAllByBoardId(boardId)), turn);
         Pieces pieces = board.getPieces();
-
         Piece piece = pieces.findByPosition(Position.from(moveDto.getFrom()));
-        try {
-            board.move(List.of(moveDto.getFrom(), moveDto.getTo()), turn);
-        } catch (IllegalArgumentException e) {
-            return move(moveDto, boardId);
-        }
+        board.move(List.of(moveDto.getFrom(), moveDto.getTo()), turn);
         Turn changedTurn = updatePieces(moveDto, turn, piece, boardId);
-
         return Board.create(pieces, changedTurn);
     }
 
     private Turn updatePieces(MoveDto moveDto, Turn turn, Piece piece, final Long boardId) {
-        Turn changedTurn = changeTurn(turn);
+        Turn changedTurn = changeTurn(turn, boardId);
         Empty empty = new Empty(Position.from(moveDto.getFrom()));
         pieceDao.updatePieceByPositionAndBoardId(empty.getType(), empty.getTeam().value(), moveDto.getFrom(), boardId);
         pieceDao.updatePieceByPositionAndBoardId(piece.getType(), piece.getTeam().value(), moveDto.getTo(), boardId);
         return changedTurn;
     }
 
-    private Turn changeTurn(Turn turn) {
+    private Turn changeTurn(Turn turn, Long id) {
         Turn change = turn.change();
-        roomDao.updateTurnById(1L, change.getTeam().value());
+        roomDao.updateTurnById(id, change.getTeam().value());
         return change;
     }
 
@@ -101,7 +94,7 @@ public class ChessService {
         return id;
     }
 
-    public List<Room> getRoomList(){
+    public List<Room> getRoomList() {
         return roomDao.findAll();
     }
 }

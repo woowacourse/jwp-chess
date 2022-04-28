@@ -14,7 +14,7 @@ section.addEventListener("mouseup", (event) => {
   toInput = findTagId(event);
 
   fetch("/game/"+gameId+"/move", {
-    method: "post",
+    method: 'put',
     redirect: 'follow',
     headers: {
       'Content-Type': 'application/json',
@@ -23,7 +23,6 @@ section.addEventListener("mouseup", (event) => {
     body: JSON.stringify({
       source: fromInput,
       target: toInput,
-      gameId: gameId
     }),
   })
   .then(res=>{

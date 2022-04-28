@@ -4,8 +4,6 @@ import chess.controller.view.BoardView;
 import chess.dto.GameRoomDto;
 import chess.dto.MoveCommandDto;
 import chess.service.ChessGameService;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,20 +46,24 @@ public class ChessGameController {
         return getModelWithGameMessage(WELCOME_MESSAGE, "redirect:/game/" + gameId);
     }
 
-    @GetMapping("/start")
-    public ModelAndView getGame(@RequestParam long gameId) {
-        return getModelWithGameMessage(WELCOME_MESSAGE, "redirect:/game/" + gameId);
-    }
-
     @GetMapping("/{gameId}")
-    public ModelAndView getGameByGameId(HttpServletRequest request, @PathVariable long gameId) {
-        return getModel(request, gameId);
+    public ModelAndView getGameByGameId(@PathVariable long gameId,
+        @RequestParam(required = false, defaultValue = MOVE_SUCCESS_MESSAGE) String gameMessage) {
+        ModelAndView modelAndView = new ModelAndView("game");
+
+        modelAndView.addObject("pieces",
+            BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
+        modelAndView.addObject("gameId", gameId);
+        modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
+        modelAndView.addObject("gameMessage", gameMessage);
+
+        return modelAndView;
     }
 
-    @PostMapping(path = "/{gameId}/move")
-    public ModelAndView move(@PathVariable long gameId, @RequestBody MoveCommandDto MoveCommandDto) {
+    @PutMapping(path = "/{gameId}/move", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String move(@PathVariable long gameId, @RequestBody MoveCommandDto MoveCommandDto) {
         chessGameService.move(gameId, MoveCommandDto);
-        return getModelWithGameMessage(MOVE_SUCCESS_MESSAGE, "redirect:/game/" + gameId);
+        return "redirect:/game/" + gameId;
     }
 
     @DeleteMapping("/{gameId}/exit")
@@ -73,21 +76,6 @@ public class ChessGameController {
         ModelAndView modelAndView = new ModelAndView(url);
         modelAndView.addObject("gameMessage", message);
         return modelAndView;
-    }
-
-    private ModelAndView getModel(HttpServletRequest request, long gameId) {
-        ModelAndView modelAndView = new ModelAndView("game");
-        modelAndView.addObject("pieces",
-            BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
-        modelAndView.addObject("gameId", gameId);
-        modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
-        modelAndView.addObject("gameMessage", getGameMessage(request));
-        return modelAndView;
-    }
-
-    private String getGameMessage(HttpServletRequest request) {
-        String decodedQueryString = URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8);
-        return decodedQueryString.split("gameMessage=")[1];
     }
 
 }

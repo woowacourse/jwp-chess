@@ -30,9 +30,8 @@
   <ul class="room_list">
     {{#each rooms}}
       <div id="room">
-        <form enctype="text/plain" action="/game/start" method="get">
+        <form enctype="text/plain" action="/game/{{id}}" method="get">
           방번호: {{id}} | 방이름: {{title}}
-          <input type="hidden" name="gameId" value="{{id}}">
           <br>
           <button type="submit" id="main-button">입장하기</button>
         </form>
@@ -42,8 +41,6 @@
           <div id="box-{{id}}">
             <input type="button" value="삭제하기" id="main-button" onclick="add_textbox({{id}})">
             <input type="hidden" name="id" value={{id}}>
-<!--            <input type='text' name='password'>-->
-<!--            <button type='submit' id='main-button'>비밀번호 입력</button>-->
           </div>
         </form>
       </div>

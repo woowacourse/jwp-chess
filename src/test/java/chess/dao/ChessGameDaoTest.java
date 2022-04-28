@@ -33,9 +33,10 @@ class ChessGameDaoTest {
     @DisplayName("게임을 올바르게 저장한다.")
     void saveChessGame() {
         String newGameName = "new Game";
+        String password = "password";
         Team turn = Team.WHITE;
 
-        chessGameDao.save(newGameName, turn);
+        chessGameDao.save(newGameName, password, turn);
         Optional<Integer> id = chessGameDao.findRoomIdByName(newGameName);
 
         assertThat(id.isPresent()).isTrue();

@@ -37,7 +37,7 @@ public class ChessGameService {
         final Player whitePlayer = new Player(new WhiteGenerator(), Team.WHITE);
         final Player blackPlayer = new Player(new BlackGenerator(), Team.BLACK);
         final ChessGame chessGame = new ChessGame(whitePlayer, blackPlayer);
-        return saveNewRoom(chessGame, roomName);
+        return saveNewRoom(chessGame, newRoomInfo.getPassword(), roomName);
     }
 
     private void validatePassword(NewRoomInfo newRoomInfo) {
@@ -48,8 +48,8 @@ public class ChessGameService {
         }
     }
 
-    private long saveNewRoom(final ChessGame chessGame, final String roomName) {
-        roomDao.save(roomName, chessGame.getTurn());
+    private long saveNewRoom(final ChessGame chessGame, final String password, final String roomName) {
+        roomDao.save(roomName, password, chessGame.getTurn());
         final long roomId = findRoomIdByName(roomName);
         pieceDao.saveAllPieces(chessGame.getCurrentPlayer(), roomId);
         pieceDao.saveAllPieces(chessGame.getOpponentPlayer(), roomId);

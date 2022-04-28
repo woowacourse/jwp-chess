@@ -26,9 +26,9 @@ public class RoomDao {
         }
     }
 
-    public void save(final String roomName, final Team turn) {
+    public void save(final String roomName, final String password, final Team turn) {
         final String sql = "insert into room (name, password, turn) values (?, ?, ?)";
-        jdbcTemplate.update(sql, roomName, "111", turn.getName());
+        jdbcTemplate.update(sql, roomName, password, turn.getName());
     }
 
     public String findTurn(final long roomId) {

@@ -202,15 +202,15 @@
         const pathName = window.location.pathname;
 
         const res = await fetch(`/api${pathName}/scores`);
-        const score = await res.json();
+        const data = await res.json();
 
         if (!res.ok) {
             document.getElementById("error").innerText = data.message;
             return;
         }
 
-        document.getElementById('whiteScore').innerText = `WHITE 점수 : ${score.whiteScore}`;
-        document.getElementById('blackScore').innerText = `BLACK 점수 : ${score.blackScore}`;
+        document.getElementById('whiteScore').innerText = `WHITE 점수 : ${data.whiteScore}`;
+        document.getElementById('blackScore').innerText = `BLACK 점수 : ${data.blackScore}`;
     }
 
     async function fetchTurn() {

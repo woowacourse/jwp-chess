@@ -1,9 +1,16 @@
 .horizontal-vertical-center {
-  margin-top: 50px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.margin-top50 {
+  margin-top: 50px;
 }
 
 .chess-ui {
@@ -116,13 +123,13 @@ img {
 }
 
 .input-box {
-  width: 120px;
-  height: 30px;
+  width: 140px;
+  height: 37px;
   position: relative;
   padding: 5px 8px;
-  margin: 7px 3px;
+  margin: 12px 3px;
   border-radius: 15px;
-  font-size: 10px;
+  font-size: 13px;
   font-family: "paybooc-Light", sans-serif;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }

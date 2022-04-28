@@ -1,22 +1,16 @@
-const newGameButton = document.getElementById("newGame");
-const resumeGameButton = document.getElementById("resumeGame");
 const stopButton = document.getElementById("stopButton");
 const statusButton = document.getElementById("statusButton")
 let current = "";
 let destination = "";
-let gameName = "";
+let roomName = "";
+let roomId = "";
 const horizontalId = ["a", "b", "c", "d", "e", "f", "g", "h"]
 const verticalId = ["1", "2", "3", "4", "5", "6", "7", "8"]
 
-newGameButton.addEventListener("click", async function () {
-    let chessMap = await newGame();
-    await setChessMap(chessMap);
-});
-
-resumeGameButton.addEventListener("click", async function () {
-    let chessMap = await resumeGame();
+window.onload = async function () {
+    let chessMap = await loadGame();
     await setChessMap(chessMap)
-})
+}
 
 statusButton.addEventListener("click", async function () {
     await getStatus();
@@ -30,41 +24,26 @@ stopButton.addEventListener("click", async function () {
     }
 });
 
-async function newGame() {
-    gameName = document.getElementById('newRoomName').value;
-
-    let chessGame = await fetch("/game?name=" + gameName, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({}),
-    }).then(handleErrors)
-        .catch(function (error) {
-            alert(error.message);
-        })
-    chessGame = await chessGame.json();
-    document.getElementById("turnInfo").innerHTML = "현재 턴: " + chessGame.turn;
-    return chessGame.chessMap;
-}
-
-async function resumeGame() {
-    gameName = document.getElementById('existRoomName').value;
-
-    let boardAndTurnInfo = await fetch("/game?name=" + gameName, {
+async function loadGame() {
+    let response = await fetch("/game/load", {
         method: "GET"
     }).then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         })
-    boardAndTurnInfo = await boardAndTurnInfo.json();
+    response = await response.json();
     document.getElementById("turnInfo").innerHTML = "현재 턴: "
-        + boardAndTurnInfo.turn;
-    return boardAndTurnInfo.chessMap;
+        + response.turn;
+
+    roomId = response.roomId;
+    roomName = response.roomName;
+    history.pushState(null, null, "/game/" + roomId);
+    document.getElementById("roomInfo").innerHTML = "♟️ "+ roomName + "체스 게임"
+    return response.chessMap;
 }
 
 async function getStatus() {
-    let status = await fetch("/status?name=" + gameName)
+    let status = await fetch("/status?name=" + roomName)
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
@@ -92,7 +71,7 @@ async function finish() {
 }
 
 async function deleteAndFinish() {
-    await fetch("/game?name=" + gameName, {
+    await fetch("/game?name=" + roomName, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -138,7 +117,7 @@ async function requestMovePiece(current, destination) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            chessGameName: gameName,
+            chessGameName: roomName,
             current: current,
             destination: destination,
         }),

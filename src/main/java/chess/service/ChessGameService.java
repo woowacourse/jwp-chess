@@ -28,7 +28,7 @@ public class ChessGameService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGameDto createNewRoom(final NewRoomInfo newRoomInfo) {
+    public Long createNewRoom(final NewRoomInfo newRoomInfo) {
         validatePassword(newRoomInfo);
         String roomName = newRoomInfo.getName();
         if (roomDao.findRoomIdByName(roomName).isPresent()) {
@@ -37,8 +37,7 @@ public class ChessGameService {
         final Player whitePlayer = new Player(new WhiteGenerator(), Team.WHITE);
         final Player blackPlayer = new Player(new BlackGenerator(), Team.BLACK);
         final ChessGame chessGame = new ChessGame(whitePlayer, blackPlayer);
-        saveNewRoom(chessGame, roomName);
-        return ChessGameDto.of(chessGame, roomName);
+        return saveNewRoom(chessGame, roomName);
     }
 
     private void validatePassword(NewRoomInfo newRoomInfo) {
@@ -49,11 +48,12 @@ public class ChessGameService {
         }
     }
 
-    private void saveNewRoom(final ChessGame chessGame, final String roomName) {
+    private long saveNewRoom(final ChessGame chessGame, final String roomName) {
         roomDao.save(roomName, chessGame.getTurn());
         final long roomId = findRoomIdByName(roomName);
         pieceDao.saveAllPieces(chessGame.getCurrentPlayer(), roomId);
         pieceDao.saveAllPieces(chessGame.getOpponentPlayer(), roomId);
+        return roomId;
     }
 
     public StatusDto deleteRoom(final String roomName) {
@@ -72,9 +72,16 @@ public class ChessGameService {
         return StatusDto.of(whitePlayerResult, blackPlayerResult);
     }
 
-    public ChessGameDto loadRoom(final String roomName) {
-        final ChessGame chessGame = findRoomByName(roomName);
-        return ChessGameDto.of(chessGame, roomName);
+    public ChessGameDto loadRoom(final long roomId) {
+        final GameNameAndTurnDto gameNameAndTurn = roomDao.findNameAndTurnById(roomId);
+        List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(roomId, Team.WHITE.getName());
+        List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(roomId, Team.BLACK.getName());
+        final Player whitePlayer = new Player(toPieces(whitePieces), Team.WHITE);
+        final Player blackPlayer = new Player(toPieces(blackPieces), Team.BLACK);
+        final Team turn = Team.from(gameNameAndTurn.getTurn());
+        ChessGame game = new ChessGame(whitePlayer, blackPlayer, turn);
+
+        return ChessGameDto.of(roomId, game, gameNameAndTurn.getName());
     }
 
     public ChessGameDto move(final String roomName, final String current, final String destination) {
@@ -86,7 +93,7 @@ public class ChessGameService {
         roomDao.updateTurn(roomId, chessGame.getTurn());
         updatePiece(roomId, current, destination, currentPlayer.getTeamName(),
                 opponentPlayer.getTeamName());
-        return ChessGameDto.of(chessGame, roomName);
+        return ChessGameDto.of(1, chessGame, roomName);
     }
 
     public void updatePiece(final long roomId, final String current, final String destination,

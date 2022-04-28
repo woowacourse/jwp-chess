@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.player.Team;
+import chess.dto.GameNameAndTurnDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,15 @@ public class RoomDao {
     public String findTurn(final long roomId) {
         final String sql = "select turn from room where id = (?)";
         return jdbcTemplate.queryForObject(sql, String.class, roomId);
+    }
+
+    public GameNameAndTurnDto findNameAndTurnById(final long roomId) {
+        final String sql = "select name, turn from room where id =(?)";
+        return jdbcTemplate.queryForObject(sql,
+                (resultSet, count) -> new GameNameAndTurnDto(
+                        resultSet.getString("name"),
+                        resultSet.getString("turn")
+                ), roomId);
     }
 
     public void updateTurn(final long roomId, final Team turn) {

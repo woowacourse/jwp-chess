@@ -8,6 +8,9 @@ import chess.service.ChessGameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+import java.net.URI;
+
 @RestController
 public class GameController {
 
@@ -18,9 +21,11 @@ public class GameController {
     }
 
     @PostMapping("/game/create")
-    public ResponseEntity<ChessGameDto> createNewGame(@RequestBody NewRoomInfo newChessGameInfo) {
-        final ChessGameDto newChessGame = chessGameService.createNewRoom(newChessGameInfo);
-        return ResponseEntity.ok(newChessGame);
+    public ResponseEntity createNewGame(@RequestBody NewRoomInfo newChessGameInfo, HttpSession session) {
+        final Long roomId = chessGameService.createNewRoom(newChessGameInfo);
+        session.setAttribute("roomId", roomId);
+        session.getAttribute("roomId");
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/status")
@@ -35,9 +40,10 @@ public class GameController {
         return ResponseEntity.ok(status);
     }
 
-    @GetMapping("/game")
-    public ResponseEntity<ChessGameDto> loadGame(@RequestParam("name") String gameName) {
-        final ChessGameDto loadChessGame = chessGameService.loadRoom(gameName);
+    @GetMapping("/game/load")
+    public ResponseEntity<ChessGameDto> loadGame(HttpSession session) {
+        long roomId = (long) session.getAttribute("roomId");
+        final ChessGameDto loadChessGame = chessGameService.loadRoom(roomId);
         return ResponseEntity.ok(loadChessGame);
     }
 

@@ -8,6 +8,16 @@ public class ViewController {
 
     @GetMapping("/")
     public String index() {
+        return "index";
+    }
+
+    @GetMapping("/game")
+    public String game() {
         return "game";
+    }
+
+    @GetMapping("/game/create")
+    public String createGame() {
+        return "newGame";
     }
 }

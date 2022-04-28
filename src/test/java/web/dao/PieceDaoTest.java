@@ -39,6 +39,7 @@ class PieceDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("DROP TABLE IF EXISTS piece");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS room");
         jdbcTemplate.execute("DROP TABLE IF EXISTS chess_game");
         jdbcTemplate.execute("CREATE TABLE chess_game\n"
                 + "(\n"

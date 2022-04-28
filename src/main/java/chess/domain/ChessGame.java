@@ -39,7 +39,13 @@ public class ChessGame {
 
     public void validateEndGame() {
         if (!END.name().equals(this.turn)) {
-            throw new IllegalStateException("아직 체스 게임이 진행 중이기에 삭제할 수 없습니다.");
+            throw new IllegalStateException("아직 체스 게임이 진행 중입니다.");
+        }
+    }
+
+    public void validateRunningGame() {
+        if (END.name().equals(this.turn)) {
+            throw new IllegalStateException("이미 종료된 게임입니다.");
         }
     }
 

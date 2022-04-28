@@ -1,7 +1,7 @@
 let gamePassword = new URLSearchParams(window.location.search).get("password");
 let gameUri = new URLSearchParams(window.location.search).get("location");
 
-window.onload= async function () {
+window.onload = async function () {
     await refreshAndDisplayBoard();
 }
 
@@ -134,4 +134,13 @@ async function scoreButton() {
     } else {
         alert("게임을 로드하지 않았습니다.");
     }
+}
+
+async function endButton() {
+    await fetch(gameUri + "/end", {
+        method: 'PATCH',
+    }).then(handlingException)
+        .catch(error => {
+            alert(error.message);
+        });
 }

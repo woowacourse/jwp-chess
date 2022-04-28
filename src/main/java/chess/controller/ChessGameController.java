@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -74,6 +75,12 @@ public class ChessGameController {
     public ResponseEntity<Void> promotionPiece(@PathVariable long chessGameId,
                                                @RequestBody PromotionRequest promotionRequest) {
         chessGameService.promotion(chessGameId, promotionRequest.toPromotionPiece());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{chessGameId}/end")
+    public ResponseEntity<Void> endChessGame(@PathVariable long chessGameId) {
+        chessGameService.endChessGame(chessGameId);
         return ResponseEntity.noContent().build();
     }
 

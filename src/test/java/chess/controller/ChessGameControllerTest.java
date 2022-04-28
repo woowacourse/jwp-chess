@@ -134,6 +134,19 @@ class ChessGameControllerTest {
     }
 
     @Test
+    @DisplayName("체스 게임 종료")
+    void endChessGame() {
+        long chessGameId = chessGameDao.createChessGame(chessGame)
+                .getId();
+
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("chessgames/" + chessGameId + "/end")
+                .then().log().all()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
     @DisplayName("체스 점수 반환")
     void calculateScore() {
         long chessGameId = chessGameDao.createChessGame(chessGame)

@@ -1,5 +1,6 @@
 package chess.service;
 
+import static chess.domain.state.Turn.END;
 import static chess.domain.state.Turn.WHITE_TURN;
 
 import chess.dao.ChessGameDao;
@@ -62,6 +63,13 @@ public class ChessGameService {
 
         pieceDao.updatePieceRule(chessGameId, position, promotionPiece.pieceRule());
         chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
+    }
+
+    public void endChessGame(long chessGameId) {
+        ChessGame chessGame = chessGameDao.findChessGame(chessGameId);
+        chessGame.validateRunningGame();
+
+        chessGameDao.changeChessGameTurn(chessGameId, END);
     }
 
     public Map<Color, Double> currentScore(long chessGameId) {

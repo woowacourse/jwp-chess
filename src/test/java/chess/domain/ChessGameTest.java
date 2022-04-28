@@ -1,5 +1,6 @@
 package chess.domain;
 
+import static chess.ChessGameFixture.createEndChessGame;
 import static chess.ChessGameFixture.createRunningChessGame;
 import static chess.domain.state.Turn.WHITE_TURN;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,6 +38,16 @@ class ChessGameTest {
 
         assertThatThrownBy(chessGame::validateEndGame)
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("아직 체스 게임이 진행 중이기에 삭제할 수 없습니다.");
+                .hasMessageContaining("아직 체스 게임이 진행 중입니다.");
+    }
+
+    @Test
+    @DisplayName("체스 게임이 이미 종료된 상태에서 게임이 진행중인지 검증")
+    void validateRunningGame(){
+        ChessGame chessGame = createEndChessGame();
+
+        assertThatThrownBy(chessGame::validateRunningGame)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("이미 종료된 게임입니다.");
     }
 }

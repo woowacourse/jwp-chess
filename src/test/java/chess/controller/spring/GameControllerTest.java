@@ -119,6 +119,23 @@ class GameControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("같은 멤버 id로 게임 생성을 요청하면 400을 반환한다.")
+    @Test
+    void createGameSameMember() {
+        final Long member1Id = memberService.addMember("알렉스");
+        final String title = "테스트 방";
+        final String password = "1234";
+
+        final CreateGameRequestDto createGameRequestDto = new CreateGameRequestDto(title, password, member1Id,
+                member1Id);
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(createGameRequestDto)
+                .when().post("/games")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("종료되지 않은 게임에 삭제요청하면 400 상태코드를 반환한다.")
     @Test
     void deletePlayingGame() {

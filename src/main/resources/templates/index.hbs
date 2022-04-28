@@ -86,13 +86,14 @@
             headers: {
                 'Content-Type': 'application/json',
             }
-        }).then(response => {
+        }).then(async response => {
             if (response.ok) {
                 alert("게임이 생성되었습니다.");
                 location.reload();
                 return;
             }
-            alert(response.statusText);
+            let message = await response.text();
+            alert(message);
         });
     }
 

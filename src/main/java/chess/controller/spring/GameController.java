@@ -98,6 +98,11 @@ public class GameController {
     @PostMapping
     @ResponseBody
     public ResponseEntity<Long> createGame(@RequestBody final CreateGameRequestDto createGameRequestDto) {
+        final Long whiteId = createGameRequestDto.getWhiteId();
+        final Long blackId = createGameRequestDto.getBlackId();
+        if (whiteId.equals(blackId)) {
+            throw new IllegalArgumentException("같은 멤버를 선택해서 게임을 생성할 수 없습니다.");
+        }
         final Long gameId = gameService.createGame(
                 createGameRequestDto.getTitle(),
                 createGameRequestDto.getPassword(),

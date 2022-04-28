@@ -11,6 +11,9 @@ import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.dto.ChessBoardDto;
 import chess.dto.ResponseDto;
+import chess.dto.RoomDto;
+import chess.dto.RoomsDto;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
@@ -132,5 +135,10 @@ public class ChessGameService {
         } catch (Exception e){
             return new ResponseDto(501, e.getMessage());
         }
+    }
+
+    public RoomsDto getRooms() {
+        List<RoomDto> rooms = boardDao.findAllRooms();
+        return new RoomsDto(rooms);
     }
 }

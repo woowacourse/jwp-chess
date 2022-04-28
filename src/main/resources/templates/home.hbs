@@ -7,7 +7,19 @@
 </head>
 <body>
 <div align="center">
-<button type="button" onclick="start()"> 체스게임 시작 </button>
+    <form>
+        <input type="text" id="titleId" title="title" placeholder="방 제목">
+        <input type="text" id="passwordId" title="password" placeholder="비밀번호">
+        <input type="button" value="방 만들기" onclick="create()">
+    </form>
+    {{#roomsDto}}
+        {{#each rooms}}
+            <div>
+                {{this.title}}
+                <button type="button" onclick="join({{this.boardId}})"> 게임 참여 </button>
+            </div>
+        {{/each}}
+    {{/roomsDto}}
 </div>
 </body>
 </html>

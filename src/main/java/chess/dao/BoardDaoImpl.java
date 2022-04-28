@@ -2,14 +2,16 @@ package chess.dao;
 
 import chess.domain.ChessGame2;
 import chess.domain.Color;
+import chess.dto.RoomDto;
 import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BoardDaoImpl implements BoardDao{
+public class BoardDaoImpl implements BoardDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -57,5 +59,12 @@ public class BoardDaoImpl implements BoardDao{
     public void updateTurn(Long boardId, Color turn) {
         final String sql = "update board set turn = ? where id = ?";
         jdbcTemplate.update(sql, turn.name(), boardId);
+    }
+
+    @Override
+    public List<RoomDto> findAllRooms() {
+        final String sql = "select id, title from board";
+        return jdbcTemplate.query(sql,
+                (resultSet, rowNum) -> new RoomDto(resultSet.getLong("id"), resultSet.getString("title")));
     }
 }

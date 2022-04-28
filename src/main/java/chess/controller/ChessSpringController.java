@@ -24,15 +24,12 @@ public class ChessSpringController {
     }
 
     @GetMapping("/")
-    public String home() {
-        return "home";
+    public ModelAndView home() {
+        final ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("roomsDto", chessGameService.getRooms());
+        modelAndView.setViewName("home");
+        return modelAndView;
     }
-
-//    @GetMapping("/start")
-//    public @ResponseBody
-//    ResponseDto start() {
-//        return chessGameService.start();
-//    }
 
     @PostMapping("/create")
     @ResponseBody
@@ -40,20 +37,14 @@ public class ChessSpringController {
         return chessGameService.create(roomInfoDto.getTitle(), roomInfoDto.getPassword());
     }
 
-//    @GetMapping("/chess")
-//    public ModelAndView chess() {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.addObject("boardDto", chessGameService.getBoard());
-//        modelAndView.setViewName("index");
-//        return modelAndView;
-//    }
-//
-//    @PostMapping("/move")
-//    public @ResponseBody
-//    ResponseDto move(@RequestBody String request) {
-//        List<String> command = Arrays.asList(request.split(" "));
-//        return chessGameService.move(command.get(0), command.get(1));
-//    }
+    @GetMapping("/board")
+    public ModelAndView board(@RequestParam(name = "id") Long id) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView
+                .addObject("boardDto", chessGameService.getBoard(id));
+        modelAndView.setViewName("index");
+        return modelAndView;
+    }
 
     @PostMapping("/board/move")
     @ResponseBody
@@ -61,15 +52,6 @@ public class ChessSpringController {
         List<String> command = Arrays.asList(request.split(" "));
         return chessGameService.move(id, command.get(0), command.get(1));
     }
-
-//    @GetMapping("/chess-status")
-//    public ModelAndView status() {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView
-//                .addObject("status", StatusDto.of(chessGameService.statusOfWhite(), chessGameService.statusOfBlack()));
-//        modelAndView.setViewName("status");
-//        return modelAndView;
-//    }
 
     @GetMapping("/board/chess-status")
     public ModelAndView status(@RequestParam(name = "id") Long id) {

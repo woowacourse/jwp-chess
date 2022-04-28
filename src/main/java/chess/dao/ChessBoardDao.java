@@ -11,14 +11,15 @@ import chess.domain.position.Position;
 import chess.dto.PieceDto;
 
 @Repository
-public class BoardDao {
+public class ChessBoardDao implements BoardDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public BoardDao(JdbcTemplate jdbcTemplate) {
+    public ChessBoardDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public void savePieces(Map<Position, Piece> board, long roomId) {
         final String sql = "insert into board (position, symbol, room_id) values(?, ?, ?)";
 
@@ -30,6 +31,7 @@ public class BoardDao {
                 });
     }
 
+    @Override
     public List<PieceDto> findAllPiece(long roomId) {
         String sql = "select * from board where room_id = ?";
 
@@ -41,12 +43,13 @@ public class BoardDao {
                 roomId);
     }
 
+    @Override
     public void updatePosition(String symbol, String destination, long roomId) {
         final String sql = "update board set symbol = ? where position = ? and room_id = ?";
-
         jdbcTemplate.update(sql, symbol, destination, roomId);
     }
 
+    @Override
     public void deleteBoard() {
         final String sql = "delete from board";
         jdbcTemplate.update(sql);

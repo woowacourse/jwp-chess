@@ -3,18 +3,15 @@ package chess.controller;
 import chess.dto.*;
 import chess.service.ChessService;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
-
 @RestController
-public class ChessSpringController {
+public class ChessGameController {
 
     private final ChessService chessService;
 
-    public ChessSpringController(ChessService chessService) {
+    public ChessGameController(ChessService chessService) {
         this.chessService = chessService;
     }
 
@@ -22,11 +19,6 @@ public class ChessSpringController {
     public ResponseEntity<BoardDto> loadBoard(@PathVariable Long id) {
         BoardDto initialBoard = chessService.getBoard(id);
         return ResponseEntity.ok().body(initialBoard);
-    }
-
-    @GetMapping("/loadGames")
-    public ResponseEntity<GamesTempDto> loadGames() {
-        return ResponseEntity.ok().body(new GamesTempDto(chessService.getGameList()));
     }
 
     @PostMapping(value = "/move/{id}")
@@ -49,20 +41,5 @@ public class ChessSpringController {
     public ResponseEntity<GameStateDto> endGame(@PathVariable Long id) {
         chessService.updateEndStatus(id);
         return ResponseEntity.ok().body(chessService.findWinner());
-    }
-
-    @ExceptionHandler({RuntimeException.class})
-    public ResponseEntity<String> runTimeExceptionHandle(RuntimeException exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
-    }
-
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<String> IllegalArgumentExceptionHandle(IllegalArgumentException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
-    }
-
-    @ExceptionHandler({SQLException.class})
-    public ResponseEntity<String> DBExceptionHandle(SQLException exception) {
-        return ResponseEntity.internalServerError().body(exception.getMessage());
     }
 }

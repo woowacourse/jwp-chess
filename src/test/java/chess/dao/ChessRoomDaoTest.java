@@ -2,9 +2,10 @@ package chess.dao;
 
 import chess.domain.Team;
 import chess.dto.GameIdDto;
-import chess.dto.RoomTempDto;
+import chess.dto.MakeRoomDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -14,17 +15,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @JdbcTest
-public class RoomDaoTest {
+public class ChessRoomDaoTest {
 
-    private RoomDao roomDao;
+    private ChessRoomDao chessRoomDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        roomDao = new RoomDao(jdbcTemplate);
-
+        chessRoomDao = new ChessRoomDao(jdbcTemplate);
+        jdbcTemplate.execute("DROP TABLE room IF EXISTS CASCADE");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS room(" +
                 "  id bigint NOT NULL AUTO_INCREMENT,\n" +
                 "  status varchar(50) NOT NULL,\n" +
@@ -33,28 +34,32 @@ public class RoomDaoTest {
                 "  PRIMARY KEY (id)" +
                 ")");
 
-        jdbcTemplate.update("insert into room (id, status, name, password) values(?, ?, ?, ?)", 1000, "WHITE", "green", "1234");
+        jdbcTemplate.update("insert into room (id, status, name, password) values(?, ?, ?, ?)",
+                1000, "WHITE", "green", "1234");
     }
 
     @AfterEach
     void delete() {
-        assertThatNoException().isThrownBy(() -> roomDao.deleteGame(1000));
+        assertThatNoException().isThrownBy(() -> chessRoomDao.deleteGame(1000));
     }
 
     @Test
+    @DisplayName("체스 게임 방 검색 확인")
     void findRoom() {
-        assertThat(roomDao.findById(new RoomTempDto("green", "1234"))).isNotNull();
+        assertThat(chessRoomDao.findById(new MakeRoomDto("green", "1234"))).isNotNull();
     }
 
     @Test
+    @DisplayName("체스 게임 방 저장 확인")
     void saveRoom() {
-        assertThatNoException().isThrownBy(() -> roomDao.makeGame(Team.WHITE,
-                new RoomTempDto("green", "1234")));
+        assertThatNoException().isThrownBy(() -> chessRoomDao.makeGame(Team.WHITE,
+                new MakeRoomDto("green", "1234")));
     }
 
     @Test
+    @DisplayName("체스 게임 방 상태 업데이트 확인")
     void updateStatus() {
-        assertThatNoException().isThrownBy(() -> roomDao.updateStatus(Team.WHITE,
-                roomDao.findById(new GameIdDto(1000L)).getId()));
+        assertThatNoException().isThrownBy(() -> chessRoomDao.updateStatus(Team.WHITE,
+                chessRoomDao.findById(new GameIdDto(1000L)).getId()));
     }
 }

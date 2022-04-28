@@ -16,7 +16,7 @@ function move(position) {
 
 function movePiece(object, position) {
     $.ajax({
-        url: "/move",
+        url: "/move/" + document.getElementById("gameId").innerText,
         type: "POST",
         accept: 'application/json; charset=utf-8',
         contentType: 'application/json; charset=utf-8',

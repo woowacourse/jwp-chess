@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,18 +24,18 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 
 
 @JdbcTest
-class BoardDaoTest {
+class ChessBoardDaoTest {
 
-    private BoardDao boardDao;
-    private RoomDao roomDao;
+    private ChessBoardDao chessBoardDao;
+    private ChessRoomDao chessRoomDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        boardDao = new BoardDao(jdbcTemplate);
-        roomDao = new RoomDao(jdbcTemplate);
+        chessBoardDao = new ChessBoardDao(jdbcTemplate);
+        chessRoomDao = new ChessRoomDao(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE board IF EXISTS");
         jdbcTemplate.execute("DROP TABLE room IF EXISTS");
@@ -48,7 +47,8 @@ class BoardDaoTest {
                 "  PRIMARY KEY (id)" +
                 ")");
 
-        jdbcTemplate.update("insert into room (id, status, name, password) values(?, ?, ?, ?)", 1000, "WHITE", "green", "1234");
+        jdbcTemplate.update("insert into room (id, status, name, password) values(?, ?, ?, ?)",
+                1000, "WHITE", "green", "1234");
 
         jdbcTemplate.execute("CREATE TABLE board(\n" +
                 "  id bigint NOT NULL AUTO_INCREMENT,\n" +
@@ -67,12 +67,12 @@ class BoardDaoTest {
     }
 
     private Long roomId() {
-        return roomDao.findById(new GameIdDto(1000L)).getId();
+        return chessRoomDao.findById(new GameIdDto(1000L)).getId();
     }
 
     @Test
     void findAll() {
-        List<PieceDto> pieces = boardDao.findAllPiece(roomId());
+        List<PieceDto> pieces = chessBoardDao.findAllPiece(roomId());
         assertThat(pieces).hasSize(3);
     }
 
@@ -80,19 +80,19 @@ class BoardDaoTest {
     void saveAll() {
         Map<Position, Piece> board = Map.of(Position.of(Column.A, Row.EIGHT), new Pawn(Team.BLACK));
         assertThatNoException().isThrownBy(() ->
-                boardDao.savePieces(board, roomId()));
+                chessBoardDao.savePieces(board, roomId()));
     }
 
     @Test
     void updatePosition() {
         assertThatNoException().isThrownBy(() ->
-                boardDao.updatePosition("a7", "a6", roomId()));
+                chessBoardDao.updatePosition("a7", "a6", roomId()));
     }
 
    @Test
    void deleteAllPiece() {
         assertThatNoException().isThrownBy(() ->
-                boardDao.deleteBoard());
+                chessBoardDao.deleteBoard());
 
    }
 }

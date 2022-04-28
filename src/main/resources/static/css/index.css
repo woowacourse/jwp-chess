@@ -75,3 +75,10 @@ p {
     text-decoration: none;
     text-align: center;
 }
+
+.button {
+    margin-top: 20px;
+    width: 250px;
+    height: 150px;
+    background-size: 200px;
+}

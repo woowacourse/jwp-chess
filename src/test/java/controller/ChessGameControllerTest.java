@@ -2,9 +2,9 @@ package controller;
 
 
 import chess.SpringChessApplication;
+import chess.dto.MakeRoomDto;
 import chess.dto.MoveDto;
 
-import chess.dto.RoomTempDto;
 import chess.service.ChessService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import static org.hamcrest.core.Is.is;
 
 @SpringBootTest(classes = SpringChessApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ChessSpringControllerTest {
+public class ChessGameControllerTest {
 
     @LocalServerPort
     int port;
@@ -32,7 +32,7 @@ public class ChessSpringControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        id = chessService.makeGame(new RoomTempDto("green green", "1234"));
+        id = chessService.makeGame(new MakeRoomDto("green green", "1234"));
     }
 
     @AfterEach
@@ -91,21 +91,9 @@ public class ChessSpringControllerTest {
                 .body("size()", is(3));
     }
 
-    @DisplayName("game lists - GET")
-    @Test
-    @Order(5)
-    void getGameList() {
-        RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/loadGames")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(1));
-    }
-
     @DisplayName("game end - POST")
     @Test
-    @Order(6)
+    @Order(5)
     void endGame() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

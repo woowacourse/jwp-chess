@@ -3,35 +3,41 @@ package chess.service;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 
-import chess.configuration.RepositoryConfiguration;
+import chess.configuration.FakeBoardRepository;
+import chess.configuration.FakePieceRepository;
+import chess.configuration.FakeRoomRepository;
 import chess.exception.UserInputException;
 import chess.repository.RoomRepository;
 import chess.web.dto.RoomDto;
 
-@SpringBootTest
-@Import(RepositoryConfiguration.class)
 class RoomServiceTest {
 
-	@Autowired
 	private RoomService roomService;
-	@Autowired
+
 	private RoomRepository roomRepository;
 
 	private final String testName = "summer";
 	private final String password = "summer";
 
+	@BeforeEach
+	void init() {
+		roomRepository = new FakeRoomRepository();
+		roomService = new RoomService(
+			new GameService(new FakePieceRepository(), new FakeBoardRepository()),
+			roomRepository
+		);
+	}
+
 	@AfterEach
 	void deleteCreated() {
 		roomRepository.findAll()
-			.forEach(room -> roomRepository.deleteById((int) room.getId()));
+			.forEach(room -> roomRepository.deleteById((int)room.getId()));
 	}
 
 	@Test

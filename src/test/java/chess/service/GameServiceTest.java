@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
+import chess.configuration.FakeBoardRepository;
+import chess.configuration.FakePieceRepository;
+import chess.configuration.FakeRoomRepository;
 import chess.configuration.RepositoryConfiguration;
 import chess.exception.UserInputException;
 import chess.repository.RoomRepository;
@@ -20,24 +23,22 @@ import chess.web.dto.CommendDto;
 import chess.web.dto.PieceDto;
 import chess.web.dto.RoomDto;
 
-@SpringBootTest
-@Import(RepositoryConfiguration.class)
 class GameServiceTest {
 
 	private static final String testName = "summer";
 	private static final String testPassword = "summer";
 
-	@Autowired
 	private RoomService roomService;
-	@Autowired
 	private GameService gameService;
-	@Autowired
 	private RoomRepository roomRepository;
 	private int roomId;
 
 	@BeforeEach
 	void init() {
+		gameService = new GameService(new FakePieceRepository(), new FakeBoardRepository());
+		roomRepository = new FakeRoomRepository();
 		roomId = roomRepository.save(new RoomDto(testName, testPassword));
+		roomService = new RoomService(gameService, roomRepository);
 	}
 
 	@AfterEach

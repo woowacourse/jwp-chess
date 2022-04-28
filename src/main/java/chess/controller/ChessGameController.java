@@ -37,6 +37,11 @@ public class ChessGameController {
         return ResponseEntity.ok().body(chessService.getBoard(id));
     }
 
+    @GetMapping("/loadGames")
+    public ResponseEntity<GamesDto> loadGames() {
+        return ResponseEntity.ok().body(new GamesDto(chessService.getGameList()));
+    }
+
     @PostMapping("/end/{id}")
     public ResponseEntity<GameStateDto> endGame(@PathVariable Long id) {
         chessService.updateEndStatus(id);

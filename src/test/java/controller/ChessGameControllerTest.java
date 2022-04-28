@@ -91,9 +91,21 @@ public class ChessGameControllerTest {
                 .body("size()", is(3));
     }
 
-    @DisplayName("game end - POST")
+    @DisplayName("game lists - GET")
     @Test
     @Order(5)
+    void getGameList() {
+        RestAssured.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().get("/loadGames")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1));
+    }
+
+    @DisplayName("game end - POST")
+    @Test
+    @Order(6)
     void endGame() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

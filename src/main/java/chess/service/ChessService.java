@@ -41,6 +41,11 @@ public class ChessService {
         return chessRoomDao.findById(makeRoomDto).getId();
     }
 
+    public void loadExistGame(long id) {
+        RoomDto room = chessRoomDao.findById(new GameIdDto(id));
+        gameState = initGameState(new RoomStatusDto(room.getId(), room.getStatus()));
+    }
+
     private void createGame(MakeRoomDto makeRoomDto) {
         chessRoomDao.makeGame(Team.WHITE, makeRoomDto);
     }
@@ -133,6 +138,10 @@ public class ChessService {
     public ScoreDto getStatus() {
         Score score = new Score(gameState.getBoard());
         return new ScoreDto(score.getTotalScoreWhiteTeam(), score.getTotalScoreBlackTeam());
+    }
+
+    public List<RoomDto> getGameList() {
+        return chessRoomDao.getGames();
     }
 
     private Map<String, String> toBoardFormat() {

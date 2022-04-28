@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.entity.CommandEntity;
 import chess.entity.RoomEntity;
+import chess.repository.RoomDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,12 +22,12 @@ public class CommandServiceTest {
     private CommandService commandService;
 
     @Autowired
-    private RoomService roomService;
+    private RoomDao roomDao;
     private Long roomId;
 
     @BeforeEach
     void setUp() {
-        RoomEntity roomEntity = roomService.create("room1", "1234");
+        RoomEntity roomEntity = roomDao.insert(new RoomEntity("room1", "1234"));
         roomId = roomEntity.getId();
     }
 
@@ -37,14 +38,12 @@ public class CommandServiceTest {
         assertThat(commandEntity.getCommand()).isEqualTo("move b2 b4");
     }
 
-    //TODO: 리팩토링
-//    @DisplayName("id에 해당되는 체스방의 모든 명령어를 가져온다.")
-//    @Test
-//    void findCommandsById() {
-//        commandService.save(new CommandEntity(roomId, "move b2 b4"));
-//        commandService.save(new CommandEntity(roomId, "move b7 b5"));
-//        commandService.save(new CommandEntity(roomId, "move c2 c4"));
-//        List<String> commands = roomService.findCommandsById(roomEntity.getId());
-//        assertThat(commands.size()).isEqualTo(3);
-//    }
+    @DisplayName("id에 해당되는 체스방의 모든 명령어를 가져온다.")
+    @Test
+    void findCommandsById() {
+        commandService.create(roomId, "move b2 b4");
+        commandService.create(roomId, "move b7 b5");
+        commandService.create(roomId, "move c2 c4");
+        assertThat(commandService.findAllByRoomID(roomId)).containsExactly("move b2 b4", "move b7 b5", "move c2 c4");
+    }
 }

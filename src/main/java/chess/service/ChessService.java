@@ -3,6 +3,7 @@ package chess.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
 import chess.dto.ChessGameDto;
@@ -55,7 +56,7 @@ public class ChessService {
         String gameID = chessGameDto.getGameID();
         ChessGame chessGame;
         try {
-            GameTurn gameTurn = getTurn(gameID);
+            GameTurn gameTurn = getTurn(chessGameDto);
             checkCanContinue(gameTurn);
             chessGame = loadSavedChessGame(chessGameDto);
         } catch (RuntimeException e) {
@@ -65,8 +66,8 @@ public class ChessService {
         return chessGame;
     }
 
-    public GameTurn getTurn(String gameID) {
-        return GameTurn.find(chessGameDao.findTurnByID(gameID));
+    public GameTurn getTurn(ChessGameDto chessGameDto) {
+        return GameTurn.find(chessGameDao.findTurnByID(chessGameDto.getGameID()));
     }
 
     private void checkCanContinue(GameTurn gameTurn) {
@@ -77,7 +78,7 @@ public class ChessService {
 
     public ChessGame loadSavedChessGame(ChessGameDto chessGameDto) {
         return new ChessGame(new SavedBoardGenerator(pieceDao.findByGameID(chessGameDto.getGameID())),
-                getTurn(chessGameDto.getGameID()));
+                getTurn(chessGameDto));
     }
 
     private ChessGame loadNewChessGame() {
@@ -112,7 +113,7 @@ public class ChessService {
 
     public List<ChessGameDto> getGameIDs() {
         return chessGameDao.findAllGame().stream()
-                .map(ChessGameDto::new)
+                .map(gameID -> new ChessGameDto(gameID, null))
                 .collect(Collectors.toList());
     }
 
@@ -139,5 +140,14 @@ public class ChessService {
 
     public boolean isValidPassword(ChessGameDto chessGameDto) {
         return chessGameDao.findPasswordByGameID(chessGameDto.getGameID(), chessGameDto.getPassword());
+    }
+
+    public boolean isGameExist(ChessGameDto chessGameDto) {
+        try {
+            chessGameDao.findTurnByID(chessGameDto.getGameID());
+            return true;
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return false;
+        }
     }
 }

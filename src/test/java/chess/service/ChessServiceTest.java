@@ -47,10 +47,10 @@ public class ChessServiceTest {
         jdbcTemplate.update(deleteChessGameSql);
     }
 
-    @Test
-    @DisplayName("gameID를 이용해 DB로부터 불러온 turn이 해당 gameTurn과 일치한다")
-    void getTurn() {
-        ChessService dbService = new ChessService(new ChessGameDao(jdbcTemplate), new PieceDao(jdbcTemplate));
-        assertThat(dbService.getTurn("test")).isEqualTo(GameTurn.WHITE);
-    }
+    // @Test
+    // @DisplayName("gameID를 이용해 DB로부터 불러온 turn이 해당 gameTurn과 일치한다")
+    // void getTurn() {
+    //     ChessService dbService = new ChessService(new ChessGameDao(jdbcTemplate), new PieceDao(jdbcTemplate));
+    //     assertThat(dbService.getTurn("test")).isEqualTo(GameTurn.WHITE);
+    // }
 }

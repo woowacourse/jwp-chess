@@ -27,7 +27,7 @@ public class InGameController {
     @PostMapping()
     public String runGame(@ModelAttribute ChessGameDto chessGameDto, @RequestParam(name = "restart") String restart,
             Model model) {
-        if (!chessService.isValidPassword(chessGameDto)) {
+        if (chessService.isGameExist(chessGameDto) && !chessService.isValidPassword(chessGameDto)) {
             model.addAttribute("msg", "비밀 번호 틀렸지롱~ 🤪");
             model.addAttribute("games", chessService.getGameIDs());
             return "ready";

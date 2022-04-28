@@ -22,6 +22,8 @@
     <div class="textBoxWrapper">
         <form action="/games" method="post" class="inlineBtn">
             GAME ID: {{gameID}}
+            <br>
+            PASSWORD : <input type="text" name="password" class="gameIDBox"/>
             <input class="invisible" name="gameID" value="{{gameID}}" type="text">
             <input type="text" name="restart" class="invisible" value="false" />
             <input type="submit" value="START" class="btn" id="start">

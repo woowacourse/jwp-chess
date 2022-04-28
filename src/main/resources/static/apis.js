@@ -9,13 +9,15 @@ const fetchAsGet = async (path) => {
 }
 
 const fetchAsPost = async (path, body) => {
-    await fetch(`${API_HOST}${path}`, {
+    const response = await fetch(`${API_HOST}${path}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(body)
     });
+
+    return response.json();
 }
 
 const fetchAsDelete = async (path) => {
@@ -45,13 +47,13 @@ const fetchWinner = async (roomId) => {
 }
 
 const createRoom = async (title, password) => {
-    await fetchAsPost(`/rooms`, {title, password});
+    return await fetchAsPost(`/rooms`, {title, password});
 }
 
 const deleteRoom = async (id, password) => {
-    await fetchAsDelete(`/rooms/${id}?password=${password}`);
+    return await fetchAsDelete(`/rooms/${id}?password=${password}`);
 }
 
 const move = async (roomId, from, to) => {
-    await fetchAsPost(`/rooms/${roomId}/move`, {from, to})
+    return await fetchAsPost(`/rooms/${roomId}/move`, {from, to})
 }

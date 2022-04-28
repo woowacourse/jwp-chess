@@ -10,15 +10,15 @@ const CreateRoom = () => {
         setPassword(e.target.value);
     }
 
-    const handleCreateClick = () => {
-        createRoom(title, password);
-        // TODO: 생성된 방으로 리다이렉트
+    const handleCreateClick = async () => {
+        const room = await createRoom(title, password);
+        location.href = `/game.html?id=${room.id}`;
     }
 
     return (
         <React.Fragment>
-            <TextField type="text" onChange={handleTitleChange} />
-            <TextField type="password" onChange={handlePasswordChange} />
+            <TextField type="text" onChange={handleTitleChange}/>
+            <TextField type="password" onChange={handlePasswordChange}/>
 
             <Button onClick={handleCreateClick}> 방 생성하기 </Button>
         </React.Fragment>

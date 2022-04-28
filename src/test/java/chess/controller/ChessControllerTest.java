@@ -53,34 +53,34 @@ public class ChessControllerTest {
     @Test
     void getBoard() {
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/room/1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/room/1")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value());
     }
 
     @DisplayName("move - POST")
     @Test
     void move() {
-        MoveDto moveDto = new MoveDto("f2", "f3");
+        MoveDto moveDto = new MoveDto("f3", "f4");
+
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(moveDto)
-                .when().post("/room/1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(moveDto)
+            .when().post("/board/1/move")
+            .then().log().all()
+            .statusCode(HttpStatus.CREATED.value());
     }
 
-    @DisplayName("status - GET")
+    @DisplayName("score - GET")
     @Test
-    void status() {
+    void score() {
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/room/1/status")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/room/1/score")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value())
+            .body("size()", is(2));
     }
 
 
@@ -88,20 +88,30 @@ public class ChessControllerTest {
     @Test
     void reset() {
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/room/1/reset")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/room/1/reset")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value())
+            .body("size()", is(2));
     }
 
     @DisplayName("end - POST")
     @Test
     void end() {
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/room/1/end")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().post("/room/1/end")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value());
+    }
+
+    @DisplayName("status - GET")
+    @Test
+    void status() {
+        RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when().get("/room/1/status")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value());
     }
 }

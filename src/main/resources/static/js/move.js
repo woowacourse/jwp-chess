@@ -1,7 +1,10 @@
 let sourcePosition = "";
+let running = false;
 
 
 function move(position) {
+    const roomId = localStorage.getItem("roomId");
+    canMove(roomId);
     if (sourcePosition === "") {
         sourcePosition = position;
         return;
@@ -16,8 +19,13 @@ function move(position) {
 }
 
 function movePiece(object, position) {
+    const roomId = localStorage.getItem("roomId");
+    if (running === false) {
+        alert("게임이 이미 종료되었습니다.");
+        return;
+    }
     $.ajax({
-        url: "/move",
+        url: "/board/"+roomId+"/move",
         type: "POST",
         accept: 'application/json; charset=utf-8',
         contentType: 'application/json; charset=utf-8',
@@ -46,10 +54,23 @@ function resetSourPosition() {
 
 function printGameState(result) {
     if (result.running === false) {
+        running = true;
         alert(result.gameState + "가 승리했습니다.");
         document.getElementById("turn").innerText = "게임이 종료되었습니다.";
         getScore();
         return;
     }
     document.getElementById("turn").innerText = result.gameState + " Turn";
+}
+
+function canMove(roomId) {
+    $.ajax({
+        url: "/room/"+roomId+"/status",
+        type: "GET",
+        accept: 'application/json; charset=utf-8',
+        contentType: 'application/json; charset=utf-8',
+        success(data) {
+            running = data.running;
+        }
+    })
 }

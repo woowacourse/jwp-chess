@@ -1,11 +1,13 @@
 package chess.controller;
 
 import chess.dto.BoardDto;
+import chess.dto.CreateRoomDto;
+import chess.dto.DeleteRoomDto;
 import chess.dto.GameStateDto;
 import chess.dto.MoveDto;
-import chess.dto.PieceDto;
 import chess.dto.RoomDto;
 import chess.dto.ScoreDto;
+import chess.dto.StatusDto;
 import chess.service.ChessService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -24,41 +26,51 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/room")
-    public ResponseEntity<String> createRoom(@RequestBody RoomDto roomDto) {
-        chessService.createRoom(roomDto);
-        return ResponseEntity.ok().body("방이 생성되었습니다.");
-    }
-
     @GetMapping("/room")
     public ResponseEntity<List<RoomDto>> getRooms() {
         return ResponseEntity.ok().body(chessService.findRoomList());
     }
 
-    @GetMapping("/room/{roomId}")
-    public ResponseEntity<List<PieceDto>> getBoard(@PathVariable(value = "roomId") Long roomId) {
-        return ResponseEntity.ok().body(chessService.getPiecesBy(roomId));
+    @PostMapping("/room")
+    public ResponseEntity<String> createRoom(@RequestBody CreateRoomDto room) {
+        chessService.createRoom(room);
+        return ResponseEntity.ok().body("방이 생성되었습니다.");
     }
 
-    @PostMapping(value = "/room/{roomId}")
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<BoardDto> getBoard(@PathVariable(value = "roomId") Long roomId) {
+        return ResponseEntity.ok().body(chessService.getBoard(roomId));
+    }
+
+    @PostMapping(value = "/board/{roomId}/move")
     public ResponseEntity<GameStateDto> move(@PathVariable(value = "roomId") Long roomId, @RequestBody MoveDto moveDto) {
         return ResponseEntity.ok().body(chessService.move(roomId, moveDto.getSource(), moveDto.getDestination()));
     }
 
-    @GetMapping("/room/{roomId}/status")
-    public ResponseEntity<ScoreDto> getStatus(@PathVariable(value = "roomId") Long roomId) {
+    @GetMapping("/room/{roomId}/score")
+    public ResponseEntity<ScoreDto> getScore(@PathVariable(value = "roomId") Long roomId) {
         return ResponseEntity.ok().body(chessService.getScoreBy(roomId));
     }
 
     @PostMapping("/room/{roomId}/reset")
     public ResponseEntity<BoardDto> reset(@PathVariable(value = "roomId") Long roomId) {
-        return ResponseEntity.ok().body(chessService.restartBy(roomId));
+        return ResponseEntity.ok().body(chessService.resetBy(roomId));
     }
 
     @PostMapping("/room/{roomId}/end")
-    public ResponseEntity<String> end(@PathVariable(value = "roomId") Long roomId) {
-        chessService.endBy(roomId);
-        return ResponseEntity.ok().body("게임이 종료되었습니다.");
+    public ResponseEntity<GameStateDto> end(@PathVariable(value = "roomId") Long roomId) {
+        return ResponseEntity.ok().body(chessService.endBy(roomId));
+    }
+
+    @GetMapping("/room/{roomId}/status")
+    public ResponseEntity<StatusDto> getStatus(@PathVariable(value = "roomId") Long roomId) {
+        return ResponseEntity.ok().body(chessService.getStatus(roomId));
+    }
+
+    @PostMapping("/room/delete")
+    public ResponseEntity delete(@RequestBody DeleteRoomDto deleteDto) {
+        chessService.deleteBy(deleteDto.getRoomId(), deleteDto.getPassword());
+        return ResponseEntity.ok().body("성공");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -67,7 +79,8 @@ public class ChessController {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> ExceptionHandle() {
-        return ResponseEntity.badRequest().body("실행 중 예상치 못한 오류가 발생했습니다.");
+    public ResponseEntity<String> ExceptionHandle(Exception exception) {
+        System.out.println(exception.getMessage());
+        return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

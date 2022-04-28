@@ -9,10 +9,12 @@ import chess.dao.RoomDao;
 import chess.domain.Team;
 import chess.domain.state.BoardInitialize;
 import chess.dto.BoardDto;
+import chess.dto.CreateRoomDto;
 import chess.dto.GameStateDto;
 import chess.dto.PieceDto;
 import chess.dto.RoomDto;
 import chess.dto.ScoreDto;
+import chess.dto.StatusDto;
 import chess.entity.Room;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,8 +34,8 @@ class ChessServiceTest {
 
         Room room1 = new Room(1L, Team.WHITE, "title", "password", true);
         Room room2 = new Room(2L, Team.WHITE, "title", "password", true);
-        roomDao.save(room1);
-        roomDao.save(room2);
+        roomDao.save("title", "password");
+        roomDao.save("title", "password");
 
         boardDao.saveAll(BoardInitialize.create(), room1.getId());
         boardDao.saveAll(BoardInitialize.create(), room2.getId());
@@ -49,7 +51,7 @@ class ChessServiceTest {
 
     @Test
     void createRoom() {
-        RoomDto room = new RoomDto(3L, Team.WHITE, "title", "password", true);
+        CreateRoomDto room = new CreateRoomDto("title", "password");
         chessService.createRoom(room);
     }
 
@@ -60,7 +62,8 @@ class ChessServiceTest {
 
     @Test
     void getPiecesBy() {
-        List<PieceDto> pieces = chessService.getPiecesBy(2L);
+        BoardDto board = chessService.getBoard(2L);
+        List<PieceDto> pieces = board.getPieces();
         assertThat(pieces.size()).isEqualTo(64);
     }
 
@@ -72,7 +75,7 @@ class ChessServiceTest {
 
     @Test
     void restartBy() {
-        BoardDto boardDto = chessService.restartBy(2L);
+        BoardDto boardDto = chessService.resetBy(2L);
         assertThat(boardDto.getPieces().size()).isEqualTo(64);
     }
 
@@ -92,6 +95,14 @@ class ChessServiceTest {
     @Test
     void move() {
         chessService.move(2L, "a2", "a3");
-        List<PieceDto> pieces = chessService.getPiecesBy(2L);
+        BoardDto board = chessService.getBoard(2L);
+        List<PieceDto> pieces = board.getPieces();
+        assertThat(pieces.size()).isEqualTo(64);
+    }
+
+    @Test
+    void status() {
+        StatusDto statusDto = chessService.getStatus(1L);
+        assertThat(statusDto.isRunning()).isTrue();
     }
 }

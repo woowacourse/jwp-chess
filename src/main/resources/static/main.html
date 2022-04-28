@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>asdfasd</title>
+  <link href="css/main.css" rel="stylesheet"/>
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+</head>
+<body>
+  <table class="table_title">
+    <tr>
+      <td>게임 제목</td>
+      <td>게임 제목</td>
+      <td>게임 제목</td>
+      <td>게임 제목</td>
+    </tr>
+  </table>
+
+<table id="room_list">
+
+</table>
+
+  <!-- Trigger/Open The Modal -->
+  <button id="myBtnDelete">방 삭제</button>
+  <button id="myBtnCreate">방 만들기</button>
+
+  <!-- The Modal -->
+  <div id="modalDelete" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <input id="delete_room_id">번방</input>
+      <input id="delete_room_password">비밀번호</input>
+      <button onclick="deleteRoom()">삭제</button>
+      <p>Some text in the Modal..</p>
+    </div>
+  </div>
+
+  <!-- The Modal -->
+  <div id="modalCreate" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close2">&times;</span>
+      <input id="create_room_title">방 제목</input>
+      <input id="create_room_password">비밀번호</input>
+      <button onclick="createRoom()">생성</button>
+      <p>Some text in the Modal..</p>
+    </div>
+  </div>
+
+
+
+</body>
+<script src="js/room.js"></script>
+<script>
+  window.onload = function () {
+    getRooms();
+  }
+</script>
+</html>

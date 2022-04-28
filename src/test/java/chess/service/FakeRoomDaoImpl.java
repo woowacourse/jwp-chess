@@ -28,9 +28,10 @@ public class FakeRoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Long save(Room room) {
-        rooms.put(room.getId(), room);
-        return room.getId();
+    public Long save(String title, String password) {
+        Long roomId = (long) (rooms.size() + 1);
+        rooms.put(roomId, new Room(roomId, Team.WHITE, title, password, true));
+        return roomId;
     }
 
     @Override
@@ -49,10 +50,10 @@ public class FakeRoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public void updateStatus(Long roomId) {
+    public void updateStatus(Long roomId, boolean status) {
         Room room = rooms.get(roomId);
         Room endRoom = new Room(room.getId(), room.getTeam(), room.getTitle(), room.getPassword(),
-            false);
+            status);
         rooms.put(roomId, endRoom);
     }
 }

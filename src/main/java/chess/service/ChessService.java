@@ -14,10 +14,12 @@ import chess.domain.state.GameState;
 import chess.domain.state.Playing;
 import chess.domain.state.WhiteTurn;
 import chess.dto.BoardDto;
+import chess.dto.CreateRoomDto;
 import chess.dto.GameStateDto;
 import chess.dto.PieceDto;
 import chess.dto.RoomDto;
 import chess.dto.ScoreDto;
+import chess.dto.StatusDto;
 import chess.entity.Room;
 import java.util.HashMap;
 import java.util.List;
@@ -36,9 +38,8 @@ public class ChessService {
         this.roomDao = roomDao;
     }
 
-    public void createRoom(RoomDto room) {
-        Long roomId = roomDao.save(room.toRoom());
-        boardDao.saveAll(BoardInitialize.create(), roomId);
+    public void createRoom(CreateRoomDto room) {
+        roomDao.save(room.getTitle(), room.getPassword());
     }
 
     public List<RoomDto> findRoomList() {
@@ -49,8 +50,13 @@ public class ChessService {
             .collect(Collectors.toList());
     }
 
-    public void deleteBy(Long roomId, String title) {
-        roomDao.deleteBy(roomId, title);
+    public void deleteBy(Long roomId, String password) {
+        Room room = roomDao.findById(roomId);
+        if (room.getPassword().equals(password)) {
+            roomDao.deleteBy(roomId, password);
+            return;
+        }
+        throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
     }
 
     public ScoreDto getScoreBy(Long roomId) {
@@ -84,15 +90,18 @@ public class ChessService {
         return new BlackTurn(board);
     }
 
-    public List<PieceDto> getPiecesBy(Long roomId) {
-        return boardDao.findAll(roomId);
+    public BoardDto getBoard(Long roomId) {
+        List<PieceDto> pieces = boardDao.findAll(roomId);
+        Room room = roomDao.findById(roomId);
+        return new BoardDto(pieces, room.getTeam());
     }
 
-    public BoardDto restartBy(Long roomId) {
+    public BoardDto resetBy(Long roomId) {
         boardDao.delete(roomId);
         boardDao.saveAll(BoardInitialize.create(), roomId);
         roomDao.updateTeam(Team.WHITE, roomId);
-        return new BoardDto(getPiecesBy(roomId), Team.WHITE);
+        roomDao.updateStatus(roomId, true);
+        return getBoard(roomId);
     }
 
     public GameStateDto findGameStateBy(Long roomId) {
@@ -100,23 +109,35 @@ public class ChessService {
         return new GameStateDto(room.getTeam(), room.getStatus());
     }
 
-    public void endBy(Long roomId) {
-        roomDao.updateTeam(Team.NONE, roomId);
+    public GameStateDto endBy(Long roomId) {
+        roomDao.updateStatus(roomId, false);
+        GameState gameState = getGameState(roomId);
+        Score score = new Score(gameState.getBoard());
+        if (score.getTotalScoreWhiteTeam() > score.getTotalScoreBlackTeam()) {
+            return new GameStateDto(Team.WHITE, false);
+        }
+        return new GameStateDto(Team.BLACK, false);
     }
 
     public GameStateDto move(Long roomId, String source, String destination) {
         GameState gameState = getGameState(roomId);
-        gameState.move(source, destination);
         Piece sourcePiece = gameState.getPiece(Position.from(source));
+        gameState = gameState.move(source, destination);
 
         boardDao.updatePosition(Blank.SYMBOL, source, roomId);
         boardDao.updatePosition(sourcePiece.getSymbol(), destination, roomId);
 
         if (!gameState.isRunning()) {
-            roomDao.updateStatus(roomId);
+            roomDao.updateStatus(roomId, false);
             return new GameStateDto(gameState.getTeam(), gameState.isRunning());
         }
         roomDao.updateTeam(gameState.getTeam(), roomId);
         return new GameStateDto(gameState.getTeam(), gameState.isRunning());
+    }
+
+    public StatusDto getStatus(Long roomId) {
+        Room room = roomDao.findById(roomId);
+        System.out.println("roomStatus" + room.getStatus() + roomId);
+        return new StatusDto(room.getStatus());
     }
 }

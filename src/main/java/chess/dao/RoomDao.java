@@ -10,11 +10,11 @@ public interface RoomDao {
 
     void deleteBy(Long roomId, String password);
 
-    Long save(Room room);
+    Long save(String title, String password);
 
     void updateTeam(Team team, Long roomId);
 
-    void updateStatus(Long roomId);
+    void updateStatus(Long roomId, boolean status);
 
     List<Room> findAll();
 }

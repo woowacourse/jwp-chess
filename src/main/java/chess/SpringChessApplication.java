@@ -15,6 +15,8 @@ public class SpringChessApplication {
 
     @GetMapping("/")
     public String index() {
-        return "index.html";
+        return "main.html";
     }
+
+
 }

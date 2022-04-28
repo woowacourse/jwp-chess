@@ -40,8 +40,7 @@ public class RoomDaoImplTest {
 
     @Test
     void createRoom() {
-        Room room = new Room(null, Team.WHITE, "title", "password", true);
-        roomDaoImpl.save(room);
+        roomDaoImpl.save("title", "password");
         assertThat(roomDaoImpl.findAll().size()).isEqualTo(2);
     }
 
@@ -57,8 +56,7 @@ public class RoomDaoImplTest {
 
     @Test
     void save() {
-        Room room = new Room(2L, Team.WHITE, "title", "password", true);
-        assertThatNoException().isThrownBy(() -> roomDaoImpl.save(room));
+        assertThatNoException().isThrownBy(() -> roomDaoImpl.save("title", "password"));
     }
 
     @Test

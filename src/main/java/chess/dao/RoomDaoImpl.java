@@ -23,9 +23,9 @@ public class RoomDaoImpl implements RoomDao {
                 new Room(
                     rs.getLong("id"),
                     Team.valueOf(rs.getString("team")),
-                    "이름",
-                    "비밀번호",
-                    true
+                    rs.getString("title"),
+                    rs.getString("password"),
+                    rs.getBoolean("status")
                 ), roomId);
         } catch (Exception exception) {
             return null;
@@ -39,10 +39,10 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Long save(Room room) {
+    public Long save(String title, String password) {
         final String sql = "insert into room (team, title, password, status) values(?, ?, ?, ?)";
-        return (long) jdbcTemplate.update(sql, room.getTeam().name(), room.getTitle(),
-            room.getPassword(), room.getStatus());
+        return (long) jdbcTemplate.update(sql, Team.WHITE.name(), title, password,
+            true);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public void updateStatus(Long roomId) {
+    public void updateStatus(Long roomId, boolean status) {
         final String sql = "update room set status = ? where id = ?";
-        jdbcTemplate.update(sql, false, roomId);
+        jdbcTemplate.update(sql, status, roomId);
     }
 }

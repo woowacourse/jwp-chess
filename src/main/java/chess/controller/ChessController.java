@@ -26,15 +26,15 @@ public class ChessController {
     }
 
     @PostMapping("/exit")
-    public String deleteGame(@RequestParam String gameId, @RequestParam String gamePassword) {
-        chessGameService.validateEnd(gameId);
-        chessGameService.cleanGame(new LogInDto(gameId, gamePassword));
+    public String deleteGame(@ModelAttribute LogInDto logInDto) {
+        chessGameService.validateEnd(logInDto.getGameId());
+        chessGameService.cleanGame(logInDto);
         return "redirect:/";
     }
 
     @GetMapping("/exit")
     public String exitAndDeleteGame(@RequestParam String gameId) {
-        chessGameService.cleanGame(gameId);
+        chessGameService.changeToEnd(gameId);
         return "redirect:/";
     }
 

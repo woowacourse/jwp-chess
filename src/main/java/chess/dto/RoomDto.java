@@ -1,7 +1,5 @@
 package chess.dto;
 
-import java.util.List;
-
 public class RoomDto {
 
     private String gameId;

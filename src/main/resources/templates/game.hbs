@@ -352,9 +352,11 @@
         {{/pieces}}
     </section>
 
-    <div class="chess-status">
-        현재 방 번호: {{gameId}}
+    <div class="chess-status box">
         <div class="status" id="status">
+            현재 방 : {{gameId}}
+            <p></p>
+            <p></p>
             <div class="winner-name">승자: {{status.winner}}</div>
             <div class="white-score">백색팀: {{status.whiteScore}} 점</div>
             <div class="black-score">흑색팀: {{status.blackScore}} 점</div>
@@ -362,7 +364,7 @@
 
         <form action="/exit" method="get">
             <input type="hidden" name="gameId" value="{{gameId}}">
-            <button type="submit">exit</button>
+            <button type="submit">게임 그만두기</button>
         </form>
     </div>
 

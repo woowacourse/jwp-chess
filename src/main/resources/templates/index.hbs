@@ -10,11 +10,11 @@
 </head>
 <body>
 
-<h1>♟️ 체스 게임 대기방♟</h1>
+<h1>♟️ 체스 게임 대기방 ♟️</h1>
 
 <div id="boxs">
     <div id="game-entry">
-        <h2 class="inContent"> @ 방 번호를 입력하여 시작하기</h2>
+        <h2> @ 방 번호를 입력하여 시작하기</h2>
         <form class="inContent" action="/init" method="post">
             <label for="game-entry">
             </label>
@@ -29,8 +29,11 @@
     </div>
 
     <div class="rooms">
+        <div class="box">
+            <h2>@ 방 리스트</h2>
+        </div>
         {{#each rooms}}
-            <div class="room">
+            <div class="box">
                 <form class="inContent" action="/start" method="post">
                     <input type="hidden" name="gameId" value="{{this.gameId}}">
                     <input type="hidden" name="gamePassword" value="{{this.gamePassword}}">

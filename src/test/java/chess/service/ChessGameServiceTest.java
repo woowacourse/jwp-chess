@@ -98,5 +98,8 @@ class ChessGameServiceTest {
         final Map<Position, Piece> pieces = chessGameService.getPieces(TEST_ROOM_ID);
         //then
         assertThat(pieces).isEmpty();
+        assertThatThrownBy(() -> chessGameService.getScore(TEST_ROOM_ID))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("진행중인 게임이 없습니다.");
     }
 }

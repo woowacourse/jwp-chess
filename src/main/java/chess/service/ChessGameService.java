@@ -94,6 +94,7 @@ public class ChessGameService {
     public void end(final int roomId) {
         checkGameIsPlaying(roomId);
         pieceDao.removeAllPieces(roomId);
+        roomDao.saveGameState(roomId, "ready");
     }
 
     private Board getSavedBoard(final int roomId) {

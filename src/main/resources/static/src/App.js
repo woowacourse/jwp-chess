@@ -61,8 +61,7 @@ function move(source, target) {
             'Accept': 'application/json',
         },
         body: JSON.stringify(request)
-    })
-        .then(response => {
+    }).then(response => {
             if (!response.ok) {
                 response.json()
                     .then(body => alert(body.message));
@@ -79,7 +78,6 @@ function deleteGame(id) {
         password: password
     }
 
-    debugger;
     fetch('/delete/' + id, {
         method: 'DELETE',
         headers: {
@@ -87,8 +85,7 @@ function deleteGame(id) {
             'Accept': 'application/json',
         },
         body: JSON.stringify(request)
-    })
-        .then(response => {
+    }).then(response => {
             if (!response.ok) {
                 response.json()
                     .then(body => alert(body.message));
@@ -110,8 +107,7 @@ function status() {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
         }
-    })
-        .then(response => {
+    }).then(response => {
             if (!response.ok) {
                 response.json()
                     .then(body => alert(body.message));

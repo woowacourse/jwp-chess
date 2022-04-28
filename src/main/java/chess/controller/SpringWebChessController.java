@@ -58,13 +58,7 @@ public class SpringWebChessController {
 //        return new ResponseEntity(HttpStatus.OK);
 //    }
 //
-//    @PostMapping("/select-game")
-//    public ResponseEntity<ResponseDto> loadGame(@RequestBody Integer gameId){
-//        chessService.loadGame(gameId);
-//        return new ResponseEntity<>(HttpStatus.OK);
 
-//    }
-//
     @GetMapping("/status/{gameId}")
     public String status(Model model, @PathVariable int gameId) {
         ChessBoard chessBoard = chessService.findBoard(gameId);

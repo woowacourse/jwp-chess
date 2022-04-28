@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -57,12 +58,11 @@ public class ChessService {
 //    }
 
     public void loadGame(int gameId){
-        int lastGameId = gameDao.findLastGameId();
-        if (isNotSaved(lastGameId)) {
-            makeNewGame();
+        gameDao.findById(gameId);
+        if (isNotSaved(gameId)) {
             return;
         }
-        loadLastGame(lastGameId);
+        loadLastGame(gameId);
     }
 
     private boolean isNotSaved(int lastGameId) {

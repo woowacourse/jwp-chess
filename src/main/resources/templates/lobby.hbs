@@ -25,5 +25,12 @@
 </div>
 
 <h2>게임 목록</h2>
-{{games}}
+{{#games}}
+    <div class = "game">
+    <div class="game-title">{{title}}</div>
+        <button class="btn">
+            <a href ="/play/{{id}}"> 참가하기 </a>
+        </button>
+    </div>
+{{/games}}
 </body>

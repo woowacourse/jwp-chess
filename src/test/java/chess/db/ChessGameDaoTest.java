@@ -6,8 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import chess.domain.ChessGame;
-import chess.domain.GameTurn;
+import chess.domain.game.ChessGame;
+import chess.domain.game.GameTurn;
 import chess.domain.board.InitialBoardGenerator;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;

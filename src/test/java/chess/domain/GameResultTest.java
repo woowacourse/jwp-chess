@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.Map;
 
+import chess.domain.game.GameResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

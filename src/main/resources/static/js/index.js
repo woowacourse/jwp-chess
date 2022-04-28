@@ -48,7 +48,6 @@ function createGame(id, name) {
 
 document.addEventListener('click', async (e) => {
   const {target: {className, id}} = e;
-  console.log(className, id);
   if (className === 'game__title') {
     await enterGame(id);
   } else if (className === 'box__close-button') {

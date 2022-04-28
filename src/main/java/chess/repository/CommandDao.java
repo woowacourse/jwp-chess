@@ -1,6 +1,12 @@
 package chess.repository;
 
+import chess.entity.CommandEntity;
+import chess.entity.RoomEntity;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,9 +15,13 @@ import java.util.List;
 public class CommandDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertActor;
 
-    public CommandDao(JdbcTemplate jdbcTemplate) {
+    public CommandDao(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
+        this.insertActor = new SimpleJdbcInsert(dataSource)
+                .withTableName("commands")
+                .usingGeneratedKeyColumns("command_id");
     }
 
     public void insert(String command) {
@@ -29,5 +39,11 @@ public class CommandDao {
     public void clear() {
         String sql = "truncate table command";
         jdbcTemplate.update(sql);
+    }
+
+    public CommandEntity insert(CommandEntity commandEntity) {
+        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(commandEntity);
+        insertActor.executeAndReturnKey(parameters).longValue();
+        return new CommandEntity(commandEntity.getRoomId(), commandEntity.getCommand());
     }
 }

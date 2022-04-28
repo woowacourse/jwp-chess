@@ -4,7 +4,6 @@ import chess.domain.Camp;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.dto.PieceDto;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,57 +18,40 @@ public class BoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insertBoard(long gameNo, Map<Position, Piece> board) {
-        String sql = "insert into piece (game_no, type, white, position) values (?, ?, ?, ?)";
+    public void insert(long gameNo, Map<Position, Piece> board) {
+        String sql = "insert into piece (type, white, position, game_no) values (?, ?, ?, ?)";
 
         for (Entry<Position, Piece> entry : board.entrySet()) {
-            Piece piece = entry.getValue();
-            String type = piece.getType().toString();
-            boolean isWhite = piece.isCamp(Camp.WHITE);
-            String position = entry.getKey().toString();
-
-            jdbcTemplate.update(sql, gameNo, type, isWhite, position);
+            updateEachPiece(sql, gameNo, entry);
         }
     }
 
-    public void save(Map<Position, Piece> board) {
-        final String sql = chooseSaveSql();
+    public void update(int gameNo, Map<Position, Piece> board) {
+        final String sql = "update piece set type = ?, white = ? where position = ? and game_no = ?";
 
         for (Entry<Position, Piece> entry : board.entrySet()) {
-            savePiece(sql, entry);
+            updateEachPiece(sql, gameNo, entry);
         }
     }
 
-    private void savePiece(String sql, Entry<Position, Piece> entry) {
+    private void updateEachPiece(String sql, long gameNo, Entry<Position, Piece> entry) {
         Piece piece = entry.getValue();
         String type = piece.getType().toString();
         boolean isWhite = piece.isCamp(Camp.WHITE);
         String position = entry.getKey().toString();
 
-        jdbcTemplate.update(sql, type, isWhite, position);
+        int result = jdbcTemplate.update(sql, type, isWhite, position, gameNo);
+        System.out.println("쿼리 실행 결과: " + result);
     }
 
-    private String chooseSaveSql() {
-        String sql = "insert into piece (game_no, type, white, position) values (1, ?, ?, ?)";
-        if (isBoardExistIn()) {
-            sql = "update piece set type = ?, white = ? where position = ?";
-        }
-        return sql;
-    }
-
-    private boolean isBoardExistIn() {
-        final String sql = "select no from piece";
-
-        return jdbcTemplate.query(sql, ResultSet::next);
-    }
-
-    public List<PieceDto> load() {
-        final String sql = "select type, white, position from piece";
+    public List<PieceDto> load(int gameNo) {
+        final String sql = "select type, white, position from piece where game_no = ?";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceDto.of(
-                    resultSet.getString("type"),
-                    resultSet.getBoolean("white"),
-                    resultSet.getString("position"))
+                        resultSet.getString("type"),
+                        resultSet.getBoolean("white"),
+                        resultSet.getString("position")),
+                gameNo
         );
     }
 }

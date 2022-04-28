@@ -53,10 +53,11 @@
 
     function createTitleTd(game) {
         const td = document.createElement('td');
-        const a = document.createElement('a');
-        a.setAttribute('href', './load/' + game.no);
-        a.innerHTML = game.title;
-        td.appendChild(a);
+        const span = document.createElement('span');
+        span.setAttribute('onclick', 'checkPassword(' + game.no + ')');
+        span.setAttribute('class', 'room-title');
+        span.innerHTML = game.title;
+        td.appendChild(span);
         return td;
     }
 
@@ -69,6 +70,23 @@
         return td;
     }
 
+   function checkPassword(gameNo) {
+        const passwordInput = window.prompt('비밀번호를 입력하세요');
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = './load/' + gameNo;
+        form.setAttribute('hidden', true);
+
+        const formField = document.createElement('input');
+        formField.type = 'hidden';
+        formField.name = 'password';
+        formField.value = passwordInput;
+
+        form.appendChild(formField);
+        document.body.appendChild(form);
+        form.submit();
+   }
+
     document.forms['create-form'].addEventListener('submit', (event) => {
         event.preventDefault();
         fetch(event.target.action, {
@@ -80,7 +98,6 @@
     });
 
     function alertCreateResult(status) {
-        console.log(status);
         if (status !== 201) {
             window.alert("생성하지 못했습니다.");
             return;

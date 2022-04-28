@@ -50,30 +50,31 @@ public class GameService {
     }
 
     public void createRoom(String title, String password) {
-        long gameNo = gameDao.insertGame(GameDto.fromNewGame(title, password));
-        boardDao.insertBoard(gameNo, BoardInitializer.get().getSquares());
+        long gameNo = gameDao.insert(GameDto.fromNewGame(title, password));
+        boardDao.insert(gameNo, BoardInitializer.get().getSquares());
     }
 
-    public void load() {
-        List<PieceDto> rawBoard = boardDao.load();
+    public void load(int gameNo) {
+        List<PieceDto> rawBoard = boardDao.load(gameNo);
         Map<Position, Piece> board = rawBoard.stream()
                 .collect(Collectors.toMap(
                         pieceDto2 -> parsePosition(pieceDto2.getPosition()),
                         this::parsePiece
                 ));
-        chessGame.load(board, gameDao.isWhiteTurn());
+        chessGame.load(board, gameDao.isWhiteTurn(gameNo));
+    }
+
+    public String loadGameTitle(long gameNo) {
+        return gameDao.loadTitle(gameNo);
     }
 
     public Map<String, Object> modelPlayingBoard() {
         Map<Position, Piece> board = chessGame.getBoardSquares();
-        Map<String, Object> model = board.entrySet().stream()
+        return board.entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> entry.getKey().toString(),
                         entry -> PieceDto.of(entry.getValue(), entry.getKey())
                 ));
-        model.put(KEY_STARTED, true);
-        model.put(KEY_READY, false);
-        return model;
     }
 
     private Piece parsePiece(PieceDto piece) {
@@ -115,9 +116,9 @@ public class GameService {
         return chessGame.getScores();
     }
 
-    public void save() {
-        gameDao.save();
-        boardDao.save(chessGame.getBoardSquares());
+    public void save(int gameNo) {
+        gameDao.update(gameNo);
+        boardDao.update(gameNo, chessGame.getBoardSquares());
     }
 
     public Map<String, Object> end() {

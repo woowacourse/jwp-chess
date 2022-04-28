@@ -6,6 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException
 import chess.domain.board.BoardInitializer;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
+import chess.dto.GameDto;
 import chess.dto.PieceDto;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class BoardDaoTest {
 
     @BeforeEach
     void insertGameData() {
-        gameDao.save();
+        gameDao.insert(GameDto.fromNewGame("test", "test"));
     }
 
     @DisplayName("DB에 보드를 저장한다.")
@@ -32,7 +33,7 @@ public class BoardDaoTest {
     void saveTo() {
         Map<Position, Piece> squares = BoardInitializer.get().getSquares();
 
-        assertThatNoException().isThrownBy(() -> boardDao.save(squares));
+        assertThatNoException().isThrownBy(() -> boardDao.update(1, squares));
     }
 
     @DisplayName("DB에 초기 보드를 저장한 후 load하면 a1 위치에 흰색 룩이 있다.")
@@ -40,11 +41,11 @@ public class BoardDaoTest {
     void load_a1_white_rook() {
         Map<Position, Piece> squares = BoardInitializer.get().getSquares();
 
-        boardDao.save(squares);
-        List<PieceDto> board = boardDao.load();
+        boardDao.insert(1, squares);
+        List<PieceDto> board = boardDao.load(1);
 
         PieceDto pieceAtA1 = board.stream()
-                .filter(pieceDto2 -> pieceDto2.getPosition().equals("a1"))
+                .filter(pieceDto -> pieceDto.getPosition().equals("a1"))
                 .findAny().get();
         assertThat(pieceAtA1.getCamp() + pieceAtA1.getType()).isEqualTo("whiterook");
     }

@@ -19,25 +19,25 @@ public class GameDaoTest {
     @DisplayName("기존에 저장된 game이 있어도 data를 덮어쓸 수 있다.")
     @Test
     void save_twice() {
-        gameDao.insertGame(GameDto.fromNewGame("방제목1", "password"));
-        assertThatNoException().isThrownBy(gameDao::save);
+        gameDao.insert(GameDto.fromNewGame("방제목1", "password"));
+        assertThatNoException().isThrownBy(() -> gameDao.update(1));
     }
 
     @DisplayName("흑색 진영의 차례일 때 게임을 저장하고 불러오면 백색 진영의 차례가 아니다.")
     @Test
     void isWhiteTurn_false() {
-        gameDao.insertGame(GameDto.fromNewGame("방제목1", "password"));
+        gameDao.insert(GameDto.fromNewGame("방제목1", "password"));
         Camp.initializeTurn();
         Camp.switchTurn();
-        gameDao.save();
+        gameDao.update(1);
 
-        assertThat(gameDao.isWhiteTurn()).isFalse();
+        assertThat(gameDao.isWhiteTurn(1)).isFalse();
     }
 
     @DisplayName("게임 목록을 조회할 수 있다.")
     @Test
     void selectGames() {
-        gameDao.insertGame(GameDto.fromNewGame("방제목1", "password"));
+        gameDao.insert(GameDto.fromNewGame("방제목1", "password"));
         List<GameDto> games = gameDao.selectGames();
         assertThat(games.get(0).getTitle()).isEqualTo("방제목1");
     }

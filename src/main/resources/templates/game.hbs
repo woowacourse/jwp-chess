@@ -9,22 +9,10 @@
 
 <body>
     <div id="app">
-        <h1>♟️ 체스 - 방제목</h1>
-        {{#ready}}
-        <div class="form start">
-            <form action="../start">
-                <input type="submit" value="게임 시작">
-            </form>
-        </div>
-        <div class="form load">
-            <form action="../load">
-                <input type="submit" value="불러오기">
-            </form>
-        </div>
-        {{/ready}}
-        {{#started}}
+        <h1>♟️ 체스 - {{title}}</h1>
+        <span id="gameNo" hidden>{{gameNo}}</span>
         <div class="form move">
-            <form action="../move" method="post">
+            <form action="../move/{{gameNo}}" method="post">
                 source : <input type="text" name="source">
                 target : <input type="text" name="target">
                 <input type="submit" value="이동">
@@ -41,7 +29,6 @@
                 <input type="submit" value="게임 종료">
             </form>
         </div>
-        {{/started}}
         <section class="chess-ui">
             <!--      Row8      -->
             <div class="white-square">
@@ -544,7 +531,8 @@
     }
 
     function saveOnClickHandler() {
-        fetch('../save')
+        const gameNo = document.getElementById('gameNo').innerText;
+        fetch('../save/' + gameNo)
             .then((response) => response.status)
             .then((status) => alertSaveResult(status));
     }

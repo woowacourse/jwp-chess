@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -37,23 +38,36 @@ public class GameController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/load/{no}")
-    public String load(Model model, @PathVariable int no) {
-        gameService.load();
-        System.out.println("방번호: " + no);
-        return play(model, no);
+    @PostMapping("/check-password/{gameNo}")
+    public ResponseEntity<Void> checkPassword(@PathVariable int gameNo, @RequestBody String password) {
+        if ("test".equals(password)) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @PostMapping("/move")
-    public String move(Model model, @RequestParam String source, @RequestParam String target) {
+    @PostMapping("/load/{gameNo}")
+    public String load(Model model, @PathVariable int gameNo, @RequestParam String password) {
+        if ("test".equals(password)) {
+            gameService.load(gameNo);
+            return play(model, gameNo);
+        }
+        throw new IllegalArgumentException("비밀번호를 확인하세요.");
+    }
+
+    @PostMapping("/move/{gameNo}")
+    public String move(Model model, @PathVariable int gameNo, @RequestParam String source,
+                       @RequestParam String target) {
         gameService.move(source, target);
         if (gameService.isGameFinished()) {
             return end(model);
         }
-        return play(model, 0L);
+        return play(model, gameNo);
     }
 
-    private String play(Model model, long no) {
+    private String play(Model model, long gameNo) {
+        model.addAttribute("gameNo", gameNo);
+        model.addAttribute("title", gameService.loadGameTitle(gameNo));
         model.addAllAttributes(gameService.modelPlayingBoard());
         return "game";
     }
@@ -64,9 +78,9 @@ public class GameController {
         return ResponseEntity.ok().body(statusData);
     }
 
-    @GetMapping("/save")
-    public ResponseEntity<Void> save() {
-        gameService.save();
+    @GetMapping("/save/{gameNo}")
+    public ResponseEntity<Void> save(@PathVariable int gameNo) {
+        gameService.save(gameNo);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

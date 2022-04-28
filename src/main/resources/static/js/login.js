@@ -4,12 +4,28 @@ window.onload = function () {
         document.getElementById('room-modal').classList.add('show-modal');
     }
 
-    let modal = document.getElementById('room-modal');
+    let roomModal = document.getElementById('room-modal');
     Array.from(document.getElementsByClassName('modal-align')).forEach((w) => {
         window.addEventListener('click', (e) => {
-            e.target === w ? modal.classList.remove('show-modal') : false;
+            e.target === w ? roomModal.classList.remove('show-modal') : false;
         })
     })
+
+    let passwordModal = document.getElementById('password-modal');
+    Array.from(document.getElementsByClassName('modal-align')).forEach((w) => {
+        window.addEventListener('click', (e) => {
+            e.target === w ? passwordModal.classList.remove('show-modal') : false;
+        })
+    })
+
+    let roomModalClose = document.getElementById('close-room-modal');
+    roomModalClose.onclick = function () {
+        roomModal.classList.remove('show-modal');
+    }
+    let confirmModalClose = document.getElementById('close-confirm-modal');
+    confirmModalClose.onclick = function () {
+        passwordModal.classList.remove('show-modal');
+    };
 
     fetchRooms();
 }
@@ -42,6 +58,9 @@ function fetchRooms() {
                 button.className = 'room-delete-button';
                 button.id = 'room-delete-' + data.id;
                 button.innerHTML = '삭제';
+                button.onclick = function () {
+                    document.getElementById('password-modal').classList.add('show-modal');
+                }
                 roomWrap.append(room);
                 roomWrap.append(button);
                 document.getElementById('rooms-list-container').append(roomWrap);

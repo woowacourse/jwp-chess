@@ -112,3 +112,7 @@ button {
     display: flex;
     justify-content: space-between;
 }
+
+.input-confirm {
+    width: 100%;
+}

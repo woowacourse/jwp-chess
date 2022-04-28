@@ -8,11 +8,11 @@ import chess.domain.game.status.Playing;
 public class GameDto {
     private final int id;
     private final String title;
-    private final int password;
+    private final String password;
     private final boolean status;
     private final String turn;
 
-    public GameDto(int id, String title, int password, boolean status, String turn) {
+    public GameDto(int id, String title, String password, boolean status, String turn) {
         this.id = id;
         this.title = title;
         this.password = password;
@@ -39,7 +39,7 @@ public class GameDto {
         return Color.from(turn);
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 }

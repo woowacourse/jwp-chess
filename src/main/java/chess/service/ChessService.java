@@ -34,7 +34,7 @@ public class ChessService {
 
     public long create(String title, String password) {
         makeNewGame();
-        int gameId = gameDao.create(chessBoard, title, Integer.parseInt(password));
+        int gameId = gameDao.create(chessBoard, title, password);
         for (Map.Entry<String, ChessPiece> entry : chessBoard.convertToMap().entrySet()) {
             boardDao.save(
                     gameId,
@@ -108,15 +108,15 @@ public class ChessService {
         return chessBoard.compareStatus(status);
     }
 
-    public void deleteGame(int gameId, int password) {
+    public void deleteGame(int gameId, String password) {
         GameDto gameDto = gameDao.findById(gameId);
         validatePassword(gameDto, password);
         boardDao.delete(gameId);
         gameDao.delete(gameId);
     }
 
-    private void validatePassword(GameDto gameDto, int password) {
-        if (gameDto.getPassword() != password) {
+    private void validatePassword(GameDto gameDto, String password) {
+        if (!gameDto.getPassword().equals(password)) {
             throw new IllegalArgumentException("올바르지 않은 비밀번호입니다.");
         }
     }

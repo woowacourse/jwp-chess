@@ -1,9 +1,9 @@
 package chess.controller.dto;
 
 public class RemoveRequestDto {
-    private int password;
+    private String password;
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 }

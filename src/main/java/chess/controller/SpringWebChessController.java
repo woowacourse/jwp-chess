@@ -30,7 +30,7 @@ public class SpringWebChessController {
     }
 
     @PostMapping("/create")
-    public String create(@RequestParam String title, @RequestParam String password) {
+    public String create(@RequestParam String title, @RequestParam String password) throws IllegalArgumentException{
         long gameId = chessService.create(title, password);
         return "redirect:/play/" + gameId;
     }

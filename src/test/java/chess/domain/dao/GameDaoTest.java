@@ -31,7 +31,7 @@ class GameDaoTest {
     }
 
     private int gameCreate() {
-        return gameDao.create(chessBoard, "test", 1212);
+        return gameDao.create(chessBoard, "test", "jh1212");
     }
 
     @BeforeEach

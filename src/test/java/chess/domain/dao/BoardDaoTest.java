@@ -29,7 +29,7 @@ class BoardDaoTest {
     void set() {
         boardDao.deleteAll();
         gameDao.deleteAll();
-        gameDao.create(ChessBoardFactory.initBoard(), "test", 1212);
+        gameDao.create(ChessBoardFactory.initBoard(), "test", "jh1212");
     }
 
     @Test

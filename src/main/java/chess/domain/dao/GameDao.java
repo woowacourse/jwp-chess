@@ -26,7 +26,7 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int create(ChessBoard chessBoard, String title, int password) {
+    public int create(ChessBoard chessBoard, String title, String password) {
         final String sql = "insert into Game (status, turn, title, password) values( ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
@@ -35,7 +35,7 @@ public class GameDao {
                 statement.setBoolean(1, chessBoard.compareStatus(Status.PLAYING));
                 statement.setString(2, String.valueOf(chessBoard.getCurrentTurn()));
                 statement.setString(3, title);
-                statement.setInt(4, password);
+                statement.setString(4, password);
                 return statement;
             }, keyHolder);
             return keyHolder.getKey().intValue();
@@ -73,7 +73,7 @@ public class GameDao {
         return new GameDto(
                 rs.getInt("id"),
                 rs.getString("title"),
-                rs.getInt("password"),
+                rs.getString("password"),
                 rs.getBoolean("status"),
                 rs.getString("turn")
         );

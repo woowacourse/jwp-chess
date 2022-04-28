@@ -86,14 +86,18 @@ public class ChessGameService {
         final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
         final Color turn = boardDao.findTurn(boardId);
         final Board board = new Board(loadedBoard, turn);
-        return board.scoreOfWhite();
+        final ChessGame2 chessGame2 = new ChessGame2(boardId, board);
+
+        return chessGame2.scoreOfWhite();
     }
 
     public double statusOfBlack(Long boardId) {
         final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
         final Color turn = boardDao.findTurn(boardId);
         final Board board = new Board(loadedBoard, turn);
-        return board.scoreOfBlack();
+        final ChessGame2 chessGame2 = new ChessGame2(boardId, board);
+
+        return chessGame2.scoreOfBlack();
     }
 
     public Winner findWinner() {

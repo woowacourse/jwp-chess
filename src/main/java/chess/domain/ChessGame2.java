@@ -34,6 +34,14 @@ public class ChessGame2 {
         return board.hasKingCaptured();
     }
 
+    public double scoreOfWhite() {
+        return board.scoreOfWhite();
+    }
+
+    public double scoreOfBlack() {
+        return board.scoreOfBlack();
+    }
+
     public Long getId() {
         return id;
     }

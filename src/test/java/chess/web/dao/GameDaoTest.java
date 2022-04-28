@@ -3,7 +3,7 @@ package chess.web.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.state.StateType;
-import chess.web.dto.GameResponseDto;
+import chess.web.dto.game.TitleDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,7 +63,7 @@ class GameDaoTest {
     @DisplayName("게임을 전부 가져온다.")
     @Test
     void findAll() {
-        List<GameResponseDto> gameDtos = gameDao.findAll();
+        List<TitleDto> gameDtos = gameDao.findAll();
         int actual = gameDtos.size();
         int expected = 1;
 

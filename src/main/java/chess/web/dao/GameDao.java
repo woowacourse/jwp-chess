@@ -1,7 +1,7 @@
 package chess.web.dao;
 
 import chess.domain.state.StateType;
-import chess.web.dto.GameResponseDto;
+import chess.web.dto.game.TitleDto;
 import java.util.List;
 
 public interface GameDao {
@@ -14,7 +14,7 @@ public interface GameDao {
 
     String findPasswordById(int id);
 
-    List<GameResponseDto> findAll();
+    List<TitleDto> findAll();
 
     void deleteGameById(int id);
 }

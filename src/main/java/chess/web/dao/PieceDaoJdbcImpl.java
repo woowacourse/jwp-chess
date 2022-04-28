@@ -1,6 +1,6 @@
 package chess.web.dao;
 
-import chess.web.dto.PieceDto;
+import chess.web.dto.board.PieceDto;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

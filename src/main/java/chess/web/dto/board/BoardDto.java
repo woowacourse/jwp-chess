@@ -1,23 +1,25 @@
-package chess.web.dto;
+package chess.web.dto.board;
 
-import chess.domain.Result;
-
-public class ChessResultDto {
+public class BoardDto {
 
     private final int gameId;
+    private final PiecesDto piecesDto;
     private final double blackScore;
     private final double whiteScore;
-    private final Result winner;
 
-    public ChessResultDto(int gameId, double blackScore, double whiteScore, Result winner) {
+    public BoardDto(int gameId, PiecesDto piecesDto, double blackScore, double whiteScore) {
         this.gameId = gameId;
+        this.piecesDto = piecesDto;
         this.blackScore = blackScore;
         this.whiteScore = whiteScore;
-        this.winner = winner;
     }
 
     public int getGameId() {
         return gameId;
+    }
+
+    public PiecesDto getPiecesDto() {
+        return piecesDto;
     }
 
     public double getBlackScore() {
@@ -27,8 +29,5 @@ public class ChessResultDto {
     public double getWhiteScore() {
         return whiteScore;
     }
-
-    public Result getWinner() {
-        return winner;
-    }
 }
+

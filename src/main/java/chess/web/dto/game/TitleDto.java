@@ -1,11 +1,11 @@
-package chess.web.dto;
+package chess.web.dto.game;
 
-public class GameResponseDto {
+public class TitleDto {
 
     private final int id;
     private final String title;
 
-    public GameResponseDto(int id, String title) {
+    public TitleDto(int id, String title) {
         this.id = id;
         this.title = title;
     }

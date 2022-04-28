@@ -10,14 +10,14 @@ import chess.domain.position.Position;
 import chess.domain.state.StateType;
 import chess.web.dao.GameDao;
 import chess.web.dao.PieceDao;
-import chess.web.dto.ChessResultDto;
-import chess.web.dto.ChessStatusDto;
-import chess.web.dto.DeleteGameRequestDto;
-import chess.web.dto.GameResponseDto;
-import chess.web.dto.MovePositionsDto;
-import chess.web.dto.MoveResultDto;
-import chess.web.dto.PieceDto;
-import chess.web.dto.PiecesDto;
+import chess.web.dto.board.ResultDto;
+import chess.web.dto.board.BoardDto;
+import chess.web.dto.game.PasswordDto;
+import chess.web.dto.game.TitleDto;
+import chess.web.dto.board.MovePositionsDto;
+import chess.web.dto.board.MoveResultDto;
+import chess.web.dto.board.PieceDto;
+import chess.web.dto.board.PiecesDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -66,13 +66,13 @@ public class ChessService {
         }
     }
 
-    public List<GameResponseDto> getAllGame() {
+    public List<TitleDto> getAllGame() {
         return gameDao.findAll();
     }
 
-    public void deleteGame(DeleteGameRequestDto deleteGameRequestDto) {
-        int gameId = deleteGameRequestDto.getGameId();
-        String password = deleteGameRequestDto.getPassword();
+    public void deleteGame(PasswordDto passwordDto) {
+        int gameId = passwordDto.getId();
+        String password = passwordDto.getPassword();
         String realPassword = gameDao.findPasswordById(gameId);
 
         if (!realPassword.equals(password)) {
@@ -100,8 +100,8 @@ public class ChessService {
         return gameDao.findStateById(gameId);
     }
 
-    public ChessStatusDto getChessStatus(int gameId) {
-        return new ChessStatusDto(gameId, new PiecesDto(getPieces(gameId)), getScore(gameId, Color.BLACK),
+    public BoardDto getBoard(int gameId) {
+        return new BoardDto(gameId, new PiecesDto(getPieces(gameId)), getScore(gameId, Color.BLACK),
                 getScore(gameId, Color.WHITE));
     }
 
@@ -130,7 +130,7 @@ public class ChessService {
         pieceDao.updateByGameId(gameId, new PieceDto(chessGame.board().findPiece(source), source));
     }
 
-    public ChessResultDto getChessResult(int gameId) {
+    public ResultDto getChessResult(int gameId) {
         ChessGame chessGame = getChessGame(gameId);
         endGame(chessGame);
 
@@ -139,7 +139,7 @@ public class ChessService {
 
         gameDao.updateStateById(gameId, StateType.END);
 
-        return new ChessResultDto(gameId, blackScore, whiteScore, chessGame.result());
+        return new ResultDto(gameId, blackScore, whiteScore, chessGame.result());
     }
 
     private void endGame(ChessGame chessGame) {

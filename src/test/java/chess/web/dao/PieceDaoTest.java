@@ -7,7 +7,7 @@ import chess.domain.piece.King;
 import chess.domain.piece.Queen;
 import chess.domain.position.Position;
 import chess.domain.state.StateType;
-import chess.web.dto.PieceDto;
+import chess.web.dto.board.PieceDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,9 +1,9 @@
 package chess.web.controller;
 
 import chess.domain.state.StateType;
-import chess.web.dto.DeleteGameRequestDto;
-import chess.web.dto.MovePositionsDto;
-import chess.web.dto.MoveResultDto;
+import chess.web.dto.game.PasswordDto;
+import chess.web.dto.board.MovePositionsDto;
+import chess.web.dto.board.MoveResultDto;
 import chess.web.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -39,8 +39,8 @@ public class ChessController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteGame(@RequestBody DeleteGameRequestDto deleteGameRequestDto) {
-        chessService.deleteGame(deleteGameRequestDto);
+    public ResponseEntity<?> deleteGame(@RequestBody PasswordDto passwordDto) {
+        chessService.deleteGame(passwordDto);
         return ResponseEntity.ok("");
     }
 
@@ -54,7 +54,7 @@ public class ChessController {
         if (chessService.getStateType(gameId) == StateType.END) {
             return "redirect:/game/" + gameId + "/result";
         }
-        model.addAttribute("chessStatus", chessService.getChessStatus(gameId));
+        model.addAttribute("chessStatus", chessService.getBoard(gameId));
 
         return "game";
     }

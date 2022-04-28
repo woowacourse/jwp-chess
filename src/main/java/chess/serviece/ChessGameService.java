@@ -52,4 +52,8 @@ public class ChessGameService {
     public GameDto getGame(Long gameId) {
         return gameDao.findById(gameId);
     }
+
+    public List<GameDto> getAllGames() {
+        return gameDao.findAll();
+    }
 }

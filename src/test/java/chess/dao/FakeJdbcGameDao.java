@@ -3,6 +3,7 @@ package chess.dao;
 import chess.dao.dto.GameDto;
 import chess.dto.GameStatusDto;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class FakeJdbcGameDao implements SpringGameDao {
 
     @Override
     public List<GameDto> findAll() {
-        return null;
+        return new ArrayList<>(games.values());
     }
 
     @Override

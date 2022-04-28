@@ -2,14 +2,12 @@ package chess.controller;
 
 import chess.dto.GameRoomDto;
 import chess.service.ChessGameService;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -25,12 +23,12 @@ public class GameWaitingRoomController {
 
     @ExceptionHandler(Exception.class)
     public ModelAndView exception(Exception e) {
-        return getModelWithGameMessage(e.getMessage(), "redirect:/");
+        return getModelAndView(e.getMessage());
     }
 
     @GetMapping("/")
-    public ModelAndView getRooms(HttpServletRequest request) {
-        return getModel(request);
+    public ModelAndView getRooms(@RequestParam(required = false, defaultValue = WELCOME_MESSAGE) String gameMessage) {
+        return getModelAndView(gameMessage);
     }
 
     @DeleteMapping("/delete")
@@ -39,24 +37,11 @@ public class GameWaitingRoomController {
         return "redirect:/";
     }
 
-    private ModelAndView getModelWithGameMessage(String message, String url) {
-        ModelAndView modelAndView = new ModelAndView(url);
-        modelAndView.addObject("gameMessage", message);
-        return modelAndView;
-    }
-
-    private ModelAndView getModel(HttpServletRequest request) {
+    private ModelAndView getModelAndView(String message) {
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("gameMessage", getGameMessage(request));
+        modelAndView.addObject("gameMessage", message);
         modelAndView.addObject("rooms", chessGameService.getAllGames());
         return modelAndView;
     }
 
-    private String getGameMessage(HttpServletRequest request) {
-        if (request.getQueryString() == null) {
-            return WELCOME_MESSAGE;
-        }
-        String decodedQueryString = URLDecoder.decode(request.getQueryString(), StandardCharsets.UTF_8);
-        return decodedQueryString.split("gameMessage=")[1];
-    }
 }

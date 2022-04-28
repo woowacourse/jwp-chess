@@ -10,7 +10,6 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
 import java.util.List;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,12 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+
 @TestInstance(Lifecycle.PER_CLASS)
 @JdbcTest
 public class PieceDaoTest {
 
     private PieceDao pieceDao;
-    private GameDao gameDao;
     private List<Piece> pieces;
     private long gameId;
 
@@ -34,37 +33,11 @@ public class PieceDaoTest {
 
     @BeforeEach
     void setUp() {
-        gameDao = new GameDao(jdbcTemplate);
+        GameDao gameDao = new GameDao(jdbcTemplate);
         pieceDao = new PieceDao(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
-
-        jdbcTemplate.execute("create table game("
-            + "id int AUTO_INCREMENT PRIMARY KEY, "
-            + "turn varchar(10) not null default 'black',"
-            + "end_flag tinyint(1) not null default false,"
-            + "title varchar(100) not null,"
-            + "password varchar(100) not null"
-            + ")");
-
-        jdbcTemplate.execute("create table piece("
-            + "id int AUTO_INCREMENT PRIMARY KEY, "
-            + "name varchar(10) not null, "
-            + "color varchar(10) not null, "
-            + "position varchar(10) not null, "
-            + "game_id int not null, "
-            + "foreign key (game_id) references game (id)"
-            + ")");
 
         gameId = gameDao.createByTitleAndPassword("게임방제목", "password486");
         pieces = ChessmenInitializer.init().getPieces();
-    }
-
-    @AfterAll
-    void end() {
-        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
     }
 
     @DisplayName("createAllByGameId 실행시 해당 gameId에 piece 정보들이 추가된다.")

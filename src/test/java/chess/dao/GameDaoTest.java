@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+
 @JdbcTest
 public class GameDaoTest {
 
@@ -22,17 +23,6 @@ public class GameDaoTest {
     @BeforeEach
     void setUp() {
         gameDao = new GameDao(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
-
-        jdbcTemplate.execute("create table game("
-            + "id int AUTO_INCREMENT PRIMARY KEY, "
-            + "turn varchar(10) not null default 'black',"
-            + "end_flag tinyint(1) not null default false,"
-            + "title varchar(100) not null,"
-            + "password varchar(100) not null"
-            + ")");
-
         id = gameDao.createByTitleAndPassword("게임방제목", "password486");
     }
 

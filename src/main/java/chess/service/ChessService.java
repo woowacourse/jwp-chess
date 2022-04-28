@@ -8,8 +8,10 @@ import chess.domain.piece.Team;
 import chess.domain.state.State;
 import chess.dto.ChessGameDto;
 import chess.exception.IllegalDeleteException;
+import chess.exception.IllegalPasswordException;
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -95,6 +97,10 @@ public class ChessService {
     }
 
     public State findStateByGameNameAndPassword(String gameName, String password) {
-        return chessGameDao.findStateByGameNameAndPassword(gameName, password);
+        try {
+            return chessGameDao.findStateByGameNameAndPassword(gameName, password);
+        } catch(EmptyResultDataAccessException e) {
+            throw new IllegalPasswordException();
+        }
     }
 }

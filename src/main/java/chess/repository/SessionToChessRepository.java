@@ -1,6 +1,7 @@
 package chess.repository;
 
 import chess.domain.board.ChessBoard;
+import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpSession;
@@ -10,8 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SessionToChessRepository {
 
-    private static final int SESSION_REMOVE_MINUTE = 10;
-    public static final int MILLI_SECOND_TO_ONE_MINUTE_UNIT = 1_000 * 60;
+    private static final int SESSION_REMOVE_MINUTE = 1;
     private Map<HttpSession, ChessBoard> sessionToChessBoard = new ConcurrentHashMap<>();
 
     public void add(HttpSession session, ChessBoard chessBoard) {
@@ -23,7 +23,7 @@ public class SessionToChessRepository {
         return sessionToChessBoard.get(session);
     }
 
-    @Scheduled(cron = "* */1 * * * *")
+    @Scheduled(cron = "*/10 * * * * *")
     public void checkAndRemoveSessions() {
         for (HttpSession session : sessionToChessBoard.keySet()) {
             checkAndRemoveSession(session);
@@ -34,7 +34,7 @@ public class SessionToChessRepository {
         long currentTimeMillis = System.currentTimeMillis();
         long lastAccessedTime = session.getLastAccessedTime();
 
-        long elapsedMinutes = (currentTimeMillis - lastAccessedTime) / MILLI_SECOND_TO_ONE_MINUTE_UNIT;
+        long elapsedMinutes = Duration.ofMillis(currentTimeMillis - lastAccessedTime).toMinutes();
 
         if (SESSION_REMOVE_MINUTE == elapsedMinutes) {
             sessionToChessBoard.remove(session);

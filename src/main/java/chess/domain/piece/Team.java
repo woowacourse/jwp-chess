@@ -5,15 +5,25 @@ import static chess.domain.board.position.Rank.ONE;
 
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Rank;
+import java.util.Arrays;
 
 public enum Team {
-    WHITE(EIGHT),
-    BLACK(ONE);
+    WHITE(EIGHT, "WHITE"),
+    BLACK(ONE, "BLACK");
 
     private final Rank promotionRank;
+    private final String value;
 
-    Team(final Rank promotionRank) {
+    Team(final Rank promotionRank, final String value) {
         this.promotionRank = promotionRank;
+        this.value = value;
+    }
+
+    public static Team from(final String value) {
+        return Arrays.stream(values())
+                .filter(team -> team.value.equals(value))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
     }
 
     public static Team findByRank(final Rank rank) {

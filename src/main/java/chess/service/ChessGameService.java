@@ -29,7 +29,6 @@ public class ChessGameService {
     private static final Map<String, Function<Team, Piece>> PIECE_CREATION_STRATEGY_BY_NAME =
             Map.of("Pawn", Pawn::new, "King", King::new, "Queen", Queen::new,
                     "Rook", Rook::new, "Knight", Knight::new, "Bishop", Bishop::new);
-    private static final Map<String, Team> TEAM_CREATION_STRATEGY = Map.of("WHITE", WHITE, "BLACK", BLACK);
 
     private final PieceDao pieceDao;
     private final RoomDao roomDao;
@@ -49,7 +48,7 @@ public class ChessGameService {
         final Map<Position, Piece> pieces = new HashMap<>();
         for (PieceDto pieceDto : savedPieces) {
             Position position = Position.from(pieceDto.getPosition());
-            Team team = TEAM_CREATION_STRATEGY.get(pieceDto.getTeam());
+            Team team = Team.from(pieceDto.getTeam());
             String name = pieceDto.getName();
             Piece piece = PIECE_CREATION_STRATEGY_BY_NAME.get(name)
                     .apply(team);
@@ -106,7 +105,7 @@ public class ChessGameService {
 
     private Board getSavedBoard(final int roomId) {
         final String turn = roomDao.getTurn(roomId);
-        final Team turnTeam = TEAM_CREATION_STRATEGY.get(turn);
+        final Team turnTeam = Team.from(turn);
         final Map<Position, Piece> pieces = getPieces(roomId);
         return new Board(pieces, turnTeam);
     }

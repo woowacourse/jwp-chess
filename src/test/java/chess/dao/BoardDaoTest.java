@@ -29,7 +29,7 @@ class BoardDaoTest {
     void getBoard() {
         Board board = new Board();
         board.initBoard(new BasicBoardStrategy());
-        assertThat(boardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(boardDao.getBoard(1)).isEqualTo(board.toMap());
     }
 
     @Test
@@ -43,7 +43,7 @@ class BoardDaoTest {
         board.move(new Position("a3"), new WhitePawn());
         board.move(new Position("a2"), new Blank());
 
-        assertThat(boardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(boardDao.getBoard(1)).isEqualTo(board.toMap());
     }
 
     @Test
@@ -56,6 +56,6 @@ class BoardDaoTest {
 
         boardDao.reset(board.toMap());
 
-        assertThat(boardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(boardDao.getBoard(1)).isEqualTo(board.toMap());
     }
 }

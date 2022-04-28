@@ -33,9 +33,9 @@ public class JdbcTemplateBoardDao implements BoardDao {
     }
 
     @Override
-    public Map<String, String> getBoard() {
-        final String sql = "select * from board";
-        List<BoardDto> value = jdbcTemplate.query(sql, new BoardMapper());
+    public Map<String, String> getBoard(int gameId) {
+        final String sql = "select * from board where game_id = ?";
+        List<BoardDto> value = jdbcTemplate.query(sql, new BoardMapper(), gameId);
         return value.stream().collect(Collectors.toMap(BoardDto::getPosition, BoardDto::getPiece));
     }
 

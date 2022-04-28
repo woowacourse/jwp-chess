@@ -81,8 +81,8 @@ public class ChessGameService {
         return GameStatusDto.of(chessGame);
     }
 
-    public ScoreDto createScore() {
-        Board board = createCustomBoard(boardDao.getBoard());
+    public ScoreDto createScore(int gameId) {
+        Board board = createCustomBoard(boardDao.getBoard(gameId));
         Result result = board.createResult();
         return ScoreDto.of(result);
     }
@@ -109,7 +109,7 @@ public class ChessGameService {
 
     private ChessGame createCustomChessGame(int gameId) {
         return new ChessGame(Team.of(turnDao.getTurn(gameId)), GameStatus.of(gameStatusDao.getStatus(gameId)),
-                createCustomBoard(boardDao.getBoard()));
+                createCustomBoard(boardDao.getBoard(gameId)));
     }
 
     private Board createCustomBoard(Map<String, String> data) {

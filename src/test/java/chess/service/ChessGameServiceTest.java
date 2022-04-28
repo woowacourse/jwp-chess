@@ -44,7 +44,7 @@ public class ChessGameServiceTest {
     @DisplayName("처음 게임 시작한 후, white, black 점수는 38점이다.")
     void createScore() {
         chessGameService.startChessGame(new WebBasicBoardStrategy(), 1);
-        ScoreDto scoreDto = chessGameService.createScore();
+        ScoreDto scoreDto = chessGameService.createScore(1);
         assertThat(scoreDto.getMessage()).isEqualTo("white : 38.0점\n"
                 + "black : 38.0점\n"
                 + "무승부 입니다!");

@@ -62,10 +62,10 @@ public class ChessSpringController {
 
     @ResponseBody
     @GetMapping("/game/{gameId}/status")
-    public ResponseEntity status() {
+    public ResponseEntity status(@PathVariable int gameId) {
         ScoreDto scoreDto = null;
         try {
-            scoreDto = chessGameService.createScore();
+            scoreDto = chessGameService.createScore(gameId);
         } catch (Exception e) {
             return ResponseEntity.ok().body(new ErrorDto(e.getMessage()));
         }

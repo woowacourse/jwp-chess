@@ -8,7 +8,7 @@ public interface BoardDao {
 
     void update(String position, String piece, int gameId);
 
-    Map<String, String> getBoard();
+    Map<String, String> getBoard(int gameId);
 
     void reset(Map<String, String> board);
 }

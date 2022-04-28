@@ -27,7 +27,7 @@ public class FakeBoardDao implements BoardDao {
     }
 
     @Override
-    public Map<String, String> getBoard() {
+    public Map<String, String> getBoard(int gameId) {
         return Map.copyOf(board);
     }
 

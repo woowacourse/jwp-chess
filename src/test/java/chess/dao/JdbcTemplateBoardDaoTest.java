@@ -27,7 +27,7 @@ public class JdbcTemplateBoardDaoTest {
         jdbcTemplateBoardDao = new JdbcTemplateBoardDao(jdbcTemplate);
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
-        jdbcTemplateBoardDao.init(board.toMap());
+        jdbcTemplateBoardDao.init(board.toMap(), 1);
     }
 
     @Test
@@ -35,32 +35,32 @@ public class JdbcTemplateBoardDaoTest {
     void getBoard() {
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
-        assertThat(jdbcTemplateBoardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(jdbcTemplateBoardDao.getBoard(1)).isEqualTo(board.toMap());
     }
 
     @Test
     @DisplayName("이동 업데이트 로직을 확인한다.")
     void update() {
-        jdbcTemplateBoardDao.update("a3", "white_pawn");
-        jdbcTemplateBoardDao.update("a2", "blank");
+        jdbcTemplateBoardDao.update("a3", "white_pawn", 1);
+        jdbcTemplateBoardDao.update("a2", "blank", 1);
 
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
         board.move(new Position("a3"), new WhitePawn());
         board.move(new Position("a2"), new Blank());
 
-        assertThat(jdbcTemplateBoardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(jdbcTemplateBoardDao.getBoard(1)).isEqualTo(board.toMap());
     }
 
     @Test
     @DisplayName("리셋을 확인한다.")
     void reset() {
-        jdbcTemplateBoardDao.update("a3", "white_pawn");
-        jdbcTemplateBoardDao.update("a2", "blank");
+        jdbcTemplateBoardDao.update("a3", "white_pawn", 1);
+        jdbcTemplateBoardDao.update("a2", "blank", 1);
 
         Board board = new Board();
         jdbcTemplateBoardDao.reset(board.toMap());
 
-        assertThat(jdbcTemplateBoardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(jdbcTemplateBoardDao.getBoard(1)).isEqualTo(board.toMap());
     }
 }

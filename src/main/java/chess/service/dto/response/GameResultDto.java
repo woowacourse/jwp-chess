@@ -1,4 +1,4 @@
-package chess.service.dto;
+package chess.service.dto.response;
 
 import static java.util.stream.Collectors.toMap;
 

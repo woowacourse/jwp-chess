@@ -1,4 +1,4 @@
-package chess.service.dto;
+package chess.service.dto.response;
 
 import chess.dao.GameEntity;
 import java.util.ArrayList;

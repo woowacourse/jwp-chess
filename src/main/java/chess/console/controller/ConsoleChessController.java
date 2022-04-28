@@ -8,7 +8,7 @@ import chess.model.board.Square;
 import chess.model.game.ChessGame;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
-import chess.service.dto.GameResultDto;
+import chess.service.dto.response.GameResultDto;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

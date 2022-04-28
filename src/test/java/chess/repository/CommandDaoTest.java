@@ -27,7 +27,7 @@ public class CommandDaoTest {
     @Test
     void insert() {
         RoomEntity roomEntity = roomDao.insert(new RoomEntity(1L, "room1", "1234"));
-        CommandEntity expected = new CommandEntity(roomEntity.getId(), "move b2 b4");
+        CommandEntity expected = new CommandEntity(1L, roomEntity.getId(), "move b2 b4");
         CommandEntity actual = commandDao.insert(expected);
         assertThat(actual.getRoomId()).isEqualTo(roomEntity.getId());
         assertThat(actual.getCommand()).isEqualTo("move b2 b4");

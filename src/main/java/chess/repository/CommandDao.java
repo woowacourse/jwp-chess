@@ -43,7 +43,7 @@ public class CommandDao {
 
     public CommandEntity insert(CommandEntity commandEntity) {
         final SqlParameterSource parameters = new BeanPropertySqlParameterSource(commandEntity);
-        insertActor.executeAndReturnKey(parameters).longValue();
-        return new CommandEntity(commandEntity.getRoomId(), commandEntity.getCommand());
+        final long commandId = insertActor.executeAndReturnKey(parameters).longValue();
+        return new CommandEntity(commandId, commandEntity.getRoomId(), commandEntity.getCommand());
     }
 }

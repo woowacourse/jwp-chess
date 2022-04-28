@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.game.ChessGame;
+import chess.entities.ChessGame;
 import chess.domain.pieces.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,13 +18,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class WebChessBoardDao implements BoardDao<ChessGame> {
 
-    private final WebChessMemberDao webChessMemberDao;
-
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public WebChessBoardDao(WebChessMemberDao webChessMemberDao,
                             NamedParameterJdbcTemplate jdbcTemplate) {
-        this.webChessMemberDao = webChessMemberDao;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -85,7 +82,7 @@ public class WebChessBoardDao implements BoardDao<ChessGame> {
                 resultSet.getInt("id"),
                 resultSet.getString("room_title"),
                 Color.findColor(resultSet.getString("turn")),
-                webChessMemberDao.getAllByBoardId(resultSet.getInt("id")),
+                null,
                 resultSet.getString("password"));
     }
 }

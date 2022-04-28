@@ -1,10 +1,12 @@
 package chess;
 
 import chess.dao.WebChessBoardDao;
+import chess.dao.WebChessPieceDao;
 import chess.dao.WebChessPositionDao;
-import chess.domain.game.ChessGame;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
+import chess.dto.MoveDto;
+import chess.entities.ChessGame;
 import io.restassured.RestAssured;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -26,6 +28,9 @@ class SpringChessApplicationTests {
     @Autowired
     WebChessPositionDao positionDao;
 
+    @Autowired
+    WebChessPieceDao pieceDao;
+
     @LocalServerPort
     int port;
 
@@ -37,15 +42,16 @@ class SpringChessApplicationTests {
         ChessGame board = boardDao.save(
                 new ChessGame("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린")), "1111"));
         this.boardId = board.getId();
-        positionDao.saveAll(boardId);
     }
 
     @DisplayName("이동 명령어로 말을 움직인다.")
     @Test
     void movePiece() {
+        MoveDto moveDto = new MoveDto("a2", "a4");
+
         RestAssured.given().log().all()
-                .contentType(MediaType.TEXT_PLAIN_VALUE)
-                .body("command=move a2 a4")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(moveDto)
                 .when().post("/room/" + boardId + "/move")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());

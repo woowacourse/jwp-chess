@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.entity.PieceEntity;
 import java.util.List;
 
 public interface PieceDao {

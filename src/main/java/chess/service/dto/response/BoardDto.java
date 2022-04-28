@@ -1,6 +1,6 @@
 package chess.service.dto.response;
 
-import chess.dao.PieceEntity;
+import chess.entity.PieceEntity;
 import java.util.List;
 
 public class BoardDto {

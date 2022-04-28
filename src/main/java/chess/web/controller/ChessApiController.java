@@ -8,6 +8,7 @@ import chess.service.dto.response.DeleteGameResponse;
 import chess.service.dto.response.EndGameResponse;
 import chess.service.dto.response.ExceptionResponse;
 import chess.service.dto.response.GameResultDto;
+import chess.service.dto.response.MoveResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,8 +41,8 @@ public class ChessApiController {
 
     @PostMapping("/move/{gameId}")
     public ResponseEntity<Object> requestMove(@PathVariable int gameId, MoveRequest moveRequest) {
-        chessService.move(gameId, moveRequest.getFrom(), moveRequest.getTo());
-        return ResponseEntity.ok().build();
+        MoveResponse moveResponse = chessService.move(gameId, moveRequest.getFrom(), moveRequest.getTo());
+        return new ResponseEntity<>(moveResponse, HttpStatus.OK);
     }
 
     @PutMapping("/game-end/{gameId}")

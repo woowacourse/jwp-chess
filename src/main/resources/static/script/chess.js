@@ -75,13 +75,7 @@ async function onClick(event) {
 
     async function postTwoCells() {
         if (squareIdList.length === 2) {
-            const res = await postMove()
-            if (!res.ok) {
-                const data = await res.json();
-                console.log(data.message)
-                alert(data.message)
-            }
-            await allocateAllPiece()
+            await postMove()
         }
     }
 
@@ -97,7 +91,7 @@ async function onClick(event) {
         }
     }
 
-    async function onButtonClick(event) {
+    async function onButtonClick() {
         const classList = target.classList
 
         if (classList.contains('status-button')) {
@@ -112,13 +106,23 @@ async function onClick(event) {
 
 async function postMove() {
     let id = location.href.split("/").pop();
-    return await fetch('/move/' + id, {
+    fetch('/move/' + id, {
         method: 'POST',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: 'to='+squareIdList.pop()+'&from='+squareIdList.pop()
+    }).then(res => res.json())
+        .then(json => {
+            if (json.ok !== undefined && json.ok === false) {
+                alert(json.message);
+                return;
+            }
+            if (json.kingAttacked) {
+                alert("왕이 잡혀서 게임이 종료됐습니다.")
+            }
+            allocateAllPiece()
     })
 }
 

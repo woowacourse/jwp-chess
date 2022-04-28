@@ -1,6 +1,6 @@
 package chess.service.dto.response;
 
-import chess.dao.GameEntity;
+import chess.entity.GameEntity;
 import java.util.ArrayList;
 import java.util.List;
 

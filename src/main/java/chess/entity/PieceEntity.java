@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.entity;
 
 import chess.model.board.Square;
 import chess.model.piece.Piece;

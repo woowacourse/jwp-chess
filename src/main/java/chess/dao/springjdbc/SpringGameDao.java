@@ -1,7 +1,7 @@
 package chess.dao.springjdbc;
 
 import chess.dao.GameDao;
-import chess.dao.GameEntity;
+import chess.entity.GameEntity;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;

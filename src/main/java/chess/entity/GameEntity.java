@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.entity;
 
 import chess.model.game.ChessGame;
 import chess.model.gamestatus.StatusType;

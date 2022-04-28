@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.entity.GameEntity;
 import java.util.List;
 
 public interface GameDao {

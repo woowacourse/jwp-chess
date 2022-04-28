@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.entity.GameEntity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

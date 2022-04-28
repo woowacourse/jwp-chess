@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.entity.PieceEntity;
 import chess.model.board.ChessInitializer;
 import chess.model.board.Square;
 import chess.model.piece.Piece;

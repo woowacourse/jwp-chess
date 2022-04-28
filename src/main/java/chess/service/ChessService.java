@@ -3,9 +3,9 @@ package chess.service;
 import static java.util.stream.Collectors.toMap;
 
 import chess.dao.GameDao;
-import chess.dao.GameEntity;
+import chess.entity.GameEntity;
 import chess.dao.PieceDao;
-import chess.dao.PieceEntity;
+import chess.entity.PieceEntity;
 import chess.model.Color;
 import chess.model.board.Board;
 import chess.model.board.MoveResult;
@@ -20,6 +20,7 @@ import chess.service.dto.response.DeleteGameResponse;
 import chess.service.dto.response.GameResultDto;
 import chess.service.dto.response.GamesDto;
 import chess.service.dto.response.EndGameResponse;
+import chess.service.dto.response.MoveResponse;
 import java.util.List;
 import java.util.Map;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -45,11 +46,12 @@ public class ChessService {
         gameDao.update(new GameEntity(id, chessGame));
     }
 
-    public void move(int id, String from, String to) {
+    public MoveResponse move(int id, String from, String to) {
         ChessGame chessGame = getGameFromDao(id);
         MoveResult movedResult = chessGame.move(Square.of(from), Square.of(to));
         updatePiece(id, movedResult);
         updateGame(chessGame, id);
+        return new MoveResponse(movedResult);
     }
 
     private void updatePiece(int id, MoveResult movedResult) {

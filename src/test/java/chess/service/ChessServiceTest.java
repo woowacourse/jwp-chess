@@ -3,10 +3,10 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.dao.GameEntity;
+import chess.entity.GameEntity;
 import chess.dao.InMemoryGameDao;
 import chess.dao.InMemoryPieceDao;
-import chess.dao.PieceEntity;
+import chess.entity.PieceEntity;
 import chess.service.dto.response.DeleteGameResponse;
 import chess.service.dto.response.GameResultDto;
 import chess.service.dto.response.GamesDto;

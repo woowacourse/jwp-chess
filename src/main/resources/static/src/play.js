@@ -111,7 +111,7 @@ async function checkEndGame() {
     const gameStatus = await fetch(gameUri + "/status")
         .then((response) => response.json())
 
-    if (gameStatus.isEnd) {
+    if (gameStatus["end"]) {
         await fetch(gameUri + "/winner")
             .then(response => handlingException(response))
             .then(response => displayWinner(response))

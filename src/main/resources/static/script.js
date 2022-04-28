@@ -5,8 +5,19 @@ let roomName = "";
 let id;
 document.getElementById("start-room").style.display = "none";
 document.getElementById("rooms").style.display = "none";
+document.getElementById("create-form").style.display = "none";
+
+async function showCreateForm() {
+    document.getElementById("create-form").style.display = "block";
+    document.getElementById("showCreateForm").style.display = "none";
+    document.getElementById("rooms").style.display = "none";
+    document.getElementById("roomName").style.display = "inline";
+    document.getElementById("create-room").style.display = "inline";
+}
 
 async function create() {
+    let isCreated = false;
+
     document.getElementById("rooms").style.display = "none";
     if (roomName === "") {
         roomName = document.getElementById("roomName").value;
@@ -18,10 +29,24 @@ async function create() {
         },
         body: "name=" + roomName + "&password=" + document.getElementById("roomPassword").value
     })
-        .then(res => res.text())
-        .then(data => id = data)
+        .then(res => res.json())
+        .then(data => {
+            id = data;
+            console.log(id);
+            if (data.message) {
+                alert(data.message);
+                isCreated = false;
+                return
+            }
+            isCreated = true;
+        })
         .then(() => document.getElementById("roomPassword").value = "")
+        .then(() => document.getElementById("roomName").value = "")
+        .then(() => roomName = "")
 
+    if (isCreated !== true) {
+        return;
+    }
     document.getElementById("entrance").style.display = "none";
     document.getElementById("start-room").style.display = "block";
 }
@@ -78,6 +103,9 @@ async function newGame() {
     roomName = "";
     document.getElementById("start-room").style.display = "none";
     document.getElementById("entrance").style.display = "block";
+    document.getElementById("index").style.display = "block";
+    document.getElementById("showCreateForm").style.display = "inline";
+    document.getElementById("create-form").style.display = "none";
 }
 
 function end() {
@@ -225,6 +253,9 @@ async function tempAlert(message, timeout)
 
 async function rooms() {
     document.getElementById("rooms").style.display = "block";
+    document.getElementById("roomName").style.display = "none";
+    document.getElementById("showCreateForm").style.display = "inline";
+    document.getElementById("create-room").style.display = "none";
     let rooms;
     removeChildren(document.querySelector("tbody"));
     await fetch("/rooms", {
@@ -242,7 +273,7 @@ async function rooms() {
         }
         let roomId = rooms[aRoom]["id"];
         let button = document.createElement("button");
-        button.innerHTML = `<input type=\"button\" id=\"enter-room/${roomId}\" class=\"chess-btn\" value=\"방 입장\" onclick=\"enter(this)\">`
+        button.innerHTML = `<input type=\"button\" id=\"index/${roomId}\" class=\"chess-btn\" value=\"방 입장\" onclick=\"enter(this)\">`
         button.innerHTML += `<input type=\"button\" id=\"delete/${roomId}\" class=\"chess-btn\" value=\"방 삭제\" onclick=\"deleteRoom(this)\">`
         tr.appendChild(button);
         document.querySelector("tbody").appendChild(tr);
@@ -261,6 +292,8 @@ async function enter(self) {
 async function deleteRoom(self) {
     id = self.id.split("/")[1];
     let isDeleted = false;
+    console.log("[id]: " + id);
+    console.log("[password]: " + document.getElementById("roomPassword").value);
     await fetch("/room/" + id, {
         method: 'DELETE',
         headers: {

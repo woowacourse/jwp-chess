@@ -10,10 +10,14 @@
     <h1 class="chess-header">🏛ROMA CHESS🏛</h1>
     <div id="entrance" class="container">
         <div class="chess-button-container">
-            <div>방에 입장해주세요.</div>
-            방 제목: <input type="text" id="roomName" name="name">
-            비밀번호: <input type="password" id="roomPassword" name="password">
-            <input type="button" id="enter-room" class="chess-btn" value="방 입장" onclick="create()">
+            <div id="create-form">
+                <div id="roomName">제목: <input type="text" name="name"></div>
+                비밀번호: <input type="password" id="roomPassword" name="password">
+                <input type="button" id="create-room" class="chess-btn" value="방 생성" onclick="create()">
+            </div>
+        </div>
+        <div id="index" class="chess-button-container">
+            <input type="button" id="showCreateForm" class="chess-btn" value="새 게임" onclick="showCreateForm()">
             <input type="button" class="chess-btn" value="방 목록" onclick="rooms()">
         </div>
     </div>

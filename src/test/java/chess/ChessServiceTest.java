@@ -35,7 +35,7 @@ public class ChessServiceTest {
         Room actual = chessService.createRoom("sojukang", "pw");
         assertAll(
             () -> assertThat(actual.getName()).isEqualTo("sojukang"),
-            () ->  assertThat(actual.getPassword()).isEqualTo("pw")
+            () -> assertThat(actual.getPassword()).isEqualTo("pw")
         );
     }
 

@@ -59,7 +59,7 @@ public class FakeRoomDao implements RoomDao {
 
     @Override
     public Optional<Room> findByIdAndPassword(Long id, String password) {
-        Room room = rooms.get((int) (id - 1));
+        Room room = rooms.get((int)(id - 1));
         if (room.getPassword().equals(password)) {
             return Optional.of(room);
         }
@@ -68,6 +68,6 @@ public class FakeRoomDao implements RoomDao {
 
     @Override
     public void delete(Long roomId) {
-        rooms.remove((int) (roomId - 1));
+        rooms.remove((int)(roomId - 1));
     }
 }

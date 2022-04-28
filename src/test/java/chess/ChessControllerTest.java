@@ -52,11 +52,22 @@ class ChessControllerTest {
     @Test
     void room() {
         RestAssured.given().log().all()
-            .body("name=roma&password=123")
+            .body("name=sojukang&password=123")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .when().post("/room")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @Test
+    void roomExceptionAlreadyExists() {
+        RestAssured.given().log().all()
+            .body("name=roma&password=pw")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .when().post("/room")
+            .then().log().all()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
 

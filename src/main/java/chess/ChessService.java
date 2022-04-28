@@ -109,13 +109,13 @@ public class ChessService {
     }
 
     public Room createRoom(String name, String password) {
-        Optional<Room> room = roomDao.findByNameAndPassword(name, password);
-        if (room.isEmpty()) {
-            Room newRoom = new Room(name, password);
-            roomDao.save(newRoom);
-            return roomDao.findByNameAndPassword(name, password).get();
+        Optional<Room> room = roomDao.findByName(name);
+        if (room.isPresent()) {
+            throw new IllegalArgumentException("[ERROR]: 중복된 방 이름입니다.");
         }
-        return room.get();
+        Room newRoom = new Room(name, password);
+        roomDao.save(newRoom);
+        return roomDao.findByNameAndPassword(name, password).get();
     }
 
     public List<RoomDto> loadRooms() {

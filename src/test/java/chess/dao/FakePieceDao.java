@@ -41,6 +41,11 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
+    public List<PieceDto> findPiecesById(Long gameId) {
+        return new ArrayList<>(pieces.values());
+    }
+
+    @Override
     public void updatePosition(Position position, Position updatedPosition) {
         PieceDto pieceDto = pieces.get(position.getName());
         pieceDto.setPosition(updatedPosition.getName());

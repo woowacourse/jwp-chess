@@ -1,7 +1,7 @@
 DROP TABLE gameDto IF EXISTS;
 DROP TABLE piece IF EXISTS;
 
-create table gameDto
+create table game
 (
     id       int         not null auto_increment,
     title    varchar(30) not null,
@@ -13,8 +13,11 @@ create table gameDto
 
 create table piece
 (
+    id       int         not null auto_increment,
     position varchar(5)  not null,
     type     varchar(10) not null,
     color    varchar(20) not null,
-    primary key (position)
+    game_id  int         not null,
+    primary key (id),
+    foreign key (game_id) references game (id)
 );

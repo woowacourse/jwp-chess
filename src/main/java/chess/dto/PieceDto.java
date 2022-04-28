@@ -14,9 +14,9 @@ public class PieceDto {
     private String position;
     private String color;
     private String type;
-    private long gameId;
+    private Long gameId;
 
-    public PieceDto(String position, String color, String type, long gameId) {
+    public PieceDto(String position, String color, String type, Long gameId) {
         this.position = position;
         this.color = color;
         this.type = type;

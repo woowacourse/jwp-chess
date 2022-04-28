@@ -72,6 +72,21 @@ public class SpringJdbcPieceDao implements PieceDao {
     }
 
     @Override
+    public List<PieceDto> findPiecesById(Long gameId) {
+        final String sql = "select * from piece where game_id = ?";
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) ->
+                        new PieceDto(
+                                resultSet.getString("position"),
+                                resultSet.getString("color"),
+                                resultSet.getString("type")
+                        ),
+                gameId
+        );
+    }
+
+    @Override
     public void updatePosition(Position position, Position updatedPosition) {
         final String sql = "update piece set position = ? where position = ?";
         jdbcTemplate.update(sql, updatedPosition.getName(), position.getName());

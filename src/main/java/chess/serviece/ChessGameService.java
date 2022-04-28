@@ -34,7 +34,7 @@ public class ChessGameService {
         return id;
     }
 
-    public GameDto createGameDto(ChessGame chessGame, GameCreationDto gameCreationDto) {
+    private GameDto createGameDto(ChessGame chessGame, GameCreationDto gameCreationDto) {
         PieceColor turnColor = chessGame.getTurnColor();
         if (chessGame.isRunning()) {
             return new GameDto(gameCreationDto.getTitle(), gameCreationDto.getPassword(), turnColor.getName(), "playing");

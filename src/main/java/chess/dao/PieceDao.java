@@ -15,6 +15,8 @@ public interface PieceDao {
 
     void saveAll(List<PieceDto> pieceDtos);
 
+    List<PieceDto> findPiecesById(Long gameId);
+
     List<PieceDto> findAll();
 
     void updatePosition(Position position, Position updatedPosition);

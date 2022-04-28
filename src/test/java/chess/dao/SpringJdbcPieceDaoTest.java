@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dao.dto.GameDto;
 import chess.domain.position.Position;
 import chess.dto.PieceDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 public class SpringJdbcPieceDaoTest {
 
     private SpringJdbcPieceDao pieceDao;
+    private JdbcGameDao gameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -27,6 +29,7 @@ public class SpringJdbcPieceDaoTest {
     @BeforeEach
     void setUp() {
         pieceDao = new SpringJdbcPieceDao(jdbcTemplate);
+        gameDao = new JdbcGameDao(jdbcTemplate);
     }
 
     @Test
@@ -76,11 +79,12 @@ public class SpringJdbcPieceDaoTest {
     @Test
     @DisplayName("전체 기물 정보 조회")
     void findAll() {
-        PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
-        PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
-        pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
+        gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", 1L);
+        PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", 1L);
 
-        List<PieceDto> pieceDtos = pieceDao.findAll();
+        pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
+        List<PieceDto> pieceDtos = pieceDao.findPiecesById(1L);
 
         assertThat(pieceDtos).containsOnly(pieceDtoA2, pieceDtoA3);
     }

@@ -13,6 +13,17 @@
     <button type="button" class="w-btn-outline2 w-btn-gray-outline" id="resumeGame">게임 이어서하기</button>
 </div>
 
-<script src="src/index.js"></script>
+<script>
+const createGameButton = document.getElementById("createGame");
+const resumeGameButton = document.getElementById("resumeGame");
+
+createGameButton.addEventListener("click", function() {
+    location.href = "/game/create";
+})
+
+resumeGameButton.addEventListener("click", async function() {
+    location.href = "/game/list";
+})
+</script>
 </body>
 </html>

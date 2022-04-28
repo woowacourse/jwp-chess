@@ -8,26 +8,25 @@ import chess.domain.game.status.GameStatus;
 import chess.domain.game.status.Ready;
 import chess.domain.piece.ChessPiece;
 import chess.domain.piece.Pawn;
+import chess.domain.piece.Type;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
+import chess.service.dto.PieceDto;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ChessBoard {
 
     private final Map<Position, ChessPiece> chessBoard;
     private Color currentTurn = Color.WHITE;
-    private chess.domain.game.status.GameStatus gameStatus = new Ready();
+    private GameStatus gameStatus = new Ready();
 
     public ChessBoard(Map<Position, ChessPiece> board) {
         this.chessBoard = board;
     }
 
-    public ChessBoard(HashMap<Position, ChessPiece> board, chess.domain.game.status.GameStatus status, Color turn) {
+    public ChessBoard(HashMap<Position, ChessPiece> board, GameStatus status, Color turn) {
         this.chessBoard = board;
         this.currentTurn = turn;
         this.gameStatus = status;

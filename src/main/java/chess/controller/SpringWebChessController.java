@@ -35,14 +35,14 @@ public class SpringWebChessController {
         return "redirect:/play/" + gameId;
     }
 
-
-    @GetMapping("/play")
-    public String play(Model model) {
-        if (chessService.checkStatus(Status.END)) {
+    @GetMapping("/play/{gameId}")
+    public String play(Model model, @PathVariable int gameId) {
+        ChessBoard chessBoard = chessService.findBoard(gameId);
+        if (chessService.checkStatus(chessBoard, Status.END)) {
             return "redirect:result";
         }
         model.addAttribute("play", true);
-        model.addAttribute("board", chessService.currentBoardForUI());
+        model.addAttribute("board", chessService.currentBoardForUI(chessBoard));
         return "game";
     }
 

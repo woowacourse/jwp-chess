@@ -136,11 +136,20 @@ public class ChessService {
         return chessBoard.decideWinner().name();
     }
 
-    public Map<String, String> currentBoardForUI() {
+    public Map<String, String> currentBoardForUI(ChessBoard chessBoard) {
         return chessBoard.convertToImageName();
     }
 
     public boolean checkStatus(Status status) {
         return chessBoard.compareStatus(status);
+    }
+    public ChessBoard findBoard(int gameId) {
+        GameDto game = gameDao.findById(gameId);
+        List<PieceDto> boardInfo = boardDao.findByGameId(gameId);
+        HashMap<Position, ChessPiece> board = new HashMap<>();
+        for (PieceDto pieceDto : boardInfo) {
+            board.put(new Position(pieceDto.getPosition()),Type.from(pieceDto.getPiece()).createPiece(Color.from(pieceDto.getColor())));
+        }
+        return new ChessBoard(board, new Playing(), game.getTurn());
     }
 }

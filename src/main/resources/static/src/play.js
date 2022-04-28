@@ -190,3 +190,6 @@ async function endButton() {
             alert(error.message);
         });
 }
+async function backButton() {
+    location.href = "/";
+}

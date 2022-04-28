@@ -11,5 +11,5 @@
 ### [2단계]
 - [x] name, password 이용하여 game 생성 
 - [x] password 이용하여 game 삭제
-- [ ] game 이 끝나지 않은 경우 삭제하지 못하도록 하는 기능
+- [x] game 이 끝나지 않은 경우 삭제하지 못하도록 하는 기능
 - [ ] password 인코딩 디코딩 기능

@@ -61,8 +61,16 @@ public class ChessGameService {
     }
 
     public void deleteChessGame(final long chessGameId, final String password) {
+        validateGameOn(chessGameId);
         boardDao.delete(chessGameId);
         chessGameDao.delete(new ChessGameEntity(chessGameId, password));
+    }
+
+    private void validateGameOn(long chessGameId) {
+        ChessGameEntity chessGameEntity = chessGameDao.load(chessGameId);
+        if (chessGameEntity.getIsOn()) {
+            throw new IllegalStateException("[ERROR] 아직 게임이 끝나지 않아 삭제할 수 없습니다!");
+        }
     }
 
     public void movePiece(

@@ -1,7 +1,7 @@
 package chess.dao;
 
-import chess.entities.ChessGame;
 import chess.domain.pieces.Color;
+import chess.entities.ChessGame;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -81,7 +81,6 @@ public class WebChessBoardDao implements BoardDao<ChessGame> {
                 resultSet.getInt("id"),
                 resultSet.getString("room_title"),
                 Color.findColor(resultSet.getString("turn")),
-                null,
                 resultSet.getString("password"));
     }
 }

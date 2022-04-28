@@ -130,6 +130,6 @@ public final class GameService {
     }
 
     public List<ChessGame> findAllBoard() {
-        return boardDao.findAll();
+        return boardRepository.findAll();
     }
 }

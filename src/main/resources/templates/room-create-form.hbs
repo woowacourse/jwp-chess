@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link rel="stylesheet" href="/src/Chess.css"/>
+</head>
+<body>
+<h1 class="centered">체스 게임</h1>
+
+<form action="/api/new" method="post">
+    <div>
+        <label for="title" style="color: white">제목 :</label>
+        <input type="text" id = "title" name="title" placeholder="제목을 입력하세요">
+    </div>
+    <div>
+        <label for="password" style="color: white">비밀번호 : </label>
+        <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요">
+    </div>
+    <button type="submit">확인</button>
+</form>
+</body>
+</html>

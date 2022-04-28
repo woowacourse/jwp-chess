@@ -34,8 +34,7 @@ function initBoard() {
 
 start.addEventListener('click', function () {
     if (start.textContent === "START") {
-        initBoard();
-        loadBoard(id);
+        loadBoard();
         move();
         start.textContent = "RESTART";
         return
@@ -57,7 +56,7 @@ status.addEventListener('click', function () {
         .then(getStatus)
 })
 
-function loadBoard(id) {
+function loadBoard() {
     fetch('/api/load/{id}')
         .then(res => res.json())
         .then(imageSetting)

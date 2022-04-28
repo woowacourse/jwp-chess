@@ -1,12 +1,13 @@
 package chess.web.controller;
 
 import chess.domain.Room;
+import chess.domain.board.Board;
 import chess.web.controller.dto.RoomResponseDto;
 import chess.web.service.ChessService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,5 +29,17 @@ public class ChessViewController {
                 .collect(Collectors.toList());
         model.addAttribute("list", titles);
         return "index";
+    }
+
+    @GetMapping("/new")
+    public String getCreateForm() {
+        return "room-create-form";
+    }
+
+    @GetMapping("/room/{id}")
+    public String getRoom(Model model, @PathVariable Long id) {
+        Board board = chessService.loadGame(id);
+        model.addAttribute("board", board);
+        return "room";
     }
 }

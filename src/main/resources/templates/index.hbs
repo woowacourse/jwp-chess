@@ -13,13 +13,14 @@
     <ul style="background-color: palegoldenrod; padding: initial; font-size: 20px">
         {{#list}}
             <li style="text-align: center; color: palegoldenrod">
-                <a href="room.hbs" >{{title}}</a>
+                <a href="/room/{{id}}">{{title}}</a>
                 <button class="delete-button" id="delete-button" onclick="" type="button">방 삭제</button>
             </li>
         {{/list}}
     </ul>
     <div class="button-group" style="text-align: center">
-        <button class="create-button" id="create-button" onclick="" type="button">방 생성</button>
+        <button class="create-button" id="create-button" onclick="location.href='/new'" type="button">방 생성</button>
+    </div>
 <script src="/src/App.js"></script>
 </body>
 </html>

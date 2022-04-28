@@ -22,11 +22,11 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/room")
+    @PostMapping(path = "/new")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> createGame(@RequestBody RoomRequestDto roomRequestDto){
+    public ResponseEntity<Void> createGame(RoomRequestDto roomRequestDto){
         Long id = chessService.createRoom(roomRequestDto);
-        return ResponseEntity.created(URI.create("/api/load" + id)).build();
+        return ResponseEntity.created(URI.create("/room" + id)).build();
     }
     @GetMapping("/load/{id}")
     public ResponseEntity<BoardDto> loadGame(@PathVariable Long id) {

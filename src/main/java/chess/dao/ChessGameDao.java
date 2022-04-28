@@ -1,9 +1,7 @@
 package chess.dao;
 
 import chess.entity.ChessGameEntity;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -62,7 +60,7 @@ public class ChessGameDao {
     }
 
     public void updateIsOnAndTurn(final ChessGameEntity chessGameEntity) {
-        String updateSql = "update chess_game set is_on=:isOn, team_value_of_turn=:teamValueOfTurn where name=:name";
+        String updateSql = "update chess_game set is_on=:isOn, team_value_of_turn=:teamValueOfTurn where id=:id";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(updateSql, source);
     }

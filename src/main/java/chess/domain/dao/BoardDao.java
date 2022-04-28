@@ -82,7 +82,7 @@ public class BoardDao {
     }
 
     public void updateMovePiece(int gameId, String source, String target) {
-        deletePiece(gameId,target);
+        deletePiece(gameId, target);
         String sql = "update Board set position = ? where game_id = ? and position = ?";
         try {
             jdbcTemplate.update(sql, target, gameId, source);

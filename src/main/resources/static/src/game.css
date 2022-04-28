@@ -65,16 +65,16 @@ a {
     color: red;
 }
 
-.game{
+.game {
     position: center;
     background: antiquewhite;
     clear: both;
 }
 
-.game-title{
+.game-title {
     font-size: 30px;
 }
 
-.btn{
+.btn {
     float: right;
 }

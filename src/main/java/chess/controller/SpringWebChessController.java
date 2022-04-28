@@ -25,12 +25,12 @@ public class SpringWebChessController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("games",chessService.findAllGame());
+        model.addAttribute("games", chessService.findAllGame());
         return "lobby";
     }
 
     @PostMapping("/create")
-    public String create(@RequestParam String title, @RequestParam String password){
+    public String create(@RequestParam String title, @RequestParam String password) {
         long gameId = chessService.create(title, password);
         return "redirect:/play/" + gameId;
     }
@@ -65,7 +65,7 @@ public class SpringWebChessController {
     }
 
     @DeleteMapping("/delete/{gameId}")
-    public String delete( @PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto){
+    public String delete(@PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto) {
         chessService.deleteGame(gameId, removeRequestDto.getPassword());
         return "lobby";
     }

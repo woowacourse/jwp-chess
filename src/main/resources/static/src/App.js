@@ -21,7 +21,7 @@ function start() {
 }
 
 function end() {
-    fetch('/end/'+getGameId())
+    fetch('/end/' + getGameId())
         .then(response => {
             if (!response.ok) {
                 response.json()
@@ -72,11 +72,11 @@ function move(source, target) {
         });
 }
 
-function deleteGame(id){
+function deleteGame(id) {
 
     let password = prompt("비밀번호를 입력해주세요.")
     const request = {
-        password : password
+        password: password
     }
 
     fetch('/delete/' + id, {
@@ -87,14 +87,14 @@ function deleteGame(id){
         },
         body: JSON.stringify(request)
     })
-           .then(response => {
-               if (!response.ok) {
-                   response.json()
-                       .then(body => alert(body.message));
-                   return;
-               }
-               location.replace("/");
-           });
+        .then(response => {
+            if (!response.ok) {
+                response.json()
+                    .then(body => alert(body.message));
+                return;
+            }
+            location.replace("/");
+        });
 }
 
 function reinitialize() {

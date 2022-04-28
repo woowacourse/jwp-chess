@@ -1,9 +1,9 @@
 package chess.domain.dao;
 
-import chess.service.dto.GameDto;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
 import chess.domain.game.status.Playing;
+import chess.service.dto.GameDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class GameDaoTest {
     }
 
     private int gameCreate() {
-        return gameDao.create(chessBoard,"test",1212);
+        return gameDao.create(chessBoard, "test", 1212);
     }
 
     @BeforeEach

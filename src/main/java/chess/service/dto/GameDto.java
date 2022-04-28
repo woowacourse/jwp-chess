@@ -1,7 +1,6 @@
 package chess.service.dto;
 
 import chess.domain.game.Color;
-import chess.domain.game.Status;
 import chess.domain.game.status.End;
 import chess.domain.game.status.GameStatus;
 import chess.domain.game.status.Playing;

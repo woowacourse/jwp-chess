@@ -1,7 +1,7 @@
 package chess.domain.dao;
 
-import chess.service.dto.PieceDto;
 import chess.domain.game.board.ChessBoardFactory;
+import chess.service.dto.PieceDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ class BoardDaoTest {
     void set() {
         boardDao.deleteAll();
         gameDao.deleteAll();
-        gameDao.create(ChessBoardFactory.initBoard(),"test",1212);
+        gameDao.create(ChessBoardFactory.initBoard(), "test", 1212);
     }
 
     @Test

@@ -6,8 +6,6 @@ import chess.domain.game.Color;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
-import chess.domain.game.status.End;
-import chess.domain.game.status.GameStatus;
 import chess.domain.game.status.Playing;
 import chess.domain.piece.ChessPiece;
 import chess.domain.piece.Type;

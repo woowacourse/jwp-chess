@@ -8,12 +8,13 @@ import chess.domain.game.status.GameStatus;
 import chess.domain.game.status.Ready;
 import chess.domain.piece.ChessPiece;
 import chess.domain.piece.Pawn;
-import chess.domain.piece.Type;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
-import chess.service.dto.PieceDto;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 public class ChessBoard {

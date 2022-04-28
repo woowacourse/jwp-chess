@@ -79,12 +79,12 @@ public class SpringJdbcPieceDaoTest {
     @Test
     @DisplayName("전체 기물 정보 조회")
     void findAll() {
-        gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
         PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", 1L);
         PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", 1L);
-
         pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
-        List<PieceDto> pieceDtos = pieceDao.findPiecesById(1L);
+
+        List<PieceDto> pieceDtos = pieceDao.findPiecesByGameId(id);
 
         assertThat(pieceDtos).containsOnly(pieceDtoA2, pieceDtoA3);
     }
@@ -92,14 +92,16 @@ public class SpringJdbcPieceDaoTest {
     @Test
     @DisplayName("기물 정보 수정")
     void update() {
-        PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
-        pieceDao.save(pieceDto);
+        long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", 1L);
+        PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", 1L);
+        pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
 
-        pieceDao.updatePosition(Position.of("a2"), Position.of("a3"));
+        pieceDao.updatePosition(id, Position.of("a2"), Position.of("a5"));
 
         assertThatCode(
                 () -> jdbcTemplate.queryForObject(
-                        "select * from piece where position = 'a3'",
+                        "select * from piece where position = 'a5'",
                         (resultSet, rowNum) ->
                                 new PieceDto(
                                         resultSet.getString("position"),

@@ -48,7 +48,8 @@ public class SpringJdbcPieceDao implements PieceDao {
                 ps.setString(1, pieceDto.getPosition());
                 ps.setString(2, pieceDto.getType());
                 ps.setString(3, pieceDto.getColor());
-                ps.setLong(4, pieceDto.getGameId());}
+                ps.setLong(4, pieceDto.getGameId());
+            }
 
             @Override
             public int getBatchSize() {
@@ -72,7 +73,7 @@ public class SpringJdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public List<PieceDto> findPiecesById(Long gameId) {
+    public List<PieceDto> findPiecesByGameId(Long gameId) {
         final String sql = "select * from piece where game_id = ?";
         return jdbcTemplate.query(
                 sql,
@@ -90,5 +91,11 @@ public class SpringJdbcPieceDao implements PieceDao {
     public void updatePosition(Position position, Position updatedPosition) {
         final String sql = "update piece set position = ? where position = ?";
         jdbcTemplate.update(sql, updatedPosition.getName(), position.getName());
+    }
+
+    @Override
+    public void updatePosition(Long gameId, Position position, Position updatedPosition) {
+        final String sql = "update piece set position = ? where game_id = ? and position = ?";
+        jdbcTemplate.update(sql, updatedPosition.getName(), gameId, position.getName());
     }
 }

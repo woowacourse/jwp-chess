@@ -41,7 +41,7 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public List<PieceDto> findPiecesById(Long gameId) {
+    public List<PieceDto> findPiecesByGameId(Long gameId) {
         return new ArrayList<>(pieces.values());
     }
 
@@ -51,5 +51,10 @@ public class FakePieceDao implements PieceDao {
         pieceDto.setPosition(updatedPosition.getName());
         pieces.remove(position.getName());
         pieces.put(updatedPosition.getName(), pieceDto);
+    }
+
+    @Override
+    public void updatePosition(Long gameId, Position position, Position updatedPosition) {
+
     }
 }

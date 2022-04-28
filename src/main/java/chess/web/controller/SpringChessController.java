@@ -1,7 +1,7 @@
 package chess.web.controller;
 
 import chess.service.ChessService;
-import chess.service.dto.response.BoardDto;
+import chess.service.dto.request.CreateGameRequest;
 import chess.service.dto.response.ExceptionResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class SpringChessController {
@@ -28,15 +27,15 @@ public class SpringChessController {
     }
 
     @GetMapping("/game/{gameId}")
-    public String renderBoard(@PathVariable int gameId, Model model) {
-        BoardDto board = chessService.getBoard(gameId);
-        model.addAttribute("board", board);
+    public String renderBoard(@PathVariable String gameId) {
         return "board";
     }
 
     @PostMapping("/game")
-    public String createGame(@RequestParam String name, @RequestParam String password) {
-        chessService.createGame(name.trim(), password);
+    public String createGame(CreateGameRequest createGameRequest) {
+        String name = createGameRequest.getName();
+        String password = createGameRequest.getPassword();
+        chessService.createGame(name, password);
         return "redirect:/";
     }
 

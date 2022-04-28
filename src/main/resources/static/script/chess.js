@@ -83,17 +83,6 @@ async function onClick(event) {
             }
             await allocateAllPiece()
         }
-        async function postMove() {
-            let id = location.href.split("/").pop();
-            return await fetch('/move/' + id, {
-                method: 'POST',
-                cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'to='+squareIdList.pop()+'&from='+squareIdList.pop()
-            })
-        }
     }
 
     function makeAllCellsNotClicked(table) {
@@ -110,46 +99,49 @@ async function onClick(event) {
 
     async function onButtonClick(event) {
         const classList = target.classList
-        let id = location.href.split("/").pop();
-
-        async function getResult() {
-            fetch('/status/' + id, {
-                method: 'GET'
-            }).then(res => res.json())
-                .then(json => {
-                    if (json.ok !== undefined && json.ok === false) {
-                        alert(json.message);
-                        return;
-                    }
-                    let matchResult = json.winnerColor + '가 이겼습니다!';
-                    const whiteScore = json.playerPoints.WHITE
-                    const blackScore = json.playerPoints.BLACK
-                    if (json.isDraw) {
-                        matchResult = '비겼습니다!'
-                    }
-                    alert(`흰색 플레이어 점수 : ${whiteScore}\n검은색 플레이어 점수 : ${blackScore}\n${matchResult}`)
-                    location.href = '/';
-                })
-        }
 
         if (classList.contains('status-button')) {
             await getResult()
             return
         }
-        if (classList.contains('board-button')) {
-            location.href = "/board/" + id
-        }
         if (classList.contains('end-button')) {
             await endGame()
         }
-        if (classList.contains('referrer-button')) {
-            location.href = document.referrer;
-        }
-        if (classList.contains('referrer-start-button')) {
-            location.href = "/new-board/" + document.referrer.split("/").pop();
-        }
     }
 }
+
+async function postMove() {
+    let id = location.href.split("/").pop();
+    return await fetch('/move/' + id, {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'to='+squareIdList.pop()+'&from='+squareIdList.pop()
+    })
+}
+
+async function getResult() {
+    fetch('/status/' + id, {
+        method: 'GET'
+    }).then(res => res.json())
+        .then(json => {
+            if (json.ok !== undefined && json.ok === false) {
+                alert(json.message);
+                return;
+            }
+            let matchResult = json.winnerColor + '가 이겼습니다!';
+            const whiteScore = json.playerPoints.WHITE
+            const blackScore = json.playerPoints.BLACK
+            if (json.isDraw) {
+                matchResult = '비겼습니다!'
+            }
+            alert(`흰색 플레이어 점수 : ${whiteScore}\n검은색 플레이어 점수 : ${blackScore}\n${matchResult}`)
+            location.href = '/';
+        })
+}
+
 async function endGame() {
     fetch('/game-end/' + id, {
         method: 'PUT'

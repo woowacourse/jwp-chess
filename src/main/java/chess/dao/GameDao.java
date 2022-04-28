@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.Camp;
+import chess.domain.ChessGame;
 import java.sql.ResultSet;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,11 @@ public class GameDao {
 
     public GameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public void create(ChessGame chessGame) {
+        final String sql = "insert into game (title, password, white_turn) values (?, ?, true)";
+        jdbcTemplate.update(sql, chessGame.getTitle(), chessGame.getPassword());
     }
 
     public void save() {

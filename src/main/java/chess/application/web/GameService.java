@@ -69,6 +69,10 @@ public class GameService {
         return model;
     }
 
+    public void create(String title, String password) {
+        gameDao.create(new ChessGame(title, password));
+    }
+
     public void load() {
         List<PieceDto> rawBoard = boardDao.load();
         Map<Position, Piece> board = rawBoard.stream()

@@ -4,15 +4,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
 
 import chess.domain.Camp;
+import chess.domain.ChessGame;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class GameDaoTest {
+class GameDaoTest {
     @Autowired
     public GameDao gameDao;
+
+    @DisplayName("제목과 비밀번호로 게임을 생성한다.")
+    @Test
+    void create() {
+        ChessGame chessGame = new ChessGame("test", "test");
+        assertThatNoException().isThrownBy(() -> gameDao.create(chessGame));
+    }
 
     @DisplayName("기존에 저장된 game이 있어도 data를 덮어쓸 수 있다.")
     @Test

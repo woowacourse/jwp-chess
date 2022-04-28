@@ -9,9 +9,17 @@ import java.util.Map;
 
 public class ChessGame {
     private State state;
+    private String title;
+    private String password;
 
     public ChessGame() {
         this.state = new Ready();
+    }
+
+    public ChessGame(String title, String password) {
+        this.state = new Ready();
+        this.title = title;
+        this.password = password;
     }
 
     public void start() {
@@ -44,5 +52,13 @@ public class ChessGame {
 
     public Camp getWinner() {
         return this.state.getWinner();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

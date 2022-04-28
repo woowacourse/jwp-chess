@@ -1,5 +1,6 @@
 package chess.application.web;
 
+import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,20 @@ public class ViewController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/create")
+    public String create() {
+        return "create";
+    }
+
+    @PostMapping("/create")
+    public String createGame(@RequestParam Map<String, String> request) {
+        String title = request.get("title");
+        String password = request.get("password");
+        gameService.create(title, password);
+        return "redirect:/";
+    }
+
+    @GetMapping("/index")
     public String index(Model model) {
         model.addAllAttributes(gameService.modelReady());
         return "index";

@@ -4,6 +4,8 @@ drop table if exists game cascade;
 create table game
 (
     no         int     not null auto_increment,
+    title       varchar(10) not null,
+    password    varchar(10) not null,
     white_turn boolean not null,
     primary key (no)
 );

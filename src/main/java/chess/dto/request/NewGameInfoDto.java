@@ -1,4 +1,4 @@
-package chess.dto.requestDto;
+package chess.dto.request;
 
 public class NewGameInfoDto {
 

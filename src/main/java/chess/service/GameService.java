@@ -10,7 +10,7 @@ import chess.domain.game.Mapper;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
-import chess.dto.responseDto.StatusDto;
+import chess.dto.response.StatusDto;
 import chess.entities.ChessGame;
 import java.util.Arrays;
 import java.util.List;

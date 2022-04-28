@@ -1,4 +1,4 @@
-package chess.dto.responseDto;
+package chess.dto.response;
 
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;

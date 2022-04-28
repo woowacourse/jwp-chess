@@ -1,4 +1,4 @@
-package chess.dto.responseDto;
+package chess.dto.response;
 
 import chess.domain.member.Member;
 

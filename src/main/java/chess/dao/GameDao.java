@@ -5,7 +5,6 @@ import chess.dto.GameStatusDto;
 
 public interface GameDao {
 
-
     void removeAll();
 
     void saveGame(GameDto gameDto);

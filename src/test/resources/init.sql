@@ -1,7 +1,7 @@
-DROP TABLE game IF EXISTS;
+DROP TABLE gameDto IF EXISTS;
 DROP TABLE piece IF EXISTS;
 
-create table game
+create table gameDto
 (
     id       int         not null auto_increment,
     title    varchar(30) not null,

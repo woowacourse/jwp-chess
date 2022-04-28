@@ -11,21 +11,17 @@ sourceCompatibility = '11'
 repositories {
     mavenCentral()
 }
-
 dependencies {
     implementation 'com.sparkjava:spark-core:2.9.3'
     implementation 'com.sparkjava:spark-template-handlebars:2.7.1'
-
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-
     implementation 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
     implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.4'
-
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.rest-assured:rest-assured:5.0.1'
+    testImplementation 'io.rest-assured:rest-assured:4.4.0'
 
-    runtimeOnly 'mysql:mysql-connector-java'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.28'
     runtimeOnly 'com.h2database:h2'
 
     implementation 'ch.qos.logback:logback-classic:1.2.11'
@@ -35,7 +31,6 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.9.0'
 }
-
 test {
     useJUnitPlatform()
 }

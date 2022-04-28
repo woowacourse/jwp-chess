@@ -10,9 +10,18 @@ import java.util.Map;
 import java.util.Objects;
 
 public class PieceDto {
+
     private String position;
-    private final String color;
-    private final String type;
+    private String color;
+    private String type;
+    private long gameId;
+
+    public PieceDto(String position, String color, String type, long gameId) {
+        this.position = position;
+        this.color = color;
+        this.type = type;
+        this.gameId = gameId;
+    }
 
     public PieceDto(String position, String color, String type) {
         this.position = position;
@@ -24,6 +33,10 @@ public class PieceDto {
         PieceType type = PieceType.find(pieceDto.getType());
         PieceColor color = PieceColor.find(pieceDto.getColor());
         return Map.entry(Position.of(pieceDto.position), PieceFactory.find(type, color));
+    }
+
+    public static PieceDto from(Position position, Piece piece, long gameId) {
+        return new PieceDto(position.getName(), piece.getColor().getName(), piece.getType().getName(), gameId);
     }
 
     public static PieceDto from(Position position, Piece piece) {
@@ -48,6 +61,10 @@ public class PieceDto {
 
     public String getType() {
         return type;
+    }
+
+    public long getGameId() {
+        return gameId;
     }
 
     @Override

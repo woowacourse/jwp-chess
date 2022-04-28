@@ -33,13 +33,13 @@ public class SpringJdbcPieceDao implements PieceDao {
 
     @Override
     public void save(PieceDto pieceDto) {
-        final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
-        jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor());
+        final String sql = "insert into piece (position, type, color, game_id) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor(), pieceDto.getGameId());
     }
 
     @Override
     public void saveAll(List<PieceDto> pieceDtos) {
-        final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
+        final String sql = "insert into piece (position, type, color, game_id) values (?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 
             @Override
@@ -48,7 +48,7 @@ public class SpringJdbcPieceDao implements PieceDao {
                 ps.setString(1, pieceDto.getPosition());
                 ps.setString(2, pieceDto.getType());
                 ps.setString(3, pieceDto.getColor());
-            }
+                ps.setLong(4, pieceDto.getGameId());}
 
             @Override
             public int getBatchSize() {

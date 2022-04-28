@@ -87,13 +87,33 @@ function start() {
 }
 
 function end() {
-    fetch("/end").then(res => {
+    const params = new URLSearchParams(location.search);
+    const boardId = params.get('id');
+    fetch(`/board/end?id=${boardId}`, {
+        method: "POST"
+    }).then(res => {
         res.json().then(data => {
             if (data.statusCode === 501) {
                 alert(data.errorMessage);
                 return;
             }
-            location.replace("/chess-result");
+            location.replace(`/board/chess-result?id=${boardId}`);
+        })
+    })
+}
+
+function restart() {
+    const params = new URLSearchParams(location.search);
+    const boardId = params.get('id');
+    fetch(`/board/restart?id=${boardId}`, {
+        method: "POST"
+    }).then(res => {
+        res.json().then(data => {
+            if (data.statusCode === 301){
+                location.replace(`/board?id=${boardId}`);
+            } else{
+                alert(data.errorMessage);
+            }
         })
     })
 }

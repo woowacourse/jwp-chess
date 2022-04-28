@@ -15,7 +15,8 @@ public class ExceptionsController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ModelAndView handle() {
+    public ModelAndView handle(RuntimeException e) {
+        e.printStackTrace();
         ModelAndView modelAndView = new ModelAndView("exception");
         modelAndView.addObject("message", "서버에서 예외 오류가 발생했습니다.");
         return modelAndView;

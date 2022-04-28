@@ -4,6 +4,7 @@ import chess.entity.CommandEntity;
 import chess.entity.RoomEntity;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -29,21 +30,40 @@ public class CommandDao {
         jdbcTemplate.update(sql, command);
     }
 
-    public List<String> findAll() {
+    public CommandEntity insert(CommandEntity commandEntity) {
+        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(commandEntity);
+        final long commandId = insertActor.executeAndReturnKey(parameters).longValue();
+        return new CommandEntity(commandId, commandEntity.getRoomId(), commandEntity.getCommand());
+    }
+
+    public List<CommandEntity> findAll() {
+        String sql = "select * from commands";
+        return jdbcTemplate.query(sql, rowMapper());
+    }
+
+    public List<String> findAllInCommandTable() {
         String sql = "select * from command";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            return resultSet.getString("command");
-        });
+        return jdbcTemplate.query(sql, stringRowMapper());
+    }
+
+    private RowMapper<String> stringRowMapper() {
+        return (rs, rowNum) -> {
+            final String command = rs.getString("command");
+            return command;
+        };
+    }
+
+    private RowMapper<CommandEntity> rowMapper() {
+        return (rs, rowNum) -> {
+            final Long commandId = rs.getLong("command_id");
+            final Long roomId = rs.getLong("room_id");
+            final String command = rs.getString("command");
+            return new CommandEntity(commandId, roomId, command);
+        };
     }
 
     public void clear() {
         String sql = "truncate table command";
         jdbcTemplate.update(sql);
-    }
-
-    public CommandEntity insert(CommandEntity commandEntity) {
-        final SqlParameterSource parameters = new BeanPropertySqlParameterSource(commandEntity);
-        final long commandId = insertActor.executeAndReturnKey(parameters).longValue();
-        return new CommandEntity(commandId, commandEntity.getRoomId(), commandEntity.getCommand());
     }
 }

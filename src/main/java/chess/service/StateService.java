@@ -17,7 +17,7 @@ public class StateService {
 
     public State currentState() {
         State state = Start.of();
-        for (String command : commandDao.findAll()) {
+        for (String command : commandDao.findAllInCommandTable()) {
             state = state.proceed(command);
         }
         return state;
@@ -28,7 +28,7 @@ public class StateService {
     }
 
     public List<String> getAllCommand() {
-        return commandDao.findAll();
+        return commandDao.findAllInCommandTable();
     }
 
     public void insertCommand(String command) {

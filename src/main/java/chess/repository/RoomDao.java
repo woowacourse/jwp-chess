@@ -39,6 +39,11 @@ public class RoomDao {
         return jdbcTemplate.query(sql, rowMapper());
     }
 
+    public void deleteById(Long id) {
+        final String sql = "delete from rooms where room_id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
     private RowMapper<RoomEntity> rowMapper() {
         return (rs, rowNum) -> {
             final Long id = rs.getLong("room_id");
@@ -46,10 +51,5 @@ public class RoomDao {
             final String password = rs.getString("password");
             return new RoomEntity(id, name, password);
         };
-    }
-
-    public void deleteById(Long id) {
-        final String sql = "delete from rooms where room_id = ?";
-        jdbcTemplate.update(sql, id);
     }
 }

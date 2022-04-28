@@ -21,6 +21,10 @@ public class Score {
         this.value = value;
     }
 
+    public Score(String value) {
+        this.value = new BigDecimal(value);
+    }
+
     public Score() {
         this(INIT_SCORE);
     }

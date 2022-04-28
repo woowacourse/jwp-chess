@@ -31,8 +31,13 @@ public class ChessGameDaoTest {
 
         chessGameDao = new ChessGameDao(jdbcTemplate);
         chessGameDao.deleteAll();
-        chessGameDao.saveChessGame(new Room("Chess Game", "1234"), GameStatus.RUNNING, Color.WHITE, new Score(new BigDecimal("10.0")),
-                new Score(new BigDecimal("15.0")));
+        chessGameDao.saveChessGame(
+            new Room("Chess Game", "1234"),
+            GameStatus.RUNNING,
+            Color.WHITE,
+            new Score("10.0"),
+            new Score("15.0")
+        );
     }
 
     @AfterEach
@@ -45,31 +50,52 @@ public class ChessGameDaoTest {
     void findById() {
         ChessGameDto chessGameDto = chessGameDao.findById(getChessGameId());
 
-        assertAll(() -> {
-            assertThat(chessGameDto.getStatus()).isEqualTo(GameStatus.RUNNING);
-            assertThat(chessGameDto.getName()).isEqualTo("Chess Game");
-            assertThat(chessGameDto.getCurrentColor()).isEqualTo(Color.WHITE);
-            assertThat(chessGameDto.getBlackScore()).isEqualTo(new Score(new BigDecimal("10.0")));
-            assertThat(chessGameDto.getWhiteScore()).isEqualTo(new Score(new BigDecimal("15.0")));
-        });
+        assertThat(chessGameDto)
+            .usingRecursiveComparison()
+            .isEqualTo(new ChessGameDto(
+                chessGameDto.getId(),
+                "Chess Game",
+                GameStatus.RUNNING,
+                new Score("10.0"),
+                new Score("15.0"),
+                Color.WHITE)
+            );
     }
 
     @Test
     void updateChessGame() {
         ChessGameDto chessGameDto = chessGameDao.findById(getChessGameId());
         ChessGameDto newChessGameDto = new ChessGameDto(
-                chessGameDto.getId(), chessGameDto.getName(), GameStatus.FINISHED,
-                new Score(new BigDecimal("20.0")), new Score(new BigDecimal("12.5")), Color.BLACK);
+            chessGameDto.getId(),
+            chessGameDto.getName(),
+            GameStatus.FINISHED,
+            new Score("20.0"),
+            new Score("12.5"),
+            Color.BLACK
+        );
         chessGameDao.updateChessGame(newChessGameDto);
 
-        ChessGameDto expect = chessGameDao.findById(getChessGameId());
+        assertThat(chessGameDao.findById(getChessGameId()))
+            .usingRecursiveComparison()
+            .isEqualTo(newChessGameDto);
+    }
 
-        assertAll(() -> {
-            assertThat(expect.getStatus()).isEqualTo(newChessGameDto.getStatus());
-            assertThat(expect.getCurrentColor()).isEqualTo(newChessGameDto.getCurrentColor());
-            assertThat(expect.getBlackScore()).isEqualTo(newChessGameDto.getBlackScore());
-            assertThat(expect.getWhiteScore()).isEqualTo(newChessGameDto.getWhiteScore());
-        });
+    @Test
+    void deleteChessGame() {
+        ChessGameDto chessGameDto = chessGameDao.findById(getChessGameId());
+        ChessGameDto newChessGameDto = new ChessGameDto(
+            chessGameDto.getId(),
+            chessGameDto.getName(),
+            GameStatus.FINISHED,
+            new Score("20.0"),
+            new Score("12.5"),
+            Color.BLACK
+        );
+        chessGameDao.updateChessGame(newChessGameDto);
+
+        chessGameDao.deleteByIdAndPassword(getChessGameId(), "1234");
+
+        assertThat(chessGameDao.existByName("Chess Game")).isFalse();
     }
 
     private int getChessGameId() {

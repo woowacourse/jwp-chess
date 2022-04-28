@@ -119,7 +119,7 @@ public class ChessService {
 
     private void checkKingDead(Long gameId, Turn turn, Board board) {
         if (board.isKingDead()) {
-            gameDao.updateTurnByGameId(gameId, turn.finish());
+            gameDao.updateTurnByGameId(gameId, "end");
         }
     }
 

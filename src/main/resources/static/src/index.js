@@ -11,8 +11,8 @@ function changeButton(value) {
 function createNewGame() {
     const password = prompt("방 비밀번호를 입력해주세요.");
     fetch("/start/new", {
-        method : "post",
-        body : password
+        method: "post",
+        body: password
     }).then(async response => {
         let gameId = await response.text();
         enterGame(gameId);
@@ -23,36 +23,33 @@ function enterGame(gameId) {
     location.href = "/enter/" + gameId;
 }
 
-const clickButton = (gameId) => {
+const clickButton = async (gameId) => {
     const button = document.getElementById("game-button");
     const buttonText = button.innerText;
 
     if (buttonText.includes("restart")) {
         removeEventListener();
-        restartGame(gameId);
-
-        const wtime = Date.now() + 500
-        while(Date.now() < wtime) {}
-
-        startGame(gameId);
+        await restartGame(gameId);
+        await startGame(gameId);
     } else if (buttonText.includes("end")) {
         endGame(gameId);
     } else if (buttonText.includes("status")) {
         getStatus(gameId);
-    } else if (buttonText.includes("start")) {
+    } else if (buttonText.includes("start") || buttonText.includes("continue")) {
+        removeEventListener();
         startGame(gameId);
     }
 }
 
 const startGame = (gameId) => {
-    const response = fetch(`/start/` + gameId, {
+    fetch(`/start/` + gameId, {
         method: "GET",
         headers: {"Content-Type": "application/json"}
-    });
-    response.then(data => data.json())
+    })
+        .then(data => data.json())
         .then(body => {
             drawBoard(body);
-            changeButton("end!");
+            changeButton("status!");
             drawTurnBox(gameId);
         });
 
@@ -83,8 +80,7 @@ function drawTurnBox(gameId) {
     const response = fetch(`/turn/` + gameId, {
         method: "GET",
         headers: {"Content-Type": "application/json"}
-    });
-    response
+    })
         .then(data => data.text())
         .then(body => {
             turnBox.innerText = body + "팀 차례!";
@@ -95,8 +91,8 @@ function drawTurnBox(gameId) {
         });
 }
 
-function restartGame(gameId) {
-    fetch(`/restart/` + gameId, {
+async function restartGame(gameId) {
+    await fetch(`/restart/` + gameId, {
         method: "get"
     });
 }
@@ -109,7 +105,7 @@ const movePiece = (gameId) => {
     })
 }
 
-const clickBLock = (e, block, gameId) => {
+const clickBLock = async (e, block, gameId) => {
     if (block.className.includes('click')) {
         block.className = block.className.replace('click', '')
         deleteMovePosition(block.id);
@@ -119,12 +115,12 @@ const clickBLock = (e, block, gameId) => {
     }
 
     if (isMovePositionAllSelected()) {
-        const response = fetch(`/move/` + gameId, {
+        await fetch(`/move/` + gameId, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(movePosition),
-        });
-        response.then(data => data.json())
+        })
+            .then(data => data.json())
             .then(body => {
                 drawBoard(body)
                 drawTurnBox(gameId);
@@ -133,27 +129,27 @@ const clickBLock = (e, block, gameId) => {
                 alert("움직일 수 없는 위치입니다.")
             })
         initTurn();
-        setTimeout(kingDeadEndGame(gameId));
+        kingDeadEndGame(gameId);
     }
 }
 
-function endGame(gameId) {
+async function endGame(gameId) {
     const turnBox = document.getElementById("turn-box")
     turnBox.innerText = "게임 종료";
 
-    fetch("/exit/" + gameId, {
-        method : "post"
+    await fetch("/exit/" + gameId, {
+        method: "post"
     });
 
-    changeButton("status!");
+    changeButton("restart");
 }
 
-const kingDeadEndGame = (gameId) => {
-    const response = fetch(`/king/dead/` + gameId, {
+const kingDeadEndGame = async (gameId) => {
+    await fetch(`/king/dead/` + gameId, {
         method: "GET",
         header: {"Content-Type": "application/json"}
-    });
-    response.then(data => data.json())
+    })
+        .then(data => data.json())
         .then(body => {
             if (body === true) {
                 alert("왕이 죽었다!")
@@ -171,20 +167,20 @@ const removeEventListener = () => {
 }
 
 const getStatus = (gameId) => {
-    const response = fetch(`/status/` + gameId, {
+    fetch(`/status/` + gameId, {
         method: "GET",
         header: {"Content-Type": "application/json"}
-    });
-    response.then(data => data.json())
+    })
+        .then(data => data.json())
         .then(body => {
             const turnBox = document.getElementById("turn-box")
+            if (body.winningTeam)
             turnBox.innerHTML = "<div> " +
                 "<div> BLACK TEAM 점수:" + body.blackScore + "</div>" +
                 "<div> WHITE TEAM 점수:" + body.whiteScore + "</div>" +
-                "<div> 우승 팀:" + body.winningTeam + "</div>" +
                 "</div> "
         })
-    changeButton("restart");
+    changeButton("continue");
 }
 
 const initTurn = () => {

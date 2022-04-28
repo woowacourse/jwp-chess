@@ -10,9 +10,7 @@ public interface ChessBoardDao {
 
     void save(Position position, Piece piece, int roomId);
 
-    void deleteAll(int roomId);
-
-    Map<Position, Piece> findAll(int roomId);
+    Map<Position, Piece> findAllPieces(int roomId);
 
     void movePiece(MoveDto moveDto, int roomId);
 

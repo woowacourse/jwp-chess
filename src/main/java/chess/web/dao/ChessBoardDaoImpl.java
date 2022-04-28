@@ -40,13 +40,7 @@ public class ChessBoardDaoImpl implements ChessBoardDao {
     }
 
     @Override
-    public void deleteAll(int roomId) {
-        final String sql = "delete from board where room_id = (?)";
-        this.jdbcTemplate.update(sql, roomId);
-    }
-
-    @Override
-    public Map<Position, Piece> findAll(int roomId) {
+    public Map<Position, Piece> findAllPieces(int roomId) {
         final String sql = "select position, piece from board where room_id = (?)";
         List<ChessCellDto> chessCellDtos = jdbcTemplate.query(sql, ChessCellMapper, roomId);
 

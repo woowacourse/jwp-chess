@@ -128,7 +128,11 @@ async function displayWinner(response) {
 
 async function scoreButton() {
     const value = await fetch(gameUri + "/score")
-        .then((response) => response.json());
+        .then(handlingException)
+        .then((response) => response.json())
+        .catch(error => {
+            alert(error.message);
+        });
     if (gameUri !== "") {
         alert(`${value[0].color}의 점수는 ${value[0].score}\n${value[1].color}의 점수는 ${value[1].score}`);
     } else {

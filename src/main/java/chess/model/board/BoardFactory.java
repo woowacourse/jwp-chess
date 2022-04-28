@@ -1,11 +1,17 @@
 package chess.model.board;
 
 import chess.model.Team;
-import chess.model.piece.*;
+import chess.model.piece.Bishop;
+import chess.model.piece.Empty;
+import chess.model.piece.King;
+import chess.model.piece.Knight;
+import chess.model.piece.Pawn;
+import chess.model.piece.Piece;
+import chess.model.piece.Queen;
+import chess.model.piece.Rook;
 import chess.model.position.File;
 import chess.model.position.Position;
 import chess.model.position.Rank;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

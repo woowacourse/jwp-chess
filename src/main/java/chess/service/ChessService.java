@@ -15,11 +15,10 @@ import chess.model.piece.Piece;
 import chess.model.piece.PieceFactory;
 import chess.model.position.Position;
 import java.util.LinkedHashMap;
-import java.util.Map;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
@@ -139,6 +138,7 @@ public class ChessService {
         Board board = toBoard(pieceDao.findAllPiecesByGameId(gameId));
         return GameResult.from(board);
     }
+
     public void exitGame(Long gameId) {
         gameDao.updateTurnByGameId(gameId, "end");
     }
@@ -150,7 +150,7 @@ public class ChessService {
     }
 
     public void deleteGame(Long gameId, String password) {
-        if (canDeleteGame(gameId, password)){
+        if (canDeleteGame(gameId, password)) {
             pieceDao.deleteByGameId(gameId);
             gameDao.deleteByGameId(gameId);
             return;

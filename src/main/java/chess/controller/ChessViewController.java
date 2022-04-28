@@ -1,9 +1,6 @@
 package chess.controller;
 
 import chess.service.ChessService;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

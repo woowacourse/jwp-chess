@@ -1,7 +1,6 @@
 package chess.model.command;
 
 import chess.model.position.Position;
-
 import java.util.Arrays;
 import java.util.List;
 

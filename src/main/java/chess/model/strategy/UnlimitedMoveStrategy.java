@@ -3,7 +3,6 @@ package chess.model.strategy;
 import chess.model.MoveType;
 import chess.model.position.Direction;
 import chess.model.position.Position;
-
 import java.util.List;
 
 public class UnlimitedMoveStrategy implements MoveStrategy {

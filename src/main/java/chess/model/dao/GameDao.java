@@ -1,14 +1,13 @@
 package chess.model.dao;
 
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class GameDao {
@@ -25,7 +24,7 @@ public class GameDao {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"game_id"});
             preparedStatement.setString(1, title);
             preparedStatement.setString(2, password);
-            return  preparedStatement;
+            return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }

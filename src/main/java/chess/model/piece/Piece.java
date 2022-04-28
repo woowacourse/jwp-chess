@@ -6,7 +6,6 @@ import chess.model.Turn;
 import chess.model.position.Direction;
 import chess.model.position.Position;
 import chess.model.strategy.MoveStrategy;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -67,8 +66,12 @@ public abstract class Piece {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Piece piece = (Piece) o;
         return team == piece.team;
     }

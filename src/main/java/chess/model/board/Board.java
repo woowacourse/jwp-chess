@@ -1,16 +1,15 @@
 package chess.model.board;
 
+import static java.util.stream.Collectors.counting;
+
 import chess.model.Team;
 import chess.model.piece.Empty;
 import chess.model.piece.Piece;
 import chess.model.position.File;
 import chess.model.position.Position;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.counting;
 
 public class Board {
     private final Map<Position, Piece> board;

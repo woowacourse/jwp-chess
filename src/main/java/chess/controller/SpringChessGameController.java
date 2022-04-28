@@ -53,7 +53,8 @@ public class SpringChessGameController {
     @ResponseBody
     @PostMapping("/room")
     public ResponseEntity<String> makeRoom(@RequestBody RoomDto roomDto) {
-        chessService.createRoom(roomDto);
+        RoomDto newRoomDto = chessService.createRoom(roomDto);
+        chessService.initializeGame(newRoomDto.getId());
         return ResponseEntity.ok("방이 생성되었습니다.");
     }
 

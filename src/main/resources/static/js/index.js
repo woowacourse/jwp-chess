@@ -38,7 +38,6 @@ const enterRoom = async (id, title) => {
         password: pw
     };
 
-    console.log(bodyValue);
 
     let response = await fetch('/room/' + id, {
         method: 'POST',
@@ -53,6 +52,35 @@ const enterRoom = async (id, title) => {
         let message = await response.text();
         alert(message);
         location.href = "/room/" + id;
+        return;
+    }
+
+    let error = await response.json();
+    alert(error.message);
+}
+
+
+const deleteRoom = async (id, title) => {
+    let pw = prompt("비밀번호를 입력하세요.");
+    const bodyValue = {
+        id: id,
+        title: title,
+        password: pw
+    };
+
+    let response = await fetch('/room/' + id, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)
+    });
+
+    if (response.ok) {
+        let message = await response.text();
+        alert(message);
+        location.reload();
         return;
     }
 

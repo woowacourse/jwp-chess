@@ -20,7 +20,7 @@
         <div class="room">
             <span> 방 번호 : {{this.id}} / 방 제목 : {{this.title}}</span>
             <button onclick="enterRoom({{this.id}}, '{{this.title}}')"> 입장하기</button>
-            <button> 방 삭제</button>
+            <button onclick="deleteRoom({{this.id}}, '{{this.title}}')"> 방 삭제</button>
             <p></p>
         </div>
     {{/rooms}}

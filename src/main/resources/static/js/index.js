@@ -41,18 +41,56 @@ function createGame(id, name) {
   game.className = 'games__game';
   game.innerHTML = `
         <span class="game__title" id=${id}>${name}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" id="box__close-button" width="20" height="20" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
-          <path d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
-        </svg>
+        <button type="button" class="box__close-button" id="${id}">X</button>
     `;
   return game;
 }
 
-document.addEventListener('click', async ({target: {className, id}}) => {
+// <button></button>
+// <div>
+//   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+//     <path class="box__close-button" id=${id} d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/>
+//   </svg>
+// </div>
+
+document.addEventListener('click', async (e) => {
+  const {target: {className, id}} = e;
+  console.log(className, id);
   if (className === 'game__title') {
     await enterGame(id);
+  } else if (className === 'box__close-button') {
+    await deleteGame(id);
+    // deleteGameFromList(id);
   }
 });
+
+async function deleteGame(gameId) {
+  const password = inputPassword();
+  const requestJson = JSON.stringify({gameId, password});
+  const res = await fetch(`/games/existed-game/${gameId}`, {
+    method: 'DELETE',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: requestJson
+  });
+  if (res.status === 204) {
+    deleteGameFromList(gameId);
+    return;
+  }
+  const {message} = await res.json();
+  alert(message);
+}
+
+function deleteGameFromList(gameId) {
+  const oldGames = document.querySelectorAll('.games__game');
+  const gamesAfterDelete = Array.from(oldGames).filter((node) => {
+    return node.firstElementChild.id !== gameId
+  });
+  const modal = document.getElementById('modal__games');
+  modal.innerHTML = '';
+  gamesAfterDelete.forEach(node => modal.appendChild(node));
+}
 
 async function enterGame(gameId) {
   const password = inputPassword();

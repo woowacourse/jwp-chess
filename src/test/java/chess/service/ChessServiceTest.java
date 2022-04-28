@@ -82,4 +82,34 @@ class ChessServiceTest {
             assertThat(chessService.checkPassword(gameId, "wrongPassword")).isFalse();
         }
     }
+
+    @DisplayName("게임 방을 지울 때 선택한 게임 방의 비밀번호가")
+    @Nested
+    class DeleteGameTest {
+
+        @BeforeEach
+        void setup() {
+            chessService.createGame(gameId);
+        }
+
+        @DisplayName("올바른 비밀번호이고 게임이 끝난 상태면 지우고 true 를 반환한다.")
+        @Test
+        void valid_Password() {
+            chessService.end(gameId);
+            assertThat(chessService.deleteGameAfterCheckingPassword(gameId, password)).isTrue();
+        }
+
+        @DisplayName("올바르지 않은 비밀번호이고 게임이 끝난 상태면 방을 지우지 않고 false 를 반환한다.")
+        @Test
+        void invalid_Password() {
+            chessService.end(gameId);
+            assertThat(chessService.deleteGameAfterCheckingPassword(gameId, "wrongPassword")).isFalse();
+        }
+
+        @DisplayName("올바른 비밀번호이고 게임이 끝나지 않은 상태면 방을 지우지 않고 false 를 반환한다.")
+        @Test
+        void game_Status_Is_Not_End() {
+            assertThat(chessService.deleteGameAfterCheckingPassword(gameId, password)).isFalse();
+        }
+    }
 }

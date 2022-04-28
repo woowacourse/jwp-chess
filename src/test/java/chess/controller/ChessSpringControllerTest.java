@@ -95,6 +95,17 @@ public class ChessSpringControllerTest {
 
     }
 
+    @Test
+    @DisplayName("POST /board/end 테스트")
+    void post_end() throws Exception {
+        final ResponseDto responseDto = new ResponseDto(201, "");
+        given(chessGameService.end(1L)).willReturn(new ResponseDto(201, ""));
+
+        mockMvc.perform(post("/board/end")
+                .queryParam("id", "1"))
+                .andExpect(content().json(responseDto.toJson()));
+    }
+
 //    @DisplayName("chess Test- GET")
 //    @Test
 //    void get_chess() throws Exception {

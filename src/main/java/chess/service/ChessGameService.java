@@ -2,7 +2,6 @@ package chess.service;
 
 import chess.dao.BoardDao;
 import chess.dao.PieceDao;
-import chess.domain.ChessGame;
 import chess.domain.ChessGame2;
 import chess.domain.Color;
 import chess.domain.Room;
@@ -20,7 +19,6 @@ public class ChessGameService {
 
     private final PieceDao pieceDao;
     private final BoardDao boardDao;
-    private ChessGame chessGame;
 
     public ChessGameService(PieceDao pieceDao, BoardDao boardDao) {
         this.pieceDao = pieceDao;
@@ -67,17 +65,6 @@ public class ChessGameService {
         pieceDao.updatePosition(chessGame2.getId(), source.stringName(), target.stringName());
     }
 
-    public ResponseDto end() {
-        try {
-            chessGame.end();
-            pieceDao.delete();
-            boardDao.deleteBoard();
-            return new ResponseDto(200, "");
-        } catch (Exception e) {
-            return new ResponseDto(501, e.getMessage());
-        }
-    }
-
     public ChessBoardDto getBoard(Long boardId) {
         return ChessBoardDto.from(pieceDao.load(boardId));
     }
@@ -109,7 +96,16 @@ public class ChessGameService {
         return chessGame2.findWinner();
     }
 
-    public Color getTurn() {
-        return chessGame.getTurn();
+    public ResponseDto end(Long boardId) {
+        try {
+            boardDao.updateTurn(boardId, Color.NONE);
+            return new ResponseDto(200, "");
+        } catch (Exception e){
+            return new ResponseDto(501, e.getMessage());
+        }
+    }
+
+    public Color getTurn(Long boardId) {
+        return boardDao.findTurn(boardId);
     }
 }

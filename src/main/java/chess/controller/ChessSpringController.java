@@ -92,18 +92,9 @@ public class ChessSpringController {
         return modelAndView;
     }
 
-    @PostMapping("/end")
-    public @ResponseBody
-    ResponseDto end() {
-        return chessGameService.end();
+    @PostMapping("/board/end")
+    @ResponseBody
+    public ResponseDto end(@RequestParam(name = "id") Long id) {
+        return chessGameService.end(id);
     }
-
-//    @GetMapping("/chess-result")
-//    public ModelAndView result() {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.addObject("result", ResultDto
-//                .of(chessGameService.statusOfWhite(), chessGameService.statusOfBlack(), chessGameService.findWinner()));
-//        modelAndView.setViewName("result");
-//        return modelAndView;
-//    }
 }

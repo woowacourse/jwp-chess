@@ -4,8 +4,12 @@ public class RoomDeleteRequest {
 
     private final String password;
 
-    public RoomDeleteRequest() {
+    RoomDeleteRequest() {
         this.password = "";
+    }
+
+    public RoomDeleteRequest(String password) {
+        this.password = password;
     }
 
     public String getPassword() {

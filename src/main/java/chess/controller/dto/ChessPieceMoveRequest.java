@@ -5,9 +5,14 @@ public class ChessPieceMoveRequest {
     private final String from;
     private final String to;
 
-    public ChessPieceMoveRequest() {
+    ChessPieceMoveRequest() {
         this.from = "";
         this.to = "";
+    }
+
+    public ChessPieceMoveRequest(String from, String to) {
+        this.from = from;
+        this.to = to;
     }
 
     public String getFrom() {

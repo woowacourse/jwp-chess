@@ -82,4 +82,9 @@ public class JdbcRoomDao {
         final String sql = "DELETE FROM room WHERE id = ? AND password = ?";
         jdbcTemplate.update(sql, id, password);
     }
+
+    public void deleteAll() {
+        final String sql = "DELETE FROM room";
+        jdbcTemplate.update(sql);
+    }
 }

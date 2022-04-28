@@ -1,9 +1,14 @@
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MySQL;
+    #    url: jdbc:h2:mem://localhost/~/testdb;MODE=MYSQL
+    url: jdbc:h2:mem://localhost/~/test;MODE=MYSQL;DATABASE_TO_LOWER=TRUE
     username: sa
     password:
+
+  h2:
+    console:
+      enabled: true
 
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration

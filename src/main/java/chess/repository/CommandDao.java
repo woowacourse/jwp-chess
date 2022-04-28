@@ -1,7 +1,6 @@
 package chess.repository;
 
 import chess.entity.CommandEntity;
-import chess.entity.RoomEntity;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,9 +35,9 @@ public class CommandDao {
         return new CommandEntity(commandId, commandEntity.getRoomId(), commandEntity.getCommand());
     }
 
-    public List<CommandEntity> findAll() {
-        String sql = "select * from commands";
-        return jdbcTemplate.query(sql, rowMapper());
+    public List<CommandEntity> findAllByRoomId(Long id) {
+        String sql = "select * from commands where room_id = ?";
+        return jdbcTemplate.query(sql, rowMapper(), id);
     }
 
     public List<String> findAllInCommandTable() {

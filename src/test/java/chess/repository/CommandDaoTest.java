@@ -39,6 +39,6 @@ public class CommandDaoTest {
         commandDao.insert(new CommandEntity(1L, roomEntity.getId(), "move b2 b4"));
         commandDao.insert(new CommandEntity(1L, roomEntity.getId(), "move b7 b5"));
         commandDao.insert(new CommandEntity(1L, roomEntity.getId(), "move c2 b4"));
-        assertThat(commandDao.findAll().size()).isEqualTo(3);
+        assertThat(commandDao.findAllByRoomId(roomEntity.getId()).size()).isEqualTo(3);
     }
 }

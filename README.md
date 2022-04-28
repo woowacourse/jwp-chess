@@ -24,19 +24,19 @@ Spark 기반의 웹 체스게임을 Spring으로 대체하는 프로젝트입니
 
 ## DB 스키마
 ```sql
-create table rooms
-(
-    room_id int not null identity(1,1) primary key,
+create table rooms (
+    room_id bigint not null auto_increment primary key,
     name varchar(20) not null,
     password varchar(20) not null
 );
 
-create table commands
-(
-    command_id int not null identity(1,1) primary key,
+create table commands (
+    command_id bigint not null auto_increment primary key,
     command varchar(20) not null,
-    room_id int foreign key references rooms(room_id);
+    room_id bigint,
+    foreign key(room_id) references rooms(room_id) on update cascade
 );
+
 ```
 
 ## HTTP API

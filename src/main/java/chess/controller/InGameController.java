@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import chess.ChessGameVO;
 import chess.domain.ChessGame;
 import chess.domain.GameResult;
 import chess.domain.piece.Color;
@@ -25,17 +26,17 @@ public class InGameController {
     }
 
     @GetMapping()
-    public String runGame(@RequestParam(name = "gameID") String gameID, @RequestParam(name = "restart") String restart,
+    public String runGame(@ModelAttribute ChessGameVO chessGameVO, @RequestParam(name = "restart") String restart,
             Model model) {
-        ChessGame chessGame = chessService.loadChessGame(gameID, restart);
-        GameResult gameResult = chessService.getGameResult(gameID);
+        ChessGame chessGame = chessService.loadChessGame(chessGameVO.getGameID(), chessGameVO.getPassword(), restart);
+        GameResult gameResult = chessService.getGameResult(chessGameVO.getGameID());
 
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
 
         model.addAllAttributes(chessGame.getEmojis());
         model.addAttribute("msg", "누가 이기나 보자구~!");
-        model.addAttribute("gameID", gameID);
+        model.addAttribute("gameID", chessGameVO.getGameID());
         return "ingame";
     }
 

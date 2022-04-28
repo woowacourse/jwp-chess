@@ -44,7 +44,16 @@
 - [x] 테스트에서 BeforeEach로 매번 테이블을 만드는 쿼리가 실행되는데 이런 raw한 sql 쿼리문이 노출되지 않도록 구현할 수 있을까?
 - [x] 불필요한 spark 의존성을 제거하자
 - [ ] Controller에서 발생하는 에러를 `@ExceptionHandler`, `@ControllerAdvice`를 이용하여 처리해보자.
-- [ ] Post 형식으로 데이터가 생성이 되었을 경우 status code(200)을 반환하는게 맞을까?
+- [x] Post 형식으로 데이터가 생성이 되었을 경우 status code(200)을 반환하는게 맞을까?
+    - Post 형식으로 요청을 받아서 어떤 데이터가 생성된 경우 statue code(201)이 반환되어야 한다.
+    - ResponseEntity에서는 ResponseEntity.created()를 사용하여 반환할 수 있다.
+    - status code는 요청에 대한 처리 결과가 어떤지 알려주는 코드로 1~5xx 로 반환해준다.
+    - 각 코드 간단 정리
+        - 1xx : 요청이 성공하여 계속 진행될 수 있음을 나타냄
+        - 2xx : 요청이 성공함
+        - 3xx : 리다이렉션 상태를 나타내어 사용자에게 대안을 제시함
+        - 4xx : 클라이언트의 문제로 에러가 발생함
+        - 5xx : 서버의 문제로 에러가 발생함
 - [ ] ChessWebController의 `createRoom`의 newId는 board의 id 인지 room의 id 인지 명확하면 좋을 것 같다
 - [ ] 보통 자원을 지울때는 pk로 지우게 되는데 Room을 지울 때 pk가 아닌 boardId 값으로 지우게 된다. 혹시 같은 boardId를 여러 자원이 가진다면 모두 지우게 되는 것이 의도한 것일까?
 - [ ] 여러 DAO를 사용하여 자원을 처리하다가 에러가 발생해서 프로그램이 중단된다면 게임의 데이터는 어떤 상태로 유지 될까요?

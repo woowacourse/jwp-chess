@@ -6,6 +6,7 @@ import chess.web.service.dto.BoardDto;
 import chess.web.service.dto.CreateRoomDto;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
+import java.net.URI;
 import java.util.NoSuchElementException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class ChessWebController {
     public ResponseEntity<Long> createChess(@RequestBody CreateRoomDto createRoomDto) {
         Long boardId = chessService.createGame();
         Long newId = chessService.createRoom(boardId, createRoomDto.getTitle(), createRoomDto.getPassword());
-        return ResponseEntity.ok().body(newId);
+        return ResponseEntity.created(URI.create("/chess/" + boardId)).body(newId);
     }
 
     @GetMapping("/chess/{boardId}")

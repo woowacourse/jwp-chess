@@ -1,12 +1,12 @@
-package chess.dto;
+package chess.dto.response;
 
 import chess.domain.Team;
 
-public class RoomStatusDto {
+public class RoomStatusResponse {
     private final Long id;
     private final Team status;
 
-    public RoomStatusDto(Long id, Team status) {
+    public RoomStatusResponse(Long id, Team status) {
         this.id = id;
         this.status = status;
     }

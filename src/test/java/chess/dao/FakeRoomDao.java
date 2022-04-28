@@ -1,10 +1,10 @@
 package chess.dao;
 
 import chess.domain.Team;
-import chess.dto.GameIdDto;
-import chess.dto.MakeRoomDto;
-import chess.dto.RoomDto;
-import chess.dto.RoomStatusDto;
+import chess.dto.request.GameIdRequest;
+import chess.dto.request.MakeRoomRequest;
+import chess.dto.response.RoomResponse;
+import chess.dto.response.RoomStatusResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,18 +14,18 @@ import java.util.stream.Collectors;
 
 public class FakeRoomDao implements RoomDao {
 
-    private final Map<Long, RoomDto> games = new HashMap<>();
+    private final Map<Long, RoomResponse> games = new HashMap<>();
 
     private long id = 0L;
 
     @Override
-    public void makeGame(Team team, MakeRoomDto makeRoomDto) {
+    public void makeGame(Team team, MakeRoomRequest makeRoomRequest) {
         id++;
-        games.put(id, new RoomDto(id, team, makeRoomDto.getName(), makeRoomDto.getPassword()));
+        games.put(id, new RoomResponse(id, team, makeRoomRequest.getName(), makeRoomRequest.getPassword()));
     }
 
     @Override
-    public List<RoomDto> getGames() {
+    public List<RoomResponse> getGames() {
         return games.keySet()
                 .stream()
                 .map(games::get)
@@ -33,27 +33,27 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public RoomStatusDto findById(MakeRoomDto makeRoomDto) {
-        RoomDto room = games
+    public RoomStatusResponse findById(MakeRoomRequest makeRoomRequest) {
+        RoomResponse room = games
                 .keySet()
                 .stream()
                 .filter(key -> games.get(key).getName()
-                        .equals(makeRoomDto.getName()))
+                        .equals(makeRoomRequest.getName()))
                 .map(games::get)
                 .findAny()
                 .orElse(null);
         if (room != null) {
-            return new RoomStatusDto(room.getId(), room.getStatus());
+            return new RoomStatusResponse(room.getId(), room.getStatus());
         }
         return null;
     }
 
     @Override
-    public RoomDto findById(GameIdDto gameIdDto) {
+    public RoomResponse findById(GameIdRequest gameIdRequest) {
         return games
                 .keySet()
                 .stream()
-                .filter(key -> Objects.equals(games.get(key).getId(), gameIdDto.getId()))
+                .filter(key -> Objects.equals(games.get(key).getId(), gameIdRequest.getId()))
                 .map(games::get)
                 .findAny()
                 .orElse(null);
@@ -63,7 +63,7 @@ public class FakeRoomDao implements RoomDao {
     public void updateStatus(Team team, long roomId) {
         for (Long idx : games.keySet()) {
             if (games.get(idx).getId() == roomId) {
-                games.put(idx, new RoomDto(games.get(idx).getId(),
+                games.put(idx, new RoomResponse(games.get(idx).getId(),
                         team, games.get(idx).getName(), games.get(idx).getPassword()));
             }
         }

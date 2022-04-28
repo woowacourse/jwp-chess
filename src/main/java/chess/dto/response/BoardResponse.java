@@ -1,22 +1,22 @@
-package chess.dto;
+package chess.dto.response;
 
 import chess.domain.Team;
 
 import java.util.List;
 
-public class BoardDto {
+public class BoardResponse {
 
-    private final List<PieceDto> pieces;
+    private final List<PieceResponse> pieces;
     private final Team team;
     private final Long id;
 
-    public BoardDto(List<PieceDto> pieces, Team team, Long id) {
+    public BoardResponse(List<PieceResponse> pieces, Team team, Long id) {
         this.pieces = pieces;
         this.team = team;
         this.id = id;
     }
 
-    public List<PieceDto> getPieces() {
+    public List<PieceResponse> getPieces() {
         return pieces;
     }
 

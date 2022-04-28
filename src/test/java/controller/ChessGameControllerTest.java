@@ -2,8 +2,8 @@ package controller;
 
 
 import chess.SpringChessApplication;
-import chess.dto.MakeRoomDto;
-import chess.dto.MoveDto;
+import chess.dto.request.MakeRoomRequest;
+import chess.dto.response.MoveResponse;
 
 import chess.service.ChessService;
 import org.junit.jupiter.api.*;
@@ -32,7 +32,7 @@ public class ChessGameControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        id = chessService.makeGame(new MakeRoomDto("green green", "1234"));
+        id = chessService.makeGame(new MakeRoomRequest("green green", "1234"));
     }
 
     @AfterEach
@@ -56,11 +56,11 @@ public class ChessGameControllerTest {
     @Test
     @Order(2)
     void movePiece() {
-        MoveDto moveDto = new MoveDto("f2", "f3");
+        MoveResponse moveResponse = new MoveResponse("f2", "f3");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(moveDto)
+                .body(moveResponse)
                 .when().post("/move/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())

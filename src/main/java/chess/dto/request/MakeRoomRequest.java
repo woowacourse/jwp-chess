@@ -1,11 +1,11 @@
-package chess.dto;
+package chess.dto.request;
 
-public class MakeRoomDto {
+public class MakeRoomRequest {
 
     private final String name;
     private final String password;
 
-    public MakeRoomDto(String name, String password) {
+    public MakeRoomRequest(String name, String password) {
         this.name = name;
         this.password = password;
     }

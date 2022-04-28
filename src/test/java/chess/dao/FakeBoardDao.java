@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.PieceDto;
+import chess.dto.response.PieceResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +25,8 @@ public class FakeBoardDao implements BoardDao {
     }
 
     @Override
-    public List<PieceDto> findAllPiece(long roomId) {
-        List<PieceDto> pieceDtos = new ArrayList<>();
+    public List<PieceResponse> findAllPiece(long roomId) {
+        List<PieceResponse> pieceResponses = new ArrayList<>();
         List<FakePiece> fakePieces = boards.keySet()
                 .stream()
                 .filter(key -> boards.get(key).getRoomId() == roomId)
@@ -34,9 +34,9 @@ public class FakeBoardDao implements BoardDao {
                 .collect(Collectors.toList());
 
         for (FakePiece fakePiece : fakePieces) {
-            pieceDtos.add(new PieceDto(fakePiece.getPosition(), fakePiece.getSymbol()));
+            pieceResponses.add(new PieceResponse(fakePiece.getPosition(), fakePiece.getSymbol()));
         }
-        return pieceDtos;
+        return pieceResponses;
     }
 
     @Override

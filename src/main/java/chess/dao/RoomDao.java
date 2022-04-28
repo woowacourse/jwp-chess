@@ -1,22 +1,22 @@
 package chess.dao;
 
 import chess.domain.Team;
-import chess.dto.GameIdDto;
-import chess.dto.MakeRoomDto;
-import chess.dto.RoomDto;
-import chess.dto.RoomStatusDto;
+import chess.dto.request.GameIdRequest;
+import chess.dto.request.MakeRoomRequest;
+import chess.dto.response.RoomResponse;
+import chess.dto.response.RoomStatusResponse;
 
 import java.util.List;
 
 public interface RoomDao {
 
-    void makeGame(Team team, MakeRoomDto makeRoomDto);
+    void makeGame(Team team, MakeRoomRequest makeRoomRequest);
 
-    List<RoomDto> getGames();
+    List<RoomResponse> getGames();
 
-    RoomStatusDto findById(MakeRoomDto makeRoomDto);
+    RoomStatusResponse findById(MakeRoomRequest makeRoomRequest);
 
-    RoomDto findById(GameIdDto gameIdDto);
+    RoomResponse findById(GameIdRequest gameIdRequest);
 
     void updateStatus(Team team, long roomId);
 

@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.*;
+import chess.dto.response.*;
 import chess.service.ChessService;
 
 import org.springframework.http.ResponseEntity;
@@ -16,34 +16,34 @@ public class ChessGameController {
     }
 
     @GetMapping("/loadBoard/{id}")
-    public ResponseEntity<BoardDto> loadBoard(@PathVariable Long id) {
-        BoardDto initialBoard = chessService.getBoard(id);
+    public ResponseEntity<BoardResponse> loadBoard(@PathVariable Long id) {
+        BoardResponse initialBoard = chessService.getBoard(id);
         return ResponseEntity.ok().body(initialBoard);
     }
 
     @PostMapping(value = "/move/{id}")
-    public ResponseEntity<GameStateDto> move(@PathVariable Long id, @RequestBody MoveDto moveDto) {
-        return ResponseEntity.ok().body(chessService.move(id, moveDto));
+    public ResponseEntity<GameStateResponse> move(@PathVariable Long id, @RequestBody MoveResponse moveResponse) {
+        return ResponseEntity.ok().body(chessService.move(id, moveResponse));
     }
 
     @GetMapping("/status")
-    public ResponseEntity<ScoreDto> getStatus() {
+    public ResponseEntity<ScoreResponse> getStatus() {
         return ResponseEntity.ok().body(chessService.getStatus());
     }
 
     @PostMapping("/reset/{id}")
-    public ResponseEntity<BoardDto> resetGame(@PathVariable Long id) {
+    public ResponseEntity<BoardResponse> resetGame(@PathVariable Long id) {
         chessService.resetBoard(chessService.findRoom(id), id);
         return ResponseEntity.ok().body(chessService.getBoard(id));
     }
 
     @GetMapping("/loadGames")
-    public ResponseEntity<GamesDto> loadGames() {
-        return ResponseEntity.ok().body(new GamesDto(chessService.getGameList()));
+    public ResponseEntity<GamesResponse> loadGames() {
+        return ResponseEntity.ok().body(new GamesResponse(chessService.getGameList()));
     }
 
     @PostMapping("/end/{id}")
-    public ResponseEntity<GameStateDto> endGame(@PathVariable Long id) {
+    public ResponseEntity<GameStateResponse> endGame(@PathVariable Long id) {
         chessService.updateEndStatus(id);
         return ResponseEntity.ok().body(chessService.findWinner());
     }

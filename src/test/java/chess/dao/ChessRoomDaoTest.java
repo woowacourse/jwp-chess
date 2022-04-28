@@ -1,8 +1,8 @@
 package chess.dao;
 
 import chess.domain.Team;
-import chess.dto.GameIdDto;
-import chess.dto.MakeRoomDto;
+import chess.dto.request.GameIdRequest;
+import chess.dto.request.MakeRoomRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,20 +46,20 @@ public class ChessRoomDaoTest {
     @Test
     @DisplayName("체스 게임 방 검색 확인")
     void findRoom() {
-        assertThat(chessRoomDao.findById(new MakeRoomDto("green", "1234"))).isNotNull();
+        assertThat(chessRoomDao.findById(new MakeRoomRequest("green", "1234"))).isNotNull();
     }
 
     @Test
     @DisplayName("체스 게임 방 저장 확인")
     void saveRoom() {
         assertThatNoException().isThrownBy(() -> chessRoomDao.makeGame(Team.WHITE,
-                new MakeRoomDto("green", "1234")));
+                new MakeRoomRequest("green", "1234")));
     }
 
     @Test
     @DisplayName("체스 게임 방 상태 업데이트 확인")
     void updateStatus() {
         assertThatNoException().isThrownBy(() -> chessRoomDao.updateStatus(Team.WHITE,
-                chessRoomDao.findById(new GameIdDto(1000L)).getId()));
+                chessRoomDao.findById(new GameIdRequest(1000L)).getId()));
     }
 }

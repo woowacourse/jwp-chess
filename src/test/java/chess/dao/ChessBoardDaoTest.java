@@ -6,8 +6,8 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import chess.dto.GameIdDto;
-import chess.dto.PieceDto;
+import chess.dto.request.GameIdRequest;
+import chess.dto.response.PieceResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,12 +67,12 @@ class ChessBoardDaoTest {
     }
 
     private Long roomId() {
-        return chessRoomDao.findById(new GameIdDto(1000L)).getId();
+        return chessRoomDao.findById(new GameIdRequest(1000L)).getId();
     }
 
     @Test
     void findAll() {
-        List<PieceDto> pieces = chessBoardDao.findAllPiece(roomId());
+        List<PieceResponse> pieces = chessBoardDao.findAllPiece(roomId());
         assertThat(pieces).hasSize(3);
     }
 

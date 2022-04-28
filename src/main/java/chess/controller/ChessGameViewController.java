@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.dto.MakeRoomDto;
-import chess.dto.PasswordDto;
+import chess.dto.request.MakeRoomRequest;
+import chess.dto.request.PasswordRequest;
 import chess.service.ChessService;
 
 import org.springframework.stereotype.Controller;
@@ -43,8 +43,8 @@ public class ChessGameViewController {
     }
 
     @PostMapping("/room")
-    public String createRoom(MakeRoomDto makeRoomDto) {
-        Long id = chessService.makeGame(makeRoomDto);
+    public String createRoom(MakeRoomRequest makeRoomRequest) {
+        Long id = chessService.makeGame(makeRoomRequest);
         return "redirect:/board/" + id;
     }
 
@@ -55,10 +55,10 @@ public class ChessGameViewController {
     }
 
     @PostMapping("/{id}")
-    public String deleteGame(@PathVariable Long id, PasswordDto passwordDto, HttpServletResponse response) throws IOException {
+    public String deleteGame(@PathVariable Long id, PasswordRequest passwordRequest, HttpServletResponse response) throws IOException {
         response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
-        if (chessService.isPossibleDeleteGame(id, passwordDto.getPassword())) {
+        if (chessService.isPossibleDeleteGame(id, passwordRequest.getPassword())) {
             chessService.endGame(id);
             out.println("<script>alert('체스가 삭제되었습니다.'); location.href='/game-list';</script>");
             out.flush();

@@ -1,10 +1,10 @@
-package chess.dto;
+package chess.dto.request;
 
-public class PasswordDto {
+public class PasswordRequest {
 
     private final String password;
 
-    public PasswordDto(String password) {
+    public PasswordRequest(String password) {
         this.password = password;
     }
 

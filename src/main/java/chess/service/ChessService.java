@@ -1,8 +1,6 @@
 package chess.service;
 
 import chess.dao.BoardDao;
-import chess.dao.ChessBoardDao;
-import chess.dao.ChessRoomDao;
 import chess.dao.RoomDao;
 import chess.domain.Score;
 import chess.domain.Team;
@@ -11,7 +9,9 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
 import chess.domain.state.*;
-import chess.dto.*;
+import chess.dto.request.GameIdRequest;
+import chess.dto.request.MakeRoomRequest;
+import chess.dto.response.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,24 +30,24 @@ public class ChessService {
         this.chessRoomDao = chessRoomDao;
     }
 
-    public Long makeGame(MakeRoomDto makeRoomDto) {
-        RoomStatusDto room = chessRoomDao.findById(makeRoomDto);
+    public Long makeGame(MakeRoomRequest makeRoomRequest) {
+        RoomStatusResponse room = chessRoomDao.findById(makeRoomRequest);
         if (room == null) {
-            createGame(makeRoomDto);
-            gameState = createGameState(chessRoomDao.findById(makeRoomDto).getId());
-            room = chessRoomDao.findById(makeRoomDto);
+            createGame(makeRoomRequest);
+            gameState = createGameState(chessRoomDao.findById(makeRoomRequest).getId());
+            room = chessRoomDao.findById(makeRoomRequest);
         }
         gameState = initGameState(room);
-        return chessRoomDao.findById(makeRoomDto).getId();
+        return chessRoomDao.findById(makeRoomRequest).getId();
     }
 
     public void loadExistGame(long id) {
-        RoomDto room = chessRoomDao.findById(new GameIdDto(id));
-        gameState = initGameState(new RoomStatusDto(room.getId(), room.getStatus()));
+        RoomResponse room = chessRoomDao.findById(new GameIdRequest(id));
+        gameState = initGameState(new RoomStatusResponse(room.getId(), room.getStatus()));
     }
 
-    private void createGame(MakeRoomDto makeRoomDto) {
-        chessRoomDao.makeGame(Team.WHITE, makeRoomDto);
+    private void createGame(MakeRoomRequest makeRoomRequest) {
+        chessRoomDao.makeGame(Team.WHITE, makeRoomRequest);
     }
 
     private WhiteTurn createGameState(long roomId) {
@@ -56,9 +56,9 @@ public class ChessService {
         return new WhiteTurn(board);
     }
 
-    private Playing initGameState(RoomStatusDto room) {
+    private Playing initGameState(RoomStatusResponse room) {
         Map<Position, Piece> board = new HashMap<>();
-        for (PieceDto pieceOfPieces : chessBoardDao.findAllPiece(room.getId())) {
+        for (PieceResponse pieceOfPieces : chessBoardDao.findAllPiece(room.getId())) {
             board.put(Position.from(pieceOfPieces.getPosition()), PieceFactory.create(pieceOfPieces.getSymbol()));
         }
 
@@ -69,11 +69,11 @@ public class ChessService {
         return new BlackTurn(board);
     }
 
-    public GameStateDto move(Long id, MoveDto moveDTO) {
-        updateMove(id, moveDTO.getSource(), moveDTO.getDestination());
+    public GameStateResponse move(Long id, MoveResponse moveResponse) {
+        updateMove(id, moveResponse.getSource(), moveResponse.getDestination());
         GameState gameState = changeState(id);
         Team team = gameState.getTeam();
-        return new GameStateDto(team, gameState.isRunning());
+        return new GameStateResponse(team, gameState.isRunning());
     }
 
     private void updateMove(long roomId, String source, String destination) {
@@ -94,9 +94,9 @@ public class ChessService {
         return gameState;
     }
 
-    public void resetBoard(RoomDto room, long id) {
+    public void resetBoard(RoomResponse room, long id) {
         chessRoomDao.deleteGame(id);
-        MakeRoomDto newRoom = new MakeRoomDto(room.getName(), room.getPassword());
+        MakeRoomRequest newRoom = new MakeRoomRequest(room.getName(), room.getPassword());
         createGame(newRoom);
         gameState = createGameState(chessRoomDao.findById(newRoom).getId());
     }
@@ -112,35 +112,35 @@ public class ChessService {
     }
 
     public boolean isPossibleDeleteGame(Long id, String password) {
-        RoomDto room = chessRoomDao.findById(new GameIdDto(id));
+        RoomResponse room = chessRoomDao.findById(new GameIdRequest(id));
         return (room.getStatus().equals(Team.NONE)) && (room.getPassword().equals(password));
     }
 
-    public GameStateDto findWinner() {
+    public GameStateResponse findWinner() {
         Score score = new Score(gameState.getBoard());
         Team winningTeam = score.getWinningTeam();
-        return new GameStateDto(winningTeam, gameState.isRunning());
+        return new GameStateResponse(winningTeam, gameState.isRunning());
     }
 
-    public RoomDto findRoom(long id) {
-        return chessRoomDao.findById(new GameIdDto(id));
+    public RoomResponse findRoom(long id) {
+        return chessRoomDao.findById(new GameIdRequest(id));
     }
 
-    public BoardDto getBoard(long id) {
-        List<PieceDto> pieces = toBoardFormat().entrySet()
+    public BoardResponse getBoard(long id) {
+        List<PieceResponse> pieces = toBoardFormat().entrySet()
                 .stream()
-                .map(piece -> new PieceDto(piece.getKey(), piece.getValue()))
+                .map(piece -> new PieceResponse(piece.getKey(), piece.getValue()))
                 .collect(Collectors.toUnmodifiableList());
 
-        return new BoardDto(pieces, gameState.getTeam(), id);
+        return new BoardResponse(pieces, gameState.getTeam(), id);
     }
 
-    public ScoreDto getStatus() {
+    public ScoreResponse getStatus() {
         Score score = new Score(gameState.getBoard());
-        return new ScoreDto(score.getTotalScoreWhiteTeam(), score.getTotalScoreBlackTeam());
+        return new ScoreResponse(score.getTotalScoreWhiteTeam(), score.getTotalScoreBlackTeam());
     }
 
-    public List<RoomDto> getGameList() {
+    public List<RoomResponse> getGameList() {
         return chessRoomDao.getGames();
     }
 

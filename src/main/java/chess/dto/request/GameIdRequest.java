@@ -1,10 +1,10 @@
-package chess.dto;
+package chess.dto.request;
 
-public class GameIdDto {
+public class GameIdRequest {
 
     private final Long id;
 
-    public GameIdDto(Long id) {
+    public GameIdRequest(Long id) {
         this.id = id;
     }
 

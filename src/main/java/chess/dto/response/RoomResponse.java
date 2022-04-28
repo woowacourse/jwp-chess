@@ -1,14 +1,14 @@
-package chess.dto;
+package chess.dto.response;
 
 import chess.domain.Team;
 
-public class RoomDto {
+public class RoomResponse {
     private final Long id;
     private final Team status;
     private final String name;
     private final String password;
 
-    public RoomDto(Long id, Team status, String name, String password) {
+    public RoomResponse(Long id, Team status, String name, String password) {
         this.id = id;
         this.status = status;
         this.name = name;

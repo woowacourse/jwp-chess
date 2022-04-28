@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.db.ChessGameDao;
 import chess.db.PieceDao;
+
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameEntity;
 import chess.domain.game.GameResult;

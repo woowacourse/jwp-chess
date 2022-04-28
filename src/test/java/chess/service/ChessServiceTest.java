@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import chess.db.ChessGameDao;
 import chess.db.PieceDao;
+
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameTurn;
 import chess.domain.board.InitialBoardGenerator;

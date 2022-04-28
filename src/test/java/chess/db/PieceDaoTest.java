@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameTurn;
 import chess.domain.board.InitialBoardGenerator;
+
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 

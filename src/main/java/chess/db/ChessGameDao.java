@@ -27,6 +27,7 @@ public class ChessGameDao {
     public void delete(String gameID) {
         String sql = "delete from chessGame where gameID = ?";
         jdbcTemplate.update(sql, gameID);
+
     }
 
     public void updateTurn(String gameID, ChessGame chessGame) {

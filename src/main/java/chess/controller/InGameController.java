@@ -47,8 +47,8 @@ public class InGameController {
     public String movePiece(@PathVariable String gameCode, @RequestBody String movement, Model model) {
         String gameID = chessService.findGameID(gameCode);
         ChessGame chessGame = chessService.loadSavedChessGame(gameID, chessService.getTurn(gameID));
-
         List<String> movements = Arrays.asList(movement.split("&"));
+
         String source = getPosition(movements.get(0));
         String target = getPosition(movements.get(1));
 
@@ -66,6 +66,7 @@ public class InGameController {
 
         GameResult gameResult = chessService.getGameResult(gameID);
         model.addAttribute("turn", chessService.getTurn(gameID));
+
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
 
@@ -73,6 +74,7 @@ public class InGameController {
             model.addAttribute("msg", "킹 잡았다!! 게임 끝~!~!");
             return "finished";
         }
+
         return "ingame";
     }
 

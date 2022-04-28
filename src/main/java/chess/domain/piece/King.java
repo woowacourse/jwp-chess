@@ -8,6 +8,7 @@ import static chess.domain.position.UnitDirection.*;
 
 public final class King extends MovingUnitPiece {
     private final static String BUG_MESSAGE_COLOR = "[BUG] 킹은 색상을 가져야합니다.";
+
     private static final String WHITE_KING = "white_king";
     private static final String BLACK_KING = "black_king";
     private static final List<UnitDirection> MOVABLE_DIRECTIONS;

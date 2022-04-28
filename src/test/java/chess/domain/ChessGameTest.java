@@ -7,6 +7,7 @@ import java.util.Map;
 
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameTurn;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

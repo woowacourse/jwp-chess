@@ -1,6 +1,7 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +55,29 @@ class ChessServiceTest {
             .collect(Collectors.toList());
 
         assertThat(existPieces).hasSize(32);
+    }
+
+    @Test
+    @DisplayName("진행중인 게임을 삭제하면 예외를 반환해야 합니다.")
+    void deleteNotEndGame() {
+        assertThatThrownBy(() -> chessService.delete("1234", savedId))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("게임을 삭제할 때 비밀번호가 틀리면 삭제하지 않아야 합니다.")
+    void deleteWrongPassword() {
+        chessService.finish(Command.from("end"), savedId);
+        chessService.delete("123", savedId);
+        List<String> chessBoard = chessService.findChessBoardById(savedId);
+        assertThat(chessBoard).isNotNull();
+    }
+
+    @Test
+    @DisplayName("끝난 게임을 정확한 비밀번호로 삭제할 시 오류가 발생하지 않아야 합니다.")
+    void delete() {
+        chessService.finish(Command.from("end"), savedId);
+        assertDoesNotThrow(() -> chessService.delete("1234", savedId));
     }
 
     @Test

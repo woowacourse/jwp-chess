@@ -56,5 +56,9 @@ const deleteGame = (id) => {
         body: password
     });
 
-    response.then(() => getGames());
+    response.then(() => getGames())
+        .catch(err => {
+            console.log(err);
+            alert(err)
+        });
 }

@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.ResponseDto;
+import chess.dto.ResultDto;
 import chess.dto.RoomInfoDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
@@ -71,11 +72,23 @@ public class ChessSpringController {
 //    }
 
     @GetMapping("/board/chess-status")
-    public ModelAndView status(@RequestParam(name = "id") Long id){
+    public ModelAndView status(@RequestParam(name = "id") Long id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView
-                .addObject("status", StatusDto.of(chessGameService.statusOfWhite(id), chessGameService.statusOfBlack(id)));
+                .addObject("status",
+                        StatusDto.of(chessGameService.statusOfWhite(id), chessGameService.statusOfBlack(id)));
         modelAndView.setViewName("status");
+        return modelAndView;
+    }
+
+    @GetMapping("/board/chess-result")
+    public ModelAndView result(@RequestParam(name = "id") Long id) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView
+                .addObject("result", ResultDto
+                        .of(chessGameService.statusOfWhite(id), chessGameService.statusOfBlack(id),
+                                chessGameService.findWinner(id)));
+        modelAndView.setViewName("result");
         return modelAndView;
     }
 

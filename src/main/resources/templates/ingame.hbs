@@ -10,7 +10,7 @@
 <form action="/" method="get" class="inlineBtn">
     <input type="submit" value="SAVE" class="btn" id="end"/>
 </form>
-<form action="/games" method="get" class="inlineBtn">
+<form action="/games" method="post" class="inlineBtn">
     <input type="text" name="gameID" class="invisible" value={{gameID}} />
     <input type="text" name="restart" class="invisible" value="true" />
     <input type="submit" value="RESTART" class="btn" id="restart">
@@ -117,7 +117,7 @@
         <th></th>
     </tbody>
 </table>
-<form action="/games/{{gameID}}" method="post" class="textBoxWrapper">
+<form action="/games/{{gameID}}/move" method="post" class="textBoxWrapper">
     FROM : <input type="text" name="source" class="textBox"/>
     TO : <input type="text" name="target" class="textBox"/>
     <input type="submit" value="MOVE" class="btn" id="move"/>

@@ -9,7 +9,7 @@
 <div id="welcomeMessage">
     {{msg}}
 </div>
-<form action="/games" method="get" class="textBoxWrapper">
+<form action="/games" method="post" class="textBoxWrapper">
     <input type="text" name="restart" class="invisible" value="false" />
     GAME ID : <input type="text" name="gameID" class="gameIDBox"/>
     <br>
@@ -20,7 +20,7 @@
 <br>
 {{#games}}
     <div class="textBoxWrapper">
-        <form action="/games" method="get" class="inlineBtn">
+        <form action="/games" method="post" class="inlineBtn">
             GAME ID: {{gameID}}
             <input class="invisible" name="gameID" value="{{gameID}}" type="text">
             <input type="text" name="restart" class="invisible" value="false" />

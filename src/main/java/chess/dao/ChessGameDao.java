@@ -2,7 +2,9 @@ package chess.dao;
 
 import chess.domain.ChessGame;
 import chess.domain.player.Team;
+import chess.dto.ChessGameNameDto;
 import chess.exception.ExecuteQueryException;
+import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -73,5 +75,22 @@ public class ChessGameDao {
         } catch (DataAccessException e) {
             throw new ExecuteQueryException("턴 정보 업데이트에 실패했습니다.");
         }
+    }
+
+    public List<ChessGameNameDto> findAllChessGame() {
+        final String sql = "select id, name from chess_game";
+        try {
+            return jdbcTemplate.query(sql, (rs, rowNum) -> new ChessGameNameDto(
+                    rs.getInt("id"),
+                    rs.getString("name")
+            ));
+        } catch (DataAccessException e) {
+            throw new ExecuteQueryException("체스 게임 정보 불러오기를 실패했습니다.");
+        }
+    }
+
+    public int findChessGameByIdAndPassword(final int gameId, final String password) {
+        final String sql = "select count(*) from chess_game where id = (?) and password = (?)";
+        return jdbcTemplate.queryForObject(sql, Integer.class, gameId, password);
     }
 }

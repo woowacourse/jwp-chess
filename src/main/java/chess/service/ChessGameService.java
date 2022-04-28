@@ -14,7 +14,9 @@ import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
 import chess.dto.ChessGameDto;
+import chess.dto.ChessGameNameDto;
 import chess.dto.CreateGameDto;
+import chess.dto.DeleteGameDto;
 import chess.dto.PieceDto;
 import chess.dto.StatusDto;
 import java.util.ArrayList;
@@ -50,20 +52,36 @@ public class ChessGameService {
         return new ChessGame(whitePlayer, blackPlayer);
     }
 
-    public void finishGame(final String gameName) {
-        final int gameId = findGameIdByGameName(gameName);
+    public void deleteGame(final DeleteGameDto deleteGameDto) {
+        final int gameId = deleteGameDto.getId();
+        final String password = deleteGameDto.getPassword();
+        validateDeleteGame(gameId, password);
         pieceDao.deletePieces(gameId);
         chessGameDao.deleteChessGame(gameId);
     }
 
+    private void validateDeleteGame(final int gameId, final String password) {
+        final ChessGame chessGame = findGameById(gameId);
+        if (chessGame.isRunning()) {
+            throw new IllegalArgumentException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
+
+        final int passwordsMatchCount = chessGameDao.findChessGameByIdAndPassword(gameId, password);
+        final boolean isWrongPassword = passwordsMatchCount == 0;
+        if (isWrongPassword) {
+            throw new IllegalArgumentException("암호가 다릅니다.");
+        }
+    }
+
     public ChessGameDto loadChessGame(final String gameName) {
-        final ChessGame chessGame = findGameByName(gameName);
+        final int gameId = findGameIdByGameName(gameName);
+        final ChessGame chessGame = findGameById(gameId);
         return ChessGameDto.of(chessGame, gameName);
     }
 
     public ChessGameDto move(final String gameName, final String current, final String destination) {
         final int gameId = findGameIdByGameName(gameName);
-        final ChessGame chessGame = findGameByName(gameName);
+        final ChessGame chessGame = findGameById(gameId);
         final Player currentPlayer = chessGame.getCurrentPlayer();
         final Player opponentPlayer = chessGame.getOpponentPlayer();
         chessGame.move(currentPlayer, opponentPlayer, new Position(current), new Position(destination));
@@ -73,11 +91,10 @@ public class ChessGameService {
         return ChessGameDto.of(chessGame, gameName);
     }
 
-    private ChessGame findGameByName(final String gameName) {
-        final int chessGameId = findGameIdByGameName(gameName);
-        final String currentTurn = chessGameDao.findCurrentTurn(chessGameId);
-        final List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(chessGameId, Team.WHITE.getName());
-        final List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(chessGameId, Team.BLACK.getName());
+    private ChessGame findGameById(final int gameId) {
+        final String currentTurn = chessGameDao.findCurrentTurn(gameId);
+        final List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(gameId, Team.WHITE.getName());
+        final List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(gameId, Team.BLACK.getName());
         final Player whitePlayer = new Player(toPieces(whitePieces), Team.WHITE);
         final Player blackPlayer = new Player(toPieces(blackPieces), Team.BLACK);
 
@@ -99,10 +116,15 @@ public class ChessGameService {
     }
 
     public StatusDto findStatus(final String gameName) {
-        final ChessGame chessGame = findGameByName(gameName);
+        final int gameId = findGameIdByGameName(gameName);
+        final ChessGame chessGame = findGameById(gameId);
         final List<GameResult> gameResult = chessGame.findGameResult();
         final GameResult whitePlayerResult = gameResult.get(0);
         final GameResult blackPlayerResult = gameResult.get(1);
         return StatusDto.of(whitePlayerResult, blackPlayerResult);
+    }
+
+    public List<ChessGameNameDto> findAllChessGame() {
+        return chessGameDao.findAllChessGame();
     }
 }

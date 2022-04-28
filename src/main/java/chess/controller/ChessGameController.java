@@ -1,10 +1,13 @@
 package chess.controller;
 
 import chess.dto.ChessGameDto;
+import chess.dto.ChessGameNameDto;
 import chess.dto.CreateGameDto;
+import chess.dto.DeleteGameDto;
 import chess.dto.MovePositionDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +29,17 @@ public class ChessGameController {
 
     @GetMapping("/")
     public ModelAndView index() {
+        return new ModelAndView("index", HttpStatus.OK);
+    }
+
+    @GetMapping("/game")
+    public ModelAndView gamePage() {
         return new ModelAndView("game", HttpStatus.OK);
+    }
+
+    @GetMapping("/games")
+    public ResponseEntity<List<ChessGameNameDto>> findAllChessGame() {
+        return ResponseEntity.ok(chessGameService.findAllChessGame());
     }
 
     @PostMapping("/game")
@@ -42,8 +55,8 @@ public class ChessGameController {
     }
 
     @DeleteMapping("/game")
-    public ResponseEntity<Void> finishGame(@RequestParam("name") String gameName) {
-        chessGameService.finishGame(gameName);
+    public ResponseEntity<Void> finishGame(@RequestBody DeleteGameDto deleteGameDto) {
+        chessGameService.deleteGame(deleteGameDto);
         return ResponseEntity.noContent().build();
     }
 

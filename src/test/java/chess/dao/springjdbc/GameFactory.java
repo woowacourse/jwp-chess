@@ -12,6 +12,7 @@ public class GameFactory {
                 .map(name -> new Object[]{name})
                 .collect(Collectors.toList());
         jdbcTemplate.batchUpdate("INSERT INTO game SET name = ?, password = 'password'", params);
+        //setUpBoardsToGames(jdbcTemplate, names);
     }
 
     private static void setUpBoardsToGames(JdbcTemplate jdbcTemplate, String... names) {

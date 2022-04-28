@@ -83,6 +83,8 @@ class SpringGameDaoTest {
     @Test
     @DisplayName("getPassword: 게임 id에 해당하는 비밀번호를 가져온다.")
     void getPassword() {
-
+        GameFactory.setUpGames(jdbcTemplate, "first");
+        String password = springGameDao.findPasswordById(1);
+        assertThat(password).isEqualTo("password");
     }
 }

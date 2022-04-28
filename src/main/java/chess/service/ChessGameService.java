@@ -42,7 +42,7 @@ public class ChessGameService {
         boardDao.end(id);
     }
 
-    public boolean isGameEnd(int id){
+    public boolean isGameEnd(int id) {
         return boardDao.isGameEnd(id);
     }
 
@@ -54,4 +54,14 @@ public class ChessGameService {
         return boardDao.findTurn(id);
     }
 
+    public void deleteBoard(int id, String password) {
+        if (!boardDao.getPassword(id).equals(password)) {
+            throw new IllegalArgumentException("잘못된 비밀번호 입력입니다.");
+        }
+        if (boardDao.findTurn(id) != Color.END) {
+            throw new IllegalStateException("종료된 게임만 삭제할 수 있습니다");
+        }
+        pieceDao.delete(id);
+        boardDao.deleteBoard(id, password);
+    }
 }

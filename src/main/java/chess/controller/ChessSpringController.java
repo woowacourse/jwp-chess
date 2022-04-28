@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -97,5 +98,10 @@ public class ChessSpringController {
         modelAndView.addObject("result", ResultDto.of(board.scoreOfWhite(), board.scoreOfBlack(), board.findWinner()));
         modelAndView.setViewName("result");
         return modelAndView;
+    }
+
+    @DeleteMapping("/delete")
+    public void delete(@RequestParam int id, @RequestParam String password){
+        chessGameService.deleteBoard(id, password);
     }
 }

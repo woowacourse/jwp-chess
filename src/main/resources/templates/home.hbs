@@ -24,12 +24,16 @@
     <thead>
     <th>ID</th>
     <th>이름</th>
+    <th>삭제</th>
     </thead>
     <tbody>
     {{#boards}}
-        <tr onclick=chess({{id}})>
+        <tr>
             <td>{{id}}</td>
-            <td>{{name}}</td>
+            <td onclick=chess({{id}})>{{name}}</td>
+            <td>
+                <button onclick=deleteBoard({{id}})>삭제</button>
+            </td>
         </tr>
     {{/boards}}
     </tbody>

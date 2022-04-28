@@ -61,6 +61,20 @@ function chess(id) {
     })
 }
 
+function deleteBoard(id){
+    const input = prompt("비밀번호를 입력해주세요.");
+    fetch("/delete" + "?id=" + id + "&password="+input, {
+        method: "DELETE",
+    }).then((res) => {
+        if (res.status === 501) {
+            res.text().then(message => alert(message))
+            return;
+        }
+        alert("삭제되었습니다");
+        location.reload();
+    })
+}
+
 function end() {
     fetch("/end" + window.location.search).then(res => {
         if (res.status === 501) {

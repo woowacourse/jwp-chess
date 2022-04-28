@@ -32,7 +32,7 @@ public class PieceDao {
 
         List<Object[]> batch = new ArrayList<>();
         for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
-            Object[] values = new Object[]{entry.getKey().getPosition(), getPieceName(entry.getValue())};
+            Object[] values = new Object[]{entry.getKey().getPosition(), getPieceName(entry.getValue()), gameId};
             batch.add(values);
         }
 

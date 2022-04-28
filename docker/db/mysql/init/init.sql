@@ -20,7 +20,7 @@ CREATE TABLE piece
     square      VARCHAR(10) NOT NULL ,
     game_id     INT NOT NULL,
     primary key (id),
-    foreign key (game_id) references game (id)
+    foreign key (game_id) references game (id) ON DELETE CASCADE
 );
 
 ALTER TABLE piece ADD UNIQUE (game_id, square);

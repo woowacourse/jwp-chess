@@ -33,19 +33,20 @@ class SpringPieceDaoTest {
     }
 
     @Test
-    @DisplayName("getBoardByGameId : 게임id로 보드를 정상적으로 가져오는 확인")
-    void getBoardByGameId() {
-        initBoard("first", "second");
-        List<PieceEntity> pieces = springPieceDao.getBoardByGameId(2);
+    @DisplayName("initBoard : 보드를 정상적으로 초기화 하는지 확인")
+    void initBoard() {
+        GameFactory.setUpGames(jdbcTemplate, "first");
+        springPieceDao.initBoard(1);
+        List<PieceEntity> pieces = springPieceDao.getBoardByGameId(1);
 
         assertThat(pieces).hasSize(64);
     }
 
     @Test
-    @DisplayName("initBoard : 보드를 정상적으로 초기화 하는지 확인")
-    void initBoard() {
-        initBoard("first");
-        List<PieceEntity> pieces = springPieceDao.getBoardByGameId(1);
+    @DisplayName("getBoardByGameId : 게임id로 보드를 정상적으로 가져오는 확인")
+    void getBoardByGameId() {
+        initBoard("first", "second");
+        List<PieceEntity> pieces = springPieceDao.getBoardByGameId(2);
 
         assertThat(pieces).hasSize(64);
     }

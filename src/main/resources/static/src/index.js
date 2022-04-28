@@ -1,18 +1,18 @@
 let source = '';
 let target = '';
 
-function join(id){
+function join(id) {
     location.replace(`/board?id=${id}`);
 }
 
-function create(){
+function create() {
     let title = document.getElementById('titleId').value;
     let password = document.getElementById('passwordId').value;
 
     fetch("/create", {
         method: "POST",
         headers: {
-            "Content-Type" : "application/json"
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
             title: title,
@@ -20,9 +20,9 @@ function create(){
         })
     }).then(res => {
         res.json().then(data => {
-            if(data.statusCode == 200){
+            if (data.statusCode == 200) {
                 location.replace("/");
-            } else{
+            } else {
                 alert(data.errorMessage);
             }
         })
@@ -109,12 +109,24 @@ function restart() {
         method: "POST"
     }).then(res => {
         res.json().then(data => {
-            if (data.statusCode === 301){
+            if (data.statusCode === 301) {
                 location.replace(`/board?id=${boardId}`);
-            } else{
+            } else {
                 alert(data.errorMessage);
             }
         })
     })
+}
+
+function showStatus() {
+    const params = new URLSearchParams(location.search);
+    const boardId = params.get('id');
+    location.replace(`/board/chess-status?id=${boardId}`);
+}
+
+function showBoard() {
+    const params = new URLSearchParams(location.search);
+    const boardId = params.get('id');
+    location.replace(`/board?id=${boardId}`);
 }
 

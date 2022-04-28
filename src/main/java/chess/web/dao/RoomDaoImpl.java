@@ -41,12 +41,6 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public void deleteAll(int roomId) {
-        final String sql = "delete from room where id = (?)";
-        this.jdbcTemplate.update(sql, roomId);
-    }
-
-    @Override
     public int createRoom(CreateRoomRequestDto createRoomRequestDto) {
         final String sql = "insert into room (title, password) values (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -70,13 +64,6 @@ public class RoomDaoImpl implements RoomDao {
     public void changeTurn(int roomId) {
         Player player = getPlayer(roomId);
         saveTurn(player.change().getColor(), roomId);
-    }
-
-    @Override
-    public boolean roomExist(int roomId) {
-        final String sql = "select count(*) from room where id = (?)";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class, roomId);
-        return count > 0;
     }
 
     @Override

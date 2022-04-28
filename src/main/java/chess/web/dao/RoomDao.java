@@ -15,15 +15,11 @@ public interface RoomDao {
 
     Player getPlayer(int roomId);
 
-    void deleteAll(int roomId);
-
     int createRoom(CreateRoomRequestDto createRoomRequestDto);
 
     ReadRoomResultDto findAll();
 
     void changeTurn(int roomId);
-
-    boolean roomExist(int roomId);
 
     FinishResultDto finish(int roomId);
 

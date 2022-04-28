@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import chess.domain.game.GameState;
 import chess.dto.GameStateResponse;
@@ -21,13 +21,12 @@ public class SpringViewChessController {
     }
 
     @GetMapping("/")
-    public String showIndex(Model model) {
-        // model.addAttribute("rooms", )
+    public String showIndex() {
         return "index";
     }
 
-    @GetMapping(path = "/main")
-    public String showGame(Model model, @RequestParam("roomId") Long roomId) {
+    @GetMapping(path = "/main/{roomId}")
+    public String showGame(Model model, @PathVariable Long roomId) {
         GameState state = gameService.readGameState(roomId);
         GameStateResponse response = GameStateResponse.of(state);
         model.addAttribute("response", response);

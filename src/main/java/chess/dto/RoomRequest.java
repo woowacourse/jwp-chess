@@ -1,9 +1,16 @@
 package chess.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class RoomRequest {
 
+    @JsonProperty("room_name")
     private final String roomName;
     private final String password;
+
+    private RoomRequest() {
+        this(null, null);
+    }
 
     public RoomRequest(String roomName, String password) {
         this.roomName = roomName;

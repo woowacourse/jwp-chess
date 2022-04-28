@@ -1,6 +1,6 @@
 package chess.database.dao;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import chess.database.dto.GameStateDto;
@@ -14,7 +14,7 @@ public interface GameDao {
 
     void removeGame(Long id);
 
-    List<String> readGames();
+    Map<Long, String> readGameRoomIdAndNames();
 
     Optional<GameStateDto> findGameByRoomName(String roomName);
 }

@@ -1,8 +1,8 @@
 package chess.database.dao.spring;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -82,7 +82,12 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public List<String> readGames() {
-        return null;
+    public Map<Long, String> readGameRoomIdAndNames() {
+        final String sql = "SELECT id, room_name FROM game";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> Map.entry(
+                rs.getLong("id"),
+                rs.getString("room_name"))
+            ).stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

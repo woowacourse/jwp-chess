@@ -1,28 +1,31 @@
 package chess.controller;
 
-import static org.hamcrest.core.Is.*;
+import static org.hamcrest.Matchers.*;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
+import chess.dto.RoomRequest;
 import chess.service.GameService;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestDatabase
+@Sql("classpath:ddl.sql")
 public class SpringChessControllerTest {
-
-    private static final String TEST_ROOM_NAME = "SPRING_T";
-    private static final String TEST_CREATION_ROOM_NAME = "SPRING_C";
 
     @Autowired
     private GameService service;
+    private Long id;
 
     @LocalServerPort
     int port;
@@ -30,7 +33,7 @@ public class SpringChessControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        service.createNewGame(TEST_ROOM_NAME);
+        id = service.createNewGame(new RoomRequest("HELLOTEST", "PASSWORD"));
     }
 
     @Test
@@ -47,10 +50,10 @@ public class SpringChessControllerTest {
     @Test
     @DisplayName("게임 화면을 보여준다")
     public void main() {
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id;
 
         RestAssured.given().log().all()
-            .when().get("/main?room_name=" + roomName)
+            .when().get("/main" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -59,49 +62,50 @@ public class SpringChessControllerTest {
     @DisplayName("게임명을 입력하고 게임을 시작한다.")
     public void create() {
         String path = "/create";
-        String roomName = TEST_CREATION_ROOM_NAME;
-        String params = String.format("?room_name=%s", roomName);
+        RoomRequest roomRequest = new RoomRequest("TEST_ROOM_NAME", "TEST_PASSWORD");
 
         RestAssured.given().log().all()
-            .when().get(path + params)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(roomRequest)
+            .when().post(path)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
-            .body("url", is("/main?room_name=" + roomName));
+            .body("url", containsString("/main"));
     }
 
     @Test
     @DisplayName("기존 게임방에 입장한다.")
     public void enter() {
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id;
 
         RestAssured.given().log().all()
-            .when().get("/enter?room_name=" + roomName)
+            .when().get("/enter" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
-            .body("url", is("/main?room_name=" + roomName));
+            .body("url", is("/main" + roomId));
     }
 
     @Test
     @DisplayName("게임을 시작한다.")
     public void start() {
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id;
 
         RestAssured.given().log().all()
-            .when().get("/start?room_name=" + roomName)
+            .when().get("/start" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
-            .body("url", is("/main?room_name=" + roomName));
+            .body("url", is("/main" + roomId));
     }
 
     @Test
     @DisplayName("게임을 종료한다.")
     public void end() {
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id;
 
-        service.startGame(roomName);
+        service.startGame(roomId);
 
         RestAssured.given().log().all()
-            .when().get("/end?room_name=" + roomName)
+            .when().get("/end" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("url", is("/"));
@@ -111,14 +115,14 @@ public class SpringChessControllerTest {
     @DisplayName("기물을 이동한다.")
     public void move() {
         String arguments = "{'source':'a2', 'destination':'a3'}";
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id;
 
-        service.startGame(roomName);
+        service.startGame(roomId);
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(arguments)
-            .when().post("/move?room_name=" + roomName)
+            .when().post("/move" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -126,12 +130,12 @@ public class SpringChessControllerTest {
     @Test
     @DisplayName("점수를 확인한다.")
     public void status() {
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id;
 
-        service.startGame(roomName);
+        service.startGame(roomId);
 
         RestAssured.given().log().all()
-            .when().get("/status?room_name=" + roomName)
+            .when().get("/status" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -139,17 +143,22 @@ public class SpringChessControllerTest {
     @Test
     @DisplayName("예외를 잡는다.")
     public void handleException() {
-        String roomName = TEST_ROOM_NAME;
+        Long roomId = id;
+        String arguments = "{'source':'a2', 'destination':'a7'}";
+
+        service.startGame(roomId);
 
         RestAssured.given().log().all()
-            .when().get("/create?room_name" + roomName)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(arguments)
+            .when().post("/move" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @AfterEach
     void setDown() {
-        service.removeGameAndBoard(TEST_ROOM_NAME);
-        service.removeGameAndBoard(TEST_CREATION_ROOM_NAME);
+        service.removeGameAndBoard(id);
+        // service.removeGameAndBoard(TEST_CREATION_ROOM_ID);
     }
 }

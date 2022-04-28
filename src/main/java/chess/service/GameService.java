@@ -1,5 +1,7 @@
 package chess.service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -90,5 +92,9 @@ public class GameService {
     public void removeGameAndBoard(Long roomId) {
         boardDao.removeBoard(roomId);
         gameDao.removeGame(roomId);
+    }
+
+    public Map<Long,String> readGameRooms() {
+        return gameDao.readGameRoomNames();
     }
 }

@@ -1,23 +1,28 @@
-
 // -------- init start ---------
 function setUpIndex() {
     const createForm = document.getElementById("create_form");
     createForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = new FormData(createForm).get("room_name");
-        send("/create?room_name=" + roomName, {
-            method: 'get'
+        send("/create", {
+            method: 'post',
+            body: toJSON(createForm),
+            headers: new Headers({'Content-Type': 'application/json'})
         }, relocate);
     })
 
-    const enterForm = document.getElementById("enter_form");
-    enterForm.addEventListener("submit", e => {
-        e.preventDefault();
-        let roomName = new FormData(enterForm).get("room_name");
-        send("/enter?room_name=" + roomName, {
-            method: 'get'
-        }, relocate);
+    const rooms = document.getElementById("enter_button");
+    rooms.addEventListener("click", e => {
+        send("/rooms", {method: 'get'}, drawRooms);
     })
+
+    // const enterForm = document.getElementById("enter_form");
+    // enterForm.addEventListener("submit", e => {
+    //     e.preventDefault();
+    //     let roomName = new FormData(enterForm).get("room_name");
+    //     send("/enter?room_name=" + roomName, {
+    //         method: 'get'
+    //     }, relocate);
+    // })
 
     console.log("setupIndex done")
 }
@@ -25,6 +30,7 @@ function setUpIndex() {
 function setUpState(state, forms) {
     const clickable = 'clickable';
     const nonClickable = 'non-clickable';
+
     function toggle(formObject) {
         const object = formObject.getElementsByTagName('input')[0];
         console.log("toggling object = ", object);
@@ -63,8 +69,9 @@ function setUpMain(state) {
     const statusForm = document.getElementById("status_form");
     statusForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = getCurrentParam("room_name");
-        send("/status?room_name=" + roomName, {
+        const roomId = getLastPath();
+
+        send("/status/" + roomId, {
             method: 'get'
         }, showStatus);
     });
@@ -72,8 +79,8 @@ function setUpMain(state) {
     const startForm = document.getElementById("start_form");
     startForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = getCurrentParam("room_name");
-        send("/start?room_name=" + roomName, {
+        const roomId = getLastPath();
+        send("/start/" + roomId, {
             method: 'get'
         }, relocate);
     });
@@ -81,8 +88,8 @@ function setUpMain(state) {
     const endForm = document.getElementById("end_form");
     endForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = getCurrentParam("room_name");
-        send("/end?room_name=" + roomName, {
+        const roomId = getLastPath();
+        send("/end/" + roomId, {
             method: 'get'
         }, relocate);
     });
@@ -94,9 +101,7 @@ function setUpMain(state) {
 // -------- init end ---------
 
 
-
 // --------- draw start ---------
-
 
 
 let source = null;
@@ -121,8 +126,8 @@ function moveByClick(source, destination) {
     }
     console.log('move by click called', source, destination);
 
-    let roomName = getCurrentParam("room_name");
-    send("/move?room_name=" + roomName, {
+    const roomId = getLastPath();
+    send("/move/" + roomId, {
         method: 'post',
         body: JSON.stringify({'source': source.id, 'destination': destination.id}),
         headers: new Headers({'Content-Type': 'application/json'})
@@ -196,11 +201,45 @@ function drawPiece(horizontal, vertical, type, color) {
     point.innerHTML = '';
     board.rows[8 - vertical].cells[horizontal - 1].appendChild(image);
 }
+
+function drawRooms(responseJson) {
+    const roomDiv = document.getElementById("rooms");
+    roomDiv.innerHTML = "";
+    console.log("darwRoom responseJson =", responseJson)
+    for (const roomId in responseJson) {
+        const room = createRoom(roomId, responseJson[roomId]);
+        roomDiv.appendChild(room);
+    }
+}
+
+function createRoom(roomId, roomName) {
+    const form = document.createElement("form");
+    const enterAnchor = Object.assign(document.createElement('a'),
+        {href: `/main/${roomId}`, innerText: roomName});
+    form.appendChild(enterAnchor);
+    return form;
+}
+
+
+function toggleHidden(targetId) {
+    const element = document.getElementById(targetId);
+    if (element.classList.contains("hidden")) {
+        element.classList.remove("hidden");
+    } else {
+        element.classList.add("hidden");
+    }
+}
+
+// }
 // ------------ draw end ------------
 
 
-
 // ------------- utils start -----------------
+
+function log(responseJson) {
+    console.log('logging ...', responseJson);
+}
+
 function relocate(responseJson) {
     console.log("responseJson in relocate =", responseJson);
     window.location.href = responseJson['url'];
@@ -219,6 +258,12 @@ function toJSON(form) {
 function getCurrentParam(key) {
     let params = (new URL(document.location)).searchParams;
     return params.get(key);
+}
+
+function getLastPath() {
+    const pathName = new URL(document.location).pathname;
+    const splitted = pathName.split("/");
+    return splitted[splitted.length - 1];
 }
 
 function showStatus(responseJson) {
@@ -244,4 +289,5 @@ async function send(path, fetchBody, handler) {
         handler(responseJson);
     }
 }
+
 // --------------- utils end ------------------

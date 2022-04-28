@@ -84,3 +84,7 @@ h1 {
 .selected {
     background-color: red;
 }
+
+.hidden {
+    display: none;
+}

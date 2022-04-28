@@ -1,12 +1,10 @@
 package chess.database.dao;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import chess.database.dto.GameStateDto;
-import chess.dto.RoomRequest;
 
 public class FakeGameDao implements GameDao {
 
@@ -85,7 +83,7 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public List<String> readGames() {
+    public Map<Long, String> readGameRoomIdAndNames() {
         return null;
     }
 }

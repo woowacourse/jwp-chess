@@ -66,7 +66,7 @@ class ChessServiceTest {
         assertAll(
             () -> assertThat(gameResponseDto.getName()).isEqualTo("체스 초보만"),
             () -> assertThat(gameResponseDto.getTeam()).isEqualTo("white"),
-            () -> assertThat(gameResponseDto.getBoard().getBoards()).hasSize(64)
+            () -> assertThat(gameResponseDto.getBoards()).hasSize(64)
         );
     }
 

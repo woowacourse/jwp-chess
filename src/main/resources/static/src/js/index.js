@@ -10,7 +10,7 @@ async function onloadGameBody() {
 
     console.log(game);
 
-    let boards = game.board.boards;
+    let boards = game.boards;
 
     document.querySelectorAll('.piece-image')
         .forEach(cell => cell.addEventListener('click', e => cellClick(e, id)));

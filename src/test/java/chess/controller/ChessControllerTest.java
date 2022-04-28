@@ -82,7 +82,7 @@ class ChessControllerTest {
     @Test
     void enterRoom() throws Exception {
         GameResponseDto gameResponseDto = GameResponseDto.of(createRoomEntity(1L)
-                , BoardsDto.of(createBoardEntities()));
+                , createBoardEntities());
         String response = objectMapper.writeValueAsString(gameResponseDto);
 
         given(chessService.enterRoom(any()))
@@ -163,7 +163,7 @@ class ChessControllerTest {
     @Test
     void move() throws Exception {
         GameResponseDto gameResponseDto = GameResponseDto.of(createRoomEntity(1L)
-                , BoardsDto.of(createBoardEntities()));
+                , createBoardEntities());
         String response = objectMapper.writeValueAsString(gameResponseDto);
 
         MoveRequestDto moveRequestDto = new MoveRequestDto(WHITE_SOURCE, WHITE_TARGET);

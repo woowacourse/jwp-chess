@@ -67,8 +67,7 @@ public class ChessService {
     public GameResponseDto enterRoom(final Long roomId) {
         final RoomEntity room = roomRepository.findById(roomId);
         validateGameOver(room);
-        final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
-        return GameResponseDto.of(room, BoardsDto.of(boards));
+        return GameResponseDto.of(room, boardRepository.findBoardByRoomId(roomId));
     }
 
     public GameResponseDto move(final Long id, final MoveRequestDto moveRequestDto) {
@@ -91,7 +90,7 @@ public class ChessService {
         final String turnAfterMove = chessGame.getCurrentTurn().getValue();
         roomRepository.updateTeam(id, turnAfterMove);
         updateGameOver(id, chessGame);
-        return GameResponseDto.of(roomRepository.findById(id), BoardsDto.of(boardRepository.findBoardByRoomId(id)));
+        return GameResponseDto.of(roomRepository.findById(id), boardRepository.findBoardByRoomId(id));
     }
 
     private void updateGameOver(final Long id, final ChessGame chessGame) {

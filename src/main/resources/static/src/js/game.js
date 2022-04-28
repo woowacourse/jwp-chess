@@ -27,7 +27,7 @@ async function startGame() {
     savedBoard = await savedBoard.json();
     gameOver = savedBoard.gameOver;
     document.getElementById("roomName").innerText = "방 제목 : " + savedBoard.name
-    return savedBoard.board.boards;
+    return savedBoard.boards;
 }
 
 async function endGame() {
@@ -92,7 +92,7 @@ function clickMovePosition(e) {
 
 async function movePiece(source, target) {
     const board = await sendMoveInformation(source, target);
-    await updateBoard(board.board.boards);
+    await updateBoard(board.boards);
     await checkGameOver(board.gameOver);
 }
 
@@ -126,11 +126,9 @@ async function sendMoveInformation(source, target) {
 
 async function checkGameOver(gameOverMessage) {
     gameOver = gameOverMessage;
-    if (gameOver === "true") {
+    if (gameOver === true) {
         alert("게임이 종료되었습니다.");
-        let board = endGame();
-        await initializeBoard(board);
-        startButton.textContent = "Start";
+        window.location.href="http://localhost:8080/index.html"
     }
 }
 

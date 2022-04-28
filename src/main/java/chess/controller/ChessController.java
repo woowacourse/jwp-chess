@@ -3,24 +3,22 @@ package chess.controller;
 import chess.domain.board.Board;
 import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
+import chess.domain.game.room.RoomPassword;
 import chess.domain.game.score.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.dto.request.CreateRoomDto;
 import chess.dto.request.MovePieceDto;
-import chess.dto.response.CommandResultDto;
-import chess.dto.response.ErrorDto;
-import chess.dto.response.PieceColorDto;
-import chess.dto.response.RoomDto;
-import chess.dto.response.ScoreResultDto;
+import chess.dto.response.*;
 import chess.service.ChessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ChessController {
@@ -40,10 +38,12 @@ public class ChessController {
         chessService.createGame(room);
     }
 
+    // TODO: DELETE 메소드는 payload를 실어보낼 수 없음. 패스워드를 전송하기 위해 임시로 POST 메소드 사용.
+    // TODO: 필드가 하나인 DTO를 RequestBody로 받으면 400에러가 발생. 임시로 RequestParam 으로 전달받도록 함. 추후 문제해결하기.
     @ResponseBody
-    @DeleteMapping("/rooms/{id}")
-    public void deleteRoom(@PathVariable String id) {
-        chessService.deleteRoom(RoomId.from(id));
+    @PostMapping("/rooms/{id}")
+    public void deleteRoom(@PathVariable String id, @RequestParam String password) {
+        chessService.deleteRoom(RoomId.from(id), RoomPassword.from(password));
     }
 
     @ResponseBody
@@ -97,7 +97,7 @@ public class ChessController {
         }
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    @ExceptionHandler()
     public ErrorDto handleException(RuntimeException e) {
         return new ErrorDto(e.getMessage());
     }

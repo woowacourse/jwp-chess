@@ -42,6 +42,10 @@ const createRoom = async (title, password) => {
     await fetchAsPost(`/rooms`, {title, password});
 }
 
+const deleteRoom = async (id, password) => {
+    await fetchAsPost(`/rooms/${id}?password=${password}`);
+}
+
 const move = async (roomId, from, to) => {
     await fetchAsPost(`/rooms/${roomId}/move`, {from, to})
 }

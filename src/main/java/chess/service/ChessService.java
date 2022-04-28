@@ -6,14 +6,16 @@ import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
+import chess.domain.game.room.RoomPassword;
 import chess.domain.game.score.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
-import java.util.List;
-import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map.Entry;
 
 @Service
 public class ChessService {
@@ -38,8 +40,12 @@ public class ChessService {
         }
     }
 
-    public void deleteRoom(RoomId roomId) {
-        gameRoomDao.deleteGameRoom(roomId);
+    public void deleteRoom(RoomId roomId, RoomPassword roomPassword) {
+        if (!generateChessGame(roomId).isEnd()) {
+            throw new IllegalStateException("게임이 끝나지 않아서 방을 삭제할 수 없습니다.");
+        }
+
+        gameRoomDao.deleteGameRoom(roomId, roomPassword);
     }
 
     public List<Room> getRooms() {

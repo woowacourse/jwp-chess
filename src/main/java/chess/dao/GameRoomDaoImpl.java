@@ -2,12 +2,14 @@ package chess.dao;
 
 import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
+import chess.domain.game.room.RoomPassword;
 import chess.domain.piece.PieceColor;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class GameRoomDaoImpl implements GameRoomDao {
@@ -44,9 +46,9 @@ public class GameRoomDaoImpl implements GameRoomDao {
     }
 
     @Override
-    public void deleteGameRoom(RoomId roomId) {
-        String query = String.format("DELETE FROM %s WHERE id = ?", TABLE_NAME);
-        jdbcTemplate.update(query, roomId.getValue());
+    public void deleteGameRoom(RoomId roomId, RoomPassword roomPassword) {
+        String query = String.format("DELETE FROM %s WHERE id = ? AND password = ?", TABLE_NAME);
+        jdbcTemplate.update(query, roomId.getValue(), roomPassword.getValue());
     }
 
     @Override

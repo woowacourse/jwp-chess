@@ -8,6 +8,7 @@ const Room = ({id, title}) => {
     return (
         <li>
             <a href={`/game.html?id=${id}`}> {title} </a>
+            <a href={`/delete-room.html?id=${id}`}> 방 제거하기 </a>
         </li>
     );
 }

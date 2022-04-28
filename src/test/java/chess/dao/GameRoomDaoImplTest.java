@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
+import chess.domain.game.room.RoomPassword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ public class GameRoomDaoImplTest {
         gameDao.createGameRoom(TEST_GAME_ROOM);
 
         // then
-        gameDao.deleteGameRoom(RoomId.from(TEST_GAME_ROOM_ID));
+        gameDao.deleteGameRoom(RoomId.from(TEST_GAME_ROOM_ID), RoomPassword.from("1234"));
     }
 
     @DisplayName("게임의 턴을 흰색으로 변경한다.")

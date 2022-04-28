@@ -64,14 +64,14 @@ public class ChessGameController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{chessGameId}/move")
+    @PatchMapping("/{chessGameId}/move")
     public ResponseEntity<Void> movePiece(@PathVariable long chessGameId,
                                           @RequestBody PieceMoveRequest pieceMoveRequest) {
         chessGameService.move(chessGameId, pieceMoveRequest.toSourcePosition(), pieceMoveRequest.toTargetPosition());
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{chessGameId}/promotion")
+    @PatchMapping("/{chessGameId}/promotion")
     public ResponseEntity<Void> promotionPiece(@PathVariable long chessGameId,
                                                @RequestBody PromotionRequest promotionRequest) {
         chessGameService.promotion(chessGameId, promotionRequest.toPromotionPiece());

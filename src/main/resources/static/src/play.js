@@ -87,7 +87,7 @@ async function promotionButton() {
     }
 
     await fetch(gameUri + "/promotion", {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },
@@ -132,7 +132,7 @@ function movePiece(source, target) {
         target: target
     }
     fetch(gameUri + "/move", {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },

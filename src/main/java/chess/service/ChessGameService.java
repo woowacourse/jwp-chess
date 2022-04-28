@@ -140,11 +140,18 @@ public class ChessGameService {
 
     public void deleteRoom(final int roomNumber, final String password) {
         final String currentGameState = gameStateDao.getGameState(roomNumber);
-        if (currentGameState != null && currentGameState.equals("playing")) {
-            throw new IllegalStateException("진행 중인 게임은 종료할 수 없습니다.");
-        }
+        validateRoom(roomNumber, password, currentGameState);
         pieceDao.removeAllPieces(roomNumber);
         gameStateDao.removeGameState(roomNumber);
         roomDao.deleteRoom(roomNumber, password);
+    }
+
+    private void validateRoom(int roomNumber, String password, String currentGameState) {
+        if (currentGameState != null && currentGameState.equals("playing")) {
+            throw new IllegalStateException("진행 중인 게임은 종료할 수 없습니다.");
+        }
+        if (!roomDao.checkRoom(roomNumber, password)) {
+            throw new IllegalStateException("잘못된 비밀번호 입력입니다.");
+        }
     }
 }

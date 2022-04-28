@@ -79,6 +79,7 @@ function deleteGame(id) {
         password: password
     }
 
+    debugger;
     fetch('/delete/' + id, {
         method: 'DELETE',
         headers: {

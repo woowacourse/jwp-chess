@@ -7,4 +7,9 @@ public class End implements GameStatus {
     public Status checkStatus() {
         return Status.END;
     }
+
+    @Override
+    public boolean isEnd(){
+        return true;
+    }
 }

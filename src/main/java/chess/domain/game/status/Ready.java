@@ -7,4 +7,9 @@ public class Ready implements GameStatus {
     public Status checkStatus() {
         return Status.READY;
     }
+
+    @Override
+    public boolean isEnd(){
+        return false;
+    }
 }

@@ -65,7 +65,7 @@ public class SpringWebChessController {
     }
 
     @DeleteMapping("/delete/{gameId}")
-    public String delete(@PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto) {
+    public String delete(@PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto) throws IllegalArgumentException{
         chessService.deleteGame(gameId, removeRequestDto.getPassword());
         return "lobby";
     }
@@ -79,7 +79,6 @@ public class SpringWebChessController {
     @GetMapping("/result/{gameId}")
     public String result(Model model, @PathVariable int gameId) throws SQLException {
         ChessBoard chessBoard = chessService.findBoard(gameId);
-        chessService.end(gameId);
         model.addAttribute("play", true);
         model.addAttribute("status", chessService.status(chessBoard));
         model.addAttribute("board", chessService.currentBoardForUI(chessBoard));

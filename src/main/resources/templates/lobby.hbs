@@ -21,9 +21,7 @@
 <h2>게임 목록</h2>
 {{#games}}
     <div class = "game">
-    <div class="game-title">
-    <a href ="/play/{{id}}"> {{title}} </a>
-    </div>
+    <a href ="/play/{{id}}" id="game-title"> {{title}} </a>
         <button class="btn" onclick="deleteGame({{id}})">
                  삭제하기
         </button>

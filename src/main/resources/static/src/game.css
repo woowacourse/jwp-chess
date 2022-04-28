@@ -59,9 +59,10 @@ table, td, th {
     border: 1px solid black;
 }
 
-a {
+.a {
     text-align: center;
     text-decoration: none;
+    color: red;
 }
 
 .game {
@@ -71,7 +72,10 @@ a {
 }
 
 .game-title {
+    text-align: center;
+    text-decoration: none;
     font-size: 30px;
+    color: black;
 }
 
 .btn {

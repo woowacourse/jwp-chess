@@ -78,20 +78,22 @@ public class ChessGameService {
         }
     }
 
-//    public ChessBoardDto getBoard() {
-//        return ChessBoardDto.from(chessGame.getBoard().getPiecesByPosition());
-//    }
-
     public ChessBoardDto getBoard(Long boardId) {
         return ChessBoardDto.from(pieceDao.load(boardId));
     }
 
-    public double statusOfWhite() {
-        return chessGame.statusOfWhite();
+    public double statusOfWhite(Long boardId) {
+        final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
+        final Color turn = boardDao.findTurn(boardId);
+        final Board board = new Board(loadedBoard, turn);
+        return board.scoreOfWhite();
     }
 
-    public double statusOfBlack() {
-        return chessGame.statusOfBlack();
+    public double statusOfBlack(Long boardId) {
+        final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
+        final Color turn = boardDao.findTurn(boardId);
+        final Board board = new Board(loadedBoard, turn);
+        return board.scoreOfBlack();
     }
 
     public Winner findWinner() {

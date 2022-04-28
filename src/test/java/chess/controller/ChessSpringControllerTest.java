@@ -1,16 +1,10 @@
 package chess.controller;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import chess.domain.Winner;
 import chess.dto.ResponseDto;
-import chess.dto.ResultDto;
-import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
@@ -90,17 +84,17 @@ public class ChessSpringControllerTest {
 //
 //    }
 
-    @DisplayName("status GET 요청 테스트")
-    @Test
-    void get_status() throws Exception {
-        final StatusDto statusDto = StatusDto.of(37, 37);
-        given(chessGameService.statusOfBlack()).willReturn(37.0);
-        given(chessGameService.statusOfWhite()).willReturn(37.0);
-
-        mockMvc.perform(get("/chess-status"))
-                .andExpect(view().name("status"))
-                .andExpect(model().attribute("status", statusDto));
-    }
+//    @DisplayName("status GET 요청 테스트")
+//    @Test
+//    void get_status() throws Exception {
+//        final StatusDto statusDto = StatusDto.of(37, 37);
+//        given(chessGameService.statusOfBlack()).willReturn(37.0);
+//        given(chessGameService.statusOfWhite()).willReturn(37.0);
+//
+//        mockMvc.perform(get("/chess-status"))
+//                .andExpect(view().name("status"))
+//                .andExpect(model().attribute("status", statusDto));
+//    }
 
 //    @DisplayName("end GET 요청 테스트")
 //    @Test
@@ -112,17 +106,17 @@ public class ChessSpringControllerTest {
 //                .andExpect(content().json(responseDto.toJson()));
 //    }
 
-    @DisplayName("result GET 요청 테스트")
-    @Test
-    void get_result() throws Exception {
-        final ResultDto resultDto = ResultDto.of(36, 37, Winner.BLACK);
-
-        given(chessGameService.statusOfWhite()).willReturn(36.0);
-        given(chessGameService.statusOfBlack()).willReturn(37.0);
-        given(chessGameService.findWinner()).willReturn(Winner.BLACK);
-
-        mockMvc.perform(get("/chess-result"))
-                .andExpect(view().name("result"))
-                .andExpect(model().attribute("result", resultDto));
-    }
+//    @DisplayName("result GET 요청 테스트")
+//    @Test
+//    void get_result() throws Exception {
+//        final ResultDto resultDto = ResultDto.of(36, 37, Winner.BLACK);
+//
+//        given(chessGameService.statusOfWhite()).willReturn(36.0);
+//        given(chessGameService.statusOfBlack()).willReturn(37.0);
+//        given(chessGameService.findWinner()).willReturn(Winner.BLACK);
+//
+//        mockMvc.perform(get("/chess-result"))
+//                .andExpect(view().name("result"))
+//                .andExpect(model().attribute("result", resultDto));
+//    }
 }

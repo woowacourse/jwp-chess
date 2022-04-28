@@ -57,6 +57,29 @@ public class ChessGameServiceTest {
         final ChessBoardDto board = chessGameService.getBoard(1L);
         assertThat(board.getBoard().get("a4")).isInstanceOf(Pawn.class);
     }
+    
+    @Test
+    @DisplayName("백색의 점수 반환")
+    void status_white() {
+        //given
+        chessGameService.create(title, password);
+        //when
+        final double statusOfWhite = chessGameService.statusOfWhite(1L);
+        //then
+        assertThat(statusOfWhite).isEqualTo(38.0);
+    }
+
+    @Test
+    @DisplayName("흑색의 점수 반환")
+    void status_black() {
+        //given
+        chessGameService.create(title, password);
+        //when
+        final double statusOfBlack = chessGameService.statusOfBlack(1L);
+        //then
+        assertThat(statusOfBlack).isEqualTo(38.0);
+    }
+    
 //    @Test
 //    @DisplayName("게임 시작 시 저장된 체스가 있으면 불러온다.")
 //    void initial_start() {

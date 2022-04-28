@@ -1,9 +1,7 @@
 package chess.controller;
 
 import chess.dto.ResponseDto;
-import chess.dto.ResultDto;
 import chess.dto.RoomInfoDto;
-import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ChessSpringController {
@@ -62,14 +59,14 @@ public class ChessSpringController {
         return chessGameService.move(id, command.get(0), command.get(1));
     }
 
-    @GetMapping("/chess-status")
-    public ModelAndView status() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView
-                .addObject("status", StatusDto.of(chessGameService.statusOfWhite(), chessGameService.statusOfBlack()));
-        modelAndView.setViewName("status");
-        return modelAndView;
-    }
+//    @GetMapping("/chess-status")
+//    public ModelAndView status() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView
+//                .addObject("status", StatusDto.of(chessGameService.statusOfWhite(), chessGameService.statusOfBlack()));
+//        modelAndView.setViewName("status");
+//        return modelAndView;
+//    }
 
     @PostMapping("/end")
     public @ResponseBody
@@ -77,12 +74,12 @@ public class ChessSpringController {
         return chessGameService.end();
     }
 
-    @GetMapping("/chess-result")
-    public ModelAndView result() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("result", ResultDto
-                .of(chessGameService.statusOfWhite(), chessGameService.statusOfBlack(), chessGameService.findWinner()));
-        modelAndView.setViewName("result");
-        return modelAndView;
-    }
+//    @GetMapping("/chess-result")
+//    public ModelAndView result() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.addObject("result", ResultDto
+//                .of(chessGameService.statusOfWhite(), chessGameService.statusOfBlack(), chessGameService.findWinner()));
+//        modelAndView.setViewName("result");
+//        return modelAndView;
+//    }
 }

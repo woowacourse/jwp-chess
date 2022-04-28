@@ -16,7 +16,7 @@ public class GameFactory {
     }
 
     private static void setUpBoardsToGames(JdbcTemplate jdbcTemplate, String... names) {
-        for (int i = 1; i < names.length+1; i++) {
+        for (int i = 1; i < names.length + 1; i++) {
             jdbcTemplate.update("INSERT INTO piece SET square = 'a1', "
                     + "piece_color = 'white', piece_type = 'pawn', game_id = ?", i);
         }

@@ -59,6 +59,13 @@ table, td, th {
     border: 1px solid black;
 }
 
+.game-title {
+    text-align: center;
+    text-decoration: none;
+    font-size: 42px;
+    color: black;
+}
+
 .a {
     text-align: center;
     text-decoration: none;
@@ -69,13 +76,6 @@ table, td, th {
     position: center;
     background: antiquewhite;
     clear: both;
-}
-
-.game-title {
-    text-align: center;
-    text-decoration: none;
-    font-size: 30px;
-    color: black;
 }
 
 .btn {

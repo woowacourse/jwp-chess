@@ -1,30 +1,22 @@
 package chess.model.state;
 
+import chess.dto.MoveDto;
 import chess.model.Team;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-import java.util.List;
 import java.util.Map;
 
 public interface State {
 
-    boolean isFinished();
-
     boolean isStatus();
 
-    State proceed(List<String> command);
+    State proceed(MoveDto moveDto);
 
     Map<Position, Piece> getBoard();
 
     Map<Team, Double> getScores();
 
     Team getWinner();
-
-    boolean isReady();
-
-    boolean isWhiteTurn();
-
-    boolean isBlackTurn();
 
     String getSymbol();
 }

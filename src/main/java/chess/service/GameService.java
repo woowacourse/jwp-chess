@@ -4,10 +4,14 @@ import chess.dto.BoardDto;
 import chess.dto.MoveDto;
 import chess.dto.ResultDto;
 import chess.model.board.Board;
+import chess.model.piece.Piece;
+import chess.model.position.Position;
 import chess.model.state.State;
 import chess.model.state.finished.Status;
 import chess.model.state.running.WhiteTurn;
 import chess.repository.GameRepository;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,23 +26,23 @@ public class GameService {
     public BoardDto start(final String id) {
         State state = new WhiteTurn(Board.init());
         gameRepository.initGameData(id, state);
-        return BoardDto.from(state.getBoard());
+        return convertToBoardDto(state.getBoard());
     }
 
     public BoardDto end(final String id) {
         Board board = gameRepository.getBoardFrom(id);
         gameRepository.deleteGameDataFrom(id);
-        return BoardDto.from(board.getBoard());
+        return convertToBoardDto(board.getBoard());
     }
 
     public BoardDto move(final String id, final MoveDto moveDto) {
         State state = proceed(id, moveDto);
-        return BoardDto.from(state.getBoard());
+        return convertToBoardDto(state.getBoard());
     }
 
     private State proceed(final String id, final MoveDto moveDto) {
         State nowState = gameRepository.getStateFrom(id);
-        State nextState = nowState.proceed(moveDto.getCommand());
+        State nextState = nowState.proceed(moveDto);
         gameRepository.saveGameData(id, nextState, moveDto);
         return nextState;
     }
@@ -51,6 +55,18 @@ public class GameService {
 
     public BoardDto load(final String id) {
         Board board = gameRepository.getBoardFrom(id);
-        return BoardDto.from(board.getBoard());
+        return convertToBoardDto(board.getBoard());
+    }
+
+    private BoardDto convertToBoardDto(final Map<Position, Piece> board) {
+        Map<String, String> squares = new HashMap<>();
+        for (Position position : board.keySet()) {
+            squares.put(position.getKey(), pieceName(board.get(position)));
+        }
+        return BoardDto.from(squares);
+    }
+
+    private String pieceName(Piece piece) {
+        return piece.getTeam() + "_" + piece.getSymbol();
     }
 }

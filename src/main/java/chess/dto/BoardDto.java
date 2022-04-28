@@ -13,20 +13,8 @@ public class BoardDto {
         this.values = values;
     }
 
-    public static BoardDto from(final Map<Position, Piece> board) {
-        return new BoardDto(createValues(board));
-    }
-
-    private static Map<String, String> createValues(Map<Position, Piece> board) {
-        Map<String, String> values = new HashMap<>();
-        for (Position position : board.keySet()) {
-            values.put(position.getKey(), createPieceKey(board.get(position)));
-        }
-        return values;
-    }
-
-    private static String createPieceKey(Piece piece) {
-        return piece.getTeam() + "_" + piece.getSymbol();
+    public static BoardDto from(final Map<String, String> squares) {
+        return new BoardDto(squares);
     }
 
     public Map<String, String> getValues() {

@@ -20,17 +20,7 @@ public abstract class Running implements State {
     }
 
     @Override
-    public boolean isFinished() {
-        return false;
-    }
-
-    @Override
     public boolean isStatus() {
-        return false;
-    }
-
-    @Override
-    public boolean isReady() {
         return false;
     }
 

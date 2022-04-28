@@ -1,4 +1,4 @@
-package chess.controller.exception;
+package chess.exception;
 
 import java.util.NoSuchElementException;
 import org.springframework.dao.DataAccessException;

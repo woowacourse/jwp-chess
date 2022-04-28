@@ -1,4 +1,4 @@
-package chess.controller.exception;
+package chess.exception;
 
 public class ErrorResponse {
 

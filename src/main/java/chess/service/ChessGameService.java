@@ -59,11 +59,18 @@ public class ChessGameService {
     }
 
     public void start(final int roomId) {
+        checkGameIsAlreadyPlaying(roomId);
         roomDao.saveGameState(roomId, "playing");
-
         final Board board = new Board();
         final Map<Position, Piece> pieces = board.getPieces();
         pieceDao.saveAllPieces(roomId, pieces);
+    }
+
+    private void checkGameIsAlreadyPlaying(final int roomId) {
+        final String gameState = roomDao.getGameStateByName(roomId);
+        if (gameState.equals("playing")) {
+            throw new IllegalStateException("이미 진행중인 게임이 있습니다.");
+        }
     }
 
     public void move(final int roomId, final String sourcePosition, final String targetPosition) {

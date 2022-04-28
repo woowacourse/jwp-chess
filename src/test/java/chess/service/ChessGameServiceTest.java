@@ -41,6 +41,17 @@ class ChessGameServiceTest {
     }
 
     @Test
+    @DisplayName("게임이 진행중인데, 게임 시작을 하려고 하면 예외를 발생시킨다.")
+    void startException() {
+        //given
+        chessGameService.start(TEST_ROOM_ID);
+        //when then
+        assertThatThrownBy(() -> chessGameService.start(TEST_ROOM_ID))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("이미 진행중인 게임이 있습니다.");
+    }
+
+    @Test
     @DisplayName("게임이 시작되지 않았는데 move를 하려고 하면 예외를 발생시킨다.")
     void moveException() {
         //given

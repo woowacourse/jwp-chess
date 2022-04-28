@@ -9,7 +9,7 @@ public enum Command {
     END("end"),
     STATUS("status");
 
-    public static final String NOT_FOUND_COMMAND_EXCEPTION = "[ERROR] 이 명령문은 존재하지 않습니다.";
+    static final String NOT_FOUND_COMMAND_EXCEPTION = "[ERROR] 이 명령문은 존재하지 않습니다.";
 
     private final String name;
 

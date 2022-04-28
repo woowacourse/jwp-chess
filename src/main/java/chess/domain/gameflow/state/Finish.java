@@ -5,7 +5,7 @@ import chess.domain.piece.PieceTeam;
 
 public class Finish implements State {
 
-    public static final String UNSUPPORTED_FUNCITON_MESSAGE = "[ERROR] 지원하지 않는 기능입니다.";
+    static final String UNSUPPORTED_FUNCTION_MESSAGE = "[ERROR] 지원하지 않는 기능입니다.";
 
     @Override
     public boolean isSameColor(Piece sourcePiece) {
@@ -14,7 +14,7 @@ public class Finish implements State {
 
     @Override
     public State nextState(boolean isGameFinished) {
-        throw new UnsupportedOperationException(UNSUPPORTED_FUNCITON_MESSAGE);
+        throw new UnsupportedOperationException(UNSUPPORTED_FUNCTION_MESSAGE);
     }
 
     @Override
@@ -29,6 +29,6 @@ public class Finish implements State {
 
     @Override
     public PieceTeam pieceTeam() {
-        throw new UnsupportedOperationException(UNSUPPORTED_FUNCITON_MESSAGE);
+        throw new UnsupportedOperationException(UNSUPPORTED_FUNCTION_MESSAGE);
     }
 }

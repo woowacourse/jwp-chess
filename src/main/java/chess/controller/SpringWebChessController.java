@@ -1,12 +1,12 @@
 package chess.controller;
 
 import chess.controller.dto.MoveRequestDto;
+import chess.controller.dto.RemoveRequestDto;
 import chess.controller.dto.ResponseDto;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,13 +52,6 @@ public class SpringWebChessController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-//    @PostMapping("/start")
-//    public ResponseEntity<ResponseDto> start() throws Exception {
-//        chessService.start();
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
-//
-
     @GetMapping("/status/{gameId}")
     public String status(Model model, @PathVariable int gameId) {
         ChessBoard chessBoard = chessService.findBoard(gameId);
@@ -70,6 +63,21 @@ public class SpringWebChessController {
         }
         return "redirect:/end";
     }
+
+    @DeleteMapping("/delete/{gameId}")
+    public String delete( @PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto){
+        chessService.deleteGame(gameId, removeRequestDto.getPassword());
+        return "lobby";
+    }
+//    @PostMapping("/start")
+//    public ResponseEntity<ResponseDto> start() throws Exception {
+//        chessService.start();
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
+
+//
+
+
 //
 //    @PostMapping("/save")
 //    public String save() {

@@ -6,22 +6,24 @@ import chess.domain.game.Status;
 public class GameDto {
     private final int id;
     private final String title;
+    private final int password;
     private final boolean status;
     private final String turn;
 
-    public GameDto(int id, String title, boolean status, String turn) {
+    public GameDto(int id, String title, int password, boolean status, String turn) {
         this.id = id;
         this.title = title;
+        this.password = password;
         this.status = status;
         this.turn = turn;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public String getTitle() {
         return title;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Status getStatus() {
@@ -33,5 +35,9 @@ public class GameDto {
 
     public Color getTurn() {
         return Color.from(turn);
+    }
+
+    public int getPassword() {
+        return password;
     }
 }

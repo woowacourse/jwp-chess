@@ -75,6 +75,31 @@ function move(source, target) {
         });
 }
 
+function deleteGame(id){
+
+    let password = prompt("비밀번호를 입력해주세요.")
+    const request = {
+        password : password
+    }
+
+    fetch('/delete/' + id, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(request)
+    })
+           .then(response => {
+               if (!response.ok) {
+                   response.json()
+                       .then(body => alert(body.message));
+                   return;
+               }
+               location.replace("/");
+           });
+}
+
 function reinitialize() {
     source = null;
     target = null;

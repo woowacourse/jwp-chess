@@ -69,15 +69,14 @@ class GameDaoTest {
     }
 
     @Test
-    @DisplayName("가장 최근 게임을 삭제한다.")
+    @DisplayName("지정 아이디를 가진 게임을 삭제한다.")
     void delete() {
         //given
         gameSave();
-        gameSave();
         //when
-        gameDao.delete();
+        gameDao.delete(1);
         //then
-        assertThat(gameDao.findLastGameId()).isEqualTo(1);
+        assertThat(gameDao.findLastGameId()).isEqualTo(0);
     }
 
 }

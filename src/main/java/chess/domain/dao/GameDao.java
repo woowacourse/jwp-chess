@@ -70,7 +70,7 @@ public class GameDao {
     }
 
     public GameDto findById(int id) {
-        final String sql = "select id, title, status, turn from game where id = ?";
+        final String sql = "select * from game where id = ?";
         try {
             GameDto result = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeGameDto(rs), id);
             return result;
@@ -83,20 +83,19 @@ public class GameDao {
     }
 
     private GameDto makeGameDto(ResultSet rs) throws SQLException {
-        System.out.println(rs.getObject("title"));
         return new GameDto(
                 rs.getInt("id"),
                 rs.getString("title"),
+                rs.getInt("password"),
                 rs.getBoolean("status"),
                 rs.getString("turn")
         );
     }
 
-    public void delete() {
+    public void delete(int gameId) {
         final String sql = "delete from game where id = ?";
         try {
-            int lastGameId = findLastGameId();
-            jdbcTemplate.update(sql, lastGameId);
+            jdbcTemplate.update(sql, gameId);
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");

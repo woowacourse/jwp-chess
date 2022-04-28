@@ -18,16 +18,13 @@
             </form>
 </div>
 
-<div class="button">
-        <button name="delete">
-            게임 삭제하기
-        </button>
-</div>
-
 <h2>게임 목록</h2>
 {{#games}}
     <div class = "game">
     <div class="game-title">{{title}}</div>
+        <button class="btn" onclick="deleteGame({{id}})">
+                 삭제하기
+        </button>
         <button class="btn">
             <a href ="/play/{{id}}"> 참가하기 </a>
         </button>

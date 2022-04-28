@@ -2,8 +2,6 @@ package chess.service;
 
 import chess.domain.dao.BoardDao;
 import chess.domain.dao.GameDao;
-import chess.service.dto.GameDto;
-import chess.service.dto.PieceDto;
 import chess.domain.game.Color;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
@@ -13,6 +11,8 @@ import chess.domain.game.status.Playing;
 import chess.domain.piece.ChessPiece;
 import chess.domain.piece.Type;
 import chess.domain.position.Position;
+import chess.service.dto.GameDto;
+import chess.service.dto.PieceDto;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -35,7 +35,7 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public long create(String title, String password){
+    public long create(String title, String password) {
         makeNewGame();
         int gameId = gameDao.create(chessBoard, title, Integer.parseInt(password));
         for (Map.Entry<String, ChessPiece> entry : chessBoard.convertToMap().entrySet()) {
@@ -57,7 +57,7 @@ public class ChessService {
 //        loadLastGame(lastGameId);
 //    }
 
-    public void loadGame(int gameId){
+    public void loadGame(int gameId) {
         gameDao.findById(gameId);
         if (isNotSaved(gameId)) {
             return;
@@ -123,14 +123,14 @@ public class ChessService {
         ChessBoard chessBoard = findBoard(gameId);
 
         if (checkStatus(chessBoard, Status.END)) {
-            end();
+            end(gameId);
         }
 
         if (chessBoard.compareStatus(Status.PLAYING)) {
             chessBoard.move(new Position(source), new Position(target));
         }
         updateBoard(gameId, source, target);
-        updateTurn(chessBoard.getCurrentTurn().name(),gameId);
+        updateTurn(chessBoard.getCurrentTurn().name(), gameId);
     }
 
     private void updateTurn(String turn, int gameId) {
@@ -142,10 +142,10 @@ public class ChessService {
                 .collect(Collectors.toMap(m -> m.getKey().name(), Map.Entry::getValue));
     }
 
-    public void end() throws SQLException {
+    public void end(int gameId) throws SQLException {
         chessBoard.changeStatus(new End());
-        boardDao.delete(gameDao.findLastGameId());
-        gameDao.delete();
+        boardDao.delete(gameId);
+        gameDao.delete(gameId);
     }
 
     public String findWinner() {
@@ -169,8 +169,21 @@ public class ChessService {
         List<PieceDto> boardInfo = boardDao.findByGameId(gameId);
         HashMap<Position, ChessPiece> board = new HashMap<>();
         for (PieceDto pieceDto : boardInfo) {
-            board.put(new Position(pieceDto.getPosition()),Type.from(pieceDto.getPiece()).createPiece(Color.from(pieceDto.getColor())));
+            board.put(new Position(pieceDto.getPosition()), Type.from(pieceDto.getPiece()).createPiece(Color.from(pieceDto.getColor())));
         }
         return new ChessBoard(board, new Playing(), game.getTurn());
+    }
+
+    public void deleteGame(int gameId, int password) {
+        GameDto gameDto = gameDao.findById(gameId);
+        validatePassword(gameDto, password);
+        boardDao.delete(gameId);
+        gameDao.delete(gameId);
+    }
+
+    private void validatePassword(GameDto gameDto, int password) {
+        if (gameDto.getPassword() != password) {
+            throw new IllegalArgumentException("올바르지 않은 비밀번호입니다.");
+        }
     }
 }

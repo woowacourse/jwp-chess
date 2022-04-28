@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.ErrorResponseDto;
+import chess.dto.response.ErrorResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;

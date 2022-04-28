@@ -1,8 +1,8 @@
 package chess.controller;
 
-import chess.dto.StatusDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
+import chess.dto.response.ErrorResponseDto.StatusResponseDto;
 import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
@@ -30,19 +30,16 @@ public class WebChessController {
     @PostMapping
     public ResponseEntity<RoomResponseDto> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
         final RoomResponseDto room = chessService.createRoom(roomRequestDto);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(room);
     }
 
     @GetMapping
     public ResponseEntity<RoomsResponseDto> findRooms() {
-
         return ResponseEntity.ok(chessService.findRooms());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<GameResponseDto> getCurrentBoard(@PathVariable Long id) {
-
         return ResponseEntity.ok(chessService.getCurrentBoard(id));
     }
 
@@ -55,13 +52,11 @@ public class WebChessController {
     @PatchMapping("/{id}")
     public ResponseEntity<Object> finishGame(@PathVariable Long id) {
         chessService.endRoom(id);
-
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/status")
-    public ResponseEntity<StatusDto> calculateStatus(@PathVariable Long id) {
-
+    public ResponseEntity<StatusResponseDto> calculateStatus(@PathVariable Long id) {
         return ResponseEntity.ok(chessService.createStatus(id));
     }
 }

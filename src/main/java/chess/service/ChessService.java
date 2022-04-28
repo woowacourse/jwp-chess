@@ -10,9 +10,9 @@ import chess.domain.game.Turn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.dto.BoardsDto;
-import chess.dto.StatusDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
+import chess.dto.response.ErrorResponseDto.StatusResponseDto;
 import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
@@ -124,9 +124,9 @@ public class ChessService {
         roomRepository.updateGameOver(id);
     }
 
-    public StatusDto createStatus(final Long id) {
+    public StatusResponseDto createStatus(final Long id) {
         final Board board = toBoard(boardRepository.findBoardByRoomId(id));
-        return StatusDto.of(new Score(board.getBoard()));
+        return StatusResponseDto.of(new Score(board.getBoard()));
     }
 
     private void validateGameOver(final RoomEntity room) {

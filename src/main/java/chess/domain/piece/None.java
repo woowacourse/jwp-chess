@@ -3,7 +3,7 @@ package chess.domain.piece;
 import chess.domain.position.Movement;
 
 public final class None extends Piece {
-    private static final String NONE = " ";
+    private static final String NONE = "blank";
 
     public None(Color color) {
         super(color, 0);

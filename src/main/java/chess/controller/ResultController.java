@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.domain.GameResult;
+import chess.domain.game.GameResult;
 import chess.domain.piece.Color;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;

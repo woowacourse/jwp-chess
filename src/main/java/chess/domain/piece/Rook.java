@@ -8,8 +8,8 @@ import static chess.domain.position.UnitDirection.*;
 
 public final class Rook extends MovingMultipleUnitPiece {
     private static final String BUG_MESSAGE_COLOR = "[BUG] 룩은 색상을 가져야합니다.";
-    private static final String WHITE_ROOK = "♖";
-    private static final String BLACK_ROOK = "♜";
+    private static final String WHITE_ROOK = "white_rook";
+    private static final String BLACK_ROOK = "black_rook";
     private static final List<UnitDirection> MOVABLE_DIRECTIONS;
 
     static {

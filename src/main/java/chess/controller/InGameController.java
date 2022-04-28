@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.domain.ChessGame;
-import chess.domain.GameResult;
+import chess.domain.game.ChessGame;
+import chess.domain.game.GameResult;
 import chess.domain.piece.Color;
 import chess.domain.position.Square;
 import chess.service.ChessService;
@@ -93,6 +93,6 @@ public class InGameController {
         model.addAttribute("turn", chessService.getTurn(gameID));
         model.addAttribute("msg", "누가 이기나 보자구~!");
         model.addAttribute("gameCode", gameCode);
-        return "redirect:/ingame?gameCode="+gameCode;
+        return "redirect:/ingame?gameCode=" + gameCode;
     }
 }

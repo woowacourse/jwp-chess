@@ -1,7 +1,7 @@
 package chess.db;
 
-import chess.domain.ChessGame;
-import chess.domain.GameEntity;
+import chess.domain.game.ChessGame;
+import chess.domain.game.GameEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

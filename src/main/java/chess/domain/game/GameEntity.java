@@ -1,4 +1,4 @@
-package chess.domain;
+package chess.domain.game;
 
 public class GameEntity {
     private String gameID;

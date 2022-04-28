@@ -2,10 +2,10 @@ package chess.service;
 
 import chess.db.ChessGameDao;
 import chess.db.PieceDao;
-import chess.domain.ChessGame;
-import chess.domain.GameEntity;
-import chess.domain.GameResult;
-import chess.domain.GameTurn;
+import chess.domain.game.ChessGame;
+import chess.domain.game.GameEntity;
+import chess.domain.game.GameResult;
+import chess.domain.game.GameTurn;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.board.SavedBoardGenerator;
@@ -44,7 +44,7 @@ public class ChessService {
         pieceDao.deleteAll(gameID);
     }
 
-    public boolean checkPassword(String gameID, String inputPW){
+    public boolean checkPassword(String gameID, String inputPW) {
         return chessGameDao.checkPassword(gameID, inputPW);
     }
 

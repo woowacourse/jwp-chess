@@ -18,6 +18,12 @@ const fetchAsPost = async (path, body) => {
     });
 }
 
+const fetchAsDelete = async (path) => {
+    await fetch(`${API_HOST}${path}`, {
+        method: "DELETE"
+    });
+}
+
 const fetchRooms = async () => {
     return fetchAsGet("/rooms");
 }
@@ -43,7 +49,7 @@ const createRoom = async (title, password) => {
 }
 
 const deleteRoom = async (id, password) => {
-    await fetchAsPost(`/rooms/${id}?password=${password}`);
+    await fetchAsDelete(`/rooms/${id}?password=${password}`);
 }
 
 const move = async (roomId, from, to) => {

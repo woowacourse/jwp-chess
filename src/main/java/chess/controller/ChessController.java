@@ -40,13 +40,11 @@ public class ChessController {
 
     // TODO: DELETE 메소드는 payload를 실어보낼 수 없음. 패스워드를 전송하기 위해 임시로 POST 메소드 사용.
     // TODO: 필드가 하나인 DTO를 RequestBody로 받으면 400에러가 발생. 임시로 RequestParam 으로 전달받도록 함. 추후 문제해결하기.
-    @ResponseBody
-    @PostMapping("/rooms/{id}")
+    @DeleteMapping("/rooms/{id}")
     public void deleteRoom(@PathVariable String id, @RequestParam String password) {
-        chessService.deleteRoom(RoomId.from(id), RoomPassword.from(password));
+        chessService.deleteRoom(RoomId.from(id), RoomPassword.createByPlainText(password));
     }
 
-    @ResponseBody
     @GetMapping("/rooms")
     public List<RoomDto> getRooms() {
         return chessService.getRooms()

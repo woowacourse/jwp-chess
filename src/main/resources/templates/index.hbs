@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>파잉의 체스게임</title>
+    <link rel="stylesheet" href="/src/index.css">
     <script type="text/javascript" src="/src/index.js"></script>
 </head>
 <body>
@@ -22,13 +23,11 @@
 <div>
     <h2>게임방 목록</h2>
     {{#games}}
-        <div>
+        <div class="game-list-container">
             <a href="/game/{{id}}">{{title}}</a>
-
             <div onclick="deleteGame({{id}})">
                 <button>삭제</button>
             </div>
-
         </div>
         <br/>
     {{/games}}

@@ -85,7 +85,6 @@ public class ChessController {
         return PieceColorDto.from(winColor);
     }
 
-
     @ResponseBody
     @PostMapping("/rooms/{id}/move")
     public CommandResultDto movePiece(@PathVariable String id, @RequestBody MovePieceDto movePieceDto) {

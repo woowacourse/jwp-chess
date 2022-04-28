@@ -19,7 +19,7 @@ public class GameRoomDaoImpl implements GameRoomDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private RowMapper<Room> roomRowMapper =
+    private final RowMapper<Room> roomRowMapper =
             (resultSet, rowNum) -> {
                 String id = resultSet.getString("id");
                 String title = resultSet.getString("title");

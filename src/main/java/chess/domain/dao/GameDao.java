@@ -66,7 +66,7 @@ public class GameDao {
     }
 
     public GameDto findById(int id) {
-        final String sql = "select id, status, turn from game where id = ?";
+        final String sql = "select id, title, status, turn from game where id = ?";
         try {
             GameDto result = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeGameDto(rs), id);
             return result;
@@ -79,8 +79,10 @@ public class GameDao {
     }
 
     private GameDto makeGameDto(ResultSet rs) throws SQLException {
+        System.out.println(rs.getObject("title"));
         return new GameDto(
                 rs.getInt("id"),
+                rs.getString("title"),
                 rs.getBoolean("status"),
                 rs.getString("turn")
         );
@@ -104,6 +106,17 @@ public class GameDao {
             jdbcTemplate.update("alter table game auto_increment = 1");
         } catch (Exception exception) {
             exception.printStackTrace();
+            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+        }
+    }
+
+    public List<GameDto> findAll() {
+        final String sql = "select * from game";
+        try {
+            return jdbcTemplate.query(sql, (rs, rowNum) -> makeGameDto(rs));
+        } catch (EmptyResultDataAccessException noResult) {
+            return null;
+        } catch (Exception e) {
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }

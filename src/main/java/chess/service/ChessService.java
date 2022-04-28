@@ -143,6 +143,11 @@ public class ChessService {
     public boolean checkStatus(Status status) {
         return chessBoard.compareStatus(status);
     }
+
+    public List<GameDto> findAllGame() {
+        return gameDao.findAll();
+    }
+
     public ChessBoard findBoard(int gameId) {
         GameDto game = gameDao.findById(gameId);
         List<PieceDto> boardInfo = boardDao.findByGameId(gameId);

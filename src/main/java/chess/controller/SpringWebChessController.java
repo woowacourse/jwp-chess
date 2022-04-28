@@ -25,7 +25,8 @@ public class SpringWebChessController {
     }
 
     @GetMapping("/")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("games",chessService.findAllGame());
         return "lobby";
     }
 

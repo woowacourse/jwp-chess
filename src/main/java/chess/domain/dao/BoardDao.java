@@ -1,6 +1,7 @@
 package chess.domain.dao;
 
 import chess.service.dto.PieceDto;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -81,9 +82,22 @@ public class BoardDao {
     }
 
     public void updateMovePiece(int gameId, String source, String target) {
+        deletePiece(gameId,target);
         String sql = "update Board set position = ? where game_id = ? and position = ?";
         try {
             jdbcTemplate.update(sql, target, gameId, source);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+        }
+    }
+
+    private void deletePiece(int gameId, String target) {
+        String sql = "delete from Board where game_id = ? and position = ?";
+        try {
+            jdbcTemplate.update(sql, gameId, target);
+        } catch (EmptyResultDataAccessException e) {
+            return;
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");

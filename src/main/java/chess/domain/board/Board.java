@@ -1,6 +1,7 @@
 package chess.domain.board;
 
 import chess.domain.Color;
+import chess.domain.Winner;
 import chess.domain.piece.NullPiece;
 import chess.domain.piece.Piece;
 import java.util.Collections;
@@ -120,6 +121,27 @@ public final class Board {
     public boolean hasWhiteKingCaptured() {
         return collectKing().stream()
                 .allMatch(Piece::isBlack);
+    }
+
+    public Winner findWinner() {
+        if (hasBlackKingCaptured()) {
+            return Winner.WHITE;
+        }
+        if (hasWhiteKingCaptured()) {
+            return Winner.BLACK;
+        }
+        return findWinnerByScore();
+    }
+
+    private Winner findWinnerByScore() {
+        final int compared = Double.compare(scoreOfBlack(), scoreOfWhite());
+        if (compared > 0) {
+            return Winner.BLACK;
+        }
+        if (compared < 0) {
+            return Winner.WHITE;
+        }
+        return Winner.DRAW;
     }
 
     public Color getTurn() {

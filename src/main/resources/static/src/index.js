@@ -18,7 +18,7 @@ function move(id) {
 }
 
 function movePiece() {
-    fetch("/move", {
+    fetch("/move" + window.location.search, {
         method: "POST",
         headers: {
             "Content-Type": "text/plain"
@@ -34,7 +34,7 @@ function movePiece() {
             end();
         }
         if (res.status === 302) {
-            location.replace("/chess");
+            location.replace("/chess" + window.location.search);
         }
         if (res.status === 501) {
             res.text().then(message => alert(message))
@@ -42,14 +42,35 @@ function movePiece() {
     })
 }
 
+function chess(id) {
+    fetch("/chess?id=" + id).then(res => {
+        if (res.status === 501) {
+            res.text().then(message => {
+                if (message !== "이미 완료된 게임입니다") {
+                    alert(message);
+                    return;
+                }
+                const watchResult = confirm("완료된 게임입니다. 결과 확인창으로 이동할까요?");
+                if (watchResult) {
+                    location.replace("/chess-result?id=" + id);
+                }
+            })
+            return;
+        }
+        location.replace("/chess?id=" + id);
+    })
+}
 
 function end() {
-    fetch("/end").then(res => {
+    fetch("/end" + window.location.search).then(res => {
         if (res.status === 501) {
             res.text().then(message => alert(message))
             return;
         }
-        location.replace("/chess-result");
+        location.replace("/chess-result" + window.location.search);
     })
 }
 
+function movePage(targetPage) {
+    location.replace(targetPage + window.location.search);
+}

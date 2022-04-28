@@ -15,13 +15,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class PieceStringFactoryTest {
+class PieceFactoryTest {
 
     @DisplayName("piece를 생성할 수 있다")
     @ParameterizedTest
     @MethodSource("supplyPieceTestCase")
     void can_create_piece(String input, Piece expectedPiece) {
-        Piece createdPiece = PieceStringFactory.create(input);
+        Piece createdPiece = PieceFactory.create(input);
         Assertions.assertThat(createdPiece).isEqualTo(expectedPiece);
     }
 

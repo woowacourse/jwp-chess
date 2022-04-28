@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
-public class PieceStringFactory {
+public class PieceFactory {
 
     private static final Map<PieceNames, Supplier<? extends Piece>> pieceCreator;
 

@@ -5,6 +5,7 @@ CREATE TABLE room
     title    varchar(50) NOT NULL,
     password varchar(50) NOT NULL,
     status   boolean,
+    UNIQUE (title),
     PRIMARY KEY (id)
 );
 

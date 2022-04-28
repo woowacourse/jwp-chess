@@ -56,7 +56,7 @@ public class RoomController {
         }
         BoardDto boardDto = gameService.loadGame(roomId);
         BoardDto boardDto1 = gameService.gameStateAndPieces(boardDto.getBoardId());
-        if (boardDto1.getState().getEnd().equals("false")) {
+        if (!boardDto1.getState().getEnd()) {
             throw new IllegalArgumentException("진행 중인 게임방은 삭제할 수 없습니다.");
         }
         roomService.delete(roomId, password);

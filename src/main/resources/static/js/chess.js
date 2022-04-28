@@ -122,7 +122,7 @@ function toggleState(state) {
     document.getElementById('white-message').innerHTML = '';
     document.getElementById('black-message').innerHTML = '';
     end = state.end;
-    if (end === 'true') {
+    if (end) {
         disableLoadGame();
         return;
     }
@@ -146,7 +146,7 @@ function updateResult(result) {
 }
 
 function checkEnd(state) {
-    if (state.end === 'true') {
+    if (state.end) {
         fetchFinalResult();
     }
 }
@@ -215,7 +215,7 @@ function fetchNewChess() {
 
 function fetchLoadChess() {
     let end = document.getElementById('game-state-end').value;
-    if (end === 'true') {
+    if (end) {
         alert("게임이 종료되었습니다. 새 게임을 눌러주세요.");
         return;
     }
@@ -267,7 +267,7 @@ function fetchMove(source, target) {
 
 function fetchResult() {
     let end = document.getElementById('game-state-end').value;
-    if (end === 'true') {
+    if (end) {
         alert("게임이 종료되었습니다. 새 게임을 눌러주세요.");
         return;
     }

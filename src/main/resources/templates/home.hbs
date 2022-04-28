@@ -36,21 +36,25 @@
     <div>
         <h3>방 목록</h3>
         {{#rooms}}
-        <table>
-            {{#roomsDto}}
-            {{#this}}
-            <tr>
-                <td>
-                    <a href="/room/{{roomId}}">{{roomTitle}}</a>
-                    {{whiteMember}}
-                    {{blackMember}}
-                </td>
-            </tr>
-            {{/this}}
-            {{/roomsDto}}
-        </table>
+            <table>
+                {{#roomsDto}}
+                    {{#this}}
+                        <tr>
+                            <td>
+                                <a href="/room/{{roomId}}">{{roomTitle}}</a>
+                                {{whiteMember}}
+                                {{blackMember}}
+                                {{#if end}}
+                                    <button id="makeButton" data-id = {{roomId}} onclick="deleteRoom(event)">삭제</button>
+                                {{/if}}
+                            </td>
+                        </tr>
+                    {{/this}}
+                {{/roomsDto}}
+            </table>
         {{/rooms}}
     </div>
 </div>
 </body>
 </html>
+

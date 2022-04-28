@@ -7,9 +7,13 @@ import java.util.List;
 
 public interface RoomRepository<T> {
 
+    List<Room> findAll();
+
     List<Room> findAllByBoardStatus(Status status);
 
     T save(T room);
 
     T getById(int roomId);
+
+    void deleteById(int id);
 }

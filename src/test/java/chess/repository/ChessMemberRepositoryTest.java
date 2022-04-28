@@ -8,6 +8,7 @@ import chess.model.status.Running;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +25,9 @@ class ChessMemberRepositoryTest {
     private ChessMemberRepository chessMemberRepository;
     @Autowired
     private ChessBoardRepository chessBoardRepository;
-
     @Autowired
     private ChessRoomRepository chessRoomRepository;
+
     private int roomId;
 
     @BeforeEach

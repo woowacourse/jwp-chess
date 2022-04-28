@@ -23,6 +23,22 @@ public class ChessRoomRepository implements RoomRepository<Room> {
     }
 
     @Override
+    public List<Room> findAll() {
+        String sq = "SELECT * FROM room r JOIN board b on r.board_id=b.id";
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sq);
+        List<Room> rooms = new ArrayList<>();
+        while (sqlRowSet.next()) {
+            rooms.add(new Room(
+                    sqlRowSet.getInt("id"),
+                    sqlRowSet.getString("title"),
+                    sqlRowSet.getString("password"),
+                    sqlRowSet.getInt("board_id"))
+            );
+        }
+        return rooms;
+    }
+
+    @Override
     public List<Room> findAllByBoardStatus(Status status) {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM room r JOIN board b on r.board_id=b.id WHERE b.status=?", status.name());
@@ -55,6 +71,11 @@ public class ChessRoomRepository implements RoomRepository<Room> {
     @Override
     public Room getById(int roomId) {
         return jdbcTemplate.queryForObject("SELECT * FROM room WHERE id=?", roomRowMapper(), roomId);
+    }
+
+    @Override
+    public void deleteById(int roomId) {
+        jdbcTemplate.update("DELETE FROM room WHERE id = ?", roomId);
     }
 
     private RowMapper<Room> roomRowMapper() {

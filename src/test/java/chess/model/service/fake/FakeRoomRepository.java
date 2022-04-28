@@ -21,6 +21,11 @@ public class FakeRoomRepository implements RoomRepository<Room> {
     }
 
     @Override
+    public List<Room> findAll() {
+        return List.of(new Room(fakeAutoIncrementId, fakeTitle, fakePassword, boardId));
+    }
+
+    @Override
     public List<Room> findAllByBoardStatus(Status status) {
         return List.of(new Room(fakeAutoIncrementId, fakeTitle, fakePassword, boardId));
     }

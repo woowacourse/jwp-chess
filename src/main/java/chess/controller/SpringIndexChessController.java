@@ -3,6 +3,7 @@ package chess.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,9 +40,9 @@ public class SpringIndexChessController {
         return respondPath(String.format(SpringViewChessController.MAIN_PATH_FORMAT, roomId));
     }
 
-    @PostMapping(path = "/delete/{roomId}")
-    public ResponseEntity<PathResponse> delete(@PathVariable Long roomId, @RequestBody RoomRequest roomRequest) {
-        gameService.deleteGame(roomId, roomRequest);
+    @DeleteMapping(path = "/room")
+    public ResponseEntity<PathResponse> delete(@RequestBody RoomRequest roomRequest) {
+        gameService.deleteGame(roomRequest);
         return respondPath(SpringViewChessController.ROOT_PATH);
     }
 

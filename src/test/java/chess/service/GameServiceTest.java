@@ -28,6 +28,7 @@ import chess.dto.RoomRequest;
 @SpringBootTest
 class GameServiceTest {
 
+    public static final String TEST_ROOM_NAME = "TEST-GAME";
     private final FakeGameDao gameDao = new FakeGameDao();
     private final FakeBoardDao boardDao = new FakeBoardDao();
 
@@ -115,7 +116,7 @@ class GameServiceTest {
         String password = "TEST-PASSWORD";
 
         // then
-        assertThatCode(() -> service.deleteGame(id, new RoomRequest(null, password)))
+        assertThatCode(() -> service.deleteGame(new RoomRequest(TEST_ROOM_NAME, password)))
             .doesNotThrowAnyException();
     }
 
@@ -127,7 +128,7 @@ class GameServiceTest {
 
         // then
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> service.deleteGame(id, new RoomRequest(null, password)));
+            .isThrownBy(() -> service.deleteGame(new RoomRequest(TEST_ROOM_NAME, password)));
     }
 
     @Test
@@ -140,7 +141,7 @@ class GameServiceTest {
 
         // when
         assertThatExceptionOfType(IllegalStateException.class)
-            .isThrownBy(() -> service.deleteGame(id, new RoomRequest(null, password)));
+            .isThrownBy(() -> service.deleteGame(new RoomRequest(TEST_ROOM_NAME, password)));
 
 
         // then

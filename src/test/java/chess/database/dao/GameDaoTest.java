@@ -16,12 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 
 import chess.database.dao.spring.SpringGameDao;
 import chess.database.dto.GameStateDto;
+import chess.database.dto.RoomDto;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 
@@ -119,12 +118,12 @@ class GameDaoTest {
     }
 
     @Test
-    @DisplayName("아이디로 비밀번호를 찾는다.")
+    @DisplayName("이름으로 방 정보를 찾는다.")
     public void findPasswordById() {
         // given
-        final Optional<String> foundPassword = dao.findPasswordById(testId);
+        final Optional<RoomDto> roomDto = dao.findRoomByName(TEST_ROOM_NAME);
         // when
-        final boolean isPresent = foundPassword.isPresent();
+        final boolean isPresent = roomDto.isPresent();
         // then
         assertThat(isPresent).isTrue();
     }

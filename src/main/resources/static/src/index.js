@@ -81,7 +81,9 @@ function setUpMain(state) {
         e.preventDefault();
         const roomId = getLastPath();
         send("/start/" + roomId, {
-            method: 'get'
+            method: 'PATCH',
+            body: JSON.stringify({}),
+            headers: new Headers({'Content-Type': 'application/json'})
         }, relocate);
     });
 
@@ -90,7 +92,7 @@ function setUpMain(state) {
         e.preventDefault();
         const roomId = getLastPath();
         send("/end/" + roomId, {
-            method: 'get'
+            method: 'PATCH'
         }, relocate);
     });
 
@@ -128,7 +130,7 @@ function moveByClick(source, destination) {
 
     const roomId = getLastPath();
     send("/move/" + roomId, {
-        method: 'post',
+        method: 'PATCH',
         body: JSON.stringify({'source': source.id, 'destination': destination.id}),
         headers: new Headers({'Content-Type': 'application/json'})
     }, drawBoardByResponse);
@@ -226,9 +228,9 @@ function createRoom(roomId, roomName) {
         });
     deleteButton.onclick = function () {
         const password = prompt("패스워드를 입력하세요 : ");
-        send(`/delete/${roomId}`, {
-                method: 'post',
-                body: JSON.stringify({password: password}),
+        send(`/room`, {
+                method: 'delete',
+                body: JSON.stringify({roomName: roomName, password: password}),
                 headers: new Headers({'Content-Type': 'application/json'})
             }, relocate);
     }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import chess.database.dto.GameStateDto;
+import chess.database.dto.RoomDto;
 
 public class FakeGameDao implements GameDao {
 
@@ -84,18 +85,21 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
+    public Optional<RoomDto> findRoomByName(String roomName) {
+        return memoryDatabase.entrySet().stream()
+            .filter(entry -> entry.getValue().getRoomName().equals(roomName))
+            .map(entry -> new RoomDto(
+                entry.getKey(),
+                entry.getValue().getRoomName(),
+                entry.getValue().getPassword())
+            )
+            .findAny();
+    }
+
+    @Override
     public Map<Long, String> readGameRoomIdAndNames() {
         return memoryDatabase.entrySet()
             .stream()
             .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getRoomName()));
-    }
-
-    @Override
-    public Optional<String> findPasswordById(Long roomId) {
-        final FakeTable row = memoryDatabase.get(roomId);
-        if (row == null) {
-            return Optional.empty();
-        }
-        return Optional.of(row.getPassword());
     }
 }

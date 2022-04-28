@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import chess.database.dao.GameDao;
 import chess.database.dto.GameStateDto;
+import chess.database.dto.RoomDto;
 
 @Repository
 public class SpringGameDao implements GameDao {
@@ -58,16 +59,6 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public Optional<String> findPasswordById(Long roomId) {
-        String sql = "SELECT password FROM game WHERE id = ?";
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, String.class, roomId));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public Long saveGame(GameStateDto gameStateDto, String roomName, String password) {
         Map<String, Object> parameters = Map.of(
             "room_name", roomName,
@@ -99,5 +90,20 @@ public class SpringGameDao implements GameDao {
                 rs.getString("room_name"))
             ).stream()
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    @Override
+    public Optional<RoomDto> findRoomByName(String roomName) {
+        final String sql = "SELECT id, room_name, password FROM game WHERE room_name = ?";
+        try {
+            final RoomDto roomDto = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new RoomDto(
+                rs.getLong("id"),
+                rs.getString("room_name"),
+                rs.getString("password")
+            ), roomName);
+            return Optional.ofNullable(roomDto);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

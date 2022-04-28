@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import chess.database.dto.GameStateDto;
+import chess.database.dto.RoomDto;
 
 public interface GameDao {
     Optional<GameStateDto> findGameById(Long id);
@@ -18,5 +19,5 @@ public interface GameDao {
 
     Optional<GameStateDto> findGameByRoomName(String roomName);
 
-    Optional<String> findPasswordById(Long roomId);
+    Optional<RoomDto> findRoomByName(String roomName);
 }

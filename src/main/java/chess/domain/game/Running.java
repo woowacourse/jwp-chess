@@ -7,7 +7,7 @@ import chess.dto.Arguments;
 
 public class Running extends GameState {
 
-    private static final String STATE = "RUNNING";
+    public static final String STATE = "RUNNING";
 
     public Running(Board board, Color turnColor) {
         super(board, turnColor);

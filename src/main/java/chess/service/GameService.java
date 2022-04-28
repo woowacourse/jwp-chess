@@ -12,12 +12,14 @@ import chess.database.dao.GameDao;
 import chess.database.dto.BoardDto;
 import chess.database.dto.GameStateDto;
 import chess.database.dto.PointDto;
+import chess.database.dto.RoomDto;
 import chess.database.dto.RouteDto;
 import chess.domain.board.Board;
 import chess.domain.board.CustomBoardGenerator;
 import chess.domain.board.Route;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
+import chess.domain.game.Running;
 import chess.dto.Arguments;
 import chess.dto.RoomRequest;
 
@@ -101,26 +103,28 @@ public class GameService {
         return gameDao.readGameRoomIdAndNames();
     }
 
-    public void deleteGame(Long roomId, RoomRequest roomRequest) {
-        validatePassword(roomId, roomRequest.getPassword());
-        validateGameNotRunning(roomId);
-        boardDao.removeBoard(roomId);
-        gameDao.removeGame(roomId);
+    public void deleteGame(RoomRequest roomRequest) {
+        final RoomDto roomDto = gameDao.findRoomByName(roomRequest.getRoomName())
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당하는 방이 없습니다."));
+        validatePassword(roomDto.getPassword(), roomRequest.getPassword());
+        validateGameNotRunning(roomRequest.getRoomName());
+
+        boardDao.removeBoard(roomDto.getId());
+        gameDao.removeGame(roomDto.getId());
     }
 
-    private void validateGameNotRunning(Long roomId) {
-        final GameStateDto gameStateDto = gameDao.findGameById(roomId)
-            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당하는 방이 없습니다."));
-        if ("RUNNING".equals(gameStateDto.getState())) {
-            throw new IllegalStateException("[ERROR] 진행중인 게임은 삭제할 수 없습니다.");
+    private void validatePassword(String foundPassword, String inputPassword) {
+        if (!encoder.matches(inputPassword, foundPassword)) {
+            throw new IllegalArgumentException("[ERROR] 패스워드가 올바르지 않습니다.");
         }
     }
 
-    private void validatePassword(Long roomId, String password) {
-        final String foundPassword = gameDao.findPasswordById(roomId)
+    private void validateGameNotRunning(String roomName) {
+        final GameStateDto gameStateDto = gameDao.findGameByRoomName(roomName)
             .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당하는 방이 없습니다."));
-        if (!encoder.matches(password, foundPassword)) {
-            throw new IllegalArgumentException("[ERROR] 패스워드가 올바르지 않습니다.");
+
+        if (Running.STATE.equals(gameStateDto.getState())) {
+            throw new IllegalStateException("[ERROR] 진행중인 게임은 삭제할 수 없습니다.");
         }
     }
 }

@@ -91,7 +91,7 @@ public class SpringChessControllerTest {
         Long roomId = id;
 
         RestAssured.given().log().all()
-            .when().get("/start/" + roomId)
+            .when().patch("/start/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("url", is("/main/" + roomId));
@@ -105,7 +105,7 @@ public class SpringChessControllerTest {
         service.startGame(roomId);
 
         RestAssured.given().log().all()
-            .when().get("/end/" + roomId)
+            .when().patch("/end/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("url", is("/"));
@@ -122,7 +122,7 @@ public class SpringChessControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(arguments)
-            .when().post("/move/" + roomId)
+            .when().patch("/move/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -151,7 +151,7 @@ public class SpringChessControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(arguments)
-            .when().post("/move/" + roomId)
+            .when().patch("/move/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value());
     }
@@ -159,6 +159,5 @@ public class SpringChessControllerTest {
     @AfterEach
     void setDown() {
         service.removeGameAndBoard(id);
-        // service.removeGameAndBoard(TEST_CREATION_ROOM_ID);
     }
 }

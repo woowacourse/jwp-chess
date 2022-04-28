@@ -4,8 +4,9 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,19 +29,19 @@ public class SpringGameChessController {
         this.gameService = gameService;
     }
 
-    @GetMapping(path = "/start/{roomId}")
+    @PatchMapping(path = "/start/{roomId}")
     public ResponseEntity<PathResponse> start(@PathVariable Long roomId) {
         gameService.startGame(roomId);
         return respondPath(String.format(MAIN_PATH_FORMAT, roomId));
     }
 
-    @GetMapping(path = "/end/{roomId}")
+    @PatchMapping(path = "/end/{roomId}")
     public ResponseEntity<PathResponse> end(@PathVariable Long roomId) {
         gameService.finishGame(roomId);
         return respondPath(ROOT_PATH);
     }
 
-    @PostMapping(path = "/move/{roomId}")
+    @PatchMapping(path = "/move/{roomId}")
     public ResponseEntity<GameStateResponse> move(
         @PathVariable Long roomId,
         @RequestBody String body) {

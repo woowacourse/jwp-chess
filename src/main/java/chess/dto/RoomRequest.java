@@ -1,10 +1,12 @@
 package chess.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RoomRequest {
 
     @JsonProperty("room_name")
+    @JsonAlias("roomName")
     private final String roomName;
     private final String password;
 

@@ -9,10 +9,7 @@ import chess.domain.game.Movement;
 import chess.domain.game.dao.MovementDAO;
 import chess.domain.gameRoom.dto.ChessGameRoomInfoDTO;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import chess.exception.InvalidDBFailException;
 import chess.exception.InvalidMoveException;
 import org.springframework.stereotype.Service;

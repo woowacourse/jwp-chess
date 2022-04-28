@@ -3,12 +3,17 @@ package chess;
 import chess.dao.WebChessBoardDao;
 import chess.dao.WebChessPieceDao;
 import chess.dao.WebChessPositionDao;
+import chess.domain.game.BoardMapper;
+import chess.domain.game.Mapper;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
+import chess.domain.pieces.Piece;
+import chess.domain.position.Position;
 import chess.dto.MoveDto;
 import chess.entities.ChessGame;
 import io.restassured.RestAssured;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,6 +47,15 @@ class SpringChessApplicationTests {
         ChessGame board = boardDao.save(
                 new ChessGame("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린")), "1111"));
         this.boardId = board.getId();
+        Mapper mapper = new BoardMapper();
+        final Map<Position, Piece> initialize = mapper.initialize();
+        positionDao.saveAll(board.getId());
+        for (Position position : initialize.keySet()) {
+            int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),
+                    board.getId());
+            final Piece piece = initialize.get(position);
+            pieceDao.save(new Piece(piece.getColor(), piece.getType(), lastPositionId));
+        }
     }
 
     @DisplayName("이동 명령어로 말을 움직인다.")

@@ -1,10 +1,21 @@
 package chess.controller;
 
+import chess.domain.member.Member;
+import chess.domain.pieces.Color;
+import chess.domain.pieces.Piece;
+import chess.domain.position.Position;
+import chess.dto.BoardDto;
 import chess.dto.GameStatusDto;
 import chess.dto.MoveDto;
 import chess.dto.NewGameInfoDto;
+import chess.dto.RoomDto;
+import chess.dto.RoomsDto;
 import chess.dto.StatusDto;
+import chess.entities.ChessGame;
 import chess.service.GameService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,31 +39,44 @@ public class ChessController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("boards", gameService.getRooms());
+        List<RoomDto> boardsDto = new ArrayList<>();
+        List<ChessGame> boards = gameService.findAllBoard();
+        for (ChessGame board : boards) {
+            boardsDto.add(new RoomDto(board.getId(), board.getRoomTitle(), board.getMembers().get(0),
+                    board.getMembers().get(1)));
+        }
+        model.addAttribute("boards", new RoomsDto(boardsDto));
         return "home";
     }
 
     @PostMapping("/room")
     public String createRoom(@ModelAttribute NewGameInfoDto newGameInfoDto) {
-        int roomId = gameService.createBoard(newGameInfoDto).getId();
+        final ChessGame board = new ChessGame(newGameInfoDto.getTitle(), Color.WHITE,
+                List.of(new Member(newGameInfoDto.getFirstMemberName()),
+                        new Member(newGameInfoDto.getSecondMemberName())),
+                newGameInfoDto.getPassword());
+        int roomId = gameService.createBoard(board).getId();
         return "redirect:/room/" + roomId;
     }
 
     @GetMapping("/room/{roomId}")
     public String showRoom(@PathVariable("roomId") int id, Model model) {
         model.addAttribute("roomId", id);
-        model.addAttribute("board", gameService.getBoard(id));
+        ChessGame board = gameService.getBoard(id);
+        Map<String, Piece> pieces = gameService.getPieces(id);
+        model.addAttribute("board",
+                BoardDto.of(pieces, board.getRoomTitle(), board.getMembers().get(0), board.getMembers().get(1)));
         return "index";
     }
 
     @ResponseBody
     @PostMapping("/room/{roomId}/move")
-    public ResponseEntity<GameStatusDto> movePiece(@PathVariable("roomId") int id, @RequestBody MoveDto moveDto) {
-        if (gameService.isEnd(id)) {
+    public ResponseEntity<GameStatusDto> movePiece(@PathVariable("roomId") int roomId, @RequestBody MoveDto moveDto) {
+        if (gameService.isEnd(roomId)) {
             throw new IllegalArgumentException("게임이 이미 끝났다.");
         }
-        gameService.move(id, moveDto.getStart(), moveDto.getTarget());
-        return ResponseEntity.ok(new GameStatusDto(gameService.isEnd(id)));
+        gameService.move(roomId, Position.of(moveDto.getStart()), Position.of(moveDto.getTarget()));
+        return ResponseEntity.ok(new GameStatusDto(gameService.isEnd(roomId)));
     }
 
     @PostMapping("/room/{roomId}/end")

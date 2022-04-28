@@ -39,29 +39,10 @@ public class SpringChessController {
         return "board";
     }
 
-    @GetMapping("/board/{gameId}")
-    @ResponseBody
-    public ResponseEntity<BoardDto> getBoardPieces(@PathVariable int gameId) {
-        return ResponseEntity.ok(chessService.getBoard(gameId));
-    }
-
-    @PutMapping("/new-board/{gameId}")
-    public ResponseEntity<Object> initBoard(@PathVariable int gameId) {
-        chessService.initGame(gameId);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/board")
+    @PostMapping("/game")
     public String createGame(@RequestParam String name, @RequestParam String password) {
         chessService.createGame(name.trim(), password);
         return "redirect:/";
-    }
-
-    @PostMapping("/move/{gameId}")
-    public String requestMove(@PathVariable int gameId, @RequestParam String from,
-                              @RequestParam String to) {
-        chessService.move(gameId, from, to);
-        return "redirect:../game/" + gameId;
     }
 
     @GetMapping("/status/{gameId}")
@@ -70,17 +51,5 @@ public class SpringChessController {
         chessService.endGame(gameId);
         model.addAttribute("status", status);
         return "result";
-    }
-
-    @GetMapping("/game-end/{gameId}")
-    public String requestEndGame(@PathVariable int gameId) {
-        chessService.endGame(gameId);
-        return "redirect:../";
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseBody
-    public ResponseEntity<String> handleError(Exception ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }

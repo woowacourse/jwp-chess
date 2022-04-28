@@ -62,7 +62,7 @@ public class ChessService {
         return new ChessGame(Color.valueOf(game.getTurn()), status);
     }
 
-    public Board getBoardFromDao(int id) {
+    private Board getBoardFromDao(int id) {
         Map<Square, Piece> pieces = convertPieces(pieceDao.getBoardByGameId(id));
         return new Board(pieces);
     }

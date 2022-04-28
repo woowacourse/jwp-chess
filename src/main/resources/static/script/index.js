@@ -12,7 +12,8 @@ async function deleteGame(event) {
         method: 'DELETE'
     })
     if (!res.ok) {
-        alert(res.json())
+        const message = await res.text()
+        alert(message)
         return
     }
     target.closest('tr').innerHTML = '';

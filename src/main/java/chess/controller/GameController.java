@@ -7,6 +7,7 @@ import chess.dto.GameDto;
 import chess.dto.MoveRouteDto;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,14 +39,14 @@ public class GameController {
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
     }
 
-    @PostMapping("/move")
+    @PostMapping("/{id}")
     public ModelAndView playGame(@RequestBody MoveRouteDto moveRoute) {
         chessService.playGame(moveRoute);
         GameDto gameDto = chessService.findGame(moveRoute.getId());
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
     }
 
-    @PostMapping("/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@RequestBody DeleteGameRequest deleteGameRequest) {
         chessService.deleteGame(deleteGameRequest);
     }

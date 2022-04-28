@@ -15,10 +15,11 @@ const deleteBoard = async (event) => {
     const id = form.parentElement.getElementsByClassName("id")[0].textContent;
     const response = await fetch("/game/"+id, {
         headers: {'Content-Type': 'application/json'},
-        method: 'post',
+        method: 'delete',
         body: toBody(event.target)
     });
 
+console.log(toBody(event.target));
     if (!response.ok) {
         return alert(await response.text());
     }

@@ -12,7 +12,7 @@ const updateGame = async (source, target, id) => {
         method: "post",
         body: JSON.stringify({source, target, id})
     };
-    const response = await fetch('/game/move', config);
+    const response = await fetch('/game/'+id, config);
     if (!response.ok) {
         const errorMessage = await response.text();
         return alert(errorMessage);

@@ -41,17 +41,21 @@ function putPieceInSquare(board) {
          if (position.hasChildNodes()) {
               position.removeChild(position.firstChild);
          }
-         const img = document.createElement("img");
-         img.src = "images/" + board.values[key] + ".png";
-         img.className = "piece-img"
-         position.appendChild(img);
+         if (board.values[key] !== "NONE_NONE") {
+            const img = document.createElement("img");
+            img.src = "images/" + board.values[key] + ".png";
+            img.className = "piece-img"
+            position.appendChild(img);
+         }
     })
 }
 
 function removePieceInSquare(board) {
     Object.keys(board.values).forEach(function (key) {
          let position = document.getElementById(key);
-         position.removeChild(position.firstChild);
+         if (position.hasChildNodes()) {
+            position.removeChild(position.firstChild);
+         }
     })
 }
 

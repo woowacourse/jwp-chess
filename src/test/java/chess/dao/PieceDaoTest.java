@@ -7,6 +7,7 @@ import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Color;
 import chess.domain.piece.King;
 import chess.domain.piece.Piece;
+import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
 import chess.dto.LogInDto;
 import java.util.List;
@@ -21,7 +22,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class PieceDaoTest {
     private static final LogInDto LOG_IN_DTO = new LogInDto("1234", "1234");
 
-
     private PieceDao pieceDao;
     private GameDao gameDao;
 
@@ -34,31 +34,31 @@ public class PieceDaoTest {
         pieceDao = new PieceDao(jdbcTemplate);
     }
 
-    @DisplayName("createAllById로 Piece 리스트를 생성한다")
+    @DisplayName("createAll로 Piece 리스트를 생성한다")
     @Test
-    void createAllById() {
+    void createAll() {
         //given
         gameDao.create(LOG_IN_DTO);
         //when
-        pieceDao.createAllById(new ChessmenInitializer().init().getPieces(), "1234");
+        pieceDao.createAll(new ChessmenInitializer().init().getPieces(), "1234");
 
         //then
         assertThat(pieceDao.findAll("1234").getPieces().size())
                 .isEqualTo(32);
     }
 
-    @DisplayName("updateAllByGameId로 해당 아이디의 Piece들의 상태를 업데이트한다")
+    @DisplayName("updateAll로 해당 아이디의 Piece들의 상태를 업데이트한다")
     @Test
-    void updateAllByGameId() {
+    void updateAll() {
         //given
         gameDao.create(LOG_IN_DTO);
         final List<Piece> pieces = new ChessmenInitializer().init().getPieces();
-        pieceDao.createAllById(pieces, "1234");
+        pieceDao.createAll(pieces, "1234");
         pieces.remove(pieces.size() - 1);
         pieces.add(new King(Color.BLACK, Position.of("h2")));
 
         //when
-        pieceDao.updateAllByGameId(pieces, "1234");
+        pieceDao.updateAll(pieces, "1234");
 
         //then
         assertThat(pieceDao.findAll("1234")
@@ -67,15 +67,29 @@ public class PieceDaoTest {
                 .isEqualTo("king");
     }
 
-    @DisplayName("deleteAllByGameId로 해당 아이디의 Piece들의 상태를 제거한다")
+    @DisplayName("findAll 로 해당 아이디의 Piece들을 반환한다")
     @Test
-    void deleteAllByGameId() {
+    void findAll() {
         //given
         gameDao.create(LOG_IN_DTO);
-        pieceDao.createAllById(new ChessmenInitializer().init().getPieces(), "1234");
+        pieceDao.createAll(new ChessmenInitializer().init().getPieces(), "1234");
 
         //when
-        pieceDao.deleteAllByGameId("1234");
+        Pieces pieces = pieceDao.findAll("1234");
+
+        //then
+        assertThat(pieces.getPieces().size()).isEqualTo(32);
+    }
+
+    @DisplayName("deleteAll 로 해당 아이디의 Piece들의 상태를 제거한다")
+    @Test
+    void deleteAll() {
+        //given
+        gameDao.create(LOG_IN_DTO);
+        pieceDao.createAll(new ChessmenInitializer().init().getPieces(), "1234");
+
+        //when
+        pieceDao.deleteAll("1234");
 
         //then
         assertThat(pieceDao.findAll("1234").getPieces().size()).isEqualTo(0);

@@ -39,17 +39,17 @@ public class GameDao {
                 Color.of(resultSet.getString("turn")), gameId);
     }
 
-    public void updateTurnById(Color nextTurn, String gameId) {
+    public void updateTurn(Color nextTurn, String gameId) {
         final String sql = "update game set turn = ? where id = ?";
         jdbcTemplate.update(sql, nextTurn.getName(), gameId);
     }
 
-    public void updateForceEndFlagById(boolean forceEndFlag, String gameId) {
+    public void updateForceEndFlag(boolean forceEndFlag, String gameId) {
         final String sql = "update game set force_end_flag = ? where id = ?";
         jdbcTemplate.update(sql, forceEndFlag, gameId);
     }
 
-    public void deleteById(String gameId) {
+    public void delete(String gameId) {
         final String sql = "delete from game where id = ?";
 
         jdbcTemplate.update(sql, gameId);

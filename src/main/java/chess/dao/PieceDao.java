@@ -17,8 +17,7 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional
-    public void createAllById(List<Piece> pieces, String gameId) {
+    public void createAll(List<Piece> pieces, String gameId) {
         final String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, pieces, pieces.size(),
@@ -31,7 +30,7 @@ public class PieceDao {
         );
     }
 
-    public void updateAllByGameId(List<Piece> pieces, String  gameId) {
+    public void updateAll(List<Piece> pieces, String  gameId) {
         final String sql = "UPDATE piece SET position = ? "
                 + "WHERE game_id = ? "
                 + "AND name = ? "
@@ -59,7 +58,7 @@ public class PieceDao {
         return new Pieces(pieces);
     }
 
-    public void deleteAllByGameId(String gameId) {
+    public void deleteAll(String gameId) {
         final String sql = "delete from piece where game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }

@@ -27,9 +27,9 @@ public class GameDaoTest {
         gameDao = new GameDao(jdbcTemplate);
     }
 
-    @DisplayName("createById로 새 게임을 생성한다")
+    @DisplayName("create로 새 게임을 생성한다")
     @Test
-    void createById() {
+    void create() {
         gameDao.create(LOG_IN_DTO);
         assertThat(gameDao.isInId("1234")).isTrue();
     }
@@ -48,7 +48,7 @@ public class GameDaoTest {
         assertThat(gameDao.findForceEndFlag("1234")).isFalse();
     }
 
-    @DisplayName("findForceEndFlagById에서 존재하지 않는 게임아이디 조회시 예외가 발생한다")
+    @DisplayName("findForceEndFlag에서 존재하지 않는 게임아이디 조회시 예외가 발생한다")
     @Test
     void findForceEndFlagByIdError() {
         gameDao.create(LOG_IN_DTO);
@@ -56,41 +56,54 @@ public class GameDaoTest {
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
-    @DisplayName("findTurnById에서 첫 이동불가능한 turn은 black이다")
+    @DisplayName("findTurn에서 첫 이동불가능한 turn은 black이다")
     @Test
-    void findTurnById() {
+    void findTurn() {
         gameDao.create(LOG_IN_DTO);
         assertThat(gameDao.findTurn("1234")).isEqualTo(Color.BLACK);
     }
 
-    @DisplayName("updateTurnById로 게임을 업데이트한다")
+    @DisplayName("updateTurn로 게임을 업데이트한다")
     @Test
     void updateTurnById() {
         gameDao.create(LOG_IN_DTO);
-        gameDao.updateTurnById(Color.WHITE, "1234");
+        gameDao.updateTurn(Color.WHITE, "1234");
         assertThat(gameDao.findTurn("1234")).isEqualTo(Color.WHITE);
     }
 
-    @DisplayName("updateForceEndFlagById를 통해 force_end_flag를 업데이트한다")
+    @DisplayName("updateForceEndFlag를 통해 force_end_flag를 업데이트한다")
     @Test
-    void updateForceEndFlagById() {
+    void updateForceEndFlag() {
         gameDao.create(LOG_IN_DTO);
-        gameDao.updateForceEndFlagById(true, "1234");
+        gameDao.updateForceEndFlag(true, "1234");
         assertThat(gameDao.findForceEndFlag("1234")).isEqualTo(true);
     }
 
-    @DisplayName("deleteById로 게임을 삭제한다")
+    @DisplayName("delete로 게임을 삭제한다")
     @Test
-    void deleteById() {
+    void delete() {
         gameDao.create(LOG_IN_DTO);
         assertThat(gameDao.isInId("1234")).isTrue();
-        gameDao.deleteById("1234");
+        gameDao.delete("1234");
         assertThat(gameDao.isInId("1234")).isFalse();
     }
 
-//    @DisplayName("isValidPassword로 올바른 패스워드인지 확인한다")
-//    @Test
-//    void isValidPassword() {
-//
-//    }
+    @DisplayName("isValidPassword로 유효한 아이디의 패스워드인지 확인한다")
+    @Test
+    void isValidPassword() {
+        gameDao.create(LOG_IN_DTO);
+        assertThat(gameDao.isValidPassword(LOG_IN_DTO)).isTrue();
+        assertThat(gameDao
+                .isValidPassword(new LogInDto("1234","12345")))
+                .isFalse();
+    }
+
+    @DisplayName("findAllGame로 모든 게임방 리스트를 반환한다")
+    @Test
+    void findAllGame() {
+        gameDao.create(LOG_IN_DTO);
+        gameDao.create(new LogInDto("2","1234"));
+        gameDao.create(new LogInDto("3","1234"));
+        assertThat(gameDao.findAllGame().size()).isEqualTo(3);
+    }
 }

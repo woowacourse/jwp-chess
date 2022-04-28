@@ -1,7 +1,5 @@
 package chess.controller.dto;
 
-import chess.domain.GameState;
-
 public class GameDto {
 
     private int id;

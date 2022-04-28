@@ -3,9 +3,13 @@ package chess.dao;
 import chess.domain.Camp;
 import chess.domain.ChessGame;
 import chess.dto.GameDto;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,9 +20,17 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void create(ChessGame chessGame) {
+    public int create(ChessGame chessGame) {
         final String sql = "insert into game (title, password, white_turn) values (?, ?, true)";
-        jdbcTemplate.update(sql, chessGame.getTitle(), chessGame.getPassword());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"no"});
+            ps.setString(1, chessGame.getTitle());
+            ps.setString(2, chessGame.getPassword());
+            return ps;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
     public void save() {
@@ -53,5 +65,18 @@ public class GameDao {
                 resultSet.getInt("no"),
                 resultSet.getString("title")
         ));
+    }
+
+    public void deleteById(int id) {
+        final String sql = "delete from game where no = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    public ChessGame findById(int id) {
+        final String sql = "select title, password from game where no = ?";
+        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new ChessGame(
+                resultSet.getString("title"),
+                resultSet.getString("password")
+        ), id);
     }
 }

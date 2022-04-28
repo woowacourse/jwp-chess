@@ -1,8 +1,8 @@
 package chess.dto;
 
 public class GameDto {
-    private final int id;
-    private final String title;
+    private int id;
+    private String title;
 
     public GameDto(int id, String title) {
         this.id = id;

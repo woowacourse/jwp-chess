@@ -156,4 +156,13 @@ public class GameService {
     public Map<Position, Piece> getBoard() {
         return chessGame.getBoardSquares();
     }
+
+    public void deleteGame(int id, Map<String, String> request) {
+        String password = request.get("password");
+        ChessGame savedChessGame = gameDao.findById(id);
+        if (savedChessGame.incorrectPassword(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        gameDao.deleteById(id);
+    }
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chess Games</title>
+</head>
+
+<body>
+<h3>체스방을 삭제하시겠습니까?</h3>
+<form action="/delete/{{id}}" method="post" class="delete-game">
+    <div>
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" required>
+    </div><br>
+    <div>
+        <input type="submit" value="delete">
+    </div>
+</form>
+</body>
+</html>

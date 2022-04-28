@@ -16,7 +16,7 @@
             <tr>
                 <td>{{title}}</td>
                 <td><button>enter</button></td>
-                <td><button>delete</button></td>
+                <td><button id="delete-game" onclick="delete_game({{id}});">delete</button></td>
             </tr>
         {{/each}}
     </table>
@@ -24,6 +24,10 @@
 <script type="text/javascript">
     document.getElementById("create-game").onclick = function () {
         location.href = "/create";
+    }
+
+    function delete_game(id) {
+        location.href = "/delete/" + id;
     }
 </script>
 </html>

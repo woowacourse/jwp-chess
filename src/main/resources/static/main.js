@@ -14,37 +14,38 @@ async function fetchAsGet(path) {
     return response.json();
 }
 
-const fetchBoard = async () => {
-    return fetchAsGet("board");
+const fetchBoard = async (id) => {
+    return fetchAsGet("board/" + id);
 }
 
-const fetchCurrentTurn = async () => {
-    return fetchAsGet("turn");
+const fetchCurrentTurn = async (id) => {
+    return fetchAsGet("turn/" + id);
 }
 
-const fetchScore = async () => {
-    return fetchAsGet("score");
+const fetchScore = async (id) => {
+    return fetchAsGet("score/" + id);
 }
 
-const fetchWinner = async () => {
-    return fetchAsGet("winner");
+const fetchWinner = async (id) => {
+    return fetchAsGet("winner/" + id);
 }
 
-const move = async (from, to) => {
-    await fetch("move", {
+const move = async (from, to, id) => {
+    await fetch("move/" + id, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({from, to})
     });
-    await render();
+    
+    await render(id);
 }
 
-const renderBoard = async () => {
+const renderBoard = async (id) => {
     clear();
 
-    const board = await fetchBoard();
+    const board = await fetchBoard(id);
     let html = "";
     Y_AXES.forEach((yAxis, i) => {
         html += "<div class='row'>";
@@ -73,14 +74,14 @@ const handleClickTile = async (coordinate) => {
     } else if (!to) {
         to = coordinate;
 
-        await move(from, to);
+        await move(from, to, parseQueryString().id);
         from = null;
         to = null;
     }
 }
 
-const renderCurrentTurn = async () => {
-    const currentTurn = await fetchCurrentTurn();
+const renderCurrentTurn = async (id) => {
+    const currentTurn = await fetchCurrentTurn(id);
 
     let turn = "";
     if (currentTurn.pieceColor === "WHITE") {
@@ -94,8 +95,8 @@ const renderCurrentTurn = async () => {
     document.getElementById("turn").innerHTML = `현재차례: ${turn}`;
 }
 
-const renderScore = async () => {
-    const score = await fetchScore();
+const renderScore = async (id) => {
+    const score = await fetchScore(id);
 
     let html = "";
     html += `백: ${score.white}<br/>`;
@@ -104,9 +105,9 @@ const renderScore = async () => {
     document.getElementById("score").innerHTML = html;
 }
 
-const renderWinner = async () => {
+const renderWinner = async (id) => {
     try {
-        const winner = await fetchWinner();
+        const winner = await fetchWinner(id);
 
         if (winner.pieceColor) {
             let color = "";
@@ -129,15 +130,26 @@ const clear = () => {
     document.getElementById("winner").innerHTML = "";
 }
 
-const render = async () => {
+const render = async (id) => {
     clear();
-    await renderBoard();
-    await renderCurrentTurn();
-    await renderScore();
-    await renderWinner();
+    await renderBoard(id);
+    await renderCurrentTurn(id);
+    await renderScore(id);
+    await renderWinner(id);
 }
 
 window.onload = async () => {
-    await render();
+    const id = parseQueryString().id;
+    await render(id);
 }
 
+const parseQueryString = () => {
+    const params = {};
+    console.log(window.location.search);
+    window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+        (str, key, value) => {
+            params[key] = value;
+        }
+    );
+    return params;
+}

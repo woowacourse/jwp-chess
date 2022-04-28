@@ -2,24 +2,21 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>체스</title>
+    <title>체스 게임</title>
+    <script>
+        function makeRoom() {
+            location.href = "makingRoom.html";
+        }
 
-    <script src="./main.js"></script>
-    <link href="./style.css" rel="stylesheet"/>
+        function inquireRoom() {
+            location.href = "inquiringRoom.html";
+        }
+    </script>
+
 </head>
 <body>
-
-<div id="board">
-</div>
-
-<div id="turn">
-</div>
-
-<div id="score">
-</div>
-
-<div id="winner">
-</div>
-
+<button onclick="makeRoom()">방 생성</button>
+<br>
+<button onclick="inquireRoom()">방 조회</button>
 </body>
 </html>

@@ -36,7 +36,7 @@ public class ChessSpringController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute GameDto gameDto) {
-        int gameId = chessGameService.create(gameDto);
+        chessGameService.create(gameDto);
         return "redirect:/";
     }
 

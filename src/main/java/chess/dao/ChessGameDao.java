@@ -32,7 +32,10 @@ public class ChessGameDao {
     public void delete(final ChessGameEntity chessGameEntity) {
         String deleteSql = "delete from chess_game where id=:id and password=:password";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
-        namedParameterJdbcTemplate.update(deleteSql, source);
+        int deleteSize = namedParameterJdbcTemplate.update(deleteSql, source);
+        if (deleteSize == 0) {
+            throw new IllegalArgumentException("[ERROR] 비밀번호가 잘못되었습니다!");
+        }
     }
 
     public ChessGameEntity load(final long id) {
@@ -61,6 +64,12 @@ public class ChessGameDao {
 
     public void updateIsOnAndTurn(final ChessGameEntity chessGameEntity) {
         String updateSql = "update chess_game set is_on=:isOn, team_value_of_turn=:teamValueOfTurn where id=:id";
+        SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
+        namedParameterJdbcTemplate.update(updateSql, source);
+    }
+
+    public void updateIsOn(final ChessGameEntity chessGameEntity) {
+        String updateSql = "update chess_game set is_on=:isOn where id=:id";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(updateSql, source);
     }

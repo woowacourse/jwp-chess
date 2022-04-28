@@ -92,4 +92,8 @@ public class ChessGameService {
         chessGameDao.updateIsOnAndTurn(new ChessGameEntity(chessGameId, true, new Turn(Team.WHITE)));
         boardDao.save(BoardEntity.generateBoardEntities(chessGameId, BoardFactory.createInitChessBoard().getBoard()));
     }
+
+    public void endChessGame(final long chessGameId) {
+        chessGameDao.updateIsOn(new ChessGameEntity(chessGameId, false));
+    }
 }

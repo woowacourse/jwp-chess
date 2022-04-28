@@ -57,4 +57,10 @@ public class GameController {
         return new RedirectView("/games/" + chessGameId);
     }
 
+    @PostMapping("/end/{chessGameId}")
+    public RedirectView endChessGame(final @PathVariable long chessGameId) {
+        chessGameService.endChessGame(chessGameId);
+        return new RedirectView("/games/" + chessGameId);
+    }
+
 }

@@ -10,134 +10,140 @@ import chess.domain.chessboard.ChessBoardFactory;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
-import chess.dto.ChessPieceDto;
 import chess.dto.ChessPieceMapper;
-import chess.dto.CurrentTurnDto;
-import chess.dto.MoveRequestDto;
-import chess.dto.RoomStatusDto;
-import chess.result.EndResult;
+import chess.dto.request.MoveRequestDto;
+import chess.dto.request.RoomDeleteRequestDto;
+import chess.dto.request.RoomRequestDto;
+import chess.dto.response.PieceResponseDto;
+import chess.dto.response.RoomResponseDto;
+import chess.dto.response.ScoreResponseDto;
+import chess.entity.PieceEntity;
+import chess.entity.RoomEntity;
+import chess.exception.IllegalCommandException;
+import chess.exception.NotExistRoomException;
 import chess.result.MoveResult;
-import chess.result.StartResult;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ChessService {
 
-    private final PieceDao chessPieceDao;
+    private final PieceDao pieceDao;
     private final RoomDao roomDao;
 
     public ChessService(final PieceDao chessPieceDao, final RoomDao roomDao) {
-        this.chessPieceDao = chessPieceDao;
+        this.pieceDao = chessPieceDao;
         this.roomDao = roomDao;
     }
 
-    public List<ChessPieceDto> findAllPiece(final String roomName) {
-        checkRoomExist(roomName);
-        return chessPieceDao.findAllByRoomName(roomName);
+    public RoomResponseDto createRoom(final RoomRequestDto roomRequestDto) {
+        final RoomEntity room = new RoomEntity(roomRequestDto.getName(), roomRequestDto.getPassword(),
+                GameStatus.PLAYING.getValue(), Color.WHITE.getValue());
+
+        final RoomEntity createdRoom = roomDao.save(room);
+        initializePieces(createdRoom.getId());
+
+        return RoomResponseDto.from(createdRoom);
     }
 
-    public void initPiece(final String roomName) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
-
-        final StartResult startResult = chessGame.start();
-        updateChessPiece(roomName, startResult.getPieceByPosition());
-        updateRoomStatusTo(roomName, GameStatus.PLAYING);
+    private void initializePieces(final Long roomId) {
+        final Map<Position, ChessPiece> pieces = ChessBoardFactory.createInitPieceByPosition();
+        pieceDao.saveAllByRoomId(roomId, pieces);
     }
 
-    public MoveResult move(final String roomName, MoveRequestDto requestDto) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
+    public List<RoomResponseDto> loadAllRoom() {
+        final List<RoomEntity> rooms = roomDao.findAll();
+        return rooms.stream()
+                .map(RoomResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
+    public RoomResponseDto loadRoom(final long id) {
+        final RoomEntity room = roomDao.findById(id);
+        return RoomResponseDto.from(room);
+    }
+
+    public void deleteRoom(final long id,  final RoomDeleteRequestDto roomDeleteRequestDto) {
+        final RoomEntity room = roomDao.findById(id);
+
+        if (!room.isSamePassword(roomDeleteRequestDto.getPassword())) {
+            throw new IllegalCommandException("비밀번호가 일치하지 않습니다.");
+        }
+        if (!room.isEnd()) {
+            throw new IllegalCommandException("게임이 진행중인 방은 삭제할 수 없습니다.");
+        }
+
+        roomDao.deleteById(id);
+    }
+
+    public List<PieceResponseDto> loadAllPiece(final Long roomId) {
+        if (!roomDao.isExistName(roomId)) {
+            throw new NotExistRoomException("방이 존재하지 않아 기물 정보를 불러올 수 없습니다.");
+        }
+
+        final List<PieceEntity> pieces = pieceDao.findAllByRoomId(roomId);
+        return pieces.stream()
+                .map(PieceResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
+    public void movePiece(final long roomId, MoveRequestDto requestDto) {
+        if (!roomDao.isExistName(roomId)) {
+            throw new NotExistRoomException("방이 존재하지 않아 기물을 움직일 수 없습니다.");
+        }
+
+        final ChessGame chessGame = generateGame(roomId);
         final Position from = requestDto.getFrom();
         final Position to = requestDto.getTo();
 
         final MoveResult moveResult = chessGame.move(from, to);
-        updatePosition(roomName, from, to);
-        updateRoom(roomName, moveResult.getGameStatus(), moveResult.getCurrentTurn());
-
-        return moveResult;
+        updatePosition(roomId, from, to);
+        updateRoom(roomId, moveResult.getGameStatus(), moveResult.getCurrentTurn());
     }
 
-    private void updatePosition(final String roomName, final Position from, final Position to) {
-        chessPieceDao.deleteByPosition(roomName, to);
-        chessPieceDao.update(roomName, from, to);
-    }
-
-    public Score findScore(final String roomName) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
-
-        return chessGame.calculateScore();
-    }
-
-    public EndResult result(final String roomName) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
-
-        final EndResult result = chessGame.end();
-        updateRoomStatusTo(roomName, GameStatus.END);
-
-        return result;
-    }
-
-    private void checkRoomExist(final String roomName) {
-        if (!roomDao.isExistName(roomName)) {
-            throw new IllegalArgumentException("존재하지 않는 방 입니다.");
-        }
-    }
-
-    private ChessGame findGameByRoomName(final String roomName) {
-        Map<Position, ChessPiece> pieceByPosition = initAllPiece(roomName);
-        Color currentTurn = initCurrentTurn(roomName);
-        GameStatus gameStatus = initGameStatus(roomName);
-
-        return new ChessGame(new ChessBoard(pieceByPosition, currentTurn), gameStatus);
-    }
-
-    private Map<Position, ChessPiece> initAllPiece(final String roomName) {
-        final List<ChessPieceDto> dtos = chessPieceDao.findAllByRoomName(roomName);
-        if (dtos.isEmpty()) {
-            return ChessBoardFactory.createInitPieceByPosition();
-        }
-
-        return dtos.stream()
+    private ChessGame generateGame(final long roomId) {
+        final RoomEntity room = roomDao.findById(roomId);
+        final Map<Position, ChessPiece> pieces = pieceDao.findAllByRoomId(roomId)
+                .stream()
                 .collect(Collectors.toMap(
-                        chessPieceDto -> Position.from(chessPieceDto.getPosition()),
-                        chessPieceDto -> ChessPieceMapper.toChessPiece(chessPieceDto.getPieceType(),
-                                chessPieceDto.getColor())
+                        piece -> Position.from(piece.getPosition()),
+                        piece -> ChessPieceMapper.toChessPiece(piece.getType(), piece.getColor())
                 ));
+
+        return new ChessGame(new ChessBoard(pieces, Color.from(room.getTurn())), GameStatus.from(room.getStatus()));
     }
 
-    private Color initCurrentTurn(final String roomName) {
-        final CurrentTurnDto dto = roomDao.findCurrentTurnByName(roomName);
-        if (Objects.isNull(dto)) {
-            return Color.WHITE;
+    private void updatePosition(final long roomId, final Position from, final Position to) {
+        pieceDao.deleteByRoomIdAndPosition(roomId, to.getValue());
+        pieceDao.updatePositionByRoomId(roomId, from.getValue(), to.getValue());
+    }
+
+    private void updateRoom(final long roomId, final GameStatus status, final Color turn) {
+        roomDao.updateStatusById(roomId, status.getValue());
+        roomDao.updateTurnById(roomId, turn.getValue());
+    }
+
+    public ScoreResponseDto loadScore(final long roomId) {
+        if (!roomDao.isExistName(roomId)) {
+            throw new NotExistRoomException("방이 존재하지 않아 점수를 불러올 수 없습니다.");
         }
-        return dto.getCurrentTurn();
+
+        final ChessGame chessGame = generateGame(roomId);
+        final Score score = chessGame.calculateScore();
+        return ScoreResponseDto.from(score);
     }
 
-    private GameStatus initGameStatus(final String roomName) {
-        final RoomStatusDto dto = roomDao.findStatusByName(roomName);
-        if (Objects.isNull(dto)) {
-            return GameStatus.READY;
+    public void end(final long roomId) {
+        if (!roomDao.isExistName(roomId)) {
+            throw new NotExistRoomException("방이 존재하지 않아 게임을 종료할 수 없습니다.");
         }
-        return dto.getGameStatus();
-    }
 
-    private void updateChessPiece(final String roomName, final Map<Position, ChessPiece> pieceByPosition) {
-        chessPieceDao.deleteAllByRoomName(roomName);
-        chessPieceDao.saveAll(roomName, pieceByPosition);
-    }
-
-    private void updateRoom(final String roomName, final GameStatus gameStatus, final Color currentTurn) {
-        roomDao.update(roomName, gameStatus, currentTurn);
-    }
-
-    private void updateRoomStatusTo(final String roomName, final GameStatus gameStatus) {
-        roomDao.updateStatusTo(roomName, gameStatus);
+        final ChessGame chessGame = generateGame(roomId);
+        chessGame.end();
+        roomDao.updateStatusById(roomId, GameStatus.END.getValue());
     }
 }

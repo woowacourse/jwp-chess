@@ -3,6 +3,7 @@ package chess.domain;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.chessboard.ChessBoardFactory;
 import chess.domain.position.Position;
+import chess.exception.IllegalCommandException;
 import chess.result.EndResult;
 import chess.result.MoveResult;
 import chess.result.StartResult;
@@ -23,7 +24,7 @@ public class ChessGame {
     }
 
     public MoveResult move(final Position from, final Position to) {
-        gameStatus.checkPlaying();
+        checkMove();
 
         final MoveResult result = chessBoard.move(from, to);
         if (chessBoard.isKingDie()) {
@@ -31,6 +32,12 @@ public class ChessGame {
             result.changeStatusToKingDie();
         }
         return result;
+    }
+
+    private void checkMove() {
+        if (!gameStatus.isPlaying()) {
+            throw new IllegalCommandException("게임이 진행중일 때만 기물을 움직일 수 있습니다.");
+        }
     }
 
     public Score calculateScore() {
@@ -47,13 +54,16 @@ public class ChessGame {
         return new StartResult(chessBoard.findAllPiece());
     }
 
-    public EndResult end() {
+    public void end() {
+        checkEnd();
         gameStatus = GameStatus.END;
         final Score score = new Score(chessBoard.findAllPiece());
-        return new EndResult(score);
+        new EndResult(score);
     }
 
-    public boolean canPlay() {
-        return !gameStatus.isEnd();
+    private void checkEnd() {
+        if (gameStatus.isEnd()) {
+            throw new IllegalCommandException("이미 게임이 종료되었습니다.");
+        }
     }
 }

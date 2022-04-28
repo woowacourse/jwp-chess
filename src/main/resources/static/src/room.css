@@ -7,22 +7,34 @@ body, button {
     font-family: "Hanna", sans-serif;
 }
 
-body {
-    background: dimgray;
+.main-container {
+    width: 400px;
+    margin: 30px auto;
+    text-align: center;
 }
 
-.outer_box {
-    width: 800px;
-    height: 800px;
-    margin: 50px auto 50px 200px;
-    float: left;
+.outer-box {
+    width: 400px;
+    border: 4px solid lavender;
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
 }
 
-.score_board {
-    width: 300px;
-    height: 600px;
-    margin: 150px 50px;
-    float: left;
+.inner-box.white {
+    background-color: lavender;
+}
+
+.inner-box.black {
+    background-color: mediumpurple;
+}
+
+.inner-box.selected {
+    background-color: blue !important;
+}
+
+.info-container {
+    width: 400px;
 }
 
 .inner_score {
@@ -33,84 +45,40 @@ body {
     text-align: center;
 }
 
-.turn {
-    width: 300px;
-    height: 200px;
-    margin-bottom: 20px;
-    float: top;
-    text-align: center;
+.turn-group {
+    height: 110px;
 }
 
-.turn_box {
-    width: 130px;
-    height: 130px;
-    float: left;
-    padding: 10px;
+.turn-box {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+}
+
+.turn-box > img {
+    width: 45px;
+    padding: 2.5px;
 }
 
 .win_text {
-    width: 140px;
-    height: 50px;
-    text-align: center;
-    font-size: xxx-large;
-    font-weight: bolder;
     visibility: hidden;
 }
 
 .draw_text {
-    width: 300px;
-    height: 50px;
-    padding-top: 160px;
-    text-align: center;
-    font-size: xxx-large;
-    font-weight: bolder;
+    margin: 2px 0;
     visibility: hidden;
 }
 
-.inner_box {
-    width: 100px;
-    height: 100px;
-    float: left;
-    text-align: center;
-    display: table;
-}
-
-.inner_box > div {
-    vertical-align: middle;
-    display: table-cell
-}
-
-.black {
-    background-color: grey;
-    color: white;
-}
-
-.white {
-    background-color: white;
-    color: black;
-}
-
-.ui-button {
-    width: 100px;
-    height: 50px;
-    font-size: x-large;
-}
-
-.score {
-    font-size: larger;
-    font-weight: bold;
-    text-align: center;
-}
-
-.error {
-    font-size: larger;
-    font-weight: bold;
-    text-align: center;
-    color: darkred;
+.menu-group {
+    margin: 5px 0;
 }
 
 .piece_img {
-    height: 80px;
-    width: 80px;
-    padding: 5px;
+    width: 100%;
+}
+
+.error {
+    font-weight: bold;
+    margin: 20px;
+    color: darkred;
 }

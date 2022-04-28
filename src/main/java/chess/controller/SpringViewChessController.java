@@ -13,6 +13,9 @@ import chess.service.GameService;
 @Controller
 public class SpringViewChessController {
 
+    public static final String MAIN_PATH_FORMAT = "/main/%d";
+    public static final String ROOT_PATH = "/";
+
     private final GameService gameService;
 
     @Autowired
@@ -32,4 +35,5 @@ public class SpringViewChessController {
         model.addAttribute("response", response);
         return "game";
     }
+
 }

@@ -14,42 +14,18 @@ import chess.dto.Arguments;
 import chess.dto.BoardResponse;
 import chess.dto.GameStateResponse;
 import chess.dto.PathResponse;
-import chess.dto.RoomRequest;
 import chess.service.GameService;
 
 @RestController
-public class SpringRestChessController {
+public class SpringGameChessController {
 
     private static final String MAIN_PATH_FORMAT = "/main/%d";
     private static final String ROOT_PATH = "/";
 
     private final GameService gameService;
 
-    public SpringRestChessController(GameService gameService) {
+    public SpringGameChessController(GameService gameService) {
         this.gameService = gameService;
-    }
-
-    @GetMapping(path = "/rooms")
-    public ResponseEntity<Map<Long, String>> rooms() {
-        final Map<Long, String> gameRooms = gameService.readGameRooms();
-        return ResponseEntity.ok().body(gameRooms);
-    }
-
-    @PostMapping(path = "/create")
-    public ResponseEntity<PathResponse> create(@RequestBody RoomRequest roomRequest) {
-        final Long id = gameService.createNewGame(roomRequest);
-        return respondPath(String.format(MAIN_PATH_FORMAT, id));
-    }
-
-    @GetMapping(path = "/enter/{roomId}")
-    public ResponseEntity<PathResponse> enter(@PathVariable Long roomId) {
-        return respondPath(String.format(MAIN_PATH_FORMAT, roomId));
-    }
-
-    @PostMapping(path = "/delete/{roomId}")
-    public ResponseEntity<PathResponse> delete(@PathVariable Long roomId, @RequestBody RoomRequest roomRequest) {
-        gameService.deleteGame(roomId, roomRequest);
-        return respondPath(ROOT_PATH);
     }
 
     @GetMapping(path = "/start/{roomId}")

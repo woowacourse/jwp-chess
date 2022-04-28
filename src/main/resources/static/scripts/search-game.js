@@ -3,7 +3,7 @@ const onSuccessResponse = ({id, found}) => {
         window.location.replace(`/game/${id}`);
         return;
     }
-    alert(`${id}에 해당되는 게임은 아직 만들어지지 않았습니다!`)
+    alert(`${id}에 해당되는 게임은 존재하지 않습니다!`)
 }
 
 const getTargetUrl = (event) => {

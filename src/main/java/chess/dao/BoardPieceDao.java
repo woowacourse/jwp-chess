@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 public class BoardPieceDao {
 
     private static final String SAVE_DML = "insert into board_pieces (board_piece_id, game_id, position, piece) values (?, ?, ?, ?)";
+    public static final String FIND_LAST_BOARD_PIECE_DML = "select * from board_pieces where game_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -34,8 +35,7 @@ public class BoardPieceDao {
     }
 
     public List<BoardPiece> findLastBoardPiece(String lastGameId) {
-        final String lastBoardPieceDml = "select * from board_pieces where game_id = ?";
-        final List<BoardPiece> boardPieces = jdbcTemplate.query(lastBoardPieceDml,
+        final List<BoardPiece> boardPieces = jdbcTemplate.query(FIND_LAST_BOARD_PIECE_DML,
                 (rs, rowNum) -> new BoardPiece(
                         rs.getString("board_piece_id"),
                         rs.getString("game_id"),

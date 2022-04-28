@@ -26,7 +26,7 @@ public class ChessGameService {
         this.pieceDao = pieceDao;
     }
 
-    public long addGame(GameCreationDto gameCreationDto) {
+    public Long addGame(GameCreationDto gameCreationDto) {
         ChessGame chessGame = ChessGame.initGame();
         long id = gameDao.save(createGameDto(chessGame, gameCreationDto));
         List<PieceDto> pieceDtos = convertPieceDtos(chessGame.getPieces(), id);
@@ -49,4 +49,7 @@ public class ChessGameService {
                 .collect(Collectors.toList());
     }
 
+    public GameDto getGame(Long gameId) {
+        return gameDao.findById(gameId);
+    }
 }

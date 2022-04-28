@@ -16,6 +16,7 @@ import chess.model.gamestatus.StatusType;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
 import chess.service.dto.BoardDto;
+import chess.service.dto.DeleteGameResponse;
 import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
 import java.util.List;
@@ -102,7 +103,9 @@ public class ChessService {
         return new BoardDto(pieceDao.getBoardByGameId(gameId));
     }
 
-    public int deleteGame(int gameId) {
-        return gameDao.deleteGame(gameId);
+    public DeleteGameResponse deleteGame(int gameId, String password) {
+        //password가 맞는지 확인해야됨
+        gameDao.deleteGame(gameId);
+        return new DeleteGameResponse(gameId, true);
     }
 }

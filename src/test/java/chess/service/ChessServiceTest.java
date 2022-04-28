@@ -7,6 +7,7 @@ import chess.dao.GameEntity;
 import chess.dao.InMemoryGameDao;
 import chess.dao.InMemoryPieceDao;
 import chess.dao.PieceEntity;
+import chess.service.dto.DeleteGameResponse;
 import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
 import java.util.List;
@@ -78,10 +79,10 @@ class ChessServiceTest {
 
     @Test
     void deleteGame() {
-        int affectedGames = service.deleteGame(1);
+        DeleteGameResponse affectedGames = service.deleteGame(1, "pw");
         int remainGames = service.getAllGames().getGames().size();
         assertAll(() -> {
-            assertThat(affectedGames).isOne();
+            assertThat(affectedGames.isSuccess()).isTrue();
             assertThat(remainGames).isZero();
         });
     }

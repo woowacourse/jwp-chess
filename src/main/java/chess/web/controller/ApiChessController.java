@@ -2,6 +2,9 @@ package chess.web.controller;
 
 import chess.service.ChessService;
 import chess.service.dto.BoardDto;
+import chess.service.dto.DeleteGameResponse;
+import chess.service.dto.request.DeleteGameRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,7 +37,7 @@ public class ApiChessController {
 
     @PostMapping("/move/{gameId}")
     public ResponseEntity<Object> requestMove(@PathVariable int gameId, @RequestParam String from,
-                              @RequestParam String to) {
+                                              @RequestParam String to) {
         chessService.move(gameId, from, to);
         return ResponseEntity.ok().build();
     }
@@ -45,10 +48,10 @@ public class ApiChessController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/game/{gameId}")
-    public ResponseEntity<Integer> deleteGame(@PathVariable int gameId) {
-        int affectedRows = chessService.deleteGame(gameId);
-        return ResponseEntity.ok(affectedRows);
+    @DeleteMapping("/game")
+    public ResponseEntity<DeleteGameResponse> deleteGame(@RequestBody DeleteGameRequest deleteGameRequest) {
+        return new ResponseEntity<>(chessService.deleteGame(deleteGameRequest.getId(), deleteGameRequest.getPassword())
+                , HttpStatus.OK);
     }
 
     @ExceptionHandler(RuntimeException.class)

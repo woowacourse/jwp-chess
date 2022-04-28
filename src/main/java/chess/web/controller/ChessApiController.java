@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ApiChessController {
+public class ChessApiController {
     private final ChessService chessService;
 
-    public ApiChessController(ChessService chessService) {
+    public ChessApiController(ChessService chessService) {
         this.chessService = chessService;
     }
 
@@ -63,10 +63,5 @@ public class ApiChessController {
         GameResultDto status = chessService.getResult(gameId);
         chessService.endGame(gameId);
         return new ResponseEntity<>(status, HttpStatus.OK);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleError(Exception ex) {
-        return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
     }
 }

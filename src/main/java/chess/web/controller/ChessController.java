@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-public class SpringChessController {
+public class ChessController {
 
     private final ChessService chessService;
 
-    public SpringChessController(ChessService chessService) {
+    public ChessController(ChessService chessService) {
         this.chessService = chessService;
     }
 
@@ -37,10 +37,5 @@ public class SpringChessController {
         String password = createGameRequest.getPassword();
         chessService.createGame(name, password);
         return "redirect:/";
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleError(Exception ex) {
-        return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getMessage()));
     }
 }

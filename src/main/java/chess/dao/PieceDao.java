@@ -2,14 +2,11 @@ package chess.dao;
 
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.position.Position;
-import chess.dto.ChessPieceDto;
 import chess.dto.ChessPieceMapper;
 import chess.entity.PieceEntity;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,7 +28,13 @@ public class PieceDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public void saveAllByRoomId(final List<PieceEntity> pieceEntities) {
+    public void saveAllByRoomId(final Long roomId, final Map<Position, ChessPiece> pieces) {
+        final List<PieceEntity> pieceEntities = pieces.entrySet()
+                .stream()
+                .map(entry -> new PieceEntity(roomId, entry.getKey().getValue(),
+                        ChessPieceMapper.toPieceType(entry.getValue()), entry.getValue().color().getValue()))
+                .collect(Collectors.toList());
+
         insertActor.executeBatch(SqlParameterSourceUtils.createBatch(pieceEntities));
     }
 
@@ -50,50 +53,7 @@ public class PieceDao {
         );
     }
 
-    public void deleteByRoomIdAndPosition(final Long roomId, final String position) {
-        final String sql = "delete from pieces where room_id = ? and position = ?";
-        jdbcTemplate.update(sql, roomId, position);
-    }
-
-    public int saveAll(final String roomName, final Map<Position, ChessPiece> pieceByPosition) {
-        String sql = "INSERT INTO chess_piece (room_name, position, chess_piece, color) VALUES (?, ?, ?, ?)";
-        final List<Object[]> list = setAllParameter(roomName, pieceByPosition);
-        final int[] result = jdbcTemplate.batchUpdate(sql, list);
-        return Arrays.stream(result).sum();
-    }
-
-    public List<ChessPieceDto> findAllByRoomName(final String roomName) {
-        final String sql = "SELECT * FROM chess_piece WHERE room_name = ?";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> ChessPieceDto.from(resultSet), roomName);
-    }
-
-    public int deleteByPosition(final String roomName, final Position position) {
-        final String sql = "DELETE FROM chess_piece WHERE room_name = ? AND position = ?";
-        return jdbcTemplate.update(sql, roomName, position.getValue());
-    }
-
-    public int deleteAllByRoomName(final String roomName) {
-        final String sql = "DELETE FROM chess_piece WHERE room_name = ?";
-        return jdbcTemplate.update(sql, roomName);
-    }
-
-    private List<Object[]> setAllParameter(final String roomName, final Map<Position, ChessPiece> pieceByPosition) {
-        final List<Object[]> list = new ArrayList<>();
-        for (final Entry<Position, ChessPiece> entry : pieceByPosition.entrySet()) {
-            final Position position = entry.getKey();
-            final ChessPiece chessPiece = entry.getValue();
-            Object[] array = {
-                    roomName,
-                    position.getValue(),
-                    ChessPieceMapper.toPieceType(chessPiece),
-                    chessPiece.color().getValue()
-            };
-            list.add(array);
-        }
-        return list;
-    }
-
-    public PieceEntity findByRoomIdPosition(final Long roomId, final String position) {
+    public PieceEntity findByRoomIdAndPosition(final Long roomId, final String position) {
         final String sql = "select * from pieces where room_id = ? and position = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper(), roomId, position);
     }
@@ -103,8 +63,8 @@ public class PieceDao {
         jdbcTemplate.update(sql, to, roomId, from);
     }
 
-    public int update(final String roomName, final Position from, final Position to) {
-        final String sql = "UPDATE chess_piece SET position = ? WHERE room_name = ? AND position = ?";
-        return jdbcTemplate.update(sql, to.getValue(), roomName, from.getValue());
+    public void deleteByRoomIdAndPosition(final Long roomId, final String position) {
+        final String sql = "delete from pieces where room_id = ? and position = ?";
+        jdbcTemplate.update(sql, roomId, position);
     }
 }

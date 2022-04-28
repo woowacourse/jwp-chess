@@ -1,5 +1,7 @@
 package chess.entity;
 
+import chess.domain.GameStatus;
+
 public class RoomEntity {
 
     private final Long id;
@@ -18,6 +20,14 @@ public class RoomEntity {
         this.password = password;
         this.status = status;
         this.turn = turn;
+    }
+
+    public boolean isSamePassword(final String password) {
+        return this.password.equals(password);
+    }
+
+    public boolean isEnd() {
+        return GameStatus.from(this.status) == GameStatus.END || GameStatus.from(this.status) == GameStatus.KING_DIE;
     }
 
     public Long getId() {

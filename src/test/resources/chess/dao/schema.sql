@@ -1,5 +1,5 @@
-drop table rooms if exists;
 drop table pieces if exists;
+drop table rooms if exists;
 
 create table rooms
 (

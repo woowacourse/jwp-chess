@@ -6,11 +6,7 @@ import chess.domain.chessboard.ChessBoard;
 import chess.domain.chessboard.ChessBoardFactory;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.position.Position;
-import chess.dto.ChessPieceMapper;
-import chess.entity.PieceEntity;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,13 +39,8 @@ public class PieceDaoTest {
     private void setTestData() {
         final ChessBoard chessBoard = ChessBoardFactory.createChessBoard();
         final Map<Position, ChessPiece> pieces = chessBoard.findAllPiece();
-        final List<PieceEntity> pieceEntities = pieces.entrySet()
-                .stream()
-                .map(entry -> new PieceEntity(ROOM_ID, entry.getKey().getValue(),
-                        ChessPieceMapper.toPieceType(entry.getValue()), entry.getValue().color().getValue()))
-                .collect(Collectors.toList());
 
-        pieceDao.saveAllByRoomId(pieceEntities);
+        pieceDao.saveAllByRoomId(ROOM_ID, pieces);
     }
 
     @Test
@@ -63,7 +54,7 @@ public class PieceDaoTest {
     void updatePositionByRoomId() {
         pieceDao.updatePositionByRoomId(ROOM_ID, "b2", "b3");
 
-        assertThat(pieceDao.findByRoomIdPosition(ROOM_ID, "b3").getType()).isEqualTo("pawn");
+        assertThat(pieceDao.findByRoomIdAndPosition(ROOM_ID, "b3").getType()).isEqualTo("pawn");
     }
 
     @Test

@@ -2,6 +2,7 @@ package chess.controller.gamecontroller;
 
 import static chess.view.webview.Converter.convertToWebViewPiece;
 
+import chess.dto.MoveRequestDto;
 import chess.service.ChessGameService;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
@@ -9,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class GameWebController {
@@ -37,10 +38,11 @@ public class GameWebController {
     }
 
     @PostMapping(path = "/{roomId}/move")
-    public String move(@PathVariable int roomId,
-                       @RequestParam("source") String source,
-                       @RequestParam("target") String target) {
-        chessGameService.move(roomId, source, target);
+    public String move(@PathVariable int roomId, @RequestBody MoveRequestDto moveRequest) {
+        System.out.println(moveRequest);
+        final String sourcePosition = moveRequest.getSource();
+        final String targetPosition = moveRequest.getTarget();
+        chessGameService.move(roomId, sourcePosition, targetPosition);
         return RE_DIRECT;
     }
 

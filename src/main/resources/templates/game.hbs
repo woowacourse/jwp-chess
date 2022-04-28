@@ -344,27 +344,76 @@
     </section>
 
     <section>
-        <form action="{{roomId}}/start" method="get">
-            <button>게임 시작</button>
-        </form>
-        <form action="{{roomId}}/move" accept-charset="utf-8" method="post">
-            움직일 말의 위치<input name="source" type="text">
-            이동시킬 위치<input name="target" type="text">
-            <input type="submit">
-        </form>
+        <input type="button" onclick=start() value="게임 시작">
+        <script>
+            function start() {
+                fetch('/{{roomId}}/start')
+                        .then(async res => {
+                            if (res.status === 400) {
+                                let exceptionMessage = await res.text();
+                                alert(exceptionMessage);
+                            }
+                            location.reload();
+                        })
+            }
+        </script>
+
+        움직일 말의 위치<input id="sourcePosition" name="source" type="text">
+        이동시킬 위치<input id="targetPosition" name="target" type="text">
+        <button onclick="move()">움직이자</button>
+
+        <script>
+            function move() {
+                let sourcePosition = document.getElementById("sourcePosition").value;
+                let targetPosition = document.getElementById("targetPosition").value;
+                fetch('{{roomId}}/move', {
+                    method: "post",
+                    body: JSON.stringify({
+                        source: sourcePosition,
+                        target: targetPosition
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                        .then(async res => {
+                            if (res.status === 400) {
+                                let exceptionMessage = await res.text();
+                                alert(exceptionMessage);
+                            }
+                            location.reload();
+                        })
+            }
+        </script>
 
         <input type="button" onclick=score() value="점수 계산">
         <script>
             function score() {
                 fetch('/{{roomId}}/status')
-                        .then(res => res.json())
+                        .then(async res => {
+                            if (res.ok) {
+                                let score = await res.json();
+                                alert(`white:${score.whiteScore} : black:${score.blackScore}점`)
+                            }
+                            alert(await res.text());
+                        })
                         .then(data => alert(`white:${data.whiteScore} : black:${data.blackScore}점`))
             }
         </script>
 
-        <form action="{{roomId}}/end" method="get">
-            <button>게임 종료</button>
-        </form>
+        <input type="button" onclick=end() value="게임 종료">
+        <script>
+            function end() {
+                fetch('/{{roomId}}/end')
+                        .then(async res => {
+                            if (res.status === 400) {
+                                let exceptionMessage = await res.text();
+                                alert(exceptionMessage);
+                            }
+                            location.reload();
+                        })
+            }
+        </script>
 
         <form action="/" method="get">
             <button>메인화면으로</button>

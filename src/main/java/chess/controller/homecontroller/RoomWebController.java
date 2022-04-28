@@ -1,5 +1,7 @@
 package chess.controller.homecontroller;
 
+import chess.dto.RoomCreationRequestDto;
+import chess.dto.RoomDeletionRequestDto;
 import chess.dto.RoomDto;
 import chess.service.RoomService;
 import java.util.HashMap;
@@ -7,9 +9,8 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -31,14 +32,20 @@ public class RoomWebController {
         return new ModelAndView("home", model);
     }
 
-    @GetMapping(path = "/makeRoom")
-    public String makeRoom(@RequestParam String roomName, @RequestParam String password) {
+    @PostMapping(path = "/makeRoom")
+    public String makeRoom(@RequestBody RoomCreationRequestDto roomCreationRequest) {
+        System.out.println(roomCreationRequest);
+        final String roomName = roomCreationRequest.getRoomName();
+        final String password = roomCreationRequest.getPassword();
         roomService.saveNewRoom(roomName, password);
         return RE_DIRECT;
     }
 
-    @PostMapping(path = "/deleteRoom/{roomId}")
-    public String deleteRoom(@PathVariable int roomId, @RequestParam String password) {
+    @PostMapping(path = "/deleteRoom")
+    public String deleteRoom(@RequestBody RoomDeletionRequestDto roomDeletionRequest) {
+        System.out.println(roomDeletionRequest);
+        final int roomId = roomDeletionRequest.getRoomId();
+        final String password = roomDeletionRequest.getPassword();
         roomService.deleteRoom(roomId, password);
         return RE_DIRECT;
     }

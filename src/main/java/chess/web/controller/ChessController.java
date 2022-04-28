@@ -8,6 +8,7 @@ import chess.web.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,16 +32,16 @@ public class ChessController {
         return "index";
     }
 
-    @PostMapping("/")
+    @PostMapping
     public String createGame(@RequestParam String title, @RequestParam String password) {
         int gameId = chessService.newGame(title, password);
         return "redirect:/game/" + gameId;
     }
 
-    @PostMapping("/delete")
-    public String deleteGame(@RequestBody DeleteGameRequestDto deleteGameRequestDto) {
+    @DeleteMapping
+    public ResponseEntity<?> deleteGame(@RequestBody DeleteGameRequestDto deleteGameRequestDto) {
         chessService.deleteGame(deleteGameRequestDto);
-        return "redirect:/";
+        return ResponseEntity.ok("");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

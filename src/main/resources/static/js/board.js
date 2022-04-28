@@ -32,7 +32,7 @@ const toPieceFullName = (name) => {
 const markPiece = (position, pieceKind) => {
     const piece = document.createElement("img");
     piece.className = 'chess-piece';
-    piece.src = "images/" + pieceKind + ".png";
+    piece.src = "/images/" + pieceKind + ".png";
     position.appendChild(piece);
 }
 
@@ -112,8 +112,6 @@ const load = async () => {
 }
 
 const restartChess = async (id) => {
-    console.log(id);
-    isRun = true;
     let chessMap = await fetch('/make-piece/' + id);
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);

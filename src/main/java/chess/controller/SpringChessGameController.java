@@ -39,10 +39,9 @@ public class SpringChessGameController {
         return "board";
     }
 
-    @PostMapping("/make-piece/{roomId}")
-    public ResponseEntity<String> makePiece(@PathVariable("roomId") int roomId) {
-        chessService.initializeGame(roomId);
-        return ResponseEntity.ok("게임 시작");
+    @GetMapping("/make-piece/{roomId}")
+    public ResponseEntity<ChessMap> makePiece(@PathVariable("roomId") int roomId) {
+        return ResponseEntity.ok(chessService.initializeGame(roomId));
     }
 
     @ResponseBody

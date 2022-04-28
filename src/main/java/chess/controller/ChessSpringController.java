@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.dto.ResponseDto;
 import chess.dto.RoomInfoDto;
+import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ChessSpringController {
@@ -67,6 +69,15 @@ public class ChessSpringController {
 //        modelAndView.setViewName("status");
 //        return modelAndView;
 //    }
+
+    @GetMapping("/board/chess-status")
+    public ModelAndView status(@RequestParam(name = "id") Long id){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView
+                .addObject("status", StatusDto.of(chessGameService.statusOfWhite(id), chessGameService.statusOfBlack(id)));
+        modelAndView.setViewName("status");
+        return modelAndView;
+    }
 
     @PostMapping("/end")
     public @ResponseBody

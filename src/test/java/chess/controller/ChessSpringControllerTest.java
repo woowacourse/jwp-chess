@@ -1,10 +1,14 @@
 package chess.controller;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import chess.dto.ResponseDto;
+import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
@@ -61,6 +65,19 @@ public class ChessSpringControllerTest {
                 .andExpect(content().json(responseDto.toJson()));
     }
 
+    @Test
+    @DisplayName("GET /board/chess-status 테스트")
+    void get_status() throws Exception {
+        final StatusDto statusDto = StatusDto.of(37, 37);
+        given(chessGameService.statusOfBlack(1L)).willReturn(37.0);
+        given(chessGameService.statusOfWhite(1L)).willReturn(37.0);
+
+        mockMvc.perform(get("/board/chess-status")
+                .queryParam("id", "1"))
+                .andExpect(view().name("status"))
+                .andExpect(model().attribute("status", statusDto));
+    }
+
 //    @DisplayName("chess Test- GET")
 //    @Test
 //    void get_chess() throws Exception {
@@ -82,18 +99,6 @@ public class ChessSpringControllerTest {
 //                .content(requestString))
 //                .andExpect(content().json(responseDto.toJson()));
 //
-//    }
-
-//    @DisplayName("status GET 요청 테스트")
-//    @Test
-//    void get_status() throws Exception {
-//        final StatusDto statusDto = StatusDto.of(37, 37);
-//        given(chessGameService.statusOfBlack()).willReturn(37.0);
-//        given(chessGameService.statusOfWhite()).willReturn(37.0);
-//
-//        mockMvc.perform(get("/chess-status"))
-//                .andExpect(view().name("status"))
-//                .andExpect(model().attribute("status", statusDto));
 //    }
 
 //    @DisplayName("end GET 요청 테스트")

@@ -18,12 +18,13 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long saveGame(String password) {
+    public Long saveGame(String title, String password) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into GAMES (password, turn) values (?, 'white')";
+        String sql = "insert into GAMES (title, password, turn) values (?, ?, 'white')";
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"game_id"});
-            preparedStatement.setString(1, password);
+            preparedStatement.setString(1, title);
+            preparedStatement.setString(2, password);
             return  preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -51,6 +52,11 @@ public class GameDao {
     public void deleteByGameId(Long gameId) {
         String sql = "delete from games where game_id = (?)";
         jdbcTemplate.update(sql, gameId);
+    }
+
+    public String findTitleByGameId(Long gameId) {
+        String sql = "select title from games where game_id = (?)";
+        return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }
 
     public String findPasswordByGameId(Long gameId) {

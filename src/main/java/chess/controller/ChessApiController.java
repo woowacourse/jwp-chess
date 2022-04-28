@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.model.GameResult;
 import chess.model.dto.MoveDto;
+import chess.model.dto.RoomDto;
 import chess.model.dto.WebBoardDto;
 import chess.service.ChessService;
 import java.util.List;
@@ -22,8 +23,8 @@ public class ChessApiController {
     }
 
     @PostMapping("/start/new")
-    public String startNewGame(@RequestBody String password) {
-        Long gameId = chessService.createGame(password);
+    public String startNewGame(@RequestBody RoomDto roomDto) {
+        Long gameId = chessService.createGame(roomDto.getTitle(), roomDto.getPassword());
         return gameId.toString();
     }
 

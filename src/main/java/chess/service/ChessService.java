@@ -14,6 +14,8 @@ import chess.model.piece.Empty;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceFactory;
 import chess.model.position.Position;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,12 +32,17 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public List<Long> getAllGames() {
-        return gameDao.findAllGameId();
+    public Map<Long, String> getAllGames() {
+        Map<Long, String> games = new LinkedHashMap<>();
+        for (Long gameId : gameDao.findAllGameId()) {
+            games.put(gameId, gameDao.findTitleByGameId(gameId));
+        }
+
+        return games;
     }
 
-    public Long createGame(String password) {
-        Long gameId = gameDao.saveGame(password);
+    public Long createGame(String title, String password) {
+        Long gameId = gameDao.saveGame(title, password);
         pieceDao.savePieces(BoardFactory.create(), gameId);
 
         return gameId;

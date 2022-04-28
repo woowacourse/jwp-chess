@@ -9,6 +9,10 @@ function changeButton(value) {
 }
 
 function createNewGame() {
+    const title = prompt("방 제목을 입력해주세요.");
+    if (title === null) {
+        return;
+    }
     const password = prompt("방 비밀번호를 입력해주세요.");
     if (password === null) {
         return;
@@ -16,7 +20,10 @@ function createNewGame() {
 
     fetch("/start/new", {
         method: "post",
-        body: password
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({title: title, password: password})
     }).then(async response => {
         let gameId = await response.text();
         enterGame(gameId);
@@ -25,7 +32,6 @@ function createNewGame() {
 
 function deleteGame(gameId) {
     const password = prompt("방 비밀번호를 입력해주세요.");
-    console.log(password);
     if (password === null) {
         return;
     }
@@ -91,13 +97,6 @@ function drawBoard(body) {
         block.innerHTML = '<img id = "piece-image" class="piece-image" src=' + imgSrc + '/>'
     })
 }
-
-// function initBoard() {
-//     const blocks = document.querySelectorAll('#chess-board tr td');
-//     blocks.forEach(block => {
-//         block.innerHTML = null;
-//     })
-// }
 
 function drawTurnBox(gameId) {
     const turnBox = document.getElementById("turn-box")
@@ -246,13 +245,4 @@ const isMovePositionAllSelected = () => {
 
 const quit = () => {
     location.href = "/";
-    // changeButton("start!")
-    // const turnBox = document.getElementById("turn-box")
-    // turnBox.innerText = "아직 게임 시작을 하지 않았습니다."
-    // initBoard();
-    //
-    // fetch(`/exit`, {
-    //     method: "POST",
-    //     headers: {"Content-Type": "application/json"},
-    // }).catch(error => alert("게임 정보를 삭제하는데 문제가 발생했습니다."));
 }

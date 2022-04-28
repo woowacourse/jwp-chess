@@ -28,7 +28,7 @@ class GameDaoTest {
 
     @Test
     void saveGame() {
-        Long gameId = gameDao.saveGame("pw1234");
+        Long gameId = gameDao.saveGame("title1", "pw1234");
         List<Long> games = gameDao.findAllGameId();
 
         assertThat(games).containsExactly(gameId);
@@ -36,15 +36,15 @@ class GameDaoTest {
 
     @Test
     void findTurnByGameId() {
-        Long gameId = gameDao.saveGame("pw1234");
+        Long gameId = gameDao.saveGame("title1", "pw1234");
         Optional<String> turn = gameDao.findTurnByGameId(gameId);
 
-        assertThat(turn.get()).isEqualTo("start");
+        assertThat(turn.get()).isEqualTo("white");
     }
 
     @Test
     void updateTurnByGameId() {
-        Long gameId = gameDao.saveGame("pw1234");
+        Long gameId = gameDao.saveGame("title1", "pw1234");
         gameDao.updateTurnByGameId(gameId, "white");
 
         assertThat(gameDao.findTurnByGameId(gameId).get()).isEqualTo("white");
@@ -52,15 +52,23 @@ class GameDaoTest {
 
     @Test
     void deleteByGameId() {
-        Long gameId = gameDao.saveGame("pw1234");
+        Long gameId = gameDao.saveGame("title1", "pw1234");
         gameDao.deleteByGameId(gameId);
 
         assertThat(gameDao.findAllGameId()).doesNotContain(gameId);
     }
 
     @Test
+    void findTitleByGameId() {
+        Long gameId = gameDao.saveGame("title1", "pw1234");
+        String password = gameDao.findTitleByGameId(gameId);
+
+        assertThat(password).isEqualTo("title1");
+    }
+
+    @Test
     void findPasswordByGameId() {
-        Long gameId = gameDao.saveGame("pw1234");
+        Long gameId = gameDao.saveGame("title1", "pw1234");
         String password = gameDao.findPasswordByGameId(gameId);
 
         assertThat(password).isEqualTo("pw1234");

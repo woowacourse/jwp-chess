@@ -15,8 +15,10 @@
     </tr>
     {{#each games}}
     <tr>
-        <td style="background-color:#C5E7E4;padding:5px" onclick="enterGame(this.id)" id="{{this}}"> Room {{this}} </td>
-        <td onclick="deleteGame(this.id)" id="{{this}}"> 삭제 </td>
+        <td style="background-color:#C5E7E4;padding:5px" onclick="enterGame(this.id)" id="{{@key}}">
+            Room {{@key}} - {{this}}
+        </td>
+        <td onclick="deleteGame(this.id)" id="{{@key}}"> 삭제 </td>
     </tr>
     {{/each}}
 </table>

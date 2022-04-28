@@ -11,10 +11,28 @@
     </div>
     <h2 class="main-message center-object">게임 목록</h2>
     <div>
-        {{#each games.games}}
-        <a class="center-object" href ="/board/{{this.id}}"><h2>{{this.name}}</h2></a>
+        <table class="game-table center-object" id="games">
+            <tr>
+                <td class="game-cell"><h3>게임 이름</h3></td>
+                <td class="game-cell"><h3>상태</h3></td>
+                <td class="game-cell"></td>
+            </tr>
+            {{#each games.games}}
+            <tr>
+                <td class="game-cell" id="{{this.name}}">
+                    <a href ="/game/{{this.id}}">
+                        <h3>{{this.name}}</h3>
+                    </a>
+                </td>
+                <td class="game-cell" id="{{this.status}}">{{this.status}}</td>
+                <td class="game-cell">
+                    <button class="button delete-game-button" type="button">삭제</button>
+                </td>
+            </tr>
         {{/each}}
+        </table>
     </div>
+    </br>
     <div class="center-object">
         <form action="/board" method="post" >
             <label for="name">새 게임 만들기: </label>
@@ -23,5 +41,6 @@
             <input type="submit">
         </form>
     </div>
+    <script src="/script/index.js"></script>
 </body>
 </html>

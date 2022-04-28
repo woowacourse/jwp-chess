@@ -65,3 +65,14 @@ body {
 .clicked {
     background-color: chartreuse;
 }
+
+.game-table {
+    border-collapse: collapse;
+}
+
+.game-cell {
+    border: 2px solid;
+    width:  150px;
+    height: auto;
+    text-align: center;
+}

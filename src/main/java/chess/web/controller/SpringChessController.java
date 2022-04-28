@@ -3,13 +3,16 @@ package chess.web.controller;
 import chess.service.ChessService;
 import chess.service.dto.BoardDto;
 import chess.service.dto.GameResultDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class SpringChessController {
@@ -26,7 +29,7 @@ public class SpringChessController {
         return "index";
     }
 
-    @GetMapping("/board/{gameId}")
+    @GetMapping("/game/{gameId}")
     public String renderBoard(@PathVariable int gameId, Model model) {
         if (chessService.isEnd(gameId)) {
             return "redirect:../status/" + gameId;
@@ -36,10 +39,16 @@ public class SpringChessController {
         return "board";
     }
 
-    @GetMapping("/new-board/{gameId}")
-    public String initBoard(@PathVariable int gameId) {
+    @GetMapping("/board/{gameId}")
+    @ResponseBody
+    public ResponseEntity<BoardDto> getBoardPieces(@PathVariable int gameId) {
+        return ResponseEntity.ok(chessService.getBoard(gameId));
+    }
+
+    @PutMapping("/new-board/{gameId}")
+    public ResponseEntity<Object> initBoard(@PathVariable int gameId) {
         chessService.initGame(gameId);
-        return "redirect:../board/" + gameId;
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/board")
@@ -52,7 +61,7 @@ public class SpringChessController {
     public String requestMove(@PathVariable int gameId, @RequestParam String from,
                               @RequestParam String to) {
         chessService.move(gameId, from, to);
-        return "redirect:../board/" + gameId;
+        return "redirect:../game/" + gameId;
     }
 
     @GetMapping("/status/{gameId}")
@@ -70,8 +79,8 @@ public class SpringChessController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public String handleError(Exception ex, Model model) {
-        model.addAttribute("exception", ex.getMessage());
-        return "exception";
+    @ResponseBody
+    public ResponseEntity<String> handleError(Exception ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import chess.ChessGameVO;
+import chess.dto.ChessGameDto;
 import chess.service.ChessService;
 
 @Controller
@@ -25,10 +25,10 @@ public class ReadyController {
     }
 
     @PostMapping("/")
-    public String delete(@ModelAttribute ChessGameVO chessGameVO, Model model) {
+    public String delete(@ModelAttribute ChessGameDto chessGameDto, Model model) {
         model.addAttribute("msg", "쨘~ 게임 삭제 완료! 😚");
         try {
-            chessService.deleteGameByGameID(chessGameVO);
+            chessService.deleteGameByGameID(chessGameDto);
         } catch (IllegalArgumentException e) {
             model.addAttribute("msg", e.getMessage());
         }

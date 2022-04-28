@@ -40,9 +40,16 @@ public class ChessService {
 
     public RoomResponseDto createRoom(final RoomRequestDto roomRequestDto) {
         final RoomEntity room = new RoomEntity(roomRequestDto.getName(), "white", false);
+        validateCreateRoom(room);
         final RoomEntity createdRoom = roomRepository.insert(room);
         boardRepository.batchInsert(createBoards(createdRoom));
         return RoomResponseDto.of(createdRoom);
+    }
+
+    private void validateCreateRoom(final RoomEntity roomEntity) {
+        if (roomEntity.getId() != null) {
+            throw new IllegalArgumentException("[ERROR] 잘못된 방 생성 요청입니다.");
+        }
     }
 
     private List<BoardEntity> createBoards(final RoomEntity createdRoom) {
@@ -52,11 +59,6 @@ public class ChessService {
                 entry.getKey().convertPositionToString(),
                 entry.getValue().convertPieceToString()))
             .collect(Collectors.toList());
-    }
-
-    public RoomEntity enterRoom(final Long roomId) {
-        final RoomEntity roomEntity = roomRepository.findById(roomId);
-        return roomEntity;
     }
 
     public GameResponseDto getCurrentBoard(final Long roomId) {
@@ -106,7 +108,14 @@ public class ChessService {
     @Transactional(readOnly = true)
     public RoomsResponseDto findRooms() {
         final List<RoomEntity> rooms = roomRepository.findRooms();
+        validateFindRooms(rooms);
         return RoomsResponseDto.of(rooms);
+    }
+
+    private void validateFindRooms(final List<RoomEntity> rooms) {
+        if (rooms.isEmpty()) {
+            throw new IllegalStateException("[INFO] 현재 방이 없습니다. 방을 생성해주세요.");
+        }
     }
 
     public void endRoom(final Long id) {

@@ -71,7 +71,7 @@ class ChessServiceTest {
         final Long id = createTestRoom("체스 초보만").getId();
         chessService.endRoom(id);
 
-        assertThatThrownBy(() -> chessService.enterRoom(id))
+        assertThatThrownBy(() -> chessService.getCurrentBoard(id))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }

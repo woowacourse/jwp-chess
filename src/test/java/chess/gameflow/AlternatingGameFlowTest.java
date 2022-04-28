@@ -3,6 +3,7 @@ package chess.gameflow;
 import static chess.domain.piece.PieceTeam.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.gameflow.AlternatingGameFlow;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.PieceTeam;
 import org.junit.jupiter.api.BeforeEach;

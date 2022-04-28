@@ -1,4 +1,4 @@
-package chess.gameflow.state;
+package chess.domain.gameflow.state;
 
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;

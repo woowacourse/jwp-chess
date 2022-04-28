@@ -1,9 +1,9 @@
-package chess.gameflow;
+package chess.domain.gameflow;
 
+import chess.domain.gameflow.state.WhiteTeam;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
-import chess.gameflow.state.State;
-import chess.gameflow.state.WhiteTeam;
+import chess.domain.gameflow.state.State;
 
 public class AlternatingGameFlow implements GameFlow {
 

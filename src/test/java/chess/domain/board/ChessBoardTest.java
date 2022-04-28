@@ -25,7 +25,7 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
 import chess.exception.NonMovableException;
-import chess.gameflow.AlternatingGameFlow;
+import chess.domain.gameflow.AlternatingGameFlow;
 import chess.gameflow.FixedGameFlow;
 import java.util.Arrays;
 import java.util.List;

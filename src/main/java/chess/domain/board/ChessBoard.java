@@ -11,7 +11,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
 import chess.exception.IncorrectTeamSelectionException;
 import chess.exception.NonMovableException;
-import chess.gameflow.GameFlow;
+import chess.domain.gameflow.GameFlow;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Predicate;

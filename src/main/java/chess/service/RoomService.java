@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.RoomDao;
+import chess.dto.RoomDto;
 import chess.entity.RoomEntity;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,8 @@ public class RoomService {
         return roomDao.findAll();
     }
 
-    public List<RoomEntity> createRoom(final String name, final String password) {
-        roomDao.insert(name, password);
+    public List<RoomEntity> createRoom(final RoomDto roomDto) {
+        roomDao.insert(roomDto.getName(), roomDto.getPassword());
         return roomDao.findAll();
     }
 }

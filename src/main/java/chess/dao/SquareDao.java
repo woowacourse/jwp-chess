@@ -1,14 +1,11 @@
 package chess.dao;
 
-import chess.entity.SquareEntity;
-import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,23 +17,17 @@ public class SquareDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<SquareEntity> actorRowMapper = (resultSet, rowNum) -> {
-        SquareEntity squareEntity = new SquareEntity(
-                resultSet.getString("position"),
-                resultSet.getString("team"),
-                resultSet.getString("symbol")
-        );
-        return squareEntity;
-    };
-
     public int insert(final String id, final Position position, final Piece piece) {
         final String sql = "insert into square (id, position, team, symbol) values (?, ?, ?, ?)";
         return jdbcTemplate.update(sql, id, position.getKey(), piece.getTeam(), piece.getSymbol());
     }
 
-    public List<SquareEntity> findSquaresFrom(final String id) {
+    public Map<Position, Piece> findSquaresFrom(final String id) {
         final String sql = "select position, team, symbol from square where id = ?";
-        return jdbcTemplate.query(sql, actorRowMapper, id);
+        List<Map<String, Object>> squares = jdbcTemplate.queryForList(sql, id);
+        return squares.stream()
+                .collect(Collectors.toMap(k -> Position.from((String) k.get("position")),
+                        k -> Piece.getPiece((String) k.get("team"), (String) k.get("symbol"))));
     }
 
     public int deleteFrom(final String id) {

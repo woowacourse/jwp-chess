@@ -2,12 +2,9 @@ package chess.repository;
 
 import chess.dao.SquareDao;
 import chess.dto.MoveDto;
-import chess.entity.SquareEntity;
 import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 
@@ -34,17 +31,7 @@ public class SquareRepository {
     }
 
     public Board getBoardFrom(final String id) {
-        List<SquareEntity> squareEntities = squareDao.findSquaresFrom(id);
-        return createBoard(squareEntities);
-    }
-
-    private Board createBoard(final List<SquareEntity> squareEntities) {
-        final Map<Position, Piece> squares = new HashMap<>();
-        for (SquareEntity squareEntity : squareEntities) {
-            Position position = Position.from(squareEntity.getPosition());
-            Piece piece = Piece.getPiece(squareEntity.getTeam(), squareEntity.getSymbol());
-            squares.put(position, piece);
-        }
+        Map<Position, Piece> squares = squareDao.findSquaresFrom(id);
         return Board.from(squares);
     }
 

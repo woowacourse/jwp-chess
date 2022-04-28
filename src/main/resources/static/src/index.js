@@ -46,7 +46,9 @@ function move(id) {
 }
 
 function movePiece() {
-    fetch("/move", {
+    const params = new URLSearchParams(location.search);
+    const boardId = params.get('id');
+    fetch(`/board/move?id=${boardId}`, {
         method: "POST",
         headers: {
             "Content-Type": "text/plain"
@@ -63,7 +65,7 @@ function movePiece() {
                 end();
             }
             if (data.statusCode === 302) {
-                location.replace("/chess");
+                location.reload();
             }
             if (data.statusCode === 501) {
                 alert(data.errorMessage);

@@ -1,8 +1,15 @@
 package chess.domain.board;
 
 import static chess.domain.board.ChessBoard.SOURCE_POSITION_SHOULD_HAVE_PIECE_MESSAGE;
-import static chess.domain.board.position.File.*;
-import static chess.domain.board.position.Rank.*;
+import static chess.domain.board.position.File.A;
+import static chess.domain.board.position.File.B;
+import static chess.domain.board.position.File.C;
+import static chess.domain.board.position.Rank.EIGHT;
+import static chess.domain.board.position.Rank.FOUR;
+import static chess.domain.board.position.Rank.ONE;
+import static chess.domain.board.position.Rank.SEVEN;
+import static chess.domain.board.position.Rank.THREE;
+import static chess.domain.board.position.Rank.TWO;
 import static chess.domain.piece.PieceTeam.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -17,6 +24,7 @@ import chess.domain.board.position.Rank;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
+import chess.exception.NonMovableException;
 import chess.gameflow.AlternatingGameFlow;
 import chess.gameflow.FixedGameFlow;
 import java.util.Arrays;
@@ -116,7 +124,7 @@ public class ChessBoardTest {
     void isBlocked(Rank rank, File file) {
         assertThatThrownBy(() ->
             chessBoard.movePiece(Position.of(C, ONE), Position.of(file, rank))
-        ).isInstanceOf(IllegalArgumentException.class);
+        ).isInstanceOf(NonMovableException.class);
     }
 
     @ParameterizedTest
@@ -134,7 +142,7 @@ public class ChessBoardTest {
         chessBoard.movePiece(Position.of(B, ONE), Position.of(C, THREE));
         assertThatThrownBy(() ->
             chessBoard.movePiece(Position.of(C, TWO), Position.of(C, FOUR))
-        ).isInstanceOf(IllegalArgumentException.class);
+        ).isInstanceOf(NonMovableException.class);
     }
 
     @DisplayName("이동 하는 곳에 아군 기물이 있으면 이동이 불가능 하다")
@@ -142,7 +150,7 @@ public class ChessBoardTest {
     void isMyTeam() {
         assertThatThrownBy(() ->
             chessBoard.movePiece(Position.of(A, ONE), Position.of(A, TWO))
-        ).isInstanceOf(IllegalArgumentException.class);
+        ).isInstanceOf(NonMovableException.class);
     }
 
     @DisplayName("폰을 A2 에서 A4로 이동시켰다면 A4에는 폰이 있다")

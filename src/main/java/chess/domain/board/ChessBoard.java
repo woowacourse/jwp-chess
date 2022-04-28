@@ -9,6 +9,8 @@ import chess.domain.board.position.Rank;
 import chess.domain.piece.EmptySpace;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
+import chess.exception.IncorrectTeamSelectionException;
+import chess.exception.NonMovableException;
 import chess.gameflow.GameFlow;
 import java.util.Arrays;
 import java.util.Map;
@@ -61,7 +63,7 @@ public class ChessBoard {
 
     private void validateWhiteBlackTeamTurn(Position position) {
         if (!gameFlow.isCorrectTurn(board.get(position))) {
-            throw new IllegalArgumentException("[ERROR] 현재 올바르지 않은 팀 선택입니다. ");
+            throw new IncorrectTeamSelectionException();
         }
     }
 
@@ -75,12 +77,12 @@ public class ChessBoard {
         board.put(sourcePosition, EMPTY_SPACE);
     }
 
-    private void validateMovable(Position sourcePosition, Position targetPosition, Piece sourcePiece, Piece targetPiece) {
+    private void validateMovable(Position from, Position to, Piece sourcePiece, Piece targetPiece) {
         TargetType targetType = decideMoveType(targetPiece);
-        if (!sourcePiece.isMovable(sourcePosition, targetPosition, targetType) ||
-                isBlocked(sourcePosition, targetPosition) ||
+        if (!sourcePiece.isMovable(from, to, targetType) ||
+                isBlocked(from, to) ||
                 targetPiece.isMyTeam(sourcePiece)) {
-            throw new IllegalArgumentException("[ERROR] 이동할 수 없는 위치입니다.");
+            throw new NonMovableException();
         }
     }
 

@@ -7,6 +7,7 @@ import chess.domain.board.position.Position;
 import chess.domain.piece.PieceTeam;
 import chess.dto.request.web.SaveRequest;
 import chess.dto.response.web.GameResponse;
+import chess.exception.ClientException;
 import chess.service.ChessService;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +77,7 @@ public class ChessApiController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public String illegalExHandle(IllegalArgumentException exception) {
+    public String illegalExHandle(ClientException exception) {
         exception.printStackTrace();
         return exception.getMessage();
     }

@@ -50,12 +50,6 @@ public class ChessController {
         return "redirect:/game/" + logInDto.getGameId();
     }
 
-//    @GetMapping("/start")
-//    public String startGame(@RequestParam String gameId, @RequestParam String gamePassword) {
-//        chessGameService.validateLogIn(new LogInDto(gameId, gamePassword));
-//        return "redirect:/game/" + gameId;
-//    }
-
     @GetMapping(path = "/game/{gameId}")
     public ModelAndView getGame(@PathVariable String gameId) {
         return getGameModel(gameId);

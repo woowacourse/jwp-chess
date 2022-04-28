@@ -17,5 +17,7 @@ public interface BoardDao {
 
     void deleteBoard(int id);
 
-    boolean existBoard(int id);
+    boolean isGameEnd(int id);
+
+    void end(int id);
 }

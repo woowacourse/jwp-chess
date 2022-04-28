@@ -5,6 +5,7 @@ import java.util.Arrays;
 public enum Color {
     WHITE,
     BLACK,
+    END,
     NONE;
 
     public static Color from(String colorName) {

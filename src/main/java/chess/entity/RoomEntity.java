@@ -8,7 +8,7 @@ public class RoomEntity {
     private String name;
     private String password;
 
-    public RoomEntity(long id, String name, String password) {
+    public RoomEntity(Long id, String name, String password) {
         this.id = id;
         this.name = name;
         this.password = password;

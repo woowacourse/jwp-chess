@@ -25,4 +25,17 @@ public class RoomDaoTest {
 
         Assertions.assertThat(insertRoom).isEqualTo(roomEntity);
     }
+
+    @DisplayName("id로 체스방을 조회한다.")
+    @Test
+    void findById() {
+        // given
+        final RoomEntity expected = roomDao.insert(new RoomEntity(1L, "room1", "1234"));
+        // when
+        RoomEntity actual = roomDao.findById(expected.getId());
+        // then
+        Assertions.assertThat(actual.getName()).isEqualTo("room1");
+        Assertions.assertThat(actual.getPassword()).isEqualTo("1234");
+
+    }
 }

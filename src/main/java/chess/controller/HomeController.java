@@ -28,13 +28,13 @@ public class HomeController {
         return "index";
     }
 
-    @PostMapping("/game")
+    @PostMapping("/games")
     public RedirectView createChessGame(final @RequestParam String name, final @RequestParam String password) {
         long chessGameId = chessGameService.createChessGame(name, password);
         return new RedirectView("/games/" + chessGameId);
     }
 
-    @PostMapping("/delete/{chessGameId}")
+    @PostMapping("/games/delete/{chessGameId}")
     public RedirectView deleteChessGame(final @PathVariable long chessGameId, final @RequestParam String password) {
         chessGameService.deleteChessGame(chessGameId, password);
         return new RedirectView("/");

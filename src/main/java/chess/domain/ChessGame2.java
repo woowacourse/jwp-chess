@@ -42,6 +42,27 @@ public class ChessGame2 {
         return board.scoreOfBlack();
     }
 
+    public Winner findWinner() {
+        if (board.hasBlackKingCaptured()) {
+            return Winner.WHITE;
+        }
+        if (board.hasWhiteKingCaptured()) {
+            return Winner.BLACK;
+        }
+        return findWinnerByScore();
+    }
+
+    private Winner findWinnerByScore() {
+        final int compared = Double.compare(board.scoreOfBlack(), board.scoreOfWhite());
+        if (compared > 0) {
+            return Winner.BLACK;
+        }
+        if (compared < 0) {
+            return Winner.WHITE;
+        }
+        return Winner.DRAW;
+    }
+
     public Long getId() {
         return id;
     }

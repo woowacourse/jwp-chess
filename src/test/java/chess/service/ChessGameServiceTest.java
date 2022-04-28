@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.dao.MockBoardDao;
 import chess.dao.MockPieceDao;
+import chess.domain.Winner;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.dto.ChessBoardDto;
@@ -78,6 +79,22 @@ public class ChessGameServiceTest {
         final double statusOfBlack = chessGameService.statusOfBlack(1L);
         //then
         assertThat(statusOfBlack).isEqualTo(38.0);
+    }
+
+    @Test
+    @DisplayName("백색이 이긴 경우에 Winner.WHITE 반환")
+    void find_winner() {
+        //given
+        chessGameService.create(title, password);
+        chessGameService.move(1L, "a2", "a4");
+        chessGameService.move(1L, "b7", "b5");
+        chessGameService.move(1L, "a4", "a5");
+        chessGameService.move(1L, "c7", "c6");
+        chessGameService.move(1L, "a1", "a7");
+        //when
+        final Winner winner = chessGameService.findWinner(1L);
+        //then
+        assertThat(winner).isEqualTo(Winner.WHITE);
     }
     
 //    @Test

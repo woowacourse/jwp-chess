@@ -100,8 +100,13 @@ public class ChessGameService {
         return chessGame2.scoreOfBlack();
     }
 
-    public Winner findWinner() {
-        return chessGame.findWinner();
+    public Winner findWinner(Long boardId) {
+        final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
+        final Color turn = boardDao.findTurn(boardId);
+        final Board board = new Board(loadedBoard, turn);
+        final ChessGame2 chessGame2 = new ChessGame2(boardId, board);
+
+        return chessGame2.findWinner();
     }
 
     public Color getTurn() {

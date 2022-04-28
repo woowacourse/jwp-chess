@@ -9,7 +9,7 @@ import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
-import chess.dto.MoveDto;
+import chess.dto.requestDto.MoveDto;
 import chess.entities.ChessGame;
 import io.restassured.RestAssured;
 import java.util.List;

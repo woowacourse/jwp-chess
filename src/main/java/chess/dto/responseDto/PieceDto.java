@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.responseDto;
 
 public class PieceDto {
 

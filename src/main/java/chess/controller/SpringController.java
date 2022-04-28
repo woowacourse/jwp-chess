@@ -92,11 +92,9 @@ public class SpringController {
     @GetMapping("/game/{chessGameId}/end")
     public String end(@PathVariable int chessGameId, Model model) {
         String winTeamName = chessService.finish(Command.from("end"), chessGameId);
-        // List<String> chessBoard = chessService.getCurrentChessBoard(chessGameId);
         List<PieceDto> pieceDtos = chessService.getPieces(chessGameId);
 
         model.addAttribute("winTeam", winTeamName);
-        // model.addAttribute("chessboard", chessBoard);
         model.addAttribute("chessGameId", chessGameId);
         model.addAttribute("pieces", pieceDtos);
 

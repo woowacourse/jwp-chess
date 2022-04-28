@@ -30,16 +30,11 @@ public class SpringWebChessController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ResponseDto> create(){
-        chessService.create();
-        return new ResponseEntity(HttpStatus.OK);
+    public String create(@RequestParam String title, @RequestParam String password){
+        long gameId = chessService.create(title, password);
+        return "redirect:/play/" + gameId;
     }
 
-//    @PostMapping("/start")
-//    public ResponseEntity<ResponseDto> start() throws Exception {
-//        chessService.start();
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
 
     @GetMapping("/play")
     public String play(Model model) {

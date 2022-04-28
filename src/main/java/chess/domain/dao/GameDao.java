@@ -33,6 +33,25 @@ public class GameDao {
         }
     }
 
+    public int create(ChessBoard chessBoard, String title, int password) {
+        final String sql = "insert into Game (status, turn, title, password) values( ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        try {
+            jdbcTemplate.update(connection -> {
+                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                statement.setBoolean(1, chessBoard.compareStatus(Status.PLAYING));
+                statement.setString(2, String.valueOf(chessBoard.getCurrentTurn()));
+                statement.setString(3, title);
+                statement.setInt(4, password);
+                return statement;
+            }, keyHolder);
+            return keyHolder.getKey().intValue();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+        }
+    }
+
     public int findLastGameId() {
         final String sql = "SELECT id FROM Game ORDER BY id DESC LIMIT 1";
         try {

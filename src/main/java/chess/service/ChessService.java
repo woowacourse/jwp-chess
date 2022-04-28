@@ -34,9 +34,17 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public void create(){
+    public long create(String title, String password){
         makeNewGame();
-        gameDao.save(chessBoard);
+        int gameId = gameDao.create(chessBoard, title, Integer.parseInt(password));
+        for (Map.Entry<String, ChessPiece> entry : chessBoard.convertToMap().entrySet()) {
+            boardDao.save(
+                    gameId,
+                    getPosition(entry),
+                    getPiece(entry),
+                    getColor(entry));
+        }
+        return gameId;
     }
 
 //    public void start() {

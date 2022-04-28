@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>배카라의 체스</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+<body>
+<div class="create-room">
+    <h3> 방만들기 </h3>
+    방 제목 : <input type="text" id="title">
+    비밀번호 : <input type="text" id="password">
+    <button type="submit" onclick="createRoom()">생성</button>
+</div>
+
+<p> 방 목록 </p>
+
+<div class="rooms">
+    {{#rooms}}
+        <div class="room">
+            <span> 방 번호 : {{this.id}} / 방 제목 : {{this.title}}</span>
+            <button onclick="enterRoom({{this.id}}, '{{this.title}}')"> 입장하기</button>
+            <button> 방 삭제</button>
+            <p></p>
+        </div>
+    {{/rooms}}
+</div>
+
+
+<script src="js/index.js"></script>
+</body>
+</html>

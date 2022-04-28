@@ -111,9 +111,10 @@ const load = async () => {
     showChessMap(chessMap.chessMap);
 }
 
-const restartChess = async () => {
+const restartChess = async (id) => {
+    console.log(id);
     isRun = true;
-    let chessMap = await fetch('/start');
+    let chessMap = await fetch('/make-piece/' + id);
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
 }

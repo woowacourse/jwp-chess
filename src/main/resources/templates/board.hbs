@@ -2,8 +2,9 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>배카라의 체스</title>
-    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <title>체스</title>
+    <link rel="stylesheet" type="text/css" href="/css/board.css">
+    <script src="/js/board.js"></script>
 </head>
 <body onload="initMapEvent()">
 <div id="main">
@@ -87,14 +88,13 @@
     </div>
     <div class="chess-menu" id="chess-menu">
         <div class="message-info" id="message-info">
-            Welcome to 배카라-Chess
+            체스 
         </div>
-        <button class="btn" id="start" onclick="restartChess()">새로하기</button>
-        <button class="btn" id="save" onclick="load()">이어하기</button>
-        <button class="btn" id="status" onclick="showStatus()">현재 점수 보기</button>
-        <button class="btn" id="end" onclick="showResult()">끝내기</button>
+        <button class="btn" id="start" onclick="restartChess({{roomId}})">새로하기</button>
+        <button class="btn" id="save" onclick="load({{roomId}})">이어하기</button>
+        <button class="btn" id="status" onclick="showStatus({{roomId}})">현재 점수 보기</button>
+        <button class="btn" id="end" onclick="showResult({{roomId}})">끝내기</button>
     </div>
 </div>
-<script src="js/board.js"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.dao.BoardRepository;
 import chess.dao.WebChessBoardDao;
 import chess.dao.WebChessMemberDao;
 import chess.dao.WebChessPieceDao;
@@ -22,13 +23,15 @@ import org.springframework.stereotype.Service;
 @Service
 public final class GameService {
 
+    private final BoardRepository boardRepository;
     private final WebChessBoardDao boardDao;
     private final WebChessPositionDao positionDao;
     private final WebChessPieceDao pieceDao;
     private final WebChessMemberDao memberDao;
 
-    public GameService(WebChessBoardDao boardDao, WebChessPositionDao positionDao, WebChessPieceDao pieceDao,
-                       WebChessMemberDao memberDao) {
+    public GameService(BoardRepository boardRepository, WebChessBoardDao boardDao, WebChessPositionDao positionDao,
+                       WebChessPieceDao pieceDao, WebChessMemberDao memberDao) {
+        this.boardRepository = boardRepository;
         this.boardDao = boardDao;
         this.positionDao = positionDao;
         this.pieceDao = pieceDao;
@@ -72,7 +75,7 @@ public final class GameService {
     }
 
     private void validateCorrectTurn(int roomId, Piece piece) {
-        final Color turn = boardDao.getById(roomId).getTurn();
+        final Color turn = boardRepository.getById(roomId).getTurn();
         if (!piece.isSameColor(turn)) {
             throw new IllegalArgumentException("지금은 " + turn.value() + "의 턴입니다.");
         }
@@ -87,11 +90,11 @@ public final class GameService {
     }
 
     private void changeTurn(int roomId) {
-        boardDao.updateTurn(Color.opposite(boardDao.getById(roomId).getTurn()), roomId);
+        boardDao.updateTurn(Color.opposite(boardRepository.getById(roomId).getTurn()), roomId);
     }
 
     public ChessGame getBoard(int roomId) {
-        return boardDao.getById(roomId);
+        return boardRepository.getById(roomId);
     }
 
     public Map<String, Piece> getPieces(int roomId) {

@@ -17,9 +17,9 @@ public class GameController {
     }
 
     @PostMapping("/game/create")
-    public ResponseEntity<RoomIdDto> createNewGame(@RequestBody NewRoomInfo newChessGameInfo) {
+    public ResponseEntity<RoomInfoDto> createNewGame(@RequestBody NewRoomInfo newChessGameInfo) {
         final long roomId = chessGameService.createNewRoom(newChessGameInfo);
-        final RoomIdDto roomIdDto = new RoomIdDto(roomId);
+        final RoomInfoDto roomIdDto = new RoomInfoDto(roomId);
         return ResponseEntity.ok(roomIdDto);
     }
 

@@ -56,6 +56,10 @@ public class ChessGameService {
         return roomId;
     }
 
+    public List<RoomInfoDto> loadRoomList() {
+        return roomDao.findAll();
+    }
+
     public StatusDto deleteRoom(final long roomId) {
         final StatusDto status = findStatus(roomId);
         roomDao.delete(roomId);

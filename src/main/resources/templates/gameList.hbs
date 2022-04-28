@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>♟️ 체스 게임 </title>
+    <link rel="stylesheet" href="/src/index.css">
+    <style>
+        table {
+            border: 0px;
+        }
+        th, td {
+            border: 0px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="horizontal-center margin-top50">
+    <h1 id="roomInfo">♟️ 생성된 체스 게임 </h1>
+    <center>
+        <table border=1 cellpadding=10>
+            {{#each list}}
+            <tr>
+                <td>
+                    <a href="/game/{{id}}">{{name}}</a>
+                </td>
+                <td>
+                    <button type="button" class="w-btn-outline2 w-btn-gray-outline" onclick="removeGame({{id}});">삭제하기</button>
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </center>
+</div>
+<script>
+async function removeGame(roomId) {
+    console.log(roomId);
+    await fetch("/game/" + roomId, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        })
+    alert("방이 삭제됐습니다.");
+    location.href = "/game/list";
+}
+
+async function handleErrors(response) {
+    if (!response.ok) {
+        let errorMessage = await response.json();
+        throw Error(errorMessage.message);
+    }
+    return response;
+}
+</script>
+</body>
+</html>

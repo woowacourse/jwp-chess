@@ -40,7 +40,6 @@ public class PieceDao {
                         resultSet.getString("position"),
                         resultSet.getString("name")
                 ), roomId, team);
-
     }
 
     public void deleteAllPiecesByRoomId(final long roomId) {

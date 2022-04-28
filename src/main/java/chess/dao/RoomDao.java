@@ -2,10 +2,12 @@ package chess.dao;
 
 import chess.domain.player.Team;
 import chess.dto.GameNameAndTurnDto;
+import chess.dto.RoomInfoDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +19,11 @@ public class RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void save(final String roomName, final String password, final Team turn) {
+        final String sql = "insert into room (name, password, turn) values (?, ?, ?)";
+        jdbcTemplate.update(sql, roomName, password, turn.getName());
+    }
+
     public Optional<Integer> findRoomIdByName(final String roomName) {
         final String sql = "select id from room where name = (?)";
         try {
@@ -24,11 +31,6 @@ public class RoomDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-    }
-
-    public void save(final String roomName, final String password, final Team turn) {
-        final String sql = "insert into room (name, password, turn) values (?, ?, ?)";
-        jdbcTemplate.update(sql, roomName, password, turn.getName());
     }
 
     public String findTurn(final long roomId) {
@@ -43,6 +45,15 @@ public class RoomDao {
                         resultSet.getString("name"),
                         resultSet.getString("turn")
                 ), roomId);
+    }
+
+    public List<RoomInfoDto> findAll() {
+        final String sql = "select id, name from room";
+        return jdbcTemplate.query(sql,
+                (resultSet, count) -> new RoomInfoDto(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name")
+                ));
     }
 
     public void updateTurn(final long roomId, final Team turn) {

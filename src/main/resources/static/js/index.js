@@ -3,25 +3,27 @@ const restartButton = document.querySelector("#restart-button");
 const chessBoard = document.querySelector("table");
 const whiteScore = document.querySelector("#white-score");
 const blackScore = document.querySelector("#black-score");
+const gameId = document.querySelector("#game-id").innerText;
 
 startButton.addEventListener("click", onClickStartButton);
 restartButton.addEventListener("click", onClickRestartButton);
 chessBoard.addEventListener("click", onClickBoard);
 
 async function onClickStartButton () {
-    const response = await fetch("/start");
-    const data = await response.json();
+    const response = await fetch("/start?gameId=" + gameId);
 
     if (response.ok) {
+        const data = await response.json();
         loadBoard(data);
         return;
     }
 
-    alert(JSON.stringify(data));
+    alert(await response.text());
 }
 
 function loadBoard (data) {
     removeAllPiece();
+    console.log(data);
     Object.entries(data.positionsAndPieces).forEach(([key, value]) => {
         const block = document.getElementById(key.toLowerCase());
         block.appendChild(createPieceImage(value));
@@ -48,7 +50,14 @@ function createPieceImage ({color, name}) {
 }
 
 async function onClickRestartButton () {
-    const response = await fetch("/restart");
+    const response = await fetch("/restart?gameId=" + gameId);
+
+debugger;
+    if (response.ok === false) {
+        alert(response.text());
+        return;
+    }
+
     const data = await response.json();
 
     if (response.ok) {
@@ -56,7 +65,7 @@ async function onClickRestartButton () {
         return;
     }
 
-    alert(JSON.stringify(data));
+    alert(data.text());
 }
 
 function onClickBoard ({target: {classList, id, parentNode}}) {
@@ -89,16 +98,16 @@ async function onClickPiece (id) {
     const response = await fetch("/move", {
                        method: "put",
                        headers: {"Content-Type": "application/json"},
-                       body: JSON.stringify({from: from, to: to})
+                       body: JSON.stringify({from: from, to: to, gameId: gameId})
                      });
-    const data = await response.json();
     if (response.ok) {
+        const data = await response.json();
         movePiece(from, to);
-        loadBoard(data);
+//        loadBoard(data);
         return;
     }
 
-    alert(JSON.stringify(data));
+    alert(await response.text());
 }
 
 function getSecondSelectedId (id) {

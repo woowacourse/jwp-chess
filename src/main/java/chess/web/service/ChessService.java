@@ -7,10 +7,11 @@ import chess.board.piece.Empty;
 import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
-import chess.web.dao.BoardDao;
+import chess.web.controller.dto.RoomRequestDto;
+import chess.web.dao.RoomDao;
 import chess.web.dao.PieceDao;
-import chess.web.service.dto.MoveDto;
-import chess.web.service.dto.ScoreDto;
+import chess.web.controller.dto.MoveDto;
+import chess.web.controller.dto.ScoreDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,17 +22,17 @@ import java.util.List;
 @Service
 public class ChessService {
 
-    private final BoardDao boardDao;
+    private final RoomDao roomDao;
     private final PieceDao pieceDao;
 
     @Autowired
-    public ChessService(BoardDao boardDao, PieceDao pieceDao) {
-        this.boardDao = boardDao;
+    public ChessService(RoomDao roomDao, PieceDao pieceDao) {
+        this.roomDao = roomDao;
         this.pieceDao = pieceDao;
     }
 
     public Board loadGame(Long boardId) {
-        Turn turn = boardDao.findTurnById(boardId)
+        Turn turn = roomDao.findTurnById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 차례입니다."));
 
         List<Piece> pieces = pieceDao.findAllByBoardId(boardId);
@@ -40,7 +41,7 @@ public class ChessService {
 
     @Transactional
     public Board move(final MoveDto moveDto, final Long boardId) {
-        Turn turn = boardDao.findTurnById(boardId)
+        Turn turn = roomDao.findTurnById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 정보입니다."));
 
         Board board = Board.create(Pieces.from(pieceDao.findAllByBoardId(boardId)), turn);
@@ -67,7 +68,7 @@ public class ChessService {
 
     private Turn changeTurn(Turn turn) {
         Turn change = turn.change();
-        boardDao.updateTurnById(1L, change.getTeam().value());
+        roomDao.updateTurnById(1L, change.getTeam().value());
         return change;
     }
 
@@ -78,7 +79,7 @@ public class ChessService {
         for (Piece piece : pieces.getPieces()) {
             pieceDao.updatePieceByPositionAndBoardId(piece.getType(), piece.getTeam().value(), piece.getPosition().name(), boardId);
         }
-        boardDao.updateTurnById(boardId, Turn.init().getTeam().value());
+        roomDao.updateTurnById(boardId, Turn.init().getTeam().value());
         return board;
     }
 
@@ -90,7 +91,16 @@ public class ChessService {
         double whiteScore = pieces.getTotalScore(Team.WHITE);
         return new ScoreDto(blackScore, whiteScore);
     }
+
+    @Transactional
+    public Long createRoom(RoomRequestDto roomRequestDto) {
+        Long id = roomDao.save(roomRequestDto.getTitle(), roomRequestDto.getPassword());
+        pieceDao.save(Pieces.createInit().getPieces(), id);
+
+        return id;
+    }
+
     public List<Long> getRoomList(){
-        return boardDao.findAllId();
+        return roomDao.findAllId();
     }
 }

@@ -6,13 +6,13 @@ import chess.board.Turn;
 import java.util.List;
 import java.util.Optional;
 
-public interface BoardDao {
+public interface RoomDao {
 
     Optional<Turn> findTurnById(Long id);
 
     void updateTurnById(Long id, String newTurn);
 
-    Long save();
+    Long save(String title, String password);
 
     Optional<Board> findById(Long id);
 

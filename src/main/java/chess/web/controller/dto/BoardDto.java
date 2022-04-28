@@ -1,4 +1,4 @@
-package chess.web.service.dto;
+package chess.web.controller.dto;
 
 import chess.board.Board;
 import chess.board.piece.Piece;

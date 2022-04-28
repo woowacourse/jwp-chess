@@ -1,10 +1,10 @@
-package chess.web.service.dto;
+package chess.web.controller.dto;
 
 public class MoveDto {
     private String from;
     private String to;
 
-    public MoveDto() {
+    private MoveDto() {
     }
 
     public MoveDto(String from, String to) {

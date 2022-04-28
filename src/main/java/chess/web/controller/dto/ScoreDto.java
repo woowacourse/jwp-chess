@@ -1,4 +1,4 @@
-package chess.web.service.dto;
+package chess.web.controller.dto;
 
 public class ScoreDto {
     private final double blackTeamScore;

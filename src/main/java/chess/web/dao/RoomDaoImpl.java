@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class BoardDaoImpl implements BoardDao {
+public class RoomDaoImpl implements RoomDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -29,13 +29,13 @@ public class BoardDaoImpl implements BoardDao {
         );
     };
 
-    public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
+    public RoomDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Optional<Turn> findTurnById(Long id) {
-        final String query = "SELECT (turn) from board where id = ?";
+        final String query = "SELECT (turn) from room where id = ?";
         String turn = jdbcTemplate.queryForObject(query, String.class, id);
 
         return Optional.of(new Turn(Team.from(turn)));
@@ -43,17 +43,19 @@ public class BoardDaoImpl implements BoardDao {
 
     @Override
     public void updateTurnById(Long id, String newTurn) {
-        final String query = "UPDATE board set turn = ? where id = ?";
+        final String query = "UPDATE room set turn = ? where id = ?";
         jdbcTemplate.update(query, newTurn, id);
     }
 
     @Override
-    public Long save() {
-        final String query = "INSERT INTO board (turn) values (?)";
+    public Long save(String title, String password) {
+        final String query = "INSERT INTO room (turn, title, password) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
             preparedStatement.setString(1, "white");
+            preparedStatement.setString(2, title);
+            preparedStatement.setString(3, password);
             return preparedStatement;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -62,9 +64,9 @@ public class BoardDaoImpl implements BoardDao {
     @Override
     public Optional<Board> findById(Long id) {
         final String query = "SELECT * " +
-                "FROM board as b " +
-                "JOIN piece as p ON b.id = p.board_id " +
-                "WHERE b.id = ?";
+                "FROM room as r " +
+                "JOIN piece as p ON r.id = p.room_id " +
+                "WHERE r.id = ?";
         List<Board> boards = jdbcTemplate.query(query, boardRowMapper, id);
         Board board = getBoard(boards);
         return Optional.of(board);
@@ -79,13 +81,13 @@ public class BoardDaoImpl implements BoardDao {
 
     @Override
     public void deleteById(Long id) {
-        final String query = "DELETE FROM board WHERE id = ?";
+        final String query = "DELETE FROM room WHERE id = ?";
         jdbcTemplate.update(query, id);
     }
 
     @Override
     public List<Long> findAllId() {
-        final String query = "SELECT id FROM board";
+        final String query = "SELECT id FROM room";
         return jdbcTemplate.query(
                 query,
                 (resultSet, rowNum) -> resultSet.getLong("id"));

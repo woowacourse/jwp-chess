@@ -26,21 +26,21 @@ public class PieceDaoImpl implements PieceDao {
 
     @Override
     public void updatePieceByPositionAndBoardId(final String type, final String team, final String position, final Long boardId) {
-        String query = "update piece set type =?, team =? where position = ? AND board_id = ?";
+        String query = "update piece set type =?, team =? where position = ? AND room_id = ?";
 
         jdbcTemplate.update(query, type, team, position, boardId);
     }
 
     @Override
     public List<Piece> findAllByBoardId(final Long boardId) {
-        String query = "select position, team, type from piece WHERE board_id = ?";
+        String query = "select position, team, type from piece WHERE room_id = ?";
 
         return jdbcTemplate.query(query, piecesRowMapper, boardId);
     }
 
     @Override
     public void save(List<Piece> pieces, Long boardId) {
-        final String query = "INSERT INTO piece (position, board_id, type, team) VALUES ( ?, ?, ?, ?)";
+        final String query = "INSERT INTO piece (position, room_id, type, team) VALUES ( ?, ?, ?, ?)";
         for (Piece piece : pieces) {
             jdbcTemplate.update(
                     query,
@@ -54,7 +54,7 @@ public class PieceDaoImpl implements PieceDao {
 
     @Override
     public void deleteByBoardId(Long boardId) {
-        final String query = "DELETE FROM piece WHERE board_id = ?";
+        final String query = "DELETE FROM piece WHERE room_id = ?";
         try {
             jdbcTemplate.update(query, boardId);
         } catch (DataAccessException e) {

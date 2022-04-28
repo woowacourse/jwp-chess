@@ -1,12 +1,16 @@
 package chess.web.controller;
 
 import chess.board.Board;
+import chess.web.controller.dto.RoomRequestDto;
 import chess.web.service.ChessService;
-import chess.web.service.dto.BoardDto;
-import chess.web.service.dto.MoveDto;
-import chess.web.service.dto.ScoreDto;
+import chess.web.controller.dto.BoardDto;
+import chess.web.controller.dto.MoveDto;
+import chess.web.controller.dto.ScoreDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RequestMapping("/api")
 @RestController
@@ -18,6 +22,12 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
+    @PostMapping("/room")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Void> createGame(@RequestBody RoomRequestDto roomRequestDto){
+        Long id = chessService.createRoom(roomRequestDto);
+        return ResponseEntity.created(URI.create("/api/load" + id)).build();
+    }
     @GetMapping("/load/{id}")
     public ResponseEntity<BoardDto> loadGame(@PathVariable Long id) {
         Board board = chessService.loadGame(id);

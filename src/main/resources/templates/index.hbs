@@ -14,12 +14,12 @@
         {{#list}}
             <li style="text-align: center; color: palegoldenrod">
                 <a href="/api/load/{{.}}" class="btn btn-success" role="button">{{.}} 번 체스방 </a>
+                <button class="delete-button" id="delete-button" onclick="" type="button">방 삭제</button>
             </li>
         {{/list}}
     </ul>
     <div class="button-group" style="text-align: center">
         <button class="create-button" id="create-button" onclick="" type="button">방 생성</button>
-        <button class="delete-button" id="delete-button" onclick="" type="button">방 삭제</button>
 <script src="/src/App.js"></script>
 </body>
 </html>

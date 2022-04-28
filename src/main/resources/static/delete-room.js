@@ -8,8 +8,8 @@ const CreateRoom = () => {
     const handleDeleteClick = async () => {
         const {id} = parseQueryString();
         await deleteRoom(id, password);
-        console.log(id, password)
-        // TODO: 생성된 방으로 리다이렉트
+
+        location.href = "/";
     }
 
     return (

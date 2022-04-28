@@ -23,6 +23,6 @@ public class RestControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Void> handle() {
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.internalServerError().build();
     }
 }

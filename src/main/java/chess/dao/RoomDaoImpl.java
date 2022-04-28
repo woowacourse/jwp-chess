@@ -112,4 +112,10 @@ public class RoomDaoImpl implements RoomDao {
             return Optional.empty();
         }
     }
+
+    @Override
+    public void delete(Long roomId) {
+        String sql = "delete from room where id = ?";
+        jdbcTemplate.update(sql, roomId);
+    }
 }

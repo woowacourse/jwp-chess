@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
@@ -16,7 +15,6 @@ import chess.domain.ChessBoard;
 import chess.domain.ChessGame;
 import chess.domain.Status;
 import chess.domain.piece.Piece;
-import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
@@ -124,8 +122,12 @@ public class ChessService {
         return roomDao.findAll();
     }
 
-    public boolean login(Long roomId, String password) {
-        Optional<Room> room = roomDao.findByIdAndPassword(roomId, password);
-        return room.isPresent();
+    public boolean delete(Long roomId, String password) {
+        if (roomDao.findByIdAndPassword(roomId, password).isEmpty()) {
+            return false;
+        }
+        squareDao.removeAll(roomId);
+        roomDao.delete(roomId);
+        return true;
     }
 }

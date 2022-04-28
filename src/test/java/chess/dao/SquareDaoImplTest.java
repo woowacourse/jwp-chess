@@ -60,7 +60,7 @@ class SquareDaoImplTest {
     }
 
     @Test
-    @DisplayName("square를 업데이트 할 수 있다.")
+    @DisplayName("square를 업데이트한다.")
     void update() {
         squareDao.update(1, "a1", "empty");
         Square square = squareDao.findByRoomIdAndPosition(1, "a1").get();
@@ -68,14 +68,14 @@ class SquareDaoImplTest {
     }
 
     @Test
-    @DisplayName("RoomId로 square를 얻을 수 있다.")
+    @DisplayName("RoomId로 square를 얻는다.")
     void findByRoomId() {
         List<Square> squares = squareDao.findByRoomId(1);
         assertThat(squares.size()).isEqualTo(3);
     }
 
     @Test
-    @DisplayName("해당 RoomId를 참조한 모든 Square를 제거할 수 있다.")
+    @DisplayName("해당 RoomId를 참조한 모든 Square를 제거한다.")
     void removeAll() {
         jdbcFixture.insertRoom("test", "white", "pw");
         jdbcFixture.insertSquares(List.of("b1,white_pawn,2"));

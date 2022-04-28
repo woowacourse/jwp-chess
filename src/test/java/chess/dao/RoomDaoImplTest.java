@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -49,5 +51,13 @@ class RoomDaoImplTest {
     void update() {
         roomDao.update(1L, "black");
         assertThat(roomDao.findByName("sojukang").get().getTurn()).isEqualTo("black");
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"1:0", "2:1"}, delimiter = ':')
+    @DisplayName("Room을 삭제한다.")
+    void delete(Long id, int size) {
+        roomDao.delete(id);
+        assertThat(roomDao.findAll()).hasSize(size);
     }
 }

@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -54,6 +55,12 @@ public class ChessController {
     @ResponseBody
     public BoardDto load(@PathVariable Long roomId) {
         return chessService.load(roomId);
+    }
+
+    @DeleteMapping("/room/{roomId}")
+    @ResponseBody
+    public boolean delete(@PathVariable Long roomId, @RequestParam String password) {
+        return chessService.delete(roomId, password);
     }
 
     @PatchMapping("/room/{roomId}/move")

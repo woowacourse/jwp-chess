@@ -243,6 +243,7 @@ async function rooms() {
         let roomId = rooms[aRoom]["id"];
         let button = document.createElement("button");
         button.innerHTML = `<input type=\"button\" id=\"enter-room/${roomId}\" class=\"chess-btn\" value=\"방 입장\" onclick=\"enter(this)\">`
+        button.innerHTML += `<input type=\"button\" id=\"delete/${roomId}\" class=\"chess-btn\" value=\"방 삭제\" onclick=\"deleteRoom(this)\">`
         tr.appendChild(button);
         document.querySelector("tbody").appendChild(tr);
     }
@@ -256,3 +257,24 @@ async function enter(self) {
     document.getElementById("entrance").style.display = "none";
     document.getElementById("start-room").style.display = "block";
 }
+
+async function deleteRoom(self) {
+    id = self.id.split("/")[1];
+    let isDeleted = false;
+    await fetch("/room/" + id, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        },
+        body: "password=" + document.getElementById("roomPassword").value
+    }).then(res => res.json())
+        .then(data => isDeleted = data)
+
+    if (isDeleted) {
+        alert("삭제되었습니다.");
+        await rooms();
+    } else {
+        alert("[ERROR]: 비밀번호가 일치하지 않습니다.")
+    }
+}
+

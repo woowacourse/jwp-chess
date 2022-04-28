@@ -65,4 +65,9 @@ public class FakeRoomDao implements RoomDao {
         }
         return Optional.empty();
     }
+
+    @Override
+    public void delete(Long roomId) {
+        rooms.remove((int) (roomId - 1));
+    }
 }

@@ -4,7 +4,10 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
@@ -76,5 +79,12 @@ public class ChessServiceTest {
             () -> assertThat(actual.getWhiteScore()).isEqualTo(38.0),
             () -> assertThat(actual.getBlackScore()).isEqualTo(38.0)
         );
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"pw:true", "pww:false"}, delimiter = ':')
+    @DisplayName("delete로 id, password를 받아 Room, square 정보를 지운다.")
+    void delete(String password, boolean expected) {
+        assertThat(chessService.delete(id, password)).isEqualTo(expected);
     }
 }

@@ -3,8 +3,6 @@ package chess.dao;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 import chess.dto.RoomDto;
 import chess.entity.Room;
 
@@ -22,4 +20,6 @@ public interface RoomDao {
     List<RoomDto> findAll();
 
     Optional<Room> findByIdAndPassword(Long id, String password);
+
+    void delete(Long roomId);
 }

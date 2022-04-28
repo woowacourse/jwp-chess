@@ -10,9 +10,13 @@ import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.dto.request.CreateRoomDto;
 import chess.dto.request.MovePieceDto;
-import chess.dto.response.*;
+import chess.dto.response.ErrorDto;
+import chess.dto.response.PieceColorDto;
+import chess.dto.response.RoomDto;
+import chess.dto.response.ScoreResultDto;
 import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -79,18 +83,13 @@ public class ChessController {
     }
 
     @PostMapping("/rooms/{id}/move")
-    public CommandResultDto movePiece(@PathVariable String id, @RequestBody MovePieceDto movePieceDto) {
-        try {
-            chessService.movePiece(RoomId.from(id), movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition());
-            return CommandResultDto.createSuccess();
-        } catch (IllegalStateException e) {
-            return CommandResultDto.createFail(e.getMessage());
-        }
+    public void movePiece(@PathVariable String id, @RequestBody MovePieceDto movePieceDto) {
+        chessService.movePiece(RoomId.from(id), movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition());
     }
 
-    @ExceptionHandler()
-    public ErrorDto handleException(RuntimeException e) {
-        return new ErrorDto(e.getMessage());
+    @ExceptionHandler
+    public ResponseEntity<ErrorDto> handleException(RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
     }
 
     private Map<String, String> boardToRaw(Board board) {

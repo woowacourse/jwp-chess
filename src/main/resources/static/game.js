@@ -50,7 +50,7 @@ const Board = ({id, selected, onCellClick}) => {
 
                         return (
                             <Cell key={coordinate} alt={isOddRow !== isOddCol} onClick={() => onCellClick(coordinate)}>
-                                { pieceName && <img alt="chess-piece" src={`/images/${pieceName.toLowerCase()}.svg`}/> }
+                                {pieceName && <img alt="chess-piece" src={`/images/${pieceName.toLowerCase()}.svg`}/>}
                             </Cell>
                         );
                     })
@@ -84,7 +84,7 @@ const Winner = ({winner}) => {
 }
 
 const Game = () => {
-    const { id } = parseQueryString();
+    const {id} = parseQueryString();
     const [selected, setSelected] = React.useState();
 
     const [score, setScore] = React.useState({
@@ -121,7 +121,12 @@ const Game = () => {
             return;
         }
 
-        await move(id, selected, coordinate);
+        try {
+            await move(id, selected, coordinate);
+        } catch (e) {
+            alert(e.message);
+        }
+
         setSelected(null);
     }
 

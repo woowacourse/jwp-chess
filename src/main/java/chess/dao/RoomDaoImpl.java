@@ -4,7 +4,9 @@ import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
 import chess.domain.game.room.RoomPassword;
 import chess.domain.piece.PieceColor;
+import chess.exception.NotFoundRoom;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -69,8 +71,12 @@ public class RoomDaoImpl implements RoomDao {
     @Override
     public PieceColor getCurrentTurn(RoomId roomId) {
         String query = String.format("SELECT turn FROM %s WHERE id = ?", TABLE_NAME);
-        String turn = jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> resultSet.getString("turn"),
-                roomId.getValue());
-        return PieceColor.valueOf(turn);
+        try {
+            String turn = jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> resultSet.getString("turn"),
+                    roomId.getValue());
+            return PieceColor.valueOf(turn);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundRoom();
+        }
     }
 }

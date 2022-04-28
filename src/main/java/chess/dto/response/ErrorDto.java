@@ -7,6 +7,10 @@ public class ErrorDto {
         this.message = message;
     }
 
+    public boolean getError() {
+        return true;
+    }
+
     public String getMessage() {
         return message;
     }

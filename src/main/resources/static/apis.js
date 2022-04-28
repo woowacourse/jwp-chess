@@ -1,23 +1,21 @@
 const API_HOST = "http://localhost:8080"
 
 const fetchAsGet = async (path) => {
-    const response = await fetch(`${API_HOST}${path}`, {
-        method: "GET"
-    });
-
-    return response.json();
+    try {
+        const response = await axios.get(`${API_HOST}${path}`);
+        return response.data;
+    } catch (e) {
+        throw new Error(e.response.data.message);
+    }
 }
 
 const fetchAsPost = async (path, body) => {
-    const response = await fetch(`${API_HOST}${path}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body)
-    });
-
-    return response.json();
+    try {
+        const response = await axios.post(`${API_HOST}${path}`, body);
+        return response.data;
+    } catch (e) {
+        throw new Error(e.response.data.message);
+    }
 }
 
 const fetchAsDelete = async (path) => {
@@ -57,3 +55,4 @@ const deleteRoom = async (id, password) => {
 const move = async (roomId, from, to) => {
     return await fetchAsPost(`/rooms/${roomId}/move`, {from, to})
 }
+

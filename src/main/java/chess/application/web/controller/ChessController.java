@@ -35,6 +35,7 @@ public class ChessController {
     @GetMapping("/")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("index");
+        modelAndView.addObject("rooms", roomsDao.findAll());
         return modelAndView;
     }
 
@@ -56,8 +57,15 @@ public class ChessController {
         return "redirect:game";
     }
 
+    @GetMapping(path = "/enter")
+    public String enterRoom(RedirectAttributes redirectAttributes, @RequestParam("roomId") int roomId) {
+        redirectAttributes.addAttribute("roomId", roomId);
+        redirectAttributes.addAttribute("message");
+        return "redirect:/game";
+    }
+
     @GetMapping(path = "/game")
-    public ModelAndView printCurrentBoard(@RequestParam("roomId") int roomId, @RequestParam("message") String message) {
+    public ModelAndView printCurrentBoard(@RequestParam("roomId") int roomId, @RequestParam(value = "message", required = false) String message) {
         State state = currentState(roomId);
         ModelAndView modelAndView = new ModelAndView(getViewName(state));
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
@@ -65,6 +73,7 @@ public class ChessController {
         modelAndView.addObject("commands", commandDao.findAll(roomId));
         modelAndView.addObject("message", message);
         modelAndView.addObject("roomId", roomId);
+        modelAndView.addObject("name", roomsDao.findNameById(roomId));
         return modelAndView;
     }
 
@@ -94,6 +103,26 @@ public class ChessController {
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
         modelAndView.addObject("whiteScore", results.get(Player.WHITE));
         modelAndView.addObject("blackScore", results.get(Player.BLACK));
+        return modelAndView;
+    }
+
+    @PostMapping(path ="/remove")
+    public String removeRoom(@RequestParam int roomId, @RequestParam String password) {
+        roomsDao.removeRoom(roomId, password);
+        return "redirect:";
+    }
+
+    @GetMapping(path = "/check-password")
+    public ModelAndView checkPassword(@RequestParam int roomId, @RequestParam String name) {
+        if (currentState(roomId).isRunning()) {
+            ModelAndView modelAndView = new ModelAndView("index");
+            modelAndView.addObject("message", "진행 중인 게임은 삭제할 수 없습니다.");
+            modelAndView.addObject("rooms", roomsDao.findAll());
+            return modelAndView;
+        }
+        ModelAndView modelAndView = new ModelAndView("remove");
+        modelAndView.addObject("roomId", roomId);
+        modelAndView.addObject("name", name);
         return modelAndView;
     }
 

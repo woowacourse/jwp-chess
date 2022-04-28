@@ -7,15 +7,18 @@
 <body>
 <h1> 체스게임 </h1>
 {{this.message}}
-<form action="/create" method="post">
-    <input type="submit" value="새로 하기">
-</form>
-<form action="/game" method="get">
-    <input type="submit" value="이어 하기" name="message">
-</form>
 <form action="/create" method="get">
     <input type="submit" value="새 게임 만들기">
 </form>
-
+<h2>진행중인 게임 목록</h2>
+<h3> 아이디 : 이름 </h3>
+{{#this.rooms}}
+<form action="/check-password" method="get">
+<input type="submit" value="삭제">
+{{this.id}} : <a href="enter/?roomId={{this.id}}"> {{this.name}} </a>
+<input type="hidden" value="{{this.name}}" name="name">
+<input type="hidden" value="{{this.id}}" name="roomId">
+</form>
+{{/this.rooms}}
 </body>
 </html>

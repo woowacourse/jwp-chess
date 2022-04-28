@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h1> 체스 게임 삭제 </h1>
+아이디 : {{this.roomId}}
+<br />
+이름 : {{this.name}}
+<form action="/remove" method="post">
+    비밀번호 입력 <input type="text" name="password" />
+    <br />
+    <input type="hidden" value="{{this.roomId}}" name="roomId" />
+    <input type="submit" value="삭제" />
+</form>
+<form action="/" method="get">
+<input type="submit" value="처음으로" />
+</form>
+</body>
+</html>

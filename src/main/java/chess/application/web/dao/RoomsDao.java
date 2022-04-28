@@ -1,7 +1,11 @@
 package chess.application.web.dao;
 
+import chess.view.Room;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class RoomsDao {
@@ -53,5 +57,16 @@ public class RoomsDao {
     private String hashedPassword(final String password) {
         final String sql = String.format("select md5('%s')", password);
         return jdbcTemplate.queryForObject(sql, String.class);
+    }
+
+    public List<Room> findAll() {
+        final String sql = "select id, name from rooms";
+        return jdbcTemplate.query(sql,
+                ((rs, rowNum) -> new Room(rs.getInt("id"), rs.getString("name"))));
+    }
+
+    public void removeRoom(final int roomId, final String password) {
+        final String sql = String.format("delete from rooms where id=(?) and password=md5('%s')", password);
+        jdbcTemplate.update(sql, roomId);
     }
 }

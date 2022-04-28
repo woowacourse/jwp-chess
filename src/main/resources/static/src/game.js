@@ -23,10 +23,10 @@ statusButton.addEventListener("click", async function () {
 });
 
 stopButton.addEventListener("click", async function () {
-  if (!confirm("방을 삭제하시겠습니까?")) {
-    await finish();
-  } else {
-    await deleteAndFinish();
+  if (confirm("게임을 중단하겠습니까?")) {
+    alert("게임이 종료되었습니다.");
+    removeAllPieces();
+    location.href = "/";
   }
 });
 
@@ -96,19 +96,6 @@ async function getStatus() {
   alert("현재 점수를 표시합니다.");
 
   document.getElementById("score").innerHTML = result;
-}
-
-async function finish() {
-  alert("방을 유지한채 게임이 종료되었습니다.");
-  removeAllPieces();
-}
-
-async function deleteAndFinish() {
-  await fetch("/game?name=" + gameName, {
-    method: "DELETE",
-  })
-  alert("방이 삭제됐습니다.");
-  removeAllPieces();
 }
 
 function removeAllPieces() {

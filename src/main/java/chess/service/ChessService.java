@@ -51,14 +51,13 @@ public class ChessService {
         pieceDao.save(chessGameDto, chessGameId);
     }
 
-    public List<String> move(String from, String to, int chessGameId) {
+    public void move(String from, String to, int chessGameId) {
         ChessGame chessGame = chessGameDao.findById(chessGameId);
         Command command = Command.from(makeCommand(from, to));
         chessGame.progress(command);
         pieceDao.deleteByPosition(to, chessGameId);
         pieceDao.updatePosition(from, to, chessGameId);
         chessGameDao.update(chessGame.getState().getTurn(), chessGameId);
-        return chessGame.getChessBoardSymbol();
     }
 
     private String makeCommand(String from, String to) {

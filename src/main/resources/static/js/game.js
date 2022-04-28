@@ -1,13 +1,13 @@
-const newGamemUrl = '/';
-let selected = '';
-let from;
-
 const urls = location.href.split('/');
 const gameId = urls[urls.length - 1];
 
-const moveUrl = `/move`;
-const scoreUrl = `/score/${gameId}`;
-const boardUrl = `/board/${gameId}`;
+const indexPageUrl = '/';
+const scoreUrl = `/games/${gameId}/score`;
+const boardUrl = `/games/${gameId}/board`;
+
+let selected = '';
+let from;
+
 /**
  * 페이지 첫 진입 시 => 기물 그리기 | 이벤트 적용 |점수 출력
  */
@@ -29,7 +29,7 @@ const initialize = () => {
         .forEach(square => square.addEventListener('click', squareClick));
 
     document.getElementById("newGame").addEventListener('click', (event) => {
-        location.href = newGamemUrl;
+        location.href = indexPageUrl;
     });
 }
 
@@ -80,8 +80,8 @@ const setupSelected = (selectedSquare) => {
  * @param selectedSquare
  */
 const processMove = (selectedSquare) => {
-    fetch(moveUrl, {
-        method: 'POST',
+    fetch(boardUrl, {
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },

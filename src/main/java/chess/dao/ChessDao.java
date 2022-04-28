@@ -1,27 +1,28 @@
 package chess.dao;
 
-import chess.dto.GameRoomDto;
-import chess.dto.MoveRequestDto;
-import chess.dto.NewGameRequest;
+import chess.domain.board.Board;
+import chess.dto.GameCreateRequest;
+import chess.dto.GameDeleteResponse;
+import chess.dto.GameDto;
+import chess.dto.MoveRequest;
 import java.util.List;
-import java.util.Map;
 
 public interface ChessDao {
-    Map<String, String> getBoardByGameId(String gameId);
+    int create(GameCreateRequest gameCreateRequest);
 
-    void move(MoveRequestDto moveRequestDto);
+    List<GameDto> findAll();
 
-    String getTurnByGameId(String gameId);
+    GameDto findById(int id);
 
-    int createNewGame(NewGameRequest newGameRequest);
+    GameDeleteResponse deleteById(int id);
 
-    List<GameRoomDto> findGamesOnPlay();
+    Board findBoardByGameId(int id);
 
-    GameRoomDto findGameById(int id);
+    void updateBoardByMove(MoveRequest moveRequest);
 
-    int deleteGameById(int id);
+    void finishBoardById(int id);
 
-    void setFinishedById(String gameId);
+    void changeTurnByGameId(int id);
 
-    List<GameRoomDto> findGames();
+    String findPasswordById(int id);
 }

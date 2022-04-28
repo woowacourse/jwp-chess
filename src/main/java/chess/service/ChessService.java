@@ -1,31 +1,30 @@
 package chess.service;
 
 import chess.domain.piece.Color;
-import chess.dto.GameRoomDto;
-import chess.dto.MoveRequestDto;
-import chess.dto.MoveResultDto;
-import chess.dto.NewGameRequest;
-import chess.dto.NewGameResponse;
+import chess.dto.GameCreateRequest;
+import chess.dto.GameCreateResponse;
+import chess.dto.GameDeleteRequest;
+import chess.dto.GameDeleteResponse;
+import chess.dto.GameDto;
+import chess.dto.MoveRequest;
+import chess.dto.MoveResponse;
 import chess.dto.PositionDto;
 import java.util.List;
 import java.util.Map;
 
 public interface ChessService {
-    List<PositionDto> getBoardByGameId(String gameId);
 
-    MoveResultDto move(MoveRequestDto moveRequestDto);
+    GameCreateResponse create(GameCreateRequest gameCreateRequest);
 
-    boolean isFinished(String gameId);
+    List<GameDto> findAll();
 
-    Map<Color, Double> getScore(String gameId);
+    GameDto findById(int id);
 
-    NewGameResponse createNewGame(NewGameRequest newGameRequest);
+    Map<Color, Double> findScoreById(int gameId);
 
-    List<GameRoomDto> findGamesOnPlay();
+    List<PositionDto> findPositionsById(int gameId);
 
-    GameRoomDto findGameById(int id);
+    MoveResponse updateBoard(MoveRequest moveRequest);
 
-    int deleteGameById(int id);
-
-    List<GameRoomDto> findGames();
+    GameDeleteResponse deleteById(GameDeleteRequest gameDeleteRequest);
 }

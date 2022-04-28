@@ -18,7 +18,6 @@ const removeUrl = `/room/delete`;
 
 const deleteRoom = (event) => {
     const id = event.target.dataset.id;
-    console.log(removeUrl);
     const password = prompt(`${id} 번방 비밀번호를 입력해주세요.`);
 
     fetch(removeUrl, {

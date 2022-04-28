@@ -4,6 +4,7 @@ import chess.dto.RoomsDto;
 import chess.model.room.Room;
 import chess.model.service.fake.*;
 import chess.service.ChessService;
+import chess.service.RoomService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +25,7 @@ class ChessServiceTest {
     private FakeRoomRepository fakeRoomRepository;
     private FakeMemberRepository fakeMemberRepository;
     private ChessService chessService;
+    private RoomService roomService;
 
     @BeforeEach
     void setup() {
@@ -34,19 +36,12 @@ class ChessServiceTest {
         fakeMemberRepository = new FakeMemberRepository(fakeMemberId, fakeName);
         chessService = new ChessService(fakeBoardRepository, fakeSquareRepository, fakePieceRepository,
                 fakeRoomRepository, fakeMemberRepository);
+        roomService = new RoomService(fakeRoomRepository, fakeMemberRepository, fakeBoardRepository);
     }
 
     @Test
     void init() {
         Room room = chessService.init(fakeTitle, fakePassword, fakeName, "corinne");
-
         assertThat(room.getTitle()).isEqualTo(fakeTitle);
-    }
-
-    @Test
-    void getRooms() {
-        RoomsDto roomsDto = chessService.getRooms();
-
-        assertThat(roomsDto.getRoomsDto().get(0).getRoomTitle()).isEqualTo(fakeTitle);
     }
 }

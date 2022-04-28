@@ -41,4 +41,8 @@ public class FakeRoomRepository implements RoomRepository<Room> {
     public Room getById(int roomId) {
         return new Room(fakeAutoIncrementId, fakeTitle, fakePassword, boardId);
     }
+
+    @Override
+    public void deleteById(int id) {
+    }
 }

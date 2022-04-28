@@ -46,7 +46,7 @@ class ChessRoomRepositoryTest {
     void findAllByStatus() {
         chessRoomRepository.save(new Room("왕허접만", "비밀번호", boardId));
         final List<Room> rooms = chessRoomRepository.findAllByBoardStatus(new Running());
-        assertThat(room).isEqualTo(2);
+        assertThat(rooms.size()).isEqualTo(2);
     }
 
     @Test

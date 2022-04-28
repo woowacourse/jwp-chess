@@ -64,18 +64,6 @@ public class ChessService {
         return chessSquareRepository.getBySquareAndBoardId(square, board);
     }
 
-    public RoomsDto getRooms() {
-        List<RoomDto> roomsDto = new ArrayList<>();
-        List<Room> rooms = chessRoomRepository.findAll();
-        for (Room room : rooms) {
-            List<Member> membersByRoom = chessMemberRepository.findMembersByRoomId(room.getId());
-            boolean isEnd = chessBoardRepository.getStatusById(room.getBoardId()).isEnd();
-            roomsDto.add(
-                    new RoomDto(room.getId(), room.getTitle(), room.getPassword(), membersByRoom, isEnd));
-        }
-        return new RoomsDto(roomsDto);
-    }
-
     public BoardDto getBoard(int roomId) {
         final Room room = chessRoomRepository.getById(roomId);
         final Map<Square, Piece> allPositionsAndPieces = chessSquareRepository.findAllSquaresAndPieces(
@@ -155,12 +143,4 @@ public class ChessService {
         chessBoardRepository.updateStatus(room.getBoardId(), new End());
     }
 
-    public GameDeleteResponseDto deleteRoom(int id, String password) {
-        Room room = chessRoomRepository.getById(id);
-        if (room.getPassword().equals(password)) {
-            chessRoomRepository.deleteById(id);
-            return new GameDeleteResponseDto(true, "삭제되었습니다.");
-        }
-        return new GameDeleteResponseDto(false, "삭제할 수 없습니다.");
-    }
 }

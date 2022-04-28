@@ -7,12 +7,17 @@
     <link rel="stylesheet" href="/src/index.css">
     <script type="text/javascript" src="/src/index.js"></script>
 </head>
+<style>
+    body {
+        background-color:darkseagreen;
+    }
+</style>
 <body>
 <div align="center">
     <a href="/"><img src="/images/home.png" style="width:7vw; height: 7vw;"></a>
-    <h1>♟산체스♟</h1>
+    <h1>체스 게임</h1>
     {{#board}}
-    <h2> 방제: {{roomTitle}}</h2>
+    <h2> 제목: {{roomTitle}}</h2>
     <input id="roomId" type="hidden" value={{roomId}}/>
     <p>
         {{blackMemberName}}

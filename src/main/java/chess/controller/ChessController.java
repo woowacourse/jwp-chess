@@ -5,6 +5,7 @@ import chess.dto.GameDeleteResponseDto;
 import chess.dto.RoomRequestDto;
 import chess.dto.ResponseDto;
 import chess.dto.ScoreDto;
+import chess.service.RoomService;
 import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,14 +18,16 @@ import chess.service.ChessService;
 public class ChessController {
 
     private final ChessService chessService;
+    private final RoomService roomService;
 
-    public ChessController(ChessService chessService) {
+    public ChessController(ChessService chessService, RoomService roomService) {
         this.chessService = chessService;
+        this.roomService = roomService;
     }
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("rooms", chessService.getRooms());
+        model.addAttribute("rooms", roomService.getRooms());
         return "home";
     }
 
@@ -79,6 +82,6 @@ public class ChessController {
     public GameDeleteResponseDto delete(@RequestBody GameDeleteDto gameDeleteDto) {
         int id = gameDeleteDto.getId();
         String password = gameDeleteDto.getPassword();
-        return chessService.deleteRoom(id, password);
+        return roomService.deleteRoom(id, password);
     }
 }

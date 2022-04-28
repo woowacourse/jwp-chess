@@ -43,7 +43,7 @@ public class ChessBoard {
         return calculateScore(piece -> piece.isPieceTeam(pieceTeam), pieceTeam);
     }
 
-    public double calculateScore(Predicate<Piece> condition, PieceTeam pieceTeam) {
+    private double calculateScore(Predicate<Piece> condition, PieceTeam pieceTeam) {
         return board.values()
                 .stream()
                 .filter(condition)

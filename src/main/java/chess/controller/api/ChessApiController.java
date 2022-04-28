@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.board.position.Position;
+import chess.domain.piece.PieceTeam;
 import chess.dto.request.web.SaveRequest;
 import chess.dto.response.web.GameResponse;
 import chess.service.ChessService;
@@ -34,6 +35,11 @@ public class ChessApiController {
 
         ChessBoard chessBoard = chessService.initAndGetChessBoard(session);
 
+        double white = chessBoard.calculateScoreByTeam(PieceTeam.WHITE);
+        double black = chessBoard.calculateScoreByTeam(PieceTeam.BLACK);
+
+        log.info("init {}, {}", white, black);
+
         return new GameResponse(chessBoard);
     }
 
@@ -42,11 +48,18 @@ public class ChessApiController {
                              @RequestParam("from") String fromString,
                              @RequestParam("to") String toString) {
 
-        System.out.println("move session = " + session);
-
         Position from = Position.of(fromString);
         Position to = Position.of(toString);
+
         chessService.movePiece(session, from, to);
+
+        ChessBoard chessBoard = chessService.getChessBoard(session);
+
+        double white = chessBoard.calculateScoreByTeam(PieceTeam.WHITE);
+        double black = chessBoard.calculateScoreByTeam(PieceTeam.BLACK);
+
+        log.info("move {}, {}", white, black);
+
         return new GameResponse(chessService.getChessBoard(session));
     }
 
@@ -56,7 +69,7 @@ public class ChessApiController {
     }
 
     @GetMapping(value = "/load-last-game", produces = APPLICATION_JSON_VALUE)
-    public GameResponse loadLastGame() {
+    public GameResponse loadLastGame(HttpSession session) {
         GameResponse gameResponse = chessService.loadLastGame();
         return gameResponse;
     }

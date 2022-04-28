@@ -13,3 +13,12 @@ td img {
 #chess-board td.clicked {
     background-color: #FCE77D !important;
 }
+
+#team-score, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+#team-score th, td {
+  padding: 5px;
+  text-align: left;
+}

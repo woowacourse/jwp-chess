@@ -59,6 +59,7 @@ function initChessPieces() {
     .done(function (data) {
       placeChessPieces(data.board);
       setCurrentTeam(data.teamName);
+      setTeamScore(data.teamNameToScore);
     })
     .fail(function (xhr, status, errorThrown) {
       console.log(xhr);
@@ -94,7 +95,6 @@ function triggerEvents() {
 }
 
 function colorClickedSquare(thisParam) {
-  debugger;
   $(globalClickedSquare).removeClass("clicked");
   $(thisParam).addClass("clicked");
   globalClickedSquare = thisParam;
@@ -157,9 +157,10 @@ function movePieceRequest(from, to) {
     dataType: "json",
   })
     .done(function (data) {
-      clearPieces();
+      clearPieceImages();
       placeChessPieces(data.board);
       setCurrentTeam(data.teamName);
+      setTeamScore(data.teamNameToScore);
     })
     .fail(function (xhr, status, errorThrown) {
       console.log(xhr);
@@ -167,12 +168,17 @@ function movePieceRequest(from, to) {
     });
 }
 
-function clearPieces() {
+function clearPieceImages() {
   $("table#chess-board").find("img").remove();
 }
 
 function setCurrentTeam(teamName) {
   $("#current-team").text(teamName);
+}
+
+function setTeamScore(teamNameToScore) {
+  $("#white-score").text(teamNameToScore.white);
+  $("#black-score").text(teamNameToScore.black);
 }
 
 function isExistPiece(square) {
@@ -193,8 +199,6 @@ function getPieces() {
 
   return pieces;
 }
-
-function convertAndGetCurrentTeam() {}
 
 function saveGameRequest() {
   const gameData = {

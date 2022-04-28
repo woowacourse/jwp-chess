@@ -52,7 +52,7 @@ public class ChessService {
                           Position to) {
         ChessBoard chessBoard = sessionToChessBoard.get(session);
 
-        System.out.println("movePiece chessBoard = " + chessBoard);
+
 
         chessBoard.movePiece(from, to);
     }
@@ -81,8 +81,5 @@ public class ChessService {
     @Scheduled(cron = "0/3 * * * * MON-FRI")
     public void scheduled() {
         System.out.println("ChessService.scheduled");
-    }
-
-    private class SessionToBoardRepository {
     }
 }

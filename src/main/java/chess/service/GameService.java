@@ -37,13 +37,11 @@ public class GameService {
         final Member black = memberDao.findById(createGameRequestDto.getBlackId())
             .orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
         final Board board = new Board(BoardInitializer.create());
+        final String title = createGameRequestDto.getTitle();
+        final String password = createGameRequestDto.getPassword();
         final Participant participant = new Participant(white, black);
 
-        return gameDao.save(
-            new ChessGame(board, Team.WHITE, participant),
-            createGameRequestDto.getTitle(),
-            createGameRequestDto.getPassword()
-        );
+        return gameDao.save(new ChessGame(board, title, password, Team.WHITE, participant));
     }
 
     public List<ChessGame> findPlayingGames() {
@@ -118,7 +116,7 @@ public class GameService {
     public void move(final Long gameId, final String rawFrom, final String rawTo) {
         final ChessGame chessGame = findByGameId(gameId);
         chessGame.move(Square.from(rawFrom), Square.from(rawTo));
-        gameDao.move(chessGame, rawFrom, rawTo);
+        gameDao.move(gameId, chessGame, rawFrom, rawTo);
     }
 
     public void terminate(final Long gameId) {

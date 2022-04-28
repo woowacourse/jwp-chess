@@ -21,9 +21,10 @@
     {{#games}}
         <div class="card" style="width: 100%; margin-top: 1vh;">
             <div class="card-body">
-                <h5 class="card-title">{{id}} 번째 게임</h5>
+                <h5 class="card-title">{{title}} 게임</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
                 <a href="/games/{{id}}/play" class="btn btn-dark">입장</a>
+                <a href="" class="btn btn-black">삭제</a>
             </div>
         </div>
     {{/games}}

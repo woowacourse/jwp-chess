@@ -1,11 +1,18 @@
 package chess.domain;
 
-import static chess.domain.piece.detail.Team.BLACK;
-import static chess.domain.piece.detail.Team.NONE;
-import static chess.domain.piece.detail.Team.WHITE;
+import static chess.domain.piece.detail.Team.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import chess.domain.piece.Piece;
 import chess.domain.piece.detail.Team;
@@ -16,20 +23,26 @@ import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.singlemove.King;
 import chess.domain.piece.singlemove.Knight;
 import chess.domain.square.Square;
-import java.util.HashMap;
-import java.util.Map;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 class ChessGameTest {
+
+    private ChessGame chessGame;
+
+    @BeforeEach
+    void init() {
+        chessGame = new ChessGame(
+            new Board(BoardInitializer.create()),
+            null,
+            null,
+            WHITE,
+            null
+        );
+    }
 
     @DisplayName("게임에 이동 명령을 내리면 기물이 정상적으로 움직이는지 확인한다.")
     @ParameterizedTest
     @CsvSource({"a2,a3", "a2,a4", "b1, a3", "b1,c3"})
     void move(final String rawFrom, final String rawTo) {
-        final ChessGame chessGame = ChessGame.initGame();
         final Square from = Square.from(rawFrom);
         final Square to = Square.from(rawTo);
         final Board board = chessGame.getBoard();
@@ -48,7 +61,6 @@ class ChessGameTest {
     @ParameterizedTest
     @CsvSource({"a7,a6", "a7,a5", "a8,a5", "b8,a6", "c8,b7", "d8,d5", "e8,e7"})
     void invalidTurnMove(final String rawFrom, final String rawTo) {
-        final ChessGame chessGame = ChessGame.initGame();
         final Square from = Square.from(rawFrom);
         final Square to = Square.from(rawTo);
 
@@ -61,7 +73,6 @@ class ChessGameTest {
     @ParameterizedTest
     @CsvSource({"a2,a3", "a2,a4", "b1, a3", "b1,c3"})
     void reverseTurn(final String rawFrom, final String rawTo) {
-        final ChessGame chessGame = ChessGame.initGame();
         final Square from = Square.from(rawFrom);
         final Square to = Square.from(rawTo);
 
@@ -73,7 +84,6 @@ class ChessGameTest {
     @DisplayName("게임에 종료 명령을 주면 게임이 종료된다.")
     @Test
     void terminate() {
-        final ChessGame chessGame = ChessGame.initGame();
         chessGame.terminate();
         assertThat(chessGame.getTurn()).isSameAs(NONE);
     }
@@ -81,7 +91,6 @@ class ChessGameTest {
     @DisplayName("종료된 게임에 기물을 움직이려하면 예외가 발생한다.")
     @Test
     void invalidMoveAfterTerminate() {
-        final ChessGame chessGame = ChessGame.initGame();
         chessGame.terminate();
         assertThatThrownBy(() -> chessGame.move(Square.from("a1"), Square.from("a2")))
                 .isInstanceOf(IllegalStateException.class)
@@ -103,7 +112,7 @@ class ChessGameTest {
         board.put(Square.from("e1"), new Bishop(WHITE, Square.from("e1"))); // Score : 13
         board.put(Square.from("f1"), new Queen(WHITE, Square.from("f1"))); // Score : 22
 
-        final ChessGame chessGame = new ChessGame(1L, new Board(board), WHITE);
+        final ChessGame chessGame = new ChessGame(new Board(board), null, null, WHITE, null);
         final Result result = chessGame.createResult();
 
         assertAll(
@@ -118,7 +127,7 @@ class ChessGameTest {
         Map<Square, Piece> board = new HashMap<>();
         board.put(Square.from("a1"), new King(WHITE, Square.from("a1")));
         board.put(Square.from("a2"), new King(BLACK, Square.from("a2")));
-        final ChessGame chessGame = new ChessGame(1L, new Board(board), WHITE);
+        final ChessGame chessGame = new ChessGame(new Board(board), null, null, WHITE, null);
 
         chessGame.move(Square.from("a1"), Square.from("a2"));
 
@@ -132,7 +141,7 @@ class ChessGameTest {
         board.put(Square.from("a1"), new King(WHITE, Square.from("a1")));
         board.put(Square.from("a2"), new King(BLACK, Square.from("a2")));
 
-        final ChessGame chessGame = new ChessGame(1L, new Board(board), WHITE);
+        final ChessGame chessGame = new ChessGame(new Board(board), null, null, WHITE, null);
         chessGame.move(Square.from("a1"), Square.from("a2"));
         final Result result = chessGame.createResult();
 

@@ -25,9 +25,9 @@ class GameDaoTest {
         final Member memberTwo = new Member(2L, "알렉스");
         final Board board = new Board(BoardInitializer.create());
         final Participant participant = new Participant(memberOne, memberTwo);
-        final ChessGame game = new ChessGame(board, Team.WHITE, participant);
+        final ChessGame game = new ChessGame(board, null, null, Team.WHITE, participant);
 
-        dao.save(game, null, null);
+        dao.save(game);
 
         assertThat(dao.findById(1L).get().getTurn()).isEqualTo(game.getTurn());
     }
@@ -43,12 +43,12 @@ class GameDaoTest {
         final Board board = new Board(BoardInitializer.create());
         final Participant participant = new Participant(memberOne, memberTwo);
 
-        games.add(new ChessGame(board, Team.WHITE, participant));
-        games.add(new ChessGame(board, Team.WHITE, participant));
-        games.add(new ChessGame(board, Team.WHITE, participant));
+        games.add(new ChessGame(board, null, null, Team.WHITE, participant));
+        games.add(new ChessGame(board, null, null, Team.WHITE, participant));
+        games.add(new ChessGame(board, null, null, Team.WHITE, participant));
 
         for (ChessGame game : games) {
-            dao.save(game, null, null);
+            dao.save(game);
         }
 
         assertThat(dao.findAll().size()).isEqualTo(games.size());

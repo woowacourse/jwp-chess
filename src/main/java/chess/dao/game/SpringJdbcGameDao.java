@@ -40,9 +40,11 @@ public class SpringJdbcGameDao implements GameDao {
                 .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
         final Member black = memberDao.findById(resultSet.getLong("black_member_id"))
                 .orElseThrow(() -> new RuntimeException("찾는 멤버가 존재하지 않습니다."));
+        final String title = resultSet.getString("title");
+        final String password = resultSet.getString("password");
         final Long id = resultSet.getLong("id");
         final String rawTurn = resultSet.getString("turn");
-        return new ChessGame(id, pieceDao.findBoardByGameId(id), Team.valueOf(rawTurn),
+        return new ChessGame(pieceDao.findBoardByGameId(id), title, password, Team.valueOf(rawTurn),
                 new Participant(white, black));
     }
 
@@ -64,19 +66,19 @@ public class SpringJdbcGameDao implements GameDao {
     }
 
     @Override
-    public Long save(final ChessGame game, final String title, final String password) {
-        final Long gameId = saveGame(game, title, password);
+    public Long save(final ChessGame game) {
+        final Long gameId = saveGame(game);
         savePieces(gameId, game.getBoard());
         return gameId;
     }
 
-    private Long saveGame(final ChessGame game, final String title, final String password) {
+    private Long saveGame(final ChessGame game) {
         final String sql = "insert into Game (title, password, turn, white_member_id, black_member_id) values (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, title);
-            statement.setString(2, password);
+            statement.setString(1, game.getTitle());
+            statement.setString(2, game.getPassword());
             statement.setString(3, game.getTurn().name());
             statement.setLong(4, game.getWhiteId());
             statement.setLong(5, game.getBlackId());
@@ -101,7 +103,7 @@ public class SpringJdbcGameDao implements GameDao {
 
     @Override
     public List<ChessGame> findAll() {
-        final String sql = "select id, turn, white_member_id, black_member_id from Game";
+        final String sql = "select id, title, password, turn, white_member_id, black_member_id from Game";
         try {
             return jdbcTemplate.queryForObject(sql, gamesRowMapper);
         } catch (EmptyResultDataAccessException e) {
@@ -119,18 +121,18 @@ public class SpringJdbcGameDao implements GameDao {
     }
 
     @Override
-    public void move(final ChessGame game, final String rawFrom, final String rawTo) {
-        pieceDao.move(game.getId(), rawFrom, rawTo);
-        reverseTurn(game);
+    public void move(final Long gameId, final ChessGame game, final String rawFrom, final String rawTo) {
+        pieceDao.move(gameId, rawFrom, rawTo);
+        reverseTurn(gameId, game);
     }
 
-    private void reverseTurn(final ChessGame game) {
+    private void reverseTurn(final Long gameId, final ChessGame game) {
         final String sql = "update Game set turn = ? where id = ?";
 
         jdbcTemplate.update(connection -> {
             final PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, game.getTurn().name());
-            statement.setLong(2, game.getId());
+            statement.setLong(2, gameId);
             return statement;
         });
     }

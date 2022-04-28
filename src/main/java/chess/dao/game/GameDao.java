@@ -7,7 +7,7 @@ import chess.domain.ChessGame;
 
 public interface GameDao {
 
-    Long save(final ChessGame game, final String title, final String password);
+    Long save(final ChessGame game);
 
     Optional<ChessGame> findById(final Long id);
 
@@ -15,7 +15,7 @@ public interface GameDao {
 
     List<ChessGame> findHistoriesByMemberId(final Long memberId);
 
-    void move(final ChessGame game, final String rawFrom, final String rawTo);
+    void move(final Long gameId, final ChessGame game, final String rawFrom, final String rawTo);
 
     void terminate(final Long id);
 }

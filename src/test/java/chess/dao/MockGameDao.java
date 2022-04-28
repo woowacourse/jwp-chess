@@ -17,10 +17,11 @@ public class MockGameDao implements GameDao {
     private static int nextId = 1;
 
     @Override
-    public Long save(ChessGame game, String title, String password) {
-        game = new ChessGame((long) nextId++, game.getBoard(), game.getTurn(), game.getParticipant());
-        store.put(game.getId(), game);
-        return game.getId();
+    public Long save(ChessGame game) {
+        game = new ChessGame(game.getBoard(), null, null, game.getTurn(), game.getParticipant());
+        long id = nextId++;
+        store.put(id, game);
+        return id;
     }
 
     @Override
@@ -44,8 +45,8 @@ public class MockGameDao implements GameDao {
     }
 
     @Override
-    public void move(final ChessGame game, final String rawFrom, final String rawTo) {
-        store.put(game.getId(), game);
+    public void move(final Long gameId, final ChessGame game, final String rawFrom, final String rawTo) {
+        store.put(gameId, game);
     }
 
     @Override

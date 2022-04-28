@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Controller
 public class ChessController {
-
+  
     private final CommandDao commandDao;
     private final RoomsDao roomsDao;
 

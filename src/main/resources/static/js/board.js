@@ -104,9 +104,9 @@ const checkEndGame = (isRunning) => {
     }
 }
 
-const load = async () => {
+const load = async (id) => {
     isRun = true;
-    let chessMap = await fetch('/load');
+    let chessMap = await fetch('/chessMap/' + id);
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
 }

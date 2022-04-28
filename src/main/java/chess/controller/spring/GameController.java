@@ -5,6 +5,7 @@ import chess.domain.Result;
 import chess.domain.piece.Piece;
 import chess.domain.square.Rank;
 import chess.dto.CreateGameRequestDto;
+import chess.dto.GameRoomEnterDto;
 import chess.dto.MoveRequestDto;
 import chess.dto.RankDto;
 import chess.service.GameService;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,6 +63,7 @@ public class GameController {
     }
 
     @PutMapping("/{gameId}/move")
+    @ResponseBody
     public ResponseEntity<Long> movePiece(@PathVariable final Long gameId,
                                           @RequestBody final MoveRequestDto moveRequestDto) {
         gameService.move(gameId, moveRequestDto.getSource(), moveRequestDto.getTarget());
@@ -95,8 +98,38 @@ public class GameController {
     @PostMapping
     @ResponseBody
     public ResponseEntity<Long> createGame(@RequestBody final CreateGameRequestDto createGameRequestDto) {
-        final Long gameId = gameService.createGame(createGameRequestDto.getWhiteId(),
-                createGameRequestDto.getBlackId());
-        return ResponseEntity.created(URI.create("/chessGame/" + gameId)).body(gameId);
+        final Long whiteId = createGameRequestDto.getWhiteId();
+        final Long blackId = createGameRequestDto.getBlackId();
+        if (whiteId.equals(blackId)) {
+            throw new IllegalArgumentException("같은 멤버를 선택해서 게임을 생성할 수 없습니다.");
+        }
+        final Long gameId = gameService.createGame(
+                createGameRequestDto.getTitle(),
+                createGameRequestDto.getPassword(),
+                createGameRequestDto.getWhiteId(),
+                createGameRequestDto.getBlackId()
+        );
+        return ResponseEntity.created(URI.create("/games/" + gameId)).body(gameId);
+    }
+
+    @PostMapping("/password")
+    @ResponseBody
+    public ResponseEntity<Boolean> checkPassword(@RequestBody GameRoomEnterDto gameRoomEnterDto) {
+        final ChessGame game = gameService.findByGameId(gameRoomEnterDto.getGameId());
+        if (game.getPassword().equals(gameRoomEnterDto.getPassword())) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.badRequest().body(false);
+    }
+
+    @DeleteMapping("/{gameId}")
+    @ResponseBody
+    public ResponseEntity<Long> deleteGame(@PathVariable Long gameId) {
+        final ChessGame game = gameService.findByGameId(gameId);
+        if (!game.isEnd()) {
+            throw new IllegalStateException("게임이 종료되지 않아서 삭제할 수 없습니다.");
+        }
+        final Long deletedId = gameService.deleteGame(gameId);
+        return ResponseEntity.ok(deletedId);
     }
 }

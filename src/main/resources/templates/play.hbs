@@ -62,6 +62,7 @@
 </body>
 
 <script>
+
     const getScoreData = async () => {
         let response = await fetch("/games/{{gameId}}/score");
         let data = await response.json();
@@ -110,5 +111,6 @@
         })
     }
 
+    checkPassword();
 </script>
 </html>

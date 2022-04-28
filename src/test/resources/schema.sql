@@ -1,3 +1,7 @@
+drop table if exists Piece;
+drop table if exists Member;
+drop table if exists Game;
+
 create table Member
 (
     id   bigint auto_increment primary key,
@@ -8,6 +12,8 @@ create table Game
 (
     id              bigint auto_increment primary key,
     turn            varchar(10) not null,
+    title           varchar(30) not null,
+    password        varchar(30) not null,
     white_member_id bigint,
     black_member_id bigint
 );

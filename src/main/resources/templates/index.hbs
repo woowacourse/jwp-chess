@@ -8,7 +8,7 @@
             crossorigin="anonymous"></script>
     <link href="/css/chess.css" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>화분 깨먹는 말썽쟁이의 체스</title>
+    <title>알렉스 체스</title>
 </head>
 <body>
 <div class="chess-header">
@@ -22,8 +22,13 @@
         <div class="card" style="width: 100%; margin-top: 1vh;">
             <div class="card-body">
                 <h5 class="card-title">{{id}} 번째 게임</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
+                <h4 class="card-title">{{title}}</h4>
+                <h6 class="card-subtitle mb-2 text-muted">{{whiteName}} vs {{blackName}}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    <span class="{{progressBadge}}">{{inProgress}}</span>
+                </h6>
                 <a href="/games/{{id}}/play" class="btn btn-dark">입장</a>
+                <button onclick="checkPasswordAndDelete({{id}})" class="btn btn-danger">삭제</button>
             </div>
         </div>
     {{/games}}
@@ -38,6 +43,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div>방 제목</div>
+                <input type="text" id="title" class="form-control" placeholder="방 제목을 입력하세요.">
+                <div>비밀번호</div>
+                <input type="password" id="password" class="form-control" placeholder="비밀번호를 입력하세요.">
                 <div>백팀</div>
                 <select id="white" class="form-control">
                     {{#members}}
@@ -62,23 +71,64 @@
 
 <script>
     const createGame = () => {
+        let title = document.getElementById("title").value;
+        let password = document.getElementById("password").value;
         let whiteId = document.getElementById("white").value;
         let blackId = document.getElementById("black").value;
         fetch("/games", {
             method: "POST",
-            body: JSON.stringify({whiteId: whiteId, blackId: blackId}),
+            body: JSON.stringify({
+                title: title,
+                password: password,
+                whiteId: whiteId,
+                blackId: blackId
+            }),
             headers: {
                 'Content-Type': 'application/json',
             }
-        }).then(response => {
+        }).then(async response => {
             if (response.ok) {
                 alert("게임이 생성되었습니다.");
                 location.reload();
+                return;
             }
-            if (!response.ok) {
-                alert(response.statusText);
-            }
+            let message = await response.text();
+            alert(message);
         });
+    }
+
+    const checkPasswordAndDelete = (gameId) => {
+        let password = prompt("비밀번호를 입력하세요");
+        fetch("/games/password", {
+            method: "POST",
+            body: JSON.stringify({gameId: gameId, password: password}),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(async response => {
+            if (response.status === 400) {
+                alert("비밀번호 오류입니다!");
+                return;
+            }
+            deleteGame(gameId);
+        }).catch(error => alert(error));
+    }
+
+    const deleteGame = (gameId) => {
+        fetch(`/games/${gameId}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(async response => {
+            if (response.ok) {
+                alert("게임이 삭제되었습니다.");
+                location.reload();
+                return;
+            }
+            let errMsg = await response.text();
+            alert(errMsg);
+        })
     }
 </script>
 

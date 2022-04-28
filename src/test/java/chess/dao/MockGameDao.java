@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 public class MockGameDao implements GameDao {
 
     private final static Map<Long, ChessGame> store = new ConcurrentHashMap<>();
-    private static int nextId = 1;
+    private static long nextId = 1L;
 
     @Override
     public Long save(ChessGame game) {
-        game = new ChessGame((long) nextId++, game.getBoard(), game.getTurn(), game.getParticipant());
+        game = new ChessGame(nextId++, game.getBoard(), game.getTurn(), game.getRoomInfo());
         store.put(game.getId(), game);
         return game.getId();
     }
@@ -52,5 +52,15 @@ public class MockGameDao implements GameDao {
         final ChessGame game = store.get(id);
         game.terminate();
         store.put(id, game);
+    }
+
+    @Override
+    public Long deleteById(final Long gameId) {
+        store.remove(gameId);
+        return gameId;
+    }
+
+    public void deleteAll() {
+        store.clear();
     }
 }

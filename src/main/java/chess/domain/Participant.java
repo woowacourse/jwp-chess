@@ -7,7 +7,7 @@ public class Participant {
     private final Member white;
     private final Member black;
 
-    public Participant(Member white, Member black) {
+    public Participant(final Member white, final Member black) {
         this.white = white;
         this.black = black;
     }

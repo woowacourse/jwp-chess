@@ -29,10 +29,10 @@ public class GameController {
         return ResponseEntity.ok(status);
     }
 
-    @DeleteMapping("/game/{roomId}")
-    public ResponseEntity<StatusDto> deleteGame(@PathVariable long roomId) {
-        final StatusDto status = chessGameService.deleteRoom(roomId);
-        return ResponseEntity.ok(status);
+    @DeleteMapping("/game")
+    public ResponseEntity deleteGame(@RequestBody RemoveRoomDto removeRoomDto) {
+        chessGameService.deleteRoom(removeRoomDto.getRoomId(), removeRoomDto.getPassword());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/game/load")

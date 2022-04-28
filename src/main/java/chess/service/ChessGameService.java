@@ -60,10 +60,12 @@ public class ChessGameService {
         return roomDao.findAll();
     }
 
-    public StatusDto deleteRoom(final long roomId) {
-        final StatusDto status = findStatus(roomId);
+    public void deleteRoom(final long roomId, final String inputPassword) {
+        String roomPassword = roomDao.findRoomPasswordById(roomId);
+        if (!inputPassword.equals(roomPassword)) {
+            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+        }
         roomDao.delete(roomId);
-        return status;
     }
 
     public StatusDto findStatus(final long roomId) {

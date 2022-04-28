@@ -136,7 +136,8 @@ stopButton.addEventListener("click", async function () {
     if (!confirm("방을 삭제하시겠습니까?")) {
         await finish();
     } else {
-        await deleteAndFinish();
+        let password = prompt("방 비밀번호를 입력해주세요.");
+        await deleteAndFinish(password);
     }
     location.href = "/";
 });
@@ -188,13 +189,20 @@ async function finish() {
     removeAllPieces();
 }
 
-async function deleteAndFinish() {
-    await fetch("/game/" + roomId, {
+async function deleteAndFinish(password) {
+    await fetch("/game", {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-        }
-    })
+        },
+        body: JSON.stringify({
+            roomId: roomId,
+            password: password,
+        }),
+    }).then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        })
     alert("방이 삭제됐습니다.");
     removeAllPieces();
 }

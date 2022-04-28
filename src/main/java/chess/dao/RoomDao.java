@@ -47,6 +47,11 @@ public class RoomDao {
                 ), roomId);
     }
 
+    public String findRoomPasswordById(final long roomId) {
+        final String sql = "select password from room where id = (?)";
+        return jdbcTemplate.queryForObject(sql, String.class, roomId);
+    }
+
     public List<RoomInfoDto> findAll() {
         final String sql = "select id, name from room";
         return jdbcTemplate.query(sql,

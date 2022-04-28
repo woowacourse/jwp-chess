@@ -26,7 +26,7 @@
                     <a href="/game/{{id}}">{{name}}</a>
                 </td>
                 <td>
-                    <button type="button" class="w-btn-outline2 w-btn-gray-outline" onclick="removeGame({{id}});">삭제하기</button>
+                    <button type="button" class="w-btn-outline2 w-btn-gray-outline" onclick="requestRemove({{id}});">삭제하기</button>
                 </td>
             </tr>
             {{/each}}
@@ -34,18 +34,27 @@
     </center>
 </div>
 <script>
-async function removeGame(roomId) {
-    console.log(roomId);
-    await fetch("/game/" + roomId, {
+function requestRemove(roomId) {
+    if (confirm("방을 삭제하시겠습니까?")) {
+        let password = prompt("방 비밀번호를 입력해주세요.");
+        removeGame(roomId, password);
+    }
+}
+
+async function removeGame(roomId, password) {
+    await fetch("/game", {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-        }
+        },
+        body: JSON.stringify({
+            roomId: roomId,
+            password: password,
+        }),
     }).then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         })
-    alert("방이 삭제됐습니다.");
     location.href = "/game/list";
 }
 

@@ -88,10 +88,11 @@ public class PieceDaoTest {
         assertThat(moved.extractPiece(Position.of("h2")).getName()).isEqualTo("king");
     }
 
-    @DisplayName("updateAllByGameId 실행시 해당 gameId의 piece들이 사라진다.")
+    @DisplayName("deleteAllByGameId 실행시 해당 gameId의 piece들이 사라진다.")
     @Test
     void deleteAllByGameId() {
         pieceDao.createAllByGameId(pieces, gameId);
+
         pieceDao.deleteAllByGameId(gameId);
 
         assertThat(pieceDao.findAllByGameId(gameId).getPieces().size()).isEqualTo(0);

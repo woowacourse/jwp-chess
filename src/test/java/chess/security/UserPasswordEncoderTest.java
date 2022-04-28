@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootTest
 public class UserPasswordEncoderTest {
 
-
     private final PasswordEncoder encoder;
 
     @Autowired
@@ -42,7 +41,7 @@ public class UserPasswordEncoderTest {
         // then
         assertThat(encodedOne).isNotEqualTo(encodedTwo);
     }
-    
+
     @Test
     @DisplayName("matches를 통해야만 동일한 평문임을 확인할 수 있다.")
     public void encodedStringCanBeProvedByMatches() {
@@ -51,7 +50,7 @@ public class UserPasswordEncoderTest {
 
         // when
         final String encoded = encoder.encode(str);
-        
+
         // then
         final boolean isMatch = encoder.matches(str, encoded);
         assertThat(isMatch).isTrue();

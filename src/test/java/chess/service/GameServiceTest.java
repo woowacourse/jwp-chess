@@ -3,20 +3,15 @@ package chess.service;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import chess.database.GameStateGenerator;
 import chess.database.dao.FakeBoardDao;
 import chess.database.dao.FakeGameDao;
 import chess.database.dto.GameStateDto;
@@ -55,7 +50,7 @@ class GameServiceTest {
     @DisplayName("게임 상태를 얻는다.")
     public void readGameState() {
         // given
-        Long roomId = id; 
+        Long roomId = id;
         // when
         GameState gameState = service.readGameState(roomId);
         // then
@@ -142,7 +137,6 @@ class GameServiceTest {
         // when
         assertThatExceptionOfType(IllegalStateException.class)
             .isThrownBy(() -> service.deleteGame(new RoomRequest(TEST_ROOM_NAME, password)));
-
 
         // then
     }

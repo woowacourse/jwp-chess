@@ -99,7 +99,7 @@ public class GameService {
         gameDao.removeGame(roomId);
     }
 
-    public Map<Long,String> readGameRooms() {
+    public Map<Long, String> readGameRooms() {
         return gameDao.readGameRoomIdAndNames();
     }
 

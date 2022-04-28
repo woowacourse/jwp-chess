@@ -1,10 +1,10 @@
 package chess.dto;
 
-public class NewGameResponse {
+public class GameCreateResponse {
 
     private int id;
 
-    public NewGameResponse(int id) {
+    public GameCreateResponse(int id) {
         this.id = id;
     }
 

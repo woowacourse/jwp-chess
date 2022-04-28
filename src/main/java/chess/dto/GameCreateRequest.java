@@ -1,11 +1,21 @@
 package chess.dto;
 
-public class NewGameRequest {
+public class GameCreateRequest {
 
     private String roomName;
     private String roomPassword;
     private String whiteName;
     private String blackName;
+
+    public GameCreateRequest() {
+    }
+
+    public GameCreateRequest(String roomName, String roomPassword, String whiteName, String blackName) {
+        this.roomName = roomName;
+        this.roomPassword = roomPassword;
+        this.whiteName = whiteName;
+        this.blackName = blackName;
+    }
 
     public String getRoomName() {
         return roomName;

@@ -1,17 +1,18 @@
 package chess.dto;
 
-public class GameRoomDto {
+public class GameDto {
 
     private int id;
     private String roomName;
     private String whiteName;
     private String blackName;
     private boolean isFinished;
+    private String password;
 
-    public GameRoomDto() {
+    public GameDto() {
     }
 
-    public GameRoomDto(int id, String roomName, String whiteName, String blackName, boolean isFinished) {
+    public GameDto(int id, String roomName, String whiteName, String blackName, boolean isFinished) {
         this.id = id;
         this.roomName = roomName;
         this.whiteName = whiteName;
@@ -37,5 +38,9 @@ public class GameRoomDto {
 
     public boolean isFinished() {
         return isFinished;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

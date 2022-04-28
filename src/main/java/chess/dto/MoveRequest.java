@@ -1,19 +1,19 @@
 package chess.dto;
 
-public class MoveRequestDto {
+public class MoveRequest {
     private String piece;
     private String from;
     private String to;
-    private String gameId;
+    private int gameId;
 
-    public MoveRequestDto(String piece, String from, String to, String gameId) {
+    public MoveRequest(String piece, String from, String to, int gameId) {
         this.piece = piece;
         this.from = from;
         this.to = to;
         this.gameId = gameId;
     }
 
-    public MoveRequestDto() {
+    public MoveRequest() {
     }
 
     public String getPiece() {
@@ -28,7 +28,7 @@ public class MoveRequestDto {
         return to;
     }
 
-    public String getGameId() {
+    public int getGameId() {
         return gameId;
     }
 }

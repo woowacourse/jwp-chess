@@ -2,6 +2,7 @@ package chess.db;
 
 import java.util.List;
 
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +16,9 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(String gameID, ChessGame chessGame) {
-        String sql = "insert into chessGame (gameID, turn) values (?, ?)";
-        jdbcTemplate.update(sql, gameID, chessGame.getTurn().name());
+    public void save(String gameID, String password, ChessGame chessGame) {
+        String sql = "insert into chessGame (gameID, password, turn) values (?, ?, ?)";
+        jdbcTemplate.update(sql, gameID, password, chessGame.getTurn().name());
     }
 
     public void updateTurn(String gameID, ChessGame chessGame) {
@@ -32,8 +33,7 @@ public class ChessGameDao {
 
     public String findTurnByID(String gameID) {
         String sql = "select turn from chessGame where gameID = ?";
-        final List<String> turns = jdbcTemplate.queryForList(sql, String.class, gameID);
-        return turns.get(0);
+        return jdbcTemplate.queryForObject(sql, String.class, gameID);
     }
 
     public List<String> findAllGame() {
@@ -41,8 +41,21 @@ public class ChessGameDao {
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> resultSet.getString("gameID"));
     }
 
-    public void deleteByGameID(String gameID) {
-        String sql = "delete from chessGame where gameID = ?";
-        jdbcTemplate.update(sql, gameID);
+    public void deleteByGameID(String gameID, String password) {
+        String sql = "delete from chessGame where gameID = ? and password = ?";
+        jdbcTemplate.update(sql, gameID, password);
+    }
+
+    public boolean findPasswordByGameID(String gameID, String password) {
+        String sql = "select password from chessGame where gameID = ?";
+        if (password == null) {
+            return false;
+        }
+        try {
+            String result = jdbcTemplate.queryForObject(sql, String.class, gameID);
+            return password.equals(result);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            return false;
+        }
     }
 }

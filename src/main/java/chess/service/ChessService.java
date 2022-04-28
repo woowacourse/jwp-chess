@@ -26,7 +26,7 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGame loadChessGame(String gameID, String restart) {
+    public ChessGame loadChessGame(String gameID, String password, String restart) {
         try {
             pieceDao.findByGameID(gameID);
         } catch (IllegalArgumentException e) {
@@ -36,7 +36,7 @@ public class ChessService {
             initBoard(gameID);
         }
         loadTurn(gameID, restart);
-        return loadGame(gameID);
+        return loadGame(gameID, password);
     }
 
     private void initBoard(String gameID) {
@@ -50,7 +50,7 @@ public class ChessService {
         }
     }
 
-    private ChessGame loadGame(String gameID) {
+    private ChessGame loadGame(String gameID, String password) {
         ChessGame chessGame;
         try {
             GameTurn gameTurn = getTurn(gameID);
@@ -58,7 +58,7 @@ public class ChessService {
             chessGame = loadSavedChessGame(gameID, gameTurn);
         } catch (RuntimeException e) {
             chessGame = loadNewChessGame();
-            startGame(gameID, chessGame);
+            startGame(gameID, password, chessGame);
         }
         return chessGame;
     }
@@ -81,8 +81,8 @@ public class ChessService {
         return new ChessGame(new InitialBoardGenerator(), GameTurn.READY);
     }
 
-    private void startGame(String gameID, ChessGame chessGame) {
-        chessGameDao.save(gameID, chessGame);
+    private void startGame(String gameID, String password, ChessGame chessGame) {
+        chessGameDao.save(gameID, password, chessGame);
         updateTurn(gameID, chessGame);
     }
 
@@ -112,10 +112,17 @@ public class ChessService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteGameByGameID(String gameID) {
+    public void deleteGameByGameID(String gameID, String password) {
+        checkPassword(gameID, password);
         checkCanDelete(GameTurn.find(chessGameDao.findTurnByID(gameID)));
-        chessGameDao.deleteByGameID(gameID);
+        chessGameDao.deleteByGameID(gameID, password);
         pieceDao.deleteByGameID(gameID);
+    }
+
+    private void checkPassword(String gameID, String password) {
+        if (!chessGameDao.findPasswordByGameID(gameID, password)) {
+            throw new IllegalArgumentException("비밀 번호 틀렸지롱~ 🤪");
+        }
     }
 
     private void checkCanDelete(GameTurn gameTurn) {

@@ -12,6 +12,8 @@
 <form action="/games" method="get" class="textBoxWrapper">
     <input type="text" name="restart" class="invisible" value="false" />
     GAME ID : <input type="text" name="gameID" class="gameIDBox"/>
+    <br>
+    PASSWORD : <input type="text" name="password" class="gameIDBox"/>
     <input type="submit" value="START" class="btn" id="start">
 </form>
 <br>
@@ -19,13 +21,16 @@
 {{#games}}
     <div class="textBoxWrapper">
         <form action="/games" method="get" class="inlineBtn">
-            room number: {{gameID}}
+            GAME ID: {{gameID}}
             <input class="invisible" name="gameID" value="{{gameID}}" type="text">
             <input type="text" name="restart" class="invisible" value="false" />
             <input type="submit" value="START" class="btn" id="start">
         </form>
+    </div>
+    <div class="textBoxWrapper">
         <form action="/" method="post" class="inlineBtn">
             <input class="invisible" name="gameID" value="{{gameID}}" type="text">
+            PASSWORD : <input type="text" name="password" class="gameIDBox"/>
             <input type="submit" value="DELETE" class="btn" id="delete">
         </form>
     </div>

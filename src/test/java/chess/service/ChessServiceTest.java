@@ -32,7 +32,7 @@ public class ChessServiceTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
 
         ChessGameDao chessGameDao = new ChessGameDao(jdbcTemplate);
-        chessGameDao.save("test", new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
+        chessGameDao.save("test", "test", new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
 
         PieceDao pieceDao = new PieceDao(jdbcTemplate);
         pieceDao.initPieces("test");

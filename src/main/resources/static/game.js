@@ -28,13 +28,7 @@ const CellWrapper = window.styled.div`
     grid-template-rows: repeat(8, 80px);
 `;
 
-const Board = ({id, selected, onCellClick}) => {
-    const [board, setBoard] = React.useState();
-
-    React.useEffect(() => {
-        fetchBoard(id).then(board => setBoard(board));
-    }, [selected]);
-
+const Board = ({board, onCellClick}) => {
     if (!board) return null;
 
     return (
@@ -86,15 +80,22 @@ const Winner = ({winner}) => {
 const Game = () => {
     const {id} = parseQueryString();
     const [selected, setSelected] = React.useState();
-
+    const [board, setBoard] = React.useState();
     const [score, setScore] = React.useState({
         whiteScore: 0,
         blackScore: 0
     });
-
     const [winner, setWinner] = React.useState();
-
     const [turn, setTurn] = React.useState();
+
+    React.useEffect(() => {
+        fetchBoard(id)
+            .then(board => setBoard(board))
+            .catch(e => {
+                alert(e.message);
+                location.href = "/";
+            });
+    }, [selected]);
 
     React.useEffect(() => {
         fetchScore(id).then(score => {
@@ -132,7 +133,7 @@ const Game = () => {
 
     return (
         <React.Fragment>
-            <Board id={id} selected={selected} onCellClick={handleCellClick}/>
+            <Board id={id} board={board} onCellClick={handleCellClick}/>
             <CurrentTurn id={id} turn={turn}/>
             <Score id={id} score={score}/>
             <Winner id={id} winner={winner}/>

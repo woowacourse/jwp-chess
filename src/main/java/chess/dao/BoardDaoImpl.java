@@ -42,7 +42,10 @@ public class BoardDaoImpl implements BoardDao {
 
     @Override
     public Board getBoard(RoomId roomId) {
+        validateRoomExisting(roomId);
+
         Map<Position, Piece> boardValue = new HashMap<>();
+
         String query = String.format(
                 "SELECT piece_type, piece_color FROM %s WHERE room_id = ? AND x_axis = ? AND y_axis = ?",
                 TABLE_NAME);
@@ -54,6 +57,15 @@ public class BoardDaoImpl implements BoardDao {
         }
 
         return Board.from(boardValue);
+    }
+
+    private void validateRoomExisting(RoomId roomId) {
+        String query = String.format("SELECT COUNT(*) FROM %s WHERE room_id = ?", TABLE_NAME);
+        Integer rowCount = jdbcTemplate.queryForObject(query, Integer.class, roomId.getValue());
+
+        if (rowCount == 0) {
+            throw new IllegalArgumentException("존재하지 않는 게임 ID입니다.");
+        }
     }
 
     private List<Position> getPositionsByRoomId(RoomId roomId) {

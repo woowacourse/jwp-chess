@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
 class BoardDaoImplTest {
@@ -71,6 +72,14 @@ class BoardDaoImplTest {
 
         // then
         assertThat(board).isInstanceOf(Board.class);
+    }
+
+    @DisplayName("getBoard에 존재하지 않는 방 ID를 전달하면, 예외가 발생한다.")
+    @Test
+    void getBoard_throwsExceptionWithInvalidRoomId() {
+        assertThatThrownBy(() -> boardDao.getBoard(RoomId.from("not-existing")))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 게임 ID입니다.");
     }
 
     @DisplayName("board 테이블에 기물을 생성한다.")

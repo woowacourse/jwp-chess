@@ -31,7 +31,6 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @ResponseBody
     @PostMapping("/rooms")
     public RoomDto createRoom(@RequestBody CreateRoomDto createRoomDto) {
         Room room = Room.create(createRoomDto.getTitle(), createRoomDto.getPassword());
@@ -40,8 +39,6 @@ public class ChessController {
         return RoomDto.from(room);
     }
 
-    // TODO: DELETE 메소드는 payload를 실어보낼 수 없음. 패스워드를 전송하기 위해 임시로 POST 메소드 사용.
-    // TODO: 필드가 하나인 DTO를 RequestBody로 받으면 400에러가 발생. 임시로 RequestParam 으로 전달받도록 함. 추후 문제해결하기.
     @DeleteMapping("/rooms/{id}")
     public void deleteRoom(@PathVariable String id, @RequestParam String password) {
         chessService.deleteRoom(RoomId.from(id), RoomPassword.createByPlainText(password));
@@ -55,21 +52,18 @@ public class ChessController {
                 .collect(Collectors.toList());
     }
 
-    @ResponseBody
     @GetMapping("/rooms/{id}/board")
     public Map<String, String> getBoard(@PathVariable String id) {
         Board board = chessService.getBoard(RoomId.from(id));
         return boardToRaw(board);
     }
 
-    @ResponseBody
     @GetMapping("/rooms/{id}/turn")
     public PieceColorDto getTurn(@PathVariable String id) {
         PieceColor currentTurn = chessService.getCurrentTurn(RoomId.from(id));
         return PieceColorDto.from(currentTurn);
     }
 
-    @ResponseBody
     @GetMapping("/rooms/{id}/score")
     public ScoreResultDto getScore(@PathVariable String id) {
         RoomId roomId = RoomId.from(id);
@@ -78,14 +72,12 @@ public class ChessController {
         return ScoreResultDto.of(whiteScore, blackScore);
     }
 
-    @ResponseBody
     @GetMapping("/rooms/{id}/winner")
     public PieceColorDto getWinner(@PathVariable String id) {
         PieceColor winColor = chessService.getWinColor(RoomId.from(id));
         return PieceColorDto.from(winColor);
     }
 
-    @ResponseBody
     @PostMapping("/rooms/{id}/move")
     public CommandResultDto movePiece(@PathVariable String id, @RequestBody MovePieceDto movePieceDto) {
         try {

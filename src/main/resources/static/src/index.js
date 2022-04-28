@@ -7,7 +7,7 @@ function deleteGame(gameId) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            gameId: gameId,
+            id: gameId,
             password: password
         })
     }).then((response) => {

@@ -19,9 +19,12 @@ const fetchAsPost = async (path, body) => {
 }
 
 const fetchAsDelete = async (path) => {
-    await fetch(`${API_HOST}${path}`, {
-        method: "DELETE"
-    });
+    try {
+        const response = await axios.delete(`${API_HOST}${path}`);
+        return response;
+    } catch (e) {
+        throw new Error(e.response.data.message);
+    }
 }
 
 const fetchRooms = async () => {

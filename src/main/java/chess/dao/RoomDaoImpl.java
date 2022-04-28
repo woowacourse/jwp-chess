@@ -4,6 +4,7 @@ import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
 import chess.domain.game.room.RoomPassword;
 import chess.domain.piece.PieceColor;
+import chess.exception.IncorrectPassword;
 import chess.exception.NotFoundRoom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -50,7 +51,11 @@ public class RoomDaoImpl implements RoomDao {
     @Override
     public void deleteRoom(RoomId roomId, RoomPassword roomPassword) {
         String query = String.format("DELETE FROM %s WHERE id = ? AND password = ?", TABLE_NAME);
-        jdbcTemplate.update(query, roomId.getValue(), roomPassword.getValue());
+        int update = jdbcTemplate.update(query, roomId.getValue(), roomPassword.getValue());
+
+        if (update == 0) {
+            throw new IncorrectPassword();
+        }
     }
 
     @Override

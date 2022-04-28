@@ -1,4 +1,4 @@
-const CreateRoom = () => {
+const DeleteRoom = () => {
     const [password, setPassword] = React.useState("");
 
     const handlePasswordChange = (e) => {
@@ -7,9 +7,12 @@ const CreateRoom = () => {
 
     const handleDeleteClick = async () => {
         const {id} = parseQueryString();
-        await deleteRoom(id, password);
 
-        location.href = "/";
+        try {
+            await deleteRoom(id, password);
+        } catch (e) {
+            alert(e.message);
+        }
     }
 
     return (
@@ -20,4 +23,4 @@ const CreateRoom = () => {
     );
 };
 
-ReactDOM.render(<CreateRoom/>, document.querySelector('#root'));
+ReactDOM.render(<DeleteRoom/>, document.querySelector('#root'));

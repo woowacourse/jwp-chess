@@ -1,6 +1,6 @@
 package chess.dto;
 
-import chess.domain.game.ChessGame;
+import chess.domain.game.Game;
 
 public class GameDto {
 
@@ -16,10 +16,10 @@ public class GameDto {
         this.currentTurnColor = currentTurnColor;
     }
 
-    public static GameDto toDto(final ChessGame chessGame) {
+    public static GameDto toDto(final Game game) {
         return new GameDto(
-                chessGame.getId(), PlayersDto.toDto(chessGame.getPlayers()),
-                chessGame.isFinished(), chessGame.getColorOfCurrentTurn().getName());
+                game.getId(), PlayersDto.toDto(game.getPlayers()),
+                game.isFinished(), game.getColorOfCurrentTurn().getName());
     }
 
     public long getGameId() {

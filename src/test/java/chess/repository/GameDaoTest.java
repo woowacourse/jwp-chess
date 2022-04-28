@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.repository;
 
 import static chess.domain.Color.BLACK;
 import static chess.domain.Color.WHITE;
@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import chess.dao.dto.GameDto;
-import chess.dao.dto.GameUpdateDto;
+import chess.repository.dto.game.GameDto;
+import chess.repository.dto.game.GameUpdateDto;
 
 @SpringBootTest
 @Transactional

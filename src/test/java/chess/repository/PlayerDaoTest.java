@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.repository;
 
 import static chess.domain.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import chess.dao.dto.PlayerDto;
+import chess.repository.dto.player.PlayerDto;
 
 @SpringBootTest
 @Transactional

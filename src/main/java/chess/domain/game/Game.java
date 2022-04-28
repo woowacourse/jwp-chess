@@ -9,31 +9,31 @@ import chess.domain.game.state.GameState;
 import chess.domain.game.state.RunningState;
 import chess.domain.player.Players;
 
-public class ChessGame {
+public class Game {
 
     private static final Long TEMPORARY_PLAYER_ID = 0L;
 
     private final Long id;
     private GameState gameState;
 
-    private ChessGame(final Long id, final GameState gameState) {
+    private Game(final Long id, final GameState gameState) {
         this.id = id;
         this.gameState = gameState;
     }
 
-    public static ChessGame initializeChessGame() {
-        return new ChessGame(TEMPORARY_PLAYER_ID, RunningState.createFirstTurnRunning());
+    public static Game initializeGame() {
+        return new Game(TEMPORARY_PLAYER_ID, RunningState.createFirstTurnRunning());
     }
 
-    public static ChessGame loadChessGame(final Long id, final Players players,
-                                          final boolean finished, final Color currentTurnColor) {
+    public static Game loadGame(final Long id, final Players players,
+                                final boolean finished, final Color currentTurnColor) {
         if (finished) {
-            return new ChessGame(id, new FinishedState(players, currentTurnColor));
+            return new Game(id, new FinishedState(players, currentTurnColor));
         }
         if (players.isPlayerAbleToPromotePawn(currentTurnColor.reverse())) {
-            return new ChessGame(id, new RunningState(players, currentTurnColor.reverse()));
+            return new Game(id, new RunningState(players, currentTurnColor.reverse()));
         }
-        return new ChessGame(id, new RunningState(players, currentTurnColor));
+        return new Game(id, new RunningState(players, currentTurnColor));
     }
 
     public void start() {

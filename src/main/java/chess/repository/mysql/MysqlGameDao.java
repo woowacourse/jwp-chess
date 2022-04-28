@@ -1,4 +1,4 @@
-package chess.dao;
+package chess.repository.mysql;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -8,19 +8,21 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
 
-import chess.dao.dto.GameDto;
-import chess.dao.dto.GameFinishedDto;
-import chess.dao.dto.GameUpdateDto;
+import chess.repository.GameDao;
+import chess.repository.dto.game.GameDto;
+import chess.repository.dto.game.GameFinishedDto;
+import chess.repository.dto.game.GameUpdateDto;
 
 @Component
-public class GameDao {
+public class MysqlGameDao implements GameDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public GameDao(final JdbcTemplate jdbcTemplate) {
+    public MysqlGameDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Long save(final GameDto gameDto) {
         final String query = "INSERT INTO Game (player_id1, player_id2, finished, turn_color) VALUES (?,?,?,?)";
         final GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
@@ -35,6 +37,7 @@ public class GameDao {
         return Objects.requireNonNull(generatedKeyHolder.getKey()).longValue();
     }
 
+    @Override
     public GameDto findById(final Long id) {
         final String query = "SELECT id, player_id1, player_id2, finished, turn_color FROM Game WHERE id=?";
         return jdbcTemplate.queryForObject(query,
@@ -47,6 +50,7 @@ public class GameDao {
                 ), id);
     }
 
+    @Override
     public List<GameFinishedDto> findIdAndFinished() {
         final String query = "SELECT id, finished FROM Game ORDER BY id DESC";
         return jdbcTemplate.query(query,
@@ -56,6 +60,7 @@ public class GameDao {
                 ));
     }
 
+    @Override
     public void update(final GameUpdateDto gameUpdateDto) {
         final String query = "UPDATE Game SET finished=?, turn_color=? WHERE id=?";
         jdbcTemplate.update(query,
@@ -65,7 +70,8 @@ public class GameDao {
         );
     }
 
-    public void remove(final long id) {
+    @Override
+    public void remove(final Long id) {
         final String query = "DELETE FROM Game WHERE id=?";
         jdbcTemplate.update(query, id);
     }

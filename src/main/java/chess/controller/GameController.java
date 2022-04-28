@@ -2,7 +2,6 @@ package chess.controller;
 
 import java.util.Map;
 
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import chess.domain.Color;
-import chess.domain.game.ChessGame;
+import chess.domain.game.Game;
 import chess.dto.GameDto;
 import chess.dto.PlayerScoresDto;
 import chess.service.GameService;
@@ -31,8 +30,8 @@ public class GameController {
 
     @GetMapping("/start")
     public String createNewGame() {
-        final ChessGame chessGame = gameService.createNewGame();
-        return "redirect:/games/" + chessGame.getId();
+        final Game game = gameService.createNewGame();
+        return "redirect:/games/" + game.getId();
     }
 
     @GetMapping("/{gameId}")
@@ -66,10 +65,10 @@ public class GameController {
         return renderBoard(gameService.endGame(gameId), model);
     }
 
-    private String renderBoard(final ChessGame chessGame, final Model model) {
-        model.addAttribute("game", GameDto.toDto(chessGame));
-        if (chessGame.isRunning()) {
-            model.addAttribute("promotable", chessGame.isPromotable());
+    private String renderBoard(final Game game, final Model model) {
+        model.addAttribute("game", GameDto.toDto(game));
+        if (game.isRunning()) {
+            model.addAttribute("promotable", game.isPromotable());
         }
         return "board";
     }

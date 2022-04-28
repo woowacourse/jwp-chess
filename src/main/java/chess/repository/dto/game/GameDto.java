@@ -1,4 +1,4 @@
-package chess.dao.dto;
+package chess.repository.dto.game;
 
 public class GameDto {
 

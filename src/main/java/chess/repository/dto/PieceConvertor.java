@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.repository.dto;
 
 import java.util.Arrays;
 

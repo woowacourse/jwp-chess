@@ -9,8 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import chess.domain.GameRepository;
 import chess.domain.Position;
-import chess.domain.game.ChessGame;
+import chess.domain.game.Game;
 
 @SpringBootTest
 @Transactional
@@ -22,9 +23,9 @@ class GameRepositoryTest {
     @DisplayName("데이터를 저장할 수 있어야 한다.")
     @Test
     void save() {
-        final ChessGame chessGame = ChessGame.initializeChessGame();
+        final Game game = Game.initializeGame();
 
-        final Long gameId = gameRepository.save(chessGame).getId();
+        final Long gameId = gameRepository.save(game).getId();
         assertThat(gameId).isNotEqualTo(0L);
         gameRepository.remove(gameId);
     }
@@ -32,14 +33,14 @@ class GameRepositoryTest {
     @DisplayName("데이터를 조회할 수 있어야 한다.")
     @Test
     void findById() {
-        final ChessGame expectedChessGame = ChessGame.initializeChessGame();
+        final Game expectedGame = Game.initializeGame();
 
-        final Long gameId = gameRepository.save(expectedChessGame).getId();
-        final ChessGame chessGame = gameRepository.findById(gameId);
+        final Long gameId = gameRepository.save(expectedGame).getId();
+        final Game game = gameRepository.findById(gameId);
 
         assertAll(() -> {
-            assertThat(chessGame.getColorOfCurrentTurn()).isEqualTo(expectedChessGame.getColorOfCurrentTurn());
-            assertThat(chessGame.isFinished()).isEqualTo(expectedChessGame.isFinished());
+            assertThat(game.getColorOfCurrentTurn()).isEqualTo(expectedGame.getColorOfCurrentTurn());
+            assertThat(game.isFinished()).isEqualTo(expectedGame.isFinished());
         });
         gameRepository.remove(gameId);
     }
@@ -47,18 +48,18 @@ class GameRepositoryTest {
     @DisplayName("데이터를 수정할 수 있어야 한다.")
     @Test
     void update() {
-        final ChessGame chessGame = ChessGame.initializeChessGame();
+        final Game game = Game.initializeGame();
 
-        final ChessGame expectedChessGame = gameRepository.save(chessGame);
+        final Game expectedGame = gameRepository.save(game);
 
-        expectedChessGame.movePiece(Position.from("a2"), Position.from("a4"));
-        expectedChessGame.end();
+        expectedGame.movePiece(Position.from("a2"), Position.from("a4"));
+        expectedGame.end();
 
-        final ChessGame updatedChessGame = gameRepository.update(expectedChessGame);
+        final Game updatedGame = gameRepository.update(expectedGame);
         assertAll(() -> {
-            assertThat(updatedChessGame.getColorOfCurrentTurn()).isEqualTo(expectedChessGame.getColorOfCurrentTurn());
-            assertThat(updatedChessGame.isFinished()).isEqualTo(expectedChessGame.isFinished());
+            assertThat(updatedGame.getColorOfCurrentTurn()).isEqualTo(expectedGame.getColorOfCurrentTurn());
+            assertThat(updatedGame.isFinished()).isEqualTo(expectedGame.isFinished());
         });
-        gameRepository.remove(updatedChessGame.getId());
+        gameRepository.remove(updatedGame.getId());
     }
 }

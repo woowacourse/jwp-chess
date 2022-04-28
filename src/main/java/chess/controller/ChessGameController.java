@@ -40,7 +40,6 @@ public class ChessGameController {
         if (chessGameDto.getStatus().isFinished()) {
             attributes.addFlashAttribute("isFinished", true);
             attributes.addFlashAttribute("winner", chessGameDto.getWinner());
-            return "redirect:/chess-game?chess-game-id=" + chessGameId;
         }
         return "redirect:/chess-game?chess-game-id=" + chessGameId;
     }

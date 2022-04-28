@@ -47,8 +47,6 @@
 
     async function deleteRoom(id) {
         const password = prompt('비밀번호를 입력해주세요.', "비밀번호를 입력해주세요.");
-        password.style.visibility = "hidden";
-
         await fetch("/chess-game/" + id, {
             method: 'DELETE',
             headers: {

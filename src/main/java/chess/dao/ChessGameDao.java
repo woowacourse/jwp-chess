@@ -75,7 +75,7 @@ public class ChessGameDao {
 
     public void deleteByIdAndPassword(int chessGameId, String password) {
         jdbcTemplate.update(
-            "DELETE FROM chess_game WHERE chess_game.id = ? and chess_game.password = ?",
+            "DELETE FROM chess_game WHERE chess_game.id = ? and chess_game.password = ? and chess_game.status != 'RUNNING'",
             chessGameId,
             password
         );

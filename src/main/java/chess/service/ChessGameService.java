@@ -55,6 +55,9 @@ public class ChessGameService {
     public ChessGameDto move(int chessGameId, Movement movement) {
         List<PieceDto> pieces = pieceDao.findPieces(chessGameId);
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
+        if (chessGameDto.getStatus().isFinished()) {
+            throw new ChessGameException(chessGameDto.getId(), "게임이 종료되었습니다.");
+        }
         ChessBoard chessBoard = createChessBoard(pieces, chessGameDto);
         movePiece(chessGameId, movement, chessBoard);
         return updateChessBoard(chessBoard, movement, chessGameDto);

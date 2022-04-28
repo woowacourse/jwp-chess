@@ -34,27 +34,6 @@ class PieceDaoTest {
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS piece");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS chess_game");
-        jdbcTemplate.execute("CREATE TABLE chess_game\n"
-                + "(\n"
-                + "    id            INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,\n"
-                + "    name          VARCHAR(10) NOT NULL,\n"
-                + "    status        VARCHAR(10) NOT NULL,\n"
-                + "    current_color CHAR(5)     NOT NULL,\n"
-                + "    black_score   VARCHAR(10) NOT NULL,\n"
-                + "    white_score   VARCHAR(10) NOT NULL\n"
-                + ")");
-        jdbcTemplate.execute("CREATE TABLE piece\n"
-                + "(\n"
-                + "    position      CHAR(2)     NOT NULL,\n"
-                + "    chess_game_id INT         NOT NULL,\n"
-                + "    color         CHAR(5)     NOT NULL,\n"
-                + "    type          VARCHAR(10) NOT NULL,\n"
-                + "    PRIMARY KEY (position, chess_game_id),\n"
-                + "    FOREIGN KEY (chess_game_id) REFERENCES chess_game (id)\n"
-                + ")");
-
         chessGameDao = new ChessGameDao(jdbcTemplate);
         chessGameDao.saveChessGame(new Room("Chess Game", "1234"), GameStatus.RUNNING, Color.WHITE,
                 new Score(BigDecimal.ONE), new Score(BigDecimal.ONE));

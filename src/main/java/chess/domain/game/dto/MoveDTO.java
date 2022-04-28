@@ -7,9 +7,6 @@ public class MoveDTO {
     private String target;
     private Team team;
 
-    public MoveDTO() {
-    }
-
     public MoveDTO(String source, String target, String team) {
         this.source = source;
         this.target = target;

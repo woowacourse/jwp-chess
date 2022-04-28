@@ -92,15 +92,6 @@ public final class ChessService {
         return chessGameDAO.findGameById(id);
     }
 
-    public Map<String, Object> getResult(ChessGame chessGame) {
-        final Map<String, Object> model = new HashMap<>();
-        chessGameDAO.updateGameEnd(chessGame.getId());
-        model.put("gameResult", result(chessGame));
-        model.put("isGameSet", Boolean.TRUE);
-
-        return model;
-    }
-
     public int deleteGameByIdAndPassword(String gameId, String password) {
         int successDelete = chessGameDAO.deleteGameByIdAndPassword(gameId, password);
 

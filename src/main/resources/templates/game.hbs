@@ -15,6 +15,7 @@
             {{/this.squares}}
         </div>
         <form action="/game" method="post">
+            Room ID: {{this.roomId}}
             <br />
             {{this.player}} 차례입니다.
             <br />
@@ -28,6 +29,7 @@
             {{this.message}}
             <br />
             입력하세요: <input type="text" name="command" />
+            <input type="hidden" value="{{this.roomId}}" name="roomId" />
             <input type="submit" />
         </form>
         <br />

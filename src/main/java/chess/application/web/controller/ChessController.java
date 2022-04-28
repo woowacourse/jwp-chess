@@ -45,57 +45,60 @@ public class ChessController {
     }
 
     @PostMapping("/create")
-    public String createRoom(@RequestParam("name") String name, @RequestParam("password") String password) {
-        roomsDao.insertRoom(name, password);
-        return "redirect:create";
-    }
-
-    @PostMapping("/start")
-    public String startChessGame(RedirectAttributes redirectAttributes) {
-        commandDao.clear();
+    public String createRoom(RedirectAttributes redirectAttributes, @RequestParam("name") String name, @RequestParam("password") String password) {
+        if (name.isBlank()) {
+            return "redirect:create";
+        }
+        final int roomId = roomsDao.createRoomId();
+        roomsDao.insertRoom(roomId, name, password);
+        redirectAttributes.addAttribute("roomId", roomId);
         redirectAttributes.addAttribute("message", "게임을 시작합니다.");
         return "redirect:game";
     }
 
     @GetMapping(path = "/game")
-    public ModelAndView printCurrentBoard(@RequestParam("message") String message) {
-        State state = currentState();
+    public ModelAndView printCurrentBoard(@RequestParam("roomId") int roomId, @RequestParam("message") String message) {
+        State state = currentState(roomId);
         ModelAndView modelAndView = new ModelAndView(getViewName(state));
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
         modelAndView.addObject("player", playerName(state.getPlayer()));
-        modelAndView.addObject("commands", commandDao.findAll());
+        modelAndView.addObject("commands", commandDao.findAll(roomId));
         modelAndView.addObject("message", message);
+        modelAndView.addObject("roomId", roomId);
         return modelAndView;
     }
 
     @PostMapping(path = "/game")
-    public String movePiece(RedirectAttributes redirectAttributes, @RequestParam("command") String command) {
-        currentState().proceed(command);
-        commandDao.insert(command);
+    public String movePiece(RedirectAttributes redirectAttributes, @RequestParam("roomId") int roomId, @RequestParam("command") String command) {
+        currentState(roomId).proceed(command);
+        commandDao.insert(roomId, command);
         redirectAttributes.addAttribute("message", "실행한 명령어: " + command);
+        redirectAttributes.addAttribute("roomId", roomId);
         return "redirect:game";
     }
 
     @PostMapping(path = "/result")
-    public String result() {
-        commandDao.insert("status");
+    public String result(RedirectAttributes redirectAttributes, @RequestParam("roomId") int roomId) {
+        commandDao.insert(roomId,"status");
+        redirectAttributes.addAttribute("roomId", roomId);
         return "redirect:result";
     }
 
     @GetMapping(path = "/result")
-    public ModelAndView printResult() {
+    public ModelAndView printResult(@RequestParam("roomId") int roomId) {
         ModelAndView modelAndView = new ModelAndView("status");
-        State state = currentState();
+        State state = currentState(roomId);
         Status status = (Status) state;
         HashMap<Player, Double> results = status.calculateScore();
+        modelAndView.addObject("roomId", roomId);
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
         modelAndView.addObject("whiteScore", results.get(Player.WHITE));
         modelAndView.addObject("blackScore", results.get(Player.BLACK));
         return modelAndView;
     }
 
-    private State currentState() {
-        List<String> commands = commandDao.findAll();
+    private State currentState(final int id) {
+        List<String> commands = commandDao.findAll(id);
         State state = Start.of();
         for (String command : commands) {
             state = state.proceed(command);

@@ -12,9 +12,8 @@ public class RoomsDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insertRoom(final String name, final String password) {
+    public void insertRoom(final int roomId, final String name, final String password) {
         final String sql = "insert into rooms (id, name, password) values (?, ?, ?)";
-        final int roomId = createRoomId(countRooms());
         System.out.println(roomId);
         jdbcTemplate.update(sql, roomId, name, hashedPassword(password));
         clearCommandsInRoom(roomId);
@@ -25,9 +24,13 @@ public class RoomsDao {
         jdbcTemplate.update(sql, roomId);
     }
 
-    private int createRoomId(final int roomId) {
+    public int createRoomId() {
+        return usableRoomId(countRooms());
+    }
+
+    private int usableRoomId(final int roomId) {
         if (exists(roomId)) {
-            return createRoomId(roomId + 1);
+            return usableRoomId(roomId + 1);
         }
         return roomId;
     }
@@ -37,7 +40,7 @@ public class RoomsDao {
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
-    private String findNameById(final int id) {
+    public String findNameById(final int id) {
         final String sql = String.format("select name from rooms where id = %d", id);
         return jdbcTemplate.queryForObject(sql, String.class);
     }

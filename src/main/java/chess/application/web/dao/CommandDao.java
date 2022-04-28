@@ -1,6 +1,5 @@
 package chess.application.web.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -14,13 +13,13 @@ public class CommandDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insert(String command) {
-        String sql = "insert into command (command) values (?)";
-        jdbcTemplate.update(sql, command);
+    public void insert(final int id, final String command) {
+        String sql = "insert into command (id, command) values (?, ?)";
+        jdbcTemplate.update(sql, id, command);
     }
 
-    public List<String> findAll() {
-        String sql = "select * from command";
+    public List<String> findAll(final int id) {
+        String sql = String.format("select command from command where id = %d", id);
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             return resultSet.getString("command");
         });

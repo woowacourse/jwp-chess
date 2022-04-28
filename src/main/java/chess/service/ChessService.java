@@ -16,9 +16,10 @@ import java.util.Map;
 import chess.exception.InvalidDBFailException;
 import chess.exception.InvalidMoveException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public final class ChessService {
+public class ChessService {
 
     private final ChessGameRoomDAO chessGameDAO;
     private final MovementDAO movementDAO;
@@ -36,6 +37,7 @@ public final class ChessService {
         return chessGameDAO.addGame(chessGame);
     }
 
+    @Transactional(readOnly = true)
     public ChessGame getChessGamePlayed(final String gameId) {
         List<Movement> movementByGameId = movementDAO.findMovementByGameId(gameId);
         ChessGame chessGame = ChessGame.initChessGame();
@@ -77,17 +79,12 @@ public final class ChessService {
         }
     }
 
-    private Map<String, Object> result(final ChessGame chessGame) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("winner", chessGame.getChessBoard().calculateWhoWinner().toString());
-
-        return model;
-    }
-
+    @Transactional(readOnly = true)
     public List<ChessGameRoomInfoDTO> getGames() {
         return chessGameDAO.findActiveGames();
     }
 
+    @Transactional(readOnly = true)
     public ChessGameRoomInfoDTO findGameById(String id) {
         return chessGameDAO.findGameById(id);
     }

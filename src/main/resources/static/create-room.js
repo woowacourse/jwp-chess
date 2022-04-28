@@ -11,8 +11,12 @@ const CreateRoom = () => {
     }
 
     const handleCreateClick = async () => {
-        const room = await createRoom(title, password);
-        location.href = `/game.html?id=${room.id}`;
+        try {
+            const room = await createRoom(title, password);
+            location.href = `/game.html?id=${room.id}`;
+        } catch (e) {
+            alert(e.message);
+        }
     }
 
     return (

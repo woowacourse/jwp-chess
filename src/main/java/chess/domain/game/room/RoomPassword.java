@@ -13,12 +13,20 @@ public class RoomPassword {
     }
 
     public static RoomPassword createByPlainText(String roomPassword) {
+        validateNotEmpty(roomPassword);
+
         try {
             String hashedPassword = Sha256.encrypt(roomPassword);
             return new RoomPassword(hashedPassword);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace(); // TODO: 적절한 처리 필요
             return null;
+        }
+    }
+
+    private static void validateNotEmpty(String roomPassword) {
+        if (roomPassword.isEmpty()) {
+            throw new IllegalArgumentException("빈 패스워드로 설정할 수 없습니다.");
         }
     }
 

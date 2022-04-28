@@ -16,8 +16,8 @@ public final class ChessBoard {
 
     private final Map<Position, Piece> pieces;
 
-    public ChessBoard(final Initializer initializer) {
-        pieces = initializer.initialize();
+    public ChessBoard(final Mapper mapper) {
+        pieces = mapper.initialize();
     }
 
     public Optional<Piece> piece(final Position position) {

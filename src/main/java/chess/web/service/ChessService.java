@@ -10,14 +10,14 @@ import chess.domain.position.Position;
 import chess.domain.state.StateType;
 import chess.web.dao.GameDao;
 import chess.web.dao.PieceDao;
-import chess.web.dto.board.ResultDto;
 import chess.web.dto.board.BoardDto;
-import chess.web.dto.game.PasswordDto;
-import chess.web.dto.game.TitleDto;
 import chess.web.dto.board.MovePositionsDto;
-import chess.web.dto.board.MoveResultDto;
+import chess.web.dto.board.IsGameOverDto;
 import chess.web.dto.board.PieceDto;
 import chess.web.dto.board.PiecesDto;
+import chess.web.dto.board.ResultDto;
+import chess.web.dto.game.PasswordDto;
+import chess.web.dto.game.TitleDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -75,15 +75,18 @@ public class ChessService {
         String password = passwordDto.getPassword();
         String realPassword = gameDao.findPasswordById(gameId);
 
+        validateDeleteGame(gameId, password, realPassword);
+
+        gameDao.deleteGameById(gameId);
+    }
+
+    private void validateDeleteGame(int gameId, String password, String realPassword) {
         if (!realPassword.equals(password)) {
             throw new IllegalArgumentException("비밀번호가 잘못되었습니다.");
         }
-
         if (getChessGame(gameId).isRunning()) {
             throw new IllegalArgumentException("게임이 아직 진행중입니다.");
         }
-
-        gameDao.deleteGameById(gameId);
     }
 
     private ChessGame getChessGame(int gameId) {
@@ -109,19 +112,15 @@ public class ChessService {
         return getChessGame(gameId).score(color);
     }
 
-    public MoveResultDto getMoveResult(int gameId, MovePositionsDto movePositionsDto) {
+    public IsGameOverDto getIsGameOver(int gameId, MovePositionsDto movePositionsDto) {
         ChessGame chessGame = getChessGame(gameId);
 
-        try {
-            chessGame.move(movePositionsDto.getSource(), movePositionsDto.getTarget());
-            Position sourcePosition = new Position(movePositionsDto.getSource());
-            Position targetPosition = new Position(movePositionsDto.getTarget());
-            move(gameId, chessGame, sourcePosition, targetPosition);
-        } catch (Exception ex) {
-            return new MoveResultDto(400, ex.getMessage(), chessGame.isFinished());
-        }
+        chessGame.move(movePositionsDto.getSource(), movePositionsDto.getTarget());
+        Position sourcePosition = new Position(movePositionsDto.getSource());
+        Position targetPosition = new Position(movePositionsDto.getTarget());
+        move(gameId, chessGame, sourcePosition, targetPosition);
 
-        return new MoveResultDto(200, "", chessGame.isFinished());
+        return new IsGameOverDto(chessGame.isFinished());
     }
 
     private void move(int gameId, ChessGame chessGame, Position target, Position source) {

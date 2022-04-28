@@ -1,9 +1,9 @@
 package chess.web.controller;
 
 import chess.domain.state.StateType;
-import chess.web.dto.game.PasswordDto;
 import chess.web.dto.board.MovePositionsDto;
-import chess.web.dto.board.MoveResultDto;
+import chess.web.dto.board.IsGameOverDto;
+import chess.web.dto.game.PasswordDto;
 import chess.web.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -44,11 +44,6 @@ public class ChessController {
         return ResponseEntity.ok("");
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handle(Exception e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
     @GetMapping("/game/{gameId}")
     public String showGame(@PathVariable int gameId, final Model model) {
         if (chessService.getStateType(gameId) == StateType.END) {
@@ -60,9 +55,9 @@ public class ChessController {
     }
 
     @PatchMapping("/game/{gameId}/move")
-    public ResponseEntity<MoveResultDto> move(@PathVariable int gameId,
+    public ResponseEntity<IsGameOverDto> move(@PathVariable int gameId,
                                               @RequestBody MovePositionsDto movePositionsDto) {
-        return ResponseEntity.ok(chessService.getMoveResult(gameId, movePositionsDto));
+        return ResponseEntity.ok(chessService.getIsGameOver(gameId, movePositionsDto));
     }
 
     @GetMapping("/game/{gameId}/result")
@@ -75,5 +70,10 @@ public class ChessController {
     public String restartGame(@PathVariable int gameId) {
         chessService.restart(gameId);
         return "redirect:/game/" + gameId;
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handle(Exception e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

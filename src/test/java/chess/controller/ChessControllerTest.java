@@ -49,6 +49,10 @@ class ChessControllerTest {
         gameDao.delete(testGameId);
     }
 
+    void deleteGame() {
+        gameDao.delete(testGameId);
+    }
+
     @Nested
     @DisplayName("GET - 게임 조회 테스트")
     class LoadTest {
@@ -174,9 +178,10 @@ class ChessControllerTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+
     @Nested
-    @DisplayName("POST - 방 입장 전 비밀번호 검사 테스트, 비밀번호가 ")
-    class PasswordTest {
+    @DisplayName("기존 게임 입장을 위해 입력한 비밀번호가 ")
+    class EnterGameTest {
 
         @DisplayName("올바른 비밀번호면 status code 204를 반환한다..")
         @Test
@@ -187,7 +192,6 @@ class ChessControllerTest {
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .accept(MediaType.APPLICATION_JSON_VALUE)
                     .body(jsonString)
                     .when().post("/games/existed-game/" + testGameId)
                     .then().log().all()
@@ -204,13 +208,77 @@ class ChessControllerTest {
 
             RestAssured.given().log().all()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .accept(MediaType.APPLICATION_JSON_VALUE)
                     .body(jsonString)
                     .when().post("/games/existed-game/" + testGameId)
                     .then().log().all()
-                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .statusCode(HttpStatus.CREATED.value())
+                    .extract();
+        }
+    }
+
+    @Nested
+    @DisplayName("기존 게임을 지울려 할 떄 ")
+    class DeleteGameTest {
+
+        @DisplayName("올바른 비밀번호가 입력되었고 게임이 끝난 상태이면 게임을 지운다.")
+        @Test
+        void delete_Game_Success() throws JsonProcessingException {
+            gameDao.save("n", "p");
+            final int gameId = gameDao.find("n", "p").get();
+            gameDao.updateState(gameId, GameState.FINISHED);
+            ObjectMapper objectMapper = new ObjectMapper();
+            GameAccessRequest gameAccessRequest = new GameAccessRequest((int) gameId, "p");
+            String jsonString = objectMapper.writeValueAsString(gameAccessRequest);
+
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .body(jsonString)
+                    .when().delete("/games/existed-game/" + testGameId)
+                    .then().log().all()
+                    .statusCode(HttpStatus.NO_CONTENT.value())
                     .extract();
         }
 
+        @DisplayName("잘못된 비밀번호면 401 에러를 반환한다")
+        @Test
+        void fail_To_Delete_Game_Wrong_password() throws JsonProcessingException {
+            gameDao.updateState(testGameId, GameState.FINISHED);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            GameAccessRequest gameAccessRequest = new GameAccessRequest((int) testGameId, "wrongPassword");
+            String jsonString = objectMapper.writeValueAsString(gameAccessRequest);
+
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .body(jsonString)
+                    .when().delete("/games/existed-game/" + testGameId)
+                    .then().log().all()
+                    .statusCode(HttpStatus.CREATED.value())
+                    .extract();
+        }
+
+        @DisplayName("올바른 비밀번호가 입력되어도 게임이 끝나지 않았으면 401 에러를 반환한다.")
+        @Test
+        void game_Status_Is_Not_End() throws JsonProcessingException {
+            ObjectMapper objectMapper = new ObjectMapper();
+            GameAccessRequest gameAccessRequest = new GameAccessRequest((int) testGameId, "password");
+            String jsonString = objectMapper.writeValueAsString(gameAccessRequest);
+
+            RestAssured.given().log().all()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .body(jsonString)
+                    .when().delete("/games/existed-game/" + testGameId)
+                    .then().log().all()
+                    .statusCode(HttpStatus.CREATED.value())
+                    .extract();
+        }
+
+
     }
+
+
+
 }

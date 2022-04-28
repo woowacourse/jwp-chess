@@ -140,8 +140,19 @@ public class ChessService {
         return new ChessGameResponse(chessGame);
     }
 
-    public void deleteGame(long gameId) {
-        gameDao.delete(gameId);
+    public boolean deleteGameAfterCheckingPassword(long gameId, String password) {
+        if (isFulfillDeleteCondition(gameId, password)) {
+            gameDao.delete(gameId);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFulfillDeleteCondition(long gameId, String password) {
+        Optional<GameState> gameState = gameDao.load(gameId);
+        return gameDao.findPassword(gameId).equals(password)
+                && gameState.isPresent()
+                && gameState.get() == GameState.FINISHED;
     }
 
     private Position parseStringToPosition(final String rawPosition) {

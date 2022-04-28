@@ -80,7 +80,7 @@ public class GameDao {
                 new GameDto(resultSet.getInt("id"), resultSet.getString("name")));
     }
 
-    public String findPassword(int gameId) {
+    public String findPassword(long gameId) {
         String sql = "SELECT password FROM game WHERE id = :gameId";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("gameId", gameId);
         return namedParameterJdbcTemplate.queryForObject(sql, sqlParameterSource, String.class);

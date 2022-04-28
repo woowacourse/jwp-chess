@@ -125,7 +125,7 @@ div {
   overflow: scroll;
 }
 
-#box__close-button {
+.box__close-button {
   align-self: end;
 }
 

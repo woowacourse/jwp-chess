@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,6 +73,15 @@ public class ChessController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("잘못된 비밀번호 입니다."));
+    }
+
+    @DeleteMapping("/existed-game/?")
+    public ResponseEntity<ErrorResponse> deleteGame(@RequestBody GameAccessRequest game) {
+        if (chessService.deleteGameAfterCheckingPassword(game.getGameId(), game.getPassword())) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse("게임이 끝난 상태가 아니거나 올바른 비밀번호가 아닙니다."));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

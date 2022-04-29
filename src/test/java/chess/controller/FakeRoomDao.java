@@ -19,15 +19,22 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public void deleteRoom(int roomId, String password) {
-        RoomDto roomDto = rooms.get(roomId);
+    public void deleteRoom(int roomNumber, String password) {
+        RoomDto roomDto = rooms.get(roomNumber);
         if (roomDto.getPassword().equals(password)) {
-            rooms.remove(roomId);
+            rooms.remove(roomNumber);
         }
     }
 
     @Override
     public List<RoomDto> findAllRoom() {
         return new ArrayList<>(rooms.values());
+    }
+
+    @Override
+    public boolean checkRoom(int roomNumber, String password) {
+        return rooms.get(roomNumber)
+                .getPassword()
+                .equals(password);
     }
 }

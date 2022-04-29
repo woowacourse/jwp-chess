@@ -28,9 +28,16 @@ public class JdbcRoomDao implements RoomDao {
     }
 
     @Override
-    public void deleteRoom(final int roomId, final String password) {
+    public void deleteRoom(final int roomNumber, final String password) {
         final String sql = "delete from room where id=? and password=?";
-        jdbcTemplate.update(sql, roomId, password);
+        jdbcTemplate.update(sql, roomNumber, password);
+    }
+
+    @Override
+    public boolean checkRoom(final int roomNumber, final String password) {
+        final String sql = "select count(*) from room where id=? and password=?";
+        final int count = jdbcTemplate.queryForObject(sql, Integer.class, roomNumber, password);
+        return count > 0;
     }
 
     @Override

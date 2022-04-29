@@ -1,26 +1,28 @@
 package chess.service;
 
 import chess.dto.BoardDto;
-import chess.dto.GameDeleteResponseDto;
-import chess.dto.RoomDto;
-import chess.dto.RoomsDto;
 import chess.model.board.Board;
 import chess.model.member.Member;
-import chess.model.piece.*;
+import chess.model.piece.Empty;
+import chess.model.piece.Initializer;
+import chess.model.piece.Piece;
+import chess.model.piece.Team;
 import chess.model.room.Room;
 import chess.model.square.File;
 import chess.model.square.Square;
 import chess.model.status.End;
 import chess.model.status.Running;
 import chess.model.status.Status;
-import chess.repository.*;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
+import chess.repository.BoardRepository;
+import chess.repository.MemberRepository;
+import chess.repository.PieceRepository;
+import chess.repository.RoomRepository;
+import chess.repository.SquareRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {

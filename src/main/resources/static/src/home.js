@@ -14,13 +14,11 @@ function makeRoom() {
     roomForm.submit();
 }
 
-const removeUrl = `/room/delete`;
-
 const deleteRoom = (event) => {
     const id = event.target.dataset.id;
     const password = prompt(`${id} 번방 비밀번호를 입력해주세요.`);
 
-    fetch(removeUrl, {
+    fetch(`/room/` + id, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'

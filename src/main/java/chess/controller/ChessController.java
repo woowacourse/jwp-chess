@@ -2,17 +2,22 @@ package chess.controller;
 
 import chess.dto.GameDeleteDto;
 import chess.dto.GameDeleteResponseDto;
-import chess.dto.RoomRequestDto;
 import chess.dto.ResponseDto;
+import chess.dto.RoomRequestDto;
 import chess.dto.ScoreDto;
-import chess.service.RoomService;
-import org.eclipse.jetty.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 import chess.model.room.Room;
 import chess.service.ChessService;
+import chess.service.RoomService;
+import org.eclipse.jetty.http.HttpStatus;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ChessController {
@@ -31,7 +36,7 @@ public class ChessController {
         return "home";
     }
 
-    @PostMapping(value = "/room")
+    @PostMapping("/room")
     public String room(@ModelAttribute RoomRequestDto roomDto) {
         Room room = chessService.init(
                 roomDto.getRoomName(),
@@ -77,11 +82,10 @@ public class ChessController {
         return "result";
     }
 
-    @DeleteMapping("/room/delete")
+    @DeleteMapping("/room/{roomId}")
     @ResponseBody
-    public GameDeleteResponseDto delete(@RequestBody GameDeleteDto gameDeleteDto) {
-        int id = gameDeleteDto.getId();
+    public GameDeleteResponseDto delete(@PathVariable int roomId, @RequestBody GameDeleteDto gameDeleteDto) {
         String password = gameDeleteDto.getPassword();
-        return roomService.deleteRoom(id, password);
+        return roomService.deleteRoom(roomId, password);
     }
 }

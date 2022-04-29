@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class GameAPIController {
+public class GameApiController {
 
     private final ChessGameService chessGameService;
 
-    public GameAPIController(final ChessGameService chessGameService) {
+    public GameApiController(final ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 

@@ -5,8 +5,8 @@ create table game
 (
     id              int auto_increment
         primary key,
-    white_user_name varchar(30) not null,
-    black_user_name varchar(30) not null,
+    room_name varchar(30) not null,
+    password varchar(100) not null,
     state           varchar(30) not null
 );
 

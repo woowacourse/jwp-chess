@@ -61,6 +61,7 @@ const Board = ({board, onCellClick}) => {
 
 const Status = styled.div`
     margin-top: 20px;
+    margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -177,6 +178,10 @@ const Game = () => {
         setSelected(null);
     }
 
+    const handleHomeClick = () => {
+        location.href = "/";
+    }
+
     return (
         <GamePageWrapper>
             <Board id={id} board={board} onCellClick={handleCellClick}/>
@@ -185,6 +190,9 @@ const Game = () => {
                 <Score id={id} score={score}/>
                 <CurrentTurn id={id} turn={turn}/>
             </Status>
+
+            <Button onClick={handleHomeClick}> 홈으로 </Button>
+
             <Winner id={id} winner={winner} score={score}/>
         </GamePageWrapper>
     );

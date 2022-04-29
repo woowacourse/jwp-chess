@@ -48,28 +48,30 @@ function checkStatus() {
 
 function sendToServer(first, second) {
     let element = document.getElementById("roomId");
-    const moveCommand = "command=" + first + " " + second;
-
+    const moveCommand = {"source": first, "target": second};
     let moveUrl = '/room/' + element.value + 'move';
     fetch(moveUrl, {
         method: "POST",
         headers: {
-            "Content-Type": "text/plain",
+            "Content-Type": "application/json",
         },
-        body: moveCommand
+        body: JSON.stringify(moveCommand)
     }).then((response) => {
-            response.json().then(data => {
-                if (data.status === 400) {
-                    alert(data.errorMessage);
-                }
-                if (data.finished === true) {
-                    alert("게임이 종료되었습니다.");
-                    document.location.href = '/'
-                    return;
-                }
-                location.reload();
-            });
+        if (response.status === 400) {
+            response.text().then(data => {
+                alert(data);
+            })
+            location.reload();
+            return;
         }
-    );
+        response.text().then(data => {
+            if (data === 'true') {
+                alert("게임이 종료되었습니다.");
+                document.location.href = '/'
+                return;
+            }
+            location.reload();
+        });
+    })
 }
 

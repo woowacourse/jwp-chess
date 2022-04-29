@@ -18,7 +18,7 @@ const deleteRoom = (event) => {
     const id = event.target.dataset.id;
     const password = prompt(`${id} 번방 비밀번호를 입력해주세요.`);
 
-    fetch(`/room/` + id, {
+    fetch(`/room`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'

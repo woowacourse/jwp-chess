@@ -2,13 +2,13 @@ package chess.controller;
 
 import chess.dto.GameDeleteDto;
 import chess.dto.GameDeleteResponseDto;
-import chess.dto.ResponseDto;
+import chess.dto.MoveRequestDto;
 import chess.dto.RoomRequestDto;
 import chess.dto.ScoreDto;
 import chess.model.room.Room;
 import chess.service.ChessService;
 import chess.service.RoomService;
-import org.eclipse.jetty.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,17 +56,11 @@ public class ChessController {
 
     @PostMapping("/room/{roomId}/move")
     @ResponseBody
-    public String move(@RequestBody String messageBody, @PathVariable int roomId) {
-        final String[] split = messageBody.strip().split("=")[1].split(" ");
-        String source = split[0];
-        String target = split[1];
-        try {
-            chessService.move(source, target, roomId);
-        } catch (IllegalArgumentException e) {
-            return ResponseDto.of(HttpStatus.BAD_REQUEST_400, e.getMessage(),
-                    chessService.isEnd(roomId)).toString();
-        }
-        return ResponseDto.of(HttpStatus.OK_200, null, chessService.isEnd(roomId)).toString();
+    public ResponseEntity<Boolean> move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int roomId) {
+        String source = moveRequestDto.getSource();
+        String target = moveRequestDto.getTarget();
+        chessService.move(source, target, roomId);
+        return ResponseEntity.ok().body(chessService.isEnd(roomId));
     }
 
     @GetMapping("/room/{roomId}/status")
@@ -82,9 +76,9 @@ public class ChessController {
         return "result";
     }
 
-    @DeleteMapping("/room/{roomId}")
+    @DeleteMapping("/room")
     @ResponseBody
-    public GameDeleteResponseDto delete(@PathVariable int roomId, @RequestBody GameDeleteDto gameDeleteDto) {
-        return roomService.deleteRoom(roomId, gameDeleteDto.getPassword());
+    public GameDeleteResponseDto delete(@RequestBody GameDeleteDto gameDeleteDto) {
+        return roomService.deleteRoom(gameDeleteDto.getId(), gameDeleteDto.getPassword());
     }
 }

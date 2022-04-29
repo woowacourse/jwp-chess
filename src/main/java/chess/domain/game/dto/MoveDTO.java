@@ -2,7 +2,9 @@ package chess.domain.game.dto;
 
 import chess.domain.piece.property.Team;
 
-public class MoveDTO {
+import java.io.Serializable;
+
+public class MoveDTO implements Serializable {
     private String source;
     private String target;
     private Team team;

@@ -269,6 +269,14 @@ async function tempAlert(message, timeout)
     setTimeout(() => alert.close(), timeout)
 }
 
+async function enterRoom(self) {
+    id = self.id.split("/")[1];
+
+    hideElement("rooms");
+    await findRoom();
+    showOnlyGameElement()
+}
+
 async function rooms() {
     clearLoginForm();
     showElementBlock("rooms");
@@ -288,7 +296,7 @@ async function rooms() {
         let tr = document.createElement("tr");
         for (let column in rooms[index]) {
             let td = document.createElement("td");
-            td.innerHTML = rooms[index][column]
+            td.innerHTML = mappingTurnToGameStatus(rooms[index][column]);
             tr.appendChild(td);
         }
         let roomId = rooms[index]["id"];
@@ -300,13 +308,20 @@ async function rooms() {
     }
 }
 
-async function enterRoom(self) {
-    id = self.id.split("/")[1];
-
-    hideElement("rooms");
-    await findRoom();
-    showOnlyGameElement()
+function mappingTurnToGameStatus(turn) {
+    if (gameStatusMap.has(turn)) {
+        return gameStatusMap.get(turn);
+    }
+    return turn;
 }
+
+let gameStatusMap = new Map([
+    ["white", "On Game"],
+    ["black", "On Game"],
+    ["empty", "Deletable"]
+])
+
+
 
 async function deleteRoom(self) {
     id = self.id.split("/")[1];

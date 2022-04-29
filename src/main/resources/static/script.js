@@ -3,6 +3,7 @@ let turn = "";
 let isStart = false;
 let roomName = "";
 let id;
+
 showIndexPageElement();
 
 function showIndexPageElement() {
@@ -37,9 +38,7 @@ async function create() {
     hideElement("rooms")
     if (roomName === "") {
         roomName = document.getElementById("roomName").value;
-        console.log("[getElement]: " + roomName);
     }
-    console.log("[roomName]: " + roomName);
     await fetch("/rooms", {
         method: "POST",
         headers: {
@@ -50,9 +49,8 @@ async function create() {
         .then(res => res.json())
         .then(data => {
             id = data;
-            console.log(id);
             if (data.message) {
-                alert(data.message);
+                alert("[ERROR]: " + data.message);
                 isCreated = false;
                 return
             }
@@ -66,6 +64,8 @@ async function create() {
         return;
     }
     showElementBlock("whole-board");
+    hideElement("create-form");
+    hideElement("index");
 }
 
 async function start() {
@@ -82,6 +82,20 @@ async function start() {
     isStart = true;
     await printPieces(pieces.board);
     await printStatus();
+}
+
+async function newGame() {
+    end()
+    let status = document.getElementById("chess-status");
+    let turnState = document.getElementById("turn-status");
+    status.innerText = "";
+    turnState.innerText = "";
+    roomName = "";
+
+    hideElement("whole-board");
+    showElementBlock("index");
+    showElementInline("showCreateForm");
+    hideElement("create-form");
 }
 
 async function load() {
@@ -107,20 +121,6 @@ async function load() {
     printPieces(pieces.board);
     isStart = true;
     await printStatus();
-}
-
-async function newGame() {
-    end()
-    let status = document.getElementById("chess-status");
-    let turnState = document.getElementById("turn-status");
-    status.innerText = "";
-    turnState.innerText = "";
-    roomName = "";
-
-    hideElement("whole-board");
-    showElementBlock("index");
-    showElementInline("showCreateForm");
-    hideElement("create-form");
 }
 
 function end() {
@@ -165,7 +165,6 @@ function printPieces(pieces) {
         const piece = pieces[key];
         const square = document.getElementById(key);
         const img = document.createElement("img");
-        console.log(square);
         removeChildren(square);
         attachPieceInSquare(piece, img, square);
     }
@@ -195,7 +194,6 @@ async function selectPiece(pieceDiv) {
     if (from === "") {
         from = pieceDiv.id;
         pieceClasses.add('selected');
-        console.log("select!" + from);
         return;
     }
 
@@ -267,12 +265,10 @@ async function tempAlert(message, timeout)
 }
 
 async function rooms() {
-    console.log("rooms");
-
     showElementBlock("rooms");
     showElementBlock("create-form");
     showElementInline("showCreateForm");
-    hideElement("create-form");
+    hideElement("create-room");
     hideElement("name-form");
     let rooms;
     removeChildren(document.querySelector("tbody"));
@@ -282,23 +278,23 @@ async function rooms() {
         .then(res => res.json())
         .then(data => rooms = data)
 
-    for (let aRoom in rooms) {
+    for (let index in rooms) {
         let tr = document.createElement("tr");
-        for (let column in rooms[aRoom]) {
+        for (let column in rooms[index]) {
             let td = document.createElement("td");
-            td.innerHTML = rooms[aRoom][column]
+            td.innerHTML = rooms[index][column]
             tr.appendChild(td);
         }
-        let roomId = rooms[aRoom]["id"];
+        let roomId = rooms[index]["id"];
         let button = document.createElement("button");
-        button.innerHTML = `<input type=\"button\" id=\"index/${roomId}\" class=\"chess-btn\" value=\"방 입장\" onclick=\"enter(this)\">`
+        button.innerHTML = `<input type=\"button\" id=\"index/${roomId}\" class=\"chess-btn\" value=\"방 입장\" onclick=\"enterRoom(this)\">`
         button.innerHTML += `<input type=\"button\" id=\"delete/${roomId}\" class=\"chess-btn\" value=\"방 삭제\" onclick=\"deleteRoom(this)\">`
         tr.appendChild(button);
         document.querySelector("tbody").appendChild(tr);
     }
 }
 
-async function enter(self) {
+async function enterRoom(self) {
     id = self.id.split("/")[1];
 
     hideElement("rooms");
@@ -318,7 +314,7 @@ async function deleteRoom(self) {
 
     if (!response.ok) {
         const errorMessage = await response.json();
-        await tempAlert(errorMessage.message, 500);
+        await tempAlert(errorMessage.message, 1000);
     }
 }
 

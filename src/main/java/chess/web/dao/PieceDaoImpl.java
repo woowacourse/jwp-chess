@@ -58,7 +58,7 @@ public class PieceDaoImpl implements PieceDao {
         try {
             jdbcTemplate.update(query, boardId);
         } catch (DataAccessException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("체스 기물들 삭제에 실패했습니다.");
         }
     }
 }

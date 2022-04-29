@@ -34,7 +34,7 @@ public class InGameController {
         }
         ChessGame chessGame = chessService.loadChessGame(chessGameDto, restart);
         GameResult gameResult = chessService.getGameResult(chessGameDto);
-        addGameInfo(chessGameDto, model, gameResult);
+        addScores(model, gameResult);
 
         model.addAllAttributes(chessGame.getEmojis());
         model.addAttribute("msg", "누가 이기나 보자구~!");
@@ -49,11 +49,9 @@ public class InGameController {
         return !chessService.isValidPassword(chessGameDto);
     }
 
-    private void addGameInfo(@ModelAttribute ChessGameDto chessGameDto,
-            Model model, GameResult gameResult) {
+    private void addScores(Model model, GameResult gameResult) {
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
-        model.addAttribute("gameID", chessGameDto.getGameID());
     }
 
     @PostMapping(value = "/{gameID}/move")
@@ -63,7 +61,7 @@ public class InGameController {
         executeMove(chessGameDto, model, chessGame, movement);
 
         GameResult gameResult = chessService.getGameResult(chessGameDto);
-        addGameInfo(chessGameDto, model, gameResult);
+        addScores(model, gameResult);
 
         if (chessGame.isKingDie()) {
             model.addAttribute("msg", "킹 잡았다!! 게임 끝~!~!");

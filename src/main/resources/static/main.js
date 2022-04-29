@@ -38,7 +38,7 @@ const move = async (from, to, id) => {
         },
         body: JSON.stringify({from, to})
     });
-    
+
     await render(id);
 }
 
@@ -145,7 +145,6 @@ window.onload = async () => {
 
 const parseQueryString = () => {
     const params = {};
-    console.log(window.location.search);
     window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,
         (str, key, value) => {
             params[key] = value;

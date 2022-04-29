@@ -1,5 +1,6 @@
 package chess.controller;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class ChessController {
     @GetMapping("/board/{id}")
     public ResponseEntity<Map<String, String>> getBoard(@PathVariable Integer id) {
         BoardDto boardDto = chessService.getBoard(id);
-        return ResponseEntity.ok(boardDtoToRaw(boardDto));
+        return ResponseEntity.ok().body(boardDtoToRaw(boardDto));
     }
 
     private Map<String, String> boardDtoToRaw(BoardDto boardDto) {
@@ -66,7 +67,7 @@ public class ChessController {
         PieceColorDto pieceColorDto = chessService.getCurrentTurn(id);
         Map<String, String> responseValue = new HashMap<>();
         responseValue.put("pieceColor", getColorFromPieceColorDto(pieceColorDto));
-        return ResponseEntity.ok(responseValue);
+        return ResponseEntity.ok().body(responseValue);
     }
 
     private String getColorFromPieceColorDto(PieceColorDto pieceColorDto) {
@@ -82,7 +83,7 @@ public class ChessController {
         Map<String, Double> responseValue = new HashMap<>();
         responseValue.put("white", scoreResultDto.getWhiteScore());
         responseValue.put("black", scoreResultDto.getBlackScore());
-        return ResponseEntity.ok(responseValue);
+        return ResponseEntity.ok().body(responseValue);
     }
 
     @GetMapping("/winner/{id}")
@@ -90,7 +91,7 @@ public class ChessController {
         PieceColorDto pieceColorDto = chessService.getWinColor(id);
         Map<String, String> responseValue = new HashMap<>();
         responseValue.put("pieceColor", getColorFromPieceColorDto(pieceColorDto));
-        return ResponseEntity.ok(responseValue);
+        return ResponseEntity.ok().body(responseValue);
     }
 
     @PostMapping("/move/{id}")
@@ -108,17 +109,17 @@ public class ChessController {
     // TODO: Exception 으로 catch 하면 안됨
 
     @PostMapping("/room")
-    public RoomDto createRoom(@RequestBody CreateRoomDto createRoomDto) {
+    public ResponseEntity<RoomDto> createRoom(@RequestBody CreateRoomDto createRoomDto) {
         String gameName = createRoomDto.getName();
         String gamePassword = createRoomDto.getPassword();
         RoomDto roomDto = new RoomDto(chessService.createGame(gameName, gamePassword), gameName);
-        return roomDto;
+        return ResponseEntity.created(URI.create("/room/" + roomDto.getId())).body(roomDto);
     }
 
     @GetMapping("/room")
     public ResponseEntity<List<RoomDto>> inquireRooms() {
         List<RoomDto> rooms = chessService.getRooms();
-        return ResponseEntity.ok(rooms);
+        return ResponseEntity.ok().body(rooms);
     }
 
     @DeleteMapping("/room")

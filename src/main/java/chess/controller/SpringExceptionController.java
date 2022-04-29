@@ -15,8 +15,7 @@ public class SpringExceptionController {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> illegalArgumentException(IllegalArgumentException exception) {
-        String message = exception.getMessage();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 
     @ExceptionHandler(SQLException.class)
@@ -26,6 +25,6 @@ public class SpringExceptionController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> runtimeException(RuntimeException exception) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
     }
 }

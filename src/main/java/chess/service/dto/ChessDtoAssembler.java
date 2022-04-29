@@ -31,7 +31,7 @@ public class ChessDtoAssembler {
 
     private static PlayersResponseDto playersResponseDto(final Players players) {
         return new PlayersResponseDto(Arrays.stream(Color.values())
-                .collect(Collectors.toMap(
+                .collect(Collectors.toUnmodifiableMap(
                         ChessDtoAssembler::colorResponseDto,
                         color -> playerResponseDto(players.getPiecesByPlayer(color)))
                 ));

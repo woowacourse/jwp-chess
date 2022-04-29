@@ -54,7 +54,7 @@ public class ChessGameService {
     }
 
     public ChessGameDto move(MoveRequest moveRequest) {
-        int chessGameId = moveRequest.getChessGameId();
+        int chessGameId = moveRequest.getId();
         Movement movement = new Movement(moveRequest.getFrom(), moveRequest.getTo());
         List<PieceDto> pieces = pieceDao.findPieces(chessGameId);
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);

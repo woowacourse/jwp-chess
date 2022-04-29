@@ -27,7 +27,7 @@ public class Movement {
     }
 
     private File file(String position) {
-        return File.find(position.substring(0, 1));
+        return File.valueOf(position.substring(0, 1));
     }
 
     private Rank rank(String position) {

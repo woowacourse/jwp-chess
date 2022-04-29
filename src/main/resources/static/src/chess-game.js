@@ -61,7 +61,7 @@ function createMoveForm(event, id) {
     form.setAttribute("action", "/chess-game/move");
     form.appendChild(createInputElement("from", pickedPiece));
     form.appendChild(createInputElement("to", findPosition(event.currentTarget)));
-    form.appendChild(createInputElement("chess-game-id", id));
+    form.appendChild(createInputElement("id", id));
     return form;
 }
 

@@ -14,7 +14,6 @@ import chess.domain.Score;
 import chess.domain.piece.Color;
 import chess.dto.ChessGameDto;
 import chess.dto.GameStatus;
-import chess.dto.MoveRequest;
 import chess.exception.ChessGameException;
 import chess.service.ChessGameService;
 import java.util.Collections;
@@ -46,7 +45,7 @@ class ChessGameControllerTest {
             .thenReturn(new ChessGameDto(1, "hoho", GameStatus.RUNNING, new Score(), new Score(), Color.WHITE));
         Mockito.when(chessGameService.findPieces(1)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/chess-game").param("chess-game-id", String.valueOf(1)))
+        mockMvc.perform(get("/chess-game").param("id", String.valueOf(1)))
             .andDo(print())
             .andExpectAll(
                 status().isOk(),
@@ -63,7 +62,7 @@ class ChessGameControllerTest {
             .thenReturn(new ChessGameDto(1, "hoho", GameStatus.RUNNING, new Score(), new Score(), Color.WHITE));
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("chessGameId", "1");
+        params.add("id", "1");
         params.add("from", "A2");
         params.add("to", "A4");
 
@@ -72,7 +71,7 @@ class ChessGameControllerTest {
             .andDo(print())
             .andExpectAll(
                 status().is3xxRedirection(),
-                redirectedUrl("/chess-game?chess-game-id=" + 1),
+                redirectedUrl("/chess-game?id=" + 1),
                 flash().attributeCount(0)
             );
 
@@ -85,13 +84,13 @@ class ChessGameControllerTest {
             .thenThrow(new ChessGameException(1, "기물을 A2에서 A5로 이동할 수 없습니다."));
 
         mockMvc.perform(post("/chess-game/move")
-            .param("chessGameId", String.valueOf(1))
+            .param("id", String.valueOf(1))
             .param("from", "A2")
             .param("to", "A5"))
             .andDo(print())
             .andExpectAll(
                 status().is3xxRedirection(),
-                redirectedUrl("/chess-game?chess-game-id=" + 1),
+                redirectedUrl("/chess-game?id=" + 1),
                 flash().attributeExists("hasError"),
                 flash().attributeExists("errorMessage")
             );

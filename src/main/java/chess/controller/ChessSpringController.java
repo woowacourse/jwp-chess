@@ -89,7 +89,7 @@ public class ChessSpringController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/board/delete")
+    @DeleteMapping("/board")
     public ResponseEntity<String> delete(@RequestParam(name = "id") Long id, @RequestBody String request) {
         chessGameService.delete(id, request);
         return ResponseEntity.status(HttpStatus.OK).build();

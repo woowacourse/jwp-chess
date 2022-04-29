@@ -40,8 +40,7 @@ public class GameController {
 
     @PostMapping("/load/{gameNo}")
     public String load(Model model, @PathVariable int gameNo, @RequestParam String password) {
-        //TODO: 비밀번호 DB에서 가져와서 비교
-        if ("test".equals(password)) {
+        if (gameService.checkPassword(gameNo, password)) {
             gameService.load(gameNo);
             return play(model, gameNo);
         }
@@ -49,8 +48,8 @@ public class GameController {
     }
 
     @PostMapping("/move/{gameNo}")
-    public String move(Model model, @PathVariable int gameNo, @RequestParam String source,
-                       @RequestParam String target) {
+    public String move(Model model, @PathVariable int gameNo,
+                       @RequestParam String source, @RequestParam String target) {
         ChessGame chessGame = gameService.load(gameNo);
         gameService.move(source, target, chessGame);
         gameService.save(gameNo, chessGame);

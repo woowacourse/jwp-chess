@@ -17,6 +17,14 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public List<GameDto> selectGames() {
+        final String sql = "select no, title from game";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new GameDto(
+                resultSet.getInt("no"),
+                resultSet.getString("title"))
+        );
+    }
+
     public long insert(GameDto game) {
         final String sql = "insert into game (running, white_turn, title, password) values (?,?,?,?)";
 
@@ -33,6 +41,16 @@ public class GameDao {
         return keyHolder.getKey().longValue();
     }
 
+    public String loadPassword(long gameNo) {
+        final String sql = "select password from game where no = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, gameNo);
+    }
+
+    public String loadTitle(long gameNo) {
+        final String sql = "select title from game where no = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, gameNo);
+    }
+
     public void update(long gameNo, boolean whiteTurn) {
         final String sql = "update game set white_turn = ? where no = ?";
         jdbcTemplate.update(sql, whiteTurn, gameNo);
@@ -42,18 +60,5 @@ public class GameDao {
         final String sql = "select white_turn from game where no = ?";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, gameNo);
-    }
-
-    public List<GameDto> selectGames() {
-        final String sql = "select no, title from game";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new GameDto(
-                resultSet.getInt("no"),
-                resultSet.getString("title"))
-        );
-    }
-
-    public String loadTitle(long gameNo) {
-        final String sql = "select title from game where no = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, gameNo);
     }
 }

@@ -45,9 +45,17 @@ public class GameService {
         this.boardDao = boardDao;
     }
 
+    public List<GameDto> list() {
+        return gameDao.selectGames();
+    }
+
     public void createRoom(String title, String password) {
         long gameNo = gameDao.insert(GameDto.fromNewGame(title, password));
         boardDao.insert(gameNo, BoardInitializer.get().getSquares());
+    }
+
+    public boolean checkPassword(long gameNo, String password) {
+        return gameDao.loadPassword(gameNo).equals(password);
     }
 
     public ChessGame load(long gameNo) {
@@ -123,9 +131,5 @@ public class GameService {
 
     public boolean isGameFinished(ChessGame chessGame) {
         return chessGame.isFinished();
-    }
-
-    public List<GameDto> list() {
-        return gameDao.selectGames();
     }
 }

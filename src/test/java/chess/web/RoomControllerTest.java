@@ -95,9 +95,9 @@ class RoomControllerTest {
         Room room = roomService.create(new Room(testName, password));
 
         RestAssured.given().log().all()
-            .when().get("/api/rooms/" + room.getId() + "/start")
+            .when().post("/rooms/" + room.getId())
             .then().log().all()
-            .statusCode(HttpStatus.OK.value());
+            .statusCode(HttpStatus.FOUND.value());
     }
 
     @Test
@@ -107,7 +107,7 @@ class RoomControllerTest {
         gameService.startNewGame(roomId);
 
         RestAssured.given().log().all()
-            .when().get("/api/rooms/" + roomId + "/load")
+            .when().get("/api/rooms/" + roomId)
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }

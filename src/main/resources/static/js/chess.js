@@ -201,14 +201,15 @@ window.onload = async function () {
 
 function fetchNewChess() {
     let roomId = document.getElementById("room-id").value;
-    fetch('http://localhost:8080/api/rooms/' + roomId + '/start', {
-        method: 'GET',
+    fetch('http://localhost:8080/rooms/' + roomId, {
+        method: 'POST',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         },
     })
         .then(res => res.json())
         .then(res => {
+            console.log(res)
             setBoardId(res.boardId);
             resetScores();
             toggleState(res.state);
@@ -224,7 +225,7 @@ function fetchLoadChess() {
         return;
     }
     let roomId = document.getElementById("room-id").value;
-    fetch('http://localhost:8080/api/rooms/' + roomId + '/load', {
+    fetch('http://localhost:8080/api/rooms/' + roomId, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',

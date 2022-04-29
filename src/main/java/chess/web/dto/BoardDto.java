@@ -1,13 +1,13 @@
 package chess.web.dto;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import chess.domain.GameState;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class BoardDto {
 

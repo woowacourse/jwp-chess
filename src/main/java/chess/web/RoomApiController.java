@@ -1,7 +1,6 @@
 package chess.web;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,12 +38,7 @@ public class RoomApiController {
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/{roomId}/start")
-	public ResponseEntity<BoardDto> startNewGame(@PathVariable int roomId) {
-		return ResponseEntity.ok(gameService.startNewGame(roomId));
-	}
-
-	@GetMapping("/{roomId}/load")
+	@GetMapping("/{roomId}")
 	public ResponseEntity<BoardDto> loadGame(@PathVariable int roomId) {
 		return ResponseEntity.ok(gameService.loadGame(roomId));
 	}

@@ -43,7 +43,10 @@
 - [x] `BoardDaoImpl`에서 `save`는 무조건 white 값을 넣고 있음
 - [x] 테스트에서 BeforeEach로 매번 테이블을 만드는 쿼리가 실행되는데 이런 raw한 sql 쿼리문이 노출되지 않도록 구현할 수 있을까?
 - [x] 불필요한 spark 의존성을 제거하자
-- [ ] Controller에서 발생하는 에러를 `@ExceptionHandler`, `@ControllerAdvice`를 이용하여 처리해보자.
+- [x] Controller에서 발생하는 에러를 `@ExceptionHandler`, `@ControllerAdvice`를 이용하여 처리해보자.
+    - `@ControllerAdvice`와 `@ExceptionHandler`를 이용하여 문제가 발생했을 때 에러를 처리할 수 있도록 함
+    - 없는 체스방 URL로 요청 시 체스방 페이지가 아닌 잘못 접속했다는 페이지를 출력하도록함
+    - 이동할 수 없는 이동을 할 경우 에러를 경고창으로 알려주기위해 예외 메시지를 400에러와 함께 전송하도록 함
 - [x] Post 형식으로 데이터가 생성이 되었을 경우 status code(200)을 반환하는게 맞을까?
     - Post 형식으로 요청을 받아서 어떤 데이터가 생성된 경우 statue code(201)이 반환되어야 한다.
     - ResponseEntity에서는 ResponseEntity.created()를 사용하여 반환할 수 있다.

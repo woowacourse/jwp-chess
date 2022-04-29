@@ -25,6 +25,7 @@ let boardInfo = "";
 let isChoiced = false;
 let currentTurn = "";
 let isFinished = GAME_RUNNING;
+let pieces;
 
 function showStatusButton() {
     status.style.visibility = 'visible';
@@ -33,7 +34,15 @@ function showStatusButton() {
 function initBoard() {
     fetch(path + '/restart')
         .then(res => res.json())
-        .then(imageSetting)
+        .then(value => {
+            if (value["statusCode"] === 400) {
+                alert(value["errorMessage"]);
+                drawBoard();
+                return;
+            }
+            imageSetting(value);
+            drawBoard();
+        });
 }
 
 start.addEventListener('click', function () {
@@ -59,19 +68,41 @@ function getStatus(scoreResponse) {
 status.addEventListener('click', function () {
     fetch(path + '/status')
         .then(res => res.json())
-        .then(getStatus)
+        .then(getStatus);
 })
 
 function loadBoard() {
     fetch(path + '/load')
         .then(res => res.json())
-        .then(imageSetting)
+        .then(value => {
+            if (value["statusCode"] === 400) {
+                alert(value["errorMessage"]);
+                drawBoard();
+                return;
+            }
+            imageSetting(value);
+            drawBoard();
+        });
 }
 
 function imageSetting(response) {
-    const divs = BOARD.querySelectorAll("div");
     boardInfo = response;
-    pieces = response["board"];
+    if (response["board"] !== undefined) {
+        pieces = response["board"];
+    }
+    turnSetting(response)
+}
+
+function turnSetting(response) {
+    if (response["finish"] === true) {
+        isFinished = GAME_FINISHED;
+        return;
+    }
+    currentTurn = getTurnByResponse(response);
+}
+
+function drawBoard() {
+    const divs = BOARD.querySelectorAll("div");
     for (const div of divs) {
         const key = div.getAttribute("id");
 
@@ -81,19 +112,13 @@ function imageSetting(response) {
             div.style.backgroundImage = null;
         }
     }
-    turnSetting(response)
-}
 
-function turnSetting(response) {
-    if (response["finish"] === true) {
+    if (isFinished) {
         document.querySelector("#view-type").textContent = "승리자 :ㅤ";
-        isFinished = GAME_FINISHED;
         alert("게임이 종료되었습니다. 승리자는 : " + CURRENT_TEAM.textContent + "입니다.");
         return;
     }
-
     document.querySelector("#view-type").textContent = "현재 턴 :ㅤ"
-    currentTurn = getTurnByResponse(response);
     CURRENT_TEAM.textContent = currentTurn
 }
 
@@ -126,8 +151,7 @@ function eventMove(event) {
             window.alert("기물을 선택하세요!");
             return
         }
-        if (turn === "white" && pieces[position] !== pieces[position].toLowerCase() ||
-            turn === "black" && pieces[position] !== pieces[position].toUpperCase()) {
+        if (turn === "white" && pieces[position] !== pieces[position].toLowerCase() || turn === "black" && pieces[position] !== pieces[position].toUpperCase()) {
             window.alert("자신의 기물을 선택하세요!");
             return;
         }
@@ -156,18 +180,23 @@ function movePiece(from, to) {
     }
 
     const request = {
-        from: from,
-        to: to
+        from: from, to: to
     }
 
     fetch(path + '/move', {
-        method: "POST",
-        headers: {
+        method: "POST", headers: {
             "Content-Type": "application/json",
-        },
-        body: JSON.stringify(request),
+        }, body: JSON.stringify(request),
     }).then(res => res.json())
-        .then(res => imageSetting(res));
+        .then(value => {
+            if (value["statusCode"] === 400) {
+                alert(value["errorMessage"]);
+                drawBoard();
+                return;
+            }
+            imageSetting(value);
+            drawBoard();
+        });
 }
 
 function move() {

@@ -31,7 +31,7 @@ public class ChessService {
 
     public Board loadGame(Long roomId) {
         Room room = roomDao.findById(roomId)
-                .orElseThrow(() -> new NoSuchElementException("없는 차례입니다."));
+                .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
         Turn turn = new Turn(Team.from(room.getTurn()));
 
         List<Piece> pieces = pieceDao.findAllByRoomId(roomId);
@@ -45,18 +45,14 @@ public class ChessService {
 
     public Board move(final MoveDto moveDto, final Long roomId) {
         Room room = roomDao.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("없는 정보입니다."));
+                .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
         Turn turn = new Turn(Team.from(room.getTurn()));
 
         Board board = Board.create(Pieces.from(pieceDao.findAllByRoomId(roomId)), turn);
         Pieces pieces = board.getPieces();
 
         Piece piece = pieces.findByPosition(Position.from(moveDto.getFrom()));
-        try {
-            board.move(List.of(moveDto.getFrom(), moveDto.getTo()), turn);
-        } catch (IllegalArgumentException exception) {
-            return board;
-        }
+        board.move(List.of(moveDto.getFrom(), moveDto.getTo()), turn);
         Turn changedTurn = updatePieces(moveDto, turn, piece, roomId);
 
         return Board.create(pieces, changedTurn);

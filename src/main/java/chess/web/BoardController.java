@@ -23,18 +23,18 @@ public class BoardController {
         this.gameService = gameService;
     }
 
-    @PatchMapping(value = "/{boardId}", params = "command=move")
+    @PatchMapping(value = "/{boardId}")
     public ResponseEntity<BoardDto> movePiece(@PathVariable int boardId, @RequestBody CommendDto commendDto) {
         gameService.move(boardId, commendDto);
         return ResponseEntity.ok(gameService.gameStateAndPieces(boardId));
     }
 
-    @GetMapping(value = "/{boardId}", params = "command=result")
+    @GetMapping(value = "/{boardId}/result")
     public ResponseEntity<ResultDto> result(@PathVariable int boardId) {
         return ResponseEntity.ok(gameService.gameResult(boardId));
     }
 
-    @GetMapping(value = "/{boardId}", params = "command=end")
+    @GetMapping(value = "/{boardId}/end")
     public ResponseEntity<ResultDto> end(@PathVariable int boardId) {
         return ResponseEntity.ok(gameService.gameFinalResult(boardId));
     }

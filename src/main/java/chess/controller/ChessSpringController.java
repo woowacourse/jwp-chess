@@ -32,10 +32,10 @@ public class ChessSpringController {
         return modelAndView;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<String> create(@RequestBody RoomInfoDto roomInfoDto) {
         chessGameService.create(roomInfoDto.getTitle(), roomInfoDto.getPassword());
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/board")

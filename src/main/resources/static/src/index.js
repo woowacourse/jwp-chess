@@ -9,7 +9,7 @@ function create() {
     let title = document.getElementById('titleId').value;
     let password = document.getElementById('passwordId').value;
 
-    fetch("/create", {
+    fetch("/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

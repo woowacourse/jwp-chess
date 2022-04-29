@@ -24,8 +24,7 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void save(String gameId, String lastTeamName) {
-        LocalDateTime createdAt = LocalDateTime.now();
+    public void save(String gameId, String lastTeamName, LocalDateTime createdAt) {
         jdbcTemplate.update(SAVE_DML, gameId, lastTeamName, createdAt);
     }
 

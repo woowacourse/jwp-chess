@@ -8,18 +8,18 @@ public class Game {
 
     private String gameId;
     private String lastTeam;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
-    public Game(String gameId, String lastTeam, Timestamp createAt) {
+    public Game(String gameId, String lastTeam, Timestamp createdAt) {
         this.gameId = gameId;
         this.lastTeam = lastTeam;
-        this.createAt = DateTimeConvertUtils.toLocalDateTimeFrom(createAt);
+        this.createdAt = DateTimeConvertUtils.toLocalDateTimeFrom(createdAt);
     }
 
-    public Game(String gameId, String lastTeam, LocalDateTime createAt) {
+    public Game(String gameId, String lastTeam, LocalDateTime createdAt) {
         this.gameId = gameId;
         this.lastTeam = lastTeam;
-        this.createAt = createAt;
+        this.createdAt = createdAt;
     }
 
     public String getGameId() {
@@ -30,7 +30,7 @@ public class Game {
         return lastTeam;
     }
 
-    public LocalDateTime getCreateAt() {
-        return createAt;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

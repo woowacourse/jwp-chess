@@ -204,6 +204,7 @@ function saveGameRequest() {
   const gameData = {
     currentTeam: $("#current-team").text(),
     pieces: getPieces(),
+    createdAt: new Date().toISOString(),
   };
 
   $.ajax({

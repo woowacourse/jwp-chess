@@ -1,9 +1,11 @@
 package chess.repository;
 
 import chess.domain.board.ChessBoard;
+import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpSession;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -21,14 +23,13 @@ public class SessionToChessRepository {
         return sessionToChessBoard.get(session);
     }
 
-//    @Scheduled(cron = "*/10 * * * * *")
-//    public void checkAndRemoveSessions() {
-//        for (HttpSession session : sessionToChessBoard.keySet()) {
-//            checkAndRemoveSession(session);
-//        }
-//    }
+    @Scheduled(cron = "*/10 * * * * *")
+    public void checkAndRemoveSessions() {
+        for (HttpSession session : sessionToChessBoard.keySet()) {
+            checkAndRemoveSession(session);
+        }
+    }
 
-/*
     private void checkAndRemoveSession(HttpSession session) {
         long currentTimeMillis = System.currentTimeMillis();
         long lastAccessedTime = session.getLastAccessedTime();
@@ -40,5 +41,4 @@ public class SessionToChessRepository {
             System.out.println("remove it " + session);
         }
     }
-*/
 }

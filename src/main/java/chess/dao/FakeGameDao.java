@@ -17,8 +17,8 @@ public class FakeGameDao implements GameDao{
     }
 
     @Override
-    public void save(String gameId, String lastTeamName) {
-        Game game = new Game(gameId, lastTeamName, LocalDateTime.now());
+    public void save(String gameId, String lastTeamName, LocalDateTime createdAt) {
+        Game game = new Game(gameId, lastTeamName, createdAt);
 
         games.add(game);
     }
@@ -26,7 +26,7 @@ public class FakeGameDao implements GameDao{
     @Override
     public Game findLastGame() {
         return games.stream()
-                .max(Comparator.comparing(Game::getCreateAt))
+                .max(Comparator.comparing(Game::getCreatedAt))
                 .get();
     }
 

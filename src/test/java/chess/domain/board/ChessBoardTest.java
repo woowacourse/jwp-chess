@@ -156,7 +156,9 @@ public class ChessBoardTest {
     @DisplayName("폰을 A2 에서 A4로 이동시켰다면 A4에는 폰이 있다")
     @Test
     void move_pawn_and_now_pawn_is_at_target_pos() {
-        chessBoard.movePiece(Position.of(A, TWO), Position.of(A, FOUR));
+        Position from = Position.of(A, TWO);
+        Position to = Position.of(A, FOUR);
+        chessBoard.movePiece(from, to);
         Piece findPiece = chessBoard.getBoard().get(Position.of(A, FOUR));
         assertThat(findPiece).isInstanceOf(Pawn.class);
     }

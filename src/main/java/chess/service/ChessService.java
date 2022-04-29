@@ -61,7 +61,7 @@ public class ChessService {
     @Transactional
     public void saveGame(SaveRequest saveRequest) {
         String gameId = createUuid();
-        gameDao.save(gameId, saveRequest.getCurrentTeam());
+        gameDao.save(gameId, saveRequest.getCurrentTeam(), saveRequest.getCreatedAt());
         boardPieceDao.save(gameId, saveRequest.getPieces());
     }
 

@@ -102,7 +102,7 @@ async function newGame() {
     hideElement("create-form");
 }
 
-async function load() {
+async function find() {
     let pieces;
     let response = await fetch("/rooms/" + id);
 
@@ -302,7 +302,7 @@ async function enterRoom(self) {
     id = self.id.split("/")[1];
 
     hideElement("rooms");
-    await load();
+    await find();
     showOnlyGameElement()
 }
 

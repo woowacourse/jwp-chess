@@ -57,7 +57,7 @@ public class ChessService {
         return BoardDto.of(board, chessGame.getTurn());
     }
 
-    public BoardDto load(Long roomId) {
+    public BoardDto find(Long roomId) {
         Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());

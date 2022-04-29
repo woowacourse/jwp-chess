@@ -48,8 +48,8 @@ public class ChessController {
     }
 
     @GetMapping("/rooms/{roomId}")
-    public BoardDto load(@PathVariable Long roomId) {
-        return chessService.load(roomId);
+    public BoardDto find(@PathVariable Long roomId) {
+        return chessService.find(roomId);
     }
 
     @DeleteMapping("/rooms/{roomId}")

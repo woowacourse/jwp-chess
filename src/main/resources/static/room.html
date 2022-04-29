@@ -8,18 +8,16 @@
 <body>
 <div class="container">
     <h1 class="chess-header">🏛ROMA CHESS🏛</h1>
-    <div id="entrance" class="container">
-        <div class="chess-button-container">
-            <div id="create-form">
-                <div id="name-form">방 제목: <input id="roomName" type="text" name="name"></div>
-                비밀번호: <input type="password" id="roomPassword" name="password">
-                <input type="button" id="create-room" class="chess-btn" value="방 생성" onclick="create()">
-            </div>
+    <div class="chess-button-container">
+        <div id="create-form">
+            <div id="name-form">방 제목: <input id="roomName" type="text" name="name"></div>
+            비밀번호: <input type="password" id="roomPassword" name="password">
+            <input type="button" id="create-room" class="chess-btn" value="방 생성" onclick="create()">
         </div>
-        <div id="index" class="chess-button-container">
-            <input type="button" id="showCreateForm" class="chess-btn" value="새 게임" onclick="showCreateForm()">
-            <input type="button" class="chess-btn" value="방 목록" onclick="rooms()">
-        </div>
+    </div>
+    <div id="index" class="chess-button-container">
+        <input type="button" id="showCreateForm" class="chess-btn" value="새 게임" onclick="showCreateForm()">
+        <input type="button" class="chess-btn" value="방 목록" onclick="rooms()">
     </div>
 
     <table id="rooms">
@@ -35,7 +33,7 @@
         </tbody>
     </table>
 
-    <div id="start-room">
+    <div id="whole-board">
         <div class="chess-button-container">
             <div id="chess-status"></div>
             <div id="turn-status"></div>

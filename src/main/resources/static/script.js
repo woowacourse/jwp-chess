@@ -3,22 +3,38 @@ let turn = "";
 let isStart = false;
 let roomName = "";
 let id;
-document.getElementById("start-room").style.display = "none";
-document.getElementById("rooms").style.display = "none";
-document.getElementById("create-form").style.display = "none";
+showIndexPageElement();
+
+function showIndexPageElement() {
+    hideElement("create-form");
+    hideElement("rooms");
+    hideElement("whole-board");
+}
 
 async function showCreateForm() {
-    document.getElementById("create-form").style.display = "block";
-    document.getElementById("showCreateForm").style.display = "none";
-    document.getElementById("rooms").style.display = "none";
-    document.getElementById("name-form").style.display = "inline";
-    document.getElementById("create-room").style.display = "inline";
+    showElementBlock("create-form");
+    showElementInline("name-form");
+    showElementInline("create-room");
+    hideElement("showCreateForm");
+    hideElement("rooms");
+}
+
+function showElementBlock(elementId) {
+    document.getElementById(elementId).style.display = "block";
+}
+
+function showElementInline(elementId) {
+    document.getElementById(elementId).style.display = "inline";
+}
+
+function hideElement(elementId) {
+    document.getElementById(elementId).style.display = "none";
 }
 
 async function create() {
     let isCreated = false;
 
-    document.getElementById("rooms").style.display = "none";
+    hideElement("rooms")
     if (roomName === "") {
         roomName = document.getElementById("roomName").value;
         console.log("[getElement]: " + roomName);
@@ -49,8 +65,7 @@ async function create() {
     if (isCreated !== true) {
         return;
     }
-    document.getElementById("entrance").style.display = "none";
-    document.getElementById("start-room").style.display = "block";
+    showElementBlock("whole-board");
 }
 
 async function start() {
@@ -62,8 +77,7 @@ async function start() {
         .then(res => res.json())
         .then(data => pieces = data)
 
-    document.getElementById("entrance").style.display = "none";
-    document.getElementById("start-room").style.display = "block";
+    showElementBlock("whole-board");
     turn = pieces.turn;
     isStart = true;
     await printPieces(pieces.board);
@@ -93,7 +107,6 @@ async function load() {
     printPieces(pieces.board);
     isStart = true;
     await printStatus();
-
 }
 
 async function newGame() {
@@ -103,11 +116,11 @@ async function newGame() {
     status.innerText = "";
     turnState.innerText = "";
     roomName = "";
-    document.getElementById("start-room").style.display = "none";
-    document.getElementById("entrance").style.display = "block";
-    document.getElementById("index").style.display = "block";
-    document.getElementById("showCreateForm").style.display = "inline";
-    document.getElementById("create-form").style.display = "none";
+
+    hideElement("whole-board");
+    showElementBlock("index");
+    showElementInline("showCreateForm");
+    hideElement("create-form");
 }
 
 function end() {
@@ -255,10 +268,12 @@ async function tempAlert(message, timeout)
 
 async function rooms() {
     console.log("rooms");
-    document.getElementById("rooms").style.display = "block";
-    document.getElementById("create-form").style.display = "block";
-    document.getElementById("create-room").style.display = "none";
-    document.getElementById("name-form").style.display = "none";
+
+    showElementBlock("rooms");
+    showElementBlock("create-form");
+    showElementInline("showCreateForm");
+    hideElement("create-form");
+    hideElement("name-form");
     let rooms;
     removeChildren(document.querySelector("tbody"));
     await fetch("/rooms", {
@@ -286,10 +301,9 @@ async function rooms() {
 async function enter(self) {
     id = self.id.split("/")[1];
 
-    document.getElementById("rooms").style.display = "none";
+    hideElement("rooms");
     await load();
-    document.getElementById("entrance").style.display = "none";
-    document.getElementById("start-room").style.display = "block";
+    showElementBlock("whole-board")
 }
 
 async function deleteRoom(self) {

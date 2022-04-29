@@ -6,8 +6,7 @@ import java.time.LocalDateTime;
 public class DateTimeConvertUtils {
 
     public static Timestamp toTimestampFrom(LocalDateTime localDateTime) {
-        Timestamp timestamp = Timestamp.valueOf(localDateTime);
-        return timestamp;
+        return Timestamp.valueOf(localDateTime);
     }
 
     public static LocalDateTime toLocalDateTimeFrom(Timestamp timestamp) {

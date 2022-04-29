@@ -10,10 +10,10 @@ import chess.domain.board.factory.RegularBoardFactory;
 import chess.domain.board.position.Position;
 import chess.domain.db.BoardPiece;
 import chess.domain.db.Game;
-import chess.dto.request.web.SaveRequest;
-import chess.dto.response.web.GameResponse;
 import chess.domain.gameflow.AlternatingGameFlow;
 import chess.domain.gameflow.GameFlow;
+import chess.dto.request.web.SaveRequest;
+import chess.dto.response.web.GameResponse;
 import chess.repository.SessionToChessRepository;
 import java.util.List;
 import javax.servlet.http.HttpSession;
@@ -72,5 +72,10 @@ public class ChessService {
         String lastTeam = lastGame.getLastTeam();
         List<BoardPiece> lastBoardPieces = boardPieceDao.findLastBoardPiece(lastGameId);
         return new GameResponse(lastBoardPieces, lastTeam);
+    }
+
+    @Transactional
+    public void clearAll() {
+        gameDao.deleteAll();
     }
 }

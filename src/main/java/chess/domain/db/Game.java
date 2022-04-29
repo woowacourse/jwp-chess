@@ -16,11 +16,21 @@ public class Game {
         this.createAt = DateTimeConvertUtils.toLocalDateTimeFrom(createAt);
     }
 
+    public Game(String gameId, String lastTeam, LocalDateTime createAt) {
+        this.gameId = gameId;
+        this.lastTeam = lastTeam;
+        this.createAt = createAt;
+    }
+
     public String getGameId() {
         return gameId;
     }
 
     public String getLastTeam() {
         return lastTeam;
+    }
+
+    public LocalDateTime getCreateAt() {
+        return createAt;
     }
 }

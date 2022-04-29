@@ -48,24 +48,29 @@ public class ChessGameService {
     }
 
     public Board getBoard(int boardId) {
-        return new Board(getPieces(boardId), getTurn(boardId));
+        return new Board(getPieces(boardId), getTurn(boardId), getName(boardId), getPassword(boardId));
     }
 
     public Map<Position, Piece> getPieces(int boardId) {
         return pieceDao.load(boardId);
     }
 
-    public Color getTurn(int id) {
+    private Color getTurn(int id) {
         return boardDao.findTurn(id);
     }
 
+    private String getName(int boardId) {
+        return boardDao.getName(boardId);
+    }
+
+    private String getPassword(int boardId) {
+        return boardDao.getPassword(boardId);
+    }
+
     public void deleteBoard(int id, String password) {
-        if (!boardDao.getPassword(id).equals(password)) {
-            throw new IllegalArgumentException("잘못된 비밀번호 입력입니다.");
-        }
-        if (boardDao.findTurn(id) != Color.END) {
-            throw new IllegalStateException("종료된 게임만 삭제할 수 있습니다");
-        }
+        Board board = getBoard(id);
+        board.delete(password);
+
         pieceDao.delete(id);
         boardDao.deleteBoard(id, password);
     }

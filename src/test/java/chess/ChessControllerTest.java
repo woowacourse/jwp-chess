@@ -3,6 +3,7 @@ package chess;
 import static org.hamcrest.Matchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,6 +42,7 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("기본 경로 페이지 반환을 검증한다.")
     void index() {
         RestAssured.given().log().all()
             .when().get("/")
@@ -50,7 +52,8 @@ class ChessControllerTest {
     }
 
     @Test
-    void room() {
+    @DisplayName("새로운 방 생성 여부를 검증한다.")
+    void create() {
         RestAssured.given().log().all()
             .body("name=sojukang&password=123")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -61,7 +64,8 @@ class ChessControllerTest {
     }
 
     @Test
-    void roomExceptionAlreadyExists() {
+    @DisplayName("이미 존재하는 이름일 경우 400대 응답을 검증한다.")
+    void createExceptionAlreadyExists() {
         RestAssured.given().log().all()
             .body("name=roma&password=pw")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -72,6 +76,7 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("게임 시작시 턴과 보드의 반환값을 검증한다.")
     void start() {
         RestAssured.given().log().all()
             .when().post("/rooms/" + id)
@@ -83,7 +88,8 @@ class ChessControllerTest {
     }
 
     @Test
-    void load() {
+    @DisplayName("저장된 게임 정보 불러오기를 검증한다.")
+    void find() {
         RestAssured.post("/rooms/" + id);
 
         RestAssured.given().log().all()
@@ -96,6 +102,7 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("체스 말 이동 기능을 검증한다.")
     void move() {
         RestAssured.post("/rooms/" + id);
         MoveDto moveDto = new MoveDto("a2", "a4");
@@ -113,6 +120,7 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("점수 출력 기능을 검증한다.")
     void status() {
         RestAssured.post("/rooms/" + id);
 
@@ -126,6 +134,7 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("이동할 수 없는 위치인 경우 400대 응답을 던진다.")
     void moveExceptionWrongPosition() {
         RestAssured.post("/rooms/" + id);
         MoveDto moveDto = new MoveDto("a2", "a5");
@@ -141,6 +150,7 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("해당 색의 차례가 아닐 경우 400대 응답을 던진다.")
     void moveExceptionWrongTurn() {
         RestAssured.post("/rooms/" + id);
         MoveDto moveDto = new MoveDto("a7", "a6");
@@ -156,7 +166,8 @@ class ChessControllerTest {
     }
 
     @Test
-    void loadExceptionBeforeInit() {
+    @DisplayName("아직 게임을 시작하지 않은 방에서 불러오기를 할 경우 400대 응답을 던진다.")
+    void findExceptionBeforeInit() {
         RestAssured.given().log().all()
             .when().get("/rooms/" + id)
             .then().log().all()

@@ -4,9 +4,11 @@ import chess.domain.GameStatus;
 
 public interface GameStatusDao {
 
-    void update(String nowStatus, String nextStatus);
+    void create(GameStatus data, int roomId);
 
-    String getStatus();
+    void update(String nowStatus, String nextStatus, int roomId);
 
-    void reset(GameStatus data);
+    String getStatus(int roomId);
+
+    void reset(GameStatus data, int roomId);
 }

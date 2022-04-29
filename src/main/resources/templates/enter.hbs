@@ -28,6 +28,7 @@
     <div onclick="openPop()"><img src="/images/create.png" class="img"></div>
 </div>
 
+
 <div class="popup_layer" id="popup_layer" style="display: none;">
   <div class="popup_box">
       <div style="height: 10px; width: 375px; float: top;">
@@ -39,6 +40,31 @@
               <p> 방 제목  : <input type="text" name="name" required id = "name" /></p>
               <p> 비밀번호 : <input type="password" name="pw"  required id = "pw" /></p>
             <button type="submit" style = "width: 100%;">등록</button>
+            </form>
+      </div>
+      <!--팝업 버튼 영역-->
+
+      <div class="popup_btn" style="float: bottom; margin-top: 100px; ">
+             <form action="/" method="GET">
+          <button type="submit" style = "width:100%">나가기</button>
+      </div>
+  </div>
+</div>
+
+
+    <!--방 지우기 팝업 버튼 영역-->
+
+<div class="popup_layer" id="delete" style="display: none;">
+  <div class="popup_box">
+      <div style="height: 10px; width: 375px; float: top;">
+      </div>
+      <!--팝업 컨텐츠 영역-->
+      <div class="popup_cont">
+          <h1>방 지우기 </h1>
+           <form action="/room/" method="POST">
+           <p> 방번호 : <input type="password" name="pw"  required id = "pw" /></p>
+              <p> 비밀번호 : <input type="password" name="pw"  required id = "pw" /></p>
+            <button type="submit" style = "width: 100%;">삭제</button>
             </form>
       </div>
       <!--팝업 버튼 영역-->

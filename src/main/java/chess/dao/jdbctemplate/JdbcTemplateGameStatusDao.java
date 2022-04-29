@@ -15,26 +15,32 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
     }
 
     @Override
-    public void update(String nowStatus, String nextStatus) {
-        String sql = "update game_status set status = ? where status = ?";
-        jdbcTemplate.update(sql, nextStatus, nowStatus);
+    public void create(GameStatus data, int roomId) {
+        String sql = "insert into game_status (status,roomId) values (?,?)";
+        jdbcTemplate.update(sql, data.toString(), roomId);
     }
 
     @Override
-    public String getStatus() {
-        final String sql = "select * from game_status";
-        return jdbcTemplate.queryForObject(sql, String.class);
+    public void update(String nowStatus, String nextStatus, int roomId) {
+        String sql = "update game_status set status = ? where status = ? and roomId = ?";
+        jdbcTemplate.update(sql, nextStatus, nowStatus, roomId);
     }
 
     @Override
-    public void reset(GameStatus data) {
-        removeAll();
-        String sql = "insert into game_status (status) values (?)";
-        jdbcTemplate.update(sql, data.toString());
+    public String getStatus(int roomId) {
+        final String sql = "select status from game_status where roomId = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, roomId);
     }
 
-    private void removeAll() {
-        String sql = "truncate table game_status";
-        jdbcTemplate.update(sql);
+    @Override
+    public void reset(GameStatus data, int roomId) {
+        removeAll(roomId);
+        String sql = "insert into game_status (status,roomId) values (?,?)";
+        jdbcTemplate.update(sql, data.toString(), roomId);
+    }
+
+    private void removeAll(int id) {
+        String sql = "delete from game_status where roomId = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

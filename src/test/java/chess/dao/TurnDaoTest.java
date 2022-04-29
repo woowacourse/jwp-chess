@@ -14,7 +14,7 @@ public class TurnDaoTest {
     @BeforeEach
     void init() {
         turnDao = new FakeTurnDao();
-        turnDao.reset(Team.WHITE);
+        turnDao.reset(Team.WHITE, 1);
     }
 
     @DisplayName("초기 값을 확인한다.")
@@ -24,7 +24,7 @@ public class TurnDaoTest {
         Team initTurn = Team.WHITE;
 
         // then
-        Assertions.assertThat(turnDao.getTurn()).isEqualTo(initTurn.toString());
+        Assertions.assertThat(turnDao.getTurn(1)).isEqualTo(initTurn.toString());
     }
 
     @DisplayName("차례를 변경 후 변경 값을 확인한다.")
@@ -34,9 +34,9 @@ public class TurnDaoTest {
         Team initTurn = Team.WHITE;
         Team nextTurn = Team.BLACK;
         //when
-        turnDao.update(initTurn.toString(), nextTurn.toString());
+        turnDao.update(initTurn.toString(), nextTurn.toString(), 1);
         // then
-        Assertions.assertThat(turnDao.getTurn()).isEqualTo(nextTurn.toString());
+        Assertions.assertThat(turnDao.getTurn(1)).isEqualTo(nextTurn.toString());
     }
 
     @DisplayName("리셋을 확인한다.")
@@ -46,9 +46,9 @@ public class TurnDaoTest {
         Team initTurn = Team.WHITE;
         Team nextTurn = Team.BLACK;
         //when
-        turnDao.update(initTurn.toString(), nextTurn.toString());
-        turnDao.reset(initTurn);
+        turnDao.update(initTurn.toString(), nextTurn.toString(), 1);
+        turnDao.reset(initTurn, 1);
         // then
-        Assertions.assertThat(turnDao.getTurn()).isEqualTo(initTurn.toString());
+        Assertions.assertThat(turnDao.getTurn(1)).isEqualTo(initTurn.toString());
     }
 }

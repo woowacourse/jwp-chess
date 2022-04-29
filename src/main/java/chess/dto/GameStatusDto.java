@@ -4,9 +4,13 @@ import chess.domain.ChessGame;
 import java.util.Map;
 
 public class GameStatusDto {
-    private final String turn;
-    private final Map<String, String> board;
-    private final String gameStatus;
+
+    private String turn;
+    private Map<String, String> board;
+    private String gameStatus;
+
+    public GameStatusDto() {
+    }
 
     public GameStatusDto(String turn, Map<String, String> board, String gameStatus) {
         this.turn = turn;

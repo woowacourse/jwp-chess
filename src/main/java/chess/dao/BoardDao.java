@@ -6,9 +6,11 @@ import java.util.Map;
 
 public interface BoardDao {
 
-    void update(String position, String piece);
+    void create(Map<String, String> board, int roomId);
 
-    List<BoardDto> getBoard();
+    void update(String position, String piece, int roomId);
 
-    void reset(Map<String, String> board);
+    List<BoardDto> getBoard(int roomId);
+
+    void reset(Map<String, String> board, int roomId);
 }

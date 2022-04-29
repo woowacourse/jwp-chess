@@ -1,7 +1,11 @@
 package chess.dto;
 
 public class ErrorDto {
-    private final String message;
+
+    private String message;
+
+    public ErrorDto() {
+    }
 
     public ErrorDto(String message) {
         this.message = message;

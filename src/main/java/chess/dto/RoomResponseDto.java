@@ -1,6 +1,7 @@
 package chess.dto;
 
 public class RoomResponseDto {
+
     private String id;
     private String name;
     private String pw;

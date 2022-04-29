@@ -1,10 +1,16 @@
 package chess.dto;
 
 public class MoveDto {
-    private final String from;
-    private final String to;
 
-    public MoveDto(String from, String to) {
+    private int roomId;
+    private String from;
+    private String to;
+
+    public MoveDto() {
+    }
+
+    public MoveDto(int roomId, String from, String to) {
+        this.roomId = roomId;
         this.from = from;
         this.to = to;
     }
@@ -15,5 +21,9 @@ public class MoveDto {
 
     public String getTo() {
         return to;
+    }
+
+    public int getRoomId() {
+        return roomId;
     }
 }

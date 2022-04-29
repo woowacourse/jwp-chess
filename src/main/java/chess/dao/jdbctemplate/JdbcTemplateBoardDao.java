@@ -18,28 +18,36 @@ public class JdbcTemplateBoardDao implements BoardDao {
     }
 
     @Override
-    public void update(String position, String piece) {
-        String sql = "update board set piece = ? where position = ?";
-        jdbcTemplate.update(sql, piece, position);
-    }
-
-    @Override
-    public List<BoardDto> getBoard() {
-        final String sql = "select * from board";
-        return jdbcTemplate.query(sql, new BoardMapper());
-    }
-
-    @Override
-    public void reset(Map<String, String> board) {
-        removeAll();
-        final String sql = "insert into board (position, piece) values (?,?)";
+    public void create(Map<String, String> board, int roomId) {
+        final String sql = "insert into board (position, piece, roomId) values (?,?,?)";
         for (Entry<String, String> boardEntry : board.entrySet()) {
-            jdbcTemplate.update(sql, boardEntry.getKey(), boardEntry.getValue());
+            jdbcTemplate.update(sql, boardEntry.getKey(), boardEntry.getValue(), roomId);
         }
     }
 
-    private void removeAll() {
-        String sql = "truncate table board";
-        jdbcTemplate.update(sql);
+    @Override
+    public void update(String position, String piece, int roomId) {
+        String sql = "update board set piece = ? where position = ? and roomId = ?";
+        jdbcTemplate.update(sql, piece, position, roomId);
+    }
+
+    @Override
+    public List<BoardDto> getBoard(int roomId) {
+        final String sql = "select * from board where roomId = ?";
+        return jdbcTemplate.query(sql, new BoardMapper(), roomId);
+    }
+
+    @Override
+    public void reset(Map<String, String> board, int id) {
+        removeAll(id);
+        final String sql = "insert into board (position, piece, roomId) values (?,?,?)";
+        for (Entry<String, String> boardEntry : board.entrySet()) {
+            jdbcTemplate.update(sql, boardEntry.getKey(), boardEntry.getValue(), id);
+        }
+    }
+
+    private void removeAll(int id) {
+        String sql = "delete from board where roomId = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

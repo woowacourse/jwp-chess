@@ -4,9 +4,11 @@ import chess.domain.piece.Team;
 
 public interface TurnDao {
 
-    void update(String nowTurn, String nextTurn);
+    void create(Team data, int roomId);
 
-    String getTurn();
+    void update(String nowTurn, String nextTurn, int roomId);
 
-    void reset(Team data);
+    String getTurn(int roomId);
+
+    void reset(Team data, int roomId);
 }

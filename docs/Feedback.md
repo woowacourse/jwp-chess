@@ -22,3 +22,30 @@
         - Exception으로 발생한 에러까지 포함될 수 있게 Exception을 인자로 받도록 수정
 - [x] EOL 경고 해결
 
+## 2단계
+
+- [ ] `ObjectMapper`를 통해 Gson 라이브러리 의존성 제거
+- [ ] Controller - status 메서드에서 Body를 Map으로 전달한 이유, DTO로 전달하는 것은 어떤지
+- [ ] Arguments - 컨트롤러에서 정해주는 것이 적절한가?
+    - Command 관련 피드백
+- [ ] ExceptionHandler
+    - RuntimeException -> Exception으로 바꾼 이유
+- [ ] BoardDao - DAO에서 Dto가 필요한지
+- [ ] 클래스명에 Spring이라는 이름을 붙인 이유
+- [ ] SpringBoardDao - `validateExist()`, DAO에서 유효성 검사를 하는 것이 적절한지
+- [ ] SpringGameDao - `readStateAndColor()`
+    - 응답값이 왜 문자열인지
+    - 상태와 색 필드를 같는 클래스를 추가해도 되지 않은지?
+- [ ] 줄바꿈의 기준
+    - 잦은 줄바꿈은 코드를 파악할 때 흐름이 끊김.
+- [ ] ChessRoomService
+    - [ ] `checkDisabledOption()`
+        - 서비스에서 게임 규칙과 관련된 처리를 맡기지말고 도메인에서 처리
+        - 문자열보다는 enum을 활용
+    - [ ] `validateDuplicateRommName()`
+        - `findByName()`의 결과를 변수로 추출
+        - 쿼리 결과를 boolean으로 반환하는 메서드로 만들어보면 어떤지
+    - [ ] `validatePassword()`
+        - 유효성 검증이 게임 규칙, 서비스에서 검증하는게 맞는지?
+- [ ] RoomDao
+    - 반환값을 null 사용 x -> 검증하기 위한 코드로 복잡도가 올라감.

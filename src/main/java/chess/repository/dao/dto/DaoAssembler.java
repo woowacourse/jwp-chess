@@ -80,7 +80,7 @@ public class DaoAssembler {
     private static Map<Position, Piece> convertStringToPieces(final Color color, final String pieceUnits) {
         return Arrays.stream(pieceUnits.split(","))
                 .map(pieceUnit -> pieceUnit.split(":"))
-                .collect(Collectors.toUnmodifiableMap(
+                .collect(Collectors.toMap(
                         value -> Position.from(value[0]),
                         value -> PieceConvertor.convertToPiece(color, value[1])
                 ));

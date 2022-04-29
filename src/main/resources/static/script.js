@@ -24,7 +24,7 @@ async function create() {
         console.log("[getElement]: " + roomName);
     }
     console.log("[roomName]: " + roomName);
-    await fetch("/room", {
+    await fetch("/rooms", {
         method: "POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -56,7 +56,7 @@ async function create() {
 async function start() {
     let pieces;
 
-    await fetch("/room/" + id, {
+    await fetch("/rooms/" + id, {
         method: "POST"
     })
         .then(res => res.json())
@@ -72,7 +72,7 @@ async function start() {
 
 async function load() {
     let pieces;
-    let response = await fetch("/room/" + id);
+    let response = await fetch("/rooms/" + id);
 
     if (response.status === 400) {
         const errorMessage = await response.json();
@@ -131,7 +131,7 @@ function end() {
 
 async function printStatus() {
     let stat;
-    await fetch("/room/" + id + "/status")
+    await fetch("/rooms/" + id + "/status")
         .then(res => res.json())
         .then(data => stat = data)
     let status = document.getElementById("chess-status");
@@ -195,7 +195,7 @@ async function selectPiece(pieceDiv) {
 
 async function move(fromPosition, toPosition) {
     from = "";
-    let response = await fetch("/room/" + id + "/move", {
+    let response = await fetch("/rooms/" + id + "/move", {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -257,6 +257,7 @@ async function rooms() {
     console.log("rooms");
     document.getElementById("rooms").style.display = "block";
     document.getElementById("create-form").style.display = "block";
+    document.getElementById("create-room").style.display = "none";
     document.getElementById("name-form").style.display = "none";
     let rooms;
     removeChildren(document.querySelector("tbody"));
@@ -293,7 +294,7 @@ async function enter(self) {
 
 async function deleteRoom(self) {
     id = self.id.split("/")[1];
-    let response = await fetch("/room/" + id, {
+    let response = await fetch("/rooms/" + id, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'

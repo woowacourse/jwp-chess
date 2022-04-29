@@ -36,40 +36,40 @@ public class ChessController {
         return "room.html";
     }
 
-    @PostMapping("/room")
+    @PostMapping("/rooms")
     @ResponseBody
     public ResponseEntity<Long> create(@RequestParam String name, @RequestParam String password) {
         long id = chessService.createRoom(name, password).getId();
-        return ResponseEntity.created(URI.create("/room/" + id))
+        return ResponseEntity.created(URI.create("/rooms/" + id))
             .body(id);
     }
 
-    @PostMapping("/room/{roomId}")
+    @PostMapping("/rooms/{roomId}")
     @ResponseBody
     public BoardDto start(@PathVariable Long roomId) {
         return chessService.startNewGame(roomId);
     }
 
-    @GetMapping("/room/{roomId}")
+    @GetMapping("/rooms/{roomId}")
     @ResponseBody
     public BoardDto load(@PathVariable Long roomId) {
         return chessService.load(roomId);
     }
 
-    @DeleteMapping("/room/{roomId}")
+    @DeleteMapping("/rooms/{roomId}")
     @ResponseBody
     public boolean delete(@PathVariable Long roomId, @RequestParam String password) {
         return chessService.delete(roomId, password);
     }
 
-    @PatchMapping("/room/{roomId}/move")
+    @PatchMapping("/rooms/{roomId}/move")
     @ResponseBody
     public BoardDto move(@PathVariable Long roomId,
         @RequestBody MoveDto moveDto) {
         return chessService.move(roomId, moveDto);
     }
 
-    @GetMapping("/room/{roomId}/status")
+    @GetMapping("/rooms/{roomId}/status")
     @ResponseBody
     public Status status(@PathVariable Long roomId) {
         return chessService.status(roomId);

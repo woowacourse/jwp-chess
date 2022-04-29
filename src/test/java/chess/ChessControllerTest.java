@@ -54,7 +54,7 @@ class ChessControllerTest {
         RestAssured.given().log().all()
             .body("name=sojukang&password=123")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-            .when().post("/room")
+            .when().post("/rooms")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE);
@@ -65,7 +65,7 @@ class ChessControllerTest {
         RestAssured.given().log().all()
             .body("name=roma&password=pw")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-            .when().post("/room")
+            .when().post("/rooms")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE);
@@ -74,7 +74,7 @@ class ChessControllerTest {
     @Test
     void start() {
         RestAssured.given().log().all()
-            .when().post("/room/" + id)
+            .when().post("/rooms/" + id)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -84,10 +84,10 @@ class ChessControllerTest {
 
     @Test
     void load() {
-        RestAssured.post("/room/" + id);
+        RestAssured.post("/rooms/" + id);
 
         RestAssured.given().log().all()
-            .when().get("/room/" + id)
+            .when().get("/rooms/" + id)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -97,13 +97,13 @@ class ChessControllerTest {
 
     @Test
     void move() {
-        RestAssured.post("/room/" + id);
+        RestAssured.post("/rooms/" + id);
         MoveDto moveDto = new MoveDto("a2", "a4");
 
         RestAssured.given().log().all()
             .body(moveDto)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().patch("/room/" + id + "/move")
+            .when().patch("/rooms/" + id + "/move")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -114,10 +114,10 @@ class ChessControllerTest {
 
     @Test
     void status() {
-        RestAssured.post("/room/" + id);
+        RestAssured.post("/rooms/" + id);
 
         RestAssured.given().log().all()
-            .when().get("/room/" + id + "/status")
+            .when().get("/rooms/" + id + "/status")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -127,13 +127,13 @@ class ChessControllerTest {
 
     @Test
     void moveExceptionWrongPosition() {
-        RestAssured.post("/room/" + id);
+        RestAssured.post("/rooms/" + id);
         MoveDto moveDto = new MoveDto("a2", "a5");
 
         RestAssured.given().log().all()
             .body(moveDto)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().patch("/room/" + id + "/move")
+            .when().patch("/rooms/" + id + "/move")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -142,13 +142,13 @@ class ChessControllerTest {
 
     @Test
     void moveExceptionWrongTurn() {
-        RestAssured.post("/room/" + id);
+        RestAssured.post("/rooms/" + id);
         MoveDto moveDto = new MoveDto("a7", "a6");
 
         RestAssured.given().log().all()
             .body(moveDto)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().patch("/room/" + id + "/move")
+            .when().patch("/rooms/" + id + "/move")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -158,7 +158,7 @@ class ChessControllerTest {
     @Test
     void loadExceptionBeforeInit() {
         RestAssured.given().log().all()
-            .when().get("/room/" + id)
+            .when().get("/rooms/" + id)
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)

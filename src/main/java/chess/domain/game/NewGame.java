@@ -1,11 +1,12 @@
 package chess.domain.game;
 
 import chess.domain.board.Board;
+import chess.domain.board.BoardFactory;
+import chess.domain.board.piece.Color;
 import chess.domain.event.Event;
 import chess.domain.event.EventType;
 import chess.domain.game.statistics.GameResult;
 import chess.dto.view.GameSnapshotDto;
-import chess.domain.board.BoardFactory;
 
 public final class NewGame implements Game {
 
@@ -18,6 +19,11 @@ public final class NewGame implements Game {
         }
         Board board = BoardFactory.init();
         return new WhiteTurn(board);
+    }
+
+    @Override
+    public boolean isValidTurn(Color playerColor) {
+        throw new UnsupportedOperationException(GAME_NOT_STARTED_EXCEPTION_MESSAGE);
     }
 
     @Override

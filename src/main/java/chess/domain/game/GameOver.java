@@ -1,6 +1,7 @@
 package chess.domain.game;
 
 import chess.domain.board.Board;
+import chess.domain.board.piece.Color;
 import chess.domain.event.Event;
 import chess.domain.event.EventType;
 import chess.domain.game.statistics.GameResult;
@@ -18,6 +19,11 @@ final class GameOver extends Started {
         if (event.hasTypeOf(EventType.INIT)) {
             return new WhiteTurn(board);
         }
+        throw new UnsupportedOperationException(GAME_NOT_RUNNING_EXCEPTION_MESSAGE);
+    }
+
+    @Override
+    public boolean isValidTurn(Color playerColor) {
         throw new UnsupportedOperationException(GAME_NOT_RUNNING_EXCEPTION_MESSAGE);
     }
 

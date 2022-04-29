@@ -27,6 +27,11 @@ public final class FinishedState implements GameState {
     }
 
     @Override
+    public boolean isPromotable() {
+        return false;
+    }
+
+    @Override
     public Map<Color, Double> getPlayerScores(final ScoreCalculator scoreCalculator) {
         return players.calculatePlayerScores(scoreCalculator);
     }

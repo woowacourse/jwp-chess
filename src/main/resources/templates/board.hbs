@@ -68,7 +68,7 @@
     </div>
 
     {{#unless game.finished}}
-    {{#if promotable}}
+    {{#if game.promotable}}
     <p>폰으로 프로모션하고 싶은 기물을 선택하세요.</p>
     <form id="promotionForm" method="post" action="/games/{{game.gameId}}/promotion">
         <input type="radio" name="pieceName" value="Queen" checked="checked">퀸

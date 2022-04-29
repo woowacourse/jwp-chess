@@ -36,17 +36,6 @@ public class Game {
         return new Game(id, new RunningState(players, currentTurnColor));
     }
 
-    public void start() {
-        validateGameAvailableToStart();
-        gameState = RunningState.createFirstTurnRunning();
-    }
-
-    private void validateGameAvailableToStart() {
-        if (gameState.isRunning()) {
-            throw new IllegalStateException("게임이 이미 실행중입니다.");
-        }
-    }
-
     public void movePiece(final Position source, final Position target) {
         final RunningState runningState = convertToRunningState(gameState);
         gameState = runningState.move(source, target);
@@ -55,6 +44,17 @@ public class Game {
     public void promotePiece(final String pieceName) {
         final RunningState runningState = convertToRunningState(gameState);
         gameState = runningState.promotion(pieceName);
+    }
+
+    private RunningState convertToRunningState(final GameState gameState) {
+        validateGameIsRunning();
+        return (RunningState) gameState;
+    }
+
+    private void validateGameIsRunning() {
+        if (!gameState.isRunning()) {
+            throw new IllegalStateException("게임이 시작되지 않았습니다.");
+        }
     }
 
     public Map<Color, Double> getPlayerScores() {
@@ -74,19 +74,7 @@ public class Game {
     }
 
     public boolean isPromotable() {
-        final RunningState runningState = convertToRunningState(gameState);
-        return runningState.isPromotable();
-    }
-
-    private RunningState convertToRunningState(final GameState gameState) {
-        validateGameIsRunning();
-        return (RunningState) gameState;
-    }
-
-    private void validateGameIsRunning() {
-        if (!gameState.isRunning()) {
-            throw new IllegalStateException("게임이 시작되지 않았습니다.");
-        }
+        return gameState.isPromotable();
     }
 
     public Long getId() {

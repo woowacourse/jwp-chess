@@ -25,7 +25,7 @@ public class ChessAssembler {
     public static GameResponse gameResponse(final GameResponseDto gameResponseDto) {
         return new GameResponse(gameResponseDto.getGameId(),
                 playersResponse(gameResponseDto.getPlayersResponseDto()),
-                gameResponseDto.getFinished(),
+                gameResponseDto.getFinished(), gameResponseDto.getPromotable(),
                 colorResponse(gameResponseDto.getCurrentTurnColor()));
     }
 

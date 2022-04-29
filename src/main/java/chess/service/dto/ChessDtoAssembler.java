@@ -24,7 +24,8 @@ public class ChessDtoAssembler {
     }
 
     public static GameResponseDto gameResponseDto(final Game game) {
-        return new GameResponseDto(game.getId(), playersResponseDto(game.getPlayers()), game.isFinished(),
+        return new GameResponseDto(game.getId(), playersResponseDto(game.getPlayers()),
+                game.isFinished(), game.isPromotable(),
                 colorResponseDto(game.getColorOfCurrentTurn()));
     }
 

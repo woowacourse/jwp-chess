@@ -223,7 +223,6 @@ const restartChess = async () => {
 const showChessMenu = () => {
     document.getElementById("chess-room").style.display = 'none';
     document.getElementById("chess-menu").style.display = 'block';
-    document.getElementById("chess-menu").style.visibility = 'visible';
 }
 
 const showStatus = async () => {

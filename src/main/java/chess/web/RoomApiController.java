@@ -30,14 +30,7 @@ public class RoomApiController {
 
 	@GetMapping
 	public ResponseEntity<List<RoomResponseDto>> loadRooms() {
-		List<RoomResponseDto> rooms = roomService.findAll().stream()
-			.map(room -> new RoomResponseDto(
-				room.getId(),
-				room.getName(),
-				gameService.isEnd((int)room.getId()))
-			)
-			.collect(Collectors.toList());
-		return ResponseEntity.ok(rooms);
+		return ResponseEntity.ok(roomService.findAll());
 	}
 
 	@DeleteMapping("/{roomId}")

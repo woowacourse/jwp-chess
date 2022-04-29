@@ -1,6 +1,7 @@
 package chess.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import chess.exception.UserInputException;
 import chess.repository.RoomRepository;
 import chess.domain.Room;
+import chess.web.dto.RoomResponseDto;
 
 @Service
 @Transactional(readOnly = true)
@@ -38,9 +40,9 @@ public class RoomService {
 
 	private void validateDuplicateName(String name) {
 		roomRepository.findByName(name)
-				.ifPresent(room -> {
-					throw new UserInputException("해당 이름의 방이 이미 존재합니다.");
-				});
+			.ifPresent(room -> {
+				throw new UserInputException("해당 이름의 방이 이미 존재합니다.");
+			});
 	}
 
 	@Transactional
@@ -54,7 +56,13 @@ public class RoomService {
 		roomRepository.deleteById(roomId);
 	}
 
-	public List<Room> findAll() {
-		return roomRepository.findAll();
+	public List<RoomResponseDto> findAll() {
+		return roomRepository.findAll().stream()
+			.map(room ->
+				new RoomResponseDto(
+					room.getId(),
+					room.getName(),
+					gameService.isEnd((int)room.getId())
+				)).collect(Collectors.toList());
 	}
 }

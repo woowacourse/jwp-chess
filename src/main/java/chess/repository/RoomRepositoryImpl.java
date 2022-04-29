@@ -47,7 +47,7 @@ public class RoomRepositoryImpl implements RoomRepository {
 		String sql = "select * from room where name = :name limit 1";
 		try {
 			return Optional.ofNullable(
-				jdbcTemplate.queryForObject(sql, Map.of("name", name), getRoomDtoRowMapper()));
+				jdbcTemplate.queryForObject(sql, Map.of("name", name), getRoomMapper()));
 		} catch (EmptyResultDataAccessException exception) {
 			return Optional.empty();
 		}
@@ -58,7 +58,7 @@ public class RoomRepositoryImpl implements RoomRepository {
 		String sql = "select * from room where id = :roomId";
 		try {
 			return Optional.ofNullable(
-				jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId), getRoomDtoRowMapper()));
+				jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId), getRoomMapper()));
 		} catch (EmptyResultDataAccessException exception) {
 			return Optional.empty();
 		}
@@ -73,10 +73,10 @@ public class RoomRepositoryImpl implements RoomRepository {
 	@Override
 	public List<Room> findAll() {
 		String sql = "select * from room";
-		return jdbcTemplate.query(sql, getRoomDtoRowMapper());
+		return jdbcTemplate.query(sql, getRoomMapper());
 	}
 
-	private RowMapper<Room> getRoomDtoRowMapper() {
+	private RowMapper<Room> getRoomMapper() {
 		return (resultSet, rowNum) -> new Room(
 			resultSet.getInt(KEY_INDEX),
 			new Room(

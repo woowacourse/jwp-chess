@@ -5,7 +5,7 @@ public class MoveDto {
     private String currentPosition;
     private String destinationPosition;
 
-    public MoveDto() {
+    private MoveDto() {
     }
 
     public MoveDto(String currentPosition, String destinationPosition) {

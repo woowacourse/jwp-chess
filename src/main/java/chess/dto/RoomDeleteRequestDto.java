@@ -4,7 +4,7 @@ public class RoomDeleteRequestDto {
 
     private String password;
 
-    public RoomDeleteRequestDto() {
+    private RoomDeleteRequestDto() {
     }
 
     public String getPassword() {

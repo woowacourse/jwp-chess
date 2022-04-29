@@ -4,7 +4,7 @@ public class RoomRequestDto {
     private String name;
     private String password;
 
-    public RoomRequestDto() {
+    private RoomRequestDto() {
     }
 
     public RoomRequestDto(String name, String password) {

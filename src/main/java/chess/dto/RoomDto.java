@@ -4,12 +4,9 @@ import java.util.Objects;
 
 public class RoomDto {
 
-    private long id;
-    private String name;
-    private String password;
-
-    public RoomDto() {
-    }
+    private final long id;
+    private final String name;
+    private final String password;
 
     public RoomDto(long id, String name, String password) {
         this.id = id;

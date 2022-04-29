@@ -49,9 +49,9 @@ class GameDaoTest {
 
         @Test
         void 게임이_존재하지_않는_경우_예외발생() {
-         assertThatThrownBy(() -> dao.findById(99999))
-                 .isInstanceOf(IllegalArgumentException.class)
-                 .hasMessage("존재하지 않는 게임입니다.");
+            assertThatThrownBy(() -> dao.findById(99999))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("존재하지 않는 게임입니다.");
         }
     }
 
@@ -73,14 +73,14 @@ class GameDaoTest {
     void countAll_메서드로_여태까지_저장된_모든_데이터의_개수_조회가능() {
         int actual = dao.countAll();
 
-        assertThat(actual).isEqualTo(3);
+        assertThat(actual).isEqualTo(5);
     }
 
     @Test
     void countRunningGames_메서드로_running값이_참인_데이터의_개수_조회가능() {
         int actual = dao.countRunningGames();
 
-        assertThat(actual).isEqualTo(2);
+        assertThat(actual).isEqualTo(4);
     }
 
     @DisplayName("saveAndGetGeneratedId 메서드는 게임 저장 후 id값 반환")
@@ -92,7 +92,9 @@ class GameDaoTest {
             int actual = dao.saveAndGetGeneratedId(
                     new EncryptedAuthCredentials("name", "passwordHash"));
 
-            assertThat(actual).isGreaterThan(findAllTestData().size());
+            int previousDataCount = findAllTestData().size();
+
+            assertThat(actual).isGreaterThan(previousDataCount);
         }
 
         @Test
@@ -149,6 +151,8 @@ class GameDaoTest {
         return List.of(
                 new GameEntity(1, "진행중인_게임", true),
                 new GameEntity(2, "종료된_게임", false),
-                new GameEntity(3, "이미_존재하는_게임명", true));
+                new GameEntity(3, "이미_존재하는_게임명", true),
+                new GameEntity(4, "참여자가_있는_게임", true),
+                new GameEntity(5, "참여자가_없는_게임", true));
     }
 }

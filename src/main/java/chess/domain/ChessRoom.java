@@ -1,19 +1,16 @@
 package chess.domain;
 
 import chess.dto.RoomDto;
-import chess.dto.RoomRequestDto;
 
 public class ChessRoom {
 
     private static final int ROOM_NAME_MAX_LENGTH = 25;
     private static final int ROOM_PASSWORD_MAX_LENGTH = 15;
-    private String name;
-    private String password;
 
-    public ChessRoom() {
-    }
+    private final String name;
+    private final String password;
 
-    public ChessRoom(String name, String password) {
+    private ChessRoom(String name, String password) {
         this.name = name;
         this.password = password;
         validateChessRoom();

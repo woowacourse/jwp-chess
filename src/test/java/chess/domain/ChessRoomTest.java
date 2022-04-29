@@ -26,7 +26,8 @@ class ChessRoomTest {
     @DisplayName("방 제목이 1자 이상 25자 이하인지 검증한다.")
     @ValueSource(strings = {"", "abcdefghijklmnopqrstuvwxyz"})
     void validateChessRoomName(String input) {
-        assertThatThrownBy(() -> new ChessRoom(input, "1234"))
+        final RoomDto roomDto = new RoomDto(1L, input, "1234");
+        assertThatThrownBy(() -> ChessRoom.from(roomDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("체스방 제목은 1자 이상 25자 이하여야 합니다.");
     }
@@ -35,7 +36,8 @@ class ChessRoomTest {
     @DisplayName("방 비밀번호가 1자 이상 15자 이하인지 검증한다.")
     @ValueSource(strings = {"", "1234567890123456"})
     void validateChessRoomPassword(String input) {
-        assertThatThrownBy(() -> new ChessRoom("room", input))
+        final RoomDto roomDto = new RoomDto(1L, "room", input);
+        assertThatThrownBy(() -> ChessRoom.from(roomDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("체스방 비밀번호는 1자 이상 15자 이하여야 합니다.");
     }

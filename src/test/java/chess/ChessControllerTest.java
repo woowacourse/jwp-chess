@@ -162,6 +162,6 @@ class ChessControllerTest {
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body("message", is("[ERROR]: 해당 ID에 체스게임이 초기화되지 않았습니다."));
+            .body("message", is("해당 ID에 체스게임이 초기화되지 않았습니다."));
     }
 }

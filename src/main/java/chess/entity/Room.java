@@ -1,5 +1,7 @@
 package chess.entity;
 
+import static chess.domain.piece.Color.*;
+
 public class Room {
 
     private final String name;
@@ -17,7 +19,7 @@ public class Room {
     public Room(String name, String password) {
         this.name = name;
         this.password = password;
-        this.turn = "empty";
+        this.turn = EMPTY.getName();
     }
 
     public Room(Long id, String turn, String name) {

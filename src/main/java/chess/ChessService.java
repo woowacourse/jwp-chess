@@ -1,5 +1,7 @@
 package chess;
 
+import static chess.domain.piece.Color.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class ChessService {
         String fromPiece = squareDao.findByRoomIdAndPosition(roomId, moveDto.getFrom())
             .orElseThrow(() -> new NoSuchElementException(NO_SQUARE_MESSAGE))
             .getPiece();
-        squareDao.update(roomId, moveDto.getFrom(), "empty");
+        squareDao.update(roomId, moveDto.getFrom(), EMPTY.getName());
         squareDao.update(roomId, moveDto.getTo(), fromPiece);
     }
 
@@ -130,7 +132,7 @@ public class ChessService {
             throw new IllegalArgumentException(INVALID_PASSWORD_MESSAGE);
         }
 
-        if (!roomDao.findByIdAndPassword(roomId, password).get().getTurn().equals("empty")) {
+        if (!roomDao.findByIdAndPassword(roomId, password).get().getTurn().equals(EMPTY.getName())) {
             throw new IllegalStateException(DELETE_NOT_ALLOWED_WHEN_RUNNING_MESSAGE);
         }
 

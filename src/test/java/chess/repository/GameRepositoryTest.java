@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import chess.domain.GameRepository;
 import chess.domain.Position;
 import chess.domain.game.Game;
 

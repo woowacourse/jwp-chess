@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import chess.domain.Position;
 import chess.domain.game.Game;
-import chess.repository.GameRepositoryImpl;
+import chess.repository.GameRepository;
 import chess.service.dto.ChessDtoAssembler;
 import chess.service.dto.response.GameResponseDto;
 import chess.service.dto.response.PlayerScoresResponseDto;
@@ -14,9 +14,9 @@ import chess.service.dto.response.PlayerScoresResponseDto;
 @Service
 public class GameService {
 
-    private final GameRepositoryImpl gameRepository;
+    private final GameRepository gameRepository;
 
-    public GameService(final GameRepositoryImpl gameRepository) {
+    public GameService(final GameRepository gameRepository) {
         this.gameRepository = gameRepository;
     }
 

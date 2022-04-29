@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
-import chess.domain.GameRepository;
 import chess.domain.game.Game;
 import chess.domain.player.Player;
 import chess.domain.player.Players;
@@ -19,17 +18,16 @@ import chess.repository.dto.game.GameFinishedDto;
 import chess.repository.dto.player.PlayerDto;
 
 @Repository
-public class GameRepositoryImpl implements GameRepository {
+public class GameRepository {
 
     private final GameDao gameDao;
     private final PlayerDao playerDao;
 
-    public GameRepositoryImpl(final GameDao gameDao, final PlayerDao playerDao) {
+    public GameRepository(final GameDao gameDao, final PlayerDao playerDao) {
         this.gameDao = gameDao;
         this.playerDao = playerDao;
     }
 
-    @Override
     public Game save(final Game game) {
         return saveGame(game, savePlayers(game.getPlayers()));
     }
@@ -51,7 +49,6 @@ public class GameRepositoryImpl implements GameRepository {
         return GameDtoAssembler.toChessGame(gameDao.save(gameDto), players, gameDto);
     }
 
-    @Override
     public Game findById(final Long gameId) {
         final GameDto gameDto = gameDao.findById(gameId);
         final List<Player> players = List.of(
@@ -65,7 +62,6 @@ public class GameRepositoryImpl implements GameRepository {
         return PlayerDtoAssembler.toPlayer(playerDto);
     }
 
-    @Override
     public Map<Long, Boolean> findIdAndFinished() {
         final Map<Long, Boolean> datas = new LinkedHashMap<>();
         for (final GameFinishedDto gameFinishedDto : gameDao.findIdAndFinished()) {
@@ -74,7 +70,6 @@ public class GameRepositoryImpl implements GameRepository {
         return Collections.unmodifiableMap(datas);
     }
 
-    @Override
     public Game update(final Game game) {
         updatePlayers(game.getPlayers());
         updateGame(game);
@@ -91,7 +86,6 @@ public class GameRepositoryImpl implements GameRepository {
         gameDao.update(GameDtoAssembler.toGameUpdateDto(game));
     }
 
-    @Override
     public void remove(final Long gameId) {
         removePlayers(gameId);
         removeGame(gameId);

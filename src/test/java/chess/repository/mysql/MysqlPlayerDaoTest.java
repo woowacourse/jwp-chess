@@ -1,23 +1,30 @@
-package chess.repository;
+package chess.repository.mysql;
 
 import static chess.domain.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import chess.repository.PlayerDao;
 import chess.repository.dto.player.PlayerDto;
 
-@SpringBootTest
-@Transactional
-class PlayerDaoTest {
+@JdbcTest
+class MysqlPlayerDaoTest {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
     private PlayerDao playerDao;
+
+    @BeforeEach
+    void setUp() {
+        playerDao = new MysqlPlayerDao(jdbcTemplate);
+    }
 
     @DisplayName("데이터 저장 및 조회가 가능해야 한다.")
     @Test
@@ -28,9 +35,9 @@ class PlayerDaoTest {
 
         final PlayerDto playerDto = playerDao.findById(id);
         assertAll(() -> {
-                    assertThat(playerDto.getColorName()).isEqualTo(colorName);
-                    assertThat(playerDto.getPieces()).isEqualTo(pieces);
-                });
+            assertThat(playerDto.getColorName()).isEqualTo(colorName);
+            assertThat(playerDto.getPieces()).isEqualTo(pieces);
+        });
     }
 
     @DisplayName("데이터를 수정할 수 있어야 한다.")

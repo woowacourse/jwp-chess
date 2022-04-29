@@ -6,6 +6,7 @@ import chess.web.controller.dto.MoveDto;
 import chess.web.controller.dto.RoomRequestDto;
 import chess.web.controller.dto.ScoreDto;
 import chess.web.service.ChessService;
+import chess.web.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +15,12 @@ import org.springframework.web.bind.annotation.*;
 public class ChessApiController {
 
     private final ChessService chessService;
+    private final RoomService roomService;
 
-    public ChessApiController(ChessService chessService) {
+    public ChessApiController(ChessService chessService, RoomService roomService) {
         this.chessService = chessService;
+        this.roomService = roomService;
     }
-
 
     @GetMapping("/load/{id}")
     public ResponseEntity<BoardDto> loadGame(@PathVariable Long id) {
@@ -46,7 +48,7 @@ public class ChessApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@RequestBody RoomRequestDto.Password request, @PathVariable Long id) {
-        chessService.delete(request.getPassword(), id);
+        roomService.delete(request.getPassword(), id);
         return ResponseEntity.ok().build();
     }
 }

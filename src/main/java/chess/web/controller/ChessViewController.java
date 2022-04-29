@@ -6,6 +6,7 @@ import chess.web.controller.dto.BoardDto;
 import chess.web.controller.dto.RoomRequestDto;
 import chess.web.controller.dto.RoomResponseDto;
 import chess.web.service.ChessService;
+import chess.web.service.RoomService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,14 +20,16 @@ import java.util.stream.Collectors;
 public class ChessViewController {
 
     private final ChessService chessService;
+    private final RoomService roomService;
 
-    public ChessViewController(ChessService chessService) {
+    public ChessViewController(ChessService chessService, RoomService roomService) {
         this.chessService = chessService;
+        this.roomService = roomService;
     }
 
     @GetMapping("/")
     public String getRoomList(Model model) {
-        List<Room> rooms = chessService.getRoomList();
+        List<Room> rooms = roomService.getRoomList();
         List<RoomResponseDto> titles = rooms.stream()
                 .map(room -> {
                     Board board = chessService.loadGame(room.getId());
@@ -45,7 +48,7 @@ public class ChessViewController {
 
     @PostMapping(path = "/new")
     public String createGame(RoomRequestDto.TitleAndPassword request) {
-        Long id = chessService.createRoom(request.getTitle(), request.getPassword());
+        Long id = roomService.createRoom(request.getTitle(), request.getPassword());
         return "redirect:/room/" + id;
     }
 

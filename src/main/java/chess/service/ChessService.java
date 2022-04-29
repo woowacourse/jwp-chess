@@ -154,6 +154,7 @@ public class ChessService {
 
     public void deleteRoom(RoomDto roomDto) {
         checkGameState(roomDto.getId());
+        checkPassword(roomDto);
         roomDao.deleteRoom(roomDto);
     }
 

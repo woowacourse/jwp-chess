@@ -3,7 +3,7 @@ function func(id) {
     let password = prompt("비밀번호 입력", "");
     $.ajax({
         type: "DELETE",
-        url: "/chess/delete/" + id,
+        url: "/chess/" + id,
         data: {
             "password": password,
         },

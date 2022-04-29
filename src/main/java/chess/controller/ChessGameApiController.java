@@ -29,7 +29,7 @@ public class ChessGameApiController {
         return ResponseEntity.ok(new BoardDTO(chessGame));
     }
 
-    @DeleteMapping("/chess/delete/{id}")
+    @DeleteMapping("/chess/{id}")
     public ResponseEntity<Integer> deleteGame(@PathVariable String id, @RequestParam String password) {
         return new ResponseEntity<>(
                 chessService.deleteGameByIdAndPassword(id, password),

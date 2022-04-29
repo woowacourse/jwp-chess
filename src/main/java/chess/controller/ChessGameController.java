@@ -1,8 +1,8 @@
 package chess.controller;
 
-import chess.dto.BoardDto;
-import chess.dto.MoveDto;
-import chess.dto.ResultDto;
+import chess.dto.response.BoardResponse;
+import chess.dto.request.MoveRequest;
+import chess.dto.response.ResultResponse;
 import chess.service.GameService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,27 +22,27 @@ public class ChessGameController {
     }
 
     @PostMapping("/{id}/start")
-    public BoardDto start(@PathVariable("id") String id) {
+    public BoardResponse start(@PathVariable("id") String id) {
         return gameService.start(id);
     }
 
     @PostMapping("/{id}/end")
-    public BoardDto end(@PathVariable("id") String id) {
+    public BoardResponse end(@PathVariable("id") String id) {
         return gameService.end(id);
     }
 
     @GetMapping("/{id}/status")
-    public ResultDto status(@PathVariable("id") String id) {
+    public ResultResponse status(@PathVariable("id") String id) {
         return gameService.status(id);
     }
 
     @GetMapping("/{id}/load")
-    public BoardDto load(@PathVariable("id") String id) {
+    public BoardResponse load(@PathVariable("id") String id) {
         return gameService.load(id);
     }
 
     @PostMapping("/{id}/move")
-    public BoardDto move(@PathVariable("id") String id, @RequestBody MoveDto moveDto) {
-        return gameService.move(id, moveDto);
+    public BoardResponse move(@PathVariable("id") String id, @RequestBody MoveRequest moveRequest) {
+        return gameService.move(id, moveRequest);
     }
 }

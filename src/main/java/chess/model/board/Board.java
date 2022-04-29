@@ -32,8 +32,8 @@ public class Board {
     }
 
     public void checkSameTeam(Team team, Position source) {
-        if (board.get(source)
-                .isOpponentTeam(team)) {
+        var piece = board.get(source);
+        if (piece.isOpponentTeam(team)) {
             throw new IllegalArgumentException("[ERROR] 상대편 기물은 움직일 수 없습니다.");
         }
     }

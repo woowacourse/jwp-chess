@@ -1,8 +1,8 @@
 package chess.service;
 
-import chess.dto.BoardDto;
-import chess.dto.MoveDto;
-import chess.dto.ResultDto;
+import chess.dto.response.BoardResponse;
+import chess.dto.request.MoveRequest;
+import chess.dto.response.ResultResponse;
 import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
@@ -23,46 +23,46 @@ public class GameService {
         this.gameRepository = gameRepository;
     }
 
-    public BoardDto start(final String id) {
+    public BoardResponse start(final String id) {
         State state = new WhiteTurn(Board.init());
         gameRepository.initGameData(id, state);
         return convertToBoardDto(state.getBoard());
     }
 
-    public BoardDto end(final String id) {
+    public BoardResponse end(final String id) {
         Board board = gameRepository.getBoardFrom(id);
         gameRepository.deleteGameDataFrom(id);
         return convertToBoardDto(board.getBoard());
     }
 
-    public BoardDto move(final String id, final MoveDto moveDto) {
-        State state = proceed(id, moveDto);
+    public BoardResponse move(final String id, final MoveRequest moveRequest) {
+        State state = proceed(id, moveRequest);
         return convertToBoardDto(state.getBoard());
     }
 
-    private State proceed(final String id, final MoveDto moveDto) {
+    private State proceed(final String id, final MoveRequest moveRequest) {
         State nowState = gameRepository.getStateFrom(id);
-        State nextState = nowState.proceed(moveDto);
-        gameRepository.saveGameData(id, nextState, moveDto);
+        State nextState = nowState.proceed(moveRequest);
+        gameRepository.saveGameData(id, nextState, moveRequest);
         return nextState;
     }
 
-    public ResultDto status(final String id) {
+    public ResultResponse status(final String id) {
         Board board = gameRepository.getBoardFrom(id);
         State status = new Status(board);
-        return new ResultDto(status.getScores(), status.getWinner());
+        return new ResultResponse(status.getScores(), status.getWinner());
     }
 
-    public BoardDto load(final String id) {
+    public BoardResponse load(final String id) {
         Board board = gameRepository.getBoardFrom(id);
         return convertToBoardDto(board.getBoard());
     }
 
-    private BoardDto convertToBoardDto(final Map<Position, Piece> board) {
+    private BoardResponse convertToBoardDto(final Map<Position, Piece> board) {
         Map<String, String> squares = new HashMap<>();
         for (Position position : board.keySet()) {
             squares.put(position.getKey(), Piece.getKey(board.get(position)));
         }
-        return BoardDto.from(squares);
+        return BoardResponse.from(squares);
     }
 }

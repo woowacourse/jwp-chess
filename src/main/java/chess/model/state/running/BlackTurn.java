@@ -2,7 +2,7 @@ package chess.model.state.running;
 
 import static chess.model.Team.BLACK;
 
-import chess.dto.MoveDto;
+import chess.dto.request.MoveRequest;
 import chess.model.board.Board;
 import chess.model.position.Position;
 import chess.model.state.State;
@@ -15,9 +15,9 @@ public final class BlackTurn extends Running {
     }
 
     @Override
-    public State proceed(final MoveDto moveDto) {
-        final String source = moveDto.getSource();
-        final String target = moveDto.getTarget();
+    public State proceed(final MoveRequest moveRequest) {
+        final String source = moveRequest.getSource();
+        final String target = moveRequest.getTarget();
         movePiece(source, target);
         return createStateByBoard();
     }

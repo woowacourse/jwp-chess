@@ -1,15 +1,13 @@
 package chess.controller;
 
-import chess.dto.RoomDto;
-import chess.entity.RoomEntity;
+import chess.dto.request.RoomRequest;
+import chess.dto.response.RoomResponse;
 import chess.service.RoomService;
 import java.util.List;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,12 +21,12 @@ public class ChessRoomController {
     }
 
     @GetMapping("search")
-    public List<RoomEntity> search() {
+    public List<RoomResponse> search() {
         return roomService.searchRooms();
     }
 
     @PostMapping("create")
-    public List<RoomEntity> create(@RequestBody RoomDto roomDto) {
-        return roomService.createRoom(roomDto);
+    public List<RoomResponse> create(@RequestBody RoomRequest roomRequest) {
+        return roomService.createRoom(roomRequest);
     }
 }

@@ -11,7 +11,7 @@ public class GameResult {
     private final Score score;
     private final Winner winner;
 
-    public GameResult(final Board board) {
+    public GameResult(Board board) {
         this.score = new Score(board);
         this.winner = new Winner(score);
     }

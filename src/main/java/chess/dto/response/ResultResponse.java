@@ -1,14 +1,14 @@
-package chess.dto;
+package chess.dto.response;
 
 import chess.model.Team;
 import java.util.Map;
 
-public class ResultDto {
+public class ResultResponse {
 
     private final Map<Team, Double> score;
     private final Team winner;
 
-    public ResultDto(final Map<Team, Double> score, final Team winner) {
+    public ResultResponse(final Map<Team, Double> score, final Team winner) {
         this.score = score;
         this.winner = winner;
     }

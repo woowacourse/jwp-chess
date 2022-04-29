@@ -1,10 +1,14 @@
 package chess.dao;
 
+import chess.dto.GameRoomDto;
 import chess.dto.PieceAndPositionDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
@@ -59,12 +63,40 @@ public class ChessDaoImpl implements ChessDao {
     }
 
     public void deleteGame(final int gameId) {
-        String sql = "DELETE FROM game WHERE game_id = ?";
+        var sql = "DELETE FROM game WHERE game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }
 
     public void initGame(final int gameId) {
         String sql = "INSERT INTO game (game_id) VALUES(?)";
         jdbcTemplate.update(sql, gameId);
+    }
+
+    @Override
+    public Number initGame(String title, String password) {
+        String sql = "INSERT INTO game (game_title, game_password) VALUES(?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"game_id"});
+            ps.setString(1, title);
+            ps.setString(2, password);
+            return ps;
+        }, keyHolder);
+        return keyHolder.getKey();
+    }
+
+    @Override
+    public String findPassword(final int gameId) {
+        final var sql = "SELECT game_password from game WHERE game_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, gameId);
+    }
+
+    @Override
+    public List<GameRoomDto> findAllGame() {
+        final var sql = "SELECT game_title, game_id from game";
+        return jdbcTemplate.query(sql, ((rs, rowNum) ->
+                new GameRoomDto(rs.getString("game_title"), rs.getInt("game_id"))
+        ));
     }
 }

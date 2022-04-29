@@ -12,14 +12,14 @@ import chess.domain.state.Ready;
 import chess.domain.state.Running;
 import chess.domain.state.StateFactory;
 import chess.dto.ChessGameDto;
+import chess.dto.GameRoomDto;
+import chess.dto.MoveDto;
 import chess.dto.PieceAndPositionDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static chess.dao.ChessDaoImpl.DEFAULT_GAME_ID;
 
 @Service
 public class ChessService {
@@ -33,11 +33,11 @@ public class ChessService {
         this.chessDao = chessDao;
     }
 
-    public ChessGameDto newGame() {
-        deleteOldData(DEFAULT_GAME_ID);
-        initNewChessGame(DEFAULT_GAME_ID);
-        chessGame = new ChessGame(new Running(Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)), convertToBoard(chessDao.findAllPiece(DEFAULT_GAME_ID))));
-        return new ChessGameDto(chessDao.findAllPiece(DEFAULT_GAME_ID), chessGame.status());
+    public ChessGameDto newGame(final int gameId) {
+        deleteOldData(gameId);
+        initNewChessGame(gameId);
+        chessGame = new ChessGame(new Running(Color.from(chessDao.findCurrentColor(gameId)), convertToBoard(chessDao.findAllPiece(gameId))));
+        return new ChessGameDto(chessDao.findAllPiece(gameId), chessGame.status());
     }
 
     private void deleteOldData(final int gameId) {
@@ -59,11 +59,11 @@ public class ChessService {
         return new Board(() -> board);
     }
 
-    public ChessGameDto move(final String from, final String to) {
-        chessGame.move(Position.from(from), Position.from(to));
-        final var nextColor = Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)).next();
-        updateBoard(from, to, DEFAULT_GAME_ID, nextColor.name());
-        return new ChessGameDto(chessDao.findAllPiece(DEFAULT_GAME_ID), chessGame.status());
+    public ChessGameDto move(final MoveDto moveDto) {
+        chessGame.move(Position.from(moveDto.getFrom()), Position.from(moveDto.getTo()));
+        final var nextColor = Color.from(chessDao.findCurrentColor(moveDto.getGameId())).next();
+        updateBoard(moveDto.getFrom(), moveDto.getTo(), moveDto.getGameId(), nextColor.name());
+        return new ChessGameDto(chessDao.findAllPiece(moveDto.getGameId()), chessGame.status());
     }
 
     private void updateBoard(final String from, final String to, final int gameId, final String color) {
@@ -72,8 +72,28 @@ public class ChessService {
         chessDao.updateTurn(color, gameId);
     }
 
-    public ChessGameDto loadGame() {
-        chessGame = new ChessGame(StateFactory.of(Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)), convertToBoard(chessDao.findAllPiece(DEFAULT_GAME_ID))));
-        return new ChessGameDto(chessDao.findAllPiece(DEFAULT_GAME_ID), chessGame.status());
+    public ChessGameDto loadGame(final int gameId) {
+        chessGame = new ChessGame(StateFactory.of(Color.from(chessDao.findCurrentColor(gameId)), convertToBoard(chessDao.findAllPiece(gameId))));
+        return new ChessGameDto(chessDao.findAllPiece(gameId), chessGame.status());
+    }
+
+    public Number createRoom(final GameRoomDto gameRoomDto) {
+        return chessDao.initGame(gameRoomDto.getTitle(), gameRoomDto.getPassword());
+    }
+
+    public ChessGameDto findGame(final int gameId) {
+        return new ChessGameDto(chessDao.findAllPiece(gameId), chessGame.status());
+    }
+
+    public void deleteGame(final GameRoomDto gameRoomDto) {
+        final var actual = chessDao.findPassword(gameRoomDto.getGameId());
+        if (!actual.equals(gameRoomDto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        chessDao.deleteGame(gameRoomDto.getGameId());
+    }
+
+    public List<GameRoomDto> findAllGame() {
+        return chessDao.findAllGame();
     }
 }

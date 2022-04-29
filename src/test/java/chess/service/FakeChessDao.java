@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.ChessDao;
+import chess.dto.GameRoomDto;
 import chess.dto.PieceAndPositionDto;
 
 import java.util.ArrayList;
@@ -72,5 +73,20 @@ public class FakeChessDao implements ChessDao {
     @Override
     public void initGame(int gameId) {
         gameData.put(gameId, "WHITE");
+    }
+
+    @Override
+    public Number initGame(String title, String password) {
+        return null;
+    }
+
+    @Override
+    public String findPassword(int gameId) {
+        return null;
+    }
+
+    @Override
+    public List<GameRoomDto> findAllGame() {
+        return null;
     }
 }

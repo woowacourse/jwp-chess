@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dto.GameRoomDto;
 import chess.dto.PieceAndPositionDto;
 
 import java.util.List;
@@ -23,4 +24,10 @@ public interface ChessDao {
     void deleteGame(final int gameId);
 
     void initGame(final int gameId);
+
+    Number initGame(final String title, final String password);
+
+    String findPassword(final int gameId);
+
+    List<GameRoomDto> findAllGame();
 }

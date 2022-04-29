@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>체스게임</title>
+    <link rel="stylesheet" href="/style/index2.css">
+</head>
+<body>
+<table>
+    {{#each games}}
+        <tr>
+            <td onClick="location.href='/game?gameId={{this.gameId}}'">
+                방제목 : {{this.title}}
+            </td>
+            <td>
+                <button id="{{this.gameId}}" class="delete-button">삭제</button>
+            </td>
+        </tr>
+    {{/each}}
+    <div class="button">
+        <button onClick="location.href='createRoom.html'">방만들기</button>
+    </div>
+    <script src="/js/index2.js"></script>
+</table>
+</body>
+</html>

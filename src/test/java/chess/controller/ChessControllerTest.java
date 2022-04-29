@@ -1,5 +1,8 @@
 package chess.controller;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+
 import chess.dao.GameDao;
 import chess.dao.MemberDao;
 import chess.domain.Board;
@@ -59,7 +62,7 @@ class ChessControllerTest {
         final Board board = new Board(BoardInitializer.create());
         final Participant participant = new Participant(one, two);
         final Room room = new Room("some", "123", participant);
-        final ChessGame game = new ChessGame(2L, board, Team.WHITE, room);
+        final ChessGame game = new ChessGame(1L, board, Team.WHITE, room);
 
         memberDao.save(one);
         memberDao.save(two);
@@ -70,7 +73,8 @@ class ChessControllerTest {
                 .body(new MoveCommandDto("a2", "a4"))
                 .when().put("/move/" + 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body(is("1"));
     }
 
     @Test
@@ -81,7 +85,7 @@ class ChessControllerTest {
         final Board board = new Board(BoardInitializer.create());
         final Participant participant = new Participant(one, two);
         final Room room = new Room("some", "123", participant);
-        final ChessGame game = new ChessGame(2L, board, Team.WHITE, room);
+        final ChessGame game = new ChessGame(1L, board, Team.WHITE, room);
 
         memberDao.save(one);
         memberDao.save(two);
@@ -94,7 +98,8 @@ class ChessControllerTest {
                 .body(moveCommandDto)
                 .when().put("/move/" + 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(equalTo("해당 위치로 이동할 수 없습니다."));
     }
 
     @Test
@@ -160,6 +165,7 @@ class ChessControllerTest {
                 .body("password=123")
                 .when().delete("/" + 1L)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body(equalTo("1"));
     }
 }

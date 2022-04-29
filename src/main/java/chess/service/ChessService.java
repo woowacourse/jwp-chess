@@ -55,6 +55,7 @@ public class ChessService {
         pieceDao.saveAllByRoomId(roomId, pieces);
     }
 
+    @Transactional(readOnly = true)
     public List<RoomResponseDto> loadAllRoom() {
         final List<RoomEntity> rooms = roomDao.findAll();
         return rooms.stream()
@@ -62,6 +63,7 @@ public class ChessService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public RoomResponseDto loadRoom(final long id) {
         final RoomEntity room = roomDao.findById(id);
         return RoomResponseDto.from(room);
@@ -80,6 +82,7 @@ public class ChessService {
         roomDao.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<PieceResponseDto> loadAllPiece(final Long roomId) {
         if (!roomDao.isExistName(roomId)) {
             throw new NotExistRoomException("방이 존재하지 않아 기물 정보를 불러올 수 없습니다.");
@@ -127,6 +130,7 @@ public class ChessService {
         roomDao.updateTurnById(roomId, turn.getValue());
     }
 
+    @Transactional(readOnly = true)
     public ScoreResponseDto loadScore(final long roomId) {
         if (!roomDao.isExistName(roomId)) {
             throw new NotExistRoomException("방이 존재하지 않아 점수를 불러올 수 없습니다.");

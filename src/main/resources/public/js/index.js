@@ -100,7 +100,7 @@ const deleteRoom = async (e) => {
         password: password
     };
     let response = await fetch('/delete/' + e.target.id, {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
             'Accept': 'application/json'
@@ -189,7 +189,7 @@ const movePiece = async () => {
         destinationPosition: destinationClickPosition.id
     };
     let chessMap = await fetch('/' + roomId + '/move', {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
             'Accept': 'application/json'

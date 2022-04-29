@@ -42,7 +42,7 @@ public class SpringChessGameController {
         return ResponseEntity.ok(springChessService.load(id));
     }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> deleteGame(@PathVariable long id,
                                                     @RequestBody RoomDeleteRequestDto roomDeleteRequestDto) {
         return ResponseEntity.ok(springChessService.deleteChessRoom(roomDeleteRequestDto, id));
@@ -58,7 +58,7 @@ public class SpringChessGameController {
         return ResponseEntity.ok(springChessService.getStatus(id));
     }
 
-    @PostMapping("/{id}/move")
+    @PatchMapping("/{id}/move")
     public ResponseEntity<ChessMap> move(@PathVariable long id, @RequestBody MoveDto moveDto) {
         return ResponseEntity.ok(springChessService.move(id, moveDto));
     }

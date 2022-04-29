@@ -1,6 +1,5 @@
-package chess.controller.page;
+package chess.dto;
 
-import chess.dto.PieceDto;
 import chess.entity.Square;
 import java.util.HashMap;
 import java.util.List;

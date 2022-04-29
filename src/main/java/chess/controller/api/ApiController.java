@@ -1,7 +1,10 @@
 package chess.controller.api;
 
-import chess.controller.api.dto.MovePositionReq;
-import chess.controller.api.dto.RoomCreateReq;
+import chess.dto.MovePositionReq;
+import chess.dto.PasswordReq;
+import chess.dto.RoomAllRes;
+import chess.dto.RoomCreateReq;
+import chess.dto.StatusRes;
 import chess.entity.Room;
 import chess.service.ChessService;
 import java.util.List;

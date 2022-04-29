@@ -1,4 +1,4 @@
-package chess.controller.api;
+package chess.dto;
 
 public class PasswordReq {
 

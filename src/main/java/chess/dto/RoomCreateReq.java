@@ -1,4 +1,4 @@
-package chess.controller.api.dto;
+package chess.dto;
 
 public class RoomCreateReq {
 

@@ -1,4 +1,4 @@
-package chess.controller.page;
+package chess.dto;
 
 public class PieceRes {
 

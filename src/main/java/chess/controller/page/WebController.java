@@ -1,5 +1,6 @@
 package chess.controller.page;
 
+import chess.dto.BoardRes;
 import chess.entity.Square;
 import chess.service.ChessService;
 import java.util.HashMap;

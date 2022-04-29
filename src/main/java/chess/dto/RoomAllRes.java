@@ -1,4 +1,4 @@
-package chess.controller.api;
+package chess.dto;
 
 import chess.entity.Room;
 import java.util.List;

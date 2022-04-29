@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class ChessGameService {
 
     public static final String WIN_MESSAGE = "승리 팀은 : %s 입니다.";
+    private static final int SUCCEED_COUNT = 0;
 
     private final BoardDao boardDao;
     private final TurnDao turnDao;
@@ -52,7 +53,7 @@ public class ChessGameService {
 
     public void deleteRoom(String pw, int roomId) {
         int returnDeleteColumnCount = roomDao.deleteRoom(pw, roomId);
-        if (returnDeleteColumnCount == 0) {
+        if (returnDeleteColumnCount == SUCCEED_COUNT) {
             throw new IllegalArgumentException("비밀번호가 달라 방을 지울 수 없습니다.");
         }
     }

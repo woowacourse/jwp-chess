@@ -33,15 +33,15 @@ public class ChessSpringController {
         return "enter";
     }
 
-    @GetMapping("/room")
-    public String room(@RequestParam @NonNull int id) {
-        return "index";
-    }
-
     @PostMapping("/")
     public String create(@RequestParam("name") String name, @RequestParam("pw") String pw) {
         chessGameService.createRoom(name, pw);
         return "redirect:/";
+    }
+
+    @GetMapping("/room")
+    public String room(@RequestParam @NonNull int id) {
+        return "index";
     }
 
     @DeleteMapping("/room")
@@ -72,7 +72,7 @@ public class ChessSpringController {
     }
 
     @ResponseBody
-    @PostMapping("/move")
+    @PostMapping("/rooms/move")
     public ResponseEntity move(@RequestBody MoveDto moveDto) {
         GameStatusDto status = chessGameService.move(moveDto.getFrom(), moveDto.getTo(), moveDto.getRoomId());
         return ResponseEntity.ok().body(status);
@@ -86,7 +86,7 @@ public class ChessSpringController {
     }
 
     @ResponseBody
-    @GetMapping("/rooms/end/{id}")
+    @PostMapping("/rooms/end/{id}")
     public ResponseEntity end(@PathVariable int id) {
         ScoreDto score = chessGameService.end(id);
         return ResponseEntity.ok().body(score);

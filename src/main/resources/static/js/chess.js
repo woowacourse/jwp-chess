@@ -215,7 +215,7 @@ function fetchNewChess() {
 
 function fetchLoadChess() {
     let end = document.getElementById('game-state-end').value;
-    if (end) {
+    if (end === 'true') {
         alert("게임이 종료되었습니다. 새 게임을 눌러주세요.");
         return;
     }
@@ -257,6 +257,7 @@ function fetchMove(source, target) {
             initPieces(res.pieces);
             checkEnd(res.state);
         })
+        .then(res => fetchResult())
         .catch(err => {
             showErrorMessage(err.message);
             resetSourceAndTarget();
@@ -267,7 +268,7 @@ function fetchMove(source, target) {
 
 function fetchResult() {
     let end = document.getElementById('game-state-end').value;
-    if (end) {
+    if (end === 'true') {
         alert("게임이 종료되었습니다. 새 게임을 눌러주세요.");
         return;
     }

@@ -63,7 +63,7 @@ public class SpringChessGameController {
         return ResponseEntity.ok(springChessService.move(id, moveDto));
     }
 
-    @GetMapping("/{id}/end")
+    @PatchMapping("/{id}/end")
     public ResponseEntity<ResultDto> end(@PathVariable long id) {
         final ResultDto resultDto = springChessService.getResult(id);
         return ResponseEntity.ok(resultDto);

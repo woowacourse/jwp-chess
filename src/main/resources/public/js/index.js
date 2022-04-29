@@ -227,21 +227,19 @@ const showChessMenu = () => {
 }
 
 const showStatus = async () => {
-    if (!isRun) {
-        alert('먼저 게임을 시작하거나 이어해주세요.');
-        return;
-    }
     let status = await fetch('/' + roomId + '/status');
     status = await status.json();
     alert(status.scoreStatus);
 }
 
 const showResult = async () => {
-    if (!isRun) {
-        alert('먼저 게임을 시작하거나 이어해주세요.');
-        return;
-    }
-    let result = await fetch('/' + roomId + '/end');
+    let result = await fetch('/' + roomId + '/end', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        }
+    });
     result = await result.json();
     alert(result.result);
     await restartChess();

@@ -26,7 +26,7 @@ public class BoardDao {
         }
     }
 
-    public void update(int gameNo, Map<Position, Piece> board) {
+    public void update(long gameNo, Map<Position, Piece> board) {
         final String sql = "update piece set type = ?, white = ? where position = ? and game_no = ?";
 
         for (Entry<Position, Piece> entry : board.entrySet()) {
@@ -44,7 +44,7 @@ public class BoardDao {
         System.out.println("쿼리 실행 결과: " + result);
     }
 
-    public List<PieceDto> load(int gameNo) {
+    public List<PieceDto> load(long gameNo) {
         final String sql = "select type, white, position from piece where game_no = ?";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceDto.of(

@@ -1,5 +1,6 @@
 package chess.application.web;
 
+import chess.domain.ChessGame;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -38,16 +38,9 @@ public class GameController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/check-password/{gameNo}")
-    public ResponseEntity<Void> checkPassword(@PathVariable int gameNo, @RequestBody String password) {
-        if ("test".equals(password)) {
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-
     @PostMapping("/load/{gameNo}")
     public String load(Model model, @PathVariable int gameNo, @RequestParam String password) {
+        //TODO: 비밀번호 DB에서 가져와서 비교
         if ("test".equals(password)) {
             gameService.load(gameNo);
             return play(model, gameNo);
@@ -58,35 +51,41 @@ public class GameController {
     @PostMapping("/move/{gameNo}")
     public String move(Model model, @PathVariable int gameNo, @RequestParam String source,
                        @RequestParam String target) {
-        gameService.move(source, target);
-        if (gameService.isGameFinished()) {
-            return end(model);
+        ChessGame chessGame = gameService.load(gameNo);
+        gameService.move(source, target, chessGame);
+        gameService.save(gameNo, chessGame);
+        if (gameService.isGameFinished(chessGame)) {
+            return end(model, gameNo);
         }
         return play(model, gameNo);
     }
 
     private String play(Model model, long gameNo) {
+        ChessGame chessGame = gameService.load(gameNo);
         model.addAttribute("gameNo", gameNo);
         model.addAttribute("title", gameService.loadGameTitle(gameNo));
-        model.addAllAttributes(gameService.modelPlayingBoard());
+        model.addAllAttributes(gameService.modelPlayingBoard(chessGame));
         return "game";
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<String> status() {
-        String statusData = jsonTransformer.render(gameService.modelStatus());
+    @GetMapping("/status/{gameNo}")
+    public ResponseEntity<String> status(@PathVariable int gameNo) {
+        ChessGame chessGame = gameService.load(gameNo);
+        String statusData = jsonTransformer.render(gameService.modelStatus(chessGame));
         return ResponseEntity.ok().body(statusData);
     }
 
     @GetMapping("/save/{gameNo}")
     public ResponseEntity<Void> save(@PathVariable int gameNo) {
-        gameService.save(gameNo);
+        ChessGame chessGame = gameService.load(gameNo);
+        gameService.save(gameNo, chessGame);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/end")
-    public String end(Model model) {
-        model.addAllAttributes(gameService.end());
+    @GetMapping("/end/{gameNo}")
+    public String end(Model model, @PathVariable int gameNo) {
+        ChessGame chessGame = gameService.load(gameNo);
+        model.addAllAttributes(gameService.end(chessGame));
         return "result";
     }
 

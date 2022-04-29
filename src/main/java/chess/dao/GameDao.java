@@ -24,7 +24,7 @@ public class GameDao {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"no"});
             ps.setBoolean(1, game.isRunning());
-            ps.setBoolean(2, game.isRunning());
+            ps.setBoolean(2, game.isWhiteTurn());
             ps.setString(3, game.getTitle());
             ps.setString(4, game.getPassword());
             return ps;
@@ -33,12 +33,12 @@ public class GameDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void update(int gameNo) {
+    public void update(long gameNo, boolean whiteTurn) {
         final String sql = "update game set white_turn = ? where no = ?";
-        jdbcTemplate.update(sql, Camp.BLACK.isNotTurn(), gameNo);
+        jdbcTemplate.update(sql, whiteTurn, gameNo);
     }
 
-    public boolean isWhiteTurn(int gameNo) {
+    public boolean isWhiteTurn(long gameNo) {
         final String sql = "select white_turn from game where no = ?";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, gameNo);

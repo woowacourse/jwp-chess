@@ -9,7 +9,7 @@ import chess.domain.Camp;
 import chess.domain.ChessGame;
 import chess.domain.board.BoardInitializer;
 import chess.domain.board.Position;
-import chess.domain.gamestate.Score;
+import chess.domain.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Type;
 import chess.dto.GameDto;
@@ -24,8 +24,6 @@ import spark.Request;
 
 @Service
 public class GameService {
-    private static final String KEY_READY = "ready";
-    private static final String KEY_STARTED = "started";
     private static final String KEY_SOURCE = "source";
     private static final String KEY_TARGET = "target";
     private static final String KEY_WINNER = "winner";
@@ -39,12 +37,10 @@ public class GameService {
     private static final int INDEX_COLUMN = 0;
     private static final int INDEX_ROW = 1;
 
-    private final ChessGame chessGame;
     private final GameDao gameDao;
     private final BoardDao boardDao;
 
     public GameService(GameDao gameDao, BoardDao boardDao) {
-        this.chessGame = new ChessGame();
         this.gameDao = gameDao;
         this.boardDao = boardDao;
     }
@@ -54,21 +50,21 @@ public class GameService {
         boardDao.insert(gameNo, BoardInitializer.get().getSquares());
     }
 
-    public void load(int gameNo) {
+    public ChessGame load(long gameNo) {
         List<PieceDto> rawBoard = boardDao.load(gameNo);
         Map<Position, Piece> board = rawBoard.stream()
                 .collect(Collectors.toMap(
                         pieceDto2 -> parsePosition(pieceDto2.getPosition()),
                         this::parsePiece
                 ));
-        chessGame.load(board, gameDao.isWhiteTurn(gameNo));
+        return ChessGame.load(board, gameDao.isWhiteTurn(gameNo));
     }
 
     public String loadGameTitle(long gameNo) {
         return gameDao.loadTitle(gameNo);
     }
 
-    public Map<String, Object> modelPlayingBoard() {
+    public Map<String, Object> modelPlayingBoard(ChessGame chessGame) {
         Map<Position, Piece> board = chessGame.getBoardSquares();
         return board.entrySet().stream()
                 .collect(Collectors.toMap(
@@ -87,17 +83,7 @@ public class GameService {
         return type.generatePiece(camp);
     }
 
-    public void move(Request req) {
-        Map<String, String> positions = Arrays.stream(req.body().split(REGEX_DATA))
-                .map(data -> data.split(REGEX_VALUE))
-                .collect(Collectors.toMap(
-                        data -> data[INDEX_KEY],
-                        data -> data[INDEX_VALUE]
-                ));
-        chessGame.move(parsePosition(positions.get(KEY_SOURCE)), parsePosition(positions.get(KEY_TARGET)));
-    }
-
-    public void move(String source, String target) {
+    public void move(String source, String target, ChessGame chessGame) {
         chessGame.move(parsePosition(source), parsePosition(target));
     }
 
@@ -106,44 +92,37 @@ public class GameService {
                 EXPRESSIONS_ROW.get(rawPosition.charAt(INDEX_ROW)));
     }
 
-    public Map<String, Object> modelStatus() {
-        Map<Camp, Score> scores = chessGame.getScores();
-        return scores.entrySet().stream()
+    public Map<String, Object> modelStatus(ChessGame chessGame) {
+        return status(chessGame).entrySet().stream()
                 .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
     }
 
-    public Map<Camp, Score> status() {
+    public Map<Camp, Score> status(ChessGame chessGame) {
         return chessGame.getScores();
     }
 
-    public void save(int gameNo) {
-        gameDao.update(gameNo);
+    public void save(long gameNo, ChessGame chessGame) {
+        gameDao.update(gameNo, chessGame.isWhiteTurn());
         boardDao.update(gameNo, chessGame.getBoardSquares());
     }
 
-    public Map<String, Object> end() {
-        chessGame.end();
-        return modelResult();
+    public Map<String, Object> end(ChessGame chessGame) {
+        //TODO: game table의 running false로 update
+        return modelResult(chessGame);
     }
 
-    private Map<String, Object> modelResult() {
+    private Map<String, Object> modelResult(ChessGame chessGame) {
         Map<String, Object> model = new HashMap<>();
         Camp winner = chessGame.getWinner();
         model.put(KEY_WINNER, winner);
         if (winner == Camp.NONE) {
             model.put(KEY_TIE, true);
         }
-        model.put(KEY_STARTED, false);
-        model.put(KEY_READY, true);
         return model;
     }
 
-    public boolean isGameFinished() {
-        return this.chessGame.isFinished();
-    }
-
-    public Map<Position, Piece> getBoard() {
-        return chessGame.getBoardSquares();
+    public boolean isGameFinished(ChessGame chessGame) {
+        return chessGame.isFinished();
     }
 
     public List<GameDto> list() {

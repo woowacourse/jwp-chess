@@ -1,10 +1,9 @@
-package chess.domain.gamestate;
+package chess.domain;
 
 import static chess.domain.Camp.BLACK;
 import static chess.domain.Camp.NONE;
 import static chess.domain.Camp.WHITE;
 
-import chess.domain.Camp;
 import chess.domain.board.Board;
 import chess.domain.board.Column;
 import chess.domain.piece.Type;

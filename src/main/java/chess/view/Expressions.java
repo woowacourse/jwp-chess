@@ -1,22 +1,15 @@
 package chess.view;
 
-import chess.command.Command;
 import chess.domain.board.Column;
 import chess.domain.board.Row;
 import chess.domain.piece.Type;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class Expressions {
-    static final String COMMAND_START = "start";
-    static final String COMMAND_END = "end";
-    private static final String COMMAND_STATUS = "status";
-
     public static final Map<Character, Column> EXPRESSIONS_COLUMN;
     public static final Map<Character, Row> EXPRESSIONS_ROW;
-    static final Map<String, Supplier<Command>> EXPRESSIONS_COMMAND;
     static final Map<Type, String> PIECE_EXPRESSIONS;
 
     static {
@@ -39,11 +32,6 @@ public class Expressions {
         EXPRESSIONS_ROW.put('6', Row.SIX);
         EXPRESSIONS_ROW.put('7', Row.SEVEN);
         EXPRESSIONS_ROW.put('8', Row.EIGHT);
-
-        EXPRESSIONS_COMMAND = new HashMap<>();
-        EXPRESSIONS_COMMAND.put(COMMAND_START, Command::createStart);
-        EXPRESSIONS_COMMAND.put(COMMAND_END, Command::createEnd);
-        EXPRESSIONS_COMMAND.put(COMMAND_STATUS, Command::createStatus);
 
         PIECE_EXPRESSIONS = new LinkedHashMap<>();
         PIECE_EXPRESSIONS.put(Type.NONE, ".");

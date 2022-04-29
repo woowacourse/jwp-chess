@@ -12,7 +12,6 @@ import java.util.function.Consumer;
 
 public final class Board {
     private static final String ERROR_NO_SOURCE = "이동할 수 있는 기물이 없습니다.";
-    private static final String ERROR_NOT_YOUR_TURN = "상대 진영의 차례입니다.";
     private static final String ERROR_NOT_BLANK_PATH = "경로에 기물이 있어 움직일 수 없습니다.";
     private static final String ERROR_SAME_CAMP_TARGET = "같은 팀 기물이 있는 위치로는 이동할 수 없습니다.";
 
@@ -28,11 +27,9 @@ public final class Board {
         Piece source = this.squares.get(sourcePosition);
 
         checkBlank(sourcePosition);
-        checkTurn(source);
         checkPath(sourcePosition, targetPosition, source);
 
         move(sourcePosition, targetPosition, source);
-        Camp.switchTurn();
     }
 
     private void checkBlank(Position sourcePosition) {
@@ -41,10 +38,8 @@ public final class Board {
         }
     }
 
-    private void checkTurn(Piece source) {
-        if (source.isNotTurn()) {
-            throw new IllegalArgumentException(ERROR_NOT_YOUR_TURN);
-        }
+    public boolean isPieceWhiteIn(Position position) {
+        return this.squares.get(position).isCamp(Camp.WHITE);
     }
 
     private void checkPath(Position sourcePosition, Position targetPosition, Piece source) {

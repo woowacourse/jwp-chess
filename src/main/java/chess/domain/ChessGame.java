@@ -1,48 +1,50 @@
 package chess.domain;
 
+import chess.domain.board.Board;
 import chess.domain.board.Position;
-import chess.domain.gamestate.Ready;
-import chess.domain.gamestate.Score;
-import chess.domain.gamestate.State;
 import chess.domain.piece.Piece;
 import java.util.Map;
 
 public class ChessGame {
-    private State state;
+    private static final String ERROR_NOT_YOUR_TURN = "상대 진영의 차례입니다.";
 
-    public ChessGame() {
-        this.state = new Ready();
+    private Board board;
+    private boolean whiteTurn;
+
+    public ChessGame(Board board, boolean whiteTurn) {
+        this.board = board;
+        this.whiteTurn = whiteTurn;
     }
 
-    public void start() {
-        this.state = this.state.start();
-    }
-
-    public void load(Map<Position, Piece> board, boolean whiteTurn) {
-        this.state = this.state.load(board, whiteTurn);
+    public static ChessGame load(Map<Position, Piece> board, boolean whiteTurn) {
+        return new ChessGame(new Board(board), whiteTurn);
     }
 
     public void move(Position sourcePosition, Position targetPosition) {
-        this.state = this.state.move(sourcePosition, targetPosition);
-    }
-
-    public void end() {
-        this.state = this.state.end();
+        if(this.board.isPieceWhiteIn(sourcePosition) != whiteTurn) {
+            throw new IllegalArgumentException(ERROR_NOT_YOUR_TURN);
+        }
+        this.board.move(sourcePosition, targetPosition);
+        whiteTurn = !whiteTurn;
     }
 
     public boolean isFinished() {
-        return this.state.isFinished();
+        return this.board.hasKingCaptured();
     }
 
     public Map<Position, Piece> getBoardSquares() {
-        return this.state.getBoard().getSquares();
+        return this.board.getSquares();
     }
 
     public Map<Camp, Score> getScores() {
-        return this.state.getScores();
+        return Score.of(this.board);
     }
 
     public Camp getWinner() {
-        return this.state.getWinner();
+        return Score.winnerOf(this.board);
+    }
+
+    public boolean isWhiteTurn() {
+        return this.whiteTurn;
     }
 }

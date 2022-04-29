@@ -20,18 +20,15 @@ public class GameDaoTest {
     @Test
     void save_twice() {
         gameDao.insert(GameDto.fromNewGame("방제목1", "password"));
-        assertThatNoException().isThrownBy(() -> gameDao.update(1));
+        assertThatNoException().isThrownBy(() -> gameDao.update(1, true));
     }
 
-    @DisplayName("흑색 진영의 차례일 때 게임을 저장하고 불러오면 백색 진영의 차례가 아니다.")
+    @DisplayName("초기 상태의 게임을 저장하고 불러오면 백색 진영의 차례이다.")
     @Test
     void isWhiteTurn_false() {
         gameDao.insert(GameDto.fromNewGame("방제목1", "password"));
-        Camp.initializeTurn();
-        Camp.switchTurn();
-        gameDao.update(1);
 
-        assertThat(gameDao.isWhiteTurn(1)).isFalse();
+        assertThat(gameDao.isWhiteTurn(1)).isTrue();
     }
 
     @DisplayName("게임 목록을 조회할 수 있다.")

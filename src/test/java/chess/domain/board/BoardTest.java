@@ -14,7 +14,6 @@ public class BoardTest {
     @BeforeEach
     void initializeBoard() {
         this.board = BoardInitializer.get();
-        Camp.initializeTurn();
     }
 
     @DisplayName("이동하려는 위치에 같은 팀 기물이 있으면 갈 수 없다")

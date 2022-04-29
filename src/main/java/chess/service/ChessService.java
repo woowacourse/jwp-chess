@@ -3,6 +3,8 @@ package chess.service;
 import chess.dao.EventDao;
 import chess.dao.GameDao;
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.domain.auth.PlayerCookie;
+import chess.domain.board.piece.Color;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.game.Game;
@@ -71,11 +73,21 @@ public class ChessService {
     }
 
     @Transactional
-    public void playGame(int gameId, Event moveEvent) {
-        Game game = currentSnapShotOf(gameId).play(moveEvent);
+    public void playGame(int gameId, Event moveEvent, PlayerCookie cookie) {
+        Game game = currentSnapShotOf(gameId);
+
+        validateTurn(gameId, cookie, game);
+        game =  game.play(moveEvent);
 
         eventDao.save(gameId, moveEvent);
         finishGameOnEnd(gameId, game);
+    }
+
+    private void validateTurn(int gameId, PlayerCookie cookie, Game game) {
+        Color playerColor = cookie.parsePlayerColorBy(gameId);
+        if (!game.isValidTurn(playerColor)) {
+            throw new IllegalArgumentException("상대방이 움직일 차례입니다!");
+        }
     }
 
     private void finishGameOnEnd(int gameId, Game game) {
@@ -92,11 +104,19 @@ public class ChessService {
 
     private Game currentSnapShotOf(int gameId) {
         List<Event> events = eventDao.findAllByGameId(gameId);
+        validateGameInit(events);
+
         Game game = new NewGame();
         for (Event event : events) {
             game = game.play(event);
         }
         return game;
+    }
+
+    private void validateGameInit(List<Event> events) {
+        if (events.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 게임입니다.");
+        }
     }
 
     private void validateGameOver(Game game) {

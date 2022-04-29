@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.domain.auth.PlayerCookie;
+import chess.domain.board.piece.Color;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
@@ -18,6 +20,7 @@ import chess.dto.view.GameResultDto;
 import chess.dto.view.GameSnapshotDto;
 import chess.service.fixture.EventDaoStub;
 import chess.service.fixture.GameDaoStub;
+import chess.util.CookieUtil;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +30,7 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class ChessServiceTest {
 
+    private static final MoveEvent GAME_ONE_VALID_BLACK_MOVE = new MoveEvent("a7 a5");
     private GameDaoStub gameDao;
     private EventDaoStub eventDao;
     private ChessService service;
@@ -80,7 +84,7 @@ class ChessServiceTest {
 
             Game expectedGame = new NewGame().play(new InitEvent()).play(new MoveEvent("e2 e4"))
                     .play(new MoveEvent("d7 d5")).play(new MoveEvent("f1 b5"))
-                    .play(new MoveEvent("a7 a5")).play(new MoveEvent("b5 e8"));
+                    .play(GAME_ONE_VALID_BLACK_MOVE).play(new MoveEvent("b5 e8"));
             GameResultDto expected = new GameResultDto(new GameOverviewDto(3, "종료된_게임"),
                     expectedGame.toSnapshotDto(), expectedGame.getResult());
 
@@ -140,11 +144,11 @@ class ChessServiceTest {
 
         @Test
         void 이동_명령에_따라_체스말을_이동시킨다() {
-            service.playGame(1, new MoveEvent("a7 a5"));
+            service.playGame(1, GAME_ONE_VALID_BLACK_MOVE, getPlayerCookieOf(1, Color.BLACK));
             FullGameDto actual = service.findGame(1);
 
             GameSnapshotDto expectedGame = currentGameSnapshotOfGameIdOne()
-                    .play(new MoveEvent("a7 a5"))
+                    .play(GAME_ONE_VALID_BLACK_MOVE)
                     .toSnapshotDto();
             FullGameDto expected = new FullGameDto(
                     new GameOverviewDto(1, "진행중인_게임"), expectedGame);
@@ -154,7 +158,8 @@ class ChessServiceTest {
 
         @Test
         void 이동_명령에_따라_체스말을_이동시키며_게임이_종료된_경우_OVER로_상태를_변경한다() {
-            service.playGame(2, new MoveEvent("b5 e8"));
+            service.playGame(2, new MoveEvent("b5 e8"),
+                    getPlayerCookieOf(2, Color.WHITE));
 
             boolean actual = gameDao.checkRunning(2);
 
@@ -162,10 +167,32 @@ class ChessServiceTest {
         }
 
         @Test
-        void playGame_메서드는_존재하지_않는_게임인_경우_예외를_발생시킨다() {
-            assertThatThrownBy(() -> service.findGame(999999))
+        void 존재하지_않는_게임인_경우_예외를_발생시킨다() {
+            assertThatThrownBy(() -> service.playGame(999999, new MoveEvent("b5 e8"),
+                    getPlayerCookieOf(999999, Color.WHITE)))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("존재하지 않는 게임입니다.");
+        }
+    }
+
+    @DisplayName("playGame 메서드에 잘못된 플레이어 인증 정보를 전달했을 때의 예외처리 테스트")
+    @Nested
+    class PlayGameAuthTest {
+
+        @Test
+        void 다른_게임과_관련된_쿠키값인_경우_예외를_발생시킨다() {
+            assertThatThrownBy(() ->  service.playGame(1, GAME_ONE_VALID_BLACK_MOVE,
+                    getPlayerCookieOf(99999, Color.BLACK)))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("해당 게임의 플레이어가 아닙니다.");
+        }
+
+        @Test
+        void 본인의_차례가_아닌_플레이어의_쿠키값의_경우_예외를_발생시킨다() {
+            assertThatThrownBy(() ->  service.playGame(1, GAME_ONE_VALID_BLACK_MOVE,
+                    getPlayerCookieOf(1, Color.WHITE)))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("상대방이 움직일 차례입니다!");
         }
     }
 
@@ -214,5 +241,12 @@ class ChessServiceTest {
                 .play(new MoveEvent("e2 e4"))
                 .play(new MoveEvent("d7 d5"))
                 .play(new MoveEvent("f1 b5"));
+    }
+
+    private PlayerCookie getPlayerCookieOf(int gameId, Color playerColor) {
+        if (playerColor == Color.WHITE) {
+            return PlayerCookie.of(CookieUtil.generateGameOwnerCookie(gameId));
+        }
+        return PlayerCookie.of(CookieUtil.generateOpponentCookie(gameId));
     }
 }

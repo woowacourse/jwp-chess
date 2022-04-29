@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.domain.auth.PlayerCookie;
 import chess.domain.event.MoveEvent;
 import chess.dto.request.MoveRouteDto;
 import chess.dto.response.CreatedGameDto;
@@ -8,11 +9,9 @@ import chess.dto.response.EnterGameDto;
 import chess.dto.response.SearchResultDto;
 import chess.service.AuthService;
 import chess.service.ChessService;
-import chess.util.CookieUtil;
 import java.net.URI;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,8 +62,9 @@ public class GameController {
 
     @PutMapping("/{id}")
     public ModelAndView updateGame(@PathVariable int id,
+                                   PlayerCookie cookie,
                                    @RequestBody MoveRouteDto moveRoute) {
-        chessService.playGame(id, new MoveEvent(moveRoute.toDomain()));
+        chessService.playGame(id, new MoveEvent(moveRoute.toDomain()), cookie);
         return getGameModelAndView(id);
     }
 

@@ -60,7 +60,7 @@ public class ChessController {
         String source = moveRequestDto.getSource();
         String target = moveRequestDto.getTarget();
         chessService.move(source, target, roomId);
-        return ResponseEntity.ok().body(chessService.isEnd(roomId));
+        return ResponseEntity.ok(chessService.isEnd(roomId));
     }
 
     @GetMapping("/room/{roomId}/status")

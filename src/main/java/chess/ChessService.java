@@ -26,11 +26,12 @@ import chess.utils.PieceFactory;
 @Service
 public class ChessService {
 
-    private static final String NO_ROOM_MESSAGE = "[ERROR]: 해당 ID와 일치하는 Room이 존재하지 않습니다.";
-    private static final String NO_SQUARE_MESSAGE = "[ERROR]: 해당 방, 위치에 존재하는 Square가 없습니다.";
-    private static final String NO_SQUARES_MESSAGE = "[ERROR]: 해당 ID에 체스게임이 초기화되지 않았습니다.";
-    private static final String INVALID_PASSWORD = "[ERROR]: Password가 일치하지 않습니다.";
-    private static final String DELETE_NOT_ALLOWED_WHEN_RUNNING = "[ERROR]: 진행중인 방은 삭제할 수 없습니다.";
+    private static final String NO_ROOM_MESSAGE = "해당 ID와 일치하는 Room이 존재하지 않습니다.";
+    private static final String NO_SQUARE_MESSAGE = "해당 방, 위치에 존재하는 Square가 없습니다.";
+    private static final String NO_SQUARES_MESSAGE = "해당 ID에 체스게임이 초기화되지 않았습니다.";
+    private static final String INVALID_PASSWORD_MESSAGE = "Password가 일치하지 않습니다.";
+    private static final String DELETE_NOT_ALLOWED_WHEN_RUNNING_MESSAGE = "진행중인 방은 삭제할 수 없습니다.";
+    private static final String DUPLICATED_ROOM_NAME_MESSAGE = "중복된 방 이름입니다.";
 
     private final RoomDao roomDao;
     private final SquareDao squareDao;
@@ -113,7 +114,7 @@ public class ChessService {
     public Room createRoom(String name, String password) {
         Optional<Room> room = roomDao.findByName(name);
         if (room.isPresent()) {
-            throw new IllegalArgumentException("[ERROR]: 중복된 방 이름입니다.");
+            throw new IllegalArgumentException(DUPLICATED_ROOM_NAME_MESSAGE);
         }
         Room newRoom = new Room(name, password);
         roomDao.save(newRoom);
@@ -126,11 +127,11 @@ public class ChessService {
 
     public boolean delete(Long roomId, String password) {
         if (roomDao.findByIdAndPassword(roomId, password).isEmpty()) {
-            throw new IllegalArgumentException(INVALID_PASSWORD);
+            throw new IllegalArgumentException(INVALID_PASSWORD_MESSAGE);
         }
 
         if (!roomDao.findByIdAndPassword(roomId, password).get().getTurn().equals("empty")) {
-            throw new IllegalStateException(DELETE_NOT_ALLOWED_WHEN_RUNNING);
+            throw new IllegalStateException(DELETE_NOT_ALLOWED_WHEN_RUNNING_MESSAGE);
         }
 
         squareDao.removeAll(roomId);

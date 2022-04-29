@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.player.Team;
 import chess.domain.position.Position;
+import chess.exception.IllegalRequestDataException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -63,7 +64,7 @@ class PawnTest {
         final Position nextPosition = new Position(currentRank, 'd');
 
         assertThatThrownBy(() -> pawn.move(currentPosition, nextPosition, Team.WHITE))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("이동 방향이 앞이 아닙니다.");
     }
 
@@ -74,7 +75,7 @@ class PawnTest {
         final Position nextPosition = new Position(currentRank + 3, 'g');
 
         assertThatThrownBy(() -> pawn.move(currentPosition, nextPosition, Team.WHITE))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("폰은 첫번째 턴에는 1칸 또는 2칸만 이동할 수 있습니다.");
     }
 
@@ -84,7 +85,7 @@ class PawnTest {
         final Position nextPosition = new Position(2, 'e');
 
         assertThatThrownBy(() -> pawn.capture(currentPosition, nextPosition, Team.WHITE))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("이동 방향이 대각선이 아닙니다.");
     }
 
@@ -95,7 +96,7 @@ class PawnTest {
         final Position nextPosition = new Position(currentRank + 2, 'e');
 
         assertThatThrownBy(() -> pawn.capture(currentPosition, nextPosition, Team.WHITE))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("대각선으로 이동하는 거리가 1칸이 아닙니다.");
     }
 
@@ -107,7 +108,7 @@ class PawnTest {
         final Position nextPosition = new Position(5, 'g');
 
         assertThatThrownBy(() -> pawnNotFirstTurn.move(currentPositionNotFirstTurn, nextPosition, Team.WHITE))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("폰은 앞으로 1칸만 이동할 수 있습니다.");
     }
 

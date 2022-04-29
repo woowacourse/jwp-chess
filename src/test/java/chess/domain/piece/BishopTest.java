@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.player.Team;
 import chess.domain.position.Position;
+import chess.exception.IllegalRequestDataException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,7 +33,7 @@ class BishopTest {
         final Position nextLinearPosition = new Position(3, 'f');
 
         assertThatThrownBy(() -> bishop.move(currentPosition, nextLinearPosition, Team.WHITE))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("비숍은 대각선으로 이동해야 합니다.");
     }
 

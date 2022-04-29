@@ -91,7 +91,7 @@ public class Position {
         final int dy = direction.getDy();
 
         for (int rank = startRank + dy, file = startFile + dx;
-             rank < destination.getRank().getValue();
+             rank != destination.getRank().getValue();
              rank+= dy, file+= dx) {
             positions.add(new Position(rank, (char) file));
         }

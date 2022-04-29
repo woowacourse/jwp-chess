@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.player.Team;
 import chess.domain.position.Position;
+import chess.exception.IllegalRequestDataException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,7 +47,7 @@ class KnightTest {
         final Position nextLinearPosition = new Position(3, 'f');
 
         assertThatThrownBy(() -> knight.move(currentPosition, nextLinearPosition, Team.WHITE))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("나이트는 상하좌우로 1칸 이동 후 대각선으로 1칸 이동해야 합니다.");
     }
 

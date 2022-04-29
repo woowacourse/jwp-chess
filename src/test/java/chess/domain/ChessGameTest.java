@@ -7,6 +7,7 @@ import chess.domain.piece.Rook;
 import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
+import chess.exception.IllegalRequestDataException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,8 +37,8 @@ class ChessGameTest {
         final Position destinationPosition = new Position(6, 'a');
 
         assertThatThrownBy(() -> chessGame.move(currentPlayer, opponentPlayer, currentPosition, destinationPosition))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("선택한 출발 위치에 체스말이 존재하지 않습니다.");
+                .isInstanceOf(IllegalRequestDataException.class)
+                .hasMessage("선택한 출발 위치에 현재 유저의 체스말이 존재하지 않습니다.");
     }
 
     @Test
@@ -47,7 +48,7 @@ class ChessGameTest {
         final Position destinationPosition = new Position(1, 'b');
 
         assertThatThrownBy(() -> chessGame.move(currentPlayer, opponentPlayer, currentPosition, destinationPosition))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("선택한 도착 위치에 이미 체스말이 존재합니다.");
     }
 
@@ -58,7 +59,7 @@ class ChessGameTest {
         final Position destinationPosition = new Position(8, 'a');
 
         assertThatThrownBy(() -> chessGame.move(currentPlayer, opponentPlayer, currentPosition, destinationPosition))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("이동 경로에 체스말이 존재합니다.");
     }
 

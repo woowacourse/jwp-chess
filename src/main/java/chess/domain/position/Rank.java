@@ -22,6 +22,13 @@ public enum Rank {
         this.value = value;
     }
 
+    public static Rank find(String value) {
+        return Arrays.stream(Rank.values())
+            .filter(rank -> String.valueOf(rank).equals(value))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 RANK입니다."));
+    }
+
     public static List<Rank> orderedValues() {
         return Arrays.stream(values())
                 .sorted(Comparator.comparingInt(col -> col.value))

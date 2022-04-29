@@ -22,6 +22,13 @@ public enum File {
         this.value = value;
     }
 
+    public static File find(String value) {
+        return Arrays.stream(File.values())
+            .filter(file -> String.valueOf(file.value).equals(value))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 FILE입니다."));
+    }
+
     public static List<File> orderedValues() {
         return Arrays.stream(values())
                 .sorted(Comparator.comparingInt(row -> row.value))

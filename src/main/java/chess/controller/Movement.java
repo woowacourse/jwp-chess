@@ -3,7 +3,6 @@ package chess.controller;
 import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
-import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -13,13 +12,6 @@ public class Movement {
 
     private final Position from;
     private final Position to;
-
-    private static final Map<String, Rank> RANKS = Map.of(
-            "1", Rank.ONE, "2", Rank.TWO, "3", Rank.THREE, "4", Rank.FOUR, "5", Rank.FIVE, "6", Rank.SIX, "7", Rank.SEVEN, "8", Rank.EIGHT
-    );
-    private static final Map<String, File> FILES = Map.of(
-            "A", File.A, "B", File.B, "C", File.C, "D", File.D, "E", File.E, "F", File.F, "G", File.G, "H", File.H
-    );
 
     public Movement(String from, String to) {
         checkPosition(from);
@@ -35,11 +27,11 @@ public class Movement {
     }
 
     private File file(String position) {
-        return FILES.get(position.substring(0, 1));
+        return File.find(position.substring(0, 1));
     }
 
     private Rank rank(String position) {
-        return RANKS.get(position.substring(1, 2));
+        return Rank.find(position.substring(1, 2));
     }
 
     public Position getFrom() {

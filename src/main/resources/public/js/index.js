@@ -98,7 +98,7 @@ const deleteRoom = async (e) => {
     const bodyValue = {
         password: password
     };
-    await fetch('/delete/' + e.target.id, {
+    let response = await fetch('/delete/' + e.target.id, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -106,6 +106,11 @@ const deleteRoom = async (e) => {
         },
         body: JSON.stringify(bodyValue)
     });
+    response = await response.json();
+    if (response.message) {
+        await showError(response.message);
+        return;
+    }
     window.location.reload();
 }
 

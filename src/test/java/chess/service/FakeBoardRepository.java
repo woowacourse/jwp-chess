@@ -15,7 +15,7 @@ public class FakeBoardRepository implements BoardRepository {
     @Override
     public int save(int roomId, GameStateDto gameStateDto) {
         autoIncrementId++;
-        database.put(autoIncrementId, new BoardData(roomId, gameStateDto.getTurn()));
+        database.put(autoIncrementId, new BoardData(roomId, gameStateDto.getTurn(), gameStateDto.getEnd()));
         return autoIncrementId;
     }
 
@@ -25,20 +25,25 @@ public class FakeBoardRepository implements BoardRepository {
     }
 
     @Override
+    public boolean getEnd(int boardId) {
+        return database.get(boardId).getEnd();
+    }
+
+    @Override
     public Optional<Integer> findBoardIdByRoom(int roomId) {
         return findBoardId(roomId);
     }
 
     private Optional<Integer> findBoardId(int roomId) {
         return database.keySet().stream()
-                .filter(key -> database.get(key).getroomId() == roomId)
+                .filter(key -> database.get(key).getRoomId() == roomId)
                 .findAny();
     }
 
     @Override
-    public void updateTurn(int boardId, GameStateDto gameStateDto) {
+    public void updateState(int boardId, GameStateDto gameStateDto) {
         BoardData board = database.get(boardId);
-        database.put(boardId, new BoardData(board.getroomId(), gameStateDto.getTurn()));
+        database.put(boardId, new BoardData(board.getRoomId(), gameStateDto.getTurn(), gameStateDto.getEnd()));
     }
 
     @Override
@@ -49,18 +54,24 @@ public class FakeBoardRepository implements BoardRepository {
     private static class BoardData {
         private int roomId;
         private String turn;
+        private boolean end;
 
-        private BoardData(int roomId, String turn) {
+        private BoardData(int roomId, String turn, boolean end) {
             this.roomId = roomId;
             this.turn = turn;
+            this.end = end;
         }
 
-        public int getroomId() {
+        public int getRoomId() {
             return roomId;
         }
 
         public String getTurn() {
             return turn;
+        }
+
+        public boolean getEnd() {
+            return end;
         }
     }
 }

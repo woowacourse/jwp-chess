@@ -1,7 +1,6 @@
 package chess.repository;
 
 import chess.domain.Color;
-import chess.web.dto.BoardDto;
 import chess.web.dto.GameStateDto;
 import java.util.Optional;
 
@@ -10,9 +9,11 @@ public interface BoardRepository {
 
     Color getTurn(int boardId);
 
+    boolean getEnd(int boardId);
+
     Optional<Integer> findBoardIdByRoom(int roomId);
 
-    void updateTurn(int boardId, GameStateDto gameStateDto);
+    void updateState(int boardId, GameStateDto gameStateDto);
 
     void deleteByRoom(int roomId);
 }

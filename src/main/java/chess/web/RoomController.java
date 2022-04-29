@@ -49,16 +49,6 @@ public class RoomController {
 
     @DeleteMapping("/{roomId}")
     public ResponseEntity<Map<String, String>> deleteRoom(@PathVariable int roomId, @RequestParam String password) {
-        Optional<Integer> boardId = gameService.findByRoomId(roomId);
-        if (boardId.isEmpty()) {
-            roomService.delete(roomId, password);
-            return ResponseEntity.ok(Map.of("url","/"));
-        }
-        BoardDto boardDto = gameService.loadGame(roomId);
-        BoardDto boardDto1 = gameService.gameStateAndPieces(boardDto.getBoardId());
-        if (!boardDto1.getState().getEnd()) {
-            throw new IllegalArgumentException("진행 중인 게임방은 삭제할 수 없습니다.");
-        }
         roomService.delete(roomId, password);
         return ResponseEntity.ok(Map.of("url","/"));
     }

@@ -27,12 +27,19 @@ public class RoomService {
     }
 
     public void delete(int roomId, String password) {
+        Optional<Integer> boardId = boardRepository.findBoardIdByRoom(roomId);
         Optional<RoomDto> room = roomRepository.findById(roomId);
-        if (room.get().getPassword().equals(password)) {
+        if (!room.get().getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        if (boardId.isEmpty()) {
             roomRepository.delete(roomId);
             return;
         }
-        throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        if (!boardRepository.getEnd(boardId.get())) {
+            throw new IllegalArgumentException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
+        roomRepository.delete(roomId);
     }
 
     public List<Map<String, String>> findRooms() {

@@ -72,7 +72,7 @@ public class BoardRepositoryImplTest {
         Board board = new Board(new RegularRuleSetup());
         int boardId = boardRepository.save(roomId, GameStateDto.from(board));
         board.loadTurn(Color.BLACK);
-        boardRepository.updateTurn(boardId, GameStateDto.from(board));
+        boardRepository.updateState(boardId, GameStateDto.from(board));
         assertThat(board.getTurn()).isEqualTo(boardRepository.getTurn(boardId));
     }
 

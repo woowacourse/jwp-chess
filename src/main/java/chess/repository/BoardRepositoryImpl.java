@@ -20,7 +20,7 @@ public class BoardRepositoryImpl implements BoardRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public BoardRepositoryImpl(DataSource dataSource,
-                              NamedParameterJdbcTemplate jdbcTemplate) {
+                               NamedParameterJdbcTemplate jdbcTemplate) {
         this.insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns(KEY_NAME);
@@ -29,7 +29,10 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public int save(int roomId, GameStateDto gameStateDto) {
-        return insertActor.executeAndReturnKey(Map.of("room_id", roomId, "turn", gameStateDto.getTurn()))
+        return insertActor.executeAndReturnKey(
+                        Map.of("room_id", roomId,
+                                "turn", gameStateDto.getTurn(),
+                                "end", gameStateDto.getEnd()))
                 .intValue();
     }
 
@@ -38,6 +41,12 @@ public class BoardRepositoryImpl implements BoardRepository {
         String sql = "select turn from board where id = :boardId";
         return jdbcTemplate.queryForObject(sql, Map.of("boardId", boardId),
                 (resultSet, rowNum) -> Color.valueOf(resultSet.getString(1).toUpperCase()));
+    }
+
+    @Override
+    public boolean getEnd(int boardId) {
+        String sql = "select end from board where id = :boardId";
+        return jdbcTemplate.queryForObject(sql, Map.of("boardId", boardId), Boolean.class);
     }
 
     @Override
@@ -52,9 +61,12 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public void updateTurn(int boardId, GameStateDto gameStateDto) {
-        String sql = "update board set turn = :turn where id = :boardId";
-        jdbcTemplate.update(sql, Map.of("turn", gameStateDto.getTurn(), "boardId", boardId));
+    public void updateState(int boardId, GameStateDto gameStateDto) {
+        String sql = "update board set turn = :turn, end = :end where id = :boardId";
+        jdbcTemplate.update(sql,
+                Map.of("turn", gameStateDto.getTurn(),
+                        "boardId", boardId,
+                        "end", gameStateDto.getEnd()));
     }
 
     @Override

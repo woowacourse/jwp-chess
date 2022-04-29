@@ -28,17 +28,13 @@ public class GameService {
         this.boardRepository = boardRepository;
     }
 
-    public Optional<Integer> findByRoomId(int roomId) {
-        return boardRepository.findBoardIdByRoom(roomId);
-    }
-
     public BoardDto startNewGame(int roomId) {
         Board board = new Board(new RegularRuleSetup());
 
         boardRepository.deleteByRoom(roomId);
 
         int boardId = boardRepository.save(roomId, getGameStateDto(board));
-        saveNewPieces(board, boardId);
+        pieceRepository.saveAll(boardId, board.getPieces());
         return gameStateAndPieces(boardId);
     }
 
@@ -89,7 +85,7 @@ public class GameService {
     }
 
     private void updateGameState(Board board, int boardId) {
-        boardRepository.updateTurn(boardId, getGameStateDto(board));
+        boardRepository.updateState(boardId, getGameStateDto(board));
     }
 
     private Board loadBoard(int boardId) {
@@ -100,10 +96,6 @@ public class GameService {
         Board board = new Board(() -> pieces);
         board.loadTurn(boardRepository.getTurn(boardId));
         return board;
-    }
-
-    private void saveNewPieces(Board board, int boardId) {
-        pieceRepository.saveAll(boardId, board.getPieces());
     }
 
     private GameStateDto getGameStateDto(Board board) {

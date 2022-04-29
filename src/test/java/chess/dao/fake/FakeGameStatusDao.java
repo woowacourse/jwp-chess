@@ -23,7 +23,7 @@ public class FakeGameStatusDao implements GameStatusDao {
     }
 
     @Override
-    public void reset() {
+    public void reset(int gameId) {
         status = GameStatus.READY;
     }
 }

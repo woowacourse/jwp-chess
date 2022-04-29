@@ -8,5 +8,5 @@ public interface TurnDao {
 
     String getTurn(int gameId);
 
-    void reset();
+    void reset(int gameId);
 }

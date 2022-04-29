@@ -1,21 +1,23 @@
 package chess.controller;
 
-import chess.dto.GameDto;
-import chess.service.ChessGameService;
 import chess.domain.board.strategy.WebBasicBoardStrategy;
 import chess.dto.ErrorDto;
+import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
 import chess.dto.MoveDto;
 import chess.dto.ScoreDto;
+import chess.service.ChessGameService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -44,6 +46,15 @@ public class ChessSpringController {
     public String enter(@PathVariable int gameId) {
         chessGameService.init(gameId);
         return "index";
+    }
+
+    @DeleteMapping("/game/{gameId}/delete")
+    public String delete(@RequestParam("password") String password, @PathVariable int gameId, Model model) {
+        boolean isDeleted = chessGameService.delete(gameId, password);
+        if (!isDeleted) {
+            model.addAttribute("value", "비밀번호가 일치하지 않습니다.");
+        }
+        return "redirect:/";
     }
 
     @ResponseBody

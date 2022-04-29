@@ -2,7 +2,6 @@
     <meta charset="UTF-8">
     <title>체스 게임</title>
     <link rel="stylesheet" href="/src/index.css">
-    <script defer src="/src/home.js"></script>
 </head>
 
 <body>
@@ -18,6 +17,12 @@
     <ul>
         <li>
             <button onclick="location.href = '/game/{{this.id}}'">{{this.roomTitle}}</button>
+            <form action="/game/{{this.id}}/delete" method="post">
+                <input type="hidden" name="_method" value="DELETE"/>
+                <input name="password" placeholder="비밀번호를 입력해주세요.">
+                <button type="submit">삭제하기</button>
+            </form>
+            <span>{{this.value}}</span>
         </li>
     </ul>
     <br>

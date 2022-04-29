@@ -10,5 +10,5 @@ public interface BoardDao {
 
     Map<String, String> getBoard(int gameId);
 
-    void reset(Map<String, String> board);
+    void reset(Map<String, String> board, int gameId);
 }

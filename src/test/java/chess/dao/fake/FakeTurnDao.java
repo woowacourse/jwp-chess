@@ -22,7 +22,7 @@ public class FakeTurnDao implements TurnDao {
     }
 
     @Override
-    public void reset() {
+    public void reset(int gameId) {
         turn = "white";
     }
 }

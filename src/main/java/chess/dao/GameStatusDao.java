@@ -8,5 +8,5 @@ public interface GameStatusDao {
 
     String getStatus(int gameId);
 
-    void reset();
+    void reset(int gameId);
 }

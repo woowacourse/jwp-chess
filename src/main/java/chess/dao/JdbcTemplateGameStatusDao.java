@@ -31,14 +31,14 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
     }
 
     @Override
-    public void reset() {
-        removeAll();
-        String sql = "insert into game_status (status) values (?)";
-        jdbcTemplate.update(sql, GameStatus.READY.toString());
+    public void reset(int gameId) {
+        removeAll(gameId);
+        String sql = "insert into game_status (status, game_id) values (?, ?)";
+        jdbcTemplate.update(sql, GameStatus.READY.toString(), gameId);
     }
 
-    private void removeAll() {
-        String sql = "truncate table game_status";
-        jdbcTemplate.update(sql);
+    private void removeAll(int gameId) {
+        String sql = "delete from game_status where game_id = ?";
+        jdbcTemplate.update(sql, gameId);
     }
 }

@@ -16,7 +16,7 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public void delete(int id) {
-
+    public boolean delete(int id, String password) {
+        return true;
     }
 }

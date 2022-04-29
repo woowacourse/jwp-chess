@@ -18,16 +18,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class JdbcTemplateBoardDaoTest {
 
     private JdbcTemplateBoardDao jdbcTemplateBoardDao;
+    private int id;
 
     @Autowired
     private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     @BeforeEach
     void setUp() {
+        JdbcTemplateGameDao jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate);
+        id = jdbcTemplateGameDao.create("asdf", "1234");
         jdbcTemplateBoardDao = new JdbcTemplateBoardDao(jdbcTemplate);
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
-        jdbcTemplateBoardDao.init(board.toMap(), 1);
+        jdbcTemplateBoardDao.init(board.toMap(), id);
     }
 
     @Test
@@ -35,32 +38,32 @@ public class JdbcTemplateBoardDaoTest {
     void getBoard() {
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
-        assertThat(jdbcTemplateBoardDao.getBoard(1)).isEqualTo(board.toMap());
+        assertThat(jdbcTemplateBoardDao.getBoard(id)).isEqualTo(board.toMap());
     }
 
     @Test
     @DisplayName("이동 업데이트 로직을 확인한다.")
     void update() {
-        jdbcTemplateBoardDao.update("a3", "white_pawn", 1);
-        jdbcTemplateBoardDao.update("a2", "blank", 1);
+        jdbcTemplateBoardDao.update("a3", "white_pawn", id);
+        jdbcTemplateBoardDao.update("a2", "blank", id);
 
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
         board.move(new Position("a3"), new WhitePawn());
         board.move(new Position("a2"), new Blank());
 
-        assertThat(jdbcTemplateBoardDao.getBoard(1)).isEqualTo(board.toMap());
+        assertThat(jdbcTemplateBoardDao.getBoard(id)).isEqualTo(board.toMap());
     }
 
     @Test
     @DisplayName("리셋을 확인한다.")
     void reset() {
-        jdbcTemplateBoardDao.update("a3", "white_pawn", 1);
-        jdbcTemplateBoardDao.update("a2", "blank", 1);
+        jdbcTemplateBoardDao.update("a3", "white_pawn", id);
+        jdbcTemplateBoardDao.update("a2", "blank", id);
 
         Board board = new Board();
-        jdbcTemplateBoardDao.reset(board.toMap());
+        jdbcTemplateBoardDao.reset(board.toMap(), id);
 
-        assertThat(jdbcTemplateBoardDao.getBoard(1)).isEqualTo(board.toMap());
+        assertThat(jdbcTemplateBoardDao.getBoard(id)).isEqualTo(board.toMap());
     }
 }

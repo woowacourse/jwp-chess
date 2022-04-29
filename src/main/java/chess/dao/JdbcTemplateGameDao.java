@@ -15,6 +15,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcTemplateGameDao implements GameDao {
 
+    private static final int DELETE_SUCCESS_VALUE = 1;
+
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcTemplateGameDao(JdbcTemplate jdbcTemplate) {
@@ -49,8 +51,8 @@ public class JdbcTemplateGameDao implements GameDao {
     }
 
     @Override
-    public void delete(int id) {
-        String sql = "delete from game where id = ?";
-        jdbcTemplate.update(sql, id);
+    public boolean delete(int id, String password) {
+        String sql = "delete from game where id = ? and password = ?";
+        return jdbcTemplate.update(sql, id, password) == DELETE_SUCCESS_VALUE;
     }
 }

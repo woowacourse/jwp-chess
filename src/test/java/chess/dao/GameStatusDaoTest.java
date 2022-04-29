@@ -14,7 +14,7 @@ public class GameStatusDaoTest {
     @BeforeEach
     void init() {
         gameStatusDao = new FakeGameStatusDao();
-        gameStatusDao.reset();
+        gameStatusDao.reset(1);
     }
 
     @DisplayName("초기 값을 확인한다.")
@@ -47,7 +47,7 @@ public class GameStatusDaoTest {
         GameStatus nextStatus = GameStatus.PLAYING;
         //when
         gameStatusDao.update(initStatus.toString(), nextStatus.toString(), 1);
-        gameStatusDao.reset();
+        gameStatusDao.reset(1);
         // then
         Assertions.assertThat(gameStatusDao.getStatus(1)).isEqualTo(initStatus.toString());
     }

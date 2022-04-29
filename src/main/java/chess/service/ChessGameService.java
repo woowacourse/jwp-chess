@@ -52,8 +52,8 @@ public class ChessGameService {
         return gameDao.find();
     }
 
-    public void delete(int id) {
-        gameDao.delete(id);
+    public boolean delete(int id, String password) {
+        return gameDao.delete(id, password);
     }
 
     public void init(int gameId) {
@@ -149,15 +149,15 @@ public class ChessGameService {
             scoreDto = new ScoreDto(String.format(WIN_MESSAGE, Team.of(turnDao.getTurn(gameId)).change()));
         }
         resetBoard();
-        turnDao.reset();
-        gameStatusDao.reset();
+        turnDao.reset(1);
+        gameStatusDao.reset(1);
         return selectScoreDto(result, scoreDto);
     }
 
     private void resetBoard() {
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
-        boardDao.reset(board.toMap());
+        boardDao.reset(board.toMap(), 1);
     }
 
     private ScoreDto selectScoreDto(Result result, ScoreDto scoreDto) {

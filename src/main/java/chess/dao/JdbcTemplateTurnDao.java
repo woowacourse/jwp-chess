@@ -31,14 +31,14 @@ public class JdbcTemplateTurnDao implements TurnDao {
     }
 
     @Override
-    public void reset() {
-        removeAll();
-        String sql = "insert into turn (team) values (?)";
-        jdbcTemplate.update(sql, Team.WHITE.toString());
+    public void reset(int gameId) {
+        removeAll(gameId);
+        String sql = "insert into turn (team, game_id) values (?, ?)";
+        jdbcTemplate.update(sql, Team.WHITE.toString(), gameId);
     }
 
-    private void removeAll() {
-        String sql = "truncate table turn";
-        this.jdbcTemplate.execute(sql);
+    private void removeAll(int gameId) {
+        String sql = "delete from turn where game_id = ?";
+        jdbcTemplate.update(sql, gameId);
     }
 }

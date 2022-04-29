@@ -21,7 +21,7 @@ class BoardDaoTest {
         boardDao = new FakeBoardDao(new BasicBoardStrategy());
         Board board = new Board();
         board.initBoard(new BasicBoardStrategy());
-        boardDao.reset(board.toMap());
+        boardDao.reset(board.toMap(), 1);
     }
 
     @Test
@@ -54,7 +54,7 @@ class BoardDaoTest {
 
         Board board = new Board();
 
-        boardDao.reset(board.toMap());
+        boardDao.reset(board.toMap(), 1);
 
         assertThat(boardDao.getBoard(1)).isEqualTo(board.toMap());
     }

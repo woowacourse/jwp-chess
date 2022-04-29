@@ -32,7 +32,7 @@ public class FakeBoardDao implements BoardDao {
     }
 
     @Override
-    public void reset(Map<String, String> board) {
+    public void reset(Map<String, String> board, int gameId) {
         this.board.clear();
         this.board.putAll(board);
     }

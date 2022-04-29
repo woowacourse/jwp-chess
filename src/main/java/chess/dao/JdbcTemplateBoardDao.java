@@ -40,12 +40,12 @@ public class JdbcTemplateBoardDao implements BoardDao {
     }
 
     @Override
-    public void reset(Map<String, String> board) {
-        removeAll();
+    public void reset(Map<String, String> board, int gameId) {
+        removeAll(gameId);
     }
 
-    private void removeAll() {
-        String sql = "truncate table board";
-        jdbcTemplate.update(sql);
+    private void removeAll(int gameId) {
+        String sql = "delete from board where game_id = ?";
+        jdbcTemplate.update(sql, gameId);
     }
 }

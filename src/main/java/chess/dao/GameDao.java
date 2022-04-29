@@ -8,5 +8,5 @@ public interface GameDao {
 
     List<GameDto> find();
 
-    void delete(int id);
+    boolean delete(int id, String password);
 }

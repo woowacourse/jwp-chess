@@ -16,10 +16,11 @@ import org.junit.jupiter.api.Test;
 
 class MockGameDaoTest {
 
+    private static final MockGameDao dao = new MockGameDao();
+
     @Test
     @DisplayName("체스 게임을 저장소에 저장한다.")
     void save() {
-        MockGameDao dao = new MockGameDao();
         final Member memberOne = new Member(1L, "썬");
         final Member memberTwo = new Member(2L, "알렉스");
         final Board board = new Board(BoardInitializer.create());
@@ -35,7 +36,6 @@ class MockGameDaoTest {
     @Test
     @DisplayName("저장소에 저장된 모든 게임을 불러온다.")
     void findAll() {
-        MockGameDao dao = new MockGameDao();
         List<ChessGame> games = new ArrayList<>();
 
         final Member memberOne = new Member(1L, "썬");

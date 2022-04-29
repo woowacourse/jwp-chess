@@ -59,6 +59,7 @@ public class ChessServiceV2 {
                         entry.getValue().getSymbol().name(), entry.getValue().getColor().name()))
                 .collect(Collectors.toList());
 
+        squareDao.deleteSquareAllById(roomId);
         squareDao.insertSquareAll(roomId, board);
         roomDao.updateStateById(roomId, "WhiteRunning");
         return roomId;
@@ -109,6 +110,7 @@ public class ChessServiceV2 {
     }
 
     public Long updateStateEnd(Long roomId) {
+        System.out.println(roomId);
         final Long updateRoomId = roomDao.updateStateById(roomId, "Finished");
         return updateRoomId;
     }

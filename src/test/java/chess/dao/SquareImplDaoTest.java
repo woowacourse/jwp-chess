@@ -1,6 +1,7 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.piece.generator.NormalPiecesGenerator;
@@ -48,6 +49,12 @@ class SquareImplDaoTest {
         final List<Square> squares = squareDao.findSquareAllById(roomId);
 
         assertThat(squares).hasSize(64);
+    }
+
+    @Test
+    @DisplayName("방 일련번호를 통해 체스판을 제거할 수 있다.")
+    void deleteSquareAllById() {
+        assertDoesNotThrow(() -> roomDao.deleteRoom(1L));
     }
 
     private Long insertTestRoom(String title, String password) {

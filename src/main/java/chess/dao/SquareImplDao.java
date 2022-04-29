@@ -58,4 +58,12 @@ public class SquareImplDao implements SquareDao {
 
         return square.getRoomId();
     }
+
+    @Override
+    public Long deleteSquareAllById(Long roomId) {
+        String sql = "DELETE FROM square WHERE room_id = (?)";
+
+        jdbcTemplate.update(sql, roomId);
+        return roomId;
+    }
 }

@@ -43,4 +43,15 @@ public class SquareFakeDao implements SquareDao {
         memoryDbSquare.put(entries.get(0).getKey(), square);
         return square.getRoomId();
     }
+
+    @Override
+    public Long deleteSquareAllById(Long roomId) {
+        final List<Entry<Long, Square>> entries = memoryDbSquare.entrySet().stream()
+                .filter(entry -> entry.getValue().getRoomId() == roomId)
+                .collect(Collectors.toList());
+        for (Entry<Long, Square> entry : entries) {
+            memoryDbSquare.remove(entry.getKey());
+        }
+        return roomId;
+    }
 }

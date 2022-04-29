@@ -10,4 +10,6 @@ public interface SquareDao {
     List<Square> findSquareAllById(Long roomId);
 
     Long updateSquare(Square square);
+
+    Long deleteSquareAllById(Long roomId);
 }

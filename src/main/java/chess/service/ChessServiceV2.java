@@ -92,4 +92,9 @@ public class ChessServiceV2 {
         chessGame.playGameByCommand(GameCommand.of("move", from, to));
         chessGame.isEndGameByPiece();
     }
+
+    public Long updateStateEnd(Long roomId) {
+        final Long updateRoomId = roomDao.updateStateById(roomId, "Finished");
+        return updateRoomId;
+    }
 }

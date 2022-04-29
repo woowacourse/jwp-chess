@@ -37,4 +37,13 @@ class ChessServiceV2Test {
 
         assertDoesNotThrow(() -> chessServiceV2.updateSquares(roomId, "a2", "a3"));
     }
+
+    @Test
+    @DisplayName("방의 상태를 종료로 변경할 수 있다.")
+    void updateStateEnd() {
+        final Long roomId = chessServiceV2.insertRoom("title1", "1111");
+        chessServiceV2.insertBoard(roomId);
+
+        assertDoesNotThrow(() -> chessServiceV2.updateStateEnd(roomId));
+    }
 }

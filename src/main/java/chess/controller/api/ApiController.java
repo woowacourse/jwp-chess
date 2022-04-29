@@ -38,4 +38,10 @@ public class ApiController {
         chessServiceV2.updateSquares(roomId, movePositionReq.getFrom(), movePositionReq.getTo());
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/room/{roomId}/stateEnd")
+    public ResponseEntity<Void> updateStateEnd(@PathVariable Long roomId) {
+        chessServiceV2.updateStateEnd(roomId);
+        return ResponseEntity.ok().build();
+    }
 }

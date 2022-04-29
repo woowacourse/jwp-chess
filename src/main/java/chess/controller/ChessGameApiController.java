@@ -20,13 +20,19 @@ public class ChessGameApiController {
     @GetMapping("/chess/game/{id}/board")
     public ResponseEntity<BoardDTO> showBoard(@PathVariable String id) {
         ChessGame chessGame = chessService.getChessGamePlayed(id);
-        return ResponseEntity.ok(new BoardDTO(chessGame));
+        return new ResponseEntity<>(
+                new BoardDTO(chessGame),
+                HttpStatus.OK
+        );
     }
 
     @PostMapping("/chess/game/{id}/move")
     public ResponseEntity<BoardDTO> movePiece(@PathVariable String id, MoveDTO moveDTO) {
         ChessGame chessGame = chessService.movePiece(id, moveDTO);
-        return ResponseEntity.ok(new BoardDTO(chessGame));
+        return new ResponseEntity<>(
+                new BoardDTO(chessGame),
+                HttpStatus.OK
+        );
     }
 
     @DeleteMapping("/chess/{id}")

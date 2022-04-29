@@ -4,12 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import chess.dao.MemberDao;
 import chess.domain.ChessGame;
-import chess.domain.Member;
 import chess.domain.piece.pawn.WhitePawn;
 import chess.domain.square.Square;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +16,11 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
-@Sql("classpath:init.sql")
+@Sql("classpath:gameServiceInit.sql")
 class GameServiceTest {
 
     @Autowired
-    private MemberDao memberDao;
-
-    @Autowired
     private GameService gameService;
-
-
-    @BeforeEach
-    void setup() {
-        final Member one = new Member(1L, "one");
-        final Member two = new Member(2L, "two");
-
-        memberDao.save(one);
-        memberDao.save(two);
-    }
 
     @Test
     @DisplayName("게임이 정상적으로 생성되는지 확인한다.")

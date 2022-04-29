@@ -44,15 +44,15 @@ body {
 }
 
 /* The Close Button */
-.close {
+.delete-modal-close {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+.delete-modal-close:hover,
+.delete-modal-close:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;

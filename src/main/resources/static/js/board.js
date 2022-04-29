@@ -6,7 +6,7 @@ function setBoard() {
         url: `/rooms/${roomId}/board`,
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
-        type: "get",
+        type: "GET",
         success: function (data) {
             const pieces = data.pieces;
             const team = data.team;
@@ -66,7 +66,7 @@ function reset() {
 function end() {
     $.ajax({
         url: "/rooms/" + roomId,
-        type: "PATCH",
+        type: "PUT",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {

@@ -24,7 +24,7 @@ function movePiece(object, position) {
   }
   $.ajax({
     url: "/board/"+roomId+"",
-    type: "PATCH",
+    type: "PUT",
     accept: 'application/json; charset=utf-8',
     contentType: 'application/json; charset=utf-8',
     data: JSON.stringify(object),

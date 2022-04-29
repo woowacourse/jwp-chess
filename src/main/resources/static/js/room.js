@@ -79,39 +79,39 @@ function createRoom() {
 
 
 /// Modal
-var modal = document.getElementById("modalDelete");
-var btn = document.getElementById("myBtnDelete");
-var span = document.getElementsByClassName("close")[0];
+var deleteModal = document.getElementById("modalDelete");
+var delteBtn = document.getElementById("myBtnDelete");
+var deleteSpan = document.getElementsByClassName("delete-modal-close")[0];
 
-btn.onclick = function() {
-  modal.style.display = "block";
+delteBtn.onclick = function() {
+  deleteModal.style.display = "block";
 }
 
-span.onclick = function() {
-  modal.style.display = "none";
+deleteSpan.onclick = function() {
+  deleteModal.style.display = "none";
 }
 
 window.onclick = function(event) {
-  if (event.target === modal) {
-    modal.style.display = "none";
+  if (event.target === deleteModal) {
+    deleteModal.style.display = "none";
   }
 }
 
-var modal2 = document.getElementById("modalCreate");
-var btn2 = document.getElementById("myBtnCreate");
-var span2 = document.getElementsByClassName("close2")[0];
+var createModal = document.getElementById("modalCreate");
+var createBtn = document.getElementById("myBtnCreate");
+var createSpan = document.getElementsByClassName("close2")[0];
 
-btn2.onclick = function() {
-  modal2.style.display = "block";
+createBtn.onclick = function() {
+  createModal.style.display = "block";
 }
 
-span2.onclick = function() {
-  modal2.style.display = "none";
+createSpan.onclick = function() {
+  createModal.style.display = "none";
 }
 
 window.onclick = function(event) {
-  if (event.target === modal2) {
-    modal2.style.display = "none";
+  if (event.target === createModal) {
+    createModal.style.display = "none";
   }
 }
 

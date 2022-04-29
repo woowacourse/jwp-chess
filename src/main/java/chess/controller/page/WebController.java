@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.page;
 
 import chess.dto.BoardDto;
 import chess.dto.GameDto;

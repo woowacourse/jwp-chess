@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.console;
 
 import chess.domain.command.CommandType;
 import chess.domain.command.GameCommand;
@@ -7,7 +7,7 @@ import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.view.InputView;
 import chess.view.OutputView;
 
-public class GameController {
+public class ConsoleController {
 
     public void run() {
         final ChessGame chessGame = new ChessGame(new NormalPiecesGenerator());

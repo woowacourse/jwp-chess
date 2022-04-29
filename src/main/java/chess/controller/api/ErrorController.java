@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.controller.api;
 
 import chess.dto.ErrorDto;
 import org.springframework.dao.EmptyResultDataAccessException;

@@ -18,6 +18,10 @@ public class Room {
         this.boardId = boardId;
     }
 
+    public boolean isSamePassword(String password) {
+        return this.password.equals(password);
+    }
+
     public int getId() {
         return id;
     }

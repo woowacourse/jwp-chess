@@ -42,7 +42,7 @@ public class RoomService {
 
     public GameDeleteResponseDto deleteRoom(int id, String password) {
         Room room = chessRoomRepository.getById(id);
-        if (room.getPassword().equals(password)) {
+        if (room.isSamePassword(password)) {
             chessRoomRepository.deleteById(id);
             return new GameDeleteResponseDto(true, "삭제되었습니다.");
         }

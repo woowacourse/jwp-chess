@@ -29,7 +29,7 @@ class RoomDaoImplTest {
     @BeforeEach
     void setUp() {
         roomDao = new RoomDaoImpl(jdbcTemplate);
-        roomDao.saveNewRoom("first", "1234");
+        roomDao.saveNewRoom("first", "1234", "ready", "WHITE");
     }
 
     @ParameterizedTest
@@ -104,8 +104,8 @@ class RoomDaoImplTest {
     @DisplayName("모든 방 정보를 반환한다.")
     void findAllRooms() {
         //given
-        roomDao.saveNewRoom("second", "1234");
-        roomDao.saveNewRoom("third", "1234");
+        roomDao.saveNewRoom("second", "1234", "ready", "WHITE");
+        roomDao.saveNewRoom("third", "1234", "ready", "WHITE");
         //when
         final List<RoomEntity> rooms = roomDao.findAllRooms();
         //then

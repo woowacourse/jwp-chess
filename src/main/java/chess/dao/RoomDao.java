@@ -5,7 +5,8 @@ import java.util.List;
 
 public interface RoomDao {
 
-    void saveNewRoom(final String roomName, final String password);
+    void saveNewRoom(final String roomName, final String password,
+                     final String gameState, final String turn);
 
     boolean hasDuplicatedName(final String roomName);
 

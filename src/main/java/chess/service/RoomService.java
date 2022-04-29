@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoomService {
 
+    private static final String DEFAULT_GAME_STATE = "ready";
+    private static final String FIRST_TURN = "WHITE";
     private static final String PLAYING_STATE_SYMBOL = "playing";
 
     private final RoomDao roomDao;
@@ -22,7 +24,7 @@ public class RoomService {
         if (roomDao.hasDuplicatedName(roomName)) {
             throw new IllegalArgumentException("이미 동일한 이름의 체스방이 존재합니다.");
         }
-        roomDao.saveNewRoom(roomName, passWord);
+        roomDao.saveNewRoom(roomName, passWord, DEFAULT_GAME_STATE, FIRST_TURN);
     }
 
     public void deleteRoom(final int roomId, final String password) {

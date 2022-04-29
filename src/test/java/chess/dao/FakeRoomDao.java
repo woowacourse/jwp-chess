@@ -13,8 +13,8 @@ public class FakeRoomDao implements RoomDao {
     private int roomIndex = 1;
 
     @Override
-    public void saveNewRoom(final String roomName, final String password) {
-        final Room room = new Room(roomName, password, "ready", "WHITE");
+    public void saveNewRoom(final String roomName, final String password, final String gameState, final String turn) {
+        final Room room = new Room(roomName, password, gameState, turn);
         rooms.put(roomIndex++, room);
     }
 

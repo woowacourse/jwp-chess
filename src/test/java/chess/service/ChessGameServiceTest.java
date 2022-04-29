@@ -26,7 +26,7 @@ class ChessGameServiceTest {
 
     @BeforeEach
     void setUp() {
-        roomDao.saveNewRoom("first", "1234");
+        roomDao.saveNewRoom("first", "1234", "ready", "WHITE");
     }
 
     @Test

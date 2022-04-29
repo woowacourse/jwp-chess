@@ -87,10 +87,17 @@ public class ChessService {
 
     @Transactional
     public Long createRoom(String title, String password) {
+        validateDuplicate(title);
         Long id = roomDao.save(title, password);
         pieceDao.save(Pieces.createInit().getPieces(), id);
 
         return id;
+    }
+
+    private void validateDuplicate(String title) {
+        if(roomDao.existByTitle(title)){
+            throw new IllegalArgumentException("이미 존재하는 방 제목입니다.");
+        }
     }
 
     public List<Room> getRoomList() {

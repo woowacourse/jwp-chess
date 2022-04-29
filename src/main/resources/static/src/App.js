@@ -187,7 +187,7 @@ function deleteCheckPassword(id, isFinish, password) {
     }
     deleteRoom(id, password)
     window.alert("성공적으로 삭제가 되었습니다!");
-    window.location.href = "/";
+    goHome();
 }
 
 function deleteRoom(id, password) {
@@ -204,6 +204,29 @@ function deleteRoom(id, password) {
     }).then(res => res.json())
 }
 
-function goHome(){
+function goHome() {
     window.location.href = "/";
 }
+
+// async function createRoom() {
+//     let title = document.getElementById("title").value;
+//     let password = document.getElementById("password").value;
+//
+//     const request = {
+//         title: title,
+//         password: password
+//     };
+//
+//     fetch('/new', {
+//         method: 'post',
+//         headers: {
+//             "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(request)
+//     }).then(response => response.json())
+//         .then((response) => {
+//             if (!response.ok) {
+//                 window.alert("제목이 중복되었습니다.")
+//             }
+//         });
+// }

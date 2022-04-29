@@ -1,6 +1,5 @@
 package chess.web.dao;
 
-import chess.domain.board.Board;
 import chess.domain.board.Turn;
 import chess.domain.entity.Room;
 
@@ -20,4 +19,6 @@ public interface RoomDao {
     void deleteById(Long id);
 
     List<Room> findAll();
+
+    boolean existByTitle(String title);
 }

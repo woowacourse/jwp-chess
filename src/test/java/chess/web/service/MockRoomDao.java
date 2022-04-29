@@ -45,4 +45,9 @@ public class MockRoomDao implements RoomDao {
     public List<Room> findAll() {
         return null;
     }
+
+    @Override
+    public boolean existByTitle(String title) {
+        return false;
+    }
 }

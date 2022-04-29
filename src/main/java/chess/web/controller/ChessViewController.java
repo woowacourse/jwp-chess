@@ -6,11 +6,10 @@ import chess.web.controller.dto.BoardDto;
 import chess.web.controller.dto.RoomRequestDto;
 import chess.web.controller.dto.RoomResponseDto;
 import chess.web.service.ChessService;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;

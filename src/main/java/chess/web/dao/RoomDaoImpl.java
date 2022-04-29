@@ -83,4 +83,11 @@ public class RoomDaoImpl implements RoomDao {
                 )
         );
     }
+
+    @Override
+    public boolean existByTitle(String title) {
+        final String query = "SELECT COUNT(*) FROM room WHERE title = ?";
+        Integer count = jdbcTemplate.queryForObject(query, Integer.class, title);
+        return count != 0;
+    }
 }

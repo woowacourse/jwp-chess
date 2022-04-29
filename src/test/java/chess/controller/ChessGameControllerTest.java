@@ -41,7 +41,7 @@ class ChessGameControllerTest {
     @Test
     @DisplayName("체스 게임 방 접속")
     void chessGame() throws Exception {
-        Mockito.when(chessGameService.getOrSaveChessGame(1))
+        Mockito.when(chessGameService.findChessGame(1))
             .thenReturn(new ChessGameDto(1, "hoho", GameStatus.RUNNING, new Score(), new Score(), Color.WHITE));
         Mockito.when(chessGameService.findPieces(1)).thenReturn(Collections.emptyList());
 

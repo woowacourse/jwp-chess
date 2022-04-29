@@ -41,12 +41,8 @@ public class ChessGameService {
         this.chessGameDao = chessGameDao;
     }
 
-    public ChessGameDto getOrSaveChessGame(int chessGameId) {
-        ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
-        if (chessGameDto.getStatus().isReady()) {
-            return prepareNewChessGame(chessGameDto);
-        }
-        return chessGameDto;
+    public ChessGameDto findChessGame(int chessGameId) {
+        return chessGameDao.findById(chessGameId);
     }
 
     public List<PieceDto> findPieces(int chessGameId) {
@@ -66,15 +62,11 @@ public class ChessGameService {
         return updateChessBoard(chessBoard, movement, chessGameDto);
     }
 
-    public int create(ChessGameRequest chessGameRequest) {
+    public void create(ChessGameRequest chessGameRequest) {
         Room room = new Room(chessGameRequest.getName(), chessGameRequest.getPassword());
-        return chessGameDao.saveChessGame(room, GameStatus.READY, Color.WHITE, new Score(), new Score());
-    }
-
-    public ChessGameDto prepareChessGame(ChessGameDto chessGameDto) {
-        ChessGameDto newChessGameDto = createNewChessGameDto(chessGameDto);
-        chessGameDao.updateChessGame(newChessGameDto);
-        return newChessGameDto;
+        int chessGameId = chessGameDao.saveChessGame(room, GameStatus.READY, Color.WHITE, new Score(), new Score());
+        pieceDao.deleteAll(chessGameId);
+        pieceDao.savePieces(chessGameId, createPieces());
     }
 
     public List<ChessGameDto> findAll() {
@@ -143,16 +135,6 @@ public class ChessGameService {
 
         return new ChessGameDto(chessGameDto.getId(), chessGameDto.getName(), status, chessBoard.getScore(Color.BLACK),
                 chessBoard.getScore(Color.WHITE), chessBoard.getCurrentColor(), winner);
-    }
-
-    private ChessGameDto prepareNewChessGame(ChessGameDto chessGameDto) {
-        preparePieces(chessGameDto);
-        return prepareChessGame(chessGameDto);
-    }
-
-    private void preparePieces(ChessGameDto chessGameDto) {
-        pieceDao.deleteAll(chessGameDto.getId());
-        pieceDao.savePieces(chessGameDto.getId(), createPieces());
     }
 
     private List<PieceDto> createPieces() {

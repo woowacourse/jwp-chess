@@ -22,4 +22,8 @@ public class Room {
     public String getPassword() {
         return password;
     }
+
+    public boolean isNotSamePassword(String password) {
+        return !this.password.equals(password);
+    }
 }

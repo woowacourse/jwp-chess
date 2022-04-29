@@ -91,6 +91,14 @@ body {
     visibility: hidden;
 }
 
+.home-button {
+    color: palevioletred;
+    border-radius: 5px;
+    margin-left: 4px;
+    font-size: 40px;
+
+}
+
 .info {
     min-width: 370px;
     height: 50px;

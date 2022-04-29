@@ -22,6 +22,7 @@ let boardInfo = "";
 let isChoiced = false;
 let currentTurn = "";
 let gameId = "";
+
 function showStatusButton(id) {
     gameId = id;
     status.style.visibility = 'visible';
@@ -165,12 +166,44 @@ function move() {
     }
 }
 
-function checkPassword(id, password){
+function enterCheckPassword(id, password) {
     var pass = prompt('패스워드를 입력하세요');
-    if(password == pass){
+    if (password === pass) {
         window.location.href = "/room/" + id
         return;
     }
     window.alert("비밀번호가 틀렸습니다!")
-    return;
+}
+
+function deleteCheckPassword(id, isFinish, password) {
+    var pass = prompt('패스워드를 입력하세요');
+    if (password !== pass) {
+        window.alert("비밀번호가 틀렸습니다! 삭제에 실패했습니다.")
+        return;
+    }
+    if (isFinish === "false") {
+        window.alert("게임이 끝나지 않았습니다! 삭제에 실패했습니다.");
+        return;
+    }
+    deleteRoom(id, password)
+    window.alert("성공적으로 삭제가 되었습니다!");
+    window.location.href = "/";
+}
+
+function deleteRoom(id, password) {
+    const request = {
+        password: password
+    }
+
+    fetch('/api/' + id, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+    }).then(res => res.json())
+}
+
+function goHome(){
+    window.location.href = "/";
 }

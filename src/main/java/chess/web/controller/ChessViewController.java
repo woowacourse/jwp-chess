@@ -27,8 +27,11 @@ public class ChessViewController {
     @GetMapping("/")
     public String getRoomList(Model model) {
         List<Room> rooms = chessService.getRoomList();
-        List<RoomResponseDto> titles = rooms.stream().
-                map(RoomResponseDto::new)
+        List<RoomResponseDto> titles = rooms.stream()
+                .map( room -> {
+                    Board board = chessService.loadGame(room.getId());
+                    return new RoomResponseDto(room, board.isDeadKing());
+                })
                 .collect(Collectors.toList());
 
         model.addAttribute("list", titles);
@@ -41,8 +44,8 @@ public class ChessViewController {
     }
 
     @PostMapping(path = "/new")
-    public String createGame(RoomRequestDto roomRequestDto) {
-        Long id = chessService.createRoom(roomRequestDto);
+    public String createGame(RoomRequestDto.TitleAndPassword request) {
+        Long id = chessService.createRoom(request.getTitle(), request.getPassword());
         return "redirect:/room/" + id;
     }
 

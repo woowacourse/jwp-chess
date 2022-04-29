@@ -9,7 +9,6 @@ import chess.domain.board.piece.Pieces;
 import chess.domain.board.piece.position.Position;
 import chess.domain.entity.Room;
 import chess.web.controller.dto.MoveDto;
-import chess.web.controller.dto.RoomRequestDto;
 import chess.web.controller.dto.ScoreDto;
 import chess.web.dao.PieceDao;
 import chess.web.dao.RoomDao;
@@ -87,8 +86,8 @@ public class ChessService {
     }
 
     @Transactional
-    public Long createRoom(RoomRequestDto roomRequestDto) {
-        Long id = roomDao.save(roomRequestDto.getTitle(), roomRequestDto.getPassword());
+    public Long createRoom(String title, String password) {
+        Long id = roomDao.save(title, password);
         pieceDao.save(Pieces.createInit().getPieces(), id);
 
         return id;
@@ -96,5 +95,20 @@ public class ChessService {
 
     public List<Room> getRoomList() {
         return roomDao.findAll();
+    }
+
+    @Transactional
+    public void delete(String password, Long id) {
+        Pieces pieces = Pieces.from(pieceDao.findAllByBoardId(id));
+        Room room = roomDao.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
+
+        if (pieces.countOfKing() == 2) {
+            throw new RuntimeException("게임이 끝나지 않아서 삭제할수 없습니다.");
+        }
+        if (room.isNotSamePassword(password)) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+        roomDao.deleteById(id);
     }
 }

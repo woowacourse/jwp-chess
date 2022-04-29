@@ -72,7 +72,7 @@ class ChessServiceTest {
     @DisplayName("체스판이 만들어진다.")
     public void createRoom() {
 
-        Long id = chessService.createRoom(new RoomRequestDto("방 제목","비밀번호"));
+        Long id = chessService.createRoom("방 제목","비밀번호");
         assertThat(id).isEqualTo(1L);
     }
 }

@@ -3,6 +3,7 @@ package chess.web.controller;
 import chess.domain.board.Board;
 import chess.web.controller.dto.BoardDto;
 import chess.web.controller.dto.MoveDto;
+import chess.web.controller.dto.RoomRequestDto;
 import chess.web.controller.dto.ScoreDto;
 import chess.web.service.ChessService;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +42,11 @@ public class ChessApiController {
     public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto, @PathVariable Long id) {
         Board board = chessService.move(moveDto, id);
         return ResponseEntity.ok().body(BoardDto.from(id, board));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@RequestBody RoomRequestDto.Password request, @PathVariable Long id){
+        chessService.delete(request.getPassword(), id);
+        return ResponseEntity.ok().build();
     }
 }

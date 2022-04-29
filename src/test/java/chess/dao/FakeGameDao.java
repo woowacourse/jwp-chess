@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.sql.DataSource;
+import org.mockito.Mockito;
 import org.springframework.dao.DuplicateKeyException;
 
-public class FakeGameDao implements GameDao {
+public class FakeGameDao extends GameDao {
 
     private final Map<Long, String> names;
     private final Map<Long, String> passwords;
@@ -17,6 +19,7 @@ public class FakeGameDao implements GameDao {
     private final Map<Long, GameState> states;
 
     public FakeGameDao() {
+        super(Mockito.mock(DataSource.class));
         this.names = new HashMap<>();
         this.passwords = new HashMap<>();
         this.salts = new HashMap<>();

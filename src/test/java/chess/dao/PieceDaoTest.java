@@ -35,8 +35,8 @@ public class PieceDaoTest {
 
     @BeforeEach
     void setUp() {
-        gameDao = new GameDaoImpl(dataSource);
-        pieceDao = new PieceDaoImpl(dataSource);
+        gameDao = new GameDao(dataSource);
+        pieceDao = new PieceDao(dataSource);
 
         String salt = PasswordEncryptor.generateSalt();
         String password = PasswordEncryptor.encrypt("password", salt);

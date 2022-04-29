@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.sql.DataSource;
+import org.mockito.Mockito;
 
-public class FakePieceDao implements PieceDao {
+public class FakePieceDao extends PieceDao {
 
     private final Map<Long, Map<Position, Piece>> pieces;
 
     public FakePieceDao() {
+        super(Mockito.mock(DataSource.class));
         this.pieces = new HashMap<>();
     }
 

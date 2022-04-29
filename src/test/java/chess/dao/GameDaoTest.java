@@ -29,7 +29,7 @@ public class GameDaoTest {
 
     @BeforeEach
     void setUp() {
-        gameDao = new GameDaoImpl(dataSource);
+        gameDao = new GameDao(dataSource);
     }
 
     @DisplayName("게임 저장 테스트")

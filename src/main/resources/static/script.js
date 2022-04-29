@@ -56,8 +56,7 @@ async function create() {
             }
             isCreated = true;
         })
-        .then(() => document.getElementById("roomPassword").value = "")
-        .then(() => document.getElementById("roomName").value = "")
+        .then(() => clearLoginForm())
         .then(() => roomName = "")
 
     if (isCreated !== true) {
@@ -66,6 +65,10 @@ async function create() {
     showOnlyGameElement()
 }
 
+function clearLoginForm() {
+    document.getElementById("roomPassword").value = "";
+    document.getElementById("roomName").value = "";
+}
 function showOnlyGameElement() {
     showElementBlock("whole-board");
     hideElement("create-form");
@@ -102,7 +105,7 @@ async function newGame() {
     hideElement("create-form");
 }
 
-async function find() {
+async function findRoom() {
     let pieces;
     let response = await fetch("/rooms/" + id);
 
@@ -260,15 +263,14 @@ async function tempAlert(message, timeout)
     const height = 30;
     const x = window.innerWidth / 2 - (width / 2);
     const y = window.innerHeight / 2 - (height / 2);
-    const alert = window.open('','',
-        'width=' + width + ',height=' + height +
-        ',left='+ x + ',top=' + y);
+    const alert = window.open('','', `width=${width} height=${height} left=${x} top=${y}`);
     alert.document.write(message)
     alert.focus()
     setTimeout(() => alert.close(), timeout)
 }
 
 async function rooms() {
+    clearLoginForm();
     showElementBlock("rooms");
     showElementBlock("create-form");
     showElementInline("showCreateForm");
@@ -302,7 +304,7 @@ async function enterRoom(self) {
     id = self.id.split("/")[1];
 
     hideElement("rooms");
-    await find();
+    await findRoom();
     showOnlyGameElement()
 }
 
@@ -319,6 +321,9 @@ async function deleteRoom(self) {
     if (!response.ok) {
         const errorMessage = await response.json();
         await tempAlert(errorMessage.message, 1000);
+        clearLoginForm();
     }
+    await tempAlert("삭제되었습니다!!", 1000);
+    await rooms();
 }
 

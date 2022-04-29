@@ -37,6 +37,13 @@ public class ApiController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/room/{roomId}/status")
+    public ResponseEntity<StatusRes> selectStatus(@PathVariable Long roomId) {
+        final List<Double> status = chessServiceV2.findStatusById(roomId);
+        System.out.println(StatusRes.createStatsRes(status).toString());
+        return ResponseEntity.ok().body(StatusRes.createStatsRes(status));
+    }
+
     @PostMapping("/room/{roomId}/board")
     public ResponseEntity<Void> insertBoard(@PathVariable Long roomId) {
         chessServiceV2.insertBoard(roomId);

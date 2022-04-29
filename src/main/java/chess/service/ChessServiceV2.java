@@ -5,6 +5,7 @@ import chess.dao.SquareDao;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.command.GameCommand;
 import chess.domain.game.ChessGame;
+import chess.domain.piece.Color;
 import chess.domain.piece.EmptyPiece;
 import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
@@ -60,12 +61,18 @@ public class ChessServiceV2 {
 
         squareDao.insertSquareAll(roomId, board);
         roomDao.updateStateById(roomId, "WhiteRunning");
-
         return roomId;
     }
 
     public List<Square> findSquareAllById(Long roomId) {
         return squareDao.findSquareAllById(roomId);
+    }
+
+    public List<Double> findStatusById(Long roomId) {
+        final ChessGame chessGame = findChessGame(roomId);
+        final Map<Color, Double> colorDoubleMap = chessGame.calculateScore();
+
+        return List.of(colorDoubleMap.get(Color.WHITE), colorDoubleMap.get(Color.BLACK));
     }
 
     @Transactional

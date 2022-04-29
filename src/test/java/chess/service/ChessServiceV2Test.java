@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.dao.RoomFakeDao;
 import chess.dao.SquareFakeDao;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -56,6 +57,17 @@ class ChessServiceV2Test {
         chessServiceV2.insertBoard(roomId);
 
         assertDoesNotThrow(() -> chessServiceV2.updateSquares(roomId, "a2", "a3"));
+    }
+
+    @Test
+    @DisplayName("일련번호를 통해 방의 점수를 조회할 수 있다.")
+    void findStatusById() {
+        final Long roomId = chessServiceV2.insertRoom("title", "1111");
+        chessServiceV2.insertBoard(roomId);
+
+        final List<Double> status = chessServiceV2.findStatusById(roomId);
+
+        assertThat(status).hasSize(2);
     }
 
     @Test

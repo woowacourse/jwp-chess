@@ -15,7 +15,7 @@ public class RankDto {
         this.rankLine = rankLine;
     }
 
-    public static RankDto toDto(List<Piece> pieces, int rankLine) {
+    public static RankDto of(List<Piece> pieces, int rankLine) {
         return new RankDto(toPieceSignature(pieces), rankLine);
     }
 

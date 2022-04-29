@@ -94,7 +94,7 @@ public class ChessController {
         final List<RankDto> ranks = new ArrayList<>();
         for (int i = 8; i > 0; i--) {
             final List<Piece> pieces = chessGame.getBoard().getPiecesByRank(Rank.from(i));
-            ranks.add(RankDto.toDto(pieces, i));
+            ranks.add(RankDto.of(pieces, i));
         }
         return ranks;
     }

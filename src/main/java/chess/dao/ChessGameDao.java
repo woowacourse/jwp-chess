@@ -39,7 +39,7 @@ public class ChessGameDao implements GameDao {
     @Override
     public Long save(ChessGame game) {
         final Long gameId = saveGame(game);
-        saveAll(gameId, game.getBoard());
+        savePieces(gameId, game.getBoard());
         return gameId;
     }
 
@@ -146,11 +146,8 @@ public class ChessGameDao implements GameDao {
         jdbcTemplate.update(sql, game.getTurn().name(), game.getId());
     }
 
-    private void saveAll(Long gameId, Board board) {
-        final List<Piece> pieces = board.getPieces();
-        for (final Piece piece : pieces) {
-            pieceDao.save(gameId, piece);
-        }
+    private void savePieces(Long gameId, Board board) {
+        pieceDao.saveAll(gameId, board.getPieces());
     }
 
     private Board loadBoard(Long gameId) {

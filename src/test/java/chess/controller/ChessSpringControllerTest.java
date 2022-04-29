@@ -48,7 +48,7 @@ public class ChessSpringControllerTest {
     @Test
     void get_chess() throws Exception {
         final ChessBoardDto chessBoardDto = ChessBoardDto.from(new Board().getPiecesByPosition());
-        given(chessGameService.getBoard(1)).willReturn(BoardInitializer.createBoard());
+        given(chessGameService.getPieces(1)).willReturn(BoardInitializer.createBoard());
 
         mockMvc.perform(get("/chess?id=1"))
                 .andExpect(view().name("index"))
@@ -59,7 +59,7 @@ public class ChessSpringControllerTest {
     @Test
     void post_move() throws Exception {
         final String requestString = "a2 a4";
-        given(chessGameService.getBoard(1)).willReturn(BoardInitializer.createBoard());
+        given(chessGameService.getPieces(1)).willReturn(BoardInitializer.createBoard());
         given(chessGameService.getTurn(1)).willReturn(Color.WHITE);
 
         mockMvc.perform(post("/move?id=1")
@@ -71,7 +71,7 @@ public class ChessSpringControllerTest {
     @Test
     void get_status() throws Exception {
         final StatusDto statusDto = StatusDto.of(38, 38);
-        given(chessGameService.getBoard(1)).willReturn(BoardInitializer.createBoard());
+        given(chessGameService.getPieces(1)).willReturn(BoardInitializer.createBoard());
         given(chessGameService.getTurn(1)).willReturn(Color.WHITE);
 
         mockMvc.perform(get("/chess-status?id=1"))
@@ -89,7 +89,7 @@ public class ChessSpringControllerTest {
     @DisplayName("result GET 요청 테스트")
     @Test
     void get_result() throws Exception {
-        given(chessGameService.getBoard(1)).willReturn(BoardInitializer.createBoard());
+        given(chessGameService.getPieces(1)).willReturn(BoardInitializer.createBoard());
         given(chessGameService.getTurn(1)).willReturn(Color.WHITE);
 
         mockMvc.perform(get("/chess-result?id=1"))

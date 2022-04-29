@@ -3,6 +3,7 @@ package chess.service;
 import chess.dao.BoardDao;
 import chess.dao.PieceDao;
 import chess.domain.Color;
+import chess.domain.board.Board;
 import chess.domain.board.BoardInitializer;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
@@ -46,7 +47,11 @@ public class ChessGameService {
         return boardDao.isGameEnd(id);
     }
 
-    public Map<Position, Piece> getBoard(int boardId) {
+    public Board getBoard(int boardId) {
+        return new Board(getPieces(boardId), getTurn(boardId));
+    }
+
+    public Map<Position, Piece> getPieces(int boardId) {
         return pieceDao.load(boardId);
     }
 

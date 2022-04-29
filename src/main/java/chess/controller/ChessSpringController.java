@@ -52,7 +52,7 @@ public class ChessSpringController {
         if (chessGameService.isGameEnd(id)) {
             throw new IllegalArgumentException("이미 완료된 게임입니다");
         }
-        modelAndView.addObject("boardDto", ChessBoardDto.from(chessGameService.getBoard(id)));
+        modelAndView.addObject("boardDto", ChessBoardDto.from(chessGameService.getPieces(id)));
         modelAndView.addObject("boardId", id);
         modelAndView.setViewName("index");
         return modelAndView;
@@ -62,7 +62,7 @@ public class ChessSpringController {
     public @ResponseBody
     ResponseEntity<String> move(@RequestBody String request, @RequestParam int id) {
         List<String> command = Arrays.asList(request.split(" "));
-        Board board = getBoard(id);
+        Board board = chessGameService.getBoard(id);
         board.move(Position.from(command.get(0)), Position.from(command.get(1)));
         chessGameService.updatePosition(Position.from(command.get(0)), Position.from(command.get(1)),
                 board.getTurn(), id);
@@ -74,14 +74,10 @@ public class ChessSpringController {
         return ResponseEntity.ok().build();
     }
 
-    private Board getBoard(int id) {
-        return new Board(chessGameService.getBoard(id), chessGameService.getTurn(id));
-    }
-
     @GetMapping("/board/status")
     public ModelAndView status(@RequestParam int id) {
         ModelAndView modelAndView = new ModelAndView();
-        Board board = getBoard(id);
+        Board board = chessGameService.getBoard(id);
         modelAndView.addObject("status", StatusDto.of(board.scoreOfWhite(), board.scoreOfBlack()));
         modelAndView.setViewName("status");
         return modelAndView;
@@ -97,7 +93,7 @@ public class ChessSpringController {
     @GetMapping("/board/result")
     public ModelAndView result(@RequestParam int id) {
         ModelAndView modelAndView = new ModelAndView();
-        Board board = getBoard(id);
+        Board board = chessGameService.getBoard(id);
         modelAndView.addObject("result", ResultDto.of(board.scoreOfWhite(), board.scoreOfBlack(), board.findWinner()));
         modelAndView.setViewName("result");
         return modelAndView;

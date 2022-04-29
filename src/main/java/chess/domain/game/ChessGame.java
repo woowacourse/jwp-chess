@@ -29,10 +29,6 @@ public class ChessGame {
         return new ChessGame(new BlackTurn(board));
     }
 
-    public void startGame() {
-        this.state = state.start();
-    }
-
     public ScoreResult getStatus() {
         return state.status();
     }
@@ -53,10 +49,15 @@ public class ChessGame {
         return state.getWinColor();
     }
 
+    public boolean isEnd() {
+        Board board = getBoard();
+        return !(board.hasKing(PieceColor.WHITE) && board.hasKing(PieceColor.BLACK));
+    }
+
     @Override
     public String toString() {
         return "ChessGame{" +
-                "state=" + state +
-                '}';
+            "state=" + state +
+            '}';
     }
 }

@@ -98,6 +98,11 @@ public class ChessService {
 
     public void deleteRoom(int gameId, String inputPassword) {
         gameDao.checkCanDelete(gameId, inputPassword);
+        ChessGame chessGame = generateChessGame(gameId);
+        if (!chessGame.isEnd()) {
+            throw new IllegalArgumentException("게임이 아직 안끝났습니다!");
+        }
+
         boardDao.deletePieces(gameId);
         gameDao.deleteGame(gameId);
     }

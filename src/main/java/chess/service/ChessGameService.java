@@ -7,14 +7,11 @@ import chess.domain.game.ChessGame;
 import chess.domain.game.GameResult;
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.dto.GameResultDto;
 import chess.dto.GameRoomDto;
 import chess.dto.MoveCommandDto;
-import chess.dto.PieceDto;
 import chess.dto.PiecesDto;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -43,32 +40,20 @@ public class ChessGameService {
         return gameId;
     }
 
-    public ChessGame getGameStatus(long gameId) {
+    private ChessGame findChessGame(long gameId) {
         boolean endFlag = gameDao.findEndFlagById(gameId);
         Color turn = gameDao.findTurnById(gameId);
         Pieces chessmen = pieceDao.findAllByGameId(gameId);
         return new ChessGame(endFlag, chessmen, turn);
     }
 
-    public PiecesDto getCurrentGame(long gameId) {
-        return new PiecesDto(toDto(getGameStatus(gameId).getChessmen()));
-    }
-
-    private List<PieceDto> toDto(Pieces chessmen) {
-        List<PieceDto> pieces = new ArrayList<>();
-        for (Piece piece : chessmen.getPieces()) {
-            pieces.add(new PieceDto(piece.getPosition().getPosition(),
-                piece.getColor().getName(),
-                piece.getName()));
-        }
-        return pieces;
+    public PiecesDto findCurrentPieces(long gameId) {
+        return PiecesDto.toDto(findChessGame(gameId).getChessmen());
     }
 
     public GameResultDto calculateGameResult(long gameId) {
-        GameResult gameResult = GameResult.calculate(getGameStatus(gameId).getChessmen());
-        return new GameResultDto(gameResult.getWinner().getName(),
-            gameResult.getWhiteScore(),
-            gameResult.getBlackScore());
+        GameResult gameResult = GameResult.calculate(findChessGame(gameId).getChessmen());
+        return GameResultDto.toDto(gameResult);
     }
 
     public void cleanGame(long gameId) {
@@ -79,15 +64,15 @@ public class ChessGameService {
     public void move(long gameId, MoveCommandDto moveCommandDto) {
         String from = moveCommandDto.getSource();
         String to = moveCommandDto.getTarget();
-        getGameStatus(gameId).moveChessmen(new MoveCommand(from, to));
+        findChessGame(gameId).moveChessmen(new MoveCommand(from, to));
         saveMove(gameId, moveCommandDto);
-        if (getGameStatus(gameId).isEnd()) {
+        if (findChessGame(gameId).isEnd()) {
             gameDao.updateEndFlagById(true, gameId);
         }
     }
 
     private void saveMove(long gameId, MoveCommandDto moveCommandDto) {
-        ChessGame chessGame = getGameStatus(gameId);
+        ChessGame chessGame = findChessGame(gameId);
         chessGame.moveChessmen(moveCommandDto.toEntity());
         boolean endFlag = chessGame.getEndFlag();
         Color turn = chessGame.getTurn();

@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
-import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Pieces;
@@ -61,21 +60,7 @@ public class ChessGameServiceTest {
 
         assertThat(actual).isEqualTo(1L);
     }
-
-    @DisplayName("Color와 turn, pieces의 정보를 가지고 ChessGame을 반환한다.")
-    @Test
-    public void getGameStatus() {
-        when(gameDao.findEndFlagById(2L)).thenReturn(false);
-        when(gameDao.findTurnById(2L)).thenReturn(Color.BLACK);
-        when(pieceDao.findAllByGameId(2L)).thenReturn(new Pieces(List.of(new Pawn(Color.BLACK, Position.of("a1")))));
-
-        ChessGame actual = chessGameService.getGameStatus(2L);
-
-        assertThat(actual.getEndFlag()).isFalse();
-        assertThat(actual.getTurn()).isEqualTo(Color.BLACK);
-        assertThat(actual.getChessmen().getPieces()).hasSize(1);
-    }
-
+    
     @DisplayName("PiecesDto를 반환한다.")
     @Test
     public void getCurrentGame() {
@@ -83,7 +68,7 @@ public class ChessGameServiceTest {
         when(gameDao.findTurnById(2L)).thenReturn(Color.BLACK);
         when(pieceDao.findAllByGameId(2L)).thenReturn(new Pieces(List.of(new Pawn(Color.BLACK, Position.of("a1")))));
 
-        PiecesDto actual = chessGameService.getCurrentGame(2L);
+        PiecesDto actual = chessGameService.findCurrentPieces(2L);
 
         assertThat(actual.getPieces()).hasSize(1);
     }

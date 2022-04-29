@@ -1,6 +1,5 @@
 package chess.domain.game;
 
-import static chess.domain.piece.Color.BLACK;
 import static chess.domain.piece.Color.WHITE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
@@ -148,7 +147,7 @@ public class ChessGameTest {
     void calculateGameResult() {
         double actual = GameResult.calculate(chessGame.getChessmen())
             .getBlackScore();
-        double expected = new GameResultDto(BLACK.getName(), 38.0, 38.0)
+        double expected = GameResultDto.toDto(new GameResult(Color.BLACK, 38, 38))
             .getBlackScore();
 
         assertThat(actual).isEqualTo(expected);

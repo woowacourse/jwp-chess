@@ -74,21 +74,26 @@ public class Position {
     }
 
     private List<Position> findBetweenDiagonalPosition(final Position destination) {
-        final List<Position> positions = new ArrayList<>();
+        int fileSubtract = file.subtract(destination.getFile());
+        int rankSubtract = rank.subtract(destination.getRank());
+        DiagonalDirection direction = DiagonalDirection.of(fileSubtract, rankSubtract);
 
-        final int startRank = Math.min(rank.getValue(), destination.rank.getValue());
-        final int startFile = Math.min(file.getValue(), destination.file.getValue());
-        final int end = Math.max(rank.getValue(), destination.rank.getValue());
-
-        addBetweenDiagonalPosition(positions, startRank, startFile, end);
-        return positions;
+        return addBetweenDiagonalPosition(direction, destination);
     }
 
-    private void addBetweenDiagonalPosition(final List<Position> positions,
-            final int startRank, final int startFile, final int end) {
-        for (int rank = startRank + 1, file = startFile + 1; rank < end; rank++, file++) {
+    private List<Position> addBetweenDiagonalPosition(final DiagonalDirection direction, final Position destination) {
+        final List<Position> positions = new ArrayList<>();
+        final int startRank = rank.getValue();
+        final int startFile = file.getValue();
+        final int dx = direction.getDx();
+        final int dy = direction.getDy();
+
+        for (int rank = startRank + dy, file = startFile + dx;
+             rank < destination.getRank().getValue();
+             rank+= dy, file+= dx) {
             positions.add(new Position(rank, (char) file));
         }
+        return positions;
     }
 
     @Override

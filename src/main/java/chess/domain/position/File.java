@@ -33,4 +33,8 @@ public enum File {
     public char getValue() {
         return value;
     }
+
+    public int subtract(File file) {
+        return file.getValue() - this.value;
+    }
 }

@@ -48,94 +48,32 @@ class ChessServiceTest {
     void findGames_메서드는_모든_게임의_id와_이름_정보를_반환한다() {
         List<GameOverviewDto> actual = service.findGames();
 
-        List<GameOverviewDto> expected = List.of(
-                new GameOverviewDto(1, "진행중인_게임"),
-                new GameOverviewDto(2, "이미_존재하는_게임명"),
-                new GameOverviewDto(3, "종료된_게임"));
+        List<GameOverviewDto> expected = findAllTestData();
 
         assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    void countGames_메서드는_전체_게임_수와_실행_중인_게임_수를_담은_데이터를_반환한다() {
-        GameCountDto actual = service.countGames();
-        GameCountDto expected = new GameCountDto(3, 2);
+    @DisplayName("findGame 메서드로 게임의 정보 조회 가능")
+    @Nested
+    class FindGameTest {
 
-        assertThat(actual).isEqualTo(expected);
-    }
+        @Test
+        void 방명과_현재_게임의_상태_및_체스말_정보를_반환한다() {
+            FullGameDto actual = service.findGame(1);
 
-    @Test
-    void initGame_메서드는_새로운_게임을_DB에_저장하고_생성된_게임ID가_담긴_데이터를_반환한다() {
-        EncryptedAuthCredentials authCredentials = new EncryptedAuthCredentials("유효한_게임명", "비밀번호");
-        int actual = service.initGame(authCredentials);
-        int expected = 4;
+            FullGameDto expected = new FullGameDto(
+                    new GameOverviewDto(1, "진행중인_게임"),
+                    currentGameSnapshotOfGameIdOne().toSnapshotDto());
 
-        assertThat(actual).isEqualTo(expected);
-    }
+            assertThat(actual).isEqualTo(expected);
+        }
 
-    @Test
-    void searchGame_메서드는_gameId에_해당되는_게임이_있다면_true가_담긴_데이터를_반환한다() {
-        SearchResultDto actual = service.searchGame(1);
-        SearchResultDto expected = new SearchResultDto(1, true);
-
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void searchGame_메서드는_gameId에_해당되는_게임이_없다면_false가_담긴_데이터를_반환한다() {
-        SearchResultDto actual = service.searchGame(99999);
-        SearchResultDto expected = new SearchResultDto(99999, false);
-
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void findGame_메서드는_방명과_현재_게임의_상태_및_체스말_정보를_반환한다() {
-        FullGameDto actual = service.findGame(1);
-
-        FullGameDto expected = new FullGameDto(
-                new GameOverviewDto(1, "진행중인_게임"),
-                currentGameSnapshotOfGameIdOne().toSnapshotDto());
-
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void findGame_메서드는_존재하지_않는_게임인_경우_예외를_발생시킨다() {
-        assertThatThrownBy(() -> service.findGame(999999))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 게임입니다.");
-    }
-
-    @Test
-    void playGame_메서드는_이동_명령에_따라_이동시킨다() {
-        service.playGame(1, new MoveEvent("a7 a5"));
-        FullGameDto actual = service.findGame(1);
-
-        GameSnapshotDto expectedGame = currentGameSnapshotOfGameIdOne()
-                .play(new MoveEvent("a7 a5"))
-                .toSnapshotDto();
-        FullGameDto expected = new FullGameDto(
-                new GameOverviewDto(1, "진행중인_게임"), expectedGame);
-
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void playGame_메서드는_이동_명령에_따라_이동시키며_게임이_종료된_경우_OVER로_상태를_변경한다() {
-        service.playGame(2, new MoveEvent("b5 e8"));
-
-        GameCountDto actual = service.countGames();
-        GameCountDto expected = new GameCountDto(3, 2 - 1);
-
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void playGame_메서드는_존재하지_않는_게임인_경우_예외를_발생시킨다() {
-        assertThatThrownBy(() -> service.findGame(999999))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 게임입니다.");
+        @Test
+        void 존재하지_않는_게임인_경우_예외를_발생시킨다() {
+            assertThatThrownBy(() -> service.findGame(999999))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("존재하지 않는 게임입니다.");
+        }
     }
 
     @DisplayName("findGameResult 메서드로 종료된 게임의 정보 조회 가능")
@@ -163,6 +101,82 @@ class ChessServiceTest {
         }
     }
 
+    @DisplayName("searchGame 메서드로 게임의 존재 여부 조회 가능")
+    @Nested
+    class SearchGameTest {
+
+        @Test
+        void gameId에_해당되는_게임이_있다면_true가_담긴_데이터를_반환한다() {
+            SearchResultDto actual = service.searchGame(1);
+            SearchResultDto expected = new SearchResultDto(1, true);
+
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        void gameId에_해당되는_게임이_없다면_false가_담긴_데이터를_반환한다() {
+            SearchResultDto actual = service.searchGame(99999);
+            SearchResultDto expected = new SearchResultDto(99999, false);
+
+            assertThat(actual).isEqualTo(expected);
+        }
+    }
+
+    @Test
+    void countGames_메서드는_전체_게임_수와_실행_중인_게임_수를_담은_데이터를_반환한다() {
+        GameCountDto actual = service.countGames();
+        GameCountDto expected = new GameCountDto(
+                GameDaoStub.TOTAL_GAME_COUNT, GameDaoStub.RUNNING_GAME_COUNT);
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void initGame_메서드는_새로운_게임을_DB에_저장하고_생성된_게임ID가_담긴_데이터를_반환한다() {
+        EncryptedAuthCredentials authCredentials = new EncryptedAuthCredentials("유효한_게임명", "비밀번호");
+        int actual = service.initGame(authCredentials);
+        int expected = 4;
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @DisplayName("playGame 메서드로 진행 중인 게임의 체스말 이동")
+    @Nested
+    class PlayGameTest {
+
+        @Test
+        void 이동_명령에_따라_체스말을_이동시킨다() {
+            service.playGame(1, new MoveEvent("a7 a5"));
+            FullGameDto actual = service.findGame(1);
+
+            GameSnapshotDto expectedGame = currentGameSnapshotOfGameIdOne()
+                    .play(new MoveEvent("a7 a5"))
+                    .toSnapshotDto();
+            FullGameDto expected = new FullGameDto(
+                    new GameOverviewDto(1, "진행중인_게임"), expectedGame);
+
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        void 이동_명령에_따라_체스말을_이동시키며_게임이_종료된_경우_OVER로_상태를_변경한다() {
+            service.playGame(2, new MoveEvent("b5 e8"));
+
+            GameCountDto actual = service.countGames();
+            GameCountDto expected = new GameCountDto(
+                    GameDaoStub.TOTAL_GAME_COUNT, GameDaoStub.RUNNING_GAME_COUNT - 1);
+
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        void playGame_메서드는_존재하지_않는_게임인_경우_예외를_발생시킨다() {
+            assertThatThrownBy(() -> service.findGame(999999))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("존재하지 않는 게임입니다.");
+        }
+    }
+
     @DisplayName("deleteFinishedGame 메서드로 종료된 게임 삭제 가능")
     @Nested
     class DeleteFinishedGameTest {
@@ -180,7 +194,7 @@ class ChessServiceTest {
         void 종료된_게임_삭제시_이벤트도_전부_삭제() {
             service.deleteFinishedGame(3, new EncryptedAuthCredentials("종료된_게임", "encrypted3"));
 
-             List<Event> relatedEvents = eventDao.findAllByGameId(3);
+            List<Event> relatedEvents = eventDao.findAllByGameId(3);
 
             assertThat(relatedEvents).isEmpty();
         }
@@ -192,6 +206,15 @@ class ChessServiceTest {
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("아직 진행 중인 게임입니다.");
         }
+    }
+
+    private List<GameOverviewDto> findAllTestData() {
+        return List.of(
+                new GameOverviewDto(1, "진행중인_게임"),
+                new GameOverviewDto(2, "이미_존재하는_게임명"),
+                new GameOverviewDto(3, "종료된_게임"),
+                new GameOverviewDto(4, "참여자가_있는_게임"),
+                new GameOverviewDto(5, "참여자가_없는_게임"));
     }
 
     private Game currentGameSnapshotOfGameIdOne() {

@@ -70,6 +70,11 @@ public class GameDaoStub extends GameDao {
                 .count();
     }
 
+    public boolean checkRunning(int gameId) {
+        GameFullEntity game = repository.get(gameId);
+        return game.running;
+    }
+
     @Override
     public int saveAndGetGeneratedId(EncryptedAuthCredentials authCredentials) {
         autoIncrementId++;

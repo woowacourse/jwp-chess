@@ -156,11 +156,9 @@ class ChessServiceTest {
         void 이동_명령에_따라_체스말을_이동시키며_게임이_종료된_경우_OVER로_상태를_변경한다() {
             service.playGame(2, new MoveEvent("b5 e8"));
 
-            GameCountDto actual = service.countGames();
-            GameCountDto expected = new GameCountDto(
-                    GameDaoStub.TOTAL_GAME_COUNT, GameDaoStub.RUNNING_GAME_COUNT - 1);
+            boolean actual = gameDao.checkRunning(2);
 
-            assertThat(actual).isEqualTo(expected);
+            assertThat(actual).isFalse();
         }
 
         @Test

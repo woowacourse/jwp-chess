@@ -10,7 +10,7 @@ import chess.entity.Room;
 public class FakeRoomDao implements RoomDao {
 
     private final List<Room> rooms = new ArrayList<>();
-    private Long id;
+    private long id;
 
     public FakeRoomDao() {
         this.id = 1L;
@@ -38,12 +38,12 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public Optional<Room> findById(Long roomId) {
+    public Optional<Room> findById(long roomId) {
         return Optional.ofNullable(rooms.get((int)(roomId - 1)));
     }
 
     @Override
-    public void update(Long id, String turn) {
+    public void update(long id, String turn) {
         Room room = rooms.get((int)(id - 1));
         rooms.set((int)(id - 1), new Room(id, room.getPassword(), turn, room.getName()));
     }
@@ -54,7 +54,7 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public Optional<Room> findByIdAndPassword(Long id, String password) {
+    public Optional<Room> findByIdAndPassword(long id, String password) {
         Room room = rooms.get((int)(id - 1));
         if (room.getPassword().equals(password)) {
             return Optional.of(room);
@@ -63,7 +63,7 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public void delete(Long roomId) {
+    public void delete(long roomId) {
         rooms.remove((int)(roomId - 1));
     }
 }

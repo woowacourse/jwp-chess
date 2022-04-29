@@ -43,7 +43,7 @@ public class ChessService {
         this.squareDao = squareDao;
     }
 
-    public BoardDto startNewGame(Long roomId) {
+    public BoardDto startNewGame(long roomId) {
         Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
 
@@ -57,7 +57,7 @@ public class ChessService {
         return BoardDto.of(board, chessGame.getTurn());
     }
 
-    public BoardDto findRoom(Long roomId) {
+    public BoardDto findRoom(long roomId) {
         Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
@@ -65,7 +65,7 @@ public class ChessService {
         return BoardDto.of(chessBoard.getPieces(), room.getTurn());
     }
 
-    public BoardDto move(Long roomId, MoveDto moveDto) {
+    public BoardDto move(long roomId, MoveDto moveDto) {
         Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessGame chessGame = ChessGame.of(loadChessBoard(room.getId()), room.getTurn());
@@ -104,7 +104,7 @@ public class ChessService {
         return new ChessBoard(() -> board);
     }
 
-    public Status status(Long roomId) {
+    public Status status(long roomId) {
         Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
@@ -129,7 +129,7 @@ public class ChessService {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public boolean delete(Long roomId, String password) {
+    public boolean delete(long roomId, String password) {
         if (roomDao.findByIdAndPassword(roomId, password).isEmpty()) {
             throw new IllegalArgumentException(INVALID_PASSWORD_MESSAGE);
         }

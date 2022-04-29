@@ -22,7 +22,7 @@ public class Room {
         this.turn = EMPTY.getName();
     }
 
-    public Room(Long id, String turn, String name) {
+    public Room(long id, String turn, String name) {
         this.id = id;
         this.turn = turn;
         this.name = name;

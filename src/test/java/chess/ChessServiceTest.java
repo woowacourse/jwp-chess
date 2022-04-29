@@ -19,7 +19,7 @@ public class ChessServiceTest {
     private ChessService chessService;
     private final RoomDao roomDao = new FakeRoomDao();
     private final SquareDao squareDao = new FakeSquareDao();
-    private Long id;
+    private long id;
 
     @BeforeEach
     void setUp() {

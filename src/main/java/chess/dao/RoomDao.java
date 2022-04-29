@@ -12,13 +12,13 @@ public interface RoomDao {
 
     Optional<Room> findByNameAndPassword(String name, String password);
 
-    Optional<Room> findById(Long roomId);
+    Optional<Room> findById(long roomId);
 
-    void update(Long id, String turn);
+    void update(long id, String turn);
 
     List<Room> findAll();
 
-    Optional<Room> findByIdAndPassword(Long id, String password);
+    Optional<Room> findByIdAndPassword(long id, String password);
 
-    void delete(Long roomId);
+    void delete(long roomId);
 }

@@ -22,7 +22,7 @@ import io.restassured.RestAssured;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ChessControllerTest {
 
-    private final Long id = 1L;
+    private final long id = 1L;
 
     @LocalServerPort
     int port;

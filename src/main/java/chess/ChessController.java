@@ -43,28 +43,28 @@ public class ChessController {
     }
 
     @PostMapping("/rooms/{roomId}")
-    public BoardDto start(@PathVariable Long roomId) {
+    public BoardDto start(@PathVariable long roomId) {
         return chessService.startNewGame(roomId);
     }
 
     @GetMapping("/rooms/{roomId}")
-    public BoardDto findRoom(@PathVariable Long roomId) {
+    public BoardDto findRoom(@PathVariable long roomId) {
         return chessService.findRoom(roomId);
     }
 
     @DeleteMapping("/rooms/{roomId}")
-    public boolean delete(@PathVariable Long roomId, @RequestParam String password) {
+    public boolean delete(@PathVariable long roomId, @RequestParam String password) {
         return chessService.delete(roomId, password);
     }
 
     @PatchMapping("/rooms/{roomId}/move")
-    public BoardDto move(@PathVariable Long roomId,
+    public BoardDto move(@PathVariable long roomId,
         @RequestBody MoveDto moveDto) {
         return chessService.move(roomId, moveDto);
     }
 
     @GetMapping("/rooms/{roomId}/status")
-    public Status status(@PathVariable Long roomId) {
+    public Status status(@PathVariable long roomId) {
         return chessService.status(roomId);
     }
 

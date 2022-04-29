@@ -25,7 +25,7 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Optional<Room> findById(Long roomId) {
+    public Optional<Room> findById(long roomId) {
         String sql = "select * from room where id = ?";
 
         try {
@@ -79,7 +79,7 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public void update(Long id, String turn) {
+    public void update(long id, String turn) {
         String sql = "update room set turn = ? where id = ?";
         jdbcTemplate.update(sql, turn, id);
     }
@@ -95,7 +95,7 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Optional<Room> findByIdAndPassword(Long id, String password) {
+    public Optional<Room> findByIdAndPassword(long id, String password) {
         String sql = "select * from room where id = ? AND password = ?";
 
         try {
@@ -113,7 +113,7 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public void delete(Long roomId) {
+    public void delete(long roomId) {
         String sql = "delete from room where id = ?";
         jdbcTemplate.update(sql, roomId);
     }

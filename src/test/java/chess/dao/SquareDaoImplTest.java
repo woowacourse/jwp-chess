@@ -20,6 +20,7 @@ class SquareDaoImplTest {
     private JdbcTemplate jdbcTemplate;
     private SquareDaoImpl squareDao;
     private JdbcFixture jdbcFixture;
+    private final long roomId = 1L;
 
     @BeforeEach
     void beforeEach() {
@@ -46,31 +47,31 @@ class SquareDaoImplTest {
             new Square("b1", "white_pawn"),
             new Square("b2", "white_pawn")
         );
-        squareDao.saveAll(squares, 1);
+        squareDao.saveAll(squares, roomId);
 
-        List<Square> result = squareDao.findByRoomId(1);
+        List<Square> result = squareDao.findByRoomId(roomId);
         assertThat(result).hasSize(5);
     }
 
     @Test
     @DisplayName("roomId와 Position을 이용해 Square를 얻는다.")
     void findByRoomIdAndPosition() {
-        Square square = squareDao.findByRoomIdAndPosition(1, "a1").get();
+        Square square = squareDao.findByRoomIdAndPosition(roomId, "a1").get();
         assertThat(square.getPiece()).isEqualTo("white_pawn");
     }
 
     @Test
     @DisplayName("square를 업데이트한다.")
     void update() {
-        squareDao.update(1, "a1", "empty");
-        Square square = squareDao.findByRoomIdAndPosition(1, "a1").get();
+        squareDao.update(roomId, "a1", "empty");
+        Square square = squareDao.findByRoomIdAndPosition(roomId, "a1").get();
         assertThat(square.getPiece()).isEqualTo("empty");
     }
 
     @Test
     @DisplayName("RoomId로 square를 얻는다.")
     void findByRoomId() {
-        List<Square> squares = squareDao.findByRoomId(1);
+        List<Square> squares = squareDao.findByRoomId(roomId);
         assertThat(squares.size()).isEqualTo(3);
     }
 
@@ -80,8 +81,8 @@ class SquareDaoImplTest {
         jdbcFixture.insertRoom("test", "white", "pw");
         jdbcFixture.insertSquares(List.of("b1,white_pawn,2"));
 
-        squareDao.removeAll(2);
-        List<Square> squares = squareDao.findByRoomId(2);
+        squareDao.removeAll(roomId + 1);
+        List<Square> squares = squareDao.findByRoomId(roomId + 1);
         assertThat(squares.isEmpty()).isTrue();
     }
 }

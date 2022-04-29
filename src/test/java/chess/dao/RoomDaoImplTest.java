@@ -56,7 +56,7 @@ class RoomDaoImplTest {
     @ParameterizedTest
     @CsvSource(value = {"1:0", "2:1"}, delimiter = ':')
     @DisplayName("Room을 삭제한다.")
-    void delete(Long id, int size) {
+    void delete(long id, int size) {
         roomDao.delete(id);
         assertThat(roomDao.findAll()).hasSize(size);
     }

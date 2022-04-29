@@ -19,24 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class SpringChessGameController {
+public class ChessApiController {
 
     private final ChessService chessService;
 
-    public SpringChessGameController(ChessService chessService) {
+    public ChessApiController(ChessService chessService) {
         this.chessService = chessService;
-    }
-
-    @GetMapping("/")
-    public String getRooms(Model model) {
-        model.addAttribute("rooms", chessService.getRooms());
-        return "index";
-    }
-
-    @GetMapping("/room/{roomId}")
-    public String showRoom(@PathVariable("roomId") int roomId, Model model) {
-        model.addAttribute("roomId", roomId);
-        return "board";
     }
 
     @GetMapping("/make-piece/{roomId}")

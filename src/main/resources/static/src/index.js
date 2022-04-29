@@ -116,7 +116,7 @@ function drawTurnBox(gameId) {
 
 async function restartGame(gameId) {
     await fetch(`/restart/` + gameId, {
-        method: "get"
+        method: "POST"
     });
 }
 
@@ -161,7 +161,7 @@ async function endGame(gameId) {
     turnBox.innerText = "게임 종료";
 
     await fetch("/exit/" + gameId, {
-        method: "post"
+        method: "PATCH"
     });
 
     changeButton("restart");

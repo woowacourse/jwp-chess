@@ -47,7 +47,7 @@ public class RoomService {
 	}
 
 	private void validateDuplicateName(String name) {
-		if (roomRepository.find(name).isPresent()) {
+		if (roomRepository.findByName(name).isPresent()) {
 			throw new UserInputException("해당 이름의 방이 이미 존재합니다.");
 		}
 	}

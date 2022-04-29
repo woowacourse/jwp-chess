@@ -45,8 +45,8 @@ public class RoomRepositoryImpl implements RoomRepository {
 	}
 
 	@Override
-	public Optional<RoomDto> find(String name) {
-		String sql = "select * from room where name = :name";
+	public Optional<RoomDto> findByName(String name) {
+		String sql = "select * from room where name = :name limit 1";
 		try {
 			return Optional.ofNullable(
 				jdbcTemplate.queryForObject(sql, Map.of("name", name), getRoomDtoRowMapper()));

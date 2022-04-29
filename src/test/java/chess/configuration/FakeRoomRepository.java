@@ -24,7 +24,7 @@ public class FakeRoomRepository implements RoomRepository {
     }
 
     @Override
-    public Optional<RoomDto> find(String name) {
+    public Optional<RoomDto> findByName(String name) {
         return database.keySet().stream()
             .filter(key -> database.get(key).getName().equals(name))
             .map(key -> new RoomDto(key, database.get(key).getName(), database.get(key).getPassword()))

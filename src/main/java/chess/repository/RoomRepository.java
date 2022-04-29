@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface RoomRepository {
     int save(RoomDto roomDto);
 
-    Optional<RoomDto> find(String name);
+    Optional<RoomDto> findByName(String name);
 
     Optional<RoomDto> findById(int roomId);
 

@@ -40,7 +40,7 @@ public class RoomRepositoryImplTest {
     @DisplayName("방 find")
     void find() {
         roomRepository.save(room);
-        RoomDto findRoom = roomRepository.find(room.getName()).orElseThrow();
+        RoomDto findRoom = roomRepository.findByName(room.getName()).orElseThrow();
         assertThat(room.getName()).isEqualTo(findRoom.getName());
     }
 
@@ -50,7 +50,7 @@ public class RoomRepositoryImplTest {
         int id = roomRepository.save(room);
         roomRepository.deleteById(id);
 
-        assertThat(roomRepository.find(room.getName())).isEmpty();
+        assertThat(roomRepository.findByName(room.getName())).isEmpty();
     }
 
     @Test

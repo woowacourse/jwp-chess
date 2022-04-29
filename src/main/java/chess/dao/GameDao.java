@@ -75,6 +75,15 @@ public class GameDao {
         return keyHolder.getKey().intValue();
     }
 
+    public void saveOpponent(EncryptedAuthCredentials authCredentials) {
+        final String sql = "UPDATE game SET opponent_password = :password "
+                + "WHERE name = :name AND NOT password = :password AND opponent_password IS NULL";
+
+        SqlParameterSource paramSource = new BeanPropertySqlParameterSource(authCredentials);
+        new StatementExecutor<>(() -> jdbcTemplate.update(sql, paramSource))
+               .updateAndThrowOnNonEffected(() -> new IllegalArgumentException("상대방 플레이어로 참여하는 데 실패하였습니다."));
+    }
+
     public void finishGame(int gameId) {
         final String sql = "UPDATE game SET running = false WHERE id = :game_id";
 

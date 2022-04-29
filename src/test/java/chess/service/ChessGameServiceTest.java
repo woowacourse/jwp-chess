@@ -13,9 +13,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
-@JdbcTest
 class ChessGameServiceTest {
 
     private final RoomDao roomDao = new FakeRoomDao();
@@ -108,7 +106,7 @@ class ChessGameServiceTest {
         chessGameService.move(TEST_ROOM_ID, "d7", "d6");
         chessGameService.move(TEST_ROOM_ID, "d1", "g4");
         chessGameService.move(TEST_ROOM_ID, "e8", "d7");
-        chessGameService.move(TEST_ROOM_ID, "g4", "e7");
+        chessGameService.move(TEST_ROOM_ID, "g4", "d7");
         //when then
         assertThatThrownBy(() -> chessGameService.move(TEST_ROOM_ID, "a7", "a5"))
                 .isInstanceOf(IllegalStateException.class)

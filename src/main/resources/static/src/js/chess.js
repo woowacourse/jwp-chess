@@ -2,9 +2,15 @@ window.onload = function () {
     getChess();
 };
 
+function getChessId() {
+    let url = location.href.split("/");
+    return url[url.length - 1];
+}
+
 function getChess() {
+    let chessId = getChessId();
     $.ajax({
-        url: "/chess-game/load",
+        url: "/chess-game/load/" + chessId,
         type: 'get',
         success(data) {
             clearPieces();
@@ -87,10 +93,11 @@ function move(position) {
         return;
     }
 
+    let chessId = getChessId();
     let sourcePosition = positions[0];
     let targetPosition = positions[1];
     $.ajax({
-        url: "/chess-game/move",
+        url: "/chess-game/move/" + chessId,
         type: 'post',
         traditional: true,
         beforeSend: function (xhr) {
@@ -117,8 +124,9 @@ function move(position) {
 }
 
 function showScore() {
+    let chessId = getChessId();
     $.ajax({
-        url: "/chess-game/score",
+        url: "/chess-game/score/" + chessId,
         type: 'get',
         success(data) {
             let score = parseToJSON(data);
@@ -141,8 +149,9 @@ function showScore() {
 }
 
 function end() {
+    let chessId = getChessId();
     $.ajax({
-        url: "/chess-game/end",
+        url: "/chess-game/end/" + chessId,
         type: 'post',
         success(data) {
             let status = parseToJSON(data);

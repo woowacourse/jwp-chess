@@ -19,7 +19,18 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
+    public void remove(int id, Position position) {
+        String positionName = position.getName();
+        pieces.remove(positionName);
+    }
+
+    @Override
     public void removeAll() {
+        pieces.clear();
+    }
+
+    @Override
+    public void removeAll(int id) {
         pieces.clear();
     }
 
@@ -31,7 +42,19 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
+    public void saveAll(int id, List<PieceDto> pieceDtos) {
+        for (PieceDto pieceDto : pieceDtos) {
+            save(pieceDto);
+        }
+    }
+
+    @Override
     public void save(PieceDto pieceDto) {
+        pieces.put(pieceDto.getPosition(), pieceDto);
+    }
+
+    @Override
+    public void save(int id, PieceDto pieceDto) {
         pieces.put(pieceDto.getPosition(), pieceDto);
     }
 
@@ -41,7 +64,20 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
+    public List<PieceDto> findAll(int id) {
+        return new ArrayList<>(pieces.values());
+    }
+
+    @Override
     public void modifyPosition(Position source, Position target) {
+        PieceDto pieceDto = pieces.get(source.getName());
+        pieceDto.setPosition(target.getName());
+        pieces.remove(source.getName());
+        pieces.put(target.getName(), pieceDto);
+    }
+
+    @Override
+    public void modifyPosition(int id, Position source, Position target) {
         PieceDto pieceDto = pieces.get(source.getName());
         pieceDto.setPosition(target.getName());
         pieces.remove(source.getName());

@@ -13,7 +13,7 @@ public class ChessViewController {
         return "rooms";
     }
 
-    @GetMapping("/index")
+    @GetMapping("/{id}")
     public String init() {
         return "index";
     }

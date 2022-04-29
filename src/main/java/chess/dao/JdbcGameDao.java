@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcGameDao implements GameDao {
 
+    private static final int NO_GAME = 0;
+    
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -25,9 +27,21 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
+    public void removeAll(int id) {
+        final String sql = "delete from game where game_id = ?";
+        jdbcTemplate.update(sql, id);
+    }
+
+    @Override
     public void save(GameDto gameDto) {
         final String sql = "insert into game (turn, status) values (?, ?)";
         jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus());
+    }
+
+    @Override
+    public void save(final int id, final GameDto gameDto) {
+        final String sql = "insert into game (game_id, turn, status) values (?, ?, ?)";
+        jdbcTemplate.update(sql, id, gameDto.getTurn(), gameDto.getStatus());
     }
 
     @Override
@@ -37,9 +51,21 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
+    public void modify(final int id, final GameDto gameDto) {
+        final String sql = "update game set turn = ?, status = ? where game_id = ?";
+        jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus(), id);
+    }
+
+    @Override
     public void modifyStatus(GameStatusDto statusDto) {
         final String sql = "update game set status = ?";
         jdbcTemplate.update(sql, statusDto.getName());
+    }
+
+    @Override
+    public void modifyStatus(final int id, final GameStatusDto statusDto) {
+        final String sql = "update game set status = ? where game_id = ?";
+        jdbcTemplate.update(sql, statusDto.getName(), id);
     }
 
     @Override
@@ -50,6 +76,28 @@ public class JdbcGameDao implements GameDao {
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();
             return GameDto.of(null, "ready");
+        }
+    }
+
+    @Override
+    public GameDto find(final int id) {
+        final String sql = "select * from game where game_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, getGameDtoRowMapper(), id);
+        } catch (EmptyResultDataAccessException e) {
+            e.printStackTrace();
+            return GameDto.of(null, "ready");
+        }
+    }
+
+    @Override
+    public Integer count() {
+        final String sql = "select game_id from game order by desc limit 1";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return NO_GAME;
         }
     }
 

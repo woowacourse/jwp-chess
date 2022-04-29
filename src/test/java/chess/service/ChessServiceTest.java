@@ -48,7 +48,7 @@ public class ChessServiceTest {
     void movePiece() {
         chessService.initializeGame();
 
-        ChessResponseDto chessResponseDto = chessService.movePiece(MoveCommand.of("e2", "e4"));
+        ChessResponseDto chessResponseDto = chessService.movePiece(1, MoveCommand.of("e2", "e4"));
 
         assertAll(
                 () -> assertThat(chessResponseDto.getPieces().size()).isEqualTo(32),
@@ -67,7 +67,7 @@ public class ChessServiceTest {
                 .collect(Collectors.toList());
         chessService.initializeGame();
 
-        ChessResponseDto chessResponseDto = chessService.getChess();
+        ChessResponseDto chessResponseDto = chessService.getChess(1);
 
         assertAll(
                 () -> assertThat(chessResponseDto.getPieces().size()).isEqualTo(32),

@@ -27,8 +27,8 @@ public class ChessViewController {
     @GetMapping("/")
     public String getRoomList(Model model) {
         List<Room> rooms = chessService.getRoomList();
-        List<RoomResponseDto.TitleAndId> titles = rooms.stream().
-                map(RoomResponseDto.TitleAndId::new)
+        List<RoomResponseDto> titles = rooms.stream().
+                map(RoomResponseDto::new)
                 .collect(Collectors.toList());
 
         model.addAttribute("list", titles);

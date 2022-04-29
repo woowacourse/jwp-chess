@@ -5,12 +5,15 @@ import chess.domain.board.piece.Piece;
 import chess.domain.board.piece.Pieces;
 import chess.domain.board.piece.position.Position;
 import chess.web.controller.dto.RoomRequestDto;
+import chess.web.dao.PieceDao;
 import chess.web.dao.RoomDao;
 import chess.web.controller.dto.MoveDto;
 import chess.web.controller.dto.ScoreDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -19,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class ChessServiceTest {
 
     private final RoomDao roomDao = new MockRoomDao();
+    private final PieceDao pieceDao = new MockPieceDao();
     private final ChessService chessService = new ChessService(roomDao, new MockPieceDao());
     private final Long boardId = 1L;
 
@@ -32,10 +36,10 @@ class ChessServiceTest {
     @Test
     @DisplayName("초기 보드판에서 from에서 to로 이동하면 처음 from에 있던 piece는 이동 후, to에 있는 piece와 같다.")
     void move() {
-        Board board = roomDao.findById(boardId).get();
+        Pieces pieces = Pieces.from(pieceDao.findAllByBoardId(boardId));
         String from = "a2";
         String to = "a3";
-        Piece piece = board.getPieces().findByPosition(Position.from(from));
+        Piece piece = pieces.findByPosition(Position.from(from));
         MoveDto moveDto = new MoveDto(from, to);
         Board movedBoard = chessService.move(moveDto, boardId);
         Piece movedPiece = movedBoard.getPieces().findByPosition(Position.from(to));

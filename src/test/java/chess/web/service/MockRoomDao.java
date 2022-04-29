@@ -32,8 +32,8 @@ public class MockRoomDao implements RoomDao {
     }
 
     @Override
-    public Optional<Board> findById(Long id) {
-        return Optional.of(Board.create(Pieces.createInit(), Turn.init()));
+    public Optional<Room> findById(Long id) {
+        return Optional.empty();
     }
 
     @Override

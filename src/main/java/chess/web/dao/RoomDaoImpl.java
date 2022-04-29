@@ -1,11 +1,8 @@
 package chess.web.dao;
 
-import chess.domain.board.Board;
 import chess.domain.board.Team;
 import chess.domain.board.Turn;
-import chess.domain.board.piece.Pieces;
 import chess.domain.entity.Room;
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,7 +10,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,13 +18,11 @@ public class RoomDaoImpl implements RoomDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Board> boardRowMapper = (resultSet, rowNum) -> {
-        Team team = Team.from(resultSet.getString("turn"));
-        return Board.create(
-                Pieces.from(new ArrayList<>()),
-                new Turn(team)
-        );
-    };
+    private final RowMapper<Room> roomRowMapper = (resultSet, rowNum) -> new Room(
+            resultSet.getLong("id"),
+            resultSet.getString("title"),
+            resultSet.getString("password")
+    );
 
     public RoomDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -63,21 +57,12 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Optional<Board> findById(Long id) {
-        final String query = "SELECT * " +
-                "FROM room as r " +
-                "JOIN piece as p ON r.id = p.room_id " +
-                "WHERE r.id = ?";
-        List<Board> boards = jdbcTemplate.query(query, boardRowMapper, id);
-        Board board = getBoard(boards);
-        return Optional.of(board);
-    }
-
-    private Board getBoard(List<Board> boards) {
-        if (boards.isEmpty()) {
-            return Board.create(Pieces.from(new ArrayList<>()), Turn.init());
-        }
-        return DataAccessUtils.singleResult(boards);
+    public Optional<Room> findById(Long id) {
+        final String query = "SELECT id, title, password " +
+                "FROM room " +
+                "WHERE id = ?";
+        Room room = jdbcTemplate.queryForObject(query, roomRowMapper, id);
+        return Optional.ofNullable(room);
     }
 
     @Override

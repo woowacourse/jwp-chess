@@ -15,7 +15,7 @@ public interface RoomDao {
 
     Long save(String title, String password);
 
-    Optional<Board> findById(Long id);
+    Optional<Room> findById(Long id);
 
     void deleteById(Long id);
 

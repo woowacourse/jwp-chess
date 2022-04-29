@@ -13,7 +13,7 @@
     <ul style="background-color: palegoldenrod; padding: initial; font-size: 20px">
         {{#list}}
             <li style="text-align: center; color: palegoldenrod">
-                <a href="/room/{{id}}">{{title}}</a>
+                <a href="javascript:void(0)" onclick = "checkPassword('{{id}}','{{password}}') ">{{title}}</a>
                 <button class="delete-button" id="delete-button" onclick="" type="button">방 삭제</button>
             </li>
         {{/list}}
@@ -21,6 +21,7 @@
     <div class="button-group" style="text-align: center">
         <button class="create-button" id="create-button" onclick="location.href='/new'" type="button">방 생성</button>
     </div>
+</div>
 <script src="/src/App.js"></script>
 </body>
 </html>

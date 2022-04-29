@@ -164,3 +164,13 @@ function move() {
         div.addEventListener("click", eventMove);
     }
 }
+
+function checkPassword(id, password){
+    var pass = prompt('패스워드를 입력하세요');
+    if(password == pass){
+        window.location.href = "/room/" + id
+        return;
+    }
+    window.alert("비밀번호가 틀렸습니다!")
+    return;
+}

@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
 
 import chess.repository.dao.dto.game.GameDto;
-import chess.repository.dao.dto.game.GameFinishedDto;
+import chess.repository.dao.dto.game.GameStatusDto;
 import chess.repository.dao.dto.game.GameUpdateDto;
 
 @Component
@@ -51,10 +51,10 @@ public class GameDao {
                 ), id);
     }
 
-    public List<GameFinishedDto> findIdAndFinished() {
+    public List<GameStatusDto> findStatuses() {
         final String query = "SELECT id, finished FROM Game ORDER BY id DESC";
         return jdbcTemplate.query(query,
-                (resultSet, rowNum) -> new GameFinishedDto(
+                (resultSet, rowNum) -> new GameStatusDto(
                         resultSet.getLong(1),
                         resultSet.getBoolean(2)
                 ));

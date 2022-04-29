@@ -15,7 +15,7 @@ import chess.repository.dao.GameDao;
 import chess.repository.dao.PlayerDao;
 import chess.repository.dao.dto.DaoAssembler;
 import chess.repository.dao.dto.game.GameDto;
-import chess.repository.dao.dto.game.GameFinishedDto;
+import chess.repository.dao.dto.game.GameStatusDto;
 import chess.repository.dao.dto.player.PlayerDto;
 
 @Repository
@@ -65,8 +65,8 @@ public class ChessRepository {
 
     public Map<Long, Boolean> findStatuses() {
         final Map<Long, Boolean> statuses = new LinkedHashMap<>();
-        for (final GameFinishedDto gameFinishedDto : gameDao.findIdAndFinished()) {
-            statuses.put(gameFinishedDto.getId(), gameFinishedDto.getFinished());
+        for (final GameStatusDto gameStatusDto : gameDao.findStatuses()) {
+            statuses.put(gameStatusDto.getId(), gameStatusDto.getFinished());
         }
         return Collections.unmodifiableMap(statuses);
     }

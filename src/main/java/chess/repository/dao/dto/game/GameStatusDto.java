@@ -1,11 +1,11 @@
 package chess.repository.dao.dto.game;
 
-public class GameFinishedDto {
+public class GameStatusDto {
 
     private final Long id;
     private final Boolean finished;
 
-    public GameFinishedDto(final Long id, final Boolean finished) {
+    public GameStatusDto(final Long id, final Boolean finished) {
         this.id = id;
         this.finished = finished;
     }

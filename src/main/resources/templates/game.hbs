@@ -12,7 +12,8 @@
         <h1>♟️ 체스 - {{title}}</h1>
         <span id="gameNo" hidden>{{gameNo}}</span>
         <div class="form move">
-            <form action="../move/{{gameNo}}" method="post">
+            <form action="../board/{{gameNo}}" method="post">
+                <input type="hidden" name="_method" value="put">
                 source : <input type="text" name="source">
                 target : <input type="text" name="target">
                 <input type="submit" value="이동">
@@ -22,7 +23,8 @@
             <button id="status">점수 보기</button>
         </div>
         <div class="form end">
-            <form action="../end/{{gameNo}}">
+            <form action="../game/{{gameNo}}" method="post">
+                <input type="hidden" name="_method" value="put">
                 <input type="submit" value="게임 종료">
             </form>
         </div>
@@ -517,7 +519,7 @@
 
     function statusOnClickHandler() {
         const gameNo = document.getElementById('gameNo').innerText;
-        fetch('../status/' + gameNo)
+        fetch('../score/' + gameNo)
             .then((response) => response.json())
             .then((scores) => addScoreToDocument(scores));
     }

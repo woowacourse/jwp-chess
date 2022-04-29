@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -29,19 +30,19 @@ public class GameController {
         return "index";
     }
 
-    @GetMapping("/list")
+    @GetMapping("/games")
     public ResponseEntity<String> list() {
         String listData = jsonTransformer.render(gameService.list());
         return ResponseEntity.ok().body(listData);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/game")
     public ResponseEntity<Void> create(@RequestParam String title, @RequestParam String password) {
         gameService.createRoom(title, password);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("/{gameNo}")
+    @DeleteMapping("/game/{gameNo}")
     public ResponseEntity<String> delete(@PathVariable long gameNo, @RequestBody String password) {
         try {
             gameService.checkPassword(gameNo, password);
@@ -59,14 +60,14 @@ public class GameController {
         return ResponseEntity.status(status).body(messageData);
     }
 
-    @PostMapping("/load/{gameNo}")
+    @PostMapping("/game/{gameNo}")
     public String load(Model model, @PathVariable int gameNo, @RequestParam String password) {
         gameService.checkPassword(gameNo, password);
         gameService.load(gameNo);
         return play(model, gameNo);
     }
 
-    @PostMapping("/move/{gameNo}")
+    @PutMapping("/board/{gameNo}")
     public String move(Model model, @PathVariable int gameNo,
                        @RequestParam String source, @RequestParam String target) {
         ChessGame chessGame = gameService.load(gameNo);
@@ -86,21 +87,14 @@ public class GameController {
         return "game";
     }
 
-    @GetMapping("/status/{gameNo}")
+    @GetMapping("/score/{gameNo}")
     public ResponseEntity<String> status(@PathVariable int gameNo) {
         ChessGame chessGame = gameService.load(gameNo);
         String statusData = jsonTransformer.render(gameService.modelStatus(chessGame));
         return ResponseEntity.ok().body(statusData);
     }
 
-    @GetMapping("/save/{gameNo}")
-    public ResponseEntity<Void> save(@PathVariable int gameNo) {
-        ChessGame chessGame = gameService.load(gameNo);
-        gameService.save(gameNo, chessGame);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @GetMapping("/end/{gameNo}")
+    @PutMapping("/game/{gameNo}")
     public String end(Model model, @PathVariable long gameNo) {
         ChessGame chessGame = gameService.load(gameNo);
         model.addAllAttributes(gameService.end(gameNo, chessGame));

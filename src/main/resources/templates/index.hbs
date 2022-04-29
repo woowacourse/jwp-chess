@@ -11,7 +11,7 @@
     <div id="app">
         <h1>♟️ 체스</h1>
         <div class="form start">
-            <form id="create-form" action="/create" method="post">
+            <form id="create-form" action="/game" method="post">
                 <label for="title">방 제목</label>
                 <input type="text" id="title" name="title">
                 <label for="password">비밀번호</label>
@@ -28,7 +28,7 @@
 <script type="text/javascript">
     function deleteRoom(id) {
         const passwordInput = window.prompt('방을 삭제하려면 비밀번호를 입력하세요');
-        fetch('./' + id, {
+        fetch('./game/' + id, {
                     method: 'DELETE',
                     body: passwordInput
                 }).then((response) => response.json())
@@ -38,7 +38,7 @@
     }
 
     function loadGames() {
-        fetch('./list')
+        fetch('./games')
             .then((response) => response.json())
             .then((games) => initializeRoomList(games));
     }
@@ -79,7 +79,7 @@
         const passwordInput = window.prompt('비밀번호를 입력하세요');
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = './load/' + gameNo;
+        form.action = './game/' + gameNo;
         form.setAttribute('hidden', true);
 
         const formField = document.createElement('input');

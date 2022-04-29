@@ -3,8 +3,14 @@ package chess.controller;
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.domain.event.MoveEvent;
 import chess.dto.request.MoveRouteDto;
+import chess.dto.response.EnterGameDto;
 import chess.dto.response.SearchResultDto;
+import chess.service.AuthService;
 import chess.service.ChessService;
+import chess.util.CookieUtil;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +31,11 @@ public class GameController {
     private static final String RESPONSE_MODEL_KEY = "response";
 
     private final ChessService chessService;
+    private final AuthService authService;
 
-    public GameController(ChessService chessService) {
+    public GameController(ChessService chessService, AuthService authService) {
         this.chessService = chessService;
+        this.authService = authService;
     }
 
     @GetMapping
@@ -63,6 +71,15 @@ public class GameController {
     @GetMapping("/search")
     public SearchResultDto searchGame(@RequestParam(name = "game_id") int gameId) {
         return chessService.searchGame(gameId);
+    }
+
+    @PostMapping("/{id}/auth")
+    public ResponseEntity<String> enterGame(@PathVariable int id,
+                          EncryptedAuthCredentials authCredentials,
+                          HttpServletResponse response) {
+        EnterGameDto enterGameDto = authService.loginOrSignUpAsOpponent(id, authCredentials);
+        response.addCookie(enterGameDto.getCookie());
+        return ResponseEntity.ok(enterGameDto.getMessage());
     }
 
     private ModelAndView getGameModelAndView(int id) {

@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.dao.BoardDao;
-import chess.dao.GameDao;
+import chess.dao.RoomDao;
+import chess.dao.SquareDao;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.command.GameCommand;
 import chess.domain.game.ChessGame;
@@ -11,96 +11,119 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
 import chess.domain.state.State;
-import chess.dto.BoardDto;
-import chess.dto.PieceDto;
-import chess.dto.StatusDto;
+import chess.entity.Room;
+import chess.entity.Square;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessService {
 
-    private final GameDao gameDao;
-    private final BoardDao boardDao;
+    private final RoomDao roomDao;
+    private final SquareDao squareDao;
 
-    @Autowired
-    public ChessService(GameDao gameDao, BoardDao boardDao) {
-        this.gameDao = gameDao;
-        this.boardDao = boardDao;
+    public ChessService(RoomDao roomDao, SquareDao squareDao) {
+        this.roomDao = roomDao;
+        this.squareDao = squareDao;
     }
 
-    public BoardDto selectBoard() {
-        ChessBoard chessBoard = boardDao.find();
-        Map<Position, Piece> pieces = chessBoard.getPieces();
-        Map<String, PieceDto> board = new HashMap<>();
-        for (Position position : pieces.keySet()) {
-            String key = position.toString();
-            Piece piece = pieces.get(Position.of(key));
-            PieceDto pieceDto = new PieceDto(piece.getSymbol().name(), piece.getColor().name());
-            board.put(key, pieceDto);
-        }
-        return new BoardDto(board);
+    public List<Room> findAllRoom() {
+        return roomDao.findAllRoom();
     }
 
-    public String selectWinner() {
-        if (gameDao.findGameCount() == 0) {
-            return null;
-        }
-        ChessBoard chessBoard = boardDao.find();
-        State state = gameDao.findState();
+    public Long insertRoom(String title, String password) {
+        validateValueIsBlank(title, password);
+        final Long roomId = roomDao.insertRoom(title, password);
 
-        ChessGame chessGame = new ChessGame(state, chessBoard);
-        if (chessGame.isEndGameByPiece()) {
-            return chessGame.getWinner().name();
+        return roomId;
+    }
+
+    private void validateValueIsBlank(String title, String password) {
+        if (title.isBlank()) {
+            throw new IllegalArgumentException("제목이 빈칸입니다.");
         }
-        return null;
+        if (password.isBlank()) {
+            throw new IllegalArgumentException("비밀번호가 빈칸입니다");
+        }
     }
 
     @Transactional
-    public Long insertGame() {
-        ChessGame chessGame = new ChessGame(new NormalPiecesGenerator());
-        chessGame.playGameByCommand(GameCommand.of("start"));
+    public Long insertBoard(Long roomId) {
+        ChessBoard chessBoard = new ChessBoard(new NormalPiecesGenerator());
+        List<Square> board = chessBoard.getPieces().entrySet().stream()
+                .map(entry -> new Square(roomId, entry.getKey().toString(),
+                        entry.getValue().getSymbol().name(), entry.getValue().getColor().name()))
+                .collect(Collectors.toList());
 
-        gameDao.delete();
-        gameDao.save(chessGame.getState().toString());
+        squareDao.deleteSquareAllById(roomId);
+        squareDao.insertSquareAll(roomId, board);
+        roomDao.updateStateById(roomId, "WhiteRunning");
+        return roomId;
+    }
 
-        Long gameId = gameDao.findId();
-        boardDao.save(chessGame.getChessBoard(), gameId);
-        return gameId;
+    public List<Square> findSquareAllById(Long roomId) {
+        return squareDao.findSquareAllById(roomId);
+    }
+
+    public List<Double> findStatusById(Long roomId) {
+        final ChessGame chessGame = findChessGame(roomId);
+        final Map<Color, Double> colorDoubleMap = chessGame.calculateScore();
+
+        return List.of(colorDoubleMap.get(Color.WHITE), colorDoubleMap.get(Color.BLACK));
     }
 
     @Transactional
-    public Long updateBoard(String from, String to) {
-        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
-        chessGame.playGameByCommand(GameCommand.of("move", from, to));
-        chessGame.isEndGameByPiece();
-        Long gameId = gameDao.findId();
-        gameDao.update(chessGame.getState().toString(), gameId);
+    public void updateSquares(Long roomId, String from, String to) {
+        ChessGame chessGame = findChessGame(roomId);
+        playChessGame(chessGame, from, to);
+
+        String source = Position.of(from).toString();
+        String target = Position.of(to).toString();
 
         Map<String, Piece> pieces = chessGame.getChessBoard().toMap();
-        boardDao.update(Position.of(to), pieces.get(to), gameId);
-        boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameId);
-        return gameId;
+        squareDao.updateSquare(new Square(roomId, target,
+                pieces.get(target).getSymbol().toString(), pieces.get(target).getColor().toString()));
+        squareDao.updateSquare(new Square(roomId, source,
+                EmptyPiece.getInstance().getSymbol().toString(), EmptyPiece.getInstance().getColor().toString()));
     }
 
-    public StatusDto selectStatus() {
-        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
-        chessGame.playGameByCommand(GameCommand.of("status"));
-        Map<Color, Double> scores = chessGame.calculateScore();
+    private ChessGame findChessGame(Long roomId) {
+        final Room room = roomDao.findRoomById(roomId);
+        final List<Square> squares = squareDao.findSquareAllById(roomId);
 
-        return new StatusDto(scores.get(Color.WHITE), scores.get(Color.BLACK));
+        final Map<Position, Piece> board = new HashMap<>();
+        for (Square square : squares) {
+            board.put(Position.of(square.getPosition()), Piece.of(square.getColor(), square.getSymbol()));
+        }
+
+        ChessGame chessGame = new ChessGame(State.of(room.getState()), new ChessBoard(board));
+        return chessGame;
+    }
+
+    private void playChessGame(ChessGame chessGame, String from, String to) {
+        chessGame.playGameByCommand(GameCommand.of("move", from, to));
+        chessGame.isEndGameByPiece();
+    }
+
+    public Long updateStateEnd(Long roomId) {
+        System.out.println(roomId);
+        final Long updateRoomId = roomDao.updateStateById(roomId, "Finished");
+        return updateRoomId;
     }
 
     @Transactional
-    public Long deleteGame() {
-        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
-
-        chessGame.playGameByCommand(GameCommand.of("end"));
-        Long gameId = gameDao.findId();
-        gameDao.delete();
-        return gameId;
+    public Long deleteRoom(Long roomId, String password) {
+        Room room = roomDao.findRoomById(roomId);
+        if (!room.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        if (room.getState().equals("WhiteRunning") || room.getState().equals("BlackRunning")) {
+            throw new IllegalStateException("게임이 실행중일 경우 게임을 삭제할 수 없습니다.");
+        }
+        return roomDao.deleteRoom(roomId);
     }
 }

@@ -3,7 +3,7 @@ package chess.controller.api;
 import chess.controller.api.dto.MovePositionReq;
 import chess.controller.api.dto.RoomCreateReq;
 import chess.entity.Room;
-import chess.service.ChessServiceV2;
+import chess.service.ChessService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class ApiController {
 
-    private ChessServiceV2 chessServiceV2;
+    private ChessService chessServiceV2;
 
-    public ApiController(ChessServiceV2 chessServiceV2) {
+    public ApiController(ChessService chessServiceV2) {
         this.chessServiceV2 = chessServiceV2;
     }
 
@@ -40,7 +40,6 @@ public class ApiController {
     @GetMapping("/room/{roomId}/status")
     public ResponseEntity<StatusRes> selectStatus(@PathVariable Long roomId) {
         final List<Double> status = chessServiceV2.findStatusById(roomId);
-        System.out.println(StatusRes.createStatsRes(status).toString());
         return ResponseEntity.ok().body(StatusRes.createStatsRes(status));
     }
 

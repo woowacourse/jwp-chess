@@ -1,7 +1,7 @@
 package chess.controller.page;
 
 import chess.entity.Square;
-import chess.service.ChessServiceV2;
+import chess.service.ChessService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class WebController {
 
-    private ChessServiceV2 chessServiceV2;
+    private ChessService chessServiceV2;
 
-    public WebController(ChessServiceV2 chessServiceV2) {
+    public WebController(ChessService chessServiceV2) {
         this.chessServiceV2 = chessServiceV2;
     }
 

@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @JdbcTest
-class BoardDaoImplTest {
+class SpringJdbcBoardDaoTest {
     private static final String TEST_ROOM_ID = "TEST-GAME-ID";
     private static final String TEST_ROOM_TITLE = "TEST-GAME-ROOM";
     private static final String TEST_ROOM_PASSWORD = "1234";
@@ -31,16 +31,16 @@ class BoardDaoImplTest {
     private static final PieceType PIECE_TYPE = PieceType.PAWN;
     private static final PieceColor PIECE_COLOR = PieceColor.WHITE;
 
-    private BoardDaoImpl boardDao;
+    private SpringJdbcBoardDao boardDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        boardDao = new BoardDaoImpl(jdbcTemplate);
+        boardDao = new SpringJdbcBoardDao(jdbcTemplate);
 
-        RoomDaoImpl gameDao = new RoomDaoImpl(jdbcTemplate);
+        SpringJdbcRoomDao gameDao = new SpringJdbcRoomDao(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE room, board IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE room("

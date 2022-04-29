@@ -4,8 +4,8 @@ import chess.domain.game.room.Room;
 import chess.domain.game.room.RoomId;
 import chess.domain.game.room.RoomPassword;
 import chess.domain.piece.PieceColor;
-import chess.exception.IncorrectPassword;
-import chess.exception.NotFoundRoom;
+import chess.exception.IncorrectPasswordException;
+import chess.exception.NotFoundRoomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class RoomDaoImpl implements RoomDao {
+public class SpringJdbcRoomDao implements RoomDao {
     private static final String TABLE_NAME = "room";
     private static final String WHITE_TURN = "WHITE";
     private static final String BLACK_TURN = "BLACK";
@@ -31,7 +31,7 @@ public class RoomDaoImpl implements RoomDao {
             };
 
     @Autowired
-    public RoomDaoImpl(JdbcTemplate jdbcTemplate) {
+    public SpringJdbcRoomDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -54,7 +54,7 @@ public class RoomDaoImpl implements RoomDao {
         int update = jdbcTemplate.update(query, roomId.getValue(), roomPassword.getValue());
 
         if (update == 0) {
-            throw new IncorrectPassword();
+            throw new IncorrectPasswordException();
         }
     }
 
@@ -81,7 +81,7 @@ public class RoomDaoImpl implements RoomDao {
                     roomId.getValue());
             return PieceColor.valueOf(turn);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundRoom();
+            throw new NotFoundRoomException();
         }
     }
 }

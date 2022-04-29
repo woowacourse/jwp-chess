@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>체스 방 생성</title>
-
+    <link href="./style.css" rel="stylesheet"/>
     <script>
         function onSubmit() {
             const name = document.getElementsByName("name")[0].value;
@@ -27,6 +27,6 @@
 <body>
 제목: <input type="text" name="name"><br>
 비밀번호: <input type="text" name="password"><br>
-<input type="submit" value="생성하기" onclick="onSubmit()">
+<button onclick="onSubmit()" class='button'>생성하기</button>
 </body>
 </html>

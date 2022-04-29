@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>체스 방 조회</title>
-
+    <link href="./style.css" rel="stylesheet"/>
     <script>
         async function inquire() {
             const res = await fetch("room", {
@@ -15,12 +15,12 @@
 
         async function makeGraph() {
             const graphs = await inquire();
-            document.write("<table border='1'><thead><td>제목</td><td>삭제</td></thead>");
+            document.write("<table border='1'><tr><th>제목</th><th>삭제</th></tr>");
             for (let i = 0; i < graphs.length; i++) {
                 const id = graphs[i].id;
                 const gameName = graphs[i].name;
                 document.write(`<tr><td><a href='game.html?id=${id}'>${gameName}</a></td>`);
-                document.write(`<td><input type='button' value='삭제' onclick='deleteGame(${id})'></td></tr>`);
+                document.write(`<td><button onclick='deleteGame(${id})' class = 'button'>삭제</button></td></tr>`);
             }
             document.write("</table>");
         }

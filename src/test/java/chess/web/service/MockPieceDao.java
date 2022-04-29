@@ -13,7 +13,6 @@ public class MockPieceDao implements PieceDao {
     private final Map<Long, MockPiece> mockDb = new HashMap<>();
 
     public MockPieceDao() {
-
         List<MockPiece> mockPieces = initFakePieces(1L);
         saveFakePieces(mockPieces);
     }
@@ -137,6 +136,7 @@ public class MockPieceDao implements PieceDao {
         for (MockPiece mockPiece : mockPieces) {
             mockDb.put(sequenceId++, mockPiece);
         }
+        mockDb.put(65L, new MockPiece(2L, "a8", "king", "black"));
     }
 
     private static class MockPiece {

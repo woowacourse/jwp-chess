@@ -1,6 +1,5 @@
 package chess.web.dao;
 
-import chess.domain.board.Board;
 import chess.domain.board.Team;
 import chess.domain.board.Turn;
 import org.junit.jupiter.api.BeforeEach;

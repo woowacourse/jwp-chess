@@ -32,7 +32,7 @@ public class SpringChessGameController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<?> createGame(@RequestBody RoomRequestDto roomRequestDto) {
+    public ResponseEntity<Long> createGame(@RequestBody RoomRequestDto roomRequestDto) {
         final long roomId = springChessService.makeChessRoom(roomRequestDto);
         return ResponseEntity.created(URI.create("/" + roomId)).body(roomId);
     }

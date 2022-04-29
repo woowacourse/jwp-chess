@@ -3,9 +3,9 @@ package chess.domain;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.chessboard.ChessBoardFactory;
 import chess.domain.position.Position;
-import chess.result.EndResult;
-import chess.result.MoveResult;
-import chess.result.StartResult;
+import chess.domain.result.EndResult;
+import chess.domain.result.MoveResult;
+import chess.domain.result.StartResult;
 
 public class ChessGame {
 
@@ -51,9 +51,5 @@ public class ChessGame {
         gameStatus = GameStatus.END;
         final Score score = new Score(chessBoard.findAllPiece());
         return new EndResult(score);
-    }
-
-    public boolean canPlay() {
-        return !gameStatus.isEnd();
     }
 }

@@ -3,63 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <title>체스</title>
+    <link rel="stylesheet" href="/css/index.css">
 </head>
-<body style="background: dimgray">
-
-<style>
-    .mainContainer {
-        margin: 100px auto;
-        float: top;
-        text-align: center;
-    }
-
-    .input {
-        width: 300px;
-        height: 40px;
-        font-size: xx-large;
-        margin: 0 auto 30px;
-    }
-
-    .ui-button {
-        width: 100px;
-        height: 40px;
-        font-size: xx-large;
-        margin: 0 auto;
-    }
-
-    .error {
-        font-size: x-large;
-        font-weight: bold;
-        text-align: center;
-        color: darkred;
-    }
-</style>
+<body>
 
 <div class="mainContainer">
     <div>
-        <input type="text" class="input" id="roomNameInput" placeholder="방 이름" autofocus maxlength="10"/>
+        <input type="text" class="input" id="roomNameInput" placeholder="방 이름" autofocus minlength="1" maxlength="10"/>
+    </div>
+    <div>
+        <input type="password" class="input" id="roomPasswordInput" placeholder="방 비밀 번호" autofocus maxlength="10">
     </div>
     <button class="ui-button" id="start" onclick="start()">입장</button>
 </div>
 <div class="error" id="error"></div>
 
+<div class="roomList">
+    <table id="roomTable">
+        <tr>
+            <th>제목</th>
+            <th>게임 상태</th>
+            <th>게임 차례</th>
+            <th>게임 삭제</th>
+        </tr>
+    </table>
+</div>
+
 </body>
 
 <script>
+    fetchRooms();
+
+    async function fetchRooms() {
+        const res = await fetch('/api/rooms');
+        const rooms = await res.json();
+
+        rooms.forEach(room => {
+            const roomTable = document.getElementById("roomTable");
+
+            const tr = document.createElement("tr");
+
+            const nameTag = document.createElement("td");
+            const gameStatusTag = document.createElement("td");
+            const currentTurnTag = document.createElement("td");
+            const isDeleteTag = document.createElement("td");
+
+            const name = document.createTextNode(room.name);
+            const a = document.createElement("a");
+            a.href = '/rooms/' + room.id;
+            a.appendChild(name);
+
+            const gameStatus = document.createTextNode(room.gameStatus);
+            const currentTurn = document.createTextNode(room.currentTurn);
+
+            const button = document.createElement("button");
+            button.addEventListener('click', () => removeRoom(room.id));
+
+            const isDelete = document.createTextNode("삭제하기");
+            button.appendChild(isDelete);
+
+            nameTag.appendChild(a);
+            gameStatusTag.appendChild(gameStatus);
+            currentTurnTag.appendChild(currentTurn);
+            isDeleteTag.appendChild(button);
+
+            tr.appendChild(nameTag);
+            tr.appendChild(gameStatusTag);
+            tr.appendChild(currentTurnTag);
+            tr.appendChild(isDeleteTag);
+
+            roomTable.appendChild(tr);
+        })
+    }
+
     async function start() {
-        roomName = document.getElementById("roomNameInput").value;
+        const roomName = document.getElementById("roomNameInput").value;
+        const roomPassword = document.getElementById("roomPasswordInput").value;
+
         if (/^\s*$/.test(roomName)) {
             const error = document.getElementById("error");
             error.innerText = "방 이름을 입력하세요!";
 
             document.getElementById("roomNameInput").value = "";
+            document.getElementById("roomPasswordInput").value = "";
             return;
         }
 
-        await fetch(`/rooms/${roomName}`, {method: "POST"});
-        await fetch(`/rooms/${roomName}/pieces`, {method: "POST"});
+        const res = await fetch('/api/rooms', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                name: `${roomName}`,
+                password: `${roomPassword}`
+            })
+        });
 
-        window.location.href = `/rooms/${roomName}`;
+        const id = await res.json();
+
+        await fetch(`/api/rooms/${id}/pieces`, {method: "POST"});
+        window.location.href = `/rooms/${id}`;
+    }
+
+    async function removeRoom(id) {
+        const res = await fetch(`/api/rooms/${id}`);
+        const room = await res.json();
+
+        if (room.gameStatus != 'end' || !res.ok) {
+            const error = document.getElementById("error");
+            error.innerText = "게임이 끝나야 삭제할 수 있습니다!";
+            return;
+        }
+
+        let password = prompt("비밀 번호를 입력하세요.");
+
+        await fetch(`/api/rooms/${id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'DELETE',
+            body: JSON.stringify({
+                password: `${password}`
+            })
+        });
+
+        window.location.href = '/';
     }
 </script>
 

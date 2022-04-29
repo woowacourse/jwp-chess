@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/chess
+    username: root
+    password: root
+
+  web:
+    resources:
+      static-locations: classpath:/static

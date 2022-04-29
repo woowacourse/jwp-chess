@@ -1,5 +1,3 @@
-USE chess;
-
 CREATE TABLE room
 (
     id           INT AUTO_INCREMENT NOT NULL PRIMARY KEY,

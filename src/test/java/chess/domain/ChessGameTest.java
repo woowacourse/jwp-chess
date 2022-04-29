@@ -10,7 +10,7 @@ import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Color;
 import chess.domain.chesspiece.King;
 import chess.domain.position.Position;
-import chess.result.MoveResult;
+import chess.domain.result.MoveResult;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;

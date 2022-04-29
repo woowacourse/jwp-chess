@@ -23,6 +23,8 @@ class RoomDaoTest {
     void setUp() {
         roomDao = new JdbcRoomDao(jdbcTemplate);
 
+        jdbcTemplate.execute("drop table piece if exists");
+        jdbcTemplate.execute("drop table turn if exists");
         jdbcTemplate.execute("drop table room if exists");
         jdbcTemplate.execute("CREATE TABLE room (\n" +
                 "    id bigint not null auto_increment primary key,\n" +

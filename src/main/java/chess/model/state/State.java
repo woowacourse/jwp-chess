@@ -12,9 +12,9 @@ public interface State {
 
     Map<Position, Piece> getBoard();
 
-    Map<Team, Double> getScores();
+    Map<String, Double> getScores();
 
-    Team getWinner();
+    String getWinner();
 
     String getSymbol();
 }

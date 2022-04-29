@@ -23,10 +23,10 @@ public class Score {
         this.board = board;
     }
 
-    public Map<Team, Double> teams() {
-        Map<Team, Double> scores = new HashMap<>();
-        scores.put(BLACK, team(BLACK) + pawnPenalty(BLACK));
-        scores.put(WHITE, team(WHITE) + pawnPenalty(WHITE));
+    public Map<String, Double> teams() {
+        Map<String, Double> scores = new HashMap<>();
+        scores.put(BLACK.getName(), team(BLACK) + pawnPenalty(BLACK));
+        scores.put(WHITE.getName(), team(WHITE) + pawnPenalty(WHITE));
         return scores;
     }
 

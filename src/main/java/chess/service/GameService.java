@@ -26,18 +26,18 @@ public class GameService {
     public BoardResponse start(final String id) {
         State state = new WhiteTurn(Board.init());
         gameRepository.initGameData(id, state);
-        return convertToBoardDto(state.getBoard());
+        return convertToBoardResponse(state.getBoard());
     }
 
     public BoardResponse end(final String id) {
         Board board = gameRepository.getBoardFrom(id);
         gameRepository.deleteGameDataFrom(id);
-        return convertToBoardDto(board.getBoard());
+        return convertToBoardResponse(board.getBoard());
     }
 
     public BoardResponse move(final String id, final MoveRequest moveRequest) {
         State state = proceed(id, moveRequest);
-        return convertToBoardDto(state.getBoard());
+        return convertToBoardResponse(state.getBoard());
     }
 
     private State proceed(final String id, final MoveRequest moveRequest) {
@@ -55,10 +55,10 @@ public class GameService {
 
     public BoardResponse load(final String id) {
         Board board = gameRepository.getBoardFrom(id);
-        return convertToBoardDto(board.getBoard());
+        return convertToBoardResponse(board.getBoard());
     }
 
-    private BoardResponse convertToBoardDto(final Map<Position, Piece> board) {
+    private BoardResponse convertToBoardResponse(final Map<Position, Piece> board) {
         Map<String, String> squares = new HashMap<>();
         for (Position position : board.keySet()) {
             squares.put(position.getKey(), Piece.getKey(board.get(position)));

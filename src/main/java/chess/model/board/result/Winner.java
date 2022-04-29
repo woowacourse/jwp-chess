@@ -14,15 +14,15 @@ public class Winner {
         this.score = score;
     }
 
-    public Team team() {
+    public String team() {
         double whiteScore = score.white();
         double blackScore = score.black();
         if (blackScore > whiteScore) {
-            return BLACK;
+            return BLACK.getName();
         }
         if (whiteScore > blackScore) {
-            return WHITE;
+            return WHITE.getName();
         }
-        return NONE;
+        return NONE.getName();
     }
 }

@@ -16,11 +16,11 @@ public class GameResult {
         this.winner = new Winner(score);
     }
 
-    public Map<Team, Double> getTeamScores() {
+    public Map<String, Double> getTeamScores() {
         return score.teams();
     }
 
-    public Team pickWinnerTeam() {
+    public String pickWinnerTeam() {
         return winner.team();
     }
 }

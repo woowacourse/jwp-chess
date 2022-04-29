@@ -15,12 +15,12 @@ public final class Status extends Finished {
     }
 
     @Override
-    public Map<Team, Double> getScores() {
+    public Map<String, Double> getScores() {
         return gameResult.getTeamScores();
     }
 
     @Override
-    public Team getWinner() {
+    public String getWinner() {
         return gameResult.pickWinnerTeam();
     }
 

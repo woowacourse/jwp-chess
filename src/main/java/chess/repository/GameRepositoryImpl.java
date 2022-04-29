@@ -1,5 +1,7 @@
 package chess.repository;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,12 +67,11 @@ public class GameRepositoryImpl implements GameRepository {
 
     @Override
     public Map<Long, Boolean> findIdAndFinished() {
-        final List<GameFinishedDto> gameFinishedDtos = gameDao.findIdAndFinished();
-        return gameFinishedDtos.stream()
-                .collect(Collectors.toUnmodifiableMap(
-                        GameFinishedDto::getId,
-                        GameFinishedDto::getFinished)
-                );
+        final Map<Long, Boolean> datas = new LinkedHashMap<>();
+        for (final GameFinishedDto gameFinishedDto : gameDao.findIdAndFinished()) {
+            datas.put(gameFinishedDto.getId(), gameFinishedDto.getFinished());
+        }
+        return Collections.unmodifiableMap(datas);
     }
 
     @Override

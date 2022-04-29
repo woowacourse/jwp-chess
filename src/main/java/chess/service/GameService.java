@@ -4,17 +4,19 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import chess.domain.Color;
-import chess.domain.GameRepository;
 import chess.domain.Position;
 import chess.domain.game.Game;
+import chess.repository.GameRepositoryImpl;
+import chess.service.dto.ChessDtoAssembler;
+import chess.service.dto.response.GameResponseDto;
+import chess.service.dto.response.PlayerScoresResponseDto;
 
 @Service
 public class GameService {
 
-    private final GameRepository gameRepository;
+    private final GameRepositoryImpl gameRepository;
 
-    public GameService(final GameRepository gameRepository) {
+    public GameService(final GameRepositoryImpl gameRepository) {
         this.gameRepository = gameRepository;
     }
 
@@ -22,35 +24,35 @@ public class GameService {
         return gameRepository.findIdAndFinished();
     }
 
-    public Game createNewGame() {
-        final Game game = Game.initializeGame();
-        return gameRepository.save(game);
+    public Long createNewGame() {
+        final Game game = gameRepository.save(Game.initializeGame());
+        return game.getId();
     }
 
-    public Game loadGame(final Long gameId) {
-        return gameRepository.findById(gameId);
+    public GameResponseDto loadGame(final Long gameId) {
+        return ChessDtoAssembler.gameResponseDto(gameRepository.findById(gameId));
     }
 
-    public Game movePiece(final Long gameId, final String source, final String target) {
+    public GameResponseDto movePiece(final Long gameId, final String source, final String target) {
         final Game game = gameRepository.findById(gameId);
         game.movePiece(Position.from(source), Position.from(target));
-        return gameRepository.update(game);
+        return ChessDtoAssembler.gameResponseDto(gameRepository.update(game));
     }
 
-    public Game promotion(final Long gameId, final String pieceName) {
+    public GameResponseDto promotion(final Long gameId, final String pieceName) {
         final Game game = gameRepository.findById(gameId);
         game.promotePiece(pieceName);
-        return gameRepository.update(game);
+        return ChessDtoAssembler.gameResponseDto(gameRepository.update(game));
     }
 
-    public Map<Color, Double> calculatePlayerScores(final Long gameId) {
+    public PlayerScoresResponseDto calculatePlayerScores(final Long gameId) {
         final Game game = gameRepository.findById(gameId);
-        return game.getPlayerScores();
+        return ChessDtoAssembler.playerScoresResponseDto(game.getPlayerScores());
     }
 
-    public Game endGame(final Long gameId) {
+    public GameResponseDto endGame(final Long gameId) {
         final Game game = gameRepository.findById(gameId);
         game.end();
-        return gameRepository.update(game);
+        return ChessDtoAssembler.gameResponseDto(gameRepository.update(game));
     }
 }

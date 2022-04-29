@@ -48,7 +48,7 @@
     </h2>
 
     {{#unless game.finished}}
-    <h3>현재 플레이어 턴 : {{game.currentTurnColor}}</h3>
+    <h3>현재 플레이어 턴 : {{game.currentTurnColor.color}}</h3>
     {{/unless}}
 
     <div style="display: inline-block;">
@@ -101,9 +101,9 @@
 
     function createChessBoard() {
         positions = {
-            {{#each game.playersDto.playerDtos as |player color|}}
-                {{#each player.pieces as |piece positionDto|}}
-                    "{{positionDto.position}}" : "{{color}}#{{piece}}",
+            {{#each game.playersResponse.playerResponses as |playerResponse colorResponse|}}
+                {{#each playerResponse.pieceUnits as |pieceResponse positionResponse|}}
+                    "{{positionResponse.position}}" : "{{colorResponse.color}}#{{pieceResponse.piece}}",
                 {{/each}}
             {{/each}}
         }

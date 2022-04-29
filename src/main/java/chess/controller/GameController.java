@@ -1,7 +1,5 @@
 package chess.controller;
 
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,12 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import chess.domain.Color;
-import chess.domain.game.Game;
-import chess.dto.GameDto;
-import chess.dto.PlayerScoresDto;
+import chess.controller.dto.ChessAssembler;
+import chess.controller.dto.response.PlayerScoresResponse;
 import chess.service.GameService;
+import chess.service.dto.response.GameResponseDto;
+import chess.service.dto.response.PlayerScoresResponseDto;
 
 @Controller
 @RequestMapping("/games")
@@ -30,8 +29,7 @@ public class GameController {
 
     @GetMapping("/start")
     public String createNewGame() {
-        final Game game = gameService.createNewGame();
-        return "redirect:/games/" + game.getId();
+        return "redirect:/games/" + gameService.createNewGame();
     }
 
     @GetMapping("/{gameId}")
@@ -55,9 +53,10 @@ public class GameController {
     }
 
     @GetMapping("/{gameId}/status")
-    public ResponseEntity<PlayerScoresDto> calculatePlayerScores(@PathVariable("gameId") final Long gameId) {
-        final Map<Color, Double> playerScores = gameService.calculatePlayerScores(gameId);
-        return ResponseEntity.ok().body(PlayerScoresDto.toDto(playerScores));
+    @ResponseBody
+    public PlayerScoresResponse calculatePlayerScores(@PathVariable("gameId") final Long gameId) {
+        final PlayerScoresResponseDto playerScoresResponseDto = gameService.calculatePlayerScores(gameId);
+        return ChessAssembler.playerScoresResponse(playerScoresResponseDto);
     }
 
     @GetMapping("/{gameId}/end")
@@ -65,11 +64,8 @@ public class GameController {
         return renderBoard(gameService.endGame(gameId), model);
     }
 
-    private String renderBoard(final Game game, final Model model) {
-        model.addAttribute("game", GameDto.toDto(game));
-        if (game.isRunning()) {
-            model.addAttribute("promotable", game.isPromotable());
-        }
+    private String renderBoard(final GameResponseDto gameResponseDto, final Model model) {
+        model.addAttribute("game", ChessAssembler.gameResponse(gameResponseDto));
         return "board";
     }
 

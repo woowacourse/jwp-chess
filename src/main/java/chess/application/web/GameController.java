@@ -4,6 +4,7 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,9 +21,9 @@ public class GameController {
         return ResponseEntity.ok().body(statusData);
     }
 
-    @GetMapping("/save")
-    public ResponseEntity<Void> save() {
-        gameService.save();
+    @GetMapping("/save/{id}")
+    public ResponseEntity<Void> save(@PathVariable int id) {
+        gameService.save(id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

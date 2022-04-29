@@ -79,4 +79,10 @@ public class GameDao {
                 resultSet.getString("password")
         ), id);
     }
+
+    public boolean isWhiteTurn(int id) {
+        final String sql = "select white_turn from game where no = ?";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
+    }
 }

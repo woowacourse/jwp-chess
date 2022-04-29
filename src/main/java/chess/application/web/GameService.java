@@ -48,16 +48,6 @@ public class GameService {
         this.boardDao = boardDao;
     }
 
-    public Map<String, Object> modelReady() {
-        Map<String, Object> model = new HashMap<>();
-        model.put(KEY_READY, true);
-        return model;
-    }
-
-    public void start() {
-        chessGame.start();
-    }
-
     public List<GameDto> loadGames() {
         return gameDao.findAll();
     }
@@ -75,17 +65,34 @@ public class GameService {
     }
 
     public void create(String title, String password) {
-        gameDao.create(new ChessGame(title, password));
+        ChessGame chessGame = new ChessGame(title, password);
+        chessGame.start();
+        int gameId = gameDao.create(chessGame);
+        boardDao.save(gameId, chessGame.getBoardSquares());
     }
 
-    public void load() {
-        List<PieceDto> rawBoard = boardDao.load();
+    public Map<String, Object> findBoardByGameId(int id) {
+        List<PieceDto> rawBoard = boardDao.loadById(id);
         Map<Position, Piece> board = rawBoard.stream()
                 .collect(Collectors.toMap(
-                        pieceDto2 -> parsePosition(pieceDto2.getPosition()),
+                        pieceDto -> parsePosition(pieceDto.getPosition()),
                         this::parsePiece
                 ));
-        chessGame.load(board, gameDao.isWhiteTurn());
+        ChessGame chessGame = new ChessGame();
+        chessGame.load(board, gameDao.isWhiteTurn(id));
+        return modelPlayingBoard(chessGame);
+    }
+
+    private Map<String, Object> modelPlayingBoard(ChessGame chessGame) {
+        Map<Position, Piece> board = chessGame.getBoardSquares();
+        Map<String, Object> model = board.entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey().toString(),
+                        entry -> PieceDto.of(entry.getValue(), entry.getKey())
+                ));
+        model.put(KEY_STARTED, true);
+        model.put(KEY_READY, false);
+        return model;
     }
 
     private Piece parsePiece(PieceDto piece) {
@@ -127,7 +134,7 @@ public class GameService {
         return chessGame.getScores();
     }
 
-    public void save() {
+    public void save(int id) {
         gameDao.save();
         boardDao.save(chessGame.getBoardSquares());
     }

@@ -22,10 +22,11 @@ public class ViewController {
         return "games";
     }
 
-    @GetMapping("/index")
-    public String index(Model model) {
-        model.addAllAttributes(gameService.modelReady());
-        return "index";
+    @GetMapping("/game/{id}")
+    public String findGameById(@PathVariable int id, Model model) {
+        Map<String, Object> result = gameService.findBoardByGameId(id);
+        model.addAllAttributes(result);
+        return "game";
     }
 
     @GetMapping("/create")
@@ -51,18 +52,6 @@ public class ViewController {
     public String deleteGame(@PathVariable int id, @RequestParam Map<String, String> request) {
         gameService.deleteGame(id, request);
         return "redirect:/";
-    }
-
-    @GetMapping("/start")
-    public String start(Model model) {
-        gameService.start();
-        return play(model);
-    }
-
-    @GetMapping("/load")
-    public String load(Model model) {
-        gameService.load();
-        return play(model);
     }
 
     @PostMapping("/move")

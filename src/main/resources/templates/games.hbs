@@ -15,7 +15,7 @@
         {{#each games}}
             <tr>
                 <td>{{title}}</td>
-                <td><button>enter</button></td>
+                <td><button id="enter-game" onclick="enter_game({{id}});">enter</button></td>
                 <td><button id="delete-game" onclick="delete_game({{id}});">delete</button></td>
             </tr>
         {{/each}}
@@ -28,6 +28,9 @@
 
     function delete_game(id) {
         location.href = "/delete/" + id;
+    }
+    function enter_game(id) {
+        location.href = "/game/" + id;
     }
 </script>
 </html>

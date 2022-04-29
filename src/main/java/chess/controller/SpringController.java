@@ -37,7 +37,7 @@ public class SpringController {
         return "redirect:/game/" + id;
     }
 
-    @GetMapping("/start")
+    @PostMapping("/start")
     public String start(@RequestParam("game_name") String gameName, @RequestParam("password") String password) {
         Long id = chessService.save(gameName, password);
 

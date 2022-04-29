@@ -22,6 +22,8 @@ public final class Board {
     private final Map<Position, Piece> piecesByPosition;
 
     private Color turn;
+    private String name;
+    private String password;
 
     public Board() {
         this.piecesByPosition = BoardInitializer.createBoard();
@@ -31,6 +33,13 @@ public final class Board {
     public Board(Map<Position, Piece> pieces, Color turn) {
         this.piecesByPosition = pieces;
         this.turn = turn;
+    }
+
+    public Board(Map<Position, Piece> pieces, Color turn, String name, String password) {
+        this.piecesByPosition = pieces;
+        this.turn = turn;
+        this.name = name;
+        this.password = password;
     }
 
     public void move(Position beforePosition, Position afterPosition) {
@@ -142,6 +151,15 @@ public final class Board {
             return Winner.WHITE;
         }
         return Winner.DRAW;
+    }
+
+    public void delete(String inputPassword) {
+        if (!password.equals(inputPassword)) {
+            throw new IllegalArgumentException("잘못된 비밀번호 입력입니다.");
+        }
+        if(turn != Color.END){
+            throw new IllegalStateException("종료된 게임만 삭제할 수 있습니다.");
+        }
     }
 
     public Color getTurn() {

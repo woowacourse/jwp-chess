@@ -11,7 +11,7 @@ async function showCreateForm() {
     document.getElementById("create-form").style.display = "block";
     document.getElementById("showCreateForm").style.display = "none";
     document.getElementById("rooms").style.display = "none";
-    document.getElementById("roomName").style.display = "inline";
+    document.getElementById("name-form").style.display = "inline";
     document.getElementById("create-room").style.display = "inline";
 }
 
@@ -21,7 +21,9 @@ async function create() {
     document.getElementById("rooms").style.display = "none";
     if (roomName === "") {
         roomName = document.getElementById("roomName").value;
+        console.log("[getElement]: " + roomName);
     }
+    console.log("[roomName]: " + roomName);
     await fetch("/room", {
         method: "POST",
         headers: {
@@ -252,10 +254,10 @@ async function tempAlert(message, timeout)
 }
 
 async function rooms() {
+    console.log("rooms");
     document.getElementById("rooms").style.display = "block";
-    document.getElementById("roomName").style.display = "none";
-    document.getElementById("showCreateForm").style.display = "inline";
-    document.getElementById("create-room").style.display = "none";
+    document.getElementById("create-form").style.display = "block";
+    document.getElementById("name-form").style.display = "none";
     let rooms;
     removeChildren(document.querySelector("tbody"));
     await fetch("/rooms", {
@@ -291,23 +293,17 @@ async function enter(self) {
 
 async function deleteRoom(self) {
     id = self.id.split("/")[1];
-    let isDeleted = false;
-    console.log("[id]: " + id);
-    console.log("[password]: " + document.getElementById("roomPassword").value);
-    await fetch("/room/" + id, {
+    let response = await fetch("/room/" + id, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
         },
         body: "password=" + document.getElementById("roomPassword").value
-    }).then(res => res.json())
-        .then(data => isDeleted = data)
+    })
 
-    if (isDeleted) {
-        alert("삭제되었습니다.");
-        await rooms();
-    } else {
-        alert("[ERROR]: 비밀번호가 일치하지 않습니다.")
+    if (!response.ok) {
+        const errorMessage = await response.json();
+        await tempAlert(errorMessage.message, 500);
     }
 }
 

@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
@@ -81,10 +79,26 @@ public class ChessServiceTest {
         );
     }
 
-    @ParameterizedTest
-    @CsvSource(value = {"pw:true", "pww:false"}, delimiter = ':')
+    @Test
     @DisplayName("delete로 id, password를 받아 Room, square 정보를 지운다.")
-    void delete(String password, boolean expected) {
-        assertThat(chessService.delete(id, password)).isEqualTo(expected);
+    void delete() {
+        assertThat(chessService.delete(id, "pw")).isTrue();
+    }
+
+    @Test
+    @DisplayName("delete로 password가 옳지 않은 경우 Exception을 던진다.")
+    void deleteInvalidPasswordException() {
+        assertThatThrownBy(() -> chessService.delete(id, "pww"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Password");
+    }
+
+    @Test
+    @DisplayName("delete로 현재 상태가 empty가 아닐 때 삭제 시도할 경우 Exception을 던진다.")
+    void deleteNotAllowedException() {
+        chessService.startNewGame(id);
+        assertThatThrownBy(() -> chessService.delete(id, "pw"))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("진행중");
     }
 }

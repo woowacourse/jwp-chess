@@ -1,4 +1,4 @@
-package chess.repository.mysql;
+package chess.repository.dao;
 
 import java.sql.PreparedStatement;
 import java.util.Objects;
@@ -7,19 +7,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
 
-import chess.repository.PlayerDao;
-import chess.repository.dto.player.PlayerDto;
+import chess.repository.dao.dto.player.PlayerDto;
 
 @Component
-public class MysqlPlayerDao implements PlayerDao {
+public class PlayerDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public MysqlPlayerDao(final JdbcTemplate jdbcTemplate) {
+    public PlayerDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public Long save(final PlayerDto playerDto) {
         final String query = "INSERT INTO Player (color, pieces) VALUES (?,?)";
         final GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
@@ -32,7 +30,6 @@ public class MysqlPlayerDao implements PlayerDao {
         return Objects.requireNonNull(generatedKeyHolder.getKey()).longValue();
     }
 
-    @Override
     public PlayerDto findById(final Long id) {
         final String query = "SELECT id, color, pieces FROM Player where id=?";
         return jdbcTemplate.queryForObject(query,
@@ -43,13 +40,11 @@ public class MysqlPlayerDao implements PlayerDao {
                 ), id);
     }
 
-    @Override
     public void update(final PlayerDto playerDto) {
         final String query = "UPDATE Player SET pieces=? WHERE id=?";
         jdbcTemplate.update(query, playerDto.getPieces(), playerDto.getId());
     }
 
-    @Override
     public void remove(final Long id) {
         final String query = "DELETE FROM Player WHERE id=?";
         jdbcTemplate.update(query, id);

@@ -1,4 +1,4 @@
-package chess.repository.mysql;
+package chess.repository.dao;
 
 import static chess.domain.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,11 +13,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import chess.repository.PlayerDao;
-import chess.repository.dto.player.PlayerDto;
+import chess.repository.dao.dto.player.PlayerDto;
 
 @JdbcTest
-class MysqlPlayerDaoTest {
+class PlayerDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -25,7 +24,7 @@ class MysqlPlayerDaoTest {
 
     @BeforeEach
     void setUp() {
-        playerDao = new MysqlPlayerDao(jdbcTemplate);
+        playerDao = new PlayerDao(jdbcTemplate);
     }
 
     @DisplayName("데이터 저장 및 조회가 가능해야 한다.")

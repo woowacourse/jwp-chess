@@ -1,12 +1,10 @@
 package chess.domain.game;
 
 import java.util.Map;
-import java.util.Objects;
 
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.game.state.GameState;
-import chess.domain.game.state.GameStateFactory;
 import chess.domain.game.state.RunningState;
 import chess.domain.player.Players;
 

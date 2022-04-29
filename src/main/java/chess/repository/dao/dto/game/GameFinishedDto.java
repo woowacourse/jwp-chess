@@ -1,4 +1,4 @@
-package chess.repository.dto.game;
+package chess.repository.dao.dto.game;
 
 public class GameFinishedDto {
 

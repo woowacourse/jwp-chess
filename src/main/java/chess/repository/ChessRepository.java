@@ -11,11 +11,12 @@ import org.springframework.stereotype.Repository;
 import chess.domain.game.Game;
 import chess.domain.player.Player;
 import chess.domain.player.Players;
-import chess.repository.dto.GameDtoAssembler;
-import chess.repository.dto.PlayerDtoAssembler;
-import chess.repository.dto.game.GameDto;
-import chess.repository.dto.game.GameFinishedDto;
-import chess.repository.dto.player.PlayerDto;
+import chess.repository.dao.GameDao;
+import chess.repository.dao.PlayerDao;
+import chess.repository.dao.dto.DaoAssembler;
+import chess.repository.dao.dto.game.GameDto;
+import chess.repository.dao.dto.game.GameFinishedDto;
+import chess.repository.dao.dto.player.PlayerDto;
 
 @Repository
 public class ChessRepository {
@@ -40,13 +41,13 @@ public class ChessRepository {
     }
 
     private Player savePlayer(final Player player) {
-        final PlayerDto playerDto = PlayerDtoAssembler.toPlayerDto(player);
-        return PlayerDtoAssembler.toPlayer(playerDao.save(playerDto), playerDto);
+        final PlayerDto playerDto = DaoAssembler.playerDto(player);
+        return DaoAssembler.player(playerDao.save(playerDto), playerDto);
     }
 
     private Game saveGame(final Game game, final List<Player> players) {
-        final GameDto gameDto = GameDtoAssembler.toGameDto(game, players);
-        return GameDtoAssembler.toChessGame(gameDao.save(gameDto), players, gameDto);
+        final GameDto gameDto = DaoAssembler.gameDto(game, players);
+        return DaoAssembler.game(gameDao.save(gameDto), players, gameDto);
     }
 
     public Game findById(final Long gameId) {
@@ -54,12 +55,12 @@ public class ChessRepository {
         final List<Player> players = List.of(
                 findPlayerById(gameDto.getPlayer_id1()),
                 findPlayerById(gameDto.getPlayer_id2()));
-        return GameDtoAssembler.toChessGame(gameId, players, gameDto);
+        return DaoAssembler.game(gameId, players, gameDto);
     }
 
     public Player findPlayerById(final Long playerId) {
         final PlayerDto playerDto = playerDao.findById(playerId);
-        return PlayerDtoAssembler.toPlayer(playerDto);
+        return DaoAssembler.player(playerDto);
     }
 
     public Map<Long, Boolean> findStatuses() {
@@ -78,12 +79,12 @@ public class ChessRepository {
 
     private void updatePlayers(final Players players) {
         for (final Player player : players.getPlayers()) {
-            playerDao.update(PlayerDtoAssembler.toPlayerDto(player));
+            playerDao.update(DaoAssembler.playerDto(player));
         }
     }
 
     private void updateGame(final Game game) {
-        gameDao.update(GameDtoAssembler.toGameUpdateDto(game));
+        gameDao.update(DaoAssembler.gameUpdateDto(game));
     }
 
     public void remove(final Long gameId) {

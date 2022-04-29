@@ -29,17 +29,13 @@ public class GameDto {
     public GameDto(Long id, String title, String turn, String status) {
         this.id = id;
         this.title = title;
-        this.password = "";
         this.turn = turn;
         this.status = status;
     }
 
     public GameDto(Long id, String password) {
         this.id = id;
-        this.title = "";
         this.password = password;
-        this.turn = "";
-        this.status = "";
     }
 
     public Long getId() {

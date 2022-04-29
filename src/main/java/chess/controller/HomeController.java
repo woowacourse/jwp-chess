@@ -24,17 +24,22 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/games")
+    @GetMapping("/rooms")
     public ResponseEntity<List<GameDto>> getGames() {
         return ResponseEntity.ok().body(chessGameService.getAllGames());
     }
 
-    @PostMapping(value = "/game", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/room/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GameDto> getGame(@PathVariable Long id, @RequestBody GameDto gameDto) {
+        return ResponseEntity.ok().body(chessGameService.getGame(id, gameDto));
+    }
+
+    @PostMapping(value = "/room", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> createGame(@RequestBody GameCreationDto gameCreationDto) {
         return ResponseEntity.ok().body(chessGameService.addGame(gameCreationDto));
     }
 
-    @DeleteMapping(value = "/game/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/room/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> deleteGame(@PathVariable Long id, @RequestBody GameDto gameDto) {
         chessGameService.removeGame(id, gameDto);
         return ResponseEntity.noContent().build();

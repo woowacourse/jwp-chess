@@ -9,13 +9,9 @@ import chess.serviece.ChessService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/chess-game")
 public class GameController {
 
     private final ChessService chessService;
@@ -31,12 +27,12 @@ public class GameController {
         return "game";
     }
 
-    @GetMapping("/load")
+    @GetMapping("/game/{id}")
     public ResponseEntity<ChessResponseDto> load() {
         return ResponseEntity.ok().body(chessService.getChess());
     }
 
-    @PostMapping("/start")
+    @PutMapping("/start")
     public ResponseEntity<ChessResponseDto> start() {
         return ResponseEntity.ok().body(chessService.initializeGame());
     }

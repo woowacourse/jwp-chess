@@ -50,8 +50,12 @@ public class ChessGameService {
                 .collect(Collectors.toList());
     }
 
-    public GameDto getGame(Long gameId) {
-        return gameDao.findById(gameId);
+    public GameDto getGame(Long id, GameDto gameDto) {
+        String password = gameDao.findPasswordById(id);
+        if (!password.equals(gameDto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        return gameDao.findById(id);
     }
 
     public List<GameDto> getAllGames() {

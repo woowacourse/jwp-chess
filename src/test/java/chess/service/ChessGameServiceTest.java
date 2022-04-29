@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.dao.FakeJdbcGameDao;
 import chess.dao.FakePieceDao;
+import chess.dao.dto.GameDto;
 import chess.serviece.ChessGameService;
 import chess.serviece.dto.GameCreationDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +36,8 @@ public class ChessGameServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(chessService.getGame(id).getTitle()).isEqualTo(title),
-                () -> assertThat(chessService.getGame(id).getPassword()).isEqualTo(password)
+                () -> assertThat(chessService.getGame(id, new GameDto(id, "1234")).getTitle()).isEqualTo(title),
+                () -> assertThat(chessService.getGame(id, new GameDto(id, "1234")).getPassword()).isEqualTo(password)
         );
     }
 
@@ -53,8 +54,8 @@ public class ChessGameServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(chessService.getGame(id).getTitle()).isEqualTo(title),
-                () -> assertThat(chessService.getGame(id).getPassword()).isEqualTo(password)
+                () -> assertThat(chessService.getGame(id, new GameDto(id, "1234")).getTitle()).isEqualTo(title),
+                () -> assertThat(chessService.getGame(id, new GameDto(id, "1234")).getPassword()).isEqualTo(password)
         );
     }
 

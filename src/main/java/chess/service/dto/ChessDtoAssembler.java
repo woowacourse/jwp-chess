@@ -10,8 +10,10 @@ import chess.domain.Position;
 import chess.domain.game.Game;
 import chess.domain.piece.Piece;
 import chess.domain.player.Players;
+import chess.repository.dto.game.GameStatus;
 import chess.service.dto.response.ColorResponseDto;
 import chess.service.dto.response.GameResponseDto;
+import chess.service.dto.response.GameStatusResponseDto;
 import chess.service.dto.response.PieceResponseDto;
 import chess.service.dto.response.PlayerResponseDto;
 import chess.service.dto.response.PlayerScoresResponseDto;
@@ -27,6 +29,10 @@ public class ChessDtoAssembler {
         return new GameResponseDto(game.getId(), playersResponseDto(game.getPlayers()),
                 game.isFinished(), game.isPromotable(),
                 colorResponseDto(game.getColorOfCurrentTurn()));
+    }
+
+    public static GameStatusResponseDto gameStatusResponseDto(final GameStatus gameStatus) {
+        return new GameStatusResponseDto(gameStatus.getId(), gameStatus.getTitle(), gameStatus.getFinished());
     }
 
     private static PlayersResponseDto playersResponseDto(final Players players) {
@@ -66,4 +72,5 @@ public class ChessDtoAssembler {
                         Entry::getValue
                 )));
     }
+
 }

@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 import chess.controller.dto.response.ColorResponse;
 import chess.controller.dto.response.GameResponse;
+import chess.controller.dto.response.GameStatusResponse;
 import chess.controller.dto.response.PieceResponse;
 import chess.controller.dto.response.PlayerResponse;
 import chess.controller.dto.response.PlayerScoresResponse;
@@ -11,6 +12,7 @@ import chess.controller.dto.response.PlayersResponse;
 import chess.controller.dto.response.PositionResponse;
 import chess.service.dto.response.ColorResponseDto;
 import chess.service.dto.response.GameResponseDto;
+import chess.service.dto.response.GameStatusResponseDto;
 import chess.service.dto.response.PieceResponseDto;
 import chess.service.dto.response.PlayerResponseDto;
 import chess.service.dto.response.PlayerScoresResponseDto;
@@ -27,6 +29,11 @@ public class ChessAssembler {
                 playersResponse(gameResponseDto.getPlayersResponseDto()),
                 gameResponseDto.getFinished(), gameResponseDto.getPromotable(),
                 colorResponse(gameResponseDto.getCurrentTurnColor()));
+    }
+
+    public static GameStatusResponse gameStatusResponse(final GameStatusResponseDto gameStatusResponseDto) {
+        return new GameStatusResponse(gameStatusResponseDto.getId(),
+                gameStatusResponseDto.getTitle(), gameStatusResponseDto.getFinished());
     }
 
     private static PlayersResponse playersResponse(final PlayersResponseDto playersResponseDto) {

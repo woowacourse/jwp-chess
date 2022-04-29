@@ -52,11 +52,12 @@ public class GameDao {
     }
 
     public List<GameStatusDto> findStatuses() {
-        final String query = "SELECT id, finished FROM Game ORDER BY id DESC";
+        final String query = "SELECT id, title, finished FROM Game ORDER BY id DESC";
         return jdbcTemplate.query(query,
                 (resultSet, rowNum) -> new GameStatusDto(
                         resultSet.getLong(1),
-                        resultSet.getBoolean(2)
+                        resultSet.getString(2),
+                        resultSet.getBoolean(3)
                 ));
     }
 

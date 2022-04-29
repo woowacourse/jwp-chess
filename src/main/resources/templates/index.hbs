@@ -47,20 +47,20 @@
                 <th>진행여부</th>
                 <th>삭제버튼</th>
             </tr>
-            {{#each games as |value key|}}
+            {{#each games}}
             <tr>
                 <td>
-                    <a href="/games/{{key}}">{{key}}</a>
+                    <a href="/games/{{this.id}}">{{this.title}}#{{this.id}}</a>
                 </td>
                 <td>
-                    {{#if value}}
+                    {{#if this.finished}}
                     종료
                     {{else}}
                     진행중
                     {{/if}}
                 </td>
                 <td>
-                    <button type="button" onclick=removeGame({{key}})>삭제</button>
+                    <button type="button" onclick=removeGame({{this.id}})>삭제</button>
                 </td>
             </tr>
             {{/each}}

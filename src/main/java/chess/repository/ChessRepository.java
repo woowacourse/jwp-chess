@@ -1,9 +1,6 @@
 package chess.repository;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -15,8 +12,9 @@ import chess.repository.dao.GameDao;
 import chess.repository.dao.PlayerDao;
 import chess.repository.dao.dto.DaoAssembler;
 import chess.repository.dao.dto.game.GameDto;
-import chess.repository.dao.dto.game.GameStatusDto;
 import chess.repository.dao.dto.player.PlayerDto;
+import chess.repository.dto.RepositoryAssembler;
+import chess.repository.dto.game.GameStatus;
 
 @Repository
 public class ChessRepository {
@@ -63,12 +61,11 @@ public class ChessRepository {
         return DaoAssembler.player(playerDto);
     }
 
-    public Map<Long, Boolean> findStatuses() {
-        final Map<Long, Boolean> statuses = new LinkedHashMap<>();
-        for (final GameStatusDto gameStatusDto : gameDao.findStatuses()) {
-            statuses.put(gameStatusDto.getId(), gameStatusDto.getFinished());
-        }
-        return Collections.unmodifiableMap(statuses);
+    public List<GameStatus> findStatuses() {
+        return gameDao.findStatuses()
+                .stream()
+                .map(RepositoryAssembler::gameStatus)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public Game update(final Game game) {

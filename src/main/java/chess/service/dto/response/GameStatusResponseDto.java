@@ -1,12 +1,12 @@
-package chess.repository.dao.dto.game;
+package chess.service.dto.response;
 
-public class GameStatusDto {
+public class GameStatusResponseDto {
 
     private final Long id;
     private final String title;
     private final Boolean finished;
 
-    public GameStatusDto(final Long id, final String title, final Boolean finished) {
+    public GameStatusResponseDto(final Long id, final String title, final Boolean finished) {
         this.id = id;
         this.title = title;
         this.finished = finished;

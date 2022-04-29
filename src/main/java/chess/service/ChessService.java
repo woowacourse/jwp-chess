@@ -1,6 +1,7 @@
 package chess.service;
 
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import chess.domain.game.Game;
 import chess.repository.ChessRepository;
 import chess.service.dto.ChessDtoAssembler;
 import chess.service.dto.response.GameResponseDto;
+import chess.service.dto.response.GameStatusResponseDto;
 import chess.service.dto.response.PlayerScoresResponseDto;
 
 @Service
@@ -20,8 +22,11 @@ public class ChessService {
         this.chessRepository = chessRepository;
     }
 
-    public Map<Long, Boolean> listGames() {
-        return chessRepository.findStatuses();
+    public List<GameStatusResponseDto> listGames() {
+        return chessRepository.findStatuses()
+                .stream()
+                .map(ChessDtoAssembler::gameStatusResponseDto)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public Long createNewGame(final String title, final String password) {

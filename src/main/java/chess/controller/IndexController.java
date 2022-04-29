@@ -1,11 +1,14 @@
 package chess.controller;
 
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import chess.controller.dto.ChessAssembler;
+import chess.controller.dto.response.GameStatusResponse;
 import chess.service.ChessService;
 
 @Controller
@@ -19,7 +22,10 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(final Model model) {
-        final Map<Long, Boolean> games = chessService.listGames();
+        final List<GameStatusResponse> games = chessService.listGames()
+                .stream()
+                .map(ChessAssembler::gameStatusResponse)
+                .collect(Collectors.toUnmodifiableList());
         model.addAttribute("games", games);
         return "index";
     }

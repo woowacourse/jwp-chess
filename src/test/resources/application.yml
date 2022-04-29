@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:13306/dev_chess
-    username: root
-    password: root
+    url: jdbc:mysql://localhost:13306/woowa-chess-dev
+    username: woowa-chess
+    password: 1234
   h2:
     console:
       enabled: true

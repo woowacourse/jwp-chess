@@ -21,9 +21,8 @@ public class ResultController {
     @GetMapping("/results")
     public String showResult(@ModelAttribute ChessGameDto chessGameDto, Model model) {
 
-        GameResult gameResult = chessService.getGameResult(chessGameDto);
-        model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
-        model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
+        model.addAttribute("whiteScore", chessService.calculateScore(chessGameDto, Color.WHITE));
+        model.addAttribute("blackScore", chessService.calculateScore(chessGameDto, Color.BLACK));
         return "status";
     }
 }

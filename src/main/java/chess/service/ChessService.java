@@ -1,12 +1,12 @@
 package chess.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
-import chess.dto.ChessGameDto;
 import chess.db.ChessGameDao;
 import chess.db.PieceDao;
 import chess.domain.ChessGame;
@@ -15,7 +15,10 @@ import chess.domain.GameTurn;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.board.SavedBoardGenerator;
+import chess.domain.piece.Color;
 import chess.domain.position.Square;
+import chess.dto.ChessGameDto;
+import chess.dto.MovementRequest;
 
 @Service
 public class ChessService {
@@ -27,7 +30,17 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGame loadChessGame(ChessGameDto chessGameDto, String restart) {
+    public Map<String, String> getEmojis(ChessGameDto chessGameDto, String restart) {
+        ChessGame chessGame = loadChessGame(chessGameDto, restart);
+        return chessGame.getEmojis();
+    }
+
+    public Map<String, String> getSavedEmojis(ChessGameDto chessGameDto) {
+        ChessGame chessGame = loadSavedChessGame(chessGameDto);
+        return chessGame.getEmojis();
+    }
+
+    private ChessGame loadChessGame(ChessGameDto chessGameDto, String restart) {
         String gameID = chessGameDto.getGameID();
         try {
             pieceDao.findByGameID(gameID);
@@ -76,7 +89,12 @@ public class ChessService {
         }
     }
 
-    public ChessGame loadSavedChessGame(ChessGameDto chessGameDto) {
+    public boolean isKingDie(ChessGameDto chessGameDto) {
+        ChessGame chessGame = loadSavedChessGame(chessGameDto);
+        return chessGame.isKingDie();
+    }
+
+    private ChessGame loadSavedChessGame(ChessGameDto chessGameDto) {
         return new ChessGame(new SavedBoardGenerator(pieceDao.findByGameID(chessGameDto.getGameID())),
                 getTurn(chessGameDto));
     }
@@ -90,7 +108,12 @@ public class ChessService {
         updateTurn(gameID, chessGame);
     }
 
-    public void movePiece(ChessGameDto chessGameDto, ChessGame chessGame, String source, String target) {
+    public void movePiece(ChessGameDto chessGameDto, MovementRequest movementRequest) {
+        String source = movementRequest.getSource();
+        String target = movementRequest.getTarget();
+        ChessGame chessGame = loadSavedChessGame(chessGameDto);
+        chessGame.move(new Square(source), new Square(target));
+
         String gameID = chessGameDto.getGameID();
         updateTurn(gameID, chessGame);
         updatePosition(gameID, source, target);
@@ -104,11 +127,6 @@ public class ChessService {
         pieceDao.deleteByPosition(new Square(target), gameID);
         pieceDao.updatePosition(new Square(source), new Square(target), gameID);
         pieceDao.insertNone(gameID, new Square(source));
-    }
-
-    public GameResult getGameResult(ChessGameDto chessGameDto) {
-        Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameID(chessGameDto.getGameID())));
-        return new GameResult(board);
     }
 
     public List<ChessGameDto> getGameIDs() {
@@ -149,5 +167,23 @@ public class ChessService {
         } catch (IncorrectResultSizeDataAccessException e) {
             return false;
         }
+    }
+
+    public double calculateScore(ChessGameDto chessGameDto, Color color) {
+        try {
+            return getSavedGameResult(chessGameDto).calculateScore(color);
+        } catch (IllegalArgumentException e) {
+            return getGameResult().calculateScore(color);
+        }
+    }
+
+    private GameResult getGameResult() {
+        Board board = new Board(new InitialBoardGenerator());
+        return new GameResult(board);
+    }
+
+    private GameResult getSavedGameResult(ChessGameDto chessGameDto) {
+        Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameID(chessGameDto.getGameID())));
+        return new GameResult(board);
     }
 }

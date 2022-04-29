@@ -45,10 +45,6 @@ public final class ChessGame {
         return turn == GameTurn.FINISHED;
     }
 
-    public boolean isInGame() {
-        return turn != GameTurn.READY;
-    }
-
     public Map<String, String> getEmojis() {
         return board.getBoard().entrySet()
                 .stream()

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class GameDaoStub extends GameDao {
 
@@ -24,8 +23,8 @@ public class GameDaoStub extends GameDao {
         put(5, new GameFullEntity(5, "참여자가_없는_게임", "encrypted5", true));
     }};
 
-    public GameDaoStub(NamedParameterJdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
+    public GameDaoStub() {
+        super(null);
     }
 
     @Override

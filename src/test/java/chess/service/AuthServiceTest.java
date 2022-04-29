@@ -10,23 +10,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @SuppressWarnings("NonAsciiCharacters")
-@SpringBootTest
 class AuthServiceTest {
-
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private GameDaoStub gameDao;
     private AuthService service;
 
     @BeforeEach
     void setup() {
-        gameDao = new GameDaoStub(namedParameterJdbcTemplate);
+        gameDao = new GameDaoStub();
         service = new AuthService(gameDao);
     }
 

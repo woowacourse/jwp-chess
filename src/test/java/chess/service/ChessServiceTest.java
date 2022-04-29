@@ -22,16 +22,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @SuppressWarnings("NonAsciiCharacters")
-@SpringBootTest
 class ChessServiceTest {
-
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private GameDaoStub gameDao;
     private EventDaoStub eventDao;
@@ -39,8 +32,8 @@ class ChessServiceTest {
 
     @BeforeEach
     void setup() {
-        gameDao = new GameDaoStub(namedParameterJdbcTemplate);
-        eventDao = new EventDaoStub(namedParameterJdbcTemplate);
+        gameDao = new GameDaoStub();
+        eventDao = new EventDaoStub();
         service = new ChessService(gameDao, eventDao);
     }
 

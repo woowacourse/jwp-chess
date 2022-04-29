@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ErrorController {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorDto> argumentErrorResponse(IllegalStateException e) {
+    public ResponseEntity<ErrorDto> argumentErrorResponse(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
     }
 

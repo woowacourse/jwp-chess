@@ -16,6 +16,7 @@ import chess.entity.Square;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,12 +84,30 @@ public class ChessService {
 
         String source = Position.of(from).toString();
         String target = Position.of(to).toString();
+        roomDao.updateStateById(roomId, chessGame.getState().toString());
 
         Map<String, Piece> pieces = chessGame.getChessBoard().toMap();
         squareDao.updateSquare(new Square(roomId, target,
                 pieces.get(target).getSymbol().toString(), pieces.get(target).getColor().toString()));
         squareDao.updateSquare(new Square(roomId, source,
                 EmptyPiece.getInstance().getSymbol().toString(), EmptyPiece.getInstance().getColor().toString()));
+    }
+
+    public Long updateStateEnd(Long roomId) {
+        final Long updateRoomId = roomDao.updateStateById(roomId, "Finished");
+        return updateRoomId;
+    }
+
+    @Transactional
+    public Long deleteRoom(Long roomId, String password) {
+        Room room = roomDao.findRoomById(roomId);
+        if (!room.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        if (room.getState().equals("WhiteRunning") || room.getState().equals("BlackRunning")) {
+            throw new IllegalStateException("게임이 실행중일 경우 게임을 삭제할 수 없습니다.");
+        }
+        return roomDao.deleteRoom(roomId);
     }
 
     private ChessGame findChessGame(Long roomId) {
@@ -107,23 +126,5 @@ public class ChessService {
     private void playChessGame(ChessGame chessGame, String from, String to) {
         chessGame.playGameByCommand(GameCommand.of("move", from, to));
         chessGame.isEndGameByPiece();
-    }
-
-    public Long updateStateEnd(Long roomId) {
-        System.out.println(roomId);
-        final Long updateRoomId = roomDao.updateStateById(roomId, "Finished");
-        return updateRoomId;
-    }
-
-    @Transactional
-    public Long deleteRoom(Long roomId, String password) {
-        Room room = roomDao.findRoomById(roomId);
-        if (!room.getPassword().equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-        if (room.getState().equals("WhiteRunning") || room.getState().equals("BlackRunning")) {
-            throw new IllegalStateException("게임이 실행중일 경우 게임을 삭제할 수 없습니다.");
-        }
-        return roomDao.deleteRoom(roomId);
     }
 }

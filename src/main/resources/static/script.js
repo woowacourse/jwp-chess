@@ -63,6 +63,10 @@ async function create() {
     if (isCreated !== true) {
         return;
     }
+    showOnlyGameElement()
+}
+
+function showOnlyGameElement() {
     showElementBlock("whole-board");
     hideElement("create-form");
     hideElement("index");
@@ -299,7 +303,7 @@ async function enterRoom(self) {
 
     hideElement("rooms");
     await load();
-    showElementBlock("whole-board")
+    showOnlyGameElement()
 }
 
 async function deleteRoom(self) {

@@ -12,42 +12,42 @@ import java.util.List;
 import java.util.Map;
 
 public class RoomDaoFake implements RoomDao {
-    private final Map<Room, PieceColor> fakeGame = new HashMap<>();
+    private final Map<Room, PieceColor> fakeRoom = new HashMap<>();
 
     @Override
     public void createRoom(Room room) {
-        fakeGame.put(room, PieceColor.WHITE);
+        fakeRoom.put(room, PieceColor.WHITE);
     }
 
     @Override
     public List<Room> getRooms() {
-        return new ArrayList<>(fakeGame.keySet());
+        return new ArrayList<>(fakeRoom.keySet());
     }
 
     @Override
     public void deleteRoom(RoomId roomId, RoomPassword roomPassword) {
         if (getRoomByRoomId(roomId).getPassword().equals(roomPassword)) {
-            fakeGame.remove(getRoomByRoomId(roomId));
+            fakeRoom.remove(getRoomByRoomId(roomId));
         }
     }
 
     @Override
     public void updateTurnToWhite(RoomId roomId) {
-        fakeGame.put(getRoomByRoomId(roomId), PieceColor.WHITE);
+        fakeRoom.put(getRoomByRoomId(roomId), PieceColor.WHITE);
     }
 
     @Override
     public void updateTurnToBlack(RoomId roomId) {
-        fakeGame.put(getRoomByRoomId(roomId), PieceColor.BLACK);
+        fakeRoom.put(getRoomByRoomId(roomId), PieceColor.BLACK);
     }
 
     @Override
     public PieceColor getCurrentTurn(RoomId roomId) {
-        return fakeGame.get(getRoomByRoomId(roomId));
+        return fakeRoom.get(getRoomByRoomId(roomId));
     }
 
     private Room getRoomByRoomId(RoomId roomId) {
-        for (Room room : fakeGame.keySet()) {
+        for (Room room : fakeRoom.keySet()) {
             if (room.getId().equals(roomId)) {
                 return room;
             }
@@ -59,7 +59,7 @@ public class RoomDaoFake implements RoomDao {
     @Override
     public String toString() {
         return "GameDaoFake{" +
-                "fakeGame=" + fakeGame +
+                "fakeGame=" + fakeRoom +
                 '}';
     }
 }

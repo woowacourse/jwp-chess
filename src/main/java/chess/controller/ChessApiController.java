@@ -4,7 +4,9 @@ import chess.model.GameResult;
 import chess.model.dto.MoveDto;
 import chess.model.dto.RoomDto;
 import chess.model.dto.WebBoardDto;
-import chess.service.ChessService;
+import chess.service.ChessBoardService;
+import chess.service.ChessGameService;
+import chess.service.ChessMoveService;
 import java.util.Map;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,57 +19,63 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ChessApiController {
 
-    private final ChessService chessService;
+    private final ChessGameService chessGameService;
+    private final ChessBoardService chessBoardService;
+    private final ChessMoveService chessMoveService;
 
-    public ChessApiController(ChessService chessService) {
-        this.chessService = chessService;
+    public ChessApiController(ChessGameService chessGameService,
+                              ChessBoardService chessBoardService,
+                              ChessMoveService chessMoveService) {
+        this.chessGameService = chessGameService;
+        this.chessBoardService = chessBoardService;
+        this.chessMoveService = chessMoveService;
     }
 
     @PostMapping("/start/new")
     public String startNewGame(@RequestBody RoomDto roomDto) {
-        Long gameId = chessService.createGame(roomDto.getTitle(), roomDto.getPassword());
+        Long gameId = chessGameService.createGame(roomDto.getTitle(), roomDto.getPassword());
         return gameId.toString();
     }
 
     @GetMapping("/start/{gameId}")
     public Map<String, String> startGame(@PathVariable Long gameId) {
-        WebBoardDto board = chessService.continueGame(gameId);
+        WebBoardDto board = chessGameService.continueGame(gameId);
         return board.getWebBoard();
     }
 
     @GetMapping(value = "/turn/{gameId}")
     public String turn(@PathVariable Long gameId) {
-        return chessService.getTurn(gameId);
+        return chessBoardService.getTurn(gameId);
     }
 
     @PostMapping("/move/{gameId}")
     public Map<String, String> move(@PathVariable Long gameId, @RequestBody MoveDto moveCommand) {
-        WebBoardDto board = chessService.move(gameId, moveCommand);
+        WebBoardDto board = chessMoveService.move(gameId, moveCommand);
         return board.getWebBoard();
     }
 
     @GetMapping("/king/dead/{gameId}")
     public boolean kingDead(@PathVariable Long gameId) {
-        return chessService.isKingDead(gameId);
+        return chessBoardService.isKingDead(gameId);
     }
 
     @GetMapping("/status/{gameId}")
     public GameResult status(@PathVariable Long gameId) {
-        return chessService.getResult(gameId);
+        return chessBoardService.getResult(gameId);
     }
 
     @PostMapping("/exit/{gameId}")
     public void exit(@PathVariable Long gameId) {
-        chessService.exitGame(gameId);
+        chessBoardService.exitGame(gameId);
     }
 
     @GetMapping("/restart/{gameId}")
     public void restartGame(@PathVariable Long gameId) {
-        chessService.restartGame(gameId);
+        chessBoardService.restartGame(gameId);
     }
 
     @DeleteMapping("/delete/room/{gameId}")
     public void deleteGame(@PathVariable Long gameId, @RequestBody String password) {
-        chessService.deleteGame(gameId, password);
+        chessGameService.deleteGame(gameId, password);
     }
 }

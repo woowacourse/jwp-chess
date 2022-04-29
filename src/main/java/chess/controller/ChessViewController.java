@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.service.ChessService;
+import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class ChessViewController {
 
-    private final ChessService chessService;
+    private final ChessGameService chessGameService;
 
-    public ChessViewController(ChessService chessService) {
-        this.chessService = chessService;
+    public ChessViewController(ChessGameService chessGameService) {
+        this.chessGameService = chessGameService;
     }
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("games", chessService.getAllGames());
+        model.addAttribute("games", chessGameService.getAllGames());
 
         return "index";
     }

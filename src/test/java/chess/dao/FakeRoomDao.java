@@ -1,6 +1,5 @@
-package chess.service;
+package chess.dao;
 
-import chess.repository.RoomRepository;
 import chess.web.dto.RoomDto;
 import java.util.HashMap;
 import java.util.List;
@@ -8,26 +7,23 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class FakeRoomRepository implements RoomRepository {
+public class FakeRoomDao {
 
     private final Map<Integer, Room> database = new HashMap<>();
     private int autoIncrementId = 0;
 
-    @Override
     public int save(String name, String password) {
         autoIncrementId++;
         database.put(autoIncrementId, new Room(name, password));
         return autoIncrementId;
     }
 
-    @Override
     public List<RoomDto> findAll() {
         return database.keySet().stream()
                 .map(key -> new RoomDto(key, database.get(key).name, database.get(key).password))
                 .collect(Collectors.toList());
     }
 
-    @Override
     public Optional<RoomDto> find(String name) {
         return database.keySet().stream()
                 .filter(key -> database.get(key).equals(name))
@@ -35,13 +31,11 @@ public class FakeRoomRepository implements RoomRepository {
                 .findAny();
     }
 
-    @Override
     public Optional<RoomDto> findById(int roomId) {
         return Optional.ofNullable(database.get(roomId))
                 .map(room -> new RoomDto(roomId, room.name, room.password));
     }
 
-    @Override
     public void delete(int roomId) {
         database.remove(roomId);
     }

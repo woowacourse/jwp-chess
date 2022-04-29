@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoomRepositoryImpl implements RoomRepository {
+public class RoomDao {
 
     private static final String TABLE_NAME = "room";
     private static final String KEY_NAME = "id";
@@ -21,56 +21,54 @@ public class RoomRepositoryImpl implements RoomRepository {
     private final SimpleJdbcInsert insertActor;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public RoomRepositoryImpl(DataSource dataSource,
-                              NamedParameterJdbcTemplate jdbcTemplate) {
+    public RoomDao(DataSource dataSource,
+                   NamedParameterJdbcTemplate jdbcTemplate) {
         this.insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns(KEY_NAME);
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public int save(String name, String password) {
         return insertActor.executeAndReturnKey(Map.of("name", name, "password", password)).intValue();
     }
 
-    @Override
     public List<RoomDto> findAll() {
         String sql = "select * from room";
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) ->
-                new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX), resultSet.getString(2)));
+                        new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX),
+                                resultSet.getString(2)));
     }
 
-    @Override
     public Optional<RoomDto> find(String name) {
         String sql = "select * from room where name = :name";
         try {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(sql, Map.of("name", name),
                             (resultSet, rowNum) ->
-                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX), resultSet.getString(2))
+                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX),
+                                            resultSet.getString(2))
                     ));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }
 
-    @Override
     public Optional<RoomDto> findById(int roomId) {
         String sql = "select * from room where id = :roomId";
         try {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId),
                             (resultSet, rowNum) ->
-                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX), resultSet.getString(3))
+                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX),
+                                            resultSet.getString(3))
                     ));
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
         }
     }
 
-    @Override
     public void delete(int roomId) {
         String sql = "delete from room where id = :roomId";
         jdbcTemplate.update(sql, Map.of("roomId", roomId));

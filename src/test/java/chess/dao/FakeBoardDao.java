@@ -1,35 +1,30 @@
-package chess.service;
+package chess.dao;
 
 import chess.domain.Color;
-import chess.repository.BoardRepository;
 import chess.web.dto.GameStateDto;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class FakeBoardRepository implements BoardRepository {
+public class FakeBoardDao {
 
     private final Map<Integer, BoardData> database = new HashMap<>();
     private int autoIncrementId = 0;
 
-    @Override
     public int save(int roomId, GameStateDto gameStateDto) {
         autoIncrementId++;
         database.put(autoIncrementId, new BoardData(roomId, gameStateDto.getTurn(), gameStateDto.getEnd()));
         return autoIncrementId;
     }
 
-    @Override
     public Color getTurn(int boardId) {
         return Color.valueOf(database.get(boardId).getTurn());
     }
 
-    @Override
     public boolean getEnd(int boardId) {
         return database.get(boardId).getEnd();
     }
 
-    @Override
     public Optional<Integer> findBoardIdByRoom(int roomId) {
         return findBoardId(roomId);
     }
@@ -40,13 +35,11 @@ public class FakeBoardRepository implements BoardRepository {
                 .findAny();
     }
 
-    @Override
     public void updateState(int boardId, GameStateDto gameStateDto) {
         BoardData board = database.get(boardId);
         database.put(boardId, new BoardData(board.getRoomId(), gameStateDto.getTurn(), gameStateDto.getEnd()));
     }
 
-    @Override
     public void deleteByRoom(int roomId) {
         findBoardId(roomId).ifPresent(database::remove);
     }

@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BoardRepositoryImpl implements BoardRepository {
+public class BoardDao {
 
     private static final String TABLE_NAME = "board";
     private static final String KEY_NAME = "id";
@@ -19,15 +19,14 @@ public class BoardRepositoryImpl implements BoardRepository {
     private final SimpleJdbcInsert insertActor;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public BoardRepositoryImpl(DataSource dataSource,
-                               NamedParameterJdbcTemplate jdbcTemplate) {
+    public BoardDao(DataSource dataSource,
+                    NamedParameterJdbcTemplate jdbcTemplate) {
         this.insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns(KEY_NAME);
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public int save(int roomId, GameStateDto gameStateDto) {
         return insertActor.executeAndReturnKey(
                         Map.of("room_id", roomId,
@@ -36,20 +35,17 @@ public class BoardRepositoryImpl implements BoardRepository {
                 .intValue();
     }
 
-    @Override
     public Color getTurn(int boardId) {
         String sql = "select turn from board where id = :boardId";
         return jdbcTemplate.queryForObject(sql, Map.of("boardId", boardId),
                 (resultSet, rowNum) -> Color.valueOf(resultSet.getString(1).toUpperCase()));
     }
 
-    @Override
     public boolean getEnd(int boardId) {
         String sql = "select end from board where id = :boardId";
         return jdbcTemplate.queryForObject(sql, Map.of("boardId", boardId), Boolean.class);
     }
 
-    @Override
     public Optional<Integer> findBoardIdByRoom(int roomId) {
         String sql = "select id from board where room_id = :roomId";
         try {
@@ -60,7 +56,6 @@ public class BoardRepositoryImpl implements BoardRepository {
         }
     }
 
-    @Override
     public void updateState(int boardId, GameStateDto gameStateDto) {
         String sql = "update board set turn = :turn, end = :end where id = :boardId";
         jdbcTemplate.update(sql,
@@ -69,7 +64,6 @@ public class BoardRepositoryImpl implements BoardRepository {
                         "end", gameStateDto.getEnd()));
     }
 
-    @Override
     public void deleteByRoom(int roomId) {
         String sql = "delete from board where room_id = :roomId";
         jdbcTemplate.update(sql, Map.of("roomId", roomId));

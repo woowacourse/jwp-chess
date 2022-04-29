@@ -4,11 +4,9 @@ import chess.domain.Room;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.BoardDto;
-import chess.web.dto.ResultDto;
 import chess.web.dto.RoomDto;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,6 +53,6 @@ public class RoomController {
 
     @GetMapping(value = "/{roomId}/new")
     public ResponseEntity<BoardDto> startNewGame(@PathVariable int roomId) {
-        return ResponseEntity.ok(gameService.startNewGame(roomId));
+        return ResponseEntity.ok(gameService.newBoard(roomId));
     }
 }

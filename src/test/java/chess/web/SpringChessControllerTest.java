@@ -2,8 +2,8 @@ package chess.web;
 
 import static org.hamcrest.core.StringContains.containsString;
 
-import chess.service.FakeRoomRepository;
-import chess.repository.RoomRepository;
+import chess.dao.FakeRoomDao;
+import chess.repository.RoomDao;
 import io.restassured.RestAssured;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +23,8 @@ import org.springframework.http.HttpStatus;
 @TestConfiguration
 class TestConfig {
     @Bean
-    public RoomRepository roomRepository() {
-        return new FakeRoomRepository();
+    public RoomDao roomRepository() {
+        return new FakeRoomDao();
     }
 }
 

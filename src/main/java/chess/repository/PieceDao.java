@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PieceRepositoryImpl implements PieceRepository {
+public class PieceDao {
 
     private static final String TABLE_NAME = "piece";
     private static final String KEY_NAME = "id";
@@ -24,15 +24,14 @@ public class PieceRepositoryImpl implements PieceRepository {
     private final SimpleJdbcInsert insertActor;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public PieceRepositoryImpl(DataSource dataSource,
-                               NamedParameterJdbcTemplate jdbcTemplate) {
+    public PieceDao(DataSource dataSource,
+                    NamedParameterJdbcTemplate jdbcTemplate) {
         this.insertActor = new SimpleJdbcInsert(dataSource)
                 .withTableName(TABLE_NAME)
                 .usingGeneratedKeyColumns(KEY_NAME);
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public int save(int boardId, String target, PieceDto pieceDto) {
         Map<String, Object> data = Map.of(
                 "board_id", boardId,
@@ -43,7 +42,6 @@ public class PieceRepositoryImpl implements PieceRepository {
         return insertActor.executeAndReturnKey(data).intValue();
     }
 
-    @Override
     public void saveAll(int boardId, Map<Position, Piece> pieces) {
         List<Map<String, String>> data = pieces.entrySet().stream()
                 .map(each -> Map.of(
@@ -55,7 +53,6 @@ public class PieceRepositoryImpl implements PieceRepository {
         insertActor.executeBatch(SqlParameterSourceUtils.createBatch(data));
     }
 
-    @Override
     public Optional<PieceDto> findOne(int boardId, String position) {
         String sql = "select * from piece where board_id = :boardId and position = :position";
         try {
@@ -69,7 +66,6 @@ public class PieceRepositoryImpl implements PieceRepository {
     }
 
 
-    @Override
     public List<PieceDto> findAll(int boardId) {
         String sql = "select * from piece where board_id = :boardId";
         return jdbcTemplate.query(sql, Map.of("boardId", boardId), getPieceMapper());
@@ -84,7 +80,6 @@ public class PieceRepositoryImpl implements PieceRepository {
                 );
     }
 
-    @Override
     public void updateOne(int boardId, String afterPosition, PieceDto pieceDto) {
         String sql = "update piece set color = :color, role = :role where board_id = :boardId and position = :position";
         jdbcTemplate.update(sql, Map.of(
@@ -95,7 +90,6 @@ public class PieceRepositoryImpl implements PieceRepository {
         ));
     }
 
-    @Override
     public void deleteOne(int boardId, String position) {
         String sql = "delete from piece where board_id = :boardId and position = :position";
         jdbcTemplate.update(sql, Map.of("boardId", boardId, "position", position));

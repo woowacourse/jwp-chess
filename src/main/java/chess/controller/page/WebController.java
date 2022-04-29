@@ -19,6 +19,11 @@ public class WebController {
         this.chessServiceV2 = chessServiceV2;
     }
 
+    @GetMapping("/")
+    public ModelAndView renderRoom() {
+        return new ModelAndView("room", new HashMap<>());
+    }
+
     @GetMapping("/room/{roomId}")
     public ModelAndView findOneRoom(@PathVariable Long roomId) {
         final List<Square> squares = chessServiceV2.findSquareAllById(roomId);
@@ -29,18 +34,6 @@ public class WebController {
         model.put("roomId", roomId);
         return new ModelAndView("room", model);
     }
-
-//    @GetMapping("/")
-//    public ModelAndView selectGame() {
-//        BoardDto boardDto = chessService.selectBoard();
-//        String winner = chessService.selectWinner();
-//
-//        Map<String, Object> model = new HashMap<>();
-//        model.put("board", boardDto);
-//        model.put("winner", winner);
-//
-//        return new ModelAndView("index", model);
-//    }
 
 //    @PostMapping("/game")
 //    @ResponseBody

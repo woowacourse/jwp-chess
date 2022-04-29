@@ -21,43 +21,43 @@ public class GameDao {
     public GameDao(DataSource dataSource) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.insertGame = new SimpleJdbcInsert(dataSource)
-                .withTableName("game");
+                .withTableName("game")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public void save(Long id, String name, String password, String salt) {
+    public Long save(String name, String password, String salt, GameState state) {
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("game_id", id)
-                .addValue("game_name", name)
-                .addValue("game_password", password)
+                .addValue("name", name)
+                .addValue("password", password)
                 .addValue("salt", salt)
-                .addValue("state", GameState.READY);
-        insertGame.execute(parameters);
+                .addValue("state", state);
+        return insertGame.executeAndReturnKey(parameters).longValue();
     }
 
     public List<GameIdentifiers> findAllGames() {
-        String sql = "SELECT game_id, game_name FROM game";
+        String sql = "SELECT id, name FROM game";
         return namedParameterJdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new GameIdentifiers(resultSet.getLong("game_id"),
-                        resultSet.getString("game_name")));
+                (resultSet, rowNum) -> new GameIdentifiers(resultSet.getLong("id"),
+                        resultSet.getString("name")));
     }
 
     public Optional<String> findName(Long id) {
-        String sql = "SELECT game_name FROM game WHERE game_id = :game_id";
+        String sql = "SELECT name FROM game WHERE id = :id";
         return find(sql, id);
     }
 
     public Optional<String> findPassword(Long id) {
-        String sql = "SELECT game_password FROM game WHERE game_id = :game_id";
+        String sql = "SELECT password FROM game WHERE id = :id";
         return find(sql, id);
     }
 
     public Optional<String> findSalt(Long id) {
-        String sql = "SELECT salt FROM game WHERE game_id = :game_id";
+        String sql = "SELECT salt FROM game WHERE id = :id";
         return find(sql, id);
     }
 
     private Optional<String> find(String sql, Long id) {
-        SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", id);
+        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
         try {
             return Optional.ofNullable(
                     namedParameterJdbcTemplate.queryForObject(sql, namedParameters, String.class));
@@ -67,8 +67,8 @@ public class GameDao {
     }
 
     public Optional<GameState> findState(Long id) {
-        String sql = "SELECT state FROM game WHERE game_id = :game_id";
-        SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", id);
+        String sql = "SELECT state FROM game WHERE id = :id";
+        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
         try {
             return Optional.ofNullable(
                     namedParameterJdbcTemplate.queryForObject(sql, namedParameters, GameState.class));
@@ -78,15 +78,15 @@ public class GameDao {
     }
 
     public void updateState(Long id, GameState gameState) {
-        String sql = "UPDATE game SET state = :game_state WHERE game_id = :game_id";
-        SqlParameterSource namedParameters = new MapSqlParameterSource("game_state", gameState.name())
-                .addValue("game_id", id);
+        String sql = "UPDATE game SET state = :state WHERE id = :id";
+        SqlParameterSource namedParameters = new MapSqlParameterSource("state", gameState.name())
+                .addValue("id", id);
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
     public void delete(Long id) {
-        String sql = "DELETE FROM game WHERE game_id = :game_id";
-        MapSqlParameterSource parameter = new MapSqlParameterSource("game_id", id);
+        String sql = "DELETE FROM game WHERE id = :id";
+        MapSqlParameterSource parameter = new MapSqlParameterSource("id", id);
         namedParameterJdbcTemplate.update(sql, parameter);
     }
 }

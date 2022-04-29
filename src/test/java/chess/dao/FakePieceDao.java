@@ -55,7 +55,12 @@ public class FakePieceDao extends PieceDao {
     }
 
     @Override
-    public void delete(Long gameId, Position position) {
+    public void deleteByGameIdAndPosition(Long gameId, Position position) {
         pieces.get(gameId).remove(position);
+    }
+
+    @Override
+    public void deleteByGameId(Long gameId) {
+        pieces.remove(gameId);
     }
 }

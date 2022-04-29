@@ -31,14 +31,14 @@ public class PieceDao {
 
     private final RowMapper<PieceResponse> pieceResponseRowMapper = (resultSet, rowNum) -> {
         Position position = parseStringToPosition(resultSet.getString("position"));
-        PieceType pieceType = PieceType.valueOf(resultSet.getString("piece_type"));
+        PieceType pieceType = PieceType.valueOf(resultSet.getString("type"));
         Color color = Color.valueOf(resultSet.getString("color"));
         Piece piece = pieceType.createPiece(color);
         return new PieceResponse(position, piece);
     };
 
     private final RowMapper<Piece> pieceRowMapper = (resultSet, rowNum) -> {
-        PieceType pieceType = PieceType.valueOf(resultSet.getString("piece_type"));
+        PieceType pieceType = PieceType.valueOf(resultSet.getString("type"));
         Color color = Color.valueOf(resultSet.getString("color"));
         return pieceType.createPiece(color);
     };
@@ -52,7 +52,7 @@ public class PieceDao {
     public void save(Long gameId, Position position, Piece piece) {
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId)
                 .addValue("position", convertPositionToString(position))
-                .addValue("piece_type", piece.getPieceType())
+                .addValue("type", piece.getPieceType())
                 .addValue("color", piece.getColor());
         insertPiece.execute(namedParameters);
     }
@@ -81,7 +81,7 @@ public class PieceDao {
     }
 
     public Optional<Piece> find(Long gameId, Position position) {
-        String sql = "SELECT piece_type, color FROM piece WHERE game_id = :game_id AND position = :position";
+        String sql = "SELECT type, color FROM piece WHERE game_id = :game_id AND position = :position";
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId)
                 .addValue("position", convertPositionToString(position));
         try {
@@ -100,10 +100,16 @@ public class PieceDao {
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 
-    public void delete(Long gameId, Position position) {
+    public void deleteByGameIdAndPosition(Long gameId, Position position) {
         String sql = "DELETE FROM piece WHERE game_id = :game_id AND position = :position";
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId)
                 .addValue("position", convertPositionToString(position));
+        namedParameterJdbcTemplate.update(sql, namedParameters);
+    }
+
+    public void deleteByGameId(Long gameId) {
+        String sql = "DELETE FROM piece WHERE game_id = :game_id";
+        SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId);
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }
 }

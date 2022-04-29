@@ -17,6 +17,7 @@ public class FakeGameDao extends GameDao {
     private final Map<Long, String> passwords;
     private final Map<Long, String> salts;
     private final Map<Long, GameState> states;
+    private Long autoIncrementId = 1L;
 
     public FakeGameDao() {
         super(Mockito.mock(DataSource.class));
@@ -27,14 +28,15 @@ public class FakeGameDao extends GameDao {
     }
 
     @Override
-    public void save(Long id, String name, String password, String salt) {
-        if (names.containsKey(id) || names.containsValue(name)) {
+    public Long save(String name, String password, String salt, GameState state) {
+        if (names.containsValue(name)) {
             throw new DuplicateKeyException("");
         }
-        names.put(id, name);
-        passwords.put(id, password);
-        salts.put(id, salt);
-        states.put(id, GameState.READY);
+        names.put(autoIncrementId, name);
+        passwords.put(autoIncrementId, password);
+        salts.put(autoIncrementId, salt);
+        states.put(autoIncrementId, GameState.READY);
+        return autoIncrementId++;
     }
 
     @Override
@@ -88,4 +90,6 @@ public class FakeGameDao extends GameDao {
         salts.remove(id);
         states.remove(id);
     }
+
+
 }

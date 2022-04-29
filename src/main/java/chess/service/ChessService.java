@@ -39,16 +39,16 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGameResponse createGame(Long gameId, CreateGameRequest createGameRequest) {
-        return createGame(gameId, createGameRequest.getGameName(), createGameRequest.getPassword());
+    public Long createGame(CreateGameRequest createGameRequest) {
+        return createGame(createGameRequest.getGameName(), createGameRequest.getPassword());
     }
 
-    private ChessGameResponse createGame(Long gameId, String gameName, String password) {
+    public Long createGame(String gameName, String password) {
         String salt = PasswordEncryptor.generateSalt();
         ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
-        gameDao.save(gameId, gameName, PasswordEncryptor.encrypt(password, salt), salt);
+        Long gameId = gameDao.save(gameName, PasswordEncryptor.encrypt(password, salt), salt, GameState.READY);
         saveBoard(gameId, chessGame.getBoard());
-        return new ChessGameResponse(chessGame);
+        return gameId;
     }
 
     public void saveBoard(Long gameId, Map<Position, Piece> board) {
@@ -92,12 +92,12 @@ public class ChessService {
     }
 
     public ChessGameResponse resetGame(Long gameId) {
-        Optional<String> maybeGameName = gameDao.findName(gameId);
-        String gameName = maybeGameName.orElseThrow(NoSuchElementException::new);
-        Optional<String> maybePassword = gameDao.findPassword(gameId);
-        String password = maybePassword.orElseThrow(NoSuchElementException::new);
-        gameDao.delete(gameId);
-        return createGame(gameId, gameName, password);
+        pieceDao.deleteByGameId(gameId);
+        gameDao.updateState(gameId, GameState.READY);
+        Board board = new Board(new CreateCompleteBoardStrategy());
+        saveBoard(gameId, board.getBoard());
+
+        return new ChessGameResponse(new ChessGame(board));
     }
 
     public ChessGameResponse move(Long gameId, MoveRequest moveRequest) {
@@ -106,7 +106,7 @@ public class ChessService {
         Position target = parseStringToPosition(moveRequest.getTarget());
         chessGame.move(start, target);
         if (pieceDao.find(gameId, target).isPresent()) {
-            pieceDao.delete(gameId, target);
+            pieceDao.deleteByGameIdAndPosition(gameId, target);
         }
         pieceDao.updatePosition(gameId, start, target);
         gameDao.updateState(gameId, chessGame.getGameState());

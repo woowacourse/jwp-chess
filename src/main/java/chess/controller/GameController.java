@@ -3,11 +3,13 @@ package chess.controller;
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.domain.event.MoveEvent;
 import chess.dto.request.MoveRouteDto;
+import chess.dto.response.CreatedGameDto;
 import chess.dto.response.EnterGameDto;
 import chess.dto.response.SearchResultDto;
 import chess.service.AuthService;
 import chess.service.ChessService;
 import chess.util.CookieUtil;
+import java.net.URI;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -46,8 +48,13 @@ public class GameController {
     }
 
     @PostMapping
-    public int createGame(EncryptedAuthCredentials authCredentials) {
-        return chessService.initGame(authCredentials);
+    public ResponseEntity<Integer> createGame(EncryptedAuthCredentials authCredentials,
+                                              HttpServletResponse response) {
+        CreatedGameDto createdGame = chessService.initGame(authCredentials);
+        response.addCookie(createdGame.getCookie());
+        int gameId = createdGame.getGameId();
+        URI location = URI.create("/game/" + gameId);
+        return ResponseEntity.created(location).body(gameId);
     }
 
     @GetMapping("/{id}")

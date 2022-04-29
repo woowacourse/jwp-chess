@@ -56,7 +56,7 @@ class ChessServiceTest {
     @Test
     void enterRoom() {
         final Long id = createTestRoom("체스 초보만").getId();
-        final GameResponseDto gameResponseDto = chessService.getCurrentBoard(id);
+        final GameResponseDto gameResponseDto = chessService.getCurrentBoards(id);
 
         assertAll(
             () -> assertThat(gameResponseDto.getName()).isEqualTo("체스 초보만"),
@@ -71,7 +71,7 @@ class ChessServiceTest {
         final Long id = createTestRoom("체스 초보만").getId();
         chessService.endRoom(id);
 
-        assertThatThrownBy(() -> chessService.getCurrentBoard(id))
+        assertThatThrownBy(() -> chessService.getCurrentBoards(id))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }

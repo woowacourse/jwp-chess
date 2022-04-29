@@ -1,6 +1,8 @@
 package chess.controller;
 
 import chess.dto.response.ErrorResponseDto;
+import chess.exception.RoomNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,11 +13,19 @@ public class WebChessControllerAdvice {
 
     @ExceptionHandler(value = IllegalArgumentException.class)
     public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
+        return ResponseEntity.badRequest()
+            .body(new ErrorResponseDto(e.getMessage()));
     }
 
     @ExceptionHandler(value = IllegalStateException.class)
     public ResponseEntity<ErrorResponseDto> handleIllegalStateException(IllegalStateException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
+        return ResponseEntity.badRequest()
+            .body(new ErrorResponseDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(value = RoomNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleIllegalStateException(RoomNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(new ErrorResponseDto(e.getMessage()));
     }
 }

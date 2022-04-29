@@ -18,11 +18,13 @@ import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
+import chess.exception.RoomNotFoundException;
 import chess.repository.BoardRepository;
 import chess.repository.RoomRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,16 +63,27 @@ public class ChessService {
             .collect(Collectors.toList());
     }
 
-    public GameResponseDto getCurrentBoard(final Long roomId) {
+    public GameResponseDto getCurrentBoards(final Long roomId) {
         final RoomEntity room = getValidRoom(roomId);
         final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
         return GameResponseDto.of(room, BoardsDto.of(boards));
     }
 
     private RoomEntity getValidRoom(final Long id) {
-        final RoomEntity room = roomRepository.findById(id);
+        final RoomEntity room;
+        try {
+            room = roomRepository.findById(id);
+        } catch (DataAccessException e) {
+            throw new RoomNotFoundException("[ERROR] 해당 방이 존재하지 않습니다.");
+        }
         validateGameOver(room);
         return room;
+    }
+
+    private void validateGameOver(final RoomEntity room) {
+        if (room.isGameOver()) {
+            throw new IllegalArgumentException("[ERROR] 이미 종료된 게임입니다.");
+        }
     }
 
     public GameResponseDto move(final Long id, final MoveRequestDto moveRequestDto) {
@@ -116,7 +129,7 @@ public class ChessService {
 
     private void validateFindRooms(final List<RoomEntity> rooms) {
         if (rooms.isEmpty()) {
-            throw new IllegalStateException("[INFO] 현재 방이 없습니다. 방을 생성해주세요.");
+            throw new IllegalStateException("[INFO] 현재 진행 중인 방이 없습니다. 방을 생성해주세요.");
         }
     }
 
@@ -128,11 +141,5 @@ public class ChessService {
     public StatusResponseDto createStatus(final Long id) {
         final Board board = getBoard(id);
         return StatusResponseDto.of(new Score(board.getBoard()));
-    }
-
-    private void validateGameOver(final RoomEntity room) {
-        if (room.isGameOver()) {
-            throw new IllegalArgumentException("[ERROR] 이미 종료된 게임입니다.");
-        }
     }
 }

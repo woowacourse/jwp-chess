@@ -13,34 +13,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import chess.controller.dto.ChessAssembler;
 import chess.controller.dto.response.PlayerScoresResponse;
-import chess.service.GameService;
+import chess.service.ChessService;
 import chess.service.dto.response.GameResponseDto;
 import chess.service.dto.response.PlayerScoresResponseDto;
 
 @Controller
 @RequestMapping("/games")
-public class GameController {
+public class ChessController {
 
-    private final GameService gameService;
+    private final ChessService chessService;
 
-    public GameController(final GameService gameService) {
-        this.gameService = gameService;
+    public ChessController(final ChessService chessService) {
+        this.chessService = chessService;
     }
 
     @GetMapping("/start")
     public String createNewGame() {
-        return "redirect:/games/" + gameService.createNewGame();
+        return "redirect:/games/" + chessService.createNewGame();
     }
 
     @GetMapping("/{gameId}/remove")
     public String removeGame(@PathVariable("gameId") final Long gameId) {
-        gameService.removeGame(gameId);
+        chessService.removeGame(gameId);
         return "redirect:/";
     }
 
     @GetMapping("/{gameId}")
     public String loadGame(@PathVariable("gameId") final Long gameId, final Model model) {
-        return renderBoard(gameService.loadGame(gameId), model);
+        return renderBoard(chessService.loadGame(gameId), model);
     }
 
     @PostMapping("/{gameId}/move")
@@ -48,26 +48,26 @@ public class GameController {
                             @RequestParam("source") final String source,
                             @RequestParam("target") final String target,
                             final Model model) {
-        return renderBoard(gameService.movePiece(gameId, source, target), model);
+        return renderBoard(chessService.movePiece(gameId, source, target), model);
     }
 
     @PostMapping("/{gameId}/promotion")
     public String promotion(@PathVariable("gameId") final Long gameId,
                             @RequestParam("pieceName") final String pieceName,
                             final Model model) {
-        return renderBoard(gameService.promotion(gameId, pieceName), model);
+        return renderBoard(chessService.promotion(gameId, pieceName), model);
     }
 
     @GetMapping("/{gameId}/status")
     @ResponseBody
     public PlayerScoresResponse calculatePlayerScores(@PathVariable("gameId") final Long gameId) {
-        final PlayerScoresResponseDto playerScoresResponseDto = gameService.calculatePlayerScores(gameId);
+        final PlayerScoresResponseDto playerScoresResponseDto = chessService.calculatePlayerScores(gameId);
         return ChessAssembler.playerScoresResponse(playerScoresResponseDto);
     }
 
     @GetMapping("/{gameId}/end")
     public String endGame(@PathVariable("gameId") final Long gameId, final Model model) {
-        return renderBoard(gameService.endGame(gameId), model);
+        return renderBoard(chessService.endGame(gameId), model);
     }
 
     private String renderBoard(final GameResponseDto gameResponseDto, final Model model) {

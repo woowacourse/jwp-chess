@@ -14,19 +14,19 @@ import chess.domain.game.Game;
 
 @SpringBootTest
 @Transactional
-class GameRepositoryTest {
+class ChessRepositoryTest {
 
     @Autowired
-    private GameRepository gameRepository;
+    private ChessRepository chessRepository;
 
     @DisplayName("데이터를 저장할 수 있어야 한다.")
     @Test
     void save() {
         final Game game = Game.initializeGame();
 
-        final Long gameId = gameRepository.save(game).getId();
+        final Long gameId = chessRepository.save(game).getId();
         assertThat(gameId).isNotEqualTo(0L);
-        gameRepository.remove(gameId);
+        chessRepository.remove(gameId);
     }
 
     @DisplayName("데이터를 조회할 수 있어야 한다.")
@@ -34,14 +34,14 @@ class GameRepositoryTest {
     void findById() {
         final Game expectedGame = Game.initializeGame();
 
-        final Long gameId = gameRepository.save(expectedGame).getId();
-        final Game game = gameRepository.findById(gameId);
+        final Long gameId = chessRepository.save(expectedGame).getId();
+        final Game game = chessRepository.findById(gameId);
 
         assertAll(() -> {
             assertThat(game.getColorOfCurrentTurn()).isEqualTo(expectedGame.getColorOfCurrentTurn());
             assertThat(game.isFinished()).isEqualTo(expectedGame.isFinished());
         });
-        gameRepository.remove(gameId);
+        chessRepository.remove(gameId);
     }
 
     @DisplayName("데이터를 수정할 수 있어야 한다.")
@@ -49,16 +49,16 @@ class GameRepositoryTest {
     void update() {
         final Game game = Game.initializeGame();
 
-        final Game expectedGame = gameRepository.save(game);
+        final Game expectedGame = chessRepository.save(game);
 
         expectedGame.movePiece(Position.from("a2"), Position.from("a4"));
         expectedGame.end();
 
-        final Game updatedGame = gameRepository.update(expectedGame);
+        final Game updatedGame = chessRepository.update(expectedGame);
         assertAll(() -> {
             assertThat(updatedGame.getColorOfCurrentTurn()).isEqualTo(expectedGame.getColorOfCurrentTurn());
             assertThat(updatedGame.isFinished()).isEqualTo(expectedGame.isFinished());
         });
-        gameRepository.remove(updatedGame.getId());
+        chessRepository.remove(updatedGame.getId());
     }
 }

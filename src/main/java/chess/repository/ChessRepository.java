@@ -18,12 +18,12 @@ import chess.repository.dto.game.GameFinishedDto;
 import chess.repository.dto.player.PlayerDto;
 
 @Repository
-public class GameRepository {
+public class ChessRepository {
 
     private final GameDao gameDao;
     private final PlayerDao playerDao;
 
-    public GameRepository(final GameDao gameDao, final PlayerDao playerDao) {
+    public ChessRepository(final GameDao gameDao, final PlayerDao playerDao) {
         this.gameDao = gameDao;
         this.playerDao = playerDao;
     }

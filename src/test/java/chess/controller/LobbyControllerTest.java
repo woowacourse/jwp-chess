@@ -50,13 +50,4 @@ public class LobbyControllerTest {
                 );
     }
 
-    @Test
-    void chessGame() throws Exception {
-        mockMvc.perform(post("/create-chess-game")
-                .param("name", "hoho"))
-                .andDo(print())
-                .andExpectAll(
-                        redirectedUrl("/")
-                );
-    }
 }

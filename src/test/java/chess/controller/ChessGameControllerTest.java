@@ -78,6 +78,17 @@ class ChessGameControllerTest {
     }
 
     @Test
+    @DisplayName("체스 게임 생성")
+    void createChessGame() throws Exception {
+        mockMvc.perform(post("/chess-game")
+            .param("name", "hoho"))
+            .andDo(print())
+            .andExpectAll(
+                redirectedUrl("/")
+            );
+    }
+
+    @Test
     @DisplayName("비정상적인 기물 이동")
     void invalidMove() throws Exception {
         Mockito.when(chessGameService.move(any()))
@@ -95,5 +106,6 @@ class ChessGameControllerTest {
                 flash().attributeExists("errorMessage")
             );
     }
+
 
 }

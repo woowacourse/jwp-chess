@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.ChessGameDto;
+import chess.dto.ChessGameRequest;
 import chess.dto.MoveRequest;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,12 @@ public class ChessGameController {
         model.addAttribute("pieces", chessGameService.findPieces(chessGameDto.getId()));
         model.addAttribute("chessGame", chessGameDto);
         return "chess-game";
+    }
+
+    @PostMapping("/chess-game")
+    public String createChessGame(@ModelAttribute ChessGameRequest chessGameRequest) {
+        chessGameService.create(chessGameRequest);
+        return "redirect:/";
     }
 
     @PostMapping("/chess-game/move")

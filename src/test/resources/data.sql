@@ -2,7 +2,7 @@ create table Game
 (
     id       bigint auto_increment primary key,
     title    varchar(45) not null,
-    password varchar(45)      not null,
+    password varchar(45) not null,
     status   boolean     not null,
     turn     varchar(45) not null
 );

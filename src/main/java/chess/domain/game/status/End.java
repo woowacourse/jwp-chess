@@ -9,7 +9,7 @@ public class End implements GameStatus {
     }
 
     @Override
-    public boolean isEnd(){
+    public boolean isEnd() {
         return true;
     }
 }

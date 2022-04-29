@@ -4,5 +4,6 @@ import chess.domain.game.Status;
 
 public interface GameStatus {
     Status checkStatus();
+
     boolean isEnd();
 }

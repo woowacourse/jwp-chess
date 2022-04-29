@@ -6,7 +6,6 @@ import chess.domain.game.Color;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
-import chess.domain.game.status.End;
 import chess.domain.game.status.GameStatus;
 import chess.domain.game.status.Playing;
 import chess.domain.piece.ChessPiece;
@@ -110,7 +109,7 @@ public class ChessService {
         return chessBoard.compareStatus(status);
     }
 
-    public void deleteGame(int gameId, String password) throws IllegalArgumentException{
+    public void deleteGame(int gameId, String password) throws IllegalArgumentException {
         GameDto gameDto = gameDao.findById(gameId);
         validateStuats(gameDto.getStatus());
         validatePassword(gameDto, password);
@@ -119,7 +118,7 @@ public class ChessService {
     }
 
     private void validateStuats(GameStatus status) {
-        if(!status.isEnd()){
+        if (!status.isEnd()) {
             throw new IllegalArgumentException("종료된 게임만 삭제할 수 있습니다");
         }
     }

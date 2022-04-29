@@ -62,13 +62,13 @@ function move(source, target) {
         },
         body: JSON.stringify(request)
     }).then(response => {
-            if (!response.ok) {
-                response.json()
-                    .then(body => alert(body.message));
-                return;
-            }
-            location.replace("/play/" + getGameId());
-        });
+        if (!response.ok) {
+            response.json()
+                .then(body => alert(body.message));
+            return;
+        }
+        location.replace("/play/" + getGameId());
+    });
 }
 
 function deleteGame(id) {
@@ -86,13 +86,13 @@ function deleteGame(id) {
         },
         body: JSON.stringify(request)
     }).then(response => {
-            if (!response.ok) {
-                response.json()
-                    .then(body => alert(body.message));
-                return;
-            }
-            location.replace("/");
-        });
+        if (!response.ok) {
+            response.json()
+                .then(body => alert(body.message));
+            return;
+        }
+        location.replace("/");
+    });
 }
 
 function reinitialize() {
@@ -108,11 +108,11 @@ function status() {
             'Accept': 'application/json',
         }
     }).then(response => {
-            if (!response.ok) {
-                response.json()
-                    .then(body => alert(body.message));
-                return;
-            }
-            location.replace("/status/" + getGameId())
-        });
+        if (!response.ok) {
+            response.json()
+                .then(body => alert(body.message));
+            return;
+        }
+        location.replace("/status/" + getGameId())
+    });
 }

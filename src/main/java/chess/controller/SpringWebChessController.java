@@ -30,7 +30,7 @@ public class SpringWebChessController {
     }
 
     @PostMapping("/create")
-    public String create(@RequestParam String title, @RequestParam String password) throws IllegalArgumentException{
+    public String create(@RequestParam String title, @RequestParam String password) throws IllegalArgumentException {
         long gameId = chessService.create(title, password);
         return "redirect:/play/" + gameId;
     }
@@ -65,7 +65,7 @@ public class SpringWebChessController {
     }
 
     @DeleteMapping("/delete/{gameId}")
-    public String delete(@PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto) throws IllegalArgumentException{
+    public String delete(@PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto) throws IllegalArgumentException {
         chessService.deleteGame(gameId, removeRequestDto.getPassword());
         return "lobby";
     }

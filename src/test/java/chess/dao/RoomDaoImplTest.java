@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.dto.RoomDto;
 import chess.entity.RoomEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,21 +101,21 @@ class RoomDaoImplTest {
     }
 
     @Test
-    @DisplayName("방들의 이름을 반환한다.")
-    void getRoomNames() {
+    @DisplayName("모든 방 정보를 반환한다.")
+    void findAllRooms() {
         //given
         roomDao.saveNewRoom("second", "1234");
         roomDao.saveNewRoom("third", "1234");
         //when
-        final List<RoomDto> roomNames = roomDao.getRoomNames();
+        final List<RoomEntity> rooms = roomDao.findAllRooms();
         //then
         assertAll(
-                () -> assertThat(roomNames.get(0).getRoomName()).isEqualTo("first"),
-                () -> assertThat(roomNames.get(1).getRoomName()).isEqualTo("second"),
-                () -> assertThat(roomNames.get(2).getRoomName()).isEqualTo("third"),
-                () -> assertThat(roomNames.get(0).getRoomId()).isEqualTo(1),
-                () -> assertThat(roomNames.get(1).getRoomId()).isEqualTo(2),
-                () -> assertThat(roomNames.get(2).getRoomId()).isEqualTo(3)
+                () -> assertThat(rooms.get(0).getName()).isEqualTo("first"),
+                () -> assertThat(rooms.get(1).getName()).isEqualTo("second"),
+                () -> assertThat(rooms.get(2).getName()).isEqualTo("third"),
+                () -> assertThat(rooms.get(0).getRoomId()).isEqualTo(1),
+                () -> assertThat(rooms.get(1).getRoomId()).isEqualTo(2),
+                () -> assertThat(rooms.get(2).getRoomId()).isEqualTo(3)
         );
     }
 }

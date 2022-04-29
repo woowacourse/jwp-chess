@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.dto.RoomDto;
 import chess.entity.RoomEntity;
 import java.util.List;
 
@@ -18,5 +17,5 @@ public interface RoomDao {
 
     RoomEntity findByRoomId(final int roomId);
 
-    List<RoomDto> getRoomNames();
+    List<RoomEntity> findAllRooms();
 }

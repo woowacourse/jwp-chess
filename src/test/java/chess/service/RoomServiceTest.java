@@ -83,11 +83,11 @@ class RoomServiceTest {
     @DisplayName("방들의 이름을 반환한다.")
     void getRoomNames() {
         //given
-        roomDao.saveNewRoom("second", "1234");
-        roomDao.saveNewRoom("third", "1234");
+        roomService.saveNewRoom("second", "1234");
+        roomService.saveNewRoom("third", "1234");
 
         //when
-        final List<RoomDto> roomNames = roomDao.getRoomNames();
+        final List<RoomDto> roomNames = roomService.getRoomNames();
 
         //then
         assertAll(

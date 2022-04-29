@@ -1,11 +1,11 @@
 package chess.dao;
 
-import chess.dto.RoomDto;
 import chess.entity.RoomEntity;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Map.Entry;
 
 public class FakeRoomDao implements RoomDao {
 
@@ -49,11 +49,14 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public List<RoomDto> getRoomNames() {
-        return rooms.keySet()
-                .stream()
-                .map(roomId -> new RoomDto(rooms.get(roomId).name, roomId))
-                .collect(Collectors.toUnmodifiableList());
+    public List<RoomEntity> findAllRooms() {
+        final List<RoomEntity> rooms = new ArrayList<>();
+        for (Entry<Integer, Room> room : this.rooms.entrySet()) {
+            final int roomId = room.getKey();
+            final Room value = room.getValue();
+            rooms.add(new RoomEntity(roomId, value.name, value.password, value.gameState, value.turn));
+        }
+        return rooms;
     }
 
     class Room {

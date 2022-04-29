@@ -4,6 +4,7 @@ import chess.dao.RoomDao;
 import chess.dto.RoomDto;
 import chess.entity.RoomEntity;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,6 +48,10 @@ public class RoomService {
     }
 
     public List<RoomDto> getRoomNames() {
-        return roomDao.getRoomNames();
+        final List<RoomEntity> rooms = roomDao.findAllRooms();
+
+        return rooms.stream()
+                .map(room -> new RoomDto(room.getName(), room.getRoomId()))
+                .collect(Collectors.toUnmodifiableList());
     }
 }

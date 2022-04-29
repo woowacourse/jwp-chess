@@ -32,6 +32,15 @@ class ChessServiceV2Test {
     }
 
     @Test
+    @DisplayName("방의 일련번호를 통해 전체 보드 구성요소를 조회할 수 있다.")
+    void findSquareAllById() {
+        final Long roomId = chessServiceV2.insertRoom("title1", "1111");
+        chessServiceV2.insertBoard(roomId);
+
+        assertThat(chessServiceV2.findSquareAllById(roomId)).hasSize(64);
+    }
+
+    @Test
     @DisplayName("방의 일련번호와 현재위치 타겟위치를 통해 보드의 구성요소를 변경할 수 있다.")
     void updateSquares() {
         final Long roomId = chessServiceV2.insertRoom("title1", "1111");

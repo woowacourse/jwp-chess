@@ -60,6 +60,10 @@ public class ChessServiceV2 {
         return roomId;
     }
 
+    public List<Square> findSquareAllById(Long roomId) {
+        return squareDao.findSquareAllById(roomId);
+    }
+
     @Transactional
     public void updateSquares(Long roomId, String from, String to) {
         ChessGame chessGame = findChessGame(roomId);
@@ -98,6 +102,7 @@ public class ChessServiceV2 {
         return updateRoomId;
     }
 
+    @Transactional
     public Long deleteRoom(Long roomId, String password) {
         Room room = roomDao.findRoomById(roomId);
         if (!room.getPassword().equals(password)) {

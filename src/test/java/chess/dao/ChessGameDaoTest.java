@@ -1,13 +1,11 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import chess.domain.Score;
 import chess.domain.piece.Color;
 import chess.domain.vo.Room;
 import chess.dto.ChessGameDto;
 import chess.dto.GameStatus;
-import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

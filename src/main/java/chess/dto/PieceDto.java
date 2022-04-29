@@ -1,8 +1,8 @@
 package chess.dto;
 
-import chess.domain.position.Position;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 import java.util.Objects;
 
 public class PieceDto {

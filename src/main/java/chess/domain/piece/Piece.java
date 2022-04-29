@@ -1,7 +1,7 @@
 package chess.domain.piece;
 
-import chess.domain.position.Position;
 import chess.domain.piece.movementcondition.MovementCondition;
+import chess.domain.position.Position;
 import java.math.BigDecimal;
 import java.util.Objects;
 

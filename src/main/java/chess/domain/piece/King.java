@@ -2,9 +2,8 @@ package chess.domain.piece;
 
 import static chess.domain.piece.movementcondition.BaseMovementCondition.IMPOSSIBLE;
 import static chess.domain.piece.movementcondition.BaseMovementCondition.POSSIBLE;
-
-import chess.domain.position.Position;
 import chess.domain.piece.movementcondition.MovementCondition;
+import chess.domain.position.Position;
 import java.math.BigDecimal;
 
 public class King extends Piece {

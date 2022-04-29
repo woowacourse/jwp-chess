@@ -58,7 +58,7 @@ class BoardControllerTest {
 		RestAssured.given().log().all()
 			.contentType(ContentType.JSON)
 			.body(new CommendDto("a2", "a3"))
-			.when().post("/boards/" + boardId + "/move")
+			.when().put("/boards/" + boardId)
 			.then().log().all()
 			.statusCode(HttpStatus.OK.value());
 	}

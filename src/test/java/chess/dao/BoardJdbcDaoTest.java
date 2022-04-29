@@ -26,8 +26,7 @@ class BoardJdbcDaoTest {
     @BeforeEach
     void init() {
         boardDto.add(new BoardDto("PAWN", "WHITE", "a2"));
-        gameDao.save(new GameDto("a", "b", "WHITE"));
-        gameId = gameDao.findGameIdByUserName("a", "b");
+        gameId = gameDao.save(new GameDto("a", "b", "WHITE"));
         boardDao.save(boardDto, gameId);
     }
 

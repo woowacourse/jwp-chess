@@ -3,7 +3,6 @@ package chess.dao;
 import java.util.List;
 import java.util.Optional;
 
-import chess.dto.RoomDto;
 import chess.entity.Room;
 
 public interface RoomDao {
@@ -17,7 +16,7 @@ public interface RoomDao {
 
     void update(Long id, String turn);
 
-    List<RoomDto> findAll();
+    List<Room> findAll();
 
     Optional<Room> findByIdAndPassword(Long id, String password);
 

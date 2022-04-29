@@ -124,7 +124,9 @@ public class ChessService {
     }
 
     public List<RoomDto> findAllRooms() {
-        return roomDao.findAll();
+        return roomDao.findAll().stream()
+            .map(room -> new RoomDto(room.getId(), room.getTurn(), room.getName()))
+            .collect(Collectors.toUnmodifiableList());
     }
 
     public boolean delete(Long roomId, String password) {

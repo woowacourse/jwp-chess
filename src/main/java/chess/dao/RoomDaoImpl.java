@@ -7,7 +7,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import chess.dto.RoomDto;
 import chess.entity.Room;
 
 @Repository
@@ -86,9 +85,9 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public List<RoomDto> findAll() {
+    public List<Room> findAll() {
         String sql = "select id, turn, name from room";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new RoomDto(
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new Room(
             rs.getLong("id"),
             rs.getString("turn"),
             rs.getString("name")

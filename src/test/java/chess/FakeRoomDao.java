@@ -3,10 +3,8 @@ package chess;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import chess.dao.RoomDao;
-import chess.dto.RoomDto;
 import chess.entity.Room;
 
 public class FakeRoomDao implements RoomDao {
@@ -51,10 +49,8 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public List<RoomDto> findAll() {
-        return rooms.stream()
-            .map(room -> new RoomDto(room.getId(), room.getTurn(), room.getName()))
-            .collect(Collectors.toUnmodifiableList());
+    public List<Room> findAll() {
+        return List.copyOf(rooms);
     }
 
     @Override

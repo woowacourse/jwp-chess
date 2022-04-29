@@ -4,17 +4,13 @@ import chess.db.BoardDAO;
 import chess.db.RoomDAO;
 import chess.db.StateDAO;
 import chess.domain.board.Board;
-import chess.domain.command.Command;
 import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.domain.score.ChessScore;
 import chess.domain.score.ScoreCalculator;
-import chess.domain.state.State;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 public class WebChessGame {
@@ -87,5 +83,13 @@ public class WebChessGame {
     public void terminateState(String name) {
         String roomId = roomDAO.findIdByName(name);
         stateDAO.terminateState(roomId);
+    }
+
+    public List<String> findAllSavedGame() {
+        return roomDAO.findAllSavedName();
+    }
+
+    public List<String> findAllEndedGame() {
+        return roomDAO.findAllEndedName();
     }
 }

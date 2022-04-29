@@ -155,14 +155,11 @@
 </table>
 <center>
 <div>
-    <form action="newGame" method="get">
-        <button type="submit"> 새 게임 시작 </button>
-    </form>
-    <form action="searchSave" method="get">
-            <button type="submit"> 진행 중인 게임 조회 </button>
-    </form>
-    <form action="searchEnd" method="get">
-                <button type="submit"> 종료된 게임 조회 </button>
+    {{#each names}}
+    <li>{{this}} </li>
+    {{/each}}
+    <form action="/" method="get">
+        <button type="submit"> 완료 </button>
     </form>
 </div>
 </center>

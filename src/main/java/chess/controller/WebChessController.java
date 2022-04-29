@@ -4,6 +4,7 @@ import chess.web.BoardDTO;
 import chess.web.ChessForm;
 import chess.web.MoveForm;
 import chess.web.WebChessGame;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +27,8 @@ public class WebChessController {
     private static final String NEW_GAME_EXCEPTION_URL = "new_game_exception";
     private static final String SCORE_URL = "game_score";
     private static final String REDIRECT_GAME_END = "redirect:/gameEnd";
+    private static final String SEARCH_GAME_URL = "search_save";
+    private static final String SEARCH_END_URL = "search_end";
 
     private final BoardDTO boardDTO = BoardDTO.buildModel();
     private final WebChessGame webChessGame;
@@ -48,6 +51,20 @@ public class WebChessController {
     @PostMapping(value = "/")
     public String redirectMain() {
         return INDEX_URL;
+    }
+
+    @GetMapping(value = "/searchSave")
+    public String searchSave(Model model) {
+        List<String> allNames = webChessGame.findAllSavedGame();
+        model.addAttribute("names", allNames);
+        return SEARCH_GAME_URL;
+    }
+
+    @GetMapping(value = "/searchEnd")
+    public String searchEnd(Model model) {
+        List<String> allNames = webChessGame.findAllEndedGame();
+        model.addAttribute("names", allNames);
+        return SEARCH_END_URL;
     }
 
     @PostMapping(value = "/newGame")
@@ -120,4 +137,6 @@ public class WebChessController {
         updateDTO(model);
         return FINISHED_URL;
     }
+
+
 }

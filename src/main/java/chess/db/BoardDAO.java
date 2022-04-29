@@ -30,12 +30,12 @@ public class BoardDAO {
                     resultSet.getString("name")
     );
 
-    public void initializePieces(State state, String roomId) {
-        Map<Position, Piece> pieces = state.getBoard().getPieces();
-        for (Position position : pieces.keySet()) {
-            insert(position, pieces.get(position), roomId);
-        }
-    }
+//    public void initializePieces(State state, String roomId) {
+//        Map<Position, Piece> pieces = state.getBoard().getPieces();
+//        for (Position position : pieces.keySet()) {
+//            insert(position, pieces.get(position), roomId);
+//        }
+//    }
 
     public Map<Position, Piece> findAllPieces(String roomId) {
         List<PiecesDTO> pieces = jdbcTemplate.query(FIND_ALL_SQL, pieceRowMapper, roomId);

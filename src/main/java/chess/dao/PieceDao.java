@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PieceDao {
 
-    void removeByPosition(Position position);
+    void removeByPosition(Long gameId, Position position);
 
     void removeAll();
 
@@ -16,10 +16,6 @@ public interface PieceDao {
     void saveAll(List<PieceDto> pieceDtos);
 
     List<PieceDto> findPiecesByGameId(Long gameId);
-
-    List<PieceDto> findAll();
-
-    void updatePosition(Position position, Position updatedPosition);
 
     void updatePosition(Long gameId, Position position, Position updatedPosition);
 }

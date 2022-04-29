@@ -1,10 +1,14 @@
+const gameUri = window.location.href;
+
 window.onload = function () {
     getChess();
 };
 
 function getChess() {
+    let id = localStorage.getItem("id");
+    console.log(id)
     $.ajax({
-        url: "/chess-game/load",
+        url: "/game/" + id,
         type: 'get',
         success(data) {
             clearPieces();
@@ -87,14 +91,15 @@ function move(position) {
         return;
     }
 
+    let id = localStorage.getItem("id");
     let sourcePosition = positions[0];
     let targetPosition = positions[1];
     $.ajax({
-        url: "/chess-game/move",
+        url: "/game/" + id + "/move",
         type: 'post',
         traditional: true,
         beforeSend: function (xhr) {
-             xhr.setRequestHeader("Content-type","application/json");
+            xhr.setRequestHeader("Content-type", "application/json");
         },
         data: JSON.stringify({
             source: sourcePosition,
@@ -117,8 +122,10 @@ function move(position) {
 }
 
 function showScore() {
+    let id = localStorage.getItem("id");
+
     $.ajax({
-        url: "/chess-game/score",
+        url: "/game/" + id + "/score",
         type: 'get',
         success(data) {
             let score = parseToJSON(data);
@@ -141,8 +148,10 @@ function showScore() {
 }
 
 function end() {
+    let id = localStorage.getItem("id");
+
     $.ajax({
-        url: "/chess-game/end",
+        url: "/game/" + id + "/end",
         type: 'post',
         success(data) {
             let status = parseToJSON(data);

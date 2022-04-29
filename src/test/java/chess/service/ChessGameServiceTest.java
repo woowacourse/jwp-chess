@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.dao.FakeJdbcGameDao;
+import chess.dao.FakeGameDao;
 import chess.dao.FakePieceDao;
 import chess.dao.dto.GameDto;
 import chess.serviece.ChessGameService;
@@ -18,7 +18,7 @@ public class ChessGameServiceTest {
 
     @BeforeEach
     void setUp() {
-        chessService = new ChessGameService(new FakeJdbcGameDao(), new FakePieceDao());
+        chessService = new ChessGameService(new FakeGameDao(), new FakePieceDao());
     }
 
     @Test

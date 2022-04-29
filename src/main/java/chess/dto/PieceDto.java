@@ -39,10 +39,6 @@ public class PieceDto {
         return new PieceDto(position.getName(), piece.getColor().getName(), piece.getType().getName(), gameId);
     }
 
-    public static PieceDto from(Position position, Piece piece) {
-        return new PieceDto(position.getName(), piece.getColor().getName(), piece.getType().getName());
-    }
-
     public static PieceDto of(String position, String color, String type) {
         return new PieceDto(position, color, type);
     }
@@ -63,7 +59,7 @@ public class PieceDto {
         return type;
     }
 
-    public long getGameId() {
+    public Long getGameId() {
         return gameId;
     }
 

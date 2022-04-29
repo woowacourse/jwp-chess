@@ -18,9 +18,9 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 @JdbcTest
 @Sql("classpath:init.sql")
-public class SpringJdbcPieceDaoTest {
+public class JdbcPieceDaoTest {
 
-    private SpringJdbcPieceDao pieceDao;
+    private JdbcPieceDao pieceDao;
     private JdbcGameDao gameDao;
 
     @Autowired
@@ -28,7 +28,7 @@ public class SpringJdbcPieceDaoTest {
 
     @BeforeEach
     void setUp() {
-        pieceDao = new SpringJdbcPieceDao(jdbcTemplate);
+        pieceDao = new JdbcPieceDao(jdbcTemplate);
         gameDao = new JdbcGameDao(jdbcTemplate);
     }
 

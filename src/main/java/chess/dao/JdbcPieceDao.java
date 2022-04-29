@@ -11,18 +11,18 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public class SpringJdbcPieceDao implements PieceDao {
+public class JdbcPieceDao implements PieceDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public SpringJdbcPieceDao(JdbcTemplate jdbcTemplate) {
+    public JdbcPieceDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void removeByPosition(Position position) {
-        final String sql = "delete from piece where position = ?";
-        jdbcTemplate.update(sql, position.getName());
+    public void removeByPosition(Long gameId, Position position) {
+        final String sql = "delete from piece where game_id = ? and position = ?";
+        jdbcTemplate.update(sql, gameId, position.getName());
     }
 
     @Override
@@ -59,20 +59,6 @@ public class SpringJdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public List<PieceDto> findAll() {
-        final String sql = "select * from piece";
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) ->
-                        new PieceDto(
-                                resultSet.getString("position"),
-                                resultSet.getString("color"),
-                                resultSet.getString("type")
-                        )
-        );
-    }
-
-    @Override
     public List<PieceDto> findPiecesByGameId(Long gameId) {
         final String sql = "select * from piece where game_id = ?";
         return jdbcTemplate.query(
@@ -81,16 +67,11 @@ public class SpringJdbcPieceDao implements PieceDao {
                         new PieceDto(
                                 resultSet.getString("position"),
                                 resultSet.getString("color"),
-                                resultSet.getString("type")
+                                resultSet.getString("type"),
+                                resultSet.getLong("game_id")
                         ),
                 gameId
         );
-    }
-
-    @Override
-    public void updatePosition(Position position, Position updatedPosition) {
-        final String sql = "update piece set position = ? where position = ?";
-        jdbcTemplate.update(sql, updatedPosition.getName(), position.getName());
     }
 
     @Override

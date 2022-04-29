@@ -5,20 +5,18 @@ import chess.dto.ChessResponseDto;
 import chess.dto.MoveCommandDto;
 import chess.dto.ScoresDto;
 import chess.serviece.ChessGameService;
-import chess.serviece.ChessService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/game")
 public class GameController {
 
-    private final ChessService chessService;
     private final ChessGameService chessGameService;
 
-    public GameController(ChessService chessService, ChessGameService chessGameService) {
-        this.chessService = chessService;
+    public GameController(ChessGameService chessGameService) {
         this.chessGameService = chessGameService;
     }
 
@@ -27,29 +25,24 @@ public class GameController {
         return "game";
     }
 
-    @GetMapping("/game/{id}")
-    public ResponseEntity<ChessResponseDto> load() {
-        return ResponseEntity.ok().body(chessService.getChess());
+    @GetMapping("/{id}")
+    public ResponseEntity<ChessResponseDto> load(@PathVariable Long id) {
+        return ResponseEntity.ok().body(chessGameService.getChessGame(id));
     }
 
-    @PutMapping("/start")
-    public ResponseEntity<ChessResponseDto> start() {
-        return ResponseEntity.ok().body(chessService.initializeGame());
+    @GetMapping("/{id}/score")
+    public ResponseEntity<ScoresDto> score(@PathVariable Long id) {
+        return ResponseEntity.ok().body(chessGameService.getScore(id));
     }
 
-    @GetMapping("/score")
-    public ResponseEntity<ScoresDto> score() {
-        return ResponseEntity.ok().body(chessService.getScore());
-    }
-
-    @PostMapping(value = "/move", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChessResponseDto> move(@RequestBody MoveCommandDto moveCommandDto) {
+    @PostMapping(value = "/{id}/move", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ChessResponseDto> move(@PathVariable Long id, @RequestBody MoveCommandDto moveCommandDto) {
         MoveCommand moveCommand = moveCommandDto.toEntity();
-        return ResponseEntity.ok().body(chessService.movePiece(moveCommand));
+        return ResponseEntity.ok().body(chessGameService.movePiece(id, moveCommand));
     }
 
-    @PostMapping("/end")
-    public ResponseEntity<ScoresDto> end() {
-        return ResponseEntity.ok().body(chessService.finishGame());
+    @PostMapping("/{id}/end")
+    public ResponseEntity<ScoresDto> end(@PathVariable Long id) {
+        return ResponseEntity.ok().body(chessGameService.finishGame(id));
     }
 }

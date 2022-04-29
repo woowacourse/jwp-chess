@@ -20,14 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Sql("classpath:init.sql")
 public class JdbcGameDaoTest {
 
-    private JdbcGameDao jdbcGameDao;
+    private JdbcGameDao gameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        jdbcGameDao = new JdbcGameDao(jdbcTemplate);
+        gameDao = new JdbcGameDao(jdbcTemplate);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class JdbcGameDaoTest {
         GameDto gameDto = new GameDto("라라라", "1234", "white", "playing");
 
         // when
-        long id = jdbcGameDao.save(gameDto);
+        long id = gameDao.save(gameDto);
 
         // then
         assertThat(id).isEqualTo(1);
@@ -48,13 +48,13 @@ public class JdbcGameDaoTest {
     void remove() {
         // given
         GameDto gameDto = new GameDto("라라라", "1234", "white", "playing");
-        long id = jdbcGameDao.save(gameDto);
+        long id = gameDao.save(gameDto);
 
         // when
-        jdbcGameDao.removeById(id);
+        gameDao.removeById(id);
 
         // then
-        assertThatThrownBy(() -> jdbcGameDao.findById(id))
+        assertThatThrownBy(() -> gameDao.findGameById(id))
                 .isInstanceOfAny(IllegalArgumentException.class);
     }
 
@@ -67,10 +67,10 @@ public class JdbcGameDaoTest {
         String turn = "white";
         String status = "playing";
         GameDto gameDto = new GameDto(title, password, turn, status);
-        long id = jdbcGameDao.save(gameDto);
+        long id = gameDao.save(gameDto);
 
         // when
-        GameDto selectedGameDto = jdbcGameDao.findById(id);
+        GameDto selectedGameDto = gameDao.findGameById(id);
 
         // then
         assertAll(
@@ -88,11 +88,11 @@ public class JdbcGameDaoTest {
         // given
         GameDto gameDto1 = new GameDto("라라라", "1234", "white", "playing");
         GameDto gameDto2 = new GameDto("룰룰루", "222", "white", "playing");
-        jdbcGameDao.save(gameDto1);
-        jdbcGameDao.save(gameDto2);
+        gameDao.save(gameDto1);
+        gameDao.save(gameDto2);
 
         // when
-        List<GameDto> gameDtos = jdbcGameDao.findAll();
+        List<GameDto> gameDtos = gameDao.findAll();
 
         // then
         assertThat(gameDtos.size()).isEqualTo(2);
@@ -103,16 +103,15 @@ public class JdbcGameDaoTest {
     void update() {
         // given
         GameDto gameDto = new GameDto("라라라", "1234", "white", "playing");
-        long id = jdbcGameDao.save(gameDto);
+        long id = gameDao.save(gameDto);
 
         // when
-        GameDto updatedGameDto = new GameDto(id, "라라라", "1234", "black", "end");
-        jdbcGameDao.updateGame(updatedGameDto);
+        gameDao.updateGame(id, "black", "end");
 
         // then
         assertAll(
-                () -> assertThat(jdbcGameDao.findById(id).getTurn()).isEqualTo("black"),
-                () -> assertThat(jdbcGameDao.findById(id).getStatus()).isEqualTo("end")
+                () -> assertThat(gameDao.findGameById(id).getTurn()).isEqualTo("black"),
+                () -> assertThat(gameDao.findGameById(id).getStatus()).isEqualTo("end")
         );
     }
 
@@ -121,13 +120,13 @@ public class JdbcGameDaoTest {
     void updateStatus() {
         // given
         GameDto gameDto = new GameDto("라라라", "1234", "white", "playing");
-        long id = jdbcGameDao.save(gameDto);
+        long id = gameDao.save(gameDto);
 
         // when
         GameStatus gameStatus = GameStatus.FINISHED;
-        jdbcGameDao.updateStatus(id, gameStatus);
+        gameDao.updateStatus(id, gameStatus);
 
         // then
-        assertThat(jdbcGameDao.findById(id).getStatus()).isEqualTo(gameStatus.getName());
+        assertThat(gameDao.findGameById(id).getStatus()).isEqualTo(gameStatus.getName());
     }
 }

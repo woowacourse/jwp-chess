@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class JdbcGameDao implements SpringGameDao {
+public class JdbcGameDao implements GameDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -23,7 +23,7 @@ public class JdbcGameDao implements SpringGameDao {
     }
 
     @Override
-    public long save(GameDto gameDto) {
+    public Long save(GameDto gameDto) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final String sql = "insert into game (title, password, turn, status) values (?, ?, ?, ?)";
@@ -52,7 +52,7 @@ public class JdbcGameDao implements SpringGameDao {
     }
 
     @Override
-    public GameDto findById(Long id) {
+    public GameDto findGameById(Long id) {
         final String sql = "select * from game where id = ?";
         try {
             return jdbcTemplate.queryForObject(
@@ -119,9 +119,9 @@ public class JdbcGameDao implements SpringGameDao {
     }
 
     @Override
-    public void updateGame(GameDto gameDto) {
+    public void updateGame(Long gameId, String turn, String status) {
         final String sql = "update game set turn = ?, status = ? where id = ?";
-        jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus(), gameDto.getId());
+        jdbcTemplate.update(sql, turn, status, gameId);
     }
 
     @Override

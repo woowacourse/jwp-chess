@@ -1,18 +1,24 @@
 function getRooms() {
   $.ajax({
-    url: "/room",
+    url: "/rooms",
     dataType: 'json',
     contentType: 'application/json; charset=utf-8',
-    type: "get",
+    type: "GET",
     success: function (data) {
       $.each(data, (rowNumber, rowData) => {
+        var status = "진행 중";
+        if (rowData.status === false) {
+          status = "종료됨";
+        }
         document.getElementById("room_list").innerHTML +=
             "<tr>"
-            + "<td class='table_title' id='" + rowData.id + "'"
-            + " onclick='enterRoom(this.id)'>"
-            + rowData.id + "</td>"
+            + "<td class='table_title'>" + rowData.id + "</td>"
             + "<td class='table_title'>" + rowData.title + "</td>"
-            + "<td class='table_title'>" + rowData.status + "</td>"
+            + "<td class='table_title'>" + status + "</td>"
+            + "<td class='table_title'"
+            + "<button class='table_title' id='" + rowData.id + "'"
+            + " onclick='enterRoom(this.id)'>" +""
+            + "방 입장하기</button></td>"
             + "</tr>";
       })
     },
@@ -24,17 +30,14 @@ function getRooms() {
 
 function enterRoom(roomId) {
   $.ajax({
-    url: "/room/" + roomId,
+    url: "/board/" + roomId,
     dataType: 'json',
     contentType: 'application/json; charset=utf-8',
-    type: "get",
+    type: "GET",
     success: function (data) {
       localStorage.setItem("roomId", roomId);
       location.href = "index.html";
     },
-    error: function (data) {
-      alert(JSON.stringify(data))
-    }
   })
 }
 
@@ -46,10 +49,10 @@ function deleteRoom() {
   }
 
   $.ajax({
-    url: "/room/delete",
+    url: "/rooms",
     dataType: 'json',
     contentType: 'application/json; charset=utf-8',
-    type: "post",
+    type: "DELETE",
     data: JSON.stringify(object),
     success: function (data) {
       alert("제거되었습니다.")
@@ -69,10 +72,10 @@ function createRoom() {
   }
 
   $.ajax({
-    url: "/room",
+    url: "/rooms",
     dataType: 'json',
     contentType: 'application/json; charset=utf-8',
-    type: "post",
+    type: "POSST",
     data: JSON.stringify(object),
     success: function (data) {
       alert("생성되었습니다.")

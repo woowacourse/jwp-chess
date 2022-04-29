@@ -1,7 +1,7 @@
 function getScore() {
     const roomId = localStorage.getItem("roomId");
     $.ajax({
-        url: "/room/"+ roomId + "/score",
+        url: "/rooms/"+ roomId + "/score",
         type: "GET",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',

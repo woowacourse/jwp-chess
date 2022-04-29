@@ -25,8 +25,8 @@ function movePiece(object, position) {
         return;
     }
     $.ajax({
-        url: "/board/"+roomId+"/move",
-        type: "POST",
+        url: "/board/"+roomId+"",
+        type: "PATCH",
         accept: 'application/json; charset=utf-8',
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(object),
@@ -65,7 +65,7 @@ function printGameState(result) {
 
 function canMove(roomId) {
     $.ajax({
-        url: "/room/"+roomId+"/status",
+        url: "/rooms/"+roomId+"/status",
         type: "GET",
         accept: 'application/json; charset=utf-8',
         contentType: 'application/json; charset=utf-8',

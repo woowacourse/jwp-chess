@@ -89,7 +89,7 @@ public class ChessControllerTest {
     void reset() {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/room/1/reset")
+            .when().patch("/room/1/reset")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("size()", is(2));
@@ -100,7 +100,7 @@ public class ChessControllerTest {
     void end() {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/room/1/end")
+            .when().patch("/room/1/end")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }

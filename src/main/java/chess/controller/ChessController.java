@@ -11,10 +11,13 @@ import chess.dto.StatusDto;
 import chess.service.ChessService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,48 +29,48 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/room")
+    @GetMapping("/rooms")
     public ResponseEntity<List<RoomDto>> getRooms() {
         return ResponseEntity.ok().body(chessService.findRoomList());
     }
 
-    @PostMapping("/room")
+    @PostMapping("/rooms")
     public ResponseEntity<String> createRoom(@RequestBody CreateRoomDto room) {
         chessService.createRoom(room);
         return ResponseEntity.ok().body("방이 생성되었습니다.");
     }
 
-    @GetMapping("/room/{roomId}")
-    public ResponseEntity<BoardDto> getBoard(@PathVariable(value = "roomId") Long roomId) {
+    @GetMapping("/board/{roomId}")
+    public ResponseEntity<BoardDto> getBoard(@PathVariable Long roomId) {
         return ResponseEntity.ok().body(chessService.getBoard(roomId));
     }
 
-    @PostMapping(value = "/board/{roomId}/move")
-    public ResponseEntity<GameStateDto> move(@PathVariable(value = "roomId") Long roomId, @RequestBody MoveDto moveDto) {
+    @PatchMapping(value = "/board/{roomId}")
+    public ResponseEntity<GameStateDto> move(@PathVariable Long roomId, @RequestBody MoveDto moveDto) {
         return ResponseEntity.ok().body(chessService.move(roomId, moveDto.getSource(), moveDto.getDestination()));
     }
 
-    @GetMapping("/room/{roomId}/score")
-    public ResponseEntity<ScoreDto> getScore(@PathVariable(value = "roomId") Long roomId) {
+    @GetMapping("/rooms/{roomId}/score")
+    public ResponseEntity<ScoreDto> getScore(@PathVariable Long roomId) {
         return ResponseEntity.ok().body(chessService.getScoreBy(roomId));
     }
 
-    @PostMapping("/room/{roomId}/reset")
-    public ResponseEntity<BoardDto> reset(@PathVariable(value = "roomId") Long roomId) {
+    @PutMapping("/rooms/{roomId}")
+    public ResponseEntity<BoardDto> reset(@PathVariable Long roomId) {
         return ResponseEntity.ok().body(chessService.resetBy(roomId));
     }
 
-    @PostMapping("/room/{roomId}/end")
-    public ResponseEntity<GameStateDto> end(@PathVariable(value = "roomId") Long roomId) {
+    @PatchMapping("/rooms/{roomId}")
+    public ResponseEntity<GameStateDto> end(@PathVariable Long roomId) {
         return ResponseEntity.ok().body(chessService.endBy(roomId));
     }
 
-    @GetMapping("/room/{roomId}/status")
-    public ResponseEntity<StatusDto> getStatus(@PathVariable(value = "roomId") Long roomId) {
+    @GetMapping("/rooms/{roomId}/status")
+    public ResponseEntity<StatusDto> getStatus(@PathVariable Long roomId) {
         return ResponseEntity.ok().body(chessService.getStatus(roomId));
     }
 
-    @PostMapping("/room/delete")
+    @DeleteMapping("/rooms")
     public ResponseEntity delete(@RequestBody DeleteRoomDto deleteDto) {
         chessService.deleteBy(deleteDto.getRoomId(), deleteDto.getPassword());
         return ResponseEntity.ok().body("성공");

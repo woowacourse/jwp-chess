@@ -84,6 +84,13 @@ public class BoardJdbcTemplateDao implements BoardDao {
     }
 
     @Override
+    public String getName(int id) {
+        final String sql = "select name from board where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
+
+    @Override
     public void deleteBoard(int id, String password) {
         final String sql = "delete from board where id = ? and password = ?";
 

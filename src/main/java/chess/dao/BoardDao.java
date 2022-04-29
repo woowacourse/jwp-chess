@@ -15,6 +15,8 @@ public interface BoardDao {
 
     Color findTurn(int id);
 
+    String getName(int id);
+
     void deleteBoard(int id, String password);
 
     boolean isGameEnd(int id);

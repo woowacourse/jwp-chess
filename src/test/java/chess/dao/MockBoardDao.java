@@ -40,6 +40,12 @@ public class MockBoardDao implements BoardDao {
     }
 
     @Override
+    public String getName(int id) {
+        FakeBoard board = fakeBoard.get(id);
+        return board.getName();
+    }
+
+    @Override
     public void deleteBoard(int id, String password) {
         fakeBoard = new HashMap<>();
     }

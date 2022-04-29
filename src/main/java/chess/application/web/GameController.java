@@ -2,6 +2,7 @@ package chess.application.web;
 
 import chess.domain.ChessGame;
 import java.util.Map;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,9 +38,13 @@ public class GameController {
     }
 
     @PostMapping("/game")
-    public ResponseEntity<Void> create(@RequestParam String title, @RequestParam String password) {
-        gameService.createRoom(title, password);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<String> create(@RequestParam String title, @RequestParam String password) {
+        try {
+            gameService.createRoom(title, password);
+        } catch (IllegalArgumentException e) {
+            return createMessageResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        return createMessageResponse(HttpStatus.CREATED, "방이 생성되었습니다.");
     }
 
     @DeleteMapping("/game/{gameNo}")
@@ -99,6 +104,12 @@ public class GameController {
         ChessGame chessGame = gameService.load(gameNo);
         model.addAllAttributes(gameService.end(gameNo, chessGame));
         return "result";
+    }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<String> handle(DataAccessException exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                "[ERROR] 서버에 연결할 수 없습니다: " + exception.getMessage());
     }
 
     @ExceptionHandler

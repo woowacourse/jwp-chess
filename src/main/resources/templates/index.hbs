@@ -29,18 +29,24 @@
     function deleteRoom(id) {
         const passwordInput = window.prompt('방을 삭제하려면 비밀번호를 입력하세요');
         fetch('./game/' + id, {
-                    method: 'DELETE',
-                    body: passwordInput
-                }).then((response) => response.json())
-                .catch((error) => window.alert("처리하지 못했습니다."))
-                .then((data) =>  window.alert(data.message))
-                .then(() => loadGames());
+                method: 'DELETE',
+                body: passwordInput
+            }).then((response) => response.json())
+            .catch((error) => window.alert("서버 문제로 삭제하지 못했습니다."))
+            .then((data) =>  window.alert(data.message))
+            .then(() => loadGames());
     }
 
     function loadGames() {
         fetch('./games')
-            .then((response) => response.json())
-            .then((games) => initializeRoomList(games));
+            .then((response) => {
+                if (response.status != 200) {
+                    throw new Error('서버 문제로 방 목록을 불러올 수 없습니다.');
+                }
+                return response.json();
+            })
+            .then((games) => initializeRoomList(games))
+            .catch((error) => window.alert(error.message));
     }
 
     function initializeRoomList(games) {
@@ -97,18 +103,11 @@
         fetch(event.target.action, {
             method: 'POST',
             body: new URLSearchParams(new FormData(event.target))
-        }).then((response) => response.status)
-        .then((status) => alertCreateResult(status))
-        .then(() => loadGames());
+            }).then((response) => response.json())
+              .catch((error) => window.alert("서버 문제로 생성하지 못했습니다."))
+              .then((data) =>  window.alert(data.message))
+              .then(() => loadGames());
     });
-
-    function alertCreateResult(status) {
-        if (status !== 201) {
-            window.alert("생성하지 못했습니다.");
-            return;
-        }
-        window.alert("방 생성에 성공하였습니다.");
-    }
 
     window.onload = function() {
         loadGames();

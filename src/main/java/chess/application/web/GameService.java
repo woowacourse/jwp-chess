@@ -41,6 +41,9 @@ public class GameService {
     }
 
     public void createRoom(String title, String password) {
+        if (title.isEmpty() || password.isEmpty()) {
+            throw new IllegalArgumentException("방 제목과 비밀번호를 입력하세요.");
+        }
         long gameNo = gameDao.insert(GameDto.fromNewGame(title, password));
         boardDao.insert(gameNo, BoardInitializer.get().getSquares());
     }

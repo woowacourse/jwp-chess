@@ -15,6 +15,15 @@ class ChessServiceV2Test {
     private final ChessServiceV2 chessServiceV2 = new ChessServiceV2(new RoomFakeDao(), new SquareFakeDao());
 
     @Test
+    @DisplayName("전체 방 리스트를 조회할 수 있다.")
+    void findAllRoom() {
+        chessServiceV2.insertRoom("title1", "1111");
+        chessServiceV2.insertRoom("title1", "1111");
+
+        assertThat(chessServiceV2.findAllRoom()).hasSize(2);
+    }
+    
+    @Test
     @DisplayName("한개의 방을 생성할 수 있다.")
     void insertRoom() {
         final Long roomId = chessServiceV2.insertRoom("title1", "1111");

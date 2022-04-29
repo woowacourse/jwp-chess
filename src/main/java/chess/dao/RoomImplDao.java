@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.entity.Room;
 import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,6 +16,17 @@ public class RoomImplDao implements RoomDao {
 
     public RoomImplDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public List<Room> findAllRoom() {
+        String sql = "SELECT * FROM room";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new Room(
+                rs.getLong("id"),
+                rs.getString("state"),
+                rs.getString("title"),
+                rs.getString("password")
+        ));
     }
 
     @Override

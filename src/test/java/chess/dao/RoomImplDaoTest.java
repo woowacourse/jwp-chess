@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.entity.Room;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,17 @@ class RoomImplDaoTest {
 
     @Autowired
     private RoomImplDao roomDao;
+
+    @Test
+    @DisplayName("전체 방 리스트를 조회할 수 있다.")
+    void findAllRoom() {
+        insertTestRoom("title1", "1111");
+        insertTestRoom("title2", "1111");
+
+        final List<Room> rooms = roomDao.findAllRoom();
+
+        assertThat(rooms).hasSize(2);
+    }
 
     @Test
     @DisplayName("한개의 방을 생성할 수 있다.")

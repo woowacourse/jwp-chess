@@ -30,6 +30,10 @@ public class ChessServiceV2 {
         this.squareDao = squareDao;
     }
 
+    public List<Room> findAllRoom() {
+        return roomDao.findAllRoom();
+    }
+
     public Long insertRoom(String title, String password) {
         validateValueIsBlank(title, password);
         final Long roomId = roomDao.insertRoom(title, password);

@@ -2,9 +2,12 @@ package chess.controller.api;
 
 import chess.controller.api.dto.MovePositionReq;
 import chess.controller.api.dto.RoomCreateReq;
+import chess.entity.Room;
 import chess.service.ChessServiceV2;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,6 +23,12 @@ public class ApiController {
 
     public ApiController(ChessServiceV2 chessServiceV2) {
         this.chessServiceV2 = chessServiceV2;
+    }
+
+    @GetMapping("/room/all")
+    public ResponseEntity<RoomAllRes> findAllRoom() {
+        final List<Room> rooms = chessServiceV2.findAllRoom();
+        return ResponseEntity.ok().body(RoomAllRes.createRoomAllRes(rooms));
     }
 
     @PostMapping("/room")

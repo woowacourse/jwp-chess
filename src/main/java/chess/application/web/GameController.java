@@ -53,14 +53,14 @@ public class GameController {
         ChessGame chessGame = gameService.load(gameNo);
         gameService.move(source, target, chessGame);
         gameService.save(gameNo, chessGame);
-        if (gameService.isGameFinished(chessGame)) {
-            return end(model, gameNo);
-        }
         return play(model, gameNo);
     }
 
     private String play(Model model, long gameNo) {
         ChessGame chessGame = gameService.load(gameNo);
+        if (gameService.isGameFinished(gameNo, chessGame)) {
+            return end(model, gameNo);
+        }
         model.addAttribute("gameNo", gameNo);
         model.addAttribute("title", gameService.loadGameTitle(gameNo));
         model.addAllAttributes(gameService.modelPlayingBoard(chessGame));
@@ -82,9 +82,9 @@ public class GameController {
     }
 
     @GetMapping("/end/{gameNo}")
-    public String end(Model model, @PathVariable int gameNo) {
+    public String end(Model model, @PathVariable long gameNo) {
         ChessGame chessGame = gameService.load(gameNo);
-        model.addAllAttributes(gameService.end(chessGame));
+        model.addAllAttributes(gameService.end(gameNo, chessGame));
         return "result";
     }
 

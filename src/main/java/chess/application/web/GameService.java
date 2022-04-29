@@ -114,8 +114,8 @@ public class GameService {
         boardDao.update(gameNo, chessGame.getBoardSquares());
     }
 
-    public Map<String, Object> end(ChessGame chessGame) {
-        //TODO: game table의 running false로 update
+    public Map<String, Object> end(long gameNo, ChessGame chessGame) {
+        gameDao.end(gameNo);
         return modelResult(chessGame);
     }
 
@@ -129,7 +129,7 @@ public class GameService {
         return model;
     }
 
-    public boolean isGameFinished(ChessGame chessGame) {
-        return chessGame.isFinished();
+    public boolean isGameFinished(long gameNo, ChessGame chessGame) {
+        return chessGame.isFinished() || !gameDao.isRunning(gameNo);
     }
 }

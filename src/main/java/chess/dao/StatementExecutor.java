@@ -27,6 +27,11 @@ public class StatementExecutor<T> {
         }
     }
 
+    public boolean countAndCheckExistence() {
+        int foundRowCount = (int) execute();
+        return foundRowCount > 0;
+    }
+
     public void updateAndThrowOnNonEffected(Supplier<RuntimeException> exceptionSupplier) {
         int effectedRowCount = (int) execute();
         if (effectedRowCount == 0) {

@@ -42,10 +42,8 @@ public class GameDao {
         final String sql = "SELECT COUNT(*) FROM game WHERE id = :game_id";
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
-        int existingGameCount = new StatementExecutor<>(
-                () -> jdbcTemplate.queryForObject(sql, paramSource, Integer.class))
-                .execute();
-        return existingGameCount > 0;
+        return new StatementExecutor<>(() -> jdbcTemplate.queryForObject(sql, paramSource, Integer.class))
+                .countAndCheckExistence();
     }
 
     public int countAll() {
@@ -82,6 +80,24 @@ public class GameDao {
         SqlParameterSource paramSource = new BeanPropertySqlParameterSource(authCredentials);
         new StatementExecutor<>(() -> jdbcTemplate.update(sql, paramSource))
                .updateAndThrowOnNonEffected(() -> new IllegalArgumentException("상대방 플레이어로 참여하는 데 실패하였습니다."));
+    }
+
+    public boolean isValidOwner(EncryptedAuthCredentials authCredentials) {
+        final String sql = "SELECT COUNT(*) FROM game "
+                + "WHERE name = :name AND password = :password";
+
+        SqlParameterSource paramSource = new BeanPropertySqlParameterSource(authCredentials);
+        return new StatementExecutor<>(() -> jdbcTemplate.queryForObject(sql, paramSource, Integer.class))
+                .countAndCheckExistence();
+    }
+
+    public boolean isValidOpponent(EncryptedAuthCredentials authCredentials) {
+        final String sql = "SELECT COUNT(*) FROM game "
+                + "WHERE name = :name AND opponent_password = :password";
+
+        SqlParameterSource paramSource = new BeanPropertySqlParameterSource(authCredentials);
+        return new StatementExecutor<>(() -> jdbcTemplate.queryForObject(sql, paramSource, Integer.class))
+                .countAndCheckExistence();
     }
 
     public void finishGame(int gameId) {

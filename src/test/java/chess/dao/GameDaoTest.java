@@ -140,6 +140,65 @@ class GameDaoTest {
         }
     }
 
+    @DisplayName("isValidOwner 메서드는 방 주인의 비밀번호에 부합하는지 확인")
+    @Nested
+    class IsValidOwnerTest {
+
+        @Test
+        void 방주인의_비밀번호와_동일한_비밀번호_입력시_참() {
+            boolean actual = dao.isValidOwner(new EncryptedAuthCredentials("참여자가_있는_게임", "encrypted4"));
+
+            assertThat(actual).isTrue();
+        }
+
+        @Test
+        void 방주인의_비밀번호와_다른_비밀번호_입력시_거짓() {
+            boolean actual = dao.isValidOwner(new EncryptedAuthCredentials("참여자가_있는_게임", "wrong!!"));
+
+            assertThat(actual).isFalse();
+        }
+
+        @Test
+        void 상대방_플레이어의_비밀번호를_입력하면_거짓() {
+            boolean actual = dao.isValidOwner(new EncryptedAuthCredentials("참여자가_있는_게임", "enemy4"));
+
+            assertThat(actual).isFalse();
+        }
+    }
+
+    @DisplayName("isValidOpponent 메서드는 상대방 플레이어의 비밀번호에 부합하는지 확인")
+    @Nested
+    class IsValidOpponentTest {
+
+        @Test
+        void 상대방_플레이어의_비밀번호와_동일한_비밀번호_입력시_참() {
+            boolean actual = dao.isValidOpponent(new EncryptedAuthCredentials("참여자가_있는_게임", "enemy4"));
+
+            assertThat(actual).isTrue();
+        }
+
+        @Test
+        void 상대방_플레이어의_비밀번호와_다른_비밀번호_입력시_거짓() {
+            boolean actual = dao.isValidOpponent(new EncryptedAuthCredentials("참여자가_있는_게임", "wrong!!"));
+
+            assertThat(actual).isFalse();
+        }
+
+        @Test
+        void 방주인의_비밀번호를_입력하면_거짓() {
+            boolean actual = dao.isValidOpponent(new EncryptedAuthCredentials("참여자가_있는_게임", "encrypted4"));
+
+            assertThat(actual).isFalse();
+        }
+
+        @Test
+        void 애초에_상대방_플레이어가_없는_경우_거짓() {
+            boolean actual = dao.isValidOpponent(new EncryptedAuthCredentials("참여자가_없는_게임", null));
+
+            assertThat(actual).isFalse();
+        }
+    }
+
     @Test
     void finishGame_메서드로_게임을_종료된_상태로_변경가능() {
         dao.finishGame(1);

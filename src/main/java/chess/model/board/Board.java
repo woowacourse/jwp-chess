@@ -3,17 +3,19 @@ package chess.model.board;
 import static chess.model.Team.NONE;
 
 import chess.model.Team;
-import chess.model.board.result.GameResult;
 import chess.model.piece.Blank;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class Board {
 
-    private static final int KING_COUNT_IN_BOARD = 2;
+    private static final long DEFAULT_KING_COUNT_IN_BOARD = 2;
 
     private final Map<Position, Piece> board;
 
@@ -58,13 +60,34 @@ public class Board {
     }
 
     public boolean isKingDead() {
-        return board.values()
+        final long nowKingCount = board.values()
                 .stream()
                 .filter(Piece::isKing)
-                .count() < KING_COUNT_IN_BOARD;
+                .count();
+        return nowKingCount < DEFAULT_KING_COUNT_IN_BOARD;
     }
 
     public Map<Position, Piece> getBoard() {
         return Collections.unmodifiableMap(board);
+    }
+
+    public List<Position> searchPositionOfPawnsFrom(Team team) {
+        return board.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue()
+                        .isSameTeam(team))
+                .filter(entry -> entry.getValue()
+                        .isPawn())
+                .map(Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
+    public Double calculateDefaultScoreFrom(final Team team) {
+        Double defaultScore = board.values()
+                .stream()
+                .filter(piece -> piece.isSameTeam(team))
+                .mapToDouble(Piece::score)
+                .sum();
+        return defaultScore;
     }
 }

@@ -11,7 +11,7 @@ public final class Status extends Finished {
 
     public Status(Board board) {
         super(board);
-        this.gameResult = new GameResult(board.getBoard());
+        this.gameResult = new GameResult(board);
     }
 
     @Override

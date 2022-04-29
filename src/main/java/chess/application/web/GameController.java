@@ -65,9 +65,8 @@ public class GameController {
         return ResponseEntity.status(status).body(messageData);
     }
 
-    @PostMapping("/game/{gameNo}")
-    public String load(Model model, @PathVariable int gameNo, @RequestParam String password) {
-        gameService.checkPassword(gameNo, password);
+    @GetMapping("/game/{gameNo}")
+    public String load(Model model, @PathVariable int gameNo) {
         gameService.load(gameNo);
         return play(model, gameNo);
     }

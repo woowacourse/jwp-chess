@@ -6,14 +6,14 @@ const onSuccessResponse = ({id, found}) => {
     alert(`${id}에 해당되는 게임은 존재하지 않습니다!`)
 }
 
-const getTargetUrl = (event) => {
+const getTargetUrl = () => {
     const inputValue = document.getElementById("num_input").value;
-    return `${event.target.action}?game_id=${inputValue}`;
+    return `game/${inputValue}/info`;
 }
 
 const searchAndRedirect = async (event) => {
     event.preventDefault();
-    const response = await fetch(getTargetUrl(event));
+    const response = await fetch(getTargetUrl());
     const json = await response.json();
     onSuccessResponse(json);
 }

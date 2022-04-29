@@ -1,23 +1,15 @@
 package chess.dao;
 
+import chess.dto.BoardDto;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import chess.dto.BoardDto;
 
 @Repository
 public class BoardJdbcDao implements BoardDao {
-
-    private final RowMapper<BoardDto> BOARD_DTO_ROW_MAPPER = (resultSet, rowNum) ->
-        new BoardDto(resultSet.getString("symbol"),
-            resultSet.getString("team"),
-            resultSet.getString("position"));
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -28,7 +20,10 @@ public class BoardJdbcDao implements BoardDao {
     @Override
     public List<BoardDto> findByGameId(int gameId) {
         final String sql = "select symbol, team, position from board where game_id = (?)";
-        return jdbcTemplate.query(sql, BOARD_DTO_ROW_MAPPER, gameId);
+        return jdbcTemplate.query(sql,  (resultSet, rowNum) ->
+                new BoardDto(resultSet.getString("symbol"),
+                        resultSet.getString("team"),
+                        resultSet.getString("position")), gameId);
     }
 
     @Override

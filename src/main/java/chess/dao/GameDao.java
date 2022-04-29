@@ -1,16 +1,19 @@
 package chess.dao;
 
 import chess.dto.GameDto;
+import java.util.List;
 
 public interface GameDao {
 
-	void save(GameDto gameDto);
+	int save(GameDto gameDto);
 
-	int findGameIdByUserName(String whiteUserName, String blackUserName);
-
-	GameDto findById(int gameId);
+	String findStateById(int gameId);
 
 	void update(String state, int gameId);
 
 	void deleteById(int gameId);
+
+	String findPasswordById(int gameId);
+
+	List<GameDto> findGames();
 }

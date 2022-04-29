@@ -32,6 +32,12 @@ public class GameController {
         return "redirect:/games/" + gameService.createNewGame();
     }
 
+    @GetMapping("/{gameId}/remove")
+    public String removeGame(@PathVariable("gameId") final Long gameId) {
+        gameService.removeGame(gameId);
+        return "redirect:/";
+    }
+
     @GetMapping("/{gameId}")
     public String loadGame(@PathVariable("gameId") final Long gameId, final Model model) {
         return renderBoard(gameService.loadGame(gameId), model);

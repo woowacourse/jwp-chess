@@ -29,6 +29,10 @@ public class GameService {
         return game.getId();
     }
 
+    public void removeGame(final Long gameId) {
+        gameRepository.remove(gameId);
+    }
+
     public GameResponseDto loadGame(final Long gameId) {
         return ChessDtoAssembler.gameResponseDto(gameRepository.findById(gameId));
     }

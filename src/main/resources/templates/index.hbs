@@ -44,6 +44,7 @@
             <tr>
                 <th>방번호</th>
                 <th>진행여부</th>
+                <th>삭제버튼</th>
             </tr>
             {{#each games as |value key|}}
             <tr>
@@ -56,6 +57,9 @@
                     {{else}}
                     진행중
                     {{/if}}
+                </td>
+                <td>
+                    <button type="button" onclick="location.href='/games/{{key}}/remove';">삭제</button>
                 </td>
             </tr>
             {{/each}}

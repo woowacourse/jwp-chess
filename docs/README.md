@@ -32,6 +32,25 @@
 ## 2. 프로그래맹 요구사항 
 - [x] 예외 발생 시 사용자가 이해할 수 있는 명시적인 메세지 응답
 
+## REST API
+- 게임방 목록 화면
+  - GET : "/"
+- 게임방 생성
+  - POST : "/rooms"
+- 게임방 입장
+  - GET : "/rooms/{roomId}"
+- 게임방 삭제
+  - DELETE : "/rooms/{roomId}"
+- 게임 시작
+  - PUT : “/rooms/{roomId}/start”
+- 게임 종료
+  - PUT : “/rooms/{roomId}/end”
+- 게임 점수 계산
+  - POST : “/rooms/{roomId}/status”
+- 기물 이동 
+  - PUT : “/rooms/{roomId}/move”
+- 게임 나가기 
+  - GET : "/"
 
 ## DB 실행 방법
 

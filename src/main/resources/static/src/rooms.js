@@ -9,7 +9,7 @@ function setUpIndex() {
         let roomPassword = new FormData(createRoomForm).get("room_password");
         send("/rooms/create", {
                 method: 'post',
-                body: JSON.stringify({'roomName': roomName, 'roomPassword': roomPassword}),
+                body: JSON.stringify({'name': roomName, 'password': roomPassword}),
                 headers: new Headers({'Content-Type': 'application/json'})
             }, relocate);
     })
@@ -38,7 +38,7 @@ function remove(roomName) {
     var roomPassword = prompt("비밀번호를 입력해주세요.");
     send("/rooms/remove", {
         method: 'post',
-        body: JSON.stringify({'roomName': roomName, 'roomPassword': roomPassword}),
+        body: JSON.stringify({'name': roomName, 'password': roomPassword}),
         headers: new Headers({'Content-Type': 'application/json'})
     }, relocate);
 }

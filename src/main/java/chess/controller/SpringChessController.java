@@ -7,8 +7,8 @@ import chess.dto.BoardResponse;
 import chess.dto.GameStateResponse;
 import chess.dto.PathResponse;
 import chess.service.ChessRoomService;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +35,10 @@ public class SpringChessController {
 
     @PostMapping("/rooms/create")
     @ResponseBody
-    public ResponseEntity<PathResponse> createRoom(@RequestBody String body) {
-        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-        String roomName = jsonObject.get("roomName").getAsString();
-        String roomPassword = jsonObject.get("roomPassword").getAsString();
-        RoomDto roomDto = chessRoomService.createNewRoom(roomName, roomPassword);
+    public ResponseEntity<PathResponse> createRoom(@RequestBody String body) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        RoomDto bodyRoomDto = mapper.readValue(body, RoomDto.class);
+        RoomDto roomDto = chessRoomService.createNewRoom(bodyRoomDto.getName(), bodyRoomDto.getPassword());
         return respondPath("/rooms/" + roomDto.getId());
     }
 
@@ -92,12 +91,10 @@ public class SpringChessController {
     }
 
     @PostMapping("/rooms/remove")
-    public ResponseEntity<PathResponse> removeRoom(@RequestBody String body) {
-        JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
-        String roomName = jsonObject.get("roomName").getAsString();
-        String roomPassword = jsonObject.get("roomPassword").getAsString();
-        RoomDto roomDto = new RoomDto(roomName, roomPassword);
-        chessRoomService.removeRoom(roomDto);
+    public ResponseEntity<PathResponse> removeRoom(@RequestBody String body) throws JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        RoomDto bodyRoomDto = mapper.readValue(body, RoomDto.class);
+        chessRoomService.removeRoom(bodyRoomDto);
         return respondPath("/");
     }
 

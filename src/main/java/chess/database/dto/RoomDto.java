@@ -1,5 +1,8 @@
 package chess.database.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class RoomDto {
 
     private int id;
@@ -11,7 +14,8 @@ public class RoomDto {
         this.name = name;
     }
 
-    public RoomDto(String name, String password) {
+    @JsonCreator
+    public RoomDto(@JsonProperty("name") String name, @JsonProperty("password") String password) {
         this.name = name;
         this.password = password;
     }

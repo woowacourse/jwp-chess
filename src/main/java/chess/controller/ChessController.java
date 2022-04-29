@@ -11,11 +11,13 @@ import chess.dto.RankDto;
 import chess.service.GameService;
 import chess.service.MemberService;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ChessController {
@@ -29,50 +31,63 @@ public class ChessController {
     }
 
     @GetMapping("/")
-    public String index(final Model model) {
+    public ModelAndView index() {
         final List<ChessGameDto> games = gameService.findPlayingGames();
         final List<Member> members = memberService.findAllMembers();
-        model.addAttribute("games", games);
-        model.addAttribute("members", members);
-        return "index";
+        final Map<String, Object> model = new HashMap<>();
+
+        model.put("games", games);
+        model.put("members", members);
+
+        return new ModelAndView("index", model);
     }
 
     @GetMapping("/play/{gameId}")
-    public String playGame(@PathVariable("gameId") Long gameId, final Model model) {
+    public ModelAndView playGame(@PathVariable("gameId") Long gameId) {
         final ChessGame chessGame = gameService.findByGameId(gameId);
+        final Map<String, Object> model = new HashMap<>();
         if (chessGame.isEnd()) {
-            return "redirect:/result/" + gameId;
+            return new ModelAndView("redirect:/result/" + gameId);
         }
 
-        model.addAttribute("turn", chessGame.getTurn());
-        model.addAttribute("ranks", makeRanksDto(chessGame));
-        model.addAttribute("gameId", gameId);
-        return "play";
+        model.put("turn", chessGame.getTurn());
+        model.put("ranks", makeRanksDto(chessGame));
+        model.put("gameId", gameId);
+
+        return new ModelAndView("play", model);
     }
 
     @GetMapping("/result/{gameId}")
-    public String gameResult(@PathVariable("gameId") Long gameId, final Model model) {
+    public ModelAndView gameResult(@PathVariable("gameId") Long gameId) {
         final ChessGame chessGame = gameService.findByGameId(gameId);
         final Result result = chessGame.createResult();
+        final Map<String, Object> model = new HashMap<>();
 
-        model.addAttribute("winner", result.getWinner().name());
-        model.addAttribute("whiteScore", result.getWhiteScore());
-        model.addAttribute("blackScore", result.getBlackScore());
-        return "result";
+        model.put("winner", result.getWinner().name());
+        model.put("whiteScore", result.getWhiteScore());
+        model.put("blackScore", result.getBlackScore());
+
+        return new ModelAndView("result", model);
     }
 
     @GetMapping("/history/{memberId}")
-    public String history(@PathVariable("memberId") Long memberId, final Model model) {
+    public ModelAndView history(@PathVariable("memberId") Long memberId) {
         final List<GameResultDto> history = gameService.findHistoriesByMemberId(memberId);
-        model.addAttribute("history", history);
-        return "history";
+        final Map<String, Object> model = new HashMap<>();
+
+        model.put("history", history);
+
+        return new ModelAndView("history", model);
     }
 
     @GetMapping("/member-management")
-    public String memberManagement(final Model model) {
+    public ModelAndView memberManagement() {
         final List<Member> members = memberService.findAllMembers();
-        model.addAttribute("members", members);
-        return "member-management";
+        final Map<String, Object> model = new HashMap<>();
+
+        model.put("members", members);
+
+        return new ModelAndView("member-management", model);
     }
 
     private List<RankDto> makeRanksDto(final ChessGame chessGame) {

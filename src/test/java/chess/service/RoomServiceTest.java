@@ -3,6 +3,7 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.entity.RoomEntity;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,17 @@ public class RoomServiceTest {
         RoomEntity roomEntity = roomService.create("room1", "1234");
         assertThat(roomEntity.getName()).isEqualTo("room1");
         assertThat(roomEntity.getPassword()).isEqualTo("1234");
+    }
+
+    @DisplayName("모든 방을 조회한다.")
+    @Test
+    void findAllRooms() {
+        roomService.create("room1", "1234");
+        roomService.create("room2", "1234");
+        roomService.create("room3", "1234");
+
+        List<RoomEntity> rooms = roomService.findAllRooms();
+
+        assertThat(rooms.size()).isEqualTo(3);
     }
 }

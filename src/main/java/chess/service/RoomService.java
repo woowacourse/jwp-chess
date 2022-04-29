@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.entity.RoomEntity;
 import chess.repository.RoomDao;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,5 +16,9 @@ public class RoomService {
 
     public RoomEntity create(String name, String password) {
         return roomDao.insert(new RoomEntity(name, password));
+    }
+
+    public List<RoomEntity> findAllRooms() {
+        return roomDao.findAll();
     }
 }

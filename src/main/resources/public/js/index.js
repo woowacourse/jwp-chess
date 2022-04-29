@@ -6,6 +6,7 @@ let roomId;
 
 const showRooms = async () => {
     let rooms = await getRoomList();
+    document.getElementById("chess-menu").style.display = 'none';
     Object.values(rooms).forEach((value) => {
         const roomListTag = document.getElementById("chess-room-list");
         const roomTag = document.createElement("div");
@@ -221,6 +222,7 @@ const restartChess = async () => {
 
 const showChessMenu = () => {
     document.getElementById("chess-room").style.display = 'none';
+    document.getElementById("chess-menu").style.display = 'block';
     document.getElementById("chess-menu").style.visibility = 'visible';
 }
 

@@ -72,7 +72,6 @@ html, body {
     line-height: 50px;
     width: 480px;
     height: 480px;
-    visibility: hidden;
 }
 
 .message-info {

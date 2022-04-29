@@ -21,7 +21,7 @@ public class GameService {
     }
 
     public Map<Long, Boolean> listGames() {
-        return gameRepository.findIdAndFinished();
+        return gameRepository.findStatuses();
     }
 
     public Long createNewGame() {

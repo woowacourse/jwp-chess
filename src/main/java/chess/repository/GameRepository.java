@@ -62,12 +62,12 @@ public class GameRepository {
         return PlayerDtoAssembler.toPlayer(playerDto);
     }
 
-    public Map<Long, Boolean> findIdAndFinished() {
-        final Map<Long, Boolean> datas = new LinkedHashMap<>();
+    public Map<Long, Boolean> findStatuses() {
+        final Map<Long, Boolean> statuses = new LinkedHashMap<>();
         for (final GameFinishedDto gameFinishedDto : gameDao.findIdAndFinished()) {
-            datas.put(gameFinishedDto.getId(), gameFinishedDto.getFinished());
+            statuses.put(gameFinishedDto.getId(), gameFinishedDto.getFinished());
         }
-        return Collections.unmodifiableMap(datas);
+        return Collections.unmodifiableMap(statuses);
     }
 
     public Game update(final Game game) {

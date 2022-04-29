@@ -36,6 +36,8 @@ const clickEvent = (e) => {
 
             document.getElementById(to).src = document.getElementById(from).src;
             document.getElementById(from).src = '/images/NONE_EMPTY.png';
+
+            location.reload(true);
         });
 
     first = '';

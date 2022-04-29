@@ -5,106 +5,22 @@
     <meta charset="UTF-8">
     <title>미니 체스 게임</title>
     <link rel="stylesheet" href="/src/index.css">
+    <script defer src="/js/index.js"></script>
 </head>
 
 <body>
 
 <h1>♟️ 초간단 체스</h1>
-<section class="chess-ui">
-
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-
-
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-
-
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-
-
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-
-
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-
-
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-
-
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-
-
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-    <div class="white-square"></div>
-    <div class="black-square"></div>
-</section>
-
+    <form method="post" action="/game">
+            <input type="text" name="roomName" placeholder="방 이름을 입력해주세요.">
+            <input type="text" name="password" placeholder="비밀번호를 입력해주세요.">
+            <input type="submit" value="방 생성" class=""/>
+    </form>
 <column>
-    <row>
-        <h3> 사용자 입력</h3>
-    </row>
-
-    <row>
-        <form method="post" action="/start">
-            <input type="text" name="white_user_name" placeholder="흰팀 사용자">
-            <input type="text" name="black_user_name" placeholder="검은팀 사용자">
-            <input type="submit" value="시작" class=""/>
-        </form>
-    </row>
 </column>
+
+<div id="roomContainer">
+</div>
 
 </body>
 </html>

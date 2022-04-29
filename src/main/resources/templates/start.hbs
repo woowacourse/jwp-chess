@@ -11,12 +11,8 @@
 <body>
 <div id="app">
     <row>
-        <form method="post" action="/stop">
-            <input type="submit" value="게임 중지"/>
-        </form>
-
-        <form method="post" action="/game/{{id}}/end">
-            <input type="submit" value="게임 종료"/>
+        <form method="post" action="/home">
+            <input type="submit" value="처음으로"/>
         </form>
     </row>
 
@@ -97,18 +93,12 @@
         {{/board}}
     </section>
 
-    <h3>체스 form</h3>
-    <row>
-        <row>
-            <form method="get" action="/game/{{id}}/status">
-                <input type="submit" value="점수">
-                {{#board}}
-                <h3>WHITE : {{WHITE}}</h3>
-                <h3>BLACK : {{BLACK}}</h3>
-                {{/board}}
-            </form>
-        </row>
-    </row>
+    {{#board}}
+        <h3> 점수 </h3>
+        <h3>WHITE : {{WHITE}}</h3>
+        <h3>BLACK : {{BLACK}}</h3>
+    {{/board}}
+
 </div>
 
 </body>

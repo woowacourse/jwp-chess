@@ -55,6 +55,7 @@ public class ChessController {
     }
 
     @PostMapping("/room/{roomId}/move")
+    @ResponseBody
     public ResponseEntity<Boolean> move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int roomId) {
         String source = moveRequestDto.getSource();
         String target = moveRequestDto.getTarget();
@@ -76,6 +77,7 @@ public class ChessController {
     }
 
     @DeleteMapping("/room")
+    @ResponseBody
     public GameDeleteResponseDto delete(@RequestBody GameDeleteDto gameDeleteDto) {
         return roomService.deleteRoom(gameDeleteDto.getId(), gameDeleteDto.getPassword());
     }

@@ -1,11 +1,12 @@
 package chess.domain.game;
 
 import java.util.Map;
+import java.util.Objects;
 
 import chess.domain.Color;
 import chess.domain.Position;
-import chess.domain.game.state.FinishedState;
 import chess.domain.game.state.GameState;
+import chess.domain.game.state.GameStateFactory;
 import chess.domain.game.state.RunningState;
 import chess.domain.player.Players;
 
@@ -14,26 +15,23 @@ public class Game {
     private static final Long TEMPORARY_PLAYER_ID = 0L;
 
     private final Long id;
+    private final String title;
+    private final String password;
     private GameState gameState;
 
-    private Game(final Long id, final GameState gameState) {
+    private Game(final Long id, final String title, final String password, final GameState gameState) {
         this.id = id;
+        this.title = title;
+        this.password = password;
         this.gameState = gameState;
     }
 
-    public static Game initializeGame() {
-        return new Game(TEMPORARY_PLAYER_ID, RunningState.createFirstTurnRunning());
+    public static Game initializeGame(final String title, final String password) {
+        return new Game(TEMPORARY_PLAYER_ID, title, password, RunningState.createFirstTurnRunning());
     }
 
-    public static Game loadGame(final Long id, final Players players,
-                                final boolean finished, final Color currentTurnColor) {
-        if (finished) {
-            return new Game(id, new FinishedState(players, currentTurnColor));
-        }
-        if (players.isPlayerAbleToPromotePawn(currentTurnColor.reverse())) {
-            return new Game(id, new RunningState(players, currentTurnColor.reverse()));
-        }
-        return new Game(id, new RunningState(players, currentTurnColor));
+    public static Game loadGame(final Long id, final String title, final String password, final GameState gameState) {
+        return new Game(id, title, password, gameState);
     }
 
     public void movePiece(final Position source, final Position target) {
@@ -77,8 +75,20 @@ public class Game {
         return gameState.isPromotable();
     }
 
+    public boolean equalsPassword(final String password) {
+        return password.equals(this.password);
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public Players getPlayers() {

@@ -7,17 +7,11 @@ create table Player (
 
 create table Game (
     id integer not null auto_increment,
+    title varchar(30) not null,
+    password varchar(30) not null,
     player_id1 integer not null,
     player_id2 integer not null,
     finished boolean not null,
     turn_color varchar(5) not null,
-    primary key (id)
-);
-
-create table Room (
-    id integer not null auto_increment,
-    game_id integer not null,
-    title varchar(30) not null,
-    password varchar(30) not null,
     primary key (id)
 );

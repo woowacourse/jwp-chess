@@ -27,14 +27,16 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/start")
-    public String createNewGame() {
-        return "redirect:/games/" + chessService.createNewGame();
+    @PostMapping("/start")
+    public String createNewGame(@RequestParam("title") final String title,
+                                @RequestParam("password") final String password) {
+        return "redirect:/games/" + chessService.createNewGame(title, password);
     }
 
-    @GetMapping("/{gameId}/remove")
-    public String removeGame(@PathVariable("gameId") final Long gameId) {
-        chessService.removeGame(gameId);
+    @PostMapping("/{gameId}/remove")
+    public String removeGame(@PathVariable("gameId") final Long gameId,
+                             @RequestParam("password") final String password) {
+        chessService.removeGame(gameId, password);
         return "redirect:/";
     }
 

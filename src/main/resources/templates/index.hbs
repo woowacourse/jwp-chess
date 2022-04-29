@@ -33,6 +33,7 @@
         }
 
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -59,7 +60,7 @@
                     {{/if}}
                 </td>
                 <td>
-                    <button type="button" onclick="location.href='/games/{{key}}/remove';">삭제</button>
+                    <button type="button" onclick=removeGame({{key}})>삭제</button>
                 </td>
             </tr>
             {{/each}}
@@ -69,8 +70,36 @@
     <br>
     <br>
 
-    <button type="button" onclick="location.href='/games/start';">새로 시작하기</button>
+    <button type="button" onclick=createNewGame()>새로 시작하기</button>
+    <form id="createForm" method="post" action="/games/start" style="display: none">
+        <input type="text" id="title" name="title">
+        <input type="text" id="password" name="password">
+    </form>
 </div>
+
+<script>
+
+    function createNewGame() {
+        document.getElementById("title").value = prompt("체스방 제목을 입력하세요")
+        document.getElementById("password").value = prompt("체스방 비밀번호를 입력하세요")
+        document.getElementById("createForm").submit()
+    }
+
+    function removeGame(gameId) {
+        const password = prompt("체스방 비밀번호를 입력하세요")
+        $.ajax({
+            url: "/games/" + gameId + "/remove",
+            type: "post",
+            data: {
+                "password" : password
+            },
+            success(data) {
+                location.reload()
+            }
+        })
+    }
+
+</script>
 
 </body>
 </html>

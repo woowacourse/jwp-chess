@@ -24,12 +24,19 @@ public class ChessService {
         return chessRepository.findStatuses();
     }
 
-    public Long createNewGame() {
-        final Game game = chessRepository.save(Game.initializeGame());
+    public Long createNewGame(final String title, final String password) {
+        final Game game = chessRepository.save(Game.initializeGame(title, password));
         return game.getId();
     }
 
-    public void removeGame(final Long gameId) {
+    public void removeGame(final Long gameId, final String password) {
+        final Game game = chessRepository.findById(gameId);
+        if (!game.isFinished()) {
+            throw new IllegalStateException("종료되지 않은 게임은 삭제할 수 없습니다.");
+        }
+        if (!game.equalsPassword(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         chessRepository.remove(gameId);
     }
 

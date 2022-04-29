@@ -24,14 +24,16 @@ public class MysqlGameDao implements GameDao {
 
     @Override
     public Long save(final GameDto gameDto) {
-        final String query = "INSERT INTO Game (player_id1, player_id2, finished, turn_color) VALUES (?,?,?,?)";
+        final String query = "INSERT INTO Game (title, password, player_id1, player_id2, finished, turn_color) VALUES (?,?,?,?,?,?)";
         final GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setLong(1, gameDto.getPlayer_id1());
-            preparedStatement.setLong(2, gameDto.getPlayer_id2());
-            preparedStatement.setBoolean(3, gameDto.getFinished());
-            preparedStatement.setString(4, gameDto.getCurrentTurnColor());
+            preparedStatement.setString(1, gameDto.getTitle());
+            preparedStatement.setString(2, gameDto.getPassword());
+            preparedStatement.setLong(3, gameDto.getPlayer_id1());
+            preparedStatement.setLong(4, gameDto.getPlayer_id2());
+            preparedStatement.setBoolean(5, gameDto.getFinished());
+            preparedStatement.setString(6, gameDto.getCurrentTurnColor());
             return preparedStatement;
         }, generatedKeyHolder);
         return Objects.requireNonNull(generatedKeyHolder.getKey()).longValue();
@@ -39,10 +41,12 @@ public class MysqlGameDao implements GameDao {
 
     @Override
     public GameDto findById(final Long id) {
-        final String query = "SELECT id, player_id1, player_id2, finished, turn_color FROM Game WHERE id=?";
+        final String query = "SELECT id, title, password, player_id1, player_id2, finished, turn_color FROM Game WHERE id=?";
         return jdbcTemplate.queryForObject(query,
                 (resultSet, rowNum) -> new GameDto(
                         resultSet.getLong("id"),
+                        resultSet.getString("title"),
+                        resultSet.getString("password"),
                         resultSet.getLong("player_id1"),
                         resultSet.getLong("player_id2"),
                         resultSet.getBoolean("finished"),

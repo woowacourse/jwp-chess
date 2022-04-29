@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import jdk.nashorn.api.tree.ConditionalLoopTree;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessGameService {
@@ -49,7 +51,17 @@ public class ChessGameService {
         return pieceDao.findPieces(chessGameId);
     }
 
-    public ChessGameDto move(MoveRequest moveRequest) {
+    public boolean isFinished(int chessGameId) {
+        ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
+        return chessGameDto.getStatus().isFinished();
+    }
+
+    public String findWinner(int chessGameId) {
+        ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
+        return chessGameDto.getWinner();
+    }
+
+    public int move(MoveRequest moveRequest) {
         int chessGameId = moveRequest.getId();
         Movement movement = new Movement(moveRequest.getFrom(), moveRequest.getTo());
         List<PieceDto> pieces = pieceDao.findPieces(chessGameId);
@@ -57,7 +69,7 @@ public class ChessGameService {
         if (chessGameDto.getStatus().isFinished()) {
             throw new ChessGameException(chessGameDto.getId(), "게임이 종료되었습니다.");
         }
-        ChessBoard chessBoard = createChessBoard(pieces, chessGameDto);
+        ChessBoard chessBoard = createChessBoard(pieces, chessGameDto.getCurrentColor());
         movePiece(chessGameId, movement, chessBoard);
         return updateChessBoard(chessBoard, movement, chessGameDto);
     }
@@ -77,8 +89,8 @@ public class ChessGameService {
         chessGameDao.deleteByIdAndPassword(chessGameId, password);
     }
 
-    private ChessBoard createChessBoard(List<PieceDto> pieces, ChessGameDto chessGameDto) {
-        return new ChessBoard(createBoard(pieces), chessGameDto.getCurrentColor());
+    private ChessBoard createChessBoard(List<PieceDto> pieces, Color color) {
+        return new ChessBoard(createBoard(pieces), color);
     }
 
     private Map<Position, Piece> createBoard(List<PieceDto> pieces) {
@@ -94,19 +106,7 @@ public class ChessGameService {
         }
     }
 
-    private ChessGameDto createNewChessGameDto(ChessGameDto chessGameDto) {
-        return new ChessGameDto(
-            chessGameDto.getId(),
-            chessGameDto.getName(),
-            GameStatus.RUNNING,
-            new Score(),
-            new Score(),
-            Color.WHITE,
-            chessGameDto.getWinner()
-        );
-    }
-
-    private ChessGameDto updateChessBoard(ChessBoard chessBoard, Movement movement, ChessGameDto chessGameDto) {
+    private int updateChessBoard(ChessBoard chessBoard, Movement movement, ChessGameDto chessGameDto) {
         updatePieces(chessGameDto, chessBoard, movement);
         return updateChessGame(chessBoard, chessGameDto);
     }
@@ -118,10 +118,10 @@ public class ChessGameService {
         pieceDao.savePiece(chessGameDto.getId(), new PieceDto(movement.getTo(), board.get(movement.getTo())));
     }
 
-    private ChessGameDto updateChessGame(ChessBoard chessBoard, ChessGameDto chessGameDto) {
+    private int updateChessGame(ChessBoard chessBoard, ChessGameDto chessGameDto) {
         ChessGameDto newChessGameDto = createNewChessGameDto(chessBoard, chessGameDto);
         chessGameDao.updateChessGame(newChessGameDto);
-        return newChessGameDto;
+        return newChessGameDto.getId();
     }
 
     private ChessGameDto createNewChessGameDto(ChessBoard chessBoard, ChessGameDto chessGameDto) {

@@ -40,12 +40,12 @@ public class ChessGameController {
 
     @PostMapping("/chess-game/move")
     public String move(@ModelAttribute MoveRequest moveRequest, RedirectAttributes attributes) {
-        ChessGameDto chessGameDto = chessGameService.move(moveRequest);
-        if (chessGameDto.getStatus().isFinished()) {
+        int chessGameId = chessGameService.move(moveRequest);
+        if (chessGameService.isFinished(chessGameId)) {
             attributes.addFlashAttribute("isFinished", true);
-            attributes.addFlashAttribute("winner", chessGameDto.getWinner());
+            attributes.addFlashAttribute("winner", chessGameService.findWinner(chessGameId));
         }
-        return "redirect:/chess-game?id=" + chessGameDto.getId();
+        return "redirect:/chess-game?id=" + chessGameId;
     }
 
     @DeleteMapping("/chess-game/{id}")

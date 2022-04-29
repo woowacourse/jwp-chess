@@ -59,7 +59,7 @@ class ChessGameControllerTest {
     @DisplayName("정상적인 기물 이동")
     void move() throws Exception {
         Mockito.when(chessGameService.move(any()))
-            .thenReturn(new ChessGameDto(1, "hoho", GameStatus.RUNNING, new Score(), new Score(), Color.WHITE));
+            .thenReturn(1);
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("id", "1");
@@ -74,7 +74,6 @@ class ChessGameControllerTest {
                 redirectedUrl("/chess-game?id=" + 1),
                 flash().attributeCount(0)
             );
-
     }
 
     @Test

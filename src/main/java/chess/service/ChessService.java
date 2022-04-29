@@ -26,7 +26,6 @@ public class ChessService {
 
     private final BoardDao boardDao;
     private final GameDao gameDao;
-    private ChessBoard chessBoard = null;
 
     public ChessService(BoardDao boardDao, GameDao gameDao) {
         this.boardDao = boardDao;
@@ -34,7 +33,7 @@ public class ChessService {
     }
 
     public long create(String title, String password) {
-        makeNewGame();
+        ChessBoard chessBoard = makeNewGame();
         int gameId = gameDao.create(chessBoard, title, password);
         for (Map.Entry<String, ChessPiece> entry : chessBoard.convertToMap().entrySet()) {
             boardDao.save(
@@ -46,9 +45,10 @@ public class ChessService {
         return gameId;
     }
 
-    private void makeNewGame() {
-        chessBoard = ChessBoardFactory.initBoard();
+    private ChessBoard makeNewGame() {
+        ChessBoard chessBoard = ChessBoardFactory.initBoard();
         chessBoard.changeStatus(new Playing());
+        return chessBoard;
     }
 
     private String getPosition(Map.Entry<String, ChessPiece> entry) {

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,7 +48,7 @@ public class ChessSpringController {
         return modelAndView;
     }
 
-    @PostMapping("/board/move")
+    @PatchMapping("/board/move")
     public ResponseEntity<Boolean> move(@RequestParam(name = "id") Long id, @RequestBody String request) {
         List<String> command = Arrays.asList(request.split(" "));
         chessGameService.move(id, command.get(0), command.get(1));

@@ -48,7 +48,7 @@ function movePiece() {
     const params = new URLSearchParams(location.search);
     const boardId = params.get('id');
     fetch(`/board/move?id=${boardId}`, {
-        method: "POST",
+        method: "PATCH",
         headers: {
             "Content-Type": "text/plain"
         },

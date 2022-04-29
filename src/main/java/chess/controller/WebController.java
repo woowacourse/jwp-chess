@@ -30,14 +30,14 @@ public class WebController {
 
     @PostMapping(path = "/")
     public String createWaitingRoom(@RequestParam("roomname") String name,
-                                    @RequestParam("password") String password,
+                                    @RequestParam String password,
                                     final Model model) {
         model.addAttribute("rooms", chessGameService.createRoom(name, password));
         return "waitingroom";
     }
 
     @GetMapping(path = "/{roomNumber}/board")
-    public String gameRoom(@PathVariable("roomNumber") int roomNumber, final Model model) {
+    public String gameRoom(@PathVariable int roomNumber, final Model model) {
         final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.getPieces(roomNumber));
         model.addAttribute("id", roomNumber);
         model.addAllAttributes(pieces);
@@ -45,7 +45,7 @@ public class WebController {
     }
 
     @GetMapping(path = "/{roomNumber}/start")
-    public String start(@PathVariable("roomNumber") int roomNumber, final Model model) {
+    public String start(@PathVariable int roomNumber, final Model model) {
         final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.start(roomNumber));
         model.addAttribute("id", roomNumber);
         model.addAllAttributes(pieces);
@@ -54,9 +54,9 @@ public class WebController {
 
     @PostMapping(path = "/{roomNumber}/move")
     public String move(final Model model,
-                       @PathVariable("roomNumber") int roomNumber,
-                       @RequestParam("source") String source,
-                       @RequestParam("target") String target) {
+                       @PathVariable int roomNumber,
+                       @RequestParam String source,
+                       @RequestParam String target) {
         final Map<Position, Piece> pieces = chessGameService.move(roomNumber, source, target);
         model.addAttribute("id", roomNumber);
         model.addAllAttributes(convertToWebViewPiece(pieces));
@@ -65,20 +65,20 @@ public class WebController {
 
     @PostMapping(path = "/{roomNumber}/delete")
     public String deleteRoom(final Model model,
-                       @PathVariable("roomNumber") int roomNumber,
-                       @RequestParam("password") String password) {
+                       @PathVariable int roomNumber,
+                       @RequestParam String password) {
         chessGameService.deleteRoom(roomNumber, password);
         return "redirect:/";
     }
 
     @GetMapping(path="/{roomNumber}/status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ScoreDto> status(@PathVariable("roomNumber") int roomNumber) {
+    public ResponseEntity<ScoreDto> status(@PathVariable int roomNumber) {
         final ScoreDto score = chessGameService.getScore(roomNumber);
         return ResponseEntity.ok(score);
     }
 
     @GetMapping(path = "/{roomNumber}/end")
-    public String end(@PathVariable("roomNumber") int roomNumber, final Model model) {
+    public String end(@PathVariable int roomNumber, final Model model) {
         final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.end(roomNumber));
         model.addAttribute("id", roomNumber);
         model.addAllAttributes(pieces);

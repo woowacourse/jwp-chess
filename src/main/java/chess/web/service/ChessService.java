@@ -14,8 +14,10 @@ import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessService {
@@ -29,6 +31,7 @@ public class ChessService {
         this.roomDao = roomDao;
     }
 
+    @Transactional
     public Board loadGame(Long roomId) {
         Room room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
@@ -43,6 +46,7 @@ public class ChessService {
         return board;
     }
 
+    @Transactional
     public Board move(final MoveDto moveDto, final Long roomId) {
         Room room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
@@ -72,6 +76,7 @@ public class ChessService {
         return change;
     }
 
+    @Transactional
     public Board initBoard(Long roomId) {
         initTurn(roomId);
         initPiece(roomId);
@@ -105,6 +110,7 @@ public class ChessService {
         pieceDao.save(piece, roomId);
     }
 
+    @Transactional(readOnly = true)
     public ScoreDto getStatus(Long roomId) {
         List<Piece> found = pieceDao.findAllByRoomId(roomId);
         Pieces pieces = Pieces.from(found);
@@ -114,18 +120,21 @@ public class ChessService {
         return new ScoreDto(blackScore, whiteScore);
     }
 
+    @Transactional
     public Long createRoom(String title, String password) {
         Long id = roomDao.save(Turn.init().getTeam().value(), title, password);
         pieceDao.save(Pieces.createInit().getPieces(), id);
         return id;
     }
 
+    @Transactional(readOnly = true)
     public List<Room> getRooms() {
         return roomDao.findAll();
     }
 
+    @Transactional
     public boolean removeRoom(Long roomId, String password) {
-        if (!hasRoom(roomId) || isRunningChess(roomId) || !matchPassword(roomId, password)) {
+        if (!canRemoveRoom(roomId, password)) {
             return false;
         }
         pieceDao.deleteAllByRoomId(roomId);
@@ -133,20 +142,28 @@ public class ChessService {
         return true;
     }
 
-    private boolean hasRoom(Long roomId) {
-        return roomDao.findById(roomId).isPresent();
+    private boolean canRemoveRoom(Long roomId, String password) {
+        Optional<Room> optionalRoom = roomDao.findById(roomId);
+        if (optionalRoom.isEmpty()) {
+            return false;
+        }
+        Room room = optionalRoom.get();
+        if (isRunningChess(roomId, room) || !matchPassword(room, password)) {
+            return false;
+        }
+        return true;
     }
 
-    private boolean isRunningChess(Long roomId) {
-        long kingCount = pieceDao.findAllByRoomId(roomId).stream()
-                .filter(Piece::isKing)
-                .count();
+    private boolean isRunningChess(Long roomId, Room room) {
+        Turn turn = new Turn(Team.from(room.getTurn()));
+        Pieces pieces = Pieces.from(pieceDao.findAllByRoomId(roomId));
+        Board board = Board.create(pieces, turn);
 
-        return kingCount == 2;
+        boolean deadKing = board.isDeadKing();
+        return !deadKing;
     }
 
-    private boolean matchPassword(Long roomId, String password) {
-        Room room = roomDao.findById(roomId).get();
+    private boolean matchPassword(Room room, String password) {
         return password.equals(room.getPassword());
     }
 }

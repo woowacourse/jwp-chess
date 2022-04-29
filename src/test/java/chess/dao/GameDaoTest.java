@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.entity.FullGameEntity;
 import chess.entity.GameEntity;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -50,6 +51,27 @@ class GameDaoTest {
         @Test
         void 게임이_존재하지_않는_경우_예외발생() {
             assertThatThrownBy(() -> dao.findById(99999))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("존재하지 않는 게임입니다.");
+        }
+    }
+
+    @DisplayName("findFullDataById 메서드로 id에 해당되는 모든 데이터 조회가능")
+    @Nested
+    class FindFullDataByIdTest {
+
+        @Test
+        void 존재하는_게임_조회가능() {
+            FullGameEntity actual = dao.findFullDataById(1);
+
+            FullGameEntity expected = new FullGameEntity(1, "진행중인_게임", "encrypted1", "enemy1", true);
+
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        void 게임이_존재하지_않는_경우_예외발생() {
+            assertThatThrownBy(() -> dao.findFullDataById(99999))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("존재하지 않는 게임입니다.");
         }
@@ -127,7 +149,7 @@ class GameDaoTest {
 
             assertThatThrownBy(() -> dao.saveOpponent(invalidAuthInfo))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상대방 플레이어로 참여하는 데 실패하였습니다.");
+                    .hasMessage("상대방 플레이어 저장에 실패하였습니다.");
         }
 
         @Test
@@ -136,7 +158,7 @@ class GameDaoTest {
 
             assertThatThrownBy(() -> dao.saveOpponent(invalidAuthInfo))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상대방 플레이어로 참여하는 데 실패하였습니다.");
+                    .hasMessage("상대방 플레이어 저장에 실패하였습니다.");
         }
     }
 

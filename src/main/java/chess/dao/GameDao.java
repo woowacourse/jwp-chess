@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.entity.FullGameEntity;
 import chess.entity.GameEntity;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +36,14 @@ public class GameDao {
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
         return new StatementExecutor<>(() -> jdbcTemplate.queryForObject(sql, paramSource, rowMapper))
+                .executeOrThrow(() -> new IllegalArgumentException("존재하지 않는 게임입니다."));
+    }
+
+    public FullGameEntity findFullDataById(int gameId) {
+        final String sql = "SELECT * FROM game WHERE id = :game_id";
+
+        MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
+        return new StatementExecutor<>(() -> jdbcTemplate.queryForObject(sql, paramSource, fullRowMapper))
                 .executeOrThrow(() -> new IllegalArgumentException("존재하지 않는 게임입니다."));
     }
 
@@ -79,7 +88,7 @@ public class GameDao {
 
         SqlParameterSource paramSource = new BeanPropertySqlParameterSource(authCredentials);
         new StatementExecutor<>(() -> jdbcTemplate.update(sql, paramSource))
-               .updateAndThrowOnNonEffected(() -> new IllegalArgumentException("상대방 플레이어로 참여하는 데 실패하였습니다."));
+               .updateAndThrowOnNonEffected(() -> new IllegalArgumentException("상대방 플레이어 저장에 실패하였습니다."));
     }
 
     public boolean isValidOwner(EncryptedAuthCredentials authCredentials) {
@@ -123,5 +132,12 @@ public class GameDao {
     private final RowMapper<GameEntity> rowMapper = (resultSet, rowNum) ->
             new GameEntity(resultSet.getInt("id"),
                     resultSet.getString("name"),
+                    resultSet.getBoolean("running"));
+
+    private final RowMapper<FullGameEntity> fullRowMapper = (resultSet, rowNum) ->
+            new FullGameEntity(resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("password"),
+                    resultSet.getString("opponent_password"),
                     resultSet.getBoolean("running"));
 }

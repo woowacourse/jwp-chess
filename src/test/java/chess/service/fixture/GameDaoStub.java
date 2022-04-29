@@ -2,6 +2,7 @@ package chess.service.fixture;
 
 import chess.dao.GameDao;
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.entity.FullGameEntity;
 import chess.entity.GameEntity;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,15 @@ public class GameDaoStub extends GameDao {
     }
 
     @Override
+    public FullGameEntity findFullDataById(int gameId) {
+        GameFullEntity game = repository.get(gameId);
+        if (game == null) {
+            throw new IllegalArgumentException("존재하지 않는 게임입니다.");
+        }
+        return new FullGameEntity(game.id, game.name, game.password, game.opponent_password, game.running);
+    }
+
+    @Override
     public boolean checkById(int gameId) {
         return repository.containsKey(gameId);
     }
@@ -76,7 +86,7 @@ public class GameDaoStub extends GameDao {
                 .filter(game -> !game.password.equals(authCredentials.getPassword()))
                 .filter(game -> game.opponent_password == null)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("상대방 플레이어로 참여하는 데 실패하였습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("상대방 플레이어 저장에 실패하였습니다."));
 
         foundGame.opponent_password = authCredentials.getPassword();
     }

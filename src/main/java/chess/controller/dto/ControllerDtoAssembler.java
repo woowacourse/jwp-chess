@@ -19,9 +19,9 @@ import chess.service.dto.response.PlayerScoresResponseDto;
 import chess.service.dto.response.PlayersResponseDto;
 import chess.service.dto.response.PositionResponseDto;
 
-public class ChessAssembler {
+public class ControllerDtoAssembler {
 
-    private ChessAssembler() {
+    private ControllerDtoAssembler() {
     }
 
     public static GameResponse gameResponse(final GameResponseDto gameResponseDto) {

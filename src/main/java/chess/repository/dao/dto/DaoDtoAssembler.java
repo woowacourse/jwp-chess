@@ -18,9 +18,9 @@ import chess.repository.dao.dto.game.GameDto;
 import chess.repository.dao.dto.game.GameUpdateDto;
 import chess.repository.dao.dto.player.PlayerDto;
 
-public class DaoAssembler {
+public class DaoDtoAssembler {
 
-    private DaoAssembler() {
+    private DaoDtoAssembler() {
     }
 
     public static Game game(final Long gameId, final List<Player> players, final GameDto gameDto) {

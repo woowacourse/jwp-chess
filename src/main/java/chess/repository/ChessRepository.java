@@ -10,10 +10,10 @@ import chess.domain.player.Player;
 import chess.domain.player.Players;
 import chess.repository.dao.GameDao;
 import chess.repository.dao.PlayerDao;
-import chess.repository.dao.dto.DaoAssembler;
+import chess.repository.dao.dto.DaoDtoAssembler;
 import chess.repository.dao.dto.game.GameDto;
 import chess.repository.dao.dto.player.PlayerDto;
-import chess.repository.dto.RepositoryAssembler;
+import chess.repository.dto.RepositoryDtoAssembler;
 import chess.repository.dto.game.GameStatus;
 
 @Repository
@@ -39,13 +39,13 @@ public class ChessRepository {
     }
 
     private Player savePlayer(final Player player) {
-        final PlayerDto playerDto = DaoAssembler.playerDto(player);
-        return DaoAssembler.player(playerDao.save(playerDto), playerDto);
+        final PlayerDto playerDto = DaoDtoAssembler.playerDto(player);
+        return DaoDtoAssembler.player(playerDao.save(playerDto), playerDto);
     }
 
     private Game saveGame(final Game game, final List<Player> players) {
-        final GameDto gameDto = DaoAssembler.gameDto(game, players);
-        return DaoAssembler.game(gameDao.save(gameDto), players, gameDto);
+        final GameDto gameDto = DaoDtoAssembler.gameDto(game, players);
+        return DaoDtoAssembler.game(gameDao.save(gameDto), players, gameDto);
     }
 
     public Game findById(final Long gameId) {
@@ -53,18 +53,18 @@ public class ChessRepository {
         final List<Player> players = List.of(
                 findPlayerById(gameDto.getPlayer_id1()),
                 findPlayerById(gameDto.getPlayer_id2()));
-        return DaoAssembler.game(gameId, players, gameDto);
+        return DaoDtoAssembler.game(gameId, players, gameDto);
     }
 
     public Player findPlayerById(final Long playerId) {
         final PlayerDto playerDto = playerDao.findById(playerId);
-        return DaoAssembler.player(playerDto);
+        return DaoDtoAssembler.player(playerDto);
     }
 
     public List<GameStatus> findStatuses() {
         return gameDao.findStatuses()
                 .stream()
-                .map(RepositoryAssembler::gameStatus)
+                .map(RepositoryDtoAssembler::gameStatus)
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -76,12 +76,12 @@ public class ChessRepository {
 
     private void updatePlayers(final Players players) {
         for (final Player player : players.getPlayers()) {
-            playerDao.update(DaoAssembler.playerDto(player));
+            playerDao.update(DaoDtoAssembler.playerDto(player));
         }
     }
 
     private void updateGame(final Game game) {
-        gameDao.update(DaoAssembler.gameUpdateDto(game));
+        gameDao.update(DaoDtoAssembler.gameUpdateDto(game));
     }
 
     public void remove(final Long gameId) {

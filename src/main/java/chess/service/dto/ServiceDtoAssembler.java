@@ -20,9 +20,9 @@ import chess.service.dto.response.PlayerScoresResponseDto;
 import chess.service.dto.response.PlayersResponseDto;
 import chess.service.dto.response.PositionResponseDto;
 
-public class ChessDtoAssembler {
+public class ServiceDtoAssembler {
 
-    private ChessDtoAssembler() {
+    private ServiceDtoAssembler() {
     }
 
     public static GameResponseDto gameResponseDto(final Game game) {
@@ -38,7 +38,7 @@ public class ChessDtoAssembler {
     private static PlayersResponseDto playersResponseDto(final Players players) {
         return new PlayersResponseDto(Arrays.stream(Color.values())
                 .collect(Collectors.toUnmodifiableMap(
-                        ChessDtoAssembler::colorResponseDto,
+                        ServiceDtoAssembler::colorResponseDto,
                         color -> playerResponseDto(players.getPiecesByPlayer(color)))
                 ));
     }

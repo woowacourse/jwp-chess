@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import chess.controller.dto.ChessAssembler;
+import chess.controller.dto.ControllerDtoAssembler;
 import chess.controller.dto.response.GameStatusResponse;
 import chess.service.ChessService;
 
@@ -24,7 +24,7 @@ public class IndexController {
     public String index(final Model model) {
         final List<GameStatusResponse> games = chessService.listGames()
                 .stream()
-                .map(ChessAssembler::gameStatusResponse)
+                .map(ControllerDtoAssembler::gameStatusResponse)
                 .collect(Collectors.toUnmodifiableList());
         model.addAttribute("games", games);
         return "index";

@@ -3,9 +3,9 @@ package chess.repository.dto;
 import chess.repository.dao.dto.game.GameStatusDto;
 import chess.repository.dto.game.GameStatus;
 
-public class RepositoryAssembler {
+public class RepositoryDtoAssembler {
 
-    private RepositoryAssembler() {
+    private RepositoryDtoAssembler() {
     }
 
     public static GameStatus gameStatus(final GameStatusDto gameStatusDto) {

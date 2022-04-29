@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import chess.controller.dto.ChessAssembler;
+import chess.controller.dto.ControllerDtoAssembler;
 import chess.controller.dto.response.PlayerScoresResponse;
 import chess.service.ChessService;
 import chess.service.dto.response.GameResponseDto;
@@ -64,7 +64,7 @@ public class ChessController {
     @ResponseBody
     public PlayerScoresResponse calculatePlayerScores(@PathVariable("gameId") final Long gameId) {
         final PlayerScoresResponseDto playerScoresResponseDto = chessService.calculatePlayerScores(gameId);
-        return ChessAssembler.playerScoresResponse(playerScoresResponseDto);
+        return ControllerDtoAssembler.playerScoresResponse(playerScoresResponseDto);
     }
 
     @GetMapping("/{gameId}/end")
@@ -73,7 +73,7 @@ public class ChessController {
     }
 
     private String renderBoard(final GameResponseDto gameResponseDto, final Model model) {
-        model.addAttribute("game", ChessAssembler.gameResponse(gameResponseDto));
+        model.addAttribute("game", ControllerDtoAssembler.gameResponse(gameResponseDto));
         return "board";
     }
 

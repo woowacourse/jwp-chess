@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import chess.domain.Position;
 import chess.domain.game.Game;
 import chess.repository.ChessRepository;
-import chess.service.dto.ChessDtoAssembler;
+import chess.service.dto.ServiceDtoAssembler;
 import chess.service.dto.response.GameResponseDto;
 import chess.service.dto.response.GameStatusResponseDto;
 import chess.service.dto.response.PlayerScoresResponseDto;
@@ -25,7 +25,7 @@ public class ChessService {
     public List<GameStatusResponseDto> listGames() {
         return chessRepository.findStatuses()
                 .stream()
-                .map(ChessDtoAssembler::gameStatusResponseDto)
+                .map(ServiceDtoAssembler::gameStatusResponseDto)
                 .collect(Collectors.toUnmodifiableList());
     }
 
@@ -46,29 +46,29 @@ public class ChessService {
     }
 
     public GameResponseDto loadGame(final Long gameId) {
-        return ChessDtoAssembler.gameResponseDto(chessRepository.findById(gameId));
+        return ServiceDtoAssembler.gameResponseDto(chessRepository.findById(gameId));
     }
 
     public GameResponseDto movePiece(final Long gameId, final String source, final String target) {
         final Game game = chessRepository.findById(gameId);
         game.movePiece(Position.from(source), Position.from(target));
-        return ChessDtoAssembler.gameResponseDto(chessRepository.update(game));
+        return ServiceDtoAssembler.gameResponseDto(chessRepository.update(game));
     }
 
     public GameResponseDto promotion(final Long gameId, final String pieceName) {
         final Game game = chessRepository.findById(gameId);
         game.promotePiece(pieceName);
-        return ChessDtoAssembler.gameResponseDto(chessRepository.update(game));
+        return ServiceDtoAssembler.gameResponseDto(chessRepository.update(game));
     }
 
     public PlayerScoresResponseDto calculatePlayerScores(final Long gameId) {
         final Game game = chessRepository.findById(gameId);
-        return ChessDtoAssembler.playerScoresResponseDto(game.getPlayerScores());
+        return ServiceDtoAssembler.playerScoresResponseDto(game.getPlayerScores());
     }
 
     public GameResponseDto endGame(final Long gameId) {
         final Game game = chessRepository.findById(gameId);
         game.end();
-        return ChessDtoAssembler.gameResponseDto(chessRepository.update(game));
+        return ServiceDtoAssembler.gameResponseDto(chessRepository.update(game));
     }
 }

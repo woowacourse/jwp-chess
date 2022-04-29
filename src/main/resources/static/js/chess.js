@@ -197,7 +197,7 @@ window.onload = async function () {
 
 function fetchNewChess() {
     let roomId = document.getElementById("room-id").value;
-    fetch('http://localhost:8080/rooms/' + roomId + '?command=start', {
+    fetch('http://localhost:8080/rooms/' + roomId + '/new', {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -220,7 +220,7 @@ function fetchLoadChess() {
         return;
     }
     let roomId = document.getElementById("room-id").value;
-    fetch('http://localhost:8080/rooms/' + roomId + '?command=load', {
+    fetch('http://localhost:8080/boards?roomId=' + roomId, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/boards")
@@ -21,6 +22,11 @@ public class BoardController {
 
     public BoardController(GameService gameService) {
         this.gameService = gameService;
+    }
+
+    @GetMapping
+    public ResponseEntity<BoardDto> findBoard(@RequestParam int roomId) {
+        return ResponseEntity.ok(gameService.loadGame(roomId));
     }
 
     @PatchMapping(value = "/{boardId}")

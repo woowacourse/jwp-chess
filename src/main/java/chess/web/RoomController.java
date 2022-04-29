@@ -38,7 +38,7 @@ public class RoomController {
     @PostMapping
     public ResponseEntity<Map<String, String>> createRoom(Room room) {
         RoomDto roomDto = roomService.create(room);
-        return ResponseEntity.ok(Map.of("url","/rooms/" + roomDto.getId()));
+        return ResponseEntity.ok(Map.of("url", "/rooms/" + roomDto.getId()));
     }
 
     @GetMapping("/{roomId}")
@@ -50,16 +50,11 @@ public class RoomController {
     @DeleteMapping("/{roomId}")
     public ResponseEntity<Map<String, String>> deleteRoom(@PathVariable int roomId, @RequestParam String password) {
         roomService.delete(roomId, password);
-        return ResponseEntity.ok(Map.of("url","/"));
+        return ResponseEntity.ok(Map.of("url", "/"));
     }
 
-    @GetMapping(value = "/{roomId}", params = "command=start")
+    @GetMapping(value = "/{roomId}/new")
     public ResponseEntity<BoardDto> startNewGame(@PathVariable int roomId) {
         return ResponseEntity.ok(gameService.startNewGame(roomId));
-    }
-
-    @GetMapping(value = "/{roomId}", params = "command=load")
-    public ResponseEntity<BoardDto> loadGame(@PathVariable int roomId) {
-        return ResponseEntity.ok(gameService.loadGame(roomId));
     }
 }

@@ -33,7 +33,7 @@ public class FullGameEntity {
     }
 
     public boolean hasOpponent() {
-        return password != null;
+        return opponentPassword != null;
     }
 
     public boolean hasOpponentOf(EncryptedAuthCredentials authCredentials) {

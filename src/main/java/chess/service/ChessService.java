@@ -71,7 +71,8 @@ public class ChessService {
         String lastGameId = lastGame.getGameId();
         String lastTeam = lastGame.getLastTeam();
         List<BoardPiece> lastBoardPieces = boardPieceDao.findLastBoardPiece(lastGameId);
-        return new GameResponse(lastBoardPieces, lastTeam);
+        ChessBoard chessBoard = new ChessBoard(lastBoardPieces, lastTeam);
+        return new GameResponse(chessBoard);
     }
 
     @Transactional

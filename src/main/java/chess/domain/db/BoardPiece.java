@@ -14,6 +14,10 @@ public class BoardPiece {
         this.piece = piece;
     }
 
+    public String getGameId() {
+        return gameId;
+    }
+
     public String getPosition() {
         return position;
     }

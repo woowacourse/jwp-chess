@@ -80,6 +80,6 @@ public class PieceFactory {
             }
         }
 
-        throw new IllegalArgumentException("ERROR piece 를 찾지 못하였습니다");
+        throw new IllegalArgumentException("[ERROR] piece 를 찾지 못하였습니다");
     }
 }

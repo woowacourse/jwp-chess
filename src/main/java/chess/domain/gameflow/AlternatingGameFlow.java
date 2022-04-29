@@ -1,5 +1,6 @@
 package chess.domain.gameflow;
 
+import chess.domain.gameflow.state.BlackTeam;
 import chess.domain.gameflow.state.WhiteTeam;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
@@ -7,7 +8,19 @@ import chess.domain.gameflow.state.State;
 
 public class AlternatingGameFlow implements GameFlow {
 
-    private State currentState = new WhiteTeam();
+    private State currentState;
+
+    public AlternatingGameFlow() {
+        currentState = WhiteTeam.getInstance();
+    }
+
+    public AlternatingGameFlow(String team) {
+        if (team.equals(WhiteTeam.NAME)) {
+            currentState = WhiteTeam.getInstance();
+            return;
+        }
+        currentState = BlackTeam.getInstance();
+    }
 
     @Override
     public boolean isCorrectTurn(Piece sourcePiece) {

@@ -21,13 +21,13 @@ public class JdbcBoardPieceDao implements BoardPieceDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void save(String gameId, Map<String, String> piecesByPositions) {
-        final Set<String> positions = piecesByPositions.keySet();
+    public void save(String gameId, Map<String, String> positionToPiece) {
+        final Set<String> positions = positionToPiece.keySet();
 
         List<Object[]> boardData = new ArrayList<>();
 
         for (String position : positions) {
-            String piece = piecesByPositions.get(position);
+            String piece = positionToPiece.get(position);
             String boardId = createUuid();
             boardData.add(new Object[]{boardId, gameId, position, piece});
         }

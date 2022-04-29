@@ -10,7 +10,6 @@ public class FakeGameDao implements GameDao{
 
     private final List<Game> games = new ArrayList<>();
 
-
     @Override
     public boolean isExistGame() {
         return games.size() > 0;

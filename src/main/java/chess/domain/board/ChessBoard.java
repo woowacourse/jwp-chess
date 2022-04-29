@@ -6,13 +6,18 @@ import chess.constant.TargetType;
 import chess.domain.board.position.File;
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Rank;
+import chess.domain.db.BoardPiece;
+import chess.domain.gameflow.AlternatingGameFlow;
 import chess.domain.piece.EmptySpace;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
+import chess.domain.piece.factory.PieceFactory;
 import chess.exception.IncorrectTeamSelectionException;
 import chess.exception.NonMovableException;
 import chess.domain.gameflow.GameFlow;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -27,6 +32,17 @@ public class ChessBoard {
     public ChessBoard(Map<Position, Piece> board, GameFlow gameFlow) {
         this.board = board;
         this.gameFlow = gameFlow;
+    }
+
+    public ChessBoard(List<BoardPiece> boardPieces, String lastTeam) {
+        final Map<Position, Piece> board = new HashMap<>();
+        for (BoardPiece boardPiece : boardPieces) {
+            String piece = boardPiece.getPiece();
+            String position = boardPiece.getPosition();
+            board.put(Position.of(position), PieceFactory.create(piece));
+        }
+        this.board = board;
+        this.gameFlow = new AlternatingGameFlow(lastTeam);
     }
 
     public void movePiece(Position source, Position target) {
@@ -129,7 +145,7 @@ public class ChessBoard {
                 .map(rank -> Position.of(file, rank))
                 .filter(position -> {
                     Piece piece = board.get(position);
-                    return piece.isPawn() && piece.isPieceTeam(pieceTeam);
+                    return (piece != null) && piece.isPawn() && piece.isPieceTeam(pieceTeam);
                 }).count();
     }
 

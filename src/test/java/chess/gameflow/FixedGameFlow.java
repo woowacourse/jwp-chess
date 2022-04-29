@@ -8,7 +8,7 @@ import chess.domain.gameflow.state.WhiteTeam;
 
 public class FixedGameFlow implements GameFlow {
 
-    private final State currentState = new WhiteTeam();
+    private final State currentState = WhiteTeam.getInstance();
 
     public boolean isCorrectTurn(Piece sourcePiece) {
         return true;

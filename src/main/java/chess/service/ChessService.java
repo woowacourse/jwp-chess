@@ -98,6 +98,14 @@ public class ChessService {
         return updateRoomId;
     }
 
+    public String findWinnerById(Long roomId) {
+        final ChessGame chessGame = findChessGame(roomId);
+        if (chessGame.isEndGameByPiece()) {
+            return chessGame.getWinner().name();
+        }
+        return "NO_WINNER";
+    }
+
     @Transactional
     public Long deleteRoom(Long roomId, String password) {
         Room room = roomDao.findRoomById(roomId);
@@ -128,3 +136,5 @@ public class ChessService {
         chessGame.isEndGameByPiece();
     }
 }
+
+

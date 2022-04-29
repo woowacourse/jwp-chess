@@ -32,6 +32,7 @@ async function updateBoard() {
         return;
     }
 
+    await selectGameIsFinish(roomId);
     selectBoard(roomId);
 }
 
@@ -50,6 +51,15 @@ async function updateStateEnd() {
     selectBoard(roomId);
 }
 
+async function selectGameIsFinish(roomId) {
+    const res = await fetch(`/api/room/${roomId}/stateEnd`);
+
+    const data = await res.json();
+    if (data.winner != "NO_WINNER") {
+        alert(data.winner + "이 승리했습니다.");
+    }
+}
+
 async function selectStatus() {
     const roomId = document.getElementById("roomId").value;
     const res = await fetch(`/api/room/${roomId}/status`, {
@@ -57,7 +67,8 @@ async function selectStatus() {
     });
 
     if (!res.ok) {
-        alert(res.json().message);
+        const data = await res.json();
+        alert(data.message);
         return;
     }
     const data = await res.json();

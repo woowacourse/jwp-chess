@@ -14,7 +14,7 @@ public interface State {
         if (value.equals("WhiteRunning")) {
             return new WhiteRunning();
         }
-        if (value.equals("Finished")) {
+        if (value.equals("Finish")) {
             return new Finish();
         }
         if (value.equals("Ready")) {

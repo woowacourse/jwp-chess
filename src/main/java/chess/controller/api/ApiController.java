@@ -64,6 +64,12 @@ public class ApiController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/room/{roomId}/stateEnd")
+    public ResponseEntity<WinnerRes> selectWinner(@PathVariable Long roomId) {
+        final String winner = chessServiceV2.findWinnerById(roomId);
+        return ResponseEntity.ok().body(new WinnerRes(winner));
+    }
+
     @DeleteMapping("/room/{roomId}")
     public ResponseEntity<Void> deleteRoom(@PathVariable Long roomId, @RequestBody PasswordReq passwordReq) {
         chessServiceV2.deleteRoom(roomId, passwordReq.getPassword());

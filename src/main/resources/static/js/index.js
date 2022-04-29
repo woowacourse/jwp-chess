@@ -3,44 +3,26 @@ const restartButton = document.querySelector("#restart-button");
 const chessBoard = document.querySelector("table");
 const whiteScore = document.querySelector("#white-score");
 const blackScore = document.querySelector("#black-score");
-<<<<<<< HEAD
-=======
 const gameId = document.querySelector("#game-id").innerText;
->>>>>>> d3df5ae88fe4ceab707355d547f08cdd11dfa948
 
 startButton.addEventListener("click", onClickStartButton);
 restartButton.addEventListener("click", onClickRestartButton);
 chessBoard.addEventListener("click", onClickBoard);
 
 async function onClickStartButton () {
-<<<<<<< HEAD
-    const response = await fetch("/start");
-    const data = await response.json();
-
-    if (response.ok) {
-=======
     const response = await fetch("/start?gameId=" + gameId);
 
     if (response.ok) {
         const data = await response.json();
->>>>>>> d3df5ae88fe4ceab707355d547f08cdd11dfa948
         loadBoard(data);
         return;
     }
 
-<<<<<<< HEAD
-    alert(JSON.stringify(data));
-=======
     alert(await response.text());
->>>>>>> d3df5ae88fe4ceab707355d547f08cdd11dfa948
 }
 
 function loadBoard (data) {
     removeAllPiece();
-<<<<<<< HEAD
-=======
-    console.log(data);
->>>>>>> d3df5ae88fe4ceab707355d547f08cdd11dfa948
     Object.entries(data.positionsAndPieces).forEach(([key, value]) => {
         const block = document.getElementById(key.toLowerCase());
         block.appendChild(createPieceImage(value));
@@ -67,18 +49,13 @@ function createPieceImage ({color, name}) {
 }
 
 async function onClickRestartButton () {
-<<<<<<< HEAD
-    const response = await fetch("/restart");
-=======
     const response = await fetch("/restart?gameId=" + gameId);
 
-debugger;
     if (response.ok === false) {
         alert(response.text());
         return;
     }
 
->>>>>>> d3df5ae88fe4ceab707355d547f08cdd11dfa948
     const data = await response.json();
 
     if (response.ok) {
@@ -86,11 +63,7 @@ debugger;
         return;
     }
 
-<<<<<<< HEAD
-    alert(JSON.stringify(data));
-=======
     alert(data.text());
->>>>>>> d3df5ae88fe4ceab707355d547f08cdd11dfa948
 }
 
 function onClickBoard ({target: {classList, id, parentNode}}) {
@@ -123,18 +96,6 @@ async function onClickPiece (id) {
     const response = await fetch("/move", {
                        method: "put",
                        headers: {"Content-Type": "application/json"},
-<<<<<<< HEAD
-                       body: JSON.stringify({from: from, to: to})
-                     });
-    const data = await response.json();
-    if (response.ok) {
-        movePiece(from, to);
-        loadBoard(data);
-        return;
-    }
-
-    alert(JSON.stringify(data));
-=======
                        body: JSON.stringify({from: from, to: to, gameId: gameId})
                      });
     if (response.ok) {
@@ -145,7 +106,6 @@ async function onClickPiece (id) {
     }
 
     alert(await response.text());
->>>>>>> d3df5ae88fe4ceab707355d547f08cdd11dfa948
 }
 
 function getSecondSelectedId (id) {

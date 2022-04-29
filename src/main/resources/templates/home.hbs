@@ -7,7 +7,7 @@
 </head>
 <body>
 <div align="center">
-    <form action="/make-board" method="post" name="form">
+    <form id="make_board">
         <div>
             <label for="name">이름</label>
             <input type="text" id="name" name="name" placeholder="체스방의 이름을 입력하세요">
@@ -16,7 +16,7 @@
             <label for="password">비밀번호</label>
             <input type="password" id="password" name="password" placeholder="체스방의 비밀번호를 입력하세요">
         </div>
-        <input type="submit" value="방 만들기">
+        <input type="button" value="방 만들기" onclick=makeBoard()>
     </form>
 </div>
 
@@ -30,7 +30,7 @@
     {{#boards}}
         <tr>
             <td>{{id}}</td>
-            <td onclick=chess({{id}})>{{name}}</td>
+            <td onclick=getBoard({{id}})>{{name}}</td>
             <td>
                 <button onclick=deleteBoard({{id}})>삭제</button>
             </td>

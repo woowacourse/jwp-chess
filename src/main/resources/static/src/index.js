@@ -1,6 +1,27 @@
 let source = '';
 let target = '';
 
+function makeBoard() {
+    fetch("/board", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            name: document.getElementById("name").value,
+            password: document.getElementById("password").value
+        })
+    }).then((res) => {
+        if (res.status === 201) {
+            res.text().then(id => {
+                location.replace("/board?id=" + id);
+            });
+        } else {
+            res.text().then(message => alert(message))
+        }
+    })
+}
+
 function move(id) {
     if (source === '') {
         let elementById = document.getElementById(id);
@@ -18,8 +39,8 @@ function move(id) {
 }
 
 function movePiece() {
-    fetch("/move" + window.location.search, {
-        method: "POST",
+    fetch("/board" + window.location.search, {
+        method: "PUT",
         headers: {
             "Content-Type": "text/plain"
         },
@@ -34,7 +55,7 @@ function movePiece() {
             end();
         }
         if (res.status === 200) {
-            location.replace("/chess" + window.location.search);
+            location.replace("/board" + window.location.search);
         }
         if (res.status === 400) {
             res.text().then(message => alert(message))
@@ -42,8 +63,8 @@ function movePiece() {
     })
 }
 
-function chess(id) {
-    fetch("/chess?id=" + id).then(res => {
+function getBoard(id) {
+    fetch("/board?id=" + id).then(res => {
         if (res.status === 400) {
             res.text().then(message => {
                 if (message !== "이미 완료된 게임입니다") {
@@ -52,18 +73,18 @@ function chess(id) {
                 }
                 const watchResult = confirm("완료된 게임입니다. 결과 확인창으로 이동할까요?");
                 if (watchResult) {
-                    location.replace("/chess-result?id=" + id);
+                    location.replace("/board/result?id=" + id);
                 }
             })
             return;
         }
-        location.replace("/chess?id=" + id);
+        location.replace("/board?id=" + id);
     })
 }
 
 function deleteBoard(id) {
     const input = prompt("비밀번호를 입력해주세요.");
-    fetch("/delete" + "?id=" + id + "&password=" + input, {
+    fetch("/board" + "?id=" + id + "&password=" + input, {
         method: "DELETE",
     }).then((res) => {
         if (res.status !== 200) {
@@ -76,12 +97,12 @@ function deleteBoard(id) {
 }
 
 function end() {
-    fetch("/end" + window.location.search).then(res => {
+    fetch("/board/end" + window.location.search).then(res => {
         if (res.status !== 200) {
             res.text().then(message => alert(message))
             return;
         }
-        location.replace("/chess-result" + window.location.search);
+        location.replace("/board/result" + window.location.search);
     })
 }
 

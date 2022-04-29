@@ -7,6 +7,7 @@ import chess.dto.CreateBoardDto;
 import chess.dto.ResultDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,13 +39,14 @@ public class ChessSpringController {
     }
 
 
-    @PostMapping("/make-board")
-    public String makeBoard(String name, String password) {
-        int id = chessGameService.start(new CreateBoardDto(name, password));
-        return "redirect:chess/?id=" + id;
+    @PostMapping("/board")
+    public @ResponseBody
+    ResponseEntity<Integer> makeBoard(@RequestBody CreateBoardDto createBoardDto) {
+        int id = chessGameService.start(createBoardDto);
+        return ResponseEntity.created(URI.create("/board/" + id)).body(id);
     }
 
-    @GetMapping("/chess")
+    @GetMapping("/board")
     public ModelAndView chess(@RequestParam int id) {
         ModelAndView modelAndView = new ModelAndView();
         if (chessGameService.isGameEnd(id)) {
@@ -55,7 +58,7 @@ public class ChessSpringController {
         return modelAndView;
     }
 
-    @PostMapping("/move")
+    @PutMapping("/board")
     public @ResponseBody
     ResponseEntity<String> move(@RequestBody String request, @RequestParam int id) {
         List<String> command = Arrays.asList(request.split(" "));
@@ -65,17 +68,17 @@ public class ChessSpringController {
                 board.getTurn(), id);
 
         if (board.hasKingCaptured()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }
 
-        return ResponseEntity.ok().body("");
+        return ResponseEntity.ok().build();
     }
 
     private Board getBoard(int id) {
         return new Board(chessGameService.getBoard(id), chessGameService.getTurn(id));
     }
 
-    @GetMapping("/chess-status")
+    @GetMapping("/board/status")
     public ModelAndView status(@RequestParam int id) {
         ModelAndView modelAndView = new ModelAndView();
         Board board = getBoard(id);
@@ -84,14 +87,14 @@ public class ChessSpringController {
         return modelAndView;
     }
 
-    @GetMapping("/end")
+    @GetMapping("/board/end")
     public @ResponseBody
     ResponseEntity<String> end(@RequestParam int id) {
         chessGameService.end(id);
-        return ResponseEntity.ok().body("");
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/chess-result")
+    @GetMapping("/board/result")
     public ModelAndView result(@RequestParam int id) {
         ModelAndView modelAndView = new ModelAndView();
         Board board = getBoard(id);
@@ -100,8 +103,10 @@ public class ChessSpringController {
         return modelAndView;
     }
 
-    @DeleteMapping("/delete")
-    public void delete(@RequestParam int id, @RequestParam String password){
+    @DeleteMapping("/board")
+    public @ResponseBody
+    ResponseEntity<String> delete(@RequestParam int id, @RequestParam String password){
         chessGameService.deleteBoard(id, password);
+        return ResponseEntity.ok().build();
     }
 }

@@ -80,22 +80,25 @@
 <script>
 
     function createNewGame() {
-        document.getElementById("title").value = prompt("체스방 제목을 입력하세요")
-        document.getElementById("password").value = prompt("체스방 비밀번호를 입력하세요")
+        document.getElementById("title").value = prompt("체스방 제목을 입력하세요", "room")
+        document.getElementById("password").value = prompt("체스방 비밀번호를 입력하세요", "")
         document.getElementById("createForm").submit()
     }
 
     function removeGame(gameId) {
-        const password = prompt("체스방 비밀번호를 입력하세요")
+        const password = prompt("체스방 비밀번호를 입력하세요", "")
         $.ajax({
             url: "/games/" + gameId + "/remove",
             type: "post",
             data: {
-                "password" : password
-            },
-            success(data) {
-                location.reload()
+                "password": password
             }
+        })
+        .done(function() {
+            location.reload()
+        })
+        .fail(function(data) {
+            alert(data.responseText)
         })
     }
 

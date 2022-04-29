@@ -9,8 +9,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ErrorController {
 
-    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})
-    public ResponseEntity<ErrorDto> errorResponse(Exception e) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorDto> argumentErrorResponse(IllegalStateException e) {
+        return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorDto> stateErrorResponse(IllegalStateException e) {
         return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
     }
 

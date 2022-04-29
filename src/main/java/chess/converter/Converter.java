@@ -14,7 +14,7 @@ public class Converter {
         return map;
     }
 
-    public static Map<String, Object> toMap(int gameId, Board board) {
+    private static Map<String, Object> toMap(int gameId, Board board) {
         Map<String, Object> map = new HashMap<>();
         map.putAll(board.toMap());
         map.put("id", gameId);

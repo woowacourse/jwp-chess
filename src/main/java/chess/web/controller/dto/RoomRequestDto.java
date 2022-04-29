@@ -1,15 +1,12 @@
 package chess.web.controller.dto;
 
 public class RoomRequestDto {
-
     public static class TitleAndPassword {
         private String title;
         private String password;
 
         private TitleAndPassword() {
         }
-
-        ;
 
         public TitleAndPassword(String title, String password) {
             this.title = title;

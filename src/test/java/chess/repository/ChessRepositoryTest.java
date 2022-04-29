@@ -4,22 +4,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import chess.domain.Position;
 import chess.domain.game.Game;
+import chess.repository.dao.GameDao;
+import chess.repository.dao.PlayerDao;
 
-@SpringBootTest
-@Transactional
+@JdbcTest
 class ChessRepositoryTest {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
     private ChessRepository chessRepository;
+
+    @BeforeEach
+    void setUp() {
+        final GameDao gameDao = new GameDao(jdbcTemplate);
+        final PlayerDao playerDao = new PlayerDao(jdbcTemplate);
+        this.chessRepository = new ChessRepository(gameDao, playerDao);
+    }
 
     @DisplayName("데이터를 저장할 수 있어야 한다.")
     @Test

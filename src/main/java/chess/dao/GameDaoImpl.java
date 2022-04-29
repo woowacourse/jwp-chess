@@ -51,18 +51,6 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public void checkCanDelete(int gameId, String inputPassword) {
-        String query = String.format("SELECT password FROM %s WHERE id = ?", TABLE_NAME);
-        String password = jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> {
-            return resultSet.getString("password");
-        }, gameId);
-
-        if (!inputPassword.equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다!");
-        }
-    }
-
-    @Override
     public void updateTurnToWhite(int gameId) {
         updateTurn(gameId, WHITE_TURN);
     }
@@ -81,6 +69,14 @@ public class GameDaoImpl implements GameDao {
             return new RoomDto(id, name);
         });
         return rooms;
+    }
+
+    @Override
+    public String getPasswordById(int gameId) {
+        String query = String.format("SELECT password FROM %s WHERE id = ?", TABLE_NAME);
+        return jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> {
+            return resultSet.getString("password");
+        }, gameId);
     }
 
     private void updateTurn(int gameId, String turn) {

@@ -22,6 +22,8 @@ import chess.dto.response.ScoreResultDto;
 
 @Service
 public class ChessService {
+    private static final String ERROR_MESSAGE_NOT_END_GAME = "게임이 아직 안끝났습니다!";
+    public static final String ERROR_MESSAGE_NOT_EQUAL_PASSWORD = "비밀번호가 일치하지 않습니다!";
     private final GameDao gameDao;
     private final BoardDao boardDao;
 
@@ -97,10 +99,13 @@ public class ChessService {
     }
 
     public void deleteRoom(int gameId, String inputPassword) {
-        gameDao.checkCanDelete(gameId, inputPassword);
+        if (!inputPassword.equals(gameDao.getPasswordById(gameId))) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_NOT_EQUAL_PASSWORD);
+        }
+        
         ChessGame chessGame = generateChessGame(gameId);
         if (!chessGame.isEnd()) {
-            throw new IllegalArgumentException("게임이 아직 안끝났습니다!");
+            throw new IllegalArgumentException(ERROR_MESSAGE_NOT_END_GAME);
         }
 
         boardDao.deletePieces(gameId);

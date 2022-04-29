@@ -17,6 +17,6 @@ public interface GameDao {
     void updateTurnToBlack(int gameId);
 
     List<RoomDto> inquireAllRooms();
-
-    void checkCanDelete(int gameId, String inputPassword);
+    
+    String getPasswordById(int gameId);
 }

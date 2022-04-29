@@ -45,7 +45,8 @@ public class GameDaoFake implements GameDao {
     }
 
     @Override
-    public void checkCanDelete(int gameId, String inputPassword) {
+    public String getPasswordById(int gameId) {
+        return null;
     }
 
     @Override

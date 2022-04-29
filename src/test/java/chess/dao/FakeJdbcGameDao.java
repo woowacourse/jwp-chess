@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.dao.dto.GameDto;
-import chess.dto.GameStatusDto;
+import chess.domain.GameStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,13 +20,23 @@ public class FakeJdbcGameDao implements SpringGameDao {
     }
 
     @Override
-    public void remove(GameDto gameDto) {
-        games.remove(gameDto.getId());
+    public void removeById(Long gameId) {
+        games.remove(gameId);
     }
 
     @Override
     public GameDto findById(Long id) {
         return games.get(id);
+    }
+
+    @Override
+    public String findPasswordById(Long id) {
+        return games.get(id).getPassword();
+    }
+
+    @Override
+    public GameStatus findStatusById(Long id) {
+        return GameStatus.find(games.get(id).getStatus());
     }
 
     @Override
@@ -40,7 +50,7 @@ public class FakeJdbcGameDao implements SpringGameDao {
     }
 
     @Override
-    public void updateStatus(Long gameId, GameStatusDto status) {
+    public void updateStatus(Long gameId, GameStatus status) {
         GameDto game = games.get(gameId);
         GameDto updatedGame = new GameDto(game.getId(), game.getTitle(), game.getPassword(), game.getTurn(), status.getName());
         games.replace(gameId, updatedGame);

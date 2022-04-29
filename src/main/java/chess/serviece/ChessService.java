@@ -3,6 +3,7 @@ package chess.serviece;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessGame;
+import chess.domain.GameStatus;
 import chess.domain.Score;
 import chess.domain.command.MoveCommand;
 import chess.domain.piece.Piece;
@@ -33,7 +34,7 @@ public class ChessService {
             gameDao.removeAll();
 
             pieceDao.saveAll(getInitPieceDtos());
-            gameDao.saveGame(GameDto.from(PieceColor.WHITE, true));
+            gameDao.saveGame(GameStatusDto.from(PieceColor.WHITE, true));
         } catch (Exception e) {
             throw new IllegalArgumentException("게임을 초기화할 수 없습니다.");
         }
@@ -43,7 +44,7 @@ public class ChessService {
     public ChessResponseDto getChess() {
         try {
             List<PieceDto> pieceDtos = pieceDao.findAll();
-            GameDto gameDto = gameDao.findGame();
+            GameStatusDto gameDto = gameDao.findGame();
             return new ChessResponseDto(pieceDtos, gameDto.getTurn(), gameDto.getStatus());
         } catch (Exception e) {
             throw new IllegalArgumentException("체스 정보를 읽어올 수 없습니다.");
@@ -64,7 +65,7 @@ public class ChessService {
             game.proceedWith(moveCommand);
             pieceDao.removeByPosition(moveCommand.to());
             pieceDao.updatePosition(moveCommand.from(), moveCommand.to());
-            gameDao.updateGame(GameDto.from(game.getTurnColor(), game.isRunning()));
+            gameDao.updateGame(GameStatusDto.from(game.getTurnColor(), game.isRunning()));
             return getChess();
         } catch (Exception e) {
             throw new IllegalArgumentException("기물을 움직일 수 없습니다.");
@@ -74,7 +75,7 @@ public class ChessService {
     private ChessGame getGame() {
         try {
             List<PieceDto> pieceDtos = pieceDao.findAll();
-            GameDto gameDto = gameDao.findGame();
+            GameStatusDto gameDto = gameDao.findGame();
             Map<Position, Piece> pieces = pieceDtos.stream()
                     .map(PieceDto::toPieceEntry)
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -92,7 +93,7 @@ public class ChessService {
 
     public ScoresDto finishGame() {
         try {
-            gameDao.updateStatus(GameStatusDto.FINISHED);
+            gameDao.updateStatus(GameStatus.FINISHED);
             return getScore();
         } catch (Exception e) {
             throw new IllegalArgumentException("게임을 종료시킬 수 없습니다.");

@@ -7,6 +7,7 @@ import chess.domain.ChessGame;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
+import chess.domain.GameStatus;
 import chess.serviece.dto.GameCreationDto;
 import chess.dto.PieceDto;
 import org.springframework.stereotype.Service;
@@ -55,5 +56,17 @@ public class ChessGameService {
 
     public List<GameDto> getAllGames() {
         return gameDao.findAll();
+    }
+
+    public void removeGame(Long id, GameDto gameDto) {
+        String password = gameDao.findPasswordById(id);
+        if (!password.equals(gameDto.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        GameStatus gameStatus = gameDao.findStatusById(id);
+        if (gameStatus == GameStatus.PLAYING) {
+            throw new IllegalArgumentException("게임이 진행중입니다. 삭제할 수 없습니다.");
+        }
+        gameDao.removeById(id);
     }
 }

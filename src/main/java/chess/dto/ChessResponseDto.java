@@ -14,7 +14,7 @@ public class ChessResponseDto {
         this.status = status;
     }
 
-    public static ChessResponseDto from(List<PieceDto> pieces, GameDto gameDto) {
+    public static ChessResponseDto from(List<PieceDto> pieces, GameStatusDto gameDto) {
         return new ChessResponseDto(pieces, gameDto.getTurn(), gameDto.getStatus());
     }
 

@@ -1,17 +1,17 @@
 package chess.dao;
 
-import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
+import chess.domain.GameStatus;
 
 public interface GameDao {
 
     void removeAll();
 
-    void saveGame(GameDto gameDto);
+    void saveGame(GameStatusDto gameDto);
 
-    void updateGame(GameDto gameDto);
+    void updateGame(GameStatusDto gameDto);
 
-    void updateStatus(GameStatusDto statusDto);
+    void updateStatus(GameStatus statusDto);
 
-    GameDto findGame();
+    GameStatusDto findGame();
 }

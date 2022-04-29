@@ -1,7 +1,7 @@
 package chess.dao;
 
-import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
+import chess.domain.GameStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class SpringJdbcGameDaoTest {
     @Test
     @DisplayName("전체 게임 데이터 삭제")
     void removeAll() {
-        GameDto gameDto = new GameDto("white", "playing");
+        GameStatusDto gameDto = new GameStatusDto("white", "playing");
         springJdbcGameDao.saveGame(gameDto);
 
         springJdbcGameDao.removeAll();
@@ -41,7 +41,7 @@ public class SpringJdbcGameDaoTest {
     @Test
     @DisplayName("게임 정보 저장")
     void save() {
-        GameDto gameDto = new GameDto("white", "playing");
+        GameStatusDto gameDto = new GameStatusDto("white", "playing");
         springJdbcGameDao.saveGame(gameDto);
 
         assertThat(getGameCount()).isEqualTo(1);
@@ -50,10 +50,10 @@ public class SpringJdbcGameDaoTest {
     @Test
     @DisplayName("게임 정보 수정")
     void update() {
-        GameDto gameDto = new GameDto("white", "playing");
+        GameStatusDto gameDto = new GameStatusDto("white", "playing");
         springJdbcGameDao.saveGame(gameDto);
 
-        GameDto updatedGameDto = new GameDto("black", "end");
+        GameStatusDto updatedGameDto = new GameStatusDto("black", "end");
         springJdbcGameDao.updateGame(updatedGameDto);
 
         assertAll(
@@ -65,19 +65,19 @@ public class SpringJdbcGameDaoTest {
     @Test
     @DisplayName("게임 상태 업데이트")
     void updateStatus() {
-        GameDto gameDto = new GameDto("white", "playing");
+        GameStatusDto gameDto = new GameStatusDto("white", "playing");
         springJdbcGameDao.saveGame(gameDto);
 
-        GameStatusDto gameStatusDto = GameStatusDto.FINISHED;
-        springJdbcGameDao.updateStatus(gameStatusDto);
+        GameStatus gameStatus = GameStatus.FINISHED;
+        springJdbcGameDao.updateStatus(gameStatus);
 
-        assertThat(springJdbcGameDao.findGame().getStatus()).isEqualTo(gameStatusDto.getName());
+        assertThat(springJdbcGameDao.findGame().getStatus()).isEqualTo(gameStatus.getName());
     }
 
     @Test
     @DisplayName("게임 정보 조회")
     void find() {
-        GameDto gameDto = new GameDto("white", "playing");
+        GameStatusDto gameDto = new GameStatusDto("white", "playing");
         springJdbcGameDao.saveGame(gameDto);
 
         assertAll(

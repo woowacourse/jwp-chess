@@ -8,6 +8,9 @@ public class GameDto {
     private String turn;
     private String status;
 
+    public GameDto() {
+    }
+
     public GameDto(String title, String password, String turn, String status) {
         this.title = title;
         this.password = password;

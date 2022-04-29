@@ -1,12 +1,12 @@
 package chess.dao;
 
 
-import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
+import chess.domain.GameStatus;
 
 public class FakeGameDao implements GameDao {
 
-    private GameDto gameDto;
+    private GameStatusDto gameDto;
 
     @Override
     public void removeAll() {
@@ -14,22 +14,22 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public void saveGame(GameDto gameDto) {
+    public void saveGame(GameStatusDto gameDto) {
         this.gameDto = gameDto;
     }
 
     @Override
-    public void updateGame(GameDto gameDto) {
+    public void updateGame(GameStatusDto gameDto) {
         this.gameDto = gameDto;
     }
 
     @Override
-    public void updateStatus(GameStatusDto statusDto) {
-        this.gameDto = new GameDto(this.gameDto.getTurn(), statusDto.getName());
+    public void updateStatus(GameStatus statusDto) {
+        this.gameDto = new GameStatusDto(this.gameDto.getTurn(), statusDto.getName());
     }
 
     @Override
-    public GameDto findGame() {
+    public GameStatusDto findGame() {
         return gameDto;
     }
 }

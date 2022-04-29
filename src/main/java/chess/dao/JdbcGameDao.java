@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.dao.dto.GameDto;
-import chess.dto.GameStatusDto;
+import chess.domain.GameStatus;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,10 +42,10 @@ public class JdbcGameDao implements SpringGameDao {
     }
 
     @Override
-    public void remove(GameDto gameDto) {
-        final String sql = "delete from game where id = ? and password = ?";
+    public void removeById(Long gameId) {
+        final String sql = "delete from game where id = ?";
         try {
-            jdbcTemplate.update(sql, gameDto.getId(), gameDto.getPassword());
+            jdbcTemplate.update(sql, gameId);
         } catch (DataAccessException e) {
             throw new IllegalArgumentException("게임을 삭제할 수 없습니다.");
         }
@@ -64,6 +64,34 @@ public class JdbcGameDao implements SpringGameDao {
                                     resultSet.getString("turn"),
                                     resultSet.getString("status")
                             ),
+                    id
+            );
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("게임(id=" + id + ")을 찾을 수 없습니다.");
+        }
+    }
+
+    @Override
+    public String findPasswordById(Long id) {
+        final String sql = "select password from game where id = ?";
+        try {
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (resultSet, rowNum) -> resultSet.getString("password"),
+                    id
+            );
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("게임(id=" + id + ")을 찾을 수 없습니다.");
+        }
+    }
+
+    @Override
+    public GameStatus findStatusById(Long id) {
+        final String sql = "select status from game where id = ?";
+        try {
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (resultSet, rowNum) -> GameStatus.find(resultSet.getString("status")),
                     id
             );
         } catch (EmptyResultDataAccessException e) {
@@ -97,7 +125,7 @@ public class JdbcGameDao implements SpringGameDao {
     }
 
     @Override
-    public void updateStatus(Long gameId, GameStatusDto statusDto) {
+    public void updateStatus(Long gameId, GameStatus statusDto) {
         final String sql = "update game set status = ? where id = ?";
         jdbcTemplate.update(sql, statusDto.getName(), gameId);
     }

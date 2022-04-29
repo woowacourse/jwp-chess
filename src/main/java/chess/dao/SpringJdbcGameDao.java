@@ -1,7 +1,7 @@
 package chess.dao;
 
-import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
+import chess.domain.GameStatus;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,37 +22,37 @@ public class SpringJdbcGameDao implements GameDao {
     }
 
     @Override
-    public void saveGame(GameDto gameDto) {
+    public void saveGame(GameStatusDto gameDto) {
         final String sql = "insert into game (turn, status) values (?, ?)";
         jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus());
     }
 
     @Override
-    public void updateGame(GameDto gameDto) {
+    public void updateGame(GameStatusDto gameDto) {
         final String sql = "update game set turn = ?, status = ?";
         jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus());
     }
 
     @Override
-    public void updateStatus(GameStatusDto statusDto) {
+    public void updateStatus(GameStatus statusDto) {
         final String sql = "update game set status = ?";
         jdbcTemplate.update(sql, statusDto.getName());
     }
 
     @Override
-    public GameDto findGame() {
+    public GameStatusDto findGame() {
         final String sql = "select * from game";
         try {
             return jdbcTemplate.queryForObject(
                     sql,
                     (resultSet, rowNum) ->
-                            new GameDto(
+                            new GameStatusDto(
                                     resultSet.getString("turn"),
                                     resultSet.getString("status")
                             )
             );
         } catch (EmptyResultDataAccessException e) {
-            return new GameDto(null, "ready");
+            return new GameStatusDto(null, "ready");
         }
     }
 }

@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.dao.dto.GameDto;
-import chess.dto.GameStatusDto;
+import chess.domain.GameStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,8 +51,7 @@ public class JdbcGameDaoTest {
         long id = jdbcGameDao.save(gameDto);
 
         // when
-        GameDto deleteGameDto = new GameDto(id, "1234");
-        jdbcGameDao.remove(deleteGameDto);
+        jdbcGameDao.removeById(id);
 
         // then
         assertThatThrownBy(() -> jdbcGameDao.findById(id))
@@ -125,10 +124,10 @@ public class JdbcGameDaoTest {
         long id = jdbcGameDao.save(gameDto);
 
         // when
-        GameStatusDto gameStatusDto = GameStatusDto.FINISHED;
-        jdbcGameDao.updateStatus(id, gameStatusDto);
+        GameStatus gameStatus = GameStatus.FINISHED;
+        jdbcGameDao.updateStatus(id, gameStatus);
 
         // then
-        assertThat(jdbcGameDao.findById(id).getStatus()).isEqualTo(gameStatusDto.getName());
+        assertThat(jdbcGameDao.findById(id).getStatus()).isEqualTo(gameStatus.getName());
     }
 }

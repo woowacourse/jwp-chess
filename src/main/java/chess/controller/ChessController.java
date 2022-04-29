@@ -48,31 +48,31 @@ public class ChessController {
     }
 
     @GetMapping("/room/{roomId}")
-    public String room(Model model, @PathVariable(value = "roomId") String roomId) {
-        model.addAttribute("roomId", Integer.parseInt(roomId));
-        model.addAttribute("board", chessService.getBoard(Integer.parseInt(roomId)));
+    public String room(Model model, @PathVariable int roomId) {
+        model.addAttribute("roomId", roomId);
+        model.addAttribute("board", chessService.getBoard(roomId));
         return "chess-game";
     }
 
     @PostMapping("/room/{roomId}/move")
     @ResponseBody
-    public String move(@RequestBody String messageBody, @PathVariable String roomId) {
+    public String move(@RequestBody String messageBody, @PathVariable int roomId) {
         final String[] split = messageBody.strip().split("=")[1].split(" ");
         String source = split[0];
         String target = split[1];
         try {
-            chessService.move(source, target, Integer.parseInt(roomId));
+            chessService.move(source, target, roomId);
         } catch (IllegalArgumentException e) {
             return ResponseDto.of(HttpStatus.BAD_REQUEST_400, e.getMessage(),
-                    chessService.isEnd(Integer.parseInt(roomId))).toString();
+                    chessService.isEnd(roomId)).toString();
         }
-        return ResponseDto.of(HttpStatus.OK_200, null, chessService.isEnd(Integer.parseInt(roomId))).toString();
+        return ResponseDto.of(HttpStatus.OK_200, null, chessService.isEnd(roomId)).toString();
     }
 
     @GetMapping("/room/{roomId}/status")
     @ResponseBody
-    public String status(@PathVariable(value = "roomId") String roomId) {
-        return ScoreDto.from(chessService.status(Integer.parseInt(roomId))).toString();
+    public String status(@PathVariable int roomId) {
+        return ScoreDto.from(chessService.status(roomId)).toString();
     }
 
     @PostMapping("/room/{roomId}/end")
@@ -85,7 +85,6 @@ public class ChessController {
     @DeleteMapping("/room/{roomId}")
     @ResponseBody
     public GameDeleteResponseDto delete(@PathVariable int roomId, @RequestBody GameDeleteDto gameDeleteDto) {
-        String password = gameDeleteDto.getPassword();
-        return roomService.deleteRoom(roomId, password);
+        return roomService.deleteRoom(roomId, gameDeleteDto.getPassword());
     }
 }

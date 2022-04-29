@@ -35,8 +35,8 @@
 * [POST] /api/room
   * 새로운 게임을 생성하는 기능
 
-* [UPDATE] /api/room/{roomId}/state
-  * 일련번호를 통해 게임의 상태를 변경하는 기능
+* [UPDATE] /api/room/{roomId}/stateEnd
+  * 일련번호를 통해 게임의 상태를 종료하는 기능
 
 * [DELETE] /api/room/{roomId}
   * 일련번호를 통해 게임을 제거하는 기능
@@ -46,6 +46,12 @@
 
 * [GET] /api/room/{roomId}/status
   * 일련번호를 통해 게임의 점수를 가져오는 기능
+  
+* [GET] /
+  * 메인 페이지를 요청하는 랜더링 하는 기능
+
+* [GET] /room/{roomId}
+  * 방 하나 페이지를 랜더링 하는 기능
 
 
 ## 우아한테크코스 코드리뷰

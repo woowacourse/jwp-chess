@@ -39,7 +39,8 @@ public class ChessService {
     }
 
     public void createRoom(CreateRoomDto room) {
-        roomDao.save(room.getTitle(), room.getPassword());
+        Long roomId = roomDao.save(room.getTitle(), room.getPassword());
+        boardDao.saveAll(BoardInitialize.create(), roomId);
     }
 
     public List<RoomDto> findRoomList() {

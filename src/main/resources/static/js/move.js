@@ -3,7 +3,6 @@ let running = false;
 
 
 function move(position) {
-    const roomId = localStorage.getItem("roomId");
     canMove(roomId);
     if (sourcePosition === "") {
         sourcePosition = position;
@@ -19,7 +18,6 @@ function move(position) {
 }
 
 function movePiece(object, position) {
-    const roomId = localStorage.getItem("roomId");
     if (running === false) {
         alert("게임이 이미 종료되었습니다.");
         return;
@@ -63,7 +61,7 @@ function printGameState(result) {
     document.getElementById("turn").innerText = result.gameState + " Turn";
 }
 
-function canMove(roomId) {
+function canMove() {
     $.ajax({
         url: "/rooms/"+roomId+"/status",
         type: "GET",

@@ -10,6 +10,7 @@ import chess.dto.ScoreDto;
 import chess.dto.StatusDto;
 import chess.service.ChessService;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,10 +38,10 @@ public class ChessController {
     @PostMapping("/rooms")
     public ResponseEntity<String> createRoom(@RequestBody CreateRoomDto room) {
         chessService.createRoom(room);
-        return ResponseEntity.ok().body("방이 생성되었습니다.");
+        return new ResponseEntity<>("방이 생성되었습니다.", HttpStatus.CREATED);
     }
 
-    @GetMapping("/board/{roomId}")
+    @GetMapping("/rooms/{roomId}/board")
     public ResponseEntity<BoardDto> getBoard(@PathVariable Long roomId) {
         return ResponseEntity.ok().body(chessService.getBoard(roomId));
     }
@@ -73,7 +74,7 @@ public class ChessController {
     @DeleteMapping("/rooms")
     public ResponseEntity delete(@RequestBody DeleteRoomDto deleteDto) {
         chessService.deleteBy(deleteDto.getRoomId(), deleteDto.getPassword());
-        return ResponseEntity.ok().body("성공");
+        return ResponseEntity.ok().body("방이 삭제되었습니다.");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

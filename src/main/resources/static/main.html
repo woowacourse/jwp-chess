@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>체스 게임</title>
-  <link href="css/main.css" rel="stylesheet"/>
+  <link href="/css/main.css" rel="stylesheet"/>
   <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 </head>
-<body>
-<div class="td_div">
-<p class="td_room_id">방 번호</p>
-<p class="td_room_title">방 제목</p>
-<p class="td_room_status">게임 상태</p>
-</div>
-<table id="room_list">
 
+<body>
+
+<h1>Spring Chess</h1>
+
+<table id="room_list">
+  <thead>
+    <td class="table_header">방 번호</td>
+    <td class="table_header">방 제목</td>
+    <td class="table_header">상태</td>
+    <td class="table_header">버튼</td>
+  </thead>
 </table>
 
-<button id="myBtnDelete">방 삭제</button>
-<button id="myBtnCreate">방 만들기</button>
+<div id="roomButtonContainer">
+  <button id="myBtnDelete">방 삭제</button>
+  <button id="myBtnCreate">방 만들기</button>
+</div>
 
 <div id="modalDelete" class="modal">
   <div class="modal-content">
@@ -25,17 +32,15 @@
     <input id="delete_room_id">번방</input>
     <input id="delete_room_password">비밀번호</input>
     <button onclick="deleteRoom()">삭제</button>
-    <p>Some text in the Modal..</p>
   </div>
 </div>
 
 <div id="modalCreate" class="modal">
   <div class="modal-content">
     <span class="close2">&times;</span>
-    <input id="create_room_title">방 제목</input>
-    <input id="create_room_password">비밀번호</input>
+    <label>방 제목<input id="create_room_title"></label>
+    <label>비밀번호<input id="create_room_password"></label>
     <button onclick="createRoom()">생성</button>
-    <p>Some text in the Modal..</p>
   </div>
 </div>
 

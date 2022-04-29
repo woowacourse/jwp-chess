@@ -2,8 +2,11 @@ package chess.dao;
 
 import chess.domain.Team;
 import chess.entity.Room;
+import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -41,8 +44,18 @@ public class RoomDaoImpl implements RoomDao {
     @Override
     public Long save(String title, String password) {
         final String sql = "insert into room (team, title, password, status) values(?, ?, ?, ?)";
-        return (long) jdbcTemplate.update(sql, Team.WHITE.name(), title, password,
-            true);
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, Team.WHITE.name());
+            ps.setString(2, title);
+            ps.setString(3, password);
+            ps.setBoolean(4, true);
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     @Override

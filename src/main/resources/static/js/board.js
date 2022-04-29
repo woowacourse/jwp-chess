@@ -1,6 +1,9 @@
-function setBoard(roomId) {
+const url = location.href.split('/');
+const roomId = url[url.length - 1];
+
+function setBoard() {
     $.ajax({
-        url: "/board/"+roomId,
+        url: `/rooms/${roomId}/board`,
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         type: "get",
@@ -40,9 +43,8 @@ let piece = {
 }
 
 function reset() {
-    const roomId = localStorage.getItem("roomId");
     $.ajax({
-        url: "/rooms/"+roomId+"/reset",
+        url: "/rooms/"+roomId,
         type: "PUT",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
@@ -62,7 +64,6 @@ function reset() {
 }
 
 function end() {
-    const roomId = localStorage.getItem("roomId");
     $.ajax({
         url: "/rooms/" + roomId,
         type: "PATCH",
@@ -83,3 +84,5 @@ function end() {
         }
     })
 }
+
+

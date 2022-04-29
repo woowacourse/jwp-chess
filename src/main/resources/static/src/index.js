@@ -18,16 +18,15 @@ function create() {
             title: title,
             password: password
         })
-    }).then(res => {
-        res.json().then(data => {
-            if (data.statusCode == 200) {
-                location.replace("/");
-            } else {
-                alert(data.errorMessage);
-            }
-        })
-    })
+    }).then(async (res) => {
+        if (!res.ok) {
+            throw new Error(await res.text());
+        }
+        location.reload();
+    }).catch(error =>
+        alert(error.message));
 }
+
 
 function move(id) {
     if (source === '') {
@@ -54,36 +53,22 @@ function movePiece() {
             "Content-Type": "text/plain"
         },
         body: source + " " + target
-    }).then((res) => {
-        res.json().then(data => {
-            document.getElementById(source).style.backgroundColor = '';
-            document.getElementById(target).style.backgroundColor = '';
-            source = '';
-            target = '';
-            if (data.statusCode === 301) {
-                alert("킹이 잡혀 게임이 종료 되었습니다!")
-                end();
-            }
-            if (data.statusCode === 302) {
-                location.reload();
-            }
-            if (data.statusCode === 501) {
-                alert(data.errorMessage);
-            }
-        })
-    })
-}
-
-function start() {
-    fetch("/start").then(res => {
-        res.json().then(data => {
-            if (data.statusCode === 501) {
-                alert(data.errorMessage);
-                return;
-            }
-            location.replace("/chess");
-        })
-    })
+    }).then(async (res) => {
+        document.getElementById(source).style.backgroundColor = '';
+        document.getElementById(target).style.backgroundColor = '';
+        source = '';
+        target = '';
+        const body = await res.text();
+        if (!res.ok) {
+            throw new Error(body);
+        }
+        if (body === 'true') {
+            alert("킹이 잡혀 게임이 종료 되었습니다!")
+            end();
+        } else if (body === 'false') {
+            location.reload();
+        }
+    }).catch(error => alert(error.message));
 }
 
 function end() {
@@ -91,15 +76,12 @@ function end() {
     const boardId = params.get('id');
     fetch(`/board/end?id=${boardId}`, {
         method: "POST"
-    }).then(res => {
-        res.json().then(data => {
-            if (data.statusCode === 501) {
-                alert(data.errorMessage);
-                return;
-            }
-            location.replace(`/board/chess-result?id=${boardId}`);
-        })
-    })
+    }).then(async res => {
+        if (!res.ok) {
+            throw new Error(await res.text())
+        }
+        location.replace(`/board/chess-result?id=${boardId}`);
+    }).catch(error => alert(error.message));
 }
 
 function restart() {
@@ -107,15 +89,12 @@ function restart() {
     const boardId = params.get('id');
     fetch(`/board/restart?id=${boardId}`, {
         method: "POST"
-    }).then(res => {
-        res.json().then(data => {
-            if (data.statusCode === 301) {
-                location.replace(`/board?id=${boardId}`);
-            } else {
-                alert(data.errorMessage);
-            }
-        })
-    })
+    }).then(async res => {
+        if (!res.ok) {
+            throw new Error(await res.text());
+        }
+        location.replace(`/board?id=${boardId}`);
+    }).catch(error => alert(error.message));
 }
 
 function showStatus() {
@@ -138,14 +117,11 @@ function deleteBoard(id) {
             "Content-Type": "text/plain"
         },
         body: inputPassword
-    }).then(res => {
-        res.json().then(data => {
-            if (data.statusCode === 201) {
-                location.reload();
-            } else{
-                alert(data.errorMessage);
-            }
-        })
-    })
+    }).then(async res => {
+        if (!res.ok) {
+            throw new Error(await res.text());
+        }
+        location.reload();
+    }).catch(error => alert(error.message));
 }
 

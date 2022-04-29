@@ -1,15 +1,14 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.dao.MockBoardDao;
 import chess.dao.MockPieceDao;
 import chess.domain.Color;
-import chess.domain.Winner;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.dto.ChessBoardDto;
-import chess.dto.ResponseDto;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +21,7 @@ public class ChessGameServiceTest {
     private final String password = "123";
 
     @BeforeEach
-    void init(){
+    void init() {
         chessGameService = new ChessGameService(new MockPieceDao(), new MockBoardDao());
     }
 
@@ -38,14 +37,14 @@ public class ChessGameServiceTest {
     }
 
     @Test
-    @DisplayName("중복된 이름의 방 제목을 생성하면 statusCode 401을 반환한다.")
+    @DisplayName("중복된 이름의 방 제목을 생성하면 에러를 발생시킨다.")
     void create_duplicate_title_board() {
         //given
         chessGameService.create(title, password);
         //when
-        final ResponseDto responseDto = chessGameService.create(title, password);
         //then
-        assertThat(responseDto.getStatusCode()).isEqualTo(401);
+        assertThatThrownBy(() -> chessGameService.create(title, password))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -59,7 +58,7 @@ public class ChessGameServiceTest {
         final ChessBoardDto board = chessGameService.getBoard(1L);
         assertThat(board.getBoard().get("a4")).isInstanceOf(Pawn.class);
     }
-    
+
     @Test
     @DisplayName("백색의 점수 반환")
     void status_white() {
@@ -80,22 +79,6 @@ public class ChessGameServiceTest {
         final double statusOfBlack = chessGameService.statusOfBlack(1L);
         //then
         assertThat(statusOfBlack).isEqualTo(38.0);
-    }
-
-    @Test
-    @DisplayName("백색이 이긴 경우에 Winner.WHITE 반환")
-    void find_winner() {
-        //given
-        chessGameService.create(title, password);
-        chessGameService.move(1L, "a2", "a4");
-        chessGameService.move(1L, "b7", "b5");
-        chessGameService.move(1L, "a4", "a5");
-        chessGameService.move(1L, "c7", "c6");
-        chessGameService.move(1L, "a1", "a7");
-        //when
-        final Winner winner = chessGameService.findWinner(1L);
-        //then
-        assertThat(winner).isEqualTo(Winner.WHITE);
     }
 
     @Test

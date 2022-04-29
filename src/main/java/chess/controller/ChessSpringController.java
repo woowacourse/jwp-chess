@@ -1,19 +1,19 @@
 package chess.controller;
 
-import chess.dto.ResponseDto;
 import chess.dto.ResultDto;
 import chess.dto.RoomInfoDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import java.util.Arrays;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -33,9 +33,9 @@ public class ChessSpringController {
     }
 
     @PostMapping("/create")
-    @ResponseBody
-    ResponseDto create(@RequestBody RoomInfoDto roomInfoDto) {
-        return chessGameService.create(roomInfoDto.getTitle(), roomInfoDto.getPassword());
+    public ResponseEntity<String> create(@RequestBody RoomInfoDto roomInfoDto) {
+        chessGameService.create(roomInfoDto.getTitle(), roomInfoDto.getPassword());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/board")
@@ -48,10 +48,11 @@ public class ChessSpringController {
     }
 
     @PostMapping("/board/move")
-    @ResponseBody
-    public ResponseDto move(@RequestParam(name = "id") Long id, @RequestBody String request) {
+    public ResponseEntity<Boolean> move(@RequestParam(name = "id") Long id, @RequestBody String request) {
         List<String> command = Arrays.asList(request.split(" "));
-        return chessGameService.move(id, command.get(0), command.get(1));
+        chessGameService.move(id, command.get(0), command.get(1));
+        final boolean gameEnd = chessGameService.isGameEnd(id);
+        return ResponseEntity.ok().body(gameEnd);
     }
 
     @GetMapping("/board/chess-status")
@@ -76,20 +77,20 @@ public class ChessSpringController {
     }
 
     @PostMapping("/board/end")
-    @ResponseBody
-    public ResponseDto end(@RequestParam(name = "id") Long id) {
-        return chessGameService.end(id);
+    public ResponseEntity<String> end(@RequestParam(name = "id") Long id) {
+        chessGameService.end(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/board/restart")
-    @ResponseBody
-    public ResponseDto restart(@RequestParam(name = "id") Long id) {
-        return chessGameService.restart(id);
+    public ResponseEntity<String> restart(@RequestParam(name = "id") Long id) {
+        chessGameService.restart(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/board/delete")
-    @ResponseBody
-    public ResponseDto delete(@RequestParam(name = "id") Long id, @RequestBody String request) {
-        return chessGameService.delete(id, request);
+    public ResponseEntity<String> delete(@RequestParam(name = "id") Long id, @RequestBody String request) {
+        chessGameService.delete(id, request);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

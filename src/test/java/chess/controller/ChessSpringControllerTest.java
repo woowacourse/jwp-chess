@@ -3,12 +3,11 @@ package chess.controller;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import chess.domain.Winner;
-import chess.dto.ResponseDto;
 import chess.dto.ResultDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
@@ -38,33 +37,27 @@ public class ChessSpringControllerTest {
     @Test
     @DisplayName("POST /create 테스트")
     void post_create() throws Exception {
-        final ResponseDto responseDto = new ResponseDto(200, "");
         final String title = "abc";
         final String password = "123";
         final Map<String, String> body = new HashMap<>();
         body.put("title", title);
         body.put("password", password);
-        given(chessGameService.create(title, password)).willReturn(new ResponseDto(200, ""));
 
         mockMvc.perform(post("/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body)))
-                .andExpect(content().json(responseDto.toJson()));
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("POST /board/move 테스트")
     void post_move() throws Exception {
-        final ResponseDto responseDto = new ResponseDto(302, "");
-        final Long boardId = 1L;
         final String requestString = "a2 a4";
-
-        given(chessGameService.move(boardId, "a2", "a4")).willReturn(responseDto);
 
         mockMvc.perform(post("/board/move")
                 .queryParam("id", "1")
                 .content(requestString))
-                .andExpect(content().json(responseDto.toJson()));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -98,11 +91,8 @@ public class ChessSpringControllerTest {
     @Test
     @DisplayName("POST /board/end 테스트")
     void post_end() throws Exception {
-        final ResponseDto responseDto = new ResponseDto(201, "");
-        given(chessGameService.end(1L)).willReturn(new ResponseDto(201, ""));
-
         mockMvc.perform(post("/board/end")
                 .queryParam("id", "1"))
-                .andExpect(content().json(responseDto.toJson()));
+                .andExpect(status().isOk());
     }
 }

@@ -54,4 +54,9 @@ public class BoardDao {
                 gameNo
         );
     }
+
+    public void delete(long gameNo) {
+        final String sql = "delete from piece where game_no = ?";
+        jdbcTemplate.update(sql, gameNo);
+    }
 }

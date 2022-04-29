@@ -1,14 +1,17 @@
 package chess.application.web;
 
 import chess.domain.ChessGame;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -38,13 +41,29 @@ public class GameController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @DeleteMapping("/{gameNo}")
+    public ResponseEntity<String> delete(@PathVariable long gameNo, @RequestBody String password) {
+        try {
+            gameService.checkPassword(gameNo, password);
+            gameService.delete(gameNo);
+            return createMessageResponse(HttpStatus.OK, "방이 삭제되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return createMessageResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (IllegalStateException e) {
+            return createMessageResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    private ResponseEntity<String> createMessageResponse(HttpStatus status, String message) {
+        String messageData = jsonTransformer.render(Map.of("message", message));
+        return ResponseEntity.status(status).body(messageData);
+    }
+
     @PostMapping("/load/{gameNo}")
     public String load(Model model, @PathVariable int gameNo, @RequestParam String password) {
-        if (gameService.checkPassword(gameNo, password)) {
-            gameService.load(gameNo);
-            return play(model, gameNo);
-        }
-        throw new IllegalArgumentException("비밀번호를 확인하세요.");
+        gameService.checkPassword(gameNo, password);
+        gameService.load(gameNo);
+        return play(model, gameNo);
     }
 
     @PostMapping("/move/{gameNo}")

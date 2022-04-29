@@ -27,9 +27,14 @@
 </body>
 <script type="text/javascript">
     function deleteRoom(id) {
-        console.log('방 삭제 : ' + id);
         const passwordInput = window.prompt('방을 삭제하려면 비밀번호를 입력하세요');
-        console.log('입력값: ' + passwordInput);
+        fetch('./' + id, {
+                    method: 'DELETE',
+                    body: passwordInput
+                }).then((response) => response.json())
+                .catch((error) => window.alert("처리하지 못했습니다."))
+                .then((data) =>  window.alert(data.message))
+                .then(() => loadGames());
     }
 
     function loadGames() {

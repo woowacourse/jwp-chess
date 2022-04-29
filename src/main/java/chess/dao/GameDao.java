@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.domain.Camp;
 import chess.dto.GameDto;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -70,5 +69,10 @@ public class GameDao {
     public void end(long gameNo) {
         final String sql = "update game set running = ? where no = ?";
         jdbcTemplate.update(sql, false, gameNo);
+    }
+
+    public void delete(long gameNo) {
+        final String sql = "delete from game where no = ?";
+        jdbcTemplate.update(sql, gameNo);
     }
 }

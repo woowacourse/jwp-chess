@@ -7,33 +7,24 @@ import chess.dao.BoardDao;
 import chess.dao.GameDao;
 import chess.domain.Camp;
 import chess.domain.ChessGame;
+import chess.domain.Score;
 import chess.domain.board.BoardInitializer;
 import chess.domain.board.Position;
-import chess.domain.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Type;
 import chess.dto.GameDto;
 import chess.dto.PieceDto;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import spark.Request;
 
 @Service
 public class GameService {
-    private static final String KEY_SOURCE = "source";
-    private static final String KEY_TARGET = "target";
     private static final String KEY_WINNER = "winner";
     private static final String KEY_TIE = "tie";
 
-    private static final String REGEX_VALUE = "=";
-    private static final String REGEX_DATA = "&";
-
-    private static final int INDEX_KEY = 0;
-    private static final int INDEX_VALUE = 1;
     private static final int INDEX_COLUMN = 0;
     private static final int INDEX_ROW = 1;
 
@@ -54,8 +45,10 @@ public class GameService {
         boardDao.insert(gameNo, BoardInitializer.get().getSquares());
     }
 
-    public boolean checkPassword(long gameNo, String password) {
-        return gameDao.loadPassword(gameNo).equals(password);
+    public void checkPassword(long gameNo, String password) {
+        if (!gameDao.loadPassword(gameNo).equals(password)) {
+            throw new IllegalArgumentException("비밀번호를 확인하세요.");
+        }
     }
 
     public ChessGame load(long gameNo) {
@@ -131,5 +124,13 @@ public class GameService {
 
     public boolean isGameFinished(long gameNo, ChessGame chessGame) {
         return chessGame.isFinished() || !gameDao.isRunning(gameNo);
+    }
+
+    public void delete(long gameNo) {
+        if (gameDao.isRunning(gameNo)) {
+            throw new IllegalStateException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
+        boardDao.delete(gameNo);
+        gameDao.delete(gameNo);
     }
 }

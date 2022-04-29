@@ -6,6 +6,8 @@ import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 public class ChessGameController {
 
@@ -23,7 +25,7 @@ public class ChessGameController {
 
     @PostMapping( "/move/{id}")
     public ResponseEntity<GameStateResponse> move(@PathVariable Long id, @RequestBody MoveResponse moveResponse) {
-        return ResponseEntity.ok().body(chessService.move(id, moveResponse));
+        return ResponseEntity.created(URI.create("/move/" + id)).body(chessService.move(id, moveResponse));
     }
 
     @GetMapping("/status")
@@ -34,7 +36,7 @@ public class ChessGameController {
     @PostMapping("/reset/{id}")
     public ResponseEntity<BoardResponse> resetGame(@PathVariable Long id) {
         chessService.resetBoard(id);
-        return ResponseEntity.ok().body(chessService.getBoard(id));
+        return ResponseEntity.created(URI.create("/reset/" + id)).body(chessService.getBoard(id));
     }
 
     @GetMapping("/loadGames")

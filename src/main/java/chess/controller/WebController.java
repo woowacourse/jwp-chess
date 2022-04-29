@@ -71,12 +71,6 @@ public class WebController {
         return "redirect:/";
     }
 
-    @GetMapping(path="/{roomNumber}/status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ScoreDto> status(@PathVariable int roomNumber) {
-        final ScoreDto score = chessGameService.getScore(roomNumber);
-        return ResponseEntity.ok(score);
-    }
-
     @GetMapping(path = "/{roomNumber}/end")
     public String end(@PathVariable int roomNumber, final Model model) {
         final Map<String, Object> pieces = convertToWebViewPiece(chessGameService.end(roomNumber));

@@ -51,7 +51,7 @@ public class ChessServiceTest {
     void find() {
         chessService.startNewGame(id);
 
-        BoardDto boardDto = chessService.find(id);
+        BoardDto boardDto = chessService.findRoom(id);
 
         assertAll(
             () -> assertThat(boardDto.getTurn()).isEqualTo("white"),

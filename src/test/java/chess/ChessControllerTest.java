@@ -89,7 +89,7 @@ class ChessControllerTest {
 
     @Test
     @DisplayName("저장된 게임 정보 불러오기를 검증한다.")
-    void find() {
+    void findRoom() {
         RestAssured.post("/rooms/" + id);
 
         RestAssured.given().log().all()

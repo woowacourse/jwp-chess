@@ -31,8 +31,8 @@ public class ChessController {
     }
 
     @GetMapping("/rooms")
-    public List<RoomDto> rooms() {
-        return chessService.loadRooms();
+    public List<RoomDto> findAllRooms() {
+        return chessService.findAllRooms();
     }
 
     @PostMapping("/rooms")
@@ -48,8 +48,8 @@ public class ChessController {
     }
 
     @GetMapping("/rooms/{roomId}")
-    public BoardDto find(@PathVariable Long roomId) {
-        return chessService.find(roomId);
+    public BoardDto findRoom(@PathVariable Long roomId) {
+        return chessService.findRoom(roomId);
     }
 
     @DeleteMapping("/rooms/{roomId}")

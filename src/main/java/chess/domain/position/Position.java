@@ -1,5 +1,7 @@
 package chess.domain.position;
 
+import chess.exception.IllegalRequestDataException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +45,7 @@ public class Position {
         if (MoveChecker.isDiagonal(this, destination)) {
             return findBetweenDiagonalPosition(destination);
         }
-        throw new IllegalArgumentException("올바른 이동이 아닙니다.");
+        throw new IllegalRequestDataException("올바른 이동 입력이 아닙니다.");
     }
 
     private List<Position> findBetweenLinearPosition(final Position destination) {

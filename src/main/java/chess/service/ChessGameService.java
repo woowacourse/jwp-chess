@@ -12,6 +12,8 @@ import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
 import chess.dto.*;
+import chess.exception.IllegalRequestDataException;
+import chess.exception.NoSuchDbDataException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class ChessGameService {
         validatePassword(newRoomInfo);
         String roomName = newRoomInfo.getName();
         if (roomDao.findRoomIdByName(roomName).isPresent()) {
-            throw new IllegalArgumentException("중복된 이름의 방이 존재합니다.");
+            throw new IllegalRequestDataException("중복된 이름의 방이 존재합니다.");
         }
         final Player whitePlayer = new Player(new WhiteGenerator(), Team.WHITE);
         final Player blackPlayer = new Player(new BlackGenerator(), Team.BLACK);
@@ -44,7 +46,7 @@ public class ChessGameService {
         String password = newRoomInfo.getPassword();
         String confirmPassword = newRoomInfo.getConfirmPassword();
         if (!password.equals(confirmPassword)) {
-            throw new IllegalArgumentException("입력하신 두 비밀번호가 일치하지 않습니다.");
+            throw new IllegalRequestDataException("입력하신 두 비밀번호가 일치하지 않습니다.");
         }
     }
 
@@ -63,12 +65,12 @@ public class ChessGameService {
     public void deleteRoom(final long roomId, final String inputPassword) {
         final ChessGame chessGame = findChessGameById(roomId);
         if (chessGame.isRunning()) {
-            throw new IllegalArgumentException("끝나지 않은 게임은 삭제가 불가능합니다.");
+            throw new IllegalRequestDataException("끝나지 않은 게임은 삭제가 불가능합니다.");
         }
 
         final String roomPassword = roomDao.findRoomPasswordById(roomId);
         if (!inputPassword.equals(roomPassword)) {
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+            throw new IllegalRequestDataException("잘못된 비밀번호입니다.");
         }
         roomDao.delete(roomId);
     }
@@ -112,7 +114,7 @@ public class ChessGameService {
 
     private long findRoomIdByName(String name) {
         return roomDao.findRoomIdByName(name)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 방입니다."));
+                .orElseThrow(() -> new NoSuchDbDataException("존재하지 않는 방입니다."));
     }
 
     private ChessGame findChessGameById(final long roomId) {

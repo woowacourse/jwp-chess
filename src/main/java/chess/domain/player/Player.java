@@ -7,6 +7,7 @@ import chess.domain.position.Position;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class Player {
@@ -51,7 +52,7 @@ public class Player {
         return pieces.stream()
                 .filter(piece -> piece.exist(position))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("체스말이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("체스말이 존재하지 않습니다."));
     }
 
     public Score calculateScore() {

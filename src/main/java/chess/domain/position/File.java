@@ -1,5 +1,8 @@
 package chess.domain.position;
 
+import chess.exception.IllegalRequestDataException;
+
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 public enum File {

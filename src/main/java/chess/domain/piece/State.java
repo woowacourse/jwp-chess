@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.position.Position;
 
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -28,7 +29,7 @@ public enum State {
         return Stream.of(State.values())
                 .filter(state -> state.name == name.charAt(0))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 이름의 체스말이 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("해당 이름의 체스말이 없습니다."));
     }
 
     public static Piece createPieceByState(final String name, Position position) {

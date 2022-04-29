@@ -1,6 +1,7 @@
 package chess.domain.position;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public enum DiagonalDirection {
 
@@ -29,7 +30,7 @@ public enum DiagonalDirection {
                 .filter(value -> value.dx == dx)
                 .filter(value -> value.dy == dy)
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당하는 방향이 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("해당하는 방향이 없습니다."));
     }
 
     public int getDx() {

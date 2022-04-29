@@ -1,5 +1,6 @@
 package chess.domain.position;
 
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 public enum Rank {

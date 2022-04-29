@@ -27,4 +27,9 @@ public class RoomFakeDao implements RoomDao {
     public Room findRoomById(Long roomId) {
         return memoryDbRoom.get(roomId);
     }
+
+    @Override
+    public Long deleteRoom(Long roomId) {
+        return memoryDbRoom.remove(roomId).getId();
+    }
 }

@@ -1,6 +1,7 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.entity.Room;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +45,14 @@ class RoomImplDaoTest {
         final Room room = roomDao.findRoomById(roomId);
 
         assertThat(room).isInstanceOf(Room.class);
+    }
+
+    @Test
+    @DisplayName("일련번호를 통해 방을 삭제할 수 있다.")
+    void deleteRoom() {
+        final Long roomId = insertTestRoom("title", "1111");
+
+        assertDoesNotThrow(() -> roomDao.deleteRoom(roomId));
     }
 
     private Long insertTestRoom(String title, String password) {

@@ -9,4 +9,6 @@ public interface RoomDao {
     Long updateStateById(Long roomId, String state);
 
     Room findRoomById(Long roomId);
+
+    Long deleteRoom(Long roomId);
 }

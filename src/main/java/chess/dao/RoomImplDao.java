@@ -51,4 +51,11 @@ public class RoomImplDao implements RoomDao {
                         rs.getString("password")),
                 roomId);
     }
+
+    @Override
+    public Long deleteRoom(Long roomId) {
+        String sql = "DELETE FROM room where id = (?)";
+        jdbcTemplate.update(sql, roomId);
+        return roomId;
+    }
 }

@@ -4,6 +4,7 @@ import chess.controller.api.dto.MovePositionReq;
 import chess.controller.api.dto.RoomCreateReq;
 import chess.service.ChessServiceV2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,6 +43,12 @@ public class ApiController {
     @PutMapping("/room/{roomId}/stateEnd")
     public ResponseEntity<Void> updateStateEnd(@PathVariable Long roomId) {
         chessServiceV2.updateStateEnd(roomId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/room/{roomId}")
+    public ResponseEntity<Void> deleteRoom(@PathVariable Long roomId, @RequestBody PasswordReq passwordReq) {
+        chessServiceV2.deleteRoom(roomId, passwordReq.getPassword());
         return ResponseEntity.ok().build();
     }
 }

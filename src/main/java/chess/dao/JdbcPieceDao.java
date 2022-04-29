@@ -60,4 +60,10 @@ public class JdbcPieceDao implements PieceDao {
         final String sql = "delete from piece where roomId = ?";
         jdbcTemplate.update(sql, roomId);
     }
+
+    @Override
+    public int getKingCount(int roomId) {
+        final String sql = " select count(*) from piece where roomId = ? and name = 'K'";
+        return jdbcTemplate.queryForObject(sql, Integer.class,roomId);
+    }
 }

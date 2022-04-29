@@ -1,7 +1,6 @@
 let currentClickPosition = '';
 let currentPiece = '';
 let destinationClickPosition = '';
-let isRun = false;
 let roomId;
 
 const initMapEvent = (id) => {
@@ -55,12 +54,12 @@ const markCurrentPiece = (e) => {
 }
 
 const markDestinationPiece = async (e) => {
+    checkEndGame();
     destinationClickPosition = e.currentTarget;
     currentClickPosition.style.backgroundColor = '';
     const chessMap = await movePiece();
     if (chessMap.chessMap) {
         showChessMap(chessMap.chessMap);
-        checkEndGame(chessMap.isRunning);
     }
 }
 
@@ -80,7 +79,8 @@ const showChessMap = (chessMap) => {
 }
 
 const movePiece = async () => {
-    if(!isRun) {
+    if (!await isRun()) {
+        alert("게임이 종료되어 움직일 수 없습니다.");
         return;
     }
 
@@ -100,32 +100,44 @@ const movePiece = async () => {
     destinationClickPosition = '';
     chessMap = await chessMap.json();
     await showError(chessMap.message);
+
+    let gameStateMessage = await fetch('/king/' + roomId);
+    let result = await gameStateMessage.text();
+
+    if(result == "게임 끝") {
+        alert(result);
+        await showResult(roomId);
+    }
     return chessMap;
 }
 
-const checkEndGame = (isRunning) => {
-    if (!isRunning) {
-        alert('게임 종료');
-        return showResult();
+const isRun = async () => {
+    let response = await fetch('/state/' + roomId);
+    const result = await response.text();
+    return result == "run";
+}
+
+const checkEndGame = () => {
+    if (!isRun()) {
+        alert("게임 종료");
+        return showResult(roomId);
     }
 }
 
 const load = async (id) => {
-    isRun = true;
     let chessMap = await fetch('/chessMap/' + id);
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
 }
 
 const restartChess = async (id) => {
-    isRun = true;
     let chessMap = await fetch('/make-piece/' + id);
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
 }
 
 const showStatus = async (id) => {
-    if (!isRun) {
+    if (!await isRun()) {
         alert('먼저 게임을 시작하거나 이어해주세요.');
         return;
     }
@@ -135,7 +147,7 @@ const showStatus = async (id) => {
 }
 
 const showResult = async (id) => {
-    if (!isRun) {
+    if (!await isRun()) {
         alert('먼저 게임을 시작하거나 이어해주세요.');
         return;
     }
@@ -146,6 +158,7 @@ const showResult = async (id) => {
             'Accept': 'application/json'
         }
     });
+    console.log(result);
     result = await result.json();
     alert(result.result);
 }

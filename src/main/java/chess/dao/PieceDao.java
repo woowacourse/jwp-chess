@@ -18,4 +18,6 @@ public interface PieceDao {
     void removePieceByCaptured(final int id, final MoveDto moveDto);
 
     void endPieces(final int id);
+
+    int getKingCount(int roomId);
 }

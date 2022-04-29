@@ -80,6 +80,16 @@ public class SpringChessGameController {
         return ResponseEntity.ok(chessService.move(roomId, moveDto));
     }
 
+    //왕 죽었는 지 확인하는 api
+    @ResponseBody
+    @GetMapping("/king/{roomId}")
+    public ResponseEntity<String> hasTwoKing(@PathVariable("roomId") int roomId) {
+        if (chessService.hasTwoKing(roomId)) {
+            return ResponseEntity.ok("게임 진행중");
+        }
+        return ResponseEntity.ok("게임 끝");
+    }
+
     @ResponseBody
     @PostMapping("/end/{roomId}")
     public ResponseEntity<ResultDto> end(@PathVariable("roomId") int roomId) {
@@ -96,6 +106,12 @@ public class SpringChessGameController {
         }
         chessService.deleteRoom(roomDto);
         return ResponseEntity.ok("방이 삭제되었습니다.");
+    }
+
+    @ResponseBody
+    @GetMapping("/state/{roomId}")
+    public ResponseEntity<String> getState(@PathVariable("roomId") int roomId) {
+        return  ResponseEntity.ok(chessService.getState(roomId));
     }
 
 

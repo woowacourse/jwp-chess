@@ -100,7 +100,6 @@ public class ChessService {
         final Position currentPosition = Position.of(moveDto.getCurrentPosition());
         final Position destinationPosition = Position.of(moveDto.getDestinationPosition());
         final TurnDto turnDto = turnDao.findTurn(roomId);
-
         final ChessWebGame chessWebGame = loadGame(roomId);
         chessWebGame.move(currentPosition, destinationPosition);
         chessWebGame.changeTurn();
@@ -162,5 +161,13 @@ public class ChessService {
         if (!gameDao.getState(roomId).equals("end")) {
             throw new IllegalArgumentException("종료된 게임만 삭제할 수 있습니다.");
         }
+    }
+
+    public String getState(int roomId) {
+        return gameDao.getState(roomId);
+    }
+
+    public boolean hasTwoKing(int roomId) {
+        return pieceDao.getKingCount(roomId) == 2;
     }
 }

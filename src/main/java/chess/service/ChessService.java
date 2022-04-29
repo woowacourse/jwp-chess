@@ -36,7 +36,7 @@ public class ChessService {
     }
 
     @Transactional(readOnly = true)
-    public ChessGame getChessGamePlayed(final String gameId) {
+    public ChessGame getChessGame(final String gameId) {
         List<Movement> movementByGameId = movementDAO.findMovementByGameId(gameId);
         ChessGame chessGame = ChessGame.initChessGame();
         for (Movement movement : movementByGameId) {
@@ -47,7 +47,7 @@ public class ChessService {
     }
 
     public ChessGame movePiece(final String gameId, final MoveDTO moveDTO) {
-        final ChessGame chessGame = getChessGamePlayed(gameId);
+        final ChessGame chessGame = getChessGame(gameId);
         final String source = moveDTO.getSource();
         final String target = moveDTO.getTarget();
         final Team team = moveDTO.getTeam();
@@ -70,11 +70,7 @@ public class ChessService {
         chessGame.execute(movement);
         movement.setGameId(chessGame.getId());
         movement.setTeam(team);
-        int successUpdate = movementDAO.addMoveCommand(movement);
-
-        if (successUpdate == 0) {
-            throw new InvalidDBFailException("[ERROR] DB UPDATE를 실패하였습니다.");
-        }
+        movementDAO.addMoveCommand(movement);
     }
 
     @Transactional(readOnly = true)

@@ -19,7 +19,7 @@ public class ChessGameApiController {
 
     @GetMapping("/chess/game/{id}/board")
     public ResponseEntity<BoardDTO> showBoard(@PathVariable String id) {
-        ChessGame chessGame = chessService.getChessGamePlayed(id);
+        ChessGame chessGame = chessService.getChessGame(id);
         return new ResponseEntity<>(
                 new BoardDTO(chessGame),
                 HttpStatus.OK

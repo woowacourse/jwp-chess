@@ -2,7 +2,6 @@ package chess.service;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
 
 import chess.dao.BoardDao;
 import chess.dao.RoomDao;
@@ -53,11 +52,6 @@ class ChessServiceTest {
     void createRoom() {
         CreateRoomDto room = new CreateRoomDto("title", "password");
         chessService.createRoom(room);
-    }
-
-    @Test
-    void deleteBy() {
-        assertThatNoException().isThrownBy(() -> chessService.deleteBy(1L, "password"));
     }
 
     @Test

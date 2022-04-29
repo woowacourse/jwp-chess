@@ -71,7 +71,7 @@ class BoardDaoImplTest {
     @Test
     void findAll() {
         List<PieceDto> pieces = boardDaoImpl.findAll(1L);
-        assertThat(pieces.size()).isEqualTo(64);
+        assertThat(pieces.size()).isEqualTo(3);
     }
 
     @Test

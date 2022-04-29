@@ -34,9 +34,9 @@ public class ChessControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(roomDto)
-            .when().post("/room")
+            .when().post("/rooms")
             .then().log().all()
-            .statusCode(HttpStatus.OK.value());
+            .statusCode(HttpStatus.CREATED.value());
     }
 
     @DisplayName("Room - GET")
@@ -44,7 +44,7 @@ public class ChessControllerTest {
     void getRooms() {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/room")
+            .when().get("/rooms")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -54,7 +54,7 @@ public class ChessControllerTest {
     void getBoard() {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/room/1")
+            .when().get("/rooms/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -67,7 +67,7 @@ public class ChessControllerTest {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(moveDto)
-            .when().post("/board/1/move")
+            .when().post("/board/1")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value());
     }
@@ -77,7 +77,7 @@ public class ChessControllerTest {
     void score() {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/room/1/score")
+            .when().get("/rooms/1/score")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("size()", is(2));
@@ -89,7 +89,7 @@ public class ChessControllerTest {
     void reset() {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().patch("/room/1/reset")
+            .when().put("/rooms/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("size()", is(2));
@@ -100,7 +100,7 @@ public class ChessControllerTest {
     void end() {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().patch("/room/1/end")
+            .when().patch("/rooms/1")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }
@@ -110,7 +110,7 @@ public class ChessControllerTest {
     void status() {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/room/1/status")
+            .when().get("/rooms/1/status")
             .then().log().all()
             .statusCode(HttpStatus.OK.value());
     }

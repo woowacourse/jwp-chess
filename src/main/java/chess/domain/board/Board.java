@@ -7,12 +7,8 @@ import chess.domain.position.Direction;
 import chess.domain.position.Position;
 import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -184,6 +180,17 @@ public class Board {
                 .stream()
                 .filter(piece -> piece.isSameColorAs(pieceColor))
                 .collect(Collectors.toSet());
+    }
+
+    public Map<String, String> toRaw() {
+        Map<String, String> rawBoard = new HashMap<>();
+        for (Map.Entry<Position, Piece> entrySet : value.entrySet()) {
+            String coordinate = entrySet.getKey().toCoordinate();
+            String fullPieceName = entrySet.getValue().generateFullName();
+            rawBoard.put(coordinate, fullPieceName);
+        }
+
+        return rawBoard;
     }
 
     public Map<Position, Piece> getValue() {

@@ -114,7 +114,7 @@ public class ChessService {
         }
 
         int result = gameDao.delete(deleteGameRequest.getId());
-        if(result == 0) {
+        if (result == 0) {
             throw new IllegalArgumentException(DELETE_FAILED_EXCEPTION_MESSAGE);
         }
     }

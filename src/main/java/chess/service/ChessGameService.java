@@ -66,7 +66,8 @@ public class ChessGameService {
     }
 
     private void checkGameIsAlreadyPlaying(final int roomId) {
-        final String gameState = roomDao.getGameStateByName(roomId);
+        final String gameState = roomDao.findByRoomId(roomId)
+                .getGameState();
         if (gameState.equals(PLAYING_STATE_VALUE)) {
             throw new IllegalStateException("이미 진행중인 게임이 있습니다.");
         }
@@ -98,7 +99,8 @@ public class ChessGameService {
     }
 
     private void checkGameIsPlaying(final int roomId) {
-        final String gameState = roomDao.getGameStateByName(roomId);
+        final String gameState = roomDao.findByRoomId(roomId)
+                .getGameState();
         if (!gameState.equals(PLAYING_STATE_VALUE)) {
             throw new IllegalStateException("진행중인 게임이 없습니다.");
         }
@@ -112,7 +114,8 @@ public class ChessGameService {
     }
 
     private Board getSavedBoard(final int roomId) {
-        final String turn = roomDao.getTurn(roomId);
+        final String turn = roomDao.findByRoomId(roomId)
+                .getTurn();
         final Team turnTeam = Team.from(turn);
         final Map<Position, Piece> pieces = getPieces(roomId);
         return new Board(pieces, turnTeam);

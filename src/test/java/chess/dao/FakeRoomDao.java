@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dto.RoomDto;
+import chess.entity.RoomEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,18 +26,6 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public String getPasswordByName(final int roomId) {
-        final Room room = rooms.get(roomId);
-        return room.password;
-    }
-
-    @Override
-    public String getGameStateByName(final int roomId) {
-        final Room room = rooms.get(roomId);
-        return room.gameState;
-    }
-
-    @Override
     public void deleteRoomByName(final int roomId) {
         rooms.remove(roomId);
     }
@@ -54,9 +43,9 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public String getTurn(final int roomId) {
+    public RoomEntity findByRoomId(final int roomId) {
         final Room room = rooms.get(roomId);
-        return room.turn;
+        return new RoomEntity(roomId, room.name, room.password, room.gameState, room.turn);
     }
 
     @Override

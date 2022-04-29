@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dto.RoomDto;
+import chess.entity.RoomEntity;
 import java.util.List;
 
 public interface RoomDao {
@@ -9,17 +10,13 @@ public interface RoomDao {
 
     boolean hasDuplicatedName(final String roomName);
 
-    String getPasswordByName(final int roomId);
-
-    String getGameStateByName(final int roomId);
-
     void saveGameState(final int roomId, final String state);
 
     void deleteRoomByName(final int roomId);
 
     void saveTurn(final int roomId, final String turn);
 
-    String getTurn(final int roomId);
+    RoomEntity findByRoomId(final int roomId);
 
     List<RoomDto> getRoomNames();
 }

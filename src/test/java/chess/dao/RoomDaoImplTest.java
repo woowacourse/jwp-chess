@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.dto.RoomDto;
+import chess.entity.RoomEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,32 +44,6 @@ class RoomDaoImplTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    @DisplayName("체스방 번호에 따른 비밀번호를 반환한다.")
-    void getPasswordByName() {
-        //given
-        final int roomId = 1;
-        final String password = "1234";
-
-        //when
-        final String actual = roomDao.getPasswordByName(roomId);
-
-        //then
-        assertThat(actual).isEqualTo(password);
-    }
-
-    @Test
-    @DisplayName("체스방 이름에 따른 게임 진행 상태를 반환한다.")
-    void getGameStateByName() {
-        //given
-        final int roomId = 1;
-        final String expected = "ready";
-
-        //when
-        final String actual = roomDao.getGameStateByName(roomId);
-        //then
-        assertThat(actual).isEqualTo(expected);
-    }
 
     @Test
     @DisplayName("이름에 맞는 체스방을 삭제한다.")
@@ -77,7 +52,7 @@ class RoomDaoImplTest {
         final int roomId = 1;
         roomDao.deleteRoomByName(roomId);
         //when then
-        assertThatThrownBy(() -> roomDao.getGameStateByName(roomId))
+        assertThatThrownBy(() -> roomDao.findByRoomId(roomId))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
@@ -89,7 +64,8 @@ class RoomDaoImplTest {
         final int roomId = 1;
         roomDao.saveTurn(roomId, turn);
         //when
-        final String actual = roomDao.getTurn(roomId);
+        final String actual = roomDao.findByRoomId(roomId)
+                .getTurn();
         //then
         assertThat(actual).isEqualTo(turn);
     }
@@ -103,10 +79,26 @@ class RoomDaoImplTest {
         roomDao.saveGameState(roomId, gameState);
 
         //when
-        final String actual = roomDao.getGameStateByName(roomId);
+        final String actual = roomDao.findByRoomId(roomId)
+                .getGameState();
 
         //then
         assertThat(actual).isEqualTo(gameState);
+    }
+
+    @Test
+    @DisplayName("roomId가 일치하는 체스방 정보를 반환한다.")
+    void findByRoomId() {
+        //when
+        final RoomEntity room = roomDao.findByRoomId(1);
+        //then
+        assertAll(
+                () -> assertThat(room.getRoomId()).isEqualTo(1),
+                () -> assertThat(room.getGameState()).isEqualTo("ready"),
+                () -> assertThat(room.getPassword()).isEqualTo("1234"),
+                () -> assertThat(room.getTurn()).isEqualTo("WHITE"),
+                () -> assertThat(room.getName()).isEqualTo("first")
+        );
     }
 
     @Test

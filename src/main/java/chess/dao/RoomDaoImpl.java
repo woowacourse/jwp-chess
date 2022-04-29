@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dto.RoomDto;
+import chess.entity.RoomEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,6 +24,13 @@ public class RoomDaoImpl implements RoomDao {
             resultSet.getInt("roomId")
     );
 
+    private static final RowMapper<RoomEntity> rowMapper = (resultSet, rowNum) -> new RoomEntity(
+            resultSet.getInt("roomId"),
+            resultSet.getString("name"),
+            resultSet.getString("password"),
+            resultSet.getString("gameState"),
+            resultSet.getString("turn")
+    );
 
     @Override
     public void saveNewRoom(final String roomName, final String password) {
@@ -38,18 +46,6 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public String getPasswordByName(final int roomId) {
-        final String sql = "select password from room where roomId = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, roomId);
-    }
-
-    @Override
-    public String getGameStateByName(final int roomId) {
-        final String sql = "select gameState from room where roomId = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, roomId);
-    }
-
-    @Override
     public void deleteRoomByName(final int roomId) {
         final String sql = "delete from room where roomId = ?";
         jdbcTemplate.update(sql, roomId);
@@ -61,15 +57,15 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public String getTurn(final int roomId) {
-        final String sql = "select turn from room where roomId = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, roomId);
-    }
-
-    @Override
     public void saveGameState(final int roomId, final String state) {
         final String sql = "update room set gameState = ? where roomId = ?";
         jdbcTemplate.update(sql, state, roomId);
+    }
+
+    @Override
+    public RoomEntity findByRoomId(final int roomId) {
+        final String sql = "select * from room where roomId = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, roomId);
     }
 
     @Override

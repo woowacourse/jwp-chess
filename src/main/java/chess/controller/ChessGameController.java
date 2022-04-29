@@ -33,7 +33,7 @@ public class ChessGameController {
 
     @PostMapping("/reset/{id}")
     public ResponseEntity<BoardResponse> resetGame(@PathVariable Long id) {
-        chessService.resetBoard(chessService.findRoom(id), id);
+        chessService.resetBoard(id);
         return ResponseEntity.ok().body(chessService.getBoard(id));
     }
 

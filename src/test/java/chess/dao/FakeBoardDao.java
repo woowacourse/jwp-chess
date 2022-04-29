@@ -53,7 +53,15 @@ public class FakeBoardDao implements BoardDao {
     }
 
     @Override
-    public void deleteBoard() {
-        boards.clear();
+    public void deleteBoard(long roomId) {
+        for (Long id : boards.keySet()) {
+            removeIfAvailable(roomId, id);
+        }
+    }
+
+    private void removeIfAvailable(long roomId, Long id) {
+        if (boards.get(id).getRoomId() == roomId) {
+            boards.remove(id);
+        }
     }
 }

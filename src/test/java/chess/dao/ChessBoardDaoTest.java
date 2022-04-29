@@ -91,6 +91,6 @@ class ChessBoardDaoTest {
    @Test
    void deleteAllPiece() {
         assertThatNoException().isThrownBy(() ->
-                chessBoardDao.deleteBoard());
+                chessBoardDao.deleteBoard(1000L));
    }
 }

@@ -50,8 +50,8 @@ public class ChessBoardDao implements BoardDao {
     }
 
     @Override
-    public void deleteBoard() {
-        final String sql = "delete from board";
-        jdbcTemplate.update(sql);
+    public void deleteBoard(long roomId) {
+        final String sql = "delete from board where room_id = ?";
+        jdbcTemplate.update(sql, roomId);
     }
 }

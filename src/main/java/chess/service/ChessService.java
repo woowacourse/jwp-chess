@@ -94,11 +94,10 @@ public class ChessService {
         return gameState;
     }
 
-    public void resetBoard(RoomResponse room, long id) {
-        chessRoomDao.deleteGame(id);
-        MakeRoomRequest newRoom = new MakeRoomRequest(room.getName(), room.getPassword());
-        createGame(newRoom);
-        gameState = createGameState(chessRoomDao.findById(newRoom).getId());
+    public void resetBoard(long id) {
+        chessRoomDao.updateStatus(Team.WHITE, id);
+        chessBoardDao.deleteBoard(id);
+        gameState = createGameState(id);
     }
 
     public void endGame(long gameId) {

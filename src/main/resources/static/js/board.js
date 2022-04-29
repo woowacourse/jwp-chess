@@ -54,11 +54,14 @@ function reset() {
         success: function (data) {
             const team = data.team;
             const pieces = data.pieces;
+
+            document.getElementById("gameId").innerText = data.id;
             document.getElementById("turn").innerText = team + " Turn";
             location.reload()
             $.each(pieces, function(index, piece) {
                 findById(piece.position, piece.symbol);
             })
+            
         },
         error: function (data){
             alert(data);

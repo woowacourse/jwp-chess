@@ -7,6 +7,7 @@ import chess.web.dto.ResultDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,7 @@ public class BoardController {
         this.gameService = gameService;
     }
 
-    @PostMapping(value = "/{boardId}", params = "command=move")
+    @PatchMapping(value = "/{boardId}", params = "command=move")
     public ResponseEntity<BoardDto> movePiece(@PathVariable int boardId, @RequestBody CommendDto commendDto) {
         gameService.move(boardId, commendDto);
         return ResponseEntity.ok(gameService.gameStateAndPieces(boardId));

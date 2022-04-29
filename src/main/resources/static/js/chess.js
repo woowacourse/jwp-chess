@@ -239,7 +239,7 @@ function fetchLoadChess() {
 function fetchMove(source, target) {
     let boardId = document.getElementById("board-id").value;
     fetch('http://localhost:8080/boards/' + boardId + '?command=move', {
-        method: 'POST',
+        method: 'PATCH',
         body: JSON.stringify({
             source: source,
             target: target

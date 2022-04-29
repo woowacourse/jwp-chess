@@ -2,14 +2,14 @@ package chess.controller.dto.response;
 
 public class GameResponse {
 
-    private final long gameId;
+    private final Long gameId;
     private final PlayersResponse playersResponse;
-    private final boolean finished;
-    private final boolean promotable;
+    private final Boolean finished;
+    private final Boolean promotable;
     private final ColorResponse currentTurnColor;
 
-    public GameResponse(final long gameId, final PlayersResponse playersResponse,
-                        final boolean finished, final boolean promotable,
+    public GameResponse(final Long gameId, final PlayersResponse playersResponse,
+                        final Boolean finished, final Boolean promotable,
                         final ColorResponse currentTurnColor) {
         this.gameId = gameId;
         this.playersResponse = playersResponse;
@@ -18,7 +18,7 @@ public class GameResponse {
         this.currentTurnColor = currentTurnColor;
     }
 
-    public long getGameId() {
+    public Long getGameId() {
         return gameId;
     }
 
@@ -26,11 +26,11 @@ public class GameResponse {
         return playersResponse;
     }
 
-    public boolean isFinished() {
+    public Boolean isFinished() {
         return finished;
     }
 
-    public boolean isPromotable() {
+    public Boolean isPromotable() {
         return promotable;
     }
 

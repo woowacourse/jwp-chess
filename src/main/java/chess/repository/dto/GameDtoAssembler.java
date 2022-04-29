@@ -30,7 +30,7 @@ public class GameDtoAssembler {
 
     public static GameUpdateDto toGameUpdateDto(final Game game) {
         final Long gameId = game.getId();
-        final boolean finished = game.isFinished();
+        final Boolean finished = game.isFinished();
         final Color currentTurnColor = game.getColorOfCurrentTurn();
         return new GameUpdateDto(gameId, finished, currentTurnColor.getName());
     }

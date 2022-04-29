@@ -64,7 +64,7 @@ class ChessControllerTest {
     }
 
     @Test
-    @DisplayName("이미 존재하는 이름일 경우 400대 응답을 검증한다.")
+    @DisplayName("이미 존재하는 이름일 경우 400대 응답을 던진다.")
     void createExceptionAlreadyExists() {
         RestAssured.given().log().all()
             .body("name=roma&password=pw")
@@ -99,6 +99,22 @@ class ChessControllerTest {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("turn", is("white"))
             .body("board.size()", is(64));
+    }
+
+    @Test
+    @DisplayName("전체 방 조회 기능을 검증한다.")
+    void findAllRooms() {
+        RestAssured.given().log().all()
+            .body("name=sojukang&password=123")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .when().post("/rooms");
+
+        RestAssured.given().log().all()
+            .when().get("/rooms")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("rooms.size()", is(2));
     }
 
     @Test
@@ -174,5 +190,51 @@ class ChessControllerTest {
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body("message", is("해당 ID에 체스게임이 초기화되지 않았습니다."));
+    }
+
+    @Test
+    @DisplayName("방 삭제 기능을 검증한다.")
+    void delete() {
+        RestAssured.given().log().all()
+            .body("name=sojukang&password=123")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .when().post("/rooms");
+
+        RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .body("password=123")
+            .when().delete("/rooms/" + (id + 1))
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @Test
+    @DisplayName("turn이 empty가 아닐 경우 삭제 시도하면 400대 응답을 던진다.")
+    void deleteNotAllowedException() {
+        RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .body("password=pw")
+            .when().delete("/rooms/" + id)
+            .then().log().all()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    @Test
+    @DisplayName("비밀번호가 틀릴 경우 400대 응답을 던진다.")
+    void deleteInvalidPassword() {
+        RestAssured.given().log().all()
+            .body("name=sojukang&password=123")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .when().post("/rooms");
+
+        RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .body("password=1234")
+            .when().delete("/rooms/" + (id + 1))
+            .then().log().all()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
 }

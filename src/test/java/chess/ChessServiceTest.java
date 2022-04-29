@@ -47,7 +47,7 @@ public class ChessServiceTest {
     }
 
     @Test
-    @DisplayName("id로 Board의 정보를 얻어 BoardDto로 반환한다.")
+    @DisplayName("id로 Board의 정보를 BoardDto에 담아 반환한다.")
     void find() {
         chessService.startNewGame(id);
 
@@ -57,6 +57,13 @@ public class ChessServiceTest {
             () -> assertThat(boardDto.getTurn()).isEqualTo("white"),
             () -> assertThat(boardDto.getBoard()).hasSize(64)
         );
+    }
+
+    @Test
+    @DisplayName("모든 방의 목록(2개)을 조회한다.")
+    void findAllRooms() {
+        chessService.createRoom("sojukang", "pw");
+        assertThat(chessService.findAllRooms()).hasSize(2);
     }
 
     @Test

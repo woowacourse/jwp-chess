@@ -32,35 +32,6 @@ public class WebController {
         final Map<String, Object> model = new HashMap<>();
         model.put("board", boardRes);
         model.put("roomId", roomId);
-        return new ModelAndView("room", model);
+        return new ModelAndView("board", model);
     }
-
-//    @PostMapping("/game")
-//    @ResponseBody
-//    public ResponseEntity insertGame() {
-//        final Long gameId = chessService.insertGame();
-//        return ResponseEntity.ok().body(new GameDto(gameId));
-//    }
-
-//    @PutMapping("/game/board")
-//    @ResponseBody
-//    public ResponseEntity updateBoard(@RequestBody MoveDto moveDto) {
-//        final Long gameId = chessService.updateBoard(moveDto.getFrom(), moveDto.getTo());
-//        return ResponseEntity.ok().body(new GameDto(gameId));
-//    }
-
-//    @GetMapping("/game/status")
-//    @ResponseBody
-//    public ResponseEntity<StatusDto> selectStatus() {
-//        StatusDto statusDto = chessService.selectStatus();
-//        return ResponseEntity.ok().body(statusDto);
-//    }
-
-//    @DeleteMapping("/game")
-//    @ResponseBody
-//    public ResponseEntity deleteGame() {
-//        final ChessService chessService = this.chessService;
-//        final Long gameId = chessService.deleteGame();
-//        return ResponseEntity.ok().body(new GameDto(gameId));
-//    }
 }

@@ -24,7 +24,7 @@ public class SquareDao {
 
     public Map<Position, Piece> findSquaresFrom(final String id) {
         final String sql = "select position, team, symbol from square where id = ?";
-        List<Map<String, Object>> squares = jdbcTemplate.queryForList(sql, id);
+        final List<Map<String, Object>> squares = jdbcTemplate.queryForList(sql, id);
         return squares.stream()
                 .collect(Collectors.toMap(k -> Position.from((String) k.get("position")),
                         k -> Piece.getPiece((String) k.get("team"), (String) k.get("symbol"))));

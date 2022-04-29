@@ -33,12 +33,13 @@ public class MultipleMove implements MoveStrategy {
         if (!source.movableTo(direction)) {
             return new ArrayList<>();
         }
-        List<Position> positions = new ArrayList<>();
+        final List<Position> positions = new ArrayList<>();
         Position nextPosition = source.createPositionTo(direction);
-        while (board.get(nextPosition)
-                .isSameTeam(NONE) && nextPosition.movableTo(direction)) {
+        Piece piece = board.get(nextPosition);
+        while (piece.isSameTeam(NONE) && nextPosition.movableTo(direction)) {
             positions.add(nextPosition);
             nextPosition = nextPosition.createPositionTo(direction);
+            piece = board.get(nextPosition);
         }
         if (!board.get(nextPosition).isSameTeam(this.team)) {
             positions.add(nextPosition);

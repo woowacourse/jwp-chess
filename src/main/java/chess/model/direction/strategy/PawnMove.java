@@ -33,15 +33,14 @@ public class PawnMove implements MoveStrategy {
         return directions.stream()
                 .filter(source::movableTo)
                 .map(source::createPositionTo)
-                .filter(position -> board.get(position).isOpponentTeam(team))
+                .filter(position -> piece(board, position).isOpponentTeam(team))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     private List<Position> searchBaseMovePositions(Position source, Map<Position, Piece> board) {
         Direction direction = Direction.pawnMoveDirection(team);
         Position nextPosition = source.createPositionTo(direction);
-        if (board.get(nextPosition)
-                .isSameTeam(NONE)) {
+        if (piece(board, nextPosition).isSameTeam(NONE)) {
             return List.of(nextPosition);
         }
         return new ArrayList<>();
@@ -54,12 +53,14 @@ public class PawnMove implements MoveStrategy {
         Direction direction = Direction.pawnMoveDirection(team);
         Position firstMovedPosition = source.createPositionTo(direction);
         Position secondMovedPosition = firstMovedPosition.createPositionTo(direction);
-        if (board.get(firstMovedPosition)
-                .isSameTeam(NONE)
-                && board.get(secondMovedPosition)
-                .isSameTeam(NONE)) {
+        if (piece(board, firstMovedPosition).isSameTeam(NONE)
+                && piece(board, secondMovedPosition).isSameTeam(NONE)) {
             return List.of(secondMovedPosition);
         }
         return new ArrayList<>();
+    }
+
+    private Piece piece(Map<Position, Piece> board, Position position) {
+        return board.get(position);
     }
 }

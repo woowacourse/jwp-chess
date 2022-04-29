@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -32,8 +31,7 @@ public class Board {
     }
 
     public void checkSameTeam(Team team, Position source) {
-        var piece = board.get(source);
-        if (piece.isOpponentTeam(team)) {
+        if (pieceOn(source).isOpponentTeam(team)) {
             throw new IllegalArgumentException("[ERROR] 상대편 기물은 움직일 수 없습니다.");
         }
     }
@@ -46,15 +44,13 @@ public class Board {
     }
 
     private void checkPieceIn(final Position source) {
-        if (board.get(source)
-                .isSameTeam(NONE)) {
+        if (pieceOn(source).isSameTeam(NONE)) {
             throw new IllegalArgumentException("[ERROR] 선택한 위치에 기물이 없습니다.");
         }
     }
 
     private void checkPieceCanMove(final Position source, final Position target) {
-        if (!board.get(source)
-                .canMove(source, target, board)) {
+        if (!pieceOn(source).canMove(source, target, board)) {
             throw new IllegalArgumentException("[ERROR] 선택한 기물을 이동 시킬수 없는 위치가 입력 됬습니다.");
         }
     }
@@ -72,14 +68,15 @@ public class Board {
     }
 
     public List<Position> searchPositionOfPawnsFrom(Team team) {
-        return board.entrySet()
+        return board.keySet()
                 .stream()
-                .filter(entry -> entry.getValue()
-                        .isSameTeam(team))
-                .filter(entry -> entry.getValue()
-                        .isPawn())
-                .map(Entry::getKey)
+                .filter(position -> pieceOn(position).isSameTeam(team))
+                .filter(position -> pieceOn(position).isPawn())
                 .collect(Collectors.toList());
+    }
+
+    private Piece pieceOn(Position position) {
+        return board.get(position);
     }
 
     public Double calculateDefaultScoreFrom(final Team team) {

@@ -15,12 +15,14 @@ import chess.domain.player.Team;
 import chess.dto.*;
 import chess.view.ChessMap;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Transactional
 @Service
 public class SpringChessService {
 
@@ -34,6 +36,7 @@ public class SpringChessService {
         this.roomDao = roomDao;
     }
 
+    @Transactional(readOnly = true)
     public List<RoomDto> showRooms() {
         return roomDao.findAll();
     }
@@ -42,6 +45,7 @@ public class SpringChessService {
         return roomDao.makeRoom(roomRequestDto);
     }
 
+    @Transactional(readOnly = true)
     public ChessMap load(final long roomId) {
         final RoomDto roomDto = roomDao.findRoomById(roomId);
         final ChessWebGame chessWebGame = new ChessWebGame(ChessRoom.from(roomDto));
@@ -127,6 +131,7 @@ public class SpringChessService {
         return new ScoreDto(status);
     }
 
+    @Transactional(readOnly = true)
     public ResultDto getResult(final long roomId) {
         final ChessWebGame chessWebGame = loadChessWebGame(roomId);
         final Result result = chessWebGame.getResult();

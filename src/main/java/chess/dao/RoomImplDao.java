@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.entity.Room;
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -36,5 +37,18 @@ public class RoomImplDao implements RoomDao {
         String sql = "UPDATE room SET state = (?) WHERE id = (?)";
         jdbcTemplate.update(sql, state, roomId);
         return roomId;
+    }
+
+    @Override
+    public Room findRoomById(Long roomId) {
+        String sql = "SELECT * FROM room WHERE id = (?)";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (rs, rowNum) -> new Room(
+                        rs.getLong("id"),
+                        rs.getString("state"),
+                        rs.getString("title"),
+                        rs.getString("password")),
+                roomId);
     }
 }

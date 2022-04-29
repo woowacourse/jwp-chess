@@ -18,10 +18,13 @@ public class RoomFakeDao implements RoomDao {
 
     @Override
     public Long updateStateById(Long roomId, String state) {
-        final Long updateRoomId = insertRoom("title", "Ready");
-        final Room room = memoryDbRoom.get(updateRoomId);
+        final Room room = memoryDbRoom.get(roomId);
+        memoryDbRoom.replace(roomId, new Room(room.getId(), state, room.getTitle(), room.getPassword()));
+        return roomId;
+    }
 
-        memoryDbRoom.replace(updateRoomId, room);
-        return updateRoomId;
+    @Override
+    public Room findRoomById(Long roomId) {
+        return memoryDbRoom.get(roomId);
     }
 }

@@ -2,6 +2,7 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.entity.Room;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,17 @@ class RoomImplDaoTest {
 
         final Long updateRoomId = roomDao.updateStateById(roomId, "WhiteRunning");
 
-        assertThat(updateRoomId).isInstanceOf(Long.class);
+        assertThat(roomDao.findRoomById(updateRoomId).getState()).isEqualTo("WhiteRunning");
+    }
+
+    @Test
+    @DisplayName("일련번호를 통해 방을 조회할 수 있다.")
+    void findRoomById() {
+        final Long roomId = insertTestRoom("title", "1111");
+
+        final Room room = roomDao.findRoomById(roomId);
+
+        assertThat(room).isInstanceOf(Room.class);
     }
 
     private Long insertTestRoom(String title, String password) {

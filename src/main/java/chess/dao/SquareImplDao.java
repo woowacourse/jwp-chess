@@ -40,7 +40,7 @@ public class SquareImplDao implements SquareDao {
 
     @Override
     public List<Square> findSquareAllById(Long id) {
-        String sql = "SELECT * FROM board WHERE room_id = (?)";
+        String sql = "SELECT * FROM square WHERE room_id = (?)";
 
         return jdbcTemplate.query(sql, (rs, ronNum) -> new Square(
                 rs.getLong("room_id"),
@@ -52,7 +52,7 @@ public class SquareImplDao implements SquareDao {
 
     @Override
     public Long updateSquare(Square square) {
-        String sql = "UPDATE board SET position = (?), symbol = (?), color = (?) WHERE room_id = (?) AND position = (?)";
+        String sql = "UPDATE square SET position = (?), symbol = (?), color = (?) WHERE room_id = (?) AND position = (?)";
         jdbcTemplate.update(sql,
                 square.getPosition(), square.getSymbol(), square.getColor(), square.getRoomId(), square.getPosition());
 

@@ -1,6 +1,7 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.dao.RoomFakeDao;
 import chess.dao.SquareFakeDao;
@@ -26,5 +27,14 @@ class ChessServiceV2Test {
         final Long updateRoomId = chessServiceV2.insertBoard(roomId);
 
         assertThat(updateRoomId).isInstanceOf(Long.class);
+    }
+
+    @Test
+    @DisplayName("방의 일련번호와 현재위치 타겟위치를 통해 보드의 구성요소를 변경할 수 있다.")
+    void updateSquares() {
+        final Long roomId = chessServiceV2.insertRoom("title1", "1111");
+        chessServiceV2.insertBoard(roomId);
+
+        assertDoesNotThrow(() -> chessServiceV2.updateSquares(roomId, "a2", "a3"));
     }
 }

@@ -3,9 +3,18 @@ package chess.service;
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
 import chess.domain.chessboard.ChessBoard;
+import chess.domain.command.GameCommand;
+import chess.domain.game.ChessGame;
+import chess.domain.piece.EmptyPiece;
+import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
+import chess.domain.position.Position;
+import chess.domain.state.State;
+import chess.entity.Room;
 import chess.entity.Square;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +55,41 @@ public class ChessServiceV2 {
                 .collect(Collectors.toList());
 
         squareDao.insertSquareAll(roomId, board);
-        roomDao.updateStateById(roomId, "Ready");
+        roomDao.updateStateById(roomId, "WhiteRunning");
 
         return roomId;
+    }
+
+    @Transactional
+    public void updateSquares(Long roomId, String from, String to) {
+        ChessGame chessGame = findChessGame(roomId);
+        playChessGame(chessGame, from, to);
+
+        String source = Position.of(from).toString();
+        String target = Position.of(to).toString();
+
+        Map<String, Piece> pieces = chessGame.getChessBoard().toMap();
+        squareDao.updateSquare(new Square(roomId, target,
+                pieces.get(target).getSymbol().toString(), pieces.get(target).getColor().toString()));
+        squareDao.updateSquare(new Square(roomId, source,
+                EmptyPiece.getInstance().getSymbol().toString(), EmptyPiece.getInstance().getColor().toString()));
+    }
+
+    private ChessGame findChessGame(Long roomId) {
+        final Room room = roomDao.findRoomById(roomId);
+        final List<Square> squares = squareDao.findSquareAllById(roomId);
+
+        final Map<Position, Piece> board = new HashMap<>();
+        for (Square square : squares) {
+            board.put(Position.of(square.getPosition()), Piece.of(square.getColor(), square.getSymbol()));
+        }
+
+        ChessGame chessGame = new ChessGame(State.of(room.getState()), new ChessBoard(board));
+        return chessGame;
+    }
+
+    private void playChessGame(ChessGame chessGame, String from, String to) {
+        chessGame.playGameByCommand(GameCommand.of("move", from, to));
+        chessGame.isEndGameByPiece();
     }
 }

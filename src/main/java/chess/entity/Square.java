@@ -29,4 +29,14 @@ public class Square {
     public String getColor() {
         return color;
     }
+
+    @Override
+    public String toString() {
+        return "Square{" +
+                "roomId=" + roomId +
+                ", position='" + position + '\'' +
+                ", symbol='" + symbol + '\'' +
+                ", color='" + color + '\'' +
+                '}';
+    }
 }

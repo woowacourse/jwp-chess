@@ -4,6 +4,8 @@ import chess.entity.Square;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class SquareFakeDao implements SquareDao {
 
@@ -19,5 +21,26 @@ public class SquareFakeDao implements SquareDao {
             memoryDbSquare.put(autoIncrementId++, square);
         }
         return numbers;
+    }
+
+    @Override
+    public List<Square> findSquareAllById(Long roomId) {
+        return memoryDbSquare.entrySet().stream()
+                .filter(entry -> entry.getValue().getRoomId() == roomId)
+                .map(entry -> new Square(
+                        entry.getValue().getRoomId(), entry.getValue().getPosition(),
+                        entry.getValue().getSymbol(), entry.getValue().getColor()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Long updateSquare(Square square) {
+        final List<Entry<Long, Square>> entries = memoryDbSquare.entrySet().stream()
+                .filter(entry -> entry.getValue().getRoomId() == square.getRoomId()
+                        && entry.getValue().getPosition().equals(square.getPosition()))
+                .collect(Collectors.toList());
+
+        memoryDbSquare.put(entries.get(0).getKey(), square);
+        return square.getRoomId();
     }
 }

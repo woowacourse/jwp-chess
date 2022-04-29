@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ChessViewController {
 
     @GetMapping
+    public String showRooms() {
+        return "rooms";
+    }
+
+    @GetMapping("/index")
     public String init() {
         return "index";
     }

@@ -34,7 +34,6 @@ public class RoomWebController {
 
     @PostMapping(path = "/makeRoom")
     public String makeRoom(@RequestBody RoomCreationRequestDto roomCreationRequest) {
-        System.out.println(roomCreationRequest);
         final String roomName = roomCreationRequest.getRoomName();
         final String password = roomCreationRequest.getPassword();
         roomService.saveNewRoom(roomName, password);
@@ -43,7 +42,6 @@ public class RoomWebController {
 
     @PostMapping(path = "/deleteRoom")
     public String deleteRoom(@RequestBody RoomDeletionRequestDto roomDeletionRequest) {
-        System.out.println(roomDeletionRequest);
         final int roomId = roomDeletionRequest.getRoomId();
         final String password = roomDeletionRequest.getPassword();
         roomService.deleteRoom(roomId, password);

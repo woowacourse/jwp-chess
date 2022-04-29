@@ -39,7 +39,6 @@ public class GameWebController {
 
     @PostMapping(path = "/{roomId}/move")
     public String move(@PathVariable int roomId, @RequestBody MoveRequestDto moveRequest) {
-        System.out.println(moveRequest);
         final String sourcePosition = moveRequest.getSource();
         final String targetPosition = moveRequest.getTarget();
         chessGameService.move(roomId, sourcePosition, targetPosition);

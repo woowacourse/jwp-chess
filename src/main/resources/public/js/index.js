@@ -6,7 +6,6 @@ let roomId;
 
 const showRooms = async () => {
     let rooms = await getRoomList();
-    document.getElementById("chess-menu").style.display = 'none';
     Object.values(rooms).forEach((value) => {
         const roomListTag = document.getElementById("chess-room-list");
         const roomTag = document.createElement("div");
@@ -113,6 +112,7 @@ const deleteRoom = async (e) => {
         return;
     }
     window.location.reload();
+    alert('방을 삭제했습니다.');
 }
 
 const intToFile = (value) => {

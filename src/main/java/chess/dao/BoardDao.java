@@ -12,5 +12,7 @@ public interface BoardDao {
 
     void deletePiece(DeletePieceDto deletePieceDto);
 
+    void deletePieces(int gameId);
+
     void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto);
 }

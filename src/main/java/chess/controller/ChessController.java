@@ -1,9 +1,11 @@
 package chess.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import chess.dto.request.CreateRoomDto;
+import chess.dto.request.DeleteRoomDto;
 import chess.dto.request.MovePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.BoardDto;
@@ -36,7 +39,7 @@ public class ChessController {
     }
 
     @GetMapping("/board/{id}")
-    public ResponseEntity getBoard(@PathVariable Integer id) {
+    public ResponseEntity<Map<String, String>> getBoard(@PathVariable Integer id) {
         BoardDto boardDto = chessService.getBoard(id);
         return ResponseEntity.ok(boardDtoToRaw(boardDto));
     }
@@ -59,7 +62,7 @@ public class ChessController {
     }
 
     @GetMapping("/turn/{id}")
-    public ResponseEntity getTurn(@PathVariable Integer id) {
+    public ResponseEntity<Map<String, String>> getTurn(@PathVariable Integer id) {
         PieceColorDto pieceColorDto = chessService.getCurrentTurn(id);
         Map<String, String> responseValue = new HashMap<>();
         responseValue.put("pieceColor", getColorFromPieceColorDto(pieceColorDto));
@@ -74,7 +77,7 @@ public class ChessController {
     }
 
     @GetMapping("/score/{id}")
-    public ResponseEntity getScore(@PathVariable Integer id) {
+    public ResponseEntity<Map<String, Double>> getScore(@PathVariable Integer id) {
         ScoreResultDto scoreResultDto = chessService.getScore(id);
         Map<String, Double> responseValue = new HashMap<>();
         responseValue.put("white", scoreResultDto.getWhiteScore());
@@ -83,7 +86,7 @@ public class ChessController {
     }
 
     @GetMapping("/winner/{id}")
-    public ResponseEntity getWinner(@PathVariable Integer id) {
+    public ResponseEntity<Map<String, String>> getWinner(@PathVariable Integer id) {
         PieceColorDto pieceColorDto = chessService.getWinColor(id);
         Map<String, String> responseValue = new HashMap<>();
         responseValue.put("pieceColor", getColorFromPieceColorDto(pieceColorDto));
@@ -110,6 +113,25 @@ public class ChessController {
         String gamePassword = createRoomDto.getPassword();
         RoomDto roomDto = new RoomDto(chessService.createGame(gameName, gamePassword), gameName);
         return roomDto;
+    }
+
+    @GetMapping("/room")
+    public ResponseEntity<List<RoomDto>> inquireRooms() {
+        List<RoomDto> rooms = chessService.getRooms();
+        return ResponseEntity.ok(rooms);
+    }
+
+    @DeleteMapping("/room")
+    public CommandResultDto deleteRoom(@RequestBody DeleteRoomDto deleteRoomDto) {
+        int gameId = deleteRoomDto.getId();
+        String inputPassword = deleteRoomDto.getPassword();
+
+        try {
+            chessService.deleteRoom(gameId, inputPassword);
+        } catch (IllegalArgumentException e) {
+            return CommandResultDto.of(false, e.getMessage());
+        }
+        return CommandResultDto.of(true, "삭제되었습니다!");
     }
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})

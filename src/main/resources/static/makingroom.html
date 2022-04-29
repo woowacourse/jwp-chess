@@ -17,7 +17,6 @@
                 body: JSON.stringify({name, password})
             }).then(res => res.json())
                 .then(res => {
-                    console.log(res);
                     location.href = "game.html?id=" + res.id;
                 }).catch((e) => {
                 console.log(e.message);

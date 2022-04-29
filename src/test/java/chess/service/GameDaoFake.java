@@ -1,11 +1,13 @@
 package chess.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import chess.dao.GameDao;
 import chess.domain.piece.PieceColor;
 import chess.dto.response.ChessGameDto;
+import chess.dto.response.RoomDto;
 
 public class GameDaoFake implements GameDao {
     private final Map<Integer, PieceColor> fakeGame = new HashMap<>();
@@ -35,6 +37,15 @@ public class GameDaoFake implements GameDao {
     @Override
     public void updateTurnToBlack(int gameId) {
         fakeGame.put(gameId, PieceColor.BLACK);
+    }
+
+    @Override
+    public List<RoomDto> inquireAllRooms() {
+        return null;
+    }
+
+    @Override
+    public void checkCanDelete(int gameId, String inputPassword) {
     }
 
     @Override

@@ -2,6 +2,7 @@ package chess.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import chess.dto.response.ChessGameDto;
+import chess.dto.response.RoomDto;
 
 @Repository
 public class GameDaoImpl implements GameDao {
@@ -49,6 +51,18 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
+    public void checkCanDelete(int gameId, String inputPassword) {
+        String query = String.format("SELECT password FROM %s WHERE id = ?", TABLE_NAME);
+        String password = jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> {
+            return resultSet.getString("password");
+        }, gameId);
+
+        if (!inputPassword.equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다!");
+        }
+    }
+
+    @Override
     public void updateTurnToWhite(int gameId) {
         updateTurn(gameId, WHITE_TURN);
     }
@@ -56,6 +70,17 @@ public class GameDaoImpl implements GameDao {
     @Override
     public void updateTurnToBlack(int gameId) {
         updateTurn(gameId, BLACK_TURN);
+    }
+
+    @Override
+    public List<RoomDto> inquireAllRooms() {
+        String query = String.format("SELECT id, name FROM %s", TABLE_NAME);
+        List<RoomDto> rooms = jdbcTemplate.query(query, (resultSet, rowNum) -> {
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            return new RoomDto(id, name);
+        });
+        return rooms;
     }
 
     private void updateTurn(int gameId, String turn) {

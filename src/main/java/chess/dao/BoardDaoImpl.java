@@ -80,6 +80,12 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
+    public void deletePieces(int gameId) {
+        String query = String.format("DELETE FROM %s WHERE game_id = ?", TABLE_NAME);
+        jdbcTemplate.update(query, gameId);
+    }
+
+    @Override
     public void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto) {
         String query = String.format(
             "UPDATE %s SET x_axis = ?, y_axis = ? WHERE x_axis = ? AND y_axis = ? AND game_id = ?", TABLE_NAME);

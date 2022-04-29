@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 방 조회</title>
+
+    <script>
+        async function inquire() {
+            const res = await fetch("room", {
+                method: "GET"
+            });
+
+            return res.json();
+        }
+
+        async function makeGraph() {
+            const graphs = await inquire();
+            document.write("<table border='1'><thead><td>제목</td><td>삭제</td></thead>");
+            for (let i = 0; i < graphs.length; i++) {
+                const id = graphs[i].id;
+                const gameName = graphs[i].name;
+                document.write(`<tr><td><a href='game.html?id=${id}'>${gameName}</a></td>`);
+                document.write(`<td><input type='button' value='삭제' onclick='deleteGame(${id})'></td></tr>`);
+            }
+            document.write("</table>");
+        }
+
+        async function deleteGame(id) {
+            const password = prompt("비밀번호를 입력하세요");
+            const res = await fetch("room", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({id, password})
+            })
+
+            const response = await res.json();
+            alert(response.message);
+            document.body.innerHTML = "";
+            await makeGraph();
+        }
+    </script>
+
+</head>
+<body>
+<div id="graph">
+    <script>
+        makeGraph();
+    </script>
+</div>
+</body>
+</html>

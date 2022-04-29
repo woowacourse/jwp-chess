@@ -1,5 +1,6 @@
 package chess.service;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.BoardDto;
 import chess.dto.response.ChessGameDto;
 import chess.dto.response.PieceColorDto;
+import chess.dto.response.RoomDto;
 import chess.dto.response.ScoreResultDto;
 
 @Service
@@ -90,6 +92,16 @@ public class ChessService {
         return boardDao.getBoard(gameId);
     }
 
+    public List<RoomDto> getRooms() {
+        return gameDao.inquireAllRooms();
+    }
+
+    public void deleteRoom(int gameId, String inputPassword) {
+        gameDao.checkCanDelete(gameId, inputPassword);
+        boardDao.deletePieces(gameId);
+        gameDao.deleteGame(gameId);
+    }
+
     @Override
     public String toString() {
         return "ChessService{" +
@@ -97,4 +109,5 @@ public class ChessService {
             ", boardDao=" + boardDao +
             '}';
     }
+
 }

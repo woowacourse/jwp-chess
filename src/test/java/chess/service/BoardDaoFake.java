@@ -38,6 +38,10 @@ public class BoardDaoFake implements BoardDao {
     }
 
     @Override
+    public void deletePieces(int gameId) {
+    }
+
+    @Override
     public void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto) {
         Position from = updatePiecePositionDto.getFrom();
         Position to = updatePiecePositionDto.getTo();

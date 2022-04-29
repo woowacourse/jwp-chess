@@ -29,6 +29,7 @@ public class ChessServiceTest {
     }
 
     @Test
+    @DisplayName("방 이름과 비밀번호를 받아 방을 생성한다.")
     void createRoom() {
         Room actual = chessService.createRoom("sojukang", "pw");
         assertAll(
@@ -38,6 +39,7 @@ public class ChessServiceTest {
     }
 
     @Test
+    @DisplayName("id를 입력받아 게임을 시작시키고 초기화된 BoardDto를 반환한다.")
     void startNewGame() {
         BoardDto boardDto = chessService.startNewGame(id);
 
@@ -45,7 +47,8 @@ public class ChessServiceTest {
     }
 
     @Test
-    void load() {
+    @DisplayName("id로 Board의 정보를 얻어 BoardDto로 반환한다.")
+    void find() {
         chessService.startNewGame(id);
 
         BoardDto boardDto = chessService.find(id);
@@ -57,6 +60,7 @@ public class ChessServiceTest {
     }
 
     @Test
+    @DisplayName("체스 말 이동 기능을 검증한다.")
     void move() {
         chessService.startNewGame(id);
         BoardDto actual = chessService.move(id, new MoveDto("a2", "a4"));
@@ -69,6 +73,7 @@ public class ChessServiceTest {
     }
 
     @Test
+    @DisplayName("점수 반환 기능을 검증한다.")
     void status() {
         chessService.startNewGame(id);
         Status actual = chessService.status(id);

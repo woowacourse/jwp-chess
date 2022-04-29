@@ -92,20 +92,6 @@ public class GameDaoStub extends GameDao {
     }
 
     @Override
-    public boolean isValidOwner(EncryptedAuthCredentials authCredentials) {
-        return repository.values().stream()
-                .filter(game -> game.name.equals(authCredentials.getName()))
-                .anyMatch(game -> game.password.equals(authCredentials.getPassword()));
-    }
-
-    @Override
-    public boolean isValidOpponent(EncryptedAuthCredentials authCredentials) {
-        return repository.values().stream()
-                .filter(game -> game.name.equals(authCredentials.getName()))
-                .anyMatch(game -> game.opponent_password.equals(authCredentials.getPassword()));
-    }
-
-    @Override
     public void finishGame(int gameId) {
         if (!repository.containsKey(gameId)) {
             throw new IllegalArgumentException("존재하지 않는 게임입니다.");
@@ -131,21 +117,11 @@ public class GameDaoStub extends GameDao {
 
     private static class GameFullEntity {
 
-        int id;
-        String name;
-        String password;
-        String opponent_password = null;
+        final int id;
+        final String name;
+        final String password;
+        String opponent_password;
         boolean running;
-
-        GameFullEntity(int id,
-                       String name,
-                       String password,
-                       boolean running) {
-            this.id = id;
-            this.name = name;
-            this.password = password;
-            this.running = running;
-        }
 
         GameFullEntity(int id,
                        String name,
@@ -157,6 +133,13 @@ public class GameDaoStub extends GameDao {
             this.password = password;
             this.opponent_password = opponent_password;
             this.running = running;
+        }
+
+        GameFullEntity(int id,
+                       String name,
+                       String password,
+                       boolean running) {
+            this(id, name, password, null, running);
         }
     }
 }

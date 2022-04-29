@@ -91,24 +91,6 @@ public class GameDao {
                .updateAndThrowOnNonEffected(() -> new IllegalArgumentException("상대방 플레이어 저장에 실패하였습니다."));
     }
 
-    public boolean isValidOwner(EncryptedAuthCredentials authCredentials) {
-        final String sql = "SELECT COUNT(*) FROM game "
-                + "WHERE name = :name AND password = :password";
-
-        SqlParameterSource paramSource = new BeanPropertySqlParameterSource(authCredentials);
-        return new StatementExecutor<>(() -> jdbcTemplate.queryForObject(sql, paramSource, Integer.class))
-                .countAndCheckExistence();
-    }
-
-    public boolean isValidOpponent(EncryptedAuthCredentials authCredentials) {
-        final String sql = "SELECT COUNT(*) FROM game "
-                + "WHERE name = :name AND opponent_password = :password";
-
-        SqlParameterSource paramSource = new BeanPropertySqlParameterSource(authCredentials);
-        return new StatementExecutor<>(() -> jdbcTemplate.queryForObject(sql, paramSource, Integer.class))
-                .countAndCheckExistence();
-    }
-
     public void finishGame(int gameId) {
         final String sql = "UPDATE game SET running = false WHERE id = :game_id";
 

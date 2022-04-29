@@ -24,4 +24,18 @@ class RoomImplDaoTest {
 
         assertThat(roomId).isInstanceOf(Long.class);
     }
+
+    @Test
+    @DisplayName("일련번호를 통해 방의 상태를 변경할 수 있다.")
+    void updateStateById() {
+        final Long roomId = insertTestRoom("title", "Ready");
+
+        final Long updateRoomId = roomDao.updateStateById(roomId, "WhiteRunning");
+
+        assertThat(updateRoomId).isInstanceOf(Long.class);
+    }
+
+    private Long insertTestRoom(String title, String password) {
+        return roomDao.insertRoom(title, password);
+    }
 }

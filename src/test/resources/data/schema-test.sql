@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS room;
+DROP TABLE IF EXISTS square;
 DROP TABLE IF EXISTS board;
 
 create table room
@@ -9,14 +9,14 @@ create table room
     password varchar(60) not null
 );
 
-create table board
+create table square
 (
     room_id  int         not null,
     position varchar(5)  not null,
     symbol   varchar(10) not null,
     color    varchar(10) not null,
     primary key (position, room_id),
-    constraint board_room_id_fk
+    constraint square_room_id_fk
         foreign key (room_id) references room (id)
             on update cascade on delete cascade
 );

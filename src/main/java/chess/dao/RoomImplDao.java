@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class RoomImplDao implements RoomDao {
-
+    
     private final JdbcTemplate jdbcTemplate;
 
     public RoomImplDao(JdbcTemplate jdbcTemplate) {
@@ -29,5 +29,12 @@ public class RoomImplDao implements RoomDao {
         };
         jdbcTemplate.update(preparedStatementCreator, keyHolder);
         return keyHolder.getKey().longValue();
+    }
+
+    @Override
+    public Long updateStateById(Long roomId, String state) {
+        String sql = "UPDATE room SET state = (?) WHERE id = (?)";
+        jdbcTemplate.update(sql, state, roomId);
+        return roomId;
     }
 }

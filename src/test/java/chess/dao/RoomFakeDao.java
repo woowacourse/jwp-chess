@@ -15,4 +15,13 @@ public class RoomFakeDao implements RoomDao {
 
         return autoIncrementId++;
     }
+
+    @Override
+    public Long updateStateById(Long roomId, String state) {
+        final Long updateRoomId = insertRoom("title", "Ready");
+        final Room room = memoryDbRoom.get(updateRoomId);
+
+        memoryDbRoom.replace(updateRoomId, room);
+        return updateRoomId;
+    }
 }

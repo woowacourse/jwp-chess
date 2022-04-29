@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.domain.gameRoom.ChessGame;
 import chess.domain.gameRoom.dao.ChessGameRoomDAO;
-import chess.domain.gameRoom.dto.ChessGameRoomInfoDTO;
+import chess.domain.gameRoom.dto.ChessGameRoomShowInfoDTO;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -44,7 +44,7 @@ class ChessGameDAOTest {
         chessGame.setName("zero");
         chessGame.setPassword("1234");
         String gameId = chessGameDAO.addGame(chessGame);
-        List<ChessGameRoomInfoDTO> activeGames = chessGameDAO.findActiveGames();
+        List<ChessGameRoomShowInfoDTO> activeGames = chessGameDAO.findActiveGames();
 
         Assertions.assertThat(activeGames.size()).isNotEqualTo(0);
     }
@@ -59,7 +59,7 @@ class ChessGameDAOTest {
 
         chessGameDAO.deleteGameByIdAndPassword(gameId, "1234");
 
-        List<ChessGameRoomInfoDTO> activeGames = chessGameDAO.findActiveGames();
+        List<ChessGameRoomShowInfoDTO> activeGames = chessGameDAO.findActiveGames();
         Assertions.assertThat(activeGames.size()).isEqualTo(0);
     }
 
@@ -74,7 +74,7 @@ class ChessGameDAOTest {
 
         chessGameDAO.deleteGameByIdAndPassword(gameId, "12345");
 
-        List<ChessGameRoomInfoDTO> activeGames = chessGameDAO.findActiveGames();
+        List<ChessGameRoomShowInfoDTO> activeGames = chessGameDAO.findActiveGames();
         Assertions.assertThat(activeGames.size()).isNotEqualTo(0);
     }
 }

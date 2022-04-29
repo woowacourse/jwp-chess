@@ -36,9 +36,9 @@ public class ChessGameApiController {
     }
 
     @DeleteMapping("/chess/{id}")
-    public ResponseEntity<Integer> deleteGame(@PathVariable String id, @RequestParam String password) {
+    public ResponseEntity<Void> deleteGame(@PathVariable String id, @RequestParam String password) {
+        chessService.deleteGameByIdAndPassword(id, password);
         return new ResponseEntity<>(
-                chessService.deleteGameByIdAndPassword(id, password),
                 HttpStatus.NO_CONTENT
         );
     }

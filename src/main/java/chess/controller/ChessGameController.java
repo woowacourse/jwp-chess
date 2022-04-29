@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.domain.gameRoom.dto.ChessGameRoomInfoDTO;
+import chess.domain.gameRoom.dto.ChessGameRoomShowInfoDTO;
 import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +29,7 @@ public class ChessGameController {
 
     @GetMapping("/chess/game/{id}")
     public String showChessGameRoom(@PathVariable String id, Model model) {
-        ChessGameRoomInfoDTO chessGameRoomInfoDTO = chessService.findGameById(id);
+        ChessGameRoomShowInfoDTO chessGameRoomInfoDTO = chessService.findGameById(id);
         model.addAttribute("chessGameRoom", chessGameRoomInfoDTO);
         return "game";
     }

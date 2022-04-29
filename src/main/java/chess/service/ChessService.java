@@ -1,13 +1,14 @@
 package chess.service;
 
 import chess.domain.game.dto.MoveDTO;
+import chess.domain.gameRoom.dto.ChessGameRoomPassInfoDTO;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
 import chess.domain.gameRoom.ChessGame;
 import chess.domain.gameRoom.dao.ChessGameRoomDAO;
 import chess.domain.game.Movement;
 import chess.domain.game.dao.MovementDAO;
-import chess.domain.gameRoom.dto.ChessGameRoomInfoDTO;
+import chess.domain.gameRoom.dto.ChessGameRoomShowInfoDTO;
 
 import java.util.List;
 import chess.exception.InvalidDBFailException;
@@ -77,22 +78,20 @@ public class ChessService {
     }
 
     @Transactional(readOnly = true)
-    public List<ChessGameRoomInfoDTO> getGames() {
+    public List<ChessGameRoomShowInfoDTO> getGames() {
         return chessGameDAO.findActiveGames();
     }
 
     @Transactional(readOnly = true)
-    public ChessGameRoomInfoDTO findGameById(String id) {
-        return chessGameDAO.findGameById(id);
+    public ChessGameRoomShowInfoDTO findGameById(String id) {
+        return chessGameDAO.findShowGameById(id);
     }
 
-    public int deleteGameByIdAndPassword(String gameId, String password) {
-        int successDelete = chessGameDAO.deleteGameByIdAndPassword(gameId, password);
-
-        if (successDelete == 0) {
+    public void deleteGameByIdAndPassword(String id, String password) {
+        ChessGameRoomPassInfoDTO chessGameRoom = chessGameDAO.findPassGameById(id);
+        if (!chessGameRoom.getPassword().equals(password)){
             throw new InvalidDBFailException("[ERROR] DELETE를 실패하였습니다.");
         }
-
-        return successDelete;
+        chessGameDAO.deleteGameByIdAndPassword(id, password);
     }
 }

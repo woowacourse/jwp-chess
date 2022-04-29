@@ -1,21 +1,18 @@
 package chess.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import chess.exception.UserInputException;
 import chess.repository.RoomRepository;
-import chess.web.dto.RoomDto;
+import chess.domain.Room;
 
 @Service
 @Transactional(readOnly = true)
 public class RoomService {
 
-	private static final int NAME_MIN_SIZE = 1;
-	private static final int NAME_MAX_SIZE = 16;
 	private static final String NOT_EXIST_ROOM = "유효하지 않은 체스방 주소입니다.";
 
 	private final GameService gameService;
@@ -27,49 +24,28 @@ public class RoomService {
 	}
 
 	@Transactional
-	public RoomDto create(RoomDto roomDto) {
-		String name = roomDto.getName();
-		validateRoom(roomDto);
-		int roomId = roomRepository.save(roomDto);
-		return new RoomDto(roomId, name, roomDto.getPassword());
+	public Room create(Room room) {
+		String name = room.getName();
+		validateDuplicateName(name);
+		int roomId = roomRepository.save(room);
+		return new Room(roomId, room);
 	}
 
-	private void validateRoom(RoomDto roomDto) {
-		validateNameSize(roomDto.getName());
-		validateDuplicateName(roomDto.getName());
-		validatePassword(roomDto.getPassword());
-	}
-
-	private void validateNameSize(String name) {
-		if (name.length() < NAME_MIN_SIZE || name.length() > NAME_MAX_SIZE) {
-			throw new UserInputException("방 이름은 1자 이상, 16자 이하입니다.");
-		}
+	public Room getRoom(int roomId) {
+		return roomRepository.findById(roomId)
+			.orElseThrow(() -> new UserInputException(NOT_EXIST_ROOM));
 	}
 
 	private void validateDuplicateName(String name) {
-		if (roomRepository.findByName(name).isPresent()) {
-			throw new UserInputException("해당 이름의 방이 이미 존재합니다.");
-		}
-	}
-
-	private void validatePassword(String password) {
-		if (password.isEmpty() || password.isBlank()) {
-			throw new UserInputException("비밀번호를 입력하세요");
-		}
-	}
-
-	public void validateId(int roomId) {
-		Optional<RoomDto> roomDto = roomRepository.findById(roomId);
-		if (roomDto.isEmpty()) {
-			throw new UserInputException(NOT_EXIST_ROOM);
-		}
-
+		roomRepository.findByName(name)
+				.ifPresent(room -> {
+					throw new UserInputException("해당 이름의 방이 이미 존재합니다.");
+				});
 	}
 
 	@Transactional
 	public void delete(int roomId, String password) {
-		validatePassword(password);
-		if (!getPassword(roomId).equals(password)) {
+		if (!getRoom(roomId).isRightPassword(password)) {
 			throw new UserInputException("유효하지 않은 비밀번호입니다.");
 		}
 		if (!gameService.isEnd(roomId)) {
@@ -78,16 +54,7 @@ public class RoomService {
 		roomRepository.deleteById(roomId);
 	}
 
-	private String getPassword(int id) {
-		Optional<RoomDto> findRoom = roomRepository.findById(id);
-		if (findRoom.isPresent()) {
-			return findRoom.get()
-				.getPassword();
-		}
-		throw new UserInputException(NOT_EXIST_ROOM);
-	}
-
-	public List<RoomDto> findAll() {
+	public List<Room> findAll() {
 		return roomRepository.findAll();
 	}
 }

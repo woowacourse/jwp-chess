@@ -11,23 +11,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 import chess.configuration.RepositoryConfiguration;
 import chess.configuration.ServiceConfiguration;
-import chess.repository.BoardRepository;
-import chess.repository.PieceRepository;
 import chess.repository.RoomRepository;
 import chess.service.GameService;
 import chess.service.RoomService;
-import chess.web.dto.RoomDto;
+import chess.domain.Room;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import({RepositoryConfiguration.class, ServiceConfiguration.class})
@@ -74,8 +69,8 @@ class RoomControllerTest {
     @Test
     @DisplayName("방 목록을 불러온다.")
     void loadRooms() {
-        roomService.create(new RoomDto(testName, password));
-        roomService.create(new RoomDto("does", password));
+        roomService.create(new Room(testName, password));
+        roomService.create(new Room("does", password));
         RestAssured.given().log().all()
             .when().get("/api/rooms")
             .then().log().all()
@@ -97,7 +92,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("새로운 게임을 시작하면 200 응답을 받는다.")
     void startNewGame() {
-        RoomDto room = roomService.create(new RoomDto(testName, password));
+        Room room = roomService.create(new Room(testName, password));
 
         RestAssured.given().log().all()
             .when().get("/api/rooms/" + room.getId() + "/start")
@@ -108,7 +103,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("게임을 불러오면 200 응답을 받는다.")
     void loadGame() {
-        int roomId = (int) roomService.create(new RoomDto(testName, password)).getId();
+        int roomId = (int) roomService.create(new Room(testName, password)).getId();
         gameService.startNewGame(roomId);
 
         RestAssured.given().log().all()
@@ -120,7 +115,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("방을 삭제한다.")
     void deleteRoom() {
-        RoomDto room = roomService.create(new RoomDto(testName, password));
+        Room room = roomService.create(new Room(testName, password));
 
         RestAssured.given().log().all()
             .formParam("password", password)

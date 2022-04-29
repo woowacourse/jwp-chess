@@ -1,9 +1,7 @@
 package chess.repository;
 
-import chess.web.dto.RoomDto;
+import chess.domain.Room;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,15 +35,15 @@ public class RoomRepositoryImpl implements RoomRepository {
 	}
 
 	@Override
-	public int save(RoomDto roomDto) {
+	public int save(Room room) {
 		return insertActor.executeAndReturnKey(Map.of(
-				"name", roomDto.getName(),
-				"password", roomDto.getPassword()))
+				"name", room.getName(),
+				"password", room.getPassword()))
 			.intValue();
 	}
 
 	@Override
-	public Optional<RoomDto> findByName(String name) {
+	public Optional<Room> findByName(String name) {
 		String sql = "select * from room where name = :name limit 1";
 		try {
 			return Optional.ofNullable(
@@ -56,11 +54,11 @@ public class RoomRepositoryImpl implements RoomRepository {
 	}
 
 	@Override
-	public Optional<RoomDto> findById(int roomId) {
+	public Optional<Room> findById(int roomId) {
 		String sql = "select * from room where id = :roomId";
 		try {
 			return Optional.ofNullable(
-				jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId),getRoomDtoRowMapper()));
+				jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId), getRoomDtoRowMapper()));
 		} catch (EmptyResultDataAccessException exception) {
 			return Optional.empty();
 		}
@@ -73,15 +71,17 @@ public class RoomRepositoryImpl implements RoomRepository {
 	}
 
 	@Override
-	public List<RoomDto> findAll() {
+	public List<Room> findAll() {
 		String sql = "select * from room";
 		return jdbcTemplate.query(sql, getRoomDtoRowMapper());
 	}
 
-	private RowMapper<RoomDto> getRoomDtoRowMapper() {
-		return (resultSet, rowNum) -> new RoomDto(
+	private RowMapper<Room> getRoomDtoRowMapper() {
+		return (resultSet, rowNum) -> new Room(
 			resultSet.getInt(KEY_INDEX),
-			resultSet.getString(NAME_INDEX),
-			resultSet.getString(PASSWORD_INDEX));
+			new Room(
+				resultSet.getString(NAME_INDEX),
+				resultSet.getString(PASSWORD_INDEX)
+			));
 	}
 }

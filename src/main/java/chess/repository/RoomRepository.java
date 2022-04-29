@@ -1,18 +1,18 @@
 package chess.repository;
 
-import chess.web.dto.RoomDto;
+import chess.domain.Room;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface RoomRepository {
-    int save(RoomDto roomDto);
+    int save(Room room);
 
-    Optional<RoomDto> findByName(String name);
+    Optional<Room> findByName(String name);
 
-    Optional<RoomDto> findById(int roomId);
+    Optional<Room> findById(int roomId);
 
     void deleteById(int id);
 
-    List<RoomDto> findAll();
+    List<Room> findAll();
 }

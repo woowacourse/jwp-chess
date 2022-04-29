@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import chess.web.dto.RoomDto;
+import chess.domain.Room;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @JdbcTest
 public class RoomRepositoryImplTest {
 
-    private static final RoomDto room = new RoomDto("summer", "summer");
+    private static final Room room = new Room("summer", "summer");
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -40,7 +40,7 @@ public class RoomRepositoryImplTest {
     @DisplayName("방 find")
     void find() {
         roomRepository.save(room);
-        RoomDto findRoom = roomRepository.findByName(room.getName()).orElseThrow();
+        Room findRoom = roomRepository.findByName(room.getName()).orElseThrow();
         assertThat(room.getName()).isEqualTo(findRoom.getName());
     }
 
@@ -57,9 +57,9 @@ public class RoomRepositoryImplTest {
     @DisplayName("저장된 전체 방을 찾아온다.")
     void findAll() {
         roomRepository.save(room);
-        roomRepository.save(new RoomDto("does", "does"));
+        roomRepository.save(new Room("does", "does"));
 
-        List<RoomDto> rooms = roomRepository.findAll();
+        List<Room> rooms = roomRepository.findAll();
         assertThat(rooms.size()).isEqualTo(2);
     }
 }

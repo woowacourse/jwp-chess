@@ -10,7 +10,7 @@ import chess.domain.piece.role.Pawn;
 import chess.domain.position.Position;
 import chess.domain.GameState;
 import chess.web.dto.PieceDto;
-import chess.web.dto.RoomDto;
+import chess.domain.Room;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,7 @@ class PieceRepositoryImplTest {
     void init() {
         BoardRepository boardRepository = new BoardRepositoryImpl(dataSource, jdbcTemplate);
         RoomRepository roomRepository = new RoomRepositoryImpl(dataSource, jdbcTemplate);
-        roomId = roomRepository.save(new RoomDto("summer", "summer"));
+        roomId = roomRepository.save(new Room("summer", "summer"));
         boardId = boardRepository.save(roomId, GameState.from(board));
 
         pieceRepository = new PieceRepositoryImpl(dataSource, jdbcTemplate);

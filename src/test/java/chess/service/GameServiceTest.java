@@ -8,20 +8,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 
 import chess.configuration.FakeBoardRepository;
 import chess.configuration.FakePieceRepository;
 import chess.configuration.FakeRoomRepository;
-import chess.configuration.RepositoryConfiguration;
 import chess.exception.UserInputException;
 import chess.repository.RoomRepository;
 import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
 import chess.web.dto.PieceDto;
-import chess.web.dto.RoomDto;
+import chess.domain.Room;
 
 class GameServiceTest {
 
@@ -37,7 +33,7 @@ class GameServiceTest {
 	void init() {
 		gameService = new GameService(new FakePieceRepository(), new FakeBoardRepository());
 		roomRepository = new FakeRoomRepository();
-		roomId = roomRepository.save(new RoomDto(testName, testPassword));
+		roomId = roomRepository.save(new Room(testName, testPassword));
 		roomService = new RoomService(gameService, roomRepository);
 	}
 

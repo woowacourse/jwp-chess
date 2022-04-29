@@ -95,7 +95,7 @@ public class ChessService {
     }
 
     private void validateDuplicate(String title) {
-        if(roomDao.existByTitle(title)){
+        if (roomDao.existByTitle(title)) {
             throw new IllegalArgumentException("이미 존재하는 방 제목입니다.");
         }
     }

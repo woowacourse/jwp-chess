@@ -3,24 +3,24 @@ package chess.web.dao;
 import chess.domain.board.Team;
 import chess.domain.board.Turn;
 import chess.domain.entity.Room;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+@Transactional
 @SpringBootTest
 @Sql("/data.sql")
 class RoomDaoTest {
 
     @Autowired
     private RoomDao roomDao;
+
     private final Long boardId = 1L;
     private static final String TITLE = "제목";
 
@@ -81,7 +81,7 @@ class RoomDaoTest {
 
     @Test
     @DisplayName("이미 존재하는 제목이 있다면 true를 반환한다.")
-    void existByTitle(){
+    void existByTitle() {
         assertThat(roomDao.existByTitle(TITLE)).isTrue();
     }
 

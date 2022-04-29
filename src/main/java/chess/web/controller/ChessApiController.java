@@ -45,7 +45,7 @@ public class ChessApiController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@RequestBody RoomRequestDto.Password request, @PathVariable Long id){
+    public ResponseEntity<Void> delete(@RequestBody RoomRequestDto.Password request, @PathVariable Long id) {
         chessService.delete(request.getPassword(), id);
         return ResponseEntity.ok().build();
     }

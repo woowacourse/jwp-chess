@@ -6,10 +6,11 @@ import chess.web.controller.dto.BoardDto;
 import chess.web.controller.dto.RoomRequestDto;
 import chess.web.controller.dto.RoomResponseDto;
 import chess.web.service.ChessService;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ public class ChessViewController {
     public String getRoomList(Model model) {
         List<Room> rooms = chessService.getRoomList();
         List<RoomResponseDto> titles = rooms.stream()
-                .map( room -> {
+                .map(room -> {
                     Board board = chessService.loadGame(room.getId());
                     return new RoomResponseDto(room, board.isDeadKing());
                 })

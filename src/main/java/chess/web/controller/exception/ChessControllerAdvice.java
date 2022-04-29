@@ -1,4 +1,4 @@
-package chess.web.controller;
+package chess.web.controller.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

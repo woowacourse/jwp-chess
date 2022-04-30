@@ -43,14 +43,19 @@ public class ChessSpringController {
     }
 
     @GetMapping("/game/{gameId}")
-    public String enter(@PathVariable int gameId) {
-        chessGameService.init(gameId);
+    public String enter(@PathVariable String gameId) {
         return "index";
     }
 
     @PostMapping("/game/{gameId}/delete")
-    public String delete(@RequestParam("password") String password, @PathVariable int gameId) {
-        chessGameService.delete(gameId, password);
+    public String delete(@RequestParam("password") String password, @PathVariable int gameId, Model model) {
+        try {
+            chessGameService.delete(gameId, password);
+        } catch (IllegalArgumentException exception) {
+            model.addAttribute("value", exception.getMessage());
+            model.addAttribute("games", chessGameService.find());
+            return "home";
+        }
         return "redirect:/";
     }
 
@@ -78,7 +83,6 @@ public class ChessSpringController {
     @GetMapping("/game/{gameId}/end")
     public ResponseEntity end(@PathVariable int gameId) {
         ScoreDto scoreDto = chessGameService.end(gameId);
-        ;
         return ResponseEntity.ok().body(scoreDto);
     }
 

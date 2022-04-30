@@ -21,9 +21,9 @@
             <button class="enter" onclick="location.href = '/game/{{this.id}}'">{{this.roomTitle}}</button>
             <form id="room_form" action="/game/{{this.id}}/delete" method="post">
                 <input class="room" name="password" placeholder="비밀번호를 입력해주세요.">
-                <button class="room" type="submit">삭제하기</button>
+                <button id="delete" class="room" type="submit">삭제하기</button>
+                <span>{{value}}</span>
             </form>
-            <span>{{this.value}}</span>
         </li>
     </ul>
     <br>

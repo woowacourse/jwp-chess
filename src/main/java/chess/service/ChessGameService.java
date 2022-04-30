@@ -29,7 +29,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessGameService {
 
-    public static final String WIN_MESSAGE = "승리 팀은 : %s 입니다.";
+    private static final String WIN_MESSAGE = "승리 팀은 : %s 입니다.";
+    private static final String PASSWORD_DIFFERENCE = "비밀번호가 일치하지 않습니다.";
+    private static final String NON_REMOVABLE_ROOM = "실행중인 방은 삭제할 수 없습니다.";
+    private static final String REMOVABLE_STATUS = "READY";
 
     private final BoardDao boardDao;
     private final TurnDao turnDao;
@@ -44,8 +47,10 @@ public class ChessGameService {
         this.gameDao = gameDao;
     }
 
-    public int create(GameDto gameDto) {
-        return gameDao.create(gameDto.getRoomTitle(), gameDto.getPassword());
+    public void create(GameDto gameDto) {
+        int id = gameDao.create(gameDto.getRoomTitle(), gameDto.getPassword());
+        turnDao.init(id);
+        gameStatusDao.init(id);
     }
 
     public List<GameDto> find() {
@@ -53,18 +58,13 @@ public class ChessGameService {
     }
 
     public void delete(int id, String password) {
+        String status = gameStatusDao.getStatus(id);
+        if (!REMOVABLE_STATUS.equalsIgnoreCase(status)) {
+            throw new IllegalArgumentException(NON_REMOVABLE_ROOM);
+        }
         boolean isDeleted = gameDao.delete(id, password);
         if (!isDeleted) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-    }
-
-    public void init(int gameId) {
-        try {
-            turnDao.getTurn(gameId);
-        } catch (Exception e) {
-            turnDao.init(gameId);
-            gameStatusDao.init(gameId);
+            throw new IllegalArgumentException(PASSWORD_DIFFERENCE);
         }
     }
 

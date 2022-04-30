@@ -5,6 +5,7 @@ import chess.web.service.mock.MockPieceDao;
 import chess.web.service.mock.MockRoomDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

@@ -232,7 +232,6 @@ function createRoom() {
         },
         body: JSON.stringify(request)
     }).then((response) => {
-        console.log(response)
         if (response.status === 400) {
             window.alert("제목이 중복되었습니다.")
             return;

@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.Color;
+import chess.domain.board.Board;
 import chess.dto.BoardInfoDto;
 import chess.dto.CreateBoardDto;
 import java.util.HashMap;
@@ -14,8 +15,8 @@ public class MockBoardDao implements BoardDao {
     int ID = 1;
 
     @Override
-    public int makeBoard(Color color, CreateBoardDto boardInfoDto) {
-        fakeBoard.put(ID, new FakeBoard(color.name(), boardInfoDto.getName(), boardInfoDto.getPassword()));
+    public int makeBoard(Board board) {
+        fakeBoard.put(ID, new FakeBoard(board.getTurn(), board.getName(), board.getPassword()));
         return ID++;
     }
 
@@ -29,14 +30,14 @@ public class MockBoardDao implements BoardDao {
     @Override
     public void updateTurn(Color turn, int id) {
         FakeBoard oldBoard = this.fakeBoard.get(id);
-        fakeBoard.put(id, new FakeBoard(turn.name(), oldBoard.getName(), oldBoard.getPassword()));
+        fakeBoard.put(id, new FakeBoard(turn, oldBoard.getName(), oldBoard.getPassword()));
     }
 
     @Override
     public Color findTurn(int id) {
         FakeBoard fakeBoard = this.fakeBoard.get(1);
         System.out.println(fakeBoard.getTurn());
-        return Color.from(fakeBoard.getTurn());
+        return fakeBoard.getTurn();
     }
 
     @Override
@@ -48,11 +49,6 @@ public class MockBoardDao implements BoardDao {
     @Override
     public void deleteBoard(int id, String password) {
         fakeBoard = new HashMap<>();
-    }
-
-    @Override
-    public boolean isGameEnd(int id) {
-        return fakeBoard.isEmpty();
     }
 
     @Override

@@ -2,10 +2,9 @@ package chess.dto;
 
 public class PasswordDto {
 
-    private final String password;
+    private String password;
 
-    public PasswordDto() {
-        this.password = "";
+    private PasswordDto() {
     }
 
     public PasswordDto(String password) {

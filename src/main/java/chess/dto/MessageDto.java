@@ -2,7 +2,10 @@ package chess.dto;
 
 public class MessageDto {
 
-    private final String message;
+    private String message;
+
+    private MessageDto() {
+    }
 
     public MessageDto(String message) {
         this.message = message;

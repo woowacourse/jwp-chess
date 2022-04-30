@@ -80,7 +80,7 @@ public class ChessService {
         try {
             room = roomRepository.findById(id);
         } catch (DataAccessException e) {
-            throw new NotFoundException("[ERROR] 해당 방이 존재하지 않습니다.");
+            throw new NotFoundException(1);
         }
         return room;
     }

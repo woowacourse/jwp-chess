@@ -1,10 +1,10 @@
 package chess.exception;
 
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
-public class NotFoundException extends DataAccessException {
+public class NotFoundException extends EmptyResultDataAccessException {
 
-    public NotFoundException(final String msg) {
-        super(msg);
+    public NotFoundException(final int expectedSize) {
+        super(expectedSize);
     }
 }

@@ -128,14 +128,14 @@ class WebChessControllerTest {
         final Long invalidRoomId = -1L;
 
         // responseDto 중에 Error는 Entity가 없이 바로 생성한다.
-        final ErrorResponseDto errorResponseDto = new ErrorResponseDto("[ERROR] 잘못된 입장 요청입니다.");
+        final ErrorResponseDto errorResponseDto = new ErrorResponseDto("[ERROR] 방 정보를 찾을 수 없습니다.");
         final String responseBody = objectMapper.writeValueAsString(errorResponseDto);
 
         // controller에서는 정상요청만 응답하고,
         // service내부에서 throw를 발생시킨 뒤 -> RestControllerAdvice - WebChessControllerAdvice에 걸리게 했었다.
         // -> controller입장에서는 해당 service 호출시 에러가 발생하게 하면 된다.
         given(chessService.getCurrentBoards(invalidRoomId))
-            .willThrow(new NotFoundException("[ERROR] 잘못된 입장 요청입니다."));
+            .willThrow(new NotFoundException(1));
 
         //1. when/then
         mockMvc.perform(get(REQUEST_MAPPING_URI + "/" + invalidRoomId))

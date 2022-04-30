@@ -20,7 +20,7 @@ public class WebChessControllerAdvice {
     @ExceptionHandler(value = NotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleIllegalStateException(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(new ErrorResponseDto(e.getMessage()));
+            .body(new ErrorResponseDto("[ERROR] 방 정보를 찾을 수 없습니다."));
     }
 
     @ExceptionHandler(value = Exception.class)

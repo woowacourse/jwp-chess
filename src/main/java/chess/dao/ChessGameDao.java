@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.domain.ChessGame;
 import chess.domain.player.Team;
-import chess.dto.ChessGameNameDto;
+import chess.dto.ChessGameInfoDto;
 import chess.exception.ExecuteQueryException;
 import java.util.List;
 import org.springframework.dao.DataAccessException;
@@ -33,9 +33,9 @@ public class ChessGameDao {
     }
 
     private void saveChessGame(final String gameName, final String password, final Team turn) {
-        final String sql = "insert into chess_game (name, password, turn) values (?, ?, ?)";
+        final String sql = "insert into chess_game (name, password, turn, running) values (?, ?, ?, ?)";
         try {
-            jdbcTemplate.update(sql, gameName, password, turn.getName());
+            jdbcTemplate.update(sql, gameName, password, turn.getName(), true);
         } catch (DataAccessException e) {
             throw new ExecuteQueryException("게임을 저장할 수 없습니다.");
         }
@@ -77,12 +77,14 @@ public class ChessGameDao {
         }
     }
 
-    public List<ChessGameNameDto> findAllChessGame() {
-        final String sql = "select id, name from chess_game";
+    public List<ChessGameInfoDto> findAllChessGame() {
+        final String sql = "select id, name, turn, running from chess_game";
         try {
-            return jdbcTemplate.query(sql, (rs, rowNum) -> new ChessGameNameDto(
+            return jdbcTemplate.query(sql, (rs, rowNum) -> new ChessGameInfoDto(
                     rs.getInt("id"),
-                    rs.getString("name")
+                    rs.getString("name"),
+                    rs.getString("turn"),
+                    rs.getBoolean("running")
             ));
         } catch (DataAccessException e) {
             throw new ExecuteQueryException("체스 게임 정보 불러오기를 실패했습니다.");
@@ -92,5 +94,15 @@ public class ChessGameDao {
     public int findChessGameByIdAndPassword(final int gameId, final String password) {
         final String sql = "select count(*) from chess_game where id = (?) and password = (?)";
         return jdbcTemplate.queryForObject(sql, Integer.class, gameId, password);
+    }
+
+    public ChessGameInfoDto findChessGame(final int gameId) {
+        final String sql = "select id, name, turn, running from chess_game where id = (?)";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ChessGameInfoDto(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("turn"),
+                rs.getBoolean("running")
+        ), gameId);
     }
 }

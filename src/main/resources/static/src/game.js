@@ -1,22 +1,34 @@
-const newGameButton = document.getElementById("newGame");
-const resumeGameButton = document.getElementById("resumeGame");
 const stopButton = document.getElementById("stopButton");
-const statusButton = document.getElementById("statusButton")
+const statusButton = document.getElementById("statusButton");
 let current = "";
 let destination = "";
 let gameName = "";
 const horizontalId = ["a", "b", "c", "d", "e", "f", "g", "h"]
 const verticalId = ["1", "2", "3", "4", "5", "6", "7", "8"]
 
-newGameButton.addEventListener("click", async function () {
-  let chessMap = await newGame();
-  await setChessMap(chessMap);
-});
+window.onload = async function () {
+  const loadGamePath = "/api" + location.pathname;
 
-resumeGameButton.addEventListener("click", async function () {
-  let chessMap = await resumeGame();
-  await setChessMap(chessMap)
-})
+  let chessGame = await fetch(loadGamePath, {
+    method: "GET"
+  }).then(handleErrors)
+  .catch(function (error) {
+    alert(error.message);
+  })
+  chessGame = await chessGame.json();
+  const chessMap = chessGame.chessMap;
+  const turn = chessGame.turn;
+
+  let isRunning = chessGame.running;
+  if (isRunning !== true) {
+    alert("게임이 종료되었습니다.");
+    location.href = "/";
+  } else {
+    await setChessMap(chessMap);
+    document.getElementById("turnInfo").innerHTML = "현재 턴: "
+        + turn;
+  }
+};
 
 statusButton.addEventListener("click", async function () {
   await getStatus();
@@ -30,53 +42,11 @@ stopButton.addEventListener("click", async function () {
   }
 });
 
-async function newGame() {
-  gameName = document.getElementById('newRoomName').value;
-  const password = document.getElementById('new-room-password').value;
-  const passwordCheck = document.getElementById(
-      'new-room-password-check').value;
-
-  if (gameName === '' || password === '' || passwordCheck === '') {
-    alert("방 이름, 패스워드를 입력해주세요.");
-    return;
-  }
-
-  let chessGame = await fetch("/game", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      chessGameName: gameName,
-      password: password,
-      passwordCheck: passwordCheck
-    }),
-  }).then(handleErrors)
-  .catch(function (error) {
-    alert(error.message);
-  });
-  chessGame = await chessGame.json();
-  document.getElementById("turnInfo").innerHTML = "현재 턴: " + chessGame.turn;
-  return chessGame.chessMap;
-}
-
-async function resumeGame() {
-  gameName = document.getElementById('existRoomName').value;
-
-  let boardAndTurnInfo = await fetch("/load?name=" + gameName, {
-    method: "GET"
-  }).then(handleErrors)
-  .catch(function (error) {
-    alert(error.message);
-  })
-  boardAndTurnInfo = await boardAndTurnInfo.json();
-  document.getElementById("turnInfo").innerHTML = "현재 턴: "
-      + boardAndTurnInfo.turn;
-  return boardAndTurnInfo.chessMap;
-}
-
 async function getStatus() {
-  let status = await fetch("/status?name=" + gameName)
+  const path = location.pathname.split("/");
+  const gameId = path[2];
+
+  let status = await fetch("/status/" + gameId)
   .then(handleErrors)
   .catch(function (error) {
     alert(error.message);
@@ -128,8 +98,11 @@ async function movePiece(current, destination) {
 }
 
 async function requestMovePiece(current, destination) {
-  let boardAndTurnInfo = await fetch("/move", {
-    method: "POST",
+  const path = location.pathname.split("/");
+  const gameId = path[2];
+
+  let boardAndTurnInfo = await fetch("/move/" + gameId, {
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
@@ -146,6 +119,7 @@ async function requestMovePiece(current, destination) {
   let isRunning = boardAndTurnInfo.running;
   if (isRunning !== true) {
     alert("킹이 죽어 게임이 종료됩니다.");
+    location.href = "/";
   }
   document.getElementById("turnInfo").innerHTML = "현재 턴: "
       + boardAndTurnInfo.turn;
@@ -161,7 +135,7 @@ async function handleErrors(response) {
   return response;
 }
 
-function setChessMap(chessMap) {
+async function setChessMap(chessMap) {
   for (let file = 0; file < 8; file++) {
     for (let rank = 1; rank <= 8; rank++) {
       const eachDiv = document.getElementById(toFileName(file) + rank);

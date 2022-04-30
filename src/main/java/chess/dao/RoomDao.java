@@ -33,6 +33,15 @@ public class RoomDao {
         }
     }
 
+    public Optional<Object> findRoomById(Long roomId) {
+        final String SQL = "select name from room where id = (?)";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, Integer.class, roomId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public String findTurn(final long roomId) {
         final String SQL = "select turn from room where id = (?)";
         return jdbcTemplate.queryForObject(SQL, String.class, roomId);

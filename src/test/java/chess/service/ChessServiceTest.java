@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.domain.game.dto.MoveDTO;
+import chess.domain.game.dto.MoveRequest;
 import chess.domain.gameRoom.ChessGame;
 import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;
@@ -42,7 +42,7 @@ class ChessServiceTest {
     @DisplayName("체스 이동 이후, 방을 나가더라도 진행한 체스보드를 불러올 수 있다")
     void moveChess() {
         String gameId = chessService.addChessGame("zero", "1234");
-        chessService.movePiece(gameId, new MoveDTO("B2", "B4", "WHITE"));
+        chessService.movePiece(gameId, new MoveRequest("B2", "B4", "WHITE"));
         ChessGame chessGame = chessService.getChessGame(gameId);
         Map<Position, Piece> board = chessGame.getChessBoard().getBoard();
 

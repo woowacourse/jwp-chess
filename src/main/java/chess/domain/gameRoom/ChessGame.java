@@ -50,7 +50,7 @@ public final class ChessGame {
         return chessBoard;
     }
 
-    public boolean isGameSet() {
+    public boolean isKingDied() {
         return !chessBoard.checkKingExist();
     }
 

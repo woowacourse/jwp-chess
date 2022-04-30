@@ -1,11 +1,11 @@
 package chess.domain.gameRoom.dto;
 
-public final class ChessGameRoomShowInfoDTO {
+public final class ChessGameRoomShowInfoResponse {
 
     private final String id;
     private final String name;
 
-    public ChessGameRoomShowInfoDTO(String id, String name) {
+    public ChessGameRoomShowInfoResponse(String id, String name) {
         this.id = id;
         this.name = name;
     }

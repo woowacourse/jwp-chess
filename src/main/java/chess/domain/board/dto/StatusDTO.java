@@ -1,4 +1,4 @@
-package chess.domain.game.dto;
+package chess.domain.board.dto;
 
 import chess.domain.gameRoom.GameStatus;
 

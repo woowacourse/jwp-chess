@@ -4,12 +4,12 @@ import chess.domain.piece.property.Team;
 
 import java.io.Serializable;
 
-public class MoveDTO implements Serializable {
+public class MoveRequest implements Serializable {
     private String source;
     private String target;
     private Team team;
 
-    public MoveDTO(String source, String target, String team) {
+    public MoveRequest(String source, String target, String team) {
         this.source = source;
         this.target = target;
         this.team = Team.valueOf(team);
@@ -41,7 +41,7 @@ public class MoveDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "MoveDTO{" +
+        return "MoveRequest{" +
                 "source='" + source + '\'' +
                 ", target='" + target + '\'' +
                 ", team=" + team +

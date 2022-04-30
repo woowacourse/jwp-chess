@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.domain.gameRoom.ChessGame;
 import chess.domain.gameRoom.dao.ChessGameRoomDAO;
-import chess.domain.gameRoom.dto.ChessGameRoomPassInfoDTO;
+import chess.domain.gameRoom.dto.ChessGameRoomPassInfoResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class ChessGameRoomDAOTest {
         chessGame.setPassword("1234");
         String id = chessGameRoomDAO.addGame(chessGame);
 
-        ChessGameRoomPassInfoDTO chessGameRoom = chessGameRoomDAO.findPassGameById(id);
+        ChessGameRoomPassInfoResponse chessGameRoom = chessGameRoomDAO.findPassGameById(id);
 
         assertAll(
                 () -> assertEquals(chessGameRoom.getName(), "zero"),

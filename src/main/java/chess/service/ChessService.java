@@ -1,20 +1,20 @@
 package chess.service;
 
-import chess.domain.game.dto.MoveDTO;
-import chess.domain.gameRoom.dto.ChessGameRoomPassInfoDTO;
-import chess.domain.piece.property.Team;
-import chess.domain.position.Position;
-import chess.domain.gameRoom.ChessGame;
-import chess.domain.gameRoom.dao.ChessGameRoomDAO;
 import chess.domain.game.Movement;
 import chess.domain.game.dao.MovementDAO;
-import chess.domain.gameRoom.dto.ChessGameRoomShowInfoDTO;
-
-import java.util.List;
+import chess.domain.game.dto.MoveRequest;
+import chess.domain.gameRoom.ChessGame;
+import chess.domain.gameRoom.dao.ChessGameRoomDAO;
+import chess.domain.gameRoom.dto.ChessGameRoomPassInfoResponse;
+import chess.domain.gameRoom.dto.ChessGameRoomShowInfoResponse;
+import chess.domain.piece.property.Team;
+import chess.domain.position.Position;
 import chess.exception.InvalidDBFailException;
 import chess.exception.InvalidMoveException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ChessService {
@@ -46,15 +46,15 @@ public class ChessService {
         return chessGame;
     }
 
-    public ChessGame movePiece(final String gameId, final MoveDTO moveDTO) {
+    public ChessGame movePiece(final String gameId, final MoveRequest moveRequest) {
         final ChessGame chessGame = getChessGame(gameId);
-        final String source = moveDTO.getSource();
-        final String target = moveDTO.getTarget();
-        final Team team = moveDTO.getTeam();
+        final String source = moveRequest.getSource();
+        final String target = moveRequest.getTarget();
+        final Team team = moveRequest.getTeam();
 
         validateCurrentTurn(chessGame, team);
         move(chessGame, new Movement(Position.of(source), Position.of(target)), team);
-        if (chessGame.isGameSet()) {
+        if (chessGame.isKingDied()) {
             chessGameDAO.updateGameEnd(gameId);
         }
         return chessGame;
@@ -74,17 +74,17 @@ public class ChessService {
     }
 
     @Transactional(readOnly = true)
-    public List<ChessGameRoomShowInfoDTO> getGames() {
+    public List<ChessGameRoomShowInfoResponse> getGames() {
         return chessGameDAO.findActiveGames();
     }
 
     @Transactional(readOnly = true)
-    public ChessGameRoomShowInfoDTO findGameById(String id) {
+    public ChessGameRoomShowInfoResponse findGameById(String id) {
         return chessGameDAO.findShowGameById(id);
     }
 
     public void deleteGameByIdAndPassword(String id, String password) {
-        ChessGameRoomPassInfoDTO chessGameRoom = chessGameDAO.findPassGameById(id);
+        ChessGameRoomPassInfoResponse chessGameRoom = chessGameDAO.findPassGameById(id);
         if (!chessGameRoom.getPassword().equals(password)){
             throw new InvalidDBFailException("[ERROR] DELETE를 실패하였습니다.");
         }

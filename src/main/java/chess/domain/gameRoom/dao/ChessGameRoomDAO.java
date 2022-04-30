@@ -1,17 +1,16 @@
 package chess.domain.gameRoom.dao;
 
 import chess.domain.gameRoom.ChessGame;
-import chess.domain.gameRoom.dto.ChessGameRoomPassInfoDTO;
-import chess.domain.gameRoom.dto.ChessGameRoomShowInfoDTO;
-
-import java.sql.PreparedStatement;
-import java.util.List;
-
+import chess.domain.gameRoom.dto.ChessGameRoomPassInfoResponse;
+import chess.domain.gameRoom.dto.ChessGameRoomShowInfoResponse;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.util.List;
 
 @Repository
 public class ChessGameRoomDAO {
@@ -20,8 +19,8 @@ public class ChessGameRoomDAO {
     public static final String NAME = "name";
     public static final String PASSWORD = "password";
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ChessGameRoomShowInfoDTO> chessGameRoomInfoDTORowMapper = (rs, rowNum) ->
-            new ChessGameRoomShowInfoDTO(
+    private final RowMapper<ChessGameRoomShowInfoResponse> chessGameRoomInfoDTORowMapper = (rs, rowNum) ->
+            new ChessGameRoomShowInfoResponse(
                     rs.getString(ID),
                     rs.getString(NAME)
             );
@@ -43,21 +42,21 @@ public class ChessGameRoomDAO {
         return String.valueOf(keyHolder.getKey().longValue());
     }
 
-    public List<ChessGameRoomShowInfoDTO> findActiveGames() {
+    public List<ChessGameRoomShowInfoResponse> findActiveGames() {
         String sql = "SELECT id, name FROM CHESS_GAME WHERE IS_END = false";
         return jdbcTemplate.query(sql, chessGameRoomInfoDTORowMapper);
     }
 
-    public ChessGameRoomShowInfoDTO findShowGameById(final String gameId) {
+    public ChessGameRoomShowInfoResponse findShowGameById(final String gameId) {
         String sql = "SELECT id, name FROM CHESS_GAME WHERE ID = ? AND IS_END = FALSE ORDER BY created_at";
         return jdbcTemplate.queryForObject(sql, chessGameRoomInfoDTORowMapper, gameId);
     }
 
-    public ChessGameRoomPassInfoDTO findPassGameById(final String gameId) {
+    public ChessGameRoomPassInfoResponse findPassGameById(final String gameId) {
         String sql = "SELECT id, name, password FROM CHESS_GAME WHERE ID = ? AND IS_END = FALSE ORDER BY created_at";
         return jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) ->
-                new ChessGameRoomPassInfoDTO(
+                new ChessGameRoomPassInfoResponse(
                         rs.getString(ID),
                         rs.getString(NAME),
                         rs.getString(PASSWORD)

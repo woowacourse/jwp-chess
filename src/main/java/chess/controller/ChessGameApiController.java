@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.domain.game.dto.BoardDTO;
-import chess.domain.game.dto.MoveDTO;
+import chess.domain.game.dto.BoardResponse;
+import chess.domain.game.dto.MoveRequest;
 import chess.domain.gameRoom.ChessGame;
 import chess.service.ChessService;
 import org.springframework.http.HttpStatus;
@@ -18,19 +18,19 @@ public class ChessGameApiController {
     }
 
     @GetMapping("/chess/game/{id}/board")
-    public ResponseEntity<BoardDTO> showBoard(@PathVariable String id) {
+    public ResponseEntity<BoardResponse> showBoard(@PathVariable String id) {
         ChessGame chessGame = chessService.getChessGame(id);
         return new ResponseEntity<>(
-                new BoardDTO(chessGame),
+                new BoardResponse(chessGame),
                 HttpStatus.OK
         );
     }
 
     @PostMapping("/chess/game/{id}/move")
-    public ResponseEntity<BoardDTO> movePiece(@PathVariable String id, MoveDTO moveDTO) {
-        ChessGame chessGame = chessService.movePiece(id, moveDTO);
+    public ResponseEntity<BoardResponse> movePiece(@PathVariable String id, MoveRequest moveRequest) {
+        ChessGame chessGame = chessService.movePiece(id, moveRequest);
         return new ResponseEntity<>(
-                new BoardDTO(chessGame),
+                new BoardResponse(chessGame),
                 HttpStatus.OK
         );
     }

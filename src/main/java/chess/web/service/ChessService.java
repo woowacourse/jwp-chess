@@ -145,7 +145,7 @@ public class ChessService {
     private boolean canRemoveRoom(Long roomId, String password) {
         Optional<Room> room = roomDao.findById(roomId);
         if (room.isEmpty()) {
-            return false;
+            throw new NoSuchElementException("삭제할 체스방이 없습니다.");
         }
         return canRemoveRoom(roomId, password, room.get());
     }

@@ -31,6 +31,10 @@ function deleteRoom(roomId) {
         body: password,
     }).then(res => res.json())
         .then(value => {
+            if (value["statusCode"] === 400) {
+                alert(value["errorMessage"]);
+                return;
+            }
             if (value) {
                 alert(roomId + " 방이 삭제되었습니다.");
                 location.reload();

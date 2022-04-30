@@ -20,4 +20,12 @@ public class WebChessExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseDto(e.getMessage()));
     }
+
+    @ExceptionHandler(value = {Exception.class})
+    private ResponseEntity<Object> generalHandleConflict(RuntimeException e) {
+        e.printStackTrace();
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseDto("서버에서 에러가 발생했습니다."));
+    }
 }

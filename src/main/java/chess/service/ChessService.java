@@ -141,7 +141,7 @@ public class ChessService {
         return StatusResponseDto.of(new Score(board.getBoard()));
     }
 
-    public RoomResponseDto update(final Long id, final RoomRequestDto roomRequestDto) {
+    public RoomResponseDto updateRoom(final Long id, final RoomRequestDto roomRequestDto) {
         final RoomEntity targetRoom = getValidRoom(id);
         final RoomEntity roomEntity = roomRequestDto.toEntity();
         targetRoom.patch(roomEntity);

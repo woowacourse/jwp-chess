@@ -32,7 +32,7 @@ class RoomRepositoryImplTest {
     void insert() {
         final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
         final RoomEntity insertRoom = roomRepository.insert(roomEntity);
-        assertThat(insertRoom).isEqualTo(roomEntity);
+        assertThat(insertRoom.getName()).isEqualTo(roomEntity.getName());
     }
 
     @DisplayName("룸의 현재 차례를 업데이트한다.")
@@ -53,5 +53,18 @@ class RoomRepositoryImplTest {
         roomRepository.updateGameOver(id);
 
         assertThat(roomRepository.findById(id).isGameOver()).isTrue();
+    }
+
+
+    @DisplayName("입력된 룸의 상태로 룸의 정보를 변경한다.")
+    @Test
+    void save() {
+        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final RoomEntity targetRoom = roomRepository.insert(roomEntity);
+        final RoomEntity nameChangedRoom = new RoomEntity(null, "체스 고수만", null, null);
+        targetRoom.patch(nameChangedRoom);
+        roomRepository.save(targetRoom);
+
+        assertThat(roomRepository.findById(targetRoom.getId()).getName()).isEqualTo("체스 고수만");
     }
 }

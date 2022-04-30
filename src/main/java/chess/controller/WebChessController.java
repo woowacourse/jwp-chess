@@ -63,10 +63,10 @@ public class WebChessController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<RoomResponseDto> updateName(@PathVariable Long id,
+    public ResponseEntity<RoomResponseDto> updateRoom(@PathVariable Long id,
                                                       @RequestBody RoomRequestDto roomRequestDto) {
         return ResponseEntity.status(HttpStatus.OK)
-            .body(chessService.update(id, roomRequestDto));
+            .body(chessService.updateRoom(id, roomRequestDto));
     }
 
     @GetMapping("/{id}/status")

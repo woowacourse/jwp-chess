@@ -191,16 +191,54 @@ class WebChessControllerTest {
     @DisplayName("점수 계산 요청이 성공하면, 200 status 및 점수 데이터를 응답한다.")
     @Test
     void calculateStatus() throws Exception {
-        final Long roomID = 1L;
-
+        final Long roomId = 1L;
         final StatusResponseDto statusResponseDto = StatusResponseDto.of(new Score(BoardFactory.initialize()));
         final String responseBody = objectMapper.writeValueAsString(statusResponseDto);
 
         given(chessService.calculateStatus(anyLong()))
             .willReturn(statusResponseDto);
 
-        mockMvc.perform(get(REQUEST_MAPPING_URI + "/" + roomID + "/status"))
+        mockMvc.perform(get(REQUEST_MAPPING_URI + "/" + roomId + "/status"))
             .andExpect(status().isOk())
+            .andExpect(content().string(responseBody));
+    }
+
+    @DisplayName("방 제목 변경 요청이 성공하면, 200 status 및 변경된 방 데이터를 응답한다.")
+    @Test
+    void update_success() throws Exception {
+        final Long roomId = 1L;
+        final RoomRequestDto roomRequestDto = new RoomRequestDto("바뀐 제목");
+        final String requestBody = objectMapper.writeValueAsString(roomRequestDto);
+        final RoomResponseDto roomResponseDto = RoomResponseDto.of(new RoomEntity(roomId, "바뀐 제목", "white", false));
+        final String responseBody = objectMapper.writeValueAsString(roomResponseDto);
+
+        given(chessService.updateRoom(anyLong(), any()))
+            .willReturn(roomResponseDto);
+
+        mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId)
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(responseBody));
+    }
+
+    @DisplayName("방 제목 변경 요청이 실패하면, 404 status(NotFoundException) 및 예외 메세지를 응답한다.")
+    @Test
+    void update_fail() throws Exception {
+        final Long invalidRoomId = -1L;
+        final RoomRequestDto roomRequestDto = new RoomRequestDto("바뀐 제목");
+        final String requestBody = objectMapper.writeValueAsString(roomRequestDto);
+
+        final ErrorResponseDto errorResponseDto = new ErrorResponseDto("[ERROR] 방 정보를 찾을 수 없습니다.");
+        final String responseBody = objectMapper.writeValueAsString(errorResponseDto);
+
+        given(chessService.updateRoom(anyLong(), any()))
+            .willThrow(new NotFoundException(1));
+
+        mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + invalidRoomId)
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
             .andExpect(content().string(responseBody));
     }
 

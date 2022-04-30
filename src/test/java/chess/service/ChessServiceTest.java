@@ -73,11 +73,10 @@ class ChessServiceTest {
     void findGame_메서드는_현재_게임의_상태와_체스말_정보를_반환한다() {
         GameDto actual = service.findGame(1);
 
-        GameDto expected = new NewGame().play(new InitEvent())
+        GameDto expected = GameDto.of(1, new NewGame().play(new InitEvent())
                 .play(new MoveEvent("e2 e4"))
                 .play(new MoveEvent("d7 d5"))
-                .play(new MoveEvent("f1 b5"))
-                .toDtoOf(1);
+                .play(new MoveEvent("f1 b5")));
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -94,12 +93,11 @@ class ChessServiceTest {
         MoveRouteDto moveRouteDto = new MoveRouteDto(1, "a7", "a5");
         GameDto actual = service.playGame(moveRouteDto);
 
-        GameDto expected = new NewGame().play(new InitEvent())
+        GameDto expected = GameDto.of(1, new NewGame().play(new InitEvent())
                 .play(new MoveEvent("e2 e4"))
                 .play(new MoveEvent("d7 d5"))
                 .play(new MoveEvent("f1 b5"))
-                .play(new MoveEvent("a7 a5"))
-                .toDtoOf(1);
+                .play(new MoveEvent("a7 a5")));
 
         assertThat(actual).isEqualTo(expected);
     }

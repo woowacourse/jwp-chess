@@ -3,7 +3,7 @@ package chess.domain.game;
 import chess.domain.board.Board;
 import chess.domain.event.Event;
 import chess.domain.game.statistics.GameResult;
-import chess.dto.GameDto;
+import chess.domain.game.statistics.GameState;
 import chess.util.BoardMapGeneratorUtil;
 
 public final class NewGame implements Game {
@@ -30,7 +30,12 @@ public final class NewGame implements Game {
     }
 
     @Override
-    public GameDto toDtoOf(int gameId) {
+    public Board getBoard() {
+        throw new UnsupportedOperationException(GAME_NOT_STARTED_EXCEPTION_MESSAGE);
+    }
+
+    @Override
+    public GameState getState() {
         throw new UnsupportedOperationException(GAME_NOT_STARTED_EXCEPTION_MESSAGE);
     }
 }

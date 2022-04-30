@@ -55,7 +55,7 @@ public class ChessService {
 
     public GameDto findGame(int gameId) {
         Game game = currentSnapShotOf(gameId);
-        return game.toDtoOf(gameId);
+        return GameDto.of(gameId, game);
     }
 
     @Transactional
@@ -67,7 +67,7 @@ public class ChessService {
 
         eventDao.save(gameId, moveEvent);
         updateGameState(gameId, game);
-        return game.toDtoOf(gameId);
+        return GameDto.of(gameId, game);
     }
 
     private void updateGameState(int gameId, Game game) {

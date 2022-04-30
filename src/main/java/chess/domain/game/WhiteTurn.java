@@ -22,7 +22,7 @@ final class WhiteTurn extends Running {
     }
 
     @Override
-    protected GameState getState() {
+    public GameState getState() {
         return GameState.WHITE_TURN;
     }
 

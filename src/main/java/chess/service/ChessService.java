@@ -132,6 +132,13 @@ public class ChessService {
         }
     }
 
+    public void validateStatus(final int id) {
+        GameDto gameDto = gameDao.find(id);
+        if (!GameStatusDto.isFinished(gameDto.getStatus())) {
+            throw new IllegalArgumentException("게임이 진행중이므로 삭제할 수 없습니다.");
+        }
+    }
+
     public void remove(final int id) {
         pieceDao.removeAll(id);
         gameDao.removeAll(id);

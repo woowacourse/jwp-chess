@@ -24,28 +24,28 @@ public class GameController {
     }
 
     @PostMapping("/{id}/start")
-    public ResponseEntity<BoardDto> start(@PathVariable Long id) {
-        return ResponseEntity.ok().body(gameService.start(id));
+    public BoardDto start(@PathVariable Long id) {
+        return gameService.start(id);
     }
 
     @PostMapping("/{id}/end")
-    public ResponseEntity<BoardDto> end(@PathVariable Long id) {
-        return ResponseEntity.ok().body(gameService.end(id));
+    public BoardDto end(@PathVariable Long id) {
+        return gameService.end(id);
     }
 
     @GetMapping("/{id}/status")
-    public ResponseEntity<ResultDto> status(@PathVariable Long id) {
-        return ResponseEntity.ok().body(gameService.status(id));
+    public ResultDto status(@PathVariable Long id) {
+        return gameService.status(id);
     }
 
     @GetMapping("/{id}/load")
-    public ResponseEntity<BoardDto> load(@PathVariable Long id) {
-        return ResponseEntity.ok().body(gameService.load(id));
+    public BoardDto load(@PathVariable Long id) {
+        return gameService.load(id);
     }
 
     @PostMapping("/{id}/move")
-    public ResponseEntity<BoardDto> move(@PathVariable Long id,
+    public BoardDto move(@PathVariable Long id,
         @RequestBody MoveDto moveDto) {
-        return ResponseEntity.ok().body(gameService.move(id, moveDto));
+        return gameService.move(id, moveDto);
     }
 }

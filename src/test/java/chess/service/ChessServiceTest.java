@@ -20,61 +20,24 @@ import chess.exception.NotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
+@Sql({"/schema.sql"})
 class ChessServiceTest {
 
     @Autowired
     private ChessService chessService;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
     private RoomDao roomDao;
 
     @Autowired
     private ChessPieceDao chessPieceDao;
-
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS room");
-        jdbcTemplate.execute(""
-                + "CREATE TABLE room"
-                + "("
-                + "    room_id      INT         PRIMARY KEY AUTO_INCREMENT,"
-                + "    name         VARCHAR(10) NOT NULL,"
-                + "    game_status  VARCHAR(10) NOT NULL,"
-                + "    current_turn VARCHAR(10) NOT NULL,"
-                + "    password     VARCHAR(255) NOT NULL,"
-                + "    is_delete    BOOLEAN      NOT NULL DEFAULT FALSE"
-                + ")");
-
-        jdbcTemplate.execute("DROP TABLE IF EXISTS chess_piece");
-        jdbcTemplate.execute(""
-                + "CREATE TABLE chess_piece"
-                + "("
-                + "    chess_piece_id INT         PRIMARY KEY AUTO_INCREMENT,"
-                + "    room_id        INT         NOT NULL,"
-                + "    position       VARCHAR(10) NOT NULL,"
-                + "    chess_piece    VARCHAR(10) NOT NULL,"
-                + "    color          VARCHAR(10) NOT NULL,"
-                + "    FOREIGN KEY (room_id) REFERENCES room (room_id) ON DELETE CASCADE"
-                + ")");
-    }
-
-    @AfterEach
-    void clear() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS chess_piece");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS room");
-    }
 
     @Test
     @DisplayName("방에 해당하는 기물이 존재하지 않으면 예외가 터진다.")

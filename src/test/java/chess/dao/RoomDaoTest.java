@@ -10,37 +10,18 @@ import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
 import chess.exception.NotFoundException;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
-@JdbcTest
+@SpringBootTest
+@Sql({"/schema.sql"})
 class RoomDaoTest {
 
-    private RoomDao roomDao;
-
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setUp() {
-        roomDao = new RoomDao(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE IF EXISTS room");
-        jdbcTemplate.execute(""
-                + "CREATE TABLE room"
-                + "("
-                + "    room_id      INT         PRIMARY KEY AUTO_INCREMENT,"
-                + "    name         VARCHAR(10) NOT NULL,"
-                + "    game_status  VARCHAR(10) NOT NULL,"
-                + "    current_turn VARCHAR(10) NOT NULL,"
-                + "    password     VARCHAR(255) NOT NULL,"
-                + "    is_delete    BOOLEAN      NOT NULL DEFAULT FALSE"
-                + ")");
-    }
+    private RoomDao roomDao;
 
     @Test
     @DisplayName("이름과 비밀번호가 주어지면 새로운 방을 생성한다.")

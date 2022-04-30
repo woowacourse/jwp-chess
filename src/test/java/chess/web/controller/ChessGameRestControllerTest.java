@@ -35,7 +35,7 @@ class ChessGameRestControllerTest {
                 .body(createRoomRequestDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/create")
+                .when().post("/room")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE);

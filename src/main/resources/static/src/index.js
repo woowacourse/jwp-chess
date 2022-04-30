@@ -11,7 +11,7 @@ const createRoomButtonInitializer = {
             let roomTitle = document.getElementById("room-title").value;
             let roomPassword = document.getElementById("room-password").value;
 
-            fetch('/create', {
+            fetch('/room', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

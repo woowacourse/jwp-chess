@@ -42,7 +42,7 @@ public class ChessGameRestController {
         return service.move(moveDto, roomId);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/room")
     public CreateRoomResultDto createRoom(@RequestBody CreateRoomRequestDto createRoomRequestDto) {
         return service.createRoom(createRoomRequestDto);
     }

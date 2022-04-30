@@ -4,6 +4,7 @@ import chess.dao.entity.GameEntity;
 import chess.domain.GameState;
 import java.util.List;
 import javax.sql.DataSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -38,6 +39,8 @@ public class GameDao {
             return insertGame.executeAndReturnKey(parameters).longValue();
         } catch (DuplicateKeyException e) {
             throw new DuplicateKeyException("이미 존재하는 게임입니다.");
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("올바르지 않은 요청값입니다.");
         }
     }
 

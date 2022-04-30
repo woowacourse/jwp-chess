@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.mockito.Mockito;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 
@@ -23,10 +24,18 @@ public class FakeGameDao extends GameDao {
 
     @Override
     public Long save(GameEntity gameEntity) {
+        checkDataIntegrityViolation(gameEntity);
         checkDuplicatedName(gameEntity.getName());
         gameEntity.setId(autoIncrementId);
         games.put(autoIncrementId, gameEntity);
         return autoIncrementId++;
+    }
+
+    private void checkDataIntegrityViolation(GameEntity gameEntity) {
+        if (gameEntity.getName() == null || gameEntity.getPassword() == null || gameEntity.getSalt() == null
+                || gameEntity.getState() == null) {
+            throw new DataIntegrityViolationException("올바르지 않은 요청값입니다.");
+        }
     }
 
     private void checkDuplicatedName(String name) {

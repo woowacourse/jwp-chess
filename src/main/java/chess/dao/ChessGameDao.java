@@ -18,9 +18,14 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createNewChessGame(final ChessGame chessGame, final String gameName, final String password) {
+    public void saveChessGame(final String gameName, final String password, final String turn) {
         validateDuplicate(gameName);
-        saveChessGame(gameName, password, chessGame.getTurn());
+        final String sql = "insert into chess_game (name, password, turn, running) values (?, ?, ?, ?)";
+        try {
+            jdbcTemplate.update(sql, gameName, password, turn, true);
+        } catch (DataAccessException e) {
+            throw new ExecuteQueryException("게임을 저장할 수 없습니다.");
+        }
     }
 
     private void validateDuplicate(final String gameName) {
@@ -29,15 +34,6 @@ public class ChessGameDao {
 
         if (count > 0) {
             throw new IllegalArgumentException("중복된 게임 이름입니다.");
-        }
-    }
-
-    private void saveChessGame(final String gameName, final String password, final Team turn) {
-        final String sql = "insert into chess_game (name, password, turn, running) values (?, ?, ?, ?)";
-        try {
-            jdbcTemplate.update(sql, gameName, password, turn.getName(), true);
-        } catch (DataAccessException e) {
-            throw new ExecuteQueryException("게임을 저장할 수 없습니다.");
         }
     }
 

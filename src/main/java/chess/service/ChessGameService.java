@@ -40,7 +40,7 @@ public class ChessGameService {
         final String password = createGameDto.getPassword();
         final ChessGame chessGame = initializeChessGame();
 
-        chessGameDao.createNewChessGame(chessGame, gameName, password);
+        chessGameDao.saveChessGame(gameName, password, chessGame.getTurn().getName());
         final int gameId = findGameIdByGameName(gameName);
         pieceDao.savePieces(chessGame.getCurrentPlayer(), gameId);
         pieceDao.savePieces(chessGame.getOpponentPlayer(), gameId);

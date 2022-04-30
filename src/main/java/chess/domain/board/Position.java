@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 
 public class Position implements Comparable<Position> {
 
-    private final static Map<String, Position> CACHE;
+    private static final Map<String, Position> CACHE;
 
     static {
         CACHE = createAll().stream()
-                .collect(toMap(Position::convertPositionToString, position -> position));
+            .collect(toMap(Position::convertPositionToString, position -> position));
     }
 
     private final Column column;
@@ -28,11 +28,11 @@ public class Position implements Comparable<Position> {
 
     private static List<Position> createAll() {
         return Arrays.stream(Row.values())
-                .flatMap(row ->
-                        Arrays.stream(Column.values())
-                                .map(column -> new Position(column, row))
-                )
-                .collect(Collectors.toList());
+            .flatMap(row ->
+                Arrays.stream(Column.values())
+                    .map(column -> new Position(column, row))
+            )
+            .collect(Collectors.toList());
     }
 
     public static Position valueOf(final String rawPosition) {

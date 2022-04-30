@@ -59,6 +59,7 @@
         - 5xx : 서버의 문제로 에러가 발생함
 - [x] ChessWebController의 `createRoom`의 newId는 board의 id 인지 room의 id 인지 명확하면 좋을 것 같다
     - board, room 테이블을 합치면서 room의 id를 사용하도록 수정했다.
+    - [ ] boardId라는 이름을 사용하던 변수 등을 roomId로 수정하기
 - [x] 보통 자원을 지울때는 pk로 지우게 되는데 Room을 지울 때 pk가 아닌 boardId 값으로 지우게 된다. 혹시 같은 boardId를 여러 자원이 가진다면 모두 지우게 되는 것이 의도한 것일까?
     - board와 room 테이블을 합치면서 board_id가 아닌 roomId로 관리하도록 수정했다.
     - PieceDao의 `deleteByboardId()`는 roomId를 만족하는 모든 기물을 삭제하도록 `deleteAllByRoomId()`로 수정하였다.
@@ -73,6 +74,20 @@
     - 저는 데이터를 읽기만 하는 경우 `@Transactional(readOnly = true)`으로 트랜잭션 어노테이션을 사용했고 나머지는 기본 설정으로 적용했습니다.
 - [x] 게임을 하는 페이지에서 목록으로 이동하는 버튼이 있으면 어떨까?
     - 더 많은 가치를 만들어 내는 것이 없는지, 불편함은 없는지 등 조금 더 사용자 관점에서 생각해보도록 하자!
+- [ ] 체스방 삭제 시 id는 맞지만 비밀번호가 틀린 경우 어떻게 처리할 것인가?
+- [ ] Controller에 대한 테스트도 추가해보자.
+- [ ] API는 endpoint에 prefix로 `/api`를 붙이기도 한다!
+- [ ] RESTFul API에 대해 공부해보고 endpoint를 수정해보자![참고자료](https://restfulapi.net/)
+    - [ ] `/chess/{boardId}/load`는 체스 보드 하나를 반환하는 API이다. RESTFul API를 공부해보고 수정해보자!
+    - [ ] 자원의 상태를 "변경"하는 경우 Post보다 Put, Patch를 사용해보자.
+    - [ ] restart는 자원의 상태를 변경하는데 Get이 적합할까?
+- [ ] Advice에서 특정 에러를 제외한 다른 에러가 발생할 경우 어떻게 처리할 것인가?
+- [ ] RoomDao의 `updateTurnById()`는 Long을 반환하는데 이것이 사용되는 곳이 있을까?
+- [ ] 전체적으로 테스트의 이름과 DisplayName 등을 확인하고 수정하기
+- [ ] RoomDaoTest 파일의 가장 마지막 줄에 공백이 없으면 깃헙에서 경고를 보여주는 이유가 무엇일까?
+- [ ] 변수명에 Optional인지 적을 필요는 없다!
+- [ ] 제거하려는 체스방이 없으면 false가 아닌 에러를 발생시키고 프론트에서 적절한 정보를 보여주는 것이 어떨까?
+- [ ] `!isDeadKing()`과 `isKingAlive()`의 차이점이 무엇이 있을까?
 
 - 기존 `JdbcTemplate`없이 영속성 레이어를 구현할 때와 `JdbcTemplate`를 활용할 때의 차이점은 무엇일까?
     - 가장 체감되게 느낀 점 세 가지

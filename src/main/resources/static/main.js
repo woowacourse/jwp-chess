@@ -31,7 +31,7 @@ const fetchWinner = async (id) => {
 }
 
 const move = async (from, to, id) => {
-    await fetch("move/" + id, {
+    let res = await fetch("move/" + id, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -39,6 +39,10 @@ const move = async (from, to, id) => {
         body: JSON.stringify({from, to})
     });
 
+    res = await res.json();
+    if (res.message != "") {
+        await alert(res.message);
+    }
     await render(id);
 }
 

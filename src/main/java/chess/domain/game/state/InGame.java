@@ -26,7 +26,7 @@ public abstract class InGame implements GameState {
 
         MoveResult moveResult = board.executeCommand(from, to, getCurrentPieceColor());
         if (!moveResult.isMoveSuccess()) {
-            throw new IllegalStateException("말을 이동하는 것에 실패했습니다.");
+            throw new IllegalStateException(moveResult.getMessage());
         }
 
         return getNextTurnState();

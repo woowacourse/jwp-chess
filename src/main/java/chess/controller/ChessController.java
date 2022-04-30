@@ -94,14 +94,10 @@ public class ChessController {
 
     @PostMapping("/move/{id}")
     public CommandResultDto movePiece(@RequestBody MovePieceDto movePieceDto, @PathVariable Integer id) {
-        try {
-            chessService.movePiece(
-                UpdatePiecePositionDto.of(id, movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition()));
-        } catch (IllegalStateException e) {
-            return CommandResultDto.of(false, e.getMessage());
-        }
+        chessService.movePiece(
+            UpdatePiecePositionDto.of(id, movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition()));
 
-        return CommandResultDto.of(true, "성공하였습니다.");
+        return new CommandResultDto("");
     }
 
     @PostMapping("/room")
@@ -123,16 +119,12 @@ public class ChessController {
         int gameId = deleteRoomDto.getId();
         String inputPassword = deleteRoomDto.getPassword();
 
-        try {
-            chessService.deleteRoom(gameId, inputPassword);
-        } catch (IllegalArgumentException e) {
-            return CommandResultDto.of(false, e.getMessage());
-        }
-        return CommandResultDto.of(true, "삭제되었습니다!");
+        chessService.deleteRoom(gameId, inputPassword);
+        return new CommandResultDto("삭제되었습니다!");
     }
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-    public String handle(RuntimeException e) {
-        return e.getMessage();
+    public CommandResultDto handle(RuntimeException e) {
+        return new CommandResultDto(e.getMessage());
     }
 }

@@ -83,7 +83,7 @@ class ChessGameRestControllerTest {
                 .body(moveDto)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/move/1")
+                .when().patch("/move/1")
                 .then().log().all();
 //                .statusCode(HttpStatus.OK.value())
 //                .contentType(MediaType.APPLICATION_JSON_VALUE);

@@ -43,6 +43,11 @@ public class ChessGameService {
         return roomDao.isStartable(roomId);
     }
 
+    public PlayResultDto play(int roomId) {
+        Map<String, Piece> boardDto = createBoardDto(roomId);
+        return new PlayResultDto(boardDto, findTurn(roomId).name());
+    }
+
     public MoveResultDto move(MoveDto moveDto, int roomId) {
         ChessGame chessGame = getChessGame(roomId);
         String turn = chessGame.getTurn();
@@ -72,11 +77,6 @@ public class ChessGameService {
             boardDto.put(position.toString(), piece);
         }
         return boardDto;
-    }
-
-    public PlayResultDto play(int roomId) {
-        Map<String, Piece> boardDto = createBoardDto(roomId);
-        return new PlayResultDto(boardDto, findTurn(roomId).name());
     }
 
     private void saveAll(ChessGame chessGame, int roomId) {

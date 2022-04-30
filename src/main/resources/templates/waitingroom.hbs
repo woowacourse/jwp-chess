@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>대기실</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>제목</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#rooms}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td><a href="/{{id}}/board">{{roomName}}</a></td>
+                    <form action="/{{id}}/delete" method="post">
+                        <td><input type="text" name="password"></td>
+                        <td><input type="submit"></td>
+                    </form>
+                </tr>
+            {{/rooms}}
+        </tbody>
+    </table>
+    <form action="/" method="post">
+        <div>
+            제목: <input type="text" name="roomname">
+        </div>
+        <div>
+            비밀번호: <input type="text" name="password">
+        </div>
+        <div>
+            <input type="submit" value="방 만들기">
+        </div>
+    </form>
+</body>
+</html>

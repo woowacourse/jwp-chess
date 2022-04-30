@@ -5,15 +5,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GameStateDao {
 
-    boolean hasPlayingGame();
+    boolean hasPlayingGame(final int roomNumber);
 
-    void saveState(final String state);
+    void saveState(final int roomNumber, final String state);
 
-    void saveTurn(final String turn);
+    void saveTurn(final int roomNumber, final String turn);
 
-    String getGameState();
+    String getGameState(final int roomNumber);
 
-    String getTurn();
+    String getTurn(final int roomNumber);
 
-    void removeGameState();
+    void removeGameState(final int roomNumber);
 }

@@ -3,6 +3,7 @@ package chess.dto;
 import java.util.Objects;
 
 public class ScoreDto {
+
     private final double whiteScore;
     private final double blackScore;
 

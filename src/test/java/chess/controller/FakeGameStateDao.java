@@ -13,32 +13,32 @@ public class FakeGameStateDao implements GameStateDao {
     }
 
     @Override
-    public boolean hasPlayingGame() {
+    public boolean hasPlayingGame(int roomNumber) {
         return !gameState.equals("nothing");
     }
 
     @Override
-    public void saveState(final String state) {
+    public void saveState(int roomNumber, final String state) {
         this.gameState = state;
     }
 
     @Override
-    public void saveTurn(final String turn) {
+    public void saveTurn(int roomNumber, final String turn) {
         this.turn = turn;
     }
 
     @Override
-    public String getGameState() {
+    public String getGameState(int roomNumber) {
         return gameState;
     }
 
     @Override
-    public String getTurn() {
+    public String getTurn(int roomNumber) {
         return turn;
     }
 
     @Override
-    public void removeGameState() {
+    public void removeGameState(int roomNumber) {
         gameState = "nothing";
         turn = "nothing";
     }

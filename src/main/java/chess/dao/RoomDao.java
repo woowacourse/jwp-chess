@@ -12,6 +12,8 @@ public interface RoomDao {
 
     RoomEntity findById(int roomId);
 
+    List<RoomEntity> findAllEntity();
+
     int save(String roomName, GameStatus gameStatus, Color currentTurn, String password);
 
     boolean isExistName(String roomName);

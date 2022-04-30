@@ -21,6 +21,12 @@ public class Room {
         this.chessGame = new ChessGame(ChessBoardFactory.createChessBoard());
     }
 
+    public Room(final RoomName name, final Password password, final ChessGame chessGame) {
+        this.name = name;
+        this.password = password;
+        this.chessGame = chessGame;
+    }
+
     public void startGame() {
         chessGame.start();
     }

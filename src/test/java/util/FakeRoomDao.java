@@ -21,8 +21,12 @@ public class FakeRoomDao implements RoomDao {
     @Override
     public RoomEntity findById(final int roomId) {
         final Room room = storage.get(roomId);
+        return toEntity(room);
+    }
+
+    private RoomEntity toEntity(final Room room) {
         return new RoomEntity(
-                roomId,
+                room.id,
                 room.name,
                 room.gameStatus.getValue(),
                 room.currentTurn.getValue(),
@@ -30,7 +34,15 @@ public class FakeRoomDao implements RoomDao {
                 false
         );
     }
-    
+
+    @Override
+    public List<RoomEntity> findAllEntity() {
+        return storage.values()
+                .stream()
+                .map(this::toEntity)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn,
                     final String password) {

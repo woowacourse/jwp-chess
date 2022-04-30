@@ -44,6 +44,22 @@ public class RoomEntity {
         return roomId;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getGameStatus() {
+        return gameStatus;
+    }
+
+    public String getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     public boolean isDelete() {
         return isDelete;
     }

@@ -40,6 +40,20 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
+    public List<RoomEntity> findAllEntity() {
+        final String sql = "SELECT * FROM room WHERE is_delete = ?";
+        final RowMapper<RoomEntity> rowMapper = (resultSet, rowNum) -> new RoomEntity(
+                Integer.parseInt(resultSet.getString("room_id")),
+                resultSet.getString("name"),
+                resultSet.getString("game_status"),
+                resultSet.getString("current_turn"),
+                resultSet.getString("password"),
+                Boolean.parseBoolean(resultSet.getString("is_delete"))
+        );
+        return jdbcTemplate.query(sql, rowMapper, false);
+    }
+
+    @Override
     public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn,
                     final String password) {
         final String sql = "INSERT INTO room (name, game_status, current_turn, password) VALUES (?, ?, ?, ?)";

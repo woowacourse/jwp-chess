@@ -8,6 +8,7 @@ import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
+import chess.repository.RoomRepository;
 import java.util.List;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,15 @@ import org.springframework.stereotype.Service;
 public class RoomService {
 
     private final RoomDao roomDao;
+    private final RoomRepository roomRepository;
 
-    public RoomService(final RoomDao roomDao) {
+    public RoomService(final RoomDao roomDao, final RoomRepository roomRepository) {
         this.roomDao = roomDao;
+        this.roomRepository = roomRepository;
     }
 
     public List<RoomResponseDto> findAll() {
-        return roomDao.findAll();
+        return roomRepository.getAll();
     }
 
     public boolean isExistRoom(final int roomId) {

@@ -17,7 +17,7 @@ import chess.model.state.running.WhiteTurn;
 
 @JdbcTest
 @Sql({"/db/schema.sql"})
-class StateDaoImplTest {
+class StateDaoTest {
 
     private StateDao stateDao;
 
@@ -26,7 +26,7 @@ class StateDaoImplTest {
 
     @BeforeEach
     void setUp() {
-        stateDao = new StateDaoImpl(jdbcTemplate);
+        stateDao = new StateDao(jdbcTemplate);
     }
 
     @DisplayName("데이터를 삽입한다.")

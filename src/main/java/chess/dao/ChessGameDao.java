@@ -2,16 +2,51 @@ package chess.dao;
 
 import java.util.List;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
 import chess.dto.ChessGameDto;
 import chess.entity.ChessGameEntity;
 
-public interface ChessGameDao {
+@Repository
+public class ChessGameDao {
 
-    void insert(final ChessGameDto chessGameDto);
+    private final JdbcTemplate jdbcTemplate;
 
-    ChessGameEntity find(final Long id);
+    public ChessGameDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-    int delete(final Long id);
+    private final RowMapper<ChessGameEntity> chessGameEntityRowMapper = (resultSet, rowNum) -> new ChessGameEntity(
+        resultSet.getLong("id"),
+        resultSet.getString("title"),
+        resultSet.getString("password")
+    );
 
-    List<ChessGameEntity> findAll();
+    public void insert(ChessGameDto chessGameDto) {
+        final String sql = "insert into game (title, password) values (?, ?)";
+        jdbcTemplate.update(sql, chessGameDto.getTitle(), chessGameDto.getPassword());
+    }
+
+    public ChessGameEntity find(Long id) {
+        final String sql = "select * from game where id = ?";
+        return jdbcTemplate.queryForObject(
+            sql,
+            (resultSet, rowNum) -> new ChessGameEntity(
+                resultSet.getLong("id"),
+                resultSet.getString("title"),
+                resultSet.getString("password")
+            ), id);
+    }
+
+    public int delete(Long id) {
+        final String sql = "delete from game where id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
+
+    public List<ChessGameEntity> findAll() {
+        final String sql = "select * from game";
+        return jdbcTemplate.query(sql, chessGameEntityRowMapper);
+    }
 }

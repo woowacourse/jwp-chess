@@ -19,16 +19,16 @@ import chess.model.position.Position;
 
 @JdbcTest
 @Sql({"/db/schema.sql"})
-public class SquareDaoImplTest {
+public class SquareDaoTest {
 
-    private SquareDaoImpl squareDao;
+    private SquareDao squareDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        squareDao = new SquareDaoImpl(jdbcTemplate);
+        squareDao = new SquareDao(jdbcTemplate);
     }
 
     @DisplayName("데이터를 삽입한다.")

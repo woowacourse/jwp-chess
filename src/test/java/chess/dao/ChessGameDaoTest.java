@@ -14,16 +14,16 @@ import chess.dto.ChessGameDto;
 
 @JdbcTest
 @Sql({"/db/schema.sql"})
-class ChessGameDaoImplTest {
+class ChessGameDaoTest {
 
-    private ChessGameDaoImpl chessGameDao;
+    private ChessGameDao chessGameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        chessGameDao = new ChessGameDaoImpl(jdbcTemplate);
+        chessGameDao = new ChessGameDao(jdbcTemplate);
     }
 
     @DisplayName("체스 게임방 데이터를 삽입한다.")

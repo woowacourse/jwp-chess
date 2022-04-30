@@ -52,7 +52,7 @@ public class ChessGameApiController {
     @GetMapping("/api/load/{gameId}")
     public ResponseEntity<ChessGameDto> loadGame(@PathVariable int gameId) {
         final char[][] chessMap = chessGameService.loadChessMap(gameId).getChessMap();
-        final ChessGameInfoDto info = chessGameService.findGameInfo(gameId);
+        final ChessGameInfoDto info = chessGameService.findGameInfoById(gameId);
 
         return ResponseEntity.ok(new ChessGameDto(info.getName(), chessMap, info.getTurn(), info.isRunning()));
     }

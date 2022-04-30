@@ -127,7 +127,7 @@ public class ChessGameService {
         return chessGameDao.findAllChessGame();
     }
 
-    public ChessGameInfoDto findGameInfo(final int gameId) {
+    public ChessGameInfoDto findGameInfoById(final int gameId) {
         return chessGameDao.findChessGame(gameId);
     }
 }

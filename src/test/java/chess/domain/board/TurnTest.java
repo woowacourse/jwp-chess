@@ -1,4 +1,4 @@
-package chess.board;
+package chess.domain.board;
 
 import chess.domain.board.Team;
 import chess.domain.board.Turn;

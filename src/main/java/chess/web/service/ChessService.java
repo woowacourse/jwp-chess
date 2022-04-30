@@ -147,11 +147,14 @@ public class ChessService {
         if (room.isEmpty()) {
             throw new NoSuchElementException("삭제할 체스방이 없습니다.");
         }
-        return canRemoveRoom(roomId, password, room.get());
+        if (!matchPassword(room.get(), password)) {
+            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+        }
+        return canRemoveRoom(roomId, room.get());
     }
 
-    private boolean canRemoveRoom(Long roomId, String password, Room room) {
-        return !isRunningChess(roomId, room) && matchPassword(room, password);
+    private boolean canRemoveRoom(Long roomId, Room room) {
+        return !isRunningChess(roomId, room);
     }
 
     private boolean isRunningChess(Long roomId, Room room) {

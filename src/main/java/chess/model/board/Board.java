@@ -31,14 +31,15 @@ public class Board {
         board.replace(source, new Empty());
     }
 
-    public boolean isKingDead() {
-        return countKing() == 1;
+    public long countKing() {
+        return countKing(Team.WHITE) + countKing(Team.BLACK);
     }
 
-    public long countKing() {
+    public long countKing(Team team) {
         return board.values()
                 .stream()
                 .filter(Piece::isKing)
+                .filter(piece -> piece.isTeam(team))
                 .count();
     }
 

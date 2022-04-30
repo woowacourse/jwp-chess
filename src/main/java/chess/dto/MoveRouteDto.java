@@ -7,7 +7,7 @@ public class MoveRouteDto {
     private String source;
     private String target;
 
-    public MoveRouteDto() {
+    private MoveRouteDto() {
     }
 
     public MoveRouteDto(String source, String target) {

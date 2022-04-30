@@ -5,7 +5,7 @@ public class CreateGameRequest {
     private String title;
     private String password;
 
-    public CreateGameRequest() {
+    private CreateGameRequest() {
     }
 
     public CreateGameRequest(String title, String password) {

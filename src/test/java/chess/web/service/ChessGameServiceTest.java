@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Piece;
+import chess.domain.piece.StartedPawn;
+import chess.domain.piece.position.Position;
+import chess.domain.piece.property.Color;
 import chess.web.dao.ChessBoardDao;
 import chess.web.dao.PlayerDao;
 import chess.web.dto.MoveDto;
-import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
 import chess.web.service.fakedao.FakeChessBoardDao;
 import chess.web.service.fakedao.FakePlayerDao;
@@ -40,12 +42,13 @@ public class ChessGameServiceTest {
 
     @Test
     void move() {
-        MoveResultDto moveResultDto = chessGameService.move(new MoveDto("a2", "a4"));
+        chessBoardDao.save(Position.of("a2"), new StartedPawn(Color.WHITE));
+        PlayResultDto playResultDto = chessGameService.move(new MoveDto("a2", "a4"));
 
-        boolean isGameOver = moveResultDto.getIsGameOver();
-        boolean isMovable = moveResultDto.getIsMovable();
+        Map<String, Piece> board = playResultDto.getBoard();
+        boolean isFinished = playResultDto.getIsFinished();
 
-        assertThat(isGameOver).isNotNull();
-        assertThat(isMovable).isNotNull();
+        assertThat(isFinished).isNotNull();
+        assertThat(board).isNotNull();
     }
 }

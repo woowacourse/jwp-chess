@@ -8,7 +8,6 @@ import chess.domain.game.GameResult;
 import chess.domain.game.Room;
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Pieces;
-import chess.dto.GameResultDto;
 import chess.dto.LogInDto;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -68,8 +67,8 @@ public class ChessGameService {
         return getGameStatus(id).getChessmen();
     }
 
-    public GameResultDto calculateGameResult(String id) {
-        return new GameResultDto(GameResult.calculate(getGameStatus(id).getChessmen()));
+    public GameResult calculateGameResult(String id) {
+        return GameResult.calculate(getGameStatus(id).getChessmen());
     }
 
     public void cleanGame(LogInDto logInDto) {

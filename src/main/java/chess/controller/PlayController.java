@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.domain.command.MoveCommand;
+import chess.domain.piece.Color;
 import chess.service.ChessGameService;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class PlayController {
     public ResponseEntity<String> move(@PathVariable String id, @RequestBody MoveCommand moveCommand) {
         chessGameService.move(id, moveCommand);
 
-        if (!chessGameService.calculateGameResult(id).getWinner().equals("없음")) {
+        if (!chessGameService.calculateGameResult(id).getWinner().equals(Color.NONE)) {
             chessGameService.changeToEnd(id);
         }
         return ResponseEntity.ok().build();

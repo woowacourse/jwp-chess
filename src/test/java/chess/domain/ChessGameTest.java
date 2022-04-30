@@ -15,7 +15,6 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
-import chess.dto.GameResultDto;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -150,10 +149,9 @@ public class ChessGameTest {
     void calculateGameResult() {
         double actual = GameResult.calculate(chessGame.getChessmen())
                 .getBlackScore();
-        double expected = new GameResultDto(BLACK.getName(), 38.0, 38.0)
+        double expected = new GameResult(BLACK, 38.0, 38.0)
                 .getBlackScore();
 
         assertThat(actual).isEqualTo(expected);
     }
-
 }

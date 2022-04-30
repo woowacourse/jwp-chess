@@ -6,9 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.domain.command.MoveCommand;
+import chess.domain.game.GameResult;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
-import chess.dto.GameResultDto;
 import chess.dto.LogInDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,10 +57,10 @@ class ChessGameServiceTest {
     @DisplayName("calculateGameResult 아이디에 맞는 게임 결과를 불러온다.")
     @Test
     void calculateGameResult() {
-        GameResultDto resultDto = chessGameService.calculateGameResult(GAME_ID);
+        GameResult resultDto = chessGameService.calculateGameResult(GAME_ID);
         assertThat(resultDto.getBlackScore()).isEqualTo(38);
         assertThat(resultDto.getWhiteScore()).isEqualTo(38);
-        assertThat(resultDto.getWinner()).isEqualTo("없음");
+        assertThat(resultDto.getWinner().getName()).isEqualTo("없음");
     }
 
     @DisplayName("cleanGame로 아이디에 맞는 방을 지운다.")

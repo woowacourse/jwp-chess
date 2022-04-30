@@ -111,17 +111,17 @@ public class ChessGameService {
         return prepareChessGame(chessGameDto);
     }
 
+    private void preparePieces(ChessGameDto chessGameDto) {
+        pieceDao.deleteByChessGameId(chessGameDto.getId());
+        pieceDao.savePieces(chessGameDto.getId(), createPieces());
+    }
+
     private ChessGameDto prepareChessGame(ChessGameDto chessGameDto) {
         Score initialScore = new Score(new BigDecimal("38.0"));
         ChessGameDto newChessGameDto = new ChessGameDto(chessGameDto.getId(),
                 GameStatus.READY, initialScore, initialScore, Color.WHITE, chessGameDto.getWinner());
         chessGameDao.updateChessGame(newChessGameDto);
         return newChessGameDto;
-    }
-
-    private void preparePieces(ChessGameDto chessGameDto) {
-        pieceDao.deleteByChessGameId(chessGameDto.getId());
-        pieceDao.savePieces(chessGameDto.getId(), createPieces());
     }
 
     private List<PieceDto> createPieces() {

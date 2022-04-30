@@ -31,17 +31,13 @@ public class ChessGameController {
     public String chessGame(@RequestParam("chess-game-id") int chessGameId, Model model) {
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
 
-        if (!isGameRunning(chessGameDto)) {
+        if (isGameFinished(chessGameDto)) {
             chessGameDto = service.prepareNewChessGame(chessGameDto);
         }
 
         model.addAttribute("pieces", pieceDao.findPieces(chessGameDto.getId()));
         model.addAttribute("chessGame", chessGameDto);
         return "chess-game";
-    }
-
-    private boolean isGameRunning(ChessGameDto chessGameDto) {
-        return chessGameDto.getStatus() == GameStatus.RUNNING;
     }
 
     @PostMapping("/chess-game/move")

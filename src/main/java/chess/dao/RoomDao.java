@@ -33,7 +33,7 @@ public class RoomDao {
         }
     }
 
-    public Optional<Object> findRoomById(Long roomId) {
+    public Optional<Object> findRoomById(long roomId) {
         final String SQL = "select name from room where id = (?)";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(SQL, Integer.class, roomId));

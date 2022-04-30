@@ -24,7 +24,7 @@ public class ViewController {
     }
 
     @GetMapping("/game/{roomId}")
-    public String moveGameRoom(@PathVariable Long roomId, HttpSession session) {
+    public String moveGameRoom(@PathVariable long roomId, HttpSession session) {
         chessGameService.checkRoomExist(roomId);
 
         session.setAttribute("roomId", roomId);

@@ -30,13 +30,13 @@ public class ChessGameService {
         this.pieceDao = pieceDao;
     }
 
-    public void checkRoomExist(Long roomId) {
+    public void checkRoomExist(long roomId) {
         if (!roomDao.findRoomById(roomId).isPresent()) {
             throw new NoSuchDbDataException("잘못된 URL 입니다.");
         }
     }
 
-    public Long createNewRoom(final NewRoomInfo newRoomInfo) {
+    public long createNewRoom(final NewRoomInfo newRoomInfo) {
         validatePassword(newRoomInfo);
         String roomName = newRoomInfo.getName();
         if (roomDao.findRoomIdByName(roomName).isPresent()) {

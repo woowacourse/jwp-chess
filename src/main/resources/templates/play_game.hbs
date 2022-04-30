@@ -10,7 +10,7 @@
 </head>
 <body>
 <section class="header__container">
-    <h1>{{name}}</h1>
+    <h1 id="game_id">{{name}}</h1>
     <div class="game_info__container">
         <span>게임 ID: {{id}} | 게임 상태: </span>
         {{/metadata}}
@@ -29,6 +29,11 @@
     </div>
     {{/board}}
 </section>
+{{/snapshot}}
+<form action="/game/{{metadata.id}}" id="login-form">
+    <input type="password" required class="password_input" name="password" placeholder="비밀번호"/>
+    <input type="submit" value="로그인!"/>
+</form>
 <section>
     <p>현재 턴에 맞는 색상의 체스말을 클릭한 후, 이동하고 싶은 장소를 클릭!</p>
     <p>다른 체스말을 이동하고 싶다면 선택된 체스말을 다시 한번 클릭!</p>
@@ -36,8 +41,7 @@
 <section>
     <a href="/">뒤로가기!</a>
 </section>
-<section id={{state}} class="popup">
-{{/snapshot}}
+<section id={{snapshot.state}} class="popup">
     <div class="popup__container">
         <div class="popup__title">게임이 종료되었습니다!</div>
         <a href="/result/{{metadata.id}}">게임결과 보러 가기!</a>
@@ -45,5 +49,6 @@
 </section>
 {{/response}}
 <script src="/scripts/update-game.js"></script>
+<script src="/scripts/login.js"></script>
 </body>
 </html>

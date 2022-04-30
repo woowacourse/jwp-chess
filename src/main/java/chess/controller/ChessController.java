@@ -81,7 +81,6 @@ public class ChessController {
 
     @PostMapping("/room/{roomId}/end")
     public ResponseEntity<Void> endGame(@PathVariable("roomId") int id, @RequestParam("password") String password) {
-        System.out.println("password" + password);
         if (!gameService.isEnd(id)) {
             throw new IllegalArgumentException("진행중인 게임은 삭제할 수 없어~");
         }

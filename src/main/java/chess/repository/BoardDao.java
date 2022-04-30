@@ -19,7 +19,7 @@ public class BoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(ChessBoard chessBoard, Long gameId) {
+    public void save(ChessBoard chessBoard, int gameId) {
         String sql = "insert into board (position, symbol, color, game_id) values (?, ?, ?, ?)";
 
         List<Object[]> board = chessBoard.getPieces().entrySet().stream()
@@ -30,10 +30,10 @@ public class BoardDao {
         jdbcTemplate.batchUpdate(sql, board);
     }
 
-    public ChessBoard find() {
-        String sql = "select position, symbol, color from board";
+    public ChessBoard findById(int id) {
+        String sql = "select position, symbol, color from board where game_id = ?";
 
-        List<Map<String, Object>> squares = jdbcTemplate.queryForList(sql);
+        List<Map<String, Object>> squares = jdbcTemplate.queryForList(sql, id);
         Map<Position, Piece> board = new HashMap<>();
         for (Map<String, Object> square : squares) {
             board.put(
@@ -43,8 +43,13 @@ public class BoardDao {
         return new ChessBoard(board);
     }
 
-    public int update(Position position, Piece piece, Long gameId) {
+    public int update(Position position, Piece piece, int gameId) {
         String sql = "update board set symbol = (?), color = (?) where game_id = (?) and position = (?)";
         return jdbcTemplate.update(sql, piece.getSymbol().name(), piece.getColor().name(), gameId, position.toString());
+    }
+
+    public void delete(int gameId) {
+        String sql = "delete from board where game_id = ?";
+        jdbcTemplate.update(sql, gameId);
     }
 }

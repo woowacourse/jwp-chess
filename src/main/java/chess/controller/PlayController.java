@@ -19,12 +19,12 @@ public class PlayController {
         this.chessGameService = chessGameService;
     }
 
-    @PutMapping("/{gameId}/move")
-    public ResponseEntity<String> move(@PathVariable String gameId, @RequestBody MoveDto moveDto) {
-        chessGameService.move(gameId, moveDto);
+    @PutMapping("/{id}/move")
+    public ResponseEntity<String> move(@PathVariable String id, @RequestBody MoveDto moveDto) {
+        chessGameService.move(id, moveDto);
 
-        if (!chessGameService.calculateGameResult(gameId).getWinner().equals("없음")) {
-            chessGameService.changeToEnd(gameId);
+        if (!chessGameService.calculateGameResult(id).getWinner().equals("없음")) {
+            chessGameService.changeToEnd(id);
         }
         return ResponseEntity.ok().build();
     }

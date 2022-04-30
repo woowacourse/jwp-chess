@@ -1,27 +1,27 @@
 package chess.dto;
 
 public class LogInDto {
-    private String gameId;
-    private String gamePassword;
+    private String id;
+    private String password;
 
-    public LogInDto(String gameId, String gamePassword) {
-        this.gameId = gameId;
-        this.gamePassword = gamePassword;
+    public LogInDto(String id, String password) {
+        this.id = id;
+        this.password = password;
     }
 
-    public String getGameId() {
-        return gameId;
+    public String getId() {
+        return id;
     }
 
-    public String getGamePassword() {
-        return gamePassword;
+    public String getPassword() {
+        return password;
     }
 
     @Override
     public String toString() {
         return "LogInDto{" +
-                "gameId='" + gameId + '\'' +
-                ", gamePassword='" + gamePassword + '\'' +
+                "gameId='" + id + '\'' +
+                ", gamePassword='" + password + '\'' +
                 '}';
     }
 }

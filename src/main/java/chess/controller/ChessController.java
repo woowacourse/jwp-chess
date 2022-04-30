@@ -32,41 +32,40 @@ public class ChessController {
     }
 
     @PostMapping("/exit")
-    public @ResponseBody ResponseEntity<Void> deleteGame(@ModelAttribute LogInDto logInDto) {
-        chessGameService.validateEnd(logInDto.getGameId());
+    public @ResponseBody
+    ResponseEntity<Void> deleteGameAndGoHome(@ModelAttribute LogInDto logInDto) {
+        chessGameService.validateEnd(logInDto.getId());
         chessGameService.cleanGame(logInDto);
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .location(URI.create(LOCALHOST_8080))
-                .build();
+        return ResponseEntity.status(HttpStatus.SEE_OTHER).location(URI.create(LOCALHOST_8080)).build();
     }
 
     @GetMapping("/exit")
-    public @ResponseBody ResponseEntity<Void> exitAndDeleteGame(@RequestParam String gameId) {
-        chessGameService.changeToEnd(gameId);
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .location(URI.create(LOCALHOST_8080))
-                .build();
+    public @ResponseBody
+    ResponseEntity<Void> endGameAndGoHome(@RequestParam String id) {
+        chessGameService.changeToEnd(id);
+        return ResponseEntity.status(HttpStatus.SEE_OTHER).location(URI.create(LOCALHOST_8080)).build();
     }
 
     @PostMapping("/init")
-    public @ResponseBody ResponseEntity<Void> initGame(@ModelAttribute LogInDto logInDto) {
+    public @ResponseBody
+    ResponseEntity<Void> initGame(@ModelAttribute LogInDto logInDto) {
+        System.err.println("게임생성됨" + logInDto);
         chessGameService.createGame(logInDto);
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .location(URI.create(LOCALHOST_8080 + "/game/" + logInDto.getGameId()))
-                .build();
+                .location(URI.create(LOCALHOST_8080 + "/game/" + logInDto.getId())).build();
     }
 
     @PostMapping("/start")
-    public @ResponseBody ResponseEntity<Void> startGame(@ModelAttribute LogInDto logInDto) {
+    public @ResponseBody
+    ResponseEntity<Void> startGame(@ModelAttribute LogInDto logInDto) {
         chessGameService.validateLogIn(logInDto);
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .location(URI.create(LOCALHOST_8080 + "/game/" + logInDto.getGameId()))
-                .build();
+                .location(URI.create(LOCALHOST_8080 + "/game/" + logInDto.getId())).build();
     }
 
-    @GetMapping(path = "/game/{gameId}")
-    public ModelAndView getGame(@PathVariable String gameId) {
-        return getGameModel(gameId);
+    @GetMapping(path = "/game/{id}")
+    public ModelAndView getGame(@PathVariable String id) {
+        return getGameModel(id);
     }
 
     @ExceptionHandler(Exception.class)
@@ -81,11 +80,11 @@ public class ChessController {
         return modelAndView;
     }
 
-    private ModelAndView getGameModel(String gameId) {
+    private ModelAndView getGameModel(String id) {
         ModelAndView modelAndView = new ModelAndView("game");
-        modelAndView.addObject("pieces", BoardView.of(new PiecesDto(chessGameService.getPieces(gameId))).getBoardView());
-        modelAndView.addObject("gameId", gameId);
-        modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
+        modelAndView.addObject("pieces", BoardView.of(new PiecesDto(chessGameService.getPieces(id))).getBoardView());
+        modelAndView.addObject("id", id);
+        modelAndView.addObject("status", chessGameService.calculateGameResult(id));
         return modelAndView;
     }
 }

@@ -19,9 +19,9 @@
             <label for="game-entry">
             </label>
             <br>
-            방 제목 : <input type="text" name="gameId" value="1234">
+            방 제목 : <input type="text" name="id" value="1234">
             <br>
-            비밀번호 : <input type="password" name="gamePassword" value="1234">
+            비밀번호 : <input type="password" name="password" value="1234">
             <br>
             <button type="submit">새로운 방 생성</button>
         </form>
@@ -35,16 +35,17 @@
         {{#each rooms}}
             <div class="box">
                 <form class="inContent" action="/start" method="post">
-                    <input type="hidden" name="gameId" value="{{this.gameId}}">
-                    <input type="hidden" name="gamePassword" value="{{this.gamePassword}}">
-                    방 : {{this.gameId}}<button type="submit" >입장하기</button>
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <input type="hidden" name="password" value="{{this.password}}">
+                    방 : {{this.id}}
+                    <button type="submit">입장하기</button>
                 </form>
 
                 <form class="inContent" action="/exit" method="post">
-                    <input type="hidden" name="gameId" value="{{this.gameId}}">
+                    <input type="hidden" name="id" value="{{this.id}}">
                     비밀번호
-                    <input type="password" name="gamePassword" value="">
-                    <button type="submit" >삭제하기</button>
+                    <input type="password" name="password" value="">
+                    <button type="submit">삭제하기</button>
                 </form>
             </div>
         {{/each}}

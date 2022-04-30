@@ -6,7 +6,7 @@ async function start() {
         headers: {'Content-Type': 'application/json'},
         method: "post",
         body: JSON.stringify({
-            gameId : gameId
+            gameId: gameId
         })
     }).then((res) => {
         gameId = res.text();

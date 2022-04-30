@@ -20,25 +20,25 @@ public class GameDao {
     }
 
     public void create(LogInDto logInDto) {
+        System.err.println("생성" + logInDto);
         final String sql = "insert into game (id, password, turn) values (?, ?, ?)";
-
-        jdbcTemplate.update(sql, logInDto.getGameId(), logInDto.getGamePassword(), Color.BLACK.getName());
+        jdbcTemplate.update(sql, logInDto.getId(), logInDto.getPassword(), Color.BLACK.getName());
     }
 
-    public Room findNoPasswordRoom(String gameId) {
+    public Room findNoPasswordRoom(String id) {
         final String sql = "select * from game where id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Room(
                             rs.getString("id"),
                             Color.of(rs.getString("turn")),
                             rs.getBoolean("force_end_flag")),
-                    gameId);
+                    id);
         } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException(NO_GAME_ERROR_MESSAGE);
         }
     }
 
-    public Room findRoom(String gameId) {
+    public Room findRoom(String id) {
         final String sql = "select * from game where id = ?";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Room(
@@ -46,7 +46,7 @@ public class GameDao {
                             rs.getString("password"),
                             Color.of(rs.getString("turn")),
                             rs.getBoolean("force_end_flag"))
-                    , gameId);
+                    , id);
         } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException(NO_GAME_ERROR_MESSAGE);
         }
@@ -55,25 +55,25 @@ public class GameDao {
     public List<Room> findAllRoom() {
         final String sql = "select * from game";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Room(
-                    rs.getString("id"),
-                    rs.getString("password"),
-                    Color.of(rs.getString("turn")),
-                    rs.getBoolean("force_end_flag")
-            ));
+                rs.getString("id"),
+                rs.getString("password"),
+                Color.of(rs.getString("turn")),
+                rs.getBoolean("force_end_flag")
+        ));
     }
 
-    public void updateTurn(Color nextTurn, String gameId) {
+    public void updateTurn(Color nextTurn, String id) {
         final String sql = "update game set turn = ? where id = ?";
-        jdbcTemplate.update(sql, nextTurn.getName(), gameId);
+        jdbcTemplate.update(sql, nextTurn.getName(), id);
     }
 
-    public void updateForceEndFlag(boolean forceEndFlag, String gameId) {
+    public void updateForceEndFlag(boolean forceEndFlag, String id) {
         final String sql = "update game set force_end_flag = ? where id = ?";
-        jdbcTemplate.update(sql, forceEndFlag, gameId);
+        jdbcTemplate.update(sql, forceEndFlag, id);
     }
 
-    public void delete(String gameId) {
+    public void delete(String id) {
         final String sql = "delete from game where id = ?";
-        jdbcTemplate.update(sql, gameId);
+        jdbcTemplate.update(sql, id);
     }
 }

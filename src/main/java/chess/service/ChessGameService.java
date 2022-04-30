@@ -4,12 +4,12 @@ import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameResult;
+import chess.domain.game.Room;
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Pieces;
 import chess.dto.GameResultDto;
 import chess.dto.LogInDto;
 import chess.dto.MoveDto;
-import chess.domain.game.Room;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -30,66 +30,62 @@ public class ChessGameService {
 
     public void createGame(LogInDto logInDto) {
         validateUniqueId(logInDto);
-        initGame(logInDto);
+        gameDao.create(logInDto);
+        pieceDao.createAll(chessmenInitializer.init(), logInDto.getId());
     }
 
     public void validateLogIn(LogInDto logInDto) {
-        gameDao.findRoom(logInDto.getGameId()).validateLogInPassword(logInDto);
+        gameDao.findRoom(logInDto.getId()).validateLogInPassword(logInDto);
     }
 
     private void validateUniqueId(LogInDto logInDto) {
         try {
-            gameDao.findNoPasswordRoom(logInDto.getGameId());
+            gameDao.findNoPasswordRoom(logInDto.getId());
         } catch (IllegalArgumentException e) {
             return;
         }
         throw new IllegalArgumentException(ALREADY_ROOM_ID_EXIST_ERROR_MESSAGE);
     }
 
-    private void initGame(LogInDto logInDto) {
-        gameDao.create(logInDto);
-        pieceDao.createAll(chessmenInitializer.init(), logInDto.getGameId());
-    }
-
-    public ChessGame getGameStatus(String gameId) {
-        Room room = gameDao.findNoPasswordRoom(gameId);
-        return new ChessGame(room.isEnd(), pieceDao.findAll(gameId),
+    public ChessGame getGameStatus(String id) {
+        Room room = gameDao.findNoPasswordRoom(id);
+        return new ChessGame(room.isEnd(), pieceDao.findAll(id),
                 room.getTurn());
     }
 
-    public Pieces getPieces(String gameId) {
-        return getGameStatus(gameId).getChessmen();
+    public Pieces getPieces(String id) {
+        return getGameStatus(id).getChessmen();
     }
 
-    public GameResultDto calculateGameResult(String gameId) {
-        return new GameResultDto(GameResult.calculate(getGameStatus(gameId).getChessmen()));
+    public GameResultDto calculateGameResult(String id) {
+        return new GameResultDto(GameResult.calculate(getGameStatus(id).getChessmen()));
     }
 
     public void cleanGame(LogInDto logInDto) {
         validateLogIn(logInDto);
-        pieceDao.deleteAll(logInDto.getGameId());
-        gameDao.delete(logInDto.getGameId());
+        pieceDao.deleteAll(logInDto.getId());
+        gameDao.delete(logInDto.getId());
     }
 
-    public void move(String gameId, MoveDto moveDto) {
-        ChessGame chessGame = getGameStatus(gameId);
+    public void move(String id, MoveDto moveDto) {
+        ChessGame chessGame = getGameStatus(id);
         chessGame.moveChessmen(moveDto.toEntity());
-        pieceDao.deleteAll(gameId);
-        pieceDao.createAll(chessGame.getChessmen(), gameId);
-        gameDao.updateTurn(chessGame.getTurn(), gameId);
-        gameDao.updateForceEndFlag(chessGame.getEnd(), gameId);
+        pieceDao.deleteAll(id);
+        pieceDao.createAll(chessGame.getChessmen(), id);
+        gameDao.updateTurn(chessGame.getTurn(), id);
+        gameDao.updateForceEndFlag(chessGame.getEnd(), id);
     }
 
     public List<Room> getRooms() {
         return gameDao.findAllRoom();
     }
 
-    public void changeToEnd(String gameId) {
-        gameDao.updateForceEndFlag(true, gameId);
+    public void changeToEnd(String id) {
+        gameDao.updateForceEndFlag(true, id);
     }
 
-    public void validateEnd(String gameId) {
-        if (!gameDao.findNoPasswordRoom(gameId).isEnd()) {
+    public void validateEnd(String id) {
+        if (!gameDao.findNoPasswordRoom(id).isEnd()) {
             throw new IllegalArgumentException(PLAYING_CHESS_ERROR_MESSAGE);
         }
     }

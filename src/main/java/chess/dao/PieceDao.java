@@ -16,7 +16,7 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createAll(Pieces pieces, String gameId) {
+    public void createAll(Pieces pieces, String id) {
         final String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, pieces.getPieces(), pieces.size(),
@@ -24,22 +24,24 @@ public class PieceDao {
                     statement.setString(1, piece.getName());
                     statement.setString(2, piece.getColor().getName());
                     statement.setString(3, piece.getPosition().getPosition());
-                    statement.setString(4, gameId);
+                    statement.setString(4, id);
                 }
         );
     }
 
-    public Pieces findAll(String gameId) {
+    public Pieces findAll(String id) {
         final String sql = "select name, color, position from piece where game_id = ?";
 
-        return new Pieces(jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceFactory.of(
+        List<Piece> pieces = jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceFactory.of(
                 resultSet.getString("name"),
                 resultSet.getString("color"),
                 resultSet.getString("position")
-        ), gameId));
+        ), id);
+
+        return new Pieces(pieces);
     }
 
-    public void updateAll(List<Piece> pieces, String gameId) {
+    public void updateAll(List<Piece> pieces, String id) {
         final String sql = "UPDATE piece SET position = ? "
                 + "WHERE game_id = ? "
                 + "AND name = ? "
@@ -48,15 +50,15 @@ public class PieceDao {
         jdbcTemplate.batchUpdate(sql, pieces, pieces.size(),
                 (statement, piece) -> {
                     statement.setString(1, piece.getPosition().getPosition());
-                    statement.setString(2, gameId);
+                    statement.setString(2, id);
                     statement.setString(3, piece.getName());
                     statement.setString(4, piece.getColor().getName());
                 }
         );
     }
 
-    public void deleteAll(String gameId) {
+    public void deleteAll(String id) {
         final String sql = "delete from piece where game_id = ?";
-        jdbcTemplate.update(sql, gameId);
+        jdbcTemplate.update(sql, id);
     }
 }

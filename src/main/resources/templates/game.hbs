@@ -354,7 +354,7 @@
 
     <div class="chess-status box">
         <div class="status" id="status">
-            현재 방 : {{gameId}}
+            현재 방 : {{id}}
             <p></p>
             <p></p>
             <div class="winner-name">승자: {{status.winner}}</div>
@@ -363,7 +363,7 @@
         </div>
 
         <form action="/exit" method="get">
-            <input type="hidden" name="gameId" value="{{gameId}}">
+            <input type="hidden" name="id" value="{{id}}">
             <button type="submit">게임 그만두기</button>
         </form>
     </div>

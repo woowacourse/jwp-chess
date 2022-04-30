@@ -26,13 +26,17 @@ public class Room {
     }
 
     public void validateLogInPassword(LogInDto logInDto) {
-        if (!password.equals(logInDto.getGamePassword())) {
+        if (!password.equals(logInDto.getPassword())) {
             throw new IllegalArgumentException(INCORRECT_PASSWORD_ERROR_MESSAGE);
         }
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public Color getTurn() {

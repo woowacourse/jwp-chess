@@ -61,6 +61,7 @@ public class ChessRoomService {
         List<String> stateAndColor = gameDao.readStateAndColor(roomId);
         validateExistGame(stateAndColor, roomId);
         BoardDto boardDto = boardDao.readBoard(roomId);
+        validateExistRoom(roomId, boardDto);
         Board board = Board.of(new CustomBoardGenerator(boardDto));
         return GameStateGenerator.generate(board, stateAndColor);
     }
@@ -121,6 +122,13 @@ public class ChessRoomService {
     private void validateExistGame(List<String> stateAndColor, int roomId) {
         if (stateAndColor.isEmpty()) {
             throw new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다.");
+        }
+    }
+
+    private void validateExistRoom(int roomId, BoardDto boardDto) {
+        if(boardDto.getPointPieces().size() == 0){
+            throw new IllegalArgumentException(String.format("[ERROR] %s에 해당하는 번호의 보드가 없습니다.",
+                roomId));
         }
     }
 

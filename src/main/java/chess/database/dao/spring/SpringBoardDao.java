@@ -52,14 +52,7 @@ public class SpringBoardDao implements BoardDao {
             }, roomId);
         final Map<PointDto, PieceDto> pointPieces = entries.stream()
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        validateExist(pointPieces, roomId);
         return new BoardDto(pointPieces);
-    }
-
-    private void validateExist(Map<PointDto, PieceDto> pointPieces, int roomId) {
-        if (pointPieces.size() == 0) {
-            throw new IllegalArgumentException(String.format("[ERROR] %s에 해당하는 번호의 보드가 없습니다.", roomId));
-        }
     }
 
     @Override

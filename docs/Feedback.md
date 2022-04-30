@@ -32,7 +32,7 @@
     - RuntimeException -> Exception으로 바꾼 이유
 - [ ] BoardDao - DAO에서 Dto가 필요한지
 - [ ] 클래스명에 Spring이라는 이름을 붙인 이유
-- [ ] SpringBoardDao - `validateExist()`, DAO에서 유효성 검사를 하는 것이 적절한지
+- [x] SpringBoardDao - `validateExist()`, DAO에서 유효성 검사를 하는 것이 적절한지
 - [ ] SpringGameDao - `readStateAndColor()`
     - 응답값이 왜 문자열인지
     - 상태와 색 필드를 같는 클래스를 추가해도 되지 않은지?

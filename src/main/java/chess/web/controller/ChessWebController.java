@@ -24,11 +24,7 @@ public class ChessWebController {
 
     @GetMapping("/chess/{roomId}")
     public String chess(@PathVariable Long roomId) {
-        try {
-            chessService.loadGame(roomId);
-        } catch (NoSuchElementException exception) {
-            return "nochess";
-        }
+        chessService.loadGame(roomId);
         return "chess";
     }
 }

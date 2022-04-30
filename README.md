@@ -81,7 +81,11 @@
     - [ ] `/chess/{roomId}/load`는 체스 보드 하나를 반환하는 API이다. RESTFul API를 공부해보고 수정해보자!
     - [ ] 자원의 상태를 "변경"하는 경우 Post보다 Put, Patch를 사용해보자.
     - [ ] restart는 자원의 상태를 변경하는데 Get이 적합할까?
-- [ ] Advice에서 특정 에러를 제외한 다른 에러가 발생할 경우 어떻게 처리할 것인가?
+- [x] Advice에서 특정 에러를 제외한 다른 에러가 발생할 경우 어떻게 처리할 것인가?
+    - Exception을 처리하는 ExceptionHandler를 만들어 주었다.
+    - ControllerAdvice의 assignableTypes 옵션으로 어떤 컨트롤러에 대한 구체적인 예외 처리를 할 수 있도록 했다.
+    - `@Controller`에서는 `NoSuchElementException`이 발생 시 체스방이 없다는 페이지를 출력하고 이 외 다른 에러의 경우 에러 메시지와 함께 error 페이지를 출력하도록 했다.
+    - `@RestController`에서는 모든 에러에 대해서 같은 동작을 하게 될 것 같아서 기존의 `IllegalArgumentException`핸들러를 `Exception`핸들러로 수정했다.
 - [x] RoomDao의 `updateTurnById()`는 Long을 반환하는데 이것이 사용되는 곳이 있을까?
     - `save()` 처럼 수정하고나서 그 id로 값을 찾아와 무언가를 할 수 있다고 생각했는데 이미 `updateTurnById()`에서 파라미터로 id를 사용하기 때문에 그럴 필요가 없었다.
     - 그래서 반환형을 Long이 아닌 void로 수정하였다.

@@ -96,7 +96,7 @@ const clickBLock = async (e, block, id) => {
             return;
         }
 
-        response.then(data => data.json())
+        await response.json()
             .then(body => {
                 drawBoard(body)
                 drawTurnBox(id);

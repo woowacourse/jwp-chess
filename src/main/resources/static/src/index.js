@@ -62,5 +62,5 @@ const deleteGame = async (id) => {
         return alert(await response.text())
     }
 
-    response.then(() => getGames())
+    getGames();
 }

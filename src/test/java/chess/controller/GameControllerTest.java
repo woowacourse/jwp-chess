@@ -52,7 +52,7 @@ class GameControllerTest {
         void created_201() throws Exception {
             MockHttpServletRequestBuilder request = post("/game")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .content("{\"name\":\"방이름\",\"password\":\"비밀번호\"}");
+                    .content("{\"name\":\"방이름\",\"password\":\"비밀번호!!\"}");
 
             int expectedNewGameId = GameDaoStub.TOTAL_GAME_COUNT + 1;
             Cookie expectedCookie = CookieUtil.generateGameOwnerCookie(expectedNewGameId);
@@ -66,15 +66,26 @@ class GameControllerTest {
                     .andExpect(content().string(expectedNewGameId + ""));
         }
 
-        @DisplayName("부적절한 입력값으로 게임을 생성하려는 경우 400 예외")
+        @DisplayName("중복되는 게임명으로 게임을 생성하려는 경우 400 예외")
         @Test
         void fail_400() throws Exception {
             MockHttpServletRequestBuilder request = post("/game")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .content("{\"name\":\"이미_존재하는_게임명\",\"password\":\"비밀번호\"}");
+                    .content("{\"name\":\"이미_존재하는_게임명\",\"password\":\"비밀번호!!\"}");
 
             mockMvc.perform(request)
                     .andExpect(status().isBadRequest());
+        }
+
+        @DisplayName("비밀번호의 길이가 5글자 미만인 경우 400 예외 발생")
+        @Test
+        void shortPassword_400() throws Exception {
+            MockHttpServletRequestBuilder request = post("/game")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content("{\"name\":\"새로운_게임명!\",\"password\":\"3글자\"}");
+
+            mockMvc.perform(request)
+                    .andExpect(status().is(400));
         }
     }
 
@@ -196,10 +207,21 @@ class GameControllerTest {
 
         @DisplayName("상대방이 있는 게임방인 경우, 잘못된 비밀번호를 입력하면 400 예외 발생")
         @Test
-        void wrongPassword_200() throws Exception {
+        void wrongPassword_400() throws Exception {
             MockHttpServletRequestBuilder request = post("/game/4/auth")
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content("{\"name\":\"참여자가_있는_게임\",\"password\":\"wrong\"}");
+
+            mockMvc.perform(request)
+                    .andExpect(status().is(400));
+        }
+
+        @DisplayName("비밀번호의 길이가 5글자 미만인 경우 400 예외 발생")
+        @Test
+        void shortPassword_400() throws Exception {
+            MockHttpServletRequestBuilder request = post("/game/4/auth")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content("{\"name\":\"참여자가_있는_게임\",\"password\":\"3글자\"}");
 
             mockMvc.perform(request)
                     .andExpect(status().is(400));

@@ -41,7 +41,7 @@ class AuthServiceTest {
         @Test
         void 상대방이_등록되지_않은_경우_입력된_비밀번호로_등록시도() {
             EnterGameDto actual = service.loginOrSignUpAsOpponent(
-                    5, toEncryptedCredentials("참여자가_없는_게임", "비밀번호"));
+                    5, toEncryptedCredentials("참여자가_없는_게임", "비밀번호!!"));
 
             EnterGameDto expected = EnterGameDto.ofOpponent(5);
 
@@ -50,7 +50,7 @@ class AuthServiceTest {
 
         @Test
         void 입력된_비밀번호가_유효하면_상대방_플레이어로_등록_성공() {
-            service.loginOrSignUpAsOpponent(5, toEncryptedCredentials("참여자가_없는_게임", "비밀번호"));
+            service.loginOrSignUpAsOpponent(5, toEncryptedCredentials("참여자가_없는_게임", "비밀번호!!"));
 
             boolean actual = gameDao.findFullDataById(5).hasOpponent();
 

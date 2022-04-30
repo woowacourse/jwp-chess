@@ -109,12 +109,15 @@ public class ChessService {
         return chessBoard.compareStatus(status);
     }
 
-    public void deleteGame(int gameId, String password) throws IllegalArgumentException {
+    public void deleteGame(int gameId, String password) throws IllegalArgumentException, SQLException {
         GameDto gameDto = gameDao.findById(gameId);
-        validateStuats(gameDto.getStatus());
+        validateRemovable(password, gameDto);
+        end(gameId);
+    }
+
+    private void validateRemovable(String password, GameDto gameDto) {
+        validateStatus(gameDto.getStatus());
         validatePassword(gameDto, password);
-        boardDao.delete(gameId);
-        gameDao.delete(gameId);
     }
 
     private void validateStuats(GameStatus status) {

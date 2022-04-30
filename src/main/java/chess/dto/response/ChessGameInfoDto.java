@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.response;
 
 public class ChessGameInfoDto {
 
@@ -15,7 +15,7 @@ public class ChessGameInfoDto {
     }
 
     public ChessGameInfoDto(int id, String name, String turn) {
-        this(id, name, turn , true);
+        this(id, name, turn, true);
     }
 
     public int getId() {

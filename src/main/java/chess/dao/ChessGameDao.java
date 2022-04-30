@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.domain.ChessGame;
 import chess.domain.player.Team;
-import chess.dto.ChessGameInfoDto;
+import chess.dto.response.ChessGameInfoDto;
 import chess.exception.ExecuteQueryException;
 import java.util.List;
 import org.springframework.dao.DataAccessException;

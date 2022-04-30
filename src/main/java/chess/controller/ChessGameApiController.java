@@ -1,11 +1,11 @@
 package chess.controller;
 
-import chess.dto.ChessGameDto;
-import chess.dto.ChessGameInfoDto;
-import chess.dto.CreateGameDto;
-import chess.dto.DeleteGameDto;
-import chess.dto.MovePositionDto;
-import chess.dto.StatusDto;
+import chess.dto.request.CreateGameDto;
+import chess.dto.request.DeleteGameDto;
+import chess.dto.request.MovePositionDto;
+import chess.dto.response.ChessGameDto;
+import chess.dto.response.ChessGameInfoDto;
+import chess.dto.response.StatusDto;
 import chess.service.ChessGameService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;

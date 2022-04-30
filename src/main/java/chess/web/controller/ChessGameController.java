@@ -19,13 +19,8 @@ public class ChessGameController {
         return "index";
     }
 
-    @GetMapping("/play/{roomId}")
+    @GetMapping("/playroom/{roomId}")
     public String play(@PathVariable("roomId") int roomId) {
         return "play";
-    }
-
-    @GetMapping("/end")
-    public String end() {
-        return "finished";
     }
 }

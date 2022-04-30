@@ -113,7 +113,7 @@ const roomListDrawer = {
                         if (room.finished === true) {
                             alert("이미 종료된 게임입니다");
                         } else {
-                            window.location.replace("http://localhost:8080/play/" + roomId);
+                            window.location.replace("http://localhost:8080/playroom/" + roomId);
                         }
                     } else {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {

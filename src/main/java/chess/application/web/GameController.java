@@ -15,15 +15,15 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/status")
+    @GetMapping("/game/status")
     public ResponseEntity<Map<String, Object>> status() {
         Map<String, Object> statusData = gameService.modelStatus();
         return ResponseEntity.ok().body(statusData);
     }
 
-    @GetMapping("/save/{id}")
+    @GetMapping("game/save/{id}")
     public ResponseEntity<Void> save(@PathVariable int id) {
-        gameService.save(id);
+        gameService.updateGame(id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

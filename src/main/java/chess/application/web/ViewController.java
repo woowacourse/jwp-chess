@@ -22,13 +22,6 @@ public class ViewController {
         return "games";
     }
 
-    @GetMapping("/game/{id}")
-    public String findGameById(@PathVariable int id, Model model) {
-        Map<String, Object> result = gameService.findBoardByGameId(id);
-        model.addAllAttributes(result);
-        return "game";
-    }
-
     @GetMapping("/create")
     public String create() {
         return "create";
@@ -54,13 +47,22 @@ public class ViewController {
         return "redirect:/";
     }
 
-    @PostMapping("/move")
-    public String move(Model model, @RequestParam String source, @RequestParam String target) {
-        gameService.move(source, target);
+    @GetMapping("/game/{id}")
+    public String findGameById(@PathVariable int id, Model model) {
+        Map<String, Object> result = gameService.findBoardByGameId(id);
+        model.addAllAttributes(result);
+        return "game";
+    }
+
+    @PostMapping("/game/{id}/move")
+    public String move(Model model, @RequestParam Map<String, String> request, @PathVariable int id) {
+        gameService.move(request.get("source"), request.get("target"));
+        gameService.updateGame(id);
         if (gameService.isGameFinished()) {
             return end(model);
         }
-        return play(model);
+        model.addAllAttributes(gameService.modelPlayingBoard());
+        return "redirect:/game/" + id;
     }
 
     private String play(Model model) {
@@ -68,7 +70,7 @@ public class ViewController {
         return "index";
     }
 
-    @GetMapping("/end")
+    @GetMapping("/game/end")
     public String end(Model model) {
         model.addAllAttributes(gameService.end());
         return "result";

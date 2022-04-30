@@ -24,7 +24,11 @@ public class Running implements State {
 
     @Override
     public State load(Map<Position, Piece> board, boolean whiteTurn) {
-        throw new UnsupportedOperationException(ERROR_CANT_LOAD);
+        Camp.initializeTurn();
+        if (!whiteTurn) {
+            Camp.switchTurn();
+        }
+        return new Running(new Board(board));
     }
 
     @Override

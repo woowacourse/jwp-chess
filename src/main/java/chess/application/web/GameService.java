@@ -68,7 +68,7 @@ public class GameService {
         ChessGame chessGame = new ChessGame(title, password);
         chessGame.start();
         int gameId = gameDao.create(chessGame);
-        boardDao.save(gameId, chessGame.getBoardSquares());
+        boardDao.update(gameId, chessGame.getBoardSquares());
     }
 
     public Map<String, Object> findBoardByGameId(int id) {
@@ -78,21 +78,8 @@ public class GameService {
                         pieceDto -> parsePosition(pieceDto.getPosition()),
                         this::parsePiece
                 ));
-        ChessGame chessGame = new ChessGame();
         chessGame.load(board, gameDao.isWhiteTurn(id));
-        return modelPlayingBoard(chessGame);
-    }
-
-    private Map<String, Object> modelPlayingBoard(ChessGame chessGame) {
-        Map<Position, Piece> board = chessGame.getBoardSquares();
-        Map<String, Object> model = board.entrySet().stream()
-                .collect(Collectors.toMap(
-                        entry -> entry.getKey().toString(),
-                        entry -> PieceDto.of(entry.getValue(), entry.getKey())
-                ));
-        model.put(KEY_STARTED, true);
-        model.put(KEY_READY, false);
-        return model;
+        return modelPlayingBoard();
     }
 
     private Piece parsePiece(PieceDto piece) {
@@ -117,6 +104,7 @@ public class GameService {
 
     public void move(String source, String target) {
         chessGame.move(parsePosition(source), parsePosition(target));
+
     }
 
     private Position parsePosition(String rawPosition) {
@@ -134,9 +122,9 @@ public class GameService {
         return chessGame.getScores();
     }
 
-    public void save(int id) {
-        gameDao.save();
-        boardDao.save(chessGame.getBoardSquares());
+    public void updateGame(int id) {
+        gameDao.update(id);
+        boardDao.update(id, chessGame.getBoardSquares());
     }
 
     public Map<String, Object> end() {
@@ -170,6 +158,7 @@ public class GameService {
         if (savedChessGame.incorrectPassword(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+        boardDao.deleteAllByGameId(id);
         gameDao.deleteById(id);
     }
 }

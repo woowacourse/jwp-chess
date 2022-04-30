@@ -39,8 +39,8 @@ class GameDaoTest {
     @DisplayName("기존에 저장된 game이 있어도 data를 덮어쓸 수 있다.")
     @Test
     void save_twice() {
-        gameDao.save();
-        assertThatNoException().isThrownBy(gameDao::save);
+        gameDao.update();
+        assertThatNoException().isThrownBy(gameDao::update);
     }
 
     @DisplayName("흑색 진영의 차례일 때 게임을 저장하고 불러오면 백색 진영의 차례가 아니다.")
@@ -48,7 +48,7 @@ class GameDaoTest {
     void isWhiteTurn_false() {
         Camp.initializeTurn();
         Camp.switchTurn();
-        gameDao.save();
+        gameDao.update();
 
         assertThat(gameDao.isWhiteTurn()).isFalse();
     }

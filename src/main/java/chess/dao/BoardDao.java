@@ -18,7 +18,8 @@ public class BoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(int gameId, Map<Position, Piece> board) {
+    public void update(int gameId, Map<Position, Piece> board) {
+        deletePieceByGameId(gameId);
         final String sql = "insert into piece (game_no, type, white, position) values (?, ?, ?, ?)";
 
         for (Entry<Position, Piece> entry : board.entrySet()) {
@@ -26,7 +27,12 @@ public class BoardDao {
         }
     }
 
-    public void save(Map<Position, Piece> board) {
+    private void deletePieceByGameId(int gameId) {
+        final String sql = "delete from piece where game_no = ?";
+        jdbcTemplate.update(sql, gameId);
+    }
+
+    public void update(Map<Position, Piece> board) {
 //        final String sql = chooseSaveSql();
 //
 //        for (Entry<Position, Piece> entry : board.entrySet()) {
@@ -61,5 +67,11 @@ public class BoardDao {
                 resultSet.getBoolean("white"),
                 resultSet.getString("position")
         ), id);
+    }
+
+    public void deleteAllByGameId(int gameId) {
+        final String sql = "delete from piece where game_no = ?";
+
+        jdbcTemplate.update(sql, gameId);
     }
 }

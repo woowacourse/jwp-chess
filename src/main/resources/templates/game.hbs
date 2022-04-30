@@ -24,7 +24,7 @@
     {{/ready}}
     {{#started}}
         <div class="form move">
-            <form action="./move" method="post">
+            <form action="./{{id}}/move" method="post">
                 source : <input type="text" name="source">
                 target : <input type="text" name="target">
                 <input type="submit" value="이동">
@@ -34,7 +34,7 @@
             <button id="status">점수 보기</button>
         </div>
         <div class="form save">
-            <button id="save">진행 상황 저장</button>
+            <button id="save" onclick="save({{id}})">진행 상황 저장</button>
         </div>
         <div class="form end">
             <form action="./end">
@@ -47,56 +47,56 @@
         <div class="white-square">
             {{#a8}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/a8}}
         </div>
         <div class="black-square">
             {{#b8}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/b8}}
         </div>
         <div class="white-square">
             {{#c8}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/c8}}
         </div>
         <div class="black-square">
             {{#d8}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/d8}}
         </div>
         <div class="white-square">
             {{#e8}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/e8}}
         </div>
         <div class="black-square">
             {{#f8}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/f8}}
         </div>
         <div class="white-square">
             {{#g8}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/g8}}
         </div>
         <div class="black-square">
             {{#h8}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/h8}}
         </div>
@@ -105,56 +105,56 @@
         <div class="black-square">
             {{#a7}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/a7}}
         </div>
         <div class="white-square">
             {{#b7}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/b7}}
         </div>
         <div class="black-square">
             {{#c7}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/c7}}
         </div>
         <div class="white-square">
             {{#d7}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/d7}}
         </div>
         <div class="black-square">
             {{#e7}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/e7}}
         </div>
         <div class="white-square">
             {{#f7}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/f7}}
         </div>
         <div class="black-square">
             {{#g7}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/g7}}
         </div>
         <div class="white-square">
             {{#h7}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/h7}}
         </div>
@@ -163,56 +163,56 @@
         <div class="white-square">
             {{#a6}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/a6}}
         </div>
         <div class="black-square">
             {{#b6}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/b6}}
         </div>
         <div class="white-square">
             {{#c6}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/c6}}
         </div>
         <div class="black-square">
             {{#d6}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/d6}}
         </div>
         <div class="white-square">
             {{#e6}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/e6}}
         </div>
         <div class="black-square">
             {{#f6}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/f6}}
         </div>
         <div class="white-square">
             {{#g6}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/g6}}
         </div>
         <div class="black-square">
             {{#h6}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/h6}}
         </div>
@@ -221,56 +221,56 @@
         <div class="black-square">
             {{#a5}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/a5}}
         </div>
         <div class="white-square">
             {{#b5}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/b5}}
         </div>
         <div class="black-square">
             {{#c5}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/c5}}
         </div>
         <div class="white-square">
             {{#d5}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/d5}}
         </div>
         <div class="black-square">
             {{#e5}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/e5}}
         </div>
         <div class="white-square">
             {{#f5}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/f5}}
         </div>
         <div class="black-square">
             {{#g5}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/g5}}
         </div>
         <div class="white-square">
             {{#h5}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/h5}}
         </div>
@@ -279,56 +279,56 @@
         <div class="white-square">
             {{#a4}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/a4}}
         </div>
         <div class="black-square">
             {{#b4}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/b4}}
         </div>
         <div class="white-square">
             {{#c4}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/c4}}
         </div>
         <div class="black-square">
             {{#d4}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/d4}}
         </div>
         <div class="white-square">
             {{#e4}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/e4}}
         </div>
         <div class="black-square">
             {{#f4}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/f4}}
         </div>
         <div class="white-square">
             {{#g4}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/g4}}
         </div>
         <div class="black-square">
             {{#h4}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/h4}}
         </div>
@@ -337,56 +337,56 @@
         <div class="black-square">
             {{#a3}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/a3}}
         </div>
         <div class="white-square">
             {{#b3}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/b3}}
         </div>
         <div class="black-square">
             {{#c3}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/c3}}
         </div>
         <div class="white-square">
             {{#d3}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/d3}}
         </div>
         <div class="black-square">
             {{#e3}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/e3}}
         </div>
         <div class="white-square">
             {{#f3}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/f3}}
         </div>
         <div class="black-square">
             {{#g3}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/g3}}
         </div>
         <div class="white-square">
             {{#h3}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/h3}}
         </div>
@@ -395,56 +395,56 @@
         <div class="white-square">
             {{#a2}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/a2}}
         </div>
         <div class="black-square">
             {{#b2}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/b2}}
         </div>
         <div class="white-square">
             {{#c2}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/c2}}
         </div>
         <div class="black-square">
             {{#d2}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/d2}}
         </div>
         <div class="white-square">
             {{#e2}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/e2}}
         </div>
         <div class="black-square">
             {{#f2}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/f2}}
         </div>
         <div class="white-square">
             {{#g2}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/g2}}
         </div>
         <div class="black-square">
             {{#h2}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/h2}}
         </div>
@@ -453,56 +453,56 @@
         <div class="black-square">
             {{#a1}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/a1}}
         </div>
         <div class="white-square">
             {{#b1}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/b1}}
         </div>
         <div class="black-square">
             {{#c1}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/c1}}
         </div>
         <div class="white-square">
             {{#d1}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/d1}}
         </div>
         <div class="black-square">
             {{#e1}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/e1}}
         </div>
         <div class="white-square">
             {{#f1}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/f1}}
         </div>
         <div class="black-square">
             {{#g1}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/g1}}
         </div>
         <div class="white-square">
             {{#h1}}
                 {{#type}}
-                    <img src="images/piece-{{type}}-{{camp}}.png" class="piece-img" />
+                    <img src="/images/piece-{{type}}-{{camp}}.png" class="piece-img" />
                 {{/type}}
             {{/h1}}
         </div>
@@ -511,7 +511,7 @@
     <section class="player-ui">
         <div class="player-square black">
             <div class="player-name">
-                <img src="images/piece-pawn-black.png"> player2
+                <img src="/images/piece-pawn-black.png"> player2
             </div>
             <div class="player-score">
                 점수: <span id="player-score-black"></span>
@@ -519,7 +519,7 @@
         </div>
         <div class="player-square white">
             <div class="player-name">
-                <img src="images/piece-pawn-white.png"> player1
+                <img src="/images/piece-pawn-white.png"> player1
             </div>
             <div class="player-score">
                 점수: <span id="player-score-white"></span>
@@ -544,7 +544,7 @@
     }
 
     function saveOnClickHandler() {
-        fetch('./save')
+        fetch('./save/{{id}}')
                 .then((response) => response.status)
                 .then((status) => alertSaveResult(status));
     }
@@ -557,6 +557,5 @@
         }
         window.alert("저장에 성공하였습니다.");
     }
-
 </script>
 </html>

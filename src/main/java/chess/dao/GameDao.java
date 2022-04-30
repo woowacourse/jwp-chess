@@ -33,17 +33,9 @@ public class GameDao {
         return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
-    public void save() {
-        final String sql = chooseSaveSql();
-        jdbcTemplate.update(sql, Camp.BLACK.isNotTurn());
-    }
-
-    private String chooseSaveSql() {
-        String sql = "insert into game (no, white_turn) values (1,?)";
-        if (isGameExistIn()) {
-            sql = "update game set white_turn = ?";
-        }
-        return sql;
+    public void update(int id) {
+        final String sql = "update game set white_turn = ? where no = ?";
+        jdbcTemplate.update(sql, Camp.BLACK.isNotTurn(), id);
     }
 
     private boolean isGameExistIn() {

@@ -46,12 +46,6 @@ public class ChessViewController {
         return "room-create-form";
     }
 
-    @PostMapping("/new")
-    public ResponseEntity<Void> createGame(@RequestBody RoomRequest.TitleAndPassword request) {
-        Long id = roomService.createRoom(request.getTitle(), request.getPassword());
-        return ResponseEntity.created(URI.create("/room/" + id)).build();
-    }
-
     @GetMapping("/room/{id}")
     public String getRoom(Model model, @PathVariable Long id) {
         Board board = chessService.loadGame(id);

@@ -225,7 +225,7 @@ function createRoom() {
         password: password
     };
 
-    fetch('/new', {
+    fetch('/api/new', {
         method: 'post',
         headers: {
             "Content-Type": "application/json",
@@ -238,6 +238,6 @@ function createRoom() {
             return;
         }
         window.alert("방 생성에 성공했습니다.");
-        window.location.href = "/";
+        window.location.href = response.headers.get("Location");
     });
 }

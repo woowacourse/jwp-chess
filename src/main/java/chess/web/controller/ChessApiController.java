@@ -8,6 +8,8 @@ import chess.web.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RequestMapping("/api")
 @RestController
 public class ChessApiController {
@@ -24,6 +26,12 @@ public class ChessApiController {
     public ResponseEntity<BoardDto> loadGame(@PathVariable Long id) {
         Board board = chessService.loadGame(id);
         return ResponseEntity.ok().body(BoardDto.from(id, board));
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<Void> createGame(@RequestBody RoomRequest.TitleAndPassword request) {
+        Long id = roomService.createRoom(request.getTitle(), request.getPassword());
+        return ResponseEntity.created(URI.create("/room/" + id)).build();
     }
 
     @GetMapping("/{id}/restart")

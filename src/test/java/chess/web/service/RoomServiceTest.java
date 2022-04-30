@@ -1,8 +1,8 @@
 package chess.web.service;
 
 import chess.domain.entity.Room;
-import chess.web.dao.PieceDao;
-import chess.web.dao.RoomDao;
+import chess.web.service.mock.MockPieceDao;
+import chess.web.service.mock.MockRoomDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +10,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RoomServiceTest {
 

@@ -3,7 +3,6 @@ package chess.domain.board.piece;
 import chess.domain.board.Board;
 import chess.domain.board.Team;
 import chess.domain.board.Turn;
-import chess.domain.board.piece.*;
 import chess.domain.board.piece.position.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -30,9 +30,10 @@ public class GameDao {
         final String sql = "insert into Game (status, turn, title, password) values( ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
+            System.out.println(Status.PLAYING.getName());
             jdbcTemplate.update(connection -> {
                 PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-                statement.setBoolean(1, chessBoard.compareStatus(Status.PLAYING));
+                statement.setString(1, Status.PLAYING.getName());
                 statement.setString(2, String.valueOf(chessBoard.getCurrentTurn()));
                 statement.setString(3, title);
                 statement.setString(4, password);
@@ -72,7 +73,7 @@ public class GameDao {
                 rs.getInt("id"),
                 rs.getString("title"),
                 rs.getString("password"),
-                rs.getBoolean("status"),
+                rs.getString("status"),
                 rs.getString("turn")
         );
     }
@@ -89,7 +90,7 @@ public class GameDao {
     public void updateStatus(int gameId) {
         final String sql = "update Game set status = ? where id = ?";
         try {
-            jdbcTemplate.update(sql, false, gameId);
+            jdbcTemplate.update(sql, Status.END.getName(), gameId);
         } catch (Exception e) {
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }

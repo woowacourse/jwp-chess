@@ -6,6 +6,7 @@ import chess.domain.game.Color;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
+import chess.domain.game.status.End;
 import chess.domain.game.status.GameStatus;
 import chess.domain.game.status.Playing;
 import chess.domain.piece.ChessPiece;
@@ -74,7 +75,11 @@ public class ChessService {
         for (PieceDto pieceDto : boardInfo) {
             board.put(new Position(pieceDto.getPosition()), Type.from(pieceDto.getPiece()).createPiece(Color.from(pieceDto.getColor())));
         }
-        return new ChessBoard(board, game.getStatus(), game.getTurn());
+        return new ChessBoard(board, convertToGameStatus(game.getStatus()), game.getTurn());
+    }
+
+    private GameStatus convertToGameStatus(String status) {
+        return  Status.valueOf(status).convertToGameStatus();
     }
 
     public void move(String source, String target, int gameId) throws SQLException {
@@ -116,12 +121,12 @@ public class ChessService {
     }
 
     private void validateRemovable(String password, GameDto gameDto) {
-        validateStatus(gameDto.getStatus());
+        validateStatus(Status.valueOf(gameDto.getStatus()));
         validatePassword(gameDto, password);
     }
 
-    private void validateStuats(GameStatus status) {
-        if (!status.isEnd()) {
+    private void validateStatus(Status gameStatus) {
+        if (gameStatus != Status.END) {
             throw new IllegalArgumentException("종료된 게임만 삭제할 수 있습니다");
         }
     }

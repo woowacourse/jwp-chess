@@ -1,18 +1,17 @@
 package chess.service.dto;
 
 import chess.domain.game.Color;
-import chess.domain.game.status.End;
+import chess.domain.game.Status;
 import chess.domain.game.status.GameStatus;
-import chess.domain.game.status.Playing;
 
 public class GameDto {
     private final int id;
     private final String title;
     private final String password;
-    private final boolean status;
+    private final String status;
     private final String turn;
 
-    public GameDto(int id, String title, String password, boolean status, String turn) {
+    public GameDto(int id, String title, String password, String status, String turn) {
         this.id = id;
         this.title = title;
         this.password = password;
@@ -28,11 +27,8 @@ public class GameDto {
         return id;
     }
 
-    public GameStatus getStatus() {
-        if (status) {
-            return new Playing();
-        }
-        return new End();
+    public String getStatus() {
+        return status;
     }
 
     public Color getTurn() {

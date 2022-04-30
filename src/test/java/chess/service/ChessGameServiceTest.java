@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
+import chess.domain.command.MoveCommand;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
 import chess.dto.GameResultDto;
 import chess.dto.LogInDto;
-import chess.dto.MoveDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,7 +75,7 @@ class ChessGameServiceTest {
     @DisplayName("move로 아이디의 말 위치를 움직인다.")
     @Test
     void move() {
-        chessGameService.move(GAME_ID, new MoveDto("a2", "a4"));
+        chessGameService.move(GAME_ID, new MoveCommand("a2", "a4"));
         Pieces pieces = chessGameService.getPieces(GAME_ID);
         assertThat(pieces.extractPiece(Position.of("a4")).isPawn())
                 .isTrue();

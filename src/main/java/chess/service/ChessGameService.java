@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
+import chess.domain.command.MoveCommand;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameResult;
 import chess.domain.game.Room;
@@ -9,7 +10,6 @@ import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Pieces;
 import chess.dto.GameResultDto;
 import chess.dto.LogInDto;
-import chess.dto.MoveDto;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class ChessGameService {
     }
 
     private void validateLogInFormat(String id) {
-        if(!logInPattern.matcher(id).matches()) {
+        if (!logInPattern.matcher(id).matches()) {
             throw new IllegalArgumentException(LOGIN_FORMAT_ERROR_MESSAGE);
         }
     }
@@ -78,9 +78,9 @@ public class ChessGameService {
         gameDao.delete(logInDto.getId());
     }
 
-    public void move(String id, MoveDto moveDto) {
+    public void move(String id, MoveCommand moveCommand) {
         ChessGame chessGame = getGameStatus(id);
-        chessGame.moveChessmen(moveDto.toEntity());
+        chessGame.moveChessmen(moveCommand);
         pieceDao.deleteAll(id);
         pieceDao.createAll(chessGame.getChessmen(), id);
         gameDao.updateTurn(chessGame.getTurn(), id);

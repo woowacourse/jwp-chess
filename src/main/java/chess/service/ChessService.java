@@ -35,18 +35,6 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    // TODO: 삭제
-    public ChessResponseDto initializeGame() {
-        int gameId = getGameId();
-        try {
-            pieceDao.saveAll(gameId, getInitPieceDtos());
-            gameDao.save(gameId, GameDto.of(PieceColor.WHITE, true));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("게임을 초기화할 수 없습니다.");
-        }
-        return getChess(gameId);
-    }
-
     public int start(final ChessRequestDto chessRequestDto) {
         int gameId = getGameId();
         try {

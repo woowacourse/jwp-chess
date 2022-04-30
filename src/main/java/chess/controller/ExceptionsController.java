@@ -1,5 +1,6 @@
 package chess.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -8,11 +9,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 public class ExceptionsController {
 
-    //TODO: 잘못된 명령어를 입력했을 때 예외처리
     @ExceptionHandler(IllegalArgumentException.class)
-    public String handle(RedirectAttributes redirectAttributes, IllegalArgumentException e) {
+    public String handle(RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest,
+                         IllegalArgumentException e) {
+        String roomId = httpServletRequest.getRequestURI().replaceAll("[^0-9]", ""); // /room/id/command
         redirectAttributes.addAttribute("message", e.getMessage());
-        return "redirect:/";
+        return "redirect:/room/" + roomId;
     }
 
     @ExceptionHandler(RuntimeException.class)

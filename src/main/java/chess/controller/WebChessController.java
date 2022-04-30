@@ -48,6 +48,13 @@ public class WebChessController {
             .body(chessService.getCurrentBoards(id));
     }
 
+    @GetMapping("/{id}/restart")
+    public ResponseEntity<GameResponseDto> reEnterRoom(@PathVariable Long id) {
+        chessService.reCreateRoom(id);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(chessService.getCurrentBoards(id));
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<RoomResponseDto> updateRoom(@PathVariable Long id,
                                                       @RequestBody RoomRequestDto roomRequestDto) {

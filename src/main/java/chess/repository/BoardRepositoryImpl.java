@@ -79,4 +79,10 @@ public class BoardRepositoryImpl implements BoardRepository {
 
         return jdbcTemplate.queryForObject(sql, rowMapper(), roomId, position);
     }
+
+    @Override
+    public void delete(final Long roomId) {
+        String sql = "delete from board where room_id = ?";
+        jdbcTemplate.update(sql, roomId);
+    }
 }

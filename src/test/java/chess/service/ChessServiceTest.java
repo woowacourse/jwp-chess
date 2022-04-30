@@ -91,17 +91,6 @@ class ChessServiceTest {
         );
     }
 
-    @DisplayName("종료된 방에 이동을 요청하여 에러가 발생한다.")
-    @Test
-    void moveException() {
-        final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id, ROOM_REQUEST_DTO_ONLY_PASSWORD);
-
-        assertThatThrownBy(() -> chessService.move(id, new MoveRequestDto("a2", "a4")))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("[ERROR] 이미 종료된 게임입니다.");
-    }
-
     @DisplayName("현재 방의 체스 게임을 종료한다.")
     @Test
     void end() {
@@ -109,17 +98,6 @@ class ChessServiceTest {
         chessService.endRoom(id, ROOM_REQUEST_DTO_ONLY_PASSWORD);
         final RoomsResponseDto rooms = chessService.findRooms();
         assertThat(rooms.getRoomResponseDtos()).isEmpty();
-    }
-
-    @DisplayName("종료된 방에 다시 종료를 요청하여 에러가 발생한다.")
-    @Test
-    void endException() {
-        final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id, ROOM_REQUEST_DTO_ONLY_PASSWORD);
-
-        assertThatThrownBy(() -> chessService.endRoom(id, ROOM_REQUEST_DTO_ONLY_PASSWORD))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }
 
     @DisplayName("현재 방의 체스 점수를 계산한다.")

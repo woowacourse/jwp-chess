@@ -1,5 +1,3 @@
-// document.querySelectorAll('.piece-image')
-//     .forEach(cell => cell.addEventListener('click', e => cellClick(e, id)));
 const id = new URL(window.location).searchParams.get('id')
 let gameOver = "";
 let source = "";
@@ -37,6 +35,17 @@ function putPiece(boards) {
         img.src = "/images/" + piece + ".png";
         div.appendChild(img);
     }
+}
+
+async function restartGame() {
+    let game = await fetch("/api/chess/rooms/" + id + "/restart")
+        .then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        });
+    game = await game.json();
+
+    putPiece(game.board.boards)
 }
 
 async function handleErrors(response) {
@@ -100,11 +109,13 @@ async function sendMoveInformation(source, target) {
 }
 
 async function checkGameOver(gameOverMessage) {
-    gameOver = gameOverMessage;
-    if (gameOver === "true") {
+    if (gameOverMessage === true) {
         alert("게임이 종료되었습니다.");
-        let board = endGame();
-        await initializeBoard(board);
+
+        const startButton = document.querySelector("#restartButton");
+        startButton.style.display = 'block';
+        const endButton = document.querySelector("#endButton");
+        endButton.style.display = 'none';
     }
 }
 
@@ -136,7 +147,11 @@ async function endGame() {
         .catch(function (error) {
             alert(error.message)
         });
+
     await getScore();
-    
-    window.location.href = "index.html";
+
+    const startButton = document.querySelector("#restartButton");
+    startButton.style.display = 'block';
+    const endButton = document.querySelector("#endButton");
+    endButton.style.display = 'none';
 }

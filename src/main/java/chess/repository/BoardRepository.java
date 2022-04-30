@@ -16,4 +16,6 @@ public interface BoardRepository {
     void batchInsert(final List<BoardEntity> boards);
 
     BoardEntity findBoardByRoomIdAndPosition(final Long roomId, final String position);
+
+    void delete(Long roomId);
 }

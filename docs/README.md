@@ -64,11 +64,13 @@
         - GET api/chess/rooms/{id}
     - [x] 방 종료
         - UPDATE api/chess/rooms/{id}/end
+    - [x] 방 제목 변경
+        - PATCH api/chess/rooms/{id}
     - [x] 체스 현재 정보 조회
         - GET api/chess/rooms/{id}
     - [x] 체스 기물 이동
         - POST api/chess/rooms/{id}/move
-    - [x] 체스 종료 및 결과계산
-        - PATCH api/chess/rooms/{id}
     - [x] 체스 점수 출력
         - GET api/chess/rooms/{id}/status
+    - [x] 체스 재시작
+        - GET api/chess/rooms/{id}/restart

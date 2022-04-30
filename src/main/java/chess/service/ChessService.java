@@ -66,25 +66,20 @@ public class ChessService {
     }
 
     public GameResponseDto getCurrentBoards(final Long roomId) {
-        final RoomEntity room = getValidRoom(roomId);
+        final RoomEntity targetRoom = getValidRoom(roomId);
+        validateGameOver(targetRoom);
         final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
-        return GameResponseDto.of(room, BoardsDto.of(boards));
+        return GameResponseDto.of(targetRoom, BoardsDto.of(boards));
     }
 
     private RoomEntity getValidRoom(final Long id) {
-        final RoomEntity room = getValidRoomIfExist(id);
-        validateGameOver(room);
-        return room;
-    }
-
-    private RoomEntity getValidRoomIfExist(final Long id) {
-        final RoomEntity room;
+        final RoomEntity targetRoom;
         try {
-            room = roomRepository.findById(id);
+            targetRoom = roomRepository.findById(id);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException(1);
         }
-        return room;
+        return targetRoom;
     }
 
     private void validateGameOver(final RoomEntity room) {
@@ -136,7 +131,9 @@ public class ChessService {
     public void endRoom(final Long id, final RoomRequestDto roomRequestDto) {
         final RoomEntity targetRoom = getValidRoom(id);
         validatePassword(roomRequestDto, targetRoom);
-        roomRepository.updateGameOver(targetRoom.getId());
+        if (!targetRoom.isGameOver()) {
+            roomRepository.updateGameOver(targetRoom.getId());
+        }
     }
 
     public StatusResponseDto calculateStatus(final Long id) {
@@ -146,6 +143,7 @@ public class ChessService {
 
     public RoomResponseDto updateRoom(final Long id, final RoomRequestDto roomRequestDto) {
         final RoomEntity targetRoom = getValidRoom(id);
+        validateGameOver(targetRoom);
         validatePassword(roomRequestDto, targetRoom);
         final RoomEntity roomEntity = roomRequestDto.toEntity();
         targetRoom.patch(roomEntity);
@@ -162,5 +160,16 @@ public class ChessService {
         if (!requestPassword.equals(encodedPassword)) {
             throw new IllegalArgumentException("[ERROR] 비밀번호가 틀렸습니다.");
         }
+    }
+
+    public RoomResponseDto reCreateRoom(final Long id) {
+        RoomEntity targetRoom = roomRepository.findById(id);
+        targetRoom = new RoomEntity(id, targetRoom.getPassword(), targetRoom.getName(), "white", false);
+        roomRepository.save(targetRoom);
+
+        boardRepository.delete(id);
+        boardRepository.batchInsert(createBoards(targetRoom));
+
+        return RoomResponseDto.of(targetRoom);
     }
 }

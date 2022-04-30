@@ -9,14 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.domain.ChessGame;
 import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ChessGameDaoTest {
 
     private ChessGameDao chessGameDao;
@@ -27,7 +29,7 @@ class ChessGameDaoTest {
     @Autowired
     private DataSource dataSource;
 
-    @BeforeEach
+    @BeforeAll
     void setup() {
         chessGameDao = new ChessGameDao(jdbcTemplate, dataSource);
     }

@@ -18,15 +18,18 @@ import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.single.Knight;
 import java.util.Map;
 import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ChessGameServiceTest {
 
     private ChessGameService chessGameService;
@@ -40,12 +43,15 @@ class ChessGameServiceTest {
     @Autowired
     private DataSource dataSource;
 
+    @BeforeAll
+    void setUpDaoAndService(){
+        pieceDao = new PieceDao(jdbcTemplate);
+        chessGameDao = new ChessGameDao(jdbcTemplate, dataSource);
+        chessGameService = new ChessGameService(pieceDao, chessGameDao);
+    }
 
     @BeforeEach
     void setUp() {
-        chessGameDao = new ChessGameDao(jdbcTemplate, dataSource);
-        pieceDao = new PieceDao(jdbcTemplate);
-        chessGameService = new ChessGameService(pieceDao, chessGameDao);
         ChessGame chessGame = createRunningChessGame();
         ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
         chessGameId = savedChessGame.getId();

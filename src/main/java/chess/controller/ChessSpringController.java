@@ -6,6 +6,7 @@ import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
 import chess.dto.MoveDto;
 import chess.dto.ScoreDto;
+import chess.dto.WinnerDto;
 import chess.service.ChessGameService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -76,15 +77,15 @@ public class ChessSpringController {
     @ResponseBody
     @GetMapping("/game/{gameId}/status")
     public ResponseEntity status(@PathVariable int gameId) {
-        ScoreDto scoreDto = chessGameService.createScore(gameId);
-        return ResponseEntity.ok().body(scoreDto);
+        ScoreDto scoresDto = chessGameService.createScore(gameId);
+        return ResponseEntity.ok().body(scoresDto);
     }
 
     @ResponseBody
     @GetMapping("/game/{gameId}/end")
     public ResponseEntity end(@PathVariable int gameId) {
-        ScoreDto scoreDto = chessGameService.end(gameId);
-        return ResponseEntity.ok().body(scoreDto);
+        WinnerDto winnerDto = chessGameService.end(gameId);
+        return ResponseEntity.ok().body(winnerDto);
     }
 
     @ExceptionHandler(value = IllegalArgumentException.class)

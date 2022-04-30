@@ -110,7 +110,7 @@ async function getScore() {
     } else {
         let score = await fetch(location.pathname + "/status")
         score = await score.json()
-        alert(score.message)
+        alert("무승부 입니다!\nwhite : " + score.whiteScore + "점\n" + "black : " + score.blackScore +"점")
     }
 }
 
@@ -128,7 +128,7 @@ async function endGame() {
             alert("게임을 종료합니다.\n" + score.message);
         }
         if (status == "CHECK_MATE") {
-            alert("승부가 결정되었습니다!!.\n" + score.message);
+            alert("승부가 결정되었습니다!!.\n" + "승리 팀은 " +score.team + "입니다.");
         }
 
         status = "";

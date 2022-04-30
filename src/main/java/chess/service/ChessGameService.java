@@ -19,6 +19,7 @@ import chess.domain.position.Position;
 import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
 import chess.dto.ScoreDto;
+import chess.dto.WinnerDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -29,7 +30,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessGameService {
 
-    private static final String WIN_MESSAGE = "승리 팀은 : %s 입니다.";
     private static final String PASSWORD_DIFFERENCE = "비밀번호가 일치하지 않습니다.";
     private static final String NON_REMOVABLE_ROOM = "실행중인 방은 삭제할 수 없습니다.";
     private static final String REMOVABLE_STATUS = "READY";
@@ -139,34 +139,34 @@ public class ChessGameService {
         boardDao.update(to.toString(), chessGame.takePieceByPosition(to).toString(), gameId);
     }
 
-    public ScoreDto end(int gameId) {
+    public WinnerDto end(int gameId) {
         ChessGame chessGame = createCustomChessGame(gameId);
         checkReady(gameId);
         Result result = chessGame.stop();
         return createEndScore(result, gameId);
     }
 
-    private ScoreDto createEndScore(Result result, int gameId) {
-        ScoreDto scoreDto = null;
+    private WinnerDto createEndScore(Result result, int gameId) {
+        WinnerDto winnerDto = null;
         if (gameStatusDao.getStatus(gameId).equals(GameStatus.CHECK_MATE.toString())) {
-            scoreDto = new ScoreDto(String.format(WIN_MESSAGE, Team.of(turnDao.getTurn(gameId)).change()));
+           winnerDto = WinnerDto.of(result);
         }
-        resetBoard();
-        turnDao.reset(1);
-        gameStatusDao.reset(1);
-        return selectScoreDto(result, scoreDto);
+        resetBoard(gameId);
+        turnDao.reset(gameId);
+        gameStatusDao.reset(gameId);
+        return selectScoreDto(result, winnerDto);
     }
 
-    private void resetBoard() {
+    private void resetBoard(int gameId) {
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
-        boardDao.reset(board.toMap(), 1);
+        boardDao.reset(board.toMap(), gameId);
     }
 
-    private ScoreDto selectScoreDto(Result result, ScoreDto scoreDto) {
-        if (Objects.isNull(scoreDto)) {
-            return ScoreDto.of(result);
+    private WinnerDto selectScoreDto(Result result, WinnerDto winnerDto) {
+        if (Objects.isNull(winnerDto)) {
+            return WinnerDto.of(result);
         }
-        return scoreDto;
+        return winnerDto;
     }
 }

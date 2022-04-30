@@ -1,6 +1,5 @@
 package chess.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,9 +44,11 @@ public class ChessGameServiceTest {
     void createScore() {
         chessGameService.startChessGame(new WebBasicBoardStrategy(), 1);
         ScoreDto scoreDto = chessGameService.createScore(1);
-        assertThat(scoreDto.getMessage()).isEqualTo("white : 38.0점\n"
-                + "black : 38.0점\n"
-                + "무승부 입니다!");
+        assertAll(
+                () -> assertEquals(scoreDto.getWhiteScore(), 38),
+                () -> assertEquals(scoreDto.getBlackScore(), 38)
+        );
+
     }
 
     @Test
@@ -68,15 +69,5 @@ public class ChessGameServiceTest {
         assertThatThrownBy(() -> chessGameService.move("a2", "a4", 1))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("체스 게임을 시작해야 합니다.");
-    }
-
-    @Test
-    @DisplayName("왕이 잡히지 않고, 게임을 종료하게 했을 때 출력문을 검사한다.")
-    void end() {
-        chessGameService.startChessGame(new WebBasicBoardStrategy(), 1);
-        ScoreDto scoreDto = chessGameService.end(1);
-        assertThat(scoreDto.getMessage()).isEqualTo("white : 38.0점\n"
-                + "black : 38.0점\n"
-                + "무승부 입니다!");
     }
 }

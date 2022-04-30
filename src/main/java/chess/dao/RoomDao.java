@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -27,20 +28,18 @@ public class RoomDao {
 
     public RoomEntity findById(final int roomId) {
         final String sql = "SELECT * FROM room WHERE room_id = ?";
-        final RowMapper<RoomEntity> rowMapper = (resultSet, rowNum) -> new RoomEntity(
-                Integer.parseInt(resultSet.getString("room_id")),
-                resultSet.getString("name"),
-                resultSet.getString("game_status"),
-                resultSet.getString("current_turn"),
-                resultSet.getString("password"),
-                Boolean.parseBoolean(resultSet.getString("is_delete"))
-        );
+        final RowMapper<RoomEntity> rowMapper = createRoomEntityRowMapper();
         return jdbcTemplate.queryForObject(sql, rowMapper, roomId);
     }
 
     public List<RoomEntity> findAllEntity() {
         final String sql = "SELECT * FROM room WHERE is_delete = ?";
-        final RowMapper<RoomEntity> rowMapper = (resultSet, rowNum) -> new RoomEntity(
+        final RowMapper<RoomEntity> rowMapper = createRoomEntityRowMapper();
+        return jdbcTemplate.query(sql, rowMapper, false);
+    }
+
+    private RowMapper<RoomEntity> createRoomEntityRowMapper() {
+        return (resultSet, rowNum) -> new RoomEntity(
                 Integer.parseInt(resultSet.getString("room_id")),
                 resultSet.getString("name"),
                 resultSet.getString("game_status"),
@@ -48,21 +47,21 @@ public class RoomDao {
                 resultSet.getString("password"),
                 Boolean.parseBoolean(resultSet.getString("is_delete"))
         );
-        return jdbcTemplate.query(sql, rowMapper, false);
     }
 
     public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn,
                     final String password) {
         final String sql = "INSERT INTO room (name, game_status, current_turn, password) VALUES (?, ?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
+        final PreparedStatementCreator statementCreator = con -> {
             final PreparedStatement ps = con.prepareStatement(sql, new String[]{"room_id"});
             ps.setString(1, roomName);
             ps.setString(2, gameStatus.getValue());
             ps.setString(3, currentTurn.getValue());
             ps.setString(4, password);
             return ps;
-        }, keyHolder);
+        };
+        jdbcTemplate.update(statementCreator, keyHolder);
         return keyHolder.getKey().intValue();
     }
 
@@ -71,21 +70,13 @@ public class RoomDao {
         return jdbcTemplate.queryForObject(sql, Boolean.class, false, roomName);
     }
 
-    public boolean isExistId(final int roomId) {
-        final String sql = "SELECT EXISTS(SELECT room_id FROM room WHERE room_id = ?)";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, roomId);
-    }
-
     public List<RoomResponseDto> findAll() {
         final String sql = "SELECT room_id, name, game_status FROM room WHERE is_delete = ?";
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> RoomResponseDto.of(
-                        Integer.parseInt(resultSet.getString("room_id")),
-                        resultSet.getString("name"),
-                        resultSet.getString("game_status")),
-                false
-        );
+        final RowMapper<RoomResponseDto> rowMapper = (resultSet, rowNum) -> RoomResponseDto.of(
+                Integer.parseInt(resultSet.getString("room_id")),
+                resultSet.getString("name"),
+                resultSet.getString("game_status"));
+        return jdbcTemplate.query(sql, rowMapper, false);
     }
 
     public String findPasswordById(final int roomId) {
@@ -100,13 +91,10 @@ public class RoomDao {
     public CurrentTurnDto findCurrentTurnById(final int roomId) {
         try {
             final String sql = "SELECT name, current_turn FROM room WHERE room_id = ? AND is_delete = ?";
-            return jdbcTemplate.queryForObject(
-                    sql,
-                    (resultSet, rowNum) -> CurrentTurnDto.of(
-                            resultSet.getString("name"),
-                            Color.from(resultSet.getString("current_turn"))),
-                    roomId, false
-            );
+            final RowMapper<CurrentTurnDto> rowMapper = (resultSet, rowNum) -> CurrentTurnDto.of(
+                    resultSet.getString("name"),
+                    Color.from(resultSet.getString("current_turn")));
+            return jdbcTemplate.queryForObject(sql, rowMapper, roomId, false);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("방 아이디에 해당하는 턴 정보가 존재하지 않습니다.");
         }
@@ -115,13 +103,10 @@ public class RoomDao {
     public RoomStatusDto findStatusById(final int roomId) {
         try {
             final String sql = "SELECT name, game_status FROM room WHERE room_id = ? AND is_delete = ?";
-            return jdbcTemplate.queryForObject(
-                    sql,
-                    (resultSet, rowNum) -> RoomStatusDto.of(
-                            resultSet.getString("name"),
-                            resultSet.getString("game_status")),
-                    roomId, false
-            );
+            final RowMapper<RoomStatusDto> rowMapper = (resultSet, rowNum) -> RoomStatusDto.of(
+                    resultSet.getString("name"),
+                    resultSet.getString("game_status"));
+            return jdbcTemplate.queryForObject(sql, rowMapper, roomId, false);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("방 아이디에 해당하는 게임 상태가 존재하지 않습니다.");
         }

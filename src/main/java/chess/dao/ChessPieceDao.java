@@ -38,14 +38,11 @@ public class ChessPieceDao {
 
     public List<ChessPieceDto> findAllByRoomId(final int roomId) {
         final String sql = "SELECT * FROM chess_piece WHERE room_id = ?";
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) -> ChessPieceDto.of(
-                        Position.from(resultSet.getString("position")),
-                        resultSet.getString("chess_piece"),
-                        Color.from(resultSet.getString("color"))),
-                roomId
-        );
+        final RowMapper<ChessPieceDto> rowMapper = (resultSet, rowNum) -> ChessPieceDto.of(
+                Position.from(resultSet.getString("position")),
+                resultSet.getString("chess_piece"),
+                Color.from(resultSet.getString("color")));
+        return jdbcTemplate.query(sql, rowMapper, roomId);
     }
 
     public int deleteByRoomIdAndPosition(final int roomId, final Position position) {

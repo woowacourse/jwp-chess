@@ -14,7 +14,7 @@ public class ChessViewController {
     }
 
     @GetMapping("/{id}")
-    public String init() {
-        return "index";
+    public String showChessGame() {
+        return "chessGame";
     }
 }

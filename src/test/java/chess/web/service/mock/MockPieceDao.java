@@ -1,4 +1,4 @@
-package chess.web.service;
+package chess.web.service.mock;
 
 import chess.domain.board.piece.Piece;
 import chess.domain.board.piece.PieceFactory;

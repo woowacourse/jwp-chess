@@ -1,4 +1,4 @@
-package chess.web.service;
+package chess.web.service.mock;
 
 import chess.domain.board.Team;
 import chess.domain.board.Turn;

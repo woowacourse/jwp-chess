@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 class ChessGameServiceTest {
     private final ChessGameService chessGameService =
-            new ChessGameService(new FakePieceDao(), new FakeGameStateDao(), new FakeRoomDao());
+            new ChessGameService(new FakePieceDao(), new FakeGameStateDao(), new FakeRoomDao(), null);
     private final int roomNumber = 1;
 
     @Test

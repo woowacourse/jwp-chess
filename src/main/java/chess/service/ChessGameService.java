@@ -23,9 +23,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.sql.DataSource;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class ChessGameService {
 
     private static final String EMPTY_GAME_STATE = "nothing";
@@ -39,11 +44,14 @@ public class ChessGameService {
     private final PieceDao pieceDao;
     private final GameStateDao gameStateDao;
     private final RoomDao roomDao;
+    private final DataSource dataSource;
 
-    public ChessGameService(final PieceDao pieceDao, final GameStateDao gameStateDao, RoomDao roomDao) {
+    public ChessGameService(final PieceDao pieceDao, final GameStateDao gameStateDao,
+                            final RoomDao roomDao, final DataSource dataSource) {
         this.pieceDao = pieceDao;
         this.gameStateDao = gameStateDao;
         this.roomDao = roomDao;
+        this.dataSource = dataSource;
     }
 
     public Map<Position, Piece> getPieces(final int roomNumber) {
@@ -63,6 +71,7 @@ public class ChessGameService {
                 .name();
         gameStateDao.saveTurn(roomNumber, turn);
         gameStateDao.saveState(roomNumber, PLAYING_GAME_STATE);
+
         pieceDao.saveAllPieces(roomNumber, board.getPieces());
         return board.getPieces();
     }

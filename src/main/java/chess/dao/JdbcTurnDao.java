@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.domain.player.Team;
 import chess.dto.TurnDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,9 +19,9 @@ public class JdbcTurnDao implements TurnDao {
     }
 
     @Override
-    public void insertTurn(int roomId) {
-        final String sql = "insert into turn(roomId, team) values(?, 'WHITE')";
-        jdbcTemplate.update(sql, roomId);
+    public void insertTurn(int roomId, String team) {
+        final String sql = "insert into turn(roomId, team) values(?, ?)";
+        jdbcTemplate.update(sql, roomId, team);
     }
 
     @Override
@@ -32,18 +31,14 @@ public class JdbcTurnDao implements TurnDao {
     }
 
     @Override
-    public void updateTurn(int roomId, final String turn) {
+    public void updateTurn(int roomId, final String nextTeam, final String currentTeam) {
         final String sql = "update turn set team = ? where roomId = ? and team = ?";
-        if (turn.equals(Team.WHITE.getName())) {
-            jdbcTemplate.update(sql, Team.BLACK.getName(), roomId, Team.WHITE.getName());
-            return;
-        }
-        jdbcTemplate.update(sql, Team.WHITE.getName(), roomId, Team.BLACK.getName());
+        jdbcTemplate.update(sql, nextTeam, roomId, currentTeam);
     }
 
     @Override
-    public void initializeTurn(int roomId) {
-        final String sql = "update turn set team = 'WHITE' where roomId = ?";
-        jdbcTemplate.update(sql, roomId);
+    public void initializeTurn(final int roomId, final String startTeam) {
+        final String sql = "update turn set team = ? where roomId = ?";
+        jdbcTemplate.update(sql, startTeam, roomId);
     }
 }

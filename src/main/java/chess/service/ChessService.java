@@ -7,6 +7,7 @@ import chess.dao.TurnDao;
 import chess.domain.ChessWebGame;
 import chess.domain.Position;
 import chess.domain.Result;
+import chess.domain.State;
 import chess.domain.generator.BlackGenerator;
 import chess.domain.generator.WhiteGenerator;
 import chess.domain.piece.Bishop;
@@ -50,8 +51,8 @@ public class ChessService {
         pieceDao.endPieces(roomId);
         pieceDao.initializePieces(roomId, new Player(new BlackGenerator(), Team.BLACK));
         pieceDao.initializePieces(roomId, new Player(new WhiteGenerator(), Team.WHITE));
-        turnDao.initializeTurn(roomId);
-        gameDao.initializeState(roomId);
+        turnDao.initializeTurn(roomId, Team.WHITE.getName());
+        gameDao.updateState(roomId, State.RUN.getValue());
 
         final ChessWebGame chessWebGame = new ChessWebGame();
         return chessWebGame.initializeChessGame();
@@ -105,8 +106,17 @@ public class ChessService {
         chessWebGame.changeTurn();
         pieceDao.removePieceByCaptured(roomId, moveDto);
         pieceDao.updatePiece(roomId, moveDto);
-        turnDao.updateTurn(roomId, turnDto.getTurn());
+        updateTurn(roomId, turnDto);
         return chessWebGame.createMap();
+    }
+
+    private void updateTurn(int roomId, TurnDto turnDto) {
+        String turn = turnDto.getTurn();
+        if (turn.equals(Team.WHITE.getName())) {
+            turnDao.updateTurn(roomId, Team.BLACK.getName(), Team.WHITE.getName());
+            return;
+        }
+        turnDao.updateTurn(roomId, Team.WHITE.getName(), Team.BLACK.getName());
     }
 
     private ChessWebGame loadGame(int roomId) {
@@ -141,8 +151,8 @@ public class ChessService {
         roomDao.createRoom(roomDto);
 
         int roomId = roomDao.getRecentRoomId();
-        gameDao.insertState(roomId);
-        turnDao.insertTurn(roomId);
+        gameDao.insertState(roomId, State.RUN.getValue());
+        turnDao.insertTurn(roomId, Team.WHITE.getName());
 
         return new RoomDto(roomId, roomDto.getTitle(), roomDto.getPassword());
     }
@@ -154,7 +164,7 @@ public class ChessService {
     }
 
     public void endGame(int roomId) {
-        gameDao.updateStateEnd(roomId);
+        gameDao.updateState(roomId, State.END.getValue());
     }
 
     public void deleteRoom(RoomDto roomDto) {
@@ -164,7 +174,7 @@ public class ChessService {
     }
 
     private void checkGameState(int roomId) {
-        if (!gameDao.getState(roomId).equals("end")) {
+        if (!gameDao.getState(roomId).equals(State.END.getValue())) {
             throw new IllegalArgumentException("종료된 게임만 삭제할 수 있습니다.");
         }
     }

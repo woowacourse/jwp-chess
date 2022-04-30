@@ -11,7 +11,7 @@ async function start() {
     turn = pieces.turn;
     isStart = true;
     printPieces(pieces.board);
-    printStatus();
+    await printStatus();
 }
 
 async function load() {
@@ -40,7 +40,7 @@ async function load() {
     }
     printPieces(pieces.board);
     isStart = true;
-    printStatus();
+    await printStatus();
 }
 
 async function end() {
@@ -127,7 +127,7 @@ async function selectPiece(pieceDiv) {
     if (from !== "") {
         let sourceClassList = document.getElementById(from).classList;
         sourceClassList.remove('selected');
-        move(from, pieceDiv.id)
+        await move(from, pieceDiv.id)
     }
 }
 
@@ -145,7 +145,7 @@ async function move(fromPosition, toPosition) {
     })
 
     if (!response.ok) {
-        errorMessage = await response.json();
+        const errorMessage = await response.json();
         alert("[ERROR] " + errorMessage.message);
         return;
     }

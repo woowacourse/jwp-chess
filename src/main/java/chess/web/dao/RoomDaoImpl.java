@@ -45,11 +45,10 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Long updateTurnById(Long id, String turn) {
+    public void updateTurnById(Long id, String turn) {
         final String query = "UPDATE room SET turn = ? WHERE id = ?";
 
         jdbcTemplate.update(query, turn, id);
-        return id;
     }
 
     @Override

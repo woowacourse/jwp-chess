@@ -82,7 +82,9 @@
     - [ ] 자원의 상태를 "변경"하는 경우 Post보다 Put, Patch를 사용해보자.
     - [ ] restart는 자원의 상태를 변경하는데 Get이 적합할까?
 - [ ] Advice에서 특정 에러를 제외한 다른 에러가 발생할 경우 어떻게 처리할 것인가?
-- [ ] RoomDao의 `updateTurnById()`는 Long을 반환하는데 이것이 사용되는 곳이 있을까?
+- [x] RoomDao의 `updateTurnById()`는 Long을 반환하는데 이것이 사용되는 곳이 있을까?
+    - `save()` 처럼 수정하고나서 그 id로 값을 찾아와 무언가를 할 수 있다고 생각했는데 이미 `updateTurnById()`에서 파라미터로 id를 사용하기 때문에 그럴 필요가 없었다.
+    - 그래서 반환형을 Long이 아닌 void로 수정하였다.
 - [ ] 전체적으로 테스트의 이름과 DisplayName 등을 확인하고 수정하기
 - [ ] RoomDaoTest 파일의 가장 마지막 줄에 공백이 없으면 깃헙에서 경고를 보여주는 이유가 무엇일까?
 - [ ] 변수명에 Optional인지 적을 필요는 없다!

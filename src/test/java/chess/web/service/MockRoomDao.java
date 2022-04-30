@@ -22,10 +22,9 @@ public class MockRoomDao implements RoomDao {
     }
 
     @Override
-    public Long updateTurnById(Long id, String turn) {
+    public void updateTurnById(Long id, String turn) {
         Room room = mockDb.get(id);
         mockDb.put(id, new Room(id, turn, room.getTitle(), room.getPassword()));
-        return id;
     }
 
     @Override

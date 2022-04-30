@@ -44,6 +44,22 @@ class RoomDaoTest {
 
     @Sql("/sql/chess-setup.sql")
     @Test
+    void updateTurnById() {
+        Turn turn = Turn.init();
+        String title = "title";
+        String password = "password";
+        Long id = roomDao.save(turn.getTeam().value(), title, password);
+        Turn changedTurn = turn.change();
+
+        roomDao.updateTurnById(id, changedTurn.getTeam().value());
+
+        Optional<Room> optionalRoom = roomDao.findById(id);
+        assertThat(optionalRoom).isPresent();
+        assertThat(optionalRoom.get().getTurn()).isEqualTo(changedTurn.getTeam().value());
+    }
+
+    @Sql("/sql/chess-setup.sql")
+    @Test
     @DisplayName("체스방을 찾는다.")
     void findById() {
         Turn turn = Turn.init();

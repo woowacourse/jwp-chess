@@ -8,7 +8,7 @@ public interface RoomDao {
 
     Long save(String turn, String title, String password);
 
-    Long updateTurnById(Long id, String turn);
+    void updateTurnById(Long id, String turn);
 
     Optional<Room> findById(Long id);
 

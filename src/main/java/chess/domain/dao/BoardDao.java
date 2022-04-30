@@ -1,7 +1,7 @@
 package chess.domain.dao;
 
 import chess.service.dto.PieceDto;
-import chess.utils.NoExecuteQuery;
+import chess.utils.exception.NoExecuteQuery;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

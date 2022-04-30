@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,13 +70,13 @@ public class ChessService {
     }
 
     public ChessBoard findBoard(int gameId) {
-        GameDto game = gameDao.findById(gameId);
+        Optional<GameDto> game = gameDao.findById(gameId);
         List<PieceDto> boardInfo = boardDao.findByGameId(gameId);
         HashMap<Position, ChessPiece> board = new HashMap<>();
         for (PieceDto pieceDto : boardInfo) {
             board.put(new Position(pieceDto.getPosition()), Type.from(pieceDto.getPiece()).createPiece(Color.from(pieceDto.getColor())));
         }
-        return new ChessBoard(board, convertToGameStatus(game.getStatus()), game.getTurn());
+        return new ChessBoard(board, convertToGameStatus(game.get().getStatus()), game.get().getTurn());
     }
 
     private GameStatus convertToGameStatus(String status) {
@@ -115,14 +116,14 @@ public class ChessService {
     }
 
     public void deleteGame(int gameId, String password) throws IllegalArgumentException, SQLException {
-        GameDto gameDto = gameDao.findById(gameId);
+        Optional<GameDto> gameDto = gameDao.findById(gameId);
         validateRemovable(password, gameDto);
         end(gameId);
     }
 
-    private void validateRemovable(String password, GameDto gameDto) {
-        validateStatus(Status.valueOf(gameDto.getStatus()));
-        validatePassword(gameDto, password);
+    private void validateRemovable(String password, Optional<GameDto> gameDto) {
+        validateStatus(Status.valueOf(gameDto.get().getStatus()));
+        validatePassword(gameDto.get(), password);
     }
 
     private void validateStatus(Status gameStatus) {

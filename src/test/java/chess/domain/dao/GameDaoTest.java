@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -52,10 +54,10 @@ class GameDaoTest {
         //given
         gameCreate();
         //when
-        GameDto actual = gameDao.findById(1);
+        Optional<GameDto> actual = gameDao.findById(1);
         //then
-        assertThat(actual.getId()).isEqualTo(1);
-        assertThat(actual.getTitle()).isEqualTo("test");
+        assertThat(actual.get().getId()).isEqualTo(1);
+        assertThat(actual.get().getTitle()).isEqualTo("test");
     }
 
     @Test
@@ -66,7 +68,7 @@ class GameDaoTest {
         //when
         gameDao.delete(1);
         //then
-        assertThat(gameDao.findById(1)).isNull();
+        assertThat(gameDao.findById(1)).isEmpty();
     }
 
 }

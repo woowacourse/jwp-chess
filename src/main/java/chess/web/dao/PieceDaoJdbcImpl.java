@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PieceDaoJdbcImpl implements PieceDao {
 
-    private static final RowMapper<PieceDto> pieceDtoRowMapper = (resultSet, rowNum) -> {
+    private static final RowMapper<PieceDto> PIECE_DTO_ROW_MAPPER = (resultSet, rowNum) -> {
         return new PieceDto(
                 resultSet.getString("piece_type"),
                 resultSet.getString("position"),
@@ -39,7 +39,7 @@ public class PieceDaoJdbcImpl implements PieceDao {
     @Override
     public List<PieceDto> findAllByGameId(int gameId) {
         final String sql = "select piece_type, position, color from piece where game_id = ?";
-        return jdbcTemplate.query(sql, pieceDtoRowMapper, gameId);
+        return jdbcTemplate.query(sql, PIECE_DTO_ROW_MAPPER, gameId);
     }
 
     @Override

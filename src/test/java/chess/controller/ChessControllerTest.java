@@ -24,7 +24,6 @@ import org.springframework.http.MediaType;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ChessControllerTest {
 
-    private static final long TEST_GAME_ID = 1;
     private static final CreateGameRequest CREAT_GAME_REQUEST = new CreateGameRequest("game", "password");
 
     @LocalServerPort
@@ -43,14 +42,14 @@ class ChessControllerTest {
 
     @AfterEach
     void cleanUp() {
-        gameDao.findAllGames()
-                .forEach(gameIdentifiers -> gameDao.delete(gameIdentifiers.getId()));
+        gameDao.findAll()
+                .forEach(gameEntity -> gameDao.delete(gameEntity.getId()));
     }
 
     @DisplayName("GET - 게임 리스트 조회 테스트")
     @Test
     void load_Games() {
-        Long gameId = chessService.createGame(CREAT_GAME_REQUEST);
+        chessService.createGame(CREAT_GAME_REQUEST);
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)

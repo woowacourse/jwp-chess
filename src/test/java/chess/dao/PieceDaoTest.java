@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import chess.controller.dto.response.PieceResponse;
+import chess.dao.entity.GameEntity;
 import chess.domain.GameState;
 import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
@@ -39,7 +40,8 @@ public class PieceDaoTest {
         gameDao = new GameDao(dataSource);
         pieceDao = new PieceDao(dataSource);
 
-        gameId = gameDao.save("game", "password", "salt", GameState.READY);
+        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        gameId = gameDao.save(gameEntity);
     }
 
     @DisplayName("기물 저장 테스트")

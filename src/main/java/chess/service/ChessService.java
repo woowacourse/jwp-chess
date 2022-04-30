@@ -4,10 +4,12 @@ import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.ChessGamesResponse;
+import chess.controller.dto.response.GameRoomResponse;
 import chess.controller.dto.response.PieceResponse;
 import chess.controller.dto.response.StatusResponse;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
+import chess.dao.entity.GameEntity;
 import chess.domain.ChessGame;
 import chess.domain.GameState;
 import chess.domain.board.Board;
@@ -19,8 +21,7 @@ import chess.domain.piece.Piece;
 import chess.util.PasswordEncryptor;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,8 +46,10 @@ public class ChessService {
 
     public Long createGame(String gameName, String password) {
         String salt = PasswordEncryptor.generateSalt();
+        GameEntity gameEntity = new GameEntity(null, gameName, PasswordEncryptor.encrypt(password, salt), salt,
+                GameState.READY);
         ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
-        Long gameId = gameDao.save(gameName, PasswordEncryptor.encrypt(password, salt), salt, GameState.READY);
+        Long gameId = gameDao.save(gameEntity);
         saveBoard(gameId, chessGame.getBoard());
         return gameId;
     }
@@ -61,8 +64,11 @@ public class ChessService {
         }
     }
 
-    public ChessGamesResponse findAllGameIds() {
-        return new ChessGamesResponse(gameDao.findAllGames());
+    public ChessGamesResponse loadAllGames() {
+        return new ChessGamesResponse(gameDao.findAll()
+                .stream()
+                .map(entity -> new GameRoomResponse(entity.getId(), entity.getName()))
+                .collect(Collectors.toList()));
     }
 
     public ChessGameResponse loadGame(Long gameId) {
@@ -70,8 +76,8 @@ public class ChessService {
     }
 
     private ChessGame createChessGameObject(Long gameId) {
-        Optional<GameState> maybeGameState = gameDao.findState(gameId);
-        GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
+        GameEntity gameEntity = gameDao.findById(gameId);
+        GameState gameState = gameEntity.getState();
         Board board = createBoard(gameId);
         return new ChessGame(board, gameState);
     }
@@ -120,8 +126,7 @@ public class ChessService {
 
     public void deleteGame(Long gameId, String password) {
         authenticate(gameId, password);
-        Optional<GameState> maybeGameState = gameDao.findState(gameId);
-        GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
+        GameState gameState = gameDao.findById(gameId).getState();
         if (!gameState.isFinished()) {
             throw new IllegalArgumentException("게임이 종료되기 전에는 삭제할 수 없습니다.");
         }
@@ -129,10 +134,9 @@ public class ChessService {
     }
 
     private void authenticate(Long gameId, String password) {
-        Optional<String> maybeSalt = gameDao.findSalt(gameId);
-        String salt = maybeSalt.orElseThrow(NoSuchElementException::new);
-        Optional<String> maybePassword = gameDao.findPassword(gameId);
-        String actualPassword = maybePassword.orElseThrow(NoSuchElementException::new);
+        GameEntity gameEntity = gameDao.findById(gameId);
+        String actualPassword = gameEntity.getPassword();
+        String salt = gameEntity.getSalt();
         String sentPassword = PasswordEncryptor.encrypt(password, salt);
         if (!sentPassword.equals(actualPassword)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");

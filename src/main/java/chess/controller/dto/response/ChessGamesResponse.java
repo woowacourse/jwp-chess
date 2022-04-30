@@ -4,13 +4,13 @@ import java.util.List;
 
 public class ChessGamesResponse {
 
-    private final List<GameIdentifiers> games;
+    private final List<GameRoomResponse> games;
 
-    public ChessGamesResponse(List<GameIdentifiers> games) {
+    public ChessGamesResponse(List<GameRoomResponse> games) {
         this.games = games;
     }
 
-    public List<GameIdentifiers> getGames() {
+    public List<GameRoomResponse> getGames() {
         return games;
     }
 }

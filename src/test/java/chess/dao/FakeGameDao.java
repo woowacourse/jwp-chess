@@ -1,95 +1,66 @@
 package chess.dao;
 
-import chess.controller.dto.response.GameIdentifiers;
+import chess.dao.entity.GameEntity;
 import chess.domain.GameState;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import org.mockito.Mockito;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 public class FakeGameDao extends GameDao {
 
-    private final Map<Long, String> names;
-    private final Map<Long, String> passwords;
-    private final Map<Long, String> salts;
-    private final Map<Long, GameState> states;
+    private final Map<Long, GameEntity> games;
     private Long autoIncrementId = 1L;
 
     public FakeGameDao() {
         super(Mockito.mock(DataSource.class));
-        this.names = new HashMap<>();
-        this.passwords = new HashMap<>();
-        this.salts = new HashMap<>();
-        this.states = new HashMap<>();
+        this.games = new HashMap<>();
     }
 
     @Override
-    public Long save(String name, String password, String salt, GameState state) {
-        if (names.containsValue(name)) {
-            throw new DuplicateKeyException("");
-        }
-        names.put(autoIncrementId, name);
-        passwords.put(autoIncrementId, password);
-        salts.put(autoIncrementId, salt);
-        states.put(autoIncrementId, GameState.READY);
+    public Long save(GameEntity gameEntity) {
+        checkDuplicatedName(gameEntity.getName());
+        gameEntity.setId(autoIncrementId);
+        games.put(autoIncrementId, gameEntity);
         return autoIncrementId++;
     }
 
-    @Override
-    public List<GameIdentifiers> findAllGames() {
-        return names.keySet().stream()
-                .map(id -> new GameIdentifiers(id, names.get(id)))
-                .collect(Collectors.toList());
+    private void checkDuplicatedName(String name) {
+        games.values()
+                .forEach(gameEntity -> {
+                    if (gameEntity.getName().equals(name)) {
+                        throw new DuplicateKeyException("이미 존재하는 게임입니다.");
+                    }
+                });
     }
 
     @Override
-    public Optional<String> findName(Long id) {
-        if (names.containsKey(id)) {
-            return Optional.of(names.get(id));
+    public List<GameEntity> findAll() {
+        return new ArrayList<>(games.values());
+    }
+
+    @Override
+    public GameEntity findById(Long id) {
+        if (!games.containsKey(id)) {
+            throw new EmptyResultDataAccessException("존재하지 않는 게임입니다.", 1);
         }
-        return Optional.empty();
+        return games.get(id);
     }
 
     @Override
-    public Optional<String> findPassword(Long id) {
-        if (passwords.containsKey(id)) {
-            return Optional.of(passwords.get(id));
+    public void updateState(Long id, GameState state) {
+        if (!games.containsKey(id)) {
+            throw new EmptyResultDataAccessException("존재하지 않는 게임입니다.", 1);
         }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<String> findSalt(Long id) {
-        if (salts.containsKey(id)) {
-            return Optional.of(salts.get(id));
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<GameState> findState(Long id) {
-        if (states.containsKey(id)) {
-            return Optional.of(states.get(id));
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public void updateState(Long id, GameState gameState) {
-        states.put(id, gameState);
+        games.get(id).setState(state);
     }
 
     @Override
     public void delete(Long id) {
-        names.remove(id);
-        passwords.remove(id);
-        salts.remove(id);
-        states.remove(id);
+        games.remove(id);
     }
-
-
 }

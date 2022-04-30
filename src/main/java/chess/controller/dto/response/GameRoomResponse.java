@@ -1,11 +1,11 @@
 package chess.controller.dto.response;
 
-public class GameIdentifiers {
+public class GameRoomResponse {
 
     private final long id;
     private final String name;
 
-    public GameIdentifiers(long id, String name) {
+    public GameRoomResponse(long id, String name) {
         this.id = id;
         this.name = name;
     }

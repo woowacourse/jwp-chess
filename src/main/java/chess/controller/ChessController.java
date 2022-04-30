@@ -33,7 +33,7 @@ public class ChessController {
 
     @GetMapping
     public ChessGamesResponse loadGameList() {
-        return chessService.findAllGameIds();
+        return chessService.loadAllGames();
     }
 
     @GetMapping("/{gameId}")

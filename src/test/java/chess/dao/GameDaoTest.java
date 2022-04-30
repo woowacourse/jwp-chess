@@ -2,9 +2,8 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.fail;
 
-import chess.controller.dto.response.GameIdentifiers;
+import chess.dao.entity.GameEntity;
 import chess.domain.GameState;
 import java.util.List;
 import javax.sql.DataSource;
@@ -17,8 +16,6 @@ import org.springframework.dao.DuplicateKeyException;
 
 @JdbcTest
 public class GameDaoTest {
-
-    private static final String NOT_HAVE_DATA = "데이터가 없습니다.";
 
     @Autowired
     private DataSource dataSource;
@@ -33,68 +30,45 @@ public class GameDaoTest {
     @DisplayName("게임 저장 테스트")
     @Test
     void save() {
-        Long gameId = gameDao.save("game", "password", "salt", GameState.READY);
+        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        Long id = gameDao.save(gameEntity);
 
-        assertThat(gameId).isNotNull();
+        List<GameEntity> games = gameDao.findAll();
+
+        assertThat(games.size()).isEqualTo(1);
+        assertThat(games.get(0).getId()).isEqualTo(id);
     }
 
     @DisplayName("전체 게임 조회 테스트")
     @Test
     void find_All_Game_Id() {
-        gameDao.save("game", "password", "salt", GameState.READY);
+        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        gameDao.save(gameEntity);
 
-        List<GameIdentifiers> actual = gameDao.findAllGames();
+        List<GameEntity> actual = gameDao.findAll();
 
         assertThat(actual.size()).isEqualTo(1);
     }
 
-    @DisplayName("게임 이름 조회 테스트")
+    @DisplayName("id에 대한 게임 조회 테스트")
     @Test
-    void find_Name() {
-        Long gameId = gameDao.save("game", "password", "salt", GameState.READY);
+    void find_By_Id() {
+        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        Long id = gameDao.save(gameEntity);
 
-        String actual = gameDao.findName(gameId).orElseGet(() -> fail(NOT_HAVE_DATA));
+        GameEntity actual = gameDao.findById(id);
 
-        assertThat(actual).isEqualTo("game");
-    }
-
-    @DisplayName("게임 비밀번호 조회 테스트")
-    @Test
-    void find_Password() {
-        Long gameId = gameDao.save("game", "password", "salt", GameState.READY);
-
-        String actual = gameDao.findPassword(gameId).orElseGet(() -> fail(NOT_HAVE_DATA));
-
-        assertThat(actual).isEqualTo("password");
-    }
-
-    @DisplayName("salt 조회 테스트")
-    @Test
-    void find_Salt() {
-        Long gameId = gameDao.save("game", "password", "salt", GameState.READY);
-
-        String actual = gameDao.findSalt(gameId).orElseGet(() -> fail(NOT_HAVE_DATA));
-
-        assertThat(actual).isEqualTo("salt");
-    }
-
-    @DisplayName("게임 상태 조회 테스트")
-    @Test
-    void find_State() {
-        Long gameId = gameDao.save("game", "password", "salt", GameState.READY);
-
-        GameState actual = gameDao.findState(gameId).orElseGet(() -> fail(NOT_HAVE_DATA));
-
-        assertThat(actual).isEqualTo(GameState.READY);
+        assertThat(actual.getName()).isEqualTo("game");
     }
 
     @DisplayName("게임 정보 업데이트 테스트")
     @Test
     void update() {
-        Long gameId = gameDao.save("game", "password", "salt", GameState.READY);
-        gameDao.updateState(gameId, GameState.WHITE_RUNNING);
+        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        Long id = gameDao.save(gameEntity);
+        gameDao.updateState(id, GameState.WHITE_RUNNING);
 
-        GameState actual = gameDao.findState(gameId).orElseGet(() -> fail(NOT_HAVE_DATA));
+        GameState actual = gameDao.findById(id).getState();
 
         assertThat(actual).isEqualTo(GameState.WHITE_RUNNING);
     }
@@ -102,17 +76,22 @@ public class GameDaoTest {
     @DisplayName("게임 삭제 테스트")
     @Test
     void delete() {
-        Long gameId = gameDao.save("game", "password", "salt", GameState.READY);
-        gameDao.delete(gameId);
+        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        Long id = gameDao.save(gameEntity);
+        gameDao.delete(id);
 
-        assertThat(gameDao.findAllGames().size()).isEqualTo(0);
+        List<GameEntity> actual = gameDao.findAll();
+
+        assertThat(actual.size()).isEqualTo(0);
     }
 
     @DisplayName("게임 이름이 중복되는 경우 DuplicateKeyException 발생 테스트")
     @Test
     void duplicated_Name() {
-        gameDao.save("game", "password", "salt", GameState.READY);
-        assertThatThrownBy(() -> gameDao.save("game", "password", "salt", GameState.READY))
+        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        gameDao.save(gameEntity);
+
+        assertThatThrownBy(() -> gameDao.save(gameEntity))
                 .isInstanceOf(DuplicateKeyException.class)
                 .hasMessage("이미 존재하는 게임입니다.");
     }

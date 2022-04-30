@@ -1,12 +1,13 @@
 package chess.dao;
 
-import chess.controller.dto.response.GameIdentifiers;
+import chess.dao.entity.GameEntity;
 import chess.domain.GameState;
 import java.util.List;
-import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -19,6 +20,11 @@ public class GameDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertGame;
 
+    private final RowMapper<GameEntity> gameEntityRowMapper = (resultSet, rowNum) -> new GameEntity(
+            resultSet.getLong("id"), resultSet.getString("name"),
+            resultSet.getString("password"), resultSet.getString("salt"),
+            GameState.valueOf(resultSet.getString("state")));
+
     public GameDao(DataSource dataSource) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.insertGame = new SimpleJdbcInsert(dataSource)
@@ -26,65 +32,33 @@ public class GameDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Long save(String name, String password, String salt, GameState state) {
+    public Long save(GameEntity gameEntity) {
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(gameEntity);
         try {
-            SqlParameterSource parameters = new MapSqlParameterSource()
-                    .addValue("name", name)
-                    .addValue("password", password)
-                    .addValue("salt", salt)
-                    .addValue("state", state);
             return insertGame.executeAndReturnKey(parameters).longValue();
         } catch (DuplicateKeyException e) {
             throw new DuplicateKeyException("이미 존재하는 게임입니다.");
         }
     }
 
-    public List<GameIdentifiers> findAllGames() {
-        String sql = "SELECT id, name FROM game";
-        return namedParameterJdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new GameIdentifiers(resultSet.getLong("id"),
-                        resultSet.getString("name")));
+    public List<GameEntity> findAll() {
+        String sql = "SELECT * FROM game";
+        return namedParameterJdbcTemplate.query(sql, gameEntityRowMapper);
     }
 
-    public Optional<String> findName(Long id) {
-        String sql = "SELECT name FROM game WHERE id = :id";
-        return find(sql, id);
-    }
-
-    public Optional<String> findPassword(Long id) {
-        String sql = "SELECT password FROM game WHERE id = :id";
-        return find(sql, id);
-    }
-
-    public Optional<String> findSalt(Long id) {
-        String sql = "SELECT salt FROM game WHERE id = :id";
-        return find(sql, id);
-    }
-
-    private Optional<String> find(String sql, Long id) {
+    public GameEntity findById(Long id) {
+        String sql = "SELECT * FROM game WHERE id = :id";
         SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
         try {
-            return Optional.ofNullable(
-                    namedParameterJdbcTemplate.queryForObject(sql, namedParameters, String.class));
+            return namedParameterJdbcTemplate.queryForObject(sql, namedParameters, gameEntityRowMapper);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new EmptyResultDataAccessException("존재하지 않는 게임입니다.", e.getExpectedSize());
         }
     }
 
-    public Optional<GameState> findState(Long id) {
-        String sql = "SELECT state FROM game WHERE id = :id";
-        SqlParameterSource namedParameters = new MapSqlParameterSource("id", id);
-        try {
-            return Optional.ofNullable(
-                    namedParameterJdbcTemplate.queryForObject(sql, namedParameters, GameState.class));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    public void updateState(Long id, GameState gameState) {
+    public void updateState(Long id, GameState state) {
         String sql = "UPDATE game SET state = :state WHERE id = :id";
-        SqlParameterSource namedParameters = new MapSqlParameterSource("state", gameState.name())
+        SqlParameterSource namedParameters = new MapSqlParameterSource("state", state.name())
                 .addValue("id", id);
         namedParameterJdbcTemplate.update(sql, namedParameters);
     }

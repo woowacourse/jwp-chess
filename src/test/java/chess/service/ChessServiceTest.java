@@ -31,7 +31,7 @@ class ChessServiceTest {
     @DisplayName("중복된 이름으로는 게임을 생성할 수 없다.")
     @Test
     void cannot_Create_Duplicated_Name() {
-        Long gameId = chessService.createGame("game", "password");
+        chessService.createGame("game", "password");
         assertThatThrownBy(() -> chessService.createGame("game", "password"))
                 .isInstanceOf(DuplicateKeyException.class);
     }
@@ -42,7 +42,7 @@ class ChessServiceTest {
         chessService.createGame("game1", "password");
         chessService.createGame("game2", "password");
 
-        ChessGamesResponse response = chessService.findAllGameIds();
+        ChessGamesResponse response = chessService.loadAllGames();
 
         assertThat(response.getGames().size()).isEqualTo(2);
     }
@@ -89,7 +89,7 @@ class ChessServiceTest {
 
             chessService.deleteGame(gameId, "password");
 
-            assertThat(chessService.findAllGameIds().getGames().size()).isEqualTo(0);
+            assertThat(chessService.loadAllGames().getGames().size()).isEqualTo(0);
         }
 
         @DisplayName("게임이 종료되지 않은 상태에서는 삭제할 수 없다.")

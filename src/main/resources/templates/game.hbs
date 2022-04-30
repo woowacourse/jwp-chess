@@ -19,8 +19,8 @@
     <section class="chess-board">
         {{#piecesDto}}
         {{#pieces}}
-        <div class="{{position}}" id="{{position}}" onclick="clicked(this.id, {{gameId}})">
-            <img src="images/{{color}}_{{pieceType}}.png" class="img"/>
+        <div class="{{position}}" onclick="clicked('{{position}}', {{gameId}})">
+            <img src="/images/{{color}}_{{pieceType}}.png" class="img"/>
         </div>
         {{/pieces}}
         {{/piecesDto}}

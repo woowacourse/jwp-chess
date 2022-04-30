@@ -98,21 +98,22 @@ const deleteRoom = async (e) => {
     const bodyValue = {
         password: password
     };
-    let response = await fetch('/delete/' + e.target.id, {
+    await fetch('/delete/' + e.target.id, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
             'Accept': 'application/json'
         },
         body: JSON.stringify(bodyValue)
-    });
-    response = await response.json();
-    if (response.message) {
-        await showError(response.message);
-        return;
-    }
-    window.location.reload();
-    alert('방을 삭제했습니다.');
+    }).then(async response => {
+        let data = await response.json();
+        if (response.ok) {
+            window.location.reload();
+            alert('방을 삭제했습니다.');
+            return;
+        }
+        return Promise.reject(data.message);
+    }).catch(error => showError(error));
 }
 
 const intToFile = (value) => {
@@ -232,16 +233,21 @@ const showStatus = async () => {
 }
 
 const showResult = async () => {
-    let result = await fetch('/' + roomId + '/end', {
+    await fetch('/' + roomId + '/end', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
             'Accept': 'application/json'
         }
-    });
-    result = await result.json();
-    alert(result.result);
-    await restartChess();
+    }).then(async response => {
+        let data = await response.json();
+        if (response.ok) {
+            alert(data.result);
+            await restartChess();
+            return;
+        }
+        return Promise.reject(data.message);
+    }).catch(error => showError(error));
 }
 
 const showError = async (message) => {

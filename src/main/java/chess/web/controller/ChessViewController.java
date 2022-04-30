@@ -3,8 +3,8 @@ package chess.web.controller;
 import chess.domain.board.Board;
 import chess.domain.entity.Room;
 import chess.web.controller.dto.BoardDto;
-import chess.web.controller.dto.RoomRequestDto;
-import chess.web.controller.dto.RoomResponseDto;
+import chess.web.controller.dto.RoomRequest;
+import chess.web.controller.dto.RoomResponse;
 import chess.web.service.ChessService;
 import chess.web.service.RoomService;
 import org.springframework.stereotype.Controller;
@@ -30,8 +30,8 @@ public class ChessViewController {
     @GetMapping("/")
     public String getRoomList(Model model) {
         List<Room> rooms = roomService.getRoomList();
-        List<RoomResponseDto.IdAndTitle> titles = rooms.stream()
-                .map(RoomResponseDto.IdAndTitle::new)
+        List<RoomResponse.IdAndTitle> titles = rooms.stream()
+                .map(RoomResponse.IdAndTitle::new)
                 .collect(Collectors.toList());
 
         model.addAttribute("list", titles);
@@ -44,7 +44,7 @@ public class ChessViewController {
     }
 
     @PostMapping("/new")
-    public String createGame(RoomRequestDto.TitleAndPassword request) {
+    public String createGame(RoomRequest.TitleAndPassword request) {
         Long id = roomService.createRoom(request.getTitle(), request.getPassword());
         return "redirect:/room/" + id;
     }

@@ -1,6 +1,6 @@
 package chess.web.controller.dto;
 
-public class RoomRequestDto {
+public class RoomRequest {
     public static class TitleAndPassword {
         private String title;
         private String password;

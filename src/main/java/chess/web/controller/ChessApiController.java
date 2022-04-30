@@ -45,21 +45,21 @@ public class ChessApiController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@RequestBody RoomRequestDto.Password request, @PathVariable Long id) {
+    public ResponseEntity<Void> delete(@RequestBody RoomRequest.Password request, @PathVariable Long id) {
         roomService.delete(request.getPassword(), id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/password")
-    public ResponseEntity<RoomResponseDto.Password> getPassword(@PathVariable Long id) {
+    public ResponseEntity<RoomResponse.Password> getPassword(@PathVariable Long id) {
         Room room = roomService.getRoom(id);
-        return ResponseEntity.ok().body(new RoomResponseDto.Password(room));
+        return ResponseEntity.ok().body(new RoomResponse.Password(room));
     }
 
     @GetMapping("/{id}/check")
-    public ResponseEntity<RoomResponseDto.PasswordAndFinish> checkDelete(@PathVariable Long id) {
+    public ResponseEntity<RoomResponse.PasswordAndFinish> checkDelete(@PathVariable Long id) {
         Room room = roomService.getRoom(id);
         Board board = chessService.loadGame(id);
-        return ResponseEntity.ok().body(new RoomResponseDto.PasswordAndFinish(room, board.isDeadKing()));
+        return ResponseEntity.ok().body(new RoomResponse.PasswordAndFinish(room, board.isDeadKing()));
     }
 }

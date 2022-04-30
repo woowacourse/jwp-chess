@@ -4,7 +4,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.board.position.Position;
-import chess.domain.piece.PieceTeam;
 import chess.dto.request.web.SaveRequest;
 import chess.dto.response.web.GameResponse;
 import chess.exception.ClientException;
@@ -35,11 +34,6 @@ public class ChessApiController {
     public GameResponse init(HttpSession session) {
         ChessBoard chessBoard = chessService.initAndGetChessBoard(session);
 
-        double white = chessBoard.calculateScoreByTeam(PieceTeam.WHITE);
-        double black = chessBoard.calculateScoreByTeam(PieceTeam.BLACK);
-
-        log.info("init {}, {}", white, black);
-
         return new GameResponse(chessBoard);
     }
 
@@ -51,13 +45,6 @@ public class ChessApiController {
         Position to = Position.of(toString);
 
         chessService.movePiece(session, from, to);
-
-        ChessBoard chessBoard = chessService.getChessBoard(session);
-
-        double white = chessBoard.calculateScoreByTeam(PieceTeam.WHITE);
-        double black = chessBoard.calculateScoreByTeam(PieceTeam.BLACK);
-
-        log.info("move {}, {}", white, black);
 
         return new GameResponse(chessService.getChessBoard(session));
     }
@@ -75,14 +62,14 @@ public class ChessApiController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public String illegalExHandle(ClientException exception) {
+    public String handleClientException(ClientException exception) {
         exception.printStackTrace();
         return exception.getMessage();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public String exHandle(Exception exception) throws Exception {
+    public String handleException(Exception exception) throws Exception {
         exception.printStackTrace();
         return exception.getMessage();
     }

@@ -14,6 +14,7 @@ public class StateDAO {
     private static final String FIND_COLOR_SQL = "select color from state where roomID = ?";
     private static final String CONVERT_COLOR_SQL = "update state set color = ? where roomID = ?";
     private static final String CHECK_SAVE_SQL = "select count(*) from room where id = ?";
+    private static final String CHECK_END_SQL = "select count(*) from state where roomID = ? and now = ?";
     private static final String FIND_ALL_USERS_SQL = "select id from room";
     private static final String TERMINATE_GAME_SQL = "delete from room where id = ?";
     private static final String INITIALIZE_ROOM_SQL = "insert into room (name, password) values (?, ?)";
@@ -66,5 +67,10 @@ public class StateDAO {
     public String findAllUsers() {
         List<String> ids = jdbcTemplate.query(FIND_ALL_USERS_SQL, stringRowMapper);
         return String.join(DELIMITER, ids);
+    }
+
+    public boolean isEndedGame(String id) {
+        int count = jdbcTemplate.queryForObject(CHECK_END_SQL, Integer.class, id, State.OFF.name());
+        return count > 0;
     }
 }

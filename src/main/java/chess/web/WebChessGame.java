@@ -31,7 +31,7 @@ public class WebChessGame {
 
     public void initializeGame(BoardDTO boardDTO, ChessForm chessForm) {
         String roomName = chessForm.getRoomName();
-        boardDTO.generateUpdatedDTO(board);
+        boardDTO.generateUpdatedDTO(board.getPieces());
         stateDAO.initializeRoom(roomName, chessForm.getPassword());
         String roomId = roomDAO.findIdByName(roomName);
         stateDAO.initializeColor(roomId);
@@ -59,7 +59,7 @@ public class WebChessGame {
         Color nextColor = nowColor.invert();
         validateMoveOpponentPiece(chessForm, moveForm);
         board.movePiece(new Position(moveForm.getSource()), new Position(moveForm.getDest()));
-        boardDTO.generateUpdatedDTO(board);
+        boardDTO.generateUpdatedDTO(board.getPieces());
         stateDAO.convertColor(nextColor, roomId);
     }
 
@@ -82,7 +82,13 @@ public class WebChessGame {
 
     public void terminateState(String name) {
         String roomId = roomDAO.findIdByName(name);
+        boardDAO.insertBoard(board, roomId);
         stateDAO.terminateState(roomId);
+    }
+
+    public void saveBoard(String name) {
+        String roomId = roomDAO.findIdByName(name);
+
     }
 
     public List<String> findAllSavedGame() {
@@ -91,5 +97,29 @@ public class WebChessGame {
 
     public List<String> findAllEndedGame() {
         return roomDAO.findAllEndedName();
+    }
+
+    public void getEndGameBoard(String name, BoardDTO boardDTO) {
+        String roomId = roomDAO.findIdByName(name);
+        boardDTO.generateUpdatedDTO(boardDAO.findAllPieces(roomId));
+    }
+
+    public String getMessageByPassWord(String name) {
+        if (isEndedGame(name)) {
+            return "방을 삭제하였습니다.";
+        }
+        return "방에 참여합니다.";
+    }
+
+    public boolean isEndedGame(String name) {
+        return stateDAO.isEndedGame(roomDAO.findIdByName(name));
+    }
+
+    public boolean checkPassword(String roomName, String password) {
+        return roomDAO.doesMatchWithPassword(password, roomName);
+    }
+
+    public void deleteRoom(String name) {
+        roomDAO.deleteRoom(name);
     }
 }

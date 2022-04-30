@@ -18,9 +18,8 @@ public class BoardDTO {
         return new BoardDTO();
     }
 
-    public void generateUpdatedDTO(Board board) {
+    public void generateUpdatedDTO(Map<Position, Piece> original) {
         Map<String, Element> model = new HashMap<>();
-        Map<Position, Piece> original = board.getPieces();
         for (Position position : original.keySet()) {
             model.put(position.getPosition(), Element.from(original.get(position)));
         }

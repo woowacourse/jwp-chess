@@ -29,6 +29,13 @@ public class WebChessController {
     private static final String REDIRECT_GAME_END = "redirect:/gameEnd";
     private static final String SEARCH_GAME_URL = "search_save";
     private static final String SEARCH_END_URL = "search_end";
+    private static final String PASSWORD_SEND_URL = "password_send";
+    private static final String REDIRECT_MATCH = "redirect:/match";
+    private static final String REDIRECT_INDEX = "redirect:/";
+    private static final String NOT_MATCH = "not_match";
+    private static final String MATCH_URL = "match_password";
+    private static final String REDIRECT_PASSWORD = "redirect:/sendPassword";
+    private static final String REDIRECT_INDEX_OR_RUN = "redirect:/indexOrRun";
 
     private final BoardDTO boardDTO = BoardDTO.buildModel();
     private final WebChessGame webChessGame;
@@ -63,7 +70,7 @@ public class WebChessController {
     @GetMapping(value = "/searchEnd")
     public String searchEnd(Model model) {
         List<String> allNames = webChessGame.findAllEndedGame();
-        model.addAttribute("names", allNames);
+        model.addAttribute("names", allNames.toArray());
         return SEARCH_END_URL;
     }
 
@@ -138,5 +145,51 @@ public class WebChessController {
         return FINISHED_URL;
     }
 
+    @PostMapping(value = "/sendPassword")
+    public String checkPassword(ChessForm chessForm, Model model) {
+        if (webChessGame.checkPassword(chessForm.getRoomName(), chessForm.getPassword())) {
+            return REDIRECT_MATCH + "?roomName=" + chessForm.getRoomName();
+        }
+        model.addAttribute("message", "비밀번호가 틀렸습니다.");
+        return NOT_MATCH;
+    }
 
+    @PostMapping("/redirectPassword")
+    public String redirectPassword(ChessForm chessForm) {
+        return REDIRECT_PASSWORD + "?roomName=" + chessForm.getRoomName();
+    }
+
+    @GetMapping(value = "/sendPassword", params = "roomName")
+    public String checkPassword(@RequestParam("roomName") String name, Model model) {
+        model.addAttribute("roomName", name);
+        if (webChessGame.isEndedGame(name)) {
+            webChessGame.getEndGameBoard(name, boardDTO);
+            updateDTO(model);
+            model.addAttribute("passwordtype", "을 삭제");
+            return PASSWORD_SEND_URL;
+        }
+        model.addAttribute("passwordtype", "에 참여");
+        return PASSWORD_SEND_URL;
+    }
+
+    @GetMapping(value = "/match", params = "roomName")
+    public String displayMatch(@RequestParam("roomName") String name, Model model) {
+        model.addAttribute("result", webChessGame.getMessageByPassWord(name));
+        model.addAttribute("roomName", name);
+        return MATCH_URL;
+    }
+
+    @PostMapping(value = "redirectIndexOrRun")
+    public String redirectIndexOrRun(ChessForm chessForm) {
+        return REDIRECT_INDEX_OR_RUN + "?roomName=" + chessForm.getRoomName();
+    }
+
+    @GetMapping(value = "/indexOrRun", params = "roomName")
+    public String redirectByCondition(@RequestParam("roomName") String name) {
+        if (webChessGame.isEndedGame(name)) {
+            webChessGame.deleteRoom(name);
+            return REDIRECT_INDEX;
+        }
+        return REDIRECT_GAME_RUN + "?roomName=" + name;
+    }
 }

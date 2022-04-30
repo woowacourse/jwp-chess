@@ -1,5 +1,6 @@
 package chess.db;
 
+import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.domain.state.State;
@@ -46,11 +47,24 @@ public class BoardDAO {
         return result;
     }
 
-    public void insert(Position position, Piece piece, String roomId) {
+    public void deleteBoard(Board board, String roomId) {
+        for (Position position : board.getPieces().keySet()) {
+            delete(position, roomId);
+        }
+    }
+
+    public void insertBoard(Board board, String roomId) {
+        Map<Position, Piece> pieces = board.getPieces();
+        for (Position position : pieces.keySet()) {
+            insert(position, pieces.get(position), roomId);
+        }
+    }
+
+    private void insert(Position position, Piece piece, String roomId) {
         jdbcTemplate.update(INSERT_ONE_PIECE_SQL, position.getPosition(), piece.getName(), piece.getColor(), roomId);
     }
 
-    public void delete(Position position, String roomId) {
+    private void delete(Position position, String roomId) {
         jdbcTemplate.update(DELETE_ONE_PIECE_SQL, position.getPosition(), roomId);
     }
 }

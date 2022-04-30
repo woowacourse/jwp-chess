@@ -155,17 +155,9 @@
 </table>
 <center>
 <div>
-    {{#each names}}
-    <li>
-    <form action="redirectPassword" method="post">
-        <input type="hidden" name="roomName" value={{this}}> </input>
-        {{this}}
-        <button type="submit"> 삭제하기 </button>
-    </form>
-    </li>
-    {{/each}}
-    <form action="/" method="get">
-        <button type="submit"> 완료 </button>
+    <form action="sendPassword?roomName={{roomName}}" method="get">
+        비밀번호가 맞지 않습니다.
+        <button type="submit"> 확인 </button>
     </form>
 </div>
 </center>

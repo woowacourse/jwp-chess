@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.dao;
 
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.piece.Piece;

@@ -15,7 +15,7 @@ class PasswordTest {
     @ValueSource(strings = {"", "  "})
     void validate(final String value) {
         // then
-        assertThatThrownBy(() -> new Password(value))
+        assertThatThrownBy(() -> Password.fromPlain(value))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("비밀번호에 공백은 허용되지 않습니다.");
     }
@@ -25,7 +25,7 @@ class PasswordTest {
     @CsvSource(value = {"1234:true", "4321:false"}, delimiter = ':')
     void isSame(final String plainPassword, final boolean expected) {
         // given
-        final Password password = new Password("1234");
+        final Password password = Password.fromPlain("1234");
 
         // when
         final boolean actual = password.isSame(plainPassword);

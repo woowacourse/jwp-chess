@@ -11,13 +11,13 @@ public class Room {
 
     public Room(final String name, final String password, final ChessGame chessGame) {
         this.name = new RoomName(name);
-        this.password = new Password(password);
+        this.password = Password.fromPlain(password);
         this.chessGame = chessGame;
     }
 
     public Room(final String name, final String password) {
         this.name = new RoomName(name);
-        this.password = new Password(password);
+        this.password = Password.fromPlain(password);
         this.chessGame = new ChessGame(ChessBoardFactory.createChessBoard());
     }
 

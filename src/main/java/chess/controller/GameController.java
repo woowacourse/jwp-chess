@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @RestController
+@RequestMapping("/game")
 public class GameController {
 
     private final ChessGameService chessGameService;
@@ -16,23 +17,17 @@ public class GameController {
         this.chessGameService = chessGameService;
     }
 
-    @PostMapping("/game/create")
-    public ResponseEntity<RoomInfoDto> createNewGame(@RequestBody NewRoomInfo newChessGameInfo) {
-        final long roomId = chessGameService.createNewRoom(newChessGameInfo);
-        final RoomInfoDto roomIdDto = new RoomInfoDto(roomId);
-        return ResponseEntity.ok(roomIdDto);
-    }
-
     @GetMapping("/status/{roomId}")
     public ResponseEntity<StatusDto> findStatusByGameName(@PathVariable long roomId) {
         final StatusDto status = chessGameService.findStatus(roomId);
         return ResponseEntity.ok(status);
     }
 
-    @DeleteMapping("/game")
-    public ResponseEntity<?> deleteGame(@RequestBody RemoveRoomDto removeRoomDto) {
-        chessGameService.deleteRoom(removeRoomDto.getRoomId(), removeRoomDto.getPassword());
-        return ResponseEntity.noContent().build();
+    @PostMapping
+    public ResponseEntity<RoomInfoDto> createNewGame(@RequestBody NewRoomInfo newChessGameInfo) {
+        final long roomId = chessGameService.createNewRoom(newChessGameInfo);
+        final RoomInfoDto roomIdDto = new RoomInfoDto(roomId);
+        return ResponseEntity.ok(roomIdDto);
     }
 
     @PutMapping("/move")
@@ -42,5 +37,11 @@ public class GameController {
         final String destinationPosition = movePositionDto.getDestination();
         final ChessGameDto chessGame = chessGameService.move(roomId, currentPosition, destinationPosition);
         return ResponseEntity.ok(chessGame);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteGame(@RequestBody RemoveRoomDto removeRoomDto) {
+        chessGameService.deleteRoom(removeRoomDto.getRoomId(), removeRoomDto.getPassword());
+        return ResponseEntity.noContent().build();
     }
 }

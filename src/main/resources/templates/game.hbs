@@ -159,7 +159,7 @@
     }
 
     async function getStatus() {
-        let status = await fetch("/status/" + roomId, {
+        let status = await fetch("/game/status/" + roomId, {
             method: "GET"
         }).then(handleErrors)
             .catch(function (error) {

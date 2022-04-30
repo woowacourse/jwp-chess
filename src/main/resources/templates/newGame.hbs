@@ -32,7 +32,7 @@ createGame.addEventListener("click", async function () {
     const input_password = document.getElementById("password").value;
     const input_confirmPassword = document.getElementById("confirmPassword").value;
 
-    let response = await fetch("/game/create", {
+    let response = await fetch("/game", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

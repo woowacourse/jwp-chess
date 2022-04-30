@@ -3,6 +3,7 @@ package chess.controller;
 import static chess.ChessGameFixture.createRunningChessGame;
 import static org.hamcrest.core.Is.is;
 
+import chess.controller.dto.request.ChessGamePasswordRequest;
 import chess.controller.dto.request.PieceMoveRequest;
 import chess.dao.ChessGameDao;
 import chess.domain.ChessGame;
@@ -54,9 +55,9 @@ class ChessGameControllerAdviceTest {
     void exceptionByNotFoundChessGame() {
         long notFoundChessGameId = chessGameId + 1;
         RestAssured.given().log().all()
-                .param("password", "password")
+                .body(new ChessGamePasswordRequest("password"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("chessgames/" + notFoundChessGameId)
+                .when().post("chessgames/" + notFoundChessGameId)
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }

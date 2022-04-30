@@ -4,6 +4,7 @@ import static chess.ChessGameFixture.createRunningChessGame;
 import static chess.domain.state.Turn.END;
 import static org.hamcrest.core.Is.is;
 
+import chess.controller.dto.request.ChessGamePasswordRequest;
 import chess.controller.dto.request.ChessGameRequest;
 import chess.controller.dto.request.PieceMoveRequest;
 import chess.controller.dto.request.PromotionRequest;
@@ -77,9 +78,9 @@ class ChessGameControllerTest {
                 .getId();
 
         RestAssured.given().log().all()
-                .param("password", "password")
+                .body(new ChessGamePasswordRequest("password"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("chessgames/" + chessGameId)
+                .when().post("chessgames/" + chessGameId)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -92,7 +93,7 @@ class ChessGameControllerTest {
         chessGameDao.changeChessGameTurn(chessGameId, END);
 
         RestAssured.given().log().all()
-                .param("password", "password")
+                .body(new ChessGamePasswordRequest("password"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().delete("chessgames/" + chessGameId)
                 .then().log().all()

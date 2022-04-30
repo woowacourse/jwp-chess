@@ -24,8 +24,15 @@ async function startChessGame() {
 }
 
 async function deleteChessGame(id, password) {
-    fetch('/chessgames/' + id + "?password=" + password, {
+    const request = {
+        password: password
+    }
+    fetch('/chessgames/' + id, {
         method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(request)
     }).then(response => handlingException(response))
         .catch(function (error) {
             alert(error.message)

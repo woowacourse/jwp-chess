@@ -45,7 +45,16 @@ async function displayBoard() {
 }
 
 function getBoard() {
-    return fetch(gameUri + "?password=" + gamePassword)
+    const request = {
+        password: gamePassword
+    }
+    return fetch(gameUri + "?password=" + gamePassword, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(request)
+    })
         .then(response => handlingException(response))
         .then((response) => response.json())
         .catch(error => {

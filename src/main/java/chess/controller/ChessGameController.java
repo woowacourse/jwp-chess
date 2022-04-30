@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.request.ChessGamePasswordRequest;
 import chess.controller.dto.request.ChessGameRequest;
 import chess.controller.dto.request.PieceMoveRequest;
 import chess.controller.dto.request.PromotionRequest;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -48,9 +48,11 @@ public class ChessGameController {
         return ResponseEntity.ok().body(chessGameResponses);
     }
 
-    @GetMapping("/{chessGameId}")
-    public ResponseEntity<List<PieceResponse>> loadChessGame(@PathVariable long chessGameId, @RequestParam String password) {
-        List<PieceResponse> pieceResponses = chessGameService.findChessBoard(chessGameId, password)
+    @PostMapping("/{chessGameId}")
+    public ResponseEntity<List<PieceResponse>> loadChessGame(@PathVariable long chessGameId,
+                                                             @RequestBody ChessGamePasswordRequest chessGamePasswordRequest) {
+        List<PieceResponse> pieceResponses = chessGameService.findChessBoard(chessGameId,
+                        chessGamePasswordRequest.getPassword())
                 .entrySet()
                 .stream()
                 .map(PieceResponse::from)
@@ -59,8 +61,9 @@ public class ChessGameController {
     }
 
     @DeleteMapping("/{chessGameId}")
-    public ResponseEntity<Void> deleteChessGame(@PathVariable long chessGameId, @RequestParam String password) {
-        chessGameService.deleteChessGame(chessGameId, password);
+    public ResponseEntity<Void> deleteChessGame(@PathVariable long chessGameId,
+                                                @RequestBody ChessGamePasswordRequest chessGamePasswordRequest) {
+        chessGameService.deleteChessGame(chessGameId, chessGamePasswordRequest.getPassword());
         return ResponseEntity.noContent().build();
     }
 

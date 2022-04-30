@@ -8,7 +8,6 @@ import chess.dto.response.RoomStatusDto;
 import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
 import java.sql.PreparedStatement;
-import java.util.Collection;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,16 +32,15 @@ public class RoomDao {
         return jdbcTemplate.queryForObject(sql, rowMapper, roomId);
     }
 
-    public List<RoomEntity> findAllEntity() {
-        final String sql = "SELECT * FROM room WHERE is_delete = ?";
-        final RowMapper<RoomEntity> rowMapper = createRoomEntityRowMapper();
-        return jdbcTemplate.query(sql, rowMapper, false);
-    }
-
     public List<RoomEntity> findAllEntity(final int page, final int size) {
         final String sql = "SELECT * FROM room WHERE is_delete = ? LIMIT ? OFFSET ?";
         final RowMapper<RoomEntity> rowMapper = createRoomEntityRowMapper();
         return jdbcTemplate.query(sql, rowMapper, false, size, calculatePage(page, size));
+    }
+
+    public int count() {
+        final String sql = "SELECT COUNT(*) FROM room WHERE is_delete = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, false);
     }
 
     private int calculatePage(final int page, final int size) {

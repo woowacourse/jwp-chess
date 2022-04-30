@@ -26,6 +26,7 @@ public class FakeRoomRepository implements RoomRepository {
 
     @Override
     public RoomPageDto getAll(final int page, final int size) {
+        final int lastPage = (int) Math.ceil((double) storage.size() / size);
         final List<RoomResponseDto> responseDtos = storage.entrySet()
                 .stream()
                 .map(entry -> RoomResponseDto.of(
@@ -35,7 +36,7 @@ public class FakeRoomRepository implements RoomRepository {
                 .skip((long) (page - 1) * size)
                 .limit(10)
                 .collect(Collectors.toList());
-        return RoomPageDto.of(page, responseDtos);
+        return RoomPageDto.of(page, lastPage, responseDtos);
     }
 
     @Override

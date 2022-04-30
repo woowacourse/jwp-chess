@@ -4,26 +4,34 @@ import java.util.List;
 
 public class RoomPageDto {
 
-    private final int page;
+    private final int currentPage;
+    private final int lastPage;
     private final int size;
     private final List<RoomResponseDto> contents;
 
-    private RoomPageDto(final int page, final int size, final List<RoomResponseDto> contents) {
-        this.page = page;
+    public RoomPageDto(final int currentPage, final int lastPage, final int size,
+                       final List<RoomResponseDto> contents) {
+        this.currentPage = currentPage;
+        this.lastPage = lastPage;
         this.size = size;
         this.contents = contents;
     }
 
-    public static RoomPageDto of(final int page, final List<RoomResponseDto> contents) {
+    public static RoomPageDto of(final int currentPage, final int lastPage, final List<RoomResponseDto> contents) {
         return new RoomPageDto(
-                page,
+                currentPage,
+                lastPage,
                 contents.size(),
                 contents
         );
     }
 
-    public int getPage() {
-        return page;
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public int getLastPage() {
+        return lastPage;
     }
 
     public int getSize() {

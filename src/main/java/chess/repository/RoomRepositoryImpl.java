@@ -41,6 +41,9 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public RoomPageDto getAll(final int page, final int size) {
+        final int totalSize = roomDao.count();
+        final int lastPage = (int) Math.ceil((double) totalSize / size);
+
         final List<RoomResponseDto> responseDtos = roomDao.findAllEntity(page, size)
                 .stream()
                 .map(roomEntity -> RoomResponseDto.of(
@@ -49,7 +52,7 @@ public class RoomRepositoryImpl implements RoomRepository {
                         roomEntity.getGameStatus()
                 ))
                 .collect(Collectors.toList());
-        return RoomPageDto.of(page, responseDtos);
+        return RoomPageDto.of(page, lastPage, responseDtos);
     }
 
     private Room toRoom(final RoomEntity roomEntity) {

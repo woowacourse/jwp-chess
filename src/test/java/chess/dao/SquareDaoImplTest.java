@@ -1,6 +1,5 @@
 package chess.dao;
 
-import static chess.model.Team.*;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import chess.model.Team;
 import chess.model.board.Board;
@@ -18,6 +18,7 @@ import chess.model.piece.Piece;
 import chess.model.position.Position;
 
 @JdbcTest
+@Sql({"/db/schema.sql"})
 public class SquareDaoImplTest {
 
     private SquareDaoImpl squareDao;
@@ -28,19 +29,6 @@ public class SquareDaoImplTest {
     @BeforeEach
     void setUp() {
         squareDao = new SquareDaoImpl(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE IF EXISTS square");
-        jdbcTemplate.execute("CREATE TABLE square(" +
-            "chess_id int not null,"
-            + "position VARCHAR(2) NOT NULL,"
-            + "team VARCHAR(10) NOT NULL,"
-            + "symbol VARCHAR(10) NOT NULL"
-            + ");");
-
-        Position position = Position.from("a1");
-        Piece piece = new Pawn(BLACK);
-
-        jdbcTemplate.update("insert into square (chess_id, position, team, symbol) values (?, ?, ?, ?)",
-            "1", position.getKey(), piece.getTeam(), piece.getSymbol());
     }
 
     @DisplayName("데이터를 삽입한다.")

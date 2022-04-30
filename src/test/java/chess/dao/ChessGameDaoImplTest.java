@@ -8,10 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import chess.dto.ChessGameDto;
 
 @JdbcTest
+@Sql({"/db/schema.sql"})
 class ChessGameDaoImplTest {
 
     private ChessGameDaoImpl chessGameDao;
@@ -22,15 +24,6 @@ class ChessGameDaoImplTest {
     @BeforeEach
     void setUp() {
         chessGameDao = new ChessGameDaoImpl(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE IF EXISTS game");
-        jdbcTemplate.execute("CREATE TABLE game("
-            + "id int not null AUTO_INCREMENT PRIMARY KEY,"
-            + "title varchar(50) not null,"
-            + "password varchar(20) not null"
-            + ");");
-
-        jdbcTemplate.update("insert into game (title, password) values (?, ?)",
-            "제목", "password");
     }
 
     @DisplayName("체스 게임방 데이터를 삽입한다.")

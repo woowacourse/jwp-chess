@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import chess.model.board.Board;
 import chess.model.state.State;
@@ -15,6 +16,7 @@ import chess.model.state.running.BlackTurn;
 import chess.model.state.running.WhiteTurn;
 
 @JdbcTest
+@Sql({"/db/schema.sql"})
 class StateDaoImplTest {
 
     private StateDao stateDao;
@@ -25,13 +27,6 @@ class StateDaoImplTest {
     @BeforeEach
     void setUp() {
         stateDao = new StateDaoImpl(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE IF EXISTS state");
-        jdbcTemplate.execute("CREATE TABLE state("
-            + "chess_id int not null,"
-            + "name VARCHAR(20) NOT NULL"
-            + ");");
-
-        jdbcTemplate.update("insert into state(chess_id, name) values (?, ?)", "1", "BLACK_TURN");
     }
 
     @DisplayName("데이터를 삽입한다.")

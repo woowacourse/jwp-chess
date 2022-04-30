@@ -1,6 +1,5 @@
 package chess.domain.board;
 
-import static chess.domain.board.ChessBoard.SOURCE_POSITION_SHOULD_HAVE_PIECE_MESSAGE;
 import static chess.domain.board.position.File.A;
 import static chess.domain.board.position.File.B;
 import static chess.domain.board.position.File.C;
@@ -21,11 +20,12 @@ import chess.domain.board.factory.StringBoardFactory;
 import chess.domain.board.position.File;
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Rank;
+import chess.domain.gameflow.AlternatingGameFlow;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
 import chess.exception.NonMovableException;
-import chess.domain.gameflow.AlternatingGameFlow;
+import chess.exception.PieceNotAtStartingPositionException;
 import chess.gameflow.FixedGameFlow;
 import java.util.Arrays;
 import java.util.List;
@@ -103,8 +103,7 @@ public class ChessBoardTest {
     @DisplayName("체스 말이 없는 곳에서 이동 시키면 예외를 던진다.")
     void move_exception() {
         assertThatThrownBy(() -> chessBoard.movePiece(Position.of(A, THREE), Position.of(B, THREE)))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage(SOURCE_POSITION_SHOULD_HAVE_PIECE_MESSAGE);
+            .isInstanceOf(PieceNotAtStartingPositionException.class);
     }
 
     @Test

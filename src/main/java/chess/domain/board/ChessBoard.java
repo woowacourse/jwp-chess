@@ -14,13 +14,13 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
 import chess.exception.IncorrectTeamSelectionException;
 import chess.exception.NonMovableException;
+import chess.exception.PieceNotAtStartingPositionException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Predicate;
 
 public class ChessBoard {
 
-    static final String SOURCE_POSITION_SHOULD_HAVE_PIECE_MESSAGE = "[ERROR] 출발 위치에는 말이 있어야 합니다.";
     private static final EmptySpace EMPTY_SPACE = new EmptySpace(EMPTY);
 
     private final Map<Position, Piece> board;
@@ -119,7 +119,7 @@ public class ChessBoard {
 
     private void validateSourceNotEmpty(Position position) {
         if (isEmpty(position)) {
-            throw new IllegalArgumentException(SOURCE_POSITION_SHOULD_HAVE_PIECE_MESSAGE);
+            throw new PieceNotAtStartingPositionException();
         }
     }
 

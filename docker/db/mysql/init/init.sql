@@ -1,9 +1,10 @@
 create table chess_game
 (
-    id   int         not null auto_increment primary key,
-    name varchar(10) not null,
+    id       int         not null auto_increment primary key,
+    name     varchar(10) not null,
     password varchar(20) not null,
-    turn varchar(5)  not null
+    turn     varchar(5)  not null,
+    running  tinyint(1) not null
 );
 
 create table piece

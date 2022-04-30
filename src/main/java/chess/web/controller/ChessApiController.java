@@ -22,7 +22,7 @@ public class ChessApiController {
         this.roomService = roomService;
     }
 
-    @GetMapping("/load/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<BoardDto> loadGame(@PathVariable Long id) {
         Board board = chessService.loadGame(id);
         return ResponseEntity.ok().body(BoardDto.from(id, board));

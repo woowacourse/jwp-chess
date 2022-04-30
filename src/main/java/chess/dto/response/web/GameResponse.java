@@ -19,11 +19,14 @@ public class GameResponse {
 
     private Map<String, Double> teamNameToScore;
 
-    public GameResponse(final ChessBoard chessBoardParameter) {
-        List<PieceResponse> board = getPieceResponses(chessBoardParameter);
+    private boolean isGamePlaying;
+
+    public GameResponse(final ChessBoard chessBoard) {
+        List<PieceResponse> board = getPieceResponses(chessBoard);
         this.board = board;
-        this.teamName = chessBoardParameter.currentStateName();
-        this.teamNameToScore = createTeamNameToScore(chessBoardParameter);
+        this.teamName = chessBoard.currentStateName();
+        this.teamNameToScore = createTeamNameToScore(chessBoard);
+        this.isGamePlaying = chessBoard.isGamePlaying();
     }
 
     private List<PieceResponse> getPieceResponses(ChessBoard chessBoardParameter) {

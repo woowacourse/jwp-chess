@@ -41,4 +41,8 @@ public class SessionToChessRepository {
             System.out.println("remove it " + session);
         }
     }
+
+    public void delete(HttpSession session) {
+        sessionToChessBoard.remove(session);
+    }
 }

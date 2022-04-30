@@ -32,7 +32,6 @@ public class ChessService {
 
     public ChessBoard initAndGetChessBoard(HttpSession session) {
         ChessBoard chessBoard = createChessBoard();
-
         sessionToChessRepository.add(session, chessBoard);
         return chessBoard;
     }
@@ -76,6 +75,12 @@ public class ChessService {
         ChessBoard chessBoard = new ChessBoard(boardFactory, lastTeam);
         sessionToChessRepository.add(session, chessBoard);
         return new GameResponse(chessBoard);
+    }
+
+    @Transactional
+    public void delete(HttpSession session) {
+        sessionToChessRepository.get(session);
+        sessionToChessRepository.delete(session);
     }
 
     @Transactional

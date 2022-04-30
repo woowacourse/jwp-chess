@@ -151,6 +151,7 @@ function clearFromAndTo() {
 }
 
 function movePieceRequest(from, to) {
+  const lastTeam = $("#current-team").text();
   clearFromAndTo();
   $.ajax({
     url: `/chess/move?from=${from}&to=${to}`,
@@ -162,6 +163,7 @@ function movePieceRequest(from, to) {
       placeChessPieces(data.board);
       setCurrentTeam(data.teamName);
       setTeamScore(data.teamNameToScore);
+      processGameIfKingKill(data.gamePlaying, lastTeam);
     })
     .fail(function (xhr, status, errorThrown) {
       console.log(xhr);
@@ -180,6 +182,23 @@ function setCurrentTeam(teamName) {
 function setTeamScore(teamNameToScore) {
   $("#white-score").text(teamNameToScore.white);
   $("#black-score").text(teamNameToScore.black);
+}
+
+function processGameIfKingKill(gamePlaying, lastTeam) {
+  if (!gamePlaying) {
+    $.ajax({
+      url: `/chess/delete-game`,
+      method: "DELETE",
+    })
+      .done(function (data) {
+        alert("Game Win !!  winner : " + lastTeam);
+        location.replace("/");
+      })
+      .fail(function (xhr, status, errorThrown) {
+        console.log(xhr);
+        alert(xhr.responseText);
+      });
+  }
 }
 
 function isExistPiece(square) {
@@ -215,7 +234,7 @@ function saveGameRequest() {
     contentType: "application/json",
   })
     .done(function (data) {
-      alert("저장 완료 !");
+      alert("Save Complete !");
     })
     .fail(function (xhr, status, errorThrown) {
       console.log(xhr);

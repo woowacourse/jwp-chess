@@ -50,4 +50,8 @@ public class ChessGame {
         final Score score = new Score(chessBoard.findAllPiece());
         return new EndResult(score);
     }
+
+    public boolean isPlaying() {
+        return gameStatus.equals(GameStatus.PLAYING);
+    }
 }

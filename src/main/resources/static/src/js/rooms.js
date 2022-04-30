@@ -29,7 +29,13 @@ function showRooms(rooms) {
     let roomsUl = $("#rooms");
 
     for (let i = 0; i < rooms.length; i++) {
-        roomsUl.append("<li><a href=\"/chess-game/" + rooms[i]["id"] + "\">" + rooms[i]["title"] + "</a></li>");
+        roomsUl.append(
+        "<li>"
+        + "<a href=\"/chess-game/" + rooms[i]["id"] + "\">"
+        + rooms[i]["title"]
+        + "</a>"
+        + "<input type=\"button\" value=\"삭제\" onclick=checkPassword(" + rooms[i]["id"] + ") />"
+        + "</li>");
     }
 }
 
@@ -47,6 +53,31 @@ function start() {
         success(data) {
             let chessId = parseToJSON(data);
             location.href = "/chess-game/" + chessId;
+        },
+        error(request) {
+            let obj = JSON.parse(request.responseText);
+            alert(obj.message);
+        }
+    });
+}
+
+function checkPassword(chessId) {
+    $("#check_password_wrap").css("display", "block");
+    $("#deletedRoomId").val(chessId);
+}
+
+function cancel() {
+    $("#deletedRoomId").val();
+    $("#check_password_wrap").css("display", "none");
+}
+
+function deleteGame() {
+    let chessId = $("#deletedRoomId").val();
+    $.ajax({
+        url: "/chess-game/" + chessId,
+        type: "delete",
+        success(data) {
+            location.href = "/chess-game";
         },
         error(request) {
             let obj = JSON.parse(request.responseText);

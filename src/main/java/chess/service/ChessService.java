@@ -123,4 +123,9 @@ public class ChessService {
             throw new IllegalArgumentException("게임을 종료시킬 수 없습니다.");
         }
     }
+
+    public void remove(final int id) {
+        pieceDao.removeAll(id);
+        gameDao.removeAll(id);
+    }
 }

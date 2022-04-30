@@ -21,6 +21,12 @@
     </div>
     <div id="rooms_wrap">
         <ul id="rooms"></ul>
+        <div id="check_password_wrap" style="display: none;">
+            <input type="text" id="deletedRoomId" value="" hidden/>
+            비밀번호 확인 : <input type="password" id="check_password" />
+            <input type="button" value="취소" onclick="cancel()" />
+            <input type="button" value="입력" onclick="deleteGame()" />
+        </div>
     </div>
 </div>
 </body>

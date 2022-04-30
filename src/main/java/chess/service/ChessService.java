@@ -7,8 +7,7 @@ import chess.domain.Command;
 import chess.domain.piece.Team;
 import chess.domain.state.State;
 import chess.dto.ChessGameDto;
-import chess.exception.IllegalDeleteException;
-import chess.exception.IllegalPasswordException;
+import chess.exception.IllegalGameProgressException;
 import java.util.List;
 import java.util.Map;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -31,6 +30,8 @@ public class ChessService {
     }
 
     public Long save(String gameName, String password) {
+        validateDuplicateGameName(gameName);
+
         ChessGame chessGame = new ChessGame(gameName);
         chessGame.progress(Command.from("start"));
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
@@ -39,6 +40,14 @@ public class ChessService {
         pieceDao.save(id, chessGameDto);
 
         return id;
+    }
+
+    private void validateDuplicateGameName(String gameName) {
+        try {
+            chessGameDao.findOneByGameName(gameName);
+            throw new IllegalGameProgressException("동일한 이름의 게임이 이미 존재합니다");
+        } catch (EmptyResultDataAccessException ignored) {
+        }
     }
 
     public List<String> move(Long id, String moveCommand) {
@@ -98,13 +107,13 @@ public class ChessService {
         try {
             return chessGameDao.findStateByGameNameAndPassword(gameName, password);
         } catch(EmptyResultDataAccessException e) {
-            throw new IllegalPasswordException();
+            throw new IllegalGameProgressException("비밀번호가 틀렸습니다.");
         }
     }
 
     private int deleteEndGame(State state, String gameName, String password) {
         if (!state.isEnd()) {
-            throw new IllegalDeleteException();
+            throw new IllegalGameProgressException("게임이 종료되어야 삭제가 가능합니다.");
         }
         return chessGameDao.deleteByGameNameAndPassword(gameName, password);
     }

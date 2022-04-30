@@ -6,6 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import chess.config.AuthArgumentResolver;
+import chess.config.CookieArgumentResolver;
+import chess.exception.ExceptionResolver;
 import chess.fixture.AuthServiceStub;
 import chess.fixture.ChessServiceStub;
 import chess.fixture.GameDaoStub;
@@ -31,7 +34,10 @@ class GameControllerTest {
         AuthService authService = new AuthServiceStub();
         ChessService chessService = new ChessServiceStub();
         GameController gameController = new GameController(chessService, authService);
-        mockMvc = MockMvcBuilders.standaloneSetup(gameController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(gameController)
+                .setCustomArgumentResolvers(new AuthArgumentResolver(), new CookieArgumentResolver())
+                .setControllerAdvice(new ExceptionResolver())
+                .build();
     }
 
     @DisplayName("POST /game - 생성된 게임id를 토대로 응답 메시지의 Set-Cookie 헤더와 Location 헤더값이 설정된다")
@@ -39,7 +45,7 @@ class GameControllerTest {
     void createGame() throws Exception {
         MockHttpServletRequestBuilder request = post("/game")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content("{\"name\": \"방이름\",\"password\": \"비밀번호\"}");
+                .content("{\"name\":\"방이름\",\"password\":\"비밀번호\"}");
 
         int expectedNewGameId = GameDaoStub.TOTAL_GAME_COUNT + 1;
         Cookie expectedCookie = CookieUtil.generateGameOwnerCookie(expectedNewGameId);

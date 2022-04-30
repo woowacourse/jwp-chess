@@ -61,6 +61,10 @@ public class Pieces {
         return pieces;
     }
 
+    public int size() {
+        return pieces.size();
+    }
+
     @Override
     public String toString() {
         return "Pieces{" +

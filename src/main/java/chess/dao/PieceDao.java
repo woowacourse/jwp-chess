@@ -17,10 +17,10 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createAll(List<Piece> pieces, String gameId) {
+    public void createAll(Pieces pieces, String gameId) {
         final String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
 
-        jdbcTemplate.batchUpdate(sql, pieces, pieces.size(),
+        jdbcTemplate.batchUpdate(sql, pieces.getPieces(), pieces.size(),
                 (statement, piece) -> {
                     statement.setString(1, piece.getName());
                     statement.setString(2, piece.getColor().getName());

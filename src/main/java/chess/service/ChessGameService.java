@@ -48,7 +48,7 @@ public class ChessGameService {
 
     private void initGame(LogInDto logInDto) {
         gameDao.create(logInDto);
-        pieceDao.createAll(chessmenInitializer.init().getPieces(), logInDto.getGameId());
+        pieceDao.createAll(chessmenInitializer.init(), logInDto.getGameId());
     }
 
     public ChessGame getGameStatus(String gameId) {
@@ -64,11 +64,6 @@ public class ChessGameService {
         return new GameResultDto(GameResult.calculate(getGameStatus(gameId).getChessmen()));
     }
 
-    public void cleanGame(String gameId) {
-        pieceDao.deleteAll(gameId);
-        gameDao.delete(gameId);
-    }
-
     public void cleanGame(LogInDto logInDto) {
         validateLogIn(logInDto);
         pieceDao.deleteAll(logInDto.getGameId());
@@ -79,7 +74,7 @@ public class ChessGameService {
         ChessGame chessGame = getGameStatus(gameId);
         chessGame.moveChessmen(moveDto.toEntity());
         pieceDao.deleteAll(gameId);
-        pieceDao.createAll(chessGame.getChessmen().getPieces(), gameId);
+        pieceDao.createAll(chessGame.getChessmen(), gameId);
         gameDao.updateTurn(chessGame.getTurn(), gameId);
         gameDao.updateForceEndFlag(chessGame.getForceEndFlag(), gameId);
     }

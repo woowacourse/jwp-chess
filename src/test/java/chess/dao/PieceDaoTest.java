@@ -40,7 +40,7 @@ public class PieceDaoTest {
         //given
         gameDao.create(LOG_IN_DTO);
         //when
-        pieceDao.createAll(new ChessmenInitializer().init().getPieces(), "1234");
+        pieceDao.createAll(new ChessmenInitializer().init(), "1234");
 
         //then
         assertThat(pieceDao.findAll("1234").getPieces().size())
@@ -52,13 +52,15 @@ public class PieceDaoTest {
     void updateAll() {
         //given
         gameDao.create(LOG_IN_DTO);
-        final List<Piece> pieces = new ChessmenInitializer().init().getPieces();
+        final Pieces pieces = new ChessmenInitializer().init();
         pieceDao.createAll(pieces, "1234");
-        pieces.remove(pieces.size() - 1);
-        pieces.add(new King(Color.BLACK, Position.of("h2")));
+
+        List<Piece> pieceList = pieces.getPieces();
+        pieceList.remove(pieces.size() - 1);
+        pieceList.add(new King(Color.BLACK, Position.of("h2")));
 
         //when
-        pieceDao.updateAll(pieces, "1234");
+        pieceDao.updateAll(pieceList, "1234");
 
         //then
         assertThat(pieceDao.findAll("1234")
@@ -72,7 +74,7 @@ public class PieceDaoTest {
     void findAll() {
         //given
         gameDao.create(LOG_IN_DTO);
-        pieceDao.createAll(new ChessmenInitializer().init().getPieces(), "1234");
+        pieceDao.createAll(new ChessmenInitializer().init(), "1234");
 
         //when
         Pieces pieces = pieceDao.findAll("1234");
@@ -86,7 +88,7 @@ public class PieceDaoTest {
     void deleteAll() {
         //given
         gameDao.create(LOG_IN_DTO);
-        pieceDao.createAll(new ChessmenInitializer().init().getPieces(), "1234");
+        pieceDao.createAll(new ChessmenInitializer().init(), "1234");
 
         //when
         pieceDao.deleteAll("1234");

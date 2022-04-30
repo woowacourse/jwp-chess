@@ -75,7 +75,9 @@ public class JdbcGameDao implements GameDao {
         try {
             return jdbcTemplate.query(sql,
                     (resultSet, rowNum) ->
-                            new RoomResponseDto(resultSet.getString("title"))
+                            new RoomResponseDto(
+                                    resultSet.getInt("game_id"),
+                                    resultSet.getString("title"))
             );
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();

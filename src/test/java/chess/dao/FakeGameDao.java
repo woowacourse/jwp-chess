@@ -43,7 +43,7 @@ public class FakeGameDao implements GameDao {
 
     @Override
     public List<RoomResponseDto> findAll() {
-        return List.of(new RoomResponseDto("title"));
+        return List.of(new RoomResponseDto(1, "title"));
     }
 
     @Override

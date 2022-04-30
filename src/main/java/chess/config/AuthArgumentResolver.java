@@ -2,8 +2,6 @@ package chess.config;
 
 import chess.domain.auth.AuthCredentials;
 import chess.domain.auth.EncryptedAuthCredentials;
-import chess.exception.InvalidAccessException;
-import chess.exception.InvalidStatus;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
@@ -29,7 +27,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         String requestBody = request.getReader()
                 .lines()
                 .findFirst()
-                .orElseThrow(() -> new InvalidAccessException(InvalidStatus.NOT_ENOUGH_INPUT));
+                .orElseThrow(() -> new IllegalArgumentException("필요한 정보가 입력되지 않았습니다."));
 
         AuthCredentials authCredentials = AuthCredentials.of(requestBody);
         return authCredentials.toEncrypted();

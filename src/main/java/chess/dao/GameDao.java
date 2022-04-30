@@ -3,6 +3,8 @@ package chess.dao;
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.entity.FullGameEntity;
 import chess.entity.GameEntity;
+import chess.exception.InvalidAccessException;
+import chess.exception.InvalidStatus;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,7 +38,7 @@ public class GameDao {
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
         return new StatementExecutor<>(() -> jdbcTemplate.queryForObject(sql, paramSource, rowMapper))
-                .executeOrThrow(() -> new IllegalArgumentException("존재하지 않는 게임입니다."));
+                .executeOrThrow(() -> new InvalidAccessException(InvalidStatus.GAME_NOT_FOUND));
     }
 
     public FullGameEntity findFullDataById(int gameId) {
@@ -44,7 +46,7 @@ public class GameDao {
 
         MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
         return new StatementExecutor<>(() -> jdbcTemplate.queryForObject(sql, paramSource, fullRowMapper))
-                .executeOrThrow(() -> new IllegalArgumentException("존재하지 않는 게임입니다."));
+                .executeOrThrow(() -> new InvalidAccessException(InvalidStatus.GAME_NOT_FOUND));
     }
 
     public boolean checkById(int gameId) {

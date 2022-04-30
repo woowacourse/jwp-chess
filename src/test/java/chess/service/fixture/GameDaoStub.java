@@ -4,6 +4,8 @@ import chess.dao.GameDao;
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.entity.FullGameEntity;
 import chess.entity.GameEntity;
+import chess.exception.InvalidAccessException;
+import chess.exception.InvalidStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class GameDaoStub extends GameDao {
     public GameEntity findById(int gameId) {
         GameFullEntity game = repository.get(gameId);
         if (game == null) {
-            throw new IllegalArgumentException("존재하지 않는 게임입니다.");
+            throw new InvalidAccessException(InvalidStatus.GAME_NOT_FOUND);
         }
         return new GameEntity(game.id, game.name, game.running);
     }
@@ -47,7 +49,7 @@ public class GameDaoStub extends GameDao {
     public FullGameEntity findFullDataById(int gameId) {
         GameFullEntity game = repository.get(gameId);
         if (game == null) {
-            throw new IllegalArgumentException("존재하지 않는 게임입니다.");
+            throw new InvalidAccessException(InvalidStatus.GAME_NOT_FOUND);
         }
         return new FullGameEntity(game.id, game.name, game.password, game.opponent_password, game.running);
     }
@@ -98,7 +100,7 @@ public class GameDaoStub extends GameDao {
     @Override
     public void finishGame(int gameId) {
         if (!repository.containsKey(gameId)) {
-            throw new IllegalArgumentException("존재하지 않는 게임입니다.");
+            throw new InvalidAccessException(InvalidStatus.GAME_NOT_FOUND);
         }
         repository.get(gameId).running = false;
     }

@@ -121,7 +121,7 @@ public class ChessService {
 
     private void validateGameOver(Game game) {
         if (!game.isEnd()) {
-            throw new InvalidAccessException(InvalidStatus.GAME_NOT_OVER);
+            throw new IllegalArgumentException("아직 게임 결과가 산출되지 않았습니다.");
         }
     }
 }

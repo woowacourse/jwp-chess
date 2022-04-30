@@ -70,7 +70,7 @@ class ChessServiceTest {
         @Test
         void 존재하지_않는_게임인_경우_예외를_발생시킨다() {
             assertThatThrownBy(() -> service.findGame(999999))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("존재하지 않는 게임입니다.");
         }
     }
@@ -95,7 +95,7 @@ class ChessServiceTest {
         @Test
         void 게임이_종료되지_않은_경우_예외_발생() {
             assertThatThrownBy(() -> service.findGameResult(1))
-                    .isInstanceOf(InvalidAccessException.class)
+                    .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("아직 게임 결과가 산출되지 않았습니다.");
         }
     }

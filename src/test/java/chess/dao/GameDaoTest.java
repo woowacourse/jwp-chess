@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.entity.FullGameEntity;
 import chess.entity.GameEntity;
+import chess.exception.InvalidAccessException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -51,7 +52,7 @@ class GameDaoTest {
         @Test
         void 게임이_존재하지_않는_경우_예외발생() {
             assertThatThrownBy(() -> dao.findById(99999))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("존재하지 않는 게임입니다.");
         }
     }
@@ -72,7 +73,7 @@ class GameDaoTest {
         @Test
         void 게임이_존재하지_않는_경우_예외발생() {
             assertThatThrownBy(() -> dao.findFullDataById(99999))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("존재하지 않는 게임입니다.");
         }
     }

@@ -4,8 +4,6 @@ import chess.dao.GameDao;
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.dto.response.EnterGameDto;
 import chess.entity.FullGameEntity;
-import chess.exception.InvalidAccessException;
-import chess.exception.InvalidStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +42,7 @@ public class AuthService {
     private void validateOpponent(EncryptedAuthCredentials authCredentials,
                                   FullGameEntity game) {
         if (!game.hasOpponentOf(authCredentials)) {
-            throw new InvalidAccessException(InvalidStatus.INVALID_PASSWORD);
+            throw new IllegalArgumentException("잘못된 비밀번호를 입력하였습니다.");
         }
     }
 }

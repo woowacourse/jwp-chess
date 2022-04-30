@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,7 +37,7 @@ public class ChessSpringController {
         return "home";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/game")
     public String create(@ModelAttribute GameDto gameDto) {
         chessGameService.create(gameDto);
         return "redirect:/";
@@ -47,7 +48,7 @@ public class ChessSpringController {
         return "index";
     }
 
-    @PostMapping("/game/{gameId}/delete")
+    @DeleteMapping("/game/{gameId}")
     public String delete(@RequestParam("password") String password, @PathVariable int gameId, Model model) {
         try {
             chessGameService.delete(gameId, password);

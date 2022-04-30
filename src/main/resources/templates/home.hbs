@@ -7,7 +7,7 @@
 <body>
 
 <h1 class="title">♟️ 체스</h1>
-<form method="post" action="/create">
+<form method="post" action="/game">
     <div id="info_form">
         <input class="info" type="text" name="roomTitle" placeholder="방 이름을 입력해주세요." autofocus required>
         <input class="info" type="password" name="password" placeholder="비밀번호를 입력해주세요." required>
@@ -19,7 +19,8 @@
     <ul>
         <li>
             <button class="enter" onclick="location.href = '/game/{{this.id}}'">{{this.roomTitle}}</button>
-            <form id="room_form" action="/game/{{this.id}}/delete" method="post">
+            <form id="room_form" action="/game/{{this.id}}" method="post">
+                <input type="hidden" name="_method" value="delete">
                 <input class="room" name="password" placeholder="비밀번호를 입력해주세요.">
                 <button id="delete" class="room" type="submit">삭제하기</button>
                 <span>{{value}}</span>

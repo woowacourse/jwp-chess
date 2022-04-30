@@ -24,7 +24,7 @@
 
 ## 2단계
 
-- [ ] `ObjectMapper`를 통해 Gson 라이브러리 의존성 제거
+- [x] `ObjectMapper`를 통해 Gson 라이브러리 의존성 제거
 - [ ] Controller - status 메서드에서 Body를 Map으로 전달한 이유, DTO로 전달하는 것은 어떤지
 - [ ] Arguments - 컨트롤러에서 정해주는 것이 적절한가?
     - Command 관련 피드백

@@ -26,8 +26,8 @@ public class ChessBoard {
     private final Map<Position, Piece> board;
     private final GameFlow gameFlow;
 
-    public ChessBoard(Map<Position, Piece> board, GameFlow gameFlow) {
-        this.board = board;
+    public ChessBoard(BoardFactory boardFactory, GameFlow gameFlow) {
+        this.board = boardFactory.create();
         this.gameFlow = gameFlow;
     }
 

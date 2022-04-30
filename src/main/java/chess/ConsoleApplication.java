@@ -12,7 +12,7 @@ public class ConsoleApplication {
     public static void main(String[] args) {
         BoardFactory boardFactory = RegularBoardFactory.getInstance();
         GameFlow gameFlow = new AlternatingGameFlow();
-        ChessBoard chessBoard = new ChessBoard(boardFactory.create(), gameFlow);
+        ChessBoard chessBoard = new ChessBoard(boardFactory, gameFlow);
 
         ConsoleChessController consoleChessController = new ConsoleChessController(chessBoard);
         consoleChessController.run();

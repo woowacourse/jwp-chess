@@ -40,7 +40,7 @@ public class ChessService {
     private ChessBoard createChessBoard() {
         BoardFactory boardFactory = RegularBoardFactory.getInstance();
         GameFlow gameFlow = new AlternatingGameFlow();
-        return new ChessBoard(boardFactory.create(), gameFlow);
+        return new ChessBoard(boardFactory, gameFlow);
     }
 
     public ChessBoard getChessBoard(HttpSession session) {

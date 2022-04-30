@@ -46,7 +46,7 @@ public class ChessBoardTest {
     @BeforeEach
     void setUp() {
         gameFlow = new FixedGameFlow();
-        chessBoard = new ChessBoard(boardFactory.create(), gameFlow);
+        chessBoard = new ChessBoard(boardFactory, gameFlow);
     }
 
     @Test
@@ -179,7 +179,7 @@ public class ChessBoardTest {
 
         BoardFactory boardFactory = StringBoardFactory.getInstance(stringChessBoard);
         AlternatingGameFlow gameFlow = new AlternatingGameFlow();
-        chessBoard = new ChessBoard(boardFactory.create(), gameFlow);
+        chessBoard = new ChessBoard(boardFactory, gameFlow);
 
         assertThat(chessBoard.isGamePlaying()).isTrue();
 
@@ -191,7 +191,7 @@ public class ChessBoardTest {
     @Test
     @DisplayName("첫판에 점수를 계산하면 38점이 나온다")
     void when_first_turn_cal_score_then_38() {
-        ChessBoard chessBoard = new ChessBoard(boardFactory.create(), new AlternatingGameFlow());
+        ChessBoard chessBoard = new ChessBoard(boardFactory, new AlternatingGameFlow());
         double score = chessBoard.calculateScoreByGameFlow();
         assertThat(score).isEqualTo(38.0);
     }
@@ -199,7 +199,7 @@ public class ChessBoardTest {
     @Test
     @DisplayName("점수 계산 - 초기 한 쪽 팀의 점수는 38점이다")
     void score_is_38_when_first_time() {
-        ChessBoard chessBoard = new ChessBoard(boardFactory.create(), new AlternatingGameFlow());
+        ChessBoard chessBoard = new ChessBoard(boardFactory, new AlternatingGameFlow());
 
         //then
         double actual = chessBoard.calculateScoreByGameFlow();
@@ -220,7 +220,7 @@ public class ChessBoardTest {
                 "ppp....."
         );
         BoardFactory boardFactory = StringBoardFactory.getInstance(stringChessBoard);
-        ChessBoard chessBoard = new ChessBoard(boardFactory.create(), new AlternatingGameFlow());
+        ChessBoard chessBoard = new ChessBoard(boardFactory, new AlternatingGameFlow());
 
         //then
         double actual = chessBoard.calculateScoreByGameFlow();
@@ -241,7 +241,7 @@ public class ChessBoardTest {
                 "...qk..."
         );
         BoardFactory boardFactory = StringBoardFactory.getInstance(stringChessBoard);
-        ChessBoard chessBoard = new ChessBoard(boardFactory.create(), new AlternatingGameFlow());
+        ChessBoard chessBoard = new ChessBoard(boardFactory, new AlternatingGameFlow());
 
         //then
         double blackScore = chessBoard.calculateScoreByTeam(PieceTeam.BLACK);

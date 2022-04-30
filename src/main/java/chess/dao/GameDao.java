@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.domain.game.Room;
 import chess.domain.piece.Color;
-import chess.dto.LogInDto;
+import chess.domain.game.LogIn;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,10 +19,10 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void create(LogInDto logInDto) {
-        System.err.println("생성" + logInDto);
+    public void create(LogIn logIn) {
+        System.err.println("생성" + logIn);
         final String sql = "insert into game (id, password, turn) values (?, ?, ?)";
-        jdbcTemplate.update(sql, logInDto.getId(), logInDto.getPassword(), Color.BLACK.getName());
+        jdbcTemplate.update(sql, logIn.getId(), logIn.getPassword(), Color.BLACK.getName());
     }
 
     public Room findNoPasswordRoom(String id) {

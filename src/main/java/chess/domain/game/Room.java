@@ -1,7 +1,7 @@
 package chess.domain.game;
 
 import chess.domain.piece.Color;
-import chess.dto.LogInDto;
+import java.util.Objects;
 
 public class Room {
     private static final String INCORRECT_PASSWORD_ERROR_MESSAGE = "올바르지 않은 비밀번호 입니다.";
@@ -25,8 +25,8 @@ public class Room {
         this.isEnd = isEnd;
     }
 
-    public void validateLogInPassword(LogInDto logInDto) {
-        if (!password.equals(logInDto.getPassword())) {
+    public void validateLogInPassword(LogIn logIn) {
+        if (!password.equals(logIn.getPassword())) {
             throw new IllegalArgumentException(INCORRECT_PASSWORD_ERROR_MESSAGE);
         }
     }
@@ -45,5 +45,23 @@ public class Room {
 
     public boolean isEnd() {
         return isEnd;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Room room = (Room) o;
+        return isEnd == room.isEnd && Objects.equals(id, room.id) && Objects.equals(password,
+                room.password) && turn == room.turn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, password, isEnd, turn);
     }
 }

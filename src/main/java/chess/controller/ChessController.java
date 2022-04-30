@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.LogInDto;
+import chess.domain.game.LogIn;
 import chess.service.ChessGameService;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -23,25 +23,25 @@ public class ChessController {
     }
 
     @PostMapping("/init")
-    public ResponseEntity<Void> initGame(@ModelAttribute LogInDto logInDto) {
-        chessGameService.createGame(logInDto);
+    public ResponseEntity<Void> initGame(@ModelAttribute LogIn logIn) {
+        chessGameService.createGame(logIn);
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .location(URI.create(LOCALHOST_8080 + "/game/" + logInDto.getId()))
+                .location(URI.create(LOCALHOST_8080 + "/game/" + logIn.getId()))
                 .build();
     }
 
     @PostMapping("/enter")
-    public ResponseEntity<Void> enterGame(@ModelAttribute LogInDto logInDto) {
-        chessGameService.validateLogIn(logInDto);
+    public ResponseEntity<Void> enterGame(@ModelAttribute LogIn logIn) {
+        chessGameService.validateLogIn(logIn);
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .location(URI.create(LOCALHOST_8080 + "/game/" + logInDto.getId()))
+                .location(URI.create(LOCALHOST_8080 + "/game/" + logIn.getId()))
                 .build();
     }
 
     @PostMapping("/exit")
-    public ResponseEntity<Void> deleteGame(@ModelAttribute LogInDto logInDto) {
-        chessGameService.validateEnd(logInDto.getId());
-        chessGameService.cleanGame(logInDto);
+    public ResponseEntity<Void> deleteGame(@ModelAttribute LogIn logIn) {
+        chessGameService.validateEnd(logIn.getId());
+        chessGameService.cleanGame(logIn);
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
                 .location(URI.create(LOCALHOST_8080))
                 .build();

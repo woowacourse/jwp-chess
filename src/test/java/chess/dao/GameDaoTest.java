@@ -3,8 +3,8 @@ package chess.dao;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import chess.domain.game.LogIn;
 import chess.domain.piece.Color;
-import chess.dto.LogInDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 public class GameDaoTest {
     private static final String GAME_ID = "1234";
-    private static final LogInDto LOG_IN_DTO = new LogInDto(GAME_ID, GAME_ID);
+    private static final LogIn LOG_IN_DTO = new LogIn(GAME_ID, GAME_ID);
 
     private GameDao gameDao;
     @Autowired
@@ -87,8 +87,8 @@ public class GameDaoTest {
     @Test
     void findAllGame() {
         gameDao.create(LOG_IN_DTO);
-        gameDao.create(new LogInDto("2", GAME_ID));
-        gameDao.create(new LogInDto("3", GAME_ID));
+        gameDao.create(new LogIn("2", GAME_ID));
+        gameDao.create(new LogIn("3", GAME_ID));
         assertThat(gameDao.findAllRoom().size()).isEqualTo(3);
     }
 

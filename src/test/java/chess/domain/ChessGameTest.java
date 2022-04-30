@@ -8,6 +8,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import chess.domain.command.MoveCommand;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameResult;
+import chess.domain.game.Room;
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Color;
 import chess.domain.piece.King;
@@ -21,13 +22,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class ChessGameTest {
+    private static final Room ROOM = new Room("1234", "1234", BLACK, false);
+
     ChessmenInitializer chessmenInitializer;
     ChessGame chessGame;
 
     @BeforeEach
     void setup_chessGame() {
         chessmenInitializer = new ChessmenInitializer();
-        chessGame = ChessGame.of(chessmenInitializer.init());
+        chessGame = new ChessGame(ROOM, chessmenInitializer.init());
     }
 
     @DisplayName("체스말이 이동할 수 있는 위치면 이동에 성공한다.")
@@ -137,7 +140,7 @@ public class ChessGameTest {
     @DisplayName("King이 한 개라도 죽으면 게임은 끝난다.")
     @Test
     void isEnd_true() {
-        chessGame = ChessGame.of(new Pieces(List.of(new King(WHITE, Position.of("e1")))));
+        chessGame = new ChessGame(ROOM, new Pieces(List.of(new King(WHITE, Position.of("e1")))));
 
         boolean actual = chessGame.isEnd();
 

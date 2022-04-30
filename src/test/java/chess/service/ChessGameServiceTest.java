@@ -7,9 +7,9 @@ import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.domain.command.MoveCommand;
 import chess.domain.game.GameResult;
+import chess.domain.game.LogIn;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
-import chess.dto.LogInDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 class ChessGameServiceTest {
     private static final String GAME_ID = "1234";
     private ChessGameService chessGameService;
-    private final LogInDto LOG_IN_DTO = new LogInDto(GAME_ID, GAME_ID);
+    private final LogIn LOG_IN_DTO = new LogIn(GAME_ID, GAME_ID);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -38,7 +38,7 @@ class ChessGameServiceTest {
     @Test
     void validateLogIn() {
         chessGameService.validateLogIn(
-                new LogInDto(GAME_ID, GAME_ID));
+                new LogIn(GAME_ID, GAME_ID));
     }
 
     @DisplayName("getRooms로 현재 생성된 방들을 불러온다.")

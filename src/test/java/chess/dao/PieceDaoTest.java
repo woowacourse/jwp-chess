@@ -9,7 +9,7 @@ import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
-import chess.dto.LogInDto;
+import chess.domain.game.LogIn;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
 public class PieceDaoTest {
-    private static final LogInDto LOG_IN_DTO = new LogInDto("1234", "1234");
+    private static final LogIn LOG_IN_DTO = new LogIn("1234", "1234");
 
     private PieceDao pieceDao;
     private GameDao gameDao;

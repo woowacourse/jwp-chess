@@ -49,30 +49,10 @@ use chess;
 - [x] Spring JDBC에서 제공하는 JdbcTemplate를 이용하여 Connection을 직접 만들어 주는 로직을 대체한다.
 - [x] JdbcTemplate는 매번 새로 생성하지 않고 빈 주입을 받아서 사용한다.
 
-### 체스방 만들기
-
-- [x] localhost:8080 요청 시 노출되는 페이지에 체스방을 만들 수 있는 버튼이 있다.
-- [x] 체스방 만들기 버튼을 누르고 체스방 제목과 비밀번호를 입력하면 새로운 체스판이 만들어진다.
-- [x] 체스방에는 고유식별값이 부여된다. (이 고유 식별값은 체스방 주소에서 사용 됨)
-
-### 체스방 목록 조회하기
-
-- [x] localhost:8080 요청 시 체스방 목록을 조회할 수 있다
-- [x] 체스방 목록에는 체스방 제목과 체스방을 삭제할 수 있는 버튼이 표시된다.
-
-### 체스방 참여하기
-
-- [x] 체스방 목록에서 체스방 제목을 클릭하면 체스 게임을 이어서 진행할 수 있다.
-
-### 체스방 삭제하기
-
-- [x] 체스방 목록에서 체스방 삭제 버튼을 클릭하고 체스방 생성시 설정한 비밀번호를 입력하면 체스 게임을 삭제할 수 있다.
-- [x] 진행중인 체스방은 삭제할 수 없다.
-
 ## 목표
 
 - [x] 기존의 spark로 구현한 controller를 spring으로 대체한다.
-    - [x] ModelAndView를 사용해 웹 페이지를 렌더링한다.
+  - [x] ModelAndView를 사용해 웹 페이지를 렌더링한다.
 - [x] 기존의 jdbc로 구현한 dao를 Spring jdbcTemplate으로 대체한다.
 - [x] 서버 DB(MySQL)와 테스트용 DB(H2)를 따로 만들어 관리한다.
 
@@ -90,6 +70,26 @@ use chess;
     - [x] 킹이 죽으면 더이상 움직일 수 없다.
 
 - [x] 게임 방 번호별로 동시에 게임을 진행할 수 있다.
+
+### -체스방 만들기
+
+- [x] localhost:8080 요청 시 노출되는 페이지에 체스방을 만들 수 있는 버튼이 있다.
+- [x] 체스방 만들기 버튼을 누르고 체스방 제목과 비밀번호를 입력하면 새로운 체스판이 만들어진다.
+- [x] 체스방에는 고유식별값이 부여된다. (이 고유 식별값은 체스방 주소에서 사용 됨)
+
+### -체스방 목록 조회하기
+
+- [x] localhost:8080 요청 시 체스방 목록을 조회할 수 있다
+- [x] 체스방 목록에는 체스방 제목과 체스방을 삭제할 수 있는 버튼이 표시된다.
+
+### -체스방 참여하기
+
+- [x] 체스방 목록에서 체스방 제목을 클릭하면 체스 게임을 이어서 진행할 수 있다.
+
+### -체스방 삭제하기
+
+- [x] 체스방 목록에서 체스방 삭제 버튼을 클릭하고 체스방 생성시 설정한 비밀번호를 입력하면 체스 게임을 삭제할 수 있다.
+- [x] 진행중인 체스방은 삭제할 수 없다.
 
 ## TODO
 
@@ -112,17 +112,17 @@ use chess;
 - [x] test 코드 DB schema.sql로 초기화(세팅)
 - [x] redirect를 사용하는 api ResponseEntity로 변경
 - [x] Service 테스트 만들기
+- [x] 아이디, 비밀번호 포맷 검증 로직 추가
 - [x] Dao는 CRUD 로직만 넣고 비밀번호 관련 로직은 서비스로 빼기
     - [x] 로그인(아이디, 비밀번호) 관련 예외는 비즈니스 로직에 의한 예외이기 때문에 서비스 단에서 예외처리
     - [x] game을 조회해서 해당 게임의 비밀번호를 체크하는 건 도메인 로직으로 뺄 수 있지 않을까요?
     - [x] password 외에 다른 부분도 도메인으로 뺄 수 있을 것 같아요(ex. turn)
 - [x] GET /game/{gameId} -> 존재하지 않는 gameId를 조회하면 어떻게 되나요?
     - [x] 예외처리 제대로 하기
-- [ ] @RequestBody를 사용하려면 JSON 형태로 요청을 보내야 합니다. 공부하기
-    - [ ] [Spring’s RequestBody and ResponseBody Annotations](https://www.baeldung.com/spring-request-response-body)
-    - [ ] [Spring MVC에서 요청 처리 시 @RequestBody는 어떻게 쓰는게 좋은가](http://bluesky-devstudy.blogspot.com/2016/07/spring-mvc-requestbody.html)
-- [ ] 자바 공부
-    - [ ] 현재 단계에서는 JS를 깊이 공부할 필요는 없고, 프론트에서 백엔드로 api를 보내고 받는 과정만 알아도 충분
-    - [ ] 비동기 요청/응답을 받는 방식인 async와 await을 알면 좋은데요. 아래 링크의 글만 봐도 충분할거에요.
-    - [ ] [자바스크립트 async와 await](https://joshua1988.github.io/web-development/javascript/js-async-await/)
+- [x] @RequestBody를 사용하려면 JSON 형태로 요청을 보내야 합니다. 공부하기
+    - [x] [Spring’s RequestBody and ResponseBody Annotations](https://www.baeldung.com/spring-request-response-body)
+    - [x] [Spring MVC에서 요청 처리 시 @RequestBody는 어떻게 쓰는게 좋은가](http://bluesky-devstudy.blogspot.com/2016/07/spring-mvc-requestbody.html)
+- [x] js 공부
+    - [x] 비동기 요청/응답을 받는 방식인 async와 await을 알면 좋은데요. 아래 링크의 글만 봐도 충분할거에요.
+    - [x] [자바스크립트 async와 await](https://joshua1988.github.io/web-development/javascript/js-async-await/)
 - [x] `public String exitAndDeleteGame(@RequestParam String gameId) api` 사용 안하면 제거

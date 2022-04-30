@@ -14,33 +14,14 @@ public class ChessGame {
     private static final String PIECE_OCCUPIED_IN_PATH_EXCEPTION_MESSAGE = "가는 길목에 다른 말이 있어 이동할 수 없습니다.";
     private static final String GAME_END_EXCEPTION_MESSAGE = "게임이 끝난 후에는 경기를 더 진행할 수 없습니다.";
 
-    private final Pieces chessmen;
     private final boolean isEnd;
     private Color turn;
+    private final Pieces chessmen;
 
-    public ChessGame(boolean isEnd, Pieces chessmen, Color turn) {
-        this.isEnd = isEnd;
+    public ChessGame(Room room, Pieces chessmen) {
+        this.isEnd = room.isEnd();
         this.chessmen = chessmen;
-        this.turn = turn;
-    }
-
-    private ChessGame(Pieces chessmen) {
-        this.isEnd = false;
-        this.chessmen = chessmen;
-        this.turn = Color.BLACK;
-    }
-
-    public ChessGame() {
-        isEnd = false;
-        this.chessmen = new Pieces(List.of());
-    }
-
-    public static ChessGame of(Pieces chessmen) {
-        return new ChessGame(chessmen);
-    }
-
-    public static ChessGame of() {
-        return new ChessGame();
+        this.turn = room.getTurn();
     }
 
     public void moveChessmen(MoveCommand moveCommand) {

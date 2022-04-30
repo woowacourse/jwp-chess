@@ -14,6 +14,7 @@ import chess.model.game.ChessGame;
 import chess.model.game.Status;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
+import chess.model.room.Room;
 import chess.service.dto.response.BoardDto;
 import chess.service.dto.response.DeleteGameResponse;
 import chess.service.dto.response.EndGameResponse;
@@ -104,8 +105,9 @@ public class ChessService {
     }
 
     public DeleteGameResponse deleteGame(Integer gameId, String password) {
-        String hashedPassword = gameDao.findPasswordById(gameId);
-        throwDifferentPassword(password, hashedPassword);
+        GameEntity gameEntity = gameDao.findById(gameId);
+        Room room = Room.fromHashedPassword(gameEntity.getName(), gameEntity.getPassword());
+        throwDifferentPassword(password, room);
         ChessGame game = getGameFromDao(gameId);
         throwPlayingGame(game);
         gameDao.deleteGame(gameId);
@@ -118,8 +120,8 @@ public class ChessService {
         }
     }
 
-    private void throwDifferentPassword(String password, String hashedPassword) {
-        if (!BCrypt.checkpw(password, hashedPassword)) {
+    private void throwDifferentPassword(String password, Room room) {
+        if (!room.isSamePassword(password)) {
             throw new IllegalArgumentException("암호가 다릅니다.");
         }
     }

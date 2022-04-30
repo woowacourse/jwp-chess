@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.response.ErrorResponseDto;
-import chess.exception.RoomNotFoundException;
+import chess.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,21 +11,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(annotations = RestController.class)
 public class WebChessControllerAdvice {
 
-    @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException e) {
+    @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
+    public ResponseEntity<ErrorResponseDto> handleIllegalException(IllegalArgumentException e) {
         return ResponseEntity.badRequest()
             .body(new ErrorResponseDto(e.getMessage()));
     }
 
-    @ExceptionHandler(value = IllegalStateException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalStateException(IllegalStateException e) {
-        return ResponseEntity.badRequest()
-            .body(new ErrorResponseDto(e.getMessage()));
-    }
-
-    @ExceptionHandler(value = RoomNotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalStateException(RoomNotFoundException e) {
+    @ExceptionHandler(value = NotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleIllegalStateException(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(new ErrorResponseDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleIllegalStateException(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponseDto("[ERROR] 예기치 못한 에러가 발생했습니다."));
     }
 }

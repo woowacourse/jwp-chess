@@ -42,11 +42,11 @@ create table commands (
 ## HTTP API
 - [ ] `localhost:8080`
   - GET: 체스방의 목록을 보여주고 체스방을 추가, 참가, 삭제할 수 있는 버튼이 있다.
-- [ ] `/chess`
+- [x] `/chess`
   - POST: 이름과 비밀번호를 가진 체스방을 만든다.
 - [ ] `/chess/{id}`
   - DELETE: header에 담긴 비밀번호가 일치하면 id 주소값을 가진 체스방과 관련된 체스판 명령어를 삭제한다.
-- [ ] `/chess/{id}/board`
+- [x] `/chess/{id}/board`
   - GET: id 주소값을 가진 체스방이 가진 체스판을 출력한다.
   - POST: id 주소값을 가진 체스방이 가진 체스판의 기물을 움직인다.
 - [ ] `/chess/{id}/result`

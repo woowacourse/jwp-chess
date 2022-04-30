@@ -9,7 +9,7 @@ public interface PieceDao {
     void save(Piece piece, Long roomId);
 
     void updatePieceByPositionAndRoomId(final String type, final String team, final String position,
-                                         final Long roomId);
+                                        final Long roomId);
 
     Optional<Piece> findByPositionAndRoomId(final String position, final Long roomId);
 

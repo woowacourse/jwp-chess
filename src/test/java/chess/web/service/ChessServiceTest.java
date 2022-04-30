@@ -61,7 +61,8 @@ class ChessServiceTest {
     @Test
     @DisplayName("64개의 말들이 초기화된다.")
     void initBoard() {
-        Long roomId = chessService.createRoom("title", "password");;
+        Long roomId = chessService.createRoom("title", "password");
+        ;
 
         Board initBoard = chessService.initBoard(roomId);
 

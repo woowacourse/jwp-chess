@@ -26,13 +26,13 @@
 ### API 정리
 
 - GET:`/` : 체스 방 리스트를 확인하고 새로운 체스 방을 만들 수 있는 페이지 출력.
-- POST:`/chess/{boardId}` : 새로운 체스 게임을 생성한다.
-- GET:`/chess/{boardId}` : 체스 게임을 할 수 있는 페이지 출력.
-- DELETE:`/chess/{boardId}` : 체스 방을 제거한다.
-- GET:`/chess/{boardId}/load` : 체스 기물 상태를 가져온다.
-- GET:`/chess/{boardId}/restart` : 체스 게임을 재시작한다.
-- GET:`/chess/{boardId}/status` : 체스 게임의 블랙, 화이트 팀의 점수를 반환한다.
-- POST:`/chess/{boardId}/move` : 체스 게임에서 시작 위치, 도착 위치를 JSON으로 전송하면 이동한다. 정상적으로 이동 시 수정된 Board를 반환한다.
+- POST:`/chess/{roomId}` : 새로운 체스 게임을 생성한다.
+- GET:`/chess/{roomId}` : 체스 게임을 할 수 있는 페이지 출력.
+- DELETE:`/chess/{roomId}` : 체스 방을 제거한다.
+- GET:`/chess/{roomId}/load` : 체스 기물 상태를 가져온다.
+- GET:`/chess/{roomId}/restart` : 체스 게임을 재시작한다.
+- GET:`/chess/{roomId}/status` : 체스 게임의 블랙, 화이트 팀의 점수를 반환한다.
+- POST:`/chess/{roomId}/move` : 체스 게임에서 시작 위치, 도착 위치를 JSON으로 전송하면 이동한다. 정상적으로 이동 시 수정된 Board를 반환한다.
 
 ---
 
@@ -59,7 +59,7 @@
         - 5xx : 서버의 문제로 에러가 발생함
 - [x] ChessWebController의 `createRoom`의 newId는 board의 id 인지 room의 id 인지 명확하면 좋을 것 같다
     - board, room 테이블을 합치면서 room의 id를 사용하도록 수정했다.
-    - [ ] boardId라는 이름을 사용하던 변수 등을 roomId로 수정하기
+    - [x] boardId라는 이름을 사용하던 변수 등을 roomId로 수정하기
 - [x] 보통 자원을 지울때는 pk로 지우게 되는데 Room을 지울 때 pk가 아닌 boardId 값으로 지우게 된다. 혹시 같은 boardId를 여러 자원이 가진다면 모두 지우게 되는 것이 의도한 것일까?
     - board와 room 테이블을 합치면서 board_id가 아닌 roomId로 관리하도록 수정했다.
     - PieceDao의 `deleteByboardId()`는 roomId를 만족하는 모든 기물을 삭제하도록 `deleteAllByRoomId()`로 수정하였다.
@@ -78,7 +78,7 @@
 - [ ] Controller에 대한 테스트도 추가해보자.
 - [ ] API는 endpoint에 prefix로 `/api`를 붙이기도 한다!
 - [ ] RESTFul API에 대해 공부해보고 endpoint를 수정해보자![참고자료](https://restfulapi.net/)
-    - [ ] `/chess/{boardId}/load`는 체스 보드 하나를 반환하는 API이다. RESTFul API를 공부해보고 수정해보자!
+    - [ ] `/chess/{roomId}/load`는 체스 보드 하나를 반환하는 API이다. RESTFul API를 공부해보고 수정해보자!
     - [ ] 자원의 상태를 "변경"하는 경우 Post보다 Put, Patch를 사용해보자.
     - [ ] restart는 자원의 상태를 변경하는데 Get이 적합할까?
 - [ ] Advice에서 특정 에러를 제외한 다른 에러가 발생할 경우 어떻게 처리할 것인가?

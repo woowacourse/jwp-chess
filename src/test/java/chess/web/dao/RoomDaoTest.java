@@ -45,7 +45,7 @@ class RoomDaoTest {
     @Sql("/sql/chess-setup.sql")
     @Test
     @DisplayName("체스방을 찾는다.")
-    void findByBoardId() {
+    void findById() {
         Turn turn = Turn.init();
         String title = "title";
         String password = "password";

@@ -21,8 +21,6 @@ class PieceDaoTest {
     private JdbcTemplate jdbcTemplate;
     private PieceDao pieceDao;
     private RoomDao roomDao;
-
-    private Long roomId = 1L;
     private Pieces pieces;
 
     @BeforeEach
@@ -54,7 +52,7 @@ class PieceDaoTest {
     @Sql("/sql/chess-setup.sql")
     @Test
     @DisplayName("초기값인 체스말 64개가 모두 조회 되야한다.")
-    void findAllByBoardId() {
+    void findAllByRoomId() {
         pieces = Pieces.createInit();
         Long roomId = roomDao.save(Turn.init().getTeam().value(), "title", "password");
         pieceDao.save(pieces.getPieces(), roomId);

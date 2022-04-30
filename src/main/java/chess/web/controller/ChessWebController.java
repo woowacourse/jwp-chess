@@ -22,10 +22,10 @@ public class ChessWebController {
         return "index";
     }
 
-    @GetMapping("/chess/{boardId}")
-    public String chess(@PathVariable Long boardId) {
+    @GetMapping("/chess/{roomId}")
+    public String chess(@PathVariable Long roomId) {
         try {
-            chessService.loadGame(boardId);
+            chessService.loadGame(roomId);
         } catch (NoSuchElementException exception) {
             return "nochess";
         }

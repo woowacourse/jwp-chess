@@ -53,11 +53,11 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Optional<Room> findById(Long roomId) {
+    public Optional<Room> findById(Long id) {
         final String query = "SELECT * FROM room WHERE id = ?";
 
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper, roomId));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper, id));
         } catch (DataAccessException exception) {
             return Optional.empty();
         }

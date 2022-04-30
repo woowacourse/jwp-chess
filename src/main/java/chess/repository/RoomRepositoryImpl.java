@@ -40,18 +40,6 @@ public class RoomRepositoryImpl implements RoomRepository {
     }
 
     @Override
-    public List<RoomResponseDto> getAll() {
-        return roomDao.findAllEntity()
-                .stream()
-                .map(roomEntity -> RoomResponseDto.of(
-                        roomEntity.getRoomId(),
-                        roomEntity.getName(),
-                        roomEntity.getGameStatus()
-                ))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public RoomPageDto getAll(final int page, final int size) {
         final List<RoomResponseDto> responseDtos = roomDao.findAllEntity(page, size)
                 .stream()

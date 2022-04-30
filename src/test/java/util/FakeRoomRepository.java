@@ -25,19 +25,8 @@ public class FakeRoomRepository implements RoomRepository {
     }
 
     @Override
-    public List<RoomResponseDto> getAll() {
-        return storage.entrySet()
-                .stream()
-                .map(entry -> RoomResponseDto.of(
-                        entry.getKey(),
-                        entry.getValue().getName(),
-                        entry.getValue().getGameStatus().getValue()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public RoomPageDto getAll(final int page, final int size) {
-        return storage.entrySet()
+        final List<RoomResponseDto> responseDtos = storage.entrySet()
                 .stream()
                 .map(entry -> RoomResponseDto.of(
                         entry.getKey(),
@@ -46,6 +35,7 @@ public class FakeRoomRepository implements RoomRepository {
                 .skip((long) (page - 1) * size)
                 .limit(10)
                 .collect(Collectors.toList());
+        return RoomPageDto.of(page, responseDtos);
     }
 
     @Override

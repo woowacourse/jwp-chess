@@ -22,11 +22,6 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void init() {
-        String query = "insert into games (turn) values (?)";
-        jdbcTemplate.update(query, "WHITE");
-    }
-
     public long initGame(String name, String password) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into games (name, password, turn) values (?, ?, ?)";
@@ -73,5 +68,10 @@ public class GameDao {
     public void deleteByGameId(Long id) {
         String sql = "DELETE FROM games where game_id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteAll() {
+        String sql = "DELETE FROM games";
+        jdbcTemplate.update(sql);
     }
 }

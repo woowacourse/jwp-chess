@@ -29,14 +29,6 @@ public class GameResult {
         return Team.NONE;
     }
 
-    public double getWhiteScore() {
-        return whiteScore;
-    }
-
-    public double getBlackScore() {
-        return blackScore;
-    }
-
     public Team getWinningTeam() {
         return winningTeam;
     }

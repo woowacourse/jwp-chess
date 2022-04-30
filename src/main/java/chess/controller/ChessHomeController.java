@@ -2,15 +2,12 @@ package chess.controller;
 
 import chess.model.dto.GameInfosDto;
 import chess.model.dto.RoomDto;
-import chess.model.dto.WebBoardDto;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 public class ChessHomeController {
@@ -22,11 +19,8 @@ public class ChessHomeController {
     }
 
     @PostMapping("/new")
-    public Map<String, String> startNewGame(@RequestBody RoomDto roomDto) {
-        WebBoardDto board = chessService.start(roomDto);
-        return board.getWebBoard();
-        // 생각해볼 부분: ResponseEntity의 사용
-        // 얘가 board를 반환할 필요가 있는가?
+    public Long startNewGame(@RequestBody RoomDto roomDto) {
+        return chessService.start(roomDto);
     }
 
     @GetMapping("/games")

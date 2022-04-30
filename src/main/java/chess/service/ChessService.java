@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class ChessService {
 
+    public static final String PIECE_NONE = "none-.";
     private final PieceDao pieceDao;
     private final GameDao gameDao;
 
@@ -31,11 +32,11 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public WebBoardDto start(RoomDto roomDto) {
+    public Long start(RoomDto roomDto) {
         long gameId = initGame(roomDto);
         initBoard(gameId);
 
-        return getBoardByGameId(gameId);
+        return gameId;
     }
 
     public GameInfosDto getAllGames() {
@@ -102,7 +103,7 @@ public class ChessService {
     private void updateGame(MoveDto moveDto, Long id, Turn turn) {
         Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPositionAndGameId(moveDto.getSource(), id));
         pieceDao.updateByPosition(moveDto.getTarget(), PieceDao.getPieceName(sourcePiece));
-        pieceDao.updateByPosition(moveDto.getSource(), "none-.");
+        pieceDao.updateByPosition(moveDto.getSource(), PIECE_NONE);
         gameDao.update(turn.change().getThisTurn(), id);
     }
 

@@ -61,7 +61,6 @@ public class WebController {
     @PutMapping("/game/{gameId}")
     public ModelAndView updateBoard(@PathVariable int gameId, MoveDto moveDto) {
         chessService.updateBoard(gameId, moveDto.getFrom(), moveDto.getTo());
-
         return new ModelAndView("redirect:/game/" + gameId);
     }
 

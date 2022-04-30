@@ -19,7 +19,7 @@ import chess.model.position.Position;
 class PawnTest {
 
     @DisplayName("한 칸 움직일 수 있으면 true를 반환한다.")
-    @ParameterizedTest()
+    @ParameterizedTest
     @EnumSource(File.class)
     void canMove_one_true(File file) {
         Map<Position, Piece> board = Board.init().getBoard();
@@ -40,7 +40,7 @@ class PawnTest {
     }
 
     @DisplayName("두 칸 움직일 수 있으면 true를 반환한다.")
-    @ParameterizedTest()
+    @ParameterizedTest
     @EnumSource(File.class)
     void canMove_two_true(File file) {
         Map<Position, Piece> board = Board.init().getBoard();

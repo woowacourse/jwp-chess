@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class FileTest {
 
     @DisplayName("1~8까지의 숫자가 아닌 숫자가 들어오면 예외를 발생한다.")
-    @ParameterizedTest()
+    @ParameterizedTest
     @ValueSource(ints = {-1, 9, 0, 11})
     void of_exception() {
         assertThatThrownBy(() -> File.of(9))
@@ -20,7 +20,7 @@ class FileTest {
     }
 
     @DisplayName("File을 이동할수 있으면 true를 반환한다.")
-    @Test()
+    @Test
     void canAdd_true() {
         assertThat(G.canAdd(1)).isTrue();
     }

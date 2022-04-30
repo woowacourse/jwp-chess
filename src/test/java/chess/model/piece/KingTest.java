@@ -19,7 +19,7 @@ import chess.model.position.Rank;
 public class KingTest {
 
     @DisplayName("초기 위치에서 target 위치로 움직일 수 없으면 false를 반환한다.")
-    @ParameterizedTest()
+    @ParameterizedTest
     @CsvSource(value = {"SEVEN,E", "EIGHT,D", "EIGHT,C", "EIGHT,F", "SEVEN,D", "SEVEN,F"})
     void canMove_false(Rank rank, File file) {
         Map<Position, Piece> board = Board.init().getBoard();
@@ -30,7 +30,7 @@ public class KingTest {
     }
 
     @DisplayName("target 위치로 움직일 수 없으면 false를 반환한다.")
-    @ParameterizedTest()
+    @ParameterizedTest
     @CsvSource(value = {"SEVEN,E", "SEVEN,D", "SEVEN,C"})
     void canMove_false_2(Rank rank, File file) {
         Map<Position, Piece> board = Board.init().getBoard();
@@ -41,7 +41,7 @@ public class KingTest {
     }
 
     @DisplayName("target 위치로 움직일 수 있으면 true를 반환한다.")
-    @ParameterizedTest()
+    @ParameterizedTest
     @CsvSource(value = {"SIX,D", "FOUR,D", "FIVE,C", "FIVE,E", "SIX,E", "FOUR,E", "SIX,C", "FOUR,C"})
     void canMove_true(Rank rank, File file) {
         Map<Position, Piece> board = Board.init().getBoard();

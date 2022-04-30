@@ -3,13 +3,11 @@ package chess.controller;
 import chess.dto.GameCountDto;
 import chess.dto.GameInfoDto;
 import chess.dto.GamesResponse;
-import chess.dto.SearchResultDto;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,10 +30,5 @@ public class SearchController {
         GamesResponse gamesResponse = new GamesResponse(gameCountDto, gameInfoDtos);
 
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gamesResponse);
-    }
-
-    @GetMapping(params = "game_id")
-    public SearchResultDto searchResult(@RequestParam(name = "game_id") int gameId) {
-        return chessService.searchGame(gameId);
     }
 }

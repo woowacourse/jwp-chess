@@ -15,7 +15,6 @@ import chess.dto.GameDto;
 import chess.dto.GameInfoDto;
 import chess.dto.GameResultDto;
 import chess.dto.MoveRouteDto;
-import chess.dto.SearchResultDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,11 +47,6 @@ public class ChessService {
         int gameId = gameDao.saveAndGetGeneratedId(createGameRequest);
         eventDao.save(gameId, new InitEvent());
         return new CreateGameResponse(gameId);
-    }
-
-    @Transactional(readOnly = true)
-    public SearchResultDto searchGame(int gameId) {
-        return new SearchResultDto(gameId, gameDao.checkById(gameId));
     }
 
     @Transactional(readOnly = true)

@@ -12,7 +12,6 @@ import chess.dto.GameCountDto;
 import chess.dto.GameDto;
 import chess.dto.GameResultDto;
 import chess.dto.MoveRouteDto;
-import chess.dto.SearchResultDto;
 import chess.service.fixture.EventDaoStub;
 import chess.service.fixture.GameDaoStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,22 +48,6 @@ class ChessServiceTest {
         CreateGameRequest request = new CreateGameRequest("title", "password");
         CreateGameResponse actual = service.initGame(request);
         CreateGameResponse expected = new CreateGameResponse(4);
-
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void searchGame_메서드는_gameId에_해당되는_게임이_있다면_true가_담긴_데이터를_반환한다() {
-        SearchResultDto actual = service.searchGame(1);
-        SearchResultDto expected = new SearchResultDto(1, true);
-
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    void searchGame_메서드는_gameId에_해당되는_게임이_없다면_false가_담긴_데이터를_반환한다() {
-        SearchResultDto actual = service.searchGame(99999);
-        SearchResultDto expected = new SearchResultDto(99999, false);
 
         assertThat(actual).isEqualTo(expected);
     }

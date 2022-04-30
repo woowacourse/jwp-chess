@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import chess.configuration.FakeBoardRepository;
-import chess.configuration.FakePieceRepository;
 import chess.configuration.FakeRoomRepository;
 import chess.exception.UserInputException;
 import chess.repository.RoomRepository;
@@ -18,20 +16,16 @@ import chess.domain.Room;
 
 class RoomServiceTest {
 
-	private RoomService roomService;
-
-	private RoomRepository roomRepository;
-
 	private final String testName = "summer";
 	private final String password = "summer";
+
+	private RoomService roomService;
+	private RoomRepository roomRepository;
 
 	@BeforeEach
 	void init() {
 		roomRepository = new FakeRoomRepository();
-		roomService = new RoomService(
-			new GameService(new FakePieceRepository(), new FakeBoardRepository()),
-			roomRepository
-		);
+		roomService = new RoomService(roomRepository);
 	}
 
 	@AfterEach
@@ -43,16 +37,16 @@ class RoomServiceTest {
 	@Test
 	@DisplayName("이름을 받아 체스 게임 방을 생성한다.")
 	void create() {
-		Room room = roomService.create(new Room(testName, password));
+		Room room = roomService.create(new Room(testName, password, false));
 		assertThat(room.getName()).isEqualTo(testName);
 	}
 
 	@Test
 	@DisplayName("이미 있는 이름으로 저장하면 예외가 발생한다.")
 	void validateDuplicateName() {
-		roomService.create(new Room(testName, password));
+		roomService.create(new Room(testName, password, false));
 
-		assertThatThrownBy(() -> roomService.create(new Room(testName, password)))
+		assertThatThrownBy(() -> roomService.create(new Room(testName, password, false)))
 			.isInstanceOf(UserInputException.class);
 	}
 
@@ -60,7 +54,7 @@ class RoomServiceTest {
 	@ValueSource(strings = {"", "16자를넘는방이름은안되니까돌아가"})
 	@DisplayName("빈 이름이나 16자 초과 이름이 들어오면 예외가 발생한다.")
 	void createException(String name) {
-		assertThatThrownBy(() -> roomService.create(new Room(name, password)))
+		assertThatThrownBy(() -> roomService.create(new Room(name, password, false)))
 			.isInstanceOf(UserInputException.class);
 	}
 
@@ -75,14 +69,14 @@ class RoomServiceTest {
 	@ValueSource(strings = {"", " "})
 	@DisplayName("빈 비밀번호를 입력하면 예외가 발생한다.")
 	void passwordException(String password) {
-		assertThatThrownBy(() -> roomService.create(new Room(testName, password)))
+		assertThatThrownBy(() -> roomService.create(new Room(testName, password, false)))
 			.isInstanceOf(UserInputException.class);
 	}
 
 	@Test
 	@DisplayName("id와 비밀번호가 맞지 않으면 삭제하지 못한다.")
 	void removeExceptionPassword() {
-		Room room = roomService.create(new Room(testName, password));
+		Room room = roomService.create(new Room(testName, password, false));
 
 		assertThatThrownBy(() -> roomService.delete(room.getId(), "1234"))
 			.isInstanceOf(UserInputException.class);

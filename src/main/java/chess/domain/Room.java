@@ -10,18 +10,21 @@ public class Room {
     private int id;
     private final String name;
     private final String password;
+    private boolean end;
 
     public Room(int id, Room room) {
         this.id = id;
         this.name = room.getName();
         this.password = room.getPassword();
+        this.end = room.getEnd();
     }
 
-    public Room(String name, String password) {
+    public Room(String name, String password, boolean end) {
         validateNameSize(name);
         validatePassword(password);
         this.name = name;
         this.password = password;
+        this.end = end;
     }
 
     private void validateNameSize(String name) {
@@ -40,6 +43,10 @@ public class Room {
         return this.password.equals(password);
     }
 
+    public void finish() {
+        this.end = true;
+    }
+
     public int getId() {
         return id;
     }
@@ -50,5 +57,9 @@ public class Room {
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean getEnd() {
+        return end;
     }
 }

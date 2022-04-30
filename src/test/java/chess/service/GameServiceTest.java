@@ -33,8 +33,8 @@ class GameServiceTest {
 	void init() {
 		gameService = new GameService(new FakePieceRepository(), new FakeBoardRepository());
 		roomRepository = new FakeRoomRepository();
-		roomId = roomRepository.save(new Room(testName, testPassword));
-		roomService = new RoomService(gameService, roomRepository);
+		roomId = roomRepository.save(new Room(testName, testPassword, false));
+		roomService = new RoomService(roomRepository);
 	}
 
 	@AfterEach

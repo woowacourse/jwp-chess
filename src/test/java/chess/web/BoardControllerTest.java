@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 import chess.configuration.RepositoryConfiguration;
-import chess.configuration.ServiceConfiguration;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.web.dto.CommendDto;
@@ -21,7 +20,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({RepositoryConfiguration.class, ServiceConfiguration.class})
+@Import(RepositoryConfiguration.class)
 class BoardControllerTest {
 
 	private static final String testName = "summer";
@@ -43,7 +42,7 @@ class BoardControllerTest {
 	@BeforeEach
 	void setUp() {
 		RestAssured.port = port;
-		roomId = roomService.create(new Room(testName, password)).getId();
+		roomId = roomService.create(new Room(testName, password, true)).getId();
 		boardId = gameService.startNewGame(roomId).getBoardId();
 	}
 
@@ -76,7 +75,7 @@ class BoardControllerTest {
 	@DisplayName("게임 종료 요청이 오면 200응답을 받는다.")
 	void end() {
 		RestAssured.given().log().all()
-			.when().get("/boards/" + boardId + "/end")
+			.when().put("/boards/" + boardId + "/end")
 			.then().log().all()
 			.statusCode(HttpStatus.OK.value());
 	}

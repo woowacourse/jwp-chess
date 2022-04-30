@@ -38,7 +38,8 @@ public class RoomRepositoryImpl implements RoomRepository {
 	public int save(Room room) {
 		return insertActor.executeAndReturnKey(Map.of(
 				"name", room.getName(),
-				"password", room.getPassword()))
+				"password", room.getPassword(),
+				"end", room.getEnd()))
 			.intValue();
 	}
 
@@ -76,12 +77,20 @@ public class RoomRepositoryImpl implements RoomRepository {
 		return jdbcTemplate.query(sql, getRoomMapper());
 	}
 
+	@Override
+	public void updateEndByBoardId(int boardId, boolean isEnd) {
+		String sql = "update room r join board b on r.id = b.room_id"
+			+ " set end = :end where b.id = :boardId";
+		jdbcTemplate.update(sql, Map.of("end", isEnd, "boardId", boardId));
+	}
+
 	private RowMapper<Room> getRoomMapper() {
 		return (resultSet, rowNum) -> new Room(
 			resultSet.getInt(KEY_INDEX),
 			new Room(
 				resultSet.getString(NAME_INDEX),
-				resultSet.getString(PASSWORD_INDEX)
+				resultSet.getString(PASSWORD_INDEX),
+				resultSet.getBoolean(4)
 			));
 	}
 }

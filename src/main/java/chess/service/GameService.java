@@ -85,11 +85,6 @@ public class GameService {
 		return new ResultDto(whiteScore, blackScore, board.gameResult());
 	}
 
-	public boolean isEnd(int roomId) {
-		int boardId = boardRepository.getBoardIdByRoom(roomId);
-		return loadBoard(boardId).isEnd();
-	}
-
 	private Board loadBoard(int boardId) {
 		Map<Position, Piece> pieces = new HashMap<>();
 		for (PieceDto pieceDto : pieceRepository.findAll(boardId)) {

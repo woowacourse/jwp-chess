@@ -17,11 +17,9 @@ public class RoomService {
 
 	private static final String NOT_EXIST_ROOM = "유효하지 않은 체스방 주소입니다.";
 
-	private final GameService gameService;
 	private final RoomRepository roomRepository;
 
-	public RoomService(GameService gameService, RoomRepository roomRepository) {
-		this.gameService = gameService;
+	public RoomService(RoomRepository roomRepository) {
 		this.roomRepository = roomRepository;
 	}
 
@@ -47,10 +45,11 @@ public class RoomService {
 
 	@Transactional
 	public void delete(int roomId, String password) {
-		if (!getRoom(roomId).isRightPassword(password)) {
+		Room room = getRoom(roomId);
+		if (!room.isRightPassword(password)) {
 			throw new UserInputException("유효하지 않은 비밀번호입니다.");
 		}
-		if (!gameService.isEnd(roomId)) {
+		if (!room.getEnd()) {
 			throw new UserInputException("게임이 끝나지 않아 삭제할 수 없습니다.");
 		}
 		roomRepository.deleteById(roomId);
@@ -62,7 +61,12 @@ public class RoomService {
 				new RoomResponseDto(
 					room.getId(),
 					room.getName(),
-					gameService.isEnd(room.getId())
+					room.getEnd()
 				)).collect(Collectors.toList());
+	}
+
+	@Transactional
+	public void finish(int boardId) {
+		roomRepository.updateEndByBoardId(boardId, true);
 	}
 }

@@ -290,7 +290,7 @@ function fetchResult() {
 function fetchFinalResult() {
     let boardId = document.getElementById("board-id").value;
     fetch('http://localhost:8080/boards/' + boardId + '/end', {
-        method: 'GET',
+        method: 'PUT',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         },

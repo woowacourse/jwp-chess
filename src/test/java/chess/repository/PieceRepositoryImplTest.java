@@ -35,14 +35,13 @@ class PieceRepositoryImplTest {
     private PieceRepository pieceRepository;
 
     private final Board board = new Board(new RegularRuleSetup());
-    private int roomId;
     private int boardId;
 
     @BeforeEach
     void init() {
         BoardRepository boardRepository = new BoardRepositoryImpl(dataSource, jdbcTemplate);
         RoomRepository roomRepository = new RoomRepositoryImpl(dataSource, jdbcTemplate);
-        roomId = roomRepository.save(new Room("summer", "summer"));
+        int roomId = roomRepository.save(new Room("summer", "summer", false));
         boardId = boardRepository.save(roomId, GameState.from(board));
 
         pieceRepository = new PieceRepositoryImpl(dataSource, jdbcTemplate);

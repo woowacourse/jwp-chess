@@ -15,4 +15,6 @@ public interface RoomRepository {
     void deleteById(int id);
 
     List<Room> findAll();
+
+	void updateEndByBoardId(int boardId, boolean isEnd);
 }

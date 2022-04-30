@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 @JdbcTest
 public class RoomRepositoryImplTest {
 
-    private static final Room room = new Room("summer", "summer");
+    private static final Room room = new Room("summer", "summer", false);
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -57,7 +57,7 @@ public class RoomRepositoryImplTest {
     @DisplayName("저장된 전체 방을 찾아온다.")
     void findAll() {
         roomRepository.save(room);
-        roomRepository.save(new Room("does", "does"));
+        roomRepository.save(new Room("does", "does", false));
 
         List<Room> rooms = roomRepository.findAll();
         assertThat(rooms.size()).isEqualTo(2);

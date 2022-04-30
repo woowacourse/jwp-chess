@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 import chess.configuration.RepositoryConfiguration;
-import chess.configuration.ServiceConfiguration;
 import chess.repository.RoomRepository;
 import chess.service.GameService;
 import chess.service.RoomService;
@@ -25,7 +24,7 @@ import chess.domain.Room;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({RepositoryConfiguration.class, ServiceConfiguration.class})
+@Import({RepositoryConfiguration.class})
 class RoomControllerTest {
 
     private static final String testName = "summer";
@@ -69,8 +68,8 @@ class RoomControllerTest {
     @Test
     @DisplayName("방 목록을 불러온다.")
     void loadRooms() {
-        roomService.create(new Room(testName, password));
-        roomService.create(new Room("does", password));
+        roomService.create(new Room(testName, password, false));
+        roomService.create(new Room("does", password, false));
         RestAssured.given().log().all()
             .when().get("/api/rooms")
             .then().log().all()
@@ -92,7 +91,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("새로운 게임을 시작하면 200 응답을 받는다.")
     void startNewGame() {
-        Room room = roomService.create(new Room(testName, password));
+        Room room = roomService.create(new Room(testName, password, false));
 
         RestAssured.given().log().all()
             .when().post("/rooms/" + room.getId())
@@ -103,7 +102,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("게임을 불러오면 200 응답을 받는다.")
     void loadGame() {
-        int roomId = roomService.create(new Room(testName, password)).getId();
+        int roomId = roomService.create(new Room(testName, password, false)).getId();
         gameService.startNewGame(roomId);
 
         RestAssured.given().log().all()
@@ -115,7 +114,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("방을 삭제한다.")
     void deleteRoom() {
-        Room room = roomService.create(new Room(testName, password));
+        Room room = roomService.create(new Room(testName, password, true));
 
         RestAssured.given().log().all()
             .formParam("password", password)

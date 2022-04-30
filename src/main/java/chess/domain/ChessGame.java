@@ -5,7 +5,6 @@ import chess.domain.chessboard.ChessBoardFactory;
 import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
 import chess.domain.result.EndResult;
-import chess.domain.result.MoveResult;
 
 public class ChessGame {
 
@@ -22,15 +21,13 @@ public class ChessGame {
         this.gameStatus = gameStatus;
     }
 
-    public MoveResult move(final Position from, final Position to) {
+    public void move(final Position from, final Position to) {
         gameStatus.checkPlaying();
 
-        final MoveResult result = chessBoard.move(from, to);
+        chessBoard.move(from, to);
         if (chessBoard.isKingDie()) {
             gameStatus = GameStatus.KING_DIE;
-            result.changeStatusToKingDie();
         }
-        return result;
     }
 
     public Score calculateScore() {

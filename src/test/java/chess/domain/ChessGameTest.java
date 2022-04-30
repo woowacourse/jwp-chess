@@ -10,7 +10,6 @@ import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Color;
 import chess.domain.chesspiece.King;
 import chess.domain.position.Position;
-import chess.domain.result.MoveResult;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -57,11 +56,11 @@ class ChessGameTest {
         chessGame.start();
 
         // when
-        final MoveResult moveResult = chessGame.move(from, to);
-        final boolean actual = moveResult.isKingDie();
+        chessGame.move(from, to);
+        final GameStatus actual = chessGame.getGameStatus();
 
         // then
-        assertThat(actual).isEqualTo(true);
+        assertThat(actual).isEqualTo(GameStatus.KING_DIE);
     }
 
     @Test

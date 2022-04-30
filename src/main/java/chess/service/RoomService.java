@@ -5,6 +5,7 @@ import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
+import chess.repository.ChessGameRepository;
 import chess.repository.RoomRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Service;
 public class RoomService {
 
     private final RoomRepository roomRepository;
+    private final ChessGameRepository chessGameRepository;
 
-    public RoomService(final RoomRepository roomRepository) {
+    public RoomService(final RoomRepository roomRepository, final ChessGameRepository chessGameRepository) {
         this.roomRepository = roomRepository;
+        this.chessGameRepository = chessGameRepository;
     }
 
     public List<RoomResponseDto> findAll() {
@@ -31,6 +34,7 @@ public class RoomService {
         final Room room = roomRepository.get(roomId);
         room.startGame();
         roomRepository.update(roomId, room);
+        chessGameRepository.add(roomId, room.getChessGame());
     }
 
     public void deleteRoom(final RoomDeletionRequestDto dto) {

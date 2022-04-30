@@ -38,4 +38,14 @@ public class ChessGameRepository {
         final ChessBoard chessBoard = new ChessBoard(pieceByPosition);
         return new ChessGame(chessBoard, roomDao.findStatus(roomId));
     }
+
+    public void update(final int roomId, final Position from, final Position to) {
+        chessPieceDao.deleteByRoomIdAndPosition(roomId, to);
+        chessPieceDao.updateByRoomIdAndPosition(roomId, from, to);
+    }
+
+    public void add(final int roomId, final ChessGame chessGame) {
+        final ChessBoard chessBoard = chessGame.getChessBoard();
+        chessPieceDao.saveAll(roomId, chessBoard.findAllPiece());
+    }
 }

@@ -46,12 +46,6 @@ async function startGame() {
         errorElement.innerText = startResponseData.message;
         return;
     }
-    // const initPieceResponse = await fetch(`${pathName}/pieces`, {method: "POST"});
-    // if (initPieceResponse.status !== 201) {
-    //     const initPieceResponseData = initPieceResponse.json();
-    //     errorElement.innerText = initPieceResponseData.message;
-    //     return;
-    // }
 
     errorElement.innerText = null;
 

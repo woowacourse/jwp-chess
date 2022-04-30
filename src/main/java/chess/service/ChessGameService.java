@@ -8,18 +8,17 @@ import chess.domain.game.GameResult;
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Color;
 import chess.domain.piece.Pieces;
+import chess.domain.room.Room;
 import chess.dto.GameResultDto;
-import chess.dto.GameRoomDto;
 import chess.dto.MoveCommandDto;
 import chess.dto.PiecesDto;
+import chess.dto.RoomDto;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameService {
-
-    private static final String INVALID_ROOM_PASSWORD_EXCEPTION_MESSAGE = "잘못된 방 비밀번호 입니다. 다시 입력해주세요.";
-    private static final String NOT_FINISHED_GAME_STATUS_EXCEPTION_MESSAGE = "아직 게임이 끝나지 않아 삭제할 수 없습니다.";
 
     private final PieceDao pieceDao;
     private final GameDao gameDao;
@@ -29,8 +28,11 @@ public class ChessGameService {
         this.gameDao = gameDao;
     }
 
-    public List<GameRoomDto> getAllGames() {
-        return gameDao.findAllIdAndTitle();
+    public List<RoomDto> getAllGames() {
+        List<Room> rooms = gameDao.findAllRoom();
+        return rooms.stream()
+            .map(RoomDto::toDto)
+            .collect(Collectors.toList());
     }
 
     public long create(String title, String password) {
@@ -41,10 +43,9 @@ public class ChessGameService {
     }
 
     private ChessGame findChessGame(long gameId) {
-        boolean endFlag = gameDao.findEndFlagById(gameId);
-        Color turn = gameDao.findTurnById(gameId);
+        Room room = gameDao.findRoomById(gameId);
         Pieces chessmen = pieceDao.findAllByGameId(gameId);
-        return new ChessGame(endFlag, chessmen, turn);
+        return new ChessGame(room.getEndFlag(), chessmen, room.getTurn());
     }
 
     public PiecesDto findCurrentPieces(long gameId) {
@@ -85,26 +86,10 @@ public class ChessGameService {
         gameDao.updateEndFlagById(endFlag, gameId);
     }
 
-
-    //TODO room 객체 생성해서 비교하는 메세지 던져주기.
     public void cleanGameByIdAndPassword(long id, String password) {
-        validatePassword(id, password);
-        validateEnd(id);
+        Room room = gameDao.findRoomById(id);
+        room.validateDeletable(password);
         cleanGame(id);
-    }
-
-    private void validatePassword(long id, String password) {
-        String targetPassword = gameDao.findPasswordById(id);
-        if (!targetPassword.equals(password)) {
-            throw new IllegalArgumentException(INVALID_ROOM_PASSWORD_EXCEPTION_MESSAGE);
-        }
-    }
-
-    private void validateEnd(long id) {
-        boolean endFlag = gameDao.findEndFlagById(id);
-        if (!endFlag) {
-            throw new IllegalArgumentException(NOT_FINISHED_GAME_STATUS_EXCEPTION_MESSAGE);
-        }
     }
 
 }

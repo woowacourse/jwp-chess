@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.piece.Color;
-import chess.dto.GameRoomDto;
+import chess.domain.room.Room;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
@@ -34,23 +34,22 @@ public class GameDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public Room findRoomById(long id) {
+        final String sql = "select id, end_flag, turn, title, password from game where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+    }
+
+    public List<Room> findAllRoom() {
+        final String sql = "select id, end_flag, turn, title, password from game";
+
+        return jdbcTemplate.query(sql, actorRowMapper);
+    }
+
     public boolean exists(String id) {
         final String sql = "select count(*) from game where id = ?";
 
         return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
-    }
-
-    public boolean findEndFlagById(long id) {
-        final String sql = "select end_flag from game where id = ?";
-
-        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
-    }
-
-    public Color findTurnById(long id) {
-        final String sql = "select turn from game where id = ?";
-
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-            Color.of(resultSet.getString("turn")), id);
     }
 
     public void updateTurnById(Color nextTurn, long id) {
@@ -71,20 +70,12 @@ public class GameDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<GameRoomDto> findAllIdAndTitle() {
-        final String sql = "select id, title from game";
-
-        return jdbcTemplate.query(sql, actorRowMapper);
-    }
-
-    private final RowMapper<GameRoomDto> actorRowMapper = (resultSet, rowNum) -> new GameRoomDto(
+    private final RowMapper<Room> actorRowMapper = (resultSet, rowNum) -> new Room(
         resultSet.getLong("id"),
-        resultSet.getString("title")
+        resultSet.getBoolean("end_flag"),
+        Color.of(resultSet.getString("turn")),
+        resultSet.getString("title"),
+        resultSet.getString("password")
     );
 
-    public String findPasswordById(long id) {
-        final String sql = "select password from game where id = ?";
-
-        return jdbcTemplate.queryForObject(sql, String.class, id);
-    }
 }

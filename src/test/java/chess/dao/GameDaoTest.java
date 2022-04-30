@@ -36,13 +36,13 @@ public class GameDaoTest {
     @DisplayName("게임이 끝나지 않은 경우 end_flag는 false이다.")
     @Test
     void findEndFlagById_false() {
-        assertThat(gameDao.findEndFlagById(id)).isFalse();
+        assertThat(gameDao.findRoomById(id).getEndFlag()).isFalse();
     }
 
     @DisplayName("turn칼럼에는 불가능한 turn이 저장되며 초깃값은 black이다.")
     @Test
     void findTurnById() {
-        assertThat(gameDao.findTurnById(id)).isEqualTo(Color.BLACK);
+        assertThat(gameDao.findRoomById(id).getTurn()).isEqualTo(Color.BLACK);
     }
 
     @DisplayName("turn 업데이트 성공")
@@ -50,7 +50,7 @@ public class GameDaoTest {
     void updateTurnById() {
         gameDao.updateTurnById(Color.WHITE, id);
 
-        assertThat(gameDao.findTurnById(id)).isEqualTo(Color.WHITE);
+        assertThat(gameDao.findRoomById(id).getTurn()).isEqualTo(Color.WHITE);
     }
 
     @DisplayName("end_flag 업데이트 성공")
@@ -58,7 +58,7 @@ public class GameDaoTest {
     void updateEndFlagById() {
         gameDao.updateEndFlagById(true, id);
 
-        assertThat(gameDao.findEndFlagById(id)).isTrue();
+        assertThat(gameDao.findRoomById(id).getEndFlag()).isTrue();
     }
 
     @DisplayName("게임 삭제시 더이상 게임은 존재하지 않는다.")
@@ -67,14 +67,6 @@ public class GameDaoTest {
         gameDao.deleteById(id);
 
         assertThat(gameDao.exists("1234")).isFalse();
-    }
-
-    @DisplayName("findPasswordById는 id에 해당하는 password를 반환한다.")
-    @Test
-    void findPasswordById_게임_삭제_성공() {
-        String actual = gameDao.findPasswordById(id);
-
-        assertThat(actual).isEqualTo("password486");
     }
 
 }

@@ -9,9 +9,10 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
+import chess.domain.room.Room;
 import chess.dto.GameResultDto;
-import chess.dto.GameRoomDto;
 import chess.dto.PiecesDto;
+import chess.dto.RoomDto;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,9 +44,9 @@ public class ChessGameServiceTest {
     @DisplayName("생성되어있는 게임들의 정보를 모두 가져온다.")
     @Test
     public void findAllIdAndTitle() {
-        when(gameDao.findAllIdAndTitle()).thenReturn(List.of(new GameRoomDto(1L, "방 제목")));
+        when(gameDao.findAllRoom()).thenReturn(List.of(new Room(1L, false, Color.WHITE, "방 제목", "비밀번호")));
 
-        List<GameRoomDto> actual = chessGameService.getAllGames();
+        List<RoomDto> actual = chessGameService.getAllGames();
 
         assertThat(actual.get(0).getId()).isEqualTo(1L);
         assertThat(actual.get(0).getTitle()).isEqualTo("방 제목");
@@ -64,8 +65,7 @@ public class ChessGameServiceTest {
     @DisplayName("PiecesDto를 반환한다.")
     @Test
     public void getCurrentGame() {
-        when(gameDao.findEndFlagById(2L)).thenReturn(false);
-        when(gameDao.findTurnById(2L)).thenReturn(Color.BLACK);
+        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, false, Color.BLACK, "방 제목", "방 비밀번호"));
         when(pieceDao.findAllByGameId(2L)).thenReturn(new Pieces(List.of(new Pawn(Color.BLACK, Position.of("a1")))));
 
         PiecesDto actual = chessGameService.findCurrentPieces(2L);
@@ -76,8 +76,7 @@ public class ChessGameServiceTest {
     @DisplayName("PiecesDto를 반환한다.")
     @Test
     public void calculateGameResult() {
-        when(gameDao.findEndFlagById(2L)).thenReturn(false);
-        when(gameDao.findTurnById(2L)).thenReturn(Color.BLACK);
+        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, false, Color.BLACK, "방 제목", "방 비밀번호"));
         when(pieceDao.findAllByGameId(2L)).thenReturn(new Pieces(List.of(new Pawn(Color.BLACK, Position.of("a1")))));
 
         GameResultDto actual = chessGameService.calculateGameResult(2L);

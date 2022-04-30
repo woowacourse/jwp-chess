@@ -34,7 +34,7 @@ public class ChessGameTest {
     @DisplayName("체스말이 이동할 수 있는 위치면 이동에 성공한다.")
     @Test
     void move_success() {
-        MoveCommand command = new MoveCommand("move a2 a4");
+        MoveCommand command = MoveCommand.of("move a2 a4");
         Position a4 = Position.of("a4");
 
         chessGame.moveChessmen(command);
@@ -49,7 +49,7 @@ public class ChessGameTest {
     @DisplayName("체스말이 이동할 수 없는 위치면 예외가 발생한다.")
     @Test
     void move_failOnInvalidMove() {
-        MoveCommand command = new MoveCommand("move a2 a5");
+        MoveCommand command = MoveCommand.of("move a2 a5");
 
         assertThatCode(() -> chessGame.moveChessmen(command))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -59,7 +59,7 @@ public class ChessGameTest {
     @DisplayName("체스말의 이동경로에 다른 말이 있으면 예외가 발생한다.")
     @Test
     void move_failOnObstacleInPath() {
-        MoveCommand command = new MoveCommand("move a1 a3");
+        MoveCommand command = MoveCommand.of("move a1 a3");
 
         assertThatCode(() -> chessGame.moveChessmen(command))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -69,7 +69,7 @@ public class ChessGameTest {
     @DisplayName("체스말의 이동하려는 위치에 아군말이 있으면 예외가 발생한다.")
     @Test
     void move_failOnFriendlyInTargetPosition() {
-        MoveCommand command = new MoveCommand("move a1 a2");
+        MoveCommand command = MoveCommand.of("move a1 a2");
 
         assertThatCode(() -> chessGame.moveChessmen(command))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -79,9 +79,9 @@ public class ChessGameTest {
     @DisplayName("체스말의 이동하려는 위치면서 공격가능한 위치면 적군말을 공격한다.")
     @Test
     void kill_enemy() {
-        MoveCommand command1 = new MoveCommand("move a2 a4");
-        MoveCommand command2 = new MoveCommand("move b7 b5");
-        MoveCommand command3 = new MoveCommand("move a4 b5");
+        MoveCommand command1 = MoveCommand.of("move a2 a4");
+        MoveCommand command2 = MoveCommand.of("move b7 b5");
+        MoveCommand command3 = MoveCommand.of("move a4 b5");
 
         chessGame.moveChessmen(command1);
         chessGame.moveChessmen(command2);
@@ -96,7 +96,7 @@ public class ChessGameTest {
     @DisplayName("게임 시작시 처음엔 백색말만 움직일 수 있다.")
     @Test
     void checkTurn_white() {
-        MoveCommand command1 = new MoveCommand("move a2 a4");
+        MoveCommand command1 = MoveCommand.of("move a2 a4");
         chessGame.moveChessmen(command1);
 
         Color actual = chessGame.getChessmen().extractPiece(Position.of("a4")).getColor();
@@ -107,7 +107,7 @@ public class ChessGameTest {
     @DisplayName("게임 시작시 처음에 흑색말을 움직이려는 경우 예외가 발생한다.")
     @Test
     void checkTurn_white_Exception() {
-        MoveCommand command = new MoveCommand("move a7 a6");
+        MoveCommand command = MoveCommand.of("move a7 a6");
 
         assertThatCode(() -> chessGame.moveChessmen(command))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -117,8 +117,8 @@ public class ChessGameTest {
     @DisplayName("같은 색의 말을 연달아 두번 움직이려는 경우 예외가 발생한다.")
     @Test
     void checkTurn_black_Exception() {
-        MoveCommand command1 = new MoveCommand("move a2 a4");
-        MoveCommand command2 = new MoveCommand("move a4 a5");
+        MoveCommand command1 = MoveCommand.of("move a2 a4");
+        MoveCommand command2 = MoveCommand.of("move a4 a5");
 
         chessGame.moveChessmen(command1);
 

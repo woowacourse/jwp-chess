@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.domain.command.MoveCommand;
 import chess.dto.MoveDto;
 import chess.service.ChessGameService;
 import java.net.URI;

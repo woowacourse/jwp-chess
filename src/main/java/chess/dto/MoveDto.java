@@ -4,11 +4,8 @@ import chess.domain.command.MoveCommand;
 
 public class MoveDto {
 
-    private String source;
-    private String target;
-
-    public MoveDto() {
-    }
+    private final String source;
+    private final String target;
 
     public MoveDto(String source, String target) {
         this.source = source;
@@ -26,5 +23,4 @@ public class MoveDto {
     public MoveCommand toEntity() {
         return new MoveCommand(source, target);
     }
-
 }

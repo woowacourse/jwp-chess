@@ -1,7 +1,6 @@
 package chess.controller;
 
 import chess.controller.view.BoardView;
-import chess.dto.PiecesDto;
 import chess.service.ChessGameService;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -38,7 +37,7 @@ public class ViewController {
     public ModelAndView toGame(@PathVariable String id) {
         chessGameService.getGameStatus(id);
         ModelAndView modelAndView = new ModelAndView("game");
-        modelAndView.addObject("pieces", BoardView.of(new PiecesDto(chessGameService.getPieces(id))).getBoardView());
+        modelAndView.addObject("pieces", BoardView.of(chessGameService.getPieces(id)).getBoardView());
         modelAndView.addObject("id", id);
         modelAndView.addObject("status", chessGameService.calculateGameResult(id));
         return modelAndView;
@@ -48,7 +47,8 @@ public class ViewController {
     @ResponseBody
     public ResponseEntity<Void> exception(Exception e) {
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .location(URI.create(LOCALHOST_8080 + "?gameMessage=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8)))
+                .location(URI.create(
+                        LOCALHOST_8080 + "?gameMessage=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8)))
                 .build();
     }
 }

@@ -155,7 +155,8 @@
 </table>
 <center>
 <div>
-    <form action="sendPassword?roomName={{roomName}}" method="get">
+    <form action="redirectPassword" method="post">
+        <input type="hidden" name="roomName" value={{roomName}}> </input>
         비밀번호가 맞지 않습니다.
         <button type="submit"> 확인 </button>
     </form>

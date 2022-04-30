@@ -9,6 +9,7 @@ import chess.domain.position.Position;
 import chess.domain.score.ChessScore;
 import chess.domain.score.ScoreCalculator;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class WebChessGame {
     @Autowired
     private RoomDAO roomDAO;
 
-    private final Board board = new Board();
+    private Board board = new Board();
 
     public void initializeGame(BoardDTO boardDTO, ChessForm chessForm) {
         String roomName = chessForm.getRoomName();
@@ -82,7 +83,6 @@ public class WebChessGame {
 
     public void terminateState(String name) {
         String roomId = roomDAO.findIdByName(name);
-        boardDAO.insertBoard(board, roomId);
         stateDAO.terminateState(roomId);
     }
 
@@ -122,5 +122,10 @@ public class WebChessGame {
         String roomId = roomDAO.findIdByName(name);
         boardDAO.deleteBoard(roomId);
         boardDAO.insertBoard(board, roomId);
+    }
+
+    public void loadBoard(String name, BoardDTO boardDTO) {
+        this.board = new Board(boardDAO.findAllPieces(roomDAO.findIdByName(name)));
+        boardDTO.generateUpdatedDTO(board.getPieces());
     }
 }

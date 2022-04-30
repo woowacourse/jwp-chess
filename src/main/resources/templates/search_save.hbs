@@ -156,7 +156,13 @@
 <center>
 <div>
     {{#each names}}
-    <li>{{this}} </li>
+    <li>
+        <form action="redirectPassword" method="post">
+            <input type="hidden" name="roomName" value={{this}}> </input>
+            {{this}}
+            <button type="submit"> 이어서 게임하기 </button>
+        </form>
+    </li>
     {{/each}}
     <form action="/" method="get">
         <button type="submit"> 완료 </button>

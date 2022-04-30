@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.domain.position.Position;
 import chess.web.BoardDTO;
 import chess.web.ChessForm;
 import chess.web.MoveForm;
@@ -80,6 +81,7 @@ public class WebChessController {
         try {
             webChessGame.validateDuplicateName(chessForm);
             webChessGame.initializeGame(boardDTO, chessForm);
+            webChessGame.saveBoard(chessForm.getRoomName());
             return REDIRECT_GAME_RUN + "?roomName=" + chessForm.getRoomName();
         }
         catch (IllegalArgumentException exception) {
@@ -92,7 +94,6 @@ public class WebChessController {
     public String runGame(Model model, @RequestParam("roomName") String roomName) {
         model.addAttribute("roomName", roomName);
         model.addAttribute("color", webChessGame.getColor(roomName));
-        webChessGame.saveBoard(roomName);
         updateDTO(model);
         return GAME_RUN_URL;
     }
@@ -160,6 +161,7 @@ public class WebChessController {
         if (webChessGame.checkPassword(chessForm.getRoomName(), chessForm.getPassword())) {
             return REDIRECT_MATCH + "?roomName=" + chessForm.getRoomName();
         }
+        model.addAttribute("roomName", chessForm.getRoomName());
         model.addAttribute("message", "비밀번호가 틀렸습니다.");
         return NOT_MATCH;
     }
@@ -200,6 +202,7 @@ public class WebChessController {
             webChessGame.deleteRoom(name);
             return REDIRECT_INDEX;
         }
+        webChessGame.loadBoard(name, boardDTO);
         return REDIRECT_GAME_RUN + "?roomName=" + name;
     }
 }

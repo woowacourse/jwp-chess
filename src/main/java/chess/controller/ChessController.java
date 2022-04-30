@@ -3,6 +3,9 @@ package chess.controller;
 import chess.controller.view.BoardView;
 import chess.dto.LogInDto;
 import chess.service.ChessGameService;
+import java.net.URI;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ChessController {
+    private static final String LOCALHOST_8080 = "http://localhost:8080";
     private final ChessGameService chessGameService;
 
     public ChessController(ChessGameService chessGameService) {
@@ -26,28 +31,36 @@ public class ChessController {
     }
 
     @PostMapping("/exit")
-    public String deleteGame(@ModelAttribute LogInDto logInDto) {
+    public @ResponseBody ResponseEntity<Void> deleteGame(@ModelAttribute LogInDto logInDto) {
         chessGameService.validateEnd(logInDto.getGameId());
         chessGameService.cleanGame(logInDto);
-        return "redirect:/";
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .location(URI.create(LOCALHOST_8080))
+                .build();
     }
 
     @GetMapping("/exit")
-    public String exitAndDeleteGame(@RequestParam String gameId) {
+    public @ResponseBody ResponseEntity<Void> exitAndDeleteGame(@RequestParam String gameId) {
         chessGameService.changeToEnd(gameId);
-        return "redirect:/";
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .location(URI.create(LOCALHOST_8080))
+                .build();
     }
 
     @PostMapping("/init")
-    public String initGame(@ModelAttribute LogInDto logInDto) {
+    public @ResponseBody ResponseEntity<Void> initGame(@ModelAttribute LogInDto logInDto) {
         chessGameService.createGame(logInDto);
-        return "redirect:/game/" + logInDto.getGameId();
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .location(URI.create(LOCALHOST_8080 + "/game/" + logInDto.getGameId()))
+                .build();
     }
 
     @PostMapping("/start")
-    public String startGame(@ModelAttribute LogInDto logInDto) {
+    public @ResponseBody ResponseEntity<Void> startGame(@ModelAttribute LogInDto logInDto) {
         chessGameService.validateLogIn(logInDto);
-        return "redirect:/game/" + logInDto.getGameId();
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .location(URI.create(LOCALHOST_8080 + "/game/" + logInDto.getGameId()))
+                .build();
     }
 
     @GetMapping(path = "/game/{gameId}")

@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("classpath:roomInit.sql")
 public class RoomDaoTest {
 
     private RoomDao roomDao;
@@ -21,12 +23,6 @@ public class RoomDaoTest {
     @BeforeEach
     void setUp() {
         roomDao = new JdbcRoomDao(jdbcTemplate);
-
-        jdbcTemplate.execute("drop table room if exists");
-        jdbcTemplate.execute("CREATE TABLE room (\n"
-                + "    id int not null auto_increment primary key,\n"
-                + "    title varchar(30) not null,\n"
-                + "    password varchar(8) not null\n)");
     }
 
     @Test

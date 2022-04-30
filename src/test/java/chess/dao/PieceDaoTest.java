@@ -20,10 +20,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
+@Sql("classpath:pieceInit.sql")
 class PieceDaoTest {
 
     private PieceDao pieceDao;
@@ -34,15 +36,6 @@ class PieceDaoTest {
     @BeforeEach
     void setUp() {
         pieceDao = new JdbcPieceDao(jdbcTemplate);
-
-        jdbcTemplate.execute("drop table piece if exists");
-        jdbcTemplate.execute("CREATE TABLE piece (\n"
-                + "    roomId int not null,\n"
-                + "    position varchar(3) not null,\n"
-                + "    name varchar(2) not null,\n"
-                + "    team varchar(5) not null,\n"
-                + "    primary key (roomId, position))"
-                + "");
     }
 
     @Test

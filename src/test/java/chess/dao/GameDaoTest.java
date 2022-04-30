@@ -8,8 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("classpath:gameInit.sql")
 class GameDaoTest {
 
     private GameDao gameDao;
@@ -20,13 +22,6 @@ class GameDaoTest {
     @BeforeEach
     void setUp() {
         gameDao = new JdbcGameDao(jdbcTemplate);
-
-        jdbcTemplate.execute("drop table game if exists");
-        jdbcTemplate.execute("CREATE TABLE game\n"
-                + "(\n"
-                + "    roomId    int not null primary key,\n"
-                + "    state varchar(3)\n"
-                + ")\n");
     }
 
     @Test

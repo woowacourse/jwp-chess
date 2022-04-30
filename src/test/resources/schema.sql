@@ -1,4 +1,7 @@
-create table game
+DROP TABLE IF EXISTS board;
+DROP TABLE IF EXISTS game;
+
+CREATE TABLE game
 (
     id       int auto_increment
         primary key,
@@ -7,7 +10,7 @@ create table game
     state    varchar(20) not null
 );
 
-create table board
+CREATE TABLE board
 (
     position varchar(5)  not null,
     symbol   varchar(10) not null,

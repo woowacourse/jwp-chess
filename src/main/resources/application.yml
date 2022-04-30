@@ -17,6 +17,10 @@ spring:
     username: root
     password: root
 
+#  sql:
+#    init:
+#      mode: always
+
   mvc:
     hiddenmethod:
       filter:
@@ -28,6 +32,12 @@ spring:
   config:
     activate:
       on-profile: "test"
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+    username: sa
+    password:
 
   h2:
     console:

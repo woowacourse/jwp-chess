@@ -346,24 +346,9 @@
     </tr>
 </table>
 <center>
-    <form action="gameRun" method="post">
-        <input type="hidden" name="roomName" value={{roomName}}>
-        현재 {{color}}의 차례입니다.
-        <input type="text" name="source" placeholder="출발 위치"> </input>
-        <input type="text" name="dest" placeholder="도착 위치"> </input>
-        <button type="submit"> 이동 </button>
-    </form>
-    <form action="gameScore" method="post">
-        <input type="hidden" name="roomName" value={{roomName}}>
-        <button type="submit"> 점수 보기 </button>
-    </form>
-    <form action="gameEnd" method="post">
-        <input type="hidden" name="roomName" value={{roomName}}>
-        <button type="submit"> 게임 끝내기 </button>
-    </form>
-    <form action="gameSave" method="post">
-        <input type="hidden" name="roomName" value={{roomName}}>
-        <button type="submit"> 게임 저장하기 </button>
+    {{roomName}} 방을 저장하였습니다.
+    <form action="/" method="get">
+        <button type="submit"> 완료 </button>
     </form>
 </center>
 </body>

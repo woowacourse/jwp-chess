@@ -36,6 +36,7 @@ public class WebChessController {
     private static final String MATCH_URL = "match_password";
     private static final String REDIRECT_PASSWORD = "redirect:/sendPassword";
     private static final String REDIRECT_INDEX_OR_RUN = "redirect:/indexOrRun";
+    private static final String SAVE_DONE_URL = "save_done";
 
     private final BoardDTO boardDTO = BoardDTO.buildModel();
     private final WebChessGame webChessGame;
@@ -91,6 +92,7 @@ public class WebChessController {
     public String runGame(Model model, @RequestParam("roomName") String roomName) {
         model.addAttribute("roomName", roomName);
         model.addAttribute("color", webChessGame.getColor(roomName));
+        webChessGame.saveBoard(roomName);
         updateDTO(model);
         return GAME_RUN_URL;
     }
@@ -127,6 +129,14 @@ public class WebChessController {
         model.addAttribute("blackScore", webChessGame.calculateScore().getBlackScore());
         updateDTO(model);
         return SCORE_URL;
+    }
+
+    @PostMapping(value = "/gameSave")
+    public String gameSave(ChessForm chessForm, Model model) {
+        webChessGame.saveBoard(chessForm.getRoomName());
+        model.addAttribute("roomName", chessForm.getRoomName());
+        updateDTO(model);
+        return SAVE_DONE_URL;
     }
 
     @PostMapping(value = "/gameEnd")

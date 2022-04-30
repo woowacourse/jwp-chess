@@ -86,11 +86,6 @@ public class WebChessGame {
         stateDAO.terminateState(roomId);
     }
 
-    public void saveBoard(String name) {
-        String roomId = roomDAO.findIdByName(name);
-
-    }
-
     public List<String> findAllSavedGame() {
         return roomDAO.findAllSavedName();
     }
@@ -121,5 +116,11 @@ public class WebChessGame {
 
     public void deleteRoom(String name) {
         roomDAO.deleteRoom(name);
+    }
+
+    public void saveBoard(String name) {
+        String roomId = roomDAO.findIdByName(name);
+        boardDAO.deleteBoard(roomId);
+        boardDAO.insertBoard(board, roomId);
     }
 }

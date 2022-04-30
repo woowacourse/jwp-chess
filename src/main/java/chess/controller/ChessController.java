@@ -5,6 +5,7 @@ import chess.domain.command.MoveCommand;
 import chess.service.dto.ChessResponseDto;
 import chess.controller.dto.MoveCommandDto;
 import chess.service.dto.GameDto;
+import chess.service.dto.RoomResponseDto;
 import chess.service.dto.ScoresDto;
 import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class ChessController {
     }
 
     @GetMapping("/load")
-    public List<GameDto> loadRooms() {
+    public List<RoomResponseDto> loadRooms() {
         return chessService.getChesses();
     }
 

@@ -14,6 +14,7 @@ import chess.service.dto.ChessResponseDto;
 import chess.service.dto.GameDto;
 import chess.service.dto.GameStatusDto;
 import chess.service.dto.PieceDto;
+import chess.service.dto.RoomResponseDto;
 import chess.service.dto.ScoresDto;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,7 @@ public class ChessService {
         }
     }
 
-    public List<GameDto> getChesses() {
+    public List<RoomResponseDto> getChesses() {
         return gameDao.findAll();
     }
 

@@ -3,6 +3,7 @@ package chess.dao;
 import chess.controller.dto.ChessRequestDto;
 import chess.service.dto.GameDto;
 import chess.service.dto.GameStatusDto;
+import chess.service.dto.RoomResponseDto;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface GameDao {
 
     GameDto find(int id);
 
-    List<GameDto> findAll();
+    List<RoomResponseDto> findAll();
 
     Integer findLastGameId();
 }

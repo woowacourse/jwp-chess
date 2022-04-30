@@ -29,10 +29,7 @@ function showRooms(rooms) {
     let roomsUl = $("#rooms");
 
     for (let i = 0; i < rooms.length; i++) {
-        roomsUl.append("<li>"
-        + CHESS_GAME_TURN[rooms[i]['turn']] + " "
-        + CHESS_GAME_STATUS[rooms[i]['status']]
-        + "</li>");
+        roomsUl.append("<li>" + rooms[i]["title"] + "</li>");
     }
 }
 

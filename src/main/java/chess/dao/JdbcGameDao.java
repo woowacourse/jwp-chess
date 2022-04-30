@@ -4,6 +4,7 @@ import chess.controller.dto.ChessRequestDto;
 import chess.domain.piece.PieceColor;
 import chess.service.dto.GameDto;
 import chess.service.dto.GameStatusDto;
+import chess.service.dto.RoomResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -69,10 +70,13 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public List<GameDto> findAll() {
+    public List<RoomResponseDto> findAll() {
         final String sql = "select * from game";
         try {
-            return jdbcTemplate.query(sql, getGameDtoRowMapper());
+            return jdbcTemplate.query(sql,
+                    (resultSet, rowNum) ->
+                            new RoomResponseDto(resultSet.getString("title"))
+            );
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();
             return new ArrayList<>();

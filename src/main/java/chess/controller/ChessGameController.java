@@ -4,8 +4,10 @@ import chess.model.GameResult;
 import chess.model.dto.MoveDto;
 import chess.model.dto.WebBoardDto;
 import chess.service.ChessService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.ResultSet;
 import java.util.Map;
 
 @RestController
@@ -19,9 +21,9 @@ public class ChessGameController {
     }
 
     @GetMapping("/{id}")
-    public Map<String, String> getGame(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> getGame(@PathVariable Long id) {
         WebBoardDto board = chessService.getBoardByGameId(id);
-        return board.getWebBoard();
+        return ResponseEntity.ok(board.getWebBoard());
     }
 
     @DeleteMapping("/{id}")
@@ -30,23 +32,23 @@ public class ChessGameController {
     }
 
     @PostMapping("/{id}/move")
-    public Map<String, String> move(@PathVariable Long id, @RequestBody MoveDto moveCommand) {
+    public ResponseEntity<Map<String, String>> move(@PathVariable Long id, @RequestBody MoveDto moveCommand) {
         WebBoardDto board = chessService.move(moveCommand, id);
-        return board.getWebBoard();
+        return ResponseEntity.ok(board.getWebBoard());
     }
 
     @GetMapping("/{id}/turn")
-    public String turn(@PathVariable Long id) {
-        return chessService.getTurn(id);
+    public ResponseEntity<String> turn(@PathVariable Long id) {
+        return ResponseEntity.ok(chessService.getTurn(id));
     }
 
     @GetMapping("/{id}/dead")
-    public boolean isKingDead(@PathVariable Long id) {
-        return chessService.isKingDead(id);
+    public ResponseEntity<Boolean> isKingDead(@PathVariable Long id) {
+        return ResponseEntity.ok(chessService.isKingDead(id));
     }
 
     @GetMapping("/{id}/status")
-    public GameResult status(@PathVariable Long id) {
-        return chessService.getResult(id);
+    public ResponseEntity<GameResult> status(@PathVariable Long id) {
+        return ResponseEntity.ok(chessService.getResult(id));
     }
 }

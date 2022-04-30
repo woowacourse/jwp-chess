@@ -6,6 +6,7 @@ import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
 import chess.dto.ChessPieceMapper;
 import chess.dto.response.ChessPieceDto;
+import chess.entity.ChessPieceEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,20 @@ public class FakeChessPieceDao implements ChessPieceDao {
 
     private final Map<Integer, MockChessPiece> storage = new HashMap<>();
     private int series = 1;
+
+    @Override
+    public List<ChessPieceEntity> findAllEntityByRoomId(final int roomId) {
+        return storage.values()
+                .stream()
+                .filter(it -> it.roomId == roomId)
+                .map(it -> new ChessPieceEntity(
+                        it.id,
+                        roomId,
+                        it.position.getValue(),
+                        it.chessPiece,
+                        it.color.getValue()))
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<ChessPieceDto> findAllByRoomId(final int roomId) {

@@ -5,12 +5,14 @@ import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
 import chess.dto.ChessPieceMapper;
 import chess.dto.response.ChessPieceDto;
+import chess.entity.ChessPieceEntity;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,18 @@ public class ChessPieceDaoImpl implements ChessPieceDao {
 
     public ChessPieceDaoImpl(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public List<ChessPieceEntity> findAllEntityByRoomId(final int roomId) {
+        final String sql = "SELECT * FROM chess_piece WHERE room_id = ?";
+        final RowMapper<ChessPieceEntity> rowMapper = (resultSet, rowNum) -> new ChessPieceEntity(
+                Integer.parseInt(resultSet.getString("chess_piece_id")),
+                roomId,
+                resultSet.getString("position"),
+                resultSet.getString("chess_piece"),
+                resultSet.getString("color"));
+        return jdbcTemplate.query(sql, rowMapper, roomId);
     }
 
     @Override

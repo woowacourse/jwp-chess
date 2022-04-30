@@ -18,7 +18,7 @@ import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
-import chess.exception.RoomNotFoundException;
+import chess.exception.NotFoundException;
 import chess.repository.BoardRepository;
 import chess.repository.RoomRepository;
 import java.util.List;
@@ -70,13 +70,18 @@ public class ChessService {
     }
 
     private RoomEntity getValidRoom(final Long id) {
+        final RoomEntity room = getValidRoomIfExist(id);
+        validateGameOver(room);
+        return room;
+    }
+
+    private RoomEntity getValidRoomIfExist(final Long id) {
         final RoomEntity room;
         try {
             room = roomRepository.findById(id);
         } catch (DataAccessException e) {
-            throw new RoomNotFoundException("[ERROR] 해당 방이 존재하지 않습니다.");
+            throw new NotFoundException("[ERROR] 해당 방이 존재하지 않습니다.");
         }
-        validateGameOver(room);
         return room;
     }
 
@@ -134,11 +139,11 @@ public class ChessService {
     }
 
     public void endRoom(final Long id) {
-        getValidRoom(id);
-        roomRepository.updateGameOver(id);
+        final RoomEntity room = getValidRoom(id);
+        roomRepository.updateGameOver(room.getId());
     }
 
-    public StatusResponseDto createStatus(final Long id) {
+    public StatusResponseDto calculateStatus(final Long id) {
         final Board board = getBoard(id);
         return StatusResponseDto.of(new Score(board.getBoard()));
     }

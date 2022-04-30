@@ -125,7 +125,7 @@ class ChessServiceTest {
     @Test
     void createStatus() {
         final Long id = createTestRoom("체스 초보만").getId();
-        final StatusResponseDto status = chessService.createStatus(id);
+        final StatusResponseDto status = chessService.calculateStatus(id);
 
         assertThat(status.getBlackScore()).isEqualTo(38);
     }

@@ -32,34 +32,39 @@ public class WebChessController {
     public ResponseEntity<RoomResponseDto> createRoom(@RequestBody RoomRequestDto roomRequestDto) {
         final RoomResponseDto room = chessService.createRoom(roomRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .location(URI.create("/api/chess/rooms" + room.getId()))
+            .location(URI.create("/api/chess/rooms/" + room.getId()))
             .body(room);
     }
 
     @GetMapping
     public ResponseEntity<RoomsResponseDto> findRooms() {
-        return ResponseEntity.ok(chessService.findRooms());
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(chessService.findRooms());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GameResponseDto> getCurrentBoard(@PathVariable Long id) {
-        return ResponseEntity.ok(chessService.getCurrentBoard(id));
+    public ResponseEntity<GameResponseDto> enterRoom(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(chessService.getCurrentBoards(id));
     }
 
-    @PostMapping("/{id}/move")
+    @PatchMapping("/{id}/move")
     public ResponseEntity<GameResponseDto> movePiece(@PathVariable Long id,
                                                      @RequestBody MoveRequestDto moveRequestDto) {
-        return ResponseEntity.ok(chessService.move(id, moveRequestDto));
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(chessService.move(id, moveRequestDto));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> finishGame(@PathVariable Long id) {
+    public ResponseEntity<Void> finishGame(@PathVariable Long id) {
         chessService.endRoom(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.OK)
+            .build();
     }
 
     @GetMapping("/{id}/status")
     public ResponseEntity<StatusResponseDto> calculateStatus(@PathVariable Long id) {
-        return ResponseEntity.ok(chessService.createStatus(id));
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(chessService.calculateStatus(id));
     }
 }

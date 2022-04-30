@@ -34,7 +34,7 @@
         </div>
         {{#each rooms}}
             <div class="box">
-                <form class="inContent" action="/start" method="post">
+                <form class="inContent" action="/enter" method="post">
                     <input type="hidden" name="id" value="{{this.id}}">
                     <input type="hidden" name="password" value="{{this.password}}">
                     방 : {{this.id}}

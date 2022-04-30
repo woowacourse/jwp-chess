@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/game")
 public class PlayController {
     private static final String LOCALHOST_8080 = "http://localhost:8080";
 
@@ -23,14 +25,14 @@ public class PlayController {
         this.chessGameService = chessGameService;
     }
 
-    @PostMapping("game/exit")
-    public ResponseEntity<Void> endGameAndGoHome(@RequestParam String id) {
+    @PostMapping("/end")
+    public ResponseEntity<Void> endGame(@RequestParam String id) {
         chessGameService.changeToEnd(id);
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
                 .location(URI.create(LOCALHOST_8080)).build();
     }
 
-    @PutMapping("/game/{id}/move")
+    @PutMapping("/{id}/move")
     public ResponseEntity<String> move(@PathVariable String id, @RequestBody MoveDto moveDto) {
         chessGameService.move(id, moveDto);
 

@@ -5,11 +5,13 @@ import chess.domain.chesspiece.Color;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
+import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -21,6 +23,20 @@ public class RoomDaoImpl implements RoomDao {
 
     public RoomDaoImpl(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public RoomEntity findById(final int roomId) {
+        final String sql = "SELECT * FROM room WHERE room_id = ?";
+        final RowMapper<RoomEntity> rowMapper = (resultSet, rowNum) -> new RoomEntity(
+                Integer.parseInt(resultSet.getString("room_id")),
+                resultSet.getString("name"),
+                resultSet.getString("game_status"),
+                resultSet.getString("current_turn"),
+                resultSet.getString("password"),
+                Boolean.parseBoolean(resultSet.getString("is_delete"))
+        );
+        return jdbcTemplate.queryForObject(sql, rowMapper, roomId);
     }
 
     @Override

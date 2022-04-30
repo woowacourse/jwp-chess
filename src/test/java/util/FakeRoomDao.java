@@ -6,6 +6,7 @@ import chess.domain.chesspiece.Color;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
+import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,19 @@ public class FakeRoomDao implements RoomDao {
     private final Map<Integer, Room> storage = new HashMap<>();
     private int series = 1;
 
+    @Override
+    public RoomEntity findById(final int roomId) {
+        final Room room = storage.get(roomId);
+        return new RoomEntity(
+                roomId,
+                room.name,
+                room.gameStatus.getValue(),
+                room.currentTurn.getValue(),
+                room.password,
+                false
+        );
+    }
+    
     @Override
     public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn,
                     final String password) {

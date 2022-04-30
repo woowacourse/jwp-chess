@@ -5,9 +5,12 @@ import chess.domain.chesspiece.Color;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
+import chess.entity.RoomEntity;
 import java.util.List;
 
 public interface RoomDao {
+
+    RoomEntity findById(int roomId);
 
     int save(String roomName, GameStatus gameStatus, Color currentTurn, String password);
 

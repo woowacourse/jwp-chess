@@ -1,36 +1,52 @@
 package chess.dao;
 
+import static chess.ChessGameFixture.createRunningChessGame;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.ChessBoard;
+import chess.domain.ChessGame;
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.piece.Piece;
 import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.single.King;
 import chess.domain.piece.single.Knight;
-import chess.domain.state.Turn;
 import java.util.Map;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PieceDaoTest {
 
     private PieceDao pieceDao;
+    private ChessGameDao chessGameDao;
     private long chessGameId;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private DataSource dataSource;
+
+    @BeforeAll
+    void setUpDao(){
+        pieceDao = new PieceDao(jdbcTemplate);
+        chessGameDao = new ChessGameDao(jdbcTemplate, dataSource);
+    }
+
     @BeforeEach
     void setUp() {
-        pieceDao = new PieceDao(jdbcTemplate);
-        chessGameId = new ChessGameDao(jdbcTemplate).createChessGame(Turn.WHITE_TURN);
+        ChessGame chessGame = createRunningChessGame();
+        ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
+        chessGameId = savedChessGame.getId();
     }
 
     @Test

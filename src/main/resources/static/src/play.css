@@ -1,0 +1,46 @@
+.background {
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.chess-board {
+    margin: 20px;
+    width: 650px;
+}
+
+.chess-buttons {
+    width: 400px;
+    text-align: center;
+}
+
+.chess-ui {
+    width: 640px;
+    border: 4px solid slategrey;
+    display: grid;
+    grid-template-columns: repeat(8, 80px);
+    grid-template-rows: repeat(8, 80px);
+}
+
+.black-square {
+    background-color: slategrey;
+    color: white;
+}
+
+.black-square.selected {
+    background-color: rosybrown;
+}
+
+.white-square {
+    background-color: white;
+    color: slategrey;
+}
+
+.white-square.selected {
+    background-color: rosybrown;
+}
+
+img.piece{
+    width: 100%;
+}

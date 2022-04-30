@@ -2,16 +2,16 @@ package chess.controller.dto.response;
 
 public class ChessGameStatusResponse {
 
-	private boolean isEnd;
+	private boolean end;
 
 	private ChessGameStatusResponse() {
 	}
 
 	public ChessGameStatusResponse(boolean isEnd) {
-		this.isEnd = isEnd;
+		this.end = isEnd;
 	}
 
 	public boolean isEnd() {
-		return isEnd;
+		return end;
 	}
 }

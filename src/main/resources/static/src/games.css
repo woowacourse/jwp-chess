@@ -1,11 +1,14 @@
-.setting_background {
+.select_board {
     width: 100%;
     text-align: center;
     padding-top: 10%;
     padding-bottom: 10%;
 }
 
-.setting_board {
-    margin: auto;
-    width: 600px;
+span {
+    font-size: 17px;
+}
+
+button {
+    margin: 10px;
 }

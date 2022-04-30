@@ -8,7 +8,6 @@ import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.single.King;
 import chess.domain.piece.single.Knight;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.function.Function;
 
 public enum PieceConverter {
@@ -30,7 +29,6 @@ public enum PieceConverter {
     }
 
     public static Piece parseToPiece(String name, Color color) {
-        Objects.requireNonNull(name, "name은 null이 들어올 수 없습니다.");
         return Arrays.stream(values())
                 .filter(pieceConvertor -> pieceConvertor.pieceName.equals(name))
                 .findAny()

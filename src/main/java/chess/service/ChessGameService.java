@@ -1,8 +1,12 @@
 package chess.service;
 
+import static chess.domain.state.Turn.END;
+import static chess.domain.state.Turn.WHITE_TURN;
+
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessBoard;
+import chess.domain.ChessGame;
 import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.PromotionPiece;
@@ -10,6 +14,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.state.ChessGameState;
 import chess.domain.state.Turn;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +31,21 @@ public class ChessGameService {
         this.chessGameDao = chessGameDao;
     }
 
-    public long createNewChessGame() {
-        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-        pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
-        return chessGameId;
+    public long createNewChessGame(String title, String password) {
+        ChessGame chessGame = new ChessGame(WHITE_TURN.name(), title, password);
+        ChessGame savedChessGame = chessGameDao.createChessGame(chessGame);
+        pieceDao.savePieces(savedChessGame.getId(), PieceFactory.createNewChessBoard());
+        return savedChessGame.getId();
     }
 
-    public Map<Position, Piece> findChessBoard(long chessGameId) {
-        return findChessGameState(chessGameId).pieces();
+    public List<ChessGame> findAllChessGame() {
+        return chessGameDao.findAllChessGame();
+    }
+
+    public Map<Position, Piece> findChessBoard(long chessGameId, String password) {
+        ChessGame chessGame = chessGameDao.findChessGame(chessGameId);
+        chessGame.validatePassword(password);
+        return pieceDao.findChessBoardByChessGameId(chessGameId).getPieces();
     }
 
     public void move(long chessGameId, Position source, Position target) {
@@ -53,6 +65,13 @@ public class ChessGameService {
         chessGameDao.changeChessGameTurn(chessGameId, chessGameState.nextTurn());
     }
 
+    public void endChessGame(long chessGameId) {
+        ChessGame chessGame = chessGameDao.findChessGame(chessGameId);
+        chessGame.validateRunningGame();
+
+        chessGameDao.changeChessGameTurn(chessGameId, END);
+    }
+
     public Map<Color, Double> currentScore(long chessGameId) {
         ChessGameState chessGameState = findChessGameState(chessGameId);
         return chessGameState.currentScore();
@@ -68,6 +87,14 @@ public class ChessGameService {
         return chessBoard.winner();
     }
 
+    public void deleteChessGame(long chessGameId, String password){
+        ChessGame chessGame = chessGameDao.findChessGame(chessGameId);
+        chessGame.validatePassword(password);
+        chessGame.validateEndGame();
+
+        chessGameDao.deleteChessGame(chessGame);
+    }
+
     private ChessGameState findChessGameState(long chessGameId) {
         Turn currentTurn = findChessGameTurn(chessGameId);
         ChessBoard chessBoard = pieceDao.findChessBoardByChessGameId(chessGameId);
@@ -75,6 +102,6 @@ public class ChessGameService {
     }
 
     private Turn findChessGameTurn(long chessGameId) {
-        return chessGameDao.findChessGame(chessGameId);
+        return Turn.valueOf(chessGameDao.findChessGame(chessGameId).getTurn());
     }
 }

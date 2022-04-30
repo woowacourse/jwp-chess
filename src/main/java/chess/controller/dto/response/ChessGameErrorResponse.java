@@ -15,6 +15,10 @@ public class ChessGameErrorResponse {
 		return new ChessGameErrorResponse(runtimeException.getMessage());
 	}
 
+	public static ChessGameErrorResponse create(String message) {
+		return new ChessGameErrorResponse(message);
+	}
+
 	public String getMessage() {
 		return message;
 	}

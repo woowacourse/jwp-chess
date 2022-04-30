@@ -1,5 +1,8 @@
 # Spring 체스
 
+## 플레이 방법
+
+- localhost:8080 으로 접속하여 게임 방을 만들고 체스 게임을 플레이한다.
 
 ## 기능 구현 사항
 
@@ -19,15 +22,31 @@
 
 - 새로운 체스 게임을 생성 
   - POST "/chessgames"
+- 체스 게임 목록 로딩
+  - GET "/chessgames"
 - 체스 게임 로딩
-  - GET "/chessgames/{id}"
+  - POST "/chessgames/{id}"
+- 체스 게임 삭제
+  - DELETE "/chessgames/{id}"
+- 체스 게임 종료
+  - PATCH "/chessgames/{id}/end"
 - 피스 이동
-  - POST "/chessgames/{id}/move"
+  - PATCH "/chessgames/{id}/move"
 - 피스 프로모션
-  - POST "/chessgames/{id}/promotion"
+  - PATCH "/chessgames/{id}/promotion"
 - 체스 게임 스코어 계산
   - GET "/chessgames/{id}/score"
 - 체스 게임 종료 여부
   - GET "/chessgames/{id}/status"
 - 체스 게임 우승자 판별
   - GET "/chessgames/{id}/winner"
+
+### 체스 게임 방
+
+- 체스 게임 방을 제목과 비밀번호를 입력하여 만들 수 있다.
+- 체스방 목록을 조회할 수 있다.
+- 체스방 목록에서 체스방 제목을 클릭하고 비밀번호를 입력하면 체스 게임을 이어서 진행할 수 있다.
+- 체스방 목록에서 체스방 삭제 버튼을 클릭하고 체스방 생성시 설정한 비밀번호를 입력하면 체스 게임을 삭제할 수 있다.
+- 진행중인 체스방은 삭제할 수 없다.
+
+

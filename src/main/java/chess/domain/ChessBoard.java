@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class ChessBoard {
 
@@ -16,7 +15,6 @@ public class ChessBoard {
     private final Map<Position, Piece> pieces;
 
     public ChessBoard(Map<Position, Piece> pieces) {
-        Objects.requireNonNull(pieces, "pieces는 null이 들어올 수 없습니다.");
         this.pieces = new HashMap<>(pieces);
     }
 

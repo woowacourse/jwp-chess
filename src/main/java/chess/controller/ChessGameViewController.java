@@ -10,4 +10,14 @@ public class ChessGameViewController {
     public String index() {
         return "index";
     }
+
+    @GetMapping("/play")
+    public String play() {
+        return "play";
+    }
+
+    @GetMapping("/games")
+    public String games() {
+        return "games";
+    }
 }

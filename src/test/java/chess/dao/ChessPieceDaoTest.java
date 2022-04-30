@@ -10,6 +10,7 @@ import chess.domain.chesspiece.Pawn;
 import chess.domain.chesspiece.Queen;
 import chess.domain.position.Position;
 import chess.dto.response.ChessPieceDto;
+import chess.entity.RoomEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ class ChessPieceDaoTest {
     @DisplayName("roomId로 모든 기물을 조회한다.")
     void findAllByRoomId() {
         // given
-        final int roomId = roomDao.save("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r");
+        final int roomId = roomDao.save(new RoomEntity("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r"));
 
         // when
         final List<ChessPieceDto> result = chessPieceDao.findAllByRoomId(roomId);
@@ -46,7 +47,7 @@ class ChessPieceDaoTest {
     @DisplayName("모든 기물을 저장한다.")
     void saveAll() {
         // given
-        final int roomId = roomDao.save("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r");
+        final int roomId = roomDao.save(new RoomEntity("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r"));
         final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
         pieceByPosition.put(Position.from("a1"), King.from(Color.WHITE));
         pieceByPosition.put(Position.from("a2"), King.from(Color.WHITE));
@@ -62,7 +63,7 @@ class ChessPieceDaoTest {
     @DisplayName("방 id와 위치에 해당하는 기물을 삭제한다.")
     void deleteByRoomIdAndPosition() {
         // given
-        final int roomId = roomDao.save("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r");
+        final int roomId = roomDao.save(new RoomEntity("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r"));
 
         final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
         final Position position = Position.from("a1");
@@ -80,7 +81,7 @@ class ChessPieceDaoTest {
     @DisplayName("방 id에 해당하는 모든 기물을 삭제한다.")
     void deleteAllByRoomId() {
         // given
-        final int roomId = roomDao.save("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r");
+        final int roomId = roomDao.save(new RoomEntity("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r"));
 
         final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
         pieceByPosition.put(Position.from("a1"), King.from(Color.WHITE));
@@ -99,7 +100,7 @@ class ChessPieceDaoTest {
     @DisplayName("방 id와 위치에 해당하는 기물의 위치를 갱신한다.")
     void updateByRoomIdAndPosition() {
         // given
-        final int roomId = roomDao.save("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r");
+        final int roomId = roomDao.save(new RoomEntity("hi", GameStatus.READY, Color.WHITE, "1q2w3e4r"));
 
         final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
         final Position from = Position.from("a1");

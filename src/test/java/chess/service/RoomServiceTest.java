@@ -9,6 +9,7 @@ import chess.domain.chesspiece.Color;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.RoomStatusDto;
+import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ class RoomServiceTest {
     @DisplayName("게임을 시작하면 방의 상태가 PLAYING이 된다.")
     void startGame() {
         // given
-        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
+        final int roomId = roomDao.save(new RoomEntity("test", GameStatus.READY, Color.WHITE, "1234"));
 
         // when;
         roomService.startGame(roomId);
@@ -78,7 +79,7 @@ class RoomServiceTest {
         // given
         final String roomName = "test";
         final String password = "1234";
-        roomDao.save(roomName, GameStatus.READY, Color.WHITE, password);
+        roomDao.save(new RoomEntity(roomName, GameStatus.READY, Color.WHITE, password));
 
         // when
         final RoomCreationRequestDto creationRequestDto = new RoomCreationRequestDto(roomName, password);
@@ -108,7 +109,8 @@ class RoomServiceTest {
     @ValueSource(strings = {"", "   "})
     void deleteRoom_blank_password(final String password) {
         // given
-        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, BCrypt.hashpw("1234", BCrypt.gensalt()));
+        final int roomId = roomDao.save(
+                new RoomEntity("test", GameStatus.READY, Color.WHITE, BCrypt.hashpw("1234", BCrypt.gensalt())));
         final RoomDeletionRequestDto dto = new RoomDeletionRequestDto(roomId, password);
 
         // then
@@ -122,7 +124,7 @@ class RoomServiceTest {
     void deleteRoom_password_not_match() {
         // given
         final String password = BCrypt.hashpw("1234", BCrypt.gensalt());
-        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, password);
+        final int roomId = roomDao.save(new RoomEntity("test", GameStatus.READY, Color.WHITE, password));
         final RoomDeletionRequestDto dto = new RoomDeletionRequestDto(roomId, "4321");
 
         // then
@@ -137,7 +139,7 @@ class RoomServiceTest {
         // given
         final String password = "1q2w3e4r";
         final String hashPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        final int roomId = roomDao.save("hi", GameStatus.PLAYING, Color.WHITE, hashPassword);
+        final int roomId = roomDao.save(new RoomEntity("hi", GameStatus.PLAYING, Color.WHITE, hashPassword));
 
         // then
         final RoomDeletionRequestDto deletionRequestDto = new RoomDeletionRequestDto(roomId, password);

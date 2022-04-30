@@ -49,16 +49,15 @@ public class RoomDao {
         );
     }
 
-    public int save(final String roomName, final GameStatus gameStatus, final Color currentTurn,
-                    final String password) {
+    public int save(final RoomEntity roomEntity) {
         final String sql = "INSERT INTO room (name, game_status, current_turn, password) VALUES (?, ?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         final PreparedStatementCreator statementCreator = con -> {
             final PreparedStatement ps = con.prepareStatement(sql, new String[]{"room_id"});
-            ps.setString(1, roomName);
-            ps.setString(2, gameStatus.getValue());
-            ps.setString(3, currentTurn.getValue());
-            ps.setString(4, password);
+            ps.setString(1, roomEntity.getName());
+            ps.setString(2, roomEntity.getGameStatus());
+            ps.setString(3, roomEntity.getCurrentTurn());
+            ps.setString(4, roomEntity.getPassword());
             return ps;
         };
         jdbcTemplate.update(statementCreator, keyHolder);

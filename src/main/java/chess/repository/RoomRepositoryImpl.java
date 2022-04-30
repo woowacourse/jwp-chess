@@ -70,7 +70,13 @@ public class RoomRepositoryImpl implements RoomRepository {
         if (existName) {
             throw new IllegalArgumentException("이름이 같은 방이 이미 존재합니다.");
         }
-        return roomDao.save(room.getName(), room.getGameStatus(), room.getCurrentTurn(), room.getPassword());
+        final RoomEntity roomEntity = new RoomEntity(
+                room.getName(),
+                room.getGameStatus(),
+                room.getCurrentTurn(),
+                room.getPassword()
+        );
+        return roomDao.save(roomEntity);
     }
 
     @Override

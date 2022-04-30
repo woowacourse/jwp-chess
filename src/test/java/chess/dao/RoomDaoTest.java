@@ -8,6 +8,7 @@ import chess.domain.chesspiece.Color;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomStatusDto;
+import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -32,8 +33,8 @@ class RoomDaoTest {
         final String password = "1q2w3e4r";
 
         // when
-        final int roomId = roomDao.save("hi", gameStatus, currentTurn, password);
-        final int roomId2 = roomDao.save("hello", gameStatus, currentTurn, password);
+        final int roomId = roomDao.save(new RoomEntity("hi", gameStatus, currentTurn, password));
+        final int roomId2 = roomDao.save(new RoomEntity("hello", gameStatus, currentTurn, password));
 
         // then
         assertThat(roomId).isEqualTo(1);
@@ -84,11 +85,11 @@ class RoomDaoTest {
     @DisplayName("삭제된 방은 제외하고, 모든 방을 조회한다.")
     void findAll() {
         // given
-        roomDao.save("name1", GameStatus.READY, Color.WHITE, "123");
-        roomDao.save("name2", GameStatus.PLAYING, Color.BLACK, "1234");
-        roomDao.save("name3", GameStatus.END, Color.WHITE, "12345");
+        roomDao.save(new RoomEntity("name1", GameStatus.READY, Color.WHITE, "123"));
+        roomDao.save(new RoomEntity("name2", GameStatus.PLAYING, Color.BLACK, "1234"));
+        roomDao.save(new RoomEntity("name3", GameStatus.END, Color.WHITE, "12345"));
 
-        final int roomId = roomDao.save("name4", GameStatus.END, Color.WHITE, "12345");
+        final int roomId = roomDao.save(new RoomEntity("name4", GameStatus.END, Color.WHITE, "12345"));
         roomDao.deleteById(roomId);
 
         // when
@@ -217,6 +218,6 @@ class RoomDaoTest {
         final Color currentTurn = Color.WHITE;
         final String password = "1q2w3e4r";
 
-        return roomDao.save(roomName, gameStatus, currentTurn, password);
+        return roomDao.save(new RoomEntity(roomName, gameStatus, currentTurn, password));
     }
 }

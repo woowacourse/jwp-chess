@@ -16,6 +16,7 @@ import chess.dto.request.MoveRequestDto;
 import chess.dto.response.ChessPieceDto;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomStatusDto;
+import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ class ChessServiceTest {
     @DisplayName("방에 해당하는 기물이 존재하지 않으면 예외가 터진다.")
     void findAllPiece_exception() {
         // given
-        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
+        final int roomId = roomDao.save(new RoomEntity("test", GameStatus.READY, Color.WHITE, "1234"));
 
         // then
         assertThatThrownBy(() -> chessService.findAllPiece(roomId))
@@ -55,7 +56,7 @@ class ChessServiceTest {
     @DisplayName("방에 해당하는 모든 기물을 조회한다.")
     void findAllPiece() {
         // given
-        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
+        final int roomId = roomDao.save(new RoomEntity("test", GameStatus.READY, Color.WHITE, "1234"));
 
         final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
         pieceByPosition.put(Position.from("a1"), King.from(Color.WHITE));
@@ -75,7 +76,7 @@ class ChessServiceTest {
     @DisplayName("기물을 이동하면 이동 시킨 기물의 위치가 변경된다.")
     void move_updatePosition() {
         // given
-        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.WHITE, "1234");
+        final int roomId = roomDao.save(new RoomEntity("test", GameStatus.PLAYING, Color.WHITE, "1234"));
 
         final String from = "a1";
         final String to = "b2";
@@ -99,7 +100,7 @@ class ChessServiceTest {
     void move_updateRoom() {
         // given
         final Color initialTurn = Color.WHITE;
-        final int roomId = roomDao.save("test", GameStatus.PLAYING, initialTurn, "1234");
+        final int roomId = roomDao.save(new RoomEntity("test", GameStatus.PLAYING, initialTurn, "1234"));
 
         final String from = "a1";
         final String to = "b2";
@@ -121,7 +122,7 @@ class ChessServiceTest {
     @DisplayName("결과를 조회하면 방 상태가 END로 변경된다.")
     void result() {
         // given
-        final int roomId = roomDao.save("test", GameStatus.PLAYING, Color.WHITE, "1234");
+        final int roomId = roomDao.save(new RoomEntity("test", GameStatus.PLAYING, Color.WHITE, "1234"));
 
         final Map<Position, ChessPiece> pieceByPosition = new HashMap<>();
         pieceByPosition.put(Position.from("a1"), King.from(Color.WHITE));

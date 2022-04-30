@@ -7,12 +7,12 @@ import chess.domain.room.RoomName;
 
 public class RoomEntity {
 
-    private final int roomId;
     private final String name;
     private final String gameStatus;
     private final String currentTurn;
     private final String password;
     private final boolean isDelete;
+    private int roomId;
 
     public RoomEntity(final int roomId, final String name, final String gameStatus, final String currentTurn,
                       final String password, final boolean isDelete) {
@@ -22,6 +22,14 @@ public class RoomEntity {
         this.currentTurn = currentTurn;
         this.password = password;
         this.isDelete = isDelete;
+    }
+
+    public RoomEntity(final String name, final GameStatus gameStatus, final Color currentTurn, final String password) {
+        this.name = name;
+        this.gameStatus = gameStatus.getValue();
+        this.currentTurn = currentTurn.getValue();
+        this.password = password;
+        this.isDelete = false;
     }
 
     public RoomName toRoomName() {

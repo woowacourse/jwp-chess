@@ -7,8 +7,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class RoomDao {
+    private static final int TRASH_ID = -1;
+
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<RoomDto> roomDtoRowMapper = (resultSet, rowNum) -> new RoomDto(
+            resultSet.getInt("game_id"),
             resultSet.getString("room_name"),
             resultSet.getString("room_password")
     );
@@ -17,10 +20,10 @@ public class RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void saveRoom(int gameId, RoomDto roomDto) {
+    public void saveRoom(RoomDto roomDto) {
         String sql = "insert into room (game_id, room_name, room_password) values (?, ?, ?)";
         jdbcTemplate.update(sql,
-                gameId,
+                roomDto.getId(),
                 roomDto.getName(),
                 roomDto.getPassword());
     }

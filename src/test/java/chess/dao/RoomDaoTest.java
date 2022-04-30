@@ -36,7 +36,7 @@ class RoomDaoTest {
                 + "room_password varchar(10) not null,"
                 + "foreign key (game_id) references game(game_id))");
 
-        roomDao.saveRoom(0, new RoomDto("josh", "0000"));
+        roomDao.saveRoom(new RoomDto(0,"josh", "0000"));
     }
 
     @AfterEach

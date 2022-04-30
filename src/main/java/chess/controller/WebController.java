@@ -1,8 +1,10 @@
 package chess.controller;
 
 import chess.dto.MoveDto;
+import chess.dto.RoomDto;
 import chess.service.ChessService;
 import com.google.gson.Gson;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,19 +21,25 @@ public class WebController {
     }
 
     @GetMapping("/")
-    public String showChessRoomListPage() {
+    public String showFirstPage() {
         return "roomlist";
     }
 
-    /*@GetMapping("/")
-    public String showFirstPage() {
-        return "index";
-    }*/
+    @GetMapping("/games")
+    public ResponseEntity<List<RoomDto>> showChessRoomListPage() {
+        return ResponseEntity.ok().body(chessService.loadRooms());
+    }
 
-    @GetMapping("/start")
-    @ResponseBody
-    public String startGame() {
-        return gson.toJson(chessService.newGame());
+    @GetMapping("/join")
+    public String showJoinPage() {
+        return "join";
+    }
+
+    @PostMapping("/roomInformation")
+    public String createRoom(@RequestParam(value="name") String name,
+                             @RequestParam(value="password") String password) {
+        chessService.createRoom(name, password);
+        return "redirect:/";
     }
 
     @GetMapping("/restart")

@@ -21,7 +21,7 @@ function deleteRoom(roomId, gameStatus) {
         return;
     }
     var password = prompt("비밀번호를 입력하세요");
-    let deleteUrl = '/room/' + roomId + '/delete';
+    let deleteUrl = '/room/' + roomId;
     fetch(deleteUrl, {
         method: "DELETE",
         headers: {

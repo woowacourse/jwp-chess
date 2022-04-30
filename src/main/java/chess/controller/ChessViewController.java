@@ -1,19 +1,22 @@
 package chess.controller;
 
+import chess.dto.MessageBody;
 import chess.dto.ScoreDto;
 import chess.model.room.Room;
 import chess.service.ChessService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-public class ChessController {
+public class ChessViewController {
 
     private final ChessService chessService;
 
-    public ChessController(ChessService chessService) {
+    public ChessViewController(ChessService chessService) {
         this.chessService = chessService;
     }
 
@@ -24,7 +27,7 @@ public class ChessController {
     }
 
     @PostMapping("/room")
-    public String room(@ModelAttribute MessageBody messageBody) {
+    public String createRoom(@ModelAttribute MessageBody messageBody) {
 
         Room room = chessService.init(
                 messageBody.getRoomName(),
@@ -36,23 +39,10 @@ public class ChessController {
     }
 
     @GetMapping("/room/{roomId}")
-    public String room(Model model, @PathVariable int roomId) {
+    public String showRoom(Model model, @PathVariable int roomId) {
         model.addAttribute("roomId", roomId);
         model.addAttribute("board", chessService.getBoard(roomId));
         return "chess-game";
-    }
-
-    @PatchMapping("/room/{roomId}/move")
-    @ResponseBody
-    public ResponseEntity<Boolean> move(@RequestBody MoveRequest moveRequest, @PathVariable int roomId) {
-        chessService.move(moveRequest.getSource(), moveRequest.getTarget(), roomId);
-        return ResponseEntity.ok().body(chessService.isEnd(roomId));
-    }
-
-    @GetMapping("/room/{roomId}/status")
-    @ResponseBody
-    public ResponseEntity<ScoreDto> status(@PathVariable int roomId) {
-        return ResponseEntity.ok().body(ScoreDto.from(chessService.status(roomId)));
     }
 
     @PostMapping("/room/{roomId}/end")
@@ -60,12 +50,5 @@ public class ChessController {
         model.addAttribute("result", ScoreDto.from(chessService.status(roomId)));
         chessService.end(roomId);
         return "result";
-    }
-
-    @DeleteMapping("/room/{roomId}")
-    @ResponseBody
-    public ResponseEntity<String> deleteRoom(@RequestBody String password, @PathVariable int roomId) {
-        chessService.deleteRoom(roomId, password);
-        return ResponseEntity.ok().build();
     }
 }

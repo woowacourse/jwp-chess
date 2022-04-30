@@ -1,6 +1,7 @@
 package chess.domain.board.piece;
 
 import chess.domain.board.position.Position;
+import chess.exception.InternalServerException;
 import chess.util.PositionUtil;
 import java.util.function.BiPredicate;
 
@@ -33,7 +34,7 @@ public enum PieceType {
     }
 
     private static boolean isPawnMovable(Position from, Position to) {
-        throw new UnsupportedOperationException(NON_PAWN_ONLY_EXCEPTION_MESSAGE);
+        throw new InternalServerException(NON_PAWN_ONLY_EXCEPTION_MESSAGE);
     }
 
     private static boolean isKnightMovable(Position from, Position to) {

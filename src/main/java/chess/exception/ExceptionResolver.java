@@ -1,6 +1,5 @@
-package chess.controller;
+package chess.exception;
 
-import chess.exception.InvalidAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

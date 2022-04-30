@@ -1,6 +1,7 @@
 package chess.domain.board.piece;
 
 import chess.domain.board.position.Position;
+import chess.exception.InternalServerException;
 
 final class NonPawn extends Piece {
 
@@ -13,7 +14,7 @@ final class NonPawn extends Piece {
 
     private void validateNonPawn() {
         if (hasTypeOf(PieceType.PAWN)) {
-            throw new IllegalArgumentException(INVALID_TYPE_EXCEPTION_MESSAGE);
+            throw new InternalServerException(INVALID_TYPE_EXCEPTION_MESSAGE);
         }
     }
 

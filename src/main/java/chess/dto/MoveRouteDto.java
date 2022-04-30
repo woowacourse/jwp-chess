@@ -4,21 +4,15 @@ import chess.domain.event.MoveRoute;
 
 public class MoveRouteDto {
 
-    private int id;
     private String source;
     private String target;
 
     public MoveRouteDto() {
     }
 
-    public MoveRouteDto(int id, String source, String target) {
-        this.id = id;
+    public MoveRouteDto(String source, String target) {
         this.source = source;
         this.target = target;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getSource() {

@@ -10,7 +10,7 @@ const updateGame = async (source, target, id) => {
     const config = {
         headers: {'Content-Type': 'application/json'},
         method: "post",
-        body: JSON.stringify({source, target, id})
+        body: JSON.stringify({source, target})
     };
     const response = await fetch('/game/'+id, config);
     if (!response.ok) {

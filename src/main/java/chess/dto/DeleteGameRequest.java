@@ -2,21 +2,15 @@ package chess.dto;
 
 public class DeleteGameRequest {
 
-    private int id;
     private String title;
     private String password;
 
     private DeleteGameRequest() {
     }
 
-    public DeleteGameRequest(int id, String title, String password) {
-        this.id = id;
+    public DeleteGameRequest(String title, String password) {
         this.title = title;
         this.password = password;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getTitle() {

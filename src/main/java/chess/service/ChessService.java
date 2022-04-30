@@ -59,8 +59,7 @@ public class ChessService {
     }
 
     @Transactional
-    public GameDto playGame(MoveRouteDto moveRoute) {
-        int gameId = moveRoute.getId();
+    public GameDto playGame(int gameId, MoveRouteDto moveRoute) {
         Event moveEvent = new MoveEvent(moveRoute.toMoveRoute());
 
         Game game = currentSnapShotOf(gameId).play(moveEvent);
@@ -102,8 +101,8 @@ public class ChessService {
     }
 
     @Transactional
-    public void deleteGame(DeleteGameRequest deleteGameRequest) {
-        GameInfoDto gameInfoDto = gameDao.findById(deleteGameRequest.getId());
+    public void deleteGame(int id, DeleteGameRequest deleteGameRequest) {
+        GameInfoDto gameInfoDto = gameDao.findById(id);
 
         if (gameInfoDto.isRunning()) {
             throw new IllegalArgumentException(GAME_NOT_OVER_EXCEPTION_MESSAGE);
@@ -113,7 +112,7 @@ public class ChessService {
             throw new IllegalArgumentException(PASSWORD_EXCEPTION_MESSAGE);
         }
 
-        int result = gameDao.delete(deleteGameRequest.getId());
+        int result = gameDao.delete(id);
         if (result == 0) {
             throw new IllegalArgumentException(DELETE_FAILED_EXCEPTION_MESSAGE);
         }

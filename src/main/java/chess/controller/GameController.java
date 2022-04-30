@@ -40,14 +40,16 @@ public class GameController {
     }
 
     @PostMapping("/{id}")
-    public ModelAndView playGame(@RequestBody MoveRouteDto moveRoute) {
-        chessService.playGame(moveRoute);
-        GameDto gameDto = chessService.findGame(moveRoute.getId());
+    public ModelAndView playGame(@PathVariable int id
+            , @RequestBody MoveRouteDto moveRoute) {
+        chessService.playGame(id, moveRoute);
+        GameDto gameDto = chessService.findGame(id);
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@RequestBody DeleteGameRequest deleteGameRequest) {
-        chessService.deleteGame(deleteGameRequest);
+    public void delete(@PathVariable int id
+            ,@RequestBody DeleteGameRequest deleteGameRequest) {
+        chessService.deleteGame(id, deleteGameRequest);
     }
 }

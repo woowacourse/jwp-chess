@@ -1,6 +1,5 @@
 const toBody = (form) => {
     var object = {};
-    object['id'] = form.parentElement.getElementsByClassName("id")[0].textContent;
     object['title'] = form.parentElement.getElementsByTagName("a")[0].textContent;
     object['running'] = form.parentElement.getElementsByClassName("running")[0].textContent;
     for (const pair of new FormData(form)) {

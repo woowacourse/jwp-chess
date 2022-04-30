@@ -90,8 +90,8 @@ class ChessServiceTest {
 
     @Test
     void playGame_메서드는_이동_명령에_따라_이동시킨_후_그_결과를_반환한다() {
-        MoveRouteDto moveRouteDto = new MoveRouteDto(1, "a7", "a5");
-        GameDto actual = service.playGame(moveRouteDto);
+        MoveRouteDto moveRouteDto = new MoveRouteDto("a7", "a5");
+        GameDto actual = service.playGame(1, moveRouteDto);
 
         GameDto expected = GameDto.of(1, new NewGame().play(new InitEvent())
                 .play(new MoveEvent("e2 e4"))
@@ -104,8 +104,8 @@ class ChessServiceTest {
 
     @Test
     void playGame_메서드는_이동_명령에_따라_이동시키며_게임이_종료된_경우_OVER로_상태를_변경한다() {
-        MoveRouteDto moveRouteDto = new MoveRouteDto(2, "b5", "e8");
-        service.playGame(moveRouteDto);
+        MoveRouteDto moveRouteDto = new MoveRouteDto("b5", "e8");
+        service.playGame(2, moveRouteDto);
 
         GameCountDto actual = service.countGames();
         GameCountDto expected = new GameCountDto(3, 2 - 1);

@@ -17,7 +17,7 @@ public class WebApiController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping(path="/{roomNumber}/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path="/{roomNumber}/status")
     public ResponseEntity<ScoreDto> status(@PathVariable int roomNumber) {
         final ScoreDto score = chessGameService.getScore(roomNumber);
         return ResponseEntity.ok(score);

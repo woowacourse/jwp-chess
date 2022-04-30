@@ -66,11 +66,11 @@ public final class ChessService {
         return new Board(() -> board);
     }
 
-    public ChessGameDto move(final String from, final String to) {
+    public ChessGameDto move(int gameId, final String from, final String to) {
         chessGame.move(Position.from(from), Position.from(to));
-        final var nextColor = getColorFromStorage(GAME_ID).next();
-        updateBoard(from, to, GAME_ID, nextColor.name());
-        return new ChessGameDto(pieceDao.findAllPieceById(GAME_ID), chessGame.status());
+        final var nextColor = getColorFromStorage(gameId).next();
+        updateBoard(from, to, gameId, nextColor.name());
+        return new ChessGameDto(pieceDao.findAllPieceById(gameId), chessGame.status());
     }
 
     private void updateBoard(String from, String to, int gameId, String turn) {
@@ -79,9 +79,21 @@ public final class ChessService {
         gameDao.updateTurn(gameId, turn);
     }
 
-    public ChessGameDto loadGame() {
-        chessGame = new ChessGame(StateFactory.of(getColorFromStorage(GAME_ID), getBoardFromStorage(GAME_ID)));
-        return new ChessGameDto(pieceDao.findAllPieceById(GAME_ID), chessGame.status());
+    public ChessGameDto newGame(int gameId) {
+        initGame(gameId);
+        chessGame = new ChessGame(new Running(getColorFromStorage(gameId), getBoardFromStorage(gameId)));
+        return new ChessGameDto(pieceDao.findAllPieceById(gameId), chessGame.status());
+    }
+
+    private void initGame(int gameId) {
+        pieceDao.deleteAllPieceById(gameId);
+        saveAllPieceToStorage(gameId, new BoardInitializer().init());
+        gameDao.updateTurn(gameId, "WHITE");
+    }
+
+    public ChessGameDto loadGame(int gameId) {
+        chessGame = new ChessGame(StateFactory.of(getColorFromStorage(gameId), getBoardFromStorage(gameId)));
+        return new ChessGameDto(pieceDao.findAllPieceById(gameId), chessGame.status());
     }
 
     private Color getColorFromStorage(int gameId) {
@@ -102,6 +114,7 @@ public final class ChessService {
     private void deleteOldData(int gameId) {
         chessGames.remove(gameId);
         pieceDao.deleteAllPieceById(gameId);
+        roomDao.deleteRoom(gameId);
         gameDao.deleteGame(gameId);
     }
 

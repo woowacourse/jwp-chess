@@ -30,6 +30,29 @@ public class WebController {
         return ResponseEntity.ok().body(chessService.loadRooms());
     }
 
+    @GetMapping("/game/{id}")
+    public String showBoard() {
+        return "room";
+    }
+
+    @GetMapping("/start/{id}")
+    @ResponseBody
+    public String startGame(@PathVariable("id") int id) {
+        return gson.toJson(chessService.newGame(id));
+    }
+
+    @GetMapping("/restart/{id}")
+    @ResponseBody
+    public String restart(@PathVariable("id") int id) {
+        return gson.toJson(chessService.loadGame(id));
+    }
+
+    @PutMapping("/move/{id}")
+    @ResponseBody
+    public String move(@PathVariable("id") int id, @RequestBody MoveDto moveDto) {
+        return gson.toJson(chessService.move(id, moveDto.getFrom(), moveDto.getTo()));
+    }
+
     @GetMapping("/join")
     public String showJoinPage() {
         return "join";
@@ -42,17 +65,17 @@ public class WebController {
         return "redirect:/";
     }
 
-    @GetMapping("/restart")
+    /*@GetMapping("/restart")
     @ResponseBody
     public String restart() {
         return gson.toJson(chessService.loadGame());
-    }
+    }*/
 
-    @PutMapping("/move")
+    /*@PutMapping("/move")
     @ResponseBody
-    public String move(@RequestBody MoveDto moveDto) {
+    public String move2(@RequestBody MoveDto moveDto) {
         return gson.toJson(chessService.move(moveDto.getFrom(), moveDto.getTo()));
-    }
+    }*/
 
     @ExceptionHandler({RuntimeException.class})
     private ResponseEntity<String> handleException(final RuntimeException exception) {

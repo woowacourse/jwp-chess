@@ -12,9 +12,7 @@ const urls = location.href.split('/');
 const gameId = urls[urls.length - 1];
 
 async function onClickStartButton () {
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@")
-    console.log(gameId);
-    const response = await fetch("/start/${gameId}");
+    const response = await fetch(`/start/${gameId}`);
     const data = await response.json();
 
     if (response.ok) {
@@ -53,7 +51,7 @@ function createPieceImage ({color, name}) {
 }
 
 async function onClickRestartButton () {
-    const response = await fetch("/restart/${gameId}");
+    const response = await fetch(`/restart/${gameId}`);
     const data = await response.json();
 
     if (response.ok) {
@@ -91,11 +89,11 @@ async function onClickPiece (id) {
 
     removeSelected();
 
-    const response = await fetch("/move/${gameId}", {
-                       method: "put",
-                       headers: {"Content-Type": "application/json"},
-                       body: JSON.stringify({from: from, to: to})
-                     });
+    const response = await fetch(`/move/${gameId}`, {
+        method: "put",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({from: from, to: to})
+    });
     const data = await response.json();
     if (response.ok) {
         movePiece(from, to);

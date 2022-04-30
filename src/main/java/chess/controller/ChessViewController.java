@@ -17,7 +17,7 @@ public class ChessViewController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("games", chessGameService.getAllGames());
+        model.addAttribute("games", chessGameService.getAllGamesWithIdAndTitle());
 
         return "index";
     }

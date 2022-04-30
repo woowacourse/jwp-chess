@@ -24,7 +24,7 @@ public class ChessGameService {
         this.chessBoardService = chessBoardService;
     }
 
-    public Map<Long, String> getAllGames() {
+    public Map<Long, String> getAllGamesWithIdAndTitle() {
         Map<Long, String> games = new LinkedHashMap<>();
         for (Long gameId : gameDao.findAllGameId()) {
             games.put(gameId, gameDao.findTitleByGameId(gameId));
@@ -48,15 +48,18 @@ public class ChessGameService {
     }
 
     public void deleteGame(Long gameId, String password) {
-        if (canDeleteGame(gameId, password)) {
-            pieceDao.deleteByGameId(gameId);
-            gameDao.deleteByGameId(gameId);
-            return;
-        }
-        throw new IllegalArgumentException("방 비밀번호가 맞지 않습니다.");
+        validateCanDeleteGame(gameId, password);
+
+        pieceDao.deleteByGameId(gameId);
+        gameDao.deleteByGameId(gameId);
     }
 
-    private boolean canDeleteGame(Long gameId, String password) {
-        return chessBoardService.getTurn(gameId).equals("end") && gameDao.findPasswordByGameId(gameId).equals(password);
+    private void validateCanDeleteGame(Long gameId, String password) {
+        if (!chessBoardService.getTurn(gameId).equals("end")) {
+            throw new IllegalStateException("게임이 진행중인 방은 삭제할 수 없습니다.");
+        }
+        if (!gameDao.findPasswordByGameId(gameId).equals(password)) {
+            throw new IllegalArgumentException("방 비밀번호가 맞지 않습니다.");
+        }
     }
 }

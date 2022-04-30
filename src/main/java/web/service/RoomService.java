@@ -15,6 +15,7 @@ import web.exception.InvalidRoomRequestException;
 import web.exception.IsRunningChessGameException;
 
 @Service
+@Transactional
 public class RoomService {
 
     private final RoomDao roomDao;

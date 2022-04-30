@@ -30,7 +30,7 @@ public class JdbcRoomDao implements RoomDao {
     }
 
     @Override
-    public int getRecentRoomId() {
+    public int getRecentCreatedRoomId() {
         String sql = "select id from room order by id desc limit 1";
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }

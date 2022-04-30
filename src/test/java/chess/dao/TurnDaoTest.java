@@ -42,7 +42,7 @@ class TurnDaoTest {
     @Test
     @DisplayName("db에서 턴을 업데이트해준다.")
     void updateTurn() {
-        turnDao.updateTurn(1, "BLACK", "WHITE");
+        turnDao.changeTurn(1, "BLACK", "WHITE");
         final String expected = "BLACK";
 
         final String actual = turnDao.findTurn(1).getTurn();
@@ -53,7 +53,7 @@ class TurnDaoTest {
     @Test
     @DisplayName("db에서 턴을 화이트로 리셋해준다.")
     void resetTurn() {
-        turnDao.initializeTurn(1, Team.WHITE.getName());
+        turnDao.updateTurn(1, Team.WHITE.getName());
         final String expected = "WHITE";
 
         final String actual = turnDao.findTurn(1).getTurn();

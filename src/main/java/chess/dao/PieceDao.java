@@ -4,12 +4,11 @@ import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.dto.MoveDto;
 import chess.dto.PieceDto;
-
 import java.util.List;
 
 public interface PieceDao {
 
-    void initializePieces(final int id, final Player player);
+    void insertAllPieces(final int id, final Player player);
 
     List<PieceDto> findPiecesByTeam(final int id, final Team team);
 
@@ -17,7 +16,7 @@ public interface PieceDao {
 
     void removePieceByCaptured(final int id, final MoveDto moveDto);
 
-    void endPieces(final int id);
+    void deletePieces(final int id);
 
     int getKingCount(int roomId);
 }

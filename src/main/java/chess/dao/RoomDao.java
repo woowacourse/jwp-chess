@@ -7,7 +7,7 @@ public interface RoomDao {
 
     void createRoom(RoomDto room);
 
-    int getRecentRoomId();
+    int getRecentCreatedRoomId();
 
     boolean matchPassword(int roomId, String password);
 

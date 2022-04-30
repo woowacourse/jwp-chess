@@ -31,7 +31,7 @@ public class RoomDaoTest {
         RoomDto room1 = new RoomDto("title2", "password");
         roomDao.createRoom(room);
         roomDao.createRoom(room1);
-        assertThat(roomDao.getRecentRoomId()).isEqualTo(2);
+        assertThat(roomDao.getRecentCreatedRoomId()).isEqualTo(2);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class RoomDaoTest {
         roomDao.createRoom(roomDto);
         assertThat(roomDao.getRooms()).hasSize(1);
 
-        RoomDto newRoomDto = new RoomDto(roomDao.getRecentRoomId(), roomDto.getTitle(), roomDto.getPassword());
+        RoomDto newRoomDto = new RoomDto(roomDao.getRecentCreatedRoomId(), roomDto.getTitle(), roomDto.getPassword());
         roomDao.deleteRoom(newRoomDto);
         assertThat(roomDao.getRooms()).hasSize(0);
     }

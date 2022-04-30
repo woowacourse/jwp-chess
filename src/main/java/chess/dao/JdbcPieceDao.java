@@ -25,7 +25,7 @@ public class JdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public void initializePieces(int roomId, Player player) {
+    public void insertAllPieces(int roomId, Player player) {
         final String sql = "insert into piece (roomId, position, team, name) values (?, ?, ?, ?)";
         List<PieceDto> pieces = player.findAll()
                 .stream()
@@ -55,7 +55,7 @@ public class JdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public void endPieces(int roomId) {
+    public void deletePieces(int roomId) {
         final String sql = "delete from piece where roomId = ?";
         jdbcTemplate.update(sql, roomId);
     }

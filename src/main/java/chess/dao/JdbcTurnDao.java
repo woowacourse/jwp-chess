@@ -31,13 +31,13 @@ public class JdbcTurnDao implements TurnDao {
     }
 
     @Override
-    public void updateTurn(int roomId, final String nextTeam, final String currentTeam) {
+    public void changeTurn(int roomId, final String nextTeam, final String currentTeam) {
         final String sql = "update turn set team = ? where roomId = ? and team = ?";
         jdbcTemplate.update(sql, nextTeam, roomId, currentTeam);
     }
 
     @Override
-    public void initializeTurn(final int roomId, final String startTeam) {
+    public void updateTurn(final int roomId, final String startTeam) {
         final String sql = "update turn set team = ? where roomId = ?";
         jdbcTemplate.update(sql, startTeam, roomId);
     }

@@ -48,10 +48,10 @@ public class ChessService {
     }
 
     public ChessMap initializeGame(int roomId) {
-        pieceDao.endPieces(roomId);
-        pieceDao.initializePieces(roomId, new Player(new BlackGenerator(), Team.BLACK));
-        pieceDao.initializePieces(roomId, new Player(new WhiteGenerator(), Team.WHITE));
-        turnDao.initializeTurn(roomId, Team.WHITE.getName());
+        pieceDao.deletePieces(roomId);
+        pieceDao.insertAllPieces(roomId, new Player(new BlackGenerator(), Team.BLACK));
+        pieceDao.insertAllPieces(roomId, new Player(new WhiteGenerator(), Team.WHITE));
+        turnDao.updateTurn(roomId, Team.WHITE.getName());
         gameDao.updateState(roomId, State.RUN.getValue());
 
         final ChessWebGame chessWebGame = new ChessWebGame();
@@ -113,10 +113,10 @@ public class ChessService {
     private void updateTurn(int roomId, TurnDto turnDto) {
         String turn = turnDto.getTurn();
         if (turn.equals(Team.WHITE.getName())) {
-            turnDao.updateTurn(roomId, Team.BLACK.getName(), Team.WHITE.getName());
+            turnDao.changeTurn(roomId, Team.BLACK.getName(), Team.WHITE.getName());
             return;
         }
-        turnDao.updateTurn(roomId, Team.WHITE.getName(), Team.BLACK.getName());
+        turnDao.changeTurn(roomId, Team.WHITE.getName(), Team.BLACK.getName());
     }
 
     private ChessWebGame loadGame(int roomId) {
@@ -150,7 +150,7 @@ public class ChessService {
     public RoomDto createRoom(RoomDto roomDto) {
         roomDao.createRoom(roomDto);
 
-        int roomId = roomDao.getRecentRoomId();
+        int roomId = roomDao.getRecentCreatedRoomId();
         gameDao.insertState(roomId, State.RUN.getValue());
         turnDao.insertTurn(roomId, Team.WHITE.getName());
 

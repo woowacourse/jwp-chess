@@ -1,13 +1,13 @@
 package chess.dao;
 
 import chess.domain.Color;
+import chess.domain.board.Board;
 import chess.dto.BoardInfoDto;
-import chess.dto.CreateBoardDto;
 import java.util.List;
 
 public interface BoardDao {
 
-    int makeBoard(Color color, CreateBoardDto boardInfoDto);
+    int makeBoard(Board board);
 
     List<BoardInfoDto> getAllBoardInfo();
 
@@ -18,8 +18,6 @@ public interface BoardDao {
     String getName(int id);
 
     void deleteBoard(int id, String password);
-
-    boolean isGameEnd(int id);
 
     void end(int id);
 

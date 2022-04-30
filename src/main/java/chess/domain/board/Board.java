@@ -4,6 +4,8 @@ import chess.domain.Color;
 import chess.domain.Winner;
 import chess.domain.piece.NullPiece;
 import chess.domain.piece.Piece;
+import chess.dto.BoardInfoDto;
+import chess.dto.CreateBoardDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,13 @@ public final class Board {
     public Board(Map<Position, Piece> pieces, Color turn) {
         this.piecesByPosition = pieces;
         this.turn = turn;
+    }
+
+    public Board(Map<Position, Piece> pieces, Color turn, CreateBoardDto createBoardDto) {
+        this.piecesByPosition = pieces;
+        this.turn = turn;
+        this.name = createBoardDto.getName();
+        this.password = createBoardDto.getPassword();
     }
 
     public Board(Map<Position, Piece> pieces, Color turn, String name, String password) {
@@ -168,5 +177,13 @@ public final class Board {
 
     public Color getTurn() {
         return turn;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

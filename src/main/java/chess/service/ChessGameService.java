@@ -9,8 +9,11 @@ import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.dto.BoardInfoDto;
 import chess.dto.CreateBoardDto;
+import chess.dto.ResultDto;
+import chess.dto.StatusDto;
 import java.util.List;
 import java.util.Map;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,34 +31,49 @@ public class ChessGameService {
         return boardDao.getAllBoardInfo();
     }
 
-    public int start(CreateBoardDto boardInfoDto) {
-        int id = boardDao.makeBoard(Color.WHITE, boardInfoDto);
+    public int start(CreateBoardDto createBoardDto) {
+        Board board = new Board(BoardInitializer.createBoard(), Color.WHITE, createBoardDto);
+        int id = boardDao.makeBoard(board);
         pieceDao.save(BoardInitializer.createBoard(), id);
         return id;
     }
 
-    public void updatePosition(Position source, Position target, Color turn, int id) {
-        boardDao.updateTurn(turn, id);
+    public HttpStatus move(Position source, Position target, int id) {
+        Board board = getBoard(id);
+        board.move(source, target);
+
+        if (board.hasKingCaptured()) {
+            return HttpStatus.ACCEPTED;
+        }
+
+        boardDao.updateTurn(board.getTurn(), id);
         pieceDao.updatePosition(source.stringName(), target.stringName(), id);
+        return HttpStatus.OK;
     }
 
-    public void end(int id) {
-        boardDao.end(id);
-    }
-
-    public boolean isGameEnd(int id) {
-        return boardDao.isGameEnd(id);
+    public StatusDto status(int id) {
+        Board board = getBoard(id);
+        return StatusDto.of(board.scoreOfWhite(), board.scoreOfBlack());
     }
 
     public Board getBoard(int boardId) {
         return new Board(getPieces(boardId), getTurn(boardId), getName(boardId), getPassword(boardId));
     }
 
+    public ResultDto result(int boardId) {
+        Board board = getBoard(boardId);
+        return ResultDto.of(board.scoreOfWhite(), board.scoreOfBlack(), board.findWinner());
+    }
+
+    public void end(int id) {
+        boardDao.end(id);
+    }
+
     public Map<Position, Piece> getPieces(int boardId) {
         return pieceDao.load(boardId);
     }
 
-    private Color getTurn(int id) {
+    public Color getTurn(int id) {
         return boardDao.findTurn(id);
     }
 

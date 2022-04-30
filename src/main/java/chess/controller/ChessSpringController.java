@@ -1,16 +1,12 @@
 package chess.controller;
 
-import chess.domain.board.Board;
+import chess.domain.Color;
 import chess.domain.board.Position;
 import chess.dto.ChessBoardDto;
 import chess.dto.CreateBoardDto;
 import chess.dto.MovePositionDto;
-import chess.dto.ResultDto;
-import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -50,7 +46,7 @@ public class ChessSpringController {
     @GetMapping("/board")
     public ModelAndView chess(@RequestParam int id) {
         ModelAndView modelAndView = new ModelAndView();
-        if (chessGameService.isGameEnd(id)) {
+        if (chessGameService.getTurn(id) == Color.END) {
             throw new IllegalArgumentException("이미 완료된 게임입니다");
         }
         modelAndView.addObject("boardDto", ChessBoardDto.from(chessGameService.getPieces(id)));
@@ -62,24 +58,17 @@ public class ChessSpringController {
     @PutMapping("/board")
     public @ResponseBody
     ResponseEntity<String> move(@RequestBody MovePositionDto request, @RequestParam int id) {
-        Board board = chessGameService.getBoard(id);
-        board.move(Position.from(request.getSource()), Position.from(request.getTarget()));
-        chessGameService.updatePosition(Position.from(request.getSource()), Position.from(request.getTarget()),
-                board.getTurn(), id);
+        HttpStatus moveResult = chessGameService.move(Position.from(request.getSource()),
+                Position.from(request.getTarget()), id);
 
-        if (board.hasKingCaptured()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(moveResult).build();
     }
 
     @GetMapping("/board/status")
     public ModelAndView status(@RequestParam int id) {
         ModelAndView modelAndView = new ModelAndView();
-        Board board = chessGameService.getBoard(id);
-        modelAndView.addObject("status", StatusDto.of(board.scoreOfWhite(), board.scoreOfBlack()));
-        modelAndView.setViewName("status");
+        modelAndView.addObject("status", chessGameService.status(id));
+        modelAndView.setViewName("boardStatus");
         return modelAndView;
     }
 
@@ -93,9 +82,8 @@ public class ChessSpringController {
     @GetMapping("/board/result")
     public ModelAndView result(@RequestParam int id) {
         ModelAndView modelAndView = new ModelAndView();
-        Board board = chessGameService.getBoard(id);
-        modelAndView.addObject("result", ResultDto.of(board.scoreOfWhite(), board.scoreOfBlack(), board.findWinner()));
-        modelAndView.setViewName("result");
+        modelAndView.addObject("result", chessGameService.result(id));
+        modelAndView.setViewName("boardResult");
         return modelAndView;
     }
 

@@ -1,8 +1,8 @@
 package chess.dao;
 
 import chess.domain.Color;
+import chess.domain.board.Board;
 import chess.dto.BoardInfoDto;
-import chess.dto.CreateBoardDto;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,21 +21,21 @@ public class BoardJdbcTemplateDao implements BoardDao {
     }
 
     @Override
-    public int makeBoard(Color turn, CreateBoardDto boardInfoDto) {
+    public int makeBoard(Board board) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(getBoardPreparedStatement(turn, boardInfoDto), keyHolder);
+        jdbcTemplate.update(getBoardPreparedStatement(board.getTurn(), board.getName(), board.getPassword()), keyHolder);
 
         return keyHolder.getKey().intValue();
     }
 
-    private PreparedStatementCreator getBoardPreparedStatement(Color turn, CreateBoardDto boardInfoDto) {
+    private PreparedStatementCreator getBoardPreparedStatement(Color turn, String name, String password) {
         String sql = "insert into board (turn, name, password) values (?, ?, ?)";
 
         return connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, turn.name());
-            ps.setString(2, boardInfoDto.getName());
-            ps.setString(3, boardInfoDto.getPassword());
+            ps.setString(2, name);
+            ps.setString(3, password);
             return ps;
         };
     }
@@ -51,14 +51,6 @@ public class BoardJdbcTemplateDao implements BoardDao {
 
         jdbcTemplate.update(sql, turn.name(), id);
     }
-
-    @Override
-    public boolean isGameEnd(int id) {
-        final String sql = "select turn from board where id = ?";
-        Color turn = jdbcTemplate.queryForObject(sql, Color.class, id);
-        return turn == Color.END;
-    }
-
 
     @Override
     public Color findTurn(int id) {

@@ -44,14 +44,12 @@ public class ChessGameService {
     private final PieceDao pieceDao;
     private final GameStateDao gameStateDao;
     private final RoomDao roomDao;
-    private final DataSource dataSource;
 
     public ChessGameService(final PieceDao pieceDao, final GameStateDao gameStateDao,
-                            final RoomDao roomDao, final DataSource dataSource) {
+                            final RoomDao roomDao) {
         this.pieceDao = pieceDao;
         this.gameStateDao = gameStateDao;
         this.roomDao = roomDao;
-        this.dataSource = dataSource;
     }
 
     public Map<Position, Piece> getPieces(final int roomNumber) {
@@ -131,10 +129,10 @@ public class ChessGameService {
     }
 
     public Map<Position, Piece> end(final int roomNumber) {
-        final Board board = getSavedBoard(roomNumber);
         checkPlayingGame(roomNumber);
         gameStateDao.removeGameState(roomNumber);
         pieceDao.removeAllPieces(roomNumber);
+        final Board board = getSavedBoard(roomNumber);
         return board.getPieces();
     }
 

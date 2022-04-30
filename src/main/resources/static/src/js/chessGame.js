@@ -10,8 +10,8 @@ function getChessId() {
 function getChess() {
     let chessId = getChessId();
     $.ajax({
-        url: "/chess-game/load/" + chessId,
-        type: 'get',
+        url: "/chess-game/pieces/" + chessId,
+        type: "get",
         success(data) {
             clearPieces();
             let obj = parseToJSON(data);
@@ -65,8 +65,8 @@ function setPieces(pieces) {
 
 function start() {
     $.ajax({
-        url: "/chess-game/start",
-        type: 'post',
+        url: "/chess-game",
+        type: "post",
         success(data) {
             clearPieces();
             let obj = parseToJSON(data);
@@ -98,7 +98,7 @@ function move(position) {
     let targetPosition = positions[1];
     $.ajax({
         url: "/chess-game/move/" + chessId,
-        type: 'post',
+        type: "put",
         traditional: true,
         beforeSend: function (xhr) {
              xhr.setRequestHeader("Content-type","application/json");
@@ -127,7 +127,7 @@ function showScore() {
     let chessId = getChessId();
     $.ajax({
         url: "/chess-game/score/" + chessId,
-        type: 'get',
+        type: "get",
         success(data) {
             let score = parseToJSON(data);
             var message = "";
@@ -152,7 +152,7 @@ function end() {
     let chessId = getChessId();
     $.ajax({
         url: "/chess-game/end/" + chessId,
-        type: 'post',
+        type: "put",
         success(data) {
             let status = parseToJSON(data);
             var message = "게임 종료 !!!\n♟ 게임 결과 ♟\n";

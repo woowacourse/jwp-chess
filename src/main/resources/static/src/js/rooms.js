@@ -12,7 +12,7 @@ window.onload = function() {
 
 function loadRooms() {
     $.ajax({
-        url: "/chess-game/load",
+        url: "/chess-game/rooms",
         type: "get",
         success(data) {
             let rooms = parseToJSON(data);
@@ -41,7 +41,7 @@ function showRooms(rooms) {
 
 function start() {
     $.ajax({
-        url: "/chess-game/start",
+        url: "/chess-game",
         type: "post",
         beforeSend: function (xhr) {
              xhr.setRequestHeader("Content-type","application/json");

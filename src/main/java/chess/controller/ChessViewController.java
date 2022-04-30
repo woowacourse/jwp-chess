@@ -7,11 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ChessViewController {
 
     @GetMapping
-    public String root() {
-        return "redirect:chess-game";
-    }
-
-    @GetMapping("/chess-game")
     public String showRooms() {
         return "rooms";
     }

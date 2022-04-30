@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,19 +32,14 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/load/{id}")
-    public ChessResponseDto loadRoom(@PathVariable int id) {
+    @GetMapping("/pieces/{id}")
+    public ChessResponseDto getPieces(@PathVariable int id) {
         return chessService.getChess(id);
     }
 
-    @GetMapping("/load")
-    public List<RoomResponseDto> loadRooms() {
+    @GetMapping("/rooms")
+    public List<RoomResponseDto> getRooms() {
         return chessService.getChesses();
-    }
-
-    @PostMapping(value = "/start", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public int start(@RequestBody ChessRequestDto chessRequestDto) {
-        return chessService.start(chessRequestDto);
     }
 
     @GetMapping("/score/{id}")
@@ -51,13 +47,18 @@ public class ChessController {
         return chessService.getScore(id);
     }
 
-    @PostMapping(value = "/move/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public int start(@RequestBody ChessRequestDto chessRequestDto) {
+        return chessService.start(chessRequestDto);
+    }
+
+    @PutMapping(value = "/move/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ChessResponseDto move(@PathVariable int id, @RequestBody MoveCommandDto moveCommandDto) {
         MoveCommand moveCommand = moveCommandDto.toEntity();
         return chessService.movePiece(id, moveCommand);
     }
 
-    @PostMapping("/end/{id}")
+    @PutMapping("/end/{id}")
     public ScoresDto end(@PathVariable int id) {
         return chessService.finishGame(id);
     }

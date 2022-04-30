@@ -131,19 +131,18 @@ public class ChessService {
 
     public ResultDto getChessResult(int gameId) {
         ChessGame chessGame = getChessGame(gameId);
-        endGame(chessGame);
+        endGame(chessGame, gameId);
 
         double blackScore = getScore(gameId, Color.BLACK);
         double whiteScore = getScore(gameId, Color.WHITE);
 
-        gameDao.updateStateById(gameId, StateType.END);
-
         return new ResultDto(gameId, blackScore, whiteScore, chessGame.result());
     }
 
-    private void endGame(ChessGame chessGame) {
+    private void endGame(ChessGame chessGame, int gameId) {
         if (!chessGame.isFinished()) {
             chessGame.end();
+            gameDao.updateStateById(gameId, StateType.END);
         }
     }
 }

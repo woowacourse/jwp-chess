@@ -64,4 +64,9 @@ public class RoomService {
     public List<Room> getRoomList() {
         return roomDao.findAll();
     }
+
+    public Room getRoom(Long id) {
+        return roomDao.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
+    }
 }

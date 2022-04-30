@@ -1,10 +1,8 @@
 package chess.web.controller;
 
 import chess.domain.board.Board;
-import chess.web.controller.dto.BoardDto;
-import chess.web.controller.dto.MoveDto;
-import chess.web.controller.dto.RoomRequestDto;
-import chess.web.controller.dto.ScoreDto;
+import chess.domain.entity.Room;
+import chess.web.controller.dto.*;
 import chess.web.service.ChessService;
 import chess.web.service.RoomService;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +48,18 @@ public class ChessApiController {
     public ResponseEntity<Void> delete(@RequestBody RoomRequestDto.Password request, @PathVariable Long id) {
         roomService.delete(request.getPassword(), id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/password/{id}")
+    public ResponseEntity<RoomResponseDto.Password> getPassword(@PathVariable Long id) {
+        Room room = roomService.getRoom(id);
+        return ResponseEntity.ok().body(new RoomResponseDto.Password(room));
+    }
+
+    @GetMapping("/check/{id}")
+    public ResponseEntity<RoomResponseDto.PasswordAndFinish> checkDelete(@PathVariable Long id) {
+        Room room = roomService.getRoom(id);
+        Board board = chessService.loadGame(id);
+        return ResponseEntity.ok().body(new RoomResponseDto.PasswordAndFinish(room, board.isDeadKing()));
     }
 }

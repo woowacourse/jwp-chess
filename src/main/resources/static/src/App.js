@@ -59,7 +59,7 @@ status.addEventListener('click', function () {
 })
 
 function loadBoard() {
-    fetch('/api/load/' + gameId)
+    fetch('/api/' + gameId)
         .then(res => res.json())
         .then(imageSetting)
 }
@@ -158,7 +158,6 @@ function movePiece(from, to) {
 }
 
 function move() {
-
     const divs = BOARD.querySelectorAll("div");
 
     for (const div of divs) {
@@ -166,28 +165,37 @@ function move() {
     }
 }
 
-function enterCheckPassword(id, password) {
+function enterCheckPassword(id) {
     var pass = prompt('패스워드를 입력하세요');
-    if (password === pass) {
-        window.location.href = "/room/" + id
-        return;
-    }
-    window.alert("비밀번호가 틀렸습니다!")
+    fetch('/api/password/' + id)
+        .then(res => res.json())
+        .then(res => {
+            if (res["password"] === pass) {
+                window.location.href = "/room/" + id
+                return;
+            }
+            window.alert("비밀번호가 틀렸습니다!")
+        })
 }
 
-function deleteCheckPassword(id, isFinish, password) {
+function deleteCheckPassword(id) {
     var pass = prompt('패스워드를 입력하세요');
-    if (password !== pass) {
-        window.alert("비밀번호가 틀렸습니다! 삭제에 실패했습니다.")
-        return;
-    }
-    if (isFinish === "false") {
-        window.alert("게임이 끝나지 않았습니다! 삭제에 실패했습니다.");
-        return;
-    }
-    deleteRoom(id, password)
-    window.alert("성공적으로 삭제가 되었습니다!");
-    goHome();
+
+    fetch('/api/check/' + id)
+        .then(res => res.json())
+        .then(res => {
+            if (res["password"] !== pass) {
+                window.alert("비밀번호가 틀렸습니다! 삭제에 실패했습니다.")
+                return;
+            }
+            if (res["isFinish"] === "false") {
+                window.alert("게임이 끝나지 않았습니다! 삭제에 실패했습니다.");
+                return;
+            }
+            deleteRoom(id, res["password"])
+            window.alert("성공적으로 삭제가 되었습니다!");
+            goHome();
+        })
 }
 
 function deleteRoom(id, password) {

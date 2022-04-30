@@ -3,31 +3,52 @@ package chess.web.controller.dto;
 import chess.domain.entity.Room;
 
 public class RoomResponseDto {
-    private final String title;
-    private final String password;
-    private final boolean finish;
-    private final Long id;
 
-    public RoomResponseDto(Room room, boolean finish) {
-        this.title = room.getTitle();
-        this.password = room.getPassword();
-        this.id = room.getId();
-        this.finish = finish;
+    public static class IdAndTitle {
+        private final Long id;
+        private final String title;
+
+        public IdAndTitle(Room room) {
+            this.title = room.getTitle();
+            this.id = room.getId();
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
     }
 
-    public String getTitle() {
-        return title;
+    public static class PasswordAndFinish {
+        private final String password;
+        private final boolean finish;
+
+        public PasswordAndFinish(Room room, boolean finish) {
+            this.password = room.getPassword();
+            this.finish = finish;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public boolean isFinish() {
+            return finish;
+        }
     }
 
-    public Long getId() {
-        return id;
-    }
+    public static class Password {
+        private final String password;
 
-    public String getPassword() {
-        return password;
-    }
+        public Password(Room room) {
+            this.password = room.getPassword();
+        }
 
-    public boolean isFinish() {
-        return finish;
+        public String getPassword() {
+            return password;
+        }
     }
 }

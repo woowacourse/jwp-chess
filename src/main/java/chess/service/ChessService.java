@@ -89,18 +89,23 @@ public class ChessService {
         return chessGameDao.findIdByGameName(gameName);
     }
 
-    public int deleteByGameNameAndPassword(State state, String gameName, String password) {
-        if (!state.isEnd()) {
-            throw new IllegalDeleteException();
-        }
-        return chessGameDao.deleteByGameNameAndPassword(gameName, password);
+    public void deleteBy(String gameName, String password) {
+        State state = findStateBy(gameName, password);
+        deleteEndGame(state, gameName, password);
     }
 
-    public State findStateByGameNameAndPassword(String gameName, String password) {
+    private State findStateBy(String gameName, String password) {
         try {
             return chessGameDao.findStateByGameNameAndPassword(gameName, password);
         } catch(EmptyResultDataAccessException e) {
             throw new IllegalPasswordException();
         }
+    }
+
+    private int deleteEndGame(State state, String gameName, String password) {
+        if (!state.isEnd()) {
+            throw new IllegalDeleteException();
+        }
+        return chessGameDao.deleteByGameNameAndPassword(gameName, password);
     }
 }

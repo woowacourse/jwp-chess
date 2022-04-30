@@ -45,8 +45,8 @@ public class PieceDao {
 
                 ps.setString(1, piece.name());
                 ps.setString(2, piece.color().name());
-                ps.setString(3, String.valueOf(position.column()));
-                ps.setString(4, String.valueOf(position.row()));
+                ps.setString(3, position.column());
+                ps.setString(4, position.row());
                 ps.setLong(5, chessGameId);
             }
 

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link rel="stylesheet" href="/src/index.css">
+</head>
+
+<body>
+<table id="chessGameTable">
+    <button onclick="startNewGame()">start new game</button>
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="game : ${chessGames}">
+        <td th:text="${game.id}">id</td>
+        <td th:text="${game.title}" th:attr="onclick=|loadGame('${game.id}')|">title</td>
+        <td><button th:attr="onclick=|deleteGame('${game.id}')|">삭제</button></td>
+    </tr>
+    </tbody>
+</table>
+<script type="text/javascript" src="/src/chess_game_list.js"></script>
+</body>
+</html>

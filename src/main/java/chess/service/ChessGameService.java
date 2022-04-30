@@ -7,7 +7,6 @@ import chess.domain.Color;
 import chess.domain.Position;
 import chess.domain.PromotionPiece;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceFactory;
 import chess.domain.state.ChessGameState;
 import chess.domain.state.Turn;
 import java.util.Map;
@@ -24,12 +23,6 @@ public class ChessGameService {
     public ChessGameService(PieceDao pieceDao, ChessGameDao chessGameDao) {
         this.pieceDao = pieceDao;
         this.chessGameDao = chessGameDao;
-    }
-
-    public long createNewChessGame() {
-        long chessGameId = chessGameDao.createChessGame(Turn.WHITE_TURN);
-        pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
-        return chessGameId;
     }
 
     public Map<Position, Piece> findChessBoard(long chessGameId) {
@@ -75,6 +68,6 @@ public class ChessGameService {
     }
 
     private Turn findChessGameTurn(long chessGameId) {
-        return chessGameDao.findChessGame(chessGameId);
+        return chessGameDao.findChessGameTurn(chessGameId);
     }
 }

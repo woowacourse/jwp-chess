@@ -1,10 +1,9 @@
 package chess.controller;
 
-import static org.hamcrest.core.Is.is;
-
-import chess.controller.dto.request.PieceMoveRequest;
+import chess.controller.dto.request.ChessGameRoomDeleteRequest;
 import chess.dao.ChessGameDao;
 import chess.domain.ChessGameRoom;
+import chess.domain.state.Turn;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,13 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class ChessGameControllerAdviceTest {
+class ChessGameRoomControllerTest {
 
     @Autowired
     private ChessGameDao chessGameDao;
-
-    private static long chessGameId;
-    private String title;
 
     @LocalServerPort
     private int port;
@@ -31,30 +27,29 @@ class ChessGameControllerAdviceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        title = "title" + chessGameId++;
-        chessGameId = chessGameDao.createChessGame(ChessGameRoom.createNewChessGameRoom(title , "password"));
     }
 
     @Test
-    @DisplayName("해당 위치에 존재한 기물이 없을 때 이동시 예외 발생")
-    void exceptionByEmptySource() {
+    @DisplayName("모든 체스방의 리스트 반환")
+    void findAllChessGameRoom() {
         RestAssured.given().log().all()
-                .body(new PieceMoveRequest("a7", "a6"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("chessgames/" + chessGameId + "/move")
+                .when().get("/chessgames")
                 .then().log().all()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("message", is("해당 위치에 존재하는 기물이 없습니다."));
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
-    @DisplayName("체스게임이 존재하지 않을 때 접속 시 예외 발생")
-    void exceptionByNotFoundChessGame() {
-        long notFoundChessGameId = chessGameId + 1;
+    @DisplayName("체스 게임 삭제")
+    void deleteChessGameRoom() {
+        String password = "password";
+        long chessGameId = chessGameDao.createChessGame(new ChessGameRoom(null, "title", password, Turn.END));
+
         RestAssured.given().log().all()
+                .body(new ChessGameRoomDeleteRequest(password))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("chessgames/" + notFoundChessGameId)
+                .when().delete("/chessgames/" + chessGameId)
                 .then().log().all()
-                .statusCode(HttpStatus.NOT_FOUND.value());
+                .statusCode(HttpStatus.NO_CONTENT.value());
     }
 }

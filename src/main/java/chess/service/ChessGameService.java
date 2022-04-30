@@ -1,9 +1,12 @@
 package chess.service;
 
 import chess.domain.ChessGame;
+import chess.domain.CurrentStatus;
 import chess.domain.MovingPosition;
-import chess.repository.ChessboardRepository;
+import chess.dto.CurrentStatusDto;
+import chess.dto.MovingPositionDto;
 import chess.dto.ScoreDto;
+import chess.repository.ChessGameRepository;
 import chess.utils.ScoreCalculator;
 import org.springframework.stereotype.Service;
 
@@ -12,52 +15,49 @@ import java.util.List;
 @Service
 public class ChessGameService {
 
-    private final ChessboardRepository dao;
-    private ChessGame chessGame = new ChessGame();
+    private static final String DUPLICATE_NAME = "채팅방 이름은 중복될 수 없습니다.";
 
-    public ChessGameService(ChessboardRepository dao) {
-        this.dao = dao;
+    private final ChessGameRepository repository;
+
+    public ChessGameService(ChessGameRepository dao) {
+        this.repository = dao;
     }
 
-    public void init() {
-        if (dao.isDataExist()) {
-            chessGame = dao.find();
-            return;
+    public void create(String name, String password) {
+        if (repository.isDuplicateName(name)) {
+            throw new IllegalArgumentException(DUPLICATE_NAME);
         }
-        chessGame = new ChessGame();
+        repository.saveNewGame(name, password, new CurrentStatusDto(new CurrentStatus()));
     }
 
-    public void start() {
+    public void start(int gameId) {
+        ChessGame chessGame = findGameById(gameId);
         chessGame.start();
+        repository.saveGame(gameId,chessGame.getChessBoard(), new CurrentStatusDto(chessGame.getCurrentStatus()));
     }
 
-    public void restart() {
-        dao.truncateAll();
-        chessGame = new ChessGame();
+    public void move(int gameId, String from, String to) {
+        MovingPosition movingPosition = new MovingPosition(from, to);
+        ChessGame chessGame = findGameById(gameId);
+        chessGame.move(movingPosition);
+        repository.saveMove(gameId, new MovingPositionDto(movingPosition), new CurrentStatusDto(chessGame.getCurrentStatus()));
     }
 
-    public void move(String from, String to) {
-        chessGame.move(new MovingPosition(from, to));
-    }
-
-    public ScoreDto status() {
-        return ScoreCalculator.computeScore(chessGame.getChessBoard());
-    }
-
-    public void save() {
-        dao.save(chessGame);
-    }
-
-    public void end() {
+    public void end(int gameId) {
+        ChessGame chessGame = findGameById(gameId);
         chessGame.end();
+        repository.saveEnd(gameId, chessGame.getStateToString());
     }
 
-    public List<String> getPiecesByUnicode() {
-        return chessGame.getPiecesByUnicode();
+    public ScoreDto status(int gameId) {
+        return ScoreCalculator.computeScore(findGameById(gameId).getChessBoard());
     }
 
-    public ChessGame getChessGame() {
-        return chessGame;
+    public List<String> getBoardByUnicode(int gameId) {
+        return findGameById(gameId).getBoardByUnicode();
     }
 
+    private ChessGame findGameById(int gameId) {
+        return repository.find(gameId);
+    }
 }

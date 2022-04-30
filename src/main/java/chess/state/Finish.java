@@ -2,7 +2,7 @@ package chess.state;
 
 import chess.domain.Chessboard;
 import chess.domain.MovingPosition;
-import chess.domain.Turn;
+import chess.piece.Color;
 
 public class Finish implements State {
 
@@ -12,7 +12,7 @@ public class Finish implements State {
     }
 
     @Override
-    public State move(Chessboard chessboard, MovingPosition movingPosition, Turn turn) {
+    public State move(Chessboard chessboard, MovingPosition movingPosition, Color turn) {
         throw new UnsupportedOperationException(UNSUPPORTED_STATE);
     }
 

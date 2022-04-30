@@ -2,7 +2,7 @@ package chess.state;
 
 import chess.domain.Chessboard;
 import chess.domain.MovingPosition;
-import chess.domain.Turn;
+import chess.piece.Color;
 
 public interface State {
 
@@ -10,7 +10,7 @@ public interface State {
 
     State start();
 
-    State move(Chessboard chessboard, MovingPosition movingPosition, Turn turn);
+    State move(Chessboard chessboard, MovingPosition movingPosition, Color turn);
 
     State end();
 

@@ -1,10 +1,6 @@
 package chess.domain;
 
 import chess.piece.Piece;
-import chess.state.Finish;
-import chess.state.Ready;
-import chess.state.State;
-import chess.state.StateFactory;
 import chess.utils.InitializedChessboardGenerator;
 import chess.utils.UnicodeConverter;
 
@@ -13,41 +9,42 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ChessGame {
-
-    private final Turn turn;
-    private State state;
+    private CurrentStatus currentStatus;
     private Chessboard chessboard;
 
     public ChessGame() {
-        state = new Ready();
-        turn = new Turn();
+        currentStatus = new CurrentStatus();
         chessboard = new Chessboard();
     }
 
     public ChessGame(String state, String turn, Map<Position, Piece> boards) {
-        this.state = StateFactory.valueOf(state).create();
-        this.turn = new Turn(turn);
+        this.currentStatus = new CurrentStatus(state, turn);
         this.chessboard = new Chessboard(boards);
     }
 
+    public ChessGame(CurrentStatus currentStatus, Chessboard chessboard) {
+        this.currentStatus = currentStatus;
+        this.chessboard = chessboard;
+    }
+
     public void start() {
-        state = state.start();
+        currentStatus.start();
         chessboard = new Chessboard(InitializedChessboardGenerator.generate());
     }
 
     public void move(MovingPosition movingPosition) {
-        state = state.move(chessboard, movingPosition, turn);
+        currentStatus.move(chessboard, movingPosition);
     }
 
     public void end() {
-        state = new Finish();
+        currentStatus.end();
     }
 
     public boolean isFinished() {
-        return state.isFinished();
+        return currentStatus.isFinished();
     }
 
-    public List<String> getPiecesByUnicode() {
+    public List<String> getBoardByUnicode() {
         return chessboard.getBoard()
                 .values()
                 .stream()
@@ -55,16 +52,20 @@ public class ChessGame {
                 .collect(Collectors.toList());
     }
 
-    public Chessboard getChessBoard() {
-        return chessboard;
+    public Map<Position,Piece> getChessBoard() {
+        return chessboard.getBoard();
+    }
+
+    public CurrentStatus getCurrentStatus() {
+        return currentStatus;
     }
 
     public String getStateToString() {
-        return state.getStateToString();
+        return currentStatus.getStateToString();
     }
 
     public String getColorOfTurn() {
-        return turn.getColor();
+        return currentStatus.getTurnToString();
     }
 
 }

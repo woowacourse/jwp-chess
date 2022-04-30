@@ -1,6 +1,5 @@
 package chess.utils;
 
-import chess.domain.Chessboard;
 import chess.domain.Position;
 import chess.dto.ScoreDto;
 import chess.piece.Color;
@@ -14,9 +13,9 @@ public class ScoreCalculator {
     private static final double MINUS_SCORE_OF_SAME_Y_PAWN = 0.5;
     private static final int NUMBER_OF_PAWNS_FOR_MINUS = 2;
 
-    public static ScoreDto computeScore(Chessboard chessboard) {
-        double scoreOfBlack = computeScore(Color.BLACK, chessboard.getBoard());
-        double scoreOfWhite = computeScore(Color.WHITE, chessboard.getBoard());
+    public static ScoreDto computeScore(Map<Position,Piece> chessboard) {
+        double scoreOfBlack = computeScore(Color.BLACK, chessboard);
+        double scoreOfWhite = computeScore(Color.WHITE, chessboard);
 
         if (scoreOfBlack > scoreOfWhite) {
             return new ScoreDto(scoreOfBlack, scoreOfWhite, Color.BLACK);

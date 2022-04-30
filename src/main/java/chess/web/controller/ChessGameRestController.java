@@ -1,8 +1,10 @@
 package chess.web.controller;
 
 import chess.web.dto.MoveDto;
-import chess.web.dto.MoveResultDto;
+import chess.web.dto.PlayResultDto;
 import chess.web.service.ChessGameService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,8 +18,15 @@ public class ChessGameRestController {
         this.service = service;
     }
 
+    @GetMapping("/load")
+    public ResponseEntity<PlayResultDto> load() {
+        final PlayResultDto playResultDto = service.play();
+        return ResponseEntity.ok(playResultDto);
+    }
+
     @PostMapping("/move")
-    public MoveResultDto move(@RequestBody MoveDto moveDto) {
-        return service.move(moveDto);
+    public ResponseEntity<PlayResultDto> move(@RequestBody MoveDto moveDto) {
+        final PlayResultDto playResultDto = service.move(moveDto);;
+        return ResponseEntity.ok(playResultDto);
     }
 }

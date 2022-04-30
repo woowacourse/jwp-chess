@@ -10,7 +10,6 @@ import chess.domain.piece.property.Color;
 import chess.web.dao.ChessBoardDao;
 import chess.web.dao.PlayerDao;
 import chess.web.dto.MoveDto;
-import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
 import chess.web.dto.ScoreDto;
 import java.util.HashMap;
@@ -38,33 +37,35 @@ public class ChessGameService {
         return chessGame;
     }
 
-    public MoveResultDto move(MoveDto moveDto) {
+    public PlayResultDto move(MoveDto moveDto) {
         ChessGame chessGame = getChessGame();
         String turn = chessGame.getTurn();
 
         chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
+        Map<Position, Piece> board = chessGame.getBoard();
         if (isChessGameEnd(chessGame)) {
-            return MoveResultDto.of(true, turn);
+            return PlayResultDto.of(toBoardDto(board), turn, isChessGameEnd(chessGame));
         }
+
         removeAll();
         saveAll(chessGame);
-
-        return MoveResultDto.of(false, null);
+        return PlayResultDto.of(toBoardDto(board), findTurn().name(), isChessGameEnd(chessGame));
     }
 
     public PlayResultDto play() {
         if (findAllBoard().isEmpty()) {
             start();
         }
+        return PlayResultDto.of(toBoardDto(findAllBoard()), findTurn().name(), false);
+    }
 
-        Map<Position, Piece> board = findAllBoard();
+    private Map<String, Piece> toBoardDto(Map<Position, Piece> board) {
         Map<String, Piece> boardDto = new HashMap<>();
         for (Position position : board.keySet()) {
             Piece piece = board.get(position);
             boardDto.put(position.toString(), piece);
         }
-
-        return PlayResultDto.of(boardDto, findTurn().name());
+        return boardDto;
     }
 
     private void removeAll() {

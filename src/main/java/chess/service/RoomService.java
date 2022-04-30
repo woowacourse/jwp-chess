@@ -1,35 +1,25 @@
 package chess.service;
 
-import chess.dao.RoomDao;
-import chess.domain.GameStatus;
 import chess.domain.room.Room;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomResponseDto;
-import chess.dto.response.RoomStatusDto;
 import chess.repository.RoomRepository;
 import java.util.List;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RoomService {
 
-    private final RoomDao roomDao;
     private final RoomRepository roomRepository;
 
-    public RoomService(final RoomDao roomDao, final RoomRepository roomRepository) {
-        this.roomDao = roomDao;
+    public RoomService(final RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
     }
 
     public List<RoomResponseDto> findAll() {
         return roomRepository.getAll();
-    }
-
-    public boolean isExistRoom(final int roomId) {
-        return roomDao.isExistId(roomId);
     }
 
     public int createRoom(final RoomCreationRequestDto dto) {
@@ -44,43 +34,14 @@ public class RoomService {
     }
 
     public void deleteRoom(final RoomDeletionRequestDto dto) {
-        final int roomId = dto.getRoomId();
-
-        checkRoomExist(roomId);
-        checkPassword(dto.getPassword(), roomId);
-        checkRoomStatus(roomId);
-
-        final int deletedRow = roomDao.deleteById(roomId);
-        if (deletedRow != 1) {
-            throw new IllegalArgumentException("방을 삭제할 수 없습니다.");
-        }
-    }
-
-    private void checkRoomExist(final int roomId) {
-        if (!roomDao.isExistId(roomId)) {
-            throw new IllegalArgumentException("존재하지 않는 방 입니다.");
-        }
-    }
-
-    private void checkPassword(final String plainPassword, final int roomId) {
-        if (plainPassword.isBlank()) {
-            throw new IllegalArgumentException("요청에 비밀번호가 존재하지 않습니다.");
-        }
-        final String password = roomDao.findPasswordById(roomId);
-        final boolean matchPassword = BCrypt.checkpw(plainPassword, password);
-        if (!matchPassword) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-    }
-
-    private void checkRoomStatus(final int roomId) {
-        final RoomStatusDto roomStatusDto = roomDao.findStatusById(roomId);
-        if (!roomStatusDto.getGameStatus().isEnd()) {
-            throw new IllegalArgumentException("게임이 진행 중입니다.");
+        final Room room = roomRepository.get(dto.getRoomId());
+        if (room.canRemove(dto.getPassword())) {
+            roomRepository.remove(dto.getRoomId());
         }
     }
 
     public CurrentTurnDto findCurrentTurn(final int roomId) {
-        return roomDao.findCurrentTurnById(roomId);
+        final Room room = roomRepository.get(roomId);
+        return CurrentTurnDto.of(room.getName(), room.getCurrentTurn());
     }
 }

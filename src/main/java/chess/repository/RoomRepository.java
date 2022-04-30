@@ -33,7 +33,7 @@ public class RoomRepository {
             final RoomEntity roomEntity = roomDao.findById(roomId);
             return toRoom(roomEntity);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException("방이 존재하지 않습니다.");
+            throw new NotFoundException("존재하지 않는 방 입니다.");
         }
     }
 
@@ -72,5 +72,9 @@ public class RoomRepository {
 
     public void update(final int roomId, final Room room) {
         roomDao.updateById(roomId, room.getGameStatus(), room.getCurrentTurn());
+    }
+
+    public void remove(final int roomId) {
+        roomDao.deleteById(roomId);
     }
 }

@@ -30,6 +30,7 @@ public class JdbcPieceDaoTest {
                 + "    position varchar(5)  not null,\n"
                 + "    type     varchar(10) not null,\n"
                 + "    color    varchar(20) not null,\n"
+                + "    game_id  int not null,\n"
                 + "    primary key (position)\n"
                 + ");");
     }
@@ -38,9 +39,9 @@ public class JdbcPieceDaoTest {
     @DisplayName("기물 정보 삭제")
     void remove() {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
-        pieceDao.save(pieceDto);
+        pieceDao.save(1, pieceDto);
 
-        pieceDao.remove(Position.of("a2"));
+        pieceDao.remove(1, Position.of("a2"));
 
         assertThat(getPieceCount()).isEqualTo(0);
     }
@@ -50,10 +51,10 @@ public class JdbcPieceDaoTest {
     void removeAll() {
         PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
         PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
-        pieceDao.save(pieceDtoA2);
-        pieceDao.save(pieceDtoA3);
+        pieceDao.save(1, pieceDtoA2);
+        pieceDao.save(1, pieceDtoA3);
 
-        pieceDao.removeAll();
+        pieceDao.removeAll(1);
 
         assertThat(getPieceCount()).isEqualTo(0);
     }
@@ -64,7 +65,7 @@ public class JdbcPieceDaoTest {
         PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
         PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
 
-        pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
+        pieceDao.saveAll(1, List.of(pieceDtoA2, pieceDtoA3));
 
         assertThat(getPieceCount()).isEqualTo(2);
     }
@@ -73,7 +74,7 @@ public class JdbcPieceDaoTest {
     @DisplayName("기물 정보 저장")
     void save() {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
-        pieceDao.save(pieceDto);
+        pieceDao.save(1, pieceDto);
 
         assertThat(getPieceCount()).isEqualTo(1);
     }
@@ -83,9 +84,9 @@ public class JdbcPieceDaoTest {
     void findAll() {
         PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
         PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
-        pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
+        pieceDao.saveAll(1, List.of(pieceDtoA2, pieceDtoA3));
 
-        List<PieceDto> pieceDtos = pieceDao.findAll();
+        List<PieceDto> pieceDtos = pieceDao.findAll(1);
 
         assertThat(pieceDtos).containsOnly(pieceDtoA2, pieceDtoA3);
     }
@@ -94,9 +95,9 @@ public class JdbcPieceDaoTest {
     @DisplayName("기물 정보 수정")
     void update() {
         PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
-        pieceDao.save(pieceDto);
+        pieceDao.save(1, pieceDto);
 
-        pieceDao.modifyPosition(Position.of("a2"), Position.of("a3"));
+        pieceDao.modifyPosition(1, Position.of("a2"), Position.of("a3"));
 
         assertThatCode(
                 () -> jdbcTemplate.queryForObject(

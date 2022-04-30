@@ -24,21 +24,9 @@ public class JdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public void remove(Position position) {
-        final String sql = "delete from piece where position = ?";
-        jdbcTemplate.update(sql, position.getName());
-    }
-
-    @Override
     public void remove(final int id, final Position position) {
         final String sql = "delete from piece where game_id = ? and position = ?";
         jdbcTemplate.update(sql, id, position.getName());
-    }
-
-    @Override
-    public void removeAll() {
-        final String sql = "delete from piece";
-        jdbcTemplate.update(sql);
     }
 
     @Override
@@ -48,33 +36,15 @@ public class JdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public void saveAll(List<PieceDto> pieceDtos) {
-        final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
-        jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(pieceDtos));
-    }
-
-    @Override
     public void saveAll(final int id, final List<PieceDto> pieceDtos) {
         final String sql = "insert into piece (position, type, color, game_id) values (?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(pieceDtos, id));
     }
 
     @Override
-    public void save(PieceDto pieceDto) {
-        final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
-        jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor());
-    }
-
-    @Override
-    public void save(int id, PieceDto pieceDto) {
+    public void save(final int id, final PieceDto pieceDto) {
         final String sql = "insert into piece (position, type, color, game_id) values (?, ?, ?, ?)";
         jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor(), id);
-    }
-
-    @Override
-    public List<PieceDto> findAll() {
-        final String sql = "select * from piece";
-        return jdbcTemplate.query(sql, getPieceDtoRowMapper());
     }
 
     @Override
@@ -84,33 +54,9 @@ public class JdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public void modifyPosition(Position source, Position target) {
-        final String sql = "update piece set position = ? where position = ?";
-        jdbcTemplate.update(sql, target.getName(), source.getName());
-    }
-
-    @Override
     public void modifyPosition(final int id, final Position source, final Position target) {
         final String sql = "update piece set position = ? where game_id = ? and position = ?";
         jdbcTemplate.update(sql, target.getName(), id, source.getName());
-    }
-
-    private BatchPreparedStatementSetter getBatchPreparedStatementSetter(List<PieceDto> pieceDtos) {
-        return new BatchPreparedStatementSetter() {
-
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                PieceDto pieceDto = pieceDtos.get(i);
-                ps.setString(1, pieceDto.getPosition());
-                ps.setString(2, pieceDto.getType());
-                ps.setString(3, pieceDto.getColor());
-            }
-
-            @Override
-            public int getBatchSize() {
-                return pieceDtos.size();
-            }
-        };
     }
 
     private BatchPreparedStatementSetter getBatchPreparedStatementSetter(final List<PieceDto> pieceDtos, final int id) {

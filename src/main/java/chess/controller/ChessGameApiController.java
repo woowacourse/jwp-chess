@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.ChessGameDto;
-import chess.dto.ChessGameNameStatusDto;
+import chess.dto.ChessGameInfoDto;
 import chess.dto.CreateGameDto;
 import chess.dto.DeleteGameDto;
 import chess.dto.MovePositionDto;
@@ -27,13 +27,13 @@ public class ChessGameApiController {
     }
 
     @GetMapping("/games")
-    public ResponseEntity<List<ChessGameNameStatusDto>> findAllChessGame() {
+    public ResponseEntity<List<ChessGameInfoDto>> findAllChessGame() {
         return ResponseEntity.ok(chessGameService.findAllChessGame());
     }
 
     @PostMapping("/game")
-    public ResponseEntity<ChessGameNameStatusDto> createNewGame(@RequestBody CreateGameDto createGameDto) {
-        final ChessGameNameStatusDto newChessGame = chessGameService.createNewChessGame(createGameDto);
+    public ResponseEntity<ChessGameInfoDto> createNewGame(@RequestBody CreateGameDto createGameDto) {
+        final ChessGameInfoDto newChessGame = chessGameService.createNewChessGame(createGameDto);
         return ResponseEntity.ok(newChessGame);
     }
 
@@ -52,10 +52,9 @@ public class ChessGameApiController {
     @GetMapping("/api/load/{gameId}")
     public ResponseEntity<ChessGameDto> loadGame(@PathVariable int gameId) {
         final char[][] chessMap = chessGameService.loadChessMap(gameId).getChessMap();
-        final ChessGameDto chessGameDto = chessGameService.findGameInfo(gameId);
+        final ChessGameInfoDto info = chessGameService.findGameInfo(gameId);
 
-        return ResponseEntity.ok(new ChessGameDto(chessGameDto.getGameName(), chessMap, chessGameDto.getTurn(),
-                chessGameDto.isRunning()));
+        return ResponseEntity.ok(new ChessGameDto(info.getName(), chessMap, info.getTurn(), info.isRunning()));
     }
 
     @PatchMapping("/move/{gameId}")

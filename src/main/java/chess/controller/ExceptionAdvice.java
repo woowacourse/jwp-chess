@@ -9,8 +9,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(Exception exception) {
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage());
+    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(Exception e) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
+        return ResponseEntity.badRequest().body(errorResponseDto);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleException() {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("서버에 문제가 발생했습니다. 다시 시도해주세요.");
         return ResponseEntity.badRequest().body(errorResponseDto);
     }
 }

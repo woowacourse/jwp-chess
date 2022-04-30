@@ -7,6 +7,7 @@ async function makeRoomTable() {
         url: "/rooms",
         type: 'get',
         success(data) {
+            document.write(`<div class="board_table">`);
             document.write(`<button class="button" id="create_room_btn" onClick="createRoom()">체스방 만들기</button>`);
             document.write("<table><tr><th>제목</th><th>삭제</th></tr>");
             for (let i = 0; i < data.length; i++) {
@@ -15,7 +16,7 @@ async function makeRoomTable() {
                 document.write(`<tr><td><button class="button" id="room" onclick="loadRoom(${id})">${gameName} 입장하기</button></td>`);
                 document.write(`<td><button onclick='deleteRoom(${id})' class = 'button'>삭제</button></td></tr>`);
             }
-            document.write("</table>");
+            document.write("</table></div>");
         },
         error(request) {
             let obj = JSON.parse(request.responseText);

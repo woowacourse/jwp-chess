@@ -2,8 +2,6 @@ package chess.dao;
 
 import chess.dao.dto.GameDto;
 import chess.domain.GameStatus;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -44,78 +42,58 @@ public class JdbcGameDao implements GameDao {
     @Override
     public void removeById(Long gameId) {
         final String sql = "delete from game where id = ?";
-        try {
-            jdbcTemplate.update(sql, gameId);
-        } catch (DataAccessException e) {
-            throw new IllegalArgumentException("게임을 삭제할 수 없습니다.");
-        }
+        jdbcTemplate.update(sql, gameId);
     }
 
     @Override
     public GameDto findGameById(Long id) {
         final String sql = "select * from game where id = ?";
-        try {
-            return jdbcTemplate.queryForObject(
-                    sql,
-                    (resultSet, rowNum) ->
-                            new GameDto(
-                                    resultSet.getLong("id"),
-                                    resultSet.getString("title"),
-                                    resultSet.getString("turn"),
-                                    resultSet.getString("status")
-                            ),
-                    id
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("게임(id=" + id + ")을 찾을 수 없습니다.");
-        }
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) ->
+                        new GameDto(
+                                resultSet.getLong("id"),
+                                resultSet.getString("title"),
+                                resultSet.getString("turn"),
+                                resultSet.getString("status")
+                        ),
+                id
+        );
     }
 
     @Override
     public String findPasswordById(Long id) {
         final String sql = "select password from game where id = ?";
-        try {
-            return jdbcTemplate.queryForObject(
-                    sql,
-                    (resultSet, rowNum) -> resultSet.getString("password"),
-                    id
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("게임(id=" + id + ")을 찾을 수 없습니다.");
-        }
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> resultSet.getString("password"),
+                id
+        );
     }
 
     @Override
     public GameStatus findStatusById(Long id) {
         final String sql = "select status from game where id = ?";
-        try {
-            return jdbcTemplate.queryForObject(
-                    sql,
-                    (resultSet, rowNum) -> GameStatus.find(resultSet.getString("status")),
-                    id
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("게임(id=" + id + ")을 찾을 수 없습니다.");
-        }
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> GameStatus.find(resultSet.getString("status")),
+                id
+        );
     }
 
     @Override
     public List<GameDto> findAll() {
         final String sql = "select * from game";
-        try {
-            return jdbcTemplate.query(
-                    sql,
-                    (resultSet, rowNum) ->
-                            new GameDto(
-                                    resultSet.getLong("id"),
-                                    resultSet.getString("title"),
-                                    resultSet.getString("turn"),
-                                    resultSet.getString("status")
-                            )
-            );
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("존재하는 게임이 없습니다.");
-        }
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) ->
+                        new GameDto(
+                                resultSet.getLong("id"),
+                                resultSet.getString("title"),
+                                resultSet.getString("turn"),
+                                resultSet.getString("status")
+                        )
+        );
     }
 
     @Override

@@ -1,19 +1,16 @@
 package chess.model.board;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.model.Team;
-import chess.model.board.Board;
-import chess.model.board.BoardFactory;
 import chess.model.piece.Pawn;
 import chess.model.piece.Piece;
 import chess.model.piece.Rook;
 import chess.model.position.Position;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class BoardTest {
 

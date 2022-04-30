@@ -1,5 +1,9 @@
 package chess.model.piece;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import chess.model.ChessGame;
 import chess.model.MoveType;
 import chess.model.Team;
@@ -7,16 +11,11 @@ import chess.model.Turn;
 import chess.model.board.Board;
 import chess.model.command.Move;
 import chess.model.position.Position;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class BishopTest {
 

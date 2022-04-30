@@ -1,12 +1,11 @@
 package chess.model;
 
-import chess.model.ChessGame;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.model.board.Board;
 import chess.model.board.BoardFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class ChessGameTest {
 

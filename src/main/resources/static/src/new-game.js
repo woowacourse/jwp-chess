@@ -6,7 +6,7 @@ newGameButton.addEventListener("click", async function () {
   const passwordCheck = document.getElementById("new-room-password-check").value;
   const gameId = await createNewGame(gameName, password, passwordCheck);
 
-  location.href = "/load/" + gameId;
+  location.href = "/games/" + gameId + "/load";
 });
 
 async function createNewGame(gameName, password, passwordCheck) {
@@ -15,7 +15,7 @@ async function createNewGame(gameName, password, passwordCheck) {
     return;
   }
 
-  let gameInfo = await fetch("/game", {
+  let gameInfo = await fetch("/api/games", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

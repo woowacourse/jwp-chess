@@ -2,7 +2,7 @@ const gameListButton = document.getElementById("gameList");
 const newGameButton = document.getElementById("newGame");
 
 gameListButton.addEventListener("click", async function () {
-  let games = await fetch("/games", {
+  let games = await fetch("/api/games", {
     method: "GET"
   }).then(handleErrors)
   .catch(function (error) {
@@ -41,7 +41,7 @@ async function loadGame(object) {
   const no = td.eq(0).text();
   const id = document.getElementById(no).value;
 
-  location.href = "/load/" + id;
+  location.href = "/games/" + id + "/load";
 }
 
 async function deleteGame(game) {
@@ -50,7 +50,7 @@ async function deleteGame(game) {
   const no = td.eq(0).text();
   const id = document.getElementById(no).value;
 
-  const response = await fetch("/game", {
+  const response = await fetch("/api/games", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

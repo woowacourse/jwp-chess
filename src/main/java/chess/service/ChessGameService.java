@@ -54,9 +54,8 @@ public class ChessGameService {
     }
 
     public void deleteGame(final DeleteGameDto deleteGameDto) {
-        final int gameId = deleteGameDto.getId();
-        final String password = deleteGameDto.getPassword();
-        validateDeleteGame(gameId, password);
+        int gameId = deleteGameDto.getId();
+        validateDeleteGame(gameId, deleteGameDto.getPassword());
         pieceDao.deletePieces(gameId);
         chessGameDao.deleteChessGame(gameId);
     }

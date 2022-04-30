@@ -46,7 +46,7 @@ async function getStatus() {
   const path = location.pathname.split("/");
   const gameId = path[2];
 
-  let status = await fetch("/status/" + gameId)
+  let status = await fetch("/api/games/" + gameId + "/status")
   .then(handleErrors)
   .catch(function (error) {
     alert(error.message);
@@ -101,7 +101,7 @@ async function requestMovePiece(current, destination) {
   const path = location.pathname.split("/");
   const gameId = path[2];
 
-  let boardAndTurnInfo = await fetch("/move/" + gameId, {
+  let boardAndTurnInfo = await fetch("/api/games/" + gameId + "/move", {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

@@ -22,7 +22,7 @@ public class ChessGameWebController {
         return "game";
     }
 
-    @GetMapping("/load/{gameId}")
+    @GetMapping("/games/{gameId}/load")
     public String loadGame(@PathVariable int gameId) {
         return "game";
     }

@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/games")
 public class ChessGameApiController {
 
     private final ChessGameService chessGameService;
@@ -26,30 +28,30 @@ public class ChessGameApiController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping("/games")
+    @GetMapping
     public ResponseEntity<List<ChessGameInfoDto>> findAllChessGame() {
         return ResponseEntity.ok(chessGameService.findAllChessGame());
     }
 
-    @PostMapping("/game")
+    @PostMapping
     public ResponseEntity<ChessGameInfoDto> createNewGame(@RequestBody CreateGameDto createGameDto) {
         final ChessGameInfoDto newChessGame = chessGameService.createNewChessGame(createGameDto);
         return ResponseEntity.ok(newChessGame);
     }
 
-    @GetMapping("/status/{gameId}")
+    @GetMapping("/{gameId}/status")
     public ResponseEntity<StatusDto> findStatusByGameName(@PathVariable int gameId) {
         final StatusDto status = chessGameService.findStatus(gameId);
         return ResponseEntity.ok(status);
     }
 
-    @DeleteMapping("/game")
+    @DeleteMapping
     public ResponseEntity<Void> finishGame(@RequestBody DeleteGameDto deleteGameDto) {
         chessGameService.deleteGame(deleteGameDto);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/api/load/{gameId}")
+    @GetMapping("/{gameId}/load")
     public ResponseEntity<ChessGameDto> loadGame(@PathVariable int gameId) {
         final char[][] chessMap = chessGameService.loadChessMap(gameId).getChessMap();
         final ChessGameInfoDto info = chessGameService.findGameInfoById(gameId);
@@ -57,7 +59,7 @@ public class ChessGameApiController {
         return ResponseEntity.ok(new ChessGameDto(info.getName(), chessMap, info.getTurn(), info.isRunning()));
     }
 
-    @PatchMapping("/move/{gameId}")
+    @PatchMapping("/{gameId}/move")
     public ResponseEntity<ChessGameDto> move(@PathVariable int gameId, @RequestBody MovePositionDto movePositionDto) {
         final String chessGameName = movePositionDto.getChessGameName();
         final String currentPosition = movePositionDto.getCurrent();

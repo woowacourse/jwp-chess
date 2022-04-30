@@ -6,7 +6,6 @@ import chess.domain.game.Color;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
-import chess.domain.game.status.End;
 import chess.domain.game.status.GameStatus;
 import chess.domain.game.status.Playing;
 import chess.domain.piece.ChessPiece;
@@ -80,7 +79,7 @@ public class ChessService {
     }
 
     private GameStatus convertToGameStatus(String status) {
-        return  Status.valueOf(status).convertToGameStatus();
+        return Status.valueOf(status).convertToGameStatus();
     }
 
     public void move(String source, String target, int gameId) throws SQLException {

@@ -1,8 +1,6 @@
 package chess.service.dto;
 
 import chess.domain.game.Color;
-import chess.domain.game.Status;
-import chess.domain.game.status.GameStatus;
 
 public class GameDto {
     private final int id;

@@ -14,12 +14,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class GameDao {
 
-    private static final List EMPTY_RESULT =  Collections.EMPTY_LIST;
+    private static final List EMPTY_RESULT = Collections.EMPTY_LIST;
     private final JdbcTemplate jdbcTemplate;
 
     public GameDao(JdbcTemplate jdbcTemplate) {
@@ -61,10 +63,9 @@ public class GameDao {
         final String sql = "select * from game where id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeGameDto(rs), id));
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }

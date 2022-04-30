@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.controller.view.BoardView;
 import chess.dto.LogInDto;
+import chess.dto.PiecesDto;
 import chess.service.ChessGameService;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
@@ -82,7 +83,7 @@ public class ChessController {
 
     private ModelAndView getGameModel(String gameId) {
         ModelAndView modelAndView = new ModelAndView("game");
-        modelAndView.addObject("pieces", BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
+        modelAndView.addObject("pieces", BoardView.of(new PiecesDto(chessGameService.getPieces(gameId))).getBoardView());
         modelAndView.addObject("gameId", gameId);
         modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
         return modelAndView;

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
@@ -34,13 +33,6 @@ public class GameDaoTest {
         assertThat(gameDao.isInId("1234")).isTrue();
     }
 
-    @DisplayName("특정 아이디의 방이 없을 시 isInId가 false를 리턴한다")
-    @Test
-    void isInId() {
-        gameDao.create(LOG_IN_DTO);
-        assertThat(gameDao.isInId("123")).isFalse();
-    }
-
     @DisplayName("게임이 끝나지 않으면 foce_end_flag는 false이다")
     @Test
     void findForceEndFlagById() {
@@ -53,7 +45,8 @@ public class GameDaoTest {
     void findForceEndFlagByIdError() {
         gameDao.create(LOG_IN_DTO);
         assertThatThrownBy(() -> gameDao.findForceEndFlag("124"))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당 제목의 방을 찾을 수 없습니다.");
     }
 
     @DisplayName("findTurn에서 첫 이동불가능한 turn은 black이다")
@@ -94,7 +87,7 @@ public class GameDaoTest {
         gameDao.create(LOG_IN_DTO);
         assertThat(gameDao.isValidPassword(LOG_IN_DTO)).isTrue();
         assertThat(gameDao
-                .isValidPassword(new LogInDto("1234","12345")))
+                .isValidPassword(new LogInDto("1234", "12345")))
                 .isFalse();
     }
 
@@ -102,8 +95,8 @@ public class GameDaoTest {
     @Test
     void findAllGame() {
         gameDao.create(LOG_IN_DTO);
-        gameDao.create(new LogInDto("2","1234"));
-        gameDao.create(new LogInDto("3","1234"));
+        gameDao.create(new LogInDto("2", "1234"));
+        gameDao.create(new LogInDto("3", "1234"));
         assertThat(gameDao.findAllGame().size()).isEqualTo(3);
     }
 }

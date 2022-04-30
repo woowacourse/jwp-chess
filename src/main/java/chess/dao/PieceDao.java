@@ -30,6 +30,18 @@ public class PieceDao {
         );
     }
 
+    public Pieces findAll(String gameId) {
+        final String sql = "select name, color, position from piece where game_id = ?";
+
+        List<Piece> pieces = jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceFactory.of(
+                resultSet.getString("name"),
+                resultSet.getString("color"),
+                resultSet.getString("position")
+        ), gameId);
+
+        return new Pieces(pieces);
+    }
+
     public void updateAll(List<Piece> pieces, String  gameId) {
         final String sql = "UPDATE piece SET position = ? "
                 + "WHERE game_id = ? "
@@ -44,18 +56,6 @@ public class PieceDao {
                     statement.setString(4, piece.getColor().getName());
                 }
         );
-    }
-
-    public Pieces findAll(String gameId) {
-        final String sql = "select name, color, position from piece where game_id = ?";
-
-        List<Piece> pieces = jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceFactory.of(
-                resultSet.getString("name"),
-                resultSet.getString("color"),
-                resultSet.getString("position")
-        ), gameId);
-
-        return new Pieces(pieces);
     }
 
     public void deleteAll(String gameId) {

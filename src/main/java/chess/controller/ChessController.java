@@ -4,19 +4,13 @@ import chess.domain.game.BoardInitializer;
 import chess.domain.game.ChessBoard;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
-import chess.domain.position.Position;
-import chess.dto.GameStatusDto;
-import chess.dto.MoveForm;
 import chess.dto.RequestDto;
-import chess.dto.StatusDto;
 import chess.service.GameService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -56,13 +50,6 @@ public class ChessController {
         return roomView;
     }
 
-    @ResponseBody
-    @PatchMapping("/room/{roomId}/move")
-    public ResponseEntity<GameStatusDto> moveByCommand(@PathVariable("roomId") int id, @RequestBody MoveForm moveForm) {
-        gameService.move(id, Position.of(moveForm.getSource()), Position.of(moveForm.getTarget()));
-        return new ResponseEntity<>(new GameStatusDto(gameService.isEnd(id)), HttpStatus.OK);
-    }
-
     @PostMapping("/room/{roomId}/end")
     public ResponseEntity<Void> endGame(@PathVariable("roomId") int id, @RequestParam("password") String password) {
         if (!gameService.isEnd(id)) {
@@ -74,9 +61,4 @@ public class ChessController {
         return ResponseEntity.ok(null);
     }
 
-    @ResponseBody
-    @GetMapping("/room/{roomId}/status")
-    public StatusDto showStatus(@PathVariable("roomId") int id) {
-        return gameService.status(id);
-    }
 }

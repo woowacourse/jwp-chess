@@ -84,7 +84,6 @@ public class ChessService {
         turn.validateEnd();
 
         if (confirmPassword.equals(storedPassword)) {
-            // 생각해볼 것: 두개가 참조되어 있을 때 뭘 먼저 실행해야할지?
             pieceDao.deleteByGameId(id);
             gameDao.deleteByGameId(id);
             return;

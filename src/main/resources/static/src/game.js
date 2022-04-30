@@ -74,7 +74,7 @@ const movePiece = (id) => {
     })
 }
 
-const clickBLock = (e, block, id) => {
+const clickBLock = async (e, block, id) => {
     if (block.className.includes('click')) {
         block.className = block.className.replace('click', '')
         deleteMovePosition(block.id);
@@ -84,11 +84,17 @@ const clickBLock = (e, block, id) => {
     }
 
     if (isMovePositionAllSelected()) {
-        const response = fetch(`/game/${id}/move`, {
+        const response = await fetch(`/game/${id}/move`, {
             method: "PATCH",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(movePosition),
         });
+
+        if (!response.ok) {
+            alert(await response.text());
+            initTurn();
+            return;
+        }
 
         response.then(data => data.json())
             .then(body => {
@@ -98,9 +104,7 @@ const clickBLock = (e, block, id) => {
             .then(() => {
                 kingDeadEndGame(id);
             })
-            .catch(err => {
-                alert("움직일 수 없는 위치입니다.")
-            })
+
         initTurn();
 
     }

@@ -40,7 +40,7 @@ public class ChessGame {
             board.move(sourcePiece, source, target);
             return;
         }
-        throw new IllegalArgumentException("움직일 수 없습니다.");
+        throw new IllegalArgumentException("움직일 수 없는 위치입니다.");
     }
 
     private boolean canMove(Position sourcePosition, Position targetPosition, Piece sourcePiece, MoveType moveType) {

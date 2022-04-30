@@ -47,18 +47,20 @@ const continueGame = (id) => {
     window.location.href = `${id}`;
 }
 
-const deleteGame = (id) => {
+const deleteGame = async (id) => {
     const password = prompt("삭제하기 위해서는 비밀번호를 입력하세요")
 
-    const response = fetch(`/game/${id}`, {
+    const response = await fetch(`/game/${id}`, {
         method: "DELETE",
         headers: {"Content-Type": "application/json"},
         body: password
     });
 
+    console.log("수정 완료")
+
+    if (!response.ok) {
+        return alert(await response.text())
+    }
+
     response.then(() => getGames())
-        .catch(err => {
-            console.log(err);
-            alert(err)
-        });
 }

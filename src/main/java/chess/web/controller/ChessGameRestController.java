@@ -28,12 +28,12 @@ public class ChessGameRestController {
     }
 
     @GetMapping("/start/{roomId}")
-    public RoomDto start(@PathVariable("roomId") int roomId) {
+    public RoomDto start(@PathVariable int roomId) {
         return service.start(roomId);
     }
 
     @PostMapping("/play/{roomId}")
-    public PlayResultDto play(@PathVariable("roomId") int roomId) {
+    public PlayResultDto play(@PathVariable int roomId) {
         return service.play(roomId);
     }
 
@@ -53,7 +53,7 @@ public class ChessGameRestController {
     }
 
     @DeleteMapping("/room/{roomId}")
-    public DeleteResultDto delete(@PathVariable("roomId") int roomId, @RequestBody DeleteDto deleteDto) {
+    public DeleteResultDto delete(@PathVariable int roomId, @RequestBody DeleteDto deleteDto) {
         return service.delete(roomId, deleteDto);
     }
 }

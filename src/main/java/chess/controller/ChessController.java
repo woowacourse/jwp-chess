@@ -1,11 +1,9 @@
 package chess.controller;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +38,9 @@ public class ChessController {
     }
 
     @GetMapping("/board/{id}")
-    public ResponseEntity<Map<String, String>> getBoard(@PathVariable Integer id) {
+    public Map<String, String> getBoard(@PathVariable Integer id) {
         BoardDto boardDto = chessService.getBoard(id);
-        return ResponseEntity.ok().body(boardDtoToRaw(boardDto));
+        return boardDtoToRaw(boardDto);
     }
 
     private Map<String, String> boardDtoToRaw(BoardDto boardDto) {
@@ -63,11 +61,11 @@ public class ChessController {
     }
 
     @GetMapping("/turn/{id}")
-    public ResponseEntity<Map<String, String>> getTurn(@PathVariable Integer id) {
+    public Map<String, String> getTurn(@PathVariable Integer id) {
         PieceColorDto pieceColorDto = chessService.getCurrentTurn(id);
         Map<String, String> responseValue = new HashMap<>();
         responseValue.put("pieceColor", getColorFromPieceColorDto(pieceColorDto));
-        return ResponseEntity.ok().body(responseValue);
+        return responseValue;
     }
 
     private String getColorFromPieceColorDto(PieceColorDto pieceColorDto) {
@@ -78,20 +76,20 @@ public class ChessController {
     }
 
     @GetMapping("/score/{id}")
-    public ResponseEntity<Map<String, Double>> getScore(@PathVariable Integer id) {
+    public Map<String, Double> getScore(@PathVariable Integer id) {
         ScoreResultDto scoreResultDto = chessService.getScore(id);
         Map<String, Double> responseValue = new HashMap<>();
         responseValue.put("white", scoreResultDto.getWhiteScore());
         responseValue.put("black", scoreResultDto.getBlackScore());
-        return ResponseEntity.ok().body(responseValue);
+        return responseValue;
     }
 
     @GetMapping("/winner/{id}")
-    public ResponseEntity<Map<String, String>> getWinner(@PathVariable Integer id) {
+    public Map<String, String> getWinner(@PathVariable Integer id) {
         PieceColorDto pieceColorDto = chessService.getWinColor(id);
         Map<String, String> responseValue = new HashMap<>();
         responseValue.put("pieceColor", getColorFromPieceColorDto(pieceColorDto));
-        return ResponseEntity.ok().body(responseValue);
+        return responseValue;
     }
 
     @PostMapping("/move/{id}")
@@ -105,19 +103,19 @@ public class ChessController {
 
         return CommandResultDto.of(true, "성공하였습니다.");
     }
-    
+
     @PostMapping("/room")
-    public ResponseEntity<RoomDto> createRoom(@RequestBody CreateRoomDto createRoomDto) {
+    public RoomDto createRoom(@RequestBody CreateRoomDto createRoomDto) {
         String gameName = createRoomDto.getName();
         String gamePassword = createRoomDto.getPassword();
         RoomDto roomDto = new RoomDto(chessService.createGameAndGetId(gameName, gamePassword), gameName);
-        return ResponseEntity.created(URI.create("/room/" + roomDto.getId())).body(roomDto);
+        return roomDto;
     }
 
     @GetMapping("/room")
-    public ResponseEntity<List<RoomDto>> inquireRooms() {
+    public List<RoomDto> inquireRooms() {
         List<RoomDto> rooms = chessService.getRooms();
-        return ResponseEntity.ok().body(rooms);
+        return rooms;
     }
 
     @DeleteMapping("/room")
@@ -134,7 +132,7 @@ public class ChessController {
     }
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-    public ResponseEntity<String> handle(RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public String handle(RuntimeException e) {
+        return e.getMessage();
     }
 }

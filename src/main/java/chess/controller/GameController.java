@@ -7,12 +7,14 @@ import chess.dto.GameDto;
 import chess.dto.MoveRouteDto;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,6 +31,7 @@ public class GameController {
     }
 
     @PostMapping("/new")
+    @ResponseStatus(HttpStatus.CREATED)
     public CreateGameResponse createGame(@RequestBody CreateGameRequest createGameRequest) {
         return chessService.initGame(createGameRequest);
     }
@@ -48,6 +51,7 @@ public class GameController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
     public void delete(@PathVariable int id
             ,@RequestBody DeleteGameRequest deleteGameRequest) {
         chessService.deleteGame(id, deleteGameRequest);

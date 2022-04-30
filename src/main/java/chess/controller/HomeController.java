@@ -3,7 +3,9 @@ package chess.controller;
 import chess.dto.GameCountDto;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,6 +21,7 @@ public class HomeController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
     public ModelAndView home() {
         GameCountDto gameCountDto = chessService.countGames();
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameCountDto);

@@ -1,7 +1,9 @@
 package chess.domain.room;
 
 import chess.domain.ChessGame;
+import chess.domain.GameStatus;
 import chess.domain.chessboard.ChessBoardFactory;
+import chess.domain.chesspiece.Color;
 
 public class Room {
 
@@ -39,5 +41,21 @@ public class Room {
             return true;
         }
         throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+    }
+
+    public String getName() {
+        return name.getValue();
+    }
+
+    public GameStatus getGameStatus() {
+        return chessGame.getGameStatus();
+    }
+
+    public Color getCurrentTurn() {
+        return chessGame.getCurrentTurn();
+    }
+
+    public String getPassword() {
+        return password.getHashPassword();
     }
 }

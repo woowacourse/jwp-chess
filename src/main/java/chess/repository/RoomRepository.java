@@ -55,4 +55,12 @@ public class RoomRepository {
 
         return new Room(roomEntity.toRoomName(), roomEntity.toPassword(), chessGame);
     }
+
+    public int add(final Room room) {
+        final boolean existName = roomDao.isExistName(room.getName());
+        if (existName) {
+            throw new IllegalArgumentException("이름이 같은 방이 이미 존재합니다.");
+        }
+        return roomDao.save(room.getName(), room.getGameStatus(), room.getCurrentTurn(), room.getPassword());
+    }
 }

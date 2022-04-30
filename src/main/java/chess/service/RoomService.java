@@ -2,7 +2,7 @@ package chess.service;
 
 import chess.dao.RoomDao;
 import chess.domain.GameStatus;
-import chess.domain.chesspiece.Color;
+import chess.domain.room.Room;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.CurrentTurnDto;
@@ -33,12 +33,8 @@ public class RoomService {
     }
 
     public int createRoom(final RoomCreationRequestDto dto) {
-        final boolean existName = roomDao.isExistName(dto.getRoomName());
-        if (existName) {
-            throw new IllegalArgumentException("이름이 같은 방이 이미 존재합니다.");
-        }
-        final String hashPassword = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt());
-        return roomDao.save(dto.getRoomName(), GameStatus.READY, Color.WHITE, hashPassword);
+        final Room room = new Room(dto.getRoomName(), dto.getPassword());
+        return roomRepository.add(room);
     }
 
     public void startGame(final int roomId) {

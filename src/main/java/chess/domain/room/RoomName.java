@@ -19,4 +19,8 @@ public class RoomName {
             throw new IllegalArgumentException("방 이름은 최대 " + NAME_MAX_LENGTH + "자 까지 허용됩니다.");
         }
     }
+
+    public String getValue() {
+        return value;
+    }
 }

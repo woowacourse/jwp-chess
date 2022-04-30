@@ -78,4 +78,8 @@ public class ChessBoard {
     public Score calculateScore() {
         return new Score(pieceByPosition);
     }
+
+    public Color getCurrentTurnColor() {
+        return currentTurnColor;
+    }
 }

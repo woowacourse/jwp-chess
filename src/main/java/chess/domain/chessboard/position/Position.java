@@ -19,7 +19,14 @@ public final class Position {
     }
 
     public static Position from(final String position) {
+        validatePositionName(position);
         return new Position(Rank.of(position.charAt(RANK_NAME_INDEX)), File.of(position.charAt(FILE_NAME_INDEX)));
+    }
+
+    private static void validatePositionName(final String position) {
+        if (position.length() != 2) {
+            throw new IllegalArgumentException("[ERROR] 잘못된 값이 입력 되었습니다.");
+        }
     }
 
     public boolean isInBoardAfterMoved(final Direction direction) {

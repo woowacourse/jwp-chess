@@ -11,11 +11,18 @@ public abstract class Running extends Started {
     }
 
     protected void movePiece(String command) {
-        final List<String> option = List.of(command.split(" "));
-        final Position source = Position.from(option.get(1));
-        final Position target = Position.from(option.get(2));
+        final List<String> commandOption = List.of(command.split(" "));
+        validateMoveCommand(commandOption);
+        final Position source = Position.from(commandOption.get(1));
+        final Position target = Position.from(commandOption.get(2));
         checkTurn(source);
         board.move(source, target);
+    }
+
+    private void validateMoveCommand(List<String> commandOption) {
+        if (commandOption.size() != 3 || !Command.MOVE.isUserInput(commandOption.get(0))) {
+            throw new IllegalArgumentException("[ERROR] 잘못된 값이 입력 되었습니다.");
+        }
     }
 
     private void checkTurn(final Position source) {

@@ -18,7 +18,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-class RoomDaoImplTest {
+class RoomDaoTest {
 
     private RoomDao roomDao;
 
@@ -27,7 +27,7 @@ class RoomDaoImplTest {
 
     @BeforeEach
     void setUp() {
-        roomDao = new RoomDaoImpl(jdbcTemplate);
+        roomDao = new RoomDao(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE IF EXISTS room");
         jdbcTemplate.execute(""

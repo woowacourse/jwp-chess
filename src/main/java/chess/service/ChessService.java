@@ -3,15 +3,18 @@ package chess.service;
 import chess.domain.ChessGame;
 import chess.domain.Score;
 import chess.domain.chessboard.ChessBoard;
+import chess.domain.chesspiece.ChessPiece;
 import chess.domain.position.Position;
 import chess.domain.result.EndResult;
 import chess.domain.room.Room;
 import chess.dto.ChessPieceMapper;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.response.ChessPieceDto;
+import chess.exception.NotFoundException;
 import chess.repository.ChessGameRepository;
 import chess.repository.RoomRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +32,11 @@ public class ChessService {
     public List<ChessPieceDto> findAllPiece(final int roomId) {
         final ChessGame chessGame = chessGameRepository.get(roomId);
         final ChessBoard chessBoard = chessGame.getChessBoard();
-        return chessBoard.findAllPiece()
+        final Map<Position, ChessPiece> pieceByPosition = chessBoard.findAllPiece();
+        if (pieceByPosition.isEmpty()) {
+            throw new NotFoundException("기물이 존재하지 않습니다.");
+        }
+        return pieceByPosition
                 .entrySet()
                 .stream()
                 .map(it -> ChessPieceDto.of(

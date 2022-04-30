@@ -37,7 +37,9 @@ public class ChessGame {
 
     public void start() {
         gameStatus.checkReady();
-        chessBoard = ChessBoardFactory.createChessBoard();
+        if (chessBoard.findAllPiece().isEmpty()) {
+            chessBoard = ChessBoardFactory.createChessBoard();
+        }
         gameStatus = GameStatus.PLAYING;
     }
 

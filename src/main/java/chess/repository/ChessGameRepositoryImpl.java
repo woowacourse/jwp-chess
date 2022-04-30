@@ -7,8 +7,6 @@ import chess.domain.chessboard.ChessBoard;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.position.Position;
 import chess.entity.ChessPieceEntity;
-import chess.exception.NotFoundException;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -26,11 +24,7 @@ public class ChessGameRepositoryImpl implements ChessGameRepository {
 
     @Override
     public ChessGame get(final int roomId) {
-        final List<ChessPieceEntity> chessPieceEntities = chessPieceDao.findAllEntityByRoomId(roomId);
-        if (chessPieceEntities.isEmpty()) {
-            throw new NotFoundException("기물이 존재하지 않습니다.");
-        }
-        final Map<Position, ChessPiece> pieceByPosition = chessPieceEntities
+        final Map<Position, ChessPiece> pieceByPosition = chessPieceDao.findAllEntityByRoomId(roomId)
                 .stream()
                 .collect(Collectors.toMap(
                         ChessPieceEntity::toPosition,

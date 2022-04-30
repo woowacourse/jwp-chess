@@ -1,22 +1,22 @@
 package chess;
 
-import chess.dao.ChessPieceDao;
-import chess.dao.RoomDao;
+import chess.repository.ChessGameRepository;
+import chess.repository.RoomRepository;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import util.FakeChessPieceDao;
-import util.FakeRoomDao;
+import util.FakeChessGameRepository;
+import util.FakeRoomRepository;
 
 @TestConfiguration
 public class TestConfig {
 
     @Bean
-    RoomDao roomDao() {
-        return new FakeRoomDao();
+    RoomRepository roomRepository() {
+        return new FakeRoomRepository();
     }
 
     @Bean
-    ChessPieceDao chessPieceDao() {
-        return new FakeChessPieceDao();
+    ChessGameRepository chessGameRepository() {
+        return new FakeChessGameRepository();
     }
 }

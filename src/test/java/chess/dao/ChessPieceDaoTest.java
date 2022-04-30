@@ -22,7 +22,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
-class ChessPieceDaoImplTest {
+class ChessPieceDaoTest {
 
     private ChessPieceDao chessPieceDao;
     private RoomDao roomDao;
@@ -32,7 +32,7 @@ class ChessPieceDaoImplTest {
 
     @BeforeEach
     void setUp() {
-        roomDao = new RoomDaoImpl(jdbcTemplate);
+        roomDao = new RoomDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS room");
         jdbcTemplate.execute(""
                 + "CREATE TABLE room"
@@ -44,7 +44,7 @@ class ChessPieceDaoImplTest {
                 + "    password     VARCHAR(255) NOT NULL"
                 + ")");
 
-        chessPieceDao = new ChessPieceDaoImpl(jdbcTemplate);
+        chessPieceDao = new ChessPieceDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS chess_piece");
         jdbcTemplate.execute(""
                 + "CREATE TABLE chess_piece"

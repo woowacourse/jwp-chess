@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.dto.response.EnterGameDto;
+import chess.exception.InvalidAccessException;
 import chess.service.fixture.GameDaoStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -70,7 +71,7 @@ class AuthServiceTest {
         void 입력된_비밀번호가_두_플레이어의_비밀번호와_일치하지_않으면_예외발생() {
             assertThatThrownBy(() -> service.loginOrSignUpAsOpponent(
                     4, new EncryptedAuthCredentials("참여자가_있는_게임", "wrong!")))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("잘못된 비밀번호를 입력하였습니다.");
         }
     }

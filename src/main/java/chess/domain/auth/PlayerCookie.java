@@ -1,6 +1,8 @@
 package chess.domain.auth;
 
 import chess.domain.board.piece.Color;
+import chess.exception.InvalidAccessException;
+import chess.exception.InvalidStatus;
 import chess.util.CookieUtil;
 import javax.servlet.http.Cookie;
 
@@ -23,7 +25,7 @@ public class PlayerCookie {
         if (CookieUtil.validate(value, id, Color.BLACK)) {
             return Color.BLACK;
         }
-        throw new IllegalArgumentException("해당 게임의 플레이어가 아닙니다.");
+        throw new InvalidAccessException(InvalidStatus.INVALID_COOKIE);
     }
 
     @Override

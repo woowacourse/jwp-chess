@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.board.piece.Color;
+import chess.exception.InvalidAccessException;
 import chess.util.CookieUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -41,7 +42,7 @@ class PlayerCookieTest {
         @Test
         void 게임의_id값이_잘못된_경우_예외발생() {
            assertThatThrownBy(() -> whiteCookie.parsePlayerColorBy(INVALID_GAME_ID))
-                   .isInstanceOf(IllegalArgumentException.class)
+                   .isInstanceOf(InvalidAccessException.class)
                    .hasMessage("해당 게임의 플레이어가 아닙니다.");
         }
     }
@@ -50,7 +51,7 @@ class PlayerCookieTest {
     void nullCookie는_parsePlayerColorBy_메서드_호출시_예외발생() {
         PlayerCookie cookie = new NullCookie();
         assertThatThrownBy(() -> cookie.parsePlayerColorBy(INVALID_GAME_ID))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidAccessException.class)
                 .hasMessage("로그인이 필요합니다.");
     }
 }

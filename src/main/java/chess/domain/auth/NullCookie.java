@@ -1,6 +1,8 @@
 package chess.domain.auth;
 
 import chess.domain.board.piece.Color;
+import chess.exception.InvalidAccessException;
+import chess.exception.InvalidStatus;
 
 public class NullCookie extends PlayerCookie {
 
@@ -10,7 +12,7 @@ public class NullCookie extends PlayerCookie {
 
     @Override
     public Color parsePlayerColorBy(int id) {
-        throw new IllegalArgumentException("로그인이 필요합니다.");
+        throw new InvalidAccessException(InvalidStatus.COOKIE_NOT_FOUND);
     }
 
     @Override

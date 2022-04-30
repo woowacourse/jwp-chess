@@ -16,6 +16,8 @@ import chess.dto.view.GameCountDto;
 import chess.dto.view.GameOverviewDto;
 import chess.dto.view.GameResultDto;
 import chess.entity.GameEntity;
+import chess.exception.InvalidAccessException;
+import chess.exception.InvalidStatus;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -23,8 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessService {
-
-    private static final String GAME_NOT_OVER_EXCEPTION_MESSAGE = "아직 게임 결과가 산출되지 않았습니다.";
 
     private final GameDao gameDao;
     private final EventDao eventDao;
@@ -77,7 +77,7 @@ public class ChessService {
         Game game = currentSnapShotOf(gameId);
 
         validateTurn(gameId, cookie, game);
-        game =  game.play(moveEvent);
+        game = game.play(moveEvent);
 
         eventDao.save(gameId, moveEvent);
         finishGameOnEnd(gameId, game);
@@ -86,7 +86,7 @@ public class ChessService {
     private void validateTurn(int gameId, PlayerCookie cookie, Game game) {
         Color playerColor = cookie.parsePlayerColorBy(gameId);
         if (!game.isValidTurn(playerColor)) {
-            throw new IllegalArgumentException("상대방이 움직일 차례입니다!");
+            throw new InvalidAccessException(InvalidStatus.INVALID_TURN);
         }
     }
 
@@ -115,13 +115,13 @@ public class ChessService {
 
     private void validateGameInit(List<Event> events) {
         if (events.isEmpty()) {
-            throw new IllegalArgumentException("존재하지 않는 게임입니다.");
+            throw new InvalidAccessException(InvalidStatus.GAME_NOT_FOUND);
         }
     }
 
     private void validateGameOver(Game game) {
         if (!game.isEnd()) {
-            throw new IllegalArgumentException(GAME_NOT_OVER_EXCEPTION_MESSAGE);
+            throw new InvalidAccessException(InvalidStatus.GAME_NOT_OVER);
         }
     }
 }

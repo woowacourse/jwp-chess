@@ -18,6 +18,7 @@ import chess.dto.view.GameCountDto;
 import chess.dto.view.GameOverviewDto;
 import chess.dto.view.GameResultDto;
 import chess.dto.view.GameSnapshotDto;
+import chess.exception.InvalidAccessException;
 import chess.service.fixture.EventDaoStub;
 import chess.service.fixture.GameDaoStub;
 import chess.util.CookieUtil;
@@ -94,7 +95,7 @@ class ChessServiceTest {
         @Test
         void 게임이_종료되지_않은_경우_예외_발생() {
             assertThatThrownBy(() -> service.findGameResult(1))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("아직 게임 결과가 산출되지 않았습니다.");
         }
     }
@@ -170,7 +171,7 @@ class ChessServiceTest {
         void 존재하지_않는_게임인_경우_예외를_발생시킨다() {
             assertThatThrownBy(() -> service.playGame(999999, new MoveEvent("b5 e8"),
                     getPlayerCookieOf(999999, Color.WHITE)))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("존재하지 않는 게임입니다.");
         }
     }
@@ -183,7 +184,7 @@ class ChessServiceTest {
         void 다른_게임과_관련된_쿠키값인_경우_예외를_발생시킨다() {
             assertThatThrownBy(() ->  service.playGame(1, GAME_ONE_VALID_BLACK_MOVE,
                     getPlayerCookieOf(99999, Color.BLACK)))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("해당 게임의 플레이어가 아닙니다.");
         }
 
@@ -191,7 +192,7 @@ class ChessServiceTest {
         void 본인의_차례가_아닌_플레이어의_쿠키값의_경우_예외를_발생시킨다() {
             assertThatThrownBy(() ->  service.playGame(1, GAME_ONE_VALID_BLACK_MOVE,
                     getPlayerCookieOf(1, Color.WHITE)))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("상대방이 움직일 차례입니다!");
         }
     }

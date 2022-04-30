@@ -16,6 +16,7 @@ public class HashUtils {
 
     private static final SecretKeyFactory hashFactory;
 
+    // TODO: 수정
     static {
         try {
             hashFactory = SecretKeyFactory.getInstance(HASH_ALGORITHM);

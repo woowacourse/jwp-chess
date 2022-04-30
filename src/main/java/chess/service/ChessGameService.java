@@ -81,7 +81,7 @@ public class ChessGameService {
     }
 
     public List<Room> getRooms() {
-        return gameDao.findAllGame();
+        return gameDao.findAllRoom();
     }
 
     public void changeToEnd(String gameId) {
@@ -89,7 +89,7 @@ public class ChessGameService {
     }
 
     public void validateEnd(String gameId) {
-        if (!gameDao.findForceEndFlag(gameId)) {
+        if (!gameDao.findNoPasswordRoom(gameId).isEnd()) {
             throw new IllegalArgumentException(PLAYING_CHESS_ERROR_MESSAGE);
         }
     }

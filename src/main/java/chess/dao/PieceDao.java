@@ -32,13 +32,11 @@ public class PieceDao {
     public Pieces findAll(String gameId) {
         final String sql = "select name, color, position from piece where game_id = ?";
 
-        List<Piece> pieces = jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceFactory.of(
+        return new Pieces(jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceFactory.of(
                 resultSet.getString("name"),
                 resultSet.getString("color"),
                 resultSet.getString("position")
-        ), gameId);
-
-        return new Pieces(pieces);
+        ), gameId));
     }
 
     public void updateAll(List<Piece> pieces, String gameId) {

@@ -6,14 +6,12 @@ import chess.dto.LogInDto;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class GameDao {
 
     private static final String NO_GAME_ERROR_MESSAGE = "해당 제목의 방을 찾을 수 없습니다.";
-    private static final String ALL_NO_ROOM_ERROR_MESSAGE = "현재 방이 없습니다.";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -54,37 +52,14 @@ public class GameDao {
         }
     }
 
-    public boolean findForceEndFlag(String gameId) {
-        final String sql = "select force_end_flag from game where id = ?";
-        try {
-            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, gameId));
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException(NO_GAME_ERROR_MESSAGE);
-        }
-    }
-
-    public Color findTurn(String gameId) {
-        final String sql = "select turn from game where id = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                    Color.of(resultSet.getString("turn")), gameId);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException(NO_GAME_ERROR_MESSAGE);
-        }
-    }
-
-    public List<Room> findAllGame() {
+    public List<Room> findAllRoom() {
         final String sql = "select * from game";
-        try {
-            return jdbcTemplate.query(sql, (rs, rowNum) -> new Room(
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new Room(
                     rs.getString("id"),
                     rs.getString("password"),
                     Color.of(rs.getString("turn")),
                     rs.getBoolean("force_end_flag")
             ));
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException(ALL_NO_ROOM_ERROR_MESSAGE);
-        }
     }
 
     public void updateTurn(Color nextTurn, String gameId) {

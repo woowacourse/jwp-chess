@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -46,14 +47,7 @@ public class RoomDaoImpl implements RoomDao {
     public Optional<Room> findById(long id) {
         String sql = "select * from room where id = ?";
         try {
-            Room room = jdbcTemplate.queryForObject(sql,
-                    (rs, rowNum) ->
-                            new Room(
-                                    rs.getLong("id"),
-                                    rs.getString("turn"),
-                                    rs.getString("name"),
-                                    rs.getString("password")),
-                    id);
+            Room room = jdbcTemplate.queryForObject(sql, rowMapper(), id);
             return Optional.ofNullable(room);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -63,16 +57,7 @@ public class RoomDaoImpl implements RoomDao {
     @Override
     public List<Room> findAll() {
         String sql = "select * from room";
-        return jdbcTemplate.query(
-                sql,
-                (rs, rowNum) ->
-                        new Room(
-                                rs.getLong("id"),
-                                rs.getString("turn"),
-                                rs.getString("name"),
-                                rs.getString("password")
-                        )
-        );
+        return jdbcTemplate.query(sql, rowMapper());
     }
 
     @Override
@@ -85,5 +70,14 @@ public class RoomDaoImpl implements RoomDao {
     public void deleteRoom(long id) {
         String sql = "delete from room where id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    private RowMapper<Room> rowMapper() {
+        return (rs, rowNum) ->
+                new Room(
+                        rs.getLong("id"),
+                        rs.getString("turn"),
+                        rs.getString("name"),
+                        rs.getString("password"));
     }
 }

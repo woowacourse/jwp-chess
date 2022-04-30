@@ -65,7 +65,7 @@ public class SpringWebChessController {
     }
 
     @DeleteMapping("/delete/{gameId}")
-    public String delete(@PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto) throws IllegalArgumentException {
+    public String delete(@PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto) throws IllegalArgumentException, SQLException {
         chessService.deleteGame(gameId, removeRequestDto.getPassword());
         return "lobby";
     }

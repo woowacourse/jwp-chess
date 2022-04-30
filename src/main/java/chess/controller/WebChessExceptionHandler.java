@@ -14,9 +14,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class WebChessExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
-    protected ResponseEntity<Object> handleConflict(
-            RuntimeException e
-    ) {
+    private ResponseEntity<Object> handleConflict(RuntimeException e) {
+        e.printStackTrace();
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseDto(e.getMessage()));

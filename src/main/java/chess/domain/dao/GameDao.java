@@ -40,7 +40,6 @@ public class GameDao {
             }, keyHolder);
             return keyHolder.getKey().intValue();
         } catch (Exception exception) {
-            exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
@@ -51,7 +50,7 @@ public class GameDao {
             return jdbcTemplate.query(sql, (rs, rowNum) -> makeGameDto(rs));
         } catch (EmptyResultDataAccessException noResult) {
             return null;
-        } catch (Exception e) {
+        } catch (Exception exception) {
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
@@ -64,7 +63,6 @@ public class GameDao {
         } catch (EmptyResultDataAccessException exception) {
             return null;
         } catch (Exception exception) {
-            exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
@@ -113,7 +111,6 @@ public class GameDao {
             jdbcTemplate.update(sql);
             jdbcTemplate.update("alter table Game alter column id restart with 1");
         } catch (Exception exception) {
-            exception.printStackTrace();
             throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
         }
     }

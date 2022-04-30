@@ -23,7 +23,7 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
 
     private final MemberDao<Member> memberDao;
 
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public WebChessBoardDao(MemberDao<Member> memberDao,
                             NamedParameterJdbcTemplate jdbcTemplate) {

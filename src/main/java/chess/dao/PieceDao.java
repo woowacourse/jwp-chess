@@ -7,7 +7,6 @@ import chess.domain.board.Row;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -66,11 +65,7 @@ public class PieceDao {
     public List<PieceResponse> findAll(Long gameId) {
         String sql = "SELECT * FROM piece WHERE game_id = :game_id";
         SqlParameterSource namedParameters = new MapSqlParameterSource("game_id", gameId);
-        try {
-            return namedParameterJdbcTemplate.query(sql, namedParameters, pieceResponseRowMapper);
-        } catch (EmptyResultDataAccessException e) {
-            return Collections.emptyList();
-        }
+        return namedParameterJdbcTemplate.query(sql, namedParameters, pieceResponseRowMapper);
     }
 
     private Position parseStringToPosition(String rawPosition) {

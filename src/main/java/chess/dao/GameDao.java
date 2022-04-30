@@ -5,6 +5,7 @@ import chess.domain.GameState;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -26,12 +27,16 @@ public class GameDao {
     }
 
     public Long save(String name, String password, String salt, GameState state) {
-        SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("name", name)
-                .addValue("password", password)
-                .addValue("salt", salt)
-                .addValue("state", state);
-        return insertGame.executeAndReturnKey(parameters).longValue();
+        try {
+            SqlParameterSource parameters = new MapSqlParameterSource()
+                    .addValue("name", name)
+                    .addValue("password", password)
+                    .addValue("salt", salt)
+                    .addValue("state", state);
+            return insertGame.executeAndReturnKey(parameters).longValue();
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateKeyException("이미 존재하는 게임입니다.");
+        }
     }
 
     public List<GameIdentifiers> findAllGames() {

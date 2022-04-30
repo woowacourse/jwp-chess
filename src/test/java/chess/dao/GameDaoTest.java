@@ -113,6 +113,7 @@ public class GameDaoTest {
     void duplicated_Name() {
         gameDao.save("game", "password", "salt", GameState.READY);
         assertThatThrownBy(() -> gameDao.save("game", "password", "salt", GameState.READY))
-                .isInstanceOf(DuplicateKeyException.class);
+                .isInstanceOf(DuplicateKeyException.class)
+                .hasMessage("이미 존재하는 게임입니다.");
     }
 }

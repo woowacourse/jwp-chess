@@ -22,7 +22,7 @@ public class ChessExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateKeyException.class)
-    public ResponseEntity<ErrorResponse> handleCreateGameAlreadyExistingRequest() {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("이미 존재하는 게임입니다."));
+    public ResponseEntity<ErrorResponse> handleCreateGameAlreadyExistingRequest(DuplicateKeyException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage()));
     }
 }

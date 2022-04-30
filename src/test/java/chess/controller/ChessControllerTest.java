@@ -110,7 +110,8 @@ class ChessControllerTest {
                 .body(CREAT_GAME_REQUEST)
                 .when().post("/games")
                 .then().log().all()
-                .statusCode(HttpStatus.CONFLICT.value());
+                .statusCode(HttpStatus.CONFLICT.value())
+                .body("message", Matchers.equalTo("이미 존재하는 게임입니다."));
     }
 
     @DisplayName("PATCH - 게임 시작 테스트")

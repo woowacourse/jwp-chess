@@ -2,9 +2,12 @@ package chess.domain.auth;
 
 import static chess.util.HashUtils.hash;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import java.util.Map;
 import org.springframework.boot.json.BasicJsonParser;
 
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class AuthCredentials {
 
     private static final BasicJsonParser jsonParser = new BasicJsonParser();
@@ -12,7 +15,7 @@ public class AuthCredentials {
     private final String name;
     private final String password;
 
-    private AuthCredentials(String name, String password) {
+    public AuthCredentials(String name, String password) {
         this.name = name;
         this.password = password;
     }

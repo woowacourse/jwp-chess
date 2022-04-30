@@ -16,7 +16,6 @@ public class GameDaoStub extends GameDao {
     public static final int TOTAL_GAME_COUNT = 5;
     public static final int RUNNING_GAME_COUNT = 4;
 
-    private int autoIncrementId = 3;
     private final Map<Integer, GameFullEntity> repository = new HashMap<>() {{
         put(1, new GameFullEntity(1, "진행중인_게임", "encrypted1", "enemy1", true));
         put(2, new GameFullEntity(2, "이미_존재하는_게임명", "encrypted2", "enemy2", true));
@@ -24,6 +23,7 @@ public class GameDaoStub extends GameDao {
         put(4, new GameFullEntity(4, "참여자가_있는_게임", "encrypted4", "enemy4", true));
         put(5, new GameFullEntity(5, "참여자가_없는_게임", "encrypted5", true));
     }};
+    private int autoIncrementId = repository.size();
 
     public GameDaoStub() {
         super(null);

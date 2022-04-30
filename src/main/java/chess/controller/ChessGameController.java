@@ -66,9 +66,8 @@ public class ChessGameController {
         return "redirect:/game/" + gameId;
     }
 
-    @DeleteMapping("/{gameId}/exit")
-    public String exitAndDeleteGame(@PathVariable long gameId) {
-        chessGameService.cleanGame(gameId);
+    @DeleteMapping("/")
+    public String exitGame() {
         return "redirect:/";
     }
 

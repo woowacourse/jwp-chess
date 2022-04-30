@@ -31,7 +31,7 @@ public class GameWaitingRoomController {
         return getModelAndView(gameMessage);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/")
     public String deleteGame(@ModelAttribute GameRoomDto gameRoomDto) {
         chessGameService.cleanGameByIdAndPassword(gameRoomDto.getId(), gameRoomDto.getPassword());
         return "redirect:/";

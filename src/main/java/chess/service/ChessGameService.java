@@ -57,11 +57,6 @@ public class ChessGameService {
         return GameResultDto.toDto(gameResult);
     }
 
-    public void cleanGame(long gameId) {
-        pieceDao.deleteAllByGameId(gameId);
-        gameDao.deleteById(gameId);
-    }
-
     public void move(long gameId, MoveCommandDto moveCommandDto) {
         String from = moveCommandDto.getSource();
         String to = moveCommandDto.getTarget();
@@ -89,7 +84,7 @@ public class ChessGameService {
     public void cleanGameByIdAndPassword(long id, String password) {
         Room room = gameDao.findRoomById(id);
         room.validateDeletable(password);
-        cleanGame(id);
+        gameDao.deleteById(id);
     }
 
 }

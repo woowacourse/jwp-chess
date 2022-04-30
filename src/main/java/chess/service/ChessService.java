@@ -128,14 +128,7 @@ public class ChessService {
     @Transactional(readOnly = true)
     public RoomsResponseDto findRooms() {
         final List<RoomEntity> rooms = roomRepository.findRooms();
-        validateFindRooms(rooms);
         return RoomsResponseDto.of(rooms);
-    }
-
-    private void validateFindRooms(final List<RoomEntity> rooms) {
-        if (rooms.isEmpty()) {
-            throw new IllegalStateException("[INFO] 현재 진행 중인 방이 없습니다. 방을 생성해주세요.");
-        }
     }
 
     public void endRoom(final Long id) {

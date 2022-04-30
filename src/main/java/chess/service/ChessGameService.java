@@ -11,12 +11,15 @@ import chess.dto.GameResultDto;
 import chess.dto.LogInDto;
 import chess.dto.MoveDto;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameService {
     private static final String PLAYING_CHESS_ERROR_MESSAGE = "진행중인 체스방은 삭제할 수 없습니다.";
     private static final String ALREADY_ROOM_ID_EXIST_ERROR_MESSAGE = "이미 해당 이름의 방이 있습니다.";
+    private static final String LOGIN_FORMAT_ERROR_MESSAGE = "방 제목, 패스워드는 한글,영어,숫자 이외엔 들어올 수 없습니다.";
+    private static final Pattern logInPattern = Pattern.compile("^[a-zA-Z가-힣ㄱ-ㅎ0-9]*$");
 
     private final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
 
@@ -30,8 +33,16 @@ public class ChessGameService {
 
     public void createGame(LogInDto logInDto) {
         validateUniqueId(logInDto);
+        validateLogInFormat(logInDto.getId());
+        validateLogInFormat(logInDto.getPassword());
         gameDao.create(logInDto);
         pieceDao.createAll(chessmenInitializer.init(), logInDto.getId());
+    }
+
+    private void validateLogInFormat(String id) {
+        if(!logInPattern.matcher(id).matches()) {
+            throw new IllegalArgumentException(LOGIN_FORMAT_ERROR_MESSAGE);
+        }
     }
 
     public void validateLogIn(LogInDto logInDto) {

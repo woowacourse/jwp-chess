@@ -4,11 +4,11 @@ import chess.domain.GameState;
 
 public class GameEntity {
 
-    private Long id;
-    private String name;
-    private String password;
-    private String salt;
-    private GameState state;
+    private final Long id;
+    private final String name;
+    private final String password;
+    private final String salt;
+    private final GameState state;
 
     public GameEntity(Long id, String name, String password, String salt, GameState state) {
         this.id = id;
@@ -36,25 +36,5 @@ public class GameEntity {
 
     public GameState getState() {
         return state;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public void setState(GameState state) {
-        this.state = state;
     }
 }

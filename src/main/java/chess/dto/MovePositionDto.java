@@ -2,14 +2,18 @@ package chess.dto;
 
 public class MovePositionDto {
 
-    private final String roomName;
+    private final long roomId;
     private final String current;
     private final String destination;
 
-    public MovePositionDto(String chessGameName, String current, String destination) {
-        this.roomName = chessGameName;
+    public MovePositionDto(long roomId, String current, String destination) {
+        this.roomId = roomId;
         this.current = current;
         this.destination = destination;
+    }
+
+    public long getRoomId() {
+        return roomId;
     }
 
     public String getCurrent() {
@@ -18,9 +22,5 @@ public class MovePositionDto {
 
     public String getDestination() {
         return destination;
-    }
-
-    public String getRoomName() {
-        return roomName;
     }
 }

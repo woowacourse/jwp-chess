@@ -3,61 +3,52 @@ package chess.domain;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChessMap {
 
-    private static final char BLANK = '.';
-    private static final int CHESS_LENGTH = 8;
+    private final Map<String, Character> chessMap;
 
-    private final char[][] chessMap;
-
-    private ChessMap(char[][] chessMap) {
+    private ChessMap(Map<String, Character> chessMap) {
         this.chessMap = chessMap;
     }
 
     public static ChessMap of(final List<Piece> whitePieces, final List<Piece> blackPieces) {
-        final char[][] chessMap = initializeChessMap();
+        final Map<String, Character> chessMap = new HashMap<>();
 
-        markWhitePieces(chessMap, whitePieces);
-        markBlackPieces(chessMap, blackPieces);
+        chessMap.putAll(markWhitePieces(whitePieces));
+        chessMap.putAll(markBlackPieces(blackPieces));
 
         return new ChessMap(chessMap);
     }
 
-    private static char[][] initializeChessMap() {
-        char[][] chessMap = new char[CHESS_LENGTH][CHESS_LENGTH];
-        for (int rank = 0; rank < CHESS_LENGTH; rank++) {
-            markBlank(chessMap, rank);
-        }
-        return chessMap;
-    }
-
-    private static void markBlank(char[][] chessMap, int rank) {
-        for (int file = 0; file < CHESS_LENGTH; file++) {
-            chessMap[rank][file] = BLANK;
-        }
-    }
-
-    private static void markWhitePieces(final char[][] chessMap, final List<Piece> whitePieces) {
+    private static Map<String, Character> markWhitePieces(final List<Piece> whitePieces) {
+        Map<String, Character> pieces = new HashMap<>();
         for (Piece piece : whitePieces) {
             final Position position = piece.getPosition();
-            final int rank = 8 - position.getRank().getValue();
-            final int file = position.getFile().getValue() - 'a';
-            chessMap[rank][file] = Character.toLowerCase(piece.getName());
+            final String rank = position.getRank().convertedValue();
+            final String file = position.getFile().convertedValue();
+            final String positionName = file + rank;
+            pieces.put(positionName, Character.toLowerCase(piece.getName()));
         }
+        return pieces;
     }
 
-    private static void markBlackPieces(final char[][] chessMap, final List<Piece> blackPieces) {
+    private static Map<String, Character> markBlackPieces(final List<Piece> blackPieces) {
+        Map<String, Character> pieces = new HashMap<>();
         for (Piece piece : blackPieces) {
             final Position position = piece.getPosition();
-            final int rank = 8 - position.getRank().getValue();
-            final int file = position.getFile().getValue() - 'a';
-            chessMap[rank][file] = piece.getName();
+            final String rank = position.getRank().convertedValue();
+            final String file = position.getFile().convertedValue();
+            final String positionName = file + rank;
+            pieces.put(positionName, piece.getName());
         }
+        return pieces;
     }
 
-    public char[][] getChessMap() {
+    public Map<String, Character> getChessMap() {
         return chessMap;
     }
 }

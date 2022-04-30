@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.dto.ChessGameDto;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,10 +25,13 @@ public class ViewController {
     }
 
     @GetMapping("/game/{roomId}")
-    public String moveGameRoom(@PathVariable long roomId, HttpSession session) {
+    public String moveGameRoom(@PathVariable long roomId, Model model) {
         chessGameService.checkRoomExist(roomId);
-
-        session.setAttribute("roomId", roomId);
+        final ChessGameDto chessGame = chessGameService.loadRoom(roomId);
+        model.addAttribute("roomId", chessGame.getRoomId());
+        model.addAttribute("roomName", chessGame.getRoomName());
+        model.addAttribute("chessMap", chessGame.getChessMap());
+        model.addAttribute("turn", chessGame.getTurn());
         return "game";
     }
 

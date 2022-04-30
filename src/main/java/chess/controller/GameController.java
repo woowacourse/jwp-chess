@@ -35,16 +35,9 @@ public class GameController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/game/load")
-    public ResponseEntity<ChessGameDto> loadGame(HttpSession session) {
-        long roomId = (long) session.getAttribute("roomId");
-        final ChessGameDto loadChessGame = chessGameService.loadRoom(roomId);
-        return ResponseEntity.ok(loadChessGame);
-    }
-
     @PutMapping("/move")
-    public ResponseEntity<ChessGameDto> move(@RequestBody MovePositionDto movePositionDto, HttpSession session) {
-        final long roomId = (long) session.getAttribute("roomId");
+    public ResponseEntity<ChessGameDto> move(@RequestBody MovePositionDto movePositionDto) {
+        final long roomId = movePositionDto.getRoomId();
         final String currentPosition = movePositionDto.getCurrent();
         final String destinationPosition = movePositionDto.getDestination();
         final ChessGameDto chessGame = chessGameService.move(roomId, currentPosition, destinationPosition);

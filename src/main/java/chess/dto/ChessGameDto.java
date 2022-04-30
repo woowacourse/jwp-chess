@@ -4,15 +4,17 @@ import chess.domain.ChessGame;
 import chess.domain.ChessMap;
 import chess.domain.player.Team;
 
+import java.util.Map;
+
 public class ChessGameDto {
 
     private final long roomId;
     private final String roomName;
-    private final char[][] chessMap;
+    private final Map<String, Character> chessMap;
     private final String turn;
     private final boolean isRunning;
 
-    public ChessGameDto(long roomId, String roomName, char[][] chessMap, String turn, boolean isRunning) {
+    public ChessGameDto(long roomId, String roomName, Map<String, Character> chessMap, String turn, boolean isRunning) {
         this.roomId = roomId;
         this.roomName = roomName;
         this.chessMap = chessMap;
@@ -42,7 +44,7 @@ public class ChessGameDto {
         return roomName;
     }
 
-    public char[][] getChessMap() {
+    public Map<String, Character> getChessMap() {
         return chessMap;
     }
 

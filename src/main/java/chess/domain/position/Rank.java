@@ -45,6 +45,10 @@ public enum Rank {
         return value;
     }
 
+    public String convertedValue() {
+        return String.valueOf(value);
+    }
+
     public int subtract(Rank rank) {
         return rank.getValue() - this.value;
     }

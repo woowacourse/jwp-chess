@@ -37,6 +37,10 @@ public enum File {
         return value;
     }
 
+    public String convertedValue() {
+        return String.valueOf(value);
+    }
+
     public int subtract(File file) {
         return file.getValue() - this.value;
     }

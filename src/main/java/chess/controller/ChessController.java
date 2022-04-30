@@ -9,17 +9,16 @@ import chess.service.dto.ScoresDto;
 import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/chess-game")
 public class ChessController {
 
@@ -31,33 +30,33 @@ public class ChessController {
     }
 
     @GetMapping("/load/{id}")
-    public ResponseEntity<ChessResponseDto> loadRoom(@PathVariable int id) {
-        return ResponseEntity.ok().body(chessService.getChess(id));
+    public ChessResponseDto loadRoom(@PathVariable int id) {
+        return chessService.getChess(id);
     }
 
     @GetMapping("/load")
-    public ResponseEntity<List<GameDto>> loadRooms() {
-        return ResponseEntity.ok().body(chessService.getChesses());
+    public List<GameDto> loadRooms() {
+        return chessService.getChesses();
     }
 
     @PostMapping(value = "/start", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> start(@RequestBody ChessRequestDto chessRequestDto) {
-        return ResponseEntity.ok().body(chessService.start(chessRequestDto));
+    public int start(@RequestBody ChessRequestDto chessRequestDto) {
+        return chessService.start(chessRequestDto);
     }
 
     @GetMapping("/score/{id}")
-    public ResponseEntity<ScoresDto> score(@PathVariable int id) {
-        return ResponseEntity.ok().body(chessService.getScore(id));
+    public ScoresDto score(@PathVariable int id) {
+        return chessService.getScore(id);
     }
 
     @PostMapping(value = "/move/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChessResponseDto> move(@PathVariable int id, @RequestBody MoveCommandDto moveCommandDto) {
+    public ChessResponseDto move(@PathVariable int id, @RequestBody MoveCommandDto moveCommandDto) {
         MoveCommand moveCommand = moveCommandDto.toEntity();
-        return ResponseEntity.ok().body(chessService.movePiece(id, moveCommand));
+        return chessService.movePiece(id, moveCommand);
     }
 
     @PostMapping("/end/{id}")
-    public ResponseEntity<ScoresDto> end(@PathVariable int id) {
-        return ResponseEntity.ok().body(chessService.finishGame(id));
+    public ScoresDto end(@PathVariable int id) {
+        return chessService.finishGame(id);
     }
 }

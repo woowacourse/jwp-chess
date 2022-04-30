@@ -1,4 +1,4 @@
-create table Game
+create table game
 (
     id       int         not null auto_increment primary key,
     title    varchar(45) not null,
@@ -12,6 +12,6 @@ create table piece
     piece_type varchar(1) not null,
     position   varchar(2) not null,
     color      varchar(5) not null,
-    foreign key (game_id) references Game(id) on delete cascade
+    foreign key (game_id) references game(id) on delete cascade
 );
 

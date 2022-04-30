@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import chess.config.MockMvcConfig;
 import chess.domain.board.BoardFactory;
 import chess.domain.game.Score;
-import chess.dto.BoardsDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomAccessRequestDto;
 import chess.dto.request.RoomRequestDto;

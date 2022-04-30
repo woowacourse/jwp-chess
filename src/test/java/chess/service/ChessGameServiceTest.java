@@ -60,7 +60,7 @@ public class ChessGameServiceTest {
 
         assertThat(actual).isEqualTo(1L);
     }
-    
+
     @DisplayName("PiecesDto를 반환한다.")
     @Test
     public void getCurrentGame() {

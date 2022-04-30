@@ -52,7 +52,7 @@ public class ChessGameController {
         ModelAndView modelAndView = new ModelAndView("game");
 
         modelAndView.addObject("pieces",
-            BoardView.of(chessGameService.getCurrentGame(gameId)).getBoardView());
+            BoardView.of(chessGameService.findCurrentPieces(gameId)).getBoardView());
         modelAndView.addObject("gameId", gameId);
         modelAndView.addObject("status", chessGameService.calculateGameResult(gameId));
         modelAndView.addObject("gameMessage", gameMessage);

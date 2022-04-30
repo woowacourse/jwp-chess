@@ -77,12 +77,16 @@ public class ChessGameService {
         boolean endFlag = chessGame.getEndFlag();
         Color turn = chessGame.getTurn();
 
-        pieceDao.deleteAllByGameId(gameId);
-        pieceDao.createAllByGameId(chessGame.getChessmen().getPieces(), gameId);
+        if (pieceDao.exists(gameId, moveCommandDto.getTarget())) {
+            pieceDao.deleteByGameIdAndPosition(gameId, moveCommandDto.getTarget());
+        }
+        pieceDao.updateByGameIdAndPosition(gameId, moveCommandDto.getSource(), moveCommandDto.getTarget());
         gameDao.updateTurnById(turn, gameId);
         gameDao.updateEndFlagById(endFlag, gameId);
     }
 
+
+    //TODO room 객체 생성해서 비교하는 메세지 던져주기.
     public void cleanGameByIdAndPassword(long id, String password) {
         validatePassword(id, password);
         validateEnd(id);

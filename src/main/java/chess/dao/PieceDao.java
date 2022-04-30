@@ -64,4 +64,19 @@ public class PieceDao {
         jdbcTemplate.update(sql, gameId);
     }
 
+    public boolean exists(long gameId, String target) {
+        final String sql = "select count(*) from piece where game_id = ? and position = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, gameId, target) > 0;
+    }
+
+    public void deleteByGameIdAndPosition(long gameId, String position) {
+        final String sql = "delete from piece where game_id = ? and position = ?";
+        jdbcTemplate.update(sql, gameId, position);
+    }
+
+    public void updateByGameIdAndPosition(long gameId, String source, String target) {
+        final String sql = "update piece set position = ? where game_id = ? and position = ? ";
+        jdbcTemplate.update(sql, target, gameId, source);
+    }
+
 }

@@ -45,7 +45,7 @@ public class ChessController {
                 .proceed(command);
         commandService.create(id, command);
         redirectAttributes.addAttribute("message", command);
-        return "redirect:/chess/" + id + "/board";
+        return "redirect:/room/" + id;
     }
 
     @GetMapping(path = "/room/{id}/result")

@@ -17,6 +17,9 @@
         <form action="/room/{{this.id}}" method="get">
             {{this.name}}방 <input type="submit" value="참가" />
         </form>
+        <form action="/room/{{this.id}}/delete" method="get">
+            <input type="submit" value="체스방 삭제" />
+        </form>
     </div>
 {{/this.rooms}}
 

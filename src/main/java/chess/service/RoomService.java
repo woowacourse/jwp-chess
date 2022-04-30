@@ -21,4 +21,12 @@ public class RoomService {
     public List<RoomEntity> findAllRooms() {
         return roomDao.findAll();
     }
+
+    public boolean delete(Long id, String password) {
+        if (roomDao.findById(id).getPassword().equals(password)) {
+            roomDao.deleteById(id);
+            return true;
+        }
+        return false;
+    }
 }

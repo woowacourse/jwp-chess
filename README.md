@@ -40,14 +40,14 @@ create table if not exists commands (
 ```
 
 ## HTTP API
-- [ ] `localhost:8080/`
+- [x] `localhost:8080/`
   - GET: 체스방의 목록을 보여주고 체스방을 추가, 참가, 삭제할 수 있는 버튼이 있다.
-- [ ] `/room`
+- [x] `/room`
   - POST: 이름과 비밀번호를 가진 체스방을 만든다.
-- [ ] `/room/{id}`
+- [x] `/room/{id}`
   - POST: 비밀번호가 일치하면 id 주소값을 가진 체스방과 관련된 체스판 명령어를 삭제한다.
   - GET: id 주소값을 가진 체스방이 가진 체스판을 출력한다.
-- [ ] `/room/{id}/command`
+- [x] `/room/{id}/command`
   - POST: id 주소값을 가진 체스방이 가진 체스판의 기물을 움직인다.
 - [x] `/room/{id}/result`
   - GET: id 주소값을 가진 체스방의 결과를 알려준다.

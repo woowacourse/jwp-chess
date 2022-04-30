@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+</head>
+<body>
+<h1>체스방 삭제</h1>
+<form action="/room/{{this.id}}" method="post">
+    비밀번호를 입력해주세요
+    <input type="text" name="password" />
+    <input type="submit" />
+    {{this.failMessage}}
+</form>
+
+</body>
+</html>

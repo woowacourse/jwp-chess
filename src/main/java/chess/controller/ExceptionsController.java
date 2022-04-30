@@ -8,10 +8,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 public class ExceptionsController {
 
+    //TODO: 잘못된 명령어를 입력했을 때 예외처리
     @ExceptionHandler(IllegalArgumentException.class)
     public String handle(RedirectAttributes redirectAttributes, IllegalArgumentException e) {
         redirectAttributes.addAttribute("message", e.getMessage());
-        return "redirect:chess";
+        return "redirect:/";
     }
 
     @ExceptionHandler(RuntimeException.class)

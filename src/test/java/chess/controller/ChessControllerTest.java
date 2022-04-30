@@ -180,7 +180,7 @@ class ChessControllerTest {
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "password")
+                .header("Password", "password")
                 .when().delete("/games/" + gameId)
                 .then().log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());

@@ -233,7 +233,7 @@ async function deleteGame() {
   const res = await fetch(`/games/${gameId}`, {
     method: "DELETE",
     headers: {
-      "Authorization": this.password.value,
+      "Password": this.password.value,
     },
   });
   if (!res.ok) {

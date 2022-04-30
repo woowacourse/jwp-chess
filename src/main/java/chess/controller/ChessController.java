@@ -70,7 +70,7 @@ public class ChessController {
 
     @DeleteMapping("/{gameId}")
     public ResponseEntity<Void> endGame(@PathVariable Long gameId, @RequestHeader HttpHeaders headers) {
-        String password = headers.getFirst("Authorization");
+        String password = headers.getFirst("Password");
         chessService.deleteGame(gameId, password);
         return ResponseEntity.noContent().build();
     }

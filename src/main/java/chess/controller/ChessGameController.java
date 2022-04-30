@@ -13,6 +13,7 @@ import chess.service.ChessGameService;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,7 @@ public class ChessGameController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createNewGame(@RequestBody ChessGameRequest chessGameRequest) {
+    public ResponseEntity<Long> createNewGame(@Valid @RequestBody ChessGameRequest chessGameRequest) {
         long chessGameId = chessGameService.createNewChessGame(chessGameRequest.getTitle(),
                 chessGameRequest.getPassword());
         return ResponseEntity.created(URI.create("/chessgames/" + chessGameId)).build();
@@ -50,7 +51,7 @@ public class ChessGameController {
 
     @PostMapping("/{chessGameId}")
     public ResponseEntity<List<PieceResponse>> loadChessGame(@PathVariable long chessGameId,
-                                                             @RequestBody ChessGamePasswordRequest chessGamePasswordRequest) {
+                                                             @Valid @RequestBody ChessGamePasswordRequest chessGamePasswordRequest) {
         List<PieceResponse> pieceResponses = chessGameService.findChessBoard(chessGameId,
                         chessGamePasswordRequest.getPassword())
                 .entrySet()
@@ -62,21 +63,21 @@ public class ChessGameController {
 
     @DeleteMapping("/{chessGameId}")
     public ResponseEntity<Void> deleteChessGame(@PathVariable long chessGameId,
-                                                @RequestBody ChessGamePasswordRequest chessGamePasswordRequest) {
+                                                @Valid @RequestBody ChessGamePasswordRequest chessGamePasswordRequest) {
         chessGameService.deleteChessGame(chessGameId, chessGamePasswordRequest.getPassword());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{chessGameId}/move")
     public ResponseEntity<Void> movePiece(@PathVariable long chessGameId,
-                                          @RequestBody PieceMoveRequest pieceMoveRequest) {
+                                          @Valid @RequestBody PieceMoveRequest pieceMoveRequest) {
         chessGameService.move(chessGameId, pieceMoveRequest.toSourcePosition(), pieceMoveRequest.toTargetPosition());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{chessGameId}/promotion")
     public ResponseEntity<Void> promotionPiece(@PathVariable long chessGameId,
-                                               @RequestBody PromotionRequest promotionRequest) {
+                                               @Valid @RequestBody PromotionRequest promotionRequest) {
         chessGameService.promotion(chessGameId, promotionRequest.toPromotionPiece());
         return ResponseEntity.noContent().build();
     }

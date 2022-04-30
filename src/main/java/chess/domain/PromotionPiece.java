@@ -6,7 +6,6 @@ import chess.domain.piece.multiple.Queen;
 import chess.domain.piece.multiple.Rook;
 import chess.domain.piece.single.Knight;
 import java.util.Arrays;
-import java.util.Objects;
 
 public enum PromotionPiece {
 
@@ -25,7 +24,6 @@ public enum PromotionPiece {
     }
 
     public static PromotionPiece createPromotionPiece(String input) {
-        Objects.requireNonNull(input, "input은 null이 들어올 수 없습니다.");
         return Arrays.stream(values())
                 .filter(promotion -> promotion.value.equals(input))
                 .findAny()

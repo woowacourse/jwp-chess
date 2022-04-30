@@ -29,14 +29,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 class ChessBoardTest {
 
     @Test
-    @DisplayName("생성 시 null 예외발생")
-    void constructorNullException() {
-        assertThatThrownBy(() -> new ChessBoard(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("pieces는 null이 들어올 수 없습니다.");
-    }
-
-    @Test
     @DisplayName("새로운 기본 체스판 생성")
     void createNewChessBoard() {
         ChessBoard chessBoard = new ChessBoard(PieceFactory.createNewChessBoard());
@@ -184,7 +176,7 @@ class ChessBoardTest {
     void winnerExceptionByNotFinishedGame() {
         ChessBoard chessBoard = new ChessBoard(PieceFactory.createNewChessBoard());
 
-        assertThatThrownBy(() -> chessBoard.winner())
+        assertThatThrownBy(chessBoard::winner)
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("경기가 종료되지 않아 우승자를 계산할 수 없습니다.");
     }

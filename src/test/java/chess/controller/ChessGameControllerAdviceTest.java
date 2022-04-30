@@ -1,10 +1,13 @@
 package chess.controller;
 
 import static chess.ChessGameFixture.createRunningChessGame;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
 
 import chess.controller.dto.request.ChessGamePasswordRequest;
+import chess.controller.dto.request.ChessGameRequest;
 import chess.controller.dto.request.PieceMoveRequest;
+import chess.controller.dto.request.PromotionRequest;
 import chess.dao.ChessGameDao;
 import chess.domain.ChessGame;
 import io.restassured.RestAssured;
@@ -60,5 +63,56 @@ class ChessGameControllerAdviceTest {
                 .when().post("chessgames/" + notFoundChessGameId)
                 .then().log().all()
                 .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    @DisplayName("Promotion 기물 생성 시 null입력 예외발생")
+    void promotionPieceWithNullException() {
+        RestAssured.given().log().all()
+                .body(new PromotionRequest(null))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("chessgames/" + chessGameId + "/promotion")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", containsString("프로모션할 기물을 입력해 주세요."));
+    }
+
+
+    @Test
+    @DisplayName("기물 움직임 시 null입력 예외발생")
+    void movePieceWithNullException() {
+        RestAssured.given().log().all()
+                .body(new PieceMoveRequest(null, null))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().patch("chessgames/" + chessGameId + "/move")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", containsString("초기 위치 값을 입력해 주세요."))
+                .body("message", containsString("도착 위치 값을 입력해 주세요."));
+    }
+
+    @Test
+    @DisplayName("체스 게임 생성 시 null입력 예외발생")
+    void createChessGameWithNullException() {
+        RestAssured.given().log().all()
+                .body(new ChessGameRequest(null, null))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("chessgames/")
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", containsString("체스 게임 제목을 입력해 주세요."))
+                .body("message", containsString("체스 게임 비밀번호를 입력해 주세요."));
+    }
+
+    @Test
+    @DisplayName("비밀번호 입력 시 null입력 예외발생")
+    void inputPasswordWithNullException() {
+        RestAssured.given().log().all()
+                .body(new ChessGamePasswordRequest(null))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("chessgames/" + chessGameId)
+                .then().log().all()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", containsString("비밀번호를 입력해 주세요."));
     }
 }

@@ -15,6 +15,6 @@ class ChessGameTest {
     void matchPassword() {
         ChessGame chessGame = new ChessGame("1", "test", "1234",
                 false, new ChessBoard(new ChessBoardGenerator()));
-        assertThat(chessGame.isMatched("1234")).isTrue();
+        assertThat(chessGame.isPasswordMatch("1234")).isTrue();
     }
 }

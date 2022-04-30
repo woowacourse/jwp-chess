@@ -51,7 +51,7 @@ public final class ChessGame {
         return isEnd;
     }
 
-    public boolean isMatched(final String password) {
+    public boolean isPasswordMatch(final String password) {
         return this.password.equals(password);
     }
 }

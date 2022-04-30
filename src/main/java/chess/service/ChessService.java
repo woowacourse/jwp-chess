@@ -70,7 +70,7 @@ public final class ChessService {
 
     public void deleteGame(final long gameId, final String password) {
         ChessGame chessGame = loadSavedGame(gameId);
-        if (!chessGame.isMatched(password)) {
+        if (!chessGame.isPasswordMatch(password)) {
             throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
         }
         if (!chessGame.isEnd()) {

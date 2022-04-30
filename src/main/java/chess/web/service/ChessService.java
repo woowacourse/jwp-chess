@@ -35,7 +35,7 @@ public class ChessService {
     public Board loadGame(Long roomId) {
         Room room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
-        Turn turn = new Turn(Team.from(room.getTurn()));
+        Turn turn = getTurn(room);
 
         List<Piece> pieces = pieceDao.findAllByRoomId(roomId);
         Board board = Board.create(Pieces.from(pieces), turn);
@@ -50,7 +50,7 @@ public class ChessService {
     public Board move(final MoveDto moveDto, final Long roomId) {
         Room room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
-        Turn turn = new Turn(Team.from(room.getTurn()));
+        Turn turn = getTurn(room);
 
         Board board = Board.create(Pieces.from(pieceDao.findAllByRoomId(roomId)), turn);
         Pieces pieces = board.getPieces();
@@ -143,19 +143,19 @@ public class ChessService {
     }
 
     private boolean canRemoveRoom(Long roomId, String password) {
-        Optional<Room> optionalRoom = roomDao.findById(roomId);
-        if (optionalRoom.isEmpty()) {
+        Optional<Room> room = roomDao.findById(roomId);
+        if (room.isEmpty()) {
             return false;
         }
-        Room room = optionalRoom.get();
-        if (isRunningChess(roomId, room) || !matchPassword(room, password)) {
-            return false;
-        }
-        return true;
+        return canRemoveRoom(roomId, password, room.get());
+    }
+
+    private boolean canRemoveRoom(Long roomId, String password, Room room) {
+        return !isRunningChess(roomId, room) && matchPassword(room, password);
     }
 
     private boolean isRunningChess(Long roomId, Room room) {
-        Turn turn = new Turn(Team.from(room.getTurn()));
+        Turn turn = getTurn(room);
         Pieces pieces = Pieces.from(pieceDao.findAllByRoomId(roomId));
         Board board = Board.create(pieces, turn);
 
@@ -165,5 +165,9 @@ public class ChessService {
 
     private boolean matchPassword(Room room, String password) {
         return password.equals(room.getPassword());
+    }
+
+    private Turn getTurn(Room room) {
+        return new Turn(Team.from(room.getTurn()));
     }
 }

@@ -24,7 +24,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-class PieceDaoTest {
+class PieceDaoTest extends DaoTest {
 
     private PieceDao pieceDao;
 
@@ -35,14 +35,7 @@ class PieceDaoTest {
     void setUp() {
         pieceDao = new JdbcPieceDao(jdbcTemplate);
 
-        jdbcTemplate.execute("drop table piece if exists");
-        jdbcTemplate.execute("drop table turn if exists");
-        jdbcTemplate.execute("drop table room if exists");
-        jdbcTemplate.execute("CREATE TABLE room (\n" +
-                "    id bigint not null auto_increment primary key,\n" +
-                "    name varchar(30) not null,\n" +
-                "    password varchar(20) not null)"
-        );
+        super.setUp();
         jdbcTemplate.execute("CREATE TABLE piece(" +
                 "    id       bigint     not null auto_increment primary key,\n" +
                 "    roomId   bigint     not null,\n" +

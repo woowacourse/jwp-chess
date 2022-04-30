@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-class RoomDaoTest {
+class RoomDaoTest extends DaoTest {
 
     private RoomDao roomDao;
 
@@ -23,14 +23,7 @@ class RoomDaoTest {
     void setUp() {
         roomDao = new JdbcRoomDao(jdbcTemplate);
 
-        jdbcTemplate.execute("drop table piece if exists");
-        jdbcTemplate.execute("drop table turn if exists");
-        jdbcTemplate.execute("drop table room if exists");
-        jdbcTemplate.execute("CREATE TABLE room (\n" +
-                "    id bigint not null auto_increment primary key,\n" +
-                "    name varchar(30) not null,\n" +
-                "    password varchar(20) not null)"
-        );
+        super.setUp();
     }
 
     @Test

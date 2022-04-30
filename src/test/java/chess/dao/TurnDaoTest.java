@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-class TurnDaoTest {
+class TurnDaoTest extends DaoTest {
 
     private TurnDao turnDao;
 
@@ -22,14 +22,7 @@ class TurnDaoTest {
     void setUp() {
         turnDao = new JdbcTurnDao(jdbcTemplate);
 
-        jdbcTemplate.execute("drop table piece if exists");
-        jdbcTemplate.execute("drop table turn if exists");
-        jdbcTemplate.execute("drop table room if exists");
-        jdbcTemplate.execute("CREATE TABLE room (\n" +
-                "    id bigint not null auto_increment primary key,\n" +
-                "    name varchar(30) not null,\n" +
-                "    password varchar(20) not null)"
-        );
+        super.setUp();
         jdbcTemplate.execute("CREATE TABLE turn(id long not null auto_increment primary key,\n" +
                 "                roomId long not null,\n" +
                 "                team varchar(5) not null,\n" +

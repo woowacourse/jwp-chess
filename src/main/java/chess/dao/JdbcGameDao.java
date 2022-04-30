@@ -8,6 +8,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Repository
 public class JdbcGameDao implements GameDao {
 
@@ -52,6 +55,17 @@ public class JdbcGameDao implements GameDao {
         } catch (EmptyResultDataAccessException e) {
             e.printStackTrace();
             return GameDto.of(null, "ready");
+        }
+    }
+
+    @Override
+    public List<GameDto> findAll() {
+        final String sql = "select * from game";
+        try {
+            return jdbcTemplate.query(sql, getGameDtoRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 

@@ -3,6 +3,7 @@ package chess.controller;
 import chess.domain.command.MoveCommand;
 import chess.service.dto.ChessResponseDto;
 import chess.controller.dto.MoveCommandDto;
+import chess.service.dto.GameDto;
 import chess.service.dto.ScoresDto;
 import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/chess-game")
@@ -27,8 +30,13 @@ public class ChessController {
     }
 
     @GetMapping("/load/{id}")
-    public ResponseEntity<ChessResponseDto> load(@PathVariable int id) {
+    public ResponseEntity<ChessResponseDto> loadRoom(@PathVariable int id) {
         return ResponseEntity.ok().body(chessService.getChess(id));
+    }
+
+    @GetMapping("/load")
+    public ResponseEntity<List<GameDto>> loadRooms() {
+        return ResponseEntity.ok().body(chessService.getChesses());
     }
 
     @PostMapping("/start")

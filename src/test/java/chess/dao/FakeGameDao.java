@@ -3,6 +3,8 @@ package chess.dao;
 import chess.service.dto.GameDto;
 import chess.service.dto.GameStatusDto;
 
+import java.util.List;
+
 public class FakeGameDao implements GameDao {
 
     private GameDto gameDto;
@@ -30,6 +32,11 @@ public class FakeGameDao implements GameDao {
     @Override
     public GameDto find(int id) {
         return gameDto;
+    }
+
+    @Override
+    public List<GameDto> findAll() {
+        return List.of(gameDto);
     }
 
     @Override

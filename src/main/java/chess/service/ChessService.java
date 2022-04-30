@@ -57,6 +57,10 @@ public class ChessService {
         }
     }
 
+    public List<GameDto> getChesses() {
+        return gameDao.findAll();
+    }
+
     private List<PieceDto> getInitPieceDtos() {
         Map<Position, Piece> initPieces = PieceFactory.createChessPieces();
         return initPieces.entrySet()

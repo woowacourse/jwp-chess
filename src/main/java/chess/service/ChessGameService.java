@@ -52,8 +52,11 @@ public class ChessGameService {
         return gameDao.find();
     }
 
-    public boolean delete(int id, String password) {
-        return gameDao.delete(id, password);
+    public void delete(int id, String password) {
+        boolean isDeleted = gameDao.delete(id, password);
+        if (!isDeleted) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 
     public void init(int gameId) {

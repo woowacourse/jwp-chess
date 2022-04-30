@@ -49,11 +49,8 @@ public class ChessSpringController {
     }
 
     @PostMapping("/game/{gameId}/delete")
-    public String delete(@RequestParam("password") String password, @PathVariable int gameId, Model model) {
-        boolean isDeleted = chessGameService.delete(gameId, password);
-        if (!isDeleted) {
-            model.addAttribute("value", "비밀번호가 일치하지 않습니다.");
-        }
+    public String delete(@RequestParam("password") String password, @PathVariable int gameId) {
+        chessGameService.delete(gameId, password);
         return "redirect:/";
     }
 

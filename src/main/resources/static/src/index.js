@@ -1,8 +1,7 @@
-
 const score = document.getElementById("score");
 
-async function selectStatus() {
-    const res = await fetch('/game/status', {
+async function selectStatus(id) {
+    const res = await fetch('/game/status/' + id, {
         method: 'get'
     });
 

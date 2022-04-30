@@ -49,7 +49,7 @@ create table if not exists commands (
 - [x] `/chess/{id}/board`
   - GET: id 주소값을 가진 체스방이 가진 체스판을 출력한다.
   - POST: id 주소값을 가진 체스방이 가진 체스판의 기물을 움직인다.
-- [ ] `/chess/{id}/result`
+- [x] `/chess/{id}/result`
   - GET: id 주소값을 가진 체스방의 결과를 알려준다.
 - [예외] 사용자가 잘못된 입력을 했을 땐 예외 메시지를 출력한다.
 - [예외] 사용자의 잘못된 입력 외의 예외가 발생했을 땐 예외 페이지를 출력한다.

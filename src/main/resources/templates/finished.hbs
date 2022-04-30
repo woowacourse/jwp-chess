@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>체스 게임 종료</title>
-    <link rel="stylesheet" href="src/board.css"/>
+    <link rel="stylesheet" href="/src/board.css"/>
 </head>
 <body>
     <div class="chess">
-        <img src ="images/chessBoard.png" id="chessBoard"/>
+        <img src ="/images/chessBoard.png" id="chessBoard"/>
         <div class="pieces">
             {{#this.squares}}
-            <img src="images/{{this.symbol}}.png" id="{{this.position}}"/>
+            <img src="/images/{{this.symbol}}.png" id="{{this.position}}"/>
             {{/this.squares}}
         </div>
-        <form action="/chess/result" method="get">
+        <form action="/chess/{{this.id}}/result" method="get">
             <input type="submit" value="결과 출력">
         </form>
         <form action="/" method="get">

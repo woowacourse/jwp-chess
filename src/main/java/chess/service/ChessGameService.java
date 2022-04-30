@@ -43,7 +43,7 @@ public class ChessGameService {
     private ChessGame convertChessGame(long chessGameId, ChessGameEntity chessGameEntity) {
         return new ChessGame(
                 BoardEntitiesToBoardConvertor.convert(boardDao.load(chessGameId)),
-                new GameSwitch(chessGameEntity.getIsOn()),
+                new GameSwitch(chessGameEntity.getPower()),
                 new Turn(Team.of(chessGameEntity.getTeamValueOfTurn()))
         );
     }
@@ -68,7 +68,7 @@ public class ChessGameService {
 
     private void validateGameOn(long chessGameId) {
         ChessGameEntity chessGameEntity = chessGameDao.load(chessGameId);
-        if (chessGameEntity.getIsOn()) {
+        if (chessGameEntity.getPower()) {
             throw new IllegalStateException("[ERROR] 아직 게임이 끝나지 않아 삭제할 수 없습니다!");
         }
     }

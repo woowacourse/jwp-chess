@@ -39,7 +39,7 @@ class ChessGameDaoTest {
                 + "    id      int primary key auto_increment,\n"
                 + "    name               varchar(20) not null unique,\n"
                 + "    password           varchar(20) not null,\n"
-                + "    is_on              bool        not null,\n"
+                + "    power              bool        not null,\n"
                 + "    team_value_of_turn varchar(20) not null\n"
                 + ")");
 
@@ -93,7 +93,7 @@ class ChessGameDaoTest {
         ChessGameEntity chessGameEntity = chessGameDao.load(savedId);
 
         assertAll(
-                () -> assertThat(chessGameEntity.getIsOn()).isFalse(),
+                () -> assertThat(chessGameEntity.getPower()).isFalse(),
                 () -> assertThat(chessGameEntity.getTeamValueOfTurn()).isEqualTo("WHITE")
         );
     }

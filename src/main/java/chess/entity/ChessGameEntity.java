@@ -8,28 +8,28 @@ public class ChessGameEntity {
     private long id;
     private String name;
     private String password;
-    private boolean isOn;
+    private boolean power;
     private String teamValueOfTurn;
 
-    public ChessGameEntity(final long id, final String name, final String password, final boolean isOn,
+    public ChessGameEntity(final long id, final String name, final String password, final boolean power,
                            final String teamValueOfTurn) {
         this.id = id;
         this.name = name;
         this.password = password;
-        this.isOn = isOn;
+        this.power = power;
         this.teamValueOfTurn = teamValueOfTurn;
     }
 
     public ChessGameEntity(final String name, final String password, final ChessGame chessGame) {
         this.name = name;
         this.password = password;
-        this.isOn = chessGame.isOn();
+        this.power = chessGame.isOn();
         this.teamValueOfTurn = chessGame.getTurn().getNow().getValue();
     }
 
-    public ChessGameEntity(final long id, final boolean isOn, final Turn turn) {
+    public ChessGameEntity(final long id, final boolean power, final Turn turn) {
         this.id = id;
-        this.isOn = isOn;
+        this.power = power;
         this.teamValueOfTurn = turn.getNow().getValue();
     }
 
@@ -38,9 +38,9 @@ public class ChessGameEntity {
         this.password = password;
     }
 
-    public ChessGameEntity(final long id, final boolean isOn) {
+    public ChessGameEntity(final long id, final boolean power) {
         this.id = id;
-        this.isOn = isOn;
+        this.power = power;
     }
 
     public long getId() {
@@ -55,8 +55,8 @@ public class ChessGameEntity {
         return name;
     }
 
-    public boolean getIsOn() {
-        return isOn;
+    public boolean getPower() {
+        return power;
     }
 
     public String getTeamValueOfTurn() {

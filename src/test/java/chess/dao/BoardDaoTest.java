@@ -40,7 +40,7 @@ public class BoardDaoTest {
                 + "    id      int primary key auto_increment,\n"
                 + "    name               varchar(20) not null unique,\n"
                 + "    password           varchar(20) not null,\n"
-                + "    is_on              bool        not null,\n"
+                + "    power              bool        not null,\n"
                 + "    team_value_of_turn varchar(20) not null\n"
                 + ")");
         jdbcTemplate.execute("create table board\n"

@@ -21,8 +21,8 @@ public class ChessGameDao {
     }
 
     public Number save(final ChessGameEntity chessGameEntity) {
-        String insertSql = "insert into chess_game (name, password, is_on, team_value_of_turn)"
-                + " values (:name, :password, :isOn, :teamValueOfTurn)";
+        String insertSql = "insert into chess_game (name, password, power, team_value_of_turn)"
+                + " values (:name, :password, :power, :teamValueOfTurn)";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(insertSql, source, keyHolder);
@@ -57,19 +57,19 @@ public class ChessGameDao {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getString("password"),
-                rs.getBoolean("is_on"),
+                rs.getBoolean("power"),
                 rs.getString("team_value_of_turn")
         );
     }
 
     public void updateIsOnAndTurn(final ChessGameEntity chessGameEntity) {
-        String updateSql = "update chess_game set is_on=:isOn, team_value_of_turn=:teamValueOfTurn where id=:id";
+        String updateSql = "update chess_game set power=:power, team_value_of_turn=:teamValueOfTurn where id=:id";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(updateSql, source);
     }
 
     public void updateIsOn(final ChessGameEntity chessGameEntity) {
-        String updateSql = "update chess_game set is_on=:isOn where id=:id";
+        String updateSql = "update chess_game set power=:power where id=:id";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(updateSql, source);
     }

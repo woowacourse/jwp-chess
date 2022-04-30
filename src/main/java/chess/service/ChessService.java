@@ -1,5 +1,7 @@
 package chess.service;
 
+import chess.dao.BoardDao;
+import chess.dao.GameDao;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.command.GameCommand;
 import chess.domain.game.ChessGame;
@@ -14,8 +16,6 @@ import chess.dto.GameDto;
 import chess.dto.PieceDto;
 import chess.dto.RoomDto;
 import chess.dto.StatusDto;
-import chess.dao.BoardDao;
-import chess.dao.GameDao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +34,12 @@ public class ChessService {
     }
 
     @Transactional
-    public int insertGame(String title, String password, ChessBoard chessBoard) {
-        validateTitle(title);
+    public int insertGame(RoomDto roomDto, ChessBoard chessBoard) {
+        validateTitle(roomDto.getTitle());
         ChessGame chessGame = new ChessGame(chessBoard);
         chessGame.playGameByCommand(GameCommand.of("start"));
 
-        int id = gameDao.save(title, password, chessGame.getState().toString());
+        int id = gameDao.save(roomDto.getTitle(), roomDto.getPassword(), chessGame.getState().toString());
         boardDao.save(chessGame.getChessBoard(), id);
         return id;
     }

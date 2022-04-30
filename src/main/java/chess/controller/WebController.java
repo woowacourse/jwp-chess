@@ -5,6 +5,7 @@ import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.dto.BoardDto;
 import chess.dto.GameDto;
 import chess.dto.MoveDto;
+import chess.dto.RoomDto;
 import chess.dto.StatusDto;
 import chess.service.ChessService;
 import java.util.HashMap;
@@ -38,8 +39,8 @@ public class WebController {
     }
 
     @PutMapping("/game")
-    public ModelAndView insertGame(String title, String password) {
-        chessService.insertGame(title, password, new ChessBoard(new NormalPiecesGenerator()));
+    public ModelAndView insertGame(RoomDto roomDto) {
+        chessService.insertGame(roomDto, new ChessBoard(new NormalPiecesGenerator()));
         return new ModelAndView("redirect:/");
     }
 

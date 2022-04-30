@@ -16,6 +16,7 @@ import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.GameDto;
 import chess.dto.PieceDto;
+import chess.dto.RoomDto;
 import chess.dto.StatusDto;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,8 @@ public class ChessServiceTest {
 
     @BeforeEach
     void setUp() {
-        id = chessService.insertGame("title", "password", new ChessBoard(new NormalPiecesGenerator()));
+        RoomDto roomDto = new RoomDto("title", "password");
+        id = chessService.insertGame(roomDto, new ChessBoard(new NormalPiecesGenerator()));
     }
 
     @AfterEach

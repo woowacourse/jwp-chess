@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(annotations = RestController.class)
 public class WebChessControllerAdvice {
-
+    
     @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
-    public ResponseEntity<ErrorResponseDto> handleIllegalException(IllegalArgumentException e) {
+    public ResponseEntity<ErrorResponseDto> handleIllegalException(RuntimeException e) {
         return ResponseEntity.badRequest()
             .body(new ErrorResponseDto(e.getMessage()));
     }
@@ -25,7 +25,7 @@ public class WebChessControllerAdvice {
 
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ErrorResponseDto> handleIllegalStateException(Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(new ErrorResponseDto("[ERROR] 예기치 못한 에러가 발생했습니다."));
     }
 }

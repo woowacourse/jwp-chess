@@ -1,9 +1,7 @@
 package chess.service;
 
-import chess.domain.board.ChessBoard;
 import chess.domain.game.dto.MoveDTO;
 import chess.domain.gameRoom.ChessGame;
-import chess.domain.piece.unit.Pawn;
 import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;
 import chess.exception.InvalidDBFailException;
@@ -47,8 +45,10 @@ class ChessServiceTest {
         chessService.movePiece(gameId, new MoveDTO("B2", "B4", "WHITE"));
         ChessGame chessGame = chessService.getChessGame(gameId);
         Map<Position, Piece> board = chessGame.getChessBoard().getBoard();
-        Piece piece = board.get(Position.of("B4"));
 
-        Assertions.assertThat(piece).isNotEqualTo(null);
+        assertAll(
+                () -> assertEquals(board.get(Position.of("B2")), null),
+                () -> assertNotEquals(board.get(Position.of("B4")), null)
+        );
     }
 }

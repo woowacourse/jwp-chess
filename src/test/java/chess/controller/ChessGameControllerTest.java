@@ -72,17 +72,19 @@ class ChessGameControllerTest {
     }
 
     @Test
-    @DisplayName("체스 보드 로딩")
+    @DisplayName("체스 게임 초기상태 일때 체스 보드 로딩")
     void loadChessGame() {
         long chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
+        pieceDao.savePieces(chessGameId, PieceFactory.createNewChessBoard());
 
         RestAssured.given().log().all()
                 .body(new ChessGamePasswordRequest("password"))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("chessgames/" + chessGameId)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(32));
     }
 
     @Test
@@ -157,11 +159,12 @@ class ChessGameControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("chessgames/" + chessGameId + "/score")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(2));
     }
 
     @Test
-    @DisplayName("게임 종료 여부 판별")
+    @DisplayName("게임이 아직 진행중 일때 게임 종료 여부 판별")
     void chessGameStatus() {
         long chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
@@ -170,11 +173,12 @@ class ChessGameControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("chessgames/" + chessGameId + "/status")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("end", is(false));
     }
 
     @Test
-    @DisplayName("게임 우승자 반환")
+    @DisplayName("화이트 팀이 이기고 있을 때 게임 우승자 반환")
     void chessGameWinner() {
         long chessGameId = chessGameDao.createChessGame(chessGame)
                 .getId();
@@ -185,6 +189,7 @@ class ChessGameControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().get("chessgames/" + chessGameId + "/winner")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value())
+                .body("winner", is("WHITE"));
     }
 }

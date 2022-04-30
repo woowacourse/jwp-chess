@@ -49,13 +49,6 @@ function drawBoard(body) {
     })
 }
 
-function initBoard() {
-    const blocks = document.querySelectorAll('#chess-board tr td');
-    blocks.forEach(block => {
-        block.innerHTML = null;
-    })
-}
-
 function drawTurnBox(id) {
     const turnBox = document.getElementById("turn-box")
     const response = fetch(`/game/${id}/turn`, {

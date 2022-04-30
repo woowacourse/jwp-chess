@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ChessApiController {
@@ -31,13 +30,11 @@ public class ChessApiController {
         return ResponseEntity.ok(chessService.initializeGame(roomId));
     }
 
-    @ResponseBody
     @GetMapping("/chessMap/{roomId}")
     public ResponseEntity<ChessMap> loadRoom(@PathVariable("roomId") int roomId) {
         return ResponseEntity.ok(chessService.load(roomId));
     }
 
-    @ResponseBody
     @PostMapping("/room")
     public ResponseEntity<String> makeRoom(@RequestBody RoomDto roomDto) {
         RoomDto newRoomDto = chessService.createRoom(roomDto);
@@ -45,7 +42,6 @@ public class ChessApiController {
         return ResponseEntity.ok("방이 생성되었습니다.");
     }
 
-    @ResponseBody
     @PostMapping("/room/{roomId}")
     public ResponseEntity<String> enterRoom(@PathVariable("roomId") int roomId, @RequestBody RoomDto roomDto) {
         if (roomDto.getId() != roomId) {
@@ -55,20 +51,16 @@ public class ChessApiController {
         return ResponseEntity.ok("방 입장 성공");
     }
 
-    @ResponseBody
     @GetMapping("/status/{roomId}")
     public ResponseEntity<ScoreDto> status(@PathVariable("roomId") int roomId) {
         return ResponseEntity.ok(chessService.getStatus(roomId));
     }
 
-    @ResponseBody
     @PostMapping("/move/{roomId}")
     public ResponseEntity<ChessMap> move(@PathVariable("roomId") int roomId, @RequestBody MoveDto moveDto) {
         return ResponseEntity.ok(chessService.move(roomId, moveDto));
     }
 
-    //왕 죽었는 지 확인하는 api
-    @ResponseBody
     @GetMapping("/king/{roomId}")
     public ResponseEntity<String> hasTwoKing(@PathVariable("roomId") int roomId) {
         if (chessService.hasTwoKing(roomId)) {
@@ -77,7 +69,6 @@ public class ChessApiController {
         return ResponseEntity.ok("게임 끝");
     }
 
-    @ResponseBody
     @PostMapping("/end/{roomId}")
     public ResponseEntity<ResultDto> end(@PathVariable("roomId") int roomId) {
         chessService.endGame(roomId);
@@ -85,7 +76,6 @@ public class ChessApiController {
         return ResponseEntity.ok(resultDto);
     }
 
-    @ResponseBody
     @DeleteMapping("/room/{roomId}")
     public ResponseEntity<String> delete(@PathVariable("roomId") int roomId, @RequestBody RoomDto roomDto) {
         if (roomDto.getId() != roomId) {
@@ -95,7 +85,6 @@ public class ChessApiController {
         return ResponseEntity.ok("방이 삭제되었습니다.");
     }
 
-    @ResponseBody
     @GetMapping("/state/{roomId}")
     public ResponseEntity<String> getState(@PathVariable("roomId") int roomId) {
         return ResponseEntity.ok(chessService.getState(roomId));

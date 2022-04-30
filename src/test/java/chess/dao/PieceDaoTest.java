@@ -32,7 +32,7 @@ class PieceDaoTest {
 
     @BeforeEach
     void beforeEach() {
-        pieceDao.saveAllPieces(whitePlayer, gameId);
+        pieceDao.insertAllPieces(whitePlayer, gameId);
     }
 
     @Test
@@ -46,7 +46,7 @@ class PieceDaoTest {
     @Test
     @DisplayName("말들을 올바르게 저장한다.")
     void savePieces() {
-        pieceDao.saveAllPieces(blackPlayer, gameId);
+        pieceDao.insertAllPieces(blackPlayer, gameId);
         List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(gameId, Team.BLACK.getName());
 
         assertThat(blackPieces.size()).isEqualTo(16);

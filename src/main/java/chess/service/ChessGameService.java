@@ -51,10 +51,10 @@ public class ChessGameService {
     }
 
     private long saveNewRoom(final ChessGame chessGame, final String password, final String roomName) {
-        roomDao.save(roomName, password, chessGame.getTurn());
+        roomDao.insert(roomName, password, chessGame.getTurn());
         final long roomId = findRoomIdByName(roomName);
-        pieceDao.saveAllPieces(chessGame.getCurrentPlayer(), roomId);
-        pieceDao.saveAllPieces(chessGame.getOpponentPlayer(), roomId);
+        pieceDao.insertAllPieces(chessGame.getCurrentPlayer(), roomId);
+        pieceDao.insertAllPieces(chessGame.getOpponentPlayer(), roomId);
         return roomId;
     }
 

@@ -69,7 +69,7 @@ class RoomDaoTest {
         String password = "password";
         Team turn = Team.WHITE;
 
-        roomDao.save(newGameName, password, turn);
+        roomDao.insert(newGameName, password, turn);
         Optional<Integer> id = roomDao.findRoomIdByName(newGameName);
 
         assertThat(id.isPresent()).isTrue();

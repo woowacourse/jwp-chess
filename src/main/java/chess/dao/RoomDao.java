@@ -19,7 +19,7 @@ public class RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(final String roomName, final String password, final Team turn) {
+    public void insert(final String roomName, final String password, final Team turn) {
         final String SQL = "insert into room (name, password, turn) values (?, ?, ?)";
         jdbcTemplate.update(SQL, roomName, password, turn.getName());
     }

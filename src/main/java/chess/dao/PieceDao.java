@@ -18,7 +18,7 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void saveAllPieces(final Player player, final long roomId) {
+    public void insertAllPieces(final Player player, final long roomId) {
         final String SQL = "insert into piece (position, name, team, room_id) values (?, ?, ?, ?)";
         final List<Piece> pieces = player.findAll();
         for (Piece piece : pieces) {

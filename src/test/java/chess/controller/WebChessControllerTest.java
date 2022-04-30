@@ -169,7 +169,7 @@ class WebChessControllerTest {
         doNothing().when(chessService)
             .endRoom(anyLong());
 
-        mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId))
+        mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId + "/end"))
             .andExpect(status().isOk());
     }
 
@@ -183,7 +183,7 @@ class WebChessControllerTest {
         doThrow(new IllegalStateException("[ERROR] 이미 종료된 게임입니다.")).when(chessService)
             .endRoom(anyLong());
 
-        mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId))
+        mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId + "/end"))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(responseBody));
     }

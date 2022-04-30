@@ -38,8 +38,8 @@ async function onloadIndexBody() {
 
         const divInnerFirstDelete = document.createElement("div");
         divInnerFirstDelete.className = "class-delete";
-        divInnerFirstDelete.setAttribute("onclick", "deleteRoom(" + value.id + ");");
-        divInnerFirstDelete.innerText = "삭제";
+        divInnerFirstDelete.setAttribute("onclick", "endRoom(" + value.id + ");");
+        divInnerFirstDelete.innerText = "종료";
 
         divInnerFirst.appendChild(divInnerFirstId);
         divInnerFirst.appendChild(divInnerFirstUpdate);
@@ -80,7 +80,7 @@ async function createRoom() {
     const bodyValue = {
         name: roomName
     }
-    let response = await fetch("/api/chess/rooms/", {
+    await fetch("/api/chess/rooms/", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -115,6 +115,20 @@ async function enterRoom(id) {
 }
 
 
+async function endRoom(id) {
+    if (confirm("정말 종료하시겠습니까?")) {
+        await fetch("/api/chess/rooms/" + id + "/end",
+            {
+                method: "PATCH"
+            }).then(handleErrors)
+            .catch(function (error) {
+                alert(error.message)
+            });
+
+        window.location.reload();
+    }
+}
+
 function updateRoomName(id) {
     const roomName = window.prompt("바꿀 방 제목을 입력해주세요");
 
@@ -135,23 +149,5 @@ function updateRoomName(id) {
     i2.setAttribute("value", id); // value
     f.appendChild(i2);
 
-    f.submit();
-}
-
-
-function deleteRoom(id) {
-
-    let f = document.createElement("form");
-    f.setAttribute("method", "post");
-    f.setAttribute("action", "/room/delete/"); //url
-    document.body.appendChild(f);
-
-    let i = document.createElement("input");
-    i.setAttribute("type", "hidden");
-    i.setAttribute("name", "roomId"); // key
-    i.setAttribute("value", id); // value
-    f.appendChild(i);
-
-    console.log(f);
     f.submit();
 }

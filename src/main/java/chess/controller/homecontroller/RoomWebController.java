@@ -8,9 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -32,7 +34,7 @@ public class RoomWebController {
         return new ModelAndView("home", model);
     }
 
-    @PostMapping(path = "/makeRoom")
+    @PostMapping(path = "/")
     public String makeRoom(@RequestBody RoomCreationRequestDto roomCreationRequest) {
         final String roomName = roomCreationRequest.getRoomName();
         final String password = roomCreationRequest.getPassword();
@@ -40,8 +42,10 @@ public class RoomWebController {
         return RE_DIRECT;
     }
 
-    @PostMapping(path = "/deleteRoom")
+    @ResponseBody
+    @DeleteMapping(path = "/")
     public String deleteRoom(@RequestBody RoomDeletionRequestDto roomDeletionRequest) {
+
         final int roomId = roomDeletionRequest.getRoomId();
         final String password = roomDeletionRequest.getPassword();
         roomService.deleteRoom(roomId, password);

@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="data:,">
     <title>체스</title>
-    <script type="text/javascript" src="/home.js"></script>
 </head>
 <body>
 <div align="center">
@@ -18,7 +18,7 @@
         function makeRoom() {
             let roomName = document.getElementById("roomName").value;
             let password = document.getElementById("password").value;
-            fetch('/makeRoom', {
+            fetch('/', {
                 method: "post",
                 body: JSON.stringify({
                     roomName: roomName,
@@ -54,8 +54,8 @@
                 function deleteRoom() {
                     let password = prompt("비밀번호를 입력해주세요.");
                     let roomId = "{{this.roomId}}";
-                    fetch('/deleteRoom', {
-                        method: "post",
+                    fetch('/', {
+                        method: "delete",
                         body: JSON.stringify({
                             roomId: roomId,
                             password: password
@@ -64,6 +64,16 @@
                             'Content-Type': 'application/json'
                         }
                     })
+                            // .then(res => res.json())
+                            // .then(json => {
+                            //
+                            //     if (json.success === false) {
+                            //         alert("삭제중 오류 발생")
+                            //         return;
+                            //     }
+                            //     alert("삭제 성공")
+                            //     location.reload();
+                            // })
                             .then(async res => {
                                 if (res.status === 400) {
                                     let exceptionMessage = await res.text();

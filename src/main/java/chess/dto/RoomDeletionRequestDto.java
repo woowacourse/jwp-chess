@@ -1,11 +1,10 @@
 package chess.dto;
 
 public class RoomDeletionRequestDto {
-    private final String password;
-    private final Integer roomId;
+    private String password;
+    private Integer roomId;
 
     public RoomDeletionRequestDto() {
-        this(null, null);
     }
 
     public RoomDeletionRequestDto(final String password, final Integer roomId) {

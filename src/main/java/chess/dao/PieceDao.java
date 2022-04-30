@@ -4,11 +4,11 @@ import chess.entity.PieceEntity;
 import java.util.List;
 
 public interface PieceDao {
-    void initBoard(int gameId);
+    void initBoard(Integer gameId);
 
-    List<PieceEntity> getBoardByGameId(int id);
+    List<PieceEntity> getBoardByGameId(Integer gameId);
 
-    void remove(int id);
+    void remove(Integer id);
 
-    int update(PieceEntity piece, int gameId);
+    int update(PieceEntity piece, Integer gameId);
 }

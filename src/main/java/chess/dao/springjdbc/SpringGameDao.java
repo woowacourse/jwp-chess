@@ -34,7 +34,7 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public GameEntity findById(final int id) {
+    public GameEntity findById(final Integer id) {
         String sql = "SELECT id, name, status, turn, password FROM game WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, chessGameDtoRowMapper, id);
     }
@@ -60,13 +60,13 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public int deleteGame(final int id) {
+    public int deleteGame(final Integer id) {
         String sql = "DELETE FROM game where id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
     @Override
-    public String findPasswordById(int gameId) {
+    public String findPasswordById(Integer gameId) {
         String sql = "SELECT password FROM game WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }

@@ -15,7 +15,7 @@ public class InMemoryPieceDao implements PieceDao {
     private final Map<Integer, List<PieceEntity>> boardTable = new HashMap<>();
 
     @Override
-    public void initBoard(int gameId) {
+    public void initBoard(Integer gameId) {
         Map<Square, Piece> board = new ChessInitializer().initPieces();
         List<PieceEntity> pieces = board.keySet().stream()
                 .map(square -> new PieceEntity(square.getName(), PieceType.getName(board.get(square)),
@@ -25,17 +25,17 @@ public class InMemoryPieceDao implements PieceDao {
     }
 
     @Override
-    public List<PieceEntity> getBoardByGameId(int gameId) {
+    public List<PieceEntity> getBoardByGameId(Integer gameId) {
         return boardTable.getOrDefault(gameId, Collections.emptyList());
     }
 
     @Override
-    public void remove(int gameId) {
+    public void remove(Integer gameId) {
         boardTable.remove(gameId);
     }
 
     @Override
-    public int update(PieceEntity replacePiece, int gameId) {
+    public int update(PieceEntity replacePiece, Integer gameId) {
         List<PieceEntity> pieces = boardTable.get(gameId);
         int affectedRows = 0;
         for (int i = 0; i < pieces.size(); i++) {

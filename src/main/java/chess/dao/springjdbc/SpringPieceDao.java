@@ -23,7 +23,7 @@ public class SpringPieceDao implements PieceDao {
     }
 
     @Override
-    public void initBoard(final int gameId) {
+    public void initBoard(final Integer gameId) {
         String sql = "INSERT INTO piece (game_id, piece_type, piece_color, square)"
                 + " SELECT ?, init.piece_type, init.piece_color, init.square FROM init_board AS init"
                 + " ON duplicate KEY UPDATE piece_type = init.piece_type, piece_color = init.piece_color";
@@ -31,19 +31,19 @@ public class SpringPieceDao implements PieceDao {
     }
 
     @Override
-    public List<PieceEntity> getBoardByGameId(final int id) {
+    public List<PieceEntity> getBoardByGameId(final Integer id) {
         String sql = "SELECT piece_type, piece_color, square FROM piece WHERE game_id = ?";
         return jdbcTemplate.query(sql, pieceRowMapper, id);
     }
 
     @Override
-    public void remove(final int id) {
+    public void remove(final Integer id) {
         String sql = "DELETE FROM piece WHERE game_id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
-    public int update(final PieceEntity piece, final int gameId) {
+    public int update(final PieceEntity piece, final Integer gameId) {
         String sql = "UPDATE piece SET piece_type = ?, piece_color = ? WHERE square = ? AND game_id = ?";
         return jdbcTemplate.update(sql, piece.getType(), piece.getColor(), piece.getSquare(), gameId);
     }

@@ -20,13 +20,13 @@ public class InMemoryGameDao implements GameDao {
     }
 
     @Override
-    public int deleteGame(int id) {
+    public int deleteGame(Integer id) {
         gameTable.remove(id);
         return 1;
     }
 
     @Override
-    public String findPasswordById(int gameId) {
+    public String findPasswordById(Integer gameId) {
         return gameTable.get(gameId).getPassword();
     }
 
@@ -37,7 +37,7 @@ public class InMemoryGameDao implements GameDao {
     }
 
     @Override
-    public GameEntity findById(int id) {
+    public GameEntity findById(Integer id) {
         return gameTable.get(id);
     }
 

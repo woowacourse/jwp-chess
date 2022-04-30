@@ -36,17 +36,17 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public void initGame(int gameId) {
+    public void initGame(Integer gameId) {
         ChessGame chessGame = new ChessGame();
         pieceDao.initBoard(gameId);
         updateGame(chessGame, gameId);
     }
 
-    private void updateGame(ChessGame chessGame, int id) {
+    private void updateGame(ChessGame chessGame, Integer id) {
         gameDao.update(new GameEntity(id, chessGame));
     }
 
-    public MoveResponse move(int id, String from, String to) {
+    public MoveResponse move(Integer id, String from, String to) {
         ChessGame chessGame = getGameFromDao(id);
         MoveResult movedResult = chessGame.move(Square.of(from), Square.of(to));
         updatePiece(id, movedResult);
@@ -54,20 +54,20 @@ public class ChessService {
         return new MoveResponse(movedResult);
     }
 
-    private void updatePiece(int id, MoveResult movedResult) {
+    private void updatePiece(Integer id, MoveResult movedResult) {
         Map<Square, Piece> affectedPiece = movedResult.getAffectedPiece();
         for (Square square : affectedPiece.keySet()) {
             pieceDao.update(new PieceEntity(square, affectedPiece.get(square)), id);
         }
     }
 
-    private ChessGame getGameFromDao(int id) {
+    private ChessGame getGameFromDao(Integer id) {
         GameEntity game = gameDao.findById(id);
         Status status = getStatusFromDao(game.getStatus(), getBoardFromDao(id));
         return new ChessGame(Color.valueOf(game.getTurn()), status);
     }
 
-    private Board getBoardFromDao(int id) {
+    private Board getBoardFromDao(Integer id) {
         Map<Square, Piece> pieces = convertPieces(pieceDao.getBoardByGameId(id));
         return new Board(pieces);
     }
@@ -81,7 +81,7 @@ public class ChessService {
         return StatusType.createStatus(statusName, board);
     }
 
-    public EndGameResponse endGame(int id) {
+    public EndGameResponse endGame(Integer id) {
         ChessGame game = getGameFromDao(id);
         game.end();
         gameDao.update(new GameEntity(id, game));
@@ -97,15 +97,15 @@ public class ChessService {
         gameDao.createGame(name, hashedPassword);
     }
 
-    public GameResultDto getResult(int id) {
+    public GameResultDto getResult(Integer id) {
         return GameResultDto.of(getGameFromDao(id).getResult());
     }
 
-    public BoardDto getBoard(int gameId) {
+    public BoardDto getBoard(Integer gameId) {
         return new BoardDto(pieceDao.getBoardByGameId(gameId));
     }
 
-    public DeleteGameResponse deleteGame(int gameId, String password) {
+    public DeleteGameResponse deleteGame(Integer gameId, String password) {
         String hashedPassword = gameDao.findPasswordById(gameId);
         throwDifferentPassword(password, hashedPassword);
         ChessGame game = getGameFromDao(gameId);

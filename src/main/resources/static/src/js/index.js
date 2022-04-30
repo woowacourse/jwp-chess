@@ -81,12 +81,9 @@ async function createRoom() {
         name: roomName
     }
     await fetch("/api/chess/rooms/", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(bodyValue)
+        method: 'POST', headers: {
+            'Content-Type': 'application/json;charset=utf-8', 'Accept': 'application/json'
+        }, body: JSON.stringify(bodyValue)
     })
         .then(handleErrors)
         .catch(function (error) {
@@ -114,13 +111,11 @@ async function enterRoom(id) {
     window.location.replace("/game.html?id=" + id);
 }
 
-
 async function endRoom(id) {
     if (confirm("정말 종료하시겠습니까?")) {
-        await fetch("/api/chess/rooms/" + id + "/end",
-            {
-                method: "PATCH"
-            }).then(handleErrors)
+        await fetch("/api/chess/rooms/" + id + "/end", {
+            method: "PATCH"
+        }).then(handleErrors)
             .catch(function (error) {
                 alert(error.message)
             });
@@ -129,25 +124,27 @@ async function endRoom(id) {
     }
 }
 
-function updateRoomName(id) {
+async function updateRoomName(id) {
     const roomName = window.prompt("바꿀 방 제목을 입력해주세요");
 
-    let f = document.createElement("form");
-    f.setAttribute("method", "post");
-    f.setAttribute("action", "/room/update/"); //url
-    document.body.appendChild(f);
+    if (roomName === null | roomName === "") {
+        return;
+    }
 
-    let i = document.createElement("input");
-    i.setAttribute("type", "hidden");
-    i.setAttribute("name", "roomName"); // key
-    i.setAttribute("value", roomName); // value
-    f.appendChild(i);
+    const bodyValue = {
+        name: roomName
+    }
 
-    let i2 = document.createElement("input");
-    i2.setAttribute("type", "hidden");
-    i2.setAttribute("name", "roomId"); // key
-    i2.setAttribute("value", id); // value
-    f.appendChild(i2);
+    let response = await fetch("/api/chess/rooms/" + id, {
+        method: "PATCH", headers: {
+            'Content-Type': 'application/json;charset=utf-8', 'Accept': 'application/json'
+        }, body: JSON.stringify(bodyValue)
+    }).then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        });
 
-    f.submit();
+    console.log(response);
+
+    window.location.reload();
 }

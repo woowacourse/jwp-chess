@@ -1,5 +1,7 @@
 package chess.dto.request;
 
+import chess.entity.RoomEntity;
+
 public class RoomRequestDto {
     private String name;
 
@@ -12,5 +14,9 @@ public class RoomRequestDto {
 
     public String getName() {
         return name;
+    }
+
+    public RoomEntity toEntity() {
+        return new RoomEntity(null, name, null, null);
     }
 }

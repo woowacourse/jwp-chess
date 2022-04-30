@@ -26,7 +26,9 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public List<RoomEntity> findRooms() {
-        final String sql = "select * from room where game_over = false;";
+        final String sql = ""
+            + "SELECT * from room "
+            + "WHERE game_over = false;";
         return jdbcTemplate.query(sql, rowMapper());
     }
 
@@ -49,19 +51,44 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public void updateTeam(final Long id, final String team) {
-        String sql = "update room set team = ? where id = ?";
+        String sql = ""
+            + "UPDATE room "
+            + "SET "
+            + "  team = ? "
+            + "WHERE id = ?";
         jdbcTemplate.update(sql, team, id);
     }
 
     @Override
     public RoomEntity findById(final Long id) {
-        String sql = "select * from room where id = ?";
+        String sql = ""
+            + "SELECT * FROM room "
+            + "WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper(), id);
     }
 
     @Override
     public void updateGameOver(final Long id) {
-        String sql = "update room set game_over = true where id = ?";
+        String sql = ""
+            + "UPDATE room "
+            + "SET"
+            + "  game_over = true "
+            + "WHERE"
+            + "  id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public RoomEntity save(final RoomEntity room) {
+        final String sql = ""
+            + "UPDATE room "
+            + "SET"
+            + "  name = ?,"
+            + "  team = ?,"
+            + "  game_over = ? "
+            + "WHERE"
+            + "  id = ?";
+        jdbcTemplate.update(sql, room.getName(), room.getTeam(), room.isGameOver(), room.getId());
+        return room;
     }
 }

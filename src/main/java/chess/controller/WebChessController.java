@@ -62,6 +62,13 @@ public class WebChessController {
             .build();
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<RoomResponseDto> updateName(@PathVariable Long id,
+                                                      @RequestBody RoomRequestDto roomRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(chessService.update(id, roomRequestDto));
+    }
+
     @GetMapping("/{id}/status")
     public ResponseEntity<StatusResponseDto> calculateStatus(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)

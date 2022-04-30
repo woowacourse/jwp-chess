@@ -140,4 +140,12 @@ public class ChessService {
         final Board board = getBoard(id);
         return StatusResponseDto.of(new Score(board.getBoard()));
     }
+
+    public RoomResponseDto update(final Long id, final RoomRequestDto roomRequestDto) {
+        final RoomEntity targetRoom = getValidRoom(id);
+        final RoomEntity roomEntity = roomRequestDto.toEntity();
+        targetRoom.patch(roomEntity);
+        final RoomEntity updatedRoom = roomRepository.save(targetRoom);
+        return RoomResponseDto.of(updatedRoom);
+    }
 }

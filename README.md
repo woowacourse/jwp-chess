@@ -69,7 +69,7 @@ use chess;
 - [x] 체스방 목록에서 체스방 삭제 버튼을 클릭하고 체스방 생성시 설정한 비밀번호를 입력하면 체스 게임을 삭제할 수 있다.
 - [x] 진행중인 체스방은 삭제할 수 없다.
 
-## TODO
+## 목표
 
 - [x] 기존의 spark로 구현한 controller를 spring으로 대체한다.
     - [x] ModelAndView를 사용해 웹 페이지를 렌더링한다.
@@ -110,4 +110,6 @@ use chess;
 - [x] ResponseBody로 내려주기
 - [x] 패스워드 포함된 form 값을 받아오는 방법 공부하기-> requestParams 사용
 - [x] test 코드 DB schema.sql로 초기화(세팅)
-
+- [ ] redirect를 사용하는 api ResponseEntity로 변경
+- [ ] GET /game/{gameId} -> 존재하지 않는 gameId를 조회하면 어떻게 되나요?
+  - [ ] 예외처리 제대로 하기

@@ -75,7 +75,7 @@ public class ChessController {
 
     private ModelAndView getIndexModel(String msg) {
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("msg", msg);
+        modelAndView.addObject("gameMessage", msg);
         modelAndView.addObject("rooms", chessGameService.getRooms());
         return modelAndView;
     }

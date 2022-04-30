@@ -84,7 +84,8 @@ class ChessControllerTest {
                     .accept(MediaType.APPLICATION_JSON_VALUE)
                     .when().get("/games/" + gameId)
                     .then().log().all()
-                    .statusCode(HttpStatus.NOT_FOUND.value());
+                    .statusCode(HttpStatus.NOT_FOUND.value())
+                    .body("message", Matchers.equalTo("존재하지 않는 게임입니다."));
         }
     }
 

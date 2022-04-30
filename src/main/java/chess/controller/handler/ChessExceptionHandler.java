@@ -1,8 +1,8 @@
 package chess.controller.handler;
 
 import chess.controller.dto.response.ErrorResponse;
-import java.util.NoSuchElementException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,9 +16,9 @@ public class ChessExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Void> handleDataNotFound() {
-        return ResponseEntity.notFound().build();
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    public ResponseEntity<ErrorResponse> handleDataNotFound(EmptyResultDataAccessException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(DuplicateKeyException.class)

@@ -4,12 +4,11 @@ import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.dto.MoveDto;
 import chess.dto.PieceDto;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 public class JdbcPieceDao implements PieceDao {
@@ -64,6 +63,6 @@ public class JdbcPieceDao implements PieceDao {
     @Override
     public int getKingCount(int roomId) {
         final String sql = " select count(*) from piece where roomId = ? and name = 'K'";
-        return jdbcTemplate.queryForObject(sql, Integer.class,roomId);
+        return jdbcTemplate.queryForObject(sql, Integer.class, roomId);
     }
 }

@@ -9,7 +9,6 @@ import chess.service.ChessService;
 import chess.view.ChessMap;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -99,7 +98,7 @@ public class ChessApiController {
     @ResponseBody
     @GetMapping("/state/{roomId}")
     public ResponseEntity<String> getState(@PathVariable("roomId") int roomId) {
-        return  ResponseEntity.ok(chessService.getState(roomId));
+        return ResponseEntity.ok(chessService.getState(roomId));
     }
 
     @ExceptionHandler

@@ -8,10 +8,12 @@ import chess.service.dto.response.DeleteGameResponse;
 import chess.service.dto.response.EndGameResponse;
 import chess.service.dto.response.GameResultDto;
 import chess.service.dto.response.MoveResponse;
-import org.springframework.http.HttpStatus;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,41 +28,44 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
-    @PutMapping("/new-board/{gameId}")
-    public ResponseEntity<Object> initBoard(@PathVariable int gameId) {
+    @PostMapping("/board/{gameId}")
+    public ResponseEntity<Object> initBoard(@PathVariable Integer gameId) {
         chessService.initGame(gameId);
-        return ResponseEntity.ok().build();
+        URI uri;
+        try {
+            uri = new URI("/board/" + gameId);
+        } catch (URISyntaxException exception) {
+            throw new IllegalArgumentException("URI 형식이 잘못됐습니다.");
+        }
+        return ResponseEntity.created(uri).build();
     }
 
     @GetMapping("/board/{gameId}")
-    public ResponseEntity<BoardDto> getBoardPieces(@PathVariable int gameId) {
-        return ResponseEntity.ok(chessService.getBoard(gameId));
+    public BoardDto getBoardPieces(@PathVariable Integer gameId) {
+        return chessService.getBoard(gameId);
     }
 
-    @PostMapping("/move/{gameId}")
-    public ResponseEntity<Object> requestMove(@PathVariable int gameId, MoveRequest moveRequest) {
-        MoveResponse moveResponse = chessService.move(gameId, moveRequest.getFrom(), moveRequest.getTo());
-        return new ResponseEntity<>(moveResponse, HttpStatus.OK);
+    @PatchMapping("/board/{gameId}")
+    public MoveResponse move(@PathVariable Integer gameId, MoveRequest moveRequest) {
+        return chessService.move(gameId, moveRequest.getFrom(), moveRequest.getTo());
     }
 
     @PutMapping("/game-end/{gameId}")
-    public ResponseEntity<EndGameResponse> requestEndGame(@PathVariable int gameId) {
-        EndGameResponse endGameResponse = chessService.endGame(gameId);
-        return new ResponseEntity<>(endGameResponse, HttpStatus.OK);
+    public EndGameResponse endGame(@PathVariable Integer gameId) {
+        return chessService.endGame(gameId);
     }
 
     @DeleteMapping("/game")
-    public ResponseEntity<DeleteGameResponse> deleteGame(@RequestBody DeleteGameRequest deleteRequest) {
+    public DeleteGameResponse deleteGame(@RequestBody DeleteGameRequest deleteRequest) {
         int id = deleteRequest.getId();
         String password = deleteRequest.getPassword();
-        DeleteGameResponse deleteResponse = chessService.deleteGame(id, password);
-        return new ResponseEntity<>(deleteResponse, HttpStatus.OK);
+        return chessService.deleteGame(id, password);
     }
 
     @GetMapping("/status/{gameId}")
-    public ResponseEntity<GameResultDto> renderStatus(@PathVariable int gameId) {
+    public GameResultDto getResult(@PathVariable Integer gameId) {
         GameResultDto status = chessService.getResult(gameId);
         chessService.endGame(gameId);
-        return new ResponseEntity<>(status, HttpStatus.OK);
+        return status;
     }
 }

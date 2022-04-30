@@ -24,7 +24,7 @@ public class ChessController {
     }
 
     @GetMapping("/game/{gameId}")
-    public String renderBoard(@PathVariable String gameId) {
+    public String renderBoard(@PathVariable Integer gameId) {
         return "board";
     }
 

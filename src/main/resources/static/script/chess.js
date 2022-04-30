@@ -13,8 +13,8 @@ for (const startButton of startButtons) {
 
 async function putNewBoard() {
     let id = location.href.split("/").pop();
-    const res = await fetch("../new-board/"+id, {
-        method: 'PUT'
+    const res = await fetch("/board/"+id, {
+        method: 'POST'
     });
     if (!res.ok) {
         console.log("체스판 초기화 실패!")
@@ -75,7 +75,7 @@ async function onClick(event) {
 
     async function postTwoCells() {
         if (squareIdList.length === 2) {
-            await postMove()
+            await patchMove()
         }
     }
 
@@ -104,10 +104,10 @@ async function onClick(event) {
     }
 }
 
-async function postMove() {
+async function patchMove() {
     let id = location.href.split("/").pop();
-    fetch('/move/' + id, {
-        method: 'POST',
+    fetch('/board/' + id, {
+        method: 'PATCH',
         cache: 'no-cache',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'

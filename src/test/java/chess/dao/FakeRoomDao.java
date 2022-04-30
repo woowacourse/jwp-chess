@@ -1,13 +1,13 @@
 package chess.dao;
 
-import chess.entity.Room;
+import chess.entity.RoomEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class FakeRoomDao implements RoomDao {
 
-    private final List<Room> rooms = new ArrayList<>();
+    private final List<RoomEntity> rooms = new ArrayList<>();
     private Long id;
 
     public FakeRoomDao() {
@@ -15,32 +15,32 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public long save(Room room) {
-        rooms.add(new Room(id, room.getTurn(), room.getName(), room.getPassword()));
+    public long save(RoomEntity room) {
+        rooms.add(new RoomEntity(id, room.getTurn(), room.getName(), room.getPassword()));
         return id++;
     }
 
     @Override
-    public Optional<Room> findById(long id) {
+    public Optional<RoomEntity> findById(long id) {
         return rooms.stream()
                 .filter(room -> room.getId() == id)
                 .findAny();
     }
 
     @Override
-    public List<Room> findAll() {
+    public List<RoomEntity> findAll() {
         return rooms;
     }
 
     @Override
     public void updateTurn(long id, String turn) {
-        Room room = rooms.get((int) (id - 1));
-        rooms.set((int) (id - 1), new Room(id, turn, room.getName(), room.getPassword()));
+        RoomEntity room = rooms.get((int) (id - 1));
+        rooms.set((int) (id - 1), new RoomEntity(id, turn, room.getName(), room.getPassword()));
     }
 
     @Override
     public void deleteRoom(long id) {
-        Room delRoom = rooms.stream()
+        RoomEntity delRoom = rooms.stream()
                 .filter(room -> room.getId() == id)
                 .findAny().orElseThrow();
         rooms.remove(delRoom);

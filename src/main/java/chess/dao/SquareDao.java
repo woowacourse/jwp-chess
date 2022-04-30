@@ -1,15 +1,15 @@
 package chess.dao;
 
-import chess.entity.Square;
+import chess.entity.SquareEntity;
 import java.util.List;
 import java.util.Optional;
 
 public interface SquareDao {
-    void saveAll(List<Square> squares, long roomId);
+    void saveAll(List<SquareEntity> squares, long roomId);
 
-    List<Square> findByRoomId(long roomId);
+    List<SquareEntity> findByRoomId(long roomId);
 
-    Optional<Square> findByRoomIdAndPosition(long roomId, String position);
+    Optional<SquareEntity> findByRoomIdAndPosition(long roomId, String position);
 
     void update(long roomId, String position, String piece);
 

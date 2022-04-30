@@ -1,15 +1,15 @@
 package chess.dao;
 
-import chess.entity.Room;
+import chess.entity.RoomEntity;
 import java.util.List;
 import java.util.Optional;
 
 public interface RoomDao {
-    long save(Room room);
+    long save(RoomEntity room);
 
-    Optional<Room> findById(long id);
+    Optional<RoomEntity> findById(long id);
 
-    List<Room> findAll();
+    List<RoomEntity> findAll();
 
     void updateTurn(long id, String turn);
 

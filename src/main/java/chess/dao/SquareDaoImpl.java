@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.entity.Square;
+import chess.entity.SquareEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,7 +18,7 @@ public class SquareDaoImpl implements SquareDao {
     }
 
     @Override
-    public void saveAll(List<Square> squares, long roomId) {
+    public void saveAll(List<SquareEntity> squares, long roomId) {
         String sql = "insert into square (position, piece, room_id) values (?, ?, ?)";
 
         List<Object[]> result = squares.stream()
@@ -29,13 +29,13 @@ public class SquareDaoImpl implements SquareDao {
     }
 
     @Override
-    public List<Square> findByRoomId(long roomId) {
+    public List<SquareEntity> findByRoomId(long roomId) {
         String sql = "select * from square where room_id = ?";
         return jdbcTemplate.query(sql, rowMapper(), roomId);
     }
 
     @Override
-    public Optional<Square> findByRoomIdAndPosition(long roomId, String position) {
+    public Optional<SquareEntity> findByRoomIdAndPosition(long roomId, String position) {
         String sql = "select * from square where room_id = ? and position = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper(), roomId, position));
     }
@@ -52,8 +52,8 @@ public class SquareDaoImpl implements SquareDao {
         jdbcTemplate.update(sql, roomId);
     }
 
-    private RowMapper<Square> rowMapper() {
-        return (result, rowNum) -> new Square(
+    private RowMapper<SquareEntity> rowMapper() {
+        return (result, rowNum) -> new SquareEntity(
                 result.getLong("id"),
                 result.getLong("room_id"),
                 result.getString("position"),

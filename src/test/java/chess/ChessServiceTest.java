@@ -14,7 +14,7 @@ import chess.dto.MoveDto;
 import chess.dto.PasswordDto;
 import chess.dto.RoomCreationDto;
 import chess.dto.RoomDto;
-import chess.entity.Room;
+import chess.entity.RoomEntity;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -95,7 +95,7 @@ public class ChessServiceTest {
     @Test
     void delete() {
         chessService.delete(1L, new PasswordDto(""));
-        Optional<Room> roomOptional = roomDao.findById(1L);
+        Optional<RoomEntity> roomOptional = roomDao.findById(1L);
         assertThat(roomOptional.isEmpty()).isTrue();
     }
 }

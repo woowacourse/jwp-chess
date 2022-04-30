@@ -2,7 +2,7 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.entity.Room;
+import chess.entity.RoomEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class RoomDaoTest {
     @Test
     @DisplayName("Room을 새로 생성한다.")
     void save() {
-        Room room = new Room("hi", "");
+        RoomEntity room = new RoomEntity("hi", "");
         long savedId = roomDao.save(room);
         assertThat(savedId).isEqualTo(2L);
     }

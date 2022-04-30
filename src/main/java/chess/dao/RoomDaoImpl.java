@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.entity.Room;
+import chess.entity.RoomEntity;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +24,7 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public long save(Room room) {
+    public long save(RoomEntity room) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into room (turn, password, name) values (?, ?, ?)";
         try {
@@ -44,10 +44,10 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Optional<Room> findById(long id) {
+    public Optional<RoomEntity> findById(long id) {
         String sql = "select * from room where id = ?";
         try {
-            Room room = jdbcTemplate.queryForObject(sql, rowMapper(), id);
+            RoomEntity room = jdbcTemplate.queryForObject(sql, rowMapper(), id);
             return Optional.ofNullable(room);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -55,7 +55,7 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public List<Room> findAll() {
+    public List<RoomEntity> findAll() {
         String sql = "select * from room";
         return jdbcTemplate.query(sql, rowMapper());
     }
@@ -72,9 +72,9 @@ public class RoomDaoImpl implements RoomDao {
         jdbcTemplate.update(sql, id);
     }
 
-    private RowMapper<Room> rowMapper() {
+    private RowMapper<RoomEntity> rowMapper() {
         return (rs, rowNum) ->
-                new Room(
+                new RoomEntity(
                         rs.getLong("id"),
                         rs.getString("turn"),
                         rs.getString("name"),

@@ -24,7 +24,7 @@ public class ChessController {
         this.commandService = commandService;
     }
 
-    @GetMapping(path = "/chess/{id}/board")
+    @GetMapping(path = "/room/{id}")
     public ModelAndView printCurrentBoard(@PathVariable("id") Long id, @RequestParam(required = false) String message) {
         List<String> commands = commandService.findAllByRoomID(id);
         State state = commandService.getCurrentState(commands);
@@ -38,7 +38,7 @@ public class ChessController {
         return modelAndView;
     }
 
-    @PostMapping(path = "/chess/{id}/board")
+    @PostMapping(path = "/room/{id}/command")
     public String movePiece(RedirectAttributes redirectAttributes, @PathVariable Long id,
                             @RequestParam("command") String command) {
         commandService.getCurrentState(commandService.findAllByRoomID(id))
@@ -48,7 +48,7 @@ public class ChessController {
         return "redirect:/chess/" + id + "/board";
     }
 
-    @GetMapping(path = "/chess/{id}/result")
+    @GetMapping(path = "/room/{id}/result")
     public ModelAndView printResult(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("status");
         StatusDto statusDto = StatusDto.of(commandService.getCurrentState(commandService.findAllByRoomID(id))

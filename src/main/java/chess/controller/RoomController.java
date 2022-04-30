@@ -24,12 +24,12 @@ public class RoomController {
         return modelAndView;
     }
 
-    @GetMapping("/chess/create")
+    @GetMapping("/room/create")
     public String createRoomPage() {
         return "createRoom";
     }
 
-    @PostMapping("/chess")
+    @PostMapping("/room")
     public String createRoom(@RequestParam String name, @RequestParam String password) {
         roomService.create(name, password);
         return "redirect:/";

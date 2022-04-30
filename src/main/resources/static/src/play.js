@@ -14,7 +14,8 @@ const moveInitializer = {
                 if (positions.length == 4) {
                     let source = positions.substring(0, 2);
                     let target = positions.substring(2, 4);
-                    JsonSender.sendSourceTarget(source, target);
+                    let roomId = window.location.pathname.split("/")[2];
+                    JsonSender.sendSourceTarget(source, target, roomId);
                     positions = "";
                 }
             }
@@ -23,8 +24,8 @@ const moveInitializer = {
 }
 
 const JsonSender = {
-    sendSourceTarget: function (source, target) {
-        fetch('/move', {
+    sendSourceTarget: function (source, target, roomId) {
+        fetch('/move/' + roomId, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

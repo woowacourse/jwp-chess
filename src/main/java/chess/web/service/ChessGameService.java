@@ -88,7 +88,11 @@ public class ChessGameService {
     }
 
     public ChessGame getChessGame(int roomId) {
-        return ChessGame.of(new RunningGame(ChessBoard.of(findAllBoard(roomId)), findTurn(roomId)));
+        RoomDto startableDto = roomDao.isStartable(roomId);
+        if (!startableDto.isFinished()) {
+            return ChessGame.of(new RunningGame(ChessBoard.of(findAllBoard(roomId)), findTurn(roomId)));
+        }
+        throw new IllegalStateException("게임이 이미 종료되었습니다.");
     }
 
     private Map<Position, Piece> findAllBoard(int roomId) {

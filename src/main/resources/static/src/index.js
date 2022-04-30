@@ -3,33 +3,6 @@ window.addEventListener("load", function () {
     readRoomListButtonInitializer.initializeReadRoomListButton();
 });
 
-const JsonSender = {
-    sendSourceTarget: function (source, target) {
-        fetch('/move', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                source: source,
-                target: target
-            })
-        })
-            .then((response) => {
-                return response.json().then((data) => {
-                    if (data.isGameOver === true) {
-                        alert(data.winner + "가 승리하였습니다!!!");
-                        window.location.replace("end");
-                    } else if (data.isMovable === false) {
-                        alert('이동할 수 없습니다.');
-                    } else {
-                        window.location.reload();
-                    }
-                });
-            });
-    }
-}
-
 const createRoomButtonInitializer = {
     initializeCreateButton: function () {
         let createButton = document.getElementById('room-create-button');

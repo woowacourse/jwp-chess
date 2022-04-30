@@ -9,6 +9,13 @@ public class ChessGameRestControllerAdvice {
 
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<Void> badArgumentHandle(final Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.badRequest().build();
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<Void> badStateHandle(final Exception e) {
+        e.printStackTrace();
         return ResponseEntity.badRequest().build();
     }
 }

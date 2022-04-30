@@ -21,3 +21,5 @@ create table board
     primary key (board_id),
     foreign key (room_id) references room (id)
 );
+
+insert into board (position, piece, room_id) values ('a2', 'p_WHITE', 1);

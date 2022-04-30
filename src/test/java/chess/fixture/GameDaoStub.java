@@ -1,4 +1,4 @@
-package chess.service.fixture;
+package chess.fixture;
 
 import chess.dao.GameDao;
 import chess.domain.auth.EncryptedAuthCredentials;
@@ -79,10 +79,19 @@ public class GameDaoStub extends GameDao {
 
     @Override
     public int saveAndGetGeneratedId(EncryptedAuthCredentials authCredentials) {
+        validateNoDuplicate(authCredentials);
         autoIncrementId++;
         repository.put(autoIncrementId, new GameFullEntity(autoIncrementId,
                 authCredentials.getName(), authCredentials.getPassword(), true));
         return autoIncrementId;
+    }
+
+    private void validateNoDuplicate(EncryptedAuthCredentials authCredentials) {
+        boolean duplicateGameExists = repository.values().stream()
+                .anyMatch(game -> game.name.equals(authCredentials.getName()));
+        if (duplicateGameExists) {
+            throw new IllegalArgumentException("게임을 생성하는데 실패하였습니다.");
+        }
     }
 
     @Override

@@ -19,8 +19,8 @@ import chess.dto.view.GameOverviewDto;
 import chess.dto.view.GameResultDto;
 import chess.dto.view.GameSnapshotDto;
 import chess.exception.InvalidAccessException;
-import chess.service.fixture.EventDaoStub;
-import chess.service.fixture.GameDaoStub;
+import chess.fixture.EventDaoStub;
+import chess.fixture.GameDaoStub;
 import chess.util.CookieUtil;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -133,8 +133,10 @@ class ChessServiceTest {
     @Test
     void initGame_메서드는_새로운_게임을_DB에_저장하고_생성된_게임ID가_담긴_데이터를_반환한다() {
         EncryptedAuthCredentials authCredentials = new EncryptedAuthCredentials("유효한_게임명", "비밀번호");
+        int existingGameCount = GameDaoStub.TOTAL_GAME_COUNT;
+
         CreatedGameDto actual = service.initGame(authCredentials);
-        CreatedGameDto expected = CreatedGameDto.of(4);
+        CreatedGameDto expected = CreatedGameDto.of(existingGameCount + 1);
 
         assertThat(actual).isEqualTo(expected);
     }

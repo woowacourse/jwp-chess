@@ -1,4 +1,4 @@
-package chess.service.fixture;
+package chess.fixture;
 
 import chess.dao.EventDao;
 import chess.domain.event.Event;

@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.dto.response.EnterGameDto;
-import chess.service.fixture.GameDaoStub;
+import chess.fixture.GameDaoStub;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

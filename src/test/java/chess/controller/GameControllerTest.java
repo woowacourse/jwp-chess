@@ -6,60 +6,51 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import chess.entity.GameEntity;
+import chess.fixture.AuthServiceStub;
+import chess.fixture.ChessServiceStub;
+import chess.fixture.GameDaoStub;
 import chess.service.AuthService;
 import chess.service.ChessService;
-import chess.service.fixture.EventDaoStub;
-import chess.service.fixture.GameDaoStub;
 import chess.util.CookieUtil;
-import java.util.List;
 import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+@SuppressWarnings("NonAsciiCharacters")
 class GameControllerTest {
 
     private MockMvc mockMvc;
 
     @BeforeEach
     public void setUp() {
-        GameDaoStub gameDao = new GameDaoStub();
-        EventDaoStub eventDao = new EventDaoStub();
-        AuthService authService = new AuthService(gameDao);
-        ChessService chessService = new ChessService(gameDao, eventDao);
+        AuthService authService = new AuthServiceStub();
+        ChessService chessService = new ChessServiceStub();
         GameController gameController = new GameController(chessService, authService);
         mockMvc = MockMvcBuilders.standaloneSetup(gameController).build();
     }
 
+    @DisplayName("POST /game - 생성된 게임id를 토대로 응답 메시지의 Set-Cookie 헤더와 Location 헤더값이 설정된다")
     @Test
     void createGame() throws Exception {
-        int expectedNewGameId = findAllTestData().size() + 1;
-        Cookie expectedCookie = CookieUtil.generateGameOwnerCookie(expectedNewGameId);
-
         MockHttpServletRequestBuilder request = post("/game")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("{\"name\": \"방이름\",\"password\": \"비밀번호\"}");
 
+        int expectedNewGameId = GameDaoStub.TOTAL_GAME_COUNT + 1;
+        Cookie expectedCookie = CookieUtil.generateGameOwnerCookie(expectedNewGameId);
+
         mockMvc.perform(request)
                 .andExpect(status().isCreated())
-                .andExpect(cookie().exists("player_validation"))
-                .andExpect(cookie().value("player_validation", expectedCookie.getValue()))
-                .andExpect(cookie().maxAge("player_validation", expectedCookie.getMaxAge()))
-                .andExpect(cookie().path("player_validation", expectedCookie.getPath()))
+                .andExpect(cookie().exists(CookieUtil.KEY))
+                .andExpect(cookie().value(CookieUtil.KEY, expectedCookie.getValue()))
+                .andExpect(cookie().maxAge(CookieUtil.KEY, expectedCookie.getMaxAge()))
+                .andExpect(cookie().path(CookieUtil.KEY, expectedCookie.getPath()))
                 .andExpect(header().string("Location", "/game/" + expectedNewGameId))
                 .andExpect(content().string(expectedNewGameId + ""));
-    }
-
-    private List<GameEntity> findAllTestData() {
-        return List.of(
-                new GameEntity(1, "진행중인_게임", true),
-                new GameEntity(2, "종료된_게임", false),
-                new GameEntity(3, "이미_존재하는_게임명", true),
-                new GameEntity(4, "참여자가_있는_게임", true),
-                new GameEntity(5, "참여자가_없는_게임", true));
     }
 }

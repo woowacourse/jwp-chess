@@ -11,6 +11,7 @@ import chess.web.dto.ReadRoomResultDto;
 import chess.web.dto.RoomDto;
 import chess.web.service.ChessGameService;
 import java.util.HashMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,10 +39,6 @@ public class ChessGameRestController {
 
     @PostMapping("/move/{roomId}")
     public MoveResultDto move(@PathVariable int roomId, @RequestBody MoveDto moveDto) {
-        System.out.println("======================");
-        System.out.println(roomId);
-        System.out.println("======================");
-        //return new MoveResultDto(new HashMap<>());
         return service.move(moveDto, roomId);
     }
 
@@ -55,7 +52,7 @@ public class ChessGameRestController {
         return service.findAllRooms();
     }
 
-    @PostMapping("/room/{roomId}")
+    @DeleteMapping("/room/{roomId}")
     public DeleteResultDto delete(@PathVariable("roomId") int roomId, @RequestBody DeleteDto deleteDto) {
         return service.delete(roomId, deleteDto);
     }

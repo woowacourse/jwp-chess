@@ -160,7 +160,7 @@ const deleteRoomButtonInitializer = {
                 }
 
                 let roomId = deleteButtons[i].id.split("-")[1];
-                httpRequest.open("POST", "/room/" + roomId);
+                httpRequest.open("delete", "/room/" + roomId);
                 httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 httpRequest.send(JSON.stringify({ "password": roomPassword }));
             })

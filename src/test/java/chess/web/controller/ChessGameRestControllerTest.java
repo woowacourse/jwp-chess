@@ -96,7 +96,7 @@ class ChessGameRestControllerTest {
         RestAssured.given().log().all()
                 .body(deleteDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/room/1")
+                .when().delete("/room/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE);

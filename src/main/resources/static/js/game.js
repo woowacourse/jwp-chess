@@ -76,6 +76,7 @@ function loadLastGame() {
     .done(function (data) {
       placeChessPieces(data.board);
       setCurrentTeam(data.teamName);
+      setTeamScore(data.teamNameToScore);
     })
     .fail(function (xhr, status, errorThrown) {
       console.log(xhr);

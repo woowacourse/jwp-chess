@@ -79,7 +79,7 @@ class ChessServiceTest {
         service.saveGame(new SaveRequest("White Team", Map.of("b2", "whitePawn"), LocalDateTime.of(2022, 04, 25, 00,00)));
         service.saveGame(new SaveRequest("Black Team", Map.of("a7", "blackPawn"), LocalDateTime.of(2022, 04, 26, 00,00)));
 
-        GameResponse gameResponse = service.loadLastGame();
+        GameResponse gameResponse = service.loadLastGame(new MockHttpSession());
         assertThat(gameResponse.getTeamName()).isEqualTo("Black Team");
     }
 }

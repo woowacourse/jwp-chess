@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StringBoardFactory extends BoardFactory {
+public class StringBoardFactory implements BoardFactory {
 
     private static final int BOARD_RANK_SIZE = 8;
     private static final int BOARD_FILE_SIZE = 8;

@@ -6,6 +6,7 @@ import chess.dao.BoardPieceDao;
 import chess.dao.GameDao;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.factory.BoardFactory;
+import chess.domain.board.factory.DbBoardFactory;
 import chess.domain.board.factory.RegularBoardFactory;
 import chess.domain.board.position.Position;
 import chess.domain.db.BoardPiece;
@@ -66,12 +67,14 @@ public class ChessService {
     }
 
     @Transactional(readOnly = true)
-    public GameResponse loadLastGame() {
+    public GameResponse loadLastGame(HttpSession session) {
         Game lastGame = gameDao.findLastGame();
         String lastGameId = lastGame.getGameId();
         String lastTeam = lastGame.getLastTeam();
         List<BoardPiece> lastBoardPieces = boardPieceDao.findLastBoardPiece(lastGameId);
-        ChessBoard chessBoard = new ChessBoard(lastBoardPieces, lastTeam);
+        BoardFactory boardFactory = new DbBoardFactory(lastBoardPieces);
+        ChessBoard chessBoard = new ChessBoard(boardFactory, lastTeam);
+        sessionToChessRepository.add(session, chessBoard);
         return new GameResponse(chessBoard);
     }
 

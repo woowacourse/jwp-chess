@@ -69,7 +69,7 @@ public class ChessApiController {
 
     @GetMapping(value = "/load-last-game", produces = APPLICATION_JSON_VALUE)
     public GameResponse loadLastGame(HttpSession session) {
-        GameResponse gameResponse = chessService.loadLastGame();
+        GameResponse gameResponse = chessService.loadLastGame(session);
         return gameResponse;
     }
 

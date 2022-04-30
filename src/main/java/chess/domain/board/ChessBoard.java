@@ -3,21 +3,18 @@ package chess.domain.board;
 import static chess.domain.piece.PieceTeam.EMPTY;
 
 import chess.constant.TargetType;
+import chess.domain.board.factory.BoardFactory;
 import chess.domain.board.position.File;
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Rank;
-import chess.domain.db.BoardPiece;
 import chess.domain.gameflow.AlternatingGameFlow;
+import chess.domain.gameflow.GameFlow;
 import chess.domain.piece.EmptySpace;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceTeam;
-import chess.domain.piece.factory.PieceFactory;
 import chess.exception.IncorrectTeamSelectionException;
 import chess.exception.NonMovableException;
-import chess.domain.gameflow.GameFlow;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -34,14 +31,8 @@ public class ChessBoard {
         this.gameFlow = gameFlow;
     }
 
-    public ChessBoard(List<BoardPiece> boardPieces, String lastTeam) {
-        final Map<Position, Piece> board = new HashMap<>();
-        for (BoardPiece boardPiece : boardPieces) {
-            String piece = boardPiece.getPiece();
-            String position = boardPiece.getPosition();
-            board.put(Position.of(position), PieceFactory.create(piece));
-        }
-        this.board = board;
+    public ChessBoard(BoardFactory boardFactory, String lastTeam) {
+        this.board = boardFactory.create();
         this.gameFlow = new AlternatingGameFlow(lastTeam);
     }
 

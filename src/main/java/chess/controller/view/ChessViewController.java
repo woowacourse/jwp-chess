@@ -1,6 +1,7 @@
 package chess.controller.view;
 
 import chess.service.ChessService;
+import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,14 +32,14 @@ public class ChessViewController {
     }
 
     @GetMapping("/load-game")
-    public String loadGame(Model model) {
+    public String loadGame(HttpSession session, Model model) {
 
         if (!chessService.isExistGame()) {
             return "redirect:/";
         }
 
         model.addAttribute("isNewGame", false);
-        chessService.loadLastGame();
+        chessService.loadLastGame(session);
 
         return "game";
     }

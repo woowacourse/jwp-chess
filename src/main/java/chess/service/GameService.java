@@ -105,7 +105,7 @@ public class GameService {
 		return new ResultDto(
 			(int) board.calculateScore(Color.WHITE),
 			(int) board.calculateScore(Color.BLACK),
-			Map.of(Result.WIN, board.winnersColor())
+			Map.of(Result.WIN, board.getWinnerColor())
 		);
 	}
 }

@@ -17,6 +17,7 @@ public final class Board {
     private static final String EMPTY_SPACE_EXCEPTION = "이동할 수 있는 기물이 없습니다.";
     private static final String INVALID_TURN_EXCEPTION = "상대 진영의 차례입니다.";
     private static final String INVALID_MOVING_PATH_EXCEPTION = "경로에 기물이 있어 움직일 수 없습니다.";
+    private static final String INVALID_MOVE_STATE = "종료된 게임에서는 이동할 수 없습니다.";
     private static final int ALL_THE_NUMBER_OF_KING = 2;
 
     private final Map<Position, Piece> piecesByPosition;
@@ -64,6 +65,9 @@ public final class Board {
     }
 
     private void validateMovable(Position beforePosition, Position afterPosition, Piece piece) {
+        if (turn == Color.END) {
+            throw new IllegalStateException(INVALID_MOVE_STATE);
+        }
         if (isBlank(beforePosition)) {
             throw new IllegalArgumentException(EMPTY_SPACE_EXCEPTION);
         }
@@ -157,7 +161,7 @@ public final class Board {
         if (!password.equals(inputPassword)) {
             throw new IllegalArgumentException("잘못된 비밀번호 입력입니다.");
         }
-        if(turn != Color.END){
+        if (turn != Color.END) {
             throw new IllegalStateException("종료된 게임만 삭제할 수 있습니다.");
         }
     }

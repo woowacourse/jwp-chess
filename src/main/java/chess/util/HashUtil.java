@@ -1,5 +1,6 @@
 package chess.util;
 
+import chess.exception.InternalServerException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
@@ -7,7 +8,7 @@ import java.util.Base64;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-public class HashUtils {
+public class HashUtil {
 
     private static final String HASH_ALGORITHM = "PBKDF2WithHmacSHA1";
     private static final byte[] SECRET_SALT = "should_be_hidden_before_deployment".getBytes();
@@ -16,17 +17,15 @@ public class HashUtils {
 
     private static final SecretKeyFactory hashFactory;
 
-    // TODO: 수정
     static {
         try {
             hashFactory = SecretKeyFactory.getInstance(HASH_ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            throw new RuntimeException("클래스 생성 과정에서 문제가 발생하였습니다.");
+            throw new InternalServerException("클래스 생성 과정에서 문제가 발생하였습니다.");
         }
     }
 
-    private HashUtils() {
+    private HashUtil() {
     }
 
     public static String hash(String value) {
@@ -35,8 +34,7 @@ public class HashUtils {
             byte[] hashedPassword = hashFactory.generateSecret(keySpec).getEncoded();
             return toString(hashedPassword);
         } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-            throw new RuntimeException("암호화 과정에서 문제가 발생했습니다.");
+            throw new InternalServerException("암호화 과정에서 문제가 발생했습니다.");
         }
     }
 

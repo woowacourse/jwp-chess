@@ -116,6 +116,6 @@ public class CookieUtilTest {
     }
 
     private Cookie generateCookie(int gameId, Color playerColor) {
-        return new Cookie(CookieUtil.KEY, HashUtils.hash(gameId + playerColor.name()));
+        return new Cookie(CookieUtil.KEY, HashUtil.hash(gameId + playerColor.name()));
     }
 }

@@ -1,6 +1,6 @@
 package chess.fixture;
 
-import static chess.util.HashUtils.hash;
+import static chess.util.HashUtil.hash;
 
 import chess.dao.GameDao;
 import chess.domain.auth.EncryptedAuthCredentials;

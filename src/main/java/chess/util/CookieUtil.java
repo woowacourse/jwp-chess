@@ -32,6 +32,6 @@ public class CookieUtil {
 
     private static String toEncrypted(int gameId, Color playerColor) {
         String value = gameId + playerColor.name();
-        return HashUtils.hash(value);
+        return HashUtil.hash(value);
     }
 }

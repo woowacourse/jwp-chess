@@ -1,4 +1,4 @@
-fetchRoomList();
+fetchRooms(1);
 
 async function createRoom() {
     const roomName = document.getElementById("roomNameInput").value;
@@ -38,13 +38,28 @@ async function createRoom() {
     document.getElementById("error").innerText = data.message;
 }
 
-async function fetchRoomList() {
-    const res = await fetch("/rooms");
+async function previousPage() {
+    let currentPage = document.getElementById("current_page").innerText;
+    fetchRooms(--currentPage);
+    document.getElementById("current_page").innerText = currentPage;
+}
+
+async function nextPage() {
+    let currentPage = document.getElementById("current_page").innerText;
+    fetchRooms(++currentPage);
+    document.getElementById("current_page").innerText = currentPage;
+}
+
+async function fetchRooms(page) {
+    const res = await fetch(`/rooms?size=10&page=${page}`);
     const datas = await res.json();
     const container = document.getElementById("room_list");
-    const containerHeight = Object.keys(datas).length * 60;
+    const containerHeight = datas.size * 60;
     container.style.height = `${containerHeight}px`;
-    datas.forEach(data => {
+    while (container.hasChildNodes()) {
+        container.removeChild(container.firstChild);
+    }
+    datas.rooms.forEach(data => {
         const argument = document.createElement("div");
         argument.className = "room_data";
 

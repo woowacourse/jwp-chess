@@ -7,22 +7,22 @@ public class RoomPageDto {
     private final int currentPage;
     private final int lastPage;
     private final int size;
-    private final List<RoomResponseDto> contents;
+    private final List<RoomResponseDto> rooms;
 
     public RoomPageDto(final int currentPage, final int lastPage, final int size,
-                       final List<RoomResponseDto> contents) {
+                       final List<RoomResponseDto> rooms) {
         this.currentPage = currentPage;
         this.lastPage = lastPage;
         this.size = size;
-        this.contents = contents;
+        this.rooms = rooms;
     }
 
-    public static RoomPageDto of(final int currentPage, final int lastPage, final List<RoomResponseDto> contents) {
+    public static RoomPageDto of(final int currentPage, final int lastPage, final List<RoomResponseDto> rooms) {
         return new RoomPageDto(
                 currentPage,
                 lastPage,
-                contents.size(),
-                contents
+                rooms.size(),
+                rooms
         );
     }
 
@@ -38,7 +38,7 @@ public class RoomPageDto {
         return size;
     }
 
-    public List<RoomResponseDto> getContents() {
-        return contents;
+    public List<RoomResponseDto> getRooms() {
+        return rooms;
     }
 }

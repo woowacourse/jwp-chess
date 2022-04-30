@@ -8,15 +8,21 @@
 <body>
     <div class="modal-wrap" id="room-modal">
         <div class="modal-align">
-            <div class="modal-content">
+            <div class="modal-content room">
                 <div class="modal-content-box">
-                    <span>새로운 방 생성하기</span>
+                    <span class="modal-title">새로운 방 생성하기</span>
                     <form id="room-form" onsubmit="return checkNameNotEmpty();">
-                    <input type="text" id="name" name="name" placeholder="방 이름" class="input-name">
-                    <input type="password" id="password" name="password" placeholder="비밀번호" class="input-name">
-                    <span id="error-message"></span>
-                    <button type="button" onclick="fetchNewRoom()">생성</button>
-                    <button type="button" id="close-room-modal">취소</button>
+                        <div class="modal-low">
+                            <input type="text" id="name" name="name" placeholder="방 이름" class="input-name">
+                            <input type="password" id="password" name="password" placeholder="비밀번호" class="input-name">
+                        </div>
+                        <div class="modal-low">
+                            <span id="error-message"></span>
+                        </div>
+                        <div class="modal-low">
+                            <button type="button" class="modal-button" onclick="fetchNewRoom()">생성</button>
+                            <button type="button" class="modal-button" id="close-room-modal">취소</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -26,10 +32,10 @@
         <div class="modal-align">
             <div class="modal-content">
                 <div class="modal-content-box">
-                    <span>비밀번호 입력</span>
+                    <span class="modal-title">비밀번호 입력</span>
                     <input type="password" id="confirm-password" name="password" placeholder="비밀번호" class="input-confirm">
-                    <button type="button" onclick="fetchDeleteRoom();">삭제</button>
-                    <button type="button" id="close-confirm-modal">취소</button>
+                    <button type="button" class="modal-button" onclick="fetchDeleteRoom();">삭제</button>
+                    <button type="button" class="modal-button" id="close-confirm-modal">취소</button>
                 </div>
             </div>
         </div>
@@ -42,16 +48,11 @@
             <h2 class="login-title">Welcome Chess</h2>
             <img src="images/black_k.png" class="icon-image">
         </div>
-        <div id="rooms-list">
+        <div class="rooms-list" id="rooms-list">
             <ul id="rooms-list-container"> 방 목록
             </ul>
         </div>
-<!--        <form action="http://localhost:8080/rooms" onsubmit="return checkNameNotEmpty();" method="post">-->
-<!--            <input type="text" id="name" name="name" placeholder="방 이름" class="input-name">-->
-<!--            <button type="submit" class="input-button">입장</button>-->
-<!--        </form>-->
-<!--        <span id="error-message"></span>-->
-        <button type="button" id="room-modal-open">새로운 방 만들기</button>
+        <button type="button" class="room-modal-open" id="room-modal-open">새로운 방 만들기</button>
     </div>
     <script type="text/javascript" src="/js/login.js"></script>
 </body>

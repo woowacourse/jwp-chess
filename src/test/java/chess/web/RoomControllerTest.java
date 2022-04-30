@@ -2,8 +2,6 @@ package chess.web;
 
 import static org.hamcrest.core.StringContains.containsString;
 
-import chess.dao.FakeRoomDao;
-import chess.repository.RoomDao;
 import io.restassured.RestAssured;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,23 +11,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
-@TestConfiguration
-class TestConfig {
-    @Bean
-    public RoomDao roomRepository() {
-        return new FakeRoomDao();
-    }
-}
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(TestConfig.class)
 class SpringChessControllerTest {
 
     @LocalServerPort
@@ -53,8 +39,8 @@ class SpringChessControllerTest {
                 .formParams(Map.of("name", name, "password", password))
                 .when().post("/rooms")
                 .then().log().all()
-                .statusCode(HttpStatus.FOUND.value())
-                .header("Location", containsString("/rooms/"));
+                .statusCode(HttpStatus.OK.value())
+                .body("url", containsString("/rooms/1"));
     }
 
     @DisplayName("부적절한 이름이 입력되면 400 에러 발생")

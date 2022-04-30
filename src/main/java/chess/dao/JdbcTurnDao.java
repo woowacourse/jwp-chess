@@ -29,11 +29,7 @@ public class JdbcTurnDao implements TurnDao {
     @Override
     public void updateTurn(final long roomId, final String turn) {
         final String sql = "update turn set team = ? where roomId = ? and team = ?";
-        if (turn.equals(Team.WHITE.getName())) {
-            jdbcTemplate.update(sql, Team.BLACK.getName(), roomId, Team.WHITE.getName());
-            return;
-        }
-        jdbcTemplate.update(sql, Team.WHITE.getName(), roomId, Team.BLACK.getName());
+        jdbcTemplate.update(sql, Team.getOpponentTeamName(turn), roomId, turn);
     }
 
     @Override

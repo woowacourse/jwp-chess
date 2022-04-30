@@ -35,6 +35,7 @@ public class ChessService {
         this.eventDao = eventDao;
     }
 
+    @Transactional(readOnly = true)
     public GameCountDto countGames() {
         int totalCount = gameDao.countAll();
         int runningCount = gameDao.countRunningGames();
@@ -49,10 +50,12 @@ public class ChessService {
         return new CreateGameResponse(gameId);
     }
 
+    @Transactional(readOnly = true)
     public SearchResultDto searchGame(int gameId) {
         return new SearchResultDto(gameId, gameDao.checkById(gameId));
     }
 
+    @Transactional(readOnly = true)
     public GameDto findGame(int gameId) {
         Game game = currentSnapShotOf(gameId);
         return GameDto.of(gameId, game);
@@ -75,6 +78,7 @@ public class ChessService {
         }
     }
 
+    @Transactional(readOnly = true)
     public GameResultDto findGameResult(int gameId) {
         Game game = currentSnapShotOf(gameId);
         validateGameOver(game);
@@ -96,6 +100,7 @@ public class ChessService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<GameInfoDto> selectAllGames() {
         return gameDao.selectAll();
     }

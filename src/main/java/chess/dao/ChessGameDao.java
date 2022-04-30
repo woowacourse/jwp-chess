@@ -44,7 +44,7 @@ public class ChessGameDao {
     }
 
     public List<ChessGameDto> findAllChessGames() {
-        String sql = "select id, game_name, turn from chess_game";
+        String sql = "select id, game_name, turn from chess_game limit 100";
         return jdbcTemplate.query(sql, chessGameDtoMapper());
     }
 

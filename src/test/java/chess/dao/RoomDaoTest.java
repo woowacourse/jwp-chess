@@ -4,28 +4,34 @@ import chess.domain.player.Team;
 import chess.dto.GameNameAndTurnDto;
 import chess.dto.RoomInfoDto;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+@JdbcTest
 class RoomDaoTest {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
     private RoomDao roomDao;
 
     private final String roomName = "rex_game";
     private final String password = "111";
     private final String turn = Team.WHITE.getName();
     private final long roomId = 1;
+
+    @BeforeEach
+    void beforeEach() {
+        roomDao = new RoomDao(jdbcTemplate);
+    }
 
     @Test
     @DisplayName("게임방 아이디를 올바르게 찾아온다.")

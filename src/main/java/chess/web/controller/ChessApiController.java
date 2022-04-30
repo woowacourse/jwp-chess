@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
-@RequestMapping("/api")
+@RequestMapping("/api/chess")
 @RestController
 public class ChessApiController {
 

@@ -53,13 +53,13 @@ function getStatus(scoreResponse) {
 }
 
 status.addEventListener('click', function () {
-    fetch('/api/' + gameId + '/status')
+    fetch('/api/chess/' + gameId + '/status')
         .then(res => res.json())
         .then(getStatus)
 })
 
 function loadBoard() {
-    fetch('/api/' + gameId)
+    fetch('/api/chess/' + gameId)
         .then(res => res.json())
         .then(imageSetting)
 }
@@ -147,7 +147,7 @@ function movePiece(from, to) {
         to: to
     }
 
-    fetch('/api/' + gameId + '/move', {
+    fetch('/api/chess/' + gameId + '/move', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -167,7 +167,7 @@ function move() {
 
 function enterCheckPassword(id) {
     var pass = prompt('패스워드를 입력하세요');
-    fetch('/api/' + id + '/password' )
+    fetch('/api/chess/' + id + '/password' )
         .then(res => res.json())
         .then(res => {
             if (res["password"] === pass) {
@@ -181,7 +181,7 @@ function enterCheckPassword(id) {
 function deleteCheckPassword(id) {
     var pass = prompt('패스워드를 입력하세요');
 
-    fetch('/api/' + id + '/check' )
+    fetch('/api/chess/' + id + '/check' )
         .then(res => res.json())
         .then(res => {
             if (res["password"] !== pass) {
@@ -203,7 +203,7 @@ function deleteRoom(id, password) {
         password: password
     }
 
-    fetch('/api/' + id, {
+    fetch('/api/chess' + id, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -225,7 +225,7 @@ function createRoom() {
         password: password
     };
 
-    fetch('/api/new', {
+    fetch('/api/chess/new', {
         method: 'post',
         headers: {
             "Content-Type": "application/json",

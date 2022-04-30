@@ -47,6 +47,11 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
+    public String findPassword(int id) {
+        return "password";
+    }
+
+    @Override
     public Integer findLastGameId() {
         return 1;
     }

@@ -86,6 +86,17 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
+    public String findPassword(final int id) {
+        final String sql = "select password from game where game_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, String.class, id);
+        } catch (EmptyResultDataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
     public Integer findLastGameId() {
         final String sql = "select game_id from game order by game_id desc limit 1";
         try {

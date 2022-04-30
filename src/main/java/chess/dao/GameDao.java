@@ -23,5 +23,7 @@ public interface GameDao {
 
     List<RoomResponseDto> findAll();
 
+    String findPassword(int id);
+
     Integer findLastGameId();
 }

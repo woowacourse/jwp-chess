@@ -73,9 +73,17 @@ function cancel() {
 
 function deleteGame() {
     let chessId = $("#deletedRoomId").val();
+
     $.ajax({
         url: "/chess-game/" + chessId,
         type: "delete",
+        beforeSend: function (xhr) {
+             xhr.setRequestHeader("Content-type","application/json");
+        },
+        data: JSON.stringify({
+            id: chessId,
+            password: $("#check_password").val()
+        }),
         success(data) {
             location.href = "/chess-game";
         },

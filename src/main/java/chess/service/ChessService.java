@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.controller.dto.ChessRequestDto;
+import chess.controller.dto.PasswordRequestDto;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessGame;
@@ -121,6 +122,13 @@ public class ChessService {
             return getScore(id);
         } catch (Exception e) {
             throw new IllegalArgumentException("게임을 종료시킬 수 없습니다.");
+        }
+    }
+
+    public void validatePassword(final PasswordRequestDto passwordRequestDto) {
+        String correctPassword = gameDao.findPassword(passwordRequestDto.getId());
+        if (!correctPassword.equals(passwordRequestDto.getPassword())) {
+            throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
     }
 

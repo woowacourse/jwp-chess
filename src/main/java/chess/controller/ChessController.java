@@ -1,10 +1,10 @@
 package chess.controller;
 
 import chess.controller.dto.ChessRequestDto;
+import chess.controller.dto.PasswordRequestDto;
 import chess.domain.command.MoveCommand;
 import chess.service.dto.ChessResponseDto;
 import chess.controller.dto.MoveCommandDto;
-import chess.service.dto.GameDto;
 import chess.service.dto.RoomResponseDto;
 import chess.service.dto.ScoresDto;
 import chess.service.ChessService;
@@ -62,8 +62,9 @@ public class ChessController {
         return chessService.finishGame(id);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
+    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void delete(@PathVariable int id, @RequestBody PasswordRequestDto passwordRequestDto) {
+        chessService.validatePassword(passwordRequestDto);
         chessService.remove(id);
     }
 }

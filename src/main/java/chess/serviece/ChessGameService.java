@@ -1,10 +1,10 @@
 package chess.serviece;
 
 import chess.dto.ChessResponseDto;
-import chess.serviece.dto.GameCreationDto;
+import chess.dto.GameCreationDto;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
-import chess.dao.dto.GameDto;
+import chess.dto.GameDto;
 import chess.domain.ChessGame;
 import chess.domain.GameStatus;
 import chess.domain.Score;

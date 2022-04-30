@@ -1,12 +1,13 @@
 package chess.dao;
 
-import chess.dao.dto.GameDto;
+import chess.dto.GameDto;
 import chess.domain.GameStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -55,7 +56,7 @@ public class JdbcGameDaoTest {
 
         // then
         assertThatThrownBy(() -> gameDao.findGameById(id))
-                .isInstanceOfAny(IllegalArgumentException.class);
+                .isInstanceOfAny(EmptyResultDataAccessException.class);
     }
 
     @Test

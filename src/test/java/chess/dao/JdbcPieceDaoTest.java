@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dao.dto.GameDto;
+import chess.dto.GameDto;
 import chess.domain.position.Position;
 import chess.dto.PieceDto;
 import org.junit.jupiter.api.BeforeEach;

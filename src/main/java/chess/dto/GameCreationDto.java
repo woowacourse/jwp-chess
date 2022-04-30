@@ -1,4 +1,4 @@
-package chess.serviece.dto;
+package chess.dto;
 
 public class GameCreationDto {
 

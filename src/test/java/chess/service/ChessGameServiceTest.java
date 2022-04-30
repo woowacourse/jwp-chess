@@ -2,9 +2,9 @@ package chess.service;
 
 import chess.dao.FakeGameDao;
 import chess.dao.FakePieceDao;
-import chess.dao.dto.GameDto;
+import chess.dto.GameDto;
 import chess.serviece.ChessGameService;
-import chess.serviece.dto.GameCreationDto;
+import chess.dto.GameCreationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

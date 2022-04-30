@@ -1,8 +1,8 @@
 package chess.controller;
 
-import chess.dao.dto.GameDto;
+import chess.dto.GameDto;
 import chess.serviece.ChessGameService;
-import chess.serviece.dto.GameCreationDto;
+import chess.dto.GameCreationDto;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

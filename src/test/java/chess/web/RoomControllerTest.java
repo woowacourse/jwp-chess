@@ -52,7 +52,7 @@ class RoomControllerTest {
     @AfterEach
     void deleteCreated() {
         roomRepository.findAll()
-            .forEach(room -> roomRepository.deleteById((int) room.getId()));
+            .forEach(room -> roomRepository.deleteById(room.getId()));
     }
 
     @DisplayName("유효한 이름을 받으면 게임방 입장")
@@ -103,7 +103,7 @@ class RoomControllerTest {
     @Test
     @DisplayName("게임을 불러오면 200 응답을 받는다.")
     void loadGame() {
-        int roomId = (int) roomService.create(new Room(testName, password)).getId();
+        int roomId = roomService.create(new Room(testName, password)).getId();
         gameService.startNewGame(roomId);
 
         RestAssured.given().log().all()

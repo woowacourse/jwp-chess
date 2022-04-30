@@ -7,11 +7,11 @@ public class Room {
     private static final int NAME_MIN_SIZE = 1;
     private static final int NAME_MAX_SIZE = 16;
 
-    private long id;
+    private int id;
     private final String name;
     private final String password;
 
-    public Room(long id, Room room) {
+    public Room(int id, Room room) {
         this.id = id;
         this.name = room.getName();
         this.password = room.getPassword();
@@ -40,7 +40,7 @@ public class Room {
         return this.password.equals(password);
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

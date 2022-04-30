@@ -62,7 +62,7 @@ public class RoomService {
 				new RoomResponseDto(
 					room.getId(),
 					room.getName(),
-					gameService.isEnd((int)room.getId())
+					gameService.isEnd(room.getId())
 				)).collect(Collectors.toList());
 	}
 }

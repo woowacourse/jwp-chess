@@ -37,7 +37,7 @@ class RoomServiceTest {
 	@AfterEach
 	void deleteCreated() {
 		roomRepository.findAll()
-			.forEach(room -> roomRepository.deleteById((int)room.getId()));
+			.forEach(room -> roomRepository.deleteById(room.getId()));
 	}
 
 	@Test
@@ -84,7 +84,7 @@ class RoomServiceTest {
 	void removeExceptionPassword() {
 		Room room = roomService.create(new Room(testName, password));
 
-		assertThatThrownBy(() -> roomService.delete((int)room.getId(), "1234"))
+		assertThatThrownBy(() -> roomService.delete(room.getId(), "1234"))
 			.isInstanceOf(UserInputException.class);
 	}
 }

@@ -26,7 +26,7 @@ public class RoomController {
     @PostMapping
     public String createRoom(@RequestParam String name, @RequestParam String password) {
         Room room = roomService.create(new Room(name, password));
-        gameService.startNewGame((int) room.getId());
+        gameService.startNewGame(room.getId());
         return "redirect:/rooms/" + room.getId();
     }
 

@@ -2,17 +2,17 @@ package chess.web.dto;
 
 public class RoomResponseDto {
 
-	private final long id;
+	private final int id;
 	private final String name;
 	private final boolean end;
 
-	public RoomResponseDto(long id, String name, boolean end) {
+	public RoomResponseDto(int id, String name, boolean end) {
 		this.id = id;
 		this.name = name;
 		this.end = end;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 

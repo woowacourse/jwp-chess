@@ -43,7 +43,7 @@ class BoardControllerTest {
 	@BeforeEach
 	void setUp() {
 		RestAssured.port = port;
-		roomId = (int) roomService.create(new Room(testName, password)).getId();
+		roomId = roomService.create(new Room(testName, password)).getId();
 		boardId = gameService.startNewGame(roomId).getBoardId();
 	}
 

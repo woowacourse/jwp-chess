@@ -1,6 +1,5 @@
 package chess.dto;
 
-import chess.service.ChessGameService;
 import chess.domain.board.Result;
 import chess.domain.piece.Team;
 import java.util.List;
@@ -37,7 +36,7 @@ public class ScoreDto {
             sb.append(DRAW_MESSAGE);
             return new ScoreDto(sb.toString());
         }
-        sb.append(String.format(ChessGameService.WIN_MESSAGE, winnerResult.get(0)));
+        sb.append(String.format("승리 팀은 : %s 입니다.", winnerResult.get(0)));
         return new ScoreDto(sb.toString());
     }
 

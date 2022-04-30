@@ -32,7 +32,7 @@ public class JdbcTemplateGameDaoTest {
     @DisplayName("roomTitle과 passWord를 저장한다.")
     void find() {
         List<GameDto> gameDtos = jdbcTemplateGameDao.find();
-        GameDto  gameDto = gameDtos.get(0);
+        GameDto gameDto = gameDtos.get(0);
         assertAll(
                 () -> assertEquals(gameDto.getRoomTitle(), "asdf")
         );

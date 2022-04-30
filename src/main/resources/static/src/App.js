@@ -188,7 +188,7 @@ function deleteCheckPassword(id) {
                 window.alert("비밀번호가 틀렸습니다! 삭제에 실패했습니다.")
                 return;
             }
-            if (res["isFinish"] === "false") {
+            if (res["finish"] === false) {
                 window.alert("게임이 끝나지 않았습니다! 삭제에 실패했습니다.");
                 return;
             }

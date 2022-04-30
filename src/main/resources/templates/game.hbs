@@ -11,7 +11,7 @@
 <body>
 <div class="chess-game">
     <h1>♗혼돈의 체스 게임♗</h1>
-    {{#chessStatus}}
+    {{#board}}
     <div>
         Black 진영 점수 VS White 진영 점수
         <div class="score">{{blackScore}}&nbsp;&nbsp;&nbsp;&nbsp;{{whiteScore}}</div>
@@ -29,7 +29,7 @@
     <form action="/game/{{gameId}}/result" method="get">
         <button> 게임종료</button>
     </form>
-    {{/chessStatus}}
+    {{/board}}
 </div>
 </body>
 </html>

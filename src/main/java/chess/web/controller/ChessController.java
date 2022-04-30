@@ -35,7 +35,7 @@ public class ChessController {
         if (chessService.getStateType(gameId) == StateType.END) {
             return "redirect:/game/" + gameId + "/result";
         }
-        model.addAttribute("chessStatus", chessService.getBoard(gameId));
+        model.addAttribute("board", chessService.getBoard(gameId));
 
         return "game";
     }

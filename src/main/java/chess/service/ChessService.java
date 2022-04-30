@@ -6,8 +6,9 @@ import chess.domain.board.ChessGame;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Movement;
 import chess.domain.position.Position;
-import chess.dto.GameRoomResponse;
 import chess.dto.GameCreationRequest;
+import chess.dto.GameRoomResponse;
+import chess.dto.MoveRequest;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -35,11 +36,12 @@ public final class ChessService {
         return chessGame;
     }
 
-    public ChessGame movePiece(final long gameId, final String source, final String target, final Team team) {
+    public ChessGame movePiece(final long gameId, final MoveRequest moveRequest) {
         final ChessGame chessGame = loadSavedGame(gameId);
-        validateCurrentTurn(chessGame, team);
-        move(chessGame, new Movement(Position.of(source), Position.of(target), chessGame.getId(), team));
-        if (chessGame.isKingDied()){
+        validateCurrentTurn(chessGame, Team.valueOf(moveRequest.getTeam()));
+        move(chessGame, new Movement(Position.of(moveRequest.getSource()), Position.of(moveRequest.getTarget()),
+                chessGame.getId(), Team.valueOf(moveRequest.getTeam())));
+        if (chessGame.isKingDied()) {
             chessGameDAO.updateGameEnd(gameId);
         }
         return chessGame;

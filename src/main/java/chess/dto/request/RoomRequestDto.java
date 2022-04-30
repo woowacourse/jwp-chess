@@ -16,6 +16,10 @@ public class RoomRequestDto {
         this.password = password;
     }
 
+    public RoomRequestDto(final String password) {
+        this.password = password;
+    }
+
     public String getName() {
         return name;
     }

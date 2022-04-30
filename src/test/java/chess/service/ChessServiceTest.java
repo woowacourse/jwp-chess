@@ -1,5 +1,6 @@
 package chess.service;
 
+import static chess.testutil.ControllerTestFixture.ROOM_REQUEST_DTO_ONLY_PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -69,7 +70,7 @@ class ChessServiceTest {
     @Test
     void enterRoomException() {
         final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id);
+        chessService.endRoom(id, ROOM_REQUEST_DTO_ONLY_PASSWORD);
 
         assertThatThrownBy(() -> chessService.getCurrentBoards(id))
             .isInstanceOf(IllegalArgumentException.class)
@@ -94,7 +95,7 @@ class ChessServiceTest {
     @Test
     void moveException() {
         final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id);
+        chessService.endRoom(id, ROOM_REQUEST_DTO_ONLY_PASSWORD);
 
         assertThatThrownBy(() -> chessService.move(id, new MoveRequestDto("a2", "a4")))
             .isInstanceOf(IllegalArgumentException.class)
@@ -105,7 +106,7 @@ class ChessServiceTest {
     @Test
     void end() {
         final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id);
+        chessService.endRoom(id, ROOM_REQUEST_DTO_ONLY_PASSWORD);
         final RoomsResponseDto rooms = chessService.findRooms();
         assertThat(rooms.getRoomResponseDtos()).isEmpty();
     }
@@ -114,9 +115,9 @@ class ChessServiceTest {
     @Test
     void endException() {
         final Long id = createTestRoom("체스 초보만").getId();
-        chessService.endRoom(id);
+        chessService.endRoom(id, ROOM_REQUEST_DTO_ONLY_PASSWORD);
 
-        assertThatThrownBy(() -> chessService.endRoom(id))
+        assertThatThrownBy(() -> chessService.endRoom(id, ROOM_REQUEST_DTO_ONLY_PASSWORD))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }

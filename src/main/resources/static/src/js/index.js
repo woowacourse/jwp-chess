@@ -136,7 +136,11 @@ async function endRoom(id) {
     }
 
     await fetch("/api/chess/rooms/" + id + "/end", {
-        method: "PATCH"
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        }, body: JSON.stringify(bodyValue)
     }).then(handleErrors)
         .catch(function (error) {
             alert(error.message)

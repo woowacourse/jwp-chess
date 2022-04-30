@@ -56,8 +56,9 @@ public class WebChessController {
     }
 
     @PatchMapping("/{id}/end")
-    public ResponseEntity<Void> endGame(@PathVariable Long id) {
-        chessService.endRoom(id);
+    public ResponseEntity<Void> endGame(@PathVariable Long id,
+                                        @RequestBody RoomRequestDto roomRequestDto) {
+        chessService.endRoom(id, roomRequestDto);
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }

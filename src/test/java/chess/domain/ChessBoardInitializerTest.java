@@ -4,7 +4,7 @@ import static chess.domain.pieces.Color.BLACK;
 import static chess.domain.pieces.Color.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.domain.game.BoardMapper;
+import chess.domain.game.ChessBoardInitializer;
 import chess.domain.pieces.Bishop;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.King;
@@ -22,13 +22,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class BoardMapperTest {
+class ChessBoardInitializerTest {
 
     @ParameterizedTest
     @MethodSource("rookPositions")
     @DisplayName("rook의 초기 위치를 확인")
     void rooks_initialPosition(final Position position, final Color color) {
-        Map<Position, Piece> pieces = new BoardMapper().initialize();
+        Map<Position, Piece> pieces = new ChessBoardInitializer().initialize();
         assertThat(pieces.get(position)).isEqualTo(new Piece(color, new Rook()));
     }
 
@@ -45,7 +45,7 @@ class BoardMapperTest {
     @MethodSource("knightPositions")
     @DisplayName("knight의 초기 위치를 확인")
     void knights_initialPosition(final Position position, final Color color) {
-        Map<Position, Piece> pieces = new BoardMapper().initialize();
+        Map<Position, Piece> pieces = new ChessBoardInitializer().initialize();
         assertThat(pieces.get(position)).isEqualTo(new Piece(color, new Knight()));
     }
 
@@ -62,7 +62,7 @@ class BoardMapperTest {
     @MethodSource("bishopPositions")
     @DisplayName("bishop의 초기 위치를 확인")
     void bishops_initialPosition(final Position position, final Color color) {
-        Map<Position, Piece> pieces = new BoardMapper().initialize();
+        Map<Position, Piece> pieces = new ChessBoardInitializer().initialize();
         assertThat(pieces.get(position)).isEqualTo(new Piece(color, new Bishop()));
     }
 
@@ -79,7 +79,7 @@ class BoardMapperTest {
     @MethodSource("queenPositions")
     @DisplayName("queen의 초기 위치를 확인")
     void queens_initialPosition(final Position position, final Color color) {
-        Map<Position, Piece> pieces = new BoardMapper().initialize();
+        Map<Position, Piece> pieces = new ChessBoardInitializer().initialize();
         assertThat(pieces.get(position)).isEqualTo(new Piece(color, new Queen()));
     }
 
@@ -94,7 +94,7 @@ class BoardMapperTest {
     @MethodSource("kingPositions")
     @DisplayName("king의 초기 위치를 확인")
     void king_initialPosition(final Position position, final Color color) {
-        Map<Position, Piece> pieces = new BoardMapper().initialize();
+        Map<Position, Piece> pieces = new ChessBoardInitializer().initialize();
         assertThat(pieces.get(position)).isEqualTo(new Piece(color, new King()));
     }
 
@@ -109,7 +109,7 @@ class BoardMapperTest {
     @ValueSource(strings = {"a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"})
     @DisplayName("흰색 pawn의 초기 위치를 확인")
     void whitePawn_initialPosition(final String rawPosition) {
-        Map<Position, Piece> pieces = new BoardMapper().initialize();
+        Map<Position, Piece> pieces = new ChessBoardInitializer().initialize();
         assertThat(pieces.get(Position.of(rawPosition))).isEqualTo(new Piece(WHITE, new Pawn()));
     }
 
@@ -117,7 +117,7 @@ class BoardMapperTest {
     @ValueSource(strings = {"a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"})
     @DisplayName("검은색 pawn의 초기 위치를 확인")
     void blackPawn_initialPosition(final String rawPosition) {
-        Map<Position, Piece> pieces = new BoardMapper().initialize();
+        Map<Position, Piece> pieces = new ChessBoardInitializer().initialize();
         assertThat(pieces.get(Position.of(rawPosition))).isEqualTo(new Piece(BLACK, new Pawn()));
     }
 

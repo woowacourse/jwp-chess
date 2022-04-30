@@ -3,8 +3,8 @@ package chess;
 import chess.dao.WebChessBoardDao;
 import chess.dao.WebChessPieceDao;
 import chess.dao.WebChessPositionDao;
-import chess.domain.game.BoardMapper;
-import chess.domain.game.Mapper;
+import chess.domain.game.ChessBoardInitializer;
+import chess.domain.game.BoardInitializer;
 import chess.entities.ChessPiece;
 import chess.entities.Member;
 import chess.domain.pieces.Color;
@@ -48,8 +48,8 @@ class SpringChessApplicationTests {
         ChessGame board = boardDao.save(
                 new ChessGame("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린")), "1111"));
         this.boardId = board.getId();
-        Mapper mapper = new BoardMapper();
-        final Map<Position, Piece> initialize = mapper.initialize();
+        BoardInitializer boardInitializer = new ChessBoardInitializer();
+        final Map<Position, Piece> initialize = boardInitializer.initialize();
         positionDao.saveAll(board.getId());
         for (Position position : initialize.keySet()) {
             int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class BoardMapper implements Mapper {
+public final class ChessBoardInitializer implements BoardInitializer {
 
     private static final Column QUEEN_LINE = Column.D;
     private static final Column KING_LINE = Column.E;

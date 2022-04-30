@@ -5,7 +5,7 @@ import chess.domain.position.Position;
 
 import java.util.Map;
 
-public interface Mapper {
+public interface BoardInitializer {
 
     Map<Position, Piece> initialize();
 }

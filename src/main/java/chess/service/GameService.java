@@ -5,9 +5,9 @@ import chess.dao.WebChessBoardDao;
 import chess.dao.WebChessMemberDao;
 import chess.dao.WebChessPieceDao;
 import chess.dao.WebChessPositionDao;
-import chess.domain.game.BoardMapper;
+import chess.domain.game.ChessBoardInitializer;
 import chess.domain.game.ChessBoard;
-import chess.domain.game.Mapper;
+import chess.domain.game.BoardInitializer;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
@@ -41,12 +41,12 @@ public final class GameService {
     }
 
     public ChessGame createBoard(final ChessGame board) {
-        return saveBoard(board, new BoardMapper());
+        return saveBoard(board, new ChessBoardInitializer());
     }
 
-    public ChessGame saveBoard(final ChessGame board, final Mapper mapper) {
+    public ChessGame saveBoard(final ChessGame board, final BoardInitializer boardInitializer) {
         final ChessGame savedBoard = boardDao.save(board);
-        final Map<Position, Piece> initialize = mapper.initialize();
+        final Map<Position, Piece> initialize = boardInitializer.initialize();
         positionDao.saveAll(savedBoard.getId());
         for (Position position : initialize.keySet()) {
             int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),

@@ -14,5 +14,13 @@
     <input type="submit" value="이어 하기" name="message">
 </form>
 
+<form action="/chess/create" method="get">
+    <input type="submit" value="체스방 생성하기" />
+</form>
+
+{{#this.rooms}}
+    <div>{{this.name}} {{this.id}} {{this.password}}</div>
+{{/this.rooms}}
+
 </body>
 </html>

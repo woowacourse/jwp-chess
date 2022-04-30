@@ -22,11 +22,6 @@ public class ChessController {
         this.stateService = stateService;
     }
 
-    @GetMapping("/")
-    public String index() {
-        return "index";
-    }
-
     @PostMapping("/chess/start")
     public String startChessGame(RedirectAttributes redirectAttributes) {
         stateService.initCommandRecord();
@@ -46,14 +41,15 @@ public class ChessController {
         return modelAndView;
     }
 
-    @PostMapping(path = "/chess")
-    public String movePiece(RedirectAttributes redirectAttributes, @RequestParam("command") String command) {
-        stateService.currentState()
-                .proceed(command);
-        stateService.insertCommand(command);
-        redirectAttributes.addAttribute("message", command);
-        return "redirect:chess";
-    }
+//TODO: url 수정
+//    @PostMapping(path = "/chess")
+//    public String movePiece(RedirectAttributes redirectAttributes, @RequestParam("command") String command) {
+//        stateService.currentState()
+//                .proceed(command);
+//        stateService.insertCommand(command);
+//        redirectAttributes.addAttribute("message", command);
+//        return "redirect:chess";
+//    }
 
     @GetMapping(path = "/chess/result")
     public ModelAndView printResult() {

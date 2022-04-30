@@ -41,9 +41,10 @@ public class RoomController {
     }
 
     @GetMapping("/room/{id}/delete")
-    public ModelAndView deleteRoomPage(@PathVariable Long id) {
+    public ModelAndView deleteRoomPage(@PathVariable Long id, @RequestParam(required = false) String failMessage) {
         ModelAndView modelAndView = new ModelAndView("deleteRoom");
         modelAndView.addObject("id", id);
+        modelAndView.addObject("failMessage", failMessage);
         if (commandService.getCurrentState(commandService.findAllByRoomID(id)).isRunning()) {
             modelAndView.setViewName("index");
             modelAndView.addObject("message", "아직 게임 중인 방입니다.");

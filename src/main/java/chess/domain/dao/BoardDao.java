@@ -1,6 +1,7 @@
 package chess.domain.dao;
 
 import chess.service.dto.PieceDto;
+import chess.utils.NoExecuteQuery;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,8 +26,7 @@ public class BoardDao {
         try {
             jdbcTemplate.update(sql, gameId, position, piece, color);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
@@ -35,8 +35,7 @@ public class BoardDao {
         try {
             return jdbcTemplate.query(sql, (resultSet, rowNum) -> makePieceDto(resultSet), gameId);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
@@ -62,8 +61,7 @@ public class BoardDao {
             jdbcTemplate.update(sql);
             jdbcTemplate.update("alter table Board alter column id restart with 1");
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
@@ -72,8 +70,7 @@ public class BoardDao {
         try {
             jdbcTemplate.update(sql, gameId);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
@@ -87,8 +84,7 @@ public class BoardDao {
         try {
             jdbcTemplate.update(sql, target, gameId, source);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
@@ -99,8 +95,7 @@ public class BoardDao {
         } catch (EmptyResultDataAccessException e) {
             return;
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 }

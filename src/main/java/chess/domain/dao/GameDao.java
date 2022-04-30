@@ -3,6 +3,7 @@ package chess.domain.dao;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.service.dto.GameDto;
+import chess.utils.exception.NoExecuteQuery;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,11 +14,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class GameDao {
 
+    private static final List EMPTY_RESULT =  Collections.EMPTY_LIST;
     private final JdbcTemplate jdbcTemplate;
 
     public GameDao(JdbcTemplate jdbcTemplate) {
@@ -31,7 +33,7 @@ public class GameDao {
             jdbcTemplate.update(connection -> makeCreateStatement(chessBoard, title, password, sql, connection), keyHolder);
             return keyHolder.getKey().intValue();
         } catch (Exception exception) {
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
@@ -49,21 +51,21 @@ public class GameDao {
         try {
             return jdbcTemplate.query(sql, (rs, rowNum) -> makeGameDto(rs));
         } catch (EmptyResultDataAccessException noResult) {
-            return null;
+            return EMPTY_RESULT;
         } catch (Exception exception) {
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
-    public GameDto findById(int id) {
+    public Optional<GameDto> findById(int id) {
         final String sql = "select * from game where id = ?";
         try {
-            GameDto result = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeGameDto(rs), id);
-            return result;
-        } catch (EmptyResultDataAccessException exception) {
-            return null;
-        } catch (Exception exception) {
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeGameDto(rs), id));
+        }catch (EmptyResultDataAccessException e){
+            return Optional.empty();
+        }
+        catch (Exception exception) {
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
@@ -82,7 +84,7 @@ public class GameDao {
         try {
             jdbcTemplate.update(sql, turn, gameId);
         } catch (Exception e) {
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
@@ -91,7 +93,7 @@ public class GameDao {
         try {
             jdbcTemplate.update(sql, Status.END.getName(), gameId);
         } catch (Exception e) {
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
@@ -101,7 +103,7 @@ public class GameDao {
             jdbcTemplate.update(sql, gameId);
         } catch (Exception exception) {
             exception.printStackTrace();
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 
@@ -111,7 +113,7 @@ public class GameDao {
             jdbcTemplate.update(sql);
             jdbcTemplate.update("alter table Game alter column id restart with 1");
         } catch (Exception exception) {
-            throw new IllegalArgumentException("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
         }
     }
 }

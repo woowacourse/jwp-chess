@@ -1,11 +1,9 @@
 package chess.controller;
 
 import chess.controller.dto.ResponseDto;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import chess.utils.exception.NoExecuteQuery;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -13,7 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class WebChessExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {IllegalArgumentException.class})
+    @ExceptionHandler(value = {IllegalArgumentException.class, NoExecuteQuery.class})
     private ResponseEntity<Object> handleConflict(RuntimeException e) {
         e.printStackTrace();
         return ResponseEntity

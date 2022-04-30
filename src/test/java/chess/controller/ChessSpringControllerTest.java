@@ -2,6 +2,7 @@ package chess.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,18 +44,18 @@ public class ChessSpringControllerTest {
         body.put("title", title);
         body.put("password", password);
 
-        mockMvc.perform(post("/create")
+        mockMvc.perform(post("/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
-    @DisplayName("POST /board/move 테스트")
+    @DisplayName("PATCH /board/move 테스트")
     void post_move() throws Exception {
         final String requestString = "a2 a4";
 
-        mockMvc.perform(post("/board/move")
+        mockMvc.perform(patch("/board/move")
                 .queryParam("id", "1")
                 .content(requestString))
                 .andExpect(status().isOk());

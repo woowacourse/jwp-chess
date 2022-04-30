@@ -68,8 +68,7 @@ async function movePiece(from, to) {
         body: JSON.stringify(bodyValue)
     }).then(res => res.json())
         .then(res => {
-            console.log(res);
-            if (res.status == undefined) {
+            if (res.board == undefined) {
                 throw new Error(res.message)
             }
             if (res.gameStatus == "CHECK_MATE") {

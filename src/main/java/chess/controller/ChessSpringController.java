@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,32 +67,28 @@ public class ChessSpringController {
     @ResponseBody
     @PostMapping("/game/{gameId}/move")
     public ResponseEntity move(@RequestBody MoveDto moveDto, @PathVariable int gameId) {
-        GameStatusDto gameStatusDto = null;
-            gameStatusDto = chessGameService.move(moveDto.getFrom(), moveDto.getTo(), gameId);
+        GameStatusDto gameStatusDto = chessGameService.move(moveDto.getFrom(), moveDto.getTo(), gameId);
         return ResponseEntity.ok().body(gameStatusDto);
     }
 
     @ResponseBody
     @GetMapping("/game/{gameId}/status")
     public ResponseEntity status(@PathVariable int gameId) {
-        ScoreDto scoreDto = null;
-        try {
-            scoreDto = chessGameService.createScore(gameId);
-        } catch (Exception e) {
-            return ResponseEntity.ok().body(new ErrorDto(e.getMessage()));
-        }
+        ScoreDto scoreDto = chessGameService.createScore(gameId);
         return ResponseEntity.ok().body(scoreDto);
     }
 
     @ResponseBody
     @GetMapping("/game/{gameId}/end")
     public ResponseEntity end(@PathVariable int gameId) {
-        ScoreDto scoreDto = null;
-        try {
-            scoreDto = chessGameService.end(gameId);
-        } catch (Exception e) {
-            return ResponseEntity.ok().body(new ErrorDto(e.getMessage()));
-        }
+        ScoreDto scoreDto = chessGameService.end(gameId);
+        ;
         return ResponseEntity.ok().body(scoreDto);
     }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<ErrorDto> handle(IllegalArgumentException illegalArgumentException) {
+        return ResponseEntity.internalServerError().body(new ErrorDto(illegalArgumentException.getMessage()));
+    }
+
 }

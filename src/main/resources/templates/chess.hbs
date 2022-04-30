@@ -13,7 +13,7 @@
             <img src="/images/{{this.symbol}}.png" id="{{this.position}}"/>
             {{/this.squares}}
         </div>
-        <form action="/chess" method="post">
+        <form action="/chess/{{this.id}}/board" method="post">
             <br />
             {{this.player.name}} 차례입니다.
             <br />

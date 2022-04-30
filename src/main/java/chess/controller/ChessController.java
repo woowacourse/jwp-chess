@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ChessController {
@@ -29,6 +30,7 @@ public class ChessController {
         State state = commandService.getCurrentState(commands);
         StateDto stateDto = StateDto.of(commandService.getCurrentState(commands));
         ModelAndView modelAndView = new ModelAndView(getViewName(state));
+        modelAndView.addObject("id", id);
         modelAndView.addObject("squares", stateDto.getSquares());
         modelAndView.addObject("player", stateDto.getPlayer());
         modelAndView.addObject("commands", commands);
@@ -36,15 +38,15 @@ public class ChessController {
         return modelAndView;
     }
 
-//TODO: url 수정
-//    @PostMapping(path = "/chess")
-//    public String movePiece(RedirectAttributes redirectAttributes, @RequestParam("command") String command) {
-//        stateService.currentState()
-//                .proceed(command);
-//        stateService.insertCommand(command);
-//        redirectAttributes.addAttribute("message", command);
-//        return "redirect:chess";
-//    }
+    @PostMapping(path = "/chess/{id}/board")
+    public String movePiece(RedirectAttributes redirectAttributes, @PathVariable Long id,
+                            @RequestParam("command") String command) {
+        commandService.getCurrentState(commandService.findAllByRoomID(id))
+                .proceed(command);
+        commandService.create(id, command);
+        redirectAttributes.addAttribute("message", command);
+        return "redirect:/chess/" + id + "/board";
+    }
 
     @GetMapping(path = "/chess/{id}/result")
     public ModelAndView printResult(@PathVariable Long id) {

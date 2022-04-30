@@ -32,18 +32,19 @@ public class ChessService {
         this.boardDao = boardDao;
     }
 
-    public int createGame(String gameName, String gamePassword) {
-        int id = gameDao.createGame(gameName, gamePassword);
+    public int createGameAndGetId(String gameName, String gamePassword) {
+        int id = gameDao.createGameAndGetId(gameName, gamePassword);
+        createBoard(id);
+        return id;
+    }
 
+    private void createBoard(int id) {
         Board initializedBoard = Board.createInitializedBoard();
-        for (Entry<Position, Piece> entry : initializedBoard.getValue().entrySet()) {
-            Position position = entry.getKey();
-            Piece piece = entry.getValue();
 
-            CreatePieceDto createPieceDto = CreatePieceDto.of(id, position, piece);
+        for (Entry<Position, Piece> entry : initializedBoard.getValue().entrySet()) {
+            CreatePieceDto createPieceDto = CreatePieceDto.of(id, entry.getKey(), entry.getValue());
             boardDao.createPiece(createPieceDto);
         }
-        return id;
     }
 
     public void movePiece(UpdatePiecePositionDto updatePiecePositionDto) {
@@ -99,17 +100,23 @@ public class ChessService {
     }
 
     public void deleteRoom(int gameId, String inputPassword) {
-        if (!inputPassword.equals(gameDao.getPasswordById(gameId))) {
-            throw new IllegalArgumentException(ERROR_MESSAGE_NOT_EQUAL_PASSWORD);
-        }
-        
+        checkSamePassword(gameId, inputPassword);
+        checkGameIsEnd(gameId);
+        boardDao.deletePieces(gameId);
+        gameDao.deleteGame(gameId);
+    }
+
+    private void checkGameIsEnd(int gameId) {
         ChessGame chessGame = generateChessGame(gameId);
         if (!chessGame.isEnd()) {
             throw new IllegalArgumentException(ERROR_MESSAGE_NOT_END_GAME);
         }
+    }
 
-        boardDao.deletePieces(gameId);
-        gameDao.deleteGame(gameId);
+    private void checkSamePassword(int gameId, String inputPassword) {
+        if (!inputPassword.equals(gameDao.getPasswordById(gameId))) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_NOT_EQUAL_PASSWORD);
+        }
     }
 
     @Override

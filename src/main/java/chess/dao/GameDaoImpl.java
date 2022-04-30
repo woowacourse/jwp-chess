@@ -32,7 +32,7 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public int createGame(String gameName, String gamePassword) {
+    public int createGameAndGetId(String gameName, String gamePassword) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = String.format("INSERT INTO %s(turn, name, password) VALUES ('WHITE', ?, ?)", TABLE_NAME);
         jdbcTemplate.update((Connection conn) -> {

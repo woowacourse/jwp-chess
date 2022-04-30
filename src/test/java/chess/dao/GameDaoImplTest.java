@@ -34,14 +34,14 @@ public class GameDaoImplTest {
     @DisplayName("새로운 게임을 game 테이블에 생성한다.")
     @Test
     void createGame() {
-        System.out.println(gameDao.createGame(TEST_GAME_NAME, TEST_GAME_PASSWORD));
+        System.out.println(gameDao.createGameAndGetId(TEST_GAME_NAME, TEST_GAME_PASSWORD));
     }
 
     @DisplayName("게임을 game 테이블로부터 제거한다.")
     @Test
     void deleteGame() {
         // given & when
-        int id = gameDao.createGame(TEST_GAME_NAME, TEST_GAME_PASSWORD);
+        int id = gameDao.createGameAndGetId(TEST_GAME_NAME, TEST_GAME_PASSWORD);
 
         // then
         gameDao.deleteGame(id);
@@ -51,7 +51,7 @@ public class GameDaoImplTest {
     @Test
     void updateTurnToWhite() {
         // given & when
-        int id = gameDao.createGame(TEST_GAME_NAME, TEST_GAME_PASSWORD);
+        int id = gameDao.createGameAndGetId(TEST_GAME_NAME, TEST_GAME_PASSWORD);
 
         // then
         gameDao.updateTurnToWhite(id);
@@ -61,7 +61,7 @@ public class GameDaoImplTest {
     @Test
     void updateTurnToBlack() {
         // given & when
-        int id = gameDao.createGame(TEST_GAME_NAME, TEST_GAME_PASSWORD);
+        int id = gameDao.createGameAndGetId(TEST_GAME_NAME, TEST_GAME_PASSWORD);
 
         // then
         gameDao.updateTurnToBlack(id);

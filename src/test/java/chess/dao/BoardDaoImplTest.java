@@ -61,7 +61,7 @@ class BoardDaoImplTest {
             + "PRIMARY KEY (game_id, x_axis, y_axis),"
             + "FOREIGN KEY (game_id) REFERENCES game (id) ON DELETE CASCADE)"
         );
-        id = gameDao.createGame(TEST_GAME_NAME, TEST_GAME_PASSWORD);
+        id = gameDao.createGameAndGetId(TEST_GAME_NAME, TEST_GAME_PASSWORD);
     }
 
     @DisplayName("getBoard 는 BoardDto 를 반환한다.")

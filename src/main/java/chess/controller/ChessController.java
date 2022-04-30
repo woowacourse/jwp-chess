@@ -105,14 +105,12 @@ public class ChessController {
 
         return CommandResultDto.of(true, "성공하였습니다.");
     }
-
-    // TODO: Exception 으로 catch 하면 안됨
-
+    
     @PostMapping("/room")
     public ResponseEntity<RoomDto> createRoom(@RequestBody CreateRoomDto createRoomDto) {
         String gameName = createRoomDto.getName();
         String gamePassword = createRoomDto.getPassword();
-        RoomDto roomDto = new RoomDto(chessService.createGame(gameName, gamePassword), gameName);
+        RoomDto roomDto = new RoomDto(chessService.createGameAndGetId(gameName, gamePassword), gameName);
         return ResponseEntity.created(URI.create("/room/" + roomDto.getId())).body(roomDto);
     }
 

@@ -8,7 +8,7 @@ import chess.dto.response.RoomDto;
 public interface GameDao {
     ChessGameDto getGame(int gameId);
 
-    int createGame(String gameName, String gamePassword);
+    int createGameAndGetId(String gameName, String gamePassword);
 
     void deleteGame(int gameId);
 
@@ -17,6 +17,6 @@ public interface GameDao {
     void updateTurnToBlack(int gameId);
 
     List<RoomDto> inquireAllRooms();
-    
+
     String getPasswordById(int gameId);
 }

@@ -21,7 +21,7 @@ class ChessServiceTest {
     @BeforeEach
     void setUp() {
         chessService = new ChessService(new GameDaoFake(), new BoardDaoFake());
-        id = chessService.createGame(GAME_NAME, GAME_PASSWORD);
+        id = chessService.createGameAndGetId(GAME_NAME, GAME_PASSWORD);
     }
 
     @DisplayName("기물 이동")

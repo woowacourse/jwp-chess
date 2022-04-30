@@ -19,7 +19,7 @@ public class GameDaoFake implements GameDao {
     }
 
     @Override
-    public int createGame(String gameName, String gamePassword) {
+    public int createGameAndGetId(String gameName, String gamePassword) {
         fakeGame.put(fakeGame.size() + 1, PieceColor.WHITE);
         return fakeGame.size();
     }

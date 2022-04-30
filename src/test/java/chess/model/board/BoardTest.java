@@ -1,5 +1,6 @@
-package chess.model;
+package chess.model.board;
 
+import chess.model.Team;
 import chess.model.board.Board;
 import chess.model.board.BoardFactory;
 import chess.model.piece.Pawn;

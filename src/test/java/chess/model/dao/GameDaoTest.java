@@ -1,11 +1,9 @@
-package chess;
+package chess.model.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.model.dao.GameDao;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -15,60 +13,55 @@ import org.springframework.test.context.jdbc.Sql;
 @JdbcTest
 @Sql("/initGames.sql")
 class GameDaoTest {
+
+    private static final Long firstGeneratedKey = 1L;
+
+    private final GameDao gameDao;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    private GameDao gameDao;
-
-    @BeforeEach
-    void initPieceDaoTest() {
+    GameDaoTest(JdbcTemplate jdbcTemplate) {
         gameDao = new GameDao(jdbcTemplate); // @JdbcTest는 일반적인 @ConfigurationProperties와 @Component 빈들은 스캔되지 않는다.
     }
 
     @Test
     void saveGame() {
-        Long gameId = gameDao.saveGame("title1", "pw1234");
+        Long gameId = gameDao.saveGame("saveGameTest", "pw1234");
         List<Long> games = gameDao.findAllGameId();
 
-        assertThat(games).containsExactly(gameId);
+        assertThat(games).contains(gameId, (long) (games.size() - 1));
     }
 
     @Test
     void findTurnByGameId() {
-        Long gameId = gameDao.saveGame("title1", "pw1234");
-        Optional<String> turn = gameDao.findTurnByGameId(gameId);
+        Optional<String> turn = gameDao.findTurnByGameId(firstGeneratedKey);
 
         assertThat(turn.get()).isEqualTo("white");
     }
 
     @Test
     void updateTurnByGameId() {
-        Long gameId = gameDao.saveGame("title1", "pw1234");
-        gameDao.updateTurnByGameId(gameId, "white");
+        gameDao.updateTurnByGameId(firstGeneratedKey, "white");
 
-        assertThat(gameDao.findTurnByGameId(gameId).get()).isEqualTo("white");
+        assertThat(gameDao.findTurnByGameId(firstGeneratedKey).get()).isEqualTo("white");
     }
 
     @Test
     void deleteByGameId() {
-        Long gameId = gameDao.saveGame("title1", "pw1234");
-        gameDao.deleteByGameId(gameId);
+        gameDao.deleteByGameId(firstGeneratedKey);
 
-        assertThat(gameDao.findAllGameId()).doesNotContain(gameId);
+        assertThat(gameDao.findAllGameId()).doesNotContain(firstGeneratedKey);
     }
 
     @Test
     void findTitleByGameId() {
-        Long gameId = gameDao.saveGame("title1", "pw1234");
-        String password = gameDao.findTitleByGameId(gameId);
+        String password = gameDao.findTitleByGameId(firstGeneratedKey);
 
         assertThat(password).isEqualTo("title1");
     }
 
     @Test
     void findPasswordByGameId() {
-        Long gameId = gameDao.saveGame("title1", "pw1234");
-        String password = gameDao.findPasswordByGameId(gameId);
+        String password = gameDao.findPasswordByGameId(firstGeneratedKey);
 
         assertThat(password).isEqualTo("pw1234");
     }

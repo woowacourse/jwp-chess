@@ -1,4 +1,4 @@
-package chess.model;
+package chess.model.position;
 
 import chess.model.position.Direction;
 import chess.model.position.Distance;

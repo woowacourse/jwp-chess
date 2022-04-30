@@ -1,16 +1,14 @@
-package chess;
+package chess.model.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.entity.PieceEntity;
 import chess.model.board.Board;
 import chess.model.board.BoardFactory;
-import chess.model.dao.PieceDao;
 import chess.model.piece.PieceFactory;
 import chess.model.position.Position;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -20,13 +18,11 @@ import org.springframework.test.context.jdbc.Sql;
 @JdbcTest
 @Sql("/initPieces.sql")
 class PieceDaoTest {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     private PieceDao pieceDao;
 
-    @BeforeEach
-    void initPieceDaoTest() {
+    @Autowired
+    PieceDaoTest(JdbcTemplate jdbcTemplate) {
         pieceDao = new PieceDao(jdbcTemplate);
     }
 

@@ -1,6 +1,6 @@
 DROP TABLE GAMES IF EXISTS;
 
-CREATE TABLE games
+CREATE TABLE GAMES
 (
     game_id     int         not null AUTO_INCREMENT,
     title       varchar(30) not null,
@@ -8,3 +8,5 @@ CREATE TABLE games
     turn        varchar(5)  not null,
     primary key (game_id)
 );
+
+INSERT INTO GAMES (title, password, turn) values ('title1', 'pw1234', 'white');

@@ -38,10 +38,9 @@ public class RoomService {
     }
 
     public void startGame(final int roomId) {
-        final RoomStatusDto statusDto = roomDao.findStatusById(roomId);
-        final GameStatus gameStatus = statusDto.getGameStatus();
-        gameStatus.checkReady();
-        roomDao.updateStatusById(roomId, GameStatus.PLAYING);
+        final Room room = roomRepository.get(roomId);
+        room.startGame();
+        roomRepository.update(roomId, room);
     }
 
     public void deleteRoom(final RoomDeletionRequestDto dto) {

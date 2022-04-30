@@ -73,7 +73,7 @@ class RoomServiceTest {
         // then
         assertThatThrownBy(() -> roomService.startGame(roomId))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessage("방 아이디에 해당하는 게임 상태가 존재하지 않습니다.");
+                .hasMessage("방이 존재하지 않습니다.");
     }
 
     @Test

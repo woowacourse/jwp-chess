@@ -10,9 +10,11 @@ import chess.domain.room.Room;
 import chess.dto.response.RoomResponseDto;
 import chess.entity.ChessPieceEntity;
 import chess.entity.RoomEntity;
+import chess.exception.NotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -27,8 +29,12 @@ public class RoomRepository {
     }
 
     public Room get(final int roomId) {
-        final RoomEntity roomEntity = roomDao.findById(roomId);
-        return toRoom(roomEntity);
+        try {
+            final RoomEntity roomEntity = roomDao.findById(roomId);
+            return toRoom(roomEntity);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("방이 존재하지 않습니다.");
+        }
     }
 
     public List<RoomResponseDto> getAll() {
@@ -62,5 +68,9 @@ public class RoomRepository {
             throw new IllegalArgumentException("이름이 같은 방이 이미 존재합니다.");
         }
         return roomDao.save(room.getName(), room.getGameStatus(), room.getCurrentTurn(), room.getPassword());
+    }
+
+    public void update(final int roomId, final Room room) {
+        roomDao.updateById(roomId, room.getGameStatus(), room.getCurrentTurn());
     }
 }

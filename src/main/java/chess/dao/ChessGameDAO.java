@@ -3,7 +3,7 @@ package chess.dao;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.ChessBoardGenerator;
 import chess.domain.board.ChessGame;
-import chess.dto.GameCreationDTO;
+import chess.dto.GameCreationRequest;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,14 +30,14 @@ public class ChessGameDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long addGame(final GameCreationDTO gameCreationDTO) {
+    public long addGame(final GameCreationRequest gameCreationRequest) {
         String sql = "INSERT INTO CHESS_GAME (name, password) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
-            statement.setString(1, gameCreationDTO.getName());
-            statement.setString(2, gameCreationDTO.getPassword());
+            statement.setString(1, gameCreationRequest.getName());
+            statement.setString(2, gameCreationRequest.getPassword());
             return statement;
         }, keyHolder);
         return keyHolder.getKey().longValue();

@@ -2,7 +2,7 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.dto.GameCreationDTO;
+import chess.dto.GameCreationRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ class ChessServiceTest {
     @Test
     @DisplayName("비밀번호가 다르면 게임방을 삭제할 수 없다")
     void cannotDeleteWithWrongPassword() {
-        chessService.addChessGame(new GameCreationDTO("test", "1234"));
+        chessService.addChessGame(new GameCreationRequest("test", "1234"));
 
         assertThatThrownBy(() -> chessService.deleteGame(1, "123"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -27,7 +27,7 @@ class ChessServiceTest {
     @Test
     @DisplayName("진행중인 게임방을 삭제할 수 없다")
     void cannotDeleteRunningGame() {
-        chessService.addChessGame(new GameCreationDTO("test", "1234"));
+        chessService.addChessGame(new GameCreationRequest("test", "1234"));
 
         assertThatThrownBy(() -> chessService.deleteGame(1, "1234"))
                 .isInstanceOf(IllegalArgumentException.class)

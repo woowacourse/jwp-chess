@@ -6,8 +6,8 @@ import chess.domain.board.ChessGame;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Movement;
 import chess.domain.position.Position;
-import chess.dto.ChessGameRoomInfoDTO;
-import chess.dto.GameCreationDTO;
+import chess.dto.GameRoomResponse;
+import chess.dto.GameCreationRequest;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +22,8 @@ public final class ChessService {
         this.movementDAO = movementDAO;
     }
 
-    public long addChessGame(final GameCreationDTO gameCreationDTO) {
-        return chessGameDAO.addGame(gameCreationDTO);
+    public long addChessGame(final GameCreationRequest gameCreationRequest) {
+        return chessGameDAO.addGame(gameCreationRequest);
     }
 
     public ChessGame loadSavedGame(final long gameId) {
@@ -64,8 +64,8 @@ public final class ChessService {
         return chessGameDAO.findAllGames();
     }
 
-    public ChessGameRoomInfoDTO findGameById(long id) {
-        return ChessGameRoomInfoDTO.from(chessGameDAO.findGameById(id));
+    public GameRoomResponse findGameById(long id) {
+        return GameRoomResponse.from(chessGameDAO.findGameById(id));
     }
 
     public void deleteGame(final long gameId, final String password) {

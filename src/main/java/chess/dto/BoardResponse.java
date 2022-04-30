@@ -7,7 +7,7 @@ import chess.domain.position.Position;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class BoardDTO {
+public final class BoardResponse {
 
     private Map<String, Object> board = new HashMap<>();
     private Team currentTurn;
@@ -16,7 +16,7 @@ public final class BoardDTO {
     private boolean isGameSet = Boolean.FALSE;
     private String winner = "";
 
-    public BoardDTO(final ChessGame chessGame) {
+    public BoardResponse(final ChessGame chessGame) {
         Map<Position, Piece> board = chessGame.getChessBoard().getBoard();
         for (Position position : board.keySet()) {
             Piece piece = board.get(position);

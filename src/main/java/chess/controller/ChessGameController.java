@@ -2,9 +2,9 @@ package chess.controller;
 
 import chess.domain.board.ChessGame;
 import chess.domain.piece.property.Team;
-import chess.dto.BoardDTO;
-import chess.dto.ChessGameRoomInfoDTO;
-import chess.dto.GameCreationDTO;
+import chess.dto.BoardResponse;
+import chess.dto.GameRoomResponse;
+import chess.dto.GameCreationRequest;
 import chess.service.ChessService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,33 +34,33 @@ public class ChessGameController {
     }
 
     @PostMapping(value = "/chess/new", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String createGame(@ModelAttribute GameCreationDTO gameCreationDTO) {
-        long gameId = chessService.addChessGame(gameCreationDTO);
+    public String createGame(@ModelAttribute GameCreationRequest gameCreationRequest) {
+        long gameId = chessService.addChessGame(gameCreationRequest);
         return "redirect:/chess/game/" + gameId;
     }
 
     @GetMapping("/chess/game/{id}")
     public String showChessGameRoom(@PathVariable long id, Model model) {
-        ChessGameRoomInfoDTO chessGameRoomInfoDTO = chessService.findGameById(id);
+        GameRoomResponse chessGameRoomInfoDTO = chessService.findGameById(id);
         model.addAttribute("chessGameRoom", chessGameRoomInfoDTO);
         return "game";
     }
 
     @GetMapping("/chess/game/{id}/board")
     @ResponseBody
-    public ResponseEntity<BoardDTO> createBoard(@PathVariable long id) {
+    public ResponseEntity<BoardResponse> createBoard(@PathVariable long id) {
         ChessGame chessGame = chessService.loadSavedGame(id);
-        return ResponseEntity.ok(new BoardDTO(chessGame));
+        return ResponseEntity.ok(new BoardResponse(chessGame));
     }
 
     @PostMapping("/chess/game/{id}/move")
     @ResponseBody
-    public ResponseEntity<BoardDTO> movePiece(@RequestParam String source,
-                                              @RequestParam String target,
-                                              @RequestParam String team,
-                                              @PathVariable long id) {
+    public ResponseEntity<BoardResponse> movePiece(@RequestParam String source,
+                                                   @RequestParam String target,
+                                                   @RequestParam String team,
+                                                   @PathVariable long id) {
         ChessGame chessGame = chessService.movePiece(id, source, target, Team.valueOf(team));
-        return ResponseEntity.ok(new BoardDTO(chessGame));
+        return ResponseEntity.ok(new BoardResponse(chessGame));
     }
 
     @DeleteMapping(value = "/chess/{id}")

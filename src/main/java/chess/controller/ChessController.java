@@ -84,7 +84,7 @@ public class ChessController {
         if (!gameService.isEnd(id)) {
             throw new IllegalArgumentException("진행중인 게임은 삭제할 수 없어~");
         }
-        if (!gameService.end(id, password)) {
+        if (!gameService.delete(id, password)) {
             throw new IllegalArgumentException("게임 삭제에 실패하였습니다.");
         }
         return ResponseEntity.ok(null);

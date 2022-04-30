@@ -127,7 +127,7 @@ public final class GameService {
         return chessBoard.calculateScore(color);
     }
 
-    public boolean end(int roomId, String password) {
+    public boolean delete(int roomId, String password) {
         return boardDao.deleteByIdAndPassword(roomId, password) == 1;
     }
 

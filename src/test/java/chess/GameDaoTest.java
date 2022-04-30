@@ -77,15 +77,6 @@ class GameDaoTest {
         assertThat(turn).isEqualToIgnoringCase("white");
     }
 
-    //TODO 이거 나중에 예외처리할 때 어떻게 할지 생각해보기
-//    @Test
-//    @DisplayName("턴이 존재하지 않는 경우 무엇을 반환하는지 확인")
-//    void getTurn() {
-//        String turn = gameDao.findTurnById(1L);
-//
-//        assertThat(turn).isEmpty();
-//    }
-
     @Test
     @DisplayName("턴이 update 되는지 확인한다")
     void update() {

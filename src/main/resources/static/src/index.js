@@ -1,7 +1,6 @@
 
 const clickStartButton = () => {
     let roomName = prompt("방 이름");
-    //TODO 여기 값 입력 안하면 안넘어가도록 수정
     if (roomName === null) {
         return;
     }

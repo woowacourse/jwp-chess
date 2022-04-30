@@ -48,7 +48,6 @@ class PieceDaoTest {
                 ");");
 
         pieceDao = new PieceDao(jdbcTemplate);
-//        pieceDao.init(BoardFactory.create());
     }
 
     @AfterEach
@@ -87,23 +86,4 @@ class PieceDaoTest {
 
         assertThat(pieceName).isEqualTo("white-p");
     }
-//
-//    @Test
-//    @DisplayName("체스판의 말을 update하는 것을 확인한다.")
-//    void updatePieceNameByPosition() {
-//        pieceDao.updateByPosition("a2", "none-.");
-//
-//        String pieceName = pieceDao.findPieceNameByPosition("a2");
-//
-//        assertThat(pieceName).isEqualTo("none-.");
-//    }
-//
-//    @Test
-//    @DisplayName("체스판의 말을 모두 삭제한다.")
-//    void deleteAll() {
-//        pieceDao.deleteAll();
-//
-//        List<PieceEntity> boardMap = pieceDao.findAllPieces();
-//        assertThat(boardMap.size()).isZero();
-//    }
 }

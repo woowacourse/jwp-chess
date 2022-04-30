@@ -1,6 +1,7 @@
 package chess.dto;
 
 public class StatusDto {
+
     private final boolean isRunning;
 
     public StatusDto(boolean isRunning) {

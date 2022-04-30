@@ -99,7 +99,7 @@ window.onclick = function(event) {
 
 var createModal = document.getElementById("modalCreate");
 var createBtn = document.getElementById("myBtnCreate");
-var createSpan = document.getElementsByClassName("close2")[0];
+var createSpan = document.getElementsByClassName("create-modal-close")[0];
 
 createBtn.onclick = function() {
   createModal.style.display = "block";

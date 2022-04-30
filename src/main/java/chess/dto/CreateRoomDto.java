@@ -1,10 +1,12 @@
 package chess.dto;
 
 public class CreateRoomDto {
+
     private String title;
     private String password;
 
-    public CreateRoomDto() {}
+    public CreateRoomDto() {
+    }
 
     public CreateRoomDto(String title, String password) {
         this.title = title;

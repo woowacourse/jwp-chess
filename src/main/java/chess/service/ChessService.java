@@ -141,7 +141,6 @@ public class ChessService {
 
     public StatusDto getStatus(Long roomId) {
         Room room = roomDao.findById(roomId);
-        System.out.println("roomStatus" + room.getStatus() + roomId);
         return new StatusDto(room.getStatus());
     }
 }

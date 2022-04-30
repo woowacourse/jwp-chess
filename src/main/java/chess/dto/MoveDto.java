@@ -5,7 +5,8 @@ public class MoveDto {
     private String source;
     private String destination;
 
-    public MoveDto() {}
+    public MoveDto() {
+    }
 
     public MoveDto(String source, String destination) {
         this.source = source;

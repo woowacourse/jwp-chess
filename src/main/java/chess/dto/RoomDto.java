@@ -4,6 +4,7 @@ import chess.domain.Team;
 import chess.entity.Room;
 
 public class RoomDto {
+
     private final Long id;
     private final Team team;
     private final String title;

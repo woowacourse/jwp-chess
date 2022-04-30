@@ -3,6 +3,10 @@ window.onload = function() {
         $(".room_info").css("display", "inline");
     });
 
+    $("#start").click(function() {
+        start();
+    })
+
     loadRooms();
 }
 
@@ -30,4 +34,26 @@ function showRooms(rooms) {
         + CHESS_GAME_STATUS[rooms[i]['status']]
         + "</li>");
     }
+}
+
+function start() {
+    $.ajax({
+        url: "/chess-game/start",
+        type: "post",
+        beforeSend: function (xhr) {
+             xhr.setRequestHeader("Content-type","application/json");
+        },
+        data: JSON.stringify({
+            title: $("#title").val(),
+            password: $("#password").val()
+        }),
+        success(data) {
+            let chessId = parseToJSON(data);
+            location.href = "/chess-game/" + chessId;
+        },
+        error(request) {
+            let obj = JSON.parse(request.responseText);
+            alert(obj.message);
+        }
+    });
 }

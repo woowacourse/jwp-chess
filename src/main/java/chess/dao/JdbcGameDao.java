@@ -1,5 +1,7 @@
 package chess.dao;
 
+import chess.controller.dto.ChessRequestDto;
+import chess.domain.piece.PieceColor;
 import chess.service.dto.GameDto;
 import chess.service.dto.GameStatusDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,14 @@ public class JdbcGameDao implements GameDao {
     public void save(final int id, final GameDto gameDto) {
         final String sql = "insert into game (game_id, turn, status) values (?, ?, ?)";
         jdbcTemplate.update(sql, id, gameDto.getTurn(), gameDto.getStatus());
+    }
+
+    @Override
+    public void save(final int id, final ChessRequestDto chessRequestDto) {
+        final String sql = "insert into game (game_id, title, password, turn, status) values (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, id,
+                chessRequestDto.getTitle(), chessRequestDto.getPassword(),
+                chessRequestDto.getTurn(), chessRequestDto.getStatus());
     }
 
     @Override

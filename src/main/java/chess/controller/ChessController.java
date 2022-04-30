@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.controller.dto.ChessRequestDto;
 import chess.domain.command.MoveCommand;
 import chess.service.dto.ChessResponseDto;
 import chess.controller.dto.MoveCommandDto;
@@ -39,9 +40,9 @@ public class ChessController {
         return ResponseEntity.ok().body(chessService.getChesses());
     }
 
-    @PostMapping("/start")
-    public ResponseEntity<ChessResponseDto> start() {
-        return ResponseEntity.ok().body(chessService.initializeGame());
+    @PostMapping(value = "/start", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> start(@RequestBody ChessRequestDto chessRequestDto) {
+        return ResponseEntity.ok().body(chessService.start(chessRequestDto));
     }
 
     @GetMapping("/score/{id}")

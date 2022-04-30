@@ -16,11 +16,9 @@
 <div class="content">
     <input type="button" value="방 만들기" id="open_room" />
     <div class="room_info">
-        <form action="/chess-game/index" method="post">
-            <div>방 이름 : <input type="text" id="title" /></div>
-            <div>비밀번호 : <input type="password" id="password" /></div>
-            <div><input type="submit" value="시작" id="start" /></div>
-        </form>
+        <div>방 이름 : <input type="text" id="title" /></div>
+        <div>비밀번호 : <input type="password" id="password" /></div>
+        <div><input type="button" value="시작" id="start" /></div>
     </div>
     <div id="rooms_wrap">
         <ul id="rooms"></ul>

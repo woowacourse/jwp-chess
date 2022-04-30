@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.controller.dto.ChessRequestDto;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessGame;
@@ -32,6 +33,7 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
+    // TODO: 삭제
     public ChessResponseDto initializeGame() {
         int gameId = getGameId();
         try {
@@ -41,6 +43,17 @@ public class ChessService {
             throw new IllegalArgumentException("게임을 초기화할 수 없습니다.");
         }
         return getChess(gameId);
+    }
+
+    public int start(final ChessRequestDto chessRequestDto) {
+        int gameId = getGameId();
+        try {
+            pieceDao.saveAll(gameId, getInitPieceDtos());
+            gameDao.save(gameId, chessRequestDto);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("게임을 초기화할 수 없습니다.");
+        }
+        return gameId;
     }
 
     private int getGameId() {

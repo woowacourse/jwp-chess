@@ -36,18 +36,18 @@ public class ChessService {
     }
 
     public int newGame(String title, String password) {
-        int gameId = gameDao.save(title, password, StateType.READY);
+        int gameId = gameDao.save(title, password, StateType.WHITE_TURN);
         start(gameId);
         return gameId;
     }
 
     public void restart(int gameId) {
         pieceDao.deleteAllByGameId(gameId);
+        gameDao.updateStateById(gameId, StateType.END);
         start(gameId);
     }
 
     private void start(int gameId) {
-        gameDao.updateStateById(gameId, StateType.WHITE_TURN);
         ChessBoard chessBoard = new ChessBoard(new InitBoardGenerator());
         initChessBoard(chessBoard.getBoard(), gameId);
     }

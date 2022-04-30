@@ -215,3 +215,29 @@ function deleteRoom(id, password) {
 function goHome() {
     window.location.href = "/";
 }
+
+function createRoom() {
+    let title = document.getElementById("title").value;
+    let password = document.getElementById("password").value;
+
+    const request = {
+        title: title,
+        password: password
+    };
+
+    fetch('/new', {
+        method: 'post',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request)
+    }).then((response) => {
+        console.log(response)
+        if (response.status === 400) {
+            window.alert("제목이 중복되었습니다.")
+            return;
+        }
+        window.alert("방 생성에 성공했습니다.");
+        window.location.href = "/";
+    });
+}

@@ -8,7 +8,7 @@
 <body>
 <h1 class="centered">체스 게임</h1>
 
-<form action="/new" method="post">
+<form>
     <div>
         <label for="title" style="color: white">제목 :</label>
         <input type="text" id = "title" name="title" placeholder="제목을 입력하세요">
@@ -17,7 +17,7 @@
         <label for="password" style="color: white">비밀번호 : </label>
         <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요">
     </div>
-    <button class="ok-button" type="submit">확인</button>
+    <button class="ok-button" onclick="createRoom()" id="ok-button" type="button">확인</button>
     <button class="home-button" id="home-button" onclick="goHome()" type="button">홈 버튼</button>
 </form>
 <script src="/src/App.js"></script>

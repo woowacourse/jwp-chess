@@ -7,12 +7,15 @@ import chess.web.controller.dto.RoomRequest;
 import chess.web.controller.dto.RoomResponse;
 import chess.web.service.ChessService;
 import chess.web.service.RoomService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,9 +47,9 @@ public class ChessViewController {
     }
 
     @PostMapping("/new")
-    public String createGame(RoomRequest.TitleAndPassword request) {
+    public ResponseEntity<Void> createGame(@RequestBody RoomRequest.TitleAndPassword request) {
         Long id = roomService.createRoom(request.getTitle(), request.getPassword());
-        return "redirect:/room/" + id;
+        return ResponseEntity.created(URI.create("/room/" + id)).build();
     }
 
     @GetMapping("/room/{id}")

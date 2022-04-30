@@ -34,8 +34,9 @@ public class HomeController {
         return new RedirectView("/games/" + chessGameId);
     }
 
-    @PostMapping("/games/delete/{chessGameId}")
-    public RedirectView deleteChessGame(final @PathVariable long chessGameId, final @RequestParam String password) {
+    @PostMapping("/games/delete/{chess-game-id}")
+    public RedirectView deleteChessGame(final @PathVariable(name = "chess-game-id") long chessGameId,
+                                        final @RequestParam String password) {
         chessGameService.deleteChessGame(chessGameId, password);
         return new RedirectView("/");
     }

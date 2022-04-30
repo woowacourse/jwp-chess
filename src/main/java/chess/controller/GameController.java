@@ -22,8 +22,8 @@ public class GameController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping("/games/{chessGameId}")
-    public String getChessGamePage(final Model model, final @PathVariable long chessGameId) {
+    @GetMapping("/games/{chess-game-id}")
+    public String getChessGamePage(final Model model, final @PathVariable(name = "chess-game-id") long chessGameId) {
         ChessGameDto chessGameDto = chessGameService.loadChessGame(chessGameId);
         if (chessGameDto.isOn()) {
             model.addAllAttributes(chessGameDto.getBoardForHtml());
@@ -35,8 +35,8 @@ public class GameController {
         return "chess_game";
     }
 
-    @PostMapping("/games/move/{chessGameId}")
-    public RedirectView movePiece(final @PathVariable long chessGameId,
+    @PostMapping("/games/move/{chess-game-id}")
+    public RedirectView movePiece(final @PathVariable(name = "chess-game-id") long chessGameId,
                                   final @RequestParam String source,
                                   final @RequestParam String target) {
         String refinedSource = source.trim().toLowerCase();
@@ -51,14 +51,14 @@ public class GameController {
         return new RedirectView("/games/" + chessGameId);
     }
 
-    @PostMapping("/games/reset/{chessGameId}")
-    public RedirectView resetChessGame(final @PathVariable long chessGameId) {
+    @PostMapping("/games/reset/{chess-game-id}")
+    public RedirectView resetChessGame(final @PathVariable(name = "chess-game-id") long chessGameId) {
         chessGameService.resetChessGame(chessGameId);
         return new RedirectView("/games/" + chessGameId);
     }
 
-    @PostMapping("/games/end/{chessGameId}")
-    public RedirectView endChessGame(final @PathVariable long chessGameId) {
+    @PostMapping("/games/end/{chess-game-id}")
+    public RedirectView endChessGame(final @PathVariable(name = "chess-game-id") long chessGameId) {
         chessGameService.endChessGame(chessGameId);
         return new RedirectView("/games/" + chessGameId);
     }

@@ -15,23 +15,23 @@ public class ChessGame {
     private static final String GAME_END_EXCEPTION_MESSAGE = "게임이 끝난 후에는 경기를 더 진행할 수 없습니다.";
 
     private final Pieces chessmen;
-    private final boolean forceEndFlag;
+    private final boolean isEnd;
     private Color turn;
 
-    public ChessGame(boolean forceEndFlag, Pieces chessmen, Color turn) {
-        this.forceEndFlag = forceEndFlag;
+    public ChessGame(boolean isEnd, Pieces chessmen, Color turn) {
+        this.isEnd = isEnd;
         this.chessmen = chessmen;
         this.turn = turn;
     }
 
     private ChessGame(Pieces chessmen) {
-        this.forceEndFlag = false;
+        this.isEnd = false;
         this.chessmen = chessmen;
         this.turn = Color.BLACK;
     }
 
     public ChessGame() {
-        forceEndFlag = false;
+        isEnd = false;
         this.chessmen = new Pieces(List.of());
     }
 
@@ -106,7 +106,7 @@ public class ChessGame {
     }
 
     public boolean isEnd() {
-        return forceEndFlag || chessmen.hasLessThanTotalKingCount();
+        return isEnd || chessmen.hasLessThanTotalKingCount();
     }
 
     public Pieces getChessmen() {
@@ -117,8 +117,8 @@ public class ChessGame {
         return turn;
     }
 
-    public boolean getForceEndFlag() {
-        return forceEndFlag;
+    public boolean getEnd() {
+        return isEnd;
     }
 
     @Override

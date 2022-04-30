@@ -9,14 +9,14 @@ import chess.domain.piece.Pieces;
 import chess.dto.GameResultDto;
 import chess.dto.LogInDto;
 import chess.dto.MoveDto;
-import chess.entity.RoomEntity;
+import chess.domain.game.Room;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameService {
-    private static final String SAME_NAME_ROOM_ERROR_MESSAGE = "이미 해당 이름의 방이 있습니다.";
     private static final String PLAYING_CHESS_ERROR_MESSAGE = "진행중인 체스방은 삭제할 수 없습니다.";
+    private static final String ALREADY_ROOM_ID_EXIST_ERROR_MESSAGE = "이미 해당 이름의 방이 있습니다.";
 
     private final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
 
@@ -33,15 +33,17 @@ public class ChessGameService {
         initGame(logInDto);
     }
 
-    private void validateUniqueId(LogInDto logInDto) {
-        if (gameDao.isInId(logInDto.getGameId())) {
-            throw new IllegalArgumentException(SAME_NAME_ROOM_ERROR_MESSAGE);
-        }
+    public void validateLogIn(LogInDto logInDto) {
+        gameDao.findRoom(logInDto.getGameId()).validateLogInPassword(logInDto);
     }
 
-    public void validateLogIn(LogInDto logInDto) {
-        RoomEntity roomEntity = gameDao.findRoom(logInDto);
-        roomEntity.validateLogIn(logInDto);
+    private void validateUniqueId(LogInDto logInDto) {
+        try {
+            gameDao.findNoPasswordRoom(logInDto.getGameId());
+        } catch (IllegalArgumentException e) {
+            return;
+        }
+        throw new IllegalArgumentException(ALREADY_ROOM_ID_EXIST_ERROR_MESSAGE);
     }
 
     private void initGame(LogInDto logInDto) {
@@ -50,9 +52,9 @@ public class ChessGameService {
     }
 
     public ChessGame getGameStatus(String gameId) {
-        RoomEntity roomEntity = gameDao.findRoom(gameId);
-        return new ChessGame(roomEntity.isForce_end_flag(), pieceDao.findAll(gameId),
-                roomEntity.getTurn());
+        Room room = gameDao.findNoPasswordRoom(gameId);
+        return new ChessGame(room.isEnd(), pieceDao.findAll(gameId),
+                room.getTurn());
     }
 
     public Pieces getPieces(String gameId) {
@@ -75,10 +77,10 @@ public class ChessGameService {
         pieceDao.deleteAll(gameId);
         pieceDao.createAll(chessGame.getChessmen(), gameId);
         gameDao.updateTurn(chessGame.getTurn(), gameId);
-        gameDao.updateForceEndFlag(chessGame.getForceEndFlag(), gameId);
+        gameDao.updateForceEndFlag(chessGame.getEnd(), gameId);
     }
 
-    public List<RoomEntity> getRooms() {
+    public List<Room> getRooms() {
         return gameDao.findAllGame();
     }
 

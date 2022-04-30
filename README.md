@@ -112,12 +112,12 @@ use chess;
 - [x] test 코드 DB schema.sql로 초기화(세팅)
 - [x] redirect를 사용하는 api ResponseEntity로 변경
 - [x] Service 테스트 만들기
+- [ ] Dao는 CRUD 로직만 넣고 비밀번호 관련 로직은 서비스로 빼기
+    - [x] 로그인(아이디, 비밀번호) 관련 예외는 비즈니스 로직에 의한 예외이기 때문에 서비스 단에서 예외처리
+    - [x] game을 조회해서 해당 게임의 비밀번호를 체크하는 건 도메인 로직으로 뺄 수 있지 않을까요?
+    - [ ] password 외에 다른 부분도 도메인으로 뺄 수 있을 것 같아요(ex. turn)
 - [ ] GET /game/{gameId} -> 존재하지 않는 gameId를 조회하면 어떻게 되나요?
     - [ ] 예외처리 제대로 하기
-- [ ] Dao는 CRUD 로직만 넣고 비밀번호 관련 로직은 서비스로 빼기
-    - [ ] 로그인(아이디, 비밀번호) 관련 예외는 비즈니스 로직에 의한 예외이기 때문에 서비스 단에서 예외처리
-    - [ ] game을 조회해서 해당 게임의 비밀번호를 체크하는 건 도메인 로직으로 뺄 수 있지 않을까요?
-    - [ ] password외에 다른 부분도 도메인으로 뺄 수 있을 것 같아요(ex. turn)
 - [ ] @RequestBody를 사용하려면 JSON 형태로 요청을 보내야 합니다. 공부하기
     - [ ] [Spring’s RequestBody and ResponseBody Annotations](https://www.baeldung.com/spring-request-response-body)
     - [ ] [Spring MVC에서 요청 처리 시 @RequestBody는 어떻게 쓰는게 좋은가](http://bluesky-devstudy.blogspot.com/2016/07/spring-mvc-requestbody.html)

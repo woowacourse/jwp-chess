@@ -84,10 +84,10 @@ class ChessGameServiceTest {
     @DisplayName("changeToEnd로 아이디에 맞는 방을 게임종료로 설정한다.")
     @Test
     void changeToEnd() {
-        assertThat(chessGameService.getGameStatus(GAME_ID).getForceEndFlag())
+        assertThat(chessGameService.getGameStatus(GAME_ID).getEnd())
                 .isFalse();
         chessGameService.changeToEnd(GAME_ID);
-        assertThat(chessGameService.getGameStatus(GAME_ID).getForceEndFlag())
+        assertThat(chessGameService.getGameStatus(GAME_ID).getEnd())
                 .isTrue();
     }
 

@@ -15,7 +15,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 public class GameDaoTest {
 
-    private static final LogInDto LOG_IN_DTO = new LogInDto("1234", "1234");
+    private static final String GAME_ID = "1234";
+    private static final LogInDto LOG_IN_DTO = new LogInDto(GAME_ID, GAME_ID);
     private GameDao gameDao;
 
     @Autowired
@@ -26,21 +27,21 @@ public class GameDaoTest {
         gameDao = new GameDao(jdbcTemplate);
     }
 
-    @DisplayName("create로 새 게임을 생성한다")
+    @DisplayName("create 로 새 게임을 생성한다")
     @Test
     void create() {
         gameDao.create(LOG_IN_DTO);
-        assertThat(gameDao.isInId("1234")).isTrue();
+        assertThat(gameDao.findRoom(GAME_ID).getId()).isEqualTo(GAME_ID);
     }
 
-    @DisplayName("게임이 끝나지 않으면 foce_end_flag는 false이다")
+    @DisplayName("게임이 끝나지 않으면 force_end_flag 는 false 이다")
     @Test
     void findForceEndFlagById() {
         gameDao.create(LOG_IN_DTO);
-        assertThat(gameDao.findForceEndFlag("1234")).isFalse();
+        assertThat(gameDao.findForceEndFlag(GAME_ID)).isFalse();
     }
 
-    @DisplayName("findForceEndFlag에서 존재하지 않는 게임아이디 조회시 예외가 발생한다")
+    @DisplayName("findForceEndFlag 에서 존재하지 않는 게임아이디 조회시 예외가 발생한다")
     @Test
     void findForceEndFlagByIdError() {
         gameDao.create(LOG_IN_DTO);
@@ -49,54 +50,47 @@ public class GameDaoTest {
                 .hasMessage("해당 제목의 방을 찾을 수 없습니다.");
     }
 
-    @DisplayName("findTurn에서 첫 이동불가능한 turn은 black이다")
+    @DisplayName("findTurn 에서 첫 이동불가능한 turn 은 black 이다")
     @Test
     void findTurn() {
         gameDao.create(LOG_IN_DTO);
-        assertThat(gameDao.findTurn("1234")).isEqualTo(Color.BLACK);
+        assertThat(gameDao.findTurn(GAME_ID)).isEqualTo(Color.BLACK);
     }
 
-    @DisplayName("updateTurn로 게임을 업데이트한다")
+    @DisplayName("updateTurn 로 게임을 업데이트한다")
     @Test
     void updateTurnById() {
         gameDao.create(LOG_IN_DTO);
-        gameDao.updateTurn(Color.WHITE, "1234");
-        assertThat(gameDao.findTurn("1234")).isEqualTo(Color.WHITE);
+        gameDao.updateTurn(Color.WHITE, GAME_ID);
+        assertThat(gameDao.findTurn(GAME_ID)).isEqualTo(Color.WHITE);
     }
 
-    @DisplayName("updateForceEndFlag를 통해 force_end_flag를 업데이트한다")
+    @DisplayName("updateForceEndFlag 를 통해 force_end_flag 를 업데이트한다")
     @Test
     void updateForceEndFlag() {
         gameDao.create(LOG_IN_DTO);
-        gameDao.updateForceEndFlag(true, "1234");
-        assertThat(gameDao.findForceEndFlag("1234")).isEqualTo(true);
+        gameDao.updateForceEndFlag(true, GAME_ID);
+        assertThat(gameDao.findForceEndFlag(GAME_ID)).isEqualTo(true);
     }
 
-    @DisplayName("delete로 게임을 삭제한다")
+    @DisplayName("delete 로 게임을 삭제한다")
     @Test
     void delete() {
         gameDao.create(LOG_IN_DTO);
-        assertThat(gameDao.isInId("1234")).isTrue();
-        gameDao.delete("1234");
-        assertThat(gameDao.isInId("1234")).isFalse();
+        assertThat(gameDao.findRoom(GAME_ID).getId())
+                .isEqualTo(GAME_ID);
+        gameDao.delete(GAME_ID);
+        assertThatThrownBy(() -> gameDao.findRoom(GAME_ID))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당 제목의 방을 찾을 수 없습니다.");
     }
 
-    @DisplayName("isValidPassword로 유효한 아이디의 패스워드인지 확인한다")
-    @Test
-    void isValidPassword() {
-        gameDao.create(LOG_IN_DTO);
-        assertThat(gameDao.isValidPassword(LOG_IN_DTO)).isTrue();
-        assertThat(gameDao
-                .isValidPassword(new LogInDto("1234", "12345")))
-                .isFalse();
-    }
-
-    @DisplayName("findAllGame로 모든 게임방 리스트를 반환한다")
+    @DisplayName("findAllGame 로 모든 게임방 리스트를 반환한다")
     @Test
     void findAllGame() {
         gameDao.create(LOG_IN_DTO);
-        gameDao.create(new LogInDto("2", "1234"));
-        gameDao.create(new LogInDto("3", "1234"));
+        gameDao.create(new LogInDto("2", GAME_ID));
+        gameDao.create(new LogInDto("3", GAME_ID));
         assertThat(gameDao.findAllGame().size()).isEqualTo(3);
     }
 }

@@ -1,11 +1,12 @@
 package chess.dao;
 
+import chess.domain.game.Room;
 import chess.domain.piece.Color;
 import chess.dto.LogInDto;
-import chess.entity.RoomEntity;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,29 +27,28 @@ public class GameDao {
         jdbcTemplate.update(sql, logInDto.getGameId(), logInDto.getGamePassword(), Color.BLACK.getName());
     }
 
-    public RoomEntity findRoom(LogInDto logInDto) {
+    public Room findNoPasswordRoom(String gameId) {
         final String sql = "select * from game where id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new RoomEntity(
-                    rs.getString("id"),
-                    rs.getString("password"),
-                    Color.of(rs.getString("turn")),
-                    rs.getBoolean("force_end_flag")
-            ), logInDto.getGameId());
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Room(
+                            rs.getString("id"),
+                            Color.of(rs.getString("turn")),
+                            rs.getBoolean("force_end_flag")),
+                    gameId);
         } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException(NO_GAME_ERROR_MESSAGE);
         }
     }
 
-    public RoomEntity findRoom(String gameId) {
+    public Room findRoom(String gameId) {
         final String sql = "select * from game where id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new RoomEntity(
-                    rs.getString("id"),
-                    rs.getString("password"),
-                    Color.of(rs.getString("turn")),
-                    rs.getBoolean("force_end_flag")
-            ), gameId);
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Room(
+                            rs.getString("id"),
+                            rs.getString("password"),
+                            Color.of(rs.getString("turn")),
+                            rs.getBoolean("force_end_flag"))
+                    , gameId);
         } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException(NO_GAME_ERROR_MESSAGE);
         }
@@ -73,10 +73,10 @@ public class GameDao {
         }
     }
 
-    public List<RoomEntity> findAllGame() {
+    public List<Room> findAllGame() {
         final String sql = "select * from game";
         try {
-            return jdbcTemplate.query(sql, (rs, rowNum) -> new RoomEntity(
+            return jdbcTemplate.query(sql, (rs, rowNum) -> new Room(
                     rs.getString("id"),
                     rs.getString("password"),
                     Color.of(rs.getString("turn")),
@@ -100,15 +100,5 @@ public class GameDao {
     public void delete(String gameId) {
         final String sql = "delete from game where id = ?";
         jdbcTemplate.update(sql, gameId);
-    }
-
-    public boolean isValidPassword(LogInDto logInDto) {
-        final String sql = "select count(*) from game where id = ? and password = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, logInDto.getGameId(), logInDto.getGamePassword()) > 0;
-    }
-
-    public boolean isInId(String gameId) {
-        final String sql = "select count(*) from game where id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, gameId) > 0;
     }
 }

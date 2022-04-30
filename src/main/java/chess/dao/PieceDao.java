@@ -6,7 +6,6 @@ import chess.domain.piece.Pieces;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class PieceDao {
@@ -42,7 +41,7 @@ public class PieceDao {
         return new Pieces(pieces);
     }
 
-    public void updateAll(List<Piece> pieces, String  gameId) {
+    public void updateAll(List<Piece> pieces, String gameId) {
         final String sql = "UPDATE piece SET position = ? "
                 + "WHERE game_id = ? "
                 + "AND name = ? "

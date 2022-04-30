@@ -7,7 +7,6 @@ import chess.domain.board.piece.Empty;
 import chess.domain.board.piece.Piece;
 import chess.domain.board.piece.Pieces;
 import chess.domain.board.piece.position.Position;
-import chess.domain.entity.Room;
 import chess.web.controller.dto.MoveDto;
 import chess.web.controller.dto.ScoreDto;
 import chess.web.dao.PieceDao;

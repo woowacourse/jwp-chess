@@ -41,23 +41,27 @@ public class RoomService {
 
     @Transactional
     public void delete(String password, Long id) {
-        Pieces pieces = Pieces.from(pieceDao.findAllByBoardId(id));
         Room room = roomDao.findById(id)
                 .orElseThrow(IllegalArgumentException::new);
-
-        if (pieces.countOfKing() == 2) {
-            throw new RuntimeException("게임이 끝나지 않아서 삭제할수 없습니다.");
-        }
-        if (room.isNotSamePassword(password)) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
-        }
+        validateCorrectPassword(password, room);
+        Pieces pieces = Pieces.from(pieceDao.findAllByBoardId(id));
+        validateProceedingGame(pieces);
         roomDao.deleteById(id);
     }
 
+    private void validateProceedingGame(Pieces pieces) {
+        if (pieces.countOfKing() == 2) {
+            throw new RuntimeException("게임이 끝나지 않아서 삭제할수 없습니다.");
+        }
+    }
+
+    private void validateCorrectPassword(String password, Room room) {
+        if (room.isNotSamePassword(password)) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+    }
 
     public List<Room> getRoomList() {
         return roomDao.findAll();
     }
-
-
 }

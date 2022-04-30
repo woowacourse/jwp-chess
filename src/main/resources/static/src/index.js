@@ -18,7 +18,7 @@ function createNewGame() {
         return;
     }
 
-    fetch("/start/new", {
+    fetch("/board/new", {
         method: "post",
         headers: {
             "Content-Type": "application/json"
@@ -36,7 +36,7 @@ function deleteGame(gameId) {
         return;
     }
 
-    fetch("/delete/room/" + gameId, {
+    fetch("/room/" + gameId, {
         method : "delete",
         body : password
     }).then(response => {
@@ -72,7 +72,7 @@ const clickButton = async (gameId) => {
 }
 
 const startGame = (gameId) => {
-    fetch(`/start/` + gameId, {
+    fetch(`/board/` + gameId, {
         method: "GET",
         headers: {"Content-Type": "application/json"}
     })

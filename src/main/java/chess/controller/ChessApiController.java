@@ -31,13 +31,13 @@ public class ChessApiController {
         this.chessMoveService = chessMoveService;
     }
 
-    @PostMapping("/start/new")
+    @PostMapping("/board/new")
     public String startNewGame(@RequestBody RoomDto roomDto) {
         Long gameId = chessGameService.createGame(roomDto.getTitle(), roomDto.getPassword());
         return gameId.toString();
     }
 
-    @GetMapping("/start/{gameId}")
+    @GetMapping("/board/{gameId}")
     public Map<String, String> startGame(@PathVariable Long gameId) {
         WebBoardDto board = chessGameService.continueGame(gameId);
         return board.getWebBoard();
@@ -74,7 +74,7 @@ public class ChessApiController {
         chessBoardService.restartGame(gameId);
     }
 
-    @DeleteMapping("/delete/room/{gameId}")
+    @DeleteMapping("/room/{gameId}")
     public void deleteGame(@PathVariable Long gameId, @RequestBody String password) {
         chessGameService.deleteGame(gameId, password);
     }

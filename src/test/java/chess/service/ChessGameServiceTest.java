@@ -3,6 +3,7 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import chess.exception.IllegalDeleteRoomException;
 import chess.model.board.BoardFactory;
 import chess.model.dao.GameDao;
 import chess.model.dao.PieceDao;
@@ -71,7 +72,7 @@ class ChessGameServiceTest {
         assertThatThrownBy(() -> {
             chessGameService.deleteGame(gameId, "pw1234");
         })
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(IllegalDeleteRoomException.class)
                 .hasMessageContaining("게임이 진행중인 방은 삭제할 수 없습니다.");
     }
 
@@ -83,7 +84,7 @@ class ChessGameServiceTest {
         assertThatThrownBy(() -> {
             chessGameService.deleteGame(gameId, "worngPw");
         })
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalDeleteRoomException.class)
                 .hasMessageContaining("방 비밀번호가 맞지 않습니다.");
     }
 

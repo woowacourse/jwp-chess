@@ -1,6 +1,7 @@
 package chess.repository;
 
 import chess.entity.RoomEntity;
+import chess.util.PasswordSha256Encoder;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -37,7 +38,7 @@ public class RoomRepositoryImpl implements RoomRepository {
             final String name = rs.getString("name");
             final String team = rs.getString("team");
             final boolean gameOver = rs.getBoolean("game_over");
-            return new RoomEntity(id, password, name, team, gameOver);
+            return new RoomEntity(id, PasswordSha256Encoder.encode(password), name, team, gameOver);
         };
     }
 

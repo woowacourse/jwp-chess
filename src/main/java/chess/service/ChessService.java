@@ -21,6 +21,7 @@ import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
 import chess.repository.BoardRepository;
 import chess.repository.RoomRepository;
+import chess.util.PasswordSha256Encoder;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,7 +42,8 @@ public class ChessService {
     }
 
     public RoomResponseDto createRoom(final RoomRequestDto roomRequestDto) {
-        final RoomEntity room = new RoomEntity(roomRequestDto.getPassword(), roomRequestDto.getName(), "white", false);
+        final RoomEntity room = new RoomEntity(PasswordSha256Encoder.encode(roomRequestDto.getPassword()),
+            roomRequestDto.getName(), "white", false);
         validateCreateRoom(room);
         final RoomEntity createdRoom = roomRepository.insert(room);
         boardRepository.batchInsert(createBoards(createdRoom));

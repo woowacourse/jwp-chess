@@ -30,6 +30,7 @@ import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
 import chess.service.ChessService;
+import chess.util.PasswordSha256Encoder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +68,8 @@ class WebChessControllerTest {
         final String requestBody = objectMapper.writeValueAsString(roomRequestDto);
 
         given(chessService.createRoom(any())).willReturn(
-            RoomResponseDto.of(new RoomEntity(firstRoomId, "1234", "체스 초보만", "white", false)));
+            RoomResponseDto.of(
+                new RoomEntity(firstRoomId, PasswordSha256Encoder.encode("1234"), "체스 초보만", "white", false)));
 
         mockMvc.perform(post(REQUEST_MAPPING_URI).content(requestBody) // POST 요청 필수1. requestBody
                 .contentType(MediaType.APPLICATION_JSON)) // POST 요청필수2. contentType
@@ -210,7 +212,7 @@ class WebChessControllerTest {
         final RoomRequestDto roomRequestDto = new RoomRequestDto("바뀐 제목", "1234");
         final String requestBody = objectMapper.writeValueAsString(roomRequestDto);
         final RoomResponseDto roomResponseDto = RoomResponseDto.of(
-            new RoomEntity(roomId, "1234", "바뀐 제목", "white", false));
+            new RoomEntity(roomId, PasswordSha256Encoder.encode("1234"), "바뀐 제목", "white", false));
         final String responseBody = objectMapper.writeValueAsString(roomResponseDto);
 
         given(chessService.updateRoom(anyLong(), any()))

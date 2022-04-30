@@ -3,6 +3,7 @@ package chess.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.entity.RoomEntity;
+import chess.util.PasswordSha256Encoder;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,9 +60,10 @@ class RoomRepositoryImplTest {
     @DisplayName("입력된 룸의 상태로 룸의 정보를 변경한다.")
     @Test
     void save() {
-        final RoomEntity roomEntity = new RoomEntity("1234", "체스 초보만", "white", false);
+        final RoomEntity roomEntity = new RoomEntity(PasswordSha256Encoder.encode("1234"), "체스 초보만", "white", false);
         final RoomEntity targetRoom = roomRepository.insert(roomEntity);
-        final RoomEntity nameChangedRoom = new RoomEntity(null, "1234", "체스 고수만", null, null);
+        final RoomEntity nameChangedRoom = new RoomEntity(null, PasswordSha256Encoder.encode("1234"), "체스 고수만", null,
+            null);
         targetRoom.patch(nameChangedRoom);
         roomRepository.save(targetRoom);
 

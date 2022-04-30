@@ -1,10 +1,15 @@
 package chess.dto.request;
 
 import chess.entity.RoomEntity;
+import chess.util.PasswordSha256Encoder;
 
 public class RoomRequestDto {
-    private final String name;
-    private final String password;
+
+    private String name;
+    private String password;
+
+    public RoomRequestDto() {
+    }
 
     public RoomRequestDto(final String name, final String password) {
         this.name = name;
@@ -20,6 +25,6 @@ public class RoomRequestDto {
     }
 
     public RoomEntity toEntity() {
-        return new RoomEntity(null, null, name, null, null);
+        return new RoomEntity(null, PasswordSha256Encoder.encode(this.password), name, null, null);
     }
 }

@@ -7,6 +7,7 @@ import chess.domain.chessboard.ChessBoard;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.position.Position;
 import chess.domain.room.Room;
+import chess.dto.response.RoomPageDto;
 import chess.dto.response.RoomResponseDto;
 import chess.entity.ChessPieceEntity;
 import chess.entity.RoomEntity;
@@ -48,6 +49,19 @@ public class RoomRepositoryImpl implements RoomRepository {
                         roomEntity.getGameStatus()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public RoomPageDto getAll(final int page, final int size) {
+        final List<RoomResponseDto> responseDtos = roomDao.findAllEntity(page, size)
+                .stream()
+                .map(roomEntity -> RoomResponseDto.of(
+                        roomEntity.getRoomId(),
+                        roomEntity.getName(),
+                        roomEntity.getGameStatus()
+                ))
+                .collect(Collectors.toList());
+        return RoomPageDto.of(page, responseDtos);
     }
 
     private Room toRoom(final RoomEntity roomEntity) {

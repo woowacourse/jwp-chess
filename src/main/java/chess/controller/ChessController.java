@@ -7,7 +7,7 @@ import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.ChessPieceDto;
 import chess.dto.response.CurrentTurnDto;
-import chess.dto.response.RoomResponseDto;
+import chess.dto.response.RoomPageDto;
 import chess.service.ChessService;
 import chess.service.RoomService;
 import java.net.URI;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,8 +38,9 @@ public class ChessController {
     }
 
     @GetMapping
-    public List<RoomResponseDto> findAllRoom() {
-        return roomService.findAll();
+    public ResponseEntity<RoomPageDto> findAllRoom(@RequestParam(defaultValue = "1") final Integer page,
+                                   @RequestParam(defaultValue = "10") final Integer size) {
+        return ResponseEntity.ok(roomService.findAll(page, size));
     }
 
     @PostMapping

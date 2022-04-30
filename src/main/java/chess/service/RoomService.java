@@ -4,10 +4,9 @@ import chess.domain.room.Room;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.CurrentTurnDto;
-import chess.dto.response.RoomResponseDto;
+import chess.dto.response.RoomPageDto;
 import chess.repository.ChessGameRepository;
 import chess.repository.RoomRepository;
-import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,8 +20,8 @@ public class RoomService {
         this.chessGameRepository = chessGameRepository;
     }
 
-    public List<RoomResponseDto> findAll() {
-        return roomRepository.getAll();
+    public RoomPageDto findAll(final int page, final int size) {
+        return roomRepository.getAll(page, size);
     }
 
     public int createRoom(final RoomCreationRequestDto dto) {

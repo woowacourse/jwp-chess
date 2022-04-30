@@ -1,6 +1,7 @@
 package util;
 
 import chess.domain.room.Room;
+import chess.dto.response.RoomPageDto;
 import chess.dto.response.RoomResponseDto;
 import chess.exception.NotFoundException;
 import chess.repository.RoomRepository;
@@ -31,6 +32,19 @@ public class FakeRoomRepository implements RoomRepository {
                         entry.getKey(),
                         entry.getValue().getName(),
                         entry.getValue().getGameStatus().getValue()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public RoomPageDto getAll(final int page, final int size) {
+        return storage.entrySet()
+                .stream()
+                .map(entry -> RoomResponseDto.of(
+                        entry.getKey(),
+                        entry.getValue().getName(),
+                        entry.getValue().getGameStatus().getValue()))
+                .skip((long) (page - 1) * size)
+                .limit(10)
                 .collect(Collectors.toList());
     }
 

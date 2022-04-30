@@ -2,9 +2,9 @@ package chess.domain.game;
 
 import chess.domain.board.Column;
 import chess.domain.board.Position;
-import chess.domain.piece.Team;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
+import chess.domain.piece.Team;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,10 +25,10 @@ public class Score {
 
     private double calculateFirstLinePieces(final Team team) {
         return board.values().stream()
-                .filter(piece -> piece.getTeam() == team)
-                .filter(piece -> !piece.isPawn())
-                .mapToDouble(Piece::getPoint)
-                .sum();
+            .filter(piece -> piece.getTeam() == team)
+            .filter(piece -> !piece.isPawn())
+            .mapToDouble(Piece::getPoint)
+            .sum();
     }
 
     private double calculatePawn(final Team team) {
@@ -38,8 +38,8 @@ public class Score {
         }
 
         return pawnCount.values().stream()
-                .mapToDouble(this::adjustPawnPoint)
-                .sum();
+            .mapToDouble(this::adjustPawnPoint)
+            .sum();
     }
 
     private void putPawnCount(final Team team, final Map<Column, Integer> pawnCount,

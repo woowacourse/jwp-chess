@@ -72,9 +72,9 @@ class WebChessControllerTest {
             RoomResponseDto.of(
                 new RoomEntity(firstRoomId, PasswordSha256Encoder.encode("1234"), "체스 초보만", "white", false)));
 
-        mockMvc.perform(post(REQUEST_MAPPING_URI).content(requestBody) // POST 요청 필수1. requestBody
-                .contentType(MediaType.APPLICATION_JSON)) // POST 요청필수2. contentType
-            .andExpect(status().isCreated()) // status 확인
+        mockMvc.perform(post(REQUEST_MAPPING_URI).content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
             .andExpect(
                 header().string(HttpHeaders.LOCATION, REQUEST_MAPPING_URI + "/" + firstRoomId));
     }
@@ -87,7 +87,7 @@ class WebChessControllerTest {
 
         given(chessService.findRooms()).willReturn(roomsResponseDto);
 
-        mockMvc.perform(get(REQUEST_MAPPING_URI)).andExpect(status().isOk()) // 응답 필수1. status 확인
+        mockMvc.perform(get(REQUEST_MAPPING_URI)).andExpect(status().isOk())
             .andExpect(content().string(responseBody));
     }
 
@@ -137,7 +137,7 @@ class WebChessControllerTest {
             .willReturn(gameResponseDto);
 
         mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId + "/move")
-                .content(requestBody) // requestDto + objMapper
+                .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().string(responseBody));
@@ -157,7 +157,7 @@ class WebChessControllerTest {
             .willThrow(new IllegalStateException("[ERROR] 이동할 수 없습니다."));
 
         mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId + "/move")
-                .content(requestBody) // requestDto + objMapper
+                .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(responseBody));

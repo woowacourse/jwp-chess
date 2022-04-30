@@ -32,8 +32,8 @@ public enum MovePattern {
 
     public static MovePattern of(final int horizon, final int vertical) {
         return Arrays.stream(values())
-                .filter(value -> value.horizon == horizon && value.vertical == vertical)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[Error] 존재하지 않는 이동 전략입니다."));
+            .filter(value -> value.horizon == horizon && value.vertical == vertical)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("[Error] 존재하지 않는 이동 전략입니다."));
     }
 }

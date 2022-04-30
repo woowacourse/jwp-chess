@@ -20,8 +20,8 @@ class BlankTest {
     void getMoveStrategyException() {
         Blank blank = new Blank();
         assertThatThrownBy(blank::getMoveStrategy)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("[ERROR] 이동전략을 가져올 수 없는 기물입니다.");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("[ERROR] 이동전략을 가져올 수 없는 기물입니다.");
     }
 
     @Test

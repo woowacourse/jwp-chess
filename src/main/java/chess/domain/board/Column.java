@@ -23,9 +23,9 @@ public enum Column {
 
     private static Column of(final int value) {
         return Arrays.stream(values())
-                .filter(it -> it.value == value)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("[ERROR] 존재하지 않는 Column 입니다."));
+            .filter(it -> it.value == value)
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("[ERROR] 존재하지 않는 Column 입니다."));
     }
 
     public Column move(final int horizon) {

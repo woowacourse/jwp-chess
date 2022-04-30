@@ -15,14 +15,12 @@ public class InputView {
 
     public static Command inputInitialCommand() {
         String input = scanner.nextLine().toLowerCase(Locale.ROOT);
-        Command initialCommand = Command.of(input);
-        return initialCommand;
+        return Command.of(input);
     }
 
     public static List<String> inputProgressCommand() {
-        final List<String> input = Arrays.stream(scanner.nextLine().split(DELIMITER))
-                .map(value -> value.toLowerCase(Locale.ROOT))
-                .collect(toList());
-        return input;
+        return Arrays.stream(scanner.nextLine().split(DELIMITER))
+            .map(value -> value.toLowerCase(Locale.ROOT))
+            .collect(toList());
     }
 }

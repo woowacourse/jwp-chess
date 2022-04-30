@@ -32,24 +32,24 @@ class ChessGameTest {
     void move() {
         chessGame.move("a2", "a4");
         assertThatThrownBy(() -> chessGame.move("a4", "a5"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("[ERROR] 당신의 차례가 아닙니다.");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("[ERROR] 당신의 차례가 아닙니다.");
     }
 
     @Test
     @DisplayName("본인 턴이 아닌경우 에러를 발생한다.")
     void moveSourceOutOfPositionBound() {
         assertThatThrownBy(() -> chessGame.move("a7", "a6"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("[ERROR] 당신의 차례가 아닙니다.");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("[ERROR] 당신의 차례가 아닙니다.");
     }
 
     @Test
     @DisplayName("기물이 이동할 수 없으면 에러를 발생한다.")
     void pieceIsNotMovable() {
         assertThatThrownBy(() -> chessGame.move("a1", "a2"))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("[ERROR] 이동할 수 없습니다.");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("[ERROR] 이동할 수 없습니다.");
     }
 
     @Test

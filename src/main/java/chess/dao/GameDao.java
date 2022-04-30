@@ -36,7 +36,7 @@ public class GameDao {
         MapSqlParameterSource paramSource = new MapSqlParameterSource();
         paramSource.addValue("id", id);
 
-        return DaoUtil.queryForObject(namedParameterJdbcTemplate, sql, paramSource, eventRowMapper);
+        return namedParameterJdbcTemplate.queryForObject(sql, paramSource, eventRowMapper);
     }
 
     public int saveAndGetGeneratedId(CreateGameRequest request) {

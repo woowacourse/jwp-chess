@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.exception.IllegalMovePieceException;
 import chess.model.MoveType;
 import chess.model.Turn;
 import chess.model.board.Board;
@@ -50,7 +51,7 @@ public class ChessMoveService {
 
     private void validateCurrentTurn(Turn thisTurn, Piece sourcePiece) {
         if (!sourcePiece.isCurrentTurn(thisTurn)) {
-            throw new IllegalArgumentException("본인의 말을 움직여야 합니다.");
+            throw new IllegalMovePieceException("본인의 말을 움직여야 합니다.");
         }
     }
 
@@ -62,7 +63,7 @@ public class ChessMoveService {
             gameDao.updateTurnByGameId(gameId, turn.change().getThisTurn());
             return;
         }
-        throw new IllegalArgumentException("기물을 이동할 수 없습니다.");
+        throw new IllegalMovePieceException("기물을 이동할 수 없습니다.");
     }
 
     private boolean canMove(Long gameId, String srcPosition, String dstPosition, Piece sourcePiece, Piece targetPiece) {

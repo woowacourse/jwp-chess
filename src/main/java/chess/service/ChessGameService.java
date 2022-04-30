@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.entity.PieceEntity;
+import chess.exception.IllegalDeleteRoomException;
 import chess.model.board.Board;
 import chess.model.board.BoardFactory;
 import chess.model.dao.GameDao;
@@ -56,10 +57,10 @@ public class ChessGameService {
 
     private void validateCanDeleteGame(Long gameId, String password) {
         if (!chessBoardService.getTurn(gameId).equals("end")) {
-            throw new IllegalStateException("게임이 진행중인 방은 삭제할 수 없습니다.");
+            throw new IllegalDeleteRoomException("게임이 진행중인 방은 삭제할 수 없습니다.");
         }
         if (!gameDao.findPasswordByGameId(gameId).equals(password)) {
-            throw new IllegalArgumentException("방 비밀번호가 맞지 않습니다.");
+            throw new IllegalDeleteRoomException("방 비밀번호가 맞지 않습니다.");
         }
     }
 }

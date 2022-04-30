@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.entity.PieceEntity;
+import chess.exception.NoSuchGameException;
 import chess.model.GameResult;
 import chess.model.board.Board;
 import chess.model.board.BoardFactory;
@@ -33,7 +34,7 @@ public class ChessBoardService {
 
     public String getTurn(Long gameId) {
         String turn = gameDao.findTurnByGameId(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 ID 값입니다."));
+                .orElseThrow(() -> new NoSuchGameException("잘못된 ID 값입니다."));
         return turn;
     }
 

@@ -3,6 +3,7 @@ package chess.controller;
 import static chess.testutil.ControllerTestFixture.REQUEST_MAPPING_URI;
 import static chess.testutil.ControllerTestFixture.ROOM_A;
 import static chess.testutil.ControllerTestFixture.ROOM_B;
+import static chess.testutil.ControllerTestFixture.ROOM_REQUEST_DTO_ONLY_PASSWORD;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -167,11 +168,14 @@ class WebChessControllerTest {
     @Test
     void finishGame_success() throws Exception {
         final Long roomId = 1L;
+        final String requestBody = objectMapper.writeValueAsString(ROOM_REQUEST_DTO_ONLY_PASSWORD);
 
         doNothing().when(chessService)
-            .endRoom(anyLong());
+            .endRoom(anyLong(), any(RoomRequestDto.class));
 
-        mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId + "/end"))
+        mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId + "/end")
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
@@ -179,13 +183,16 @@ class WebChessControllerTest {
     @Test
     void finishGame_fail() throws Exception {
         final Long roomId = 1L;
+        final String requestBody = objectMapper.writeValueAsString(ROOM_REQUEST_DTO_ONLY_PASSWORD);
         final ErrorResponseDto errorResponseDto = new ErrorResponseDto("[ERROR] 이미 종료된 게임입니다.");
         final String responseBody = objectMapper.writeValueAsString(errorResponseDto);
 
         doThrow(new IllegalStateException("[ERROR] 이미 종료된 게임입니다.")).when(chessService)
-            .endRoom(anyLong());
+            .endRoom(anyLong(), any(RoomRequestDto.class));
 
-        mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId + "/end"))
+        mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + roomId + "/end")
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
             .andExpect(content().string(responseBody));
     }

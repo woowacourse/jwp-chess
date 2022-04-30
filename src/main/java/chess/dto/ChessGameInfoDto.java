@@ -1,19 +1,21 @@
 package chess.dto;
 
-public class ChessGameNameStatusDto {
+public class ChessGameInfoDto {
 
     private final int id;
     private final String name;
+    private final String turn;
     private final boolean running;
 
-    public ChessGameNameStatusDto(int id, String name, boolean running) {
+    public ChessGameInfoDto(int id, String name, String turn, boolean running) {
         this.id = id;
         this.name = name;
+        this.turn = turn;
         this.running = running;
     }
 
-    public ChessGameNameStatusDto(int id, String name) {
-        this(id, name, true);
+    public ChessGameInfoDto(int id, String name, String turn) {
+        this(id, name, turn , true);
     }
 
     public int getId() {
@@ -22,6 +24,10 @@ public class ChessGameNameStatusDto {
 
     public String getName() {
         return name;
+    }
+
+    public String getTurn() {
+        return turn;
     }
 
     public boolean isRunning() {

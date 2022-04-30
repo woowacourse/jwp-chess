@@ -137,6 +137,14 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
+    public GameStatus findStatus(final int roomId) {
+        final String sql = "SELECT game_status FROM room WHERE room_id = ?";
+        final RowMapper<GameStatus> rowMapper = (resultSet, rowNum) ->
+                GameStatus.from(resultSet.getString("game_status"));
+        return jdbcTemplate.queryForObject(sql, rowMapper, roomId);
+    }
+
+    @Override
     public int deleteById(final int roomId) {
         final String sql = "UPDATE room SET is_delete = ? WHERE room_id = ?";
         return jdbcTemplate.update(sql, true, roomId);

@@ -40,9 +40,7 @@ public class ChessGame {
 
     public void start() {
         gameStatus.checkReady();
-        if (gameStatus.isEnd()) {
-            chessBoard = ChessBoardFactory.createChessBoard();
-        }
+        chessBoard = ChessBoardFactory.createChessBoard();
         gameStatus = GameStatus.PLAYING;
     }
 
@@ -62,5 +60,9 @@ public class ChessGame {
 
     public Color getCurrentTurn() {
         return chessBoard.getCurrentTurnColor();
+    }
+
+    public ChessBoard getChessBoard() {
+        return chessBoard;
     }
 }

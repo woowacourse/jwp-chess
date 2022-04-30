@@ -58,4 +58,8 @@ public class Room {
     public String getPassword() {
         return password.getHashPassword();
     }
+
+    public ChessGame getChessGame() {
+        return chessGame;
+    }
 }

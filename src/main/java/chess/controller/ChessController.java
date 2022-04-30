@@ -65,12 +65,6 @@ public class ChessController {
         return ResponseEntity.ok(chessPieces);
     }
 
-    @PostMapping("/{roomId}/pieces")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createPieces(@PathVariable final int roomId) {
-        chessService.initPiece(roomId);
-    }
-
     @PatchMapping("/{roomId}/pieces")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void movePiece(@PathVariable final int roomId,

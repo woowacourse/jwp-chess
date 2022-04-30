@@ -28,6 +28,8 @@ public interface RoomDao {
 
     RoomStatusDto findStatusById(int roomId);
 
+    GameStatus findStatus(int roomId);
+
     int deleteById(int roomId);
 
     int updateById(int roomId, GameStatus gameStatus, Color currentTurn);

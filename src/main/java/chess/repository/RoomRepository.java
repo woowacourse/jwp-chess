@@ -72,6 +72,16 @@ public class RoomRepository {
 
     public void update(final int roomId, final Room room) {
         roomDao.updateById(roomId, room.getGameStatus(), room.getCurrentTurn());
+
+        final ChessGame chessGame = room.getChessGame();
+        final ChessBoard chessBoard = chessGame.getChessBoard();
+        final Map<Position, ChessPiece> pieceByPosition = chessBoard.findAllPiece();
+
+        final List<ChessPieceEntity> chessPieceEntities = chessPieceDao.findAllEntityByRoomId(roomId);
+        if (chessPieceEntities.isEmpty()) {
+            chessPieceDao.saveAll(roomId, pieceByPosition);
+            return;
+        }
     }
 
     public void remove(final int roomId) {

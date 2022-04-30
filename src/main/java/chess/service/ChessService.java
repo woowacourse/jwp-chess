@@ -24,7 +24,7 @@ import chess.repository.RoomRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,7 +79,7 @@ public class ChessService {
         final RoomEntity room;
         try {
             room = roomRepository.findById(id);
-        } catch (DataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException(1);
         }
         return room;

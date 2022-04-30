@@ -49,9 +49,6 @@ public class RoomEntity {
         if (roomEntity.name != null) {
             this.name = roomEntity.name;
         }
-        if (roomEntity.password != null) {
-            this.password = roomEntity.password;
-        }
         if (roomEntity.team != null) {
             this.team = roomEntity.team;
         }

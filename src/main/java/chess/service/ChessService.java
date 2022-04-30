@@ -145,9 +145,18 @@ public class ChessService {
 
     public RoomResponseDto updateRoom(final Long id, final RoomRequestDto roomRequestDto) {
         final RoomEntity targetRoom = getValidRoom(id);
+        validatePassword(roomRequestDto, targetRoom);
         final RoomEntity roomEntity = roomRequestDto.toEntity();
         targetRoom.patch(roomEntity);
         final RoomEntity updatedRoom = roomRepository.save(targetRoom);
         return RoomResponseDto.of(updatedRoom);
+    }
+
+    private void validatePassword(final RoomRequestDto roomRequestDto, final RoomEntity targetRoom) {
+        final String requestPassword = PasswordSha256Encoder.encode(roomRequestDto.getPassword());
+        final String encodedPassword = targetRoom.getPassword();
+        if (!requestPassword.equals(encodedPassword)) {
+            throw new IllegalArgumentException("[ERROR] 비밀번호가 틀렸습니다.");
+        }
     }
 }

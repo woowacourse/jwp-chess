@@ -19,7 +19,11 @@
 </form>
 
 {{#this.rooms}}
-    <div>{{this.name}} {{this.id}} {{this.password}}</div>
+    <div>
+        <form action="/chess/{{this.id}}" method="get">
+            {{this.name}}방 <input type="submit" value="참가" />
+        </form>
+    </div>
 {{/this.rooms}}
 
 </body>

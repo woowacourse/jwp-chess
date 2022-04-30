@@ -1,5 +1,7 @@
 package chess.service;
 
+import chess.domain.state.Start;
+import chess.domain.state.State;
 import chess.entity.CommandEntity;
 import chess.repository.CommandDao;
 import java.util.List;
@@ -24,5 +26,13 @@ public class CommandService {
                 .stream()
                 .map(CommandEntity::getCommand)
                 .collect(Collectors.toList());
+    }
+
+    public State getCurrentState(List<String> commands) {
+        State state = Start.of();
+        for (String command : commands) {
+            state = state.proceed(command);
+        }
+        return state;
     }
 }

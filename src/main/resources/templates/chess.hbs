@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>체스 게임</title>
-    <link rel="stylesheet" href="src/board.css"/>
+    <link rel="stylesheet" href="/src/board.css"/>
 </head>
 <body>
     <div class="chess">
-        <img src ="images/chessBoard.png" id="chessBoard"/>
+        <img src ="/images/chessBoard.png" id="chessBoard"/>
         <div class="pieces">
             {{#this.squares}}
-            <img src="images/{{this.symbol}}.png" id="{{this.position}}"/>
+            <img src="/images/{{this.symbol}}.png" id="{{this.position}}"/>
             {{/this.squares}}
         </div>
         <form action="/chess" method="post">

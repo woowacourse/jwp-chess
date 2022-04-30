@@ -1,15 +1,26 @@
 const startButton = document.querySelector("#start-button");
 const restartButton = document.querySelector("#restart-button");
+const endButton = document.querySelector("#end-button");
 const chessBoard = document.querySelector("table");
 const whiteScore = document.querySelector("#white-score");
 const blackScore = document.querySelector("#black-score");
 
 startButton.addEventListener("click", onClickStartButton);
 restartButton.addEventListener("click", onClickRestartButton);
+endButton.addEventListener("click", onClickEndButton);
 chessBoard.addEventListener("click", onClickBoard);
 
 const urls = location.href.split('/');
 const gameId = urls[urls.length - 1];
+
+async function onClickEndButton () {
+    const response = await fetch(`/endGame/${gameId}`);
+    const data = await response.json();
+
+    if (response.ok) {
+        loadBoard(data);
+    }
+}
 
 async function onClickStartButton () {
     const response = await fetch(`/start/${gameId}`);

@@ -53,6 +53,13 @@ public class WebController {
         return gson.toJson(chessService.move(id, moveDto.getFrom(), moveDto.getTo()));
     }
 
+    @GetMapping("/endGame/{id}")
+    @ResponseBody
+    public String endGame(@PathVariable("id") int id) {
+        chessService.endGame(id);
+        return gson.toJson(chessService.loadGame(id));
+    }
+
     @GetMapping("/join")
     public String showJoinPage() {
         return "join";

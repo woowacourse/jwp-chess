@@ -49,7 +49,7 @@ class GameDaoTest {
     @Test
     void insertGameTest() {
         int gameId = 1;
-        gameDao.insertGame(gameId, "WHITE");
+        gameDao.insertGame(gameId, "WHITE", "PLAY");
         String turn = gameDao.findTurnById(gameId);
         assertThat(turn).isEqualTo("WHITE");
     }

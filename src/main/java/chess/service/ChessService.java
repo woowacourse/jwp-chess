@@ -89,6 +89,7 @@ public final class ChessService {
         pieceDao.deleteAllPieceById(gameId);
         saveAllPieceToStorage(gameId, new BoardInitializer().init());
         gameDao.updateTurn(gameId, "WHITE");
+        gameDao.updateStatus(gameId, "PLAY");
     }
 
     public ChessGameDto loadGame(int gameId) {
@@ -125,7 +126,7 @@ public final class ChessService {
     }
 
     private void initNewChessGame(int gameId, RoomDto roomDto) {
-        gameDao.insertGame(gameId, "WHITE");
+        gameDao.insertGame(gameId, "WHITE", "PLAY");
         roomDao.saveRoom(roomDto);
         saveAllPieceToStorage(gameId, new BoardInitializer().init());
     }
@@ -134,5 +135,10 @@ public final class ChessService {
         return IntStream.range(0, nextGameId)
                 .mapToObj(roomDao::findById)
                 .collect(Collectors.toList());
+    }
+
+    public void endGame(int gameId) {
+        pieceDao.deleteAllPieceById(gameId);
+        gameDao.updateStatus(gameId, "STOP");
     }
 }

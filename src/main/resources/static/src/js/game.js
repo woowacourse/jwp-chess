@@ -26,11 +26,9 @@ function putPiece(boards) {
         let piece = boards[i].piece;
 
         let div = document.querySelector("#" + position);
-        // (1) 이미 안에 기물용img태그 있다면 지우기
         if (div.hasChildNodes()) {
             div.removeChild(div.firstChild);
         }
-        // (2) 기물용img태그 추가해주기
         let img = document.createElement("img");
         img.style.width = '30px';
         img.style.height = '40px';
@@ -107,12 +105,6 @@ async function checkGameOver(gameOverMessage) {
         alert("게임이 종료되었습니다.");
         let board = endGame();
         await initializeBoard(board);
-
-        const startButton = document.querySelector("#startButton");
-        startButton.style.display = 'block';
-
-        const endButton = document.querySelector("#endButton");
-        endButton.style.display = 'none';
     }
 }
 
@@ -131,11 +123,20 @@ async function getScore() {
 }
 
 async function endGame() {
-    await fetch("/api/chess/rooms/" + id + "/end", {method: "PATCH"})
-        .then(handleErrors)
+    const bodyValue = {
+        password: null
+    }
+    await fetch("/api/chess/rooms/" + id + "/end", {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        }, body: JSON.stringify(bodyValue)
+    }).then(handleErrors)
         .catch(function (error) {
-            alert(error.message);
+            alert(error.message)
         });
     await getScore();
+    
     window.location.href = "index.html";
 }

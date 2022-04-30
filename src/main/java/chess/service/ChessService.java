@@ -154,6 +154,9 @@ public class ChessService {
     }
 
     private void validatePassword(final RoomRequestDto roomRequestDto, final RoomEntity targetRoom) {
+        if (roomRequestDto.getPassword() == null) {
+            return;
+        }
         final String requestPassword = PasswordSha256Encoder.encode(roomRequestDto.getPassword());
         final String encodedPassword = targetRoom.getPassword();
         if (!requestPassword.equals(encodedPassword)) {

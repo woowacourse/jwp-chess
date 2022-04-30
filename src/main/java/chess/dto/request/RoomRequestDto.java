@@ -11,12 +11,12 @@ public class RoomRequestDto {
     public RoomRequestDto() {
     }
 
-    public RoomRequestDto(final String name, final String password) {
-        this.name = name;
+    public RoomRequestDto(final String password) {
         this.password = password;
     }
 
-    public RoomRequestDto(final String password) {
+    public RoomRequestDto(final String name, final String password) {
+        this.name = name;
         this.password = password;
     }
 

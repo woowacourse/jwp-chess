@@ -76,13 +76,26 @@ async function onloadIndexBody() {
 
 async function createRoom() {
     const roomName = window.prompt("방 제목을 중복되지 않도록 입력해주세요.");
+    if (roomName === null | roomName === "") {
+        alert("방 제목은 빈칸일 수 없습니다.")
+        return;
+    }
+
+    const password = window.prompt("비밀번호를 입력해주세요.");
+    if (password === null | password === "") {
+        alert("비밀번호는 빈칸일 수 없습니다.")
+        return;
+    }
 
     const bodyValue = {
-        name: roomName
+        name: roomName,
+        password: password
     }
     await fetch("/api/chess/rooms/", {
-        method: 'POST', headers: {
-            'Content-Type': 'application/json;charset=utf-8', 'Accept': 'application/json'
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
         }, body: JSON.stringify(bodyValue)
     })
         .then(handleErrors)
@@ -112,27 +125,42 @@ async function enterRoom(id) {
 }
 
 async function endRoom(id) {
-    if (confirm("정말 종료하시겠습니까?")) {
-        await fetch("/api/chess/rooms/" + id + "/end", {
-            method: "PATCH"
-        }).then(handleErrors)
-            .catch(function (error) {
-                alert(error.message)
-            });
-
-        window.location.reload();
-    }
-}
-
-async function updateRoomName(id) {
-    const roomName = window.prompt("바꿀 방 제목을 입력해주세요");
-
-    if (roomName === null | roomName === "") {
+    const password = window.prompt("비밀번호를 입력해주세요.");
+    if (password === null | password === "") {
+        alert("비밀번호는 빈칸일 수 없습니다.")
         return;
     }
 
     const bodyValue = {
-        name: roomName
+        password: password
+    }
+
+    await fetch("/api/chess/rooms/" + id + "/end", {
+        method: "PATCH"
+    }).then(handleErrors)
+        .catch(function (error) {
+            alert(error.message)
+        });
+
+    window.location.reload();
+}
+
+async function updateRoomName(id) {
+    const roomName = window.prompt("바꿀 방 제목을 입력해주세요");
+    if (roomName === null | roomName === "") {
+        alert("방 제목은 빈칸일 수 없습니다.")
+        return;
+    }
+
+    const password = window.prompt("비밀번호를 입력해주세요.");
+    if (password === null | password === "") {
+        alert("비밀번호는 빈칸일 수 없습니다.")
+        return;
+    }
+
+    const bodyValue = {
+        name: roomName,
+        password: password
     }
 
     let response = await fetch("/api/chess/rooms/" + id, {
@@ -143,8 +171,6 @@ async function updateRoomName(id) {
         .catch(function (error) {
             alert(error.message);
         });
-
-    console.log(response);
 
     window.location.reload();
 }

@@ -2,7 +2,7 @@ package chess.service.fixture;
 
 import chess.dao.GameDao;
 import chess.dto.CreateGameRequest;
-import chess.dto.GameInfoDto;
+import chess.entity.GameEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,16 +23,16 @@ public class GameDaoStub extends GameDao {
     }
 
     @Override
-    public List<GameInfoDto> selectAll() {
+    public List<GameEntity> selectAll() {
         return repository.entrySet()
                 .stream()
-                .map(entry -> new GameInfoDto(entry.getKey(), "title", "password", entry.getValue()))
+                .map(entry -> new GameEntity(entry.getKey(), "title", "password", entry.getValue()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
-    public GameInfoDto findById(int id) {
-        return new GameInfoDto(id, "title", "password", repository.get(id));
+    public GameEntity findById(int id) {
+        return new GameEntity(id, "title", "password", repository.get(id));
     }
 
     @Override
@@ -53,11 +53,6 @@ public class GameDaoStub extends GameDao {
     @Override
     public void finishGame(int gameId) {
         repository.put(gameId, false);
-    }
-
-    @Override
-    public boolean checkById(int gameId) {
-        return repository.containsKey(gameId);
     }
 
     @Override

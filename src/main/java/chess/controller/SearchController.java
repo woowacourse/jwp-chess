@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.GameCountDto;
-import chess.dto.GameInfoDto;
+import chess.entity.GameEntity;
 import chess.dto.GamesResponse;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
@@ -26,8 +26,8 @@ public class SearchController {
     @GetMapping
     public ModelAndView renderSearchPage() {
         GameCountDto gameCountDto = chessService.countGames();
-        List<GameInfoDto> gameInfoDtos = chessService.selectAllGames();
-        GamesResponse gamesResponse = new GamesResponse(gameCountDto, gameInfoDtos);
+        List<GameEntity> gameEntities = chessService.selectAllGames();
+        GamesResponse gamesResponse = new GamesResponse(gameCountDto, gameEntities);
 
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gamesResponse);
     }

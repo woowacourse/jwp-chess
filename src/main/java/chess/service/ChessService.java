@@ -12,9 +12,10 @@ import chess.dto.CreateGameResponse;
 import chess.dto.DeleteGameRequest;
 import chess.dto.GameCountDto;
 import chess.dto.GameDto;
-import chess.dto.GameInfoDto;
 import chess.dto.GameResultDto;
 import chess.dto.MoveRouteDto;
+import chess.entity.EventEntity;
+import chess.entity.GameEntity;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +46,9 @@ public class ChessService {
     @Transactional
     public CreateGameResponse initGame(CreateGameRequest createGameRequest) {
         int gameId = gameDao.saveAndGetGeneratedId(createGameRequest);
-        eventDao.save(gameId, new InitEvent());
+        EventEntity event = EventEntity.of(new InitEvent());
+
+        eventDao.save(gameId, event);
         return new CreateGameResponse(gameId);
     }
 
@@ -58,10 +61,9 @@ public class ChessService {
     @Transactional
     public GameDto playGame(int gameId, MoveRouteDto moveRoute) {
         Event moveEvent = new MoveEvent(moveRoute.toMoveRoute());
-
         Game game = currentSnapShotOf(gameId).play(moveEvent);
 
-        eventDao.save(gameId, moveEvent);
+        eventDao.save(gameId, EventEntity.of(moveEvent));
         updateGameState(gameId, game);
         return GameDto.of(gameId, game);
     }
@@ -80,10 +82,10 @@ public class ChessService {
     }
 
     private Game currentSnapShotOf(int gameId) {
-        List<Event> events = eventDao.findAllByGameId(gameId);
+        List<EventEntity> events = eventDao.findAllByGameId(gameId);
         Game game = new NewGame();
-        for (Event event : events) {
-            game = game.play(event);
+        for (EventEntity event : events) {
+            game = game.play(Event.of(event));
         }
         return game;
     }
@@ -95,19 +97,19 @@ public class ChessService {
     }
 
     @Transactional(readOnly = true)
-    public List<GameInfoDto> selectAllGames() {
+    public List<GameEntity> selectAllGames() {
         return gameDao.selectAll();
     }
 
     @Transactional
     public void deleteGame(int id, DeleteGameRequest deleteGameRequest) {
-        GameInfoDto gameInfoDto = gameDao.findById(id);
+        GameEntity gameEntity = gameDao.findById(id);
 
-        if (gameInfoDto.isRunning()) {
+        if (gameEntity.isRunning()) {
             throw new IllegalArgumentException(GAME_NOT_OVER_EXCEPTION_MESSAGE);
         }
 
-        if (!gameInfoDto.getPassword().equals(deleteGameRequest.getPassword())) {
+        if (!gameEntity.getPassword().equals(deleteGameRequest.getPassword())) {
             throw new IllegalArgumentException(PASSWORD_EXCEPTION_MESSAGE);
         }
 

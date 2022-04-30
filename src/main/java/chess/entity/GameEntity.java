@@ -1,13 +1,13 @@
-package chess.dto;
+package chess.entity;
 
-public class GameInfoDto {
+public class GameEntity {
 
     private final int id;
     private final String title;
     private final String password;
     private final boolean running;
 
-    public GameInfoDto(int id, String title, String password, boolean running) {
+    public GameEntity(int id, String title, String password, boolean running) {
         this.id = id;
         this.title = title;
         this.password = password;

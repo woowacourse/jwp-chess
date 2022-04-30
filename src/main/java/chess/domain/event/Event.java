@@ -1,11 +1,13 @@
 package chess.domain.event;
 
+import chess.entity.EventEntity;
+
 public abstract class Event {
 
-    public static Event of(String type, String description) {
-        EventType eventType = EventType.valueOf(type);
+    public static Event of(EventEntity eventEntity) {
+        EventType eventType = EventType.valueOf(eventEntity.getType());
         if (eventType == EventType.MOVE) {
-            return new MoveEvent(description);
+            return new MoveEvent(eventEntity.getDescription());
         }
         return new InitEvent();
     }

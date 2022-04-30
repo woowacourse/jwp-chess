@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.dto.CreateGameRequest;
-import chess.dto.GameInfoDto;
+import chess.entity.GameEntity;
 import chess.util.DaoUtil;
 import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,19 +19,19 @@ public class GameDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    private final RowMapper<GameInfoDto> eventRowMapper = (resultSet, rowNum) ->
-            new GameInfoDto(resultSet.getInt("id"),
+    private final RowMapper<GameEntity> eventRowMapper = (resultSet, rowNum) ->
+            new GameEntity(resultSet.getInt("id"),
                     resultSet.getString("title"),
                     resultSet.getString("password"),
                     resultSet.getBoolean("running")
             );
 
-    public List<GameInfoDto> selectAll() {
+    public List<GameEntity> selectAll() {
         final String sql = "SELECT id, title, password, running FROM game";
         return DaoUtil.queryNoParameter(namedParameterJdbcTemplate, sql, eventRowMapper);
     }
 
-    public GameInfoDto findById(int id) {
+    public GameEntity findById(int id) {
         final String sql = "SELECT id, title, password, running FROM game WHERE id = :id";
         MapSqlParameterSource paramSource = new MapSqlParameterSource();
         paramSource.addValue("id", id);
@@ -55,14 +55,6 @@ public class GameDao {
         paramSource.addValue("game_id", gameId);
 
         namedParameterJdbcTemplate.update(sql, paramSource);
-    }
-
-    public boolean checkById(int gameId) {
-        final String sql = "SELECT COUNT(*) FROM game WHERE id = :game_id";
-        MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
-
-        Integer existingGameCount = namedParameterJdbcTemplate.queryForObject(sql, paramSource, Integer.class);
-        return existingGameCount == null || existingGameCount > 0;
     }
 
     public int countAll() {

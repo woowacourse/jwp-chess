@@ -1,18 +1,19 @@
 package chess.dto;
 
+import chess.entity.GameEntity;
 import java.util.List;
 
 public class GamesResponse {
 
-    List<GameInfoDto> games;
+    List<GameEntity> games;
     GameCountDto gameCount;
 
-    public GamesResponse(GameCountDto gameCount, List<GameInfoDto> games) {
+    public GamesResponse(GameCountDto gameCount, List<GameEntity> games) {
         this.games = games;
         this.gameCount = gameCount;
     }
 
-    public List<GameInfoDto> getGames() {
+    public List<GameEntity> getGames() {
         return games;
     }
 

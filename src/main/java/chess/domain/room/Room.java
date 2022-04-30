@@ -37,6 +37,9 @@ public class Room {
         if (chessGame.isPlaying()) {
             throw new IllegalArgumentException("게임이 진행 중입니다.");
         }
+        if (plainPassword.isBlank()) {
+            throw new IllegalArgumentException("요청에 비밀번호가 존재하지 않습니다.");
+        }
         if (password.isSame(plainPassword)) {
             return true;
         }

@@ -10,6 +10,7 @@ import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
 import chess.dto.response.RoomStatusDto;
 import chess.exception.NotFoundException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 @SpringBootTest
 class RoomServiceTest {
 
+    @Autowired
     private RoomDao roomDao;
 
     @Autowired
@@ -33,8 +35,6 @@ class RoomServiceTest {
 
     @BeforeEach
     void setUp() {
-        roomDao = new RoomDao(jdbcTemplate);
-
         jdbcTemplate.execute("DROP TABLE IF EXISTS room");
         jdbcTemplate.execute(""
                 + "CREATE TABLE room"
@@ -46,6 +46,24 @@ class RoomServiceTest {
                 + "    password     VARCHAR(255) NOT NULL,"
                 + "    is_delete    BOOLEAN      NOT NULL DEFAULT FALSE"
                 + ")");
+
+        jdbcTemplate.execute("DROP TABLE IF EXISTS chess_piece");
+        jdbcTemplate.execute(""
+                + "CREATE TABLE chess_piece"
+                + "("
+                + "    chess_piece_id INT         PRIMARY KEY AUTO_INCREMENT,"
+                + "    room_id        INT         NOT NULL,"
+                + "    position       VARCHAR(10) NOT NULL,"
+                + "    chess_piece    VARCHAR(10) NOT NULL,"
+                + "    color          VARCHAR(10) NOT NULL,"
+                + "    FOREIGN KEY (room_id) REFERENCES room (room_id) ON DELETE CASCADE"
+                + ")");
+    }
+
+    @AfterEach
+    void clear() {
+        jdbcTemplate.execute("DROP TABLE IF EXISTS chess_piece");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS room");
     }
 
     @Test
@@ -118,8 +136,8 @@ class RoomServiceTest {
 
         // then
         assertThatThrownBy(() -> roomService.deleteRoom(dto))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 방 입니다.");
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("방이 존재하지 않습니다.");
     }
 
     @ParameterizedTest
@@ -127,7 +145,7 @@ class RoomServiceTest {
     @ValueSource(strings = {"", "   "})
     void deleteRoom_blank_password(final String password) {
         // given
-        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, "1234");
+        final int roomId = roomDao.save("test", GameStatus.READY, Color.WHITE, BCrypt.hashpw("1234", BCrypt.gensalt()));
         final RoomDeletionRequestDto dto = new RoomDeletionRequestDto(roomId, password);
 
         // then

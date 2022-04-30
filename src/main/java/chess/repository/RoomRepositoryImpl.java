@@ -34,7 +34,7 @@ public class RoomRepositoryImpl implements RoomRepository {
             final RoomEntity roomEntity = roomDao.findById(roomId);
             return toRoom(roomEntity);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException("존재하지 않는 방 입니다.");
+            throw new NotFoundException("방이 존재하지 않습니다.");
         }
     }
 

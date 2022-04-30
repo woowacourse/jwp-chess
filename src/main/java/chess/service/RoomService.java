@@ -52,7 +52,7 @@ public class RoomService {
         }
 
     }
-    
+
     private void checkGameEnd(Optional<Integer> boardId) {
         if (!boardDao.getEnd(boardId.get())) {
             throw new IllegalArgumentException("진행 중인 게임은 삭제할 수 없습니다.");

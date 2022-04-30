@@ -1,35 +1,24 @@
 package chess.web;
 
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 
+import chess.repository.RoomDao;
 import io.restassured.RestAssured;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SpringChessControllerTest {
-
-    @LocalServerPort
-    int port;
+class RoomControllerTest extends SpringBootTestConfig {
 
     @Autowired
-    ApplicationContext context;
+    private RoomDao roomDao;
 
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
-
-    @DisplayName("유효한 이름을 받으면 게임방 입장")
+    @DisplayName("유효한 이름을 받으면 게임방 생성")
     @Test
     void createRoom() {
         final String name = "summer";
@@ -40,7 +29,7 @@ class SpringChessControllerTest {
                 .when().post("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("url", containsString("/rooms/1"));
+                .body("url", containsString("/rooms/"));
     }
 
     @DisplayName("부적절한 이름이 입력되면 400 에러 발생")
@@ -55,5 +44,25 @@ class SpringChessControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
+
+//    @DisplayName("존재하는 모든 방 조회")
+//    @Test
+//    void findRooms() {
+//        roomDao.save("does", "password");
+//        RestAssured.given().log().all()
+//                .when().get("/rooms")
+//                .then().log().all()
+//                .statusCode(HttpStatus.OK.value())
+//                .body("size()", is(2));
+//    }
+//
+//    @DisplayName("존재하는 방에 대한 새로운 보드 생성 요청")
+//    @Test
+//    void newGame() {
+//        RestAssured.given().log().all()
+//                .when().get("/rooms/1/new")
+//                .then().log().all()
+//                .statusCode(HttpStatus.OK.value());
+//    }
 
 }

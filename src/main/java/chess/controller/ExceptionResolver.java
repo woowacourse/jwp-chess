@@ -24,6 +24,6 @@ public class ExceptionResolver {
 
     @ExceptionHandler
     public ResponseEntity<String> handleException(InvalidAccessException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return new ResponseEntity<>(e.getMessage(), e.getStatus());
     }
 }

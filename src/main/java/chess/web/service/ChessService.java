@@ -43,11 +43,11 @@ public class ChessService {
         Turn turn = roomDao.findTurnById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("없는 정보입니다."));
         Board board = Board.create(Pieces.from(pieceDao.findAllByBoardId(boardId)), turn);
-        Pieces pieces = board.getPieces();
-        Piece piece = pieces.findByPosition(Position.from(moveDto.getFrom()));
+        Piece piece = board.findPieceByPosition(Position.from(moveDto.getFrom()));
         board.move(List.of(moveDto.getFrom(), moveDto.getTo()), turn);
+
         Turn changedTurn = updatePieces(moveDto, turn, piece, boardId);
-        return Board.create(pieces, changedTurn);
+        return board.updateTurn(changedTurn);
     }
 
     private Turn updatePieces(MoveDto moveDto, Turn turn, Piece piece, final Long boardId) {

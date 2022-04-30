@@ -91,22 +91,12 @@ public final class Board {
         return pieces.countOfKing() == 1;
     }
 
-    public double getWhiteTeamScore() {
-        return pieces.getTotalScore(Team.WHITE);
+    public Board updateTurn(Turn turn) {
+        return Board.create(pieces, turn);
     }
 
-    public double getBlackTeamScore() {
-        return pieces.getTotalScore(Team.BLACK);
-    }
-
-    public Team getWinTeam() {
-        if (getWhiteTeamScore() > getBlackTeamScore()) {
-            return Team.WHITE;
-        }
-        if (getBlackTeamScore() > getWhiteTeamScore()) {
-            return Team.BLACK;
-        }
-        return Team.NONE;
+    public Piece findPieceByPosition(Position position) {
+        return pieces.findByPosition(position);
     }
 }
 

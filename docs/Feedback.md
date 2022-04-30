@@ -30,7 +30,10 @@
     - Command 관련 피드백
 - [ ] ExceptionHandler
     - RuntimeException -> Exception으로 바꾼 이유
-- [ ] BoardDao - DAO에서 Dto가 필요한지
+- [ ] DAO에서 Dto가 필요한지
+    - [ ] BoardDao
+    - [x] RoomDao
+        - 삭제 시 (게임명, 비밀번호)를 이용하는 것이 아닌 id로 지우도록 수정하고 비밀번호 검증은 service에서 하도록 수정
 - [ ] 클래스명에 Spring이라는 이름을 붙인 이유
 - [x] SpringBoardDao - `validateExist()`, DAO에서 유효성 검사를 하는 것이 적절한지
 - [ ] SpringGameDao - `readStateAndColor()`
@@ -42,7 +45,7 @@
     - [ ] `checkDisabledOption()`
         - 서비스에서 게임 규칙과 관련된 처리를 맡기지말고 도메인에서 처리
         - 문자열보다는 enum을 활용
-    - [ ] `validateDuplicateRommName()`
+    - [ ] `validateDuplicateRoomName()`
         - `findByName()`의 결과를 변수로 추출
         - 쿼리 결과를 boolean으로 반환하는 메서드로 만들어보면 어떤지
     - [ ] `validatePassword()`

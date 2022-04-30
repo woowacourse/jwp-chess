@@ -91,7 +91,7 @@ public class ChessRoomService {
         validatePassword(roomDto, findRoomDto);
         boardDao.removeBoard(findRoomDto.getId());
         gameDao.removeGame(findRoomDto.getId());
-        roomDao.delete(roomDto);
+        roomDao.delete(findRoomDto.getId());
     }
 
     public Map<String, String> findAllRoomState() {

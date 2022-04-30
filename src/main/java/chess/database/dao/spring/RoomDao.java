@@ -48,6 +48,11 @@ public class RoomDao {
         jdbcTemplate.update(sql, roomDto.getName(), roomDto.getPassword());
     }
 
+    public void delete(int roomId) {
+        final String sql = "DELETE FROM room WHERE id = ?";
+        jdbcTemplate.update(sql, roomId);
+    }
+
     public List<RoomDto> findAll() {
         String sql = "select id, name from room";
         return jdbcTemplate.query(sql, (resultSet, rowNum) ->

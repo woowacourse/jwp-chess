@@ -1,5 +1,7 @@
 package chess.fixture;
 
+import static chess.util.HashUtils.hash;
+
 import chess.dao.GameDao;
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.entity.FullGameEntity;
@@ -17,11 +19,11 @@ public class GameDaoStub extends GameDao {
     public static final int RUNNING_GAME_COUNT = 4;
 
     private final Map<Integer, GameFullEntity> repository = new HashMap<>() {{
-        put(1, new GameFullEntity(1, "진행중인_게임", "encrypted1", "enemy1", true));
-        put(2, new GameFullEntity(2, "이미_존재하는_게임명", "encrypted2", "enemy2", true));
-        put(3, new GameFullEntity(3, "종료된_게임", "encrypted3", false));
-        put(4, new GameFullEntity(4, "참여자가_있는_게임", "encrypted4", "enemy4", true));
-        put(5, new GameFullEntity(5, "참여자가_없는_게임", "encrypted5", true));
+        put(1, new GameFullEntity(1, "진행중인_게임", hash("encrypted1"), hash("enemy1"), true));
+        put(2, new GameFullEntity(2, "이미_존재하는_게임명", hash("encrypted2"), hash("enemy2"), true));
+        put(3, new GameFullEntity(3, "종료된_게임", hash("encrypted3"), false));
+        put(4, new GameFullEntity(4, "참여자가_있는_게임", hash("encrypted4"), hash("enemy4"), true));
+        put(5, new GameFullEntity(5, "참여자가_없는_게임", hash("encrypted5"), true));
     }};
     private int autoIncrementId = repository.size();
 

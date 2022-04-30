@@ -49,8 +49,8 @@ public class JdbcPieceDao implements PieceDao {
 
     @Override
     public List<PieceDto> findAll(final int id) {
-        final String sql = "select * from piece";
-        return jdbcTemplate.query(sql, getPieceDtoRowMapper());
+        final String sql = "select * from piece where game_id = ?";
+        return jdbcTemplate.query(sql, getPieceDtoRowMapper(), id);
     }
 
     @Override

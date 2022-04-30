@@ -21,7 +21,7 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void removeAll(int id) {
+    public void removeAll(final int id) {
         final String sql = "delete from game where game_id = ?";
         jdbcTemplate.update(sql, id);
     }

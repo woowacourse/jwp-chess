@@ -35,7 +35,6 @@ public class RoomDaoTest {
     }
 
     @Test
-
     void matchPassword() {
         RoomDto roomDto = new RoomDto("title", "password");
         roomDao.createRoom(roomDto);
@@ -59,7 +58,6 @@ public class RoomDaoTest {
     }
 
     @Test
-
     void getRooms() {
         RoomDto roomDto1 = new RoomDto("1", "1234");
         RoomDto roomDto2 = new RoomDto("2", "2341");

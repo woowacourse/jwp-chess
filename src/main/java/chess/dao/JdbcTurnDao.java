@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class JdbcTurnDao implements TurnDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<TurnDto> turnRowMapper = (resultSet, rowNum) -> new TurnDto(

@@ -102,7 +102,6 @@ public class ChessApiController {
         return  ResponseEntity.ok(chessService.getState(roomId));
     }
 
-
     @ExceptionHandler
     public ResponseEntity<ErrorMessageDto> handle(Exception e) {
         ErrorMessageDto errorMessageDto = new ErrorMessageDto(e.getMessage());

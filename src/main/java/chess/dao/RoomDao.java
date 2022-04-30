@@ -4,6 +4,7 @@ import chess.dto.RoomDto;
 import java.util.List;
 
 public interface RoomDao {
+
     void createRoom(RoomDto room);
 
     int getRecentRoomId();

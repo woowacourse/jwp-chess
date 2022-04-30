@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
+
 @RestController
 public class ChessHomeController {
 
@@ -19,8 +21,9 @@ public class ChessHomeController {
     }
 
     @PostMapping("/new")
-    public Long startNewGame(@RequestBody RoomDto roomDto) {
-        return chessService.start(roomDto);
+    public ResponseEntity startNewGame(@RequestBody RoomDto roomDto) {
+        chessService.start(roomDto);
+        return ResponseEntity.created(URI.create("/")).build();
     }
 
     @GetMapping("/games")

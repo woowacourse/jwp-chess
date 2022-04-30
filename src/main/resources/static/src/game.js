@@ -85,7 +85,7 @@ const clickBLock = (e, block, id) => {
 
     if (isMovePositionAllSelected()) {
         const response = fetch(`/game/${id}/move`, {
-            method: "POST",
+            method: "PATCH",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(movePosition),
         });

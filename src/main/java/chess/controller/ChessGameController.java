@@ -31,7 +31,7 @@ public class ChessGameController {
         chessService.deleteByGameId(confirmPwd, id);
     }
 
-    @PostMapping("/{id}/move")
+    @PatchMapping("/{id}/move")
     public ResponseEntity<Map<String, String>> move(@PathVariable Long id, @RequestBody MoveDto moveCommand) {
         WebBoardDto board = chessService.move(moveCommand, id);
         return ResponseEntity.ok(board.getWebBoard());

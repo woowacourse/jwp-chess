@@ -1,12 +1,13 @@
 package chess.domain.game.score;
 
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.Map;
+
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.XAxis;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
 
 public class ScoreResult {
 
@@ -28,17 +29,17 @@ public class ScoreResult {
 
     private Score calculateScore(Board board, PieceColor pieceColor) {
         return board.findPiecesByPieceColor(pieceColor)
-                .stream()
-                .map(Piece::getScore)
-                .reduce(Score::add)
-                .map(score -> score.subtract(adjustPawnScore(board, pieceColor)))
-                .orElse(Score.from(0)); // TODO: 계산실패시 적절한 처리 (Optional 관련)
+            .stream()
+            .map(Piece::getScore)
+            .reduce(Score::add)
+            .map(score -> score.subtract(adjustPawnScore(board, pieceColor)))
+            .orElse(Score.from(0));
     }
 
     private Score adjustPawnScore(Board board, PieceColor pieceColor) {
         int duplicatedPawnCount = Arrays.stream(XAxis.values())
-                .mapToInt(xAxis -> board.getDuplicatedPawnCountByXAxis(pieceColor, xAxis))
-                .sum();
+            .mapToInt(xAxis -> board.getDuplicatedPawnCountByXAxis(pieceColor, xAxis))
+            .sum();
 
         return Score.from(duplicatedPawnCount * 0.5);
     }

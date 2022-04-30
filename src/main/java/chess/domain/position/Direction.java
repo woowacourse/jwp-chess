@@ -13,7 +13,6 @@ public enum Direction {
     DIAGONAL_LEFT_DOWN(-135.0),
     SEVEN_SHAPE(0),
     UNDEFINED_DIRECTION(0);
-    // TODO: degree가 VERTICAL_UP 과 겹치는 이슈
 
     private final double degree;
 
@@ -29,9 +28,9 @@ public enum Direction {
         }
 
         return Arrays.stream(values())
-                .filter(direction -> direction.degree == degree)
-                .findFirst()
-                .orElse(UNDEFINED_DIRECTION);
+            .filter(direction -> direction.degree == degree)
+            .findFirst()
+            .orElse(UNDEFINED_DIRECTION);
     }
 
     private static boolean isSevenShape(Position from, Position to) {
@@ -54,6 +53,6 @@ public enum Direction {
 
     public boolean isDiagonal() {
         return equals(DIAGONAL_RIGHT_UP) || equals(DIAGONAL_RIGHT_DOWN)
-                || equals(DIAGONAL_LEFT_UP) || equals(DIAGONAL_LEFT_DOWN);
+            || equals(DIAGONAL_LEFT_UP) || equals(DIAGONAL_LEFT_DOWN);
     }
 }

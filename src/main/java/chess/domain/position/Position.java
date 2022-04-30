@@ -35,7 +35,6 @@ public class Position {
         return of(xAxis, yAxis);
     }
 
-    // TODO: 리팩토링
     public static Position from(String coordinate) {
         XAxis xAxis = XAxis.valueOf(coordinate.substring(0, 1).toUpperCase(Locale.ROOT));
         YAxis yAxis = YAxis.getByValue(Integer.parseInt(coordinate.substring(1, 2)));
@@ -45,8 +44,8 @@ public class Position {
 
     public static List<Position> getPositionsByXAxis(XAxis xAxis) {
         return Arrays.stream(YAxis.values())
-                .map(yAxis -> Position.of(xAxis, yAxis))
-                .collect(Collectors.toList());
+            .map(yAxis -> Position.of(xAxis, yAxis))
+            .collect(Collectors.toList());
     }
 
     public static double calculateDegree(Position position1, Position position2) {
@@ -93,17 +92,16 @@ public class Position {
 
     public List<Position> getPositionsSameYAxisBetween(Position other) {
         return YAxis.getBetween(this.yAxis, other.yAxis).stream()
-                .map(yAxis -> Position.of(this.xAxis, yAxis))
-                .collect(Collectors.toList());
+            .map(yAxis -> Position.of(this.xAxis, yAxis))
+            .collect(Collectors.toList());
     }
 
     public List<Position> getPositionsSameXAxisBetween(Position other) {
         return XAxis.getBetween(this.xAxis, other.xAxis).stream()
-                .map(xAxis -> Position.of(xAxis, this.yAxis))
-                .collect(Collectors.toList());
+            .map(xAxis -> Position.of(xAxis, this.yAxis))
+            .collect(Collectors.toList());
     }
 
-    // TODO: 리팩토링
     public List<Position> getPositionsSameDirectionDiagonalBetween(Position to) {
         int xAxisDelta = xAxis.getValue() - to.xAxis.getValue();
         int yAxisDelta = yAxis.getValue() - to.yAxis.getValue();
@@ -113,8 +111,8 @@ public class Position {
         int yDirection = -(yAxisDelta / time);
 
         return IntStream.range(1, time)
-                .mapToObj(idx -> getPositionWith(xDirection, yDirection, idx))
-                .collect(Collectors.toList());
+            .mapToObj(idx -> getPositionWith(xDirection, yDirection, idx))
+            .collect(Collectors.toList());
     }
 
     private Position getPositionWith(int xDirection, int yDirection, int idx) {
@@ -131,9 +129,9 @@ public class Position {
     @Override
     public String toString() {
         return "Position{" +
-                "XAxis=" + xAxis +
-                ", YAxis=" + yAxis +
-                '}';
+            "XAxis=" + xAxis +
+            ", YAxis=" + yAxis +
+            '}';
     }
 
     @Override
@@ -145,7 +143,7 @@ public class Position {
             return false;
         }
 
-        Position position = (Position) o;
+        Position position = (Position)o;
 
         if (xAxis != position.xAxis) {
             return false;
@@ -174,17 +172,17 @@ public class Position {
 
         static {
             cache = Arrays.stream(XAxis.values()).
-                    flatMap(xAxis -> Arrays.stream(YAxis.values())
-                            .map(yAxis -> new Position(xAxis, yAxis)))
-                    .collect(Collectors.toList());
+                flatMap(xAxis -> Arrays.stream(YAxis.values())
+                    .map(yAxis -> new Position(xAxis, yAxis)))
+                .collect(Collectors.toList());
         }
 
         public static Position findByXAxisAndYAxis(XAxis xAxis, YAxis yAxis) {
             return cache.stream()
-                    .filter(position -> position.xAxis.equals(xAxis))
-                    .filter(position -> position.yAxis.equals(yAxis))
-                    .findFirst()
-                    .orElseThrow(() -> new NoSuchElementException("좌표가 존재하지 않습니다."));
+                .filter(position -> position.xAxis.equals(xAxis))
+                .filter(position -> position.yAxis.equals(yAxis))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("좌표가 존재하지 않습니다."));
         }
     }
 }

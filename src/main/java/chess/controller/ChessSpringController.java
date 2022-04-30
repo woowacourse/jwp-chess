@@ -11,7 +11,6 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,7 +48,7 @@ public class ChessSpringController {
         return "index";
     }
 
-    @DeleteMapping("/game/{gameId}/delete")
+    @PostMapping("/game/{gameId}/delete")
     public String delete(@RequestParam("password") String password, @PathVariable int gameId, Model model) {
         boolean isDeleted = chessGameService.delete(gameId, password);
         if (!isDeleted) {
@@ -90,5 +89,4 @@ public class ChessSpringController {
     public ResponseEntity<ErrorDto> handle(IllegalArgumentException illegalArgumentException) {
         return ResponseEntity.internalServerError().body(new ErrorDto(illegalArgumentException.getMessage()));
     }
-
 }

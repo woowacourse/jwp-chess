@@ -81,7 +81,7 @@ public class JdbcGameDao implements GameDao {
 
     @Override
     public Integer findLastGameId() {
-        final String sql = "select game_id from game order by desc limit 1";
+        final String sql = "select game_id from game order by game_id desc limit 1";
         try {
             return jdbcTemplate.queryForObject(sql, Integer.class);
         } catch (Exception e) {

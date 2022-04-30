@@ -13,6 +13,5 @@ create table piece
     position varchar(5)  not null,
     type     varchar(10) not null,
     color    varchar(20) not null,
-    game_id  int not null,
-    primary key (position)
+    game_id  int not null
 );

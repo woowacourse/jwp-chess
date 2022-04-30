@@ -30,8 +30,7 @@ public class JdbcPieceDaoTest {
                 + "    position varchar(5)  not null,\n"
                 + "    type     varchar(10) not null,\n"
                 + "    color    varchar(20) not null,\n"
-                + "    game_id  int not null,\n"
-                + "    primary key (position)\n"
+                + "    game_id  int not null\n"
                 + ");");
     }
 

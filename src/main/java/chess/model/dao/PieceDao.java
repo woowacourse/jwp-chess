@@ -68,9 +68,9 @@ public class PieceDao {
         return jdbcTemplate.queryForObject(sql, String.class, source, gameId);
     }
 
-    public void updateByPosition(String position, String pieceName) {
-        String sql = "UPDATE pieces SET name = (?) WHERE position = (?)";
-        jdbcTemplate.update(sql, pieceName, position);
+    public void updateByPositionAndGameId(String position, String pieceName, Long gameId) {
+        String sql = "UPDATE pieces SET name = (?) WHERE position = (?) and game_id = ?";
+        jdbcTemplate.update(sql, pieceName, position, gameId);
     }
 
     public void deleteAll() {

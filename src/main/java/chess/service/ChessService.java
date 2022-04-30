@@ -102,8 +102,8 @@ public class ChessService {
 
     private void updateGame(MoveDto moveDto, Long id, Turn turn) {
         Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPositionAndGameId(moveDto.getSource(), id));
-        pieceDao.updateByPosition(moveDto.getTarget(), PieceDao.getPieceName(sourcePiece));
-        pieceDao.updateByPosition(moveDto.getSource(), PIECE_NONE);
+        pieceDao.updateByPositionAndGameId(moveDto.getTarget(), PieceDao.getPieceName(sourcePiece), id);
+        pieceDao.updateByPositionAndGameId(moveDto.getSource(), PIECE_NONE, id);
         gameDao.update(turn.change().getThisTurn(), id);
     }
 

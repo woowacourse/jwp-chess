@@ -158,7 +158,7 @@ public class LobbyControllerTest {
     @Test
     void removeChessGameIsRunning() throws Exception {
         RoomDto room = roomService.saveRoom("verus", "1234");
-        chessGameService.prepareNewChessGame(chessGameDao.findById(room.getChessGameId()));
+        chessGameService.prepareNewChessGame(room.getChessGameId());
         chessGameService.move(room.getChessGameId(), new Movement("A2", "A4"));
 
         mockMvc.perform(post("/remove-chess-game")

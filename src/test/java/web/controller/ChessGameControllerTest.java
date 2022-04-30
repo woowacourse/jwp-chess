@@ -67,7 +67,7 @@ class ChessGameControllerTest {
 
         chessGameId = chessGameDao.saveChessGame(GameStatus.READY, Color.WHITE, new Score(new BigDecimal("38")),
                 new Score(new BigDecimal("38")));
-        chessGameService.prepareNewChessGame(chessGameDao.findById(chessGameId));
+        chessGameService.prepareNewChessGame(chessGameId);
     }
 
     @Test

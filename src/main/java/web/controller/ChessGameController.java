@@ -32,7 +32,7 @@ public class ChessGameController {
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
 
         if (isGameFinished(chessGameDto)) {
-            chessGameDto = service.prepareNewChessGame(chessGameDto);
+            chessGameDto = service.prepareNewChessGame(chessGameDto.getId());
         }
 
         model.addAttribute("pieces", pieceDao.findPieces(chessGameDto.getId()));

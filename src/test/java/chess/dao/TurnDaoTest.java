@@ -24,7 +24,7 @@ class TurnDaoTest {
     @BeforeEach
     void setUp() {
         turnDao = new JdbcTurnDao(jdbcTemplate);
-        turnDao.initializeTurn(1);
+        turnDao.insertTurn(1);
     }
 
     @Test

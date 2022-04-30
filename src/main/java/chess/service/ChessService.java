@@ -51,7 +51,7 @@ public class ChessService {
         pieceDao.initializePieces(roomId, new Player(new BlackGenerator(), Team.BLACK));
         pieceDao.initializePieces(roomId, new Player(new WhiteGenerator(), Team.WHITE));
         turnDao.initializeTurn(roomId);
-        gameDao.startGame(roomId);
+        gameDao.initializeState(roomId);
 
         final ChessWebGame chessWebGame = new ChessWebGame();
         return chessWebGame.initializeChessGame();
@@ -139,7 +139,12 @@ public class ChessService {
 
     public RoomDto createRoom(RoomDto roomDto) {
         roomDao.createRoom(roomDto);
-        return new RoomDto(roomDao.getRecentRoomId(), roomDto.getTitle(), roomDto.getPassword());
+
+        int roomId = roomDao.getRecentRoomId();
+        gameDao.insertState(roomId);
+        turnDao.insertTurn(roomId);
+
+        return new RoomDto(roomId, roomDto.getTitle(), roomDto.getPassword());
     }
 
     public void checkPassword(RoomDto roomDto) {
@@ -149,7 +154,7 @@ public class ChessService {
     }
 
     public void endGame(int roomId) {
-        gameDao.endGame(roomId);
+        gameDao.updateStateEnd(roomId);
     }
 
     public void deleteRoom(RoomDto roomDto) {

@@ -9,4 +9,6 @@ public interface TurnDao {
     void updateTurn(final int roomId, final String turn);
 
     void initializeTurn(final int roomId);
+
+    void insertTurn(int roomId);
 }

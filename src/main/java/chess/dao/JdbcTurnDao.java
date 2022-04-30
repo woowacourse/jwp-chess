@@ -19,6 +19,12 @@ public class JdbcTurnDao implements TurnDao {
     }
 
     @Override
+    public void insertTurn(int roomId) {
+        final String sql = "insert into turn(roomId, team) values(?, 'WHITE')";
+        jdbcTemplate.update(sql, roomId);
+    }
+
+    @Override
     public TurnDto findTurn(int roomId) {
         final String sql = "select * from turn where roomId = ?";
         return jdbcTemplate.queryForObject(sql, turnRowMapper, roomId);
@@ -36,21 +42,7 @@ public class JdbcTurnDao implements TurnDao {
 
     @Override
     public void initializeTurn(int roomId) {
-        if (isExistId(roomId)) {
-            resetTurn(roomId);
-            return;
-        }
-        final String sql = "insert into turn(roomId, team) values(?, 'WHITE')";
-        jdbcTemplate.update(sql, roomId);
-    }
-
-    private void resetTurn(int roomId) {
         final String sql = "update turn set team = 'WHITE' where roomId = ?";
         jdbcTemplate.update(sql, roomId);
-    }
-
-    private boolean isExistId(int roomId) {
-        final String sql = "select count(*) from turn where roomId = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, roomId) == 1;
     }
 }

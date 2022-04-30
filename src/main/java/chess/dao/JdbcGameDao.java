@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcGameDao implements GameDao {
 
+    public static final String UPDATE_GAME_SET_STATE_SQL = "update game set state = ? where roomId = ?";
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcGameDao(JdbcTemplate jdbcTemplate) {
@@ -13,30 +14,21 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void startGame(int roomId) {
-        if (isExist(roomId)) {
-            updateGame(roomId);
-            return;
-        }
+    public void insertState(int roomId) {
         final String sql = "insert into game(roomId, state) values(?, 'run')";
         jdbcTemplate.update(sql, roomId);
     }
 
-
-    private boolean isExist(int roomId) {
-        final String sql = "select count(*) from game where roomId = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, roomId) == 1;
-    }
-
-    private void updateGame(int roomId) {
-        final String sql = "update game set state = 'run' where roomId = ?";
-        jdbcTemplate.update(sql, roomId);
+    @Override
+    public void initializeState(int roomId) {
+        final String sql = UPDATE_GAME_SET_STATE_SQL;
+        jdbcTemplate.update(sql, "run", roomId);
     }
 
     @Override
-    public void endGame(int roomId) {
-        final String sql = "update game set state = 'end' where roomId = ?";
-        jdbcTemplate.update(sql, roomId);
+    public void updateStateEnd(int roomId) {
+        final String sql = UPDATE_GAME_SET_STATE_SQL;
+        jdbcTemplate.update(sql, "end", roomId);
     }
 
     @Override

@@ -22,20 +22,19 @@ class GameDaoTest {
     @BeforeEach
     void setUp() {
         gameDao = new JdbcGameDao(jdbcTemplate);
+        gameDao.insertState(1);
     }
 
     @Test
     @DisplayName("방 생성 시 run 상태로 만든다.")
     void makeRunState() {
-        gameDao.startGame(1);
         assertThat(gameDao.getState(1)).isEqualTo("run");
     }
 
     @Test
     @DisplayName("방 종료 시 end 상태로 만든다.")
     void makeEndState() {
-        gameDao.startGame(1);
-        gameDao.endGame(1);
+        gameDao.updateStateEnd(1);
         assertThat(gameDao.getState(1)).isEqualTo("end");
     }
 }

@@ -11,8 +11,7 @@ import chess.model.board.Board;
 import chess.model.board.MoveResult;
 import chess.model.board.Square;
 import chess.model.game.ChessGame;
-import chess.model.gamestatus.Status;
-import chess.model.gamestatus.StatusType;
+import chess.model.game.Status;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
 import chess.service.dto.response.BoardDto;
@@ -37,7 +36,8 @@ public class ChessService {
     }
 
     public void initGame(Integer gameId) {
-        ChessGame chessGame = new ChessGame();
+        ChessGame chessGame = ChessGame.getReadyInstance();
+        chessGame.init();
         pieceDao.initBoard(gameId);
         updateGame(chessGame, gameId);
     }
@@ -62,9 +62,11 @@ public class ChessService {
     }
 
     private ChessGame getGameFromDao(Integer id) {
-        GameEntity game = gameDao.findById(id);
-        Status status = getStatusFromDao(game.getStatus(), getBoardFromDao(id));
-        return new ChessGame(Color.valueOf(game.getTurn()), status);
+        GameEntity gameEntity = gameDao.findById(id);
+        Color turn = Color.valueOf(gameEntity.getTurn());
+        Status status = Status.findByGameEntity(gameEntity.getStatus());
+        Board board = getBoardFromDao(id);
+        return new ChessGame(turn, status, board);
     }
 
     private Board getBoardFromDao(Integer id) {
@@ -75,10 +77,6 @@ public class ChessService {
     private Map<Square, Piece> convertPieces(List<PieceEntity> pieceEntities) {
         return pieceEntities.stream()
                 .collect(toMap(dto -> Square.of(dto.getSquare()), PieceType::createPiece));
-    }
-
-    private Status getStatusFromDao(String statusName, Board board) {
-        return StatusType.createStatus(statusName, board);
     }
 
     public EndGameResponse endGame(Integer id) {

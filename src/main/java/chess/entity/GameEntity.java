@@ -1,7 +1,6 @@
 package chess.entity;
 
 import chess.model.game.ChessGame;
-import chess.model.gamestatus.StatusType;
 
 public class GameEntity {
     private final String status;
@@ -19,9 +18,10 @@ public class GameEntity {
         this.password = password;
     }
 
-    public GameEntity(final int id, final ChessGame chessGame) {
+
+    public GameEntity(final Integer id, final ChessGame chessGame) {
         this.id = id;
-        this.status = StatusType.findByStatus(chessGame.getStatus()).name();
+        this.status = chessGame.getStatus().name();
         this.turn = chessGame.getTurn().name();
     }
 

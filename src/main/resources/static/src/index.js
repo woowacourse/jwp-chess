@@ -42,9 +42,12 @@ function movePiece() {
     fetch("/board" + window.location.search, {
         method: "PUT",
         headers: {
-            "Content-Type": "text/plain"
+            "Content-Type": "application/json"
         },
-        body: source + " " + target
+        body: JSON.stringify({
+            source: source,
+            target: target
+        })
     }).then((res) => {
         document.getElementById(source).style.backgroundColor = '';
         document.getElementById(target).style.backgroundColor = '';

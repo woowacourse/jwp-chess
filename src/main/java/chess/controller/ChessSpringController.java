@@ -4,6 +4,7 @@ import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.dto.ChessBoardDto;
 import chess.dto.CreateBoardDto;
+import chess.dto.MovePositionDto;
 import chess.dto.ResultDto;
 import chess.dto.StatusDto;
 import chess.service.ChessGameService;
@@ -60,11 +61,10 @@ public class ChessSpringController {
 
     @PutMapping("/board")
     public @ResponseBody
-    ResponseEntity<String> move(@RequestBody String request, @RequestParam int id) {
-        List<String> command = Arrays.asList(request.split(" "));
+    ResponseEntity<String> move(@RequestBody MovePositionDto request, @RequestParam int id) {
         Board board = chessGameService.getBoard(id);
-        board.move(Position.from(command.get(0)), Position.from(command.get(1)));
-        chessGameService.updatePosition(Position.from(command.get(0)), Position.from(command.get(1)),
+        board.move(Position.from(request.getSource()), Position.from(request.getTarget()));
+        chessGameService.updatePosition(Position.from(request.getSource()), Position.from(request.getTarget()),
                 board.getTurn(), id);
 
         if (board.hasKingCaptured()) {
@@ -101,7 +101,7 @@ public class ChessSpringController {
 
     @DeleteMapping("/board")
     public @ResponseBody
-    ResponseEntity<String> delete(@RequestParam int id, @RequestParam String password){
+    ResponseEntity<String> delete(@RequestParam int id, @RequestParam String password) {
         chessGameService.deleteBoard(id, password);
         return ResponseEntity.ok().build();
     }

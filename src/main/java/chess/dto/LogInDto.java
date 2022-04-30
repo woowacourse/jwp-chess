@@ -1,8 +1,8 @@
 package chess.dto;
 
 public class LogInDto {
-    private String id;
-    private String password;
+    private final String id;
+    private final String password;
 
     public LogInDto(String id, String password) {
         this.id = id;

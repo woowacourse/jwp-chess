@@ -362,7 +362,7 @@
             <div class="black-score">흑색팀: {{status.blackScore}} 점</div>
         </div>
 
-        <form action="/exit" method="get">
+        <form action="/game/exit" method="post">
             <input type="hidden" name="id" value="{{id}}">
             <button type="submit">게임 그만두기</button>
         </form>

@@ -5,6 +5,8 @@ import chess.dto.LogInDto;
 import chess.dto.PiecesDto;
 import chess.service.ChessGameService;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,14 +30,16 @@ public class ChessController {
     }
 
     @GetMapping("/")
-    public ModelAndView index(@RequestParam(required = false, defaultValue = "") String msg) {
-        return getIndexModel(msg);
+    public ModelAndView index(@RequestParam(required = false, defaultValue = "") String gameMessage) {
+        ModelAndView modelAndView = new ModelAndView("index");
+        modelAndView.addObject("gameMessage", gameMessage);
+        modelAndView.addObject("rooms", chessGameService.getRooms());
+        return modelAndView;
     }
 
     @PostMapping("/init")
     @ResponseBody
     public ResponseEntity<Void> initGame(@ModelAttribute LogInDto logInDto) {
-        System.err.println("게임생성됨" + logInDto);
         chessGameService.createGame(logInDto);
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
                 .location(URI.create(LOCALHOST_8080 + "/game/" + logInDto.getId())).build();
@@ -50,6 +54,7 @@ public class ChessController {
     }
 
     @PostMapping("/exit")
+    @ResponseBody
     public ResponseEntity<Void> deleteGameAndGoHome(@ModelAttribute LogInDto logInDto) {
         chessGameService.validateEnd(logInDto.getId());
         chessGameService.cleanGame(logInDto);
@@ -59,6 +64,7 @@ public class ChessController {
 
     @GetMapping(path = "/game/{id}")
     public ModelAndView getGame(@PathVariable String id) {
+        chessGameService.getGameStatus(id);
         ModelAndView modelAndView = new ModelAndView("game");
         modelAndView.addObject("pieces", BoardView.of(new PiecesDto(chessGameService.getPieces(id))).getBoardView());
         modelAndView.addObject("id", id);
@@ -66,15 +72,11 @@ public class ChessController {
         return modelAndView;
     }
 
-    private ModelAndView getIndexModel(String gameMessage) {
-        ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("gameMessage", gameMessage);
-        modelAndView.addObject("rooms", chessGameService.getRooms());
-        return modelAndView;
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ModelAndView exception(Exception e) {
-        return getIndexModel(e.getMessage());
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    public ResponseEntity<Void> exception(Exception e) {
+        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                .location(URI.create(LOCALHOST_8080 + "?gameMessage=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8)))
+                .build();
     }
 }

@@ -6,21 +6,35 @@ import chess.model.piece.PieceType;
 import java.util.Objects;
 
 public class PieceEntity {
-
+    private final Integer id;
+    private final Integer gameId;
     private final String square;
     private final String type;
     private final String color;
 
-    public PieceEntity(final Square square, final Piece piece) {
+    public PieceEntity(final Integer gameId, final Square square, final Piece piece) {
+        this.id = null;
+        this.gameId = gameId;
         this.square = square.getName();
         this.type = PieceType.getName(piece);
         this.color = piece.getColor().name();
     }
 
-    public PieceEntity(final String square, final String type, final String color) {
+
+    public PieceEntity(final Integer id, final Integer gameId, final String square, final String type, final String color) {
+        this.id = id;
+        this.gameId = gameId;
         this.square = square;
         this.type = type;
         this.color = color;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getGameId() {
+        return gameId;
     }
 
     public String getSquare() {

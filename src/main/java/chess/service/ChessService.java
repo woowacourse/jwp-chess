@@ -58,7 +58,7 @@ public class ChessService {
     private void updatePiece(Integer id, MoveResult movedResult) {
         Map<Square, Piece> affectedPiece = movedResult.getAffectedPiece();
         for (Square square : affectedPiece.keySet()) {
-            pieceDao.update(new PieceEntity(square, affectedPiece.get(square)), id);
+            pieceDao.update(new PieceEntity(id, square, affectedPiece.get(square)), id);
         }
     }
 

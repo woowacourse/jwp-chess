@@ -5,11 +5,11 @@ import chess.model.board.ChessInitializer;
 import chess.model.board.Square;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class InMemoryPieceDao implements PieceDao {
     private final Map<Integer, List<PieceEntity>> boardTable = new HashMap<>();
@@ -17,10 +17,15 @@ public class InMemoryPieceDao implements PieceDao {
     @Override
     public void initBoard(Integer gameId) {
         Map<Square, Piece> board = new ChessInitializer().initPieces();
-        List<PieceEntity> pieces = board.keySet().stream()
-                .map(square -> new PieceEntity(square.getName(), PieceType.getName(board.get(square)),
-                        board.get(square).getColor().name()))
-                .collect(Collectors.toList());
+        int id = 1;
+        List<PieceEntity> pieces = new ArrayList<>();
+        for (Square square : board.keySet()) {
+            Piece piece = board.get(square);
+            pieces.add(
+                    new PieceEntity(id++, gameId, square.getName(),
+                            PieceType.getName(piece), piece.getColor().name()));
+        }
+
         boardTable.put(gameId, pieces);
     }
 

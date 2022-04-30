@@ -3,11 +3,11 @@ package chess.entity;
 import chess.model.game.ChessGame;
 
 public class GameEntity {
-    private final String status;
-    private final String turn;
     private final int id;
     private String name;
     private String password;
+    private final String status;
+    private final String turn;
 
     public GameEntity(final int id, final String name,
                       final String status, final String turn, final String password) {

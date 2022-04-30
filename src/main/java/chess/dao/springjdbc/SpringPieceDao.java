@@ -13,6 +13,8 @@ public class SpringPieceDao implements PieceDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<PieceEntity> pieceRowMapper = (resultSet, rowNum) ->
             new PieceEntity(
+                    resultSet.getInt("id"),
+                    resultSet.getInt("game_id"),
                     resultSet.getString("square"),
                     resultSet.getString("piece_type"),
                     resultSet.getString("piece_color")
@@ -32,7 +34,7 @@ public class SpringPieceDao implements PieceDao {
 
     @Override
     public List<PieceEntity> getBoardByGameId(final Integer id) {
-        String sql = "SELECT piece_type, piece_color, square FROM piece WHERE game_id = ?";
+        String sql = "SELECT * FROM piece WHERE game_id = ?";
         return jdbcTemplate.query(sql, pieceRowMapper, id);
     }
 

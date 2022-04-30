@@ -71,7 +71,7 @@ class SpringPieceDaoTest {
     @DisplayName("update : 보드의 피스 정보들이 정상적으러 업데이트 되는지 확인")
     void update() {
         initBoard("first");
-        PieceEntity piece = new PieceEntity("a4", "pawn", "white");
+        PieceEntity piece = new PieceEntity(null, 1, "a4", "pawn", "white");
         int affectedRows = springPieceDao.update(piece, 1);
         List<PieceEntity> pieces = springPieceDao.getBoardByGameId(1);
         assertAll(() -> {

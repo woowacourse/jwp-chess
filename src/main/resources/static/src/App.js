@@ -29,7 +29,7 @@ function showStatusButton(id) {
 }
 
 function initBoard() {
-    fetch('/api/restart/' + gameId)
+    fetch('/api/' + gameId + '/restart')
         .then(res => res.json())
         .then(imageSetting)
 }
@@ -53,7 +53,7 @@ function getStatus(scoreResponse) {
 }
 
 status.addEventListener('click', function () {
-    fetch('/api/status/' + gameId)
+    fetch('/api/' + gameId + '/status')
         .then(res => res.json())
         .then(getStatus)
 })
@@ -147,7 +147,7 @@ function movePiece(from, to) {
         to: to
     }
 
-    fetch('/api/move/' + gameId, {
+    fetch('/api/' + gameId + '/move', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -167,7 +167,7 @@ function move() {
 
 function enterCheckPassword(id) {
     var pass = prompt('패스워드를 입력하세요');
-    fetch('/api/password/' + id)
+    fetch('/api/' + id + '/password' )
         .then(res => res.json())
         .then(res => {
             if (res["password"] === pass) {
@@ -181,7 +181,7 @@ function enterCheckPassword(id) {
 function deleteCheckPassword(id) {
     var pass = prompt('패스워드를 입력하세요');
 
-    fetch('/api/check/' + id)
+    fetch('/api/' + id + '/check' )
         .then(res => res.json())
         .then(res => {
             if (res["password"] !== pass) {

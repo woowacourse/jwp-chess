@@ -23,6 +23,12 @@ Spark 기반의 웹 체스게임을 Spring으로 대체하는 프로젝트입니
 - 예외가 발생했을 때 사용자가 이해할 수 있는 명시적인 메시지를 응답한다.
 
 ## DB 스키마
+docker에 열려있는 MySQL에서 `chess` 이름인 데이터베이스가 있는지 확인해주고 없다면 생성해주세요!
+```sql
+show databases; // 데이터베이스 목록 확인
+CREATE DATABASE chess default CHARACTER SET UTF8;
+```
+
 ```sql
 create table if not exists rooms (
     room_id bigint not null auto_increment primary key,
@@ -42,8 +48,10 @@ create table if not exists commands (
 ## HTTP API
 - [x] `localhost:8080/`
   - GET: 체스방의 목록을 보여주고 체스방을 추가, 참가, 삭제할 수 있는 버튼이 있다.
+- [x] `/room/create`
 - [x] `/room`
   - POST: 이름과 비밀번호를 가진 체스방을 만든다.
+- [x] `/room/{id}/delete`
 - [x] `/room/{id}`
   - POST: 비밀번호가 일치하면 id 주소값을 가진 체스방과 관련된 체스판 명령어를 삭제한다.
   - GET: id 주소값을 가진 체스방이 가진 체스판을 출력한다.

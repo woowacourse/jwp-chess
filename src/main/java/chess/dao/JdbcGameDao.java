@@ -12,18 +12,12 @@ import org.springframework.stereotype.Repository;
 public class JdbcGameDao implements GameDao {
 
     private static final int NO_GAME = 0;
-    
+
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public JdbcGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Override
-    public void removeAll() {
-        final String sql = "delete from game";
-        jdbcTemplate.update(sql);
     }
 
     @Override
@@ -33,21 +27,9 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void save(GameDto gameDto) {
-        final String sql = "insert into game (turn, status) values (?, ?)";
-        jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus());
-    }
-
-    @Override
     public void save(final int id, final GameDto gameDto) {
         final String sql = "insert into game (game_id, turn, status) values (?, ?, ?)";
         jdbcTemplate.update(sql, id, gameDto.getTurn(), gameDto.getStatus());
-    }
-
-    @Override
-    public void modify(GameDto gameDto) {
-        final String sql = "update game set turn = ?, status = ?";
-        jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus());
     }
 
     @Override
@@ -57,26 +39,9 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void modifyStatus(GameStatusDto statusDto) {
-        final String sql = "update game set status = ?";
-        jdbcTemplate.update(sql, statusDto.getName());
-    }
-
-    @Override
     public void modifyStatus(final int id, final GameStatusDto statusDto) {
         final String sql = "update game set status = ? where game_id = ?";
         jdbcTemplate.update(sql, statusDto.getName(), id);
-    }
-
-    @Override
-    public GameDto find() {
-        final String sql = "select * from game";
-        try {
-            return jdbcTemplate.queryForObject(sql, getGameDtoRowMapper());
-        } catch (EmptyResultDataAccessException e) {
-            e.printStackTrace();
-            return GameDto.of(null, "ready");
-        }
     }
 
     @Override
@@ -91,7 +56,7 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public Integer count() {
+    public Integer findLastGameId() {
         final String sql = "select game_id from game order by desc limit 1";
         try {
             return jdbcTemplate.queryForObject(sql, Integer.class);

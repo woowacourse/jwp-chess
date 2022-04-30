@@ -37,9 +37,9 @@ public class JdbcGameDaoTest {
     @DisplayName("전체 게임 데이터 삭제")
     void removeAll() {
         GameDto gameDto = GameDto.of("white", "playing");
-        jdbcGameDao.save(gameDto);
+        jdbcGameDao.save(1, gameDto);
 
-        jdbcGameDao.removeAll();
+        jdbcGameDao.removeAll(1);
 
         assertThat(getGameCount()).isEqualTo(0);
     }
@@ -48,7 +48,7 @@ public class JdbcGameDaoTest {
     @DisplayName("게임 정보 저장")
     void save() {
         GameDto gameDto = GameDto.of("white", "playing");
-        jdbcGameDao.save(gameDto);
+        jdbcGameDao.save(1, gameDto);
 
         assertThat(getGameCount()).isEqualTo(1);
     }
@@ -57,14 +57,14 @@ public class JdbcGameDaoTest {
     @DisplayName("게임 정보 수정")
     void update() {
         GameDto gameDto = GameDto.of("white", "playing");
-        jdbcGameDao.save(gameDto);
+        jdbcGameDao.save(1, gameDto);
 
         GameDto updatedGameDto = GameDto.of("black", "end");
-        jdbcGameDao.modify(updatedGameDto);
+        jdbcGameDao.modify(1, updatedGameDto);
 
         assertAll(
-                () -> assertThat(jdbcGameDao.find().getTurn()).isEqualTo("black"),
-                () -> assertThat(jdbcGameDao.find().getStatus()).isEqualTo("end")
+                () -> assertThat(jdbcGameDao.find(1).getTurn()).isEqualTo("black"),
+                () -> assertThat(jdbcGameDao.find(1).getStatus()).isEqualTo("end")
         );
     }
 
@@ -72,23 +72,23 @@ public class JdbcGameDaoTest {
     @DisplayName("게임 상태 업데이트")
     void updateStatus() {
         GameDto gameDto = GameDto.of("white", "playing");
-        jdbcGameDao.save(gameDto);
+        jdbcGameDao.save(1, gameDto);
 
         GameStatusDto gameStatusDto = GameStatusDto.FINISHED;
-        jdbcGameDao.modifyStatus(gameStatusDto);
+        jdbcGameDao.modifyStatus(1, gameStatusDto);
 
-        assertThat(jdbcGameDao.find().getStatus()).isEqualTo(gameStatusDto.getName());
+        assertThat(jdbcGameDao.find(1).getStatus()).isEqualTo(gameStatusDto.getName());
     }
 
     @Test
     @DisplayName("게임 정보 조회")
     void find() {
         GameDto gameDto = GameDto.of("white", "playing");
-        jdbcGameDao.save(gameDto);
+        jdbcGameDao.save(1, gameDto);
 
         assertAll(
-                () -> assertThat(jdbcGameDao.find().getStatus()).isEqualTo("playing"),
-                () -> assertThat(jdbcGameDao.find().getTurn()).isEqualTo("white")
+                () -> assertThat(jdbcGameDao.find(1).getStatus()).isEqualTo("playing"),
+                () -> assertThat(jdbcGameDao.find(1).getTurn()).isEqualTo("white")
         );
     }
 

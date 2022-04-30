@@ -44,7 +44,7 @@ public class ChessService {
     }
 
     private int getGameId() {
-        return gameDao.count() + 1;
+        return gameDao.findLastGameId() + 1;
     }
 
     public ChessResponseDto getChess(final int id) {

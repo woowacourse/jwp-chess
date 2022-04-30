@@ -41,7 +41,7 @@ public class ChessService {
     }
 
     public RoomResponseDto createRoom(final RoomRequestDto roomRequestDto) {
-        final RoomEntity room = new RoomEntity(roomRequestDto.getName(), "white", false);
+        final RoomEntity room = new RoomEntity(roomRequestDto.getPassword(), roomRequestDto.getName(), "white", false);
         validateCreateRoom(room);
         final RoomEntity createdRoom = roomRepository.insert(room);
         boardRepository.batchInsert(createBoards(createdRoom));
@@ -54,10 +54,10 @@ public class ChessService {
         }
     }
 
-    private List<BoardEntity> createBoards(final RoomEntity createdRoom) {
+    private List<BoardEntity> createBoards(final RoomEntity room) {
         final Map<Position, Piece> board = BoardFactory.initialize();
         return board.entrySet().stream()
-            .map(entry -> new BoardEntity(createdRoom.getId(),
+            .map(entry -> new BoardEntity(room.getId(),
                 entry.getKey().convertPositionToString(),
                 entry.getValue().convertPieceToString()))
             .collect(Collectors.toList());

@@ -63,11 +63,11 @@ class WebChessControllerTest {
     @Test
     void createRoom_success() throws Exception {
         final Long firstRoomId = 1L;
-        final RoomRequestDto roomRequestDto = new RoomRequestDto("체스 초보만");
+        final RoomRequestDto roomRequestDto = new RoomRequestDto("체스 초보만", "1234");
         final String requestBody = objectMapper.writeValueAsString(roomRequestDto);
 
         given(chessService.createRoom(any())).willReturn(
-            RoomResponseDto.of(new RoomEntity(firstRoomId, "체스 초보만", "white", false)));
+            RoomResponseDto.of(new RoomEntity(firstRoomId, "1234", "체스 초보만", "white", false)));
 
         mockMvc.perform(post(REQUEST_MAPPING_URI).content(requestBody) // POST 요청 필수1. requestBody
                 .contentType(MediaType.APPLICATION_JSON)) // POST 요청필수2. contentType
@@ -207,9 +207,10 @@ class WebChessControllerTest {
     @Test
     void update_success() throws Exception {
         final Long roomId = 1L;
-        final RoomRequestDto roomRequestDto = new RoomRequestDto("바뀐 제목");
+        final RoomRequestDto roomRequestDto = new RoomRequestDto("바뀐 제목", "1234");
         final String requestBody = objectMapper.writeValueAsString(roomRequestDto);
-        final RoomResponseDto roomResponseDto = RoomResponseDto.of(new RoomEntity(roomId, "바뀐 제목", "white", false));
+        final RoomResponseDto roomResponseDto = RoomResponseDto.of(
+            new RoomEntity(roomId, "1234", "바뀐 제목", "white", false));
         final String responseBody = objectMapper.writeValueAsString(roomResponseDto);
 
         given(chessService.updateRoom(anyLong(), any()))
@@ -226,7 +227,7 @@ class WebChessControllerTest {
     @Test
     void update_fail() throws Exception {
         final Long invalidRoomId = -1L;
-        final RoomRequestDto roomRequestDto = new RoomRequestDto("바뀐 제목");
+        final RoomRequestDto roomRequestDto = new RoomRequestDto("바뀐 제목", "1234");
         final String requestBody = objectMapper.writeValueAsString(roomRequestDto);
 
         final ErrorResponseDto errorResponseDto = new ErrorResponseDto("[ERROR] 방 정보를 찾을 수 없습니다.");

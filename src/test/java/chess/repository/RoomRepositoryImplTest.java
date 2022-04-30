@@ -30,7 +30,7 @@ class RoomRepositoryImplTest {
     @DisplayName("룸을 생성한다.")
     @Test
     void insert() {
-        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final RoomEntity roomEntity = new RoomEntity("1234", "체스 초보만", "white", false);
         final RoomEntity insertRoom = roomRepository.insert(roomEntity);
         assertThat(insertRoom.getName()).isEqualTo(roomEntity.getName());
     }
@@ -38,7 +38,7 @@ class RoomRepositoryImplTest {
     @DisplayName("룸의 현재 차례를 업데이트한다.")
     @Test
     void updateTeam() {
-        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final RoomEntity roomEntity = new RoomEntity("1234", "체스 초보만", "white", false);
         final Long id = roomRepository.insert(roomEntity).getId();
         roomRepository.updateTeam(id, "black");
 
@@ -48,7 +48,7 @@ class RoomRepositoryImplTest {
     @DisplayName("룸의 상태를 종료로 변경한다")
     @Test
     void finishRoom() {
-        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final RoomEntity roomEntity = new RoomEntity("1234", "체스 초보만", "white", false);
         final Long id = roomRepository.insert(roomEntity).getId();
         roomRepository.updateGameOver(id);
 
@@ -59,9 +59,9 @@ class RoomRepositoryImplTest {
     @DisplayName("입력된 룸의 상태로 룸의 정보를 변경한다.")
     @Test
     void save() {
-        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final RoomEntity roomEntity = new RoomEntity("1234", "체스 초보만", "white", false);
         final RoomEntity targetRoom = roomRepository.insert(roomEntity);
-        final RoomEntity nameChangedRoom = new RoomEntity(null, "체스 고수만", null, null);
+        final RoomEntity nameChangedRoom = new RoomEntity(null, "1234", "체스 고수만", null, null);
         targetRoom.patch(nameChangedRoom);
         roomRepository.save(targetRoom);
 

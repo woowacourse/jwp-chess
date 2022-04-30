@@ -131,7 +131,7 @@ class ChessServiceTest {
     }
 
     private RoomResponseDto createTestRoom(final String roomName) {
-        final RoomRequestDto roomRequestDto = new RoomRequestDto(roomName);
+        final RoomRequestDto roomRequestDto = new RoomRequestDto(roomName, "1234");
         return chessService.createRoom(roomRequestDto);
     }
 }

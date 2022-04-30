@@ -15,7 +15,6 @@ import static chess.position.Rank.TWO;
 import static java.util.stream.Collectors.toMap;
 
 import chess.ChessBoard;
-import chess.Score;
 import chess.piece.Bishop;
 import chess.piece.Color;
 import chess.piece.King;
@@ -25,7 +24,6 @@ import chess.piece.Piece;
 import chess.piece.Queen;
 import chess.piece.Rook;
 import chess.position.Position;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -108,22 +106,9 @@ public class ChessGameService {
             chessBoard.getScore(Color.WHITE), chessBoard.getCurrentColor(), winner);
     }
 
-    public ChessGameDto prepareNewChessGame(int chessGameId) {
-        preparePieces(chessGameId);
-        return prepareChessGame(chessGameId);
-    }
-
-    private void preparePieces(int chessGameId) {
+    public void prepareNewChessGame(int chessGameId) {
         pieceDao.deleteByChessGameId(chessGameId);
         pieceDao.savePieces(chessGameId, createPieces());
-    }
-
-    private ChessGameDto prepareChessGame(int chessGameId) {
-        Score initialScore = new Score(new BigDecimal("38.0"));
-        ChessGameDto newChessGameDto = new ChessGameDto(chessGameId, GameStatus.READY,
-            initialScore, initialScore, Color.WHITE);
-        chessGameDao.updateChessGame(newChessGameDto);
-        return newChessGameDto;
     }
 
     private List<PieceDto> createPieces() {

@@ -21,7 +21,8 @@ public class ChessGameController {
     private final ChessGameDao chessGameDao;
     private final PieceDao pieceDao;
 
-    public ChessGameController(ChessGameService service, ChessGameDao chessGameDao, PieceDao pieceDao) {
+    public ChessGameController(ChessGameService service, ChessGameDao chessGameDao,
+                               PieceDao pieceDao) {
         this.service = service;
         this.chessGameDao = chessGameDao;
         this.pieceDao = pieceDao;
@@ -32,7 +33,7 @@ public class ChessGameController {
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
 
         if (isGameFinished(chessGameDto)) {
-            chessGameDto = service.prepareNewChessGame(chessGameDto.getId());
+            service.prepareNewChessGame(chessGameDto.getId());
         }
 
         model.addAttribute("pieces", pieceDao.findPieces(chessGameDto.getId()));

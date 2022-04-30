@@ -55,4 +55,16 @@ public class ChessGameDto {
     public String getWinner() {
         return winner;
     }
+
+    @Override
+    public String toString() {
+        return "ChessGameDto{" +
+            "id=" + id +
+            ", status=" + status +
+            ", blackScore=" + blackScore +
+            ", whiteScore=" + whiteScore +
+            ", currentColor=" + currentColor +
+            ", winner='" + winner + '\'' +
+            '}';
+    }
 }

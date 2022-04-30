@@ -120,6 +120,7 @@ public class SpringChessService {
         return chessWebGame.createMap();
     }
 
+    @Transactional(readOnly = true)
     public ScoreDto getStatus(final long roomId) {
         final ChessWebGame chessWebGame = loadChessWebGame(roomId);
         final Map<String, Double> scores = chessWebGame.getScoreStatus();

@@ -14,7 +14,7 @@ public class FakeGameDao implements GameDao {
     private Map<Long, GameDto> games = new HashMap<>();
 
     @Override
-    public long save(GameDto gameDto) {
+    public Long save(GameDto gameDto) {
         games.put(id, gameDto);
         return id++;
     }

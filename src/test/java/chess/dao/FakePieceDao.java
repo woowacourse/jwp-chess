@@ -13,7 +13,7 @@ public class FakePieceDao implements PieceDao {
     private Map<String, PieceDto> pieces = new HashMap<>();
 
     @Override
-    public void removeByPosition(Position position) {
+    public void removeByPosition(Long gameId, Position position) {
         String positionName = position.getName();
         pieces.remove(positionName);
     }
@@ -36,21 +36,8 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public List<PieceDto> findAll() {
-        return new ArrayList<>(pieces.values());
-    }
-
-    @Override
     public List<PieceDto> findPiecesByGameId(Long gameId) {
         return new ArrayList<>(pieces.values());
-    }
-
-    @Override
-    public void updatePosition(Position position, Position updatedPosition) {
-        PieceDto pieceDto = pieces.get(position.getName());
-        pieceDto.setPosition(updatedPosition.getName());
-        pieces.remove(position.getName());
-        pieces.put(updatedPosition.getName(), pieceDto);
     }
 
     @Override

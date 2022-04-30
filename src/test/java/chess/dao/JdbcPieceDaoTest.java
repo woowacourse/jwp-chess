@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Sql("classpath:init.sql")
@@ -35,70 +36,96 @@ public class JdbcPieceDaoTest {
     @Test
     @DisplayName("기물 정보 삭제")
     void remove() {
-        PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
+        // given
+        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        PieceDto pieceDto = new PieceDto("a2", "white", "pawn", id);
         pieceDao.save(pieceDto);
 
-        pieceDao.removeByPosition(Position.of("a2"));
+        // when
+        pieceDao.removeByPosition(id, Position.of("a2"));
 
-        assertThat(getPieceCount()).isEqualTo(0);
+        // then
+        assertThat(getPieceCount(id)).isEqualTo(0);
     }
 
     @Test
     @DisplayName("전체 기물 정보 삭제")
     void removeAll() {
-        PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
-        PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
+        // given
+        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", id);
+        PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", id);
         pieceDao.save(pieceDtoA2);
         pieceDao.save(pieceDtoA3);
 
+        // when
         pieceDao.removeAll();
 
-        assertThat(getPieceCount()).isEqualTo(0);
+        // then
+        assertThat(getPieceCount(id)).isEqualTo(0);
     }
 
     @Test
     @DisplayName("전체 기물 정보 저장")
     void saveAll() {
-        PieceDto pieceDtoA2 = PieceDto.of("a2", "white", "pawn");
-        PieceDto pieceDtoA3 = PieceDto.of("a3", "white", "pawn");
+        // given
+        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", id);
+        PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", id);
 
+        // when
         pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
 
-        assertThat(getPieceCount()).isEqualTo(2);
+        // then
+        assertThat(getPieceCount(id)).isEqualTo(2);
     }
 
     @Test
     @DisplayName("기물 정보 저장")
     void save() {
-        PieceDto pieceDto = PieceDto.of("a2", "white", "pawn");
+        // given
+        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        PieceDto pieceDto = new PieceDto("a2", "white", "pawn", id);
+
+        // when
         pieceDao.save(pieceDto);
 
-        assertThat(getPieceCount()).isEqualTo(1);
+        // then
+        assertThat(getPieceCount(id)).isEqualTo(1);
     }
 
     @Test
     @DisplayName("전체 기물 정보 조회")
     void findAll() {
-        long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
-        PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", 1L);
-        PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", 1L);
+        // given
+        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", id);
+        PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", id);
         pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
 
+        // when
         List<PieceDto> pieceDtos = pieceDao.findPiecesByGameId(id);
 
-        assertThat(pieceDtos).containsOnly(pieceDtoA2, pieceDtoA3);
+        // then
+        assertAll(
+                () -> assertThat(pieceDtos.size()).isEqualTo(2),
+                () -> assertThat(pieceDtos).containsOnly(pieceDtoA2, pieceDtoA3)
+        );
     }
 
     @Test
     @DisplayName("기물 정보 수정")
     void update() {
-        long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
-        PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", 1L);
-        PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", 1L);
+        // given
+        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", id);
+        PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", id);
         pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
 
+        // when
         pieceDao.updatePosition(id, Position.of("a2"), Position.of("a5"));
 
+        // then
         assertThatCode(
                 () -> jdbcTemplate.queryForObject(
                         "select * from piece where position = 'a5'",
@@ -112,7 +139,7 @@ public class JdbcPieceDaoTest {
         ).doesNotThrowAnyException();
     }
 
-    private Integer getPieceCount() {
-        return jdbcTemplate.queryForObject("select count(*) from piece", Integer.class);
+    private Integer getPieceCount(Long id) {
+        return jdbcTemplate.queryForObject("select count(*) from piece where game_id = " + id, Integer.class);
     }
 }

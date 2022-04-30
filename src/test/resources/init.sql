@@ -19,5 +19,5 @@ create table piece
     color    varchar(20) not null,
     game_id  int         not null,
     primary key (id),
-    foreign key (game_id) references game (id)
+    foreign key (game_id) references game (id) on delete cascade
 );

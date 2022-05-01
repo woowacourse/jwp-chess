@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class RoomDao {
-    private static final int TRASH_ID = -1;
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<RoomDto> roomDtoRowMapper = (resultSet, rowNum) -> new RoomDto(
@@ -31,11 +30,6 @@ public class RoomDao {
                 roomDto.getStatus());
     }
 
-    /*public RoomDto findById(int gameId) {
-        String sql = "select * from room where game_id=?";
-        return jdbcTemplate.queryForObject(sql, roomDtoRowMapper, gameId);
-    }*/
-
     public List<RoomDto> findAll() {
         String sql = "select * from room";
         return jdbcTemplate.query(sql, roomDtoRowMapper);
@@ -48,11 +42,6 @@ public class RoomDao {
 
     public String findPasswordById(int gameId) {
         String sql = "select room_password from room where game_id=?";
-        return jdbcTemplate.queryForObject(sql, String.class, gameId);
-    }
-
-    public String findStatusById(int gameId) {
-        String sql = "select status from room where game_id=?";
         return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }
 

@@ -17,7 +17,6 @@ import chess.dto.ChessGameDto;
 import chess.dto.DeleteRequestDto;
 import chess.dto.DeleteResponseDto;
 import chess.dto.RoomDto;
-import java.util.HashMap;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,20 +25,15 @@ import java.util.stream.Collectors;
 
 @Service
 public final class ChessService {
-    private static final int GAME_ID = 0;
 
     private final GameDao gameDao;
     private final RoomDao roomDao;
     private final PieceDao pieceDao;
-    private int nextGameId = 0;
-    private final Map<Integer, ChessGame> chessGames;
-    private ChessGame chessGame;
 
     public ChessService(GameDao gameDao, RoomDao roomDao, PieceDao pieceDao) {
         this.gameDao = gameDao;
         this.roomDao = roomDao;
         this.pieceDao = pieceDao;
-        this.chessGames = new HashMap<>();
     }
 
     private void saveAllPieceToStorage(int gameId, Map<Position, Piece> boardElements) {
@@ -68,6 +62,7 @@ public final class ChessService {
     }
 
     public ChessGameDto move(int gameId, final String from, final String to) {
+        ChessGame chessGame = new ChessGame(StateFactory.of(getColorFromStorage(gameId), getBoardFromStorage(gameId)));
         chessGame.move(Position.from(from), Position.from(to));
         final var nextColor = getColorFromStorage(gameId).next();
         updateBoard(from, to, gameId, nextColor.name());
@@ -82,7 +77,7 @@ public final class ChessService {
 
     public ChessGameDto newGame(int gameId) {
         initGame(gameId);
-        chessGame = new ChessGame(new Running(getColorFromStorage(gameId), getBoardFromStorage(gameId)));
+        ChessGame chessGame = new ChessGame(new Running(getColorFromStorage(gameId), getBoardFromStorage(gameId)));
         return new ChessGameDto(pieceDao.findAllPieceById(gameId), chessGame.status());
     }
 
@@ -94,7 +89,7 @@ public final class ChessService {
     }
 
     public ChessGameDto loadGame(int gameId) {
-        chessGame = new ChessGame(StateFactory.of(getColorFromStorage(gameId), getBoardFromStorage(gameId)));
+        ChessGame chessGame = new ChessGame(StateFactory.of(getColorFromStorage(gameId), getBoardFromStorage(gameId)));
         return new ChessGameDto(pieceDao.findAllPieceById(gameId), chessGame.status());
     }
 
@@ -107,32 +102,16 @@ public final class ChessService {
     }
 
     public void createRoom(String roomName, String password) {
-        RoomDto roomDto = new RoomDto(nextGameId++, roomName, password, "STOP");
-        deleteOldData(roomDto.getId());
-        ChessGame chessGame = makeGame(roomDto.getId(), roomDto);
-        chessGames.put(roomDto.getId(), chessGame);
-    }
-
-    private void deleteOldData(int gameId) {
-        chessGames.remove(gameId);
-        pieceDao.deleteAllPieceById(gameId);
-        roomDao.deleteRoom(gameId);
-        gameDao.deleteGame(gameId);
-    }
-
-    private ChessGame makeGame(int gameId, RoomDto roomDto) {
-        initNewChessGame(gameId, roomDto);
-        return new ChessGame(new Running(getColorFromStorage(gameId),
-                getBoardFromStorage(gameId)));
-    }
-
-    private void initNewChessGame(int gameId, RoomDto roomDto) {
-        gameDao.insertGame(gameId, "WHITE");
+        int gameId = gameDao.insertWithKeyHolder("WHITE");
+        RoomDto roomDto = new RoomDto(gameId, roomName, password, "STOP");
         roomDao.saveRoom(roomDto);
         saveAllPieceToStorage(gameId, new BoardInitializer().init());
     }
 
     public List<RoomDto> loadRooms() {
+        for (RoomDto roomDto : roomDao.findAll()) {
+            System.out.println(roomDto.getId());
+        }
         return roomDao.findAll();
     }
 

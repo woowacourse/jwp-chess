@@ -40,7 +40,7 @@ public class GameController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteGame(@RequestBody RemoveRoomDto removeRoomDto) {
+    public ResponseEntity<Void> deleteGame(@RequestBody RemoveRoomDto removeRoomDto) {
         chessGameService.deleteRoom(removeRoomDto.getRoomId(), removeRoomDto.getPassword());
         return ResponseEntity.noContent().build();
     }

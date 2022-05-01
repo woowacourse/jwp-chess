@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.controller.request.RoomCreationRequest;
+import chess.controller.response.RoomResponse;
 import chess.dto.GameDto;
 import chess.serviece.ChessGameService;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -24,8 +26,12 @@ public class HomeController {
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity<List<GameDto>> getRooms() {
-        return ResponseEntity.ok().body(chessGameService.getAllGames());
+    public ResponseEntity<List<RoomResponse>> getRooms() {
+        List<GameDto> games = chessGameService.getAllGames();
+        List<RoomResponse> roomResponses = games.stream()
+                .map(RoomResponse::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(roomResponses);
     }
 
     @PostMapping(value = "/rooms")

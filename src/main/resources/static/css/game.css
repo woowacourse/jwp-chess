@@ -1,0 +1,24 @@
+td img {
+    max-width: 100%;
+}
+
+#chess-board td {
+    max-width: 50px;
+    width: 50px;
+    max-height: 50px;
+    height: 50px;
+    text-align: center;
+}
+
+#chess-board td.clicked {
+    background-color: #FCE77D !important;
+}
+
+#team-score, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+#team-score th, td {
+  padding: 5px;
+  text-align: left;
+}

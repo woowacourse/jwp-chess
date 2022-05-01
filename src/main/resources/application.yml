@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:13306/woowa-chess
+    username: woowa-chess
+    password: 1234
+    schema: classpath*:schema.sql
+    initialization-mode: always
+server:
+  servlet:
+    session:
+      timeout: 600

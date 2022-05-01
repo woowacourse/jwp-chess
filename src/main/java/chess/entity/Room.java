@@ -2,6 +2,8 @@ package chess.entity;
 
 public class Room {
 
+    private static final String PLAYING_STATE_VALUE = "playing";
+
     private final int roomId;
     private final String name;
     private final String password;
@@ -17,6 +19,12 @@ public class Room {
         this.turn = turn;
     }
 
+    public void validatePassword(final String password) {
+        if (!this.password.equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
     public int getRoomId() {
         return roomId;
     }
@@ -25,12 +33,8 @@ public class Room {
         return name;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getGameState() {
-        return gameState;
+    public boolean isPlayingState() {
+        return gameState.equals(PLAYING_STATE_VALUE);
     }
 
     public String getTurn() {

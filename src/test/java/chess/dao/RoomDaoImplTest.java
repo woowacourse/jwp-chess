@@ -74,15 +74,15 @@ class RoomDaoImplTest {
     void saveGameState() {
         //given
         final int roomId = 1;
-        final String gameState = "ready";
+        final String gameState = "playing";
         roomDao.saveGameState(roomId, gameState);
 
         //when
-        final String actual = roomDao.findByRoomId(roomId)
-                .getGameState();
+        final boolean actual = roomDao.findByRoomId(roomId)
+                .isPlayingState();
 
         //then
-        assertThat(actual).isEqualTo(gameState);
+        assertThat(actual).isTrue();
     }
 
     @Test
@@ -93,8 +93,6 @@ class RoomDaoImplTest {
         //then
         assertAll(
                 () -> assertThat(room.getRoomId()).isEqualTo(1),
-                () -> assertThat(room.getGameState()).isEqualTo("ready"),
-                () -> assertThat(room.getPassword()).isEqualTo("1234"),
                 () -> assertThat(room.getTurn()).isEqualTo("WHITE"),
                 () -> assertThat(room.getName()).isEqualTo("first")
         );

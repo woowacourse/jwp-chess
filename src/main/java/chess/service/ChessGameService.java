@@ -17,6 +17,7 @@ import chess.domain.piece.Rook;
 import chess.domain.piece.Team;
 import chess.dto.PieceDto;
 import chess.dto.ScoreDto;
+import chess.entity.Room;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,9 +67,8 @@ public class ChessGameService {
     }
 
     private void checkGameIsAlreadyPlaying(final int roomId) {
-        final String gameState = roomDao.findByRoomId(roomId)
-                .getGameState();
-        if (gameState.equals(PLAYING_STATE_VALUE)) {
+        final Room room = roomDao.findByRoomId(roomId);
+        if (room.isPlayingState()) {
             throw new IllegalStateException("이미 진행중인 게임이 있습니다.");
         }
     }
@@ -99,9 +99,8 @@ public class ChessGameService {
     }
 
     private void checkGameIsPlaying(final int roomId) {
-        final String gameState = roomDao.findByRoomId(roomId)
-                .getGameState();
-        if (!gameState.equals(PLAYING_STATE_VALUE)) {
+        final Room room = roomDao.findByRoomId(roomId);
+        if (!room.isPlayingState()) {
             throw new IllegalStateException("진행중인 게임이 없습니다.");
         }
     }

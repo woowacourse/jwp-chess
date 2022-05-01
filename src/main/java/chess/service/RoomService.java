@@ -12,7 +12,6 @@ public class RoomService {
 
     private static final String DEFAULT_GAME_STATE = "ready";
     private static final String FIRST_TURN = "WHITE";
-    private static final String PLAYING_STATE_SYMBOL = "playing";
 
     private final RoomDao roomDao;
 
@@ -30,23 +29,11 @@ public class RoomService {
     public void deleteRoom(final int roomId, final String password) {
         final Room savedRoom = roomDao.findByRoomId(roomId);
 
-        if (isIncorrectPassword(savedRoom, password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-        if (isPlayingState(savedRoom)) {
+        savedRoom.validatePassword(password);
+        if (savedRoom.isPlayingState()) {
             throw new IllegalStateException("게임이 진행중인 체스방은 삭제할 수 없습니다.");
         }
         roomDao.deleteRoomByName(roomId);
-    }
-
-    private boolean isIncorrectPassword(final Room room, final String password) {
-        final String savedPassword = room.getPassword();
-        return !password.equals(savedPassword);
-    }
-
-    private boolean isPlayingState(final Room room) {
-        final String savedGameState = room.getGameState();
-        return savedGameState.equals(PLAYING_STATE_SYMBOL);
     }
 
     public List<RoomDto> getRoomNames() {

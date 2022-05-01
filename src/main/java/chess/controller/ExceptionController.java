@@ -12,8 +12,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ExceptionController {
 
     @ExceptionHandler(IllegalMoveException.class)
-    public String handleMove(RedirectAttributes redirectAttributes, IllegalMoveException e, HttpServletRequest request) {
-        redirectAttributes.addAttribute("error", e.getMessage());
+    public String handleMove(RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        redirectAttributes.addAttribute("error", "잘못된 이동입니다.");
 
         String referer = request.getHeader("Referer");
         String previousPath = URI.create(referer).getPath();

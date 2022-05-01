@@ -114,6 +114,9 @@ async function patchMove() {
         alert(body.message);
         return;
     }
+    if (body.status === 'RESULT') {
+        await getResult();
+    }
     await loadAllPiece();
 }
 

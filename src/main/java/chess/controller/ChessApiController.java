@@ -10,9 +10,9 @@ import chess.service.ChessMoveService;
 import java.util.Map;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +31,7 @@ public class ChessApiController {
         this.chessMoveService = chessMoveService;
     }
 
-    @PostMapping("/board/new")
+    @PostMapping("/board")
     public String startNewGame(@RequestBody RoomDto roomDto) {
         Long gameId = chessGameService.createGame(roomDto.getTitle(), roomDto.getPassword());
         return gameId.toString();
@@ -64,9 +64,9 @@ public class ChessApiController {
         return chessBoardService.getResult(gameId);
     }
 
-    @PatchMapping("/exit/{gameId}")
-    public void exit(@PathVariable Long gameId) {
-        chessGameService.exitGame(gameId);
+    @PutMapping("/end/{gameId}")
+    public void endGame(@PathVariable Long gameId) {
+        chessGameService.endGame(gameId);
     }
 
     @PostMapping("/restart/{gameId}")

@@ -68,7 +68,7 @@ public class ChessGameService {
         }
     }
 
-    public void exitGame(Long gameId) {
+    public void endGame(Long gameId) {
         gameDao.updateTurnByGameId(gameId, "end");
     }
 

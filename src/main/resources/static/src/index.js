@@ -18,7 +18,7 @@ function createNewGame() {
         return;
     }
 
-    fetch("/board/new", {
+    fetch("/board", {
         method: "post",
         headers: {
             "Content-Type": "application/json"
@@ -160,8 +160,8 @@ async function endGame(gameId) {
     const turnBox = document.getElementById("turn-box")
     turnBox.innerText = "게임 종료";
 
-    await fetch("/exit/" + gameId, {
-        method: "PATCH"
+    await fetch("/end/" + gameId, {
+        method: "PUT"
     });
 
     changeButton("restart");

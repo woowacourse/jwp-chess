@@ -8,10 +8,6 @@ import chess.model.board.BoardFactory;
 import chess.model.dao.GameDao;
 import chess.model.dao.PieceDao;
 import chess.model.dto.WebBoardDto;
-import chess.model.piece.Piece;
-import chess.model.position.Position;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -86,7 +82,7 @@ class ChessGameServiceTest {
     @Test
     @DisplayName("방 삭제 시 방 비밀번호가 틀린 경우 테스트")
     void deleteGameWithWrongPw() {
-        chessGameService.exitGame(gameId);
+        chessGameService.endGame(gameId);
 
         assertThatThrownBy(() -> chessGameService.deleteGame(gameId, "wrongPw"))
                 .isInstanceOf(IllegalDeleteRoomException.class)
@@ -96,7 +92,7 @@ class ChessGameServiceTest {
     @Test
     @DisplayName("방 삭제 테스트")
     void deleteGameTest() {
-        chessGameService.exitGame(gameId);
+        chessGameService.endGame(gameId);
         chessGameService.deleteGame(gameId, "pw1234");
 
         assertThat(chessGameService.getAllGamesWithIdAndTitle().keySet()).doesNotContain(gameId);
@@ -106,7 +102,7 @@ class ChessGameServiceTest {
     @Test
     @DisplayName("게임 종료 테스트")
     void exitGameTest() {
-        chessGameService.exitGame(gameId);
+        chessGameService.endGame(gameId);
 
         assertThat(chessGameService.getTurn(gameId)).isEqualTo("end");
     }

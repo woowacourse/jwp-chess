@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.dto.request.RoomRequest;
+import chess.dto.request.UserPasswordRequest;
 import chess.dto.response.RoomResponse;
 import chess.service.RoomService;
 import java.util.List;
@@ -32,7 +33,8 @@ public class ChessRoomController {
     }
 
     @PostMapping("delete/{id}")
-    public List<RoomResponse> delete(@PathVariable("id") String id) {
-        return roomService.deleteRoomFrom(id);
+    public List<RoomResponse> delete(@PathVariable("id") String id,
+                                     @RequestBody UserPasswordRequest userPasswordRequest) {
+        return roomService.deleteRoomFrom(id, userPasswordRequest);
     }
 }

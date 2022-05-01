@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ChessExceptionController {
 
     @ExceptionHandler(ClientException.class)
-    public ResponseEntity<ErrorMessageResponse> handleIllegalArgumentException(ClientException error) {
+    public ResponseEntity<ErrorMessageResponse> handleClientException(ClientException error) {
         return ResponseEntity.badRequest().body(new ErrorMessageResponse(error.getMessage()));
     }
 }

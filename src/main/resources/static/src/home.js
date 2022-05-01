@@ -27,7 +27,7 @@ function print(rooms) {
         roomDeleteButton.type = 'button';
         roomDeleteButton.value = '❌';
         roomDeleteButton.addEventListener('click', function () {
-            deleteRoom(value.id);
+            deleteRoom(room.id);
         })
         room.appendChild(roomDeleteButton);
         roomList.appendChild(room);
@@ -35,21 +35,23 @@ function print(rooms) {
 }
 
 async function deleteRoom(roomId) {
-    const room = document.querySelector(".room");
+    var password = prompt("비밀번호를 입력해주세요");
     const deleteUrl = "delete/" + roomId;
-    deleteGameDateAboutRoom(roomId);
     let rooms = await fetch(deleteUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-            name: roomName.value,
-            password: roomPassword.value,
-        }),
-    })
+        body: JSON.stringify(password)
+    });
+    if (rooms.status !== 200) {
+        const error = await rooms.json();
+        alert(error.message);
+        return;
+    }
     rooms = await rooms.json();
     print(rooms);
+    deleteGameDateAboutRoom(roomId);
 }
 
 async function deleteGameDateAboutRoom(roomId) {
@@ -58,11 +60,7 @@ async function deleteGameDateAboutRoom(roomId) {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            name: roomName.value,
-            password: roomPassword.value,
-        }),
+        }
     })
 }
 

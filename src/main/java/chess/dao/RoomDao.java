@@ -38,4 +38,9 @@ public class RoomDao {
         final String sql = "delete from room where id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    public String findPasswordById(String id) {
+        final String sql = "select password from room where id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
+    }
 }

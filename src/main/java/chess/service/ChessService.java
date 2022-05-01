@@ -121,10 +121,6 @@ public class ChessService {
         return new GameStateResponse(winningTeam, gameState.isRunning());
     }
 
-    public RoomResponse findRoom(long id) {
-        return chessRoomDao.findById(new GameIdRequest(id));
-    }
-
     public BoardResponse getBoard(long id) {
         List<PieceResponse> pieces = toBoardFormat().entrySet()
                 .stream()

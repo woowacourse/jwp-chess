@@ -16,6 +16,8 @@ import chess.entity.Room;
 @JdbcTest
 class RoomDaoImplTest {
 
+    private final String firstRoomPassword = "pw12345678";
+    private final String secondRoomPassword = "pw12345678";
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private RoomDaoImpl roomDao;
@@ -28,13 +30,13 @@ class RoomDaoImplTest {
         jdbcFixture.dropTable("square");
         jdbcFixture.dropTable("room");
         jdbcFixture.createRoomTable();
-        jdbcFixture.insertRoom("sojukang", "white", "pw");
+        jdbcFixture.insertRoom("sojukang", "white", firstRoomPassword);
     }
 
     @Test
     @DisplayName("Room을 새로 생성한다.")
     void save() {
-        Room room = new Room("hi", "pw");
+        Room room = new Room("hi", secondRoomPassword);
         roomDao.save(room);
         assertThat(roomDao.findByName("hi").get().getName()).isEqualTo("hi");
     }

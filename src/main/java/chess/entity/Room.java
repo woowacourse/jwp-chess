@@ -2,30 +2,48 @@ package chess.entity;
 
 import static chess.domain.piece.Color.*;
 
+import java.util.Objects;
+
 public class Room {
 
-    private final String name;
+    private static final int ID_UNASSIGNED = 0;
+    private final long id;
     private final String turn;
-    private long id;
-    private String password;
+    private final String name;
+    private final String password;
 
-    public Room(long id, String password, String turn, String name) {
+    public Room(long id, String name, String password, String turn) {
+        validateName(name);
+        validatePassword(password);
         this.id = id;
+        this.name = name;
         this.password = password;
         this.turn = turn;
-        this.name = name;
     }
 
     public Room(String name, String password) {
-        this.name = name;
-        this.password = password;
-        this.turn = EMPTY.getName();
+        this(ID_UNASSIGNED, name, password, EMPTY.getName());
     }
 
-    public Room(long id, String turn, String name) {
-        this.id = id;
-        this.turn = turn;
-        this.name = name;
+    public Room(long id, String name, String turn) {
+        this(id, name, null, turn);
+    }
+
+    private void validateName(String name) {
+        int length = name.length();
+        if (length < 1 || length > 20) {
+            throw new IllegalArgumentException("방 제목은 1 ~ 20자만 가능합니다.");
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (Objects.isNull(password)) {
+            return;
+        }
+        int length = password.length();
+        if (length < 10 || length > 20) {
+            throw new IllegalArgumentException("비밀번호는 10 ~ 20자만 가능합니다.");
+        }
     }
 
     public long getId() {

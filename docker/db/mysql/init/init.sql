@@ -5,8 +5,8 @@ create table room
 (
     id bigint not null auto_increment,
     name varchar(255) not null,
-    turn varchar(10) not null,
     password varchar(255) not null,
+    turn varchar(10) not null,
     unique (name),
     primary key (id)
 );

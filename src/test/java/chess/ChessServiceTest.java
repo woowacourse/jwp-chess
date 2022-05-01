@@ -20,21 +20,23 @@ public class ChessServiceTest {
     private final RoomDao roomDao = new FakeRoomDao();
     private final SquareDao squareDao = new FakeSquareDao();
     private long id;
+    private final String firstRoomPassword = "pw12345678";
+    private final String secondRoomPassword = "pw123456789";
 
     @BeforeEach
     void setUp() {
         chessService = new ChessService(roomDao, squareDao);
-        Room room = chessService.createRoom("roma", "pw");
+        Room room = chessService.createRoom("roma", firstRoomPassword);
         id = room.getId();
     }
 
     @Test
     @DisplayName("방 이름과 비밀번호를 받아 방을 생성한다.")
     void createRoom() {
-        Room actual = chessService.createRoom("sojukang", "pw");
+        Room actual = chessService.createRoom("sojukang", secondRoomPassword);
         assertAll(
             () -> assertThat(actual.getName()).isEqualTo("sojukang"),
-            () -> assertThat(actual.getPassword()).isEqualTo("pw")
+            () -> assertThat(actual.getPassword()).isEqualTo(secondRoomPassword)
         );
     }
 
@@ -62,7 +64,7 @@ public class ChessServiceTest {
     @Test
     @DisplayName("모든 방의 목록(2개)을 조회한다.")
     void findAllRooms() {
-        chessService.createRoom("sojukang", "pw");
+        chessService.createRoom("sojukang", secondRoomPassword);
         assertThat(chessService.findAllRooms()).hasSize(2);
     }
 
@@ -94,13 +96,13 @@ public class ChessServiceTest {
     @Test
     @DisplayName("delete로 id, password를 받아 Room, square 정보를 지운다.")
     void delete() {
-        assertThat(chessService.delete(id, "pw")).isTrue();
+        assertThat(chessService.delete(id, firstRoomPassword)).isTrue();
     }
 
     @Test
     @DisplayName("delete로 password가 옳지 않은 경우 Exception을 던진다.")
     void deleteInvalidPasswordException() {
-        assertThatThrownBy(() -> chessService.delete(id, "pww"))
+        assertThatThrownBy(() -> chessService.delete(id, firstRoomPassword + "1"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessageContaining("Password");
     }
@@ -109,7 +111,7 @@ public class ChessServiceTest {
     @DisplayName("delete로 현재 상태가 empty가 아닐 때 삭제 시도할 경우 Exception을 던진다.")
     void deleteNotAllowedException() {
         chessService.startNewGame(id);
-        assertThatThrownBy(() -> chessService.delete(id, "pw"))
+        assertThatThrownBy(() -> chessService.delete(id, firstRoomPassword))
             .isInstanceOf(IllegalStateException.class)
             .hasMessageContaining("진행중");
     }

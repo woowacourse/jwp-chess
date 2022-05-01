@@ -21,8 +21,8 @@ public class JdbcFixture {
         jdbcTemplate.execute("create table room ("
             + " id bigint not null auto_increment,"
             + " name VARCHAR(255) not null,"
-            + " turn varchar(10) not null,"
             + " password varchar(255) not null,"
+            + " turn varchar(10) not null,"
             + " primary key (id))");
     }
 
@@ -38,7 +38,7 @@ public class JdbcFixture {
     }
 
     public void insertRoom(String name, String turn, String password) {
-        jdbcTemplate.update("INSERT INTO room(name, turn, password) VALUES (?, ?, ?)", name, turn, password);
+        jdbcTemplate.update("INSERT INTO room(name, password, turn) VALUES (?, ?, ?)", name, password, turn);
     }
 
     public void insertSquares(List<String> squares) {

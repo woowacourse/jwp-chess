@@ -38,7 +38,7 @@ class ChessControllerTest {
         jdbcFixture.dropTable("room");
         jdbcFixture.createRoomTable();
         jdbcFixture.createSquareTable();
-        jdbcFixture.insertRoom("roma", "white", "pw");
+        jdbcFixture.insertRoom("roma", "white", "pw12345678");
     }
 
     @Test
@@ -55,7 +55,7 @@ class ChessControllerTest {
     @DisplayName("새로운 방 생성 여부를 검증한다.")
     void create() {
         RestAssured.given().log().all()
-            .body("name=sojukang&password=123")
+            .body("name=sojukang&password=1234567890")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .when().post("/rooms")
             .then().log().all()
@@ -67,7 +67,7 @@ class ChessControllerTest {
     @DisplayName("이미 존재하는 이름일 경우 400대 응답을 던진다.")
     void createExceptionAlreadyExists() {
         RestAssured.given().log().all()
-            .body("name=roma&password=pw")
+            .body("name=roma&password=pw12345678")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .when().post("/rooms")
             .then().log().all()
@@ -105,7 +105,7 @@ class ChessControllerTest {
     @DisplayName("전체 방 조회 기능을 검증한다.")
     void findAllRooms() {
         RestAssured.given().log().all()
-            .body("name=sojukang&password=123")
+            .body("name=sojukang&password=1234567890")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .when().post("/rooms");
 
@@ -196,13 +196,13 @@ class ChessControllerTest {
     @DisplayName("방 삭제 기능을 검증한다.")
     void delete() {
         RestAssured.given().log().all()
-            .body("name=sojukang&password=123")
+            .body("name=sojukang&password=1234567890")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .when().post("/rooms");
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-            .body("password=123")
+            .body("password=1234567890")
             .when().delete("/rooms/" + (id + 1))
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
@@ -225,13 +225,13 @@ class ChessControllerTest {
     @DisplayName("비밀번호가 틀릴 경우 400대 응답을 던진다.")
     void deleteInvalidPassword() {
         RestAssured.given().log().all()
-            .body("name=sojukang&password=123")
+            .body("name=sojukang&password=1234567890")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
             .when().post("/rooms");
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-            .body("password=1234")
+            .body("password=12345678901")
             .when().delete("/rooms/" + (id + 1))
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())

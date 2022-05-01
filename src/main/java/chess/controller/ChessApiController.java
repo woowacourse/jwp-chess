@@ -3,6 +3,7 @@ package chess.controller;
 import chess.dto.MoveRequest;
 import chess.dto.ScoreDto;
 import chess.service.ChessService;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,7 @@ public class ChessApiController {
     }
 
     @PatchMapping("/room/{roomId}/move")
-    public ResponseEntity<Boolean> move(@RequestBody MoveRequest moveRequest, @PathVariable int roomId) {
+    public ResponseEntity<Boolean> move(@RequestBody @Valid MoveRequest moveRequest, @PathVariable int roomId) {
         chessService.move(moveRequest.getSource(), moveRequest.getTarget(), roomId);
         return ResponseEntity.ok().body(chessService.isEnd(roomId));
     }

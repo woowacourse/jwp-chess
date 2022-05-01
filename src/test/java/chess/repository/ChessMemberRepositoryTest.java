@@ -24,6 +24,7 @@ class ChessMemberRepositoryTest {
     private final ChessMemberRepository chessMemberRepository;
     private final ChessBoardRepository chessBoardRepository;
     private final ChessRoomRepository chessRoomRepository;
+    private int roomId;
 
     @Autowired
     ChessMemberRepositoryTest(JdbcTemplate jdbcTemplate) {
@@ -31,8 +32,6 @@ class ChessMemberRepositoryTest {
         chessBoardRepository = new ChessBoardRepository(jdbcTemplate);
         chessRoomRepository = new ChessRoomRepository(jdbcTemplate);
     }
-
-    private int roomId;
 
     @BeforeEach
     void setup() {

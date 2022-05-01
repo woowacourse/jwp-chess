@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import chess.util.ChessGameAlreadyFinishException;
 import chess.util.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,7 +135,7 @@ public class ChessService {
 
     private void validateGameOver(final RoomEntity room) {
         if (room.isGameOver()) {
-            throw new IllegalArgumentException("[ERROR] 이미 종료된 게임입니다.");
+            throw new ChessGameAlreadyFinishException("[ERROR] 이미 종료된 게임입니다.");
         }
     }
 

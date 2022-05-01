@@ -15,6 +15,7 @@ import chess.dto.response.RoomsResponseDto;
 import chess.entity.BoardEntity;
 import chess.repository.BoardRepository;
 import chess.repository.RoomRepository;
+import chess.util.ChessGameAlreadyFinishException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,7 @@ class ChessServiceTest {
         chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
 
         assertThatThrownBy(() -> chessService.enterRoom(id))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(ChessGameAlreadyFinishException.class)
             .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }
 
@@ -112,7 +113,7 @@ class ChessServiceTest {
         chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
 
         assertThatThrownBy(() -> chessService.move(id, new MoveRequestDto("a2", "a4")))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(ChessGameAlreadyFinishException.class)
             .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }
 
@@ -132,7 +133,7 @@ class ChessServiceTest {
         chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
 
         assertThatThrownBy(() -> chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD)))
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(ChessGameAlreadyFinishException.class)
             .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }
 
@@ -171,7 +172,7 @@ class ChessServiceTest {
         final Long id = createTestRoom("체스 초보만").getId();
         chessService.endRoom(id, new RoomAccessRequestDto(ROOM_PASSWORD));
         assertThatThrownBy(() -> chessService.updateRoomName(id, new RoomRequestDto("체스 왕 초보만", "1234")))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ChessGameAlreadyFinishException.class)
                 .hasMessage("[ERROR] 이미 종료된 게임입니다.");
     }
 

@@ -58,6 +58,12 @@ class ChessServiceTest {
     }
 
     @Test
+    @DisplayName("기물을 정상적으로 움직일 수 있어야 합니다.")
+    void move() {
+        assertDoesNotThrow(() -> chessService.move("a2", "a4", savedId));
+    }
+
+    @Test
     @DisplayName("진행중인 게임을 삭제하면 예외를 반환해야 합니다.")
     void deleteNotEndGame() {
         assertThatThrownBy(() -> chessService.delete("1234", savedId))
@@ -85,5 +91,12 @@ class ChessServiceTest {
     void end() {
         chessService.finish(Command.from("end"), savedId);
         assertThat(chessService.isEnd(savedId)).isTrue();
+    }
+
+    @Test
+    @DisplayName("게임을 종료하면 이긴 팀의 이름을 반환해야 합니다.")
+    void finish() {
+        String teamName = chessService.finish(Command.from("end"), savedId);
+        assertThat(teamName).isEqualTo("DRAW");
     }
 }

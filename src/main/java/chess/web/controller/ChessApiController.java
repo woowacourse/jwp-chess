@@ -1,7 +1,6 @@
 package chess.web.controller;
 
 import chess.domain.board.Board;
-import chess.domain.entity.Room;
 import chess.web.controller.dto.*;
 import chess.web.service.ChessService;
 import chess.web.service.RoomService;
@@ -58,16 +57,9 @@ public class ChessApiController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}/password")
-    public ResponseEntity<RoomResponse.Password> getPassword(@PathVariable Long id) {
-        Room room = roomService.getRoom(id);
-        return ResponseEntity.ok().body(new RoomResponse.Password(room));
-    }
-
-    @GetMapping("/{id}/check")
-    public ResponseEntity<RoomResponse.PasswordAndFinish> checkDelete(@PathVariable Long id) {
-        Room room = roomService.getRoom(id);
-        Board board = chessService.loadGame(id);
-        return ResponseEntity.ok().body(new RoomResponse.PasswordAndFinish(room, board.isDeadKing()));
+    @PostMapping("/{id}/join")
+    public ResponseEntity<Void> getJoin(@RequestBody RoomRequest.Password request, @PathVariable Long id) {
+        roomService.checkJoinRoom(request.getPassword(), id);
+        return ResponseEntity.ok().build();
     }
 }

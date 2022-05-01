@@ -20,34 +20,4 @@ public class RoomResponse {
             return title;
         }
     }
-
-    public static class PasswordAndFinish {
-        private final String password;
-        private final boolean finish;
-
-        public PasswordAndFinish(Room room, boolean finish) {
-            this.password = room.getPassword();
-            this.finish = finish;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public boolean isFinish() {
-            return finish;
-        }
-    }
-
-    public static class Password {
-        private final String password;
-
-        public Password(Room room) {
-            this.password = room.getPassword();
-        }
-
-        public String getPassword() {
-            return password;
-        }
-    }
 }

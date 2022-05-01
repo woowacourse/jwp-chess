@@ -65,8 +65,9 @@ public class RoomService {
         return roomDao.findAll();
     }
 
-    public Room getRoom(Long id) {
-        return roomDao.findById(id)
-                .orElseThrow(IllegalArgumentException::new);
+    public void checkJoinRoom(String password, Long id) {
+        Room room = roomDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 방을 찾을수가 없습니다."));
+        validateCorrectPassword(password, room);
     }
 }

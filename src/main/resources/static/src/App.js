@@ -165,51 +165,47 @@ function move() {
     }
 }
 
-function enterCheckPassword(id) {
-    var pass = prompt('패스워드를 입력하세요');
-    fetch('/api/chess/' + id + '/password' )
-        .then(res => res.json())
-        .then(res => {
-            if (res["password"] === pass) {
-                window.location.href = "/room/" + id
-                return;
-            }
-            window.alert("비밀번호가 틀렸습니다!")
-        })
-}
-
-function deleteCheckPassword(id) {
-    var pass = prompt('패스워드를 입력하세요');
-
-    fetch('/api/chess/' + id + '/check' )
-        .then(res => res.json())
-        .then(res => {
-            if (res["password"] !== pass) {
-                window.alert("비밀번호가 틀렸습니다! 삭제에 실패했습니다.")
-                return;
-            }
-            if (res["finish"] === false) {
-                window.alert("게임이 끝나지 않았습니다! 삭제에 실패했습니다.");
-                return;
-            }
-            deleteRoom(id, res["password"])
-            window.alert("성공적으로 삭제가 되었습니다!");
-            goHome();
-        })
-}
-
-function deleteRoom(id, password) {
+function enterRoom(id) {
+    var password = prompt('패스워드를 입력하세요');
     const request = {
         password: password
     }
+    fetch('/api/chess/' + id + '/join', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw res
+            }
+            window.location.href = "/room/" + id
+            return;
+        }).catch(error => {
+        error.text().then(msg => alert(msg))
+    })
+}
 
-    fetch('/api/chess' + id, {
+function deleteRoom(id) {
+    var password = prompt('패스워드를 입력하세요');
+    const request = {
+        password: password
+    }
+    fetch('/api/chess/' + id, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(request),
-    }).then(res => res.json())
+    }).then(res => {
+        if (!res.ok) {
+            throw res
+        }
+    }).catch(error => {
+        error.text().then(msg => alert(msg))
+    })
 }
 
 function goHome() {

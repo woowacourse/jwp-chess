@@ -7,7 +7,7 @@ import java.util.Map;
 import chess.dao.GameDao;
 import chess.domain.piece.PieceColor;
 import chess.dto.response.ChessGameDto;
-import chess.dto.response.RoomDto;
+import chess.entity.Room;
 
 public class GameDaoFake implements GameDao {
     private final Map<Integer, PieceColor> fakeGame = new HashMap<>();
@@ -40,7 +40,7 @@ public class GameDaoFake implements GameDao {
     }
 
     @Override
-    public List<RoomDto> inquireAllRooms() {
+    public List<Room> inquireAllRooms() {
         return null;
     }
 

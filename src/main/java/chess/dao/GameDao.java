@@ -3,7 +3,7 @@ package chess.dao;
 import java.util.List;
 
 import chess.dto.response.ChessGameDto;
-import chess.dto.response.RoomDto;
+import chess.entity.Room;
 
 public interface GameDao {
     ChessGameDto getGame(int gameId);
@@ -16,7 +16,7 @@ public interface GameDao {
 
     void updateTurnToBlack(int gameId);
 
-    List<RoomDto> inquireAllRooms();
+    List<Room> inquireAllRooms();
 
     String getPasswordById(int gameId);
 }

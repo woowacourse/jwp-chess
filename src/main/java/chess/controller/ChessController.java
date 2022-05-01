@@ -3,6 +3,7 @@ package chess.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +25,7 @@ import chess.dto.request.MovePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.CommandResultDto;
 import chess.dto.response.RoomDto;
+import chess.entity.Room;
 import chess.service.ChessService;
 
 @RestController
@@ -31,6 +33,7 @@ public class ChessController {
     private static final String PIECE_NAME_FORMAT = "%s_%s";
     private static final String WHITE_PIECE_COLOR_NAME = "WHITE";
     private static final String BLACK_PIECE_COLOR_NAME = "BLACK";
+    private static final String MESSAGE_DELETE_SUCCESSFULLY = "삭제되었습니다!";
 
     private final ChessService chessService;
 
@@ -114,8 +117,10 @@ public class ChessController {
 
     @GetMapping("/room")
     public List<RoomDto> inquireRooms() {
-        List<RoomDto> rooms = chessService.getRooms();
-        return rooms;
+        List<Room> rooms = chessService.getRooms();
+        return rooms.stream()
+            .map(room -> new RoomDto(room.getId(), room.getName()))
+            .collect(Collectors.toList());
     }
 
     @DeleteMapping("/room")
@@ -124,7 +129,7 @@ public class ChessController {
         String inputPassword = deleteRoomDto.getPassword();
 
         chessService.deleteRoom(gameId, inputPassword);
-        return new CommandResultDto("삭제되었습니다!");
+        return new CommandResultDto(MESSAGE_DELETE_SUCCESSFULLY);
     }
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})

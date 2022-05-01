@@ -10,7 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import chess.dto.response.ChessGameDto;
-import chess.dto.response.RoomDto;
+import chess.entity.Room;
 
 @Repository
 public class GameDaoImpl implements GameDao {
@@ -61,12 +61,14 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public List<RoomDto> inquireAllRooms() {
-        String query = String.format("SELECT id, name FROM %s", TABLE_NAME);
-        List<RoomDto> rooms = jdbcTemplate.query(query, (resultSet, rowNum) -> {
+    public List<Room> inquireAllRooms() {
+        String query = String.format("SELECT * FROM %s", TABLE_NAME);
+        List<Room> rooms = jdbcTemplate.query(query, (resultSet, rowNum) -> {
             int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
-            return new RoomDto(id, name);
+            String turn = resultSet.getString("turn");
+            String password = resultSet.getString("password");
+            return new Room(id, turn, name, password);
         });
         return rooms;
     }

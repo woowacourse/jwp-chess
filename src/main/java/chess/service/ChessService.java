@@ -17,7 +17,7 @@ import chess.dto.request.CreatePieceDto;
 import chess.dto.request.DeletePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.ChessGameDto;
-import chess.dto.response.RoomDto;
+import chess.entity.Room;
 
 @Service
 public class ChessService {
@@ -97,7 +97,7 @@ public class ChessService {
         return boardDao.getBoard(gameId);
     }
 
-    public List<RoomDto> getRooms() {
+    public List<Room> getRooms() {
         return gameDao.inquireAllRooms();
     }
 

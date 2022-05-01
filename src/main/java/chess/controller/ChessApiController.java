@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.domain.Status;
+import chess.domain.game.Status;
 import chess.dto.BoardDto;
 import chess.dto.MessageDto;
 import chess.dto.MoveDto;

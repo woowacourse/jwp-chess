@@ -2,10 +2,10 @@ package chess.service;
 
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
-import chess.domain.ChessBoard;
-import chess.domain.ChessGame;
-import chess.domain.ChessRoom;
-import chess.domain.Status;
+import chess.domain.game.ChessBoard;
+import chess.domain.game.ChessGame;
+import chess.domain.game.ChessRoom;
+import chess.domain.game.Status;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;

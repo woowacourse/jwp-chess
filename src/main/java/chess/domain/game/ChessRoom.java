@@ -1,10 +1,11 @@
-package chess.domain;
+package chess.domain.game;
 
 import chess.domain.piece.Color;
 
 public class ChessRoom {
 
     private static final int PASSWORD_LIMIT_LENGTH = 30;
+    public static final int NAME_LIMIT_LENGTH = 255;
 
     private final String name;
     private final String password;
@@ -12,6 +13,7 @@ public class ChessRoom {
 
     public ChessRoom(String name, String password, ChessGame chessGame) {
         validateNameEmpty(name);
+        validateNameLength(name);
         validatePasswordLength(password);
 
         this.name = name;
@@ -21,6 +23,12 @@ public class ChessRoom {
 
     public ChessRoom(String name, String password, String turnValue) {
         this(name, password, new ChessGame(Color.of(turnValue)));
+    }
+
+    private void validateNameLength(String name) {
+        if (name.length() > NAME_LIMIT_LENGTH) {
+            throw new IllegalArgumentException("이름은 255자 이하여야합니다.");
+        }
     }
 
     private void validatePasswordLength(String password) {

@@ -8,7 +8,7 @@ import chess.dao.FakeRoomDao;
 import chess.dao.FakeSquareDao;
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
-import chess.domain.Status;
+import chess.domain.game.Status;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
 import chess.dto.PasswordDto;

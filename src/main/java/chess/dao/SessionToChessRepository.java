@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.dao;
 
 import chess.domain.board.ChessBoard;
 import java.time.Duration;

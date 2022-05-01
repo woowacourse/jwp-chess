@@ -15,7 +15,7 @@ import chess.domain.gameflow.AlternatingGameFlow;
 import chess.domain.gameflow.GameFlow;
 import chess.dto.request.web.SaveGameRequest;
 import chess.dto.response.web.GameResponse;
-import chess.repository.SessionToChessRepository;
+import chess.dao.SessionToChessRepository;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -81,10 +81,5 @@ public class ChessService {
     public void delete(HttpSession session) {
         sessionToChessRepository.get(session);
         sessionToChessRepository.delete(session);
-    }
-
-    @Transactional
-    public void clearAll() {
-        gameDao.deleteAll();
     }
 }

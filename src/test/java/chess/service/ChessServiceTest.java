@@ -14,7 +14,7 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.dto.request.web.SaveGameRequest;
 import chess.dto.response.web.GameResponse;
-import chess.repository.SessionToChessRepository;
+import chess.dao.SessionToChessRepository;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;

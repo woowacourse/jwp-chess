@@ -53,7 +53,7 @@ public class RoomDao {
     }
 
     public boolean isExistName(final Long id) {
-        final String sql = "select exists (select id from rooms where id = ?)";
+        final String sql = "SELECT EXISTS (SELECT id FROM rooms WHERE id = ?)";
         return jdbcTemplate.queryForObject(sql, Long.class, id) == IS_EXIST;
     }
 

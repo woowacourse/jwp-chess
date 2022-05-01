@@ -20,7 +20,6 @@ public class PieceDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
 
-
     public PieceDao(final JdbcTemplate jdbcTemplate, final DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(dataSource)
@@ -39,7 +38,7 @@ public class PieceDao {
     }
 
     public List<PieceEntity> findAllByRoomId(final Long roomId) {
-        final String sql = "select * from pieces where room_id = ?";
+        final String sql = "SELECT * FROM pieces WHERE room_id = ?";
         return jdbcTemplate.query(sql, rowMapper(), roomId);
     }
 
@@ -54,17 +53,17 @@ public class PieceDao {
     }
 
     public PieceEntity findByRoomIdAndPosition(final Long roomId, final String position) {
-        final String sql = "select * from pieces where room_id = ? and position = ?";
+        final String sql = "SELECT * FROM pieces WHERE room_id = ? AND position = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper(), roomId, position);
     }
 
     public void updatePositionByRoomId(final Long roomId, final String from, final String to) {
-        final String sql = "update pieces set position = ? where room_id = ? and position = ?";
+        final String sql = "UPDATE pieces SET position = ? WHERE room_id = ? AND position = ?";
         jdbcTemplate.update(sql, to, roomId, from);
     }
 
     public void deleteByRoomIdAndPosition(final Long roomId, final String position) {
-        final String sql = "delete from pieces where room_id = ? and position = ?";
+        final String sql = "DELETE FROM pieces WHERE room_id = ? AND position = ?";
         jdbcTemplate.update(sql, roomId, position);
     }
 }

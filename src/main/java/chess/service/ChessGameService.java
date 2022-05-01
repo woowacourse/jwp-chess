@@ -39,9 +39,9 @@ public class ChessGameService {
         final String gameName = createGameDto.getChessGameName();
         final String password = createGameDto.getPassword();
         final ChessGame chessGame = initializeChessGame();
+        final int gameId = chessGameDao.findChessGameIdByName(gameName);
 
         chessGameDao.saveChessGame(gameName, password, chessGame.getTurn().getName());
-        final int gameId = findGameIdByGameName(gameName);
         pieceDao.savePieces(chessGame.getCurrentPlayer(), gameId);
         pieceDao.savePieces(chessGame.getOpponentPlayer(), gameId);
         return new ChessGameInfoDto(gameId, gameName, chessGame.getTurn().getName());
@@ -98,10 +98,6 @@ public class ChessGameService {
         final Player blackPlayer = new Player(toPieces(blackPieces), Team.BLACK);
 
         return new ChessGame(whitePlayer, blackPlayer, Team.from(currentTurn));
-    }
-
-    private int findGameIdByGameName(final String gameName) {
-        return chessGameDao.findChessGameIdByName(gameName);
     }
 
     private static List<Piece> toPieces(final List<PieceDto> piecesDto) {

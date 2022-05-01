@@ -1,36 +1,41 @@
 package web.controller;
 
-import chess.Score;
-import chess.piece.Color;
-import java.math.BigDecimal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import web.dao.ChessGameDao;
-import web.dto.GameStatus;
+import web.dao.RoomDao;
+import web.dto.RoomDto;
+import web.service.RoomService;
 
 
 @Controller
 public class LobbyController {
 
-    private final ChessGameDao chessGameDao;
+    private final RoomDao roomDao;
+    private final RoomService roomService;
 
-    public LobbyController(ChessGameDao chessGameDao) {
-        this.chessGameDao = chessGameDao;
+    public LobbyController(RoomDao roomDao, RoomService roomService) {
+        this.roomDao = roomDao;
+        this.roomService = roomService;
     }
 
     @GetMapping("/")
     public String lobby(Model model) {
-        model.addAttribute("chess-games", chessGameDao.findAll());
+        model.addAttribute("chess-games", roomDao.findAll());
         return "index";
     }
 
     @PostMapping("/create-chess-game")
-    public String createChessGame(@RequestParam String name) {
-        Score initialScore = new Score(new BigDecimal("38.0"));
-        chessGameDao.saveChessGame(name, GameStatus.READY, Color.WHITE, initialScore, initialScore);
+    public String createChessGame(@RequestParam String name, @RequestParam String password) {
+        RoomDto room = roomService.saveRoom(name, password);
+        return "redirect:/chess-game?chess-game-id=" + room.getChessGameId() ;
+    }
+
+    @PostMapping("/remove-chess-game")
+    public String removeChessGame(@RequestParam int id, @RequestParam String password) {
+        roomService.deleteRoom(id, password);
         return "redirect:/";
     }
 }

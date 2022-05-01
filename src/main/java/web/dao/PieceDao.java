@@ -80,7 +80,7 @@ public class PieceDao {
         }
     }
 
-    public void deleteAll(int chessGameId) {
+    public void deleteByChessGameId(int chessGameId) {
         jdbcTemplate.update("DELETE FROM piece WHERE chess_game_id = ?", chessGameId);
     }
 

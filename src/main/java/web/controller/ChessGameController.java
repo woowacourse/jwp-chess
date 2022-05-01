@@ -21,7 +21,8 @@ public class ChessGameController {
     private final ChessGameDao chessGameDao;
     private final PieceDao pieceDao;
 
-    public ChessGameController(ChessGameService service, ChessGameDao chessGameDao, PieceDao pieceDao) {
+    public ChessGameController(ChessGameService service, ChessGameDao chessGameDao,
+                               PieceDao pieceDao) {
         this.service = service;
         this.chessGameDao = chessGameDao;
         this.pieceDao = pieceDao;
@@ -31,17 +32,13 @@ public class ChessGameController {
     public String chessGame(@RequestParam("chess-game-id") int chessGameId, Model model) {
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
 
-        if (!isGameRunning(chessGameDto)) {
-            chessGameDto = service.prepareNewChessGame(chessGameDto);
+        if (isGameFinished(chessGameDto)) {
+            service.prepareNewChessGame(chessGameDto.getId());
         }
 
         model.addAttribute("pieces", pieceDao.findPieces(chessGameDto.getId()));
         model.addAttribute("chessGame", chessGameDto);
         return "chess-game";
-    }
-
-    private boolean isGameRunning(ChessGameDto chessGameDto) {
-        return chessGameDto.getStatus() == GameStatus.RUNNING;
     }
 
     @PostMapping("/chess-game/move")

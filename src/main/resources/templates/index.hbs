@@ -11,6 +11,7 @@
     <div class="create-room">
         <form action="/create-chess-game" method="post">
             <input type="text" name="name" placeholder="방 이름을 입력하세요."/>
+            <input type="text" name="password" placeholder="비밀번호를 입력하세요."/>
             <input type="submit" value="생성">
         </form>
     </div>
@@ -21,6 +22,7 @@
                 <th>방 번호</th>
                 <th>방 이름</th>
                 <th>참 가</th>
+                <th>삭 제</th>
             </tr>
             {{#chess-games}}
             <tr>
@@ -28,6 +30,9 @@
                 <td>{{name}}</td>
                 <td>
                     <input type="button" value="참가" onclick="joinRoom('{{id}}')"/>
+                </td>
+                <td>
+                    <input type="button" value="삭제" onclick="removeRoom('{{id}}')"/>
                 </td>
             </tr>
             {{/chess-games}}
@@ -37,8 +42,36 @@
 </div>
 
 <script>
+    {{#hasError}}
+    alert("{{errorMessage}}");
+    {{/hasError}}
+
     function joinRoom(id) {
         window.location.replace("/chess-game?chess-game-id=" + id);
+    }
+
+    function removeRoom(id) {
+        const password = prompt("비밀번호를 입력하세요.");
+        const form = createRemoveRoomForm(id, password);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function createRemoveRoomForm(id, password) {
+        const form = document.createElement("form");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/remove-chess-game");
+        form.appendChild(createInputElement("id", id));
+        form.appendChild(createInputElement("password", password));
+        return form;
+    }
+
+    function createInputElement(name, value) {
+        const input = document.createElement("input");
+        input.setAttribute("type", "hidden");
+        input.setAttribute("name", name);
+        input.setAttribute("value", value);
+        return input
     }
 </script>
 </html>

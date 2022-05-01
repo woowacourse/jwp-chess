@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 @Controller
 public class ChessGameViewController {
@@ -38,7 +39,8 @@ public class ChessGameViewController {
     }
 
     @GetMapping("/board/{id}")
-    public String returnBoardView() {
+    public String returnBoardView(@PathVariable Long id) throws SQLException {
+        chessService.validateGameId(id);
         return "board";
     }
 
@@ -49,13 +51,15 @@ public class ChessGameViewController {
     }
 
     @PostMapping("/participate/{id}")
-    public String participateRoom(@PathVariable Long id) {
+    public String participateRoom(@PathVariable Long id) throws SQLException {
+        chessService.validateGameId(id);
         chessService.loadExistGame(id);
         return "redirect:/board/" + id;
     }
 
     @PostMapping("/{id}")
-    public String deleteGame(@PathVariable Long id, PasswordRequest passwordRequest, HttpServletResponse response) throws IOException {
+    public String deleteGame(@PathVariable Long id, PasswordRequest passwordRequest,
+                             HttpServletResponse response) throws IOException {
         response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
         if (chessService.isPossibleDeleteGame(id, passwordRequest.getPassword())) {

@@ -18,6 +18,8 @@ public interface RoomDao {
 
     RoomResponse findById(GameIdRequest gameIdRequest);
 
+    boolean isExistId(GameIdRequest gameIdRequest);
+
     void updateStatus(Team team, long roomId);
 
     void deleteGame(long roomId);

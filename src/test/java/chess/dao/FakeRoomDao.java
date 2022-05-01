@@ -50,13 +50,17 @@ public class FakeRoomDao implements RoomDao {
 
     @Override
     public RoomResponse findById(GameIdRequest gameIdRequest) {
-        return games
-                .keySet()
+        return games.keySet()
                 .stream()
                 .filter(key -> Objects.equals(games.get(key).getId(), gameIdRequest.getId()))
                 .map(games::get)
                 .findAny()
                 .orElse(null);
+    }
+
+    @Override
+    public boolean isExistId(GameIdRequest gameIdRequest) {
+        return games.containsKey(gameIdRequest.getId());
     }
 
     @Override

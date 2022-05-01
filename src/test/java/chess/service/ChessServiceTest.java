@@ -11,7 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ChessServiceTest {
 
@@ -69,5 +72,14 @@ class ChessServiceTest {
     void checkGameWinner() {
         Long id = chessService.initializeGame(new MakeRoomRequest("lawn lawn", "2"));
         assertThat(chessService.findWinner(id).getGameState()).isEqualTo(Team.NONE);
+    }
+
+    @Test
+    @DisplayName("체스 게임 id 존재 여부 확인")
+    void isExistGameId() {
+        assertThatThrownBy(() ->
+                chessService.validateGameId(3))
+                .isInstanceOf(SQLException.class)
+                .hasMessageContaining("존재하지 않는 게임아이디입니다.");
     }
 }

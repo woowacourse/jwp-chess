@@ -64,6 +64,17 @@ public class ChessRoomDao implements RoomDao {
     }
 
     @Override
+    public boolean isExistId(GameIdRequest gameIdRequest) {
+        final String sql = "select * from room where id = ?";
+        try {
+            return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                    true, gameIdRequest.getId()));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public void updateStatus(Team team, long roomId) {
         final String sql = "update room set status = ? where id = ?";
         jdbcTemplate.update(sql, team.name(), roomId);

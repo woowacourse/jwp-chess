@@ -14,6 +14,7 @@ import chess.dto.request.MakeRoomRequest;
 import chess.dto.response.*;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,12 @@ public class ChessService {
     public ChessService(BoardDao chessBoardDao, RoomDao chessRoomDao) {
         this.chessBoardDao = chessBoardDao;
         this.chessRoomDao = chessRoomDao;
+    }
+
+    public void validateGameId(long id) throws SQLException {
+        if (!chessRoomDao.isExistId(new GameIdRequest(id))) {
+            throw new SQLException("존재하지 않는 게임아이디입니다.");
+        }
     }
 
     public Long initializeGame(MakeRoomRequest makeRoomRequest) {

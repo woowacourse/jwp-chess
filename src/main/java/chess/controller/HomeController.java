@@ -1,9 +1,8 @@
 package chess.controller;
 
+import chess.dto.GameCreationDto;
 import chess.dto.GameDto;
 import chess.serviece.ChessGameService;
-import chess.dto.GameCreationDto;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,17 +28,12 @@ public class HomeController {
         return ResponseEntity.ok().body(chessGameService.getAllGames());
     }
 
-    @GetMapping(value = "/room/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GameDto> getGame(@PathVariable Long id, @RequestBody GameDto gameDto) {
-        return ResponseEntity.ok().body(chessGameService.getGame(id, gameDto));
-    }
-
-    @PostMapping(value = "/room", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/room")
     public ResponseEntity<Long> createGame(@RequestBody GameCreationDto gameCreationDto) {
         return ResponseEntity.ok().body(chessGameService.addGame(gameCreationDto));
     }
 
-    @DeleteMapping(value = "/room/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/room/{id}")
     public ResponseEntity<Long> deleteGame(@PathVariable Long id, @RequestBody GameDto gameDto) {
         chessGameService.removeGame(id, gameDto);
         return ResponseEntity.noContent().build();

@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Chess</title>
-    <link rel="stylesheet" href="/src/game.css">
-    <script type="text/javascript" src="/src/game.js"></script>
+    <link rel="stylesheet" href="/files/src/game.css">
+    <script type="text/javascript" src="/files/src/game.js"></script>
 </head>
 
 <body>
@@ -20,7 +20,7 @@
         {{#piecesDto}}
         {{#pieces}}
         <div class="{{position}}" onclick="clicked('{{position}}', {{gameId}})">
-            <img src="/images/{{color}}_{{pieceType}}.png" class="img"/>
+            <img src="/files/images/{{color}}_{{pieceType}}.png" class="img"/>
         </div>
         {{/pieces}}
         {{/piecesDto}}

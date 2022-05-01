@@ -52,7 +52,7 @@ function addChessBoardSquare(r, f) {
 
 function initChessPieces() {
   $.ajax({
-    url: "/chess/init",
+    url: "/chess/first",
     method: "GET",
     dataType: "json",
   })
@@ -69,7 +69,7 @@ function initChessPieces() {
 
 function loadLastGame() {
   $.ajax({
-    url: "/chess/load-last-game",
+    url: "/chess/last",
     method: "GET",
     dataType: "json",
   })
@@ -154,8 +154,8 @@ function movePieceRequest(from, to) {
   const lastTeam = $("#current-team").text();
   clearFromAndTo();
   $.ajax({
-    url: `/chess/move?from=${from}&to=${to}`,
-    method: "PATCH",
+    url: `/chess/from/${from}/to/${to}`,
+    method: "PUT",
     dataType: "json",
   })
     .done(function (data) {
@@ -187,7 +187,7 @@ function setTeamScore(teamNameToScore) {
 function processGameIfKingKill(gamePlaying, lastTeam) {
   if (!gamePlaying) {
     $.ajax({
-      url: `/chess/delete-game`,
+      url: `/chess`,
       method: "DELETE",
     })
       .done(function (data) {
@@ -228,8 +228,8 @@ function saveGameRequest() {
   };
 
   $.ajax({
-    url: "/chess/save-game",
-    method: "PUT",
+    url: "/chess",
+    method: "POST",
     data: JSON.stringify(gameData),
     contentType: "application/json",
   })

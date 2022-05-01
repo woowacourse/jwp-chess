@@ -15,11 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,17 +31,17 @@ public class ChessApiController {
 
     private final ChessService chessService;
 
-    @GetMapping(value = "/init", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "first", produces = APPLICATION_JSON_VALUE)
     public GameResponse init(HttpSession session) {
         ChessBoard chessBoard = chessService.initAndGetChessBoard(session);
 
         return new GameResponse(chessBoard);
     }
 
-    @PatchMapping(value = "/move", produces = APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/from/{from}/to/{to}", produces = APPLICATION_JSON_VALUE)
     public GameResponse move(HttpSession session,
-                             @RequestParam("from") String fromString,
-                             @RequestParam("to") String toString) {
+                             @PathVariable("from") String fromString,
+                             @PathVariable("to") String toString) {
         Position from = Position.of(fromString);
         Position to = Position.of(toString);
 
@@ -50,18 +50,18 @@ public class ChessApiController {
         return new GameResponse(chessService.getChessBoard(session));
     }
 
-    @PutMapping(value = "/save-game", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = APPLICATION_JSON_VALUE)
     public void saveGame(@RequestBody SaveRequest saveRequest) {
         chessService.saveGame(saveRequest);
     }
 
-    @GetMapping(value = "/load-last-game", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "last", produces = APPLICATION_JSON_VALUE)
     public GameResponse loadLastGame(HttpSession session) {
         GameResponse gameResponse = chessService.loadLastGame(session);
         return gameResponse;
     }
 
-    @DeleteMapping("/delete-game")
+    @DeleteMapping
     public void deleteGame(HttpSession session) {
         chessService.delete(session);
     }

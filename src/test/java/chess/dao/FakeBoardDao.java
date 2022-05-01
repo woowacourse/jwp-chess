@@ -1,7 +1,9 @@
 package chess.dao;
 
 import chess.domain.chessboard.ChessBoard;
+import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
+import chess.domain.piece.Symbol;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.PieceDto;
@@ -36,8 +38,12 @@ public class FakeBoardDao implements BoardDao {
         Map<Position, Piece> pieces = board.entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> Position.of(entry.getKey()),
-                        entry -> entry.getValue().toEntity()));
+                        entry -> createPiece(entry.getValue())));
         return new ChessBoard(pieces);
+    }
+
+    private Piece createPiece(PieceDto pieceDto) {
+        return Piece.of(Color.valueOf(pieceDto.getColor()), Symbol.valueOf(pieceDto.getSymbol()));
     }
 
     @Override

@@ -61,9 +61,13 @@ public class ChessServiceTest {
     void selectBoard() {
         BoardDto boardDto = chessService.selectBoard(id);
         Map<String, PieceDto> board = boardDto.getBoard();
-        Piece piece = board.get("a2").toEntity();
+        Piece piece = createPiece(board.get("a2"));
 
         assertThat(piece).isEqualTo(Piece.of(Color.WHITE, Symbol.PAWN));
+    }
+
+    private Piece createPiece(PieceDto pieceDto) {
+        return Piece.of(Color.valueOf(pieceDto.getColor()), Symbol.valueOf(pieceDto.getSymbol()));
     }
 
     @Test

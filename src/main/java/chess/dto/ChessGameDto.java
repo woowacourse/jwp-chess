@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class ChessGameDto {
-    final Map<String, PieceDto> positionsAndPieces;
-    private final Map<Color, Double> whiteScore;
-    private final Map<Color, Double> blackScore;
-    private final Result result;
+    Map<String, PieceDto> positionsAndPieces;
+    private Map<Color, Double> whiteScore;
+    private Map<Color, Double> blackScore;
+    private Result result;
 
     /*public ChessGameDto(final Map<String, List<String>> board, final Status status) {
         positionsAndPieces = new HashMap<>();
@@ -28,6 +28,7 @@ public final class ChessGameDto {
         blackScore = status.getBlackScore();
         result = status.getResult();
     }*/
+    public ChessGameDto() {}
 
     public ChessGameDto(final List<BoardElementDto> boardDatas, final Status status) {
         this.positionsAndPieces = boardDatas.stream()
@@ -35,5 +36,21 @@ public final class ChessGameDto {
         whiteScore = status.getWhiteScore();
         blackScore = status.getBlackScore();
         result = status.getResult();
+    }
+
+    public Map<String, PieceDto> getPositionsAndPieces() {
+        return positionsAndPieces;
+    }
+
+    public Map<Color, Double> getWhiteScore() {
+        return whiteScore;
+    }
+
+    public Map<Color, Double> getBlackScore() {
+        return blackScore;
+    }
+
+    public Result getResult() {
+        return result;
     }
 }

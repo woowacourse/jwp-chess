@@ -15,10 +15,8 @@ const gameId = urls[urls.length - 1];
 
 async function onClickEndButton () {
     const response = await fetch(`/endGame/${gameId}`);
-    const data = await response.json();
-
     if (response.ok) {
-        loadBoard(data);
+        removeAllPiece();
     }
 }
 

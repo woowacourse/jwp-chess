@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.dto.ChessGameDto;
 import chess.dto.DeleteRequestDto;
 import chess.dto.DeleteResponseDto;
 import chess.dto.MoveDto;
@@ -43,28 +44,24 @@ public class WebController {
     }
 
     @GetMapping("/start/{id}")
-    @ResponseBody
-    public String startGame(@PathVariable("id") int id) {
-        return gson.toJson(chessService.newGame(id));
+    public ResponseEntity<ChessGameDto> startGame(@PathVariable int id) {
+        return ResponseEntity.ok().body(chessService.newGame(id));
     }
 
     @GetMapping("/restart/{id}")
-    @ResponseBody
-    public String restart(@PathVariable("id") int id) {
-        return gson.toJson(chessService.loadGame(id));
+    public ResponseEntity<ChessGameDto> restart(@PathVariable("id") int id) {
+        return ResponseEntity.ok().body(chessService.loadGame(id));
     }
 
     @PutMapping("/move/{id}")
-    @ResponseBody
-    public String move(@PathVariable("id") int id, @RequestBody MoveDto moveDto) {
-        return gson.toJson(chessService.move(id, moveDto.getFrom(), moveDto.getTo()));
+    public ResponseEntity<ChessGameDto> move(@PathVariable("id") int id, @RequestBody MoveDto moveDto) {
+        return ResponseEntity.ok().body(chessService.move(id, moveDto.getFrom(), moveDto.getTo()));
     }
 
     @GetMapping("/endGame/{id}")
-    @ResponseBody
-    public String endGame(@PathVariable("id") int id) {
+    public ResponseEntity<ChessGameDto> endGame(@PathVariable("id") int id) {
         chessService.endGame(id);
-        return gson.toJson(chessService.loadGame(id));
+        return ResponseEntity.ok().body(chessService.loadGame(id));
     }
 
     @GetMapping("/join")
@@ -79,21 +76,8 @@ public class WebController {
         return "redirect:/";
     }
 
-    /*@GetMapping("/restart")
-    @ResponseBody
-    public String restart() {
-        return gson.toJson(chessService.loadGame());
-    }*/
-
-    /*@PutMapping("/move")
-    @ResponseBody
-    public String move2(@RequestBody MoveDto moveDto) {
-        return gson.toJson(chessService.move(moveDto.getFrom(), moveDto.getTo()));
-    }*/
-
     @ExceptionHandler({RuntimeException.class})
     private ResponseEntity<String> handleException(final RuntimeException exception) {
-        ResponseEntity.status(500);
         return ResponseEntity.badRequest().body(gson.toJson(exception.getMessage()));
     }
 }

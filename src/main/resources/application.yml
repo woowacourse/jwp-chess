@@ -1,6 +1,6 @@
 spring:
   datasource:
-    schema: classpath*:schema.sql
+    # schema: classpath*:schema.sql
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:13306/woowa-chess
     username: woowa-chess

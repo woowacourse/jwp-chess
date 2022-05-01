@@ -4,6 +4,5 @@ spring:
     url: jdbc:mysql://localhost:13306/woowa-chess-dev
     username: woowa-chess
     password: 1234
-  h2:
-    console:
-      enabled: true
+    schema: classpath*:schema.sql
+    initialization-mode: always

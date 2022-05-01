@@ -25,10 +25,6 @@ table.createGame {
     text-align: center;
 }
 
-div.error {
-    text-align: center;
-}
-
 div.gameList {
     width: 200px;
     border: 5px solid cornflowerblue;

@@ -61,6 +61,6 @@ public class GameController {
     @ExceptionHandler(RuntimeException.class)
     private String handelException(Exception e, Model model) {
         model.addAttribute("error", e.getMessage());
-        return "chessGame";
+        return "error";
     }
 }

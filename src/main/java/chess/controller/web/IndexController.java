@@ -32,6 +32,6 @@ public class IndexController {
     @ExceptionHandler(RuntimeException.class)
     private String handelException(Exception e, Model model) {
         model.addAttribute("error", e.getMessage());
-        return "index";
+        return "error";
     }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>체스 게임</title>
-    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="stylesheet" type="text/css" href="/chessGameStyle.css">
 </head>
 
 <body>
@@ -21,6 +21,10 @@
 
     <form action="/game/{{gameId}}/status" method="get">
         <button>점수</button>
+    </form>
+
+    <form action="/" method="get">
+        <button>메인으로 돌아가기</button>
     </form>
 
     <br/><br/>
@@ -41,10 +45,6 @@
     </form>
 
     <br/><br/>
-
-    <div class="error">
-        <h2>{{error}}</h2>
-    </div>
 
     <div class="score">
         {{#each score}}

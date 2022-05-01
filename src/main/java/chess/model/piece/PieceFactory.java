@@ -1,7 +1,6 @@
 package chess.model.piece;
 
 import chess.model.Team;
-
 import java.util.ArrayList;
 import java.util.List;
 

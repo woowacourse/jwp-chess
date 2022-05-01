@@ -5,7 +5,6 @@ import chess.model.command.Command;
 import chess.model.piece.Empty;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
-
 import java.util.List;
 
 public class ChessGame {

@@ -1,14 +1,18 @@
-CREATE TABLE turns
+CREATE TABLE games
 (
-    turn_id  int        not null AUTO_INCREMENT,
-    turn     varchar(5) not null,
-    primary key (turn_id)
+    game_id     int         not null AUTO_INCREMENT,
+    title       varchar(30) not null,
+    password    varchar(25) not null,
+    turn        varchar(5)  not null,
+    primary key (game_id)
 );
 
 CREATE TABLE pieces
 (
-    piece_id int         not null AUTO_INCREMENT,
-    position varchar(4)  not null,
-    name    varchar(10) not null,
-    primary key (piece_id)
+    piece_id    int         not null AUTO_INCREMENT,
+    game_id     int         not null,
+    position    varchar(4)  not null,
+    name        varchar(10) not null,
+    primary key (piece_id),
+    foreign key(game_id) references GAMES(game_id)
 );

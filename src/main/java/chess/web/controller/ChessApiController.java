@@ -1,7 +1,7 @@
 package chess.web.controller;
 
-import chess.web.dto.board.moveResultDto;
 import chess.web.dto.board.MovePositionsDto;
+import chess.web.dto.board.MoveResultDto;
 import chess.web.dto.game.PasswordDto;
 import chess.web.service.ChessService;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class ChessApiController {
     }
 
     @PatchMapping("/game/{gameId}/move")
-    public ResponseEntity<moveResultDto> move(@PathVariable int gameId,
+    public ResponseEntity<MoveResultDto> move(@PathVariable int gameId,
                                               @RequestBody MovePositionsDto movePositionsDto) {
         return ResponseEntity.ok(chessService.getMoveResult(gameId, movePositionsDto));
     }

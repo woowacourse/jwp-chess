@@ -12,7 +12,7 @@ import chess.web.dao.GameDao;
 import chess.web.dao.PieceDao;
 import chess.web.dto.board.BoardDto;
 import chess.web.dto.board.MovePositionsDto;
-import chess.web.dto.board.moveResultDto;
+import chess.web.dto.board.MoveResultDto;
 import chess.web.dto.board.PieceDto;
 import chess.web.dto.board.PiecesDto;
 import chess.web.dto.board.ResultDto;
@@ -112,7 +112,7 @@ public class ChessService {
         return getChessGame(gameId).score(color);
     }
 
-    public moveResultDto getMoveResult(int gameId, MovePositionsDto movePositionsDto) {
+    public MoveResultDto getMoveResult(int gameId, MovePositionsDto movePositionsDto) {
         ChessGame chessGame = getChessGame(gameId);
 
         chessGame.move(movePositionsDto.getSource(), movePositionsDto.getTarget());
@@ -120,7 +120,7 @@ public class ChessService {
         Position targetPosition = new Position(movePositionsDto.getTarget());
         move(gameId, chessGame, sourcePosition, targetPosition);
 
-        return new moveResultDto(chessGame.isFinished());
+        return new MoveResultDto(chessGame.isFinished());
     }
 
     private void move(int gameId, ChessGame chessGame, Position target, Position source) {

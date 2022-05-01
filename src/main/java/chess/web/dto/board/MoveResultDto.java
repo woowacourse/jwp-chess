@@ -1,10 +1,10 @@
 package chess.web.dto.board;
 
-public class moveResultDto {
+public class MoveResultDto {
 
     private final boolean isGameOver;
 
-    public moveResultDto(boolean isGameOver) {
+    public MoveResultDto(boolean isGameOver) {
         this.isGameOver = isGameOver;
     }
 

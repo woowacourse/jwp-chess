@@ -72,7 +72,7 @@ async function onClickRestartButton () {
 }
 
 function onClickBoard ({target: {classList, id, parentNode}}) {
-    if (!hasFirstSelected()) {
+    if (!hasFirstSelected() && isPiece(id)) {
         classList.toggle("first-selected");
         return;
     }
@@ -82,6 +82,14 @@ function onClickBoard ({target: {classList, id, parentNode}}) {
         onClickPiece(id);
         return;
     }
+}
+
+function isPiece(id) {
+    if (id === "") {
+        return true;
+    }
+    alert("기물을 선택해 주세요.");
+    return false;
 }
 
 function hasFirstSelected () {

@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+@RequestMapping("/")
 @Controller
 public class RoomWebController {
 
@@ -26,7 +28,7 @@ public class RoomWebController {
         this.roomService = roomService;
     }
 
-    @GetMapping(path = "/")
+    @GetMapping
     public ModelAndView initial() {
         final Map<String, Object> model = new HashMap<>();
         final List<RoomDto> roomNames = roomService.getRoomNames();
@@ -34,7 +36,7 @@ public class RoomWebController {
         return new ModelAndView("home", model);
     }
 
-    @PostMapping(path = "/")
+    @PostMapping
     public String makeRoom(@RequestBody RoomCreationRequestDto roomCreationRequest) {
         final String roomName = roomCreationRequest.getRoomName();
         final String password = roomCreationRequest.getPassword();
@@ -43,7 +45,7 @@ public class RoomWebController {
     }
 
     @ResponseBody
-    @DeleteMapping(path = "/")
+    @DeleteMapping
     public String deleteRoom(@RequestBody RoomDeletionRequestDto roomDeletionRequest) {
 
         final int roomId = roomDeletionRequest.getRoomId();

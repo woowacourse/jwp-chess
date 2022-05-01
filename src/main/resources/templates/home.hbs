@@ -45,7 +45,7 @@
 <ul>
     {{#each rooms}}
         <li>
-            <form action="/{{this.roomId}}" method="GET">
+            <form action="/game/{{roomId}}" method="GET">
                 <button>{{this.roomName}}</button>
             </form>
 
@@ -64,16 +64,6 @@
                             'Content-Type': 'application/json'
                         }
                     })
-                            // .then(res => res.json())
-                            // .then(json => {
-                            //
-                            //     if (json.success === false) {
-                            //         alert("삭제중 오류 발생")
-                            //         return;
-                            //     }
-                            //     alert("삭제 성공")
-                            //     location.reload();
-                            // })
                             .then(async res => {
                                 if (res.status === 400) {
                                     let exceptionMessage = await res.text();

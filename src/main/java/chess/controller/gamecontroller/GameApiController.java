@@ -16,7 +16,7 @@ public class GameApiController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping(path = "/api/{roomId}")
+    @GetMapping(path = "game/api/{roomId}")
     public ResponseEntity<ScoreDto> status(@PathVariable int roomId) {
         final ScoreDto score = chessGameService.getScore(roomId);
         return ResponseEntity.ok(score);

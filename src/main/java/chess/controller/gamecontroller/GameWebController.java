@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+@RequestMapping("/game/{roomId}")
 @Controller
 public class GameWebController {
 
@@ -23,18 +25,18 @@ public class GameWebController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping(path = "/{roomId}")
+    @GetMapping
     public ModelAndView index(@PathVariable int roomId) {
         return render(roomId);
     }
 
-    @PostMapping(path = "/{roomId}")
+    @PostMapping
     public ModelAndView start(@PathVariable int roomId) {
         chessGameService.start(roomId);
         return render(roomId);
     }
 
-    @PutMapping(path = "/{roomId}")
+    @PutMapping
     public ModelAndView move(@PathVariable int roomId, @RequestBody MoveRequestDto moveRequest) {
         final String sourcePosition = moveRequest.getSource();
         final String targetPosition = moveRequest.getTarget();
@@ -42,7 +44,7 @@ public class GameWebController {
         return render(roomId);
     }
 
-    @DeleteMapping(path = "/{roomId}")
+    @DeleteMapping
     public ModelAndView end(@PathVariable int roomId) {
         chessGameService.end(roomId);
         return render(roomId);

@@ -30,8 +30,7 @@ public class PieceDao {
     public void saveAllByRoomId(final Long roomId, final Map<Position, ChessPiece> pieces) {
         final List<PieceEntity> pieceEntities = pieces.entrySet()
                 .stream()
-                .map(entry -> new PieceEntity(roomId, entry.getKey().getValue(),
-                        ChessPieceMapper.toPieceType(entry.getValue()), entry.getValue().color().getValue()))
+                .map(entry -> PieceEntity.of(roomId, entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
         insertActor.executeBatch(SqlParameterSourceUtils.createBatch(pieceEntities));

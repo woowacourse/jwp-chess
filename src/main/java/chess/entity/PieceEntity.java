@@ -1,5 +1,9 @@
 package chess.entity;
 
+import chess.domain.chesspiece.ChessPiece;
+import chess.domain.position.Position;
+import chess.dto.ChessPieceMapper;
+
 public class PieceEntity {
 
     private final Long id;
@@ -18,6 +22,11 @@ public class PieceEntity {
         this.position = position;
         this.type = type;
         this.color = color;
+    }
+
+    public static PieceEntity of(final Long roomId, final Position position, final ChessPiece piece) {
+        return new PieceEntity(roomId, position.getValue(), ChessPieceMapper.toPieceType(piece),
+                piece.color().getValue());
     }
 
     public Long getId() {

@@ -50,7 +50,7 @@ public class ChessGameService {
     private ChessGame findChessGame(long gameId) {
         Room room = gameDao.findRoomById(gameId);
         Pieces chessmen = pieceDao.findAllByGameId(gameId);
-        return new ChessGame(room.getEndFlag(), chessmen, room.getTurn());
+        return new ChessGame(chessmen, room.getTurn());
     }
 
     public GameResultDto calculateGameResult(long gameId) {

@@ -68,8 +68,8 @@ public class ChessGameServiceTest {
     @DisplayName("게임 아이디에 맞는 PiecesDto를 반환한다.")
     @Test
     public void findCurrentPieces() {
-        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, false, Color.BLACK, "방 제목", "방 비밀번호"));
-        when(pieceDao.findAllByGameId(2L)).thenReturn(new Pieces(List.of(new Pawn(Color.BLACK, Position.of("a1")))));
+        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, false, Color.WHITE, "방 제목", "방 비밀번호"));
+        when(pieceDao.findAllByGameId(2L)).thenReturn(new Pieces(List.of(new Pawn(Color.WHITE, Position.of("a1")))));
 
         PiecesDto actual = chessGameService.findCurrentPieces(2L);
 
@@ -79,13 +79,13 @@ public class ChessGameServiceTest {
     @DisplayName("게임 점수와 승자를 반환한다.")
     @Test
     public void calculateGameResult() {
-        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, false, Color.BLACK, "방 제목", "방 비밀번호"));
-        when(pieceDao.findAllByGameId(2L)).thenReturn(new Pieces(List.of(new Pawn(Color.BLACK, Position.of("a1")))));
+        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, false, Color.WHITE, "방 제목", "방 비밀번호"));
+        when(pieceDao.findAllByGameId(2L)).thenReturn(new Pieces(List.of(new Pawn(Color.WHITE, Position.of("a1")))));
 
         GameResultDto actual = chessGameService.calculateGameResult(2L);
 
-        assertThat(actual.getBlackScore()).isEqualTo(1);
-        assertThat(actual.getWhiteScore()).isEqualTo(0);
+        assertThat(actual.getBlackScore()).isEqualTo(0);
+        assertThat(actual.getWhiteScore()).isEqualTo(1);
         assertThat(actual.getWinner()).isEqualTo("없음");
     }
 
@@ -95,7 +95,7 @@ public class ChessGameServiceTest {
         //given
         MoveCommandDto moveCommandDto = new MoveCommandDto("a2", "a3");
 
-        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, false, Color.BLACK, "제목", "비밀번호"));
+        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, false, Color.WHITE, "제목", "비밀번호"));
         when(pieceDao.findAllByGameId(2L)).thenReturn(ChessmenInitializer.init());
         when(pieceDao.exists(2L, moveCommandDto.getTarget())).thenReturn(false);
 
@@ -119,7 +119,7 @@ public class ChessGameServiceTest {
     @DisplayName("id와 password로 게임을 삭제한다.")
     @Test
     public void cleanGameByIdAndPassword() {
-        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, true, Color.BLACK, "제목", "비밀번호"));
+        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, true, Color.WHITE, "제목", "비밀번호"));
 
         assertThatCode(() -> chessGameService.cleanGameByIdAndPassword(2L, "비밀번호"))
             .doesNotThrowAnyException();
@@ -128,7 +128,7 @@ public class ChessGameServiceTest {
     @DisplayName("password가 다르면 게임을 삭제할 수 없다.")
     @Test
     public void cleanGameByIdAndPassword_fail_with_invalid_password() {
-        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, true, Color.BLACK, "제목", "비밀번호"));
+        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, true, Color.WHITE, "제목", "비밀번호"));
 
         assertThatCode(() -> chessGameService.cleanGameByIdAndPassword(2L, "가짜비밀번호"))
             .isInstanceOf(IllegalArgumentException.class)
@@ -138,7 +138,7 @@ public class ChessGameServiceTest {
     @DisplayName("게임이 종료되지 않으면 게임을 삭제할 수 없다.")
     @Test
     public void cleanGameByIdAndPassword_fail_with_false_end_flag() {
-        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, false, Color.BLACK, "제목", "비밀번호"));
+        when(gameDao.findRoomById(2L)).thenReturn(new Room(2L, false, Color.WHITE, "제목", "비밀번호"));
 
         assertThatCode(() -> chessGameService.cleanGameByIdAndPassword(2L, "비밀번호"))
             .isInstanceOf(IllegalArgumentException.class)

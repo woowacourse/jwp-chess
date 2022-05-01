@@ -16,31 +16,10 @@ public class ChessGame {
 
     private final Pieces chessmen;
     private Color turn;
-    private final boolean endFlag;
 
-    public ChessGame(boolean endFlag, Pieces chessmen, Color turn) {
-        this.endFlag = endFlag;
+    public ChessGame(Pieces chessmen, Color turn) {
         this.chessmen = chessmen;
         this.turn = turn;
-    }
-
-    private ChessGame(Pieces chessmen) {
-        this.endFlag = false;
-        this.chessmen = chessmen;
-        this.turn = Color.BLACK;
-    }
-
-    public ChessGame() {
-        endFlag = false;
-        this.chessmen = new Pieces(List.of());
-    }
-
-    public static ChessGame of(Pieces chessmen) {
-        return new ChessGame(chessmen);
-    }
-
-    public static ChessGame of() {
-        return new ChessGame();
     }
 
     public void moveChessmen(MoveCommand moveCommand) {
@@ -68,7 +47,7 @@ public class ChessGame {
     }
 
     private void validateTurn(Piece sourcePiece) {
-        if (sourcePiece.isSameColor(turn)) {
+        if (!sourcePiece.isSameColor(turn)) {
             throw new IllegalArgumentException(TURN_EXCEPTION_MESSAGE);
         }
     }
@@ -115,10 +94,6 @@ public class ChessGame {
 
     public Color getTurn() {
         return turn;
-    }
-
-    public boolean getEndFlag() {
-        return endFlag;
     }
 
     @Override

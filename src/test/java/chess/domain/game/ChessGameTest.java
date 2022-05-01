@@ -25,7 +25,7 @@ public class ChessGameTest {
 
     @BeforeEach
     void setup_chessGame() {
-        chessGame = ChessGame.of(ChessmenInitializer.init());
+        chessGame = new ChessGame(ChessmenInitializer.init(), Color.WHITE);
     }
 
     @DisplayName("체스말이 이동할 수 있는 위치면 이동에 성공한다.")
@@ -135,7 +135,7 @@ public class ChessGameTest {
     @DisplayName("King이 한 개라도 죽으면 게임은 끝난다.")
     @Test
     void isEnd_true() {
-        chessGame = ChessGame.of(new Pieces(List.of(new King(WHITE, Position.of("e1")))));
+        chessGame = new ChessGame(new Pieces(List.of(new King(WHITE, Position.of("e1")))), Color.WHITE);
 
         boolean actual = chessGame.isEnd();
 

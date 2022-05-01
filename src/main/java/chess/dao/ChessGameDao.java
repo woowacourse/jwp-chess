@@ -18,50 +18,40 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ChessGameDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ChessGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ChessGameDto> findAll() {
-        return jdbcTemplate.query(
-                "SELECT id, name, status, current_color, black_score, white_score FROM chess_game",
-                this::createChessGameDto);
-    }
-
-    private ChessGameDto createChessGameDto(ResultSet rs, int rowNum) throws SQLException {
-        int id = rs.getInt("id");
-        String name = rs.getString("name");
-        GameStatus status = GameStatus.valueOf(rs.getString("status"));
-        Color currentColor = Color.valueOf(rs.getString("current_color"));
-        Score blackScore = new Score(rs.getBigDecimal("black_score"));
-        Score whiteScore = new Score(rs.getBigDecimal("white_score"));
-        return new ChessGameDto(id, name, status, blackScore, whiteScore, currentColor);
-    }
-
-    public ChessGameDto findById(int id) {
-        return jdbcTemplate.queryForObject(
-                "SELECT id, name, status, current_color, black_score, white_score FROM chess_game WHERE id = ?",
-                this::createChessGameDto, id);
-    }
-
     public int saveChessGame(Room room, GameStatus status, Color currentColor, Score blackScore, Score whiteScore) {
         String sql = "INSERT INTO chess_game(name, password, status, current_color, black_score, white_score) VALUES(?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
-                connection -> {
-                    PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-                    ps.setString(1, room.getName());
-                    ps.setString(2, room.getPassword());
-                    ps.setString(3, status.name());
-                    ps.setString(4, currentColor.name());
-                    ps.setString(5, blackScore.getValue().toPlainString());
-                    ps.setString(6, whiteScore.getValue().toPlainString());
-                    return ps;
-                }, keyHolder);
+            connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+                ps.setString(1, room.getName());
+                ps.setString(2, room.getPassword());
+                ps.setString(3, status.name());
+                ps.setString(4, currentColor.name());
+                ps.setString(5, blackScore.getValue().toPlainString());
+                ps.setString(6, whiteScore.getValue().toPlainString());
+                return ps;
+            }, keyHolder);
         return keyHolder.getKey().intValue();
+    }
+
+    public ChessGameDto findById(int id) {
+        return jdbcTemplate.queryForObject(
+            "SELECT id, name, status, current_color, black_score, white_score FROM chess_game WHERE id = ?",
+            this::createChessGameDto, id);
+    }
+
+    public List<ChessGameDto> findAll() {
+        return jdbcTemplate.query(
+                "SELECT id, name, status, current_color, black_score, white_score FROM chess_game",
+                this::createChessGameDto);
     }
 
     public void updateChessGame(ChessGameDto chessGameDto) {
@@ -89,5 +79,15 @@ public class ChessGameDao {
         int count = jdbcTemplate.queryForObject(
             "SELECT count(*) FROM chess_game WHERE name = ?", Integer.class, name);
         return count != 0;
+    }
+
+    private ChessGameDto createChessGameDto(ResultSet rs, int rowNum) throws SQLException {
+        int id = rs.getInt("id");
+        String name = rs.getString("name");
+        GameStatus status = GameStatus.valueOf(rs.getString("status"));
+        Color currentColor = Color.valueOf(rs.getString("current_color"));
+        Score blackScore = new Score(rs.getBigDecimal("black_score"));
+        Score whiteScore = new Score(rs.getBigDecimal("white_score"));
+        return new ChessGameDto(id, name, status, blackScore, whiteScore, currentColor);
     }
 }

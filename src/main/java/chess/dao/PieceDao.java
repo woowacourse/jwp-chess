@@ -21,9 +21,33 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public void savePiece(int chessGameId, PieceDto pieceDto) {
+        jdbcTemplate.update("INSERT INTO piece(chess_game_id, position, type, color) VALUES(?, ?, ?, ?)",
+            chessGameId, pieceDto.getPosition().toString(), pieceDto.getType().name(), pieceDto.getColor().name());
+    }
+
     public List<PieceDto> findPieces(int chessGameId) {
         return jdbcTemplate.query("SELECT chess_game_id, position, type, color FROM piece WHERE chess_game_id = ?",
                 this::mapToPieceDTO, chessGameId);
+    }
+
+    public void deletePieceByPosition(int chessGameId, Position position) {
+        jdbcTemplate
+                .update("DELETE FROM piece WHERE chess_game_id = ? and position = ?", chessGameId, position.toString());
+    }
+
+    public void savePieces(int chessGameId, List<PieceDto> pieceDtos) {
+        for (PieceDto pieceDTO : pieceDtos) {
+            savePiece(chessGameId, pieceDTO);
+        }
+    }
+
+    public void deleteById(int chessGameId) {
+        jdbcTemplate.update("DELETE FROM piece WHERE chess_game_id = ?", chessGameId);
+    }
+
+    public void deleteById() {
+        jdbcTemplate.update("DELETE FROM piece");
     }
 
     private PieceDto mapToPieceDTO(ResultSet rs, int rowNum) throws SQLException {
@@ -37,29 +61,5 @@ public class PieceDao {
         File file = File.valueOf(position.substring(0, 1));
         Rank rank = Rank.find(position.substring(1, 2));
         return new Position(file, rank);
-    }
-
-    public void deletePieceByPosition(int chessGameId, Position position) {
-        jdbcTemplate
-                .update("DELETE FROM piece WHERE chess_game_id = ? and position = ?", chessGameId, position.toString());
-    }
-
-    public void savePiece(int chessGameId, PieceDto pieceDto) {
-        jdbcTemplate.update("INSERT INTO piece(chess_game_id, position, type, color) VALUES(?, ?, ?, ?)",
-                chessGameId, pieceDto.getPosition().toString(), pieceDto.getType().name(), pieceDto.getColor().name());
-    }
-
-    public void savePieces(int chessGameId, List<PieceDto> pieceDtos) {
-        for (PieceDto pieceDTO : pieceDtos) {
-            savePiece(chessGameId, pieceDTO);
-        }
-    }
-
-    public void deleteAll(int chessGameId) {
-        jdbcTemplate.update("DELETE FROM piece WHERE chess_game_id = ?", chessGameId);
-    }
-
-    public void deleteAll() {
-        jdbcTemplate.update("DELETE FROM piece");
     }
 }

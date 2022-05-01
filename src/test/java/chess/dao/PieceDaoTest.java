@@ -39,7 +39,7 @@ class PieceDaoTest {
                 new Score(BigDecimal.ONE), new Score(BigDecimal.ONE));
 
         pieceDao = new PieceDao(jdbcTemplate);
-        pieceDao.deleteAll(getChessGameId());
+        pieceDao.deleteById(getChessGameId());
         pieceDao.savePieces(getChessGameId(), List.of(
                 new PieceDto(new Position(A, EIGHT), PieceType.KING, Color.WHITE),
                 new PieceDto(new Position(A, SEVEN), PieceType.QUEEN, Color.WHITE),
@@ -57,7 +57,7 @@ class PieceDaoTest {
 
     @AfterEach
     void tearDown() {
-        pieceDao.deleteAll(getChessGameId());
+        pieceDao.deleteById(getChessGameId());
     }
 
     @Test

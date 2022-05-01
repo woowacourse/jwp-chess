@@ -28,9 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import jdk.nashorn.api.tree.ConditionalLoopTree;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessGameService {
@@ -77,7 +75,7 @@ public class ChessGameService {
     public void create(ChessGameRequest chessGameRequest) {
         Room room = new Room(chessGameRequest.getName(), chessGameRequest.getPassword());
         int chessGameId = chessGameDao.saveChessGame(room, GameStatus.READY, Color.WHITE, new Score(), new Score());
-        pieceDao.deleteAll(chessGameId);
+        pieceDao.deleteById(chessGameId);
         pieceDao.savePieces(chessGameId, createPieces());
     }
 

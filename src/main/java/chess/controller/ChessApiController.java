@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,8 +26,8 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/make-piece/{roomId}")
-    public ResponseEntity<ChessMap> makePiece(@PathVariable("roomId") int roomId) {
+    @PatchMapping("/chessMap/{roomId}")
+    public ResponseEntity<ChessMap> initializeGame(@PathVariable("roomId") int roomId) {
         return ResponseEntity.ok(chessService.initializeGame(roomId));
     }
 

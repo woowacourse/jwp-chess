@@ -104,7 +104,7 @@ const movePiece = async () => {
     let gameStateMessage = await fetch('/king/' + roomId);
     let result = await gameStateMessage.text();
 
-    if(result == "게임 끝") {
+    if (result == "게임 끝") {
         alert(result);
         await showResult(roomId);
     }
@@ -131,7 +131,13 @@ const load = async (id) => {
 }
 
 const restartChess = async (id) => {
-    let chessMap = await fetch('/make-piece/' + id);
+    let chessMap = await fetch('/chessMap/' + id, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        }
+    });
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
 }

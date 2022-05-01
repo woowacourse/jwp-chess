@@ -39,7 +39,7 @@ public class ChessGameControllerTest {
         chessService.endGame(id);
     }
 
-    @DisplayName("Board - GET")
+    @DisplayName("체스 보드 초기화 확인 - GET")
     @Test
     @Order(1)
     void getBoard() {
@@ -48,25 +48,28 @@ public class ChessGameControllerTest {
                 .when().get("/loadBoard/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(3));
+                .body("pieces.size()", is(64))
+                .body("team", is("WHITE"))
+                .body("id", is((int) id));
     }
 
-    @DisplayName("move - POST")
+    @DisplayName("기물 move 확인 - POST")
     @Test
     @Order(2)
     void movePiece() {
         MoveResponse moveResponse = new MoveResponse("f2", "f3");
-
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveResponse)
                 .when().post("/move/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("size()", is(2));
+                .body("size()", is(2))
+                .body("gameState", is("BLACK"))
+                .body("running", is(true));
     }
 
-    @DisplayName("game status - GET")
+    @DisplayName("체스 게임 점수 확인 - GET")
     @Test
     @Order(3)
     void statusGame() {
@@ -75,10 +78,12 @@ public class ChessGameControllerTest {
                 .when().get("/status/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
+                .body("size()", is(2))
+                .body("whiteScore", is((float) 38.0))
+                .body("blackScore", is((float) 38.0));
     }
 
-    @DisplayName("game reset - POST")
+    @DisplayName("체스 게임 reset 확인 - POST")
     @Test
     @Order(4)
     void resetGame() {
@@ -87,10 +92,12 @@ public class ChessGameControllerTest {
                 .when().post("/reset/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("size()", is(3));
+                .body("pieces.size()", is(64))
+                .body("team", is("WHITE"))
+                .body("id", is((int) id));
     }
 
-    @DisplayName("game lists - GET")
+    @DisplayName("체스 게임방 정보 확인 - GET")
     @Test
     @Order(5)
     void getGameList() {
@@ -99,10 +106,12 @@ public class ChessGameControllerTest {
                 .when().get("/loadGames")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(1));
+                .body("games.id[0]", is((int) id))
+                .body("games.name[0]", is("green green"))
+                .body("games.password[0]", is("1234"));
     }
 
-    @DisplayName("game end - POST")
+    @DisplayName("체스 게임 종료 확인 - POST")
     @Test
     @Order(6)
     void endGame() {
@@ -111,6 +120,7 @@ public class ChessGameControllerTest {
                 .when().post("/end/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(2));
+                .body("gameState", is("NONE"))
+                .body("running", is(true));
     }
 }

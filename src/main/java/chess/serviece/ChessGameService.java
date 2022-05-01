@@ -13,7 +13,6 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.dto.PieceDto;
-import chess.dto.ScoresDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -106,13 +105,12 @@ public class ChessGameService {
         return new ChessGame(pieces, PieceColor.find(gameDto.getTurn()));
     }
 
-    public ScoresDto getScore(Long gameId) {
+    public Map<PieceColor, Score> getScore(Long gameId) {
         ChessGame game = createGame(gameId);
-        Map<PieceColor, Score> scoresByColor = game.calculateScoreByColor();
-        return ScoresDto.of(scoresByColor);
+        return game.calculateScoreByColor();
     }
 
-    public ScoresDto finishGame(Long gameId) {
+    public Map<PieceColor, Score> finishGame(Long gameId) {
         gameDao.updateStatus(gameId, GameStatus.FINISHED);
         return getScore(gameId);
     }

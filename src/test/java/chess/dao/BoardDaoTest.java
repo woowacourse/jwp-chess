@@ -17,15 +17,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class BoardDaoTest {
+class BoardDaoTest {
     @Autowired
     BoardDao boardDao;
     @Autowired
     GameDao gameDao;
 
+    int id;
+
     @BeforeEach
     void insertGameData() {
-        int id = gameDao.create(new ChessGame("test", "test"));
+        id = gameDao.create(new ChessGame("test", "test"));
         gameDao.update(id);
     }
 
@@ -42,11 +44,11 @@ public class BoardDaoTest {
     void load_a1_white_rook() {
         Map<Position, Piece> squares = BoardInitializer.get().getSquares();
 
-        boardDao.update(squares);
-        List<PieceDto> board = boardDao.load();
+        boardDao.update(id, squares);
+        List<PieceDto> board = boardDao.loadById(id);
 
         PieceDto pieceAtA1 = board.stream()
-                .filter(pieceDto2 -> pieceDto2.getPosition().equals("a1"))
+                .filter(pieceDto -> pieceDto.getPosition().equals("a1"))
                 .findAny().get();
         assertThat(pieceAtA1.getCamp() + pieceAtA1.getType()).isEqualTo("whiterook");
     }

@@ -4,7 +4,6 @@ import chess.domain.Camp;
 import chess.domain.ChessGame;
 import chess.dto.GameDto;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,18 +35,6 @@ public class GameDao {
     public void update(int id) {
         final String sql = "update game set white_turn = ? where no = ?";
         jdbcTemplate.update(sql, Camp.BLACK.isNotTurn(), id);
-    }
-
-    private boolean isGameExistIn() {
-        final String sql = "select no from game";
-
-        return jdbcTemplate.query(sql, ResultSet::next);
-    }
-
-    public boolean isWhiteTurn() {
-        final String sql = "select white_turn from game";
-
-        return jdbcTemplate.queryForObject(sql, Boolean.class);
     }
 
     public List<GameDto> findAll() {

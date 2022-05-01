@@ -1,8 +1,6 @@
 package chess.web.controller;
 
 import chess.service.ChessService;
-import chess.service.dto.BoardDto;
-import chess.service.dto.GameResultDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,54 +25,19 @@ public class SpringChessController {
         return "index";
     }
 
-    @GetMapping("/board/{gameId}")
-    public String renderBoard(@PathVariable int gameId, Model model) {
-        BoardDto board = getRunningBoard(gameId);
-        if (board == null) {
-            return "redirect:../status/" + gameId;
+    @GetMapping("/game/{gameId}")
+    public String gameRoom(@PathVariable Long gameId) {
+        boolean gameExist = chessService.existsGameById(gameId);
+        if (!gameExist) {
+            return "error/404";
         }
-        model.addAttribute("board", board);
         return "board";
     }
 
-    private BoardDto getRunningBoard(int gameId) {
-        if (chessService.isRunning(gameId) || chessService.isGameEmpty(gameId)) {
-            return chessService.getBoard(gameId);
-        }
-        return null;
-    }
-
-    @GetMapping("/new-board/{gameId}")
-    public RedirectView initBoard(@PathVariable int gameId) {
-        chessService.initGame(gameId);
-        return new RedirectView("/board/" + gameId);
-    }
-
-    @PostMapping("/board")
-    public RedirectView createGame(@RequestParam String name) {
-        int gameId = chessService.createGame(name.trim());
-        return new RedirectView("/board/" + gameId);
-    }
-
-    @PostMapping("/move/{gameId}")
-    public RedirectView requestMove(@PathVariable int gameId, @RequestParam String from,
-        @RequestParam String to) {
-        chessService.move(gameId, from, to);
-        return new RedirectView("/board/" + gameId);
-    }
-
-    @GetMapping("/status/{gameId}")
-    public String renderStatus(@PathVariable int gameId, Model model) {
-        GameResultDto status = chessService.getResult(gameId);
-        chessService.endGame(gameId);
-        model.addAttribute("status", status);
-        return "result";
-    }
-
-    @GetMapping("/game-end/{gameId}")
-    public RedirectView requestEndGame(@PathVariable int gameId) {
-        chessService.endGame(gameId);
-        return new RedirectView("/");
+    @PostMapping("/game")
+    public RedirectView createGame(@RequestParam String name, @RequestParam String password) {
+        Long gameId = chessService.createGame(name.trim(), password);
+        return new RedirectView("/game/" + gameId);
     }
 
     @ExceptionHandler(RuntimeException.class)

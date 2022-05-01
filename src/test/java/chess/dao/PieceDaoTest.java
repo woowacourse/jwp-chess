@@ -3,13 +3,13 @@ package chess.dao;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import chess.domain.game.LogIn;
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Color;
 import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
-import chess.domain.game.LogIn;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

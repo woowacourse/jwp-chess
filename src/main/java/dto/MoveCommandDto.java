@@ -12,7 +12,7 @@ public class MoveCommandDto {
     }
 
     public MoveCommand toEntity() {
-        return new MoveCommand(source,target);
+        return new MoveCommand(source, target);
     }
 
     public String getSource() {

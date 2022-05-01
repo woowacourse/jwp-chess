@@ -15,8 +15,8 @@ public class ChessGame {
     private static final String GAME_END_EXCEPTION_MESSAGE = "게임이 끝난 후에는 경기를 더 진행할 수 없습니다.";
 
     private final boolean isEnd;
-    private Color turn;
     private final Pieces chessmen;
+    private Color turn;
 
     public ChessGame(Room room, Pieces chessmen) {
         this.isEnd = room.isEnd();

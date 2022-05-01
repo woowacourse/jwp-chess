@@ -20,9 +20,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @JdbcTest
 class ChessGameServiceTest {
     private static final String GAME_ID = "1234";
-    private ChessGameService chessGameService;
     private final LogIn LOG_IN_DTO = new LogIn(GAME_ID, GAME_ID);
-
+    private ChessGameService chessGameService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

@@ -1,8 +1,9 @@
-package chess.dto;
+package chess.controller.response;
 
 import chess.domain.Score;
 import chess.domain.WinResult;
 import chess.domain.piece.PieceColor;
+import chess.dto.ScoreDto;
 
 import java.util.List;
 import java.util.Map;

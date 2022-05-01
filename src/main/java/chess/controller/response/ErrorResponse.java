@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.controller.response;
 
 public class ErrorResponse {
 

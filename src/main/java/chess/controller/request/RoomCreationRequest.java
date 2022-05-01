@@ -1,11 +1,11 @@
-package chess.dto;
+package chess.controller.request;
 
-public class GameCreationRequest {
+public class RoomCreationRequest {
 
     private String title;
     private String password;
 
-    public GameCreationRequest(){
+    public RoomCreationRequest(){
     }
 
     public String getTitle() {

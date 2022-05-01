@@ -1,15 +1,17 @@
-package chess.dto;
+package chess.controller.response;
+
+import chess.dto.PieceDto;
 
 import java.util.List;
 
-public class ChessResponse {
+public class ChessGameResponse {
 
     private final Long gameId;
     private final List<PieceDto> pieces;
     private final String turn;
     private final String status;
 
-    public ChessResponse(Long gameId, List<PieceDto> pieces, String turn, String status) {
+    public ChessGameResponse(Long gameId, List<PieceDto> pieces, String turn, String status) {
         this.gameId = gameId;
         this.pieces = pieces;
         this.turn = turn;

@@ -4,7 +4,7 @@ import chess.dao.FakeGameDao;
 import chess.dao.FakePieceDao;
 import chess.dto.GameDto;
 import chess.serviece.ChessGameService;
-import chess.dto.GameCreationRequest;
+import chess.controller.request.RoomCreationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,14 +25,14 @@ public class ChessGameServiceTest {
     @DisplayName("게임 추가")
     void addGame() {
         // given
-        GameCreationRequest gameCreationRequest = new GameCreationRequest();
+        RoomCreationRequest roomCreationRequest = new RoomCreationRequest();
         String title = "라라";
         String password = "1234";
-        gameCreationRequest.setTitle(title);
-        gameCreationRequest.setPassword(password);
+        roomCreationRequest.setTitle(title);
+        roomCreationRequest.setPassword(password);
 
         // when
-        Long id = chessService.addGame(gameCreationRequest);
+        Long id = chessService.addGame(roomCreationRequest);
 
         // then
         assertAll(
@@ -45,12 +45,12 @@ public class ChessGameServiceTest {
     @DisplayName("게임 검색")
     void getGame() {
         // given
-        GameCreationRequest gameCreationRequest = new GameCreationRequest();
+        RoomCreationRequest roomCreationRequest = new RoomCreationRequest();
         String title = "라라";
         String password = "1234";
-        gameCreationRequest.setTitle(title);
-        gameCreationRequest.setPassword(password);
-        Long id = chessService.addGame(gameCreationRequest);
+        roomCreationRequest.setTitle(title);
+        roomCreationRequest.setPassword(password);
+        Long id = chessService.addGame(roomCreationRequest);
 
         // then
         assertAll(
@@ -63,15 +63,15 @@ public class ChessGameServiceTest {
     @DisplayName("게임 검색")
     void getAllGame() {
         // given
-        GameCreationRequest gameCreationRequest1 = new GameCreationRequest();
-        gameCreationRequest1.setTitle("라라");
-        gameCreationRequest1.setPassword("1234");
-        chessService.addGame(gameCreationRequest1);
+        RoomCreationRequest roomCreationRequest1 = new RoomCreationRequest();
+        roomCreationRequest1.setTitle("라라");
+        roomCreationRequest1.setPassword("1234");
+        chessService.addGame(roomCreationRequest1);
 
-        GameCreationRequest gameCreationRequest2 = new GameCreationRequest();
-        gameCreationRequest2.setTitle("루루");
-        gameCreationRequest2.setPassword("1234");
-        chessService.addGame(gameCreationRequest2);
+        RoomCreationRequest roomCreationRequest2 = new RoomCreationRequest();
+        roomCreationRequest2.setTitle("루루");
+        roomCreationRequest2.setPassword("1234");
+        chessService.addGame(roomCreationRequest2);
 
         // then
         assertThat(chessService.getAllGames().size()).isEqualTo(2);

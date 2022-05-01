@@ -1,7 +1,7 @@
 package chess.serviece;
 
-import chess.dto.ChessResponse;
-import chess.dto.GameCreationRequest;
+import chess.controller.response.ChessGameResponse;
+import chess.controller.request.RoomCreationRequest;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.dto.GameDto;
@@ -30,20 +30,20 @@ public class ChessGameService {
         this.pieceDao = pieceDao;
     }
 
-    public Long addGame(GameCreationRequest gameCreationRequest) {
+    public Long addGame(RoomCreationRequest roomCreationRequest) {
         ChessGame chessGame = ChessGame.initGame();
-        long id = gameDao.save(createGameDto(chessGame, gameCreationRequest));
+        long id = gameDao.save(createGameDto(chessGame, roomCreationRequest));
         List<PieceDto> pieceDtos = convertPieceDtos(chessGame.getPieces(), id);
         pieceDao.saveAll(pieceDtos);
         return id;
     }
 
-    private GameDto createGameDto(ChessGame chessGame, GameCreationRequest gameCreationRequest) {
+    private GameDto createGameDto(ChessGame chessGame, RoomCreationRequest roomCreationRequest) {
         PieceColor turnColor = chessGame.getTurnColor();
         if (chessGame.isRunning()) {
-            return new GameDto(gameCreationRequest.getTitle(), gameCreationRequest.getPassword(), turnColor.getName(), "playing");
+            return new GameDto(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(), turnColor.getName(), "playing");
         }
-        return new GameDto(gameCreationRequest.getTitle(), gameCreationRequest.getPassword(), turnColor.getName(), "finished");
+        return new GameDto(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(), turnColor.getName(), "finished");
     }
 
     private List<PieceDto> convertPieceDtos(Map<Position, Piece> pieces, long gameId) {
@@ -77,13 +77,13 @@ public class ChessGameService {
         gameDao.removeById(id);
     }
 
-    public ChessResponse getChessGame(Long gameId) {
+    public ChessGameResponse getChessGame(Long gameId) {
         List<PieceDto> pieceDtos = pieceDao.findPiecesByGameId(gameId);
         GameDto gameDto = gameDao.findGameById(gameId);
-        return new ChessResponse(gameId, pieceDtos, gameDto.getTurn(), gameDto.getStatus());
+        return new ChessGameResponse(gameId, pieceDtos, gameDto.getTurn(), gameDto.getStatus());
     }
 
-    public ChessResponse movePiece(Long gameId, MoveCommand moveCommand) {
+    public ChessGameResponse movePiece(Long gameId, MoveCommand moveCommand) {
         ChessGame game = createGame(gameId);
         game.proceedWith(moveCommand);
         pieceDao.removeByPosition(gameId, moveCommand.to());

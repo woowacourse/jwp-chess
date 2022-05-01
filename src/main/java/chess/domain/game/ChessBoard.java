@@ -27,6 +27,12 @@ public final class ChessBoard {
         return Optional.empty();
     }
 
+    public void move(final Position source, final Position target) {
+        validateMovement(source, target);
+        pieces.put(target, findPiece(source));
+        pieces.remove(source);
+    }
+
     private Piece findPiece(final Position sourcePosition) {
         final Optional<Piece> wrappedPiece = piece(sourcePosition);
         if (wrappedPiece.isEmpty()) {
@@ -35,7 +41,7 @@ public final class ChessBoard {
         return wrappedPiece.get();
     }
 
-    public void validateMovement(Position sourcePosition, Position targetPosition) {
+    private void validateMovement(Position sourcePosition, Position targetPosition) {
         validateNotEquals(sourcePosition, targetPosition);
         validateTargetNotSameColor(targetPosition, findPiece(sourcePosition));
         findPiece(sourcePosition).validateMovement(sourcePosition, targetPosition);

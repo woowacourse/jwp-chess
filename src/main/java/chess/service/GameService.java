@@ -64,8 +64,8 @@ public final class GameService {
         ChessPosition targetPosition = positionDao.getByColumnAndRowAndBoardId(targetRawPosition.getColumn(),
                 targetRawPosition.getRow(), roomId);
         ChessBoard chessBoard = new ChessBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
-        chessBoard.validateMovement(sourceRawPosition, targetRawPosition);
-        validateTurn(roomId, new Position(sourcePosition.getColumn(), sourcePosition.getRow()));
+        validateTurn(roomId, sourceRawPosition);
+        chessBoard.move(sourceRawPosition, targetRawPosition);
         updateMovingPiecePosition(sourcePosition, targetPosition, chessBoard.piece(targetRawPosition));
         changeTurn(roomId);
     }

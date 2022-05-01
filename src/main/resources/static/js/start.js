@@ -16,7 +16,7 @@ const clickEvent = (e) => {
     }
 
     fetch(moveUrl, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },

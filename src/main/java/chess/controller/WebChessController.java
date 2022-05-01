@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -60,7 +61,7 @@ public class WebChessController {
         return "redirect:/game/" + gameId;
     }
 
-    @PostMapping("/game/{gameId}/move")
+    @PutMapping("/game/{gameId}/move")
     @ResponseBody
     public ResponseEntity<MoveRequestDto> move(
             @PathVariable("gameId") int gameId, @RequestBody MoveRequestDto moveRequestDto) {

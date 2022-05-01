@@ -36,7 +36,7 @@ public class Finished implements GameState {
     }
 
     @Override
-    public Team getTeam() {
+    public Team team() {
         return team;
     }
 }

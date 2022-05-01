@@ -29,7 +29,7 @@ public class WhiteTurn extends Playing {
     }
 
     @Override
-    public Team getTeam() {
+    public Team team() {
         return Team.WHITE;
     }
 }

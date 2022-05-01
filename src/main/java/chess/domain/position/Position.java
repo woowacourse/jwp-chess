@@ -14,7 +14,7 @@ public class Position {
     private final Column col;
     private final Row row;
 
-    public String getPositionToString() {
+    public String toSymbol() {
         return col.getSymbol() + row.getSymbol();
     }
 

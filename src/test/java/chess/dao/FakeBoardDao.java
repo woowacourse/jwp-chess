@@ -20,7 +20,7 @@ public class FakeBoardDao implements BoardDao {
     public void savePieces(Map<Position, Piece> board, long roomId) {
         for (Position position : board.keySet()) {
             id++;
-            boards.put(id, new FakePiece(position.getPositionToString(), board.get(position).getSymbol(), roomId));
+            boards.put(id, new FakePiece(position.toSymbol(), board.get(position).getSymbol(), roomId));
         }
     }
 

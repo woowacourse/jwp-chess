@@ -10,7 +10,6 @@ function move(position) {
         "source": sourcePosition,
         "destination": position,
     }
-
     movePiece(object, position);
 }
 
@@ -23,6 +22,8 @@ function movePiece(object, position) {
         data: JSON.stringify(object),
         success(data) {
             let result = data;
+            const team = data.team;
+            document.getElementById("turn").innerText = team + " Turn";
             printGameState(result);
             changePiece(position);
         },

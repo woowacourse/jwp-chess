@@ -31,7 +31,7 @@ public class ChessGameControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        id = chessService.makeGame(new MakeRoomRequest("green green", "1234"));
+        id = chessService.initializeGame(new MakeRoomRequest("green green", "1234"));
     }
 
     @AfterEach
@@ -72,7 +72,7 @@ public class ChessGameControllerTest {
     void statusGame() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/status")
+                .when().get("/status/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(2));

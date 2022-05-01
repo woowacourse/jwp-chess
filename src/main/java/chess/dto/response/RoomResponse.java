@@ -19,7 +19,7 @@ public class RoomResponse {
         return id;
     }
 
-    public Team getStatus() {
+    public Team status() {
         return status;
     }
 

@@ -1,6 +1,7 @@
 function startGame() {
+    const url = window.location.href.split('/');
     $.ajax({
-        url: "/loadBoard/" + + document.getElementById("gameId").innerText,
+        url: "/loadBoard/" + url[url.length - 1],
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         type: "get",
@@ -19,6 +20,7 @@ function startGame() {
 
         },
         error: function (data){
+            alert(JSON.stringify(data))
             alert(data)
         }
     })
@@ -76,7 +78,7 @@ function end() {
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            if (data.running === false) {
+            if (data.running === true) {
                 const winningTeam = data.gameState;
                 alert("게임이 종료되었습니다." + "우승자는 "+ winningTeam);
             }

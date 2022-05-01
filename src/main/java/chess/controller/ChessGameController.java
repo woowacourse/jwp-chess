@@ -28,9 +28,9 @@ public class ChessGameController {
         return ResponseEntity.created(URI.create("/move/" + id)).body(chessService.move(id, moveResponse));
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<ScoreResponse> getStatus() {
-        return ResponseEntity.ok().body(chessService.getStatus());
+    @GetMapping("/status/{id}")
+    public ResponseEntity<ScoreResponse> getStatus(@PathVariable Long id) {
+        return ResponseEntity.ok().body(chessService.getStatus(id));
     }
 
     @PostMapping("/reset/{id}")
@@ -41,12 +41,12 @@ public class ChessGameController {
 
     @GetMapping("/loadGames")
     public ResponseEntity<GamesResponse> loadGames() {
-        return ResponseEntity.ok().body(new GamesResponse(chessService.getGameList()));
+        return ResponseEntity.ok().body(new GamesResponse(chessService.getGames()));
     }
 
     @PostMapping("/end/{id}")
     public ResponseEntity<GameStateResponse> endGame(@PathVariable Long id) {
-        chessService.updateEndStatus(id);
-        return ResponseEntity.ok().body(chessService.findWinner());
+        chessService.updateStateEnd(id);
+        return ResponseEntity.ok().body(chessService.findWinner(id));
     }
 }

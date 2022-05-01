@@ -15,5 +15,5 @@ public interface GameState {
 
     boolean isRunning();
 
-    Team getTeam();
+    Team team();
 }

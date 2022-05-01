@@ -44,7 +44,7 @@ public class ChessGameViewController {
 
     @PostMapping("/room")
     public String createRoom(MakeRoomRequest makeRoomRequest) {
-        Long id = chessService.makeGame(makeRoomRequest);
+        Long id = chessService.initializeGame(makeRoomRequest);
         return "redirect:/board/" + id;
     }
 

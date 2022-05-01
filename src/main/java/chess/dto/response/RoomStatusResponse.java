@@ -15,7 +15,7 @@ public class RoomStatusResponse {
         return id;
     }
 
-    public Team getStatus() {
+    public Team status() {
         return status;
     }
 }

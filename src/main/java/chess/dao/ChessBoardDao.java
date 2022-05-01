@@ -25,7 +25,7 @@ public class ChessBoardDao implements BoardDao {
 
         jdbcTemplate.batchUpdate(sql, board.keySet(), board.size(),
                 (rs, position) -> {
-                    rs.setString(1, position.getPositionToString());
+                    rs.setString(1, position.toSymbol());
                     rs.setString(2, board.get(position).getSymbol());
                     rs.setLong(3, roomId);
                 });

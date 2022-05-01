@@ -43,7 +43,7 @@ public class FakeRoomDao implements RoomDao {
                 .findAny()
                 .orElse(null);
         if (room != null) {
-            return new RoomStatusResponse(room.getId(), room.getStatus());
+            return new RoomStatusResponse(room.getId(), room.status());
         }
         return null;
     }

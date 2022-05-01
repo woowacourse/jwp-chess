@@ -20,7 +20,7 @@ class PositionTest {
         Position position = Position.from(inputPosition);
 
         // when
-        String positionToString = position.getPositionToString();
+        String positionToString = position.toSymbol();
 
         // then
         assertThat(positionToString).isEqualTo(inputPosition);
@@ -31,7 +31,7 @@ class PositionTest {
     @DisplayName("위치 값을 문자열로 입력 받은 후, Position을 조회한다.")
     void from(String input) {
         Position position = Position.from(input);
-        assertThat(position.getPositionToString()).isEqualTo(input);
+        assertThat(position.toSymbol()).isEqualTo(input);
     }
 
     @ParameterizedTest

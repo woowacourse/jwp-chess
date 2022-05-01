@@ -77,7 +77,7 @@ class WhiteTurnTest {
 
         // when
         GameState whiteTurn = board.move(source, destination);
-        Team result = whiteTurn.getTeam();
+        Team result = whiteTurn.team();
 
         // then
         assertThat(result).isEqualTo(Team.BLACK);

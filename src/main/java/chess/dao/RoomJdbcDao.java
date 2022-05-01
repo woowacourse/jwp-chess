@@ -15,11 +15,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoomDaoImpl implements RoomDao {
+public class RoomJdbcDao implements RoomDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public RoomDaoImpl(JdbcTemplate jdbcTemplate) {
+    public RoomJdbcDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -17,11 +17,11 @@ class SquareDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private SquareDaoImpl squareDao;
+    private SquareJdbcDao squareDao;
 
     @BeforeEach
     void beforeEach() {
-        squareDao = new SquareDaoImpl(jdbcTemplate);
+        squareDao = new SquareJdbcDao(jdbcTemplate);
         JdbcFixture.dropTable(jdbcTemplate, "square");
         JdbcFixture.dropTable(jdbcTemplate, "room");
 

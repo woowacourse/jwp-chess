@@ -9,11 +9,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class SquareDaoImpl implements SquareDao {
+public class SquareJdbcDao implements SquareDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public SquareDaoImpl(JdbcTemplate jdbcTemplate) {
+    public SquareJdbcDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

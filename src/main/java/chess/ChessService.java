@@ -34,9 +34,9 @@ public class ChessService {
     private final RoomDao roomDao;
     private final SquareDao squareDao;
 
-    public ChessService(RoomDao roomDao, SquareDao squareDao) {
-        this.roomDao = roomDao;
-        this.squareDao = squareDao;
+    public ChessService(RoomDao roomJdbcDao, SquareDao squareJdbcDao) {
+        this.roomDao = roomJdbcDao;
+        this.squareDao = squareJdbcDao;
     }
 
     public BoardDto startNewGame(long roomId) {

@@ -16,11 +16,11 @@ class RoomDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private RoomDaoImpl roomDao;
+    private RoomJdbcDao roomDao;
 
     @BeforeEach
     void beforeEach() {
-        roomDao = new RoomDaoImpl(jdbcTemplate);
+        roomDao = new RoomJdbcDao(jdbcTemplate);
         JdbcFixture.dropTable(jdbcTemplate, "square");
         JdbcFixture.dropTable(jdbcTemplate, "room");
 

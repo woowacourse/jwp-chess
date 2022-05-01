@@ -15,9 +15,9 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void saveChessGame(final String gameName, final String password, final String turn) {
+    public int saveChessGame(final String gameName, final String password, final String turn) {
         final String sql = "insert into chess_game (name, password, turn, running) values (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, gameName, password, turn, true);
+        return jdbcTemplate.update(sql, gameName, password, turn, true);
     }
 
     public int findChessGameCountByName(final String gameName) {

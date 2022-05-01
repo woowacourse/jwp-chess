@@ -1,7 +1,7 @@
-package chess.dao.springjdbc;
+package chess.repository.dao.springjdbc;
 
-import chess.dao.PieceDao;
-import chess.entity.PieceEntity;
+import chess.repository.dao.PieceDao;
+import chess.repository.dao.entity.PieceEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -39,14 +39,8 @@ public class SpringPieceDao implements PieceDao {
     }
 
     @Override
-    public void remove(final Integer id) {
-        String sql = "DELETE FROM piece WHERE game_id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    @Override
-    public int update(final PieceEntity piece, final Integer gameId) {
+    public int update(final PieceEntity piece) {
         String sql = "UPDATE piece SET piece_type = ?, piece_color = ? WHERE square = ? AND game_id = ?";
-        return jdbcTemplate.update(sql, piece.getType(), piece.getColor(), piece.getSquare(), gameId);
+        return jdbcTemplate.update(sql, piece.getType(), piece.getColor(), piece.getSquare(), piece.getGameId());
     }
 }

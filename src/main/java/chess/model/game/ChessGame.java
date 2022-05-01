@@ -24,7 +24,9 @@ public class ChessGame {
         return new ChessGame(Color.WHITE, Status.READY, new Board(new EmptyBoardInitializer()));
     }
 
-    public void init() {
+
+
+    public void start() {
         this.status = Status.PLAYING;
         this.turn = Color.WHITE;
         this.board = new Board(new ChessInitializer());
@@ -81,7 +83,7 @@ public class ChessGame {
     }
 
     public Map<Square, Piece> getBoard() {
-        return Map.copyOf(board.getBoard());
+        return Map.copyOf(board.getValue());
     }
 
     public Color getTurn() {

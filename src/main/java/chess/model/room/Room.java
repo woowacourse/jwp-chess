@@ -1,7 +1,5 @@
 package chess.model.room;
 
-import chess.entity.GameEntity;
-
 public class Room {
     private final String name;
     private final Password password;
@@ -21,5 +19,12 @@ public class Room {
 
     public boolean isSamePassword(String plainPassword) {
         return password.isSamePassword(plainPassword);
+    }
+
+    public String getName() {
+        return name;
+    }
+    public String getPassword() {
+        return password.getHashedPassword();
     }
 }

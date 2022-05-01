@@ -1,6 +1,6 @@
-package chess.dao;
+package chess.repository.dao;
 
-import chess.entity.PieceEntity;
+import chess.repository.dao.entity.PieceEntity;
 import java.util.List;
 
 public interface PieceDao {
@@ -8,7 +8,5 @@ public interface PieceDao {
 
     List<PieceEntity> getBoardByGameId(Integer gameId);
 
-    void remove(Integer id);
-
-    int update(PieceEntity piece, Integer gameId);
+    int update(PieceEntity piece);
 }

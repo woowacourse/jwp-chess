@@ -1,10 +1,11 @@
 package chess.dao;
 
-import chess.entity.PieceEntity;
+import chess.repository.dao.entity.PieceEntity;
 import chess.model.board.ChessInitializer;
 import chess.model.board.Square;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
+import chess.repository.dao.PieceDao;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,13 +36,8 @@ public class InMemoryPieceDao implements PieceDao {
     }
 
     @Override
-    public void remove(Integer gameId) {
-        boardTable.remove(gameId);
-    }
-
-    @Override
-    public int update(PieceEntity replacePiece, Integer gameId) {
-        List<PieceEntity> pieces = boardTable.get(gameId);
+    public int update(PieceEntity replacePiece) {
+        List<PieceEntity> pieces = boardTable.get(replacePiece.getGameId());
         int affectedRows = 0;
         for (int i = 0; i < pieces.size(); i++) {
             affectedRows += replaceIfSquareEquals(replacePiece, pieces, i);

@@ -21,4 +21,8 @@ public class Password {
     public boolean isSamePassword(String plainText) {
         return BCrypt.checkpw(plainText, hashedPassword);
     }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
 }

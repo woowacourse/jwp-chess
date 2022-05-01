@@ -3,7 +3,8 @@ package chess.dao.springjdbc;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.entity.PieceEntity;
+import chess.repository.dao.entity.PieceEntity;
+import chess.repository.dao.springjdbc.SpringPieceDao;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,20 +60,11 @@ class SpringPieceDaoTest {
     }
 
     @Test
-    @DisplayName("remove : 보드가 정상적으로 제거되는지 확인")
-    void remove() {
-        initBoard("first");
-        springPieceDao.remove(1);
-
-        assertThat(springPieceDao.getBoardByGameId(1)).isEmpty();
-    }
-
-    @Test
     @DisplayName("update : 보드의 피스 정보들이 정상적으러 업데이트 되는지 확인")
     void update() {
         initBoard("first");
         PieceEntity piece = new PieceEntity(null, 1, "a4", "pawn", "white");
-        int affectedRows = springPieceDao.update(piece, 1);
+        int affectedRows = springPieceDao.update(piece);
         List<PieceEntity> pieces = springPieceDao.getBoardByGameId(1);
         assertAll(() -> {
             assertThat(affectedRows).isEqualTo(1);

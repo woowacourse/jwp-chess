@@ -1,6 +1,7 @@
 package chess.web.controller;
 
 import chess.service.ChessService;
+import chess.service.RoomService;
 import chess.service.dto.request.CreateGameRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,15 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class ChessController {
 
-    private final ChessService chessService;
+    private final RoomService roomService;
 
-    public ChessController(ChessService chessService) {
-        this.chessService = chessService;
+    public ChessController(final RoomService roomService) {
+        this.roomService = roomService;
     }
 
     @GetMapping("/")
     public String renderIndex(Model model) {
-        model.addAttribute("games", chessService.getAllGames());
+        model.addAttribute("games", roomService.getAllRooms());
         return "index";
     }
 
@@ -32,7 +33,7 @@ public class ChessController {
     public String createGame(CreateGameRequest createGameRequest) {
         String name = createGameRequest.getName();
         String password = createGameRequest.getPassword();
-        chessService.createGame(name, password);
+        roomService.createRoom(name, password);
         return "redirect:/";
     }
 }

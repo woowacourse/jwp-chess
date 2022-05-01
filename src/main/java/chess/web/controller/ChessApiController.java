@@ -1,6 +1,7 @@
 package chess.web.controller;
 
 import chess.service.ChessService;
+import chess.service.RoomService;
 import chess.service.dto.request.DeleteGameRequest;
 import chess.service.dto.request.MoveRequest;
 import chess.service.dto.response.BoardDto;
@@ -23,9 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ChessApiController {
     private final ChessService chessService;
+    private final RoomService roomService;
 
-    public ChessApiController(ChessService chessService) {
+    public ChessApiController(final ChessService chessService, final RoomService roomService) {
         this.chessService = chessService;
+        this.roomService = roomService;
     }
 
     @PostMapping("/board/{gameId}")
@@ -59,7 +62,7 @@ public class ChessApiController {
     public DeleteGameResponse deleteGame(@RequestBody DeleteGameRequest deleteRequest) {
         int id = deleteRequest.getId();
         String password = deleteRequest.getPassword();
-        return chessService.deleteGame(id, password);
+        return roomService.deleteRoom(id, password);
     }
 
     @GetMapping("/status/{gameId}")

@@ -5,6 +5,7 @@ import chess.dto.PasswordReq;
 import chess.dto.RoomAllRes;
 import chess.dto.RoomCreateReq;
 import chess.dto.StatusRes;
+import chess.dto.WinnerRes;
 import chess.entity.Room;
 import chess.service.ChessService;
 import java.util.List;

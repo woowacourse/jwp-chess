@@ -1,13 +1,13 @@
 package chess.dto;
 
-public class ErrorDto {
+public class ErrorRes {
 
     private String message;
 
-    public ErrorDto() {
+    public ErrorRes() {
     }
 
-    public ErrorDto(String message) {
+    public ErrorRes(String message) {
         this.message = message;
     }
 

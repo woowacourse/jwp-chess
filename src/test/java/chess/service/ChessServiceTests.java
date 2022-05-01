@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import chess.dao.RoomFakeDao;
 import chess.dao.SquareFakeDao;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ class ChessServiceTests {
         chessService.insertRoom("title1", "1111");
         chessService.insertRoom("title1", "1111");
 
-        Assertions.assertThat(chessService.findAllRoom()).hasSize(2);
+        assertThat(chessService.findAllRoom()).hasSize(2);
     }
 
     @Test
@@ -51,7 +50,7 @@ class ChessServiceTests {
         final Long roomId = chessService.insertRoom("title1", "1111");
         chessService.insertBoard(roomId);
 
-        Assertions.assertThat(chessService.findSquareAllById(roomId)).hasSize(64);
+        assertThat(chessService.findSquareAllById(roomId)).hasSize(64);
     }
 
     @Test
@@ -80,7 +79,7 @@ class ChessServiceTests {
         final Long roomId = chessService.insertRoom("title1", "1111");
         chessService.insertBoard(roomId);
 
-        org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> chessService.updateStateEnd(roomId));
+        assertDoesNotThrow(() -> chessService.updateStateEnd(roomId));
     }
 
     @Nested
@@ -92,7 +91,7 @@ class ChessServiceTests {
         void valid() {
             final Long roomId = chessService.insertRoom("title1", "1111");
 
-            org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> chessService.deleteRoom(roomId, "1111"));
+            assertDoesNotThrow(() -> chessService.deleteRoom(roomId, "1111"));
         }
 
         @Test

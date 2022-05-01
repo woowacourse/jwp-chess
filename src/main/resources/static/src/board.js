@@ -38,7 +38,7 @@ async function updateBoard() {
 
 async function updateStateEnd() {
     const roomId = document.getElementById("roomId").value;
-    const res = await fetch(`/api/room/${roomId}/stateEnd`, {
+    const res = await fetch(`/api/room/${roomId}/state/end`, {
         method: "put"
     });
 
@@ -52,7 +52,7 @@ async function updateStateEnd() {
 }
 
 async function selectGameIsFinish(roomId) {
-    const res = await fetch(`/api/room/${roomId}/stateEnd`);
+    const res = await fetch(`/api/room/${roomId}/state/end`);
 
     const data = await res.json();
     if (data.winner != "NO_WINNER") {

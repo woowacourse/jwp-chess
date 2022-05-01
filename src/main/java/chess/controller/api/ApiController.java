@@ -29,7 +29,7 @@ public class ApiController {
         this.chessServiceV2 = chessServiceV2;
     }
 
-    @GetMapping("/room/all")
+    @GetMapping("/rooms")
     public ResponseEntity<RoomAllRes> findAllRoom() {
         final List<Room> rooms = chessServiceV2.findAllRoom();
         return ResponseEntity.ok().body(RoomAllRes.createRoomAllRes(rooms));
@@ -59,13 +59,13 @@ public class ApiController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/room/{roomId}/stateEnd")
+    @PutMapping("/room/{roomId}/state/end")
     public ResponseEntity<Void> updateStateEnd(@PathVariable Long roomId) {
         chessServiceV2.updateStateEnd(roomId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/room/{roomId}/stateEnd")
+    @GetMapping("/room/{roomId}/state/end")
     public ResponseEntity<WinnerRes> selectWinner(@PathVariable Long roomId) {
         final String winner = chessServiceV2.findWinnerById(roomId);
         return ResponseEntity.ok().body(new WinnerRes(winner));

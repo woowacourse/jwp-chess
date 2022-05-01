@@ -3,7 +3,7 @@ window.onload = async function () {
 }
 
 async function selectRoomAll() {
-    const res = await fetch('/api/room/all');
+    const res = await fetch('/api/rooms');
     const data = await res.json();
     if (!res.ok) {
         const data = await res.json();

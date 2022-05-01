@@ -25,32 +25,32 @@ class GameDaoTest {
                 + "game_id int primary key auto_increment,"
                 + " current_turn varchar(10) default'WHITE')");
 
-        gameDao.insert(new GameEntity("WHITE"));
+        gameDao.insert(GameEntity.of("WHITE"));
     }
 
     @AfterEach
     void clean() {
-        gameDao.deleteById(1);
+        gameDao.deleteById(GameEntity.of(1));
         jdbcTemplate.execute("drop table game if exists");
     }
 
     @Test
-    void updateTurnTest() {
+    void updateByIdTest() {
         int gameId = 1;
-        gameDao.updateById(new GameEntity(gameId, "BLACK"));
-        assertThat(gameDao.findById(gameId).getTurn()).isEqualTo("BLACK");
+        gameDao.updateById(GameEntity.of(gameId, "BLACK"));
+        assertThat(gameDao.findById(GameEntity.of(gameId)).getTurn()).isEqualTo("BLACK");
     }
 
     @Test
-    void findTurnByIdTest() {
+    void findByIdTest() {
         int gameId = 1;
-        String turn = gameDao.findById(gameId).getTurn();
+        String turn = gameDao.findById(GameEntity.of(gameId)).getTurn();
         assertThat(turn).isEqualTo("WHITE");
     }
 
     @Test
     void insertWithKeyHolderTest() {
-        int id = gameDao.insertWithKeyHolder(new GameEntity("WHITE"));
+        int id = gameDao.insertWithKeyHolder(GameEntity.of("WHITE"));
         assertThat(id).isEqualTo(2);
     }
 }

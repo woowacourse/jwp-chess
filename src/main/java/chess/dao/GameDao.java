@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GameDao {
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<GameEntity> gameEntityRowMapper = (resultSet, rowNum) -> new GameEntity(
+    private final RowMapper<GameEntity> gameEntityRowMapper = (resultSet, rowNum) -> GameEntity.of(
             resultSet.getInt("game_id"),
             resultSet.getString("current_turn")
     );
@@ -27,9 +27,9 @@ public class GameDao {
         jdbcTemplate.update(sql, gameEntity.getTurn(), gameEntity.getGameId());
     }
 
-    public GameEntity findById(int gameId) {
+    public GameEntity findById(GameEntity gameEntity) {
         String sql = "select * from game where game_id = ?";
-        return jdbcTemplate.queryForObject(sql, gameEntityRowMapper, gameId);
+        return jdbcTemplate.queryForObject(sql, gameEntityRowMapper, gameEntity.getGameId());
     }
 
     public void insert(GameEntity gameEntity) {
@@ -37,9 +37,9 @@ public class GameDao {
         jdbcTemplate.update(sql, gameEntity.getTurn());
     }
 
-    public void deleteById(int gameId) {
+    public void deleteById(GameEntity gameEntity) {
         String sql = "delete from game where game_id = ?";
-        jdbcTemplate.update(sql, gameId);
+        jdbcTemplate.update(sql, gameEntity.getGameId());
     }
 
     public int insertWithKeyHolder(GameEntity gameEntity) {

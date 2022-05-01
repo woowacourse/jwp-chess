@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dto.BoardElementDto;
+import chess.entity.PieceEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PieceDao {
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<BoardElementDto> boardDtoRowMapper = (resultSet, rowNum) -> new BoardElementDto(
+    private final RowMapper<PieceEntity> pieceEntityRowMapper = (resultSet, rowNum) -> PieceEntity.of(
+            resultSet.getInt("game_id"),
             resultSet.getString("piece_name"),
             resultSet.getString("piece_color"),
             resultSet.getString("position")
@@ -19,32 +20,42 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void savePiece(int gameId, BoardElementDto boardElementDto) {
+    public void insert(PieceEntity pieceEntity) {
         String sql = "insert into piece (game_id, piece_name, piece_color, position) values (?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                gameId,
-                boardElementDto.getPieceName(),
-                boardElementDto.getPieceColor(),
-                boardElementDto.getPosition());
+                pieceEntity.getGameId(),
+                pieceEntity.getPieceName(),
+                pieceEntity.getPieceColor(),
+                pieceEntity.getPosition());
     }
 
-    public List<BoardElementDto> findAllPieceById(int gameId) {
+    public PieceEntity find(PieceEntity pieceEntity) {
+        String sql = "select * from piece where game_id=? and position=?";
+        return jdbcTemplate.queryForObject(sql, pieceEntityRowMapper, pieceEntity.getGameId(), pieceEntity.getPosition());
+    }
+
+    public List<PieceEntity> findAll(PieceEntity pieceEntity) {
         String sql = "SELECT * FROM piece WHERE game_id=?";
-        return jdbcTemplate.query(sql, boardDtoRowMapper, gameId);
+        return jdbcTemplate.query(sql, pieceEntityRowMapper, pieceEntity.getGameId());
     }
 
-    public void deleteAllPieceById(int gameId) {
+    public void update(PieceEntity from, PieceEntity to) {
+        String sql = "update piece set piece_name=?, piece_color=?, position=? where game_id=? and position=?";
+        jdbcTemplate.update(sql,
+                to.getPieceName(),
+                to.getPieceColor(),
+                to.getPosition(),
+                from.getGameId(),
+                from.getPosition());
+    }
+
+    public void delete(PieceEntity pieceEntity) {
+        String sql = "delete from piece where game_id=? and position=?";
+        jdbcTemplate.update(sql, pieceEntity.getGameId(), pieceEntity.getPosition());
+    }
+
+    public void deleteAll(PieceEntity pieceEntity) {
         String sql = "DELETE FROM piece WHERE game_id = ?";
-        jdbcTemplate.update(sql, gameId);
-    }
-
-    public void deletePieceByIdAndPosition(int gameId, String position) {
-        String sql = "DELETE FROM piece WHERE game_id = ? and position = ?";
-        jdbcTemplate.update(sql, gameId, position);
-    }
-
-    public void updatePiecePosition(int gameId, String from, String to) {
-        String sql = "UPDATE piece SET position = ? WHERE position = ? AND game_id = ?";
-        jdbcTemplate.update(sql, to, from, gameId);
+        jdbcTemplate.update(sql, pieceEntity.getGameId());
     }
 }

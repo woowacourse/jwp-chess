@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.dto.RoomDto;
+import chess.entity.RoomEntity;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public class RoomDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<RoomDto> roomDtoRowMapper = (resultSet, rowNum) -> new RoomDto(
+    private final RowMapper<RoomEntity> roomEntityRowMapper = (resultSet, rowNum) -> RoomEntity.of(
             resultSet.getInt("game_id"),
             resultSet.getString("room_name"),
             resultSet.getString("room_password"),
@@ -21,32 +22,36 @@ public class RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void saveRoom(RoomDto roomDto) {
+    public void insert(RoomEntity roomEntity) {
         String sql = "insert into room (game_id, room_name, room_password, status) values (?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                roomDto.getId(),
-                roomDto.getName(),
-                roomDto.getPassword(),
-                roomDto.getStatus());
+                roomEntity.getGameId(),
+                roomEntity.getRoomName(),
+                roomEntity.getRoomPassword(),
+                roomEntity.getStatus());
     }
 
-    public List<RoomDto> findAll() {
+    public List<RoomEntity> findAll() {
         String sql = "select * from room";
-        return jdbcTemplate.query(sql, roomDtoRowMapper);
+        return jdbcTemplate.query(sql, roomEntityRowMapper);
     }
 
-    public void deleteRoom(int gameId) {
+    public void delete(RoomEntity roomEntity) {
         String sql = "delete from room where game_id=?";
-        jdbcTemplate.update(sql, gameId);
+        jdbcTemplate.update(sql, roomEntity.getGameId());
     }
 
-    public String findPasswordById(int gameId) {
-        String sql = "select room_password from room where game_id=?";
-        return jdbcTemplate.queryForObject(sql, String.class, gameId);
+    public RoomEntity findById(RoomEntity roomEntity) {
+        String sql = "select * from room where game_id=?";
+        return jdbcTemplate.queryForObject(sql, roomEntityRowMapper, roomEntity.getGameId());
     }
 
-    public void updateStatus(int gameId, String status) {
-        String sql = "update room set status=? where game_id=?";
-        jdbcTemplate.update(sql, status, gameId);
+    public void updateById(RoomEntity roomEntity) {
+        String sql = "update room set room_name=?, room_password=?, status=? where game_id=?";
+        jdbcTemplate.update(sql,
+                roomEntity.getRoomName(),
+                roomEntity.getRoomPassword(),
+                roomEntity.getStatus(),
+                roomEntity.getGameId());
     }
 }

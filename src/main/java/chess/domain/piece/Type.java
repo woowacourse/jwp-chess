@@ -25,7 +25,7 @@ public enum Type {
         }
         return sourcePosition.inSameRowWith(targetPosition);
     }, 5, Rook::new),
-    NONE((sourcePosition, targetPosition) -> false, 0, (camp) -> new None());
+    NONE((sourcePosition, targetPosition) -> false, 0, camp -> new None());
 
     private static final int DISTANCE_KNIGHT_FIRST_STEP = 2;
     private static final int DISTANCE_KNIGHT_SECOND_STEP = 1;

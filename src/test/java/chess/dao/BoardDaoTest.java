@@ -36,7 +36,7 @@ class BoardDaoTest {
     void saveTo() {
         Map<Position, Piece> squares = BoardInitializer.get().getSquares();
 
-        assertThatNoException().isThrownBy(() -> boardDao.update(squares));
+        assertThatNoException().isThrownBy(() -> boardDao.update(id, squares));
     }
 
     @DisplayName("DB에 초기 보드를 저장한 후 load하면 a1 위치에 흰색 룩이 있다.")

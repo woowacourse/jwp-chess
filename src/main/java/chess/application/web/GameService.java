@@ -158,7 +158,7 @@ public class GameService {
         if (savedChessGame.incorrectPassword(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        boardDao.deleteAllByGameId(id);
+        boardDao.deletePiecesByGameId(id);
         gameDao.deleteById(id);
     }
 }

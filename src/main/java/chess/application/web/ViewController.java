@@ -65,11 +65,6 @@ public class ViewController {
         return "redirect:/game/" + id;
     }
 
-    private String play(Model model) {
-        model.addAllAttributes(gameService.modelPlayingBoard());
-        return "index";
-    }
-
     @GetMapping("/game/end")
     public String end(Model model) {
         model.addAllAttributes(gameService.end());

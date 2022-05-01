@@ -1,10 +1,13 @@
 package chess.application.web;
 
+import java.net.URI;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -13,6 +16,21 @@ public class GameController {
 
     public GameController(GameService gameService) {
         this.gameService = gameService;
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<Void> createGame(@RequestParam Map<String, String> request) {
+        String title = request.get("title");
+        String password = request.get("password");
+        int gameId = gameService.create(title, password);
+        return ResponseEntity.created(URI.create("/game/" + gameId)).build();
+    }
+
+    @PostMapping("/game/{id}/move")
+    public ResponseEntity<Map<String, Object>> move(@RequestParam Map<String, String> request, @PathVariable int id) {
+        gameService.move(request.get("source"), request.get("target"));
+        gameService.updateGame(id);
+        return ResponseEntity.ok().body(gameService.modelPlayingBoard());
     }
 
     @GetMapping("/game/status")
@@ -25,5 +43,11 @@ public class GameController {
     public ResponseEntity<Void> save(@PathVariable int id) {
         gameService.updateGame(id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteGame(@PathVariable int id, @RequestParam Map<String, String> request) {
+        gameService.deleteGame(id, request);
+        return ResponseEntity.ok().build();
     }
 }

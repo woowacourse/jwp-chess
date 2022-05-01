@@ -48,7 +48,7 @@ public class GameService {
         this.boardDao = boardDao;
     }
 
-    public List<GameDto> loadGames() {
+    public List<GameDto> findAllGames() {
         return gameDao.findAll();
     }
 
@@ -64,12 +64,12 @@ public class GameService {
         return model;
     }
 
-    public void create(String title, String password) {
+    public int create(String title, String password) {
         ChessGame chessGame = new ChessGame(title, password);
         chessGame.start();
         int gameId = gameDao.save(chessGame);
-        boardDao.deleteAllByGameId(gameId);
         boardDao.saveAll(gameId, chessGame.getBoardSquares());
+        return gameId;
     }
 
     public Map<String, Object> findBoardByGameId(int id) {

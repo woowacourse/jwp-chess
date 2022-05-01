@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class SpringJdbcRoomDao implements RoomDao {
+public class JdbcRoomDao implements RoomDao {
     private static final String TABLE_NAME = "room";
     private static final String WHITE_TURN = "WHITE";
     private static final String BLACK_TURN = "BLACK";
@@ -31,7 +31,7 @@ public class SpringJdbcRoomDao implements RoomDao {
             };
 
     @Autowired
-    public SpringJdbcRoomDao(JdbcTemplate jdbcTemplate) {
+    public JdbcRoomDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

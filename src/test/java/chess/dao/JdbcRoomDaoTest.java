@@ -13,18 +13,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-public class SpringJdbcRoomDaoTest {
+public class JdbcRoomDaoTest {
     private static final String TEST_ROOM_ID = "TEST-GAME-ID";
     private static final Room TEST_ROOM = Room.from(TEST_ROOM_ID, "test game room", "1234");
 
-    private SpringJdbcRoomDao gameDao;
+    private JdbcRoomDao gameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        gameDao = new SpringJdbcRoomDao(jdbcTemplate);
+        gameDao = new JdbcRoomDao(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE game IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE game("

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class SpringJdbcBoardDao implements BoardDao {
+public class JdbcBoardDao implements BoardDao {
     private static final String TABLE_NAME = "board";
 
     private final JdbcTemplate jdbcTemplate;
@@ -37,7 +37,7 @@ public class SpringJdbcBoardDao implements BoardDao {
     };
 
     @Autowired
-    public SpringJdbcBoardDao(JdbcTemplate jdbcTemplate, RoomDao roomDao) {
+    public JdbcBoardDao(JdbcTemplate jdbcTemplate, RoomDao roomDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.roomDao = roomDao;
     }

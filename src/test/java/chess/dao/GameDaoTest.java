@@ -2,7 +2,6 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
 
 import chess.domain.Camp;
 import chess.domain.ChessGame;
@@ -24,7 +23,7 @@ class GameDaoTest {
     private int id;
 
     @BeforeEach
-    void before() {
+    void setUp() {
         chessGame = new ChessGame("test", "test");
         id = gameDao.save(chessGame);
     }
@@ -36,7 +35,9 @@ class GameDaoTest {
 
     @DisplayName("새로운 게임이 저장되었는지 테스트한다.")
     @Test
-    void create() {
+    void save() {
+        ChessGame chessGame = new ChessGame("test2", "test2");
+        int id = gameDao.save(chessGame);
         ChessGame expected = gameDao.findById(id);
 
         assertThat(chessGame).isEqualTo(expected);
@@ -46,18 +47,21 @@ class GameDaoTest {
     @Test
     void findAll() {
         List<GameDto> result = gameDao.findAll();
+
         assertThat(result).isNotEmpty();
     }
 
-    @DisplayName("기존에 저장된 game이 있어도 data를 덮어쓸 수 있다.")
+    @DisplayName("id에 해당하는 게임을 조회한다.")
     @Test
-    void save_twice() {
-        assertThatNoException().isThrownBy(() -> gameDao.updateTurnById(id));
+    void findById() {
+        ChessGame result = gameDao.findById(id);
+
+        assertThat(result).isEqualTo(chessGame);
     }
 
     @DisplayName("흑색 진영의 차례일 때 게임을 저장하고 불러오면 백색 진영의 차례가 아니다.")
     @Test
-    void isWhiteTurn_false() {
+    void updateTurnById() {
         Camp.initializeTurn();
         Camp.switchTurn();
         gameDao.updateTurnById(id);
@@ -73,5 +77,11 @@ class GameDaoTest {
 
         assertThatThrownBy(() -> gameDao.findById(id))
                 .isInstanceOf(EmptyResultDataAccessException.class);
+    }
+
+    @DisplayName("백색 진영의 차례를 확인한다.")
+    @Test
+    void isWhiteTurn() {
+        assertThat(gameDao.isWhiteTurn(id)).isTrue();
     }
 }

@@ -1,7 +1,6 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
 
 import chess.domain.ChessGame;
 import chess.domain.board.BoardInitializer;
@@ -10,6 +9,7 @@ import chess.domain.piece.Piece;
 import chess.dto.PieceDto;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,30 +22,33 @@ class BoardDaoTest {
     BoardDao boardDao;
     @Autowired
     GameDao gameDao;
-
-    int id;
+    int gameId;
 
     @BeforeEach
-    void insertGameData() {
-        id = gameDao.save(new ChessGame("test", "test"));
-        gameDao.updateTurnById(id);
+    void setUp() {
+        gameId = gameDao.save(new ChessGame("test", "test"));
+        Map<Position, Piece> squares = BoardInitializer.get().getSquares();
+        boardDao.saveAll(gameId, squares);
     }
 
-    @DisplayName("DB에 보드를 저장한다.")
-    @Test
-    void saveTo() {
-        Map<Position, Piece> squares = BoardInitializer.get().getSquares();
+    @AfterEach
+    void after() {
+        boardDao.deleteAllByGameId(gameId);
+        gameDao.deleteById(gameId);
+    }
 
-        assertThatNoException().isThrownBy(() -> boardDao.saveAll(id, squares));
+    @DisplayName("새로운 게임 보드가 저장되었는지 테스트한다.")
+    @Test
+    void findAllByGameId() {
+        List<PieceDto> pieces = boardDao.findAllByGameId(gameId);
+
+        assertThat(pieces.size()).isEqualTo(64);
     }
 
     @DisplayName("DB에 초기 보드를 저장한 후 load하면 a1 위치에 흰색 룩이 있다.")
     @Test
-    void load_a1_white_rook() {
-        Map<Position, Piece> squares = BoardInitializer.get().getSquares();
-
-        boardDao.saveAll(id, squares);
-        List<PieceDto> board = boardDao.findAllByGameId(id);
+    void save_a1_white_rook() {
+        List<PieceDto> board = boardDao.findAllByGameId(gameId);
 
         PieceDto pieceAtA1 = board.stream()
                 .filter(pieceDto -> pieceDto.getPosition().equals("a1"))

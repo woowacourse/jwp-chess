@@ -1,5 +1,7 @@
+@import "global.css";
+
 td img {
-    max-width: 100%;
+    max-height: 100%;
 }
 
 #chess-board td {
@@ -14,11 +16,45 @@ td img {
     background-color: #FCE77D !important;
 }
 
-#team-score, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
-#team-score th, td {
+#team-score {
+  border: 1px solid black;
+  border-collapse: collapse;
   padding: 5px;
   text-align: left;
+}
+
+th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+  text-align: left;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.sub-container {
+  margin: 5px;
+}
+
+.current-team {
+  
+  border-radius: 10px;
+  padding: 7px;
+
+  font-size: 20px;
+} 
+
+.current-team.white {
+    background-color: white;
+    border: 1px solid white;
+    color: black;
+}
+
+.current-team.black {
+  background-color: black;
+  border: 1px solid black;
+  color: white;
 }

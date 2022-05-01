@@ -13,29 +13,37 @@
 <script src="js/game.js"></script>
 <body>
 
-  <input id="isNewGame" type="hidden" th:value="${isNewGame}"></input>
-  <table id="chess-board">
-  </table>
+  <input id="isNewGame" type="hidden" th:value="${isNewGame}">
 
-  <br /><br />
+  <div class="container">
+    <div class="sub-container">
+      <table id="chess-board"></table>
+    </div>
 
-  현재 팀: <span id="current-team"></span>
+    <div class="sub-container">
+      <table style="width:30vw">
+        <tr>
+          <td>Current Team</td>
+          <td id="current-team" class="">White Team</td>
+        </tr>
+      </table>
+      <br /><br /><br />
+      <table style="width:30vw" id="team-score">
+        <caption>Team Scores</caption>
+        <tr>
+          <th>White</th>
+          <th>Black</th>
+        </tr>
+        <tr>
+          <td id="white-score">0.0</td>
+          <td id="black-score">0.0</td>
+        </tr>
+      </table>
+      <br /><br />
+      <button id="save-game">SAVE</button>
+    </div>
 
-  <table style="width:100%" id="team-score">
-    <caption>Team Scores</caption>
-    <tr>
-      <th>White</th>
-      <th>Black</th>
-    </tr>
-    <tr>
-      <td id="white-score">0.0</td>
-      <td id="black-score">0.0</td>
-    </tr>
-  </table>
+  </div>
 
-  <br />
-  <br />
-  
-  <button id="save-game">게임저장</button>
 </body>
 </html>

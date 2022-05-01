@@ -177,6 +177,18 @@ function clearPieceImages() {
 
 function setCurrentTeam(teamName) {
   $("#current-team").text(teamName);
+
+  $("#current-team").removeClass();
+
+  switch (teamName.toLowerCase()) {
+    case "white team":
+      $("#current-team").addClass("current-team white");
+      break;
+
+    case "black team":
+      $("#current-team").addClass("current-team black");
+      break;
+  }
 }
 
 function setTeamScore(teamNameToScore) {

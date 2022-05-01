@@ -6,8 +6,8 @@ public final class MoveDto {
     private String from;
     private String to;
 
-    public MoveDto(final String gameId, final String from, final String to) {
-        this.gameId = Integer.parseInt(gameId);
+    public MoveDto(final int gameId, final String from, final String to) {
+        this.gameId = gameId;
         this.from = from;
         this.to = to;
     }

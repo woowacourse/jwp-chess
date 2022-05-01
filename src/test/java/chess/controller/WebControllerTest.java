@@ -1,10 +1,10 @@
-package chess.controller;
-
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class WebControllerTest {
-
+//package chess.controller;
+//
+//import org.springframework.boot.test.context.SpringBootTest;
+//
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//public class WebControllerTest {
+//
 //    @LocalServerPort
 //    int port;
 //
@@ -12,7 +12,7 @@ public class WebControllerTest {
 //    void setUp() {
 //        RestAssured.port = port;
 //    }
-
+//
 //    @Test
 //    void indexPage() {
 //        RestAssured.given().log().all()
@@ -145,4 +145,4 @@ public class WebControllerTest {
 //                .then().log().all()
 //                .statusCode(HttpStatus.CREATED.value());
 //    }
-}
+//}

@@ -9,7 +9,7 @@ public interface ChessDao {
 
     void updateTurn(final String color, final int gameId);
 
-    void deleteAllPiece(final int gameId);
+    void deletePiece(final int gameId);
 
     void savePiece(final int gameId, final PieceAndPositionDto pieceAndPositionDto);
 
@@ -22,8 +22,6 @@ public interface ChessDao {
     void updatePiece(final String from, final String to, final int gameId);
 
     void deleteGame(final int gameId);
-
-    void initGame(final int gameId);
 
     Number initGame(final String title, final String password);
 

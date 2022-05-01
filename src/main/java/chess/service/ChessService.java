@@ -8,7 +8,6 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
-import chess.domain.state.Ready;
 import chess.domain.state.Running;
 import chess.domain.state.StateFactory;
 import chess.dto.ChessGameDto;
@@ -27,30 +26,19 @@ public class ChessService {
     private static final String FIRST_COLOR = "WHITE";
 
     private final ChessDao chessDao;
-    private ChessGame chessGame = new ChessGame(new Ready());
 
     public ChessService(final ChessDao chessDao) {
         this.chessDao = chessDao;
     }
 
     public ChessGameDto newGame(final int gameId) {
-        deleteOldData(gameId);
-        initNewChessGame(gameId);
-        chessGame = new ChessGame(new Running(Color.from(chessDao.findCurrentColor(gameId)), convertToBoard(chessDao.findAllPiece(gameId))));
-        return new ChessGameDto(chessDao.findAllPiece(gameId), chessGame.status());
-    }
-
-    private void deleteOldData(final int gameId) {
-        chessDao.deleteAllPiece(gameId);
-        chessDao.deleteGame(gameId);
-    }
-
-    private void initNewChessGame(final int gameId) {
-        chessDao.initGame(gameId);
+        chessDao.deletePiece(gameId);
         chessDao.updateTurn(FIRST_COLOR, gameId);
         for (final Map.Entry<Position, Piece> entry : new BoardInitializer().init().entrySet()) {
             chessDao.savePiece(gameId, new PieceAndPositionDto(entry.getKey(), entry.getValue()));
         }
+        ChessGame chessGame = new ChessGame(new Running(Color.from(chessDao.findCurrentColor(gameId)), convertToBoard(chessDao.findAllPiece(gameId))));
+        return new ChessGameDto(chessDao.findAllPiece(gameId), chessGame.status());
     }
 
     private Board convertToBoard(final List<PieceAndPositionDto> pieceAndPositionDtos) {
@@ -60,6 +48,7 @@ public class ChessService {
     }
 
     public ChessGameDto move(final MoveDto moveDto) {
+        final var chessGame = new ChessGame(new Running(Color.from(chessDao.findCurrentColor(moveDto.getGameId())), convertToBoard(chessDao.findAllPiece(moveDto.getGameId()))));
         chessGame.move(Position.from(moveDto.getFrom()), Position.from(moveDto.getTo()));
         final var nextColor = Color.from(chessDao.findCurrentColor(moveDto.getGameId())).next();
         updateBoard(moveDto.getFrom(), moveDto.getTo(), moveDto.getGameId(), nextColor.name());
@@ -73,7 +62,7 @@ public class ChessService {
     }
 
     public ChessGameDto loadGame(final int gameId) {
-        chessGame = new ChessGame(StateFactory.of(Color.from(chessDao.findCurrentColor(gameId)), convertToBoard(chessDao.findAllPiece(gameId))));
+        final var chessGame = new ChessGame(StateFactory.of(Color.from(chessDao.findCurrentColor(gameId)), convertToBoard(chessDao.findAllPiece(gameId))));
         return new ChessGameDto(chessDao.findAllPiece(gameId), chessGame.status());
     }
 
@@ -81,16 +70,27 @@ public class ChessService {
         return chessDao.initGame(gameRoomDto.getTitle(), gameRoomDto.getPassword());
     }
 
-    public ChessGameDto findGame(final int gameId) {
-        return new ChessGameDto(chessDao.findAllPiece(gameId), chessGame.status());
-    }
-
     public void deleteGame(final GameRoomDto gameRoomDto) {
-        final var actual = chessDao.findPassword(gameRoomDto.getGameId());
-        if (!actual.equals(gameRoomDto.getPassword())) {
+        final var chessGame = new ChessGame(StateFactory.of(Color.from(chessDao.findCurrentColor(gameRoomDto.getGameId())), convertToBoard(chessDao.findAllPiece(gameRoomDto.getGameId()))));
+        final var OriginalPassword = chessDao.findPassword(gameRoomDto.getGameId());
+
+        if (!OriginalPassword.equals(gameRoomDto.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        chessDao.deleteGame(gameRoomDto.getGameId());
+
+        if (chessGame.isEnd()) {
+            chessDao.deletePiece(gameRoomDto.getGameId());
+        }
+
+        deleteGame(gameRoomDto.getGameId());
+    }
+
+    private void deleteGame(final int gameId) {
+        try {
+            chessDao.deleteGame(gameId);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("게임이 종료되지 않아 삭제할 수 없습니다.");
+        }
     }
 
     public List<GameRoomDto> findAllGame() {

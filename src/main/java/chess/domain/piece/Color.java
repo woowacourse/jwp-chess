@@ -7,7 +7,7 @@ public enum Color {
 
     public static Color from(final String name) {
         return Arrays.stream(values())
-                .filter(color -> color.name().contains(name))
+                .filter(color -> color.name().equalsIgnoreCase(name))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 색상입니다."));
     }

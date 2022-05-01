@@ -1,15 +1,23 @@
 package chess.dto;
 
 public final class GameRoomDto {
+
     private int gameId;
 
     private String title;
     private String password;
+
     public GameRoomDto() {
     }
 
     public GameRoomDto(String title, int gameId) {
         this.title = title;
+        this.gameId = gameId;
+    }
+
+    public GameRoomDto(String title, String password, int gameId) {
+        this.title = title;
+        this.password = password;
         this.gameId = gameId;
     }
 

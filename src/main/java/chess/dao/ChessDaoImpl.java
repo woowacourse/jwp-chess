@@ -14,13 +14,15 @@ import java.util.List;
 @Repository
 public class ChessDaoImpl implements ChessDao {
 
-    public static final int DEFAULT_GAME_ID = 0;
+    private static final String PIECE_NAME = "piece_name";
+    private static final String PIECE_COLOR = "piece_color";
+    private static final String POSITION = "position";
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<PieceAndPositionDto> pieceAndPositionDtoRowMapper = (resultSet, rowNum) -> new PieceAndPositionDto(
-            resultSet.getString("piece_name"),
-            resultSet.getString("piece_color"),
-            resultSet.getString("position")
+            resultSet.getString(PIECE_NAME),
+            resultSet.getString(PIECE_COLOR),
+            resultSet.getString(POSITION)
     );
 
     public ChessDaoImpl(final JdbcTemplate jdbcTemplate) {
@@ -32,7 +34,7 @@ public class ChessDaoImpl implements ChessDao {
         jdbcTemplate.update(sql, color, gameId);
     }
 
-    public void deleteAllPiece(final int gameId) {
+    public void deletePiece(final int gameId) {
         final var sql = "DELETE FROM piece WHERE game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }
@@ -64,11 +66,6 @@ public class ChessDaoImpl implements ChessDao {
 
     public void deleteGame(final int gameId) {
         var sql = "DELETE FROM game WHERE game_id = ?";
-        jdbcTemplate.update(sql, gameId);
-    }
-
-    public void initGame(final int gameId) {
-        String sql = "INSERT INTO game (game_id) VALUES(?)";
         jdbcTemplate.update(sql, gameId);
     }
 

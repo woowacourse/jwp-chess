@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import chess.dto.response.ChessGameDto;
+import chess.domain.piece.PieceColor;
 import chess.entity.Room;
 
 @Repository
@@ -25,10 +25,10 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public ChessGameDto getGame(int gameId) {
+    public PieceColor getGameTurn(int gameId) {
         String query = String.format("SELECT turn FROM %s WHERE id = ?", TABLE_NAME);
         String turn = jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> resultSet.getString("turn"), gameId);
-        return ChessGameDto.of(gameId, turn);
+        return PieceColor.valueOf(turn);
     }
 
     @Override

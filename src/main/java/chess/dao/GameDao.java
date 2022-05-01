@@ -2,11 +2,11 @@ package chess.dao;
 
 import java.util.List;
 
-import chess.dto.response.ChessGameDto;
+import chess.domain.piece.PieceColor;
 import chess.entity.Room;
 
 public interface GameDao {
-    ChessGameDto getGame(int gameId);
+    PieceColor getGameTurn(int gameId);
 
     int createGameAndGetId(String gameName, String gamePassword);
 

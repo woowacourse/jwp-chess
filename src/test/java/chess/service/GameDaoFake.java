@@ -6,16 +6,15 @@ import java.util.Map;
 
 import chess.dao.GameDao;
 import chess.domain.piece.PieceColor;
-import chess.dto.response.ChessGameDto;
 import chess.entity.Room;
 
 public class GameDaoFake implements GameDao {
     private final Map<Integer, PieceColor> fakeGame = new HashMap<>();
 
     @Override
-    public ChessGameDto getGame(int gameId) {
+    public PieceColor getGameTurn(int gameId) {
         PieceColor pieceColor = fakeGame.get(gameId);
-        return ChessGameDto.of(gameId, pieceColor.name());
+        return pieceColor;
     }
 
     @Override

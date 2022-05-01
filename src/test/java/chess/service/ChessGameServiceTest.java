@@ -85,12 +85,12 @@ class ChessGameServiceTest {
     @Test
     @DisplayName("게임 번호로 체스맵을 조회한다.")
     void loadChessMap() {
-        service.createNewChessGame(new CreateGameDto("게임1", "1234", "1234"));
+        final int gameId = service.createNewChessGame(new CreateGameDto("게임1", "1234", "1234")).getId();
         final Player whitePlayer = new Player(new WhiteGenerator(), Team.WHITE);
         final Player blackPlayer = new Player(new BlackGenerator(), Team.BLACK);
         final char[][] expected = ChessMap.of(whitePlayer.findAll(), blackPlayer.findAll()).getChessMap();
 
-        final char[][] actual = service.loadChessMap(1).getChessMap();
+        final char[][] actual = service.loadChessMap(gameId).getChessMap();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -98,12 +98,12 @@ class ChessGameServiceTest {
     @Test
     @DisplayName("번호로 체스 게임을 조회한다.")
     void findChessGame() {
-        service.createNewChessGame(new CreateGameDto("게임1", "1234", "1234"));
+        final int gameId = service.createNewChessGame(new CreateGameDto("게임1", "1234", "1234")).getId();
 
-        final ChessGameInfoDto gameInfo = service.findGameInfoById(1);
+        final ChessGameInfoDto gameInfo = service.findGameInfoById(gameId);
 
         assertAll(() -> {
-            assertThat(gameInfo.getId()).isEqualTo(1);
+            assertThat(gameInfo.getId()).isEqualTo(gameId);
             assertThat(gameInfo.getName()).isEqualTo("게임1");
             assertThat(gameInfo.isRunning()).isTrue();
         });
@@ -113,11 +113,11 @@ class ChessGameServiceTest {
     @DisplayName("점수를 조회한다.")
     void findStatus() {
         final CreateGameDto createGameDto = new CreateGameDto("게임1", "1234", "1234");
-        service.createNewChessGame(createGameDto);
+        final int gameId = service.createNewChessGame(createGameDto).getId();
         final double expectedScore = 38;
         final String expectedResult = Result.DRAW.getValue();
 
-        final StatusDto status = service.findStatus(1);
+        final StatusDto status = service.findStatus(gameId);
 
         assertAll(() -> {
             assertThat(status.getWhitePlayerScore()).isEqualTo(expectedScore);
@@ -130,8 +130,6 @@ class ChessGameServiceTest {
     @Test
     @DisplayName("모든 체스 게임을 조회한다.")
     void findAllChessGame() {
-        service.createNewChessGame(new CreateGameDto("게임1", "1234", "1234"));
-        service.createNewChessGame(new CreateGameDto("게임2", "1234", "1234"));
         final int expected = 2;
 
         final int actual = service.findAllChessGame().size();

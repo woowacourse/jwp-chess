@@ -1,11 +1,11 @@
 package chess.dto;
 
-public class GameCreationDto {
+public class GameCreationRequest {
 
     private String title;
     private String password;
 
-    public GameCreationDto(){
+    public GameCreationRequest(){
     }
 
     public String getTitle() {

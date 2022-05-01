@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.ErrorResponseDto;
+import chess.dto.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(Exception e) {
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
-        return ResponseEntity.badRequest().body(errorResponseDto);
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception e) {
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDto> handleException() {
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto("서버에 문제가 발생했습니다. 다시 시도해주세요.");
-        return ResponseEntity.badRequest().body(errorResponseDto);
+    public ResponseEntity<ErrorResponse> handleException() {
+        ErrorResponse errorResponse = new ErrorResponse("서버에 문제가 발생했습니다. 다시 시도해주세요.");
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 }

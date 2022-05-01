@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.GameCreationDto;
+import chess.dto.GameCreationRequest;
 import chess.dto.GameDto;
 import chess.serviece.ChessGameService;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +29,13 @@ public class HomeController {
     }
 
     @PostMapping(value = "/rooms")
-    public ResponseEntity<Long> createGame(@RequestBody GameCreationDto gameCreationDto) {
-        return ResponseEntity.ok().body(chessGameService.addGame(gameCreationDto));
+    public ResponseEntity<Long> addGame(@RequestBody GameCreationRequest gameCreationRequest) {
+        return ResponseEntity.ok().body(chessGameService.addGame(gameCreationRequest));
     }
 
     @DeleteMapping(value = "/rooms/{id}")
     public ResponseEntity<Long> deleteGame(@PathVariable Long id, @RequestBody GameDto gameDto) {
-        chessGameService.removeGame(id, gameDto);
+        chessGameService.deleteGame(id, gameDto);
         return ResponseEntity.noContent().build();
     }
 }

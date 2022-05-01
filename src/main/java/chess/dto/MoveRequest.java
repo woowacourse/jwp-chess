@@ -2,12 +2,12 @@ package chess.dto;
 
 import chess.domain.command.MoveCommand;
 
-public class MoveCommandDto {
+public class MoveRequest {
 
     private String source;
     private String target;
 
-    public MoveCommandDto() {
+    public MoveRequest() {
     }
 
     public String getSource() {

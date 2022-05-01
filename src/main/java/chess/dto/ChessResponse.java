@@ -2,14 +2,14 @@ package chess.dto;
 
 import java.util.List;
 
-public class ChessResponseDto {
+public class ChessResponse {
 
     private final Long gameId;
     private final List<PieceDto> pieces;
     private final String turn;
     private final String status;
 
-    public ChessResponseDto(Long gameId, List<PieceDto> pieces, String turn, String status) {
+    public ChessResponse(Long gameId, List<PieceDto> pieces, String turn, String status) {
         this.gameId = gameId;
         this.pieces = pieces;
         this.turn = turn;

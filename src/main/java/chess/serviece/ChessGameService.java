@@ -1,7 +1,7 @@
 package chess.serviece;
 
-import chess.dto.ChessResponseDto;
-import chess.dto.GameCreationDto;
+import chess.dto.ChessResponse;
+import chess.dto.GameCreationRequest;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.dto.GameDto;
@@ -31,20 +31,20 @@ public class ChessGameService {
         this.pieceDao = pieceDao;
     }
 
-    public Long addGame(GameCreationDto gameCreationDto) {
+    public Long addGame(GameCreationRequest gameCreationRequest) {
         ChessGame chessGame = ChessGame.initGame();
-        long id = gameDao.save(createGameDto(chessGame, gameCreationDto));
+        long id = gameDao.save(createGameDto(chessGame, gameCreationRequest));
         List<PieceDto> pieceDtos = convertPieceDtos(chessGame.getPieces(), id);
         pieceDao.saveAll(pieceDtos);
         return id;
     }
 
-    private GameDto createGameDto(ChessGame chessGame, GameCreationDto gameCreationDto) {
+    private GameDto createGameDto(ChessGame chessGame, GameCreationRequest gameCreationRequest) {
         PieceColor turnColor = chessGame.getTurnColor();
         if (chessGame.isRunning()) {
-            return new GameDto(gameCreationDto.getTitle(), gameCreationDto.getPassword(), turnColor.getName(), "playing");
+            return new GameDto(gameCreationRequest.getTitle(), gameCreationRequest.getPassword(), turnColor.getName(), "playing");
         }
-        return new GameDto(gameCreationDto.getTitle(), gameCreationDto.getPassword(), turnColor.getName(), "finished");
+        return new GameDto(gameCreationRequest.getTitle(), gameCreationRequest.getPassword(), turnColor.getName(), "finished");
     }
 
     private List<PieceDto> convertPieceDtos(Map<Position, Piece> pieces, long gameId) {
@@ -66,7 +66,7 @@ public class ChessGameService {
         return gameDao.findAll();
     }
 
-    public void removeGame(Long id, GameDto gameDto) {
+    public void deleteGame(Long id, GameDto gameDto) {
         String password = gameDao.findPasswordById(id);
         if (!password.equals(gameDto.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -78,13 +78,13 @@ public class ChessGameService {
         gameDao.removeById(id);
     }
 
-    public ChessResponseDto getChessGame(Long gameId) {
+    public ChessResponse getChessGame(Long gameId) {
         List<PieceDto> pieceDtos = pieceDao.findPiecesByGameId(gameId);
         GameDto gameDto = gameDao.findGameById(gameId);
-        return new ChessResponseDto(gameId, pieceDtos, gameDto.getTurn(), gameDto.getStatus());
+        return new ChessResponse(gameId, pieceDtos, gameDto.getTurn(), gameDto.getStatus());
     }
 
-    public ChessResponseDto movePiece(Long gameId, MoveCommand moveCommand) {
+    public ChessResponse movePiece(Long gameId, MoveCommand moveCommand) {
         ChessGame game = createGame(gameId);
         game.proceedWith(moveCommand);
         pieceDao.removeByPosition(gameId, moveCommand.to());

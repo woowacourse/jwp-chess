@@ -1,10 +1,10 @@
 package chess.dto;
 
-public class ErrorResponseDto {
+public class ErrorResponse {
 
     private final String message;
 
-    public ErrorResponseDto(String message) {
+    public ErrorResponse(String message) {
         this.message = message;
     }
 

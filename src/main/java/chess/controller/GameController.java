@@ -1,8 +1,8 @@
 package chess.controller;
 
 import chess.domain.command.MoveCommand;
-import chess.dto.ChessResponseDto;
-import chess.dto.MoveCommandDto;
+import chess.dto.ChessResponse;
+import chess.dto.MoveRequest;
 import chess.dto.ScoresDto;
 import chess.serviece.ChessGameService;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class GameController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ChessResponseDto> load(@PathVariable Long id) {
+    public ResponseEntity<ChessResponse> load(@PathVariable Long id) {
         return ResponseEntity.ok().body(chessGameService.getChessGame(id));
     }
 
@@ -35,8 +35,8 @@ public class GameController {
     }
 
     @PutMapping(value = "/{id}/pieces")
-    public ResponseEntity<ChessResponseDto> move(@PathVariable Long id, @RequestBody MoveCommandDto moveCommandDto) {
-        MoveCommand moveCommand = moveCommandDto.toEntity();
+    public ResponseEntity<ChessResponse> move(@PathVariable Long id, @RequestBody MoveRequest moveRequest) {
+        MoveCommand moveCommand = moveRequest.toEntity();
         return ResponseEntity.ok().body(chessGameService.movePiece(id, moveCommand));
     }
 

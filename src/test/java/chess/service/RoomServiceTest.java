@@ -67,8 +67,8 @@ class RoomServiceTest {
         roomService.startGame(roomId);
 
         // then
-        final RoomStatusDto statusDto = roomDao.findStatusById(roomId);
-        final GameStatus actual = statusDto.getGameStatus();
+        final RoomEntity roomEntity = roomDao.findById(roomId);
+        final GameStatus actual = roomEntity.toGameStatus();
 
         assertThat(actual).isEqualTo(GameStatus.PLAYING);
     }

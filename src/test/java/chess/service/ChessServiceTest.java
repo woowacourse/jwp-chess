@@ -14,7 +14,6 @@ import chess.domain.chesspiece.Queen;
 import chess.domain.position.Position;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.response.ChessPieceDto;
-import chess.dto.response.CurrentTurnDto;
 import chess.dto.response.RoomStatusDto;
 import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
@@ -114,8 +113,9 @@ class ChessServiceTest {
         chessService.move(roomId, dto);
 
         // then
-        final CurrentTurnDto currentTurnDto = roomDao.findCurrentTurnById(roomId);
-        assertThat(currentTurnDto.getCurrentTurn()).isEqualTo(initialTurn.toOpposite());
+        final RoomEntity roomEntity = roomDao.findById(roomId);
+        final Color actual = roomEntity.toCurrentTurn();
+        assertThat(actual).isEqualTo(initialTurn.toOpposite());
     }
 
     @Test
@@ -132,7 +132,8 @@ class ChessServiceTest {
         chessService.result(roomId);
 
         // then
-        final RoomStatusDto statusDto = roomDao.findStatusById(roomId);
-        assertThat(statusDto.getGameStatus()).isEqualTo(GameStatus.END);
+        final RoomEntity roomEntity = roomDao.findById(roomId);
+        final GameStatus actual = roomEntity.toGameStatus();
+        assertThat(actual).isEqualTo(GameStatus.END);
     }
 }

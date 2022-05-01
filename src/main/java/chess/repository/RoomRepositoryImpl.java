@@ -11,11 +11,10 @@ import chess.dto.response.RoomPageDto;
 import chess.dto.response.RoomResponseDto;
 import chess.entity.ChessPieceEntity;
 import chess.entity.RoomEntity;
-import chess.exception.NotFoundException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -31,12 +30,8 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public Room get(final int roomId) {
-        try {
-            final RoomEntity roomEntity = roomDao.findById(roomId);
-            return toRoom(roomEntity);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException("방이 존재하지 않습니다.");
-        }
+        final RoomEntity roomEntity = roomDao.findById(roomId);
+        return toRoom(roomEntity);
     }
 
     @Override
@@ -44,7 +39,7 @@ public class RoomRepositoryImpl implements RoomRepository {
         final int totalSize = roomDao.count();
         final int lastPage = (int) Math.ceil((double) totalSize / size);
 
-        final List<RoomResponseDto> responseDtos = roomDao.findAllEntity(page, size)
+        final List<RoomResponseDto> responseDtos = roomDao.findAll(page, size)
                 .stream()
                 .map(roomEntity -> RoomResponseDto.of(
                         roomEntity.getRoomId(),
@@ -71,10 +66,11 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public int add(final Room room) {
-        final boolean existName = roomDao.isExistName(room.getName());
-        if (existName) {
+        final Optional<RoomEntity> existName = roomDao.findByName(room.getName());
+        if (existName.isPresent()) {
             throw new IllegalArgumentException("이름이 같은 방이 이미 존재합니다.");
         }
+
         final RoomEntity roomEntity = new RoomEntity(
                 room.getName(),
                 room.getGameStatus(),

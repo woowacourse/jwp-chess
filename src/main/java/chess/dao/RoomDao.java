@@ -11,7 +11,7 @@ public interface RoomDao {
 
     void createRoom(Room room);
 
-    List<Room> getRooms();
+    List<Room> getAllRooms();
 
     void deleteRoom(RoomId roomId, RoomPassword roomPassword);
 
@@ -20,4 +20,6 @@ public interface RoomDao {
     void updateTurnToBlack(RoomId roomId);
 
     PieceColor getCurrentTurn(RoomId roomId);
+
+    void validateRoomExisting(RoomId roomId);
 }

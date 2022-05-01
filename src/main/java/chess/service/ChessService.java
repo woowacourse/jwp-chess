@@ -49,7 +49,7 @@ public class ChessService {
     }
 
     public List<Room> getRooms() {
-        return roomDao.getRooms();
+        return roomDao.getAllRooms();
     }
 
     public void movePiece(RoomId roomId, Position from, Position to) {

@@ -48,7 +48,7 @@ public class SpringJdbcRoomDaoTest {
         gameDao.createRoom(Room.create("test2", "1234"));
 
         // when
-        int actual = gameDao.getRooms().size();
+        int actual = gameDao.getAllRooms().size();
 
         // then
         assertThat(actual).isEqualTo(2);

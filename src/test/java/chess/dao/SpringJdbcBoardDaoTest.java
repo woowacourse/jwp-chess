@@ -9,6 +9,8 @@ import chess.domain.piece.PieceType;
 import chess.domain.position.Position;
 import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
+import chess.exception.NotFoundRoomException;
+import chess.service.RoomDaoFake;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +40,7 @@ class SpringJdbcBoardDaoTest {
 
     @BeforeEach
     void setUp() {
-        boardDao = new SpringJdbcBoardDao(jdbcTemplate);
+        boardDao = new SpringJdbcBoardDao(jdbcTemplate, new RoomDaoFake());
 
         SpringJdbcRoomDao gameDao = new SpringJdbcRoomDao(jdbcTemplate);
 
@@ -78,8 +80,8 @@ class SpringJdbcBoardDaoTest {
     @Test
     void getBoard_throwsExceptionWithInvalidRoomId() {
         assertThatThrownBy(() -> boardDao.getBoard(RoomId.from("not-existing")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("존재하지 않는 게임 ID입니다.");
+                .isInstanceOf(NotFoundRoomException.class)
+                .hasMessage("해당하는 체스방을 찾을 수 없습니다.");
     }
 
     @DisplayName("board 테이블에 기물을 생성한다.")

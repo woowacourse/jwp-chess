@@ -22,6 +22,7 @@ public class SpringJdbcBoardDao implements BoardDao {
     private static final String TABLE_NAME = "board";
 
     private final JdbcTemplate jdbcTemplate;
+    private final RoomDao roomDao;
 
     private final RowMapper<Position> positionMapper = (resultSet, rowNum) -> {
         XAxis xAxis = XAxis.getByValue(resultSet.getString("x_axis"));
@@ -36,13 +37,14 @@ public class SpringJdbcBoardDao implements BoardDao {
     };
 
     @Autowired
-    public SpringJdbcBoardDao(JdbcTemplate jdbcTemplate) {
+    public SpringJdbcBoardDao(JdbcTemplate jdbcTemplate, RoomDao roomDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.roomDao = roomDao;
     }
 
     @Override
     public Board getBoard(RoomId roomId) {
-        validateRoomExisting(roomId);
+        roomDao.validateRoomExisting(roomId);
 
         Map<Position, Piece> boardValue = new HashMap<>();
 
@@ -57,15 +59,6 @@ public class SpringJdbcBoardDao implements BoardDao {
         }
 
         return Board.from(boardValue);
-    }
-
-    private void validateRoomExisting(RoomId roomId) {
-        String query = String.format("SELECT COUNT(*) FROM %s WHERE room_id = ?", TABLE_NAME);
-        Integer rowCount = jdbcTemplate.queryForObject(query, Integer.class, roomId.getValue());
-
-        if (rowCount == 0) {
-            throw new IllegalArgumentException("존재하지 않는 게임 ID입니다.");
-        }
     }
 
     private List<Position> getPositionsByRoomId(RoomId roomId) {

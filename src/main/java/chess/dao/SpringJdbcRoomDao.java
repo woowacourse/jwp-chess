@@ -43,13 +43,15 @@ public class SpringJdbcRoomDao implements RoomDao {
     }
 
     @Override
-    public List<Room> getRooms() {
+    public List<Room> getAllRooms() {
         String query = String.format("SELECT id, title, password FROM %s", TABLE_NAME);
         return jdbcTemplate.query(query, roomRowMapper);
     }
 
     @Override
     public void deleteRoom(RoomId roomId, RoomPassword roomPassword) {
+        validateRoomExisting(roomId);
+
         String query = String.format("DELETE FROM %s WHERE id = ? AND password = ?", TABLE_NAME);
         int update = jdbcTemplate.update(query, roomId.getValue(), roomPassword.getValue());
 
@@ -69,18 +71,31 @@ public class SpringJdbcRoomDao implements RoomDao {
     }
 
     private void updateTurn(RoomId roomId, String turn) {
+        validateRoomExisting(roomId);
         String query = String.format("UPDATE %s SET turn = ? WHERE id = ?", TABLE_NAME);
         jdbcTemplate.update(query, turn, roomId.getValue());
     }
 
     @Override
     public PieceColor getCurrentTurn(RoomId roomId) {
+        validateRoomExisting(roomId);
+
         String query = String.format("SELECT turn FROM %s WHERE id = ?", TABLE_NAME);
         try {
             String turn = jdbcTemplate.queryForObject(query, (resultSet, rowNum) -> resultSet.getString("turn"),
                     roomId.getValue());
             return PieceColor.valueOf(turn);
         } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundRoomException();
+        }
+    }
+
+    @Override
+    public void validateRoomExisting(RoomId roomId) {
+        String query = String.format("SELECT * FROM %s WHERE id = ?", TABLE_NAME);
+        List<Room> rooms = jdbcTemplate.query(query, roomRowMapper, roomId.getValue());
+
+        if (rooms.size() == 0) {
             throw new NotFoundRoomException();
         }
     }

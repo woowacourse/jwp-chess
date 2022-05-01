@@ -10,9 +10,12 @@ import chess.dto.GameDto;
 import chess.dto.MoveRequest;
 import chess.dto.MoveResponse;
 import chess.dto.PositionDto;
+import chess.exception.DeleteFailOnPlayingException;
+import chess.exception.PasswordNotMatchedException;
 import chess.service.ChessService;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,23 +49,23 @@ public class ChessController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GameDto> findById(@PathVariable("id") int id) {
+    public ResponseEntity<GameDto> findById(@PathVariable int id) {
         return new ResponseEntity<>(chessService.findById(id), HttpStatus.FOUND);
     }
 
     @GetMapping("/{id}/score")
-    public Map<Color, Double> findScoreById(@PathVariable("id") int id) {
+    public Map<Color, Double> findScoreById(@PathVariable int id) {
         return chessService.findScoreById(id);
     }
 
     @GetMapping("/{id}/board")
-    public List<PositionDto> findPositionsById(@PathVariable("id") int id) {
+    public List<PositionDto> findPositionsById(@PathVariable int id) {
         return chessService.findPositionsById(id);
     }
 
     @PatchMapping("/{id}/board")
-    public MoveResponse updateBoard(@PathVariable("id") int id, @RequestBody MoveRequest moveRequest) {
-        return chessService.updateBoard(moveRequest);
+    public MoveResponse updateBoard(@PathVariable long id, @RequestBody MoveRequest moveRequest) {
+        return chessService.updateBoard(id, moveRequest);
     }
 
     @DeleteMapping
@@ -71,7 +74,18 @@ public class ChessController {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> exception(Exception e) {
+    public ResponseEntity<ExceptionResponse> unknownExceptionHandler(Exception e) {
+        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class,
+            DeleteFailOnPlayingException.class})
+    public ResponseEntity<ExceptionResponse> knownExceptionHandler(Exception e) {
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({PasswordNotMatchedException.class})
+    public ResponseEntity<ExceptionResponse> unauthorizedExceptionHandler(Exception e) {
+        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 }

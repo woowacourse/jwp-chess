@@ -15,6 +15,7 @@ import chess.dto.*;
 import chess.exception.IllegalRequestDataException;
 import chess.exception.NoSuchDbDataException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +31,14 @@ public class ChessGameService {
         this.pieceDao = pieceDao;
     }
 
+    @Transactional(readOnly = true)
     public void checkRoomExist(long roomId) {
-        if (!roomDao.findRoomById(roomId).isPresent()) {
+        if (roomDao.findRoomById(roomId).isEmpty()) {
             throw new NoSuchDbDataException("잘못된 URL 입니다.");
         }
     }
 
+    @Transactional
     public long createNewRoom(final NewRoomInfo newRoomInfo) {
         validatePassword(newRoomInfo);
         String roomName = newRoomInfo.getName();
@@ -64,10 +67,12 @@ public class ChessGameService {
         return roomId;
     }
 
+    @Transactional(readOnly = true)
     public List<RoomInfoDto> loadRoomList() {
         return roomDao.findAll();
     }
 
+    @Transactional
     public void deleteRoom(final long roomId, final String inputPassword) {
         final ChessGame chessGame = findChessGameById(roomId);
         if (chessGame.isRunning()) {
@@ -81,6 +86,7 @@ public class ChessGameService {
         roomDao.delete(roomId);
     }
 
+    @Transactional(readOnly = true)
     public StatusDto findStatus(final long roomId) {
         final ChessGame chessGame = findChessGameById(roomId);
         final List<GameResult> gameResult = chessGame.findGameResult();
@@ -89,6 +95,7 @@ public class ChessGameService {
         return StatusDto.of(whitePlayerResult, blackPlayerResult);
     }
 
+    @Transactional(readOnly = true)
     public ChessGameDto loadRoom(final long roomId) {
         final GameNameAndTurnDto gameNameAndTurn = roomDao.findNameAndTurnById(roomId);
         List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(roomId, Team.WHITE.getName());
@@ -101,6 +108,7 @@ public class ChessGameService {
         return ChessGameDto.of(roomId, game, gameNameAndTurn.getName());
     }
 
+    @Transactional
     public ChessGameDto move(final long roomId, final String current, final String destination) {
         final ChessGame chessGame = findChessGameById(roomId);
         final Player currentPlayer = chessGame.getCurrentPlayer();
@@ -112,6 +120,7 @@ public class ChessGameService {
         return ChessGameDto.of(roomId, chessGame);
     }
 
+    @Transactional
     public void updatePiece(final long roomId, final String current, final String destination,
                             final String currentTeam, final String opponentTeam) {
         pieceDao.deletePieceByRoomIdAndPositionAndTeam(roomId, destination, opponentTeam);

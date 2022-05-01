@@ -27,7 +27,7 @@ public abstract class InGame implements GameState {
 
         MoveResult moveResult = board.executeCommand(from, to, getCurrentPieceColor());
         if (!moveResult.isMoveSuccess()) {
-            throw new MovePieceFailedException();
+            throw new MovePieceFailedException(moveResult.getMessage());
         }
 
         return getNextTurnState();

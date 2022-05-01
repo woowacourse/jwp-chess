@@ -154,7 +154,7 @@ function movePieceRequest(from, to) {
   const lastTeam = $("#current-team").text();
   clearFromAndTo();
   $.ajax({
-    url: `/chess/from/${from}/to/${to}`,
+    url: `/chess/move?from=${from}&to=${to}`,
     method: "PUT",
     dataType: "json",
   })

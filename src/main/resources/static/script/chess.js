@@ -3,32 +3,29 @@ body.addEventListener('click', onClick)
 const squareIdList = [];
 const id = location.href.split("/").pop();
 
-const startButtons = document.getElementsByClassName('start-button');
-for (const startButton of startButtons) {
-    startButton.addEventListener('click', async () => {
-        await putNewBoard();
-        await allocateAllPiece();
-    });
+const restartButton = document.querySelector("#reStartButton");
+restartButton.addEventListener("click", reStartGame);
+
+async function reStartGame() {
+    await initBoard();
+    await loadAllPiece();
 }
 
-async function putNewBoard() {
+async function initBoard() {
     let id = location.href.split("/").pop();
-    const res = await fetch("/board/"+id, {
+    await fetch("/board/"+id, {
         method: 'POST'
     });
-    if (!res.ok) {
-        console.log("체스판 초기화 실패!")
-    }
 }
 
-async function allocateAllPiece() {
+async function loadAllPiece() {
     let id = location.href.split("/").pop();
     const res = await fetch("../board/"+id, {
         method: 'GET'
     });
     const pieces = await res.json();
     if (!res.ok) {
-        alert("체스판 로드를 실패했습니다.");
+        alert("체스판 로드가 실패했습니다.");
         return;
     }
 
@@ -117,7 +114,7 @@ async function patchMove() {
         alert(body.message);
         return;
     }
-    await allocateAllPiece();
+    await loadAllPiece();
 }
 
 async function getResult() {

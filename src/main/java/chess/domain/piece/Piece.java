@@ -7,9 +7,11 @@ import java.util.Objects;
 
 public abstract class Piece {
 
+    private final Name name;
     private final Color color;
 
-    public Piece(Color color) {
+    public Piece(Name name, Color color) {
+        this.name = name;
         this.color = color;
     }
 
@@ -42,7 +44,11 @@ public abstract class Piece {
     public String toString() {
         return "Piece{" +
                 "color=" + color +
-                ", type=" + getClass().getSimpleName();
+                ", type=" + name.getValue();
+    }
+
+    public Name getName() {
+        return name;
     }
 
     public abstract MovementCondition identifyMovementCondition(Position from, Position to);

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 public class King extends Piece {
 
     public King(Color color) {
-        super(color);
+        super(Name.KING, color);
     }
 
     @Override

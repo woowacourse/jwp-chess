@@ -1,6 +1,8 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import chess.domain.ChessGame;
+import chess.domain.GameScore;
 import chess.domain.Score;
 import chess.domain.piece.Color;
 import chess.domain.vo.Room;
@@ -30,11 +32,11 @@ public class ChessGameDaoTest {
         chessGameDao = new ChessGameDao(jdbcTemplate);
         chessGameDao.deleteAll();
         chessGameDao.saveChessGame(
+            new ChessGame(
             new Room("Chess Game", "1234"),
             GameStatus.RUNNING,
             Color.WHITE,
-            new Score("10.0"),
-            new Score("15.0")
+            new GameScore(new Score("10.0"), new Score("15.0")))
         );
     }
 

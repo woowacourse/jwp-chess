@@ -7,11 +7,10 @@ import chess.domain.position.Position;
 import java.math.BigDecimal;
 
 public class Rook extends Piece {
-
     private static final BigDecimal ROOK_POINT = new BigDecimal("5");
 
     public Rook(Color color) {
-        super(color);
+        super(Name.ROOK, color);
     }
 
     @Override

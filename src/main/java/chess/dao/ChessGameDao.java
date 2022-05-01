@@ -1,10 +1,12 @@
 package chess.dao;
 
+import chess.domain.ChessGame;
 import chess.domain.Score;
 import chess.domain.piece.Color;
 import chess.domain.vo.Room;
 import chess.dto.ChessGameDto;
 import chess.dto.GameStatus;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,20 +28,10 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int saveChessGame(Room room, GameStatus status, Color currentColor, Score blackScore, Score whiteScore) {
+    public int saveChessGame(ChessGame chessGame) {
         String sql = "INSERT INTO chess_game(name, password, status, current_color, black_score, white_score) VALUES(?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(
-            connection -> {
-                PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-                ps.setString(1, room.getName());
-                ps.setString(2, room.getPassword());
-                ps.setString(3, status.name());
-                ps.setString(4, currentColor.name());
-                ps.setString(5, blackScore.getValue().toPlainString());
-                ps.setString(6, whiteScore.getValue().toPlainString());
-                return ps;
-            }, keyHolder);
+        jdbcTemplate.update(connection -> getPreparedStatement(chessGame, sql, connection), keyHolder);
         return keyHolder.getKey().intValue();
     }
 
@@ -80,6 +72,19 @@ public class ChessGameDao {
         int count = jdbcTemplate.queryForObject(
             "SELECT count(*) FROM chess_game WHERE name = ?", Integer.class, name);
         return count != 0;
+    }
+
+    private PreparedStatement getPreparedStatement(
+        ChessGame chessGame, String sql, Connection connection
+    ) throws SQLException {
+        PreparedStatement request = connection.prepareStatement(sql, new String[]{"id"});
+        request.setString(1, chessGame.getRoom().getName());
+        request.setString(2, chessGame.getRoom().getPassword());
+        request.setString(3, chessGame.getStatus().name());
+        request.setString(4, chessGame.getCurrentColor().name());
+        request.setString(5, chessGame.getBlackScore().getValue().toPlainString());
+        request.setString(6, chessGame.getWhiteScore().getValue().toPlainString());
+        return request;
     }
 
     private ChessGameDto createChessGameDto(ResultSet rs, int rowNum) throws SQLException {

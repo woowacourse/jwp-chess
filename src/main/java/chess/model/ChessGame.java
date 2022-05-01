@@ -3,7 +3,6 @@ package chess.model;
 import chess.model.board.Board;
 import chess.model.board.BoardInitializer;
 import chess.model.board.ChessInitializer;
-import chess.model.board.EmptyBoardInitializer;
 import chess.model.board.Square;
 import chess.model.piece.King;
 import chess.model.piece.Piece;
@@ -69,7 +68,6 @@ public class ChessGame {
         return board.findPieceBySquare(square);
     }
 
-    //TODO DTO대신 뭘 반환하는게 좋은가
     public GameResultDto getResult() {
         status = status.changeStatus(GameCommand.STATUS);
         Color winner = findWinner();

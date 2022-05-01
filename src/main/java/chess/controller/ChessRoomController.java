@@ -5,6 +5,7 @@ import chess.dto.response.RoomResponse;
 import chess.service.RoomService;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +29,10 @@ public class ChessRoomController {
     @PostMapping("create")
     public List<RoomResponse> create(@RequestBody RoomRequest roomRequest) {
         return roomService.createRoom(roomRequest);
+    }
+
+    @PostMapping("delete/{id}")
+    public List<RoomResponse> delete(@PathVariable("id") String id) {
+        return roomService.deleteRoomFrom(id);
     }
 }

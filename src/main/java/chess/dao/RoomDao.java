@@ -33,4 +33,9 @@ public class RoomDao {
         final String sql = "select id, name, password from room";
         return jdbcTemplate.query(sql, actorRowMapper);
     }
+
+    public int deleteFrom(String id) {
+        final String sql = "delete from room where id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
 }

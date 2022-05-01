@@ -23,4 +23,9 @@ public class RoomService {
         roomDao.insert(roomRequest.getName(), roomRequest.getPassword());
         return roomDao.findAll();
     }
+
+    public List<RoomResponse> deleteRoomFrom(String id) {
+        roomDao.deleteFrom(id);
+        return roomDao.findAll();
+    }
 }

@@ -13,9 +13,20 @@
 }
 
 #rooms {
+  list-style: none;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.room {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.roomDeleteButton {
+    cursor: pointer;
 }
 
 #buttons {

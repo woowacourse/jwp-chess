@@ -15,13 +15,41 @@ function print(rooms) {
     }
     rooms.forEach(function (value) {
         const room = document.createElement('li');
+        room.id = value.id;
         room.className = "room";
         const roomRink = document.createElement('a');
         roomRink.innerText = value.name;
         roomRink.href = "/game/" + value.id;
         room.appendChild(roomRink);
+
+        const roomDeleteButton = document.createElement('input');
+        roomDeleteButton.className = 'roomDeleteButton'
+        roomDeleteButton.type = 'button';
+        roomDeleteButton.value = '❌';
+        roomDeleteButton.addEventListener('click', function () {
+            deleteRoom(value.id);
+        })
+        room.appendChild(roomDeleteButton);
         roomList.appendChild(room);
     })
+}
+
+async function deleteRoom(roomId) {
+    const room = document.querySelector(".room");
+    console.log(roomId);
+    const deleteUrl = "delete/" + roomId;
+    let rooms = await fetch(deleteUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: roomName.value,
+            password: roomPassword.value,
+        }),
+    })
+    rooms = await rooms.json();
+    print(rooms);
 }
 
 function closeRooms() {

@@ -5,6 +5,7 @@ import chess.web.dto.MoveDto;
 import chess.web.dto.PlayResultDto;
 import chess.web.dto.RoomDto;
 import chess.web.service.ChessGameService;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,5 +38,11 @@ public class ChessGameRestController {
     public ResponseEntity createRoom(@RequestBody CreateRoomDto createRoomDto) {
         final RoomDto roomDto = service.createRoom(createRoomDto);
         return new ResponseEntity(roomDto, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/chess-game")
+    public ResponseEntity<List<RoomDto>> loadChessGames() {
+        List<RoomDto> roomDtos = service.loadChessGames();
+        return ResponseEntity.ok(roomDtos);
     }
 }

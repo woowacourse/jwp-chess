@@ -18,6 +18,7 @@ import chess.web.dto.PlayResultDto;
 import chess.web.dto.RoomDto;
 import chess.web.dto.ScoreDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
@@ -117,5 +118,9 @@ public class ChessGameService {
         int roomNumber = roomDao.save(RoomName.of(name), RoomPassword.of(password));
 
         return RoomDto.of(roomNumber, RoomName.of(name));
+    }
+
+    public List<RoomDto> loadChessGames() {
+        return roomDao.findAll();
     }
 }

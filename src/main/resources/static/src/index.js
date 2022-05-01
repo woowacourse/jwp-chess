@@ -1,5 +1,3 @@
-let positions = "";
-
 function createGameButton() {
     const roomName = document.querySelector("#room-name");
     const password = document.querySelector("#room-password");
@@ -24,16 +22,22 @@ function createGameButton() {
         roomName.value = "";
         password.value = "";
         alert("방 생성이 완료되었습니다.");
+        location.reload();
         return data;
+    })
+    .catch(function (error) {
+        alert(error.message);
     });
 }
 
 window.onload = async () => {
-    let data = await chessGame;
-    JsonSender.setChessBoard(data);
+    const rooms = await chessGameRoom;
+    console.log("rooms: " + rooms);
+
+    JsonSender.setChessRoom(rooms);
 }
 
-const chessGame = fetch("/load", {
+const chessGameRoom = fetch("/chess-game", {
     method: "GET"
 })
 .then(r=>r.json())
@@ -41,15 +45,11 @@ const chessGame = fetch("/load", {
     return data;
 });
 
-const move = async function (position) {
-    positions += position;
-    if (positions.length == 4) {
-        const source = positions.substring(0, 2);
-        const target = positions.substring(2, 4);
-
-        JsonSender.sendSourceTarget(source, target);
-        positions = "";
+async function handleCreatedErrors(response) {
+    if (response.status != 201) {
+        throw Error("방 생성이 실패하였습니다.");
     }
+    return response;
 }
 
 const start = function () {
@@ -59,95 +59,25 @@ const start = function () {
 const play = function () {
     window.location.replace("/play");
 }
+
 const JsonSender = {
-    sendSourceTarget: function(source, target) {
-        fetch('/move', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                source: source,
-                target: target
-            })
-        })
-        .then(handleErrors)
-        .then(r=>r.json())
-        .then(data => {
-            if (data.isFinished === true) {
-                alert(data.turn + "이 승리하였습니다!!!");
-                window.location.replace("/end");
-                return;
-            }
+    setChessRoom: function (rooms) {
+        let data = rooms;
+        let tbody = document.querySelector(".tbody-list");
 
-            JsonSender.removeChessBoard();
-            JsonSender.setChessBoard(data);
-
-            return data;
-        })
-        .catch(function (error) {
-            alert(error.message);
-        });
-    },
-
-    setChessBoard: function (chessGame) {
-        let data = chessGame;
-        let chessBoard = data.board;
-
-        let turnInfo = document.querySelector(".turnInfo");
-        let turn = turnInfo.querySelector("tbody tr td");
-        turn.innerHTML = '<img src="images/' + data.turn + '_turn.png" class="img"/>';
-
-        for (let file = 0; file < 8; file++) {
-            for (let rank = 1; rank <= 8; rank++) {
-                const position = toFileName(file) + rank;
-                let piece = chessBoard[position];
-
-                const eachDiv = document.getElementById(position);
-                if (piece) {
-                    eachDiv.innerHTML = '<img src="images/' + piece.name + '_' + piece.color + '.png" class="img"/>';
-                    continue;
-                }
-                eachDiv.innerHTML = '<img src="images/empty.png" class="img" />';
-            }
+        let html = '';
+        for(let roomNumber in data) {
+            let roomName = data[roomNumber]['roomName']['roomName'];
+            console.log('key:' + roomNumber + ' / ' + 'value:' + roomName);
+            html += '<tr>';
+            html += '<td>' + roomNumber + '</td><td>' + roomName + '</td>';
+            html += '<td><button class="delete-room" onclick="deleteGameButton()">삭제하기</button></td>';
+            html += '</tr>';
         }
-    },
-
-    removeChessBoard: function () {
-        let turnInfo = document.querySelector(".turnInfo");
-        let turn = turnInfo.querySelector("tbody tr td");
-        turn.innerHTML = "";
-
-        for (let file = 0; file < 8; file++) {
-            for (let rank = 1; rank <= 8; rank++) {
-                const position = toFileName(file) + rank;
-                const eachDiv = document.getElementById(position);
-                eachDiv.innerHTML = "";
-            }
-        }
+        tbody.innerHTML = html;
     }
 }
 
-function toFileName(file) {
-    const fileNames = new Map([
-        [0, "A"], [1, "B"], [2, "C"], [3, "D"], [4, "E"], [5, "F"], [6, "G"], [7, "H"]
-    ]);
-    return fileNames.get(file);
-}
+function deleteGameButton() {
 
-async function handleErrors(response) {
-    if (!response.ok) {
-        let errorMessage = await response.json().then((data) => {
-            return data.errorMessage;
-        })
-        throw Error(errorMessage);
-    }
-    return response;
-}
-
-async function handleCreatedErrors(response) {
-    if (response.status != 201) {
-        throw Error("방 생성이 실패하였습니다.");
-    }
-    return response;
 }

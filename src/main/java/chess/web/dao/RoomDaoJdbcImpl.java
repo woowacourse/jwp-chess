@@ -2,8 +2,11 @@ package chess.web.dao;
 
 import chess.domain.room.RoomName;
 import chess.domain.room.RoomPassword;
+import chess.web.dto.RoomDto;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +22,14 @@ public class RoomDaoJdbcImpl implements RoomDao {
         this.passwordEncoder = passwordEncoder;
     }
 
+    private final RowMapper<RoomDto> actorRowMapper = (resultSet, rowNum) -> {
+        RoomDto roomDto = RoomDto.of(
+                Integer.parseInt(resultSet.getString("num")),
+                RoomName.of(resultSet.getString("name"))
+        );
+        return roomDto;
+    };
+
     @Override
     public int save(RoomName name, RoomPassword password) {
         String encodePassword = passwordEncoder.encode(password.getPassword());
@@ -29,5 +40,13 @@ public class RoomDaoJdbcImpl implements RoomDao {
                 encodePassword);
 
         return roomNumber;
+    }
+
+    @Override
+    public List<RoomDto> findAll() {
+        final String sql = "select num, name from room";
+        List<RoomDto> roomDtos = jdbcTemplate.query(sql, actorRowMapper);
+
+        return roomDtos;
     }
 }

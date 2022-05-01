@@ -1,4 +1,4 @@
-package chess.service.dto;
+package chess.web.controller.dto;
 
 public class MoveRequest {
     private String from;

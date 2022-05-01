@@ -11,6 +11,11 @@ public class End implements State {
     }
 
     @Override
+    public boolean isProgress() {
+        return false;
+    }
+
+    @Override
     public State execute(Command command, ChessBoard chessBoard) {
         if (command.isStart()) {
             return new White();

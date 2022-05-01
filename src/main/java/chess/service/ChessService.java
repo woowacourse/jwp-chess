@@ -31,11 +31,16 @@ public class ChessService {
     }
 
     public void delete(String password, int chessGameId) {
-        if (isEnd(chessGameId)) {
+        if (!isProgress(chessGameId)) {
             chessGameDao.delete(password, chessGameId);
             return;
         }
         throw new IllegalArgumentException("게임이 진행중 입니다.");
+    }
+
+    private boolean isProgress(int chessGameId) {
+        ChessGame chessGame = chessGameDao.findById(chessGameId);
+        return chessGame.isProgress();
     }
 
     public int save(String gameName, String password) {

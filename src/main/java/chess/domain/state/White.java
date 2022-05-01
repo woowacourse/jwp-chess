@@ -16,6 +16,11 @@ public class White implements State {
     }
 
     @Override
+    public boolean isProgress() {
+        return true;
+    }
+
+    @Override
     public State execute(Command command, ChessBoard chessBoard) {
         if (command.isStart()) {
             throw new IllegalArgumentException("게임이 진행중 입니다.");

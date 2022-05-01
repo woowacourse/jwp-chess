@@ -158,4 +158,8 @@ public class ChessGame {
     public Map<Position, Piece> getCells() {
         return unmodifiableMap(chessBoard.getCells());
     }
+
+    public boolean isProgress() {
+        return state.isProgress();
+    }
 }

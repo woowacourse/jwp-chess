@@ -62,7 +62,7 @@ public class ChessGameControllerTest {
                 .body(moveResponse)
                 .when().post("/move/" + id)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.CREATED.value())
                 .body("size()", is(2));
     }
 
@@ -86,7 +86,7 @@ public class ChessGameControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when().post("/reset/" + id)
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.CREATED.value())
                 .body("size()", is(3));
     }
 

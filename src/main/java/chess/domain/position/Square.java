@@ -38,6 +38,14 @@ public class Square {
         return column.name() + row.getIndex();
     }
 
+    public boolean isPlacedOnRightSideOf(Square target) {
+        return column.getGap(target.column) < 0;
+    }
+
+    public boolean isEndRank(){
+        return row == Row.EIGHT || row == Row.ONE;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -46,7 +54,7 @@ public class Square {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Square square = (Square)o;
+        Square square = (Square) o;
         return column == square.column && row == square.row;
     }
 

@@ -4,17 +4,18 @@ import chess.domain.position.Column;
 import chess.domain.position.Row;
 
 import java.util.Arrays;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 public enum InitialPositionPieceGenerator {
-    KING((column, row) -> new InitialPiecePositionChecker(column, row).isKing(), row -> new King(getColor(row))),
-    QUEEN((column, row) -> new InitialPiecePositionChecker(column, row).isQueen(), row -> new Queen(getColor(row))),
-    ROOK((column, row) -> new InitialPiecePositionChecker(column, row).isRook(), row -> new Rook(getColor(row))),
-    BISHOP((column, row) -> new InitialPiecePositionChecker(column, row).isBishop(), row -> new Bishop(getColor(row))),
-    KNIGHT((column, row) -> new InitialPiecePositionChecker(column, row).isKnight(), row -> new Knight(getColor(row))),
-    PAWN((column, row) -> new InitialPiecePositionChecker(column, row).isPawn(), row -> new Pawn(getColor(row))),
-    NONE((column, row) -> new InitialPiecePositionChecker(column, row).isNone(), row -> new None(getColor(row)));
+    KING((column, row) -> new InitialPiecePositionChecker(column, row).isKing(), row -> new King(getColor(row), 0)),
+    QUEEN((column, row) -> new InitialPiecePositionChecker(column, row).isQueen(), row -> new Queen(getColor(row), 0)),
+    ROOK((column, row) -> new InitialPiecePositionChecker(column, row).isRook(), row -> new Rook(getColor(row), 0)),
+    BISHOP((column, row) -> new InitialPiecePositionChecker(column, row).isBishop(), row -> new Bishop(getColor(row), 0)),
+    KNIGHT((column, row) -> new InitialPiecePositionChecker(column, row).isKnight(), row -> new Knight(getColor(row), 0)),
+    PAWN((column, row) -> new InitialPiecePositionChecker(column, row).isPawn(), row -> new Pawn(getColor(row), 0)),
+    NONE((column, row) -> new InitialPiecePositionChecker(column, row).isNone(), row -> new None(getColor(row), 0));
 
     private final BiPredicate<Column, Row> condition;
     private final Function<Row, Piece> colorOf;

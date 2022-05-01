@@ -16,8 +16,8 @@ public final class Rook extends MovingMultipleUnitPiece {
         MOVABLE_DIRECTIONS = List.of(N, S, W, E);
     }
 
-    Rook(Color color) {
-        super(color, 5, MOVABLE_DIRECTIONS);
+    Rook(Color color, int moveCount) {
+        super(color, 5, moveCount, MOVABLE_DIRECTIONS);
     }
 
     @Override
@@ -32,4 +32,9 @@ public final class Rook extends MovingMultipleUnitPiece {
 
         return WHITE_ROOK;
     }
+
+    @Override
+    public boolean isRook(){
+        return true;
+    };
 }

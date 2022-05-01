@@ -9,18 +9,20 @@ public abstract class Piece {
 
     final Color color;
     final double score;
+    private int moveCount;
 
-    Piece(Color color, double score) {
+    Piece(Color color, double score, int moveCount) {
         this.color = color;
         this.score = score;
+        this.moveCount = moveCount;
     }
 
     public static Piece createByPosition(Column column, Row row) {
         return InitialPositionPieceGenerator.generatePiece(column, row);
     }
 
-    public static Piece createByTypeAndColor(String type, String color) {
-        return SavedConditionPieceGenerator.generatePiece(type, color);
+    public static Piece createByTypeAndColorAndMoveCount(String type, String color, int moveCount) {
+        return SavedConditionPieceGenerator.generatePiece(type, color, moveCount);
     }
 
     public abstract String getEmoji();
@@ -43,7 +45,22 @@ public abstract class Piece {
 
     public abstract boolean isKing();
 
+    public abstract boolean isRook();
+
     public double getScore() {
         return score;
+    }
+
+    public boolean isDisplaced() {
+        return moveCount > 0;
+    }
+
+    public Piece displaced(){
+        moveCount++;
+        return this;
+    }
+
+    public Color getColor() {
+        return this.color;
     }
 }

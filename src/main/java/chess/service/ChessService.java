@@ -9,10 +9,12 @@ import chess.domain.game.GameTurn;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.board.SavedBoardGenerator;
+import chess.domain.piece.Piece;
 import chess.domain.position.Square;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChessService {
@@ -102,5 +104,9 @@ public class ChessService {
     public void startGame(String gameID, ChessGame chessGame) {
         chessGame.startGame();
         updateTurn(gameID, chessGame);
+    }
+
+    public void promotePawnToQueen(String gameID, String target) {
+        pieceDao.promotePiece(gameID, target,"QUEEN");
     }
 }

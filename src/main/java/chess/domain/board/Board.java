@@ -3,6 +3,7 @@ package chess.domain.board;
 import chess.domain.piece.Color;
 import chess.domain.piece.None;
 import chess.domain.piece.Piece;
+import chess.domain.piece.Queen;
 import chess.domain.position.Movement;
 import chess.domain.position.Square;
 
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 public final class Board {
     private static final String ERROR_MESSAGE_POSITION_INCAPABLE = "허걱... 거긴 못가... 미안..";
     private static final String ERROR_MESSAGE_DIRECTION_INCAPABLE = "길이 막혔다...!";
+    private static final String ERROR_MESSAGE_CASTLING_INCAPABLE = "캐슬링 할 수 없어!";
 
     private final Map<Square, Piece> board;
 
@@ -66,9 +68,9 @@ public final class Board {
     }
 
     public Board move(Square source, Square target) {
-        Piece sourcePiece = board.get(source);
+        Piece sourcePiece = board.get(source).displaced();
         board.put(target, sourcePiece);
-        board.put(source, new None(Color.NONE));
+        board.put(source, new None(Color.NONE, 0));
         return new Board(board);
     }
 
@@ -80,5 +82,76 @@ public final class Board {
 
     public Map<Square, Piece> getBoard() {
         return new LinkedHashMap<>(board);
+    }
+
+    public boolean isCastable(Square source, Square target) {
+        Piece sourcePiece = board.get(source);
+        Piece targetPiece = board.get(target);
+        Movement movement = source.getGap(target);
+
+        try {
+            checkCastablePieces(sourcePiece, targetPiece);
+            checkCapableRoute(source, target, movement);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void checkCastablePieces(Piece sourcePiece, Piece targetPiece) {
+        checkCastableSourcePiece(sourcePiece);
+        checkCastableTargetPiece(targetPiece);
+    }
+
+    private void checkCastableSourcePiece(Piece sourcePiece) {
+        if (!sourcePiece.isKing() || sourcePiece.isDisplaced()) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_CASTLING_INCAPABLE);
+        }
+    }
+
+    private void checkCastableTargetPiece(Piece targetPiece) {
+        if (!targetPiece.isRook() || targetPiece.isDisplaced()) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_CASTLING_INCAPABLE);
+        }
+    }
+
+    public Board castle(Square source, Square target) {
+        if (source.isPlacedOnRightSideOf(target)) {
+            return queenSideCastle(source, target);
+        }
+        return kingSideCastle(source, target);
+    }
+
+    private Board queenSideCastle(Square source, Square target) {
+        Piece sourcePiece = board.get(source).displaced();
+        Piece targetPiece = board.get(target).displaced();
+
+        board.put(source.add(new Movement(-2,0)), sourcePiece);
+        board.put(target.add(new Movement(3,0)), targetPiece);
+
+        board.put(source, new None(Color.NONE, 0));
+        board.put(target, new None(Color.NONE, 0));
+
+        return new Board(board);
+    }
+
+    private Board kingSideCastle(Square source, Square target) {
+        Piece sourcePiece = board.get(source).displaced();
+        Piece targetPiece = board.get(target).displaced();
+
+        board.put(source.add(new Movement(2,0)), sourcePiece);
+        board.put(target.add(new Movement(-2,0)), targetPiece);
+
+        board.put(source, new None(Color.NONE, 0));
+        board.put(target, new None(Color.NONE, 0));
+
+        return new Board(board);
+    }
+
+    public Board doPromotion(Square target) {
+        String pieceColor = board.get(target).getColor().name();
+        board.replace(target, Piece.createByTypeAndColorAndMoveCount("QUEEN", pieceColor, 0));
+        return new Board(board);
     }
 }

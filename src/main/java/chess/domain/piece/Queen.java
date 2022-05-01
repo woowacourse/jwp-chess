@@ -16,8 +16,8 @@ public final class Queen extends MovingMultipleUnitPiece {
         MOVABLE_DIRECTIONS = List.of(N, S, W, E, ES, WN, WS, EN);
     }
 
-    Queen(Color color) {
-        super(color, 9, MOVABLE_DIRECTIONS);
+    Queen(Color color, int moveCount) {
+        super(color, 9, moveCount, MOVABLE_DIRECTIONS);
     }
 
     @Override
@@ -32,4 +32,9 @@ public final class Queen extends MovingMultipleUnitPiece {
 
         return WHITE_QUEEN;
     }
+
+    @Override
+    public boolean isRook(){
+        return false;
+    };
 }

@@ -16,8 +16,8 @@ public final class King extends MovingUnitPiece {
         MOVABLE_DIRECTIONS = List.of(N, S, E, W, WS, EN, WN, ES);
     }
 
-    King(Color color) {
-        super(color, 0, MOVABLE_DIRECTIONS);
+    King(Color color, int moveCount) {
+        super(color, 0, moveCount, MOVABLE_DIRECTIONS);
     }
 
     @Override

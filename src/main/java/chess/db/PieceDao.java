@@ -25,7 +25,7 @@ public class PieceDao {
     }
 
     public void save(String gameID) {
-        String sql = "insert into piece (position, type, color, gameID) values (?, ?, ?, ?)";
+        String sql = "insert into piece (position, type, color, moveCount, gameID) values (?, ?, ?, ?, ?)";
 
         List<Object[]> data = new ArrayList<>();
         insertPieces(gameID, data);
@@ -43,6 +43,7 @@ public class PieceDao {
             data.add(new Object[]{new Square(column, row).getName(),
                     InitialPositionPieceGenerator.getType(column, row).name(),
                     InitialPositionPieceGenerator.getColor(row).name(),
+                    0,
                     gameID});
         }
     }
@@ -53,13 +54,13 @@ public class PieceDao {
     }
 
     public void updatePosition(Square source, Square target, String gameID) {
-        String sql = "update piece set position = ? where position = ? and gameID = ?";
+        String sql = "update piece set position = ?, moveCount=moveCount+1 where position = ? and gameID = ?";
         jdbcTemplate.update(sql, target.getName(), source.getName(), gameID);
     }
 
     public void insertNone(String gameID, Square source) {
-        String sql = "insert into piece (position, type, color, gameID) values (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, source.getName(), InitialPositionPieceGenerator.NONE.name(), Color.NONE.name(), gameID);
+        String sql = "insert into piece (position, type, color, moveCount, gameID) values (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, source.getName(), InitialPositionPieceGenerator.NONE.name(), Color.NONE.name(), 0, gameID);
     }
 
     public void deleteAll(String gameID) {
@@ -68,7 +69,7 @@ public class PieceDao {
     }
 
     public Map<Square, Piece> findByGameID(String gameID) {
-        String sql = "select position, type, color from piece where gameID = ?";
+        String sql = "select position, type, color, moveCount from piece where gameID = ?";
         Map<Square, Piece> board = new HashMap<>();
         List<Map<String, Object>> data = jdbcTemplate.queryForList(sql, gameID);
         loadBoard(board, data);
@@ -77,12 +78,18 @@ public class PieceDao {
 
     }
 
+    public void promotePiece(String gameID, String target, String type){
+        String sql = "update piece set type = ? where position = ? and gameID = ?";
+        jdbcTemplate.update(sql, type, target, gameID);
+    }
+
     private void loadBoard(Map<Square, Piece> board, List<Map<String, Object>> pieces) {
         for (Map<String, Object> piece : pieces) {
             String position = (String) piece.get("position");
             String type = (String) piece.get("type");
             String color = (String) piece.get("color");
-            board.put(new Square(position), Piece.createByTypeAndColor(type, color));
+            int moveCount = (int) piece.get("moveCount");
+            board.put(new Square(position), Piece.createByTypeAndColorAndMoveCount(type, color, moveCount));
         }
     }
 

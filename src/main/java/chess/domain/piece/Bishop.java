@@ -16,8 +16,8 @@ public final class Bishop extends MovingMultipleUnitPiece {
         MOVABLE_DIRECTIONS = List.of(EN, ES, WS, WN);
     }
 
-    Bishop(Color color) {
-        super(color, 3, MOVABLE_DIRECTIONS);
+    Bishop(Color color, int moveCount) {
+        super(color, 3, moveCount, MOVABLE_DIRECTIONS);
     }
 
     @Override
@@ -32,4 +32,9 @@ public final class Bishop extends MovingMultipleUnitPiece {
 
         return WHITE_BISHOP;
     }
+
+    @Override
+    public boolean isRook(){
+        return false;
+    };
 }

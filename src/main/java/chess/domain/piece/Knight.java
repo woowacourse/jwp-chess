@@ -16,8 +16,8 @@ public final class Knight extends MovingUnitPiece {
         MOVABLE_DIRECTIONS = List.of(ENN, ESS, WNN, WSS, EEN, EES, WWN, WWS);
     }
 
-    Knight(Color color) {
-        super(color, 2.5, MOVABLE_DIRECTIONS);
+    Knight(Color color, int moveCount) {
+        super(color, 2.5, moveCount, MOVABLE_DIRECTIONS);
     }
 
     @Override

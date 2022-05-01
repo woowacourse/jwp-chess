@@ -10,12 +10,12 @@ import chess.dao.GameDao;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.dto.request.CreatePieceDto;
 import chess.dto.request.DeletePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.ChessGameDto;
-import chess.dto.response.PieceColorDto;
 import chess.dto.response.RoomDto;
 import chess.dto.response.ScoreResultDto;
 
@@ -70,17 +70,20 @@ public class ChessService {
         gameDao.updateTurnToBlack(gameId);
     }
 
-    public PieceColorDto getCurrentTurn(int gameId) {
-        return PieceColorDto.from(generateChessGame(gameId));
+    public PieceColor getCurrentTurn(int gameId) {
+        if (generateChessGame(gameId).isWhiteTurn()) {
+            return PieceColor.WHITE;
+        }
+        return PieceColor.BLACK;
     }
 
     public ScoreResultDto getScore(int gameId) {
         return ScoreResultDto.from(generateChessGame(gameId));
     }
 
-    public PieceColorDto getWinColor(int gameId) {
+    public PieceColor getWinColor(int gameId) {
         ChessGame chessGame = generateChessGame(gameId);
-        return PieceColorDto.from(chessGame.getWinColor());
+        return chessGame.getWinColor();
     }
 
     private ChessGame generateChessGame(int gameId) {

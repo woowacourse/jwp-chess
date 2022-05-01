@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.dto.request.CreateRoomDto;
 import chess.dto.request.DeleteRoomDto;
 import chess.dto.request.MovePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.CommandResultDto;
-import chess.dto.response.PieceColorDto;
 import chess.dto.response.RoomDto;
 import chess.dto.response.ScoreResultDto;
 import chess.service.ChessService;
@@ -63,14 +63,14 @@ public class ChessController {
 
     @GetMapping("/turn/{id}")
     public Map<String, String> getTurn(@PathVariable Integer id) {
-        PieceColorDto pieceColorDto = chessService.getCurrentTurn(id);
+        PieceColor pieceColor = chessService.getCurrentTurn(id);
         Map<String, String> responseValue = new HashMap<>();
-        responseValue.put("pieceColor", getColorFromPieceColorDto(pieceColorDto));
+        responseValue.put("pieceColor", getColorNameFromPieceColor(pieceColor));
         return responseValue;
     }
 
-    private String getColorFromPieceColorDto(PieceColorDto pieceColorDto) {
-        if (pieceColorDto.isWhiteTurn()) {
+    private String getColorNameFromPieceColor(PieceColor pieceColor) {
+        if (pieceColor == PieceColor.WHITE) {
             return WHITE_PIECE_COLOR_NAME;
         }
         return BLACK_PIECE_COLOR_NAME;
@@ -87,9 +87,9 @@ public class ChessController {
 
     @GetMapping("/winner/{id}")
     public Map<String, String> getWinner(@PathVariable Integer id) {
-        PieceColorDto pieceColorDto = chessService.getWinColor(id);
+        PieceColor pieceColor = chessService.getWinColor(id);
         Map<String, String> responseValue = new HashMap<>();
-        responseValue.put("pieceColor", getColorFromPieceColorDto(pieceColorDto));
+        responseValue.put("pieceColor", getColorNameFromPieceColor(pieceColor));
         return responseValue;
     }
 

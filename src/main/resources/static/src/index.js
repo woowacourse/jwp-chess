@@ -1,7 +1,7 @@
 function deleteGame(gameId) {
     const password = prompt('비밀번호를 입력하세요.', '');
 
-    fetch(`/`, {
+    fetch(`/game/` + gameId, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -11,11 +11,10 @@ function deleteGame(gameId) {
             password: password
         })
     }).then((response) => {
-        if (response.status === 400) {
-            throw response;
-        }
-        if (response.status === 200) {
+        if (response.status === 204) {
             alert("성공적으로 삭제하였습니다.");
+        } else {
+            throw response;
         }
         location.reload();
     }).catch(err => {
@@ -24,4 +23,3 @@ function deleteGame(gameId) {
         })
     });
 }
-

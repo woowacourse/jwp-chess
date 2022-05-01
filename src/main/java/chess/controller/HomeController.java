@@ -1,9 +1,11 @@
 package chess.controller;
 
 import chess.controller.request.RoomCreationRequest;
+import chess.controller.request.RoomDeletionRequest;
 import chess.controller.response.RoomResponse;
 import chess.dto.GameDto;
 import chess.serviece.ChessGameService;
+import chess.serviece.dto.PasswordDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +42,8 @@ public class HomeController {
     }
 
     @DeleteMapping(value = "/rooms/{id}")
-    public ResponseEntity<Long> deleteRoom(@PathVariable Long id, @RequestBody GameDto gameDto) {
-        chessGameService.deleteGame(id, gameDto);
+    public ResponseEntity<Long> deleteRoom(@PathVariable Long id, @RequestBody RoomDeletionRequest roomDeletionRequest) {
+        chessGameService.deleteGame(id, new PasswordDto(roomDeletionRequest.getPassword()));
         return ResponseEntity.noContent().build();
     }
 }

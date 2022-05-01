@@ -13,6 +13,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.dto.PieceDto;
+import chess.serviece.dto.PasswordDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,9 +66,9 @@ public class ChessGameService {
         return gameDao.findAll();
     }
 
-    public void deleteGame(Long id, GameDto gameDto) {
+    public void deleteGame(Long id, PasswordDto passwordDto) {
         String password = gameDao.findPasswordById(id);
-        if (!password.equals(gameDto.getPassword())) {
+        if (!password.equals(passwordDto.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         GameStatus gameStatus = gameDao.findStatusById(id);

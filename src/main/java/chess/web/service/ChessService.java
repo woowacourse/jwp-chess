@@ -19,10 +19,15 @@ import chess.web.dto.board.ResultDto;
 import chess.web.dto.game.PasswordDto;
 import chess.web.dto.game.TitleDto;
 import java.util.List;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
+
+    private static final Set<StateType> RUNNING_STATE_TYPES = Set.of(StateType.WHITE_TURN, StateType.BLACK_TURN);
+    private static final Set<StateType> FINISHED_STATE_TYPES =
+            Set.of(StateType.END, StateType.WHITE_WIN, StateType.BLACK_WIN);
 
     private static final int BOARD_START_INDEX = 0;
     private static final int BOARD_END_INDEX = 7;
@@ -84,19 +89,13 @@ public class ChessService {
         if (!realPassword.equals(password)) {
             throw new IllegalArgumentException("비밀번호가 잘못되었습니다.");
         }
-        if (getChessGame(gameId).isRunning()) {
+        if (isChessRunning(gameId)) {
             throw new IllegalArgumentException("게임이 아직 진행중입니다.");
         }
     }
 
-    private ChessGame getChessGame(int gameId) {
-        PiecesDto piecesDto = new PiecesDto(getPieces(gameId));
-        ChessBoard chessBoard = new ChessBoard(piecesDto.toBoard());
-        return new ChessGame(getStateType(gameId).newState(chessBoard));
-    }
-
-    private List<PieceDto> getPieces(int gameId) {
-        return pieceDao.findAllByGameId(gameId);
+    private boolean isChessRunning(int gameId) {
+        return RUNNING_STATE_TYPES.contains(getStateType(gameId));
     }
 
     public StateType getStateType(int gameId) {
@@ -108,8 +107,18 @@ public class ChessService {
                 getScore(gameId, Color.WHITE));
     }
 
+    private List<PieceDto> getPieces(int gameId) {
+        return pieceDao.findAllByGameId(gameId);
+    }
+
     private double getScore(int gameId, Color color) {
         return getChessGame(gameId).score(color);
+    }
+
+    private ChessGame getChessGame(int gameId) {
+        PiecesDto piecesDto = new PiecesDto(getPieces(gameId));
+        ChessBoard chessBoard = new ChessBoard(piecesDto.toBoard());
+        return new ChessGame(getStateType(gameId).newState(chessBoard));
     }
 
     public MoveResultDto getMoveResult(int gameId, MovePositionsDto movePositionsDto) {
@@ -130,7 +139,7 @@ public class ChessService {
     }
 
     public boolean isChessFinished(int gameId) {
-        return getChessGame(gameId).isFinished();
+        return FINISHED_STATE_TYPES.contains(getStateType(gameId));
     }
 
     public ResultDto getChessResult(int gameId) {

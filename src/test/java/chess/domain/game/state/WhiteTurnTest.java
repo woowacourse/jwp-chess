@@ -8,6 +8,7 @@ import chess.domain.game.score.ScoreResult;
 import chess.domain.position.Position;
 import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
+import chess.exception.MovePieceFailedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -60,8 +61,8 @@ class WhiteTurnTest {
 
         // when & then
         assertThatThrownBy(() -> whiteTurn.move(Position.of(XAxis.A, YAxis.ONE), Position.of(XAxis.A, YAxis.ONE)))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("말을 이동하는 것에 실패했습니다.");
+                .isInstanceOf(MovePieceFailedException.class)
+                .hasMessage("기물을 움직이는데 실패하였습니다.");
     }
 
     @DisplayName("한쪽 킹이 죽었다면 기물을 움직일 수 없다.")

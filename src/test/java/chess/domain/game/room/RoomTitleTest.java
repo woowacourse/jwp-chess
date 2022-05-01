@@ -19,6 +19,6 @@ class RoomTitleTest {
         Assertions.assertThatThrownBy(
                         () -> RoomTitle.from("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam."))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("빈 제목으로 생성할 수 없습니다.");
+                .hasMessage("50자를 초과한 제목으로 생성할 수 없습니다.");
     }
 }

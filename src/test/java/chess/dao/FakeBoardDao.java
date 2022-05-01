@@ -7,6 +7,7 @@ import chess.dto.BoardDto;
 import chess.dto.PieceDto;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FakeBoardDao implements BoardDao {
 
@@ -31,8 +32,12 @@ public class FakeBoardDao implements BoardDao {
 
     @Override
     public ChessBoard findById(int id) {
-        BoardDto boardDto = board.get(id);
-        return boardDto.toEntity();
+        Map<String, PieceDto> board = this.board.get(id).getBoard();
+        Map<Position, Piece> pieces = board.entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> Position.of(entry.getKey()),
+                        entry -> entry.getValue().toEntity()));
+        return new ChessBoard(pieces);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.state.State;
-import chess.dto.GameDto;
+import chess.entity.Game;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +32,23 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public List<GameDto> findAll() {
-        String sql = "select id, title, state from game";
+    public List<Game> findAll() {
+        String sql = "select * from game";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            GameDto gameDto = new GameDto(rs.getInt("id"), rs.getString("title"), rs.getString("state"));
-            return gameDto;
+            Game game = new Game(rs.getInt("id"), rs.getString("title"), rs.getString("password"),
+                    rs.getString("state"));
+            return game;
         });
+    }
+
+    @Override
+    public Game findById(int id) {
+        String sql = "select * from game where id = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            Game game = new Game(rs.getInt("id"), rs.getString("title"), rs.getString("password"),
+                    rs.getString("state"));
+            return game;
+        }, id);
     }
 
     @Override
@@ -47,12 +58,6 @@ public class GameDaoImpl implements GameDao {
             State state = State.of(rs.getString("state"));
             return state;
         }, id);
-    }
-
-    @Override
-    public String findPassword(int id) {
-        String sql = "select password from game where id = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, id);
     }
 
     @Override

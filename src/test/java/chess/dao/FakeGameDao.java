@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.state.State;
-import chess.dto.GameDto;
+import chess.entity.Game;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class FakeGameDao implements GameDao {
 
-    private final Map<Integer, GameDto> game;
+    private final Map<Integer, Game> game;
     private int id = 1;
 
     public FakeGameDao() {
@@ -18,34 +18,32 @@ public class FakeGameDao implements GameDao {
 
     @Override
     public int save(String title, String password, String state) {
-        GameDto gameDto = new GameDto(id, title, state, password);
-        game.put(id, gameDto);
+        Game game = new Game(id, title, password, state);
+        this.game.put(id, game);
         return id++;
     }
 
     @Override
-    public List<GameDto> findAll() {
+    public List<Game> findAll() {
         return new ArrayList<>(game.values());
     }
 
     @Override
+    public Game findById(int id) {
+        return game.get(id);
+    }
+
+    @Override
     public State findState(int id) {
-        GameDto gameDto = game.get(id);
-        String state = gameDto.getState();
+        Game game = this.game.get(id);
+        String state = game.getState();
         return State.of(state);
     }
 
     @Override
-    public String findPassword(int id) {
-        GameDto gameDto = game.get(id);
-        return gameDto.getPassword();
-    }
-
-    @Override
     public int update(String state, int id) {
-        GameDto value = game.get(id);
-        GameDto gameDto = new GameDto(value.getId(), value.getTitle(), state, value.getPassword());
-        game.put(id, gameDto);
+        Game game = this.game.get(id);
+        this.game.put(id, new Game(game.getId(), game.getTitle(), game.getPassword(), state));
         return id;
     }
 

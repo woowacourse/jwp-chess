@@ -51,9 +51,9 @@ public class ChessServiceTest {
     @DisplayName("게임들의 리스트를 반환한다.")
     void findGame() {
         List<GameDto> game = chessService.findGame();
-        String password = game.get(id - 1).getPassword();
+        String password = game.get(id - 1).getTitle();
 
-        assertThat(password).isEqualTo("password");
+        assertThat(password).isEqualTo("title");
     }
 
     @Test

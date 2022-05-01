@@ -16,6 +16,8 @@ import chess.dto.GameDto;
 import chess.dto.PieceDto;
 import chess.dto.RoomDto;
 import chess.dto.StatusDto;
+import chess.entity.Game;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +46,12 @@ public class ChessService {
     }
 
     public List<GameDto> findGame() {
-        return gameDao.findAll();
+        List<GameDto> gameDtos = new ArrayList<>();
+        List<Game> games = gameDao.findAll();
+        for (Game game : games) {
+            gameDtos.add(new GameDto(game.getId(), game.getTitle(), game.getState()));
+        }
+        return gameDtos;
     }
 
     public BoardDto selectBoard(int id) {
@@ -103,7 +110,7 @@ public class ChessService {
 
     @Transactional
     public void deleteGame(int gameId, String password) {
-        String value = gameDao.findPassword(gameId);
+        String value = gameDao.findById(gameId).getPassword();
         State state = gameDao.findState(gameId);
         validateState(state);
         if (value.equals(password)) {

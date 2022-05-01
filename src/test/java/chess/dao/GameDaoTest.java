@@ -2,7 +2,7 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.dto.GameDto;
+import chess.entity.Game;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,9 +35,17 @@ class GameDaoTest {
     @Test
     @DisplayName("게임들의 리스트를 조회할 수 있다.")
     void findAll() {
-        List<GameDto> games = gameDao.findAll();
+        List<Game> games = gameDao.findAll();
 
         assertThat(games.get(0).getTitle()).isEqualTo("title");
+    }
+
+    @Test
+    @DisplayName("게임을 조회할 수 있다.")
+    void findById() {
+        Game game = gameDao.findById(gameId);
+
+        assertThat(game.getPassword()).isEqualTo("password");
     }
 
     @Test
@@ -46,14 +54,6 @@ class GameDaoTest {
         String state = gameDao.findState(gameId).getValue();
 
         assertThat(state).isEqualTo("WhiteTurn");
-    }
-
-    @Test
-    @DisplayName("게임의 비밀번호를 조회할 수 있다.")
-    void findPassword() {
-        String password = gameDao.findPassword(gameId);
-
-        assertThat(password).isEqualTo("password");
     }
 
     @Test

@@ -129,17 +129,20 @@ public class ChessService {
             .collect(Collectors.toUnmodifiableList());
     }
 
-    public boolean delete(long roomId, String password) {
-        if (roomDao.findByIdAndPassword(roomId, password).isEmpty()) {
+    public void delete(long roomId, String password) {
+        Optional<Room> optionalRoom = roomDao.findByIdAndPassword(roomId, password);
+        if (optionalRoom.isEmpty()) {
             throw new IllegalArgumentException(INVALID_PASSWORD_MESSAGE);
         }
-
-        if (!roomDao.findByIdAndPassword(roomId, password).get().getTurn().equals(EMPTY.getName())) {
-            throw new IllegalStateException(DELETE_NOT_ALLOWED_WHEN_RUNNING_MESSAGE);
-        }
+        validateDeletableState(optionalRoom.get());
 
         squareDao.removeAll(roomId);
         roomDao.delete(roomId);
-        return true;
+    }
+
+    private void validateDeletableState(Room room) {
+        if (!room.isDeletable()) {
+            throw new IllegalStateException(DELETE_NOT_ALLOWED_WHEN_RUNNING_MESSAGE);
+        }
     }
 }

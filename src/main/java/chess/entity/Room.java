@@ -61,4 +61,8 @@ public class Room {
     public String getPassword() {
         return password;
     }
+
+    public boolean isDeletable() {
+        return turn.equals(EMPTY.getName());
+    }
 }

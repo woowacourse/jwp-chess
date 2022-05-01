@@ -53,8 +53,9 @@ public class ChessController {
     }
 
     @DeleteMapping("/rooms/{id}")
-    public boolean delete(@PathVariable long id, @RequestParam String password) {
-        return chessService.delete(id, password);
+    public ResponseEntity<Void> delete(@PathVariable long id, @RequestParam String password) {
+        chessService.delete(id, password);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/rooms/{id}/move")

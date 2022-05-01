@@ -3,6 +3,8 @@ package chess;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.NoSuchElementException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -96,7 +98,9 @@ public class ChessServiceTest {
     @Test
     @DisplayName("delete로 id, password를 받아 Room, square 정보를 지운다.")
     void delete() {
-        assertThat(chessService.delete(id, firstRoomPassword)).isTrue();
+        chessService.delete(id, firstRoomPassword);
+        assertThatThrownBy(() -> chessService.findRoom(id))
+            .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test

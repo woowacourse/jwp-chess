@@ -39,7 +39,12 @@ public class FakeRoomDao implements RoomDao {
 
     @Override
     public Optional<Room> findById(long roomId) {
-        return Optional.ofNullable(rooms.get((int)(roomId - 1)));
+        try {
+            Room room = rooms.get((int)(roomId - 1));
+            return Optional.of(room);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @Override

@@ -193,7 +193,7 @@ class ChessControllerTest {
     }
 
     @Test
-    @DisplayName("방 삭제 기능을 검증한다.")
+    @DisplayName("방 삭제 성공시 204 상태를 응답한다.")
     void delete() {
         RestAssured.given().log().all()
             .body("name=sojukang&password=1234567890")
@@ -205,8 +205,7 @@ class ChessControllerTest {
             .body("password=1234567890")
             .when().delete("/rooms/" + (id + 1))
             .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.APPLICATION_JSON_VALUE);
+            .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
     @Test

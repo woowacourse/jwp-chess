@@ -29,7 +29,7 @@ async function createRoom() {
     const title = prompt("방 이름 입력해주세요.");
     const password = prompt("방 비밀번호를 입력해주세요.");
     $.ajax({
-        url: "/room",
+        url: "/rooms",
         type: 'post',
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Content-type", "application/json");
@@ -51,14 +51,14 @@ async function createRoom() {
 
 async function loadRoom(id) {
     localStorage.setItem("id", id);
-    window.location.href = "/game";
+    window.location.href = "/games";
 }
 
 async function deleteRoom(id) {
     let password = prompt("비밀번호를 입력해주세요.");
 
     $.ajax({
-        url: "/room/" + id,
+        url: "/rooms/" + id,
         type: 'delete',
         beforeSend: function (xhr) {
             xhr.setRequestHeader("Content-type", "application/json");

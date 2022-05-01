@@ -5,13 +5,12 @@ import chess.dto.ChessResponseDto;
 import chess.dto.MoveCommandDto;
 import chess.dto.ScoresDto;
 import chess.serviece.ChessGameService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/game")
+@RequestMapping("/games")
 public class GameController {
 
     private final ChessGameService chessGameService;
@@ -35,13 +34,13 @@ public class GameController {
         return ResponseEntity.ok().body(chessGameService.getScore(id));
     }
 
-    @PostMapping(value = "/{id}/move", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}/pieces")
     public ResponseEntity<ChessResponseDto> move(@PathVariable Long id, @RequestBody MoveCommandDto moveCommandDto) {
         MoveCommand moveCommand = moveCommandDto.toEntity();
         return ResponseEntity.ok().body(chessGameService.movePiece(id, moveCommand));
     }
 
-    @PostMapping("/{id}/end")
+    @PutMapping("/{id}")
     public ResponseEntity<ScoresDto> end(@PathVariable Long id) {
         return ResponseEntity.ok().body(chessGameService.finishGame(id));
     }

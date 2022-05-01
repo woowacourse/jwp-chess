@@ -28,12 +28,12 @@ public class HomeController {
         return ResponseEntity.ok().body(chessGameService.getAllGames());
     }
 
-    @PostMapping(value = "/room")
+    @PostMapping(value = "/rooms")
     public ResponseEntity<Long> createGame(@RequestBody GameCreationDto gameCreationDto) {
         return ResponseEntity.ok().body(chessGameService.addGame(gameCreationDto));
     }
 
-    @DeleteMapping(value = "/room/{id}")
+    @DeleteMapping(value = "/rooms/{id}")
     public ResponseEntity<Long> deleteGame(@PathVariable Long id, @RequestBody GameDto gameDto) {
         chessGameService.removeGame(id, gameDto);
         return ResponseEntity.noContent().build();

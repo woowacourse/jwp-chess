@@ -17,7 +17,6 @@ public class ControllerExceptionHandler {
         return exception.getMessage();
     }
 
-
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public String handleException(Exception exception) throws Exception {

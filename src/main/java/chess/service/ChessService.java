@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,10 +28,13 @@ public class ChessService {
 
     private final BoardDao boardDao;
     private final GameDao gameDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public ChessService(BoardDao boardDao, GameDao gameDao) {
+    public ChessService(BoardDao boardDao, GameDao gameDao,
+                        PasswordEncoder passwordEncoder) {
         this.boardDao = boardDao;
         this.gameDao = gameDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Board findBoardByGameId(int gameId) {
@@ -43,13 +47,9 @@ public class ChessService {
     }
 
     public int start(GameCreateDto gameCreateDto) {
-        int gameId = saveGame(gameCreateDto);
+        int gameId = gameDao.save(new GameDto(gameCreateDto.getRoomName(), gameCreateDto.getPassword(), Team.WHITE.name()));
         saveBoard(Board.create(), gameId);
         return gameId;
-    }
-
-    private int saveGame(GameCreateDto gameCreateDto) {
-        return gameDao.save(new GameDto(gameCreateDto.getRoomName(), gameCreateDto.getPassword(), Team.WHITE.name()));
     }
 
     private void saveBoard(Board board, int gameId) {
@@ -122,7 +122,8 @@ public class ChessService {
     }
 
     private boolean isSamePassword(GameDeleteDto gameDeleteDto) {
-        return gameDao.findPasswordById(gameDeleteDto.getId()).equals(gameDeleteDto.getPassword());
+        String passwordById = gameDao.findPasswordById(gameDeleteDto.getId());
+        return passwordEncoder.matches(gameDeleteDto.getPassword(), passwordById);
     }
 
     public List<GameDto> findGames() {

@@ -8,6 +8,10 @@ import chess.model.board.BoardFactory;
 import chess.model.dao.GameDao;
 import chess.model.dao.PieceDao;
 import chess.model.dto.WebBoardDto;
+import chess.model.piece.Piece;
+import chess.model.position.Position;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,24 +24,21 @@ import org.springframework.test.context.jdbc.Sql;
 @JdbcTest
 @Sql({"/initGames.sql", "/initPieces.sql"})
 class ChessGameServiceTest {
+
+    private final JdbcTemplate jdbcTemplate;
     private final ChessGameService chessGameService;
-    private final GameDao gameDao;
-    private final PieceDao pieceDao;
-    private Long gameId;
+    private Long gameId = 1L;
 
     @Autowired
     ChessGameServiceTest(JdbcTemplate jdbcTemplate) {
-        gameDao = new GameDao(jdbcTemplate);
-        pieceDao = new PieceDao(jdbcTemplate);
+        this.jdbcTemplate = jdbcTemplate;
 
-        chessGameService = new ChessGameService(
-                pieceDao, gameDao, new ChessBoardService(pieceDao, gameDao));
+        chessGameService = new ChessGameService(new PieceDao(jdbcTemplate), new GameDao(jdbcTemplate));
     }
 
     @BeforeEach
     void beforeEach() {
-        gameId = gameDao.saveGame("serviceTestGame", "pw123");
-        pieceDao.savePieces(BoardFactory.create(), gameId);
+        gameId = chessGameService.createGame("serviceTestRoom", "pw1234");
     }
 
     @Test
@@ -46,16 +47,16 @@ class ChessGameServiceTest {
         Map<Long, String> games = chessGameService.getAllGamesWithIdAndTitle();
 
         assertThat(games.keySet()).containsExactly(1L, 2L);
-        assertThat(games.values()).containsExactly("title1", "serviceTestGame");
+        assertThat(games.values()).containsExactly("title1", "serviceTestRoom");
     }
 
     @Test
     @DisplayName("새 게임을 생성하는 테스트")
     void createNewGameTest() {
-        gameId = chessGameService.createGame("newGame", "pw1234");
+        Long newGameId = chessGameService.createGame("newGame", "pw1234");
 
         assertThat(chessGameService.getAllGamesWithIdAndTitle().keySet())
-                .contains(gameId);
+                .contains(newGameId);
     }
 
     @Test
@@ -67,11 +68,17 @@ class ChessGameServiceTest {
     }
 
     @Test
+    @DisplayName("게임의 현재 턴을 반환받는 테스트")
+    void getTurnTest() {
+        String turn = chessGameService.getTurn(gameId);
+
+        assertThat(turn).isEqualTo("white");
+    }
+
+    @Test
     @DisplayName("게임 종료 샹태갸 아닐 때 방을 삭제하려는 경우 테스트")
     void deleteGameWhilePlaying() {
-        assertThatThrownBy(() -> {
-            chessGameService.deleteGame(gameId, "pw1234");
-        })
+        assertThatThrownBy(() -> chessGameService.deleteGame(gameId, "pw1234"))
                 .isInstanceOf(IllegalDeleteRoomException.class)
                 .hasMessageContaining("게임이 진행중인 방은 삭제할 수 없습니다.");
     }
@@ -79,11 +86,9 @@ class ChessGameServiceTest {
     @Test
     @DisplayName("방 삭제 시 방 비밀번호가 틀린 경우 테스트")
     void deleteGameWithWrongPw() {
-        gameDao.updateTurnByGameId(gameId, "end");
+        chessGameService.exitGame(gameId);
 
-        assertThatThrownBy(() -> {
-            chessGameService.deleteGame(gameId, "worngPw");
-        })
+        assertThatThrownBy(() -> chessGameService.deleteGame(gameId, "wrongPw"))
                 .isInstanceOf(IllegalDeleteRoomException.class)
                 .hasMessageContaining("방 비밀번호가 맞지 않습니다.");
     }
@@ -91,9 +96,28 @@ class ChessGameServiceTest {
     @Test
     @DisplayName("방 삭제 테스트")
     void deleteGameTest() {
-        gameDao.updateTurnByGameId(gameId, "end");
-        chessGameService.deleteGame(gameId, "pw123");
+        chessGameService.exitGame(gameId);
+        chessGameService.deleteGame(gameId, "pw1234");
 
         assertThat(chessGameService.getAllGamesWithIdAndTitle().keySet()).doesNotContain(gameId);
+    }
+
+
+    @Test
+    @DisplayName("게임 종료 테스트")
+    void exitGameTest() {
+        chessGameService.exitGame(gameId);
+
+        assertThat(chessGameService.getTurn(gameId)).isEqualTo("end");
+    }
+
+    @Test
+    @DisplayName("게임 재시작 테스트")
+    void restartGameTest() {
+        chessGameService.restartGame(gameId);
+        WebBoardDto board = chessGameService.continueGame(gameId);
+
+        assertThat(board.getWebBoard()).isEqualTo(WebBoardDto.from(BoardFactory.create()).getWebBoard());
+        assertThat(chessGameService.getTurn(gameId)).isEqualTo("white");
     }
 }

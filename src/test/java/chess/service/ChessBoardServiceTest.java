@@ -2,12 +2,20 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.entity.PieceEntity;
 import chess.model.GameResult;
 import chess.model.Team;
 import chess.model.board.Board;
 import chess.model.board.BoardFactory;
 import chess.model.dao.GameDao;
 import chess.model.dao.PieceDao;
+import chess.model.dto.WebBoardDto;
+import chess.model.piece.Piece;
+import chess.model.position.Position;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,40 +28,44 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql({"/initGames.sql", "/initPieces.sql"})
 class ChessBoardServiceTest {
 
+    private static final Long gameId = 1L;
+
+    private final JdbcTemplate jdbcTemplate;
     private final ChessBoardService chessBoardService;
-    private final GameDao gameDao;
-    private final PieceDao pieceDao;
-    private Long gameId;
 
     @Autowired
     ChessBoardServiceTest(JdbcTemplate jdbcTemplate) {
-        gameDao = new GameDao(jdbcTemplate);
-        pieceDao = new PieceDao(jdbcTemplate);
+        this.jdbcTemplate = jdbcTemplate;
 
-        chessBoardService = new ChessBoardService(pieceDao, gameDao);
+        chessBoardService = new ChessBoardService(new PieceDao(jdbcTemplate), new GameDao(jdbcTemplate));
     }
 
     @BeforeEach
     void beforeEach() {
-        gameId = gameDao.saveGame("serviceTestGame", "pw123");
-        pieceDao.savePieces(BoardFactory.create(), gameId);
+        String sql = "insert into pieces (position, name, game_id) values (?, ?, ?)";
+
+        List<Object[]> batch = new ArrayList<>();
+        for (Map.Entry<Position, Piece> entry : BoardFactory.create().getBoard().entrySet()) {
+            Object[] values = new Object[]{entry.getKey().getPosition(),
+                    (entry.getValue().getTeam().name() + "-" + entry.getValue().getName()).toLowerCase(),
+                    gameId};
+            batch.add(values);
+        }
+
+        jdbcTemplate.batchUpdate(sql, batch);
     }
 
     @Test
     @DisplayName("엔티티로 받은 데이터를 Board로 변환하는 테스트")
     void toBoardTest() {
-        Board board = BoardFactory.create();
-        Board resultBoard = chessBoardService.toBoard(pieceDao.findAllPiecesByGameId(gameId));
+        WebBoardDto pieces = WebBoardDto.from(BoardFactory.create());
+        List<PieceEntity> pieceEntities = pieces.getWebBoard().entrySet().stream()
+                .map(piece -> new PieceEntity(piece.getValue(), piece.getKey()))
+                .collect(Collectors.toList());
 
-        assertThat(resultBoard).isEqualTo(board);
-    }
+        Board resultBoard = ChessBoardService.toBoard(pieceEntities);
 
-    @Test
-    @DisplayName("게임의 현재 턴을 반환받는 테스트")
-    void getTurnTest() {
-        String turn = chessBoardService.getTurn(gameId);
-
-        assertThat(turn).isEqualTo("white");
+        assertThat(resultBoard).isEqualTo(BoardFactory.create());
     }
 
     @Test
@@ -72,24 +84,5 @@ class ChessBoardServiceTest {
         assertThat(gameResult.getWhiteScore()).isEqualTo(38);
         assertThat(gameResult.getBlackScore()).isEqualTo(38);
         assertThat(gameResult.getWinningTeam()).isEqualTo(Team.NONE);
-    }
-
-    @Test
-    @DisplayName("게임 종료 테스트")
-    void exitGameTest() {
-        chessBoardService.exitGame(gameId);
-
-        assertThat(gameDao.findTurnByGameId(gameId).get()).isEqualTo("end");
-    }
-
-    @Test
-    @DisplayName("게임 재시작 테스트")
-    void restartGameTest() {
-        chessBoardService.restartGame(gameId);
-
-        assertThat(chessBoardService.toBoard(pieceDao.findAllPiecesByGameId(gameId)))
-                .isEqualTo(BoardFactory.create());
-        assertThat(gameDao.findTurnByGameId(gameId).get())
-                .isEqualTo("white");
     }
 }

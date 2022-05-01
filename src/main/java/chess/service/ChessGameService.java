@@ -15,6 +15,7 @@ import chess.dto.RoomsDto;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessGameService {
@@ -27,6 +28,7 @@ public class ChessGameService {
         this.boardDao = boardDao;
     }
 
+    @Transactional
     public void create(String title, String password) {
         final Room room = new Room(title, password);
         if (boardDao.existsBoardByName(title)) {
@@ -37,6 +39,7 @@ public class ChessGameService {
         pieceDao.save(chessGame.getBoard().getPiecesByPosition(), boardId);
     }
 
+    @Transactional
     public void move(Long boardId, String rawSource, String rawTarget) {
         final Position source = Position.from(rawSource);
         final Position target = Position.from(rawTarget);
@@ -56,10 +59,12 @@ public class ChessGameService {
         pieceDao.updatePosition(chessGame.getId(), source.stringName(), target.stringName());
     }
 
+    @Transactional(readOnly = true)
     public ChessBoardDto getBoard(Long boardId) {
         return ChessBoardDto.from(pieceDao.load(boardId));
     }
 
+    @Transactional(readOnly = true)
     public double statusOfWhite(Long boardId) {
         final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
         final Color turn = boardDao.findTurn(boardId);
@@ -69,6 +74,7 @@ public class ChessGameService {
         return chessGame.scoreOfWhite();
     }
 
+    @Transactional(readOnly = true)
     public double statusOfBlack(Long boardId) {
         final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
         final Color turn = boardDao.findTurn(boardId);
@@ -78,6 +84,7 @@ public class ChessGameService {
         return chessGame.scoreOfBlack();
     }
 
+    @Transactional(readOnly = true)
     public Winner findWinner(Long boardId) {
         final Map<Position, Piece> loadedBoard = pieceDao.load(boardId);
         final Color turn = boardDao.findTurn(boardId);
@@ -87,20 +94,24 @@ public class ChessGameService {
         return chessGame.findWinner();
     }
 
+    @Transactional
     public void end(Long boardId) {
         boardDao.updateTurn(boardId, Color.NONE);
     }
 
+    @Transactional(readOnly = true)
     public Color getTurn(Long boardId) {
         return boardDao.findTurn(boardId);
     }
 
+    @Transactional
     public void restart(Long boardId) {
         boardDao.updateTurn(boardId, Color.WHITE);
         final Board board = new Board();
         pieceDao.updateAll(board.getPiecesByPosition(), boardId);
     }
 
+    @Transactional
     public void delete(Long boardId, String password) {
         final String loadedPassword = boardDao.findPasswordById(boardId);
         if (!password.equals(loadedPassword)) {
@@ -114,11 +125,13 @@ public class ChessGameService {
         boardDao.deleteBoard(boardId);
     }
 
+    @Transactional(readOnly = true)
     public RoomsDto getRooms() {
         List<RoomDto> rooms = boardDao.findAllRooms();
         return new RoomsDto(rooms);
     }
 
+    @Transactional(readOnly = true)
     public boolean isGameEnd(Long boardId) {
         final Color turn = boardDao.findTurn(boardId);
         return turn == Color.NONE;

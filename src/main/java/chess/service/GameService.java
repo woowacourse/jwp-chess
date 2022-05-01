@@ -6,8 +6,10 @@ import chess.dao.PieceDao;
 import chess.dao.PositionDao;
 import chess.domain.game.Board;
 import chess.domain.game.ChessBoard;
+import chess.domain.game.Game;
 import chess.domain.game.Initializer;
 import chess.domain.member.Member;
+import chess.domain.pieces.Blank;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
@@ -58,56 +60,27 @@ public class GameService {
 
     @Transactional
     public void move(int roomId, Position sourceRawPosition, Position targetRawPosition) {
-        Position sourcePosition = extractPosition(positionDao.findByColumnAndRowAndBoardId(sourceRawPosition.getColumn(), sourceRawPosition.getRow(), roomId));
-        Position targetPosition = extractPosition(positionDao.findByColumnAndRowAndBoardId(targetRawPosition.getColumn(), targetRawPosition.getRow(), roomId));
-        Board board = new Board(() -> positionDao.findAllPositionsAndPieces(roomId));
-        board.validateMovement(sourcePosition, targetPosition);
-        validateTurn(roomId, sourcePosition);
-        updateMovingPiecePosition(sourcePosition, targetPosition, board.piece(targetPosition));
-        changeTurn(roomId);
-    }
-
-    private Position extractPosition(Optional<Position> wrappedPosition) {
-        if (wrappedPosition.isEmpty()) {
-            throw new IllegalArgumentException("위치가 존재하지 않습니다.");
-        }
-        return wrappedPosition.get();
-    }
-
-    private void validateTurn(int roomId, Position sourcePosition) {
-        Position position = extractPosition(positionDao.findByColumnAndRowAndBoardId(sourcePosition.getColumn(), sourcePosition.getRow(), roomId));
-        Optional<Piece> wrappedPiece = pieceDao.findByPositionId(position.getId());
-        if (wrappedPiece.isEmpty()) {
-            throw new IllegalArgumentException("말이 존재하지 않습니다.");
-        }
-        validateCorrectTurn(roomId, wrappedPiece.get());
-    }
-
-    private void validateCorrectTurn(int roomId, Piece piece) {
-        Optional<ChessBoard> wrappedBoard = boardDao.findById(roomId);
-        if (wrappedBoard.isEmpty()) {
-            throw new IllegalArgumentException("보드가 존재하지 않습니다.");
-        }
-        ChessBoard chessBoard = wrappedBoard.get();
-        Color turn = chessBoard.getTurn();
-        if (!piece.isSameColor(turn)) {
-            throw new IllegalArgumentException("지금은 " + turn.value() + "의 턴입니다.");
-        }
-    }
-
-    private void updateMovingPiecePosition(Position sourcePosition, Position targetPosition, Optional<Piece> targetPiece) {
-        if (targetPiece.isPresent()) {
-            pieceDao.deleteByPositionId(targetPosition.getId());
-        }
-        pieceDao.updatePositionId(sourcePosition.getId(), targetPosition.getId());
-    }
-
-    private void changeTurn(int roomId) {
         final Optional<ChessBoard> wrappedBoard = boardDao.findById(roomId);
-        if (wrappedBoard.isEmpty()) {
+        if(wrappedBoard.isEmpty()) {
             throw new IllegalArgumentException("보드가 존재하지 않습니다.");
         }
-        boardDao.updateTurn(Color.opposite(wrappedBoard.get().getTurn()), roomId);
+        Game game = new Game(() -> positionDao.findAllPositionsAndPieces(roomId), wrappedBoard.get().getTurn());
+        Piece sourcePiece = extractPiece(game.piece(sourceRawPosition));
+        Piece targetPiece = extractPiece(game.piece(targetRawPosition));
+
+        game.move(sourceRawPosition, targetRawPosition);
+
+        pieceDao.updatePiece(targetPiece, sourcePiece);
+        pieceDao.updatePiece(sourcePiece, new Piece(Color.NONE, new Blank()));
+
+        boardDao.updateTurn(game.getTurn(), roomId);
+    }
+
+    private Piece extractPiece(Optional<Piece> wrappedPiece) {
+        if (wrappedPiece.isEmpty()) {
+            throw new IllegalArgumentException("기물이 존재하지 않습니다.");
+        }
+        return wrappedPiece.get();
     }
 
     public BoardDto getBoard(int roomId) {

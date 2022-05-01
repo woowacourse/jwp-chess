@@ -1,5 +1,6 @@
 package chess.domain.game;
 
+import chess.domain.pieces.Blank;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
@@ -17,7 +18,7 @@ public final class Board {
 
     private final Map<Position, Piece> pieces;
 
-    public Board(final Initializer initializer) {
+    public Board(Initializer initializer) {
         pieces = initializer.initialize();
     }
 
@@ -31,7 +32,7 @@ public final class Board {
     public void move(final Position sourcePosition, final Position targetPosition) {
         final Piece piece = findPiece(sourcePosition);
         validateMovement(sourcePosition, targetPosition);
-        pieces.remove(sourcePosition);
+        pieces.put(sourcePosition, new Piece(Color.NONE, new Blank()));
         pieces.put(targetPosition, piece);
     }
 
@@ -78,7 +79,8 @@ public final class Board {
     }
 
     private void validatePieceNotExist(final Position position) {
-        if (pieces.containsKey(position)) {
+        final Optional<Piece> wrappedPiece = piece(position);
+        if (wrappedPiece.isPresent() && !wrappedPiece.get().isBlank()) {
             throw new IllegalArgumentException("이동경로에 다른 기물이 있으면 움직일 수 없습니다.");
         }
     }
@@ -99,7 +101,8 @@ public final class Board {
     }
 
     private void checkPawnTargetNotExist(final Position targetPosition) {
-        if (pieces.containsKey(targetPosition)) {
+        final Optional<Piece> wrappedPiece = piece(targetPosition);
+        if (wrappedPiece.isPresent() && !wrappedPiece.get().isBlank()) {
             throw new IllegalArgumentException("목적지에 다른 기물이 존재하면 움직일 수 없습니다.");
         }
     }
@@ -172,4 +175,11 @@ public final class Board {
                 .anyMatch(piece -> piece.isKing() && piece.isSameColor(color));
     }
 
+    public Position findPosition(Position rawPosition) {
+        return pieces.keySet()
+                .stream()
+                .filter(position -> position.equals(rawPosition))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("위치를 찾을 수 없습니다."));
+    }
 }

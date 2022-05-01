@@ -6,6 +6,7 @@ public enum Color {
 
     BLACK("검은말"),
     WHITE("흰말"),
+    NONE("없음"),
     ;
 
     private final String value;

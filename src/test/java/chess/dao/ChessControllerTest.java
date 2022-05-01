@@ -45,12 +45,12 @@ class ChessControllerTest {
         RestAssured.port = port;
         ChessBoard board = boardDao.save(
                 new ChessBoard("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린")), "111"));
+
         this.boardId = board.getId();
         positionDao.saveAll(boardId);
         final Map<Position, Piece> initialize = new BoardInitializer().initialize();
         for (Position position : initialize.keySet()) {
-            int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),
-                    boardId);
+            int lastPositionId = positionDao.findByColumnAndRowAndBoardId(position.getColumn(), position.getRow(), boardId).get().getId();
             final Piece piece = initialize.get(position);
             pieceDao.save(new Piece(piece.getColor(), piece.getType(), lastPositionId));
         }

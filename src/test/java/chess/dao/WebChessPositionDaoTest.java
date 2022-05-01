@@ -78,8 +78,5 @@ class WebChessPositionDaoTest {
         assertThat(savedRecords).isEqualTo(64);
     }
 
-    @AfterEach
-    void setDown() {
-        boardDao.deleteAll();
-    }
+
 }

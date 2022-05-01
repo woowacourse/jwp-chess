@@ -28,4 +28,9 @@ public final class Bishop implements Type {
     public Symbol symbol() {
         return Symbol.BISHOP;
     }
+
+    @Override
+    public boolean isBlank() {
+        return false;
+    }
 }

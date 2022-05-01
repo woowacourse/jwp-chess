@@ -28,4 +28,9 @@ public final class Queen implements Type {
     public Symbol symbol() {
         return Symbol.QUEEN;
     }
+
+    @Override
+    public boolean isBlank() {
+        return false;
+    }
 }

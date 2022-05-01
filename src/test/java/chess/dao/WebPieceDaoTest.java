@@ -1,6 +1,7 @@
 package chess.dao;
 
 import chess.domain.game.ChessBoard;
+import chess.domain.pieces.Blank;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Pawn;
 import chess.domain.pieces.Piece;
@@ -15,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -66,10 +68,9 @@ class WebPieceDaoTest {
     }
 
     @Test
-    void updatePiecePositionId() {
-        final int sourcePositionId = positionId;
-        final int targetPositionId = positionDao.save(new Position(Column.A, Row.TWO, boardId)).getId();
-        int affectedRow = pieceDao.updatePositionId(sourcePositionId, targetPositionId);
+    void updatePiece() {
+        Piece sourcePiece = pieceDao.findByPositionId(positionId).get();
+        int affectedRow = pieceDao.updatePiece(sourcePiece, new Piece(Color.NONE, new Blank()));
         assertThat(affectedRow).isEqualTo(1);
     }
 

@@ -10,22 +10,19 @@ import java.util.Optional;
 
 public final class Game {
 
-    private static final Color FIRST_TURN = Color.WHITE;
-
     private final Board board;
-    private Color turn = FIRST_TURN;
+    private Color turn;
 
-    public Game(final Initializer initializer) {
-        board = new Board(initializer);
+    public Game(Initializer initializer, Color turn) {
+        this.board = new Board(initializer);
+        this.turn = turn;
     }
 
     public Optional<Piece> piece(final Position position) {
         return board.piece(position);
     }
 
-    public void move(final String source, final String target) {
-        final Position sourcePosition = Position.of(source);
-        final Position targetPosition = Position.of(target);
+    public void move(final Position sourcePosition, final Position targetPosition) {
         validateNotEquals(sourcePosition, targetPosition);
         validateCorrectTurn(sourcePosition);
         board.move(sourcePosition, targetPosition);
@@ -47,6 +44,14 @@ public final class Game {
 
     private void changeTurn() {
         turn = Color.opposite(turn);
+    }
+
+    public Color getTurn() {
+        return this.turn;
+    }
+
+    public Position findPosition(Position position) {
+        return board.findPosition(position);
     }
 
     public boolean isEnd() {

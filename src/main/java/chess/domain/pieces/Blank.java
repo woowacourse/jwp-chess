@@ -2,11 +2,11 @@ package chess.domain.pieces;
 
 import chess.domain.position.Position;
 
-public final class Rook implements Type {
+public final class Blank implements Type {
 
     @Override
-    public boolean isMovable(final Position source, final Position target) {
-        return source.isStraight(target);
+    public boolean isMovable(Position source, Position target) {
+        throw new IllegalArgumentException("기물이 존재하지 않습니다.");
     }
 
     @Override
@@ -21,16 +21,16 @@ public final class Rook implements Type {
 
     @Override
     public double score() {
-        return Symbol.ROOK.score();
+        return 0;
     }
 
     @Override
     public Symbol symbol() {
-        return Symbol.ROOK;
+        return Symbol.BLANK;
     }
 
     @Override
     public boolean isBlank() {
-        return false;
+        return true;
     }
 }

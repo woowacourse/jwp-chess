@@ -41,4 +41,9 @@ public final class Knight implements Type {
     public Symbol symbol() {
         return Symbol.KNIGHT;
     }
+
+    @Override
+    public boolean isBlank() {
+        return false;
+    }
 }

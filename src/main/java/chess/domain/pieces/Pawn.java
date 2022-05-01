@@ -59,4 +59,9 @@ public final class Pawn implements Type {
     public Symbol symbol() {
         return Symbol.PAWN;
     }
+
+    @Override
+    public boolean isBlank() {
+        return false;
+    }
 }

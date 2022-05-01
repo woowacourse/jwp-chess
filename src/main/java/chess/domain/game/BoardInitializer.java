@@ -34,6 +34,19 @@ public final class BoardInitializer implements Initializer {
         initQueens(pieces);
         initKings(pieces);
         initPawns(pieces);
+        initBlanks(pieces);
+    }
+
+    private void initBlanks(Map<Position, Piece> pieces) {
+        for (Column column : Column.values()) {
+            initBlank(pieces, column);
+        }
+    }
+
+    private void initBlank(Map<Position, Piece> pieces, Column column) {
+        for (Row row : List.of(Row.THREE, Row.FOUR, Row.FIVE, Row.SIX)) {
+            pieces.put(Position.of(column.name() + row.value()), new Piece(Color.NONE, new Blank()));
+        }
     }
 
     private void initRooks(Map<Position, Piece> pieces) {

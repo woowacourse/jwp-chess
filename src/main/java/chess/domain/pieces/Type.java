@@ -13,4 +13,6 @@ public interface Type {
     double score();
 
     Symbol symbol();
+
+    boolean isBlank();
 }

@@ -3,7 +3,6 @@ package chess.dao;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.Symbol;
-import chess.domain.position.Column;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,8 +18,6 @@ import java.util.*;
 
 @Repository
 public class WebChessPieceDao implements PieceDao<Piece> {
-
-    private static final int WRONG_COUNT = -1;
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -50,7 +47,7 @@ public class WebChessPieceDao implements PieceDao<Piece> {
         SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
 
         final Piece piece = DataAccessUtils.singleResult(jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> makePiece(rs)));
-        if(piece == null) {
+        if (piece == null) {
             return Optional.empty();
         }
         return Optional.of(piece);
@@ -66,11 +63,12 @@ public class WebChessPieceDao implements PieceDao<Piece> {
     }
 
     @Override
-    public int updatePositionId(int sourcePositionId, int targetPositionId) {
-        final String sql = "UPDATE piece SET position_id=:target_position_id WHERE position_id=:source_position_id";
-        List<String> keys = List.of("target_position_id", "source_position_id");
-        List<Object> values = List.of(targetPositionId, sourcePositionId);
-        return jdbcTemplate.update(sql, ParameterSourceCreator.makeParameterSource(keys, values));
+    public int updatePiece(Piece source, Piece target) {
+        final String sql = "UPDATE piece SET type=:type, color=:color WHERE id=:piece_id";
+        List<String> keys = List.of("type", "color", "piece_id");
+        List<Object> values = List.of(target.getType().symbol().name(), target.getColor().name(), source.getId());
+        SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
+        return jdbcTemplate.update(sql, namedParameters);
     }
 
     @Override

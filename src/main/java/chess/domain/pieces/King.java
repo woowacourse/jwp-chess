@@ -30,4 +30,9 @@ public final class King implements Type {
     public Symbol symbol() {
         return Symbol.KING;
     }
+
+    @Override
+    public boolean isBlank() {
+        return false;
+    }
 }

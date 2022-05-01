@@ -111,6 +111,9 @@ function showBoard() {
 
 function deleteBoard(id) {
     const inputPassword = prompt('비밀번호를 입력하세요');
+    if (inputPassword == null) {
+        return;
+    }
     fetch(`/board?id=${id}`, {
         method: "DELETE",
         headers: {

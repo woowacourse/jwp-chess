@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,7 +29,12 @@ class ChessServiceTest {
     @DisplayName("체스 게임방 삭제 (성공)")
     void deleteChessGameRoomSuccess() {
         String gameId = chessService.addChessGame("zero", "1234");
-        assertDoesNotThrow(() -> chessService.deleteGameByIdAndPassword(gameId, "1234"));
+        chessService.deleteGameByIdAndPassword(gameId, "1234");
+        List<String> gameIDs = chessService.getGames().stream()
+                .map(game -> game.getId())
+                .collect(Collectors.toList());
+
+        Assertions.assertThat(gameIDs.contains(gameId)).isEqualTo(false);
     }
 
     @Test

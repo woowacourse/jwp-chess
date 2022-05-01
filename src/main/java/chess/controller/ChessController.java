@@ -6,11 +6,13 @@ import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.dto.RequestDto;
 import chess.service.GameService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -19,20 +21,15 @@ public class ChessController {
 
     private final GameService gameService;
 
-    @Value("home")
-    private String mainView;
-
-    @Value("index")
-    private String roomView;
-
     public ChessController(GameService gameService) {
         this.gameService = gameService;
     }
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("boards", gameService.getRooms());
-        return mainView;
+    public ModelAndView index(Model model) {
+        ModelAndView modelAndView = new ModelAndView("home");
+        modelAndView.addObject("boards", gameService.getRooms());
+        return modelAndView;
     }
 
     @PostMapping("/room")
@@ -44,21 +41,11 @@ public class ChessController {
     }
 
     @GetMapping("/room/{roomId}")
-    public String showRoom(@PathVariable("roomId") int id, Model model) {
-        model.addAttribute("roomId", id);
-        model.addAttribute("board", gameService.getBoard(id));
-        return roomView;
-    }
-
-    @PostMapping("/room/{roomId}/end")
-    public ResponseEntity<Void> endGame(@PathVariable("roomId") int id, @RequestParam("password") String password) {
-        if (!gameService.isEnd(id)) {
-            throw new IllegalArgumentException("진행중인 게임은 삭제할 수 없습니다.");
-        }
-        if (!gameService.end(id, password)) {
-            throw new IllegalArgumentException("게임 삭제에 실패하였습니다.");
-        }
-        return ResponseEntity.ok(null);
+    public ModelAndView showRoom(@PathVariable("roomId") int id, Model model) {
+        ModelAndView modelAndView = new ModelAndView("index");
+        modelAndView.addObject("roomId", id);
+        modelAndView.addObject("board", gameService.getBoard(id));
+        return modelAndView;
     }
 
 }

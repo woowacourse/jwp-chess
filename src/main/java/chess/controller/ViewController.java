@@ -19,8 +19,7 @@ public class ViewController {
     }
 
     @GetMapping("/")
-    public String index(HttpSession session) {
-        session.removeAttribute("roomId");
+    public String index() {
         return "index";
     }
 

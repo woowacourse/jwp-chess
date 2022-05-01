@@ -7,6 +7,7 @@ import chess.dto.MoveDto;
 import chess.dto.RoomDto;
 import chess.service.ChessService;
 import chess.view.WebInputView;
+import com.google.gson.Gson;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,6 +78,7 @@ public class WebController {
 
     @ExceptionHandler({RuntimeException.class})
     private ResponseEntity<String> handleException(final RuntimeException exception) {
-        return ResponseEntity.badRequest().body(exception.getMessage());
+        Gson gson = new Gson();
+        return ResponseEntity.badRequest().body(gson.toJson(exception.getMessage()));
     }
 }

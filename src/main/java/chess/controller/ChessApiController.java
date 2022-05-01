@@ -45,7 +45,7 @@ public class ChessApiController {
 
     @GetMapping(value = "/turn/{gameId}")
     public String turn(@PathVariable Long gameId) {
-        return chessBoardService.getTurn(gameId);
+        return chessGameService.getTurn(gameId);
     }
 
     @PostMapping("/move/{gameId}")
@@ -66,12 +66,12 @@ public class ChessApiController {
 
     @PatchMapping("/exit/{gameId}")
     public void exit(@PathVariable Long gameId) {
-        chessBoardService.exitGame(gameId);
+        chessGameService.exitGame(gameId);
     }
 
     @PostMapping("/restart/{gameId}")
     public void restartGame(@PathVariable Long gameId) {
-        chessBoardService.restartGame(gameId);
+        chessGameService.restartGame(gameId);
     }
 
     @DeleteMapping("/room/{gameId}")

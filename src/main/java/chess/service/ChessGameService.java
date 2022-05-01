@@ -2,6 +2,7 @@ package chess.service;
 
 import chess.entity.PieceEntity;
 import chess.exception.IllegalDeleteRoomException;
+import chess.exception.NoSuchGameException;
 import chess.model.board.Board;
 import chess.model.board.BoardFactory;
 import chess.model.dao.GameDao;
@@ -17,12 +18,10 @@ public class ChessGameService {
 
     private final PieceDao pieceDao;
     private final GameDao gameDao;
-    private final ChessBoardService chessBoardService;
 
-    public ChessGameService(PieceDao pieceDao, GameDao gameDao, ChessBoardService chessBoardService) {
+    public ChessGameService(PieceDao pieceDao, GameDao gameDao) {
         this.pieceDao = pieceDao;
         this.gameDao = gameDao;
-        this.chessBoardService = chessBoardService;
     }
 
     public Map<Long, String> getAllGamesWithIdAndTitle() {
@@ -43,9 +42,14 @@ public class ChessGameService {
 
     public WebBoardDto continueGame(Long gameId) {
         List<PieceEntity> pieceEntities = pieceDao.findAllPiecesByGameId(gameId);
-        Board board = chessBoardService.toBoard(pieceEntities);
+        Board board = ChessBoardService.toBoard(pieceEntities);
 
         return WebBoardDto.from(board);
+    }
+
+    public String getTurn(Long gameId) {
+        return gameDao.findTurnByGameId(gameId)
+                .orElseThrow(() -> new NoSuchGameException("잘못된 ID 값입니다."));
     }
 
     public void deleteGame(Long gameId, String password) {
@@ -56,11 +60,21 @@ public class ChessGameService {
     }
 
     private void validateCanDeleteGame(Long gameId, String password) {
-        if (!chessBoardService.getTurn(gameId).equals("end")) {
+        if (!getTurn(gameId).equals("end")) {
             throw new IllegalDeleteRoomException("게임이 진행중인 방은 삭제할 수 없습니다.");
         }
         if (!gameDao.findPasswordByGameId(gameId).equals(password)) {
             throw new IllegalDeleteRoomException("방 비밀번호가 맞지 않습니다.");
         }
+    }
+
+    public void exitGame(Long gameId) {
+        gameDao.updateTurnByGameId(gameId, "end");
+    }
+
+    public void restartGame(Long gameId) {
+        pieceDao.deleteByGameId(gameId);
+        pieceDao.savePieces(BoardFactory.create(), gameId);
+        gameDao.updateTurnByGameId(gameId, "white");
     }
 }

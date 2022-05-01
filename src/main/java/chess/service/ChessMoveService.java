@@ -20,12 +20,12 @@ public class ChessMoveService {
 
     private final PieceDao pieceDao;
     private final GameDao gameDao;
-    private final ChessBoardService chessBoardService;
+    private final ChessGameService chessGameService;
 
-    public ChessMoveService(PieceDao pieceDao, GameDao gameDao, ChessBoardService chessBoardService) {
+    public ChessMoveService(PieceDao pieceDao, GameDao gameDao, ChessGameService chessGameService) {
         this.pieceDao = pieceDao;
         this.gameDao = gameDao;
-        this.chessBoardService = chessBoardService;
+        this.chessGameService = chessGameService;
     }
 
     public WebBoardDto move(Long gameId, MoveDto moveDto) {
@@ -38,12 +38,12 @@ public class ChessMoveService {
     }
 
     public WebBoardDto move(Long gameId, String srcPosition, String dstPosition, Piece sourcePiece, Piece targetPiece) {
-        Turn turn = Turn.from(chessBoardService.getTurn(gameId));
+        Turn turn = Turn.from(chessGameService.getTurn(gameId));
         validateCurrentTurn(turn, sourcePiece);
 
         movePiece(gameId, srcPosition, dstPosition, sourcePiece, targetPiece, turn);
 
-        Board board = chessBoardService.toBoard(pieceDao.findAllPiecesByGameId(gameId));
+        Board board = ChessBoardService.toBoard(pieceDao.findAllPiecesByGameId(gameId));
         checkKingDead(gameId, turn, board);
 
         return WebBoardDto.from(board);
@@ -76,7 +76,7 @@ public class ChessMoveService {
     }
 
     private boolean hasBlock(Long gameId, Position sourcePosition, Position targetPosition, Piece sourcePiece) {
-        Board board = chessBoardService.toBoard(pieceDao.findAllPiecesByGameId(gameId));
+        Board board = ChessBoardService.toBoard(pieceDao.findAllPiecesByGameId(gameId));
         List<Position> positions = sourcePiece.getIntervalPosition(sourcePosition, targetPosition);
 
         return positions.stream()

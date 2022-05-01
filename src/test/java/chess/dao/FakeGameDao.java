@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dto.GameDto;
+import chess.dao.entity.Game;
 import chess.domain.GameStatus;
 
 import java.util.ArrayList;
@@ -11,21 +11,21 @@ import java.util.Map;
 public class FakeGameDao implements GameDao {
 
     Long id = 0L;
-    private Map<Long, GameDto> games = new HashMap<>();
+    private Map<Long, Game> games = new HashMap<>();
 
     @Override
-    public Long save(GameDto gameDto) {
-        games.put(id, gameDto);
+    public Long save(Game game) {
+        games.put(id, game);
         return id++;
     }
 
     @Override
-    public void removeById(Long gameId) {
-        games.remove(gameId);
+    public void removeById(Long id) {
+        games.remove(id);
     }
 
     @Override
-    public GameDto findGameById(Long id) {
+    public Game findGameById(Long id) {
         return games.get(id);
     }
 
@@ -40,20 +40,20 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public List<GameDto> findAll() {
+    public List<Game> findAll() {
         return new ArrayList<>(games.values());
     }
 
     @Override
-    public void updateGame(Long gameId, String turn, String status) {
-        GameDto gameDto = games.get(gameId);
-        games.replace(gameId, new GameDto(gameId, gameDto.getTitle(), gameDto.getPassword(), turn, status));
+    public void updateGame(Long id, String turn, String status) {
+        Game gameDto = games.get(id);
+        games.replace(id, new Game(id, gameDto.getTitle(), gameDto.getPassword(), turn, status));
     }
 
     @Override
-    public void updateStatus(Long gameId, GameStatus status) {
-        GameDto game = games.get(gameId);
-        GameDto updatedGame = new GameDto(game.getId(), game.getTitle(), game.getPassword(), game.getTurn(), status.getName());
-        games.replace(gameId, updatedGame);
+    public void updateStatus(Long id, GameStatus status) {
+        Game game = games.get(id);
+        Game updatedGame = new Game(game.getId(), game.getTitle(), game.getPassword(), game.getTurn(), status.getName());
+        games.replace(id, updatedGame);
     }
 }

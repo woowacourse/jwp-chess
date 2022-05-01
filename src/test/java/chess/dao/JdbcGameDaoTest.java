@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dto.GameDto;
+import chess.dao.entity.Game;
 import chess.domain.GameStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,10 +35,10 @@ public class JdbcGameDaoTest {
     @DisplayName("게임 데이터 저장")
     void save() {
         // given
-        GameDto gameDto = new GameDto("라라라", "1234", "white", "playing");
+        Game game = new Game("라라라", "1234", "white", "playing");
 
         // when
-        long id = gameDao.save(gameDto);
+        long id = gameDao.save(game);
 
         // then
         assertThat(id).isEqualTo(1);
@@ -48,8 +48,8 @@ public class JdbcGameDaoTest {
     @DisplayName("게임 데이터 삭제")
     void remove() {
         // given
-        GameDto gameDto = new GameDto("라라라", "1234", "white", "playing");
-        long id = gameDao.save(gameDto);
+        Game game = new Game("라라라", "1234", "white", "playing");
+        long id = gameDao.save(game);
 
         // when
         gameDao.removeById(id);
@@ -67,19 +67,19 @@ public class JdbcGameDaoTest {
         String password = "1234";
         String turn = "white";
         String status = "playing";
-        GameDto gameDto = new GameDto(title, password, turn, status);
-        long id = gameDao.save(gameDto);
+        Game game = new Game(title, password, turn, status);
+        long id = gameDao.save(game);
 
         // when
-        GameDto selectedGameDto = gameDao.findGameById(id);
+        Game selectedGame = gameDao.findGameById(id);
 
         // then
         assertAll(
-                () -> assertThat(selectedGameDto).isNotNull(),
-                () -> assertThat(selectedGameDto.getId()).isEqualTo(id),
-                () -> assertThat(selectedGameDto.getTitle()).isEqualTo(title),
-                () -> assertThat(selectedGameDto.getTurn()).isEqualTo(turn),
-                () -> assertThat(selectedGameDto.getStatus()).isEqualTo(status)
+                () -> assertThat(selectedGame).isNotNull(),
+                () -> assertThat(selectedGame.getId()).isEqualTo(id),
+                () -> assertThat(selectedGame.getTitle()).isEqualTo(title),
+                () -> assertThat(selectedGame.getTurn()).isEqualTo(turn),
+                () -> assertThat(selectedGame.getStatus()).isEqualTo(status)
         );
     }
 
@@ -87,24 +87,24 @@ public class JdbcGameDaoTest {
     @DisplayName("모든 게임 데이터 저장")
     void findAll() {
         // given
-        GameDto gameDto1 = new GameDto("라라라", "1234", "white", "playing");
-        GameDto gameDto2 = new GameDto("룰룰루", "222", "white", "playing");
-        gameDao.save(gameDto1);
-        gameDao.save(gameDto2);
+        Game game1 = new Game("라라라", "1234", "white", "playing");
+        Game game2 = new Game("룰룰루", "222", "white", "playing");
+        gameDao.save(game1);
+        gameDao.save(game2);
 
         // when
-        List<GameDto> gameDtos = gameDao.findAll();
+        List<Game> games = gameDao.findAll();
 
         // then
-        assertThat(gameDtos.size()).isEqualTo(2);
+        assertThat(games.size()).isEqualTo(2);
     }
 
     @Test
     @DisplayName("게임 정보 수정")
     void update() {
         // given
-        GameDto gameDto = new GameDto("라라라", "1234", "white", "playing");
-        long id = gameDao.save(gameDto);
+        Game game = new Game("라라라", "1234", "white", "playing");
+        long id = gameDao.save(game);
 
         // when
         gameDao.updateGame(id, "black", "end");
@@ -120,8 +120,8 @@ public class JdbcGameDaoTest {
     @DisplayName("게임 상태 업데이트")
     void updateStatus() {
         // given
-        GameDto gameDto = new GameDto("라라라", "1234", "white", "playing");
-        long id = gameDao.save(gameDto);
+        Game game = new Game("라라라", "1234", "white", "playing");
+        long id = gameDao.save(game);
 
         // when
         GameStatus gameStatus = GameStatus.FINISHED;

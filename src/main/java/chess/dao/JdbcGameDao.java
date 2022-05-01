@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dto.GameDto;
+import chess.dao.entity.Game;
 import chess.domain.GameStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,7 +21,7 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public Long save(GameDto gameDto) {
+    public Long save(Game game) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final String sql = "insert into game (title, password, turn, status) values (?, ?, ?, ?)";
@@ -29,10 +29,10 @@ public class JdbcGameDao implements GameDao {
                     sql,
                     new String[]{"id"}
             );
-            preparedStatement.setString(1, gameDto.getTitle());
-            preparedStatement.setString(2, gameDto.getPassword());
-            preparedStatement.setString(3, gameDto.getTurn());
-            preparedStatement.setString(4, gameDto.getStatus());
+            preparedStatement.setString(1, game.getTitle());
+            preparedStatement.setString(2, game.getPassword());
+            preparedStatement.setString(3, game.getTurn());
+            preparedStatement.setString(4, game.getStatus());
             return preparedStatement;
         }, keyHolder);
 
@@ -40,20 +40,21 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void removeById(Long gameId) {
+    public void removeById(Long id) {
         final String sql = "delete from game where id = ?";
-        jdbcTemplate.update(sql, gameId);
+        jdbcTemplate.update(sql, id);
     }
 
     @Override
-    public GameDto findGameById(Long id) {
+    public Game findGameById(Long id) {
         final String sql = "select * from game where id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
                 (resultSet, rowNum) ->
-                        new GameDto(
+                        new Game(
                                 resultSet.getLong("id"),
                                 resultSet.getString("title"),
+                                resultSet.getString("password"),
                                 resultSet.getString("turn"),
                                 resultSet.getString("status")
                         ),
@@ -82,14 +83,15 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public List<GameDto> findAll() {
+    public List<Game> findAll() {
         final String sql = "select * from game";
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) ->
-                        new GameDto(
+                        new Game(
                                 resultSet.getLong("id"),
                                 resultSet.getString("title"),
+                                resultSet.getString("password"),
                                 resultSet.getString("turn"),
                                 resultSet.getString("status")
                         )
@@ -97,14 +99,14 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void updateGame(Long gameId, String turn, String status) {
+    public void updateGame(Long id, String turn, String status) {
         final String sql = "update game set turn = ?, status = ? where id = ?";
-        jdbcTemplate.update(sql, turn, status, gameId);
+        jdbcTemplate.update(sql, turn, status, id);
     }
 
     @Override
-    public void updateStatus(Long gameId, GameStatus statusDto) {
+    public void updateStatus(Long id, GameStatus statusDto) {
         final String sql = "update game set status = ? where id = ?";
-        jdbcTemplate.update(sql, statusDto.getName(), gameId);
+        jdbcTemplate.update(sql, statusDto.getName(), id);
     }
 }

@@ -1,6 +1,6 @@
 package chess.controller.response;
 
-import chess.dto.GameDto;
+import chess.serviece.dto.GameDto;
 
 public class RoomResponse {
 

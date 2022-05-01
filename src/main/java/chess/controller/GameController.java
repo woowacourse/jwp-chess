@@ -5,7 +5,7 @@ import chess.controller.response.ChessGameResponse;
 import chess.controller.response.ScoresResponse;
 import chess.domain.Score;
 import chess.domain.piece.PieceColor;
-import chess.dto.GameDto;
+import chess.serviece.dto.GameDto;
 import chess.dto.PieceDto;
 import chess.serviece.ChessGameService;
 import org.springframework.http.ResponseEntity;

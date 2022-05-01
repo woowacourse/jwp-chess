@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dto.GameDto;
+import chess.dao.entity.Game;
 import chess.domain.position.Position;
 import chess.dto.PieceDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +37,7 @@ public class JdbcPieceDaoTest {
     @DisplayName("기물 정보 삭제")
     void remove() {
         // given
-        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        Long id = gameDao.save(new Game("라라", "1234", "white", "playing"));
         PieceDto pieceDto = new PieceDto("a2", "white", "pawn", id);
         pieceDao.save(pieceDto);
 
@@ -52,7 +52,7 @@ public class JdbcPieceDaoTest {
     @DisplayName("전체 기물 정보 삭제")
     void removeAll() {
         // given
-        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        Long id = gameDao.save(new Game("라라", "1234", "white", "playing"));
         PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", id);
         PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", id);
         pieceDao.save(pieceDtoA2);
@@ -69,7 +69,7 @@ public class JdbcPieceDaoTest {
     @DisplayName("전체 기물 정보 저장")
     void saveAll() {
         // given
-        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        Long id = gameDao.save(new Game("라라", "1234", "white", "playing"));
         PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", id);
         PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", id);
 
@@ -84,7 +84,7 @@ public class JdbcPieceDaoTest {
     @DisplayName("기물 정보 저장")
     void save() {
         // given
-        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        Long id = gameDao.save(new Game("라라", "1234", "white", "playing"));
         PieceDto pieceDto = new PieceDto("a2", "white", "pawn", id);
 
         // when
@@ -98,7 +98,7 @@ public class JdbcPieceDaoTest {
     @DisplayName("전체 기물 정보 조회")
     void findAll() {
         // given
-        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        Long id = gameDao.save(new Game("라라", "1234", "white", "playing"));
         PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", id);
         PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", id);
         pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));
@@ -117,7 +117,7 @@ public class JdbcPieceDaoTest {
     @DisplayName("기물 정보 수정")
     void update() {
         // given
-        Long id = gameDao.save(new GameDto("라라", "1234", "white", "playing"));
+        Long id = gameDao.save(new Game("라라", "1234", "white", "playing"));
         PieceDto pieceDtoA2 = new PieceDto("a2", "white", "pawn", id);
         PieceDto pieceDtoA3 = new PieceDto("a3", "white", "pawn", id);
         pieceDao.saveAll(List.of(pieceDtoA2, pieceDtoA3));

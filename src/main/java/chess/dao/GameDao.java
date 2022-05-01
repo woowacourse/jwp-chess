@@ -1,25 +1,25 @@
 package chess.dao;
 
-import chess.dto.GameDto;
+import chess.dao.entity.Game;
 import chess.domain.GameStatus;
 
 import java.util.List;
 
 public interface GameDao {
 
-    Long save(GameDto gameDto);
+    Long save(Game game);
 
-    void removeById(Long gameId);
+    void removeById(Long id);
 
-    GameDto findGameById(Long id);
+    Game findGameById(Long id);
 
     String findPasswordById(Long id);
 
     GameStatus findStatusById(Long id);
 
-    List<GameDto> findAll();
+    List<Game> findAll();
 
-    void updateGame(Long gameId, String turn, String status);
+    void updateGame(Long id, String turn, String status);
 
-    void updateStatus(Long gameId, GameStatus statusDto);
+    void updateStatus(Long id, GameStatus statusDto);
 }

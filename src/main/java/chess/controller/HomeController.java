@@ -3,7 +3,7 @@ package chess.controller;
 import chess.controller.request.RoomCreationRequest;
 import chess.controller.request.RoomDeletionRequest;
 import chess.controller.response.RoomResponse;
-import chess.dto.GameDto;
+import chess.serviece.dto.GameDto;
 import chess.serviece.ChessGameService;
 import chess.serviece.dto.PasswordDto;
 import org.springframework.http.ResponseEntity;

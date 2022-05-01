@@ -9,6 +9,7 @@ import chess.domain.piece.Piece;
 import chess.dto.GameCreateRequest;
 import chess.dto.MoveRequest;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,12 @@ class BoardJdbcRepositoryTest {
     private BoardRepository boardRepository;
     @Autowired
     private RoomRepository roomRepository;
+
+    @BeforeEach
+    void setup() {
+        roomRepository.deleteAll();
+        boardRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("Board Repository CRUD 테스트")

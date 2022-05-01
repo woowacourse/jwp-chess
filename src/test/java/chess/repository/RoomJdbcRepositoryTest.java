@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import chess.domain.Room;
 import chess.dto.GameCreateRequest;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,11 @@ class RoomJdbcRepositoryTest {
     private RoomRepository roomRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    void setup() {
+        roomRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("Room Repository CRUD 테스트")

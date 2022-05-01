@@ -18,7 +18,7 @@ public class BoardDaoFake implements BoardDao {
 
     @Override
     public Board getBoard(int gameId) {
-        return Board.from(fakeBoard);
+        return Board.from(new HashMap<>(fakeBoard));
     }
 
     @Override
@@ -45,7 +45,6 @@ public class BoardDaoFake implements BoardDao {
     public void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto) {
         Position from = updatePiecePositionDto.getFrom();
         Position to = updatePiecePositionDto.getTo();
-
         fakeBoard.put(to, fakeBoard.remove(from));
     }
 

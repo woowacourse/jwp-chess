@@ -39,7 +39,7 @@ class ChessServiceTest {
     @Test
     void getCurrentTurn() {
         // given & when
-        PieceColor actual = chessService.getCurrentTurn(id).getPieceColor();
+        PieceColor actual = chessService.getCurrentTurn(id);
 
         // then
         assertThat(actual).isEqualTo(PieceColor.WHITE);
@@ -75,23 +75,34 @@ class ChessServiceTest {
     @Test
     void getWinColor() {
         // given
+        chessService.getBoard(id).toString();
         chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("b1"),
             Position.from("c3")));
+        chessService.getBoard(id).toString();
+
         chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("a7"),
             Position.from("a6")));
+        chessService.getBoard(id).toString();
+
         chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("c3"),
             Position.from("b5")));
+        chessService.getBoard(id).toString();
+
         chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("a6"),
             Position.from("a5")));
+        chessService.getBoard(id).toString();
+
         chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("b5"),
             Position.from("c7")));
+        chessService.getBoard(id).toString();
+
         chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("a5"),
             Position.from("a4")));
         chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("c7"),
             Position.from("e8")));
 
         // when
-        PieceColor actual = chessService.getWinColor(id).getPieceColor();
+        PieceColor actual = chessService.getWinColor(id);
 
         // then
         assertThat(actual).isEqualTo(PieceColor.WHITE);

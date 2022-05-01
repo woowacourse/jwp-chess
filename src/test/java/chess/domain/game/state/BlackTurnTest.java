@@ -1,16 +1,16 @@
 package chess.domain.game.state;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import chess.domain.board.Board;
 import chess.domain.game.score.ScoreResult;
 import chess.domain.position.Position;
 import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 
 class BlackTurnTest {
     private GameState blackTurn;
@@ -56,9 +56,9 @@ class BlackTurnTest {
     void move_throwsExceptionOnFailed() {
         // when & then
         assertThatThrownBy(
-                () -> blackTurn.move(Position.of(XAxis.A, YAxis.EIGHT), Position.of(XAxis.A, YAxis.SEVEN)))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("말을 이동하는 것에 실패했습니다.");
+            () -> blackTurn.move(Position.of(XAxis.A, YAxis.EIGHT), Position.of(XAxis.A, YAxis.SEVEN)))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("같은 팀이 있는 곳은 갈 수 없습니다");
     }
 
     @DisplayName("한쪽 킹이 죽었다면 기물을 움직일 수 없다.")
@@ -72,8 +72,8 @@ class BlackTurnTest {
 
         // then
         assertThatThrownBy(() -> blackTurn.move(Position.of(XAxis.A, YAxis.SEVEN), Position.of(XAxis.A, YAxis.SIX)))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("킹이 죽었으므로 더이상 게임을 진행할 수 없습니다.");
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("킹이 죽었으므로 더이상 게임을 진행할 수 없습니다.");
     }
 
     @DisplayName("move 메소드 호출 시 말이 움직이기만 했다면 WhiteTurn 을 생성하여 반환한다.")

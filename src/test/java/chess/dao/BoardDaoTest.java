@@ -56,4 +56,13 @@ public class BoardDaoTest {
 
         assertThat(actual).isEqualTo(piece);
     }
+
+    @Test
+    @DisplayName("체스 보드를 삭제할 수 있다.")
+    void delete() {
+        boardDao.delete(gameId);
+
+        ChessBoard chessBoard = boardDao.findById(gameId);
+        assertThat(chessBoard.getPieces()).isEmpty();
+    }
 }

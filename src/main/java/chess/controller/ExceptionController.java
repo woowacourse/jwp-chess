@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.exception.IllegalGameProgressException;
+import java.net.URI;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,9 +15,9 @@ public class ExceptionController {
         redirectAttributes.addAttribute("error", e.getMessage());
 
         String referer = request.getHeader("Referer");
-        String[] split = referer.split("\\?");
+        String previousPath = URI.create(referer).getPath();
 
-        return "redirect:" + split[0];
+        return "redirect:" + previousPath;
     }
 
     @ExceptionHandler(IllegalGameProgressException.class)

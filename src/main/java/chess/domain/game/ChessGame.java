@@ -4,7 +4,6 @@ import chess.domain.board.Board;
 import chess.domain.game.score.ScoreResult;
 import chess.domain.game.state.BlackTurn;
 import chess.domain.game.state.GameState;
-import chess.domain.game.state.ReadyToStart;
 import chess.domain.game.state.WhiteTurn;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
@@ -17,20 +16,12 @@ public class ChessGame {
         this.state = gameState;
     }
 
-    public static ChessGame create() {
-        return new ChessGame(new ReadyToStart());
-    }
-
     public static ChessGame of(Board board, PieceColor pieceColor) {
         if (pieceColor.equals(PieceColor.WHITE)) {
             return new ChessGame(new WhiteTurn(board));
         }
 
         return new ChessGame(new BlackTurn(board));
-    }
-
-    public void startGame() {
-        this.state = state.start();
     }
 
     public ScoreResult getStatus() {

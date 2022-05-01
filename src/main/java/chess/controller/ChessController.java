@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 @RestController
 public class ChessController {
-    private static final String PIECE_NAME_FORMAT = "%s_%s";
 
     private final ChessService chessService;
 

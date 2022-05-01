@@ -21,20 +21,6 @@ public class Position {
         return Cache.findByXAxisAndYAxis(xAxis, yAxis);
     }
 
-    public static Position of(int xAxisValue, int yAxisValue) {
-        XAxis xAxis = XAxis.getByValue(xAxisValue);
-        YAxis yAxis = YAxis.getByValue(yAxisValue);
-
-        return of(xAxis, yAxis);
-    }
-
-    public static Position of(String xAxisValue, String yAxisValue) {
-        XAxis xAxis = XAxis.getByValue(xAxisValue);
-        YAxis yAxis = YAxis.getByValue(yAxisValue);
-
-        return of(xAxis, yAxis);
-    }
-
     // TODO: 리팩토링
     public static Position from(String coordinate) {
         XAxis xAxis = XAxis.valueOf(coordinate.substring(0, 1).toUpperCase(Locale.ROOT));
@@ -54,10 +40,6 @@ public class Position {
         int deltaY = position2.yAxis.getValue() - position1.yAxis.getValue();
 
         return Math.toDegrees(Math.atan2(deltaX, deltaY));
-    }
-
-    public static List<Position> getAllPositions() {
-        return List.copyOf(Cache.cache);
     }
 
     public boolean hasSameXAxisAs(Position other) {

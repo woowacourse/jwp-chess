@@ -1,13 +1,13 @@
 package chess.board;
 
-public class Room {
+public class BoardDto {
 
     private final Long id;
     private final String turn;
     private final String title;
     private final String password;
 
-    public Room(Long id, String turn, String title, String password) {
+    public BoardDto(Long id, String turn, String title, String password) {
         this.id = id;
         this.turn = turn;
         this.title = title;

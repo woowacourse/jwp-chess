@@ -2,7 +2,7 @@ package chess.web.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.board.Room;
+import chess.board.BoardDto;
 import chess.board.Turn;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,14 +36,15 @@ class BoardDaoTest {
 
         Long id = boardDao.save(turn.getTeam().value(), title, password);
 
-        Optional<Room> optionalRoom = boardDao.findById(id);
-        assertThat(optionalRoom).isPresent();
-        assertThat(optionalRoom.get().getTitle()).isEqualTo(title);
-        assertThat(optionalRoom.get().getPassword()).isEqualTo(password);
+        Optional<BoardDto> board = boardDao.findById(id);
+        assertThat(board).isPresent();
+        assertThat(board.get().getTitle()).isEqualTo(title);
+        assertThat(board.get().getPassword()).isEqualTo(password);
     }
 
     @Sql("/sql/chess-setup.sql")
     @Test
+    @DisplayName("id에 맞는 체스 게임의 순서를 수정한다.")
     void updateTurnById() {
         Turn turn = Turn.init();
         String title = "title";
@@ -53,30 +54,30 @@ class BoardDaoTest {
 
         boardDao.updateTurnById(id, changedTurn.getTeam().value());
 
-        Optional<Room> optionalRoom = boardDao.findById(id);
-        assertThat(optionalRoom).isPresent();
-        assertThat(optionalRoom.get().getTurn()).isEqualTo(changedTurn.getTeam().value());
+        Optional<BoardDto> board = boardDao.findById(id);
+        assertThat(board).isPresent();
+        assertThat(board.get().getTurn()).isEqualTo(changedTurn.getTeam().value());
     }
 
     @Sql("/sql/chess-setup.sql")
     @Test
-    @DisplayName("체스방을 찾는다.")
+    @DisplayName("id에 맞는 체스방의 정보를 반환한다.")
     void findById() {
         Turn turn = Turn.init();
         String title = "title";
         String password = "password";
         Long id = boardDao.save(turn.getTeam().value(), title, password);
 
-        Optional<Room> optionalRoom = boardDao.findById(id);
+        Optional<BoardDto> board = boardDao.findById(id);
 
-        assertThat(optionalRoom).isPresent();
-        assertThat(optionalRoom.get().getTitle()).isEqualTo(title);
-        assertThat(optionalRoom.get().getPassword()).isEqualTo(password);
+        assertThat(board).isPresent();
+        assertThat(board.get().getTitle()).isEqualTo(title);
+        assertThat(board.get().getPassword()).isEqualTo(password);
     }
 
     @Sql("/sql/chess-setup.sql")
     @Test
-    @DisplayName("체스방을 제거한다.")
+    @DisplayName("id와 패스워드가 맞다면 체스방을 제거한다.")
     void delete() {
         Turn turn = Turn.init();
         String title = "title";
@@ -85,8 +86,8 @@ class BoardDaoTest {
 
         boardDao.delete(id, password);
 
-        Optional<Room> optionalRoom = boardDao.findById(id);
-        assertThat(optionalRoom).isNotPresent();
+        Optional<BoardDto> board = boardDao.findById(id);
+        assertThat(board).isNotPresent();
     }
 
     @Sql("/sql/chess-setup.sql")
@@ -100,9 +101,9 @@ class BoardDaoTest {
 
         boardDao.delete(id, "test");
 
-        Optional<Room> optionalRoom = boardDao.findById(id);
-        assertThat(optionalRoom).isPresent();
-        assertThat(optionalRoom.get().getTitle()).isEqualTo(title);
-        assertThat(optionalRoom.get().getPassword()).isEqualTo(password);
+        Optional<BoardDto> board = boardDao.findById(id);
+        assertThat(board).isPresent();
+        assertThat(board.get().getTitle()).isEqualTo(title);
+        assertThat(board.get().getPassword()).isEqualTo(password);
     }
 }

@@ -1,7 +1,7 @@
 package chess.web.service;
 
 import chess.board.Board;
-import chess.board.Room;
+import chess.board.BoardDto;
 import chess.board.Team;
 import chess.board.Turn;
 import chess.board.piece.Empty;
@@ -33,9 +33,9 @@ public class ChessService {
 
     @Transactional
     public Board loadGame(Long boardId) {
-        Room room = boardDao.findById(boardId)
+        BoardDto boardDto = boardDao.findById(boardId)
                 .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
-        Turn turn = getTurn(room);
+        Turn turn = getTurn(boardDto);
 
         List<Piece> pieces = pieceDao.findAllByBoardId(boardId);
         Board board = Board.create(Pieces.from(pieces), turn);
@@ -48,9 +48,9 @@ public class ChessService {
 
     @Transactional
     public Board move(final MoveDto moveDto, final Long boardId) {
-        Room room = boardDao.findById(boardId)
+        BoardDto boardDto = boardDao.findById(boardId)
                 .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
-        Turn turn = getTurn(room);
+        Turn turn = getTurn(boardDto);
 
         Board board = Board.create(Pieces.from(pieceDao.findAllByBoardId(boardId)), turn);
         Pieces pieces = board.getPieces();
@@ -128,12 +128,12 @@ public class ChessService {
     }
 
     @Transactional(readOnly = true)
-    public List<Room> getRooms() {
+    public List<BoardDto> getBoards() {
         return boardDao.findAll();
     }
 
     @Transactional
-    public boolean removeRoom(Long boardId, String password) {
+    public boolean removeBoard(Long boardId, String password) {
         if (!canRemoveRoom(boardId, password)) {
             return false;
         }
@@ -143,7 +143,7 @@ public class ChessService {
     }
 
     private boolean canRemoveRoom(Long boardId, String password) {
-        Optional<Room> room = boardDao.findById(boardId);
+        Optional<BoardDto> room = boardDao.findById(boardId);
         if (room.isEmpty()) {
             throw new NoSuchElementException("삭제할 체스방이 없습니다.");
         }
@@ -156,19 +156,19 @@ public class ChessService {
         return true;
     }
 
-    private boolean isFinishedChess(Long boardId, Room room) {
-        Turn turn = getTurn(room);
+    private boolean isFinishedChess(Long boardId, BoardDto boardDto) {
+        Turn turn = getTurn(boardDto);
         Pieces pieces = Pieces.from(pieceDao.findAllByBoardId(boardId));
         Board board = Board.create(pieces, turn);
 
         return board.isDeadKing();
     }
 
-    private boolean matchPassword(Room room, String password) {
-        return password.equals(room.getPassword());
+    private boolean matchPassword(BoardDto boardDto, String password) {
+        return password.equals(boardDto.getPassword());
     }
 
-    private Turn getTurn(Room room) {
-        return new Turn(Team.from(room.getTurn()));
+    private Turn getTurn(BoardDto boardDto) {
+        return new Turn(Team.from(boardDto.getTurn()));
     }
 }

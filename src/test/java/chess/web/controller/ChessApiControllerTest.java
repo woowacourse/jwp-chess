@@ -13,7 +13,7 @@ import chess.board.piece.Piece;
 import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
 import chess.web.service.ChessService;
-import chess.web.service.dto.BoardDto;
+import chess.web.service.dto.BoardResponseDto;
 import chess.web.service.dto.CreateBoardDto;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
@@ -127,7 +127,7 @@ class ChessApiControllerTest {
         final String title = "title";
         final String password = "password";
         Long id = chessService.createBoard(title, password);
-        BoardDto boardDto = BoardDto.from(Board.create(Pieces.createInit(), Turn.init()));
+        BoardResponseDto boardResponseDto = BoardResponseDto.from(Board.create(Pieces.createInit(), Turn.init()));
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -135,7 +135,7 @@ class ChessApiControllerTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("turn", equalTo("white"))
-                .body("board", equalTo(boardDto.getBoard()))
+                .body("board", equalTo(boardResponseDto.getBoard()))
                 .body("finish", equalTo(false));
 
         List<Piece> initPieces = Pieces.createInit().getPieces();

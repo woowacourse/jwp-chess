@@ -5,19 +5,19 @@ import chess.board.piece.Piece;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class BoardDto {
+public class BoardResponseDto {
 
     private final String turn;
     private final Map<String, String> board;
     private final boolean finish;
 
-    public BoardDto(String turn, Map<String, String> board, boolean finish) {
+    public BoardResponseDto(String turn, Map<String, String> board, boolean finish) {
         this.turn = turn;
         this.board = board;
         this.finish = finish;
     }
 
-    public static BoardDto from(Board board) {
+    public static BoardResponseDto from(Board board) {
         Map<String, String> collect = board.getPieces().getPieces().stream()
                 .collect(Collectors.toMap(
                         piece -> piece.getPosition().name(),
@@ -26,7 +26,7 @@ public class BoardDto {
         String turn = board.getTurn()
                 .getTeam()
                 .value();
-        return new BoardDto(turn, collect, board.isDeadKing());
+        return new BoardResponseDto(turn, collect, board.isDeadKing());
     }
 
     public Map<String, String> getBoard() {

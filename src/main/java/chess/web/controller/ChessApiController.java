@@ -2,7 +2,7 @@ package chess.web.controller;
 
 import chess.board.Board;
 import chess.web.service.ChessService;
-import chess.web.service.dto.BoardDto;
+import chess.web.service.dto.BoardResponseDto;
 import chess.web.service.dto.CreateBoardDto;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
@@ -36,21 +36,21 @@ public class ChessApiController {
     }
 
     @PutMapping(value = "/board/{boardId}/initialization", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BoardDto> initBoard(@PathVariable Long boardId) {
+    public ResponseEntity<BoardResponseDto> initBoard(@PathVariable Long boardId) {
         Board board = chessService.initBoard(boardId);
-        return ResponseEntity.ok().body(BoardDto.from(board));
+        return ResponseEntity.ok().body(BoardResponseDto.from(board));
     }
 
     @PatchMapping(value = "/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto, @PathVariable Long boardId) {
+    public ResponseEntity<BoardResponseDto> move(@RequestBody MoveDto moveDto, @PathVariable Long boardId) {
         Board board = chessService.move(moveDto, boardId);
-        return ResponseEntity.ok().body(BoardDto.from(board));
+        return ResponseEntity.ok().body(BoardResponseDto.from(board));
     }
 
     @GetMapping(value = "/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BoardDto> loadGame(@PathVariable Long boardId) {
+    public ResponseEntity<BoardResponseDto> loadGame(@PathVariable Long boardId) {
         Board board = chessService.loadGame(boardId);
-        return ResponseEntity.ok().body(BoardDto.from(board));
+        return ResponseEntity.ok().body(BoardResponseDto.from(board));
     }
 
     @GetMapping(value = "/board/{boardId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +61,7 @@ public class ChessApiController {
 
     @DeleteMapping(value = "/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> deleteRoom(@RequestBody String password, @PathVariable Long boardId) {
-        boolean result = chessService.removeRoom(boardId, password);
+        boolean result = chessService.removeBoard(boardId, password);
         return ResponseEntity.ok().body(result);
     }
 }

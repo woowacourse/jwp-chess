@@ -112,7 +112,7 @@
 - [x] RoomDao의 `updateTurnById()`는 Long을 반환하는데 이것이 사용되는 곳이 있을까?
     - `save()` 처럼 수정하고나서 그 id로 값을 찾아와 무언가를 할 수 있다고 생각했는데 이미 `updateTurnById()`에서 파라미터로 id를 사용하기 때문에 그럴 필요가 없었다.
     - 그래서 반환형을 Long이 아닌 void로 수정하였다.
-- [ ] 전체적으로 테스트의 이름과 DisplayName 등을 확인하고 수정하기
+- [x] 전체적으로 테스트의 이름과 DisplayName 등을 확인하고 수정하기
 - [x] RoomDaoTest 파일의 가장 마지막 줄에 개행 문자가 없으면 깃헙에서 경고를 보여주는 이유가 무엇일까?
     - 경고의 내용은 "no newline at end of file"이다.
     - 마지막 줄에 개행 문자가 있어야하는 이유는 "POSIX"라는 표준에서 그렇게 정했기 때문이다. 

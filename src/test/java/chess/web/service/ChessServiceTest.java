@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.board.Board;
-import chess.board.Room;
+import chess.board.BoardDto;
 import chess.board.Team;
 import chess.board.Turn;
 import chess.board.piece.Piece;
@@ -31,7 +31,9 @@ class ChessServiceTest {
     void loadGame() {
         Long boardId = chessService.createBoard("title", "password");
         chessService.initBoard(boardId);
+
         Board board = chessService.loadGame(boardId);
+
         assertThat(board.getPieces().getPieces().size()).isEqualTo(64);
     }
 
@@ -63,12 +65,12 @@ class ChessServiceTest {
     @DisplayName("64개의 말들이 초기화된다.")
     void initBoard() {
         Long boardId = chessService.createBoard("title", "password");
-        ;
 
         Board initBoard = chessService.initBoard(boardId);
 
         Pieces pieces = initBoard.getPieces();
         assertThat(pieces.getPieces().size()).isEqualTo(64);
+        assertThat(pieces.getPieces().containsAll(Pieces.createInit().getPieces())).isTrue();
     }
 
     @Test
@@ -85,21 +87,21 @@ class ChessServiceTest {
 
     @Test
     @DisplayName("입력한 방이름과 비밀번호로 새로운 체스방이 만들어진다.")
-    void createRoom() {
+    void createBoard() {
         String title = "title";
         String password = "password";
 
         Long boardId = chessService.createBoard(title, password);
 
-        Optional<Room> room = boardDao.findById(boardId);
-        assertThat(room).isPresent();
-        assertThat(room.get().getTitle()).isEqualTo(title);
-        assertThat(room.get().getPassword()).isEqualTo(password);
+        Optional<BoardDto> board = boardDao.findById(boardId);
+        assertThat(board).isPresent();
+        assertThat(board.get().getTitle()).isEqualTo(title);
+        assertThat(board.get().getPassword()).isEqualTo(password);
     }
 
     @Test
     @DisplayName("생성된 모든 체스 방의 정보를 가져온다.")
-    void getRooms() {
+    void getBoards() {
         String title1 = "title1";
         String title2 = "title2";
         String password1 = "password1";
@@ -107,16 +109,16 @@ class ChessServiceTest {
         chessService.createBoard(title1, password1);
         chessService.createBoard(title2, password2);
 
-        List<Room> rooms = chessService.getRooms();
+        List<BoardDto> boardDtos = chessService.getBoards();
 
-        assertThat(rooms.size()).isEqualTo(2);
-        assertThat(rooms.get(0).getTitle()).isEqualTo(title1);
-        assertThat(rooms.get(1).getTitle()).isEqualTo(title2);
+        assertThat(boardDtos.size()).isEqualTo(2);
+        assertThat(boardDtos.get(0).getTitle()).isEqualTo(title1);
+        assertThat(boardDtos.get(1).getTitle()).isEqualTo(title2);
     }
 
     @Test
     @DisplayName("생성된 체스방과 체스게임의 상태를 삭제한다.")
-    void removeRoom() {
+    void removeBoard() {
         String title = "title";
         String password = "password";
         Long boardId = chessService.createBoard(title, password);
@@ -126,12 +128,12 @@ class ChessServiceTest {
         chessService.move(new MoveDto("a7", "a6"), boardId);
         chessService.move(new MoveDto("h5", "e8"), boardId);
 
-        boolean result = chessService.removeRoom(boardId, password);
+        boolean result = chessService.removeBoard(boardId, password);
 
-        long resultCount = chessService.getRooms().stream()
-                .filter(room -> room.getId().equals(boardId))
-                .filter(room -> room.getTitle().equals(title))
-                .filter(room -> room.getPassword().equals(password))
+        long resultCount = chessService.getBoards().stream()
+                .filter(board -> board.getId().equals(boardId))
+                .filter(board -> board.getTitle().equals(title))
+                .filter(board -> board.getPassword().equals(password))
                 .count();
         assertThat(result).isTrue();
         assertThat(resultCount).isZero();
@@ -145,7 +147,7 @@ class ChessServiceTest {
         Long boardId = chessService.createBoard(title, password);
         chessService.initBoard(boardId);
 
-        assertThatThrownBy(() -> chessService.removeRoom(boardId, password))
+        assertThatThrownBy(() -> chessService.removeBoard(boardId, password))
                 .isInstanceOf(IllegalStateException.class);
     }
 }

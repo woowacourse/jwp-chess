@@ -1,6 +1,6 @@
 package chess.web.dao;
 
-import chess.board.Room;
+import chess.board.BoardDto;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +16,8 @@ public class BoardDaoImpl implements BoardDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Room> rowMapper = (resultSet, rowNum) -> {
-        return new Room(
+    private final RowMapper<BoardDto> rowMapper = (resultSet, rowNum) -> {
+        return new BoardDto(
                 resultSet.getLong("id"),
                 resultSet.getString("turn"),
                 resultSet.getString("title"),
@@ -52,7 +52,7 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public Optional<Room> findById(Long id) {
+    public Optional<BoardDto> findById(Long id) {
         final String query = "SELECT * FROM board WHERE id = ?";
 
         try {
@@ -63,7 +63,7 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public List<Room> findAll() {
+    public List<BoardDto> findAll() {
         final String query = "SELECT * FROM board";
 
         return jdbcTemplate.query(query, rowMapper);

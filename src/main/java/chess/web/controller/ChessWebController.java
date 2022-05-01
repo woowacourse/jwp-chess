@@ -17,7 +17,7 @@ public class ChessWebController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("rooms", chessService.getRooms());
+        model.addAttribute("boards", chessService.getBoards());
         return "index";
     }
 

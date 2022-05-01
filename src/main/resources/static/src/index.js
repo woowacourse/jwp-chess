@@ -1,6 +1,6 @@
-function createRoom() {
-    let title = document.getElementById('room-title').value;
-    let password = document.getElementById('room-password').value;
+function createBoard() {
+    let title = document.getElementById('board-title').value;
+    let password = document.getElementById('board-password').value;
 
     const request = {
         title: title,
@@ -20,7 +20,7 @@ function createRoom() {
         });
 }
 
-function deleteRoom(boardId) {
+function deleteBoard(boardId) {
     let password = prompt("비밀번호를 입력하세요");
 
     fetch('/api/board/' + boardId, {

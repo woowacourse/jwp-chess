@@ -9,7 +9,7 @@ import chess.domain.gameRoom.dto.ChessGameRoomPassInfoResponse;
 import chess.domain.gameRoom.dto.ChessGameRoomShowInfoResponse;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
-import chess.exception.InvalidDBFailException;
+import chess.exception.InvalidDeleteFailException;
 import chess.exception.InvalidMoveException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,8 +85,8 @@ public class ChessService {
 
     public void deleteGameByIdAndPassword(String id, String password) {
         ChessGameRoomPassInfoResponse chessGameRoom = chessGameDAO.findPassGameById(id);
-        if (!chessGameRoom.getPassword().equals(password)){
-            throw new InvalidDBFailException("[ERROR] DELETE를 실패하였습니다.");
+        if (!chessGameRoom.checkEqualPassword(password)){
+            throw new InvalidDeleteFailException("[ERROR] DELETE를 실패하였습니다.");
         }
         chessGameDAO.deleteGameByIdAndPassword(id, password);
     }

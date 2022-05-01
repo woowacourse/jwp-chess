@@ -4,7 +4,7 @@ import chess.domain.game.dto.MoveRequest;
 import chess.domain.gameRoom.ChessGame;
 import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;
-import chess.exception.InvalidDBFailException;
+import chess.exception.InvalidDeleteFailException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class ChessServiceTest {
     void deleteChessGameRoomFail() {
         String gameId = chessService.addChessGame("zero", "1234");
         Assertions.assertThatThrownBy(() -> chessService.deleteGameByIdAndPassword(gameId, "wrongPass"))
-                .isInstanceOf(InvalidDBFailException.class);
+                .isInstanceOf(InvalidDeleteFailException.class);
     }
 
     @Test

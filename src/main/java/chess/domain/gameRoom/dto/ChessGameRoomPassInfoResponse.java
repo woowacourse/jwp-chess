@@ -22,4 +22,8 @@ public class ChessGameRoomPassInfoResponse {
     public String getPassword() {
         return password;
     }
+
+    public boolean checkEqualPassword(String password) {
+        return this.password.equals(password);
+    }
 }

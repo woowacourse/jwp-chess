@@ -50,10 +50,7 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
         parameters.put("id", id);
         SqlParameterSource namedParameters = new MapSqlParameterSource(parameters);
         final ChessBoard chessBoard = DataAccessUtils.singleResult(jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> makeBoard(rs)));
-        if(chessBoard == null) {
-            return Optional.empty();
-        }
-        return Optional.of(chessBoard);
+        return Optional.ofNullable(chessBoard);
     }
 
     @Override

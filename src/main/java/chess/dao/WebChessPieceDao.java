@@ -47,10 +47,7 @@ public class WebChessPieceDao implements PieceDao<Piece> {
         SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
 
         final Piece piece = DataAccessUtils.singleResult(jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> makePiece(rs)));
-        if (piece == null) {
-            return Optional.empty();
-        }
-        return Optional.of(piece);
+        return Optional.ofNullable(piece);
     }
 
     private Piece makePiece(ResultSet resultSet) throws SQLException {

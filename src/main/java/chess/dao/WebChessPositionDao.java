@@ -55,10 +55,7 @@ public class WebChessPositionDao implements PositionDao<Position> {
         SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
 
         Position position = DataAccessUtils.singleResult(jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> makePosition(rs, "id")));
-        if(position == null) {
-            return Optional.empty();
-        }
-        return Optional.of(position);
+        return Optional.ofNullable(position);
     }
 
     @Override
@@ -73,6 +70,7 @@ public class WebChessPositionDao implements PositionDao<Position> {
         }
         return jdbcTemplate.batchUpdate(sql, batchValues.toArray(new Map[boardSize])).length;
     }
+
     private void saveColumnLine(int boardId, Row[] rows, List<Map<String, Object>> batchValues, Column column) {
         for (Row row : rows) {
             batchValues.add(

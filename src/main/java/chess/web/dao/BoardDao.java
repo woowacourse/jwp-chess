@@ -1,6 +1,6 @@
 package chess.web.dao;
 
-import chess.board.BoardDto;
+import chess.board.BoardEntity;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,9 +10,9 @@ public interface BoardDao {
 
     void updateTurnById(Long id, String turn);
 
-    Optional<BoardDto> findById(Long id);
+    Optional<BoardEntity> findById(Long id);
 
-    List<BoardDto> findAll();
+    List<BoardEntity> findAll();
 
     void delete(Long id, String password);
 }

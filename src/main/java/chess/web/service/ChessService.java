@@ -1,7 +1,7 @@
 package chess.web.service;
 
 import chess.board.Board;
-import chess.board.BoardDto;
+import chess.board.BoardEntity;
 import chess.board.Team;
 import chess.board.Turn;
 import chess.board.piece.Empty;
@@ -10,11 +10,13 @@ import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
 import chess.web.dao.BoardDao;
 import chess.web.dao.PieceDao;
+import chess.web.service.dto.BoardDto;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +35,9 @@ public class ChessService {
 
     @Transactional
     public Board loadGame(Long boardId) {
-        BoardDto boardDto = boardDao.findById(boardId)
+        BoardEntity boardEntity = boardDao.findById(boardId)
                 .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
-        Turn turn = getTurn(boardDto);
+        Turn turn = getTurn(boardEntity);
 
         List<Piece> pieces = pieceDao.findAllByBoardId(boardId);
         Board board = Board.create(Pieces.from(pieces), turn);
@@ -48,9 +50,9 @@ public class ChessService {
 
     @Transactional
     public Board move(final MoveDto moveDto, final Long boardId) {
-        BoardDto boardDto = boardDao.findById(boardId)
+        BoardEntity boardEntity = boardDao.findById(boardId)
                 .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
-        Turn turn = getTurn(boardDto);
+        Turn turn = getTurn(boardEntity);
 
         Board board = Board.create(Pieces.from(pieceDao.findAllByBoardId(boardId)), turn);
         Pieces pieces = board.getPieces();
@@ -129,7 +131,9 @@ public class ChessService {
 
     @Transactional(readOnly = true)
     public List<BoardDto> getBoards() {
-        return boardDao.findAll();
+        return boardDao.findAll().stream()
+                .map(board -> new BoardDto(board.getId(), board.getTurn(), board.getTitle()))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Transactional
@@ -143,7 +147,7 @@ public class ChessService {
     }
 
     private boolean canRemoveRoom(Long boardId, String password) {
-        Optional<BoardDto> board = boardDao.findById(boardId);
+        Optional<BoardEntity> board = boardDao.findById(boardId);
         if (board.isEmpty()) {
             throw new NoSuchElementException("삭제할 체스방이 없습니다.");
         }
@@ -156,19 +160,19 @@ public class ChessService {
         return true;
     }
 
-    private boolean isFinishedChess(Long boardId, BoardDto boardDto) {
-        Turn turn = getTurn(boardDto);
+    private boolean isFinishedChess(Long boardId, BoardEntity boardEntity) {
+        Turn turn = getTurn(boardEntity);
         Pieces pieces = Pieces.from(pieceDao.findAllByBoardId(boardId));
         Board board = Board.create(pieces, turn);
 
         return board.isDeadKing();
     }
 
-    private boolean matchPassword(BoardDto boardDto, String password) {
-        return password.equals(boardDto.getPassword());
+    private boolean matchPassword(BoardEntity boardEntity, String password) {
+        return password.equals(boardEntity.getPassword());
     }
 
-    private Turn getTurn(BoardDto boardDto) {
-        return new Turn(Team.from(boardDto.getTurn()));
+    private Turn getTurn(BoardEntity boardEntity) {
+        return new Turn(Team.from(boardEntity.getTurn()));
     }
 }

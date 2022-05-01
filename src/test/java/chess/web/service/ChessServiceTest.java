@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.board.Board;
-import chess.board.BoardDto;
+import chess.board.BoardEntity;
 import chess.board.Team;
 import chess.board.Turn;
 import chess.board.piece.Piece;
@@ -13,6 +13,7 @@ import chess.board.piece.Pieces;
 import chess.board.piece.position.Position;
 import chess.web.dao.BoardDao;
 import chess.web.dao.PieceDao;
+import chess.web.service.dto.BoardDto;
 import chess.web.service.dto.MoveDto;
 import chess.web.service.dto.ScoreDto;
 import java.util.List;
@@ -93,7 +94,7 @@ class ChessServiceTest {
 
         Long boardId = chessService.createBoard(title, password);
 
-        Optional<BoardDto> board = boardDao.findById(boardId);
+        Optional<BoardEntity> board = boardDao.findById(boardId);
         assertThat(board).isPresent();
         assertThat(board.get().getTitle()).isEqualTo(title);
         assertThat(board.get().getPassword()).isEqualTo(password);
@@ -132,8 +133,6 @@ class ChessServiceTest {
 
         long resultCount = chessService.getBoards().stream()
                 .filter(board -> board.getId().equals(boardId))
-                .filter(board -> board.getTitle().equals(title))
-                .filter(board -> board.getPassword().equals(password))
                 .count();
         assertThat(result).isTrue();
         assertThat(resultCount).isZero();

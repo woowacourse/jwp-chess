@@ -2,7 +2,7 @@ package chess.web.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.board.BoardDto;
+import chess.board.BoardEntity;
 import chess.board.Turn;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ class BoardDaoTest {
 
         Long id = boardDao.save(turn.getTeam().value(), title, password);
 
-        Optional<BoardDto> board = boardDao.findById(id);
+        Optional<BoardEntity> board = boardDao.findById(id);
         assertThat(board).isPresent();
         assertThat(board.get().getTitle()).isEqualTo(title);
         assertThat(board.get().getPassword()).isEqualTo(password);
@@ -54,7 +54,7 @@ class BoardDaoTest {
 
         boardDao.updateTurnById(id, changedTurn.getTeam().value());
 
-        Optional<BoardDto> board = boardDao.findById(id);
+        Optional<BoardEntity> board = boardDao.findById(id);
         assertThat(board).isPresent();
         assertThat(board.get().getTurn()).isEqualTo(changedTurn.getTeam().value());
     }
@@ -68,7 +68,7 @@ class BoardDaoTest {
         String password = "password";
         Long id = boardDao.save(turn.getTeam().value(), title, password);
 
-        Optional<BoardDto> board = boardDao.findById(id);
+        Optional<BoardEntity> board = boardDao.findById(id);
 
         assertThat(board).isPresent();
         assertThat(board.get().getTitle()).isEqualTo(title);
@@ -86,7 +86,7 @@ class BoardDaoTest {
 
         boardDao.delete(id, password);
 
-        Optional<BoardDto> board = boardDao.findById(id);
+        Optional<BoardEntity> board = boardDao.findById(id);
         assertThat(board).isNotPresent();
     }
 
@@ -101,7 +101,7 @@ class BoardDaoTest {
 
         boardDao.delete(id, "test");
 
-        Optional<BoardDto> board = boardDao.findById(id);
+        Optional<BoardEntity> board = boardDao.findById(id);
         assertThat(board).isPresent();
         assertThat(board.get().getTitle()).isEqualTo(title);
         assertThat(board.get().getPassword()).isEqualTo(password);

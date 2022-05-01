@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceType;
@@ -18,7 +19,6 @@ import chess.domain.position.YAxis;
 import chess.dto.request.CreatePieceDto;
 import chess.dto.request.DeletePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
 
 @JdbcTest
 class BoardDaoImplTest {
@@ -64,14 +64,14 @@ class BoardDaoImplTest {
         id = gameDao.createGameAndGetId(TEST_GAME_NAME, TEST_GAME_PASSWORD);
     }
 
-    @DisplayName("getBoard 는 BoardDto 를 반환한다.")
+    @DisplayName("getBoard 는 Board를 반환한다.")
     @Test
     void getBoard() {
         // given & when
-        BoardDto board = boardDao.getBoard(id);
+        Board board = boardDao.getBoard(id);
 
         // then
-        assertThat(board).isInstanceOf(BoardDto.class);
+        assertThat(board).isInstanceOf(Board.class);
     }
 
     @DisplayName("CreatePieceDto를 전달받아 board 테이블에 기물을 생성한다.")

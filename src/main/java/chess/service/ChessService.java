@@ -14,7 +14,6 @@ import chess.domain.position.Position;
 import chess.dto.request.CreatePieceDto;
 import chess.dto.request.DeletePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
 import chess.dto.response.ChessGameDto;
 import chess.dto.response.PieceColorDto;
 import chess.dto.response.RoomDto;
@@ -85,13 +84,13 @@ public class ChessService {
     }
 
     private ChessGame generateChessGame(int gameId) {
-        BoardDto boardDto = boardDao.getBoard(gameId);
+        Board board = boardDao.getBoard(gameId);
         ChessGameDto chessGameDto = gameDao.getGame(gameId);
 
-        return ChessGame.of(boardDto.toBoard(), chessGameDto.getCurrentTurnAsPieceColor());
+        return ChessGame.of(board, chessGameDto.getCurrentTurnAsPieceColor());
     }
 
-    public BoardDto getBoard(int gameId) {
+    public Board getBoard(int gameId) {
         return boardDao.getBoard(gameId);
     }
 

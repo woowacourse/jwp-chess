@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceType;
@@ -16,7 +17,6 @@ import chess.domain.position.YAxis;
 import chess.dto.request.CreatePieceDto;
 import chess.dto.request.DeletePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
 
 @Repository
 public class BoardDaoImpl implements BoardDao {
@@ -29,16 +29,16 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public BoardDto getBoard(int gameId) {
-        Map<Position, Piece> boardValue = new HashMap<>();
+    public Board getBoard(int gameId) {
+        Map<Position, Piece> board = new HashMap<>();
 
         for (Position position : getPositionsByGameId(gameId)) {
             String query = String.format(
                 "SELECT piece_type, piece_color FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
-            boardValue.put(position, getPieceByGameIdAndPosition(query, gameId, position));
+            board.put(position, getPieceByGameIdAndPosition(query, gameId, position));
         }
 
-        return BoardDto.from(boardValue);
+        return Board.from(board);
     }
 
     private List<Position> getPositionsByGameId(int gameId) {

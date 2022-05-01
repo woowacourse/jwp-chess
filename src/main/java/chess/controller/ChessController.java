@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import chess.domain.board.Board;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 import chess.dto.request.CreateRoomDto;
 import chess.dto.request.DeleteRoomDto;
 import chess.dto.request.MovePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
 import chess.dto.response.CommandResultDto;
 import chess.dto.response.PieceColorDto;
-import chess.dto.response.PieceDto;
-import chess.dto.response.PositionDto;
 import chess.dto.response.RoomDto;
 import chess.dto.response.ScoreResultDto;
 import chess.service.ChessService;
@@ -37,16 +37,17 @@ public class ChessController {
         this.chessService = chessService;
     }
 
+    //TODO: Dto로 반환하는 것 고려
     @GetMapping("/board/{id}")
     public Map<String, String> getBoard(@PathVariable Integer id) {
-        BoardDto boardDto = chessService.getBoard(id);
-        return boardDtoToRaw(boardDto);
+        Board board = chessService.getBoard(id);
+        return boardDtoToRaw(board);
     }
 
-    private Map<String, String> boardDtoToRaw(BoardDto boardDto) {
+    private Map<String, String> boardDtoToRaw(Board board) {
         Map<String, String> coordinateAndPiece = new HashMap<>();
-        for (Map.Entry<PositionDto, PieceDto> entrySet : boardDto.getValue().entrySet()) {
-            String coordinate = entrySet.getKey().toPosition().toCoordinate();
+        for (Map.Entry<Position, Piece> entrySet : board.getValue().entrySet()) {
+            String coordinate = entrySet.getKey().toCoordinate();
             String piece = generatePieceName(entrySet.getValue());
             coordinateAndPiece.put(coordinate, piece);
         }
@@ -54,9 +55,9 @@ public class ChessController {
         return coordinateAndPiece;
     }
 
-    private String generatePieceName(PieceDto pieceDto) {
-        String pieceName = pieceDto.getPieceType().name();
-        String pieceColorName = pieceDto.getPieceColor().name();
+    private String generatePieceName(Piece piece) {
+        String pieceName = piece.getPieceType().name();
+        String pieceColorName = piece.getPieceColor().name();
         return String.format(PIECE_NAME_FORMAT, pieceName, pieceColorName);
     }
 

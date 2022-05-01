@@ -96,6 +96,7 @@ const WinnerWrapper = styled.div`
     background-color: rgba(0, 0, 0, 0.8);
     color: #ffffff;
     backdrop-filter: blur(5px);
+    z-index: 1000;
     
     & > div:nth-child(1) {
         margin-bottom: 5px;
@@ -112,14 +113,27 @@ const WinnerWrapper = styled.div`
     }
 `;
 
+const BackLink = styled.div`
+    margin-top: 50px;
+    font-size: 30px;
+    text-decoration: underline;
+    color: #ffffff;
+    cursor: pointer;
+`
+
 const Winner = ({winner, score}) => {
     if (!winner) return null;
+
+    const handleBackClick = () => {
+        location.href = "/";
+    }
 
     return (
         <WinnerWrapper>
             <div>게임이 끝났습니다</div>
             <div>승자는 {getColorName(winner)}!</div>
             <div>백은 {score.whiteScore}점, 흑은 {score.blackScore}점</div>
+            <BackLink onClick={handleBackClick}>메인으로</BackLink>
         </WinnerWrapper>
     );
 }

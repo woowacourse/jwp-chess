@@ -50,8 +50,8 @@ class ChessMemberRepositoryTest {
 
         //then
         assertAll(
-                () -> assertThat(members.get(0).getName()).isEqualTo("eden"),
-                () -> assertThat(members.get(1).getName()).isEqualTo("corinne")
+                () -> assertThat(members.get(0).getName()).isEqualTo("corinne"),
+                () -> assertThat(members.get(1).getName()).isEqualTo("eden")
         );
 
     }

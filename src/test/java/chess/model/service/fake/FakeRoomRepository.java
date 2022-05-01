@@ -37,6 +37,6 @@ public class FakeRoomRepository implements RoomRepository<Room> {
 
     @Override
     public String getPasswordById(int roomId) {
-        return null;
+        return "password";
     }
 }

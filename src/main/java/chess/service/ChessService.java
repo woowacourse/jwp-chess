@@ -55,6 +55,10 @@ public class ChessService {
         ChessGame chessGame = chessGameDao.findById(chessGameId);
         Command command = Command.from(makeCommand(from, to));
         chessGame.progress(command);
+        moveUpdateDB(from, to, chessGameId, chessGame);
+    }
+
+    private void moveUpdateDB(String from, String to, int chessGameId, ChessGame chessGame) {
         pieceDao.deleteByPosition(to, chessGameId);
         pieceDao.updatePosition(from, to, chessGameId);
         chessGameDao.update(chessGame.getState().getTurn(), chessGameId);

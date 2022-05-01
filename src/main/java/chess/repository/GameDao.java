@@ -25,7 +25,7 @@ public class GameDao {
         return count > 0;
     }
 
-    public int saveGame(String name, String password) {
+    public long saveGame(String name, String password) {
         final String sql = "INSERT INTO game(name,password) VALUES (?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -36,27 +36,27 @@ public class GameDao {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().intValue();
+        return keyHolder.getKey().longValue();
     }
 
-    public Map<Integer, String> findGameList() {
+    public Map<Long, String> findGameList() {
         final String sql = "SELECT id,name FROM game ORDER BY id ASC";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql);
 
-        Map<Integer, String> gameList = new LinkedHashMap<>();
+        Map<Long, String> gameList = new LinkedHashMap<>();
         while (rowSet.next()) {
-            gameList.put(rowSet.getInt("id"), rowSet.getString("name"));
+            gameList.put(rowSet.getLong("id"), rowSet.getString("name"));
         }
 
         return gameList;
     }
 
-    public String findPasswordById(int gameId) {
+    public String findPasswordById(long gameId) {
         final String sql = "SELECT password FROM game WHERE id=?";
         return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }
 
-    public void delete(int gameId) {
+    public void delete(long gameId) {
         final String sql = "DELETE FROM game WHERE id=?";
         jdbcTemplate.update(sql, gameId);
     }

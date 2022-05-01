@@ -27,37 +27,37 @@ public class ChessGameRepository {
     }
 
     public void saveNewGame(String name, String password, CurrentStatusDto currentStatus) {
-        int gameId = gameDao.saveGame(name, password);
+        long gameId = gameDao.saveGame(name, password);
         currentStatusDao.save(gameId, currentStatus);
     }
 
-    public void saveGame(int gameId, Map<Position, Piece> chessboard, CurrentStatusDto currentStatus) {
+    public void saveGame(long gameId, Map<Position, Piece> chessboard, CurrentStatusDto currentStatus) {
         boardDao.saveBoard(gameId, chessboard);
         currentStatusDao.update(gameId, currentStatus);
     }
 
-    public void saveMove(int gameId, MovingPositionDto movingPosition, CurrentStatusDto currentStatus) {
+    public void saveMove(long gameId, MovingPositionDto movingPosition, CurrentStatusDto currentStatus) {
         boardDao.saveMove(gameId, movingPosition);
         currentStatusDao.update(gameId, currentStatus);
     }
 
-    public ChessGame find(int gameId) {
+    public ChessGame find(long gameId) {
         return new ChessGame(currentStatusDao.findByGameId(gameId), boardDao.findByGameId(gameId));
     }
 
-    public void saveEnd(int gameId, String state) {
+    public void saveEnd(long gameId, String state) {
         currentStatusDao.saveEnd(gameId, state);
     }
 
-    public Map<Integer, String> findGameList() {
+    public Map<Long, String> findGameList() {
         return gameDao.findGameList();
     }
 
-    public String findPasswordById(int gameId) {
+    public String findPasswordById(long gameId) {
         return gameDao.findPasswordById(gameId);
     }
 
-    public void delete(int gameId) {
+    public void delete(long gameId) {
         gameDao.delete(gameId);
     }
 }

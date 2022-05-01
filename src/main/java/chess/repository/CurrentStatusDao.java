@@ -20,22 +20,22 @@ public class CurrentStatusDao {
                     resultSet.getString("turn")
             );
 
-    public CurrentStatus findByGameId(int gameId) {
+    public CurrentStatus findByGameId(long gameId) {
         String sql = "SELECT state,turn FROM current_status WHERE game_id = ?";
         return jdbcTemplate.queryForObject(sql, currentStatusMapper, gameId);
     }
 
-    public void save(int gameId, CurrentStatusDto currentStatus) {
+    public void save(long gameId, CurrentStatusDto currentStatus) {
         String sql = "INSERT INTO current_status(game_id,state,turn) VALUES (?,?,?)";
         jdbcTemplate.update(sql, gameId, currentStatus.getState(), currentStatus.getTurn());
     }
 
-    public void update(int gameId, CurrentStatusDto currentStatus) {
+    public void update(long gameId, CurrentStatusDto currentStatus) {
         String sql = "UPDATE current_status SET state=? , turn=? WHERE game_id=?";
         jdbcTemplate.update(sql, currentStatus.getState(), currentStatus.getTurn(), gameId);
     }
 
-    public void saveEnd(int gameId, String state) {
+    public void saveEnd(long gameId, String state) {
         String sql = "UPDATE current_status SET state=? WHERE game_id=?";
         jdbcTemplate.update(sql, state, gameId);
     }

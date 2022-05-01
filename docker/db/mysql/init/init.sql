@@ -1,6 +1,6 @@
 CREATE TABLE game
 (
-    id       int NOT NULL AUTO_INCREMENT,
+    id       long NOT NULL AUTO_INCREMENT,
     name     varchar,
     password varchar,
     PRIMARY KEY (id)
@@ -8,7 +8,7 @@ CREATE TABLE game
 
 CREATE TABLE piece
 (
-    id    int NOT NULL AUTO_INCREMENT,
+    id    long NOT NULL AUTO_INCREMENT,
     type  ENUM('k','q','b','n','r','p','.'),
     color ENUM('BLACK','WHITE','NONE'),
     PRIMARY KEY (id)
@@ -16,27 +16,27 @@ CREATE TABLE piece
 
 CREATE TABLE position
 (
-    id int NOT NULL AUTO_INCREMENT,
-    x  int NOT NULL,
-    y  int NOT NULL,
+    id long NOT NULL AUTO_INCREMENT,
+    x  int  NOT NULL,
+    y  int  NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE board
 (
-    id          int NOT NULL AUTO_INCREMENT,
+    id          long NOT NULL AUTO_INCREMENT,
     game_id     int,
     position_id int,
     piece_id    int,
     PRIMARY KEY (id),
-    FOREIGN KEY (game_id) REFERENCES game (id) ON DELETE CASCADE ,
+    FOREIGN KEY (game_id) REFERENCES game (id) ON DELETE CASCADE,
     FOREIGN KEY (position_id) REFERENCES position (id),
     FOREIGN KEY (piece_id) REFERENCES piece (id)
 );
 
 CREATE TABLE current_status
 (
-    id      int NOT NULL AUTO_INCREMENT,
+    id      long NOT NULL AUTO_INCREMENT,
     game_id int,
     state   ENUM('READY','PLAY','FINISH'),
     turn    ENUM('BLACK','WHITE'),

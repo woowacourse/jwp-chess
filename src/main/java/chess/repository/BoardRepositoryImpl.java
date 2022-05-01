@@ -28,7 +28,7 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public List<BoardEntity> findBoardByRoomId(final Long roomId) {
-        String sql = "select * from board where room_id = ?";
+        String sql = "SELECT * FROM board WHERE room_id = ?";
         return jdbcTemplate.query(sql, rowMapper(), roomId);
     }
 
@@ -44,13 +44,13 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public void updatePosition(final BoardEntity board) {
-        final String sql = "update board set piece = ? where room_id = ? and position = ?";
+        final String sql = "UPDATE board SET piece = ? WHERE room_id = ? AND position = ?";
         jdbcTemplate.update(sql, board.getPiece(), board.getRoomId(), board.getPosition());
     }
 
     @Override
     public void updateBatchPositions(final List<BoardEntity> board) {
-        final String sql = "update board set piece = ? where room_id = ? and position = ?";
+        final String sql = "UPDATE board SET piece = ? WHERE room_id = ? AND position = ?";
         jdbcTemplate.batchUpdate(sql,
             board,
             board.size(),
@@ -75,7 +75,7 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public BoardEntity findBoardByRoomIdAndPosition(final Long roomId, final String position) {
-        final String sql = "select * from board where room_id = ? and position = ?";
+        final String sql = "SELECT * FROM board WHERE room_id = ? AND position = ?";
 
         return jdbcTemplate.queryForObject(sql, rowMapper(), roomId, position);
     }

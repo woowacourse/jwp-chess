@@ -75,6 +75,29 @@ class SpringGameDaoTest {
     @DisplayName("이름을 받아 게임을 만든 후 id값을 적절하게 반환하는지 확인")
     void createGame() {
         Long createdGameId = springGameDao.createGame("testGameName", "1a2s3d4f");
-        assertThat(createdGameId).isEqualTo(1);
+        assertThat(createdGameId).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("게임이 존재하는지 확인")
+    void existsById() {
+        Long createdGameId = springGameDao.createGame("testGameName", "1a2s3d4f");
+        assertThat(springGameDao.existsById(createdGameId)).isTrue();
+    }
+
+    @Test
+    @DisplayName("게임이 존재하지 않는지 확인")
+    void doesNotExistsById() {
+        assertThat(springGameDao.existsById(2L)).isFalse();
+    }
+
+    @Test
+    @DisplayName("게임이 모두 삭제되는지 확인")
+    void removeAll() {
+        GameFactory.setUpGames(jdbcTemplate, "first", "second");
+        springGameDao.removeAll();
+        GamesDto gamesDto = springGameDao.findAll();
+
+        assertThat(gamesDto.getGames()).isEmpty();
     }
 }

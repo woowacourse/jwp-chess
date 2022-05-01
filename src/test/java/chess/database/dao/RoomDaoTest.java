@@ -49,7 +49,8 @@ public class RoomDaoTest {
     @DisplayName("게임방 이름과 비밀번호로 삭제한다.")
     public void delete() {
         RoomDto roomDto = new RoomDto(TEST_ROOM_NAME, TEST_ROOM_PASSWORD);
-        assertThatCode(() -> roomDao.delete(roomDto))
+        int id = roomDao.findByName(TEST_ROOM_NAME).getId();
+        assertThatCode(() -> roomDao.delete(id))
             .doesNotThrowAnyException();
     }
 
@@ -61,7 +62,9 @@ public class RoomDaoTest {
 
     @AfterEach
     void afterAll() {
-        roomDao.delete(new RoomDto(TEST_ROOM_NAME, TEST_ROOM_PASSWORD));
-        roomDao.delete(new RoomDto(TEST_CREATION_ROOM_NAME, TEST_CREATION_ROOM_PASSWORD));
+        int firstId = roomDao.findByName(TEST_ROOM_NAME).getId();
+        int secondId = roomDao.findByName(TEST_ROOM_NAME).getId();
+        roomDao.delete(firstId);
+        roomDao.delete(secondId);
     }
 }

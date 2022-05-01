@@ -2,7 +2,7 @@ package chess.database.dao.spring;
 
 import chess.database.dto.RoomDto;
 import java.util.List;
-import org.springframework.dao.EmptyResultDataAccessException;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -23,29 +23,22 @@ public class RoomDao {
 
     public RoomDto findByName(String roomName) {
         String sql = "select * from room where name = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
                 int id = resultSet.getInt("id");
                 String password = resultSet.getString("password");
                 return new RoomDto(id, roomName, password);
-            }, roomName);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+            }, roomName))
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당하는 이름의 게임방이 없습니다."));
     }
 
     public RoomDto findById(int roomId) {
         String sql = "select * from room where id = ?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
-            String roomName = resultSet.getString("name");
-            String password = resultSet.getString("password");
-            return new RoomDto(roomId, roomName, password);
-        }, roomId);
-    }
-
-    public void delete(RoomDto roomDto) {
-        final String sql = "DELETE FROM room WHERE name = ? and password = ?";
-        jdbcTemplate.update(sql, roomDto.getName(), roomDto.getPassword());
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
+                String roomName = resultSet.getString("name");
+                String password = resultSet.getString("password");
+                return new RoomDto(roomId, roomName, password);
+            }, roomId))
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다."));
     }
 
     public void delete(int roomId) {
@@ -58,5 +51,19 @@ public class RoomDao {
         return jdbcTemplate.query(sql, (resultSet, rowNum) ->
             new RoomDto(resultSet.getInt("id"), resultSet.getString("name"))
         );
+    }
+
+    public boolean existRoomName(String roomName) {
+        String sql = "select count(*) from room where name = ?";
+        Optional<Integer> count = Optional.ofNullable(
+            jdbcTemplate.queryForObject(sql, Integer.class, roomName));
+        return count.isPresent() && count.get() >= 1;
+    }
+
+    public boolean existRoomId(int roomId) {
+        String sql = "select count(*) from room where id = ?";
+        Optional<Integer> count = Optional.ofNullable(
+            jdbcTemplate.queryForObject(sql, Integer.class, roomId));
+        return count.isPresent() && count.get() >= 1;
     }
 }

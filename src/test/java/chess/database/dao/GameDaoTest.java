@@ -48,8 +48,9 @@ class GameDaoTest {
             new RoomDto(TEST_CREATION_ROOM_NAME, TEST_CREATION_ROOM_PASSWORD));
         assertThatCode(() -> gameDao.create(GameStateDto.of(state), roomDto.getId()))
             .doesNotThrowAnyException();
-        gameDao.removeGame(roomDao.findByName(TEST_CREATION_ROOM_NAME).getId());
-        roomDao.delete(new RoomDto(TEST_CREATION_ROOM_NAME, TEST_CREATION_ROOM_PASSWORD));
+        int findId = roomDao.findByName(TEST_CREATION_ROOM_NAME).getId();
+        gameDao.removeGame(findId);
+        roomDao.delete(findId);
     }
 
 
@@ -90,7 +91,8 @@ class GameDaoTest {
 
     @AfterEach
     void afterAll() {
-        gameDao.removeGame(roomDao.findByName(TEST_ROOM_NAME).getId());
-        roomDao.delete(new RoomDto(TEST_ROOM_NAME, TEST_ROOM_PASSWORD));
+        int firstFindId = roomDao.findByName(TEST_ROOM_NAME).getId();
+        gameDao.removeGame(firstFindId);
+        roomDao.delete(firstFindId);
     }
 }

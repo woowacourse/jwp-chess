@@ -29,7 +29,6 @@ public class SpringChessController {
 
     @GetMapping("/")
     public String showRooms(Model model) {
-//        Map<String, String> roomStates = chessRoomService.findAllRoomState();
         Map<RoomDto, String> roomStates = chessRoomService.findAllRoomState();
         model.addAttribute("roomStates", roomStates);
         return "rooms";
@@ -37,10 +36,12 @@ public class SpringChessController {
 
     @PostMapping("/rooms")
     @ResponseBody
-    public ResponseEntity<PathResponse> createRoom(@RequestBody String body) throws JsonProcessingException {
+    public ResponseEntity<PathResponse> createRoom(@RequestBody String body)
+        throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         RoomDto bodyRoomDto = mapper.readValue(body, RoomDto.class);
-        RoomDto roomDto = chessRoomService.createNewRoom(bodyRoomDto.getName(), bodyRoomDto.getPassword());
+        RoomDto roomDto = chessRoomService.createNewRoom(bodyRoomDto.getName(),
+            bodyRoomDto.getPassword());
         return respondPath("/rooms/" + roomDto.getId());
     }
 
@@ -57,7 +58,8 @@ public class SpringChessController {
     }
 
     @DeleteMapping("/rooms/{roomId}")
-    public ResponseEntity<PathResponse> removeRoom(@PathVariable("roomId") int roomId, @RequestBody String body) throws JsonProcessingException{
+    public ResponseEntity<PathResponse> removeRoom(@PathVariable("roomId") int roomId,
+        @RequestBody String body) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         RoomDto inputRoomDto = mapper.readValue(body, RoomDto.class);
         chessRoomService.removeRoom(inputRoomDto);

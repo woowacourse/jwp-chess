@@ -115,7 +115,7 @@ class ChessRoomServiceTest {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         boardDao.removeBoard(roomDto.getId());
         gameDao.removeGame(roomDto.getId());
-        roomDao.delete(roomDto);
+        roomDao.delete(roomDto.getId());
 
         RoomDto roomDto2 = roomDao.findByName(secondRoomDto.getName());
         if (roomDto2 != null) {

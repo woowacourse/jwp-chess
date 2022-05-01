@@ -129,7 +129,7 @@ class BoardDaoTest {
         gameDao.removeGame(roomDto.getId());
         gameDao.removeGame(roomDto2.getId());
 
-        roomDao.delete(roomDto);
-        roomDao.delete(roomDto2);
+        roomDao.delete(roomDto.getId());
+        roomDao.delete(roomDto2.getId());
     }
 }

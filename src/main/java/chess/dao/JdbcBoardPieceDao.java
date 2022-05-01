@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -21,6 +22,15 @@ public class JdbcBoardPieceDao implements BoardPieceDao {
     public static final String SET_FOREIGN_KEY_CHECKS_DDL = "set foreign_key_checks = ";
 
     private final JdbcTemplate jdbcTemplate;
+
+    private static RowMapper<BoardPiece> boardPieceRowMapper() {
+        return (rs, rowNum) -> new BoardPiece(
+                rs.getString("board_piece_id"),
+                rs.getString("game_id"),
+                rs.getString("position"),
+                rs.getString("piece")
+        );
+    }
 
     @Override
     public void save(String gameId, Map<String, String> positionToPiece) {
@@ -39,14 +49,7 @@ public class JdbcBoardPieceDao implements BoardPieceDao {
 
     @Override
     public List<BoardPiece> findLastBoardPiece(String lastGameId) {
-        return jdbcTemplate.query(FIND_LAST_BOARD_PIECE_DML,
-                (rs, rowNum) -> new BoardPiece(
-                        rs.getString("board_piece_id"),
-                        rs.getString("game_id"),
-                        rs.getString("position"),
-                        rs.getString("piece")
-                ),
-                lastGameId);
+        return jdbcTemplate.query(FIND_LAST_BOARD_PIECE_DML, boardPieceRowMapper(), lastGameId);
     }
 
     @Override

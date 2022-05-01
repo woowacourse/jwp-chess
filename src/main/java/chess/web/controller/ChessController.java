@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
-public class SpringChessController {
+public class ChessController {
 
     private final ChessService chessService;
 
-    public SpringChessController(ChessService chessService) {
+    public ChessController(ChessService chessService) {
         this.chessService = chessService;
     }
 
@@ -38,11 +38,5 @@ public class SpringChessController {
     public RedirectView createGame(@RequestParam String name, @RequestParam String password) {
         Long gameId = chessService.createGame(name.trim(), password);
         return new RedirectView("/game/" + gameId);
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public String handleError(Exception ex, Model model) {
-        model.addAttribute("exception", ex.getMessage());
-        return "exception";
     }
 }

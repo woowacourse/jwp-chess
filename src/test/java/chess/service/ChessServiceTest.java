@@ -6,10 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import chess.domain.game.score.Score;
+import chess.domain.game.score.ScoreResult;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.ScoreResultDto;
 
 class ChessServiceTest {
     private static final String GAME_NAME = "test";
@@ -49,10 +50,11 @@ class ChessServiceTest {
     @Test
     void getScore_black() {
         // given
-        ScoreResultDto scoreResultDto = chessService.getScore(id);
+        ScoreResult scoreResult = chessService.getScore(id);
 
         // when
-        double actual = scoreResultDto.getBlackScore();
+        Score blackScore = scoreResult.getScoreByPieceColor(PieceColor.BLACK);
+        double actual = blackScore.getValue();
 
         // then
         assertThat(actual).isEqualTo(38.0);
@@ -62,10 +64,12 @@ class ChessServiceTest {
     @Test
     void getScore_white() {
         // given
-        ScoreResultDto scoreResultDto = chessService.getScore(id);
+        ScoreResult scoreResult = chessService.getScore(id);
 
         // when
-        double actual = scoreResultDto.getWhiteScore();
+        Score whiteScore = scoreResult.getScoreByPieceColor(PieceColor.WHITE);
+
+        double actual = whiteScore.getValue();
 
         // then
         assertThat(actual).isEqualTo(38.0);

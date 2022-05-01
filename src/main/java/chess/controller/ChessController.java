@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import chess.domain.board.Board;
+import chess.domain.game.score.Score;
+import chess.domain.game.score.ScoreResult;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
@@ -22,7 +24,6 @@ import chess.dto.request.MovePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.CommandResultDto;
 import chess.dto.response.RoomDto;
-import chess.dto.response.ScoreResultDto;
 import chess.service.ChessService;
 
 @RestController
@@ -78,10 +79,12 @@ public class ChessController {
 
     @GetMapping("/score/{id}")
     public Map<String, Double> getScore(@PathVariable Integer id) {
-        ScoreResultDto scoreResultDto = chessService.getScore(id);
+        ScoreResult scoreResult = chessService.getScore(id);
         Map<String, Double> responseValue = new HashMap<>();
-        responseValue.put("white", scoreResultDto.getWhiteScore());
-        responseValue.put("black", scoreResultDto.getBlackScore());
+        Score whiteScore = scoreResult.getScoreByPieceColor(PieceColor.WHITE);
+        Score blackScore = scoreResult.getScoreByPieceColor(PieceColor.BLACK);
+        responseValue.put("white", whiteScore.getValue());
+        responseValue.put("black", blackScore.getValue());
         return responseValue;
     }
 

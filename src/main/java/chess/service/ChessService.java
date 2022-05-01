@@ -9,6 +9,7 @@ import chess.dao.BoardDao;
 import chess.dao.GameDao;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
+import chess.domain.game.score.ScoreResult;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
@@ -17,7 +18,6 @@ import chess.dto.request.DeletePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
 import chess.dto.response.ChessGameDto;
 import chess.dto.response.RoomDto;
-import chess.dto.response.ScoreResultDto;
 
 @Service
 public class ChessService {
@@ -77,8 +77,8 @@ public class ChessService {
         return PieceColor.BLACK;
     }
 
-    public ScoreResultDto getScore(int gameId) {
-        return ScoreResultDto.from(generateChessGame(gameId));
+    public ScoreResult getScore(int gameId) {
+        return new ScoreResult(generateChessGame(gameId).getBoard());
     }
 
     public PieceColor getWinColor(int gameId) {

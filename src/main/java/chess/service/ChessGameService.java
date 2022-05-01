@@ -28,7 +28,7 @@ public class ChessGameService {
 
     public void createGame(LogIn logIn) {
         validateUniqueId(logIn);
-        logIn.validate();
+        logIn.validateFormat();
         gameDao.create(logIn);
         pieceDao.createAll(chessmenInitializer.init(), logIn.getId());
     }

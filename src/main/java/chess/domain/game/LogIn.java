@@ -15,7 +15,7 @@ public class LogIn {
         this.password = password;
     }
 
-    public void validate() {
+    public void validateFormat() {
         if (!logInPattern.matcher(id).matches()) {
             throw new IllegalArgumentException(LOGIN_FORMAT_ERROR_MESSAGE);
         }
@@ -51,7 +51,7 @@ public class LogIn {
 
     @Override
     public String toString() {
-        return "LogIn{" +
+        return "LogInDto{" +
                 "gameId='" + id + '\'' +
                 ", gamePassword='" + password + '\'' +
                 '}';

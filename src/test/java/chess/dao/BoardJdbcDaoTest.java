@@ -3,37 +3,28 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.dto.BoardDto;
-import chess.dto.GameDto;
-import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest
+@JdbcTest
+@Sql(value = {"../../../resources/schema.sql"})
 class BoardJdbcDaoTest {
 
     @Autowired
-    private BoardDao boardDao;
-    @Autowired
-    private GameDao gameDao;
+    private JdbcTemplate jdbcTemplate;
 
-    private List<BoardDto> boardDto = new ArrayList<>();
-    private int gameId;
+    private BoardDao boardDao;
+    private int gameId = 1;
+
 
     @BeforeEach
-    void init() {
-        boardDto.add(new BoardDto("PAWN", "WHITE", "a2"));
-        gameId = gameDao.save(new GameDto("a", "b", "WHITE"));
-        boardDao.save(boardDto, gameId);
-    }
-
-    @AfterEach
-    void clear() {
-        boardDto.clear();
-        gameDao.deleteById(gameId);
+    void setup() {
+        boardDao = new BoardJdbcDao(jdbcTemplate);
     }
 
     @Test

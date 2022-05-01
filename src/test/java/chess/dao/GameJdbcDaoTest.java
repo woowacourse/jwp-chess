@@ -4,29 +4,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.piece.Team;
 import chess.dto.GameDto;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest
+@JdbcTest
+@Sql(value = {"../../../resources/schema.sql"})
 class GameJdbcDaoTest {
 
     @Autowired
-    private GameDao gameDao;
+    private JdbcTemplate jdbcTemplate;
 
-    private int gameId;
+    private GameDao gameDao;
+    private int gameId = 1;
 
     @BeforeEach
-    void init() {
-        gameId = gameDao.save(new GameDto("a", "b", "WHITE"));
-    }
-
-    @AfterEach
-    void clear() {
-        gameDao.deleteById(gameId);
+    void setup() {
+        gameDao = new GameJdbcDao(jdbcTemplate, new BCryptPasswordEncoder());
     }
 
     @Test
@@ -34,7 +33,7 @@ class GameJdbcDaoTest {
     void findById() {
         GameDto gameDto = gameDao.findGames().get(0);
 
-        assertThat(gameDto.getRoomName()).isEqualTo("a");
+        assertThat(gameDto.getRoomName()).isEqualTo("test");
     }
 
     @Test

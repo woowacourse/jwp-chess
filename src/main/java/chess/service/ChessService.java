@@ -13,13 +13,13 @@ import chess.domain.state.BoardInitialize;
 import chess.domain.state.GameState;
 import chess.domain.state.Playing;
 import chess.domain.state.WhiteTurn;
-import chess.dto.BoardDto;
-import chess.dto.CreateRoomDto;
-import chess.dto.GameStateDto;
-import chess.dto.PieceDto;
-import chess.dto.RoomDto;
-import chess.dto.ScoreDto;
-import chess.dto.StatusDto;
+import chess.dto.response.BoardDto;
+import chess.dto.request.CreateRoomDto;
+import chess.dto.response.GameStateDto;
+import chess.dto.response.PieceDto;
+import chess.dto.response.RoomDto;
+import chess.dto.response.ScoreDto;
+import chess.dto.response.StatusDto;
 import chess.entity.Room;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +47,7 @@ public class ChessService {
         List<Room> rooms = roomDao.findAll();
         return rooms.stream()
             .map(room -> new RoomDto(room.getId(), room.getTeam(), room.getTitle(),
-                room.getPassword(), room.getStatus()))
+                room.getStatus()))
             .collect(Collectors.toList());
     }
 

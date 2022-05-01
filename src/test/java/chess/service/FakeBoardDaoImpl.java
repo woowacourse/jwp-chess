@@ -5,7 +5,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
 import chess.domain.state.BoardInitialize;
-import chess.dto.PieceDto;
+import chess.dto.response.PieceDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

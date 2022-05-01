@@ -1,14 +1,7 @@
 package chess.dao;
 
-import chess.domain.Team;
-import chess.domain.piece.Pawn;
-import chess.domain.piece.Piece;
-import chess.domain.piece.PieceFactory;
-import chess.domain.position.Column;
-import chess.domain.position.Position;
-import chess.domain.position.Row;
 import chess.domain.state.BoardInitialize;
-import chess.dto.PieceDto;
+import chess.dto.response.PieceDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;

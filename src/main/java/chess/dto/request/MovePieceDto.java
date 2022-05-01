@@ -1,14 +1,14 @@
-package chess.dto;
+package chess.dto.request;
 
-public class MoveDto {
+public class MovePieceDto {
 
     private String source;
     private String destination;
 
-    public MoveDto() {
+    public MovePieceDto() {
     }
 
-    public MoveDto(String source, String destination) {
+    public MovePieceDto(String source, String destination) {
         this.source = source;
         this.destination = destination;
     }

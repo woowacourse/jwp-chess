@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.PieceDto;
+import chess.dto.response.PieceDto;
 
 import java.util.List;
 import java.util.Map;

@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.PieceDto;
+import chess.dto.response.PieceDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

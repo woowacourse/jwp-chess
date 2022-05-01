@@ -4,9 +4,8 @@ package chess.controller;
 import static org.hamcrest.core.Is.is;
 
 import chess.SpringChessApplication;
-import chess.domain.Team;
-import chess.dto.MoveDto;
-import chess.dto.RoomDto;
+import chess.dto.request.CreateRoomDto;
+import chess.dto.request.MovePieceDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +29,8 @@ public class ChessControllerTest {
     @DisplayName("Room - POST")
     @Test
     void createRoom() {
-        RoomDto roomDto = new RoomDto(1L, Team.WHITE, "title", "password", true);
+        CreateRoomDto roomDto = new CreateRoomDto( "title",  "password");
+
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(roomDto)
@@ -62,11 +62,11 @@ public class ChessControllerTest {
     @DisplayName("move - POST")
     @Test
     void move() {
-        MoveDto moveDto = new MoveDto("f3", "f4");
+        MovePieceDto movePieceDto = new MovePieceDto("f3", "f4");
 
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(moveDto)
+            .body(movePieceDto)
             .when().post("/board/1")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value());

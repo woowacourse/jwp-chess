@@ -1,13 +1,13 @@
 package chess.controller;
 
-import chess.dto.BoardDto;
-import chess.dto.CreateRoomDto;
-import chess.dto.DeleteRoomDto;
-import chess.dto.GameStateDto;
-import chess.dto.MoveDto;
-import chess.dto.RoomDto;
-import chess.dto.ScoreDto;
-import chess.dto.StatusDto;
+import chess.dto.response.BoardDto;
+import chess.dto.request.CreateRoomDto;
+import chess.dto.request.DeleteRoomDto;
+import chess.dto.response.GameStateDto;
+import chess.dto.request.MovePieceDto;
+import chess.dto.response.RoomDto;
+import chess.dto.response.ScoreDto;
+import chess.dto.response.StatusDto;
 import chess.service.ChessService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -48,9 +48,9 @@ public class ChessController {
 
     @PutMapping(value = "/board/{roomId}")
     public ResponseEntity<GameStateDto> move(@PathVariable Long roomId,
-        @RequestBody MoveDto moveDto) {
+        @RequestBody MovePieceDto movePieceDto) {
         return ResponseEntity.ok()
-            .body(chessService.move(roomId, moveDto.getSource(), moveDto.getDestination()));
+            .body(chessService.move(roomId, movePieceDto.getSource(), movePieceDto.getDestination()));
     }
 
     @GetMapping("/rooms/{roomId}/score")

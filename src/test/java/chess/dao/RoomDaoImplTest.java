@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.entity.RoomEntity;
+import chess.entity.Room;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -89,7 +89,7 @@ class RoomDaoImplTest {
     @DisplayName("roomId가 일치하는 체스방 정보를 반환한다.")
     void findByRoomId() {
         //when
-        final RoomEntity room = roomDao.findByRoomId(1);
+        final Room room = roomDao.findByRoomId(1);
         //then
         assertAll(
                 () -> assertThat(room.getRoomId()).isEqualTo(1),
@@ -107,7 +107,7 @@ class RoomDaoImplTest {
         roomDao.saveNewRoom("second", "1234", "ready", "WHITE");
         roomDao.saveNewRoom("third", "1234", "ready", "WHITE");
         //when
-        final List<RoomEntity> rooms = roomDao.findAllRooms();
+        final List<Room> rooms = roomDao.findAllRooms();
         //then
         assertAll(
                 () -> assertThat(rooms.get(0).getName()).isEqualTo("first"),

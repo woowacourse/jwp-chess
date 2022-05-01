@@ -1,6 +1,6 @@
 package chess.entity;
 
-public class RoomEntity {
+public class Room {
 
     private final int roomId;
     private final String name;
@@ -8,8 +8,8 @@ public class RoomEntity {
     private final String gameState;
     private final String turn;
 
-    public RoomEntity(final int roomId, final String name, final String password,
-                      final String gameState, final String turn) {
+    public Room(final int roomId, final String name, final String password,
+                final String gameState, final String turn) {
         this.roomId = roomId;
         this.name = name;
         this.password = password;

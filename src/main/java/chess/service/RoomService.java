@@ -2,7 +2,7 @@ package chess.service;
 
 import chess.dao.RoomDao;
 import chess.dto.RoomDto;
-import chess.entity.RoomEntity;
+import chess.entity.Room;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class RoomService {
     }
 
     public void deleteRoom(final int roomId, final String password) {
-        final RoomEntity savedRoom = roomDao.findByRoomId(roomId);
+        final Room savedRoom = roomDao.findByRoomId(roomId);
 
         if (isIncorrectPassword(savedRoom, password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -39,18 +39,18 @@ public class RoomService {
         roomDao.deleteRoomByName(roomId);
     }
 
-    private boolean isIncorrectPassword(final RoomEntity room, final String password) {
+    private boolean isIncorrectPassword(final Room room, final String password) {
         final String savedPassword = room.getPassword();
         return !password.equals(savedPassword);
     }
 
-    private boolean isPlayingState(final RoomEntity room) {
+    private boolean isPlayingState(final Room room) {
         final String savedGameState = room.getGameState();
         return savedGameState.equals(PLAYING_STATE_SYMBOL);
     }
 
     public List<RoomDto> getRoomNames() {
-        final List<RoomEntity> rooms = roomDao.findAllRooms();
+        final List<Room> rooms = roomDao.findAllRooms();
 
         return rooms.stream()
                 .map(room -> new RoomDto(room.getName(), room.getRoomId()))

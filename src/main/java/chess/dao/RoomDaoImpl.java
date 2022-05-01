@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.entity.RoomEntity;
+import chess.entity.Room;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,7 +15,7 @@ public class RoomDaoImpl implements RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private static final RowMapper<RoomEntity> actorRowMapper = (resultSet, rowNum) -> new RoomEntity(
+    private static final RowMapper<Room> actorRowMapper = (resultSet, rowNum) -> new Room(
             resultSet.getInt("roomId"),
             resultSet.getString("name"),
             resultSet.getString("password"),
@@ -54,13 +54,13 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public RoomEntity findByRoomId(final int roomId) {
+    public Room findByRoomId(final int roomId) {
         final String sql = "select * from room where roomId = ?";
         return jdbcTemplate.queryForObject(sql, actorRowMapper, roomId);
     }
 
     @Override
-    public List<RoomEntity> findAllRooms() {
+    public List<Room> findAllRooms() {
         final String sql = "select * from room";
         return jdbcTemplate.query(sql, actorRowMapper);
     }

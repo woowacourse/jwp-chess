@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.entity.RoomEntity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,18 +42,18 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public RoomEntity findByRoomId(final int roomId) {
+    public chess.entity.Room findByRoomId(final int roomId) {
         final Room room = rooms.get(roomId);
-        return new RoomEntity(roomId, room.name, room.password, room.gameState, room.turn);
+        return new chess.entity.Room(roomId, room.name, room.password, room.gameState, room.turn);
     }
 
     @Override
-    public List<RoomEntity> findAllRooms() {
-        final List<RoomEntity> rooms = new ArrayList<>();
+    public List<chess.entity.Room> findAllRooms() {
+        final List<chess.entity.Room> rooms = new ArrayList<>();
         for (Entry<Integer, Room> room : this.rooms.entrySet()) {
             final int roomId = room.getKey();
             final Room value = room.getValue();
-            rooms.add(new RoomEntity(roomId, value.name, value.password, value.gameState, value.turn));
+            rooms.add(new chess.entity.Room(roomId, value.name, value.password, value.gameState, value.turn));
         }
         return rooms;
     }

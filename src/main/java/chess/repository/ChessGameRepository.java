@@ -52,4 +52,12 @@ public class ChessGameRepository {
     public Map<Integer, String> findGameList() {
         return gameDao.findGameList();
     }
+
+    public String findPasswordById(int gameId) {
+        return gameDao.findPasswordById(gameId);
+    }
+
+    public void delete(int gameId) {
+        gameDao.delete(gameId);
+    }
 }

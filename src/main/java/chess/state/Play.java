@@ -14,7 +14,7 @@ public class Play implements State {
 
     @Override
     public State move(Chessboard chessboard, MovingPosition movingPosition, Color turn) {
-        chessboard.move(movingPosition,turn);
+        chessboard.move(movingPosition, turn);
 
         if (chessboard.isOver()) {
             return new Finish();
@@ -36,6 +36,11 @@ public class Play implements State {
     @Override
     public String getStateToString() {
         return "PLAY";
+    }
+
+    @Override
+    public boolean canBeDeleted() {
+        return false;
     }
 
 }

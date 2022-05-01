@@ -31,4 +31,9 @@ public class Finish implements State {
         return "FINISH";
     }
 
+    @Override
+    public boolean canBeDeleted() {
+        return true;
+    }
+
 }

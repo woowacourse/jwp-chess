@@ -52,7 +52,7 @@ public class ChessGame {
                 .collect(Collectors.toList());
     }
 
-    public Map<Position,Piece> getChessBoard() {
+    public Map<Position, Piece> getChessBoard() {
         return chessboard.getBoard();
     }
 
@@ -68,4 +68,7 @@ public class ChessGame {
         return currentStatus.getTurnToString();
     }
 
+    public boolean canBeDeleted() {
+        return currentStatus.canBeDeleted();
+    }
 }

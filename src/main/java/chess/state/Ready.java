@@ -2,7 +2,6 @@ package chess.state;
 
 import chess.domain.Chessboard;
 import chess.domain.MovingPosition;
-import chess.domain.Turn;
 import chess.piece.Color;
 
 public class Ready implements State {
@@ -32,4 +31,8 @@ public class Ready implements State {
         return false;
     }
 
+    @Override
+    public boolean canBeDeleted() {
+        return true;
+    }
 }

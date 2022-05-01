@@ -18,4 +18,5 @@ public interface State {
 
     String getStateToString();
 
+    boolean canBeDeleted();
 }

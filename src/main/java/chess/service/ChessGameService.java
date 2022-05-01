@@ -17,6 +17,8 @@ import java.util.Map;
 public class ChessGameService {
 
     private static final String DUPLICATE_NAME = "채팅방 이름은 중복될 수 없습니다.";
+    private static final String CANNOT_BE_DELETED = "삭제할 수 없는 상태입니다.";
+    private static final String WRONG_PASSWORD = "올바르지 않은 비밀번호입니다.";
 
     private final ChessGameRepository repository;
 
@@ -64,5 +66,24 @@ public class ChessGameService {
 
     public Map<Integer, String> findGameList() {
         return repository.findGameList();
+    }
+
+    public void delete(int gameId,String password) {
+        validateState(gameId);
+        validatePassword(gameId,password);
+
+        repository.delete(gameId);
+    }
+
+    private void validateState(int gameId){
+        if(!repository.find(gameId).canBeDeleted()){
+            throw new IllegalArgumentException(CANNOT_BE_DELETED);
+        }
+    }
+
+    private void validatePassword(int gameId,String password){
+        if(!password.equals(repository.findPasswordById(gameId))){
+            throw new IllegalArgumentException(WRONG_PASSWORD);
+        }
     }
 }

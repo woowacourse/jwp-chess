@@ -50,4 +50,14 @@ public class GameDao {
 
         return gameList;
     }
+
+    public String findPasswordById(int gameId) {
+        final String sql = "SELECT password FROM game WHERE id=?";
+        return jdbcTemplate.queryForObject(sql, String.class, gameId);
+    }
+
+    public void delete(int gameId) {
+        final String sql = "DELETE FROM game WHERE id=?";
+        jdbcTemplate.update(sql, gameId);
+    }
 }

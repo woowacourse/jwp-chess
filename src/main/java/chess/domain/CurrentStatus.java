@@ -55,4 +55,8 @@ public class CurrentStatus {
     public boolean isFinished() {
         return state.isFinished();
     }
+
+    public boolean canBeDeleted() {
+        return state.canBeDeleted();
+    }
 }

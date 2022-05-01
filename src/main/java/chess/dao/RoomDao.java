@@ -1,12 +1,17 @@
 package chess.dao;
 
-import chess.entity.Room;
+import chess.entity.RoomEntity;
+import java.util.List;
 import java.util.Optional;
 
 public interface RoomDao {
-    void save(Room room);
+    long save(RoomEntity room);
 
-    Optional<Room> findByName(String name);
+    Optional<RoomEntity> findById(long id);
 
-    void update(long id, String turn);
+    List<RoomEntity> findAll();
+
+    void updateTurn(long id, String turn);
+
+    void deleteRoom(long id);
 }

@@ -7,8 +7,11 @@ import java.util.Map;
 
 public class BoardDto {
 
-    private final Map<String, String> board;
-    private final String turn;
+    private Map<String, String> board;
+    private String turn;
+
+    private BoardDto(){
+    }
 
     private BoardDto(Map<String, String> board, String turn) {
         this.board = board;

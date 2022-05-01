@@ -1,4 +1,4 @@
-package chess.domain;
+package chess.domain.game;
 
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
@@ -8,22 +8,26 @@ import chess.domain.position.Position;
 import java.util.List;
 import java.util.Map;
 
-public class WebChessGame {
+public class ChessGame {
 
     private ChessBoard chessBoard;
     private Color turn;
 
-    public WebChessGame() {
-        this.turn = Color.WHITE;
+    public ChessGame() {
+        this.turn = Color.EMPTY;
     }
 
-    private WebChessGame(ChessBoard chessBoard, Color turn) {
+    public ChessGame(Color color) {
+        this.turn = color;
+    }
+
+    private ChessGame(ChessBoard chessBoard, Color turn) {
         this.chessBoard = chessBoard;
         this.turn = turn;
     }
 
-    public static WebChessGame of(ChessBoard chessBoard, String turnValue) {
-        return new WebChessGame(chessBoard, Color.of(turnValue));
+    public static ChessGame of(ChessBoard chessBoard, String turnValue) {
+        return new ChessGame(chessBoard, Color.of(turnValue));
     }
 
     public void start() {
@@ -83,6 +87,10 @@ public class WebChessGame {
         if (chessBoard.isEnd()) {
             turn = Color.EMPTY;
         }
+    }
+
+    public boolean isEnd() {
+        return turn.isEmpty();
     }
 
     private void changeTurn() {

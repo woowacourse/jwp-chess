@@ -1,63 +1,35 @@
-package chess;
+package chess.controller;
 
 import static org.hamcrest.Matchers.is;
 
 import chess.dao.JdbcFixture;
 import chess.dto.MoveDto;
+import chess.dto.PasswordDto;
+import chess.dto.RoomCreationDto;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class ChessControllerTest {
-
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-        JdbcFixture.dropTable(jdbcTemplate, "square");
-        JdbcFixture.dropTable(jdbcTemplate, "room");
-        JdbcFixture.createRoomTable(jdbcTemplate);
-        JdbcFixture.createSquareTable(jdbcTemplate);
-        JdbcFixture.insertRoom(jdbcTemplate, "roma", "white");
-    }
+class ChessApiControllerTest extends ControllerTest {
 
     @Test
-    void index() {
+    void create() {
+        RoomCreationDto roomCreationDto = new RoomCreationDto("test", "1234");
         RestAssured.given().log().all()
-                .when().get("/")
+                .body(roomCreationDto)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/rooms")
                 .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(MediaType.TEXT_HTML_VALUE);
-    }
-
-    @Test
-    void room() {
-        RestAssured.given().log().all()
-                .when().get("/room?name=roma")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(MediaType.TEXT_HTML_VALUE);
+                .statusCode(HttpStatus.CREATED.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("id", is(2));
     }
 
     @Test
     void start() {
         RestAssured.given().log().all()
-                .when().get("/start?name=roma")
+                .when().get("/rooms/1/start")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -67,10 +39,10 @@ class ChessControllerTest {
 
     @Test
     void load() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.get("/rooms/1/start");
 
         RestAssured.given().log().all()
-                .when().get("/load?name=roma")
+                .when().get("/rooms/1/load")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -80,13 +52,13 @@ class ChessControllerTest {
 
     @Test
     void move() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.get("/rooms/1/start");
         MoveDto moveDto = new MoveDto("a2", "a4");
 
         RestAssured.given().log().all()
                 .body(moveDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/move?name=roma")
+                .when().patch("/rooms/1/board")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -97,10 +69,10 @@ class ChessControllerTest {
 
     @Test
     void status() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.get("/rooms/1/start");
 
         RestAssured.given().log().all()
-                .when().get("/status?name=roma")
+                .when().get("/rooms/1/status")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -110,13 +82,13 @@ class ChessControllerTest {
 
     @Test
     void moveExceptionWrongPosition() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.get("/rooms/1/start");
         MoveDto moveDto = new MoveDto("a2", "a5");
 
         RestAssured.given().log().all()
                 .body(moveDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/move?name=roma")
+                .when().patch("/rooms/1/board")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -125,13 +97,13 @@ class ChessControllerTest {
 
     @Test
     void moveExceptionWrongTurn() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.get("/rooms/1/start");
         MoveDto moveDto = new MoveDto("a7", "a6");
 
         RestAssured.given().log().all()
                 .body(moveDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/move?name=roma")
+                .when().patch("/rooms/1/board")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -140,13 +112,49 @@ class ChessControllerTest {
 
     @Test
     void loadExceptionBeforeInit() {
-        RestAssured.get("/room?name=sojukang");
+        JdbcFixture.insertRoom(jdbcTemplate, "roma2", "1234", "white");
 
         RestAssured.given().log().all()
-                .when().get("/load?name=sojukang")
+                .when().get("/rooms/2/load")
                 .then().log().all()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("error", is("Internal Server Error"));
+                .body("message", is("해당 ID에 체스게임이 초기화되지 않았습니다."));
+    }
+
+    @Test
+    void list() {
+        JdbcFixture.insertRoom(jdbcTemplate, "roma2", "1234", "white");
+        JdbcFixture.insertRoom(jdbcTemplate, "roma3", "1234", "white");
+
+        RestAssured.given().log().all()
+                .when().get("/rooms")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("size()", is(3));
+    }
+
+    @Test
+    void end() {
+        RestAssured.given().log().all()
+                .when().patch("/rooms/1/end")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("message", is("게임 종료상태로 변경했습니다."));
+    }
+
+    @Test
+    void delete() {
+        JdbcFixture.insertRoom(jdbcTemplate, "sojukang", "1111", "empty");
+
+        PasswordDto passwordDto = new PasswordDto("1111");
+        RestAssured.given().log().all()
+                .body(passwordDto)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().delete("/rooms/2")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("message", is("방을 삭제했습니다."));
     }
 }

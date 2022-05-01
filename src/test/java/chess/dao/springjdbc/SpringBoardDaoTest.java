@@ -42,7 +42,7 @@ class SpringBoardDaoTest {
 
     private void initBoard(String... names) {
         GameFactory.setUpGames(jdbcTemplate, names);
-        for (long i = 1L; i < names.length + 1L; i++) {
+        for (long i = 1L; i < names.length + 1; i++) {
             springBoardDao.initBoard(i);
         }
     }

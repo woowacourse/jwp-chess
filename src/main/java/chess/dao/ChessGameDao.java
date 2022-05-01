@@ -16,18 +16,13 @@ public class ChessGameDao {
     }
 
     public void saveChessGame(final String gameName, final String password, final String turn) {
-        validateDuplicate(gameName);
         final String sql = "insert into chess_game (name, password, turn, running) values (?, ?, ?, ?)";
         jdbcTemplate.update(sql, gameName, password, turn, true);
     }
 
-    private void validateDuplicate(final String gameName) {
+    public int findChessGameCountByName(final String gameName) {
         final String sql = "select count(*) from chess_game where name = (?)";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, gameName);
-
-        if (count > 0) {
-            throw new IllegalArgumentException("중복된 게임 이름입니다.");
-        }
+        return jdbcTemplate.queryForObject(sql, Integer.class, gameName);
     }
 
     public int findChessGameIdByName(final String gameName) {

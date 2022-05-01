@@ -36,12 +36,33 @@ public class ChessGameService {
     }
 
     public ChessGameInfoDto createNewChessGame(final CreateGameDto createGameDto) {
+        validatePassword(createGameDto.getPassword(), createGameDto.getPasswordCheck());
+        validateDuplicateName(createGameDto.getChessGameName());
+
         final String gameName = createGameDto.getChessGameName();
         final String password = createGameDto.getPassword();
+        return saveChessGame(gameName, password);
+    }
+
+    private void validatePassword(final String password, final String passwordCheck) {
+        boolean isSame = password.equals(passwordCheck);
+        if (!isSame) {
+            throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    private void validateDuplicateName(final String gameName) {
+        final int count = chessGameDao.findChessGameCountByName(gameName);
+        if (count > 0) {
+            throw new IllegalArgumentException("중복된 게임 이름입니다.");
+        }
+    }
+
+    private ChessGameInfoDto saveChessGame(String gameName, String password) {
         final ChessGame chessGame = initializeChessGame();
-        final int gameId = chessGameDao.findChessGameIdByName(gameName);
 
         chessGameDao.saveChessGame(gameName, password, chessGame.getTurn().getName());
+        final int gameId = chessGameDao.findChessGameIdByName(gameName);
         pieceDao.savePieces(chessGame.getCurrentPlayer(), gameId);
         pieceDao.savePieces(chessGame.getOpponentPlayer(), gameId);
         return new ChessGameInfoDto(gameId, gameName, chessGame.getTurn().getName());

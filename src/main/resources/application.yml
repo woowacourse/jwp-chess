@@ -6,9 +6,6 @@ spring:
     password: 1234
     schema: classpath*:schema.sql
     initialization-mode: always
-#  h2:
-#    console:
-#      enabled: true
 server:
   servlet:
     session:

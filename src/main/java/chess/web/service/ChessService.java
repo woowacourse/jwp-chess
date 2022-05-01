@@ -129,6 +129,10 @@ public class ChessService {
         pieceDao.updateByGameId(gameId, new PieceDto(chessGame.board().findPiece(source), source));
     }
 
+    public boolean isChessFinished(int gameId) {
+        return getChessGame(gameId).isFinished();
+    }
+
     public ResultDto getChessResult(int gameId) {
         ChessGame chessGame = getChessGame(gameId);
         endGame(chessGame, gameId);

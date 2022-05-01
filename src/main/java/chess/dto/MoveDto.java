@@ -32,4 +32,8 @@ public final class MoveDto {
     public int getGameId() {
         return gameId;
     }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
 }

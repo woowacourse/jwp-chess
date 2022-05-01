@@ -9,7 +9,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class WebController {
@@ -26,37 +33,40 @@ public class WebController {
         return "index";
     }
 
-    @GetMapping("/start")
-    public ResponseEntity<ChessGameDto> startGame(@RequestParam int gameId) {
+    @PostMapping("/games/{gameId}/pieces")
+    public ResponseEntity<ChessGameDto> startGame(@PathVariable int gameId) {
         return new ResponseEntity<>(chessService.newGame(gameId), HttpStatus.CREATED);
     }
 
-    @GetMapping("/restart")
-    public ResponseEntity<ChessGameDto> restart(@RequestParam int gameId) {
+    @GetMapping("/games/{gameId}/pieces")
+    public ResponseEntity<ChessGameDto> restart(@PathVariable int gameId) {
         return new ResponseEntity<>(chessService.loadGame(gameId), HttpStatus.OK);
     }
 
-    @PatchMapping(value = "/move", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChessGameDto> move(@RequestBody MoveDto moveDto) {
+    @PatchMapping(value = "/games/{gameId}/pieces", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ChessGameDto> move(@PathVariable int gameId, @RequestBody MoveDto moveDto) {
+        //rest api 적용하면서 생긴 로직
+        moveDto.setGameId(gameId);
         return new ResponseEntity<>(chessService.move(moveDto), HttpStatus.OK);
     }
 
-    @GetMapping("/game")
-    public String getGame(@RequestParam int gameId, Model model) {
+    @GetMapping("/games/{gameId}")
+    public String getGame(@PathVariable int gameId, Model model) {
         model.addAttribute("gameId", gameId);
-        return "game";
+        return "board";
     }
 
-    @DeleteMapping("/game")
-    public ResponseEntity<Void> deleteGame(@RequestBody GameRoomDto gameRoomDto) {
+    @DeleteMapping("/games/{gameId}")
+    public ResponseEntity<Void> deleteGame(@PathVariable int gameId, @RequestBody GameRoomDto gameRoomDto) {
+        gameRoomDto.setGameId(gameId);
         chessService.deleteGame(gameRoomDto);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping(value = "/game", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "/games", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String createGame(@ModelAttribute GameRoomDto gameRoomDto) {
         var gameId = chessService.createRoom(gameRoomDto);
-        return "redirect:/game?gameId=" + gameId;
+        return "redirect:/games/" + gameId;
     }
 
     @ExceptionHandler({RuntimeException.class})

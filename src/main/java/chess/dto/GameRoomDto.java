@@ -40,4 +40,8 @@ public final class GameRoomDto {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
 }

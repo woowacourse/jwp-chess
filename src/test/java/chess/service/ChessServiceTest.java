@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @JdbcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ChessServiceTest {
-
+    //TODO h2 mysql 비교
     private int gameId;
 
     private ChessDao chessDao;

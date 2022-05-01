@@ -9,8 +9,10 @@ startButton.addEventListener("click", onClickStartButton);
 restartButton.addEventListener("click", onClickRestartButton);
 chessBoard.addEventListener("click", onClickBoard);
 
-async function onClickStartButton () {
-    const response = await fetch("/start?gameId=" + gameId);
+async function onClickStartButton() {
+    const response = await fetch(`/games/${gameId}/pieces`, {
+        method: "POST"
+    });
 
     if (response.ok) {
         const data = await response.json();
@@ -21,7 +23,7 @@ async function onClickStartButton () {
     alert(await response.text());
 }
 
-function loadBoard (data) {
+function loadBoard(data) {
     removeAllPiece();
     Object.entries(data.positionsAndPieces).forEach(([key, value]) => {
         const block = document.getElementById(key.toLowerCase());
@@ -35,11 +37,11 @@ function loadBoard (data) {
     }
 }
 
-function removeAllPiece () {
+function removeAllPiece() {
     chessBoard.querySelectorAll(".piece").forEach(e => e.remove());
 }
 
-function createPieceImage ({color, name}) {
+function createPieceImage({color, name}) {
     const image = document.createElement("img");
     image.src = `/images/pieces/${color}/${color}-${name}.svg`;
     image.width = 90;
@@ -48,18 +50,18 @@ function createPieceImage ({color, name}) {
     return image;
 }
 
-async function onClickRestartButton () {
-    const response = await fetch("/restart?gameId=" + gameId);
+async function onClickRestartButton() {
+    const response = await fetch(`/games/${gameId}/pieces`);
 
     if (response.ok) {
         const data = await response.json();
         loadBoard(data);
         return;
     }
-     alert(await response.text());
+    alert(await response.text());
 }
 
-function onClickBoard ({target: {classList, id, parentNode}}) {
+function onClickBoard({target: {classList, id, parentNode}}) {
     if (!hasFirstSelected() && isPiece(id)) {
         classList.add("first-selected");
         return;
@@ -71,7 +73,7 @@ function onClickBoard ({target: {classList, id, parentNode}}) {
     }
 }
 
-function hasFirstSelected () {
+function hasFirstSelected() {
     return chessBoard.querySelector(".first-selected") !== null;
 }
 
@@ -83,21 +85,21 @@ function isPiece(id) {
     return false;
 }
 
-function hasSecondSelected () {
+function hasSecondSelected() {
     return chessBoard.querySelector(".second-selected") !== null;
 }
 
-async function onClickPiece (id) {
+async function onClickPiece(id) {
     const from = chessBoard.querySelector(".first-selected").parentNode.id;
     const to = getSecondSelectedId(id);
 
     removeSelected();
 
-    const response = await fetch("/move", {
-                       method: "PATCH",
-                       headers: {"Content-Type": "application/json"},
-                       body: JSON.stringify({from: from, to: to, gameId: gameId})
-                     });
+    const response = await fetch(`/games/${gameId}/pieces`, {
+        method: "PATCH",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({from: from, to: to})
+    });
     if (response.ok) {
         const data = await response.json();
         movePiece(from, to);
@@ -108,19 +110,19 @@ async function onClickPiece (id) {
     alert(await response.text());
 }
 
-function getSecondSelectedId (id) {
+function getSecondSelectedId(id) {
     if (id === "") {
         return chessBoard.querySelector(".second-selected").parentNode.id;
     }
     return id;
 }
 
-function removeSelected () {
+function removeSelected() {
     chessBoard.querySelector(".first-selected").classList.remove("first-selected");
     chessBoard.querySelector(".second-selected").classList.remove("second-selected");
 }
 
-function movePiece (from, to) {
+function movePiece(from, to) {
     const fromPiece = document.getElementById(from).firstElementChild;
     const toPiece = document.getElementById(to).firstElementChild;
     if (toPiece !== null) {

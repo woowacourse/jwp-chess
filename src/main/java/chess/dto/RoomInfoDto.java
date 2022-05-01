@@ -5,9 +5,9 @@ import javax.validation.constraints.Size;
 public class RoomInfoDto {
     private static final int MAX_ROOM_INFO_LENGTH = 20;
 
-    @Size(message = "방 제목은 20자가 넘으면 안됩니다.", max = 20)
+    @Size(message = "방 제목은 20자가 넘으면 안됩니다.", max = MAX_ROOM_INFO_LENGTH)
     private String title;
-    @Size(message = "비밀번호는 20자가 넘으면 안됩니다.", max = 20)
+    @Size(message = "비밀번호는 20자가 넘으면 안됩니다.", max = MAX_ROOM_INFO_LENGTH)
     private String password;
 
     public RoomInfoDto() {

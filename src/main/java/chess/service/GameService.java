@@ -61,19 +61,21 @@ public class GameService {
     @Transactional
     public void move(int roomId, Position sourceRawPosition, Position targetRawPosition) {
         final Optional<ChessBoard> wrappedBoard = boardDao.findById(roomId);
-        if(wrappedBoard.isEmpty()) {
+        if (wrappedBoard.isEmpty()) {
             throw new IllegalArgumentException("보드가 존재하지 않습니다.");
         }
         Game game = new Game(() -> positionDao.findAllPositionsAndPieces(roomId), wrappedBoard.get().getTurn());
         Piece sourcePiece = extractPiece(game.piece(sourceRawPosition));
         Piece targetPiece = extractPiece(game.piece(targetRawPosition));
-
         game.move(sourceRawPosition, targetRawPosition);
 
+        updateMovement(sourcePiece, targetPiece);
+        boardDao.updateTurn(game.getTurn(), roomId);
+    }
+
+    private void updateMovement(Piece sourcePiece, Piece targetPiece) {
         pieceDao.updatePiece(targetPiece, sourcePiece);
         pieceDao.updatePiece(sourcePiece, new Piece(Color.NONE, new Blank()));
-
-        boardDao.updateTurn(game.getTurn(), roomId);
     }
 
     private Piece extractPiece(Optional<Piece> wrappedPiece) {

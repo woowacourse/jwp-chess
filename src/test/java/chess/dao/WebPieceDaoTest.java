@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
-@Sql({"schema.sql"})
 class WebPieceDaoTest {
 
     private final PositionDao<Position> positionDao;

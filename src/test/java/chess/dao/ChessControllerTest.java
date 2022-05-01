@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql({"schema.sql"})
 class ChessControllerTest {
 
     @Autowired

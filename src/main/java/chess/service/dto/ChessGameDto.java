@@ -3,20 +3,29 @@ package chess.service.dto;
 public class ChessGameDto {
     private final String status;
     private final String turn;
-    private int id;
+    private Long id;
     private String name;
+    private String password;
 
-    public ChessGameDto(int id, String name, String status, String turn) {
+    public ChessGameDto(Long id, String name, String status, String turn) {
         this.id = id;
         this.name = name;
         this.status = status;
         this.turn = turn;
     }
 
-    public ChessGameDto(int id, String status, String turn) {
+    public ChessGameDto(Long id, String status, String turn) {
         this.id = id;
         this.status = status;
         this.turn = turn;
+    }
+
+    public ChessGameDto(Long id, String name, String status, String turn,  String password) {
+        this.status = status;
+        this.turn = turn;
+        this.id = id;
+        this.name = name;
+        this.password = password;
     }
 
     public String getName() {
@@ -31,7 +40,11 @@ public class ChessGameDto {
         return turn.toUpperCase();
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

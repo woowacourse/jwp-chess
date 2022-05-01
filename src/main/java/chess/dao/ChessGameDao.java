@@ -68,45 +68,23 @@ public class ChessGameDao {
             "select chess_game.turn, chess_game.game_name, piece.type, piece.team, piece.`rank`, piece.file "
                 + "from chess_game, piece "
                 + "where chess_game.id = piece.chess_game_id AND chess_game.id = ?";
-
-        List<ChessGame> result = jdbcTemplate.query(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            preparedStatement.setInt(1, chessGameId);
-            return preparedStatement;
-        }, chessGameRowMapper);
-
-        if (result.isEmpty()) {
-            return null;
-        }
-
-        return result.get(0);
+        return jdbcTemplate.queryForObject(sql, chessGameRowMapper, chessGameId);
     }
 
-    private final RowMapper<ChessGame> chessGameRowMapper = (resultSet, rowNum) -> new ChessGame(
-        getTurn(resultSet),
-        resultSet.getString("game_name"),
-        makeCells(resultSet)
-    );
+    private final RowMapper<ChessGame> chessGameRowMapper = (resultSet, rowNum) -> initChessGame(resultSet);
 
-    private String getTurn(ResultSet resultSet) throws SQLException {
-        resultSet.beforeFirst();
-        resultSet.next();
-        return resultSet.getString("turn");
-    }
-
-    private Map<Position, Piece> makeCells(ResultSet resultSet) throws SQLException {
-        resultSet.beforeFirst();
-
+    private ChessGame initChessGame(ResultSet resultSet) throws SQLException {
         Map<Position, Piece> cells = new HashMap<>();
-
+        cells.put(makePosition(resultSet), makePiece(resultSet));
+        String turn = resultSet.getString("turn");
+        String gameName = resultSet.getString("game_name");
         while (resultSet.next()) {
             Position position = makePosition(resultSet);
             Piece piece = makePiece(resultSet);
             cells.put(position, piece);
         }
 
-        return cells;
+        return new ChessGame(turn, gameName, cells);
     }
 
     private Position makePosition(ResultSet resultSet) throws SQLException {

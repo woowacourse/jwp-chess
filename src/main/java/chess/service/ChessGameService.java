@@ -49,18 +49,16 @@ public class ChessGameService {
         return pieceDao.findPieces(chessGameId);
     }
 
-    public boolean isFinished(int chessGameId) {
-        ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
-        return chessGameDto.getStatus().isFinished();
-    }
-
-    public String findWinner(int chessGameId) {
-        ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
-        return chessGameDto.getWinner();
+    @Transactional
+    public void create(ChessGameRequest chessGameRequest) {
+        Room room = new Room(chessGameRequest.getName(), chessGameRequest.getPassword());
+        int chessGameId = chessGameDao.saveChessGame(ChessGame.start(room));
+        Map<Position, Piece> initBoard = ChessBoardInitializer.getInitBoard();
+        initBoard.forEach((key, value) -> pieceDao.savePiece(chessGameId, key, value));
     }
 
     @Transactional
-    public int move(MoveRequest moveRequest) {
+    public ChessGameDto move(MoveRequest moveRequest) {
         int chessGameId = moveRequest.getId();
         Movement movement = new Movement(moveRequest.getFrom(), moveRequest.getTo());
         List<PieceDto> pieces = pieceDao.findPieces(chessGameId);
@@ -73,20 +71,16 @@ public class ChessGameService {
         return updateChessBoard(chessBoard, movement, chessGameDto);
     }
 
-    @Transactional
-    public void create(ChessGameRequest chessGameRequest) {
-        Room room = new Room(chessGameRequest.getName(), chessGameRequest.getPassword());
-        int chessGameId = chessGameDao.saveChessGame(ChessGame.start(room));
-        Map<Position, Piece> initBoard = ChessBoardInitializer.getInitBoard();
-        initBoard.forEach((key, value) -> pieceDao.savePiece(chessGameId, key, value));
-    }
-
     public List<ChessGameDto> findAll() {
         return chessGameDao.findAll();
     }
 
     public void deleteRoom(int chessGameId, String password) {
         chessGameDao.deleteByIdAndPassword(chessGameId, password);
+    }
+
+    public boolean isFinished(GameStatus status) {
+        return status.isFinished();
     }
 
     private ChessBoard createChessBoard(List<PieceDto> pieces, Color color) {
@@ -109,7 +103,7 @@ public class ChessGameService {
         }
     }
 
-    private int updateChessBoard(ChessBoard chessBoard, Movement movement, ChessGameDto chessGameDto) {
+    private ChessGameDto updateChessBoard(ChessBoard chessBoard, Movement movement, ChessGameDto chessGameDto) {
         updatePieces(chessGameDto, chessBoard, movement);
         return updateChessGame(chessBoard, chessGameDto);
     }
@@ -121,10 +115,10 @@ public class ChessGameService {
         pieceDao.savePiece(chessGameDto.getId(), movement.getTo(), board.get(movement.getTo()));
     }
 
-    private int updateChessGame(ChessBoard chessBoard, ChessGameDto chessGameDto) {
+    private ChessGameDto updateChessGame(ChessBoard chessBoard, ChessGameDto chessGameDto) {
         ChessGameDto newChessGameDto = createNewChessGameDto(chessBoard, chessGameDto);
         chessGameDao.updateChessGame(newChessGameDto);
-        return newChessGameDto.getId();
+        return newChessGameDto;
     }
 
     private ChessGameDto createNewChessGameDto(ChessBoard chessBoard, ChessGameDto chessGameDto) {
@@ -139,7 +133,6 @@ public class ChessGameService {
         return new ChessGameDto(chessGameDto.getId(), chessGameDto.getName(), status, chessBoard.getScore(Color.BLACK),
                 chessBoard.getScore(Color.WHITE), chessBoard.getCurrentColor(), winner);
     }
-
 
     private Position createPosition(String position) {
         File file = File.valueOf(position.substring(0, 1));

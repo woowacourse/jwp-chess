@@ -62,14 +62,6 @@ public class ChessApiController {
         return ResponseEntity.ok(chessService.move(roomId, moveDto));
     }
 
-    @GetMapping("/king/{roomId}")
-    public ResponseEntity<String> hasTwoKing(@PathVariable("roomId") int roomId) {
-        if (chessService.hasTwoKing(roomId)) {
-            return ResponseEntity.ok("게임 진행중");
-        }
-        return ResponseEntity.ok("게임 끝");
-    }
-
     @PostMapping("/end/{roomId}")
     public ResponseEntity<ResultDto> end(@PathVariable("roomId") int roomId) {
         chessService.endGame(roomId);

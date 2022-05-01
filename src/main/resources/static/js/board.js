@@ -101,11 +101,9 @@ const movePiece = async () => {
     chessMap = await chessMap.json();
     await showError(chessMap.message);
 
-    let gameStateMessage = await fetch('/king/' + roomId);
-    let result = await gameStateMessage.text();
-
-    if (result == "게임 끝") {
-        alert(result);
+    let isRunning = chessMap.isRunning;
+    if (isRunning == false) {
+        alert("게임 끝");
         await showResult(roomId);
     }
     return chessMap;

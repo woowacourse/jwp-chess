@@ -6,21 +6,17 @@ import chess.domain.board.ChessBoard;
 import chess.domain.board.position.Position;
 import chess.dto.request.web.SaveRequest;
 import chess.dto.response.web.GameResponse;
-import chess.exception.ClientException;
 import chess.service.ChessService;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -62,19 +58,5 @@ public class ChessApiController {
     @DeleteMapping
     public void deleteGame(HttpSession session) {
         chessService.delete(session);
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
-    public String handleClientException(ClientException exception) {
-        exception.printStackTrace();
-        return exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler
-    public String handleException(Exception exception) throws Exception {
-        exception.printStackTrace();
-        return exception.getMessage();
     }
 }

@@ -3,13 +3,8 @@ package chess.dto.request;
 import chess.domain.position.Position;
 
 public class MovePieceDto {
-    private final String from;
-    private final String to;
-
-    public MovePieceDto(String from, String to) {
-        this.from = from;
-        this.to = to;
-    }
+    private String from;
+    private String to;
 
     public String getFrom() {
         return from;
@@ -30,8 +25,8 @@ public class MovePieceDto {
     @Override
     public String toString() {
         return "MovePieceDto{" +
-            "from='" + from + '\'' +
-            ", to='" + to + '\'' +
-            '}';
+                "from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                '}';
     }
 }

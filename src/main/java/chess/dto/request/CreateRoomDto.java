@@ -1,13 +1,8 @@
 package chess.dto.request;
 
 public class CreateRoomDto {
-    private final String title;
-    private final String password;
-
-    public CreateRoomDto(String title, String password) {
-        this.title = title;
-        this.password = password;
-    }
+    private String title;
+    private String password;
 
     public String getTitle() {
         return title;

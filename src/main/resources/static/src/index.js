@@ -7,7 +7,7 @@ function createRoom() {
         password: password
     };
 
-    fetch('/chess', {
+    fetch('/api/chess', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -23,7 +23,7 @@ function createRoom() {
 function deleteRoom(roomId) {
     let password = prompt("비밀번호를 입력하세요");
 
-    fetch('/chess/' + roomId, {
+    fetch('/api/chess/' + roomId, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

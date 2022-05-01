@@ -32,7 +32,7 @@ function showStatusButton() {
 }
 
 function initBoard() {
-    fetch(path + '/restart')
+    fetch('/api' + path + '/restart')
         .then(res => res.json())
         .then(value => {
             if (value["statusCode"] === 400) {
@@ -66,13 +66,13 @@ function getStatus(scoreResponse) {
 }
 
 status.addEventListener('click', function () {
-    fetch(path + '/status')
+    fetch('/api' + path + '/status')
         .then(res => res.json())
         .then(getStatus);
 })
 
 function loadBoard() {
-    fetch(path + '/load')
+    fetch('/api' + path + '/load')
         .then(res => res.json())
         .then(value => {
             if (value["statusCode"] === 400) {
@@ -183,7 +183,7 @@ function movePiece(from, to) {
         from: from, to: to
     }
 
-    fetch(path + '/move', {
+    fetch('/api' + path + '/move', {
         method: "POST", headers: {
             "Content-Type": "application/json",
         }, body: JSON.stringify(request),

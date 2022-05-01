@@ -26,13 +26,13 @@
 ### API 정리
 
 - GET:`/` : 체스 방 리스트를 확인하고 새로운 체스 방을 만들 수 있는 페이지 출력.
-- POST:`/chess/{roomId}` : 새로운 체스 게임을 생성한다.
 - GET:`/chess/{roomId}` : 체스 게임을 할 수 있는 페이지 출력.
-- DELETE:`/chess/{roomId}` : 체스 방을 제거한다.
-- GET:`/chess/{roomId}/load` : 체스 기물 상태를 가져온다.
-- GET:`/chess/{roomId}/restart` : 체스 게임을 재시작한다.
-- GET:`/chess/{roomId}/status` : 체스 게임의 블랙, 화이트 팀의 점수를 반환한다.
-- POST:`/chess/{roomId}/move` : 체스 게임에서 시작 위치, 도착 위치를 JSON으로 전송하면 이동한다. 정상적으로 이동 시 수정된 Board를 반환한다.
+- POST:`/api/chess/{roomId}` : 새로운 체스 게임을 생성한다.
+- DELETE:`/api/chess/{roomId}` : 체스 방을 제거한다.
+- GET:`/api/chess/{roomId}/load` : 체스 기물 상태를 가져온다.
+- GET:`/api/chess/{roomId}/restart` : 체스 게임을 재시작한다.
+- GET:`/api/chess/{roomId}/status` : 체스 게임의 블랙, 화이트 팀의 점수를 반환한다.
+- POST:`/api/chess/{roomId}/move` : 체스 게임에서 시작 위치, 도착 위치를 JSON으로 전송하면 이동한다. 정상적으로 이동 시 수정된 Board를 반환한다.
 
 ---
 
@@ -75,7 +75,7 @@
 - [x] 게임을 하는 페이지에서 목록으로 이동하는 버튼이 있으면 어떨까?
     - 더 많은 가치를 만들어 내는 것이 없는지, 불편함은 없는지 등 조금 더 사용자 관점에서 생각해보도록 하자!
 - [ ] Controller에 대한 테스트도 추가해보자.
-- [ ] API는 endpoint에 prefix로 `/api`를 붙이기도 한다!
+- [x] API는 endpoint에 prefix로 `/api`를 붙이기도 한다!
 - [ ] RESTFul API에 대해 공부해보고 endpoint를 수정해보자![참고자료](https://restfulapi.net/)
     - [ ] `/chess/{roomId}/load`는 체스 보드 하나를 반환하는 API이다. RESTFul API를 공부해보고 수정해보자!
     - [ ] 자원의 상태를 "변경"하는 경우 Post보다 Put, Patch를 사용해보자.

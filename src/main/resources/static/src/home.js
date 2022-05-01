@@ -38,7 +38,7 @@ async function createRoom() {
             title: title,
             password: password,
         }),
-        success(data) {
+        success() {
             location.reload();
         },
         error(request) {
@@ -51,7 +51,7 @@ async function createRoom() {
 
 async function loadRoom(id) {
     localStorage.setItem("id", id);
-    window.open("/game")
+    window.location.href = "/game";
 }
 
 async function deleteRoom(id) {
@@ -66,7 +66,7 @@ async function deleteRoom(id) {
         data: JSON.stringify({
             password: password,
         }),
-        success(data) {
+        success() {
             location.reload();
         },
         error(request) {

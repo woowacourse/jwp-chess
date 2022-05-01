@@ -1,12 +1,13 @@
-const gameUri = window.location.href;
-
 window.onload = function () {
     getChess();
 };
 
+function goRoomList() {
+    window.location.href = "/";
+}
+
 function getChess() {
     let id = localStorage.getItem("id");
-    console.log(id)
     $.ajax({
         url: "/game/" + id,
         type: 'get',

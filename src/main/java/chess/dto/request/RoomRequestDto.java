@@ -1,13 +1,14 @@
 package chess.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class RoomRequestDto {
-    private String name;
-    private String password;
+    private final String name;
+    private final String password;
 
-    private RoomRequestDto() {
-    }
-
-    public RoomRequestDto(final String name, final String password) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public RoomRequestDto(@JsonProperty("name") final String name, @JsonProperty("password") final String password) {
         this.name = name;
         this.password = password;
     }

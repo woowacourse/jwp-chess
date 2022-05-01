@@ -12,6 +12,9 @@ public class End implements State {
 
     @Override
     public State execute(Command command, ChessBoard chessBoard) {
+        if (command.isStart()) {
+            return new White();
+        }
         if (!command.isEnd()) {
             throw new IllegalArgumentException("이미 게임이 종료되었습니다.");
         }

@@ -17,6 +17,10 @@ public class White implements State {
 
     @Override
     public State execute(Command command, ChessBoard chessBoard) {
+        if (command.isStart()) {
+            throw new IllegalArgumentException("게임이 진행중 입니다.");
+        }
+
         if (command.isMoveCommand()) {
             return move(command, chessBoard);
         }

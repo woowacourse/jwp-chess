@@ -40,12 +40,18 @@ public class ChessService {
 
     public int save(String gameName, String password) {
         int savedId = chessGameDao.save(gameName, password);
-        createChessBoard(gameName, savedId);
+        ChessGame chessGame = new ChessGame(gameName);
+        createChessBoard(chessGame, savedId);
         return savedId;
     }
 
-    private void createChessBoard(String gameName, int chessGameId) {
-        ChessGame chessGame = new ChessGame(gameName);
+    public void start(int chessGameId) {
+        ChessGame chessGame = new ChessGame();
+        createChessBoard(chessGame, chessGameId);
+        chessGameDao.update(chessGame.getState().getTurn(), chessGameId);
+    }
+
+    private void createChessBoard(ChessGame chessGame, int chessGameId) {
         chessGame.progress(Command.from("start"));
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
         pieceDao.save(chessGameDto, chessGameId);
@@ -79,11 +85,11 @@ public class ChessService {
         chessGameDao.update("end", chessGameId);
         return chessGame.getWinTeamName();
     }
-
     public List<String> findChessBoardById(int chessGameId) throws IllegalStateException {
         ChessGame chessGame = chessGameDao.findById(chessGameId);
         return chessGame.getChessBoardSymbol();
     }
+
     public boolean isEnd(int chessGameId) {
         ChessGame chessGame = chessGameDao.findById(chessGameId);
         return chessGame.isEnd();

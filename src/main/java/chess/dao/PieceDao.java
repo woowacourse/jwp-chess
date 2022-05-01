@@ -22,8 +22,15 @@ public class PieceDao {
 
     public void save(ChessGameDto chessGameDto, int chessGameId) {
         ChessBoardDto chessBoard = chessGameDto.getChessBoard();
+        deleteByChessGameId(chessGameId);
         Map<PositionDto, PieceDto> cells = chessBoard.getCells();
         saveCells(cells, chessGameId);
+    }
+
+    private void deleteByChessGameId(int chessGameId) {
+        String sql = "delete from piece where chess_game_id = ?";
+
+        jdbcTemplate.update(sql, chessGameId);
     }
 
     private void saveCells(Map<PositionDto, PieceDto> cells, int chessGameId) {

@@ -69,6 +69,17 @@ public class SpringController {
         return "chess";
     }
 
+    @GetMapping("/game/{chessGameId}/start")
+    public String start(@PathVariable int chessGameId, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            chessService.start(chessGameId);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addAttribute("error", e.getMessage());
+        }
+        model.addAttribute("chessGameId", chessGameId);
+        return "redirect:/game/" + chessGameId;
+    }
+
     @PostMapping("/game/{chessGameId}/move")
     public String move(
         @PathVariable int chessGameId,
@@ -90,11 +101,14 @@ public class SpringController {
     }
 
     @GetMapping("/game/{chessGameId}/end")
-    public String end(@PathVariable int chessGameId, Model model) {
-        String winTeamName = chessService.finish(Command.from("end"), chessGameId);
+    public String end(@PathVariable int chessGameId, Model model, RedirectAttributes redirectAttributes) {
+        try {
+            String winTeamName = chessService.finish(Command.from("end"), chessGameId);;
+            model.addAttribute("winTeam", winTeamName);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addAttribute("error", e.getMessage());
+        }
         List<PieceDto> pieceDtos = chessService.getPieces(chessGameId);
-
-        model.addAttribute("winTeam", winTeamName);
         model.addAttribute("chessGameId", chessGameId);
         model.addAttribute("pieces", pieceDtos);
 

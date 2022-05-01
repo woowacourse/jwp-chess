@@ -60,6 +60,7 @@ class ChessServiceTest {
     @Test
     @DisplayName("기물을 정상적으로 움직일 수 있어야 합니다.")
     void move() {
+        chessService.start(savedId);
         assertDoesNotThrow(() -> chessService.move("a2", "a4", savedId));
     }
 

@@ -37,7 +37,7 @@ public class ChessGameDao {
             PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
             ps.setString(1, gameName);
             ps.setString(2, password);
-            ps.setString(3, "white");
+            ps.setString(3, "ready");
             return ps;
         }, keyHolder);
         return keyHolder.getKey().intValue();

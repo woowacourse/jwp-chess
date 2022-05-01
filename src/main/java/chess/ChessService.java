@@ -128,7 +128,7 @@ public class ChessService {
 
     public List<RoomDto> findAllRooms() {
         return roomDao.findAll().stream()
-            .map(room -> new RoomDto(room.getId(), room.getTurn(), room.getName()))
+            .map(RoomDto::from)
             .collect(Collectors.toUnmodifiableList());
     }
 

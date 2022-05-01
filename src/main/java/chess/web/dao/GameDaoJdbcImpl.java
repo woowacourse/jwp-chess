@@ -13,13 +13,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GameDaoJdbcImpl implements GameDao {
 
-    private static final RowMapper<StateType> stateTypeRowMapper = (resultSet, rowNum) -> {
+    private static final RowMapper<StateType> STATE_TYPE_ROW_MAPPER = (resultSet, rowNum) -> {
         return StateType.from(
                 resultSet.getString("state")
         );
     };
 
-    private static final RowMapper<TitleDto> gameDtoRowMapper = (resultSet, rowNum) -> {
+    private static final RowMapper<TitleDto> GAME_DTO_ROW_MAPPER = (resultSet, rowNum) -> {
         return new TitleDto(
                 resultSet.getInt("id"),
                 resultSet.getString("title")
@@ -38,11 +38,11 @@ public class GameDaoJdbcImpl implements GameDao {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, title);
-            ps.setString(2, password);
-            ps.setString(3, stateType.getNotation());
-            return ps;
+            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
+            statement.setString(1, title);
+            statement.setString(2, password);
+            statement.setString(3, stateType.getNotation());
+            return statement;
         }, keyHolder);
 
         return keyHolder.getKey().intValue();
@@ -57,7 +57,7 @@ public class GameDaoJdbcImpl implements GameDao {
     @Override
     public StateType findStateById(int id) {
         final String sql = "select state from game where id = ?";
-        return jdbcTemplate.queryForObject(sql, stateTypeRowMapper, id);
+        return jdbcTemplate.queryForObject(sql, STATE_TYPE_ROW_MAPPER, id);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class GameDaoJdbcImpl implements GameDao {
     @Override
     public List<TitleDto> findAll() {
         final String sql = "select id, title from game";
-        return jdbcTemplate.query(sql, gameDtoRowMapper);
+        return jdbcTemplate.query(sql, GAME_DTO_ROW_MAPPER);
     }
 
     @Override

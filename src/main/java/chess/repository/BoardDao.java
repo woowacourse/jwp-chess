@@ -46,16 +46,6 @@ public class BoardDao {
         return new Chessboard(board);
     }
 
-    private Position findPositionById(long id) {
-        final String positionSql = "SELECT x,y FROM position WHERE id = ?";
-        return jdbcTemplate.queryForObject(positionSql, positionMapper, id);
-    }
-
-    private Piece findPieceById(long id) {
-        final String pieceSql = "SELECT type,color FROM piece WHERE id = ?";
-        return jdbcTemplate.queryForObject(pieceSql, pieceMapper, id);
-    }
-
     public void saveBoard(long gameId, Map<Position, Piece> chessboard) {
         final String sql = "INSERT INTO board(game_id,piece_id,position_id) values (" +
                 "?," +
@@ -80,6 +70,16 @@ public class BoardDao {
 
         updatePieceToBlank(gameId, fromPositionId);
         updatePiece(gameId, fromPieceId, findPosition(movingPosition.getToX(), movingPosition.getToY()));
+    }
+
+    private Position findPositionById(long id) {
+        final String positionSql = "SELECT x,y FROM position WHERE id = ?";
+        return jdbcTemplate.queryForObject(positionSql, positionMapper, id);
+    }
+
+    private Piece findPieceById(long id) {
+        final String pieceSql = "SELECT type,color FROM piece WHERE id = ?";
+        return jdbcTemplate.queryForObject(pieceSql, pieceMapper, id);
     }
 
     private long findPosition(int x, int y) {

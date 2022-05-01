@@ -26,6 +26,18 @@ public class ChessGameRepository {
         return gameDao.isDuplicateName(name);
     }
 
+    public Map<Long, String> findGameList() {
+        return gameDao.findGameList();
+    }
+
+    public String findPasswordById(long gameId) {
+        return gameDao.findPasswordById(gameId);
+    }
+
+    public void delete(long gameId) {
+        gameDao.delete(gameId);
+    }
+
     public void saveNewGame(String name, String password, CurrentStatusDto currentStatus) {
         long gameId = gameDao.saveGame(name, password);
         currentStatusDao.save(gameId, currentStatus);
@@ -49,15 +61,4 @@ public class ChessGameRepository {
         currentStatusDao.saveEnd(gameId, state);
     }
 
-    public Map<Long, String> findGameList() {
-        return gameDao.findGameList();
-    }
-
-    public String findPasswordById(long gameId) {
-        return gameDao.findPasswordById(gameId);
-    }
-
-    public void delete(long gameId) {
-        gameDao.delete(gameId);
-    }
 }

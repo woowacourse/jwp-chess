@@ -33,6 +33,17 @@ public class ChessGameService {
         repository.saveNewGame(name, password, new CurrentStatusDto(new CurrentStatus()));
     }
 
+    public Map<Long, String> findGameList() {
+        return repository.findGameList();
+    }
+
+    public void delete(long gameId, String password) {
+        validateState(gameId);
+        validatePassword(gameId, password);
+
+        repository.delete(gameId);
+    }
+
     public void start(long gameId) {
         ChessGame chessGame = findGameById(gameId);
         chessGame.start();
@@ -62,17 +73,6 @@ public class ChessGameService {
 
     private ChessGame findGameById(long gameId) {
         return repository.find(gameId);
-    }
-
-    public Map<Long, String> findGameList() {
-        return repository.findGameList();
-    }
-
-    public void delete(long gameId, String password) {
-        validateState(gameId);
-        validatePassword(gameId, password);
-
-        repository.delete(gameId);
     }
 
     private void validateState(long gameId) {

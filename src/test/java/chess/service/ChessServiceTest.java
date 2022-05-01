@@ -12,12 +12,14 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Symbol;
 import chess.domain.piece.generator.NormalPiecesGenerator;
+import chess.domain.piece.generator.PiecesGenerator;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.GameDto;
 import chess.dto.PieceDto;
 import chess.dto.RoomDto;
 import chess.dto.StatusDto;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -67,15 +69,29 @@ public class ChessServiceTest {
     @Test
     @DisplayName("승자를 불러올 수 있다")
     void selectWinner() {
+        RoomDto roomDto = new RoomDto("title", "password");
+        id = chessService.insertGame(roomDto, createTestBoard());
         String winner = chessService.selectWinner(id);
 
-        assertThat(winner).isNull();
+        assertThat(winner).isEqualTo("WHITE");
+    }
+
+    private ChessBoard createTestBoard() {
+        final Map<Position, Piece> testPieces = new HashMap<>(Map.ofEntries(
+                Map.entry(Position.of("a1"), Piece.of(Color.WHITE, Symbol.KING)),
+                Map.entry(Position.of("b3"), Piece.of(Color.WHITE, Symbol.PAWN)),
+                Map.entry(Position.of("c4"), Piece.of(Color.WHITE, Symbol.PAWN)),
+                Map.entry(Position.of("a7"), Piece.of(Color.BLACK, Symbol.PAWN)),
+                Map.entry(Position.of("c5"), Piece.of(Color.BLACK, Symbol.PAWN))
+        ));
+        PiecesGenerator.fillEmptyPiece(testPieces);
+        return new ChessBoard(() -> testPieces);
     }
 
     @Test
     @DisplayName("보드를 업데이트할 수 있다.")
     void updateBoard() {
-        chessService.updateBoard(id, "a2", "a3");
+        chessService.movePiece(id, "a2", "a3");
 
         ChessBoard chessBoard = boardDao.findById(id);
         Piece piece = chessBoard.selectPiece(Position.of("a3"));
@@ -103,6 +119,7 @@ public class ChessServiceTest {
     @DisplayName("게임을 종료시킬 수 있다.")
     void endGame() {
         chessService.endGame(id);
+
         String state = gameDao.findState(id).toString();
 
         assertThat(state).isEqualTo("Finish");

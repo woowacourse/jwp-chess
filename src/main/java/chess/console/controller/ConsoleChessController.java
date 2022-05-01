@@ -56,7 +56,7 @@ public final class ConsoleChessController {
 
     public void start(final GameCommandRequest request) {
         OutputView.startGame();
-        game.init();
+        game.start();
         OutputView.printBoard(getAllPieceLetter(game));
     }
 

@@ -1,6 +1,6 @@
 package chess.model.piece;
 
-import chess.entity.PieceEntity;
+import chess.repository.dao.entity.PieceEntity;
 import chess.model.Color;
 import chess.model.piece.pawn.Pawn;
 import java.util.Arrays;

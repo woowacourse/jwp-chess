@@ -1,6 +1,6 @@
-package chess.dao;
+package chess.repository.dao;
 
-import chess.entity.GameEntity;
+import chess.repository.dao.entity.GameEntity;
 import java.util.List;
 
 public interface GameDao {

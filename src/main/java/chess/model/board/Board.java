@@ -83,7 +83,7 @@ public final class Board {
         return GameResult.from(board, calculateScore());
     }
 
-    public Map<Square, Piece> getBoard() {
+    public Map<Square, Piece> getValue() {
         return Map.copyOf(board);
     }
 }

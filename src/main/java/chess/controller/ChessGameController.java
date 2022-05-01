@@ -1,13 +1,12 @@
 package chess.controller;
 
 import chess.controller.view.BoardView;
-import chess.dto.GameRoomDto;
 import chess.dto.MoveCommandDto;
+import chess.dto.RoomDto;
 import chess.service.ChessGameService;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,9 +38,9 @@ public class ChessGameController {
     }
 
     @PostMapping(path = "/start", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public ModelAndView createGame(@ModelAttribute GameRoomDto gameRoomDto) {
-        long gameId = chessGameService.create(gameRoomDto.getTitle(),
-            gameRoomDto.getPassword());
+    public ModelAndView createGame(@ModelAttribute RoomDto roomDto) {
+        long gameId = chessGameService.create(roomDto.getTitle(),
+            roomDto.getPassword());
 
         return getModelWithGameMessage(WELCOME_MESSAGE, "redirect:/game/" + gameId);
     }
@@ -66,7 +65,7 @@ public class ChessGameController {
         return "redirect:/game/" + gameId;
     }
 
-    @DeleteMapping("/")
+    @GetMapping("/")
     public String exitGame() {
         return "redirect:/";
     }

@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.GameRoomDto;
+import chess.dto.RoomDto;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,8 +32,8 @@ public class GameWaitingRoomController {
     }
 
     @DeleteMapping("/")
-    public String deleteGame(@ModelAttribute GameRoomDto gameRoomDto) {
-        chessGameService.cleanGameByIdAndPassword(gameRoomDto.getId(), gameRoomDto.getPassword());
+    public String deleteGame(@ModelAttribute RoomDto roomDto) {
+        chessGameService.cleanGameByIdAndPassword(roomDto.getId(), roomDto.getPassword());
         return "redirect:/";
     }
 

@@ -22,8 +22,10 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ChessService {
 
     private static final String NO_ROOM_MESSAGE = "해당 ID와 일치하는 Room이 존재하지 않습니다.";
@@ -62,6 +64,7 @@ public class ChessService {
         squareDao.removeAll(roomId);
     }
 
+    @Transactional(readOnly = true)
     public BoardDto load(long roomId) {
         RoomEntity room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
@@ -95,20 +98,7 @@ public class ChessService {
                 .collect(Collectors.toList());
     }
 
-    private ChessBoard loadChessBoard(long roomId) {
-        List<SquareEntity> squares = squareDao.findByRoomId(roomId);
-        if (squares.isEmpty()) {
-            throw new NoSuchElementException(NO_SQUARES_MESSAGE);
-        }
-        Map<Position, Piece> board = new HashMap<>();
-        for (SquareEntity square : squares) {
-            Position position = Position.of(square.getPosition());
-            Piece piece = PieceFactory.convertToPiece(square.getPiece());
-            board.put(position, piece);
-        }
-        return new ChessBoard(() -> board);
-    }
-
+    @Transactional(readOnly = true)
     public Status status(long roomId) {
         RoomEntity room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
@@ -123,6 +113,7 @@ public class ChessService {
         return roomDao.save(newRoom);
     }
 
+    @Transactional(readOnly = true)
     public List<RoomDto> list() {
         List<RoomEntity> rooms = roomDao.findAll();
         return rooms.stream()
@@ -141,5 +132,19 @@ public class ChessService {
             return;
         }
         throw new IllegalStateException(NOT_END_GAME_MESSAGE);
+    }
+
+    private ChessBoard loadChessBoard(long roomId) {
+        List<SquareEntity> squares = squareDao.findByRoomId(roomId);
+        if (squares.isEmpty()) {
+            throw new NoSuchElementException(NO_SQUARES_MESSAGE);
+        }
+        Map<Position, Piece> board = new HashMap<>();
+        for (SquareEntity square : squares) {
+            Position position = Position.of(square.getPosition());
+            Piece piece = PieceFactory.convertToPiece(square.getPiece());
+            board.put(position, piece);
+        }
+        return new ChessBoard(() -> board);
     }
 }

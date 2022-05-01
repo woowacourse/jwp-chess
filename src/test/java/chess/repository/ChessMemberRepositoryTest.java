@@ -38,14 +38,17 @@ class ChessMemberRepositoryTest {
         final Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
         final Room room = chessRoomRepository.save(new Room("초보만", board.getId()), "password");
         this.roomId = room.getId();
-        chessMemberRepository.save("eden", roomId);
     }
 
     @Test
-    void getAllByBoardId() {
+    void findMembersByRoomId() {
+        //given
         chessMemberRepository.save("corinne", roomId);
+        chessMemberRepository.save("eden", roomId);
+        //when
         final List<Member> members = chessMemberRepository.findMembersByRoomId(roomId);
 
+        //then
         assertAll(
                 () -> assertThat(members.get(0).getName()).isEqualTo("eden"),
                 () -> assertThat(members.get(1).getName()).isEqualTo("corinne")
@@ -55,17 +58,23 @@ class ChessMemberRepositoryTest {
 
     @Test
     void save() {
+        //when
         final Member member = chessMemberRepository.save("corinne", roomId);
 
+        //then
         assertThat(member.getName()).isEqualTo("corinne");
     }
 
     @Test
     void saveAll() {
-        List<Member> members = List.of(new Member("neo"));
+        //given
+        List<Member> members = List.of(new Member("neo"), new Member("corinne"));
+
+        //when
         chessMemberRepository.saveAll(members, roomId);
         final List<Member> savedMembers = chessMemberRepository.findMembersByRoomId(roomId);
 
+        //then
         assertThat(savedMembers.size()).isEqualTo(2);
     }
 }

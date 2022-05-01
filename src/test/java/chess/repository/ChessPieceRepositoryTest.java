@@ -29,8 +29,8 @@ class ChessPieceRepositoryTest {
     private final ChessSquareRepository chessSquareRepository;
 
     private final ChessBoardRepository chessBoardRepository;
-    private int boardId;
-    private int squareId;
+    private Board board;
+    private Square square;
 
     @Autowired
     ChessPieceRepositoryTest(JdbcTemplate jdbcTemplate) {
@@ -41,28 +41,30 @@ class ChessPieceRepositoryTest {
 
     @BeforeEach
     void setup() {
-        final Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
-        this.boardId = board.getId();
-        final Square square = chessSquareRepository.save(new Square(File.A, Rank.TWO, board.getId()));
-        this.squareId = square.getId();
-        chessPieceRepository.save(new Pawn(Team.WHITE), squareId);
+        board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
+        square = chessSquareRepository.save(new Square(File.A, Rank.TWO, board.getId()));
     }
 
     @Test
     void saveTest() {
-        final Piece piece = chessPieceRepository.save(new Pawn(Team.WHITE), squareId);
+        //when
+        final Piece piece = chessPieceRepository.save(new Pawn(Team.WHITE), square.getId());
 
+        //then
         assertAll(
                 () -> assertThat(piece.name()).isEqualTo("p"),
-                () -> assertThat(piece.team()).isEqualTo(Team.WHITE),
-                () -> assertThat(piece.getSquareId()).isEqualTo(squareId)
+                () -> assertThat(piece.team()).isEqualTo(Team.WHITE)
         );
     }
 
     @Test
     void findBySquareId() {
-        Piece piece = chessPieceRepository.findBySquareId(squareId);
+        //given
+        chessPieceRepository.save(new Pawn(Team.WHITE), square.getId());
+        //when
+        Piece piece = chessPieceRepository.findBySquareId(square.getId());
 
+        //then
         assertAll(
                 () -> assertThat(piece.name()).isEqualTo("p"),
                 () -> assertThat(piece.team()).isEqualTo(Team.WHITE)
@@ -71,24 +73,37 @@ class ChessPieceRepositoryTest {
 
     @Test
     void deletePieceBySquareId() {
-        int affectedRows = chessPieceRepository.deletePieceBySquareId(squareId);
+        //given
+        chessPieceRepository.save(new Pawn(Team.WHITE), square.getId());
+        //when
+        int affectedRows = chessPieceRepository.deletePieceBySquareId(square.getId());
 
+        //then
         assertThat(affectedRows).isEqualTo(1);
     }
 
     @Test
     void updatePieceSquareId() {
-        final int originSquareId = squareId;
-        final int newSquareId = chessSquareRepository.save(new Square(File.A, Rank.FOUR, boardId)).getId();
-        int affectedRow = chessPieceRepository.updatePieceSquareId(originSquareId, newSquareId);
+        //given
+        chessPieceRepository.save(new Pawn(Team.WHITE), square.getId());
+        final int originalSquareId = square.getId();
+        final int newSquareId = chessSquareRepository.save(new Square(File.A, Rank.FOUR, board.getId())).getId();
 
+        //when
+        int affectedRow = chessPieceRepository.updatePieceSquareId(originalSquareId, newSquareId);
+
+        //then
         assertThat(affectedRow).isEqualTo(1);
     }
 
     @Test
     void getAllPiecesByBoardId() {
-        List<Piece> pieces = chessPieceRepository.getAllPiecesByBoardId(boardId);
+        //given
+        chessPieceRepository.save(new Pawn(Team.WHITE), square.getId());
+        //when
+        List<Piece> pieces = chessPieceRepository.getAllPiecesByBoardId(board.getId());
 
+        //then
         assertThat(pieces.size()).isEqualTo(1);
     }
 }

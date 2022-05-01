@@ -1,7 +1,6 @@
 let from = "";
 let turn = "";
 let isStart = false;
-let roomName = "";
 let id;
 
 showIndexPageElement();
@@ -34,17 +33,28 @@ function hideElement(elementId) {
 
 async function create() {
     let isCreated = false;
-
+    const roomName = document.getElementById("roomName").value;
+    const roomPassword = document.getElementById("roomPassword").value;
     hideElement("rooms")
-    if (roomName === "") {
-        roomName = document.getElementById("roomName").value;
+
+    if (roomName.length < 1 || roomName.length > 20) {
+        clearLoginForm();
+        alert("방 제목은 1 ~ 20자만 가능합니다.")
+        return;
     }
+
+    if (roomPassword.length < 10 || roomPassword.length > 20) {
+        clearLoginForm();
+        alert("비밀번호는 10 ~ 20자만 가능합니다.")
+        return;
+    }
+
     await fetch("/rooms", {
         method: "POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         },
-        body: "name=" + roomName + "&password=" + document.getElementById("roomPassword").value
+        body: "name=" + roomName + "&password=" + roomPassword
     })
         .then(res => res.json())
         .then(data => {
@@ -57,7 +67,6 @@ async function create() {
             isCreated = true;
         })
         .then(() => clearLoginForm())
-        .then(() => roomName = "")
 
     if (isCreated !== true) {
         return;
@@ -97,7 +106,6 @@ async function newGame() {
     let turnState = document.getElementById("turn-status");
     status.innerText = "";
     turnState.innerText = "";
-    roomName = "";
 
     hideElement("whole-board");
     showElementBlock("index");
@@ -337,6 +345,7 @@ async function deleteRoom(self) {
         const errorMessage = await response.json();
         await tempAlert(errorMessage.message, 1000);
         clearLoginForm();
+        // return;
     }
     await tempAlert("삭제되었습니다!!", 1000);
     await rooms();

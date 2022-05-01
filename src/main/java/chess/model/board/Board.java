@@ -2,6 +2,7 @@ package chess.model.board;
 
 import static chess.model.Team.NONE;
 
+import chess.exception.ClientException;
 import chess.model.Team;
 import chess.model.piece.Blank;
 import chess.model.piece.Piece;
@@ -32,7 +33,7 @@ public class Board {
 
     public void checkSameTeam(Team team, Position source) {
         if (pieceOn(source).isOpponentTeam(team)) {
-            throw new IllegalArgumentException("[ERROR] 상대편 기물은 움직일 수 없습니다.");
+            throw new ClientException("상대편 기물은 움직일 수 없습니다.");
         }
     }
 
@@ -45,13 +46,13 @@ public class Board {
 
     private void checkPieceIn(final Position source) {
         if (pieceOn(source).isSameTeam(NONE)) {
-            throw new IllegalArgumentException("[ERROR] 선택한 위치에 기물이 없습니다.");
+            throw new ClientException("선택한 위치에 기물이 없습니다.");
         }
     }
 
     private void checkPieceCanMove(final Position source, final Position target) {
         if (!pieceOn(source).canMove(source, target, board)) {
-            throw new IllegalArgumentException("[ERROR] 선택한 기물을 이동 시킬수 없는 위치가 입력 됬습니다.");
+            throw new ClientException("선택한 기물을 이동 시킬수 없는 위치가 입력 됬습니다.");
         }
     }
 

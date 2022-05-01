@@ -1,5 +1,6 @@
 package chess.model.state.running;
 
+import chess.exception.ClientException;
 import chess.model.Team;
 import chess.model.board.Board;
 import chess.model.piece.Piece;
@@ -22,11 +23,11 @@ public abstract class Running implements State {
 
     @Override
     public Map<String, Double> getScores() {
-        throw new IllegalArgumentException("[ERROR] 아직 게임이 종료되지 않아 점수를 확인 할 수 없습니다.");
+        throw new ClientException("아직 게임이 종료되지 않아 점수를 확인 할 수 없습니다.");
     }
 
     @Override
     public String getWinner() {
-        throw new IllegalArgumentException("[ERROR] 아직 게임이 종료되지 않아 승자를 확인 할 수 없습니다.");
+        throw new ClientException("아직 게임이 종료되지 않아 승자를 확인 할 수 없습니다.");
     }
 }

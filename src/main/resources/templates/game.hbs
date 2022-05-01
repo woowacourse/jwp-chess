@@ -88,11 +88,12 @@
     <h1> <span> 차례 : </span> {{state}} </h1>
     <h1>{{#if winner}} {{winner}} <span> 승리 </span> {{/if}}</h1>
 
-    <form method="get" action="/">
+    <a href="/">
         <button type="submit"> 메인화면으로 </button>
-    </form>
+    </a>
 
     <form method="post" action="/game/{{id}}">
+        <input type="hidden" name="_method" value="PUT"/>
         <button type="submit"> 다시시작 </button>
     </form>
 
@@ -101,7 +102,7 @@
         <input type="submit" value="종료">
     </form>
 
-    <form method="post" action="/game/{{id}}">
+    <form method="post" action="/game/board/{{id}}">
         <input type="hidden" name="_method" value="PUT"/>
         <input type="text" name="from">
         <input type="text" name="to">

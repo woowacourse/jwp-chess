@@ -8,18 +8,16 @@ import chess.dto.MoveDto;
 import chess.dto.RoomDto;
 import chess.dto.StatusDto;
 import chess.service.ChessService;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class WebController {
@@ -31,44 +29,42 @@ public class WebController {
     }
 
     @GetMapping("/")
-    public ModelAndView selectGame() {
-        Map<String, Object> model = new HashMap<>();
+    public String selectGame(Model model) {
         List<GameDto> games = chessService.findGame();
-        model.put("game", games);
-        return new ModelAndView("index", model);
+        model.addAttribute("game", games);
+        return "index";
     }
 
-    @PutMapping("/game")
-    public ModelAndView insertGame(RoomDto roomDto) {
+    @PostMapping("/game")
+    public String insertGame(RoomDto roomDto) {
         chessService.insertGame(roomDto, new ChessBoard(new NormalPiecesGenerator()));
-        return new ModelAndView("redirect:/");
+        return "redirect:/";
     }
 
     @GetMapping("/game/{gameId}")
-    public ModelAndView startGame(@PathVariable int gameId) {
+    public String startGame(@PathVariable int gameId, Model model) {
         BoardDto boardDto = chessService.selectBoard(gameId);
         String winner = chessService.selectWinner(gameId);
         String state = chessService.selectState(gameId);
 
-        Map<String, Object> model = new HashMap<>();
-        model.put("board", boardDto);
-        model.put("id", gameId);
-        model.put("winner", winner);
-        model.put("state", state);
+        model.addAttribute("board", boardDto);
+        model.addAttribute("id", gameId);
+        model.addAttribute("winner", winner);
+        model.addAttribute("state", state);
 
-        return new ModelAndView("game", model);
+        return "game";
+    }
+
+    @PutMapping("/game/board/{gameId}")
+    public String movePiece(@PathVariable int gameId, MoveDto moveDto) {
+        chessService.movePiece(gameId, moveDto.getFrom(), moveDto.getTo());
+        return "redirect:/game/" + gameId;
     }
 
     @PutMapping("/game/{gameId}")
-    public ModelAndView updateBoard(@PathVariable int gameId, MoveDto moveDto) {
-        chessService.updateBoard(gameId, moveDto.getFrom(), moveDto.getTo());
-        return new ModelAndView("redirect:/game/" + gameId);
-    }
-
-    @PostMapping("/game/{gameId}")
-    public ModelAndView restartGame(@PathVariable int gameId) {
+    public String restartGame(@PathVariable int gameId) {
         chessService.restartGame(gameId);
-        return new ModelAndView("redirect:/game/" + gameId);
+        return "redirect:/game/" + gameId;
     }
 
     @GetMapping("/game/status/{gameId}")
@@ -79,14 +75,14 @@ public class WebController {
     }
 
     @PutMapping("/game/end/{gameId}")
-    public ModelAndView endGame(@PathVariable int gameId) {
+    public String endGame(@PathVariable int gameId) {
         chessService.endGame(gameId);
-        return new ModelAndView("redirect:/");
+        return "redirect:/";
     }
 
     @DeleteMapping("/game/{gameId}")
-    public ModelAndView deleteGame(@PathVariable int gameId, String password) {
+    public String deleteGame(@PathVariable int gameId, String password) {
         chessService.deleteGame(gameId, password);
-        return new ModelAndView("redirect:/");
+        return "redirect:/";
     }
 }

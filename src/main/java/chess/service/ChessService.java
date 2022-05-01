@@ -68,9 +68,6 @@ public class ChessService {
     }
 
     public String selectWinner(int gameId) {
-        if (gameDao.findGameCount() == 0) {
-            return null;
-        }
         State state = gameDao.findState(gameId);
         ChessBoard chessBoard = boardDao.findById(gameId);
 
@@ -93,7 +90,7 @@ public class ChessService {
     }
 
     @Transactional
-    public void updateBoard(int gameId, String from, String to) {
+    public void movePiece(int gameId, String from, String to) {
         ChessGame chessGame = new ChessGame(gameDao.findState(gameId), boardDao.findById(gameId));
         chessGame.playGameByCommand(GameCommand.of("move", from, to));
         chessGame.isEndGameByPiece();

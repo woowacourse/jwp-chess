@@ -43,39 +43,42 @@ public class ChessApiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RoomResponseDto> loadRoom(@PathVariable long id) {
+    public ResponseEntity<RoomResponseDto> loadRoom(@PathVariable Long id) {
         final RoomResponseDto room = chessService.loadRoom(id);
         return ResponseEntity.ok(room);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteRoom(@PathVariable final long id,
+    public ResponseEntity<Void> deleteRoom(@PathVariable final Long id,
                                         @RequestBody final RoomDeleteRequestDto roomDeleteRequestDto) {
         chessService.deleteRoom(id, roomDeleteRequestDto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent()
+                .build();
     }
 
     @GetMapping("/{id}/pieces")
-    public ResponseEntity<List<PieceResponseDto>> loadAllPiece(@PathVariable long id) {
+    public ResponseEntity<List<PieceResponseDto>> loadAllPiece(@PathVariable Long id) {
         final List<PieceResponseDto> pieces = chessService.loadAllPiece(id);
         return ResponseEntity.ok(pieces);
     }
 
     @PatchMapping("/{id}/pieces")
-    public ResponseEntity<?> movePiece(@PathVariable long id, @RequestBody final MoveRequestDto moveRequestDto) {
+    public ResponseEntity<Void> movePiece(@PathVariable Long id, @RequestBody final MoveRequestDto moveRequestDto) {
         chessService.movePiece(id, moveRequestDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .build();
     }
 
     @GetMapping("/{id}/scores")
-    public ResponseEntity<ScoreResponseDto> loadScore(@PathVariable final long id) {
+    public ResponseEntity<ScoreResponseDto> loadScore(@PathVariable final Long id) {
         final ScoreResponseDto scoreResponseDto = chessService.loadScore(id);
         return ResponseEntity.ok(scoreResponseDto);
     }
 
     @PatchMapping("/{id}/end")
-    public ResponseEntity<?> endGame(@PathVariable final long id) {
+    public ResponseEntity<Void> endGame(@PathVariable final long id) {
         chessService.end(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok()
+                .build();
     }
 }

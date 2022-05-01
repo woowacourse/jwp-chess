@@ -18,21 +18,14 @@ public class BoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void update(int gameId, Map<Position, Piece> board) {
-        deletePiecesByGameId(gameId);
-        final String sql = "insert into piece (game_no, type, white, position) values (?, ?, ?, ?)";
-
+    public void saveAll(int gameId, Map<Position, Piece> board) {
         for (Entry<Position, Piece> entry : board.entrySet()) {
-            savePiece(gameId, sql, entry);
+            savePiece(gameId, entry);
         }
     }
 
-    public void deletePiecesByGameId(int gameId) {
-        final String sql = "delete from piece where game_no = ?";
-        jdbcTemplate.update(sql, gameId);
-    }
-
-    private void savePiece(int gameId, String sql, Entry<Position, Piece> entry) {
+    private void savePiece(int gameId, Entry<Position, Piece> entry) {
+        final String sql = "insert into piece (game_no, type, white, position) values (?, ?, ?, ?)";
         Piece piece = entry.getValue();
         String type = piece.getType().toString();
         boolean isWhite = piece.isCamp(Camp.WHITE);
@@ -41,13 +34,19 @@ public class BoardDao {
         jdbcTemplate.update(sql, gameId, type, isWhite, position);
     }
 
-    public List<PieceDto> loadById(int id) {
+    public List<PieceDto> findAllByGameId(int gameId) {
         final String sql = "select type, white, position from piece where game_no = ?";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceDto.of(
                 resultSet.getString("type"),
                 resultSet.getBoolean("white"),
                 resultSet.getString("position")
-        ), id);
+        ), gameId);
+    }
+
+    public void deleteAllByGameId(int gameId) {
+        final String sql = "delete from piece where game_no = ?";
+
+        jdbcTemplate.update(sql, gameId);
     }
 }

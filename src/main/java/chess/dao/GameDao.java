@@ -19,22 +19,17 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int create(ChessGame chessGame) {
+    public int save(ChessGame chessGame) {
         final String sql = "insert into game (title, password, white_turn) values (?, ?, true)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"no"});
             ps.setString(1, chessGame.getTitle());
             ps.setString(2, chessGame.getPassword());
             return ps;
         }, keyHolder);
-
         return Objects.requireNonNull(keyHolder.getKey()).intValue();
-    }
-
-    public void update(int id) {
-        final String sql = "update game set white_turn = ? where no = ?";
-        jdbcTemplate.update(sql, Camp.BLACK.isNotTurn(), id);
     }
 
     public List<GameDto> findAll() {
@@ -46,11 +41,6 @@ public class GameDao {
         ));
     }
 
-    public void deleteById(int id) {
-        final String sql = "delete from game where no = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
     public ChessGame findById(int id) {
         final String sql = "select title, password from game where no = ?";
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new ChessGame(
@@ -59,9 +49,21 @@ public class GameDao {
         ), id);
     }
 
+    public void updateTurnById(int id) {
+        final String sql = "update game set white_turn = ? where no = ?";
+
+        jdbcTemplate.update(sql, Camp.BLACK.isNotTurn(), id);
+    }
+
+    public void deleteById(int id) {
+        final String sql = "delete from game where no = ?";
+
+        jdbcTemplate.update(sql, id);
+    }
+
     public boolean isWhiteTurn(int id) {
         final String sql = "select white_turn from game where no = ?";
 
-        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 }

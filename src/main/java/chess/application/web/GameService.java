@@ -67,12 +67,13 @@ public class GameService {
     public void create(String title, String password) {
         ChessGame chessGame = new ChessGame(title, password);
         chessGame.start();
-        int gameId = gameDao.create(chessGame);
-        boardDao.update(gameId, chessGame.getBoardSquares());
+        int gameId = gameDao.save(chessGame);
+        boardDao.deleteAllByGameId(gameId);
+        boardDao.saveAll(gameId, chessGame.getBoardSquares());
     }
 
     public Map<String, Object> findBoardByGameId(int id) {
-        List<PieceDto> rawBoard = boardDao.loadById(id);
+        List<PieceDto> rawBoard = boardDao.findAllByGameId(id);
         Map<Position, Piece> board = rawBoard.stream()
                 .collect(Collectors.toMap(
                         pieceDto -> parsePosition(pieceDto.getPosition()),
@@ -123,8 +124,9 @@ public class GameService {
     }
 
     public void updateGame(int id) {
-        gameDao.update(id);
-        boardDao.update(id, chessGame.getBoardSquares());
+        gameDao.updateTurnById(id);
+        boardDao.deleteAllByGameId(id);
+        boardDao.saveAll(id, chessGame.getBoardSquares());
     }
 
     public Map<String, Object> end() {
@@ -158,7 +160,7 @@ public class GameService {
         if (savedChessGame.incorrectPassword(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        boardDao.deletePiecesByGameId(id);
+        boardDao.deleteAllByGameId(id);
         gameDao.deleteById(id);
     }
 }

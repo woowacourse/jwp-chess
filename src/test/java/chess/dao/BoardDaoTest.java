@@ -27,8 +27,8 @@ class BoardDaoTest {
 
     @BeforeEach
     void insertGameData() {
-        id = gameDao.create(new ChessGame("test", "test"));
-        gameDao.update(id);
+        id = gameDao.save(new ChessGame("test", "test"));
+        gameDao.updateTurnById(id);
     }
 
     @DisplayName("DB에 보드를 저장한다.")
@@ -36,7 +36,7 @@ class BoardDaoTest {
     void saveTo() {
         Map<Position, Piece> squares = BoardInitializer.get().getSquares();
 
-        assertThatNoException().isThrownBy(() -> boardDao.update(id, squares));
+        assertThatNoException().isThrownBy(() -> boardDao.saveAll(id, squares));
     }
 
     @DisplayName("DB에 초기 보드를 저장한 후 load하면 a1 위치에 흰색 룩이 있다.")
@@ -44,8 +44,8 @@ class BoardDaoTest {
     void load_a1_white_rook() {
         Map<Position, Piece> squares = BoardInitializer.get().getSquares();
 
-        boardDao.update(id, squares);
-        List<PieceDto> board = boardDao.loadById(id);
+        boardDao.saveAll(id, squares);
+        List<PieceDto> board = boardDao.findAllByGameId(id);
 
         PieceDto pieceAtA1 = board.stream()
                 .filter(pieceDto -> pieceDto.getPosition().equals("a1"))

@@ -26,7 +26,7 @@ class GameDaoTest {
     @BeforeEach
     void before() {
         chessGame = new ChessGame("test", "test");
-        id = gameDao.create(chessGame);
+        id = gameDao.save(chessGame);
     }
 
     @AfterEach
@@ -52,7 +52,7 @@ class GameDaoTest {
     @DisplayName("기존에 저장된 game이 있어도 data를 덮어쓸 수 있다.")
     @Test
     void save_twice() {
-        assertThatNoException().isThrownBy(() -> gameDao.update(id));
+        assertThatNoException().isThrownBy(() -> gameDao.updateTurnById(id));
     }
 
     @DisplayName("흑색 진영의 차례일 때 게임을 저장하고 불러오면 백색 진영의 차례가 아니다.")
@@ -60,7 +60,7 @@ class GameDaoTest {
     void isWhiteTurn_false() {
         Camp.initializeTurn();
         Camp.switchTurn();
-        gameDao.update(id);
+        gameDao.updateTurnById(id);
 
         assertThat(gameDao.isWhiteTurn(id)).isFalse();
     }
@@ -68,7 +68,7 @@ class GameDaoTest {
     @DisplayName("id에 해당하는 게임을 삭제한다.")
     @Test
     void deleteById() {
-        int id = gameDao.create(new ChessGame("test", "test"));
+        int id = gameDao.save(new ChessGame("test", "test"));
         gameDao.deleteById(id);
 
         assertThatThrownBy(() -> gameDao.findById(id))

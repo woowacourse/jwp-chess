@@ -373,7 +373,7 @@
                 let sourcePosition = document.getElementById("sourcePosition").value;
                 let targetPosition = document.getElementById("targetPosition").value;
                 fetch('/game/{{roomId}}', {
-                    method: "put",
+                    method: "PATCH",
                     body: JSON.stringify({
                         source: sourcePosition,
                         target: targetPosition

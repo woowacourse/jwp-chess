@@ -38,10 +38,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({DataAccessException.class})
     public ResponseEntity<ErrorResponseDto> handleSqlException(final DataAccessException e,
                                                                final HttpServletRequest request) {
-        return log(e, request);
+        log(e, request);
+        return ResponseEntity.internalServerError().body(new ErrorResponseDto("요청을 다시 확인해주세요."));
     }
 
-    private ResponseEntity<ErrorResponseDto> log(final Exception e, final HttpServletRequest request) {
+    private void log(final Exception e, final HttpServletRequest request) {
         String messageFormat = "[{}] {} {}";
         logger.error(
                 messageFormat,
@@ -50,12 +51,12 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(),
                 e
         );
-        return ResponseEntity.badRequest().body(new ErrorResponseDto("요청을 다시 확인해주세요."));
     }
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorResponseDto> handleUnexpectedException(final Exception e,
                                                                       final HttpServletRequest request) {
-        return log(e, request);
+        log(e, request);
+        return ResponseEntity.internalServerError().body(new ErrorResponseDto("요청을 처리할 수 없습니다."));
     }
 }

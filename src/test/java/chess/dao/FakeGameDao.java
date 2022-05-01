@@ -42,11 +42,6 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public Long findGameCount() {
-        return (long) game.size();
-    }
-
-    @Override
     public int update(String state, int id) {
         GameDto value = game.get(id);
         GameDto gameDto = new GameDto(value.getId(), value.getTitle(), state, value.getPassword());

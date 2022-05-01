@@ -57,14 +57,6 @@ class GameDaoTest {
     }
 
     @Test
-    @DisplayName("게임의 갯수를 조회할 수 있다.")
-    void findGameCount() {
-        Long gameCount = gameDao.findGameCount();
-
-        assertThat(gameCount).isEqualTo(1);
-    }
-
-    @Test
     @DisplayName("게임의 상태를 업데이트할 수 있다.")
     void update() {
         gameDao.update("BlackTurn", gameId);

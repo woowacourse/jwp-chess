@@ -14,8 +14,6 @@ public interface GameDao {
 
     String findPassword(int id);
 
-    Long findGameCount();
-
     int update(String state, int id);
 
     int delete(int id);

@@ -56,12 +56,6 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public Long findGameCount() {
-        String sql = "select count(*) from game";
-        return jdbcTemplate.queryForObject(sql, Long.class);
-    }
-
-    @Override
     public int update(String state, int id) {
         String sql = "update game set state=? where id=?";
         jdbcTemplate.update(sql, state, id);

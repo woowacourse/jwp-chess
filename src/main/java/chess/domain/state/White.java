@@ -55,7 +55,7 @@ public class White implements State {
 
         Team team = chessBoard.findTeam(source);
 
-        if (!(team == WHITE)) {
+        if (team != WHITE) {
             throw new IllegalArgumentException("검은팀 말은 흰색 팀이 옮길 수 없습니다.");
         }
     }

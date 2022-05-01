@@ -50,8 +50,8 @@ public class ChessSpringController {
     }
 
     @PatchMapping("/board/move")
-    public ResponseEntity<Boolean> move(@RequestParam(name = "id") Long id, @RequestBody String request) {
-        List<String> command = Arrays.asList(request.split(" "));
+    public ResponseEntity<Boolean> move(@RequestParam(name = "id") Long id, @RequestBody String moveRequest) {
+        List<String> command = Arrays.asList(moveRequest.split(" "));
         chessGameService.move(id, command.get(0), command.get(1));
         final boolean gameEnd = chessGameService.isGameEnd(id);
         return ResponseEntity.ok().body(gameEnd);
@@ -91,8 +91,8 @@ public class ChessSpringController {
     }
 
     @DeleteMapping("/board")
-    public ResponseEntity<String> delete(@RequestParam(name = "id") Long id, @RequestBody String request) {
-        chessGameService.delete(id, request);
+    public ResponseEntity<String> delete(@RequestParam(name = "id") Long id, @RequestBody String password) {
+        chessGameService.delete(id, password);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -1,4 +1,4 @@
-package chess.database.dao.spring;
+package chess.database.dao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +15,11 @@ import chess.database.dto.PointDto;
 import chess.database.dto.RouteDto;
 
 @Repository
-public class SpringBoardDao implements BoardDao {
+public class JdbcBoardDao implements BoardDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public SpringBoardDao(JdbcTemplate jdbcTemplate) {
+    public JdbcBoardDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

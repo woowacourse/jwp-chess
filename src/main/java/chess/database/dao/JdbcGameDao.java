@@ -1,4 +1,4 @@
-package chess.database.dao.spring;
+package chess.database.dao;
 
 import java.util.Map;
 import java.util.Optional;
@@ -16,12 +16,12 @@ import chess.database.dto.GameStateDto;
 import chess.database.dto.RoomDto;
 
 @Repository
-public class SpringGameDao implements GameDao {
+public class JdbcGameDao implements GameDao {
 
     private final SimpleJdbcInsert jdbcInsert;
     private final JdbcTemplate jdbcTemplate;
 
-    public SpringGameDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
+    public JdbcGameDao(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.jdbcInsert = new SimpleJdbcInsert(dataSource)
             .withTableName("game")
             .usingGeneratedKeyColumns("id");

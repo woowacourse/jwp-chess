@@ -17,14 +17,14 @@ import chess.dto.PathResponse;
 import chess.service.GameService;
 
 @RestController
-public class SpringGameChessController {
+public class ChessGameController {
 
     private static final String MAIN_PATH_FORMAT = "/main/%d";
     private static final String ROOT_PATH = "/";
 
     private final GameService gameService;
 
-    public SpringGameChessController(GameService gameService) {
+    public ChessGameController(GameService gameService) {
         this.gameService = gameService;
     }
 

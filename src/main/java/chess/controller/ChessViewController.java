@@ -11,7 +11,7 @@ import chess.dto.GameStateResponse;
 import chess.service.GameService;
 
 @Controller
-public class SpringViewChessController {
+public class ChessViewController {
 
     public static final String MAIN_PATH_FORMAT = "/main/%d";
     public static final String ROOT_PATH = "/";
@@ -19,7 +19,7 @@ public class SpringViewChessController {
     private final GameService gameService;
 
     @Autowired
-    public SpringViewChessController(GameService gameService) {
+    public ChessViewController(GameService gameService) {
         this.gameService = gameService;
     }
 

@@ -18,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
-import chess.database.dao.spring.SpringGameDao;
 import chess.database.dto.GameStateDto;
 import chess.database.dto.RoomDto;
 import chess.domain.game.GameState;
@@ -44,7 +43,7 @@ class GameDaoTest {
 
     @BeforeEach
     void setUp() {
-        dao = new SpringGameDao(dataSource, jdbcTemplate);
+        dao = new JdbcGameDao(dataSource, jdbcTemplate);
         GameState state = new Ready();
         testId = dao.saveGame(GameStateDto.of(state), TEST_ROOM_NAME, "password");
     }

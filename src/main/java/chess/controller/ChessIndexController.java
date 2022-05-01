@@ -15,11 +15,11 @@ import chess.dto.RoomRequest;
 import chess.service.GameService;
 
 @RestController
-public class SpringIndexChessController {
+public class ChessIndexController {
 
     private final GameService gameService;
 
-    public SpringIndexChessController(GameService gameService) {
+    public ChessIndexController(GameService gameService) {
         this.gameService = gameService;
     }
 
@@ -32,18 +32,18 @@ public class SpringIndexChessController {
     @PostMapping(path = "/create")
     public ResponseEntity<PathResponse> create(@RequestBody RoomRequest roomRequest) {
         final Long id = gameService.createNewGame(roomRequest);
-        return respondPath(String.format(SpringViewChessController.MAIN_PATH_FORMAT, id));
+        return respondPath(String.format(ChessViewController.MAIN_PATH_FORMAT, id));
     }
 
     @GetMapping(path = "/enter/{roomId}")
     public ResponseEntity<PathResponse> enter(@PathVariable Long roomId) {
-        return respondPath(String.format(SpringViewChessController.MAIN_PATH_FORMAT, roomId));
+        return respondPath(String.format(ChessViewController.MAIN_PATH_FORMAT, roomId));
     }
 
     @DeleteMapping(path = "/room")
     public ResponseEntity<PathResponse> delete(@RequestBody RoomRequest roomRequest) {
         gameService.deleteGame(roomRequest);
-        return respondPath(SpringViewChessController.ROOT_PATH);
+        return respondPath(ChessViewController.ROOT_PATH);
     }
 
     private ResponseEntity<PathResponse> respondPath(String path) {

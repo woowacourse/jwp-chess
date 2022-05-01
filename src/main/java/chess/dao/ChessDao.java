@@ -23,7 +23,7 @@ public interface ChessDao {
 
     void deleteGame(final int gameId);
 
-    Number initGame(final String title, final String password);
+    int initGame(final String title, final String password);
 
     String findPassword(final int gameId);
 

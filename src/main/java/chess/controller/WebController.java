@@ -36,7 +36,7 @@ public class WebController {
         return new ResponseEntity<>(chessService.loadGame(gameId), HttpStatus.OK);
     }
 
-    @PutMapping("/move")
+    @PatchMapping(value = "/move", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChessGameDto> move(@RequestBody MoveDto moveDto) {
         return new ResponseEntity<>(chessService.move(moveDto), HttpStatus.OK);
     }
@@ -55,7 +55,7 @@ public class WebController {
 
     @PostMapping(value = "/game", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String createGame(@ModelAttribute GameRoomDto gameRoomDto) {
-        Number gameId = chessService.createRoom(gameRoomDto);
+        var gameId = chessService.createRoom(gameRoomDto);
         return "redirect:/game?gameId=" + gameId;
     }
 

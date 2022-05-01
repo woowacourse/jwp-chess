@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class ChessDaoImpl implements ChessDao {
@@ -70,7 +71,7 @@ public class ChessDaoImpl implements ChessDao {
     }
 
     @Override
-    public Number initGame(String title, String password) {
+    public int initGame(String title, String password) {
         String sql = "INSERT INTO game (game_title, game_password) VALUES(?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -80,7 +81,7 @@ public class ChessDaoImpl implements ChessDao {
             ps.setString(2, password);
             return ps;
         }, keyHolder);
-        return keyHolder.getKey();
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
     @Override

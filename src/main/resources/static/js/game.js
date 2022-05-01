@@ -68,7 +68,6 @@ function onClickBoard ({target: {classList, id, parentNode}}) {
     if (hasFirstSelected() && !hasSecondSelected()) {
         classList.add("second-selected");
         onClickPiece(id);
-        return;
     }
 }
 
@@ -95,7 +94,7 @@ async function onClickPiece (id) {
     removeSelected();
 
     const response = await fetch("/move", {
-                       method: "put",
+                       method: "PATCH",
                        headers: {"Content-Type": "application/json"},
                        body: JSON.stringify({from: from, to: to, gameId: gameId})
                      });

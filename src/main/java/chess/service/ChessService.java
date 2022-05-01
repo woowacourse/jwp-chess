@@ -66,7 +66,7 @@ public class ChessService {
         return new ChessGameDto(chessDao.findAllPiece(gameId), chessGame.status());
     }
 
-    public Number createRoom(final GameRoomDto gameRoomDto) {
+    public int createRoom(final GameRoomDto gameRoomDto) {
         return chessDao.initGame(gameRoomDto.getTitle(), gameRoomDto.getPassword());
     }
 

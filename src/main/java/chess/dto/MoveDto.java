@@ -12,6 +12,12 @@ public final class MoveDto {
         this.to = to;
     }
 
+    public MoveDto(final String gameId, final String from, final String to) {
+        this.gameId = Integer.parseInt(gameId);
+        this.from = from;
+        this.to = to;
+    }
+
     public MoveDto() {
     }
 

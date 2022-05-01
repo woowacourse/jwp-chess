@@ -36,7 +36,7 @@ public class ChessServiceTest {
     @BeforeEach
     void setUp() {
         chessDao = new ChessDaoImpl(jdbcTemplate);
-        gameId = chessDao.initGame("칙촉조시제이", "123").intValue();
+        gameId = chessDao.initGame("칙촉조시제이", "123");
         chessService = new ChessService(chessDao);
     }
 

@@ -24,12 +24,12 @@ public class GameWebController {
     }
 
     @GetMapping(path = "/{roomId}")
-    public ModelAndView index(@PathVariable("roomId") int roomId) {
+    public ModelAndView index(@PathVariable int roomId) {
         return render(roomId);
     }
 
     @PostMapping(path = "/{roomId}")
-    public ModelAndView start(@PathVariable("roomId") int roomId) {
+    public ModelAndView start(@PathVariable int roomId) {
         chessGameService.start(roomId);
         return render(roomId);
     }

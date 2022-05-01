@@ -45,4 +45,9 @@ public class ChessGameController {
     public BoardResponse move(@PathVariable("id") String id, @RequestBody MoveRequest moveRequest) {
         return gameService.move(id, moveRequest);
     }
+
+    @PostMapping("/{id}/delete")
+    public void delete(@PathVariable("id") String id) {
+        gameService.deleteFrom(id);
+    }
 }

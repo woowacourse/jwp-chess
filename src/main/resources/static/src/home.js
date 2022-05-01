@@ -36,8 +36,8 @@ function print(rooms) {
 
 async function deleteRoom(roomId) {
     const room = document.querySelector(".room");
-    console.log(roomId);
     const deleteUrl = "delete/" + roomId;
+    deleteGameDateAboutRoom(roomId);
     let rooms = await fetch(deleteUrl, {
         method: "POST",
         headers: {
@@ -50,6 +50,20 @@ async function deleteRoom(roomId) {
     })
     rooms = await rooms.json();
     print(rooms);
+}
+
+async function deleteGameDateAboutRoom(roomId) {
+    const deleteUrl = "game/" + roomId + "/delete";
+    await fetch(deleteUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: roomName.value,
+            password: roomPassword.value,
+        }),
+    })
 }
 
 function closeRooms() {

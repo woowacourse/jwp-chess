@@ -65,4 +65,8 @@ public class GameService {
         }
         return BoardResponse.from(squares);
     }
+
+    public void deleteFrom(final String id) {
+        gameRepository.deleteGameDataFrom(id);
+    }
 }

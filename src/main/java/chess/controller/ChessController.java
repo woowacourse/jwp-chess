@@ -59,6 +59,6 @@ public class ChessController {
     public ResponseEntity<Void> changeRoomName(@PathVariable Long id,
                                          @RequestBody RoomRequestDto roomRequestDto) {
         chessService.updateRoomName(id, roomRequestDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

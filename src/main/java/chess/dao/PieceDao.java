@@ -41,16 +41,6 @@ public class PieceDao {
         return jdbcTemplate.query(sql, rowMapper(), roomId);
     }
 
-    private RowMapper<PieceEntity> rowMapper() {
-        return (resultSet, rowNum) -> new PieceEntity(
-                resultSet.getLong("id"),
-                resultSet.getLong("room_id"),
-                resultSet.getString("position"),
-                resultSet.getString("type"),
-                resultSet.getString("color")
-        );
-    }
-
     public PieceEntity findByRoomIdAndPosition(final Long roomId, final String position) {
         final String sql = "SELECT * FROM pieces WHERE room_id = ? AND position = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper(), roomId, position);
@@ -64,5 +54,15 @@ public class PieceDao {
     public void deleteByRoomIdAndPosition(final Long roomId, final String position) {
         final String sql = "DELETE FROM pieces WHERE room_id = ? AND position = ?";
         jdbcTemplate.update(sql, roomId, position);
+    }
+
+    private RowMapper<PieceEntity> rowMapper() {
+        return (resultSet, rowNum) -> new PieceEntity(
+                resultSet.getLong("id"),
+                resultSet.getLong("room_id"),
+                resultSet.getString("position"),
+                resultSet.getString("type"),
+                resultSet.getString("color")
+        );
     }
 }

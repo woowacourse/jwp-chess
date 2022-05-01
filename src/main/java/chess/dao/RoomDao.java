@@ -37,22 +37,12 @@ public class RoomDao {
         return jdbcTemplate.query(sql, rowMapper());
     }
 
-    private RowMapper<RoomEntity> rowMapper() {
-        return (resultSet, rowNum) -> new RoomEntity(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getString("password"),
-                resultSet.getString("status"),
-                resultSet.getString("turn")
-        );
-    }
-
     public RoomEntity findById(final Long id) {
         String sql = "SELECT * FROM rooms WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper(), id);
     }
 
-    public boolean isExistName(final Long id) {
+    public boolean isExist(final Long id) {
         final String sql = "SELECT EXISTS (SELECT id FROM rooms WHERE id = ?)";
         return jdbcTemplate.queryForObject(sql, Long.class, id) == IS_EXIST;
     }
@@ -70,5 +60,15 @@ public class RoomDao {
     public void deleteById(final Long id) {
         final String sql = "DELETE FROM rooms WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    private RowMapper<RoomEntity> rowMapper() {
+        return (resultSet, rowNum) -> new RoomEntity(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getString("password"),
+                resultSet.getString("status"),
+                resultSet.getString("turn")
+        );
     }
 }

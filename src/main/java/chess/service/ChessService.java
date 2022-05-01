@@ -88,7 +88,7 @@ public class ChessService {
 
     @Transactional(readOnly = true)
     public List<PieceResponseDto> loadAllPiece(final Long roomId) {
-        if (!roomDao.isExistName(roomId)) {
+        if (!roomDao.isExist(roomId)) {
             throw new NotExistRoomException("방이 존재하지 않아 기물 정보를 불러올 수 없습니다.");
         }
 
@@ -98,8 +98,8 @@ public class ChessService {
                 .collect(Collectors.toList());
     }
 
-    public void movePiece(final long roomId, MoveRequestDto requestDto) {
-        if (!roomDao.isExistName(roomId)) {
+    public void movePiece(final long roomId, final MoveRequestDto requestDto) {
+        if (!roomDao.isExist(roomId)) {
             throw new NotExistRoomException("방이 존재하지 않아 기물을 움직일 수 없습니다.");
         }
 
@@ -136,7 +136,7 @@ public class ChessService {
 
     @Transactional(readOnly = true)
     public ScoreResponseDto loadScore(final long roomId) {
-        if (!roomDao.isExistName(roomId)) {
+        if (!roomDao.isExist(roomId)) {
             throw new NotExistRoomException("방이 존재하지 않아 점수를 불러올 수 없습니다.");
         }
 
@@ -145,13 +145,19 @@ public class ChessService {
         return ScoreResponseDto.from(score);
     }
 
-    public void end(final long roomId) {
-        if (!roomDao.isExistName(roomId)) {
+    public void end(final Long roomId) {
+        if (!roomDao.isExist(roomId)) {
             throw new NotExistRoomException("방이 존재하지 않아 게임을 종료할 수 없습니다.");
         }
 
         final ChessGame chessGame = generateGame(roomId);
         chessGame.end();
         roomDao.updateStatusById(roomId, GameStatus.END.getValue());
+    }
+
+    public void checkRoomExist(final Long roomId) {
+        if (!roomDao.isExist(roomId)) {
+            throw new NotExistRoomException("존재하지 않는 방입니다.");
+        }
     }
 }

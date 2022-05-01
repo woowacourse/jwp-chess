@@ -184,7 +184,7 @@ public class ChessServiceTest {
                 .collect(Collectors.toList());
 
         // mocking
-        given(roomDao.isExistName(id)).willReturn(true);
+        given(roomDao.isExist(id)).willReturn(true);
         given(pieceDao.findAllByRoomId(id)).willReturn(pieces);
 
         // when
@@ -211,7 +211,7 @@ public class ChessServiceTest {
         final MoveRequestDto moveRequestDto = new MoveRequestDto("b2", "b4");
 
         // mocking
-        given(roomDao.isExistName(id)).willReturn(true);
+        given(roomDao.isExist(id)).willReturn(true);
         given(roomDao.findById(id)).willReturn(room);
         given(pieceDao.findAllByRoomId(id)).willReturn(pieces);
 
@@ -242,7 +242,7 @@ public class ChessServiceTest {
                 .collect(Collectors.toList());
 
         // mocking
-        given(roomDao.isExistName(id)).willReturn(true);
+        given(roomDao.isExist(id)).willReturn(true);
         given(roomDao.findById(id)).willReturn(room);
         given(pieceDao.findAllByRoomId(id)).willReturn(pieces);
 
@@ -272,7 +272,7 @@ public class ChessServiceTest {
                 .collect(Collectors.toList());
 
         // mocking
-        given(roomDao.isExistName(id)).willReturn(true);
+        given(roomDao.isExist(id)).willReturn(true);
         given(roomDao.findById(id)).willReturn(room);
         given(pieceDao.findAllByRoomId(id)).willReturn(pieces);
 

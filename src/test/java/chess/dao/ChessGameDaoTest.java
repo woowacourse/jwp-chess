@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,6 +48,7 @@ class ChessGameDaoTest {
     }
 
     @Test
+    @DisplayName("게임을 DB에 저장해야 합니다.")
     void save() {
         String gameName = "test_game4";
         int savedId = chessGameDao.save(gameName, "1234");
@@ -56,6 +58,14 @@ class ChessGameDaoTest {
     }
 
     @Test
+    @DisplayName("저장된 게임을 id로 조회해올 수 있어야 합니다.")
+    void findById() {
+        ChessGame chessGame = chessGameDao.findById(savedId);
+        assertThat(chessGame.getGameName()).isEqualTo("test_game1");
+    }
+
+    @Test
+    @DisplayName("저장된 게임들을 조회해와야 합니다.")
     void findAllChessGames() {
         List<ChessGameDto> chessGames = chessGameDao.findAllChessGames();
         List<String> chessGameNames = chessGames.stream()
@@ -67,6 +77,7 @@ class ChessGameDaoTest {
     }
 
     @Test
+    @DisplayName("저장된 게임의 상태를 변경할 수 있어야 합니다.")
     void update() {
         String newTurn = "black";
         chessGameDao.update(newTurn, savedId);
@@ -77,6 +88,7 @@ class ChessGameDaoTest {
     }
 
     @Test
+    @DisplayName("저장된 게임을 삭제할 수 있어야 합니다.")
     void delete() {
         chessGameDao.delete("1234", savedId);
         List<ChessGameDto> chessGames = chessGameDao.findAllChessGames();

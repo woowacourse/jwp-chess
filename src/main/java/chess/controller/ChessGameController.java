@@ -26,9 +26,8 @@ public class ChessGameController {
 
     @GetMapping("/chess-game")
     public String chessGame(@RequestParam int id, Model model) {
-        ChessGameDto chessGameDto = chessGameService.findChessGame(id);
-        model.addAttribute("pieces", chessGameService.findPieces(chessGameDto.getId()));
-        model.addAttribute("chessGame", chessGameDto);
+        model.addAttribute("chessGame", chessGameService.findChessGame(id));
+        model.addAttribute("pieces", chessGameService.findPieces(id));
         return "chess-game";
     }
 

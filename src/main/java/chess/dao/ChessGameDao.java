@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -43,9 +44,9 @@ public class ChessGameDao {
     }
 
     public ChessGameDto findById(int id) {
-        return jdbcTemplate.queryForObject(
+        return DataAccessUtils.singleResult(jdbcTemplate.query(
             "SELECT id, name, status, current_color, black_score, white_score FROM chess_game WHERE id = ?",
-            this::createChessGameDto, id);
+            this::createChessGameDto, id));
     }
 
     public List<ChessGameDto> findAll() {

@@ -1,4 +1,4 @@
-package chess.interceptor;
+package chess.framework.interceptor;
 
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;

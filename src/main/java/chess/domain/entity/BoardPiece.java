@@ -1,4 +1,4 @@
-package chess.domain.db;
+package chess.domain.entity;
 
 public class BoardPiece {
 

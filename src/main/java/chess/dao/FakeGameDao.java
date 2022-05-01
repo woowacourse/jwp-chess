@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.db.Game;
+import chess.domain.entity.Game;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;

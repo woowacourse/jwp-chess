@@ -1,4 +1,4 @@
-package chess.domain.db;
+package chess.domain.entity;
 
 import chess.util.DateTimeConvertUtils;
 import java.sql.Timestamp;

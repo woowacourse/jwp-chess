@@ -40,10 +40,8 @@ public class ChessApiController {
 
     @PutMapping(value = "/from/{from}/to/{to}", produces = APPLICATION_JSON_VALUE)
     public GameResponse move(HttpSession session,
-                             @PathVariable("from") String fromString,
-                             @PathVariable("to") String toString) {
-        Position from = Position.of(fromString);
-        Position to = Position.of(toString);
+                             @PathVariable Position from,
+                             @PathVariable Position to) {
 
         chessService.movePiece(session, from, to);
 

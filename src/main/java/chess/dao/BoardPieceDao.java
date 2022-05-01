@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.db.BoardPiece;
+import chess.domain.entity.BoardPiece;
 import java.util.List;
 import java.util.Map;
 

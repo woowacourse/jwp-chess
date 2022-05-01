@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.db.Game;
+import chess.domain.entity.Game;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;

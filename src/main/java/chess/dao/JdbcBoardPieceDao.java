@@ -2,7 +2,7 @@ package chess.dao;
 
 import static chess.util.RandomCreationUtils.createUuid;
 
-import chess.domain.db.BoardPiece;
+import chess.domain.entity.BoardPiece;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

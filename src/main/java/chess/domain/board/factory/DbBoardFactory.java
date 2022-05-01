@@ -5,7 +5,7 @@ import static chess.domain.piece.PieceTeam.EMPTY;
 import chess.domain.board.position.File;
 import chess.domain.board.position.Position;
 import chess.domain.board.position.Rank;
-import chess.domain.db.BoardPiece;
+import chess.domain.entity.BoardPiece;
 import chess.domain.piece.EmptySpace;
 import chess.domain.piece.Piece;
 import chess.domain.piece.factory.PieceFactory;

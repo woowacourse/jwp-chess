@@ -18,12 +18,12 @@ import chess.entity.Room;
 
 public class ChessServiceTest {
 
-    private ChessService chessService;
     private final RoomDao roomDao = new FakeRoomDao();
     private final SquareDao squareDao = new FakeSquareDao();
-    private long id;
     private final String firstRoomPassword = "pw12345678";
     private final String secondRoomPassword = "pw123456789";
+    private ChessService chessService;
+    private long id;
 
     @BeforeEach
     void setUp() {

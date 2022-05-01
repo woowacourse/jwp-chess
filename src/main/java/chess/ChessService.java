@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
@@ -43,15 +44,16 @@ public class ChessService {
         this.squareDao = squareDao;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public BoardDto startNewGame(long roomId) {
         Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
 
         ChessGame chessGame = new ChessGame();
         chessGame.start();
-        squareDao.removeAll(room.getId());
         Map<Position, Piece> board = chessGame.getBoard();
         List<Square> squares = convertBoardToSquares(board);
+        squareDao.removeAll(room.getId());
         squareDao.saveAll(squares, room.getId());
         roomDao.update(room.getId(), chessGame.getTurn());
         return BoardDto.of(board, chessGame.getTurn());
@@ -65,6 +67,7 @@ public class ChessService {
         return BoardDto.of(chessBoard.getPieces(), room.getTurn());
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public BoardDto move(long roomId, MoveDto moveDto) {
         Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
@@ -129,6 +132,7 @@ public class ChessService {
             .collect(Collectors.toUnmodifiableList());
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void delete(long roomId, String password) {
         Optional<Room> optionalRoom = roomDao.findByIdAndPassword(roomId, password);
         if (optionalRoom.isEmpty()) {

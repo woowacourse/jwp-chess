@@ -94,7 +94,7 @@ button, input {
     text-overflow: ellipsis;
     transition: all 200ms ease-in-out 0s;
     white-space: nowrap;
-    font-family: "Gotham Rounded A","Gotham Rounded B",Helvetica,Arial,sans-serif;
+    font-family: "Gotham Rounded A", "Gotham Rounded B", Helvetica, Arial, sans-serif;
     font-weight: 700;
     padding: 10px 30px 10px;
     font-size: 18px;
@@ -113,14 +113,6 @@ button:hover, button:focus, button:active {
 input {
     color: #000000;
 }
-
-/*.chess-btn {*/
-/*    width: 120px;*/
-/*    height: 30px;*/
-/*    font-size: 20px;*/
-/*    font-family: "Malgun Gothic", serif;*/
-/*    background-color: floralwhite;*/
-/*}*/
 
 #turn-status {
     font-family: "Futura", serif;

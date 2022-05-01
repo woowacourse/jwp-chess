@@ -8,14 +8,30 @@
 
 <body>
 <h3>체스방을 삭제하시겠습니까?</h3>
-<form action="/delete/{{id}}" method="post" class="delete-game">
     <div>
         <label for="password">Password: </label>
         <input type="password" name="password" id="password" required>
     </div><br>
     <div>
-        <input type="submit" value="delete">
+        <input type="button" id="delete" value="삭제하기"/>
     </div>
-</form>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $("#delete").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/delete/{{id}}",
+            data: {
+                password: $("#password").val()
+            },
+            success: () => {
+                window.location.href = "../"
+            },
+            error: () => {
+                alert("실패하였습니다.")
+            }
+        });
+    });
+</script>
 </html>

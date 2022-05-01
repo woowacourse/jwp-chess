@@ -21,9 +21,8 @@ public class ChessApiController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteGame(@RequestBody PasswordDto passwordDto) {
+    public void deleteGame(@RequestBody PasswordDto passwordDto) {
         chessService.deleteGame(passwordDto);
-        return ResponseEntity.ok("");
     }
 
     @PatchMapping("/game/{gameId}/move")

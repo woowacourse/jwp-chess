@@ -38,9 +38,9 @@ public class ViewController {
         return "game";
     }
 
-    @GetMapping("/game/end")
-    public String end(Model model) {
-        model.addAllAttributes(gameService.end());
+    @GetMapping("/game/end/{id}")
+    public String end(@PathVariable int id, Model model) {
+        model.addAllAttributes(gameService.end(id));
         return "result";
     }
 }

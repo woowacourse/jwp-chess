@@ -32,6 +32,8 @@ public class GameService {
 
     private static final String REGEX_VALUE = "=";
     private static final String REGEX_DATA = "&";
+    private static final String ERROR_PASSWORD = "비밀번호가 일치하지 않습니다.";
+    private static final String ERROR_IS_RUNNING = "실행 중인 게임은 삭제할 수 없습니다.";
 
     private static final int INDEX_KEY = 0;
     private static final int INDEX_VALUE = 1;
@@ -105,7 +107,6 @@ public class GameService {
 
     public void move(String source, String target) {
         chessGame.move(parsePosition(source), parsePosition(target));
-
     }
 
     private Position parsePosition(String rawPosition) {
@@ -129,8 +130,9 @@ public class GameService {
         boardDao.saveAll(id, chessGame.getBoardSquares());
     }
 
-    public Map<String, Object> end() {
+    public Map<String, Object> end(int id) {
         chessGame.end();
+        gameDao.updateStateById(id);
         return modelResult();
     }
 
@@ -158,7 +160,10 @@ public class GameService {
         String password = request.get("password");
         ChessGame savedChessGame = gameDao.findById(id);
         if (savedChessGame.incorrectPassword(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new IllegalArgumentException(ERROR_PASSWORD);
+        }
+        if (gameDao.findRunningById(id)) {
+            throw new IllegalArgumentException(ERROR_IS_RUNNING);
         }
         boardDao.deleteAllByGameId(id);
         gameDao.deleteById(id);

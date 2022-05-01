@@ -7,6 +7,7 @@ create table game
     title       varchar(10) not null,
     password    varchar(10) not null,
     white_turn boolean not null,
+    finished boolean not null,
     primary key (no)
 );
 

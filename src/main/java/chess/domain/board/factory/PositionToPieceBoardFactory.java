@@ -15,14 +15,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class DbBoardFactory implements BoardFactory {
+public class PositionToPieceBoardFactory implements BoardFactory {
 
     private final List<BoardPiece> boardPieces;
 
     private static final EmptySpace EMPTY_SPACE = new EmptySpace(EMPTY);
 
 
-    public DbBoardFactory(List<BoardPiece> boardPieces) {
+    public PositionToPieceBoardFactory(List<BoardPiece> boardPieces) {
         this.boardPieces = boardPieces;
     }
 

@@ -31,9 +31,9 @@ public class ChessBoard {
         this.gameFlow = gameFlow;
     }
 
-    public ChessBoard(BoardFactory boardFactory, String lastTeam) {
+    public ChessBoard(BoardFactory boardFactory, String teamName) {
         this.board = boardFactory.create();
-        this.gameFlow = new AlternatingGameFlow(lastTeam);
+        this.gameFlow = new AlternatingGameFlow(teamName);
     }
 
     public void movePiece(Position source, Position target) {

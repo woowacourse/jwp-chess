@@ -86,7 +86,7 @@ public class ChessService {
         ChessGame chessGame = new ChessGame(gameDao.findState(gameId), boardDao.findById(gameId));
         Map<Color, Double> scores = chessGame.calculateScore();
 
-        return new StatusDto(scores.get(Color.WHITE), scores.get(Color.BLACK));
+        return new StatusDto(scores);
     }
 
     @Transactional

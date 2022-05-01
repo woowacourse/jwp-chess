@@ -1,5 +1,8 @@
 package chess.dto;
 
+import chess.domain.piece.Color;
+import java.util.Map;
+
 public class StatusDto {
 
     private String whiteScore;
@@ -10,8 +13,8 @@ public class StatusDto {
         this.blackScore = blackScore;
     }
 
-    public StatusDto(Double whiteScore, Double blackScore) {
-        this(String.valueOf(whiteScore), String.valueOf(blackScore));
+    public StatusDto(Map<Color, Double> scores) {
+        this(String.valueOf(scores.get(Color.WHITE)), String.valueOf(scores.get(Color.BLACK)));
     }
 
     public String getWhiteScore() {

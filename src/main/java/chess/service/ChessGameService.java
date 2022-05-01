@@ -16,6 +16,7 @@ import chess.service.util.BoardEntitiesToBoardConvertor;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessGameService {
@@ -28,6 +29,7 @@ public class ChessGameService {
         this.boardDao = boardDao;
     }
 
+    @Transactional
     public long createChessGame(final String name, final String password) {
         ChessGame chessGame = ChessGame.createBasic();
         ChessGameEntity chessGameEntity = new ChessGameEntityBuilder()
@@ -68,13 +70,15 @@ public class ChessGameService {
         return chessRoomDto;
     }
 
+    @Transactional
     public void deleteChessGame(final long chessGameId, final String password) {
         validateGamePower(chessGameId);
-        boardDao.delete(chessGameId);
         ChessGameEntity chessGameEntity = new ChessGameEntityBuilder()
                 .setId(chessGameId)
                 .setPassword(password)
                 .build();
+
+        boardDao.delete(chessGameId);
         chessGameDao.delete(chessGameEntity);
     }
 
@@ -83,6 +87,7 @@ public class ChessGameService {
         chessGameEntity.isPower();
     }
 
+    @Transactional
     public void movePiece(
             final long chessGameId, final char sourceColumn, final int sourceRow,
             final char targetColumn, final int targetRow
@@ -95,11 +100,12 @@ public class ChessGameService {
                 .setPower(chessGame.isOn())
                 .setTeamValueOfTurn(chessGame.getTurn())
                 .build();
-        chessGameDao.updateIsOnAndTurn(chessGameEntity);
+        chessGameDao.updatePowerAndTurn(chessGameEntity);
         boardDao.updatePiece(new BoardEntity(chessGameId, sourceColumn, sourceRow, chessGame.getCurrentBoard()));
         boardDao.updatePiece(new BoardEntity(chessGameId, targetColumn, targetRow, chessGame.getCurrentBoard()));
     }
 
+    @Transactional
     public void resetChessGame(final long chessGameId) {
         ChessGameEntity chessGameEntity = new ChessGameEntityBuilder()
                 .setId(chessGameId)
@@ -108,14 +114,15 @@ public class ChessGameService {
                 .build();
         boardDao.delete(chessGameId);
         boardDao.save(BoardEntity.generateBoardEntities(chessGameId, BoardFactory.createInitChessBoard().getBoard()));
-        chessGameDao.updateIsOnAndTurn(chessGameEntity);
+        chessGameDao.updatePowerAndTurn(chessGameEntity);
     }
 
+    @Transactional
     public void endChessGame(final long chessGameId) {
         ChessGameEntity chessGameEntity = new ChessGameEntityBuilder()
                 .setId(chessGameId)
                 .setPower(false)
                 .build();
-        chessGameDao.updateIsOn(chessGameEntity);
+        chessGameDao.updatePower(chessGameEntity);
     }
 }

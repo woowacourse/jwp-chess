@@ -99,7 +99,7 @@ class ChessGameDaoTest {
     void updatePiece() {
         ChessGameEntity chessGameEntityForUpdate = new ChessGameEntity(savedId, SAVED_NAME, SAVED_PASSWORD, false,
                 "WHITE");
-        chessGameDao.updateIsOnAndTurn(chessGameEntityForUpdate);
+        chessGameDao.updatePowerAndTurn(chessGameEntityForUpdate);
 
         ChessGameEntity chessGameEntity = chessGameDao.load(savedId);
 

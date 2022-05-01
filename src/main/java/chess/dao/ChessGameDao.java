@@ -62,13 +62,13 @@ public class ChessGameDao {
         );
     }
 
-    public void updateIsOnAndTurn(final ChessGameEntity chessGameEntity) {
+    public void updatePowerAndTurn(final ChessGameEntity chessGameEntity) {
         String updateSql = "update chess_game set power=:power, team_value_of_turn=:teamValueOfTurn where id=:id";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(updateSql, source);
     }
 
-    public void updateIsOn(final ChessGameEntity chessGameEntity) {
+    public void updatePower(final ChessGameEntity chessGameEntity) {
         String updateSql = "update chess_game set power=:power where id=:id";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(updateSql, source);

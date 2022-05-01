@@ -22,10 +22,6 @@ public class RoomEntity {
         this.turn = turn;
     }
 
-    public boolean isSamePassword(final String password) {
-        return this.password.equals(password);
-    }
-
     public boolean isEnd() {
         return GameStatus.from(this.status) == GameStatus.END || GameStatus.from(this.status) == GameStatus.KING_DIE;
     }

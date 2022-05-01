@@ -35,6 +35,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 public class ChessServiceTest {
@@ -47,6 +48,9 @@ public class ChessServiceTest {
 
     @Mock
     private PieceDao pieceDao;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Test
     @DisplayName("방을 생성하고 기물들을 초기화한다.")
@@ -119,6 +123,7 @@ public class ChessServiceTest {
 
         // mocking
         given(roomDao.findById(id)).willReturn(room);
+        given(passwordEncoder.matches(room.getPassword(), roomDeleteRequestDto.getPassword())).willReturn(true);
 
         // when
         chessService.deleteRoom(id, roomDeleteRequestDto);
@@ -138,7 +143,6 @@ public class ChessServiceTest {
 
         // mocking
         given(roomDao.findById(id)).willReturn(room);
-
         // when & then
         assertThatThrownBy(() -> chessService.deleteRoom(id, roomDeleteRequestDto))
                 .isInstanceOf(IllegalCommandException.class)
@@ -150,12 +154,15 @@ public class ChessServiceTest {
     void deleteRoomException2() {
         // given
         final long id = 1L;
-        final RoomEntity room = new RoomEntity("다 드루와", "1234", GameStatus.PLAYING.getValue(),
+        final RoomEntity room = new RoomEntity(id, "다 드루와", "1234", GameStatus.PLAYING.getValue(),
                 Color.WHITE.getValue());
         final RoomDeleteRequestDto roomDeleteRequestDto = new RoomDeleteRequestDto("1234");
 
         // mocking
         given(roomDao.findById(id)).willReturn(room);
+        given(passwordEncoder.matches(room.getPassword(), roomDeleteRequestDto.getPassword())).willReturn(true);
+
+        System.out.println("1" + passwordEncoder.encode("1234"));
 
         // when & then
         assertThatThrownBy(() -> chessService.deleteRoom(id, roomDeleteRequestDto))

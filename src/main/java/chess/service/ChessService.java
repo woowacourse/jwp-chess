@@ -25,6 +25,7 @@ import chess.result.MoveResult;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,15 +35,18 @@ public class ChessService {
 
     private final PieceDao pieceDao;
     private final RoomDao roomDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public ChessService(final PieceDao chessPieceDao, final RoomDao roomDao) {
+    public ChessService(final PieceDao chessPieceDao, final RoomDao roomDao, final PasswordEncoder passwordEncoder) {
         this.pieceDao = chessPieceDao;
         this.roomDao = roomDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public RoomResponseDto createRoom(final RoomRequestDto roomRequestDto) {
-        final RoomEntity room = new RoomEntity(roomRequestDto.getName(), roomRequestDto.getPassword(),
-                GameStatus.PLAYING.getValue(), Color.WHITE.getValue());
+        final RoomEntity room = new RoomEntity(roomRequestDto.getName(),
+                passwordEncoder.encode(roomRequestDto.getPassword()), GameStatus.PLAYING.getValue(),
+                Color.WHITE.getValue());
 
         final RoomEntity createdRoom = roomDao.save(room);
         initializePieces(createdRoom.getId());
@@ -69,10 +73,10 @@ public class ChessService {
         return RoomResponseDto.from(room);
     }
 
-    public void deleteRoom(final long id,  final RoomDeleteRequestDto roomDeleteRequestDto) {
+    public void deleteRoom(final long id, final RoomDeleteRequestDto roomDeleteRequestDto) {
         final RoomEntity room = roomDao.findById(id);
 
-        if (!room.isSamePassword(roomDeleteRequestDto.getPassword())) {
+        if (!passwordEncoder.matches(roomDeleteRequestDto.getPassword(), room.getPassword())) {
             throw new IllegalCommandException("비밀번호가 일치하지 않습니다.");
         }
         if (!room.isEnd()) {

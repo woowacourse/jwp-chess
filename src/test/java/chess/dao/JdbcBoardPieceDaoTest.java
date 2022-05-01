@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
-@Sql(statements = "insert into games values ('test-game-id', 'Black Team', now())")
+@Sql("/data-board_pieces.sql")
 class JdbcBoardPieceDaoTest {
 
     @Autowired

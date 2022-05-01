@@ -16,6 +16,7 @@ import chess.dto.RoomDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessGameService {
@@ -35,11 +36,16 @@ public class ChessGameService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public long create(String title, String password) {
         long gameId = gameDao.createByTitleAndPassword(title, password);
         Pieces chessmen = ChessmenInitializer.init();
         pieceDao.createAllByGameId(chessmen.getPieces(), gameId);
         return gameId;
+    }
+
+    public PiecesDto findCurrentPieces(long gameId) {
+        return PiecesDto.toDto(findChessGame(gameId).getChessmen());
     }
 
     private ChessGame findChessGame(long gameId) {
@@ -48,15 +54,12 @@ public class ChessGameService {
         return new ChessGame(room.getEndFlag(), chessmen, room.getTurn());
     }
 
-    public PiecesDto findCurrentPieces(long gameId) {
-        return PiecesDto.toDto(findChessGame(gameId).getChessmen());
-    }
-
     public GameResultDto calculateGameResult(long gameId) {
         GameResult gameResult = GameResult.calculate(findChessGame(gameId).getChessmen());
         return GameResultDto.toDto(gameResult);
     }
 
+    @Transactional
     public void move(long gameId, MoveCommandDto moveCommandDto) {
         String from = moveCommandDto.getSource();
         String to = moveCommandDto.getTarget();
@@ -81,6 +84,7 @@ public class ChessGameService {
         gameDao.updateEndFlagById(endFlag, gameId);
     }
 
+    @Transactional
     public void cleanGameByIdAndPassword(long id, String password) {
         Room room = gameDao.findRoomById(id);
         room.validateDeletable(password);

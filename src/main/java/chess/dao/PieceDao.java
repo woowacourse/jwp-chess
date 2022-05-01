@@ -6,7 +6,6 @@ import chess.domain.piece.Pieces;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class PieceDao {
@@ -17,7 +16,6 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Transactional
     public void createAllByGameId(List<Piece> pieces, long gameId) {
         final String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
 

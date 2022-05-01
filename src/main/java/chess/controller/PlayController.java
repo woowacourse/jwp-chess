@@ -43,7 +43,7 @@ public class PlayController {
         return ResponseEntity.ok().build();
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> exception(Exception e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }

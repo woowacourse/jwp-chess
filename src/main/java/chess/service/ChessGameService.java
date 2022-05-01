@@ -11,6 +11,7 @@ import chess.utils.ScoreCalculator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ChessGameService {
@@ -33,7 +34,7 @@ public class ChessGameService {
     public void start(int gameId) {
         ChessGame chessGame = findGameById(gameId);
         chessGame.start();
-        repository.saveGame(gameId,chessGame.getChessBoard(), new CurrentStatusDto(chessGame.getCurrentStatus()));
+        repository.saveGame(gameId, chessGame.getChessBoard(), new CurrentStatusDto(chessGame.getCurrentStatus()));
     }
 
     public void move(int gameId, String from, String to) {
@@ -59,5 +60,9 @@ public class ChessGameService {
 
     private ChessGame findGameById(int gameId) {
         return repository.find(gameId);
+    }
+
+    public Map<Integer, String> findGameList() {
+        return repository.findGameList();
     }
 }

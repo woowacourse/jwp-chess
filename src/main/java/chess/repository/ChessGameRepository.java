@@ -46,6 +46,10 @@ public class ChessGameRepository {
     }
 
     public void saveEnd(int gameId, String state) {
-        currentStatusDao.saveEnd(gameId,state);
+        currentStatusDao.saveEnd(gameId, state);
+    }
+
+    public Map<Integer, String> findGameList() {
+        return gameDao.findGameList();
     }
 }

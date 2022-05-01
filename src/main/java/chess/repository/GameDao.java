@@ -3,9 +3,12 @@ package chess.repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Repository
 public class GameDao {
@@ -34,5 +37,17 @@ public class GameDao {
         }, keyHolder);
 
         return keyHolder.getKey().intValue();
+    }
+
+    public Map<Integer, String> findGameList() {
+        final String sql = "SELECT id,name FROM game ORDER BY id ASC";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql);
+
+        Map<Integer, String> gameList = new LinkedHashMap<>();
+        while (rowSet.next()) {
+            gameList.put(rowSet.getInt("id"), rowSet.getString("name"));
+        }
+
+        return gameList;
     }
 }

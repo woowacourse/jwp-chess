@@ -2,7 +2,7 @@ let from = "";
 let turn = "";
 let isStart = false;
 let id;
-
+const API_URL_PREFIX = "/api";
 showIndexPageElement();
 
 function showIndexPageElement() {
@@ -49,7 +49,7 @@ async function create() {
         return;
     }
 
-    await fetch("/rooms", {
+    await fetch(API_URL_PREFIX + "/rooms", {
         method: "POST",
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -88,7 +88,7 @@ function showOnlyGameElement() {
 async function start() {
     let pieces;
 
-    await fetch("/rooms/" + id, {
+    await fetch(API_URL_PREFIX + "/rooms/" + id, {
         method: "POST"
     })
         .then(res => res.json())
@@ -116,7 +116,7 @@ async function newGame() {
 
 async function findRoom() {
     let pieces;
-    let response = await fetch("/rooms/" + id);
+    let response = await fetch(API_URL_PREFIX + "/rooms/" + id);
 
     if (response.status === 400) {
         const errorMessage = await response.json();
@@ -160,7 +160,7 @@ function end() {
 
 async function printStatus() {
     let stat;
-    await fetch("/rooms/" + id + "/status")
+    await fetch(API_URL_PREFIX + "/rooms/" + id + "/status")
         .then(res => res.json())
         .then(data => stat = data)
     let status = document.getElementById("chess-status");
@@ -222,7 +222,7 @@ async function selectPiece(pieceDiv) {
 
 async function move(fromPosition, toPosition) {
     from = "";
-    let response = await fetch("/rooms/" + id + "/move", {
+    let response = await fetch(API_URL_PREFIX + "/rooms/" + id + "/move", {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -294,7 +294,7 @@ async function rooms() {
     hideElement("name-form");
     let rooms;
     removeChildren(document.querySelector("tbody"));
-    await fetch("/rooms", {
+    await fetch(API_URL_PREFIX + "/rooms", {
         method: "GET",
     })
         .then(res => res.json())
@@ -332,7 +332,7 @@ let gameStatusMap = new Map([
 
 async function deleteRoom(self) {
     id = self.id.split("/")[1];
-    let response = await fetch("/rooms/" + id, {
+    let response = await fetch(API_URL_PREFIX + "/rooms/" + id, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'

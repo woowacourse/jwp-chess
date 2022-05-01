@@ -43,7 +43,7 @@ public class ChessService {
 
     public void restart(int gameId) {
         pieceDao.deleteAllByGameId(gameId);
-        gameDao.updateStateById(gameId, StateType.END);
+        gameDao.updateStateById(gameId, StateType.WHITE_TURN);
         start(gameId);
     }
 

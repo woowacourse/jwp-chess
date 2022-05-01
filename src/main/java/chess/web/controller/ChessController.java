@@ -1,13 +1,11 @@
 package chess.web.controller;
 
-import chess.domain.state.StateType;
 import chess.web.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -45,11 +43,5 @@ public class ChessController {
     public String showResult(@PathVariable int gameId, final Model model) {
         model.addAttribute("result", chessService.getChessResult(gameId));
         return "result";
-    }
-
-    @PutMapping("/game/{gameId}/restart")
-    public String restartGame(@PathVariable int gameId) {
-        chessService.restart(gameId);
-        return "redirect:/game/" + gameId;
     }
 }

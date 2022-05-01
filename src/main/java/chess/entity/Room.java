@@ -25,6 +25,18 @@ public class Room {
         }
     }
 
+    public void checkGameIsNotPlaying() {
+        if (gameState.equals(PLAYING_STATE_VALUE)) {
+            throw new IllegalStateException("이미 진행중인 게임이 있습니다.");
+        }
+    }
+
+    public void checkGameIsPlaying() {
+        if (!gameState.equals(PLAYING_STATE_VALUE)) {
+            throw new IllegalStateException("진행중인 게임이 없습니다.");
+        }
+    }
+
     public int getRoomId() {
         return roomId;
     }

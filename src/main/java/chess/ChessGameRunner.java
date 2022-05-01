@@ -48,7 +48,7 @@ public class ChessGameRunner {
             commandType = CommandType.from(command);
             board = execute(commandType, board, command);
         }
-        while (commandType != END && !board.hasOneKing());
+        while (commandType != END);
     }
 
     private Board execute(final CommandType commandType,

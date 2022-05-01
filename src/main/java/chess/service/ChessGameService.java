@@ -59,24 +59,22 @@ public class ChessGameService {
     }
 
     public void start(final int roomId) {
-        checkGameIsAlreadyPlaying(roomId);
+        checkGameIsNotPlaying(roomId);
         roomDao.saveGameState(roomId, PLAYING_STATE_VALUE);
         final Board board = new Board();
         final Map<Position, Piece> pieces = board.getPieces();
         pieceDao.saveAllPieces(roomId, pieces);
     }
 
-    private void checkGameIsAlreadyPlaying(final int roomId) {
+    private void checkGameIsNotPlaying(final int roomId) {
         final Room room = roomDao.findByRoomId(roomId);
-        if (room.isPlayingState()) {
-            throw new IllegalStateException("이미 진행중인 게임이 있습니다.");
-        }
+        room.checkGameIsNotPlaying();
     }
 
     public void move(final int roomId, final String sourcePosition, final String targetPosition) {
         checkGameIsPlaying(roomId);
+
         final Board board = getSavedBoard(roomId);
-        checkGameIsOver(board);
         final Board movedBoard = board.movePiece(Position.from(sourcePosition), Position.from(targetPosition));
         final Piece piece = movedBoard.getPieces().get(Position.from(targetPosition));
         roomDao.saveTurn(roomId, movedBoard.getTurn().toString());
@@ -84,12 +82,6 @@ public class ChessGameService {
         pieceDao.removePiece(roomId, sourcePosition);
         pieceDao.removePiece(roomId, targetPosition);
         pieceDao.savePiece(roomId, targetPosition, piece);
-    }
-
-    private void checkGameIsOver(final Board board) {
-        if (board.hasOneKing()) {
-            throw new IllegalStateException("King이 죽어 게임이 종료되었습니다.");
-        }
     }
 
     public ScoreDto getScore(final int roomId) {
@@ -100,9 +92,7 @@ public class ChessGameService {
 
     private void checkGameIsPlaying(final int roomId) {
         final Room room = roomDao.findByRoomId(roomId);
-        if (!room.isPlayingState()) {
-            throw new IllegalStateException("진행중인 게임이 없습니다.");
-        }
+        room.checkGameIsPlaying();
     }
 
     public void end(final int roomId) {

@@ -29,6 +29,7 @@ public class Board {
     public Board movePiece(final Position sourcePosition, final Position targetPosition) {
         final Piece sourcePiece = pieces.get(sourcePosition);
 
+        validateGameIsOver();
         validateTurn(sourcePiece);
         validateSameTeamTargetPositionPiece(sourcePiece, targetPosition);
         validateMovement(sourcePosition, targetPosition);
@@ -37,6 +38,16 @@ public class Board {
         movedPieces.remove(sourcePosition);
         movedPieces.put(targetPosition, sourcePiece);
         return new Board(movedPieces, currentTurnTeam.turnToNext());
+    }
+
+    private void validateGameIsOver() {
+        final int countOfKing = (int) pieces.values()
+                .stream()
+                .filter(Piece::isKing)
+                .count();
+        if (countOfKing == 1) {
+            throw new IllegalStateException("King이 죽어 게임이 종료되었습니다.");
+        }
     }
 
     private void validateMovement(final Position sourcePosition, final Position targetPosition) {
@@ -67,13 +78,6 @@ public class Board {
                 .stream()
                 .filter(position -> position != sourcePosition)
                 .collect(Collectors.toList());
-    }
-
-    public boolean hasOneKing() {
-        return pieces.values()
-                .stream()
-                .filter(Piece::isKing)
-                .count() == 1;
     }
 
     public double getTotalPoint(Team team) {

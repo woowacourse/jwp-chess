@@ -1,8 +1,8 @@
 package chess.controller;
 
-import chess.domain.command.MoveCommand;
 import chess.domain.piece.Color;
 import chess.service.ChessGameService;
+import dto.MoveCommandDto;
 import java.net.URI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +34,8 @@ public class PlayController {
     }
 
     @PutMapping("/{id}/move")
-    public ResponseEntity<String> move(@PathVariable String id, @RequestBody MoveCommand moveCommand) {
-        chessGameService.move(id, moveCommand);
+    public ResponseEntity<String> move(@PathVariable String id, @RequestBody MoveCommandDto moveCommandDto) {
+        chessGameService.move(id, moveCommandDto.toEntity());
 
         if (!chessGameService.calculateGameResult(id).getWinner().equals(Color.NONE)) {
             chessGameService.changeToEnd(id);

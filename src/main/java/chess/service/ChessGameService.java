@@ -58,7 +58,7 @@ public class ChessGameService {
         return GameResult.calculate(getGameStatus(id).getChessmen());
     }
 
-    public void cleanGame(LogIn logIn) {
+    public void deleteGame(LogIn logIn) {
         validateLogIn(logIn);
         pieceDao.deleteAll(logIn.getId());
         gameDao.delete(logIn.getId());

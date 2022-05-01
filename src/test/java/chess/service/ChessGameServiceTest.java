@@ -66,7 +66,7 @@ class ChessGameServiceTest {
     @DisplayName("cleanGame로 아이디에 맞는 방을 지운다.")
     @Test
     void cleanGame() {
-        chessGameService.cleanGame(LOG_IN_DTO);
+        chessGameService.deleteGame(LOG_IN_DTO);
         assertThatThrownBy(() -> chessGameService.getGameStatus(GAME_ID))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 제목의 방을 찾을 수 없습니다.");

@@ -41,7 +41,7 @@ public class ChessController {
     @PostMapping("/exit")
     public ResponseEntity<Void> deleteGame(@ModelAttribute LogIn logIn) {
         chessGameService.validateEnd(logIn.getId());
-        chessGameService.cleanGame(logIn);
+        chessGameService.deleteGame(logIn);
         return ResponseEntity.status(HttpStatus.SEE_OTHER)
                 .location(URI.create(LOCALHOST_8080))
                 .build();

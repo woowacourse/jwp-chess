@@ -1,5 +1,7 @@
 package chess.controller;
 
+import chess.dto.DeleteRequestDto;
+import chess.dto.DeleteResponseDto;
 import chess.dto.MoveDto;
 import chess.dto.RoomDto;
 import chess.service.ChessService;
@@ -28,6 +30,11 @@ public class WebController {
     @GetMapping("/games")
     public ResponseEntity<List<RoomDto>> showChessRoomListPage() {
         return ResponseEntity.ok().body(chessService.loadRooms());
+    }
+
+    @DeleteMapping("/games")
+    public ResponseEntity<DeleteResponseDto> delete(@RequestBody DeleteRequestDto deleteRequestDto) {
+        return ResponseEntity.ok().body(chessService.deleteGame(deleteRequestDto));
     }
 
     @GetMapping("/game/{id}")

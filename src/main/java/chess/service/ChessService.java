@@ -14,9 +14,10 @@ import chess.domain.state.Running;
 import chess.domain.state.StateFactory;
 import chess.dto.BoardElementDto;
 import chess.dto.ChessGameDto;
+import chess.dto.DeleteRequestDto;
+import chess.dto.DeleteResponseDto;
 import chess.dto.RoomDto;
 import java.util.HashMap;
-import java.util.stream.IntStream;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -89,7 +90,7 @@ public final class ChessService {
         pieceDao.deleteAllPieceById(gameId);
         saveAllPieceToStorage(gameId, new BoardInitializer().init());
         gameDao.updateTurn(gameId, "WHITE");
-        gameDao.updateStatus(gameId, "PLAY");
+        roomDao.updateStatus(gameId, "PLAY");
     }
 
     public ChessGameDto loadGame(int gameId) {
@@ -106,7 +107,7 @@ public final class ChessService {
     }
 
     public void createRoom(String roomName, String password) {
-        RoomDto roomDto = new RoomDto(nextGameId++, roomName, password);
+        RoomDto roomDto = new RoomDto(nextGameId++, roomName, password, "STOP");
         deleteOldData(roomDto.getId());
         ChessGame chessGame = makeGame(roomDto.getId(), roomDto);
         chessGames.put(roomDto.getId(), chessGame);
@@ -126,19 +127,27 @@ public final class ChessService {
     }
 
     private void initNewChessGame(int gameId, RoomDto roomDto) {
-        gameDao.insertGame(gameId, "WHITE", "PLAY");
+        gameDao.insertGame(gameId, "WHITE");
         roomDao.saveRoom(roomDto);
         saveAllPieceToStorage(gameId, new BoardInitializer().init());
     }
 
     public List<RoomDto> loadRooms() {
-        return IntStream.range(0, nextGameId)
-                .mapToObj(roomDao::findById)
-                .collect(Collectors.toList());
+        return roomDao.findAll();
     }
 
     public void endGame(int gameId) {
         pieceDao.deleteAllPieceById(gameId);
-        gameDao.updateStatus(gameId, "STOP");
+        roomDao.updateStatus(gameId, "STOP");
+    }
+
+    public DeleteResponseDto deleteGame(DeleteRequestDto deleteRequestDto) {
+        String password = roomDao.findPasswordById(deleteRequestDto.getId());
+        if (password.equals(deleteRequestDto.getPassword())) {
+            roomDao.deleteRoom(deleteRequestDto.getId());
+            gameDao.deleteGame(deleteRequestDto.getId());
+            return DeleteResponseDto.success();
+        }
+        return DeleteResponseDto.fail();
     }
 }

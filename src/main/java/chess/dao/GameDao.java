@@ -21,14 +21,9 @@ public class GameDao {
         return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }
 
-    public void insertGame(int gameId, String turn, String status) {
-        String sql = "insert into game (game_id, current_turn, status) values (?,?,?)";
-        jdbcTemplate.update(sql, gameId, turn, status);
-    }
-
-    public void updateStatus(int gameId, String status) {
-        String sql = "update game set status=? where game_id=?";
-        jdbcTemplate.update(sql, status, gameId);
+    public void insertGame(int gameId, String turn) {
+        String sql = "insert into game (game_id, current_turn) values (?,?)";
+        jdbcTemplate.update(sql, gameId, turn);
     }
 
     public void deleteGame(int gameId) {

@@ -79,7 +79,7 @@ public class ChessController {
     }
 
     @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class,
-            DeleteFailOnPlayingException.class})
+            DeleteFailOnPlayingException.class, IllegalStateException.class})
     public ResponseEntity<ExceptionResponse> knownExceptionHandler(Exception e) {
         return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
     }

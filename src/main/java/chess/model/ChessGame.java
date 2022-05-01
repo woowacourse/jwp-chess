@@ -1,22 +1,19 @@
-package chess.dto;
+package chess.model;
 
-import chess.model.ChessGame;
-
-public class ChessGameDto {
+public class ChessGame {
 
     private Long id;
     private String title;
     private String password;
 
-    public ChessGameDto(String title, String password) {
+    public ChessGame(Long id, String title, String password) {
+        this.id = id;
         this.title = title;
         this.password = password;
     }
 
-    public ChessGameDto(ChessGame chessGame) {
-        this.id = chessGame.getId();
-        this.title = chessGame.getTitle();
-        this.password = chessGame.getPassword();
+    public boolean isSamePassword(String password) {
+        return this.password.equals(password);
     }
 
     public Long getId() {

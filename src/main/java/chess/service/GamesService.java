@@ -1,11 +1,12 @@
 package chess.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import chess.dto.ChessGameDto;
-import chess.entity.ChessGameEntity;
+import chess.model.ChessGame;
 import chess.model.state.State;
 import chess.repository.GamesRepository;
 
@@ -25,8 +26,12 @@ public class GamesService {
         gamesRepository.save(chessGameDto);
     }
 
-    public List<ChessGameEntity> loadGames() {
-        return gamesRepository.getGames();
+    public List<ChessGameDto> loadGames() {
+        List<ChessGameDto> chessGameDtos = new ArrayList<>();
+        for (ChessGame game : gamesRepository.getGames()) {
+            chessGameDtos.add(new ChessGameDto(game));
+        }
+        return chessGameDtos;
     }
 
     public void delete(Long id, String password) {
@@ -36,8 +41,8 @@ public class GamesService {
     }
 
     public void checkGamePassword(Long id, String password) {
-        ChessGameEntity chessGameEntity = gamesRepository.getGame(id);
-        if (!password.equals(chessGameEntity.getPassword())) {
+        ChessGame chessGame = gamesRepository.getGame(id);
+        if (!chessGame.isSamePassword(password)) {
             throw new IllegalArgumentException(PASSWORD_NOT_EQUAL_ERROR);
         }
     }

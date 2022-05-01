@@ -8,7 +8,7 @@ import chess.dao.ChessGameDao;
 import chess.dao.SquareDao;
 import chess.dao.StateDao;
 import chess.dto.ChessGameDto;
-import chess.entity.ChessGameEntity;
+import chess.model.ChessGame;
 import chess.model.board.Board;
 import chess.model.state.State;
 
@@ -31,7 +31,7 @@ public class GamesRepositoryImpl implements GamesRepository {
     }
 
     @Override
-    public List<ChessGameEntity> getGames() {
+    public List<ChessGame> getGames() {
         return chessGameDao.findAll();
     }
 
@@ -43,7 +43,7 @@ public class GamesRepositoryImpl implements GamesRepository {
     }
 
     @Override
-    public ChessGameEntity getGame(Long id) {
+    public ChessGame getGame(Long id) {
         return chessGameDao.find(id);
     }
 

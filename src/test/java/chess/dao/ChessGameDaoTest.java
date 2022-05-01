@@ -33,7 +33,7 @@ class ChessGameDaoTest {
 
         chessGameDao.insert(chessGameDto);
 
-        assertThat(chessGameDao.find(2L).getTitle()).isEqualTo("제목2");
+        assertThat(chessGameDao.find(2L).isSamePassword("password")).isTrue();
     }
 
     @DisplayName("체스 게임 방 데이터를 삭제한다.")

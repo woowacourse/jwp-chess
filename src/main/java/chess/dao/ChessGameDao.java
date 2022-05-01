@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import chess.dto.ChessGameDto;
-import chess.entity.ChessGameEntity;
+import chess.model.ChessGame;
 
 @Repository
 public class ChessGameDao {
@@ -18,7 +18,7 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<ChessGameEntity> chessGameEntityRowMapper = (resultSet, rowNum) -> new ChessGameEntity(
+    private final RowMapper<ChessGame> chessGameRowMapper = (resultSet, rowNum) -> new ChessGame(
         resultSet.getLong("id"),
         resultSet.getString("title"),
         resultSet.getString("password")
@@ -29,11 +29,11 @@ public class ChessGameDao {
         jdbcTemplate.update(sql, chessGameDto.getTitle(), chessGameDto.getPassword());
     }
 
-    public ChessGameEntity find(Long id) {
+    public ChessGame find(Long id) {
         final String sql = "select * from game where id = ?";
         return jdbcTemplate.queryForObject(
             sql,
-            (resultSet, rowNum) -> new ChessGameEntity(
+            (resultSet, rowNum) -> new ChessGame(
                 resultSet.getLong("id"),
                 resultSet.getString("title"),
                 resultSet.getString("password")
@@ -45,8 +45,8 @@ public class ChessGameDao {
         return jdbcTemplate.update(sql, id);
     }
 
-    public List<ChessGameEntity> findAll() {
+    public List<ChessGame> findAll() {
         final String sql = "select * from game";
-        return jdbcTemplate.query(sql, chessGameEntityRowMapper);
+        return jdbcTemplate.query(sql, chessGameRowMapper);
     }
 }

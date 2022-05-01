@@ -2,19 +2,49 @@ package chess.repository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+import chess.dao.ChessGameDao;
+import chess.dao.SquareDao;
+import chess.dao.StateDao;
 import chess.dto.ChessGameDto;
 import chess.model.ChessGame;
+import chess.model.board.Board;
 import chess.model.state.State;
 
-public interface GamesRepository {
+@Repository
+public class GamesRepository {
 
-    void save(ChessGameDto chessGameDto);
+    private final ChessGameDao chessGameDao;
+    private final SquareDao squareDao;
+    private final StateDao stateDao;
 
-    List<ChessGame> getGames();
+    public GamesRepository(ChessGameDao chessGameDao, SquareDao squareDao, StateDao stateDao) {
+        this.chessGameDao = chessGameDao;
+        this.squareDao = squareDao;
+        this.stateDao = stateDao;
+    }
 
-    void delete(Long id);
+    public void save(ChessGameDto chessGameDto) {
+        chessGameDao.insert(chessGameDto);
+    }
 
-    ChessGame getGame(Long id);
+    public List<ChessGame> getGames() {
+        return chessGameDao.findAll();
+    }
 
-    State getState(Long id);
+    public void delete(Long id) {
+        chessGameDao.delete(id);
+        squareDao.delete(id);
+        stateDao.delete(id);
+    }
+
+    public ChessGame getGame(Long id) {
+        return chessGameDao.find(id);
+    }
+
+    public State getState(Long id) {
+        Board board = squareDao.createBoard(id);
+        return stateDao.find(id, board);
+    }
 }

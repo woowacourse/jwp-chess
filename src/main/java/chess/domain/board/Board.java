@@ -114,28 +114,10 @@ public class Board {
         return TotalScore.getTotalPoint(teamPieces);
     }
 
-    public Board promotePawn(final Position sourcePosition, final String promotionType) {
-        final Piece piece = pieces.get(sourcePosition);
-        validatePromoteCondition(sourcePosition, piece);
-        pieces.put(sourcePosition, piece.promote(promotionType));
-        return new Board(pieces, currentTurnTeam);
-    }
-
-    private void validatePromoteCondition(final Position position, final Piece piece) {
-        if (!piece.canPromote(position)) {
-            throw new IllegalArgumentException("해당 기물은 프로모션 할 수 없습니다.");
-        }
-    }
-
     public Map<Position, Piece> getPieces() {
         return pieces;
     }
 
-    public boolean hasPromotionPawnIn(final Position sourcePosition) {
-        return pieces.values()
-                .stream()
-                .anyMatch(piece -> piece.canPromote(sourcePosition));
-    }
 
     public Team getTurn() {
         return currentTurnTeam;

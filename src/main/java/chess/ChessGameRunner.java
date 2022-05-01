@@ -7,7 +7,6 @@ import static chess.view.consoleview.input.CommandType.MOVE;
 import static chess.view.consoleview.input.CommandType.START;
 import static chess.view.consoleview.input.CommandType.STATUS;
 import static chess.view.consoleview.input.InputView.inputCommand;
-import static chess.view.consoleview.input.InputView.inputPromotionType;
 import static chess.view.consoleview.output.OutputView.printCurrentBoard;
 import static chess.view.consoleview.output.OutputView.printStartMessage;
 
@@ -75,10 +74,6 @@ public class ChessGameRunner {
         final Position targetPosition = Position.from(
                 command.split(COMMAND_DELIMITER)[TARGET_POSITION_INDEX]);
         board = board.movePiece(sourcePosition, targetPosition);
-
-        if (board.hasPromotionPawnIn(targetPosition)) {
-            board = board.promotePawn(targetPosition, inputPromotionType());
-        }
         return board;
     }
 }

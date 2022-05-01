@@ -6,7 +6,6 @@ import chess.domain.command.MoveCommand;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameResult;
 import chess.domain.piece.ChessmenInitializer;
-import chess.domain.piece.Color;
 import chess.domain.piece.Pieces;
 import chess.domain.room.Room;
 import chess.dto.GameResultDto;
@@ -63,25 +62,20 @@ public class ChessGameService {
     public void move(long gameId, MoveCommandDto moveCommandDto) {
         String from = moveCommandDto.getSource();
         String to = moveCommandDto.getTarget();
-        findChessGame(gameId).moveChessmen(new MoveCommand(from, to));
-        saveMove(gameId, moveCommandDto);
-        if (findChessGame(gameId).isEnd()) {
-            gameDao.updateEndFlagById(true, gameId);
-        }
+        ChessGame chessGame = findChessGame(gameId);
+
+        chessGame.moveChessmen(new MoveCommand(from, to));
+
+        saveMove(gameId, moveCommandDto, chessGame);
     }
 
-    private void saveMove(long gameId, MoveCommandDto moveCommandDto) {
-        ChessGame chessGame = findChessGame(gameId);
-        chessGame.moveChessmen(moveCommandDto.toEntity());
-        boolean endFlag = chessGame.getEndFlag();
-        Color turn = chessGame.getTurn();
-
+    private void saveMove(long gameId, MoveCommandDto moveCommandDto, ChessGame chessGame) {
         if (pieceDao.exists(gameId, moveCommandDto.getTarget())) {
             pieceDao.deleteByGameIdAndPosition(gameId, moveCommandDto.getTarget());
         }
         pieceDao.updateByGameIdAndPosition(gameId, moveCommandDto.getSource(), moveCommandDto.getTarget());
-        gameDao.updateTurnById(turn, gameId);
-        gameDao.updateEndFlagById(endFlag, gameId);
+        gameDao.updateTurnById(chessGame.getTurn(), gameId);
+        gameDao.updateEndFlagById(chessGame.isEnd(), gameId);
     }
 
     @Transactional

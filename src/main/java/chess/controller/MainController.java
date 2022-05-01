@@ -66,7 +66,7 @@ public class MainController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public String handle(Exception exception, Model model) {
+    public String handle(RuntimeException exception, Model model) {
         model.addAttribute("error", exception.getMessage());
         return "error";
     }

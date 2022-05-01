@@ -66,7 +66,7 @@ const Lobby = () => {
             <Title> 체스의 민족 </Title>
             <RoomWrapper>
                 {
-                    rooms.map((room) => <Room id={room.id} title={room.title}/>)
+                    rooms.map((room) => <Room key={room.id} id={room.id} title={room.title}/>)
                 }
             </RoomWrapper>
 

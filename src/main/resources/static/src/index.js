@@ -40,7 +40,7 @@ function deleteRoom(boardId) {
                 location.reload();
                 return;
             }
-            alert("게임이 진행중입니다.");
+            alert(boardId + " 방 삭제에 실패했습니다.");
             location.reload();
         });
 }

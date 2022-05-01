@@ -150,7 +150,10 @@ public class ChessService {
         if (!matchPassword(room.get(), password)) {
             throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
         }
-        return isFinishedChess(boardId, room.get());
+        if (!isFinishedChess(boardId, room.get())) {
+            throw new IllegalStateException("게임이 진행중입니다.");
+        }
+        return true;
     }
 
     private boolean isFinishedChess(Long boardId, Room room) {

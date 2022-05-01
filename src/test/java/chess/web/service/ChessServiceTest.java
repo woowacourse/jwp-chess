@@ -1,6 +1,7 @@
 package chess.web.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.board.Board;
@@ -144,14 +145,7 @@ class ChessServiceTest {
         Long boardId = chessService.createBoard(title, password);
         chessService.initBoard(boardId);
 
-        boolean result = chessService.removeRoom(boardId, password);
-
-        long resultCount = chessService.getRooms().stream()
-                .filter(room -> room.getId().equals(boardId))
-                .filter(room -> room.getTitle().equals(title))
-                .filter(room -> room.getPassword().equals(password))
-                .count();
-        assertThat(result).isFalse();
-        assertThat(resultCount).isOne();
+        assertThatThrownBy(() -> chessService.removeRoom(boardId, password))
+                .isInstanceOf(IllegalStateException.class);
     }
 }

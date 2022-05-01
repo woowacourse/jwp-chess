@@ -32,4 +32,8 @@ public class GameCreateRequest {
     public String getBlackName() {
         return blackName;
     }
+
+    public void setRoomPassword(String roomPassword) {
+        this.roomPassword = roomPassword;
+    }
 }

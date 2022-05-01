@@ -7,7 +7,6 @@ public class GameDto {
     private String whiteName;
     private String blackName;
     private boolean isFinished;
-    private String password;
 
     public GameDto() {
     }
@@ -38,9 +37,5 @@ public class GameDto {
 
     public boolean isFinished() {
         return isFinished;
-    }
-
-    public String getPassword() {
-        return password;
     }
 }

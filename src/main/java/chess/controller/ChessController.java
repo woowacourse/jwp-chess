@@ -84,11 +84,15 @@ public class ChessController {
     public Map<String, Double> getScore(@PathVariable Integer id) {
         ScoreResult scoreResult = chessService.getScore(id);
         Map<String, Double> responseValue = new HashMap<>();
+        saveScorePerTeam(scoreResult, responseValue);
+        return responseValue;
+    }
+
+    private void saveScorePerTeam(ScoreResult scoreResult, Map<String, Double> responseValue) {
         Score whiteScore = scoreResult.getScoreByPieceColor(PieceColor.WHITE);
         Score blackScore = scoreResult.getScoreByPieceColor(PieceColor.BLACK);
         responseValue.put("white", whiteScore.getValue());
         responseValue.put("black", blackScore.getValue());
-        return responseValue;
     }
 
     @GetMapping("/winner/{id}")

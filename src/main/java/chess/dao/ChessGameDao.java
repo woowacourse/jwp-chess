@@ -81,10 +81,10 @@ public class ChessGameDao {
         return jdbcTemplate.queryForObject(sql, Long.class, gameName);
     }
 
-    public Long findOneByGameName(String gameName) {
-        String sql = "select id from CHESSGAME where game_name = ? LIMIT 1";
+    public boolean existGameName(String gameName) {
+        String sql = "select exists(select * from chessgame where game_name = ? LIMIT 1)";
 
-        return jdbcTemplate.queryForObject(sql, Long.class, gameName);
+        return jdbcTemplate.queryForObject(sql, Boolean.class, gameName);
     }
 
     public void update(Long id, ChessGameDto chessGameDto) {

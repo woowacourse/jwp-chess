@@ -43,10 +43,8 @@ public class ChessService {
     }
 
     private void validateDuplicateGameName(String gameName) {
-        try {
-            chessGameDao.findOneByGameName(gameName);
+        if (chessGameDao.existGameName(gameName)) {
             throw new IllegalGameProgressException("동일한 이름의 게임이 이미 존재합니다");
-        } catch (EmptyResultDataAccessException ignored) {
         }
     }
 

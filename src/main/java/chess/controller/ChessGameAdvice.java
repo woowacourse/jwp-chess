@@ -26,17 +26,14 @@ public class ChessGameAdvice {
     }
 
     @ExceptionHandler({SQLException.class, DataAccessException.class})
-    @ResponseBody
-    public ResponseEntity<String> handleSQLException(Exception e){
-        return new ResponseEntity<>(
-                e.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
+    public String handleSQLException(Exception e, Model model) {
+        model.addAttribute("exception", e);
+        return "/error/error_page";
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handle404(NoHandlerFoundException e, Model model){
+    public String handle404(NoHandlerFoundException e, Model model) {
         model.addAttribute("exception", e);
         return "/error/error_page";
     }

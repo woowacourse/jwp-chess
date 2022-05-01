@@ -53,16 +53,21 @@ public class Board {
 
     public Board movePiece(final Position sourcePosition, final Position targetPosition) {
         final Piece sourcePiece = pieces.get(sourcePosition);
-
-        validateGameIsOver();
-        validateTurn(sourcePiece);
-        validateSameTeamTargetPositionPiece(sourcePiece, targetPosition);
-        validateMovement(sourcePosition, targetPosition);
+        validateMovementCondition(sourcePosition, targetPosition, sourcePiece);
 
         Map<Position, Piece> movedPieces = new HashMap<>(pieces);
         movedPieces.remove(sourcePosition);
         movedPieces.put(targetPosition, sourcePiece);
         return new Board(movedPieces, currentTurnTeam.turnToNext());
+    }
+
+    private void validateMovementCondition(final Position sourcePosition,
+                                           final Position targetPosition,
+                                           final Piece sourcePiece) {
+        validateGameIsOver();
+        validateTurn(sourcePiece);
+        validateSameTeamTargetPositionPiece(sourcePiece, targetPosition);
+        validatePieceMovementStrategy(sourcePosition, targetPosition);
     }
 
     private void validateGameIsOver() {
@@ -75,7 +80,7 @@ public class Board {
         }
     }
 
-    private void validateMovement(final Position sourcePosition, final Position targetPosition) {
+    private void validatePieceMovementStrategy(final Position sourcePosition, final Position targetPosition) {
         final Piece sourcePiece = pieces.get(sourcePosition);
         if (!sourcePiece.canMove(sourcePosition, targetPosition, getOtherPositions(sourcePosition))) {
             throw new IllegalArgumentException("기물을 이동시킬 수 없습니다.");
@@ -117,7 +122,6 @@ public class Board {
     public Map<Position, Piece> getPieces() {
         return pieces;
     }
-
 
     public Team getTurn() {
         return currentTurnTeam;

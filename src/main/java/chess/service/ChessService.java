@@ -35,19 +35,12 @@ public class ChessService {
 
     @Transactional
     public int insertGame(RoomDto roomDto, ChessBoard chessBoard) {
-        validateTitle(roomDto.getTitle());
         ChessGame chessGame = new ChessGame(chessBoard);
         chessGame.playGameByCommand(GameCommand.of("start"));
 
         int id = gameDao.save(roomDto.getTitle(), roomDto.getPassword(), chessGame.getState().toString());
         boardDao.save(chessGame.getChessBoard(), id);
         return id;
-    }
-
-    private void validateTitle(String title) {
-        if (title.isBlank()) {
-            throw new IllegalArgumentException("제목을 입력해주세요.");
-        }
     }
 
     public List<GameDto> findGame() {

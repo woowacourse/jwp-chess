@@ -1,6 +1,6 @@
 package chess.web.controller;
 
-import chess.web.dto.board.IsGameOverDto;
+import chess.web.dto.board.GameOverDto;
 import chess.web.dto.board.MovePositionsDto;
 import chess.web.dto.game.PasswordDto;
 import chess.web.service.ChessService;
@@ -27,8 +27,8 @@ public class ChessApiController {
     }
 
     @PatchMapping("/game/{gameId}/move")
-    public ResponseEntity<IsGameOverDto> move(@PathVariable int gameId,
-                                              @RequestBody MovePositionsDto movePositionsDto) {
+    public ResponseEntity<GameOverDto> move(@PathVariable int gameId,
+                                            @RequestBody MovePositionsDto movePositionsDto) {
         return ResponseEntity.ok(chessService.getIsGameOver(gameId, movePositionsDto));
     }
 }

@@ -345,7 +345,7 @@ async function deleteRoom(self) {
         const errorMessage = await response.json();
         await tempAlert(errorMessage.message, 1000);
         clearLoginForm();
-        // return;
+        return;
     }
     await tempAlert("삭제되었습니다!!", 1000);
     await rooms();

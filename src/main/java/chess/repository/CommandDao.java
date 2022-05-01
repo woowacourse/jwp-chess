@@ -24,11 +24,6 @@ public class CommandDao {
                 .usingGeneratedKeyColumns("command_id");
     }
 
-    public void insert(String command) {
-        String sql = "insert into command (command) values (?)";
-        jdbcTemplate.update(sql, command);
-    }
-
     public CommandEntity insert(CommandEntity commandEntity) {
         final SqlParameterSource parameters = new BeanPropertySqlParameterSource(commandEntity);
         final long commandId = insertActor.executeAndReturnKey(parameters).longValue();
@@ -40,18 +35,6 @@ public class CommandDao {
         return jdbcTemplate.query(sql, rowMapper(), id);
     }
 
-    public List<String> findAllInCommandTable() {
-        String sql = "select * from command";
-        return jdbcTemplate.query(sql, stringRowMapper());
-    }
-
-    private RowMapper<String> stringRowMapper() {
-        return (rs, rowNum) -> {
-            final String command = rs.getString("command");
-            return command;
-        };
-    }
-
     private RowMapper<CommandEntity> rowMapper() {
         return (rs, rowNum) -> {
             final Long commandId = rs.getLong("command_id");
@@ -59,10 +42,5 @@ public class CommandDao {
             final String command = rs.getString("command");
             return new CommandEntity(commandId, roomId, command);
         };
-    }
-
-    public void clear() {
-        String sql = "truncate table command";
-        jdbcTemplate.update(sql);
     }
 }

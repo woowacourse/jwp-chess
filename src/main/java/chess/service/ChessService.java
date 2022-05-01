@@ -17,6 +17,7 @@ import chess.dto.ChessGameDto;
 import chess.dto.DeleteRequestDto;
 import chess.dto.DeleteResponseDto;
 import chess.dto.RoomDto;
+import chess.entity.GameEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public final class ChessService {
     }
 
     public void createRoom(String roomName, String password) {
-        int gameId = gameDao.insertWithKeyHolder("WHITE");
+        int gameId = gameDao.insertWithKeyHolder(new GameEntity("WHITE"));
         RoomDto roomDto = new RoomDto(gameId, roomName, password, "STOP");
         roomDao.saveRoom(roomDto);
         saveAllPieceToStorage(gameId, new BoardInitializer().init());
@@ -75,7 +76,7 @@ public final class ChessService {
         String password = roomDao.findPasswordById(deleteRequestDto.getId());
         if (password.equals(deleteRequestDto.getPassword())) {
             roomDao.deleteRoom(deleteRequestDto.getId());
-            gameDao.deleteGame(deleteRequestDto.getId());
+            gameDao.deleteById(deleteRequestDto.getId());
             return DeleteResponseDto.success();
         }
         return DeleteResponseDto.fail();
@@ -109,18 +110,18 @@ public final class ChessService {
     private void updateBoard(String from, String to, int gameId, String turn) {
         pieceDao.deletePieceByIdAndPosition(gameId, to);
         pieceDao.updatePiecePosition(gameId, from, to);
-        gameDao.updateTurn(gameId, turn);
+        gameDao.updateById(new GameEntity(gameId, turn));
     }
 
     private void initGame(int gameId) {
         pieceDao.deleteAllPieceById(gameId);
         saveAllPieceToStorage(gameId, new BoardInitializer().init());
-        gameDao.updateTurn(gameId, "WHITE");
+        gameDao.updateById(new GameEntity(gameId, "WHITE"));
         roomDao.updateStatus(gameId, "PLAY");
     }
 
     private Color getColorFromStorage(int gameId) {
-        return Color.from(gameDao.findTurnById(gameId));
+        return Color.from(gameDao.findById(gameId).getTurn());
     }
 
     private Board getBoardFromStorage(int gameId) {

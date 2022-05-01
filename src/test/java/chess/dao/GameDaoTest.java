@@ -2,12 +2,12 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
+import chess.entity.GameEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
@@ -22,43 +22,35 @@ class GameDaoTest {
         gameDao = new GameDao(jdbcTemplate);
 
         jdbcTemplate.execute("create table game("
-                + "game_id int primary key not null, current_turn varchar(10) default'WHITE')");
+                + "game_id int primary key auto_increment,"
+                + " current_turn varchar(10) default'WHITE')");
 
-        jdbcTemplate.update("insert into game(game_id, current_turn) values (?,?)", 0, "WHITE");
+        gameDao.insert(new GameEntity("WHITE"));
     }
 
     @AfterEach
     void clean() {
+        gameDao.deleteById(1);
         jdbcTemplate.execute("drop table game if exists");
     }
 
     @Test
     void updateTurnTest() {
-        int gameId = 0;
-        gameDao.updateTurn(gameId, "BLACK");
-        assertThat(gameDao.findTurnById(gameId)).isEqualTo("BLACK");
+        int gameId = 1;
+        gameDao.updateById(new GameEntity(gameId, "BLACK"));
+        assertThat(gameDao.findById(gameId).getTurn()).isEqualTo("BLACK");
     }
 
     @Test
     void findTurnByIdTest() {
-        int gameId = 0;
-        String turn = gameDao.findTurnById(gameId);
-        assertThat(turn).isEqualTo("WHITE");
-    }
-
-    @Test
-    void insertGameTest() {
         int gameId = 1;
-        gameDao.insertGame(gameId, "WHITE");
-        String turn = gameDao.findTurnById(gameId);
+        String turn = gameDao.findById(gameId).getTurn();
         assertThat(turn).isEqualTo("WHITE");
     }
 
     @Test
-    void deleteGameTest() {
-        int gameId = 0;
-        gameDao.deleteGame(gameId);
-        assertThatThrownBy(() -> gameDao.findTurnById(gameId))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+    void insertWithKeyHolderTest() {
+        int id = gameDao.insertWithKeyHolder(new GameEntity("WHITE"));
+        assertThat(id).isEqualTo(2);
     }
 }

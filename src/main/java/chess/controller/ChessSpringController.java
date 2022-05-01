@@ -6,6 +6,7 @@ import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import java.util.Arrays;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,7 +35,7 @@ public class ChessSpringController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> create(@RequestBody RoomInfoDto roomInfoDto) {
+    public ResponseEntity<String> create(@Valid @RequestBody RoomInfoDto roomInfoDto) {
         chessGameService.create(roomInfoDto.getTitle(), roomInfoDto.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

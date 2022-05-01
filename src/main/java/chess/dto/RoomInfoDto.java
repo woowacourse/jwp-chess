@@ -1,8 +1,17 @@
 package chess.dto;
 
+import javax.validation.constraints.Size;
+
 public class RoomInfoDto {
-    private final String title;
-    private final String password;
+    private static final int MAX_ROOM_INFO_LENGTH = 20;
+
+    @Size(message = "방 제목은 20자가 넘으면 안됩니다.", max = 20)
+    private String title;
+    @Size(message = "비밀번호는 20자가 넘으면 안됩니다.", max = 20)
+    private String password;
+
+    public RoomInfoDto() {
+    }
 
     public RoomInfoDto(String title, String password) {
         this.title = title;

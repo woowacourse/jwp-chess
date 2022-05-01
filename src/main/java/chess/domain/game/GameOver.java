@@ -32,7 +32,7 @@ final class GameOver extends Started {
     }
 
     @Override
-    protected GameState getState() {
+    public GameState getState() {
         return GameState.OVER;
     }
 

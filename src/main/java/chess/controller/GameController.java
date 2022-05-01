@@ -1,16 +1,20 @@
 package chess.controller;
 
-import chess.domain.event.MoveEvent;
-import chess.domain.event.MoveRoute;
-import chess.dto.CreateGameDto;
+import chess.dto.CreateGameRequest;
+import chess.dto.CreateGameResponse;
+import chess.dto.DeleteGameRequest;
 import chess.dto.GameDto;
+import chess.dto.MoveRouteDto;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,8 +31,9 @@ public class GameController {
     }
 
     @PostMapping("/new")
-    public CreateGameDto createGame() {
-        return chessService.initGame();
+    @ResponseStatus(HttpStatus.CREATED)
+    public CreateGameResponse createGame(@RequestBody CreateGameRequest createGameRequest) {
+        return chessService.initGame(createGameRequest);
     }
 
     @GetMapping("/{id}")
@@ -38,10 +43,17 @@ public class GameController {
     }
 
     @PostMapping("/{id}")
-    public ModelAndView playGame(@PathVariable int id,
-                                 @RequestBody MoveRoute moveRoute) {
-        chessService.playGame(id, new MoveEvent(moveRoute));
+    public ModelAndView playGame(@PathVariable int id
+            , @RequestBody MoveRouteDto moveRoute) {
+        chessService.playGame(id, moveRoute);
         GameDto gameDto = chessService.findGame(id);
         return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameDto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
+    public void delete(@PathVariable int id
+            ,@RequestBody DeleteGameRequest deleteGameRequest) {
+        chessService.deleteGame(id, deleteGameRequest);
     }
 }

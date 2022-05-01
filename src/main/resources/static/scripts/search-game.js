@@ -1,25 +1,39 @@
-const onSuccessResponse = ({id, found}) => {
-    if (found) {
-        window.location.replace(`/game/${id}`);
-        return;
+const toBody = (form) => {
+    var object = {};
+    object['title'] = form.parentElement.getElementsByTagName("a")[0].textContent;
+    object['running'] = form.parentElement.getElementsByClassName("running")[0].textContent;
+    for (const pair of new FormData(form)) {
+        object[pair[0]] = pair[1];
     }
-    alert(`${id}에 해당되는 게임은 아직 만들어지지 않았습니다!`)
+    return JSON.stringify(object);
 }
 
-const searchAndRedirect = async (event) => {
+const deleteBoard = async (event) => {
     event.preventDefault();
-    const response = await fetch(event.target.action, {
-        method: 'post',
-        body: new URLSearchParams(new FormData(event.target))
+    const form = event.target;
+    const id = form.parentElement.getElementsByClassName("id")[0].textContent;
+    const response = await fetch("/game/"+id, {
+        headers: {'Content-Type': 'application/json'},
+        method: 'delete',
+        body: toBody(event.target)
     });
-    const json = await response.json();
-    onSuccessResponse(json);
+
+console.log(toBody(event.target));
+    if (!response.ok) {
+        return alert(await response.text());
+    }
+
+    form.parentElement.remove();
+
+    const total = document.querySelector("#total");
+    total.textContent = total.textContent-1;
 }
 
 const init = () => {
-    const form = document.querySelector("form");
-    form.addEventListener('submit', searchAndRedirect);
-
+    const gameForm = document.getElementsByClassName("game_form");
+    for (i = 0; i < gameForm.length; i++) {
+        gameForm[i].addEventListener("submit", (event) => deleteBoard(event));
+    }
 }
 
 init();

@@ -6,13 +6,13 @@ const SELECTED = "selected";
 
 let sourcePieceKey = null;
 
-const updateGame = async (source, target) => {
+const updateGame = async (source, target, id) => {
     const config = {
         headers: {'Content-Type': 'application/json'},
         method: "post",
         body: JSON.stringify({source, target})
     };
-    const response = await fetch(window.location.pathname, config);
+    const response = await fetch('/game/'+id, config);
     if (!response.ok) {
         const errorMessage = await response.text();
         return alert(errorMessage);
@@ -33,7 +33,9 @@ const toggleSelection = ({target: {id: positionKey, classList}}) => {
         classList.remove(SELECTED);
         return;
     }
-    updateGame(sourcePieceKey, positionKey);
+    const url = window.location.href.split('/');
+    const id = url[url.length-1];
+    updateGame(sourcePieceKey, positionKey, id);
 }
 
 const formatSquare = (square, positionKey) => {

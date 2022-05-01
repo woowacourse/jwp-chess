@@ -1,10 +1,13 @@
 package chess.dao;
 
+import chess.dto.CreateGameRequest;
+import chess.entity.GameEntity;
+import chess.util.DaoUtil;
+import java.util.List;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.EmptySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,11 +19,34 @@ public class GameDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public int saveAndGetGeneratedId() {
-        final String sql = "INSERT INTO game VALUES ()";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(sql, new EmptySqlParameterSource(), keyHolder);
-        return keyHolder.getKey().intValue();
+    private final RowMapper<GameEntity> eventRowMapper = (resultSet, rowNum) ->
+            new GameEntity(resultSet.getInt("id"),
+                    resultSet.getString("title"),
+                    resultSet.getString("password"),
+                    resultSet.getBoolean("running")
+            );
+
+    public List<GameEntity> selectAll() {
+        final String sql = "SELECT id, title, password, running FROM game";
+        return DaoUtil.queryNoParameter(namedParameterJdbcTemplate, sql, eventRowMapper);
+    }
+
+    public GameEntity findById(int id) {
+        final String sql = "SELECT id, title, password, running FROM game WHERE id = :id";
+        MapSqlParameterSource paramSource = new MapSqlParameterSource();
+        paramSource.addValue("id", id);
+
+        return namedParameterJdbcTemplate.queryForObject(sql, paramSource, eventRowMapper);
+    }
+
+    public int saveAndGetGeneratedId(CreateGameRequest request) {
+        final String sql = "INSERT INTO game(title, password) VALUES (:title, :password)";
+
+        MapSqlParameterSource paramSource = new MapSqlParameterSource();
+        paramSource.addValue("title", request.getTitle());
+        paramSource.addValue("password", request.getPassword());
+
+        return DaoUtil.queryForKeyHolder(namedParameterJdbcTemplate, sql, paramSource);
     }
 
     public void finishGame(int gameId) {
@@ -31,21 +57,19 @@ public class GameDao {
         namedParameterJdbcTemplate.update(sql, paramSource);
     }
 
-    public boolean checkById(int gameId) {
-        final String sql = "SELECT COUNT(*) FROM game WHERE id = :game_id";
-
-        MapSqlParameterSource paramSource = new MapSqlParameterSource("game_id", gameId);
-        int existingGameCount = namedParameterJdbcTemplate.queryForObject(sql, paramSource, Integer.class);
-        return existingGameCount > 0;
-    }
-
     public int countAll() {
         final String sql = "SELECT COUNT(*) FROM game";
-        return namedParameterJdbcTemplate.queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
+        return DaoUtil.queryForInt(namedParameterJdbcTemplate, sql, new EmptySqlParameterSource());
     }
 
     public int countRunningGames() {
         final String sql = "SELECT COUNT(*) FROM game WHERE running = true";
-        return namedParameterJdbcTemplate.queryForObject(sql, new EmptySqlParameterSource(), Integer.class);
+        return DaoUtil.queryForInt(namedParameterJdbcTemplate, sql, new EmptySqlParameterSource());
+    }
+
+    public int delete(int id) {
+        final String sql = "delete from game where id = :id";
+        MapSqlParameterSource paramSource = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.update(sql, paramSource);
     }
 }

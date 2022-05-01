@@ -22,7 +22,7 @@ final class BlackTurn extends Running {
     }
 
     @Override
-    protected GameState getState() {
+    public GameState getState() {
         return GameState.BLACK_TURN;
     }
 

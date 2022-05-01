@@ -24,3 +24,7 @@ form > #num_input{
     justify-content: center;
     align-items: center;
 }
+
+#table {
+    margin: 0 25%;
+}

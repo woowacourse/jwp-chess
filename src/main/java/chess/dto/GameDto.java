@@ -1,5 +1,6 @@
 package chess.dto;
 
+import chess.domain.game.Game;
 import chess.dto.board.RowDto;
 import chess.dto.board.WebBoardViewDto;
 import java.util.List;
@@ -13,6 +14,10 @@ public class GameDto {
     public GameDto(GameDataDto game, WebBoardViewDto board) {
         this.game = game;
         this.board = board;
+    }
+
+    public static GameDto of(int gameId, Game game) {
+        return new GameDto(new GameDataDto(gameId, game.getState()), new WebBoardViewDto(game.getBoard()));
     }
 
     public GameDataDto getGame() {

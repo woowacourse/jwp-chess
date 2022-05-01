@@ -1,13 +1,15 @@
 package chess.controller;
 
 import chess.dto.GameCountDto;
-import chess.dto.SearchResultDto;
+import chess.entity.GameEntity;
+import chess.dto.GamesResponse;
 import chess.service.ChessService;
 import chess.util.ResponseUtil;
+import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,13 +26,12 @@ public class SearchController {
     }
 
     @GetMapping
-    public ModelAndView render() {
+    @ResponseStatus(HttpStatus.NON_AUTHORITATIVE_INFORMATION)
+    public ModelAndView renderSearchPage() {
         GameCountDto gameCountDto = chessService.countGames();
-        return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gameCountDto);
-    }
+        List<GameEntity> gameEntities = chessService.selectAllGames();
+        GamesResponse gamesResponse = new GamesResponse(gameCountDto, gameEntities);
 
-    @PostMapping
-    public SearchResultDto searchResult(@RequestParam(name = "game_id") int gameId) {
-        return chessService.searchGame(gameId);
+        return ResponseUtil.createModelAndView(HTML_TEMPLATE_PATH, gamesResponse);
     }
 }

@@ -1,5 +1,6 @@
-package chess.domain.game;
+package chess.entity;
 
+import chess.domain.game.LogIn;
 import chess.domain.piece.Color;
 import java.util.Objects;
 

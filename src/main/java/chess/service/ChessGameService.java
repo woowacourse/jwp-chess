@@ -11,6 +11,7 @@ import chess.dto.ChessGameDto;
 import chess.dto.ChessRoomDto;
 import chess.entity.BoardEntity;
 import chess.entity.ChessGameEntity;
+import chess.entity.ChessGameEntityBuilder;
 import chess.service.util.BoardEntitiesToBoardConvertor;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,14 @@ public class ChessGameService {
 
     public long createChessGame(final String name, final String password) {
         ChessGame chessGame = ChessGame.createBasic();
-        long chessGameId = chessGameDao.save(new ChessGameEntity(name, password, chessGame)).longValue();
+        ChessGameEntity chessGameEntity = new ChessGameEntityBuilder()
+                .setName(name)
+                .setPassword(password)
+                .setPower(chessGame.isOn())
+                .setTeamValueOfTurn(chessGame.getTurn())
+                .build();
+
+        long chessGameId = chessGameDao.save(chessGameEntity).longValue();
         boardDao.save(BoardEntity.generateBoardEntities(chessGameId, chessGame.getCurrentBoard()));
         return chessGameId;
     }
@@ -61,39 +69,53 @@ public class ChessGameService {
     }
 
     public void deleteChessGame(final long chessGameId, final String password) {
-        validateGameOn(chessGameId);
+        validateGamePower(chessGameId);
         boardDao.delete(chessGameId);
-        chessGameDao.delete(new ChessGameEntity(chessGameId, password));
+        ChessGameEntity chessGameEntity = new ChessGameEntityBuilder()
+                .setId(chessGameId)
+                .setPassword(password)
+                .build();
+        chessGameDao.delete(chessGameEntity);
     }
 
-    private void validateGameOn(long chessGameId) {
+    private void validateGamePower(long chessGameId) {
         ChessGameEntity chessGameEntity = chessGameDao.load(chessGameId);
-        if (chessGameEntity.getPower()) {
-            throw new IllegalStateException("[ERROR] 아직 게임이 끝나지 않아 삭제할 수 없습니다!");
-        }
+        chessGameEntity.isPower();
     }
 
     public void movePiece(
-            final long chessGameId,
-            final char sourceColumnValue, final int sourceRowValue,
-            final char targetColumnValue, final int targetRowValue
+            final long chessGameId, final char sourceColumn, final int sourceRow,
+            final char targetColumn, final int targetRow
     ) {
         ChessGame chessGame = convertChessGame(chessGameId, chessGameDao.load(chessGameId));
-        chessGame.move(sourceColumnValue, sourceRowValue, targetColumnValue, targetRowValue);
-        chessGameDao.updateIsOnAndTurn(new ChessGameEntity(chessGameId, chessGame.isOn(), chessGame.getTurn()));
-        boardDao.updatePiece(
-                new BoardEntity(chessGameId, sourceColumnValue, sourceRowValue, chessGame.getCurrentBoard()));
-        boardDao.updatePiece(
-                new BoardEntity(chessGameId, targetColumnValue, targetRowValue, chessGame.getCurrentBoard()));
+        chessGame.move(sourceColumn, sourceRow, targetColumn, targetRow);
+
+        ChessGameEntity chessGameEntity = new ChessGameEntityBuilder()
+                .setId(chessGameId)
+                .setPower(chessGame.isOn())
+                .setTeamValueOfTurn(chessGame.getTurn())
+                .build();
+        chessGameDao.updateIsOnAndTurn(chessGameEntity);
+        boardDao.updatePiece(new BoardEntity(chessGameId, sourceColumn, sourceRow, chessGame.getCurrentBoard()));
+        boardDao.updatePiece(new BoardEntity(chessGameId, targetColumn, targetRow, chessGame.getCurrentBoard()));
     }
 
     public void resetChessGame(final long chessGameId) {
+        ChessGameEntity chessGameEntity = new ChessGameEntityBuilder()
+                .setId(chessGameId)
+                .setPower(true)
+                .setTeamValueOfTurn(new Turn(Team.WHITE).getValue())
+                .build();
         boardDao.delete(chessGameId);
-        chessGameDao.updateIsOnAndTurn(new ChessGameEntity(chessGameId, true, new Turn(Team.WHITE)));
         boardDao.save(BoardEntity.generateBoardEntities(chessGameId, BoardFactory.createInitChessBoard().getBoard()));
+        chessGameDao.updateIsOnAndTurn(chessGameEntity);
     }
 
     public void endChessGame(final long chessGameId) {
-        chessGameDao.updateIsOn(new ChessGameEntity(chessGameId, false));
+        ChessGameEntity chessGameEntity = new ChessGameEntityBuilder()
+                .setId(chessGameId)
+                .setPower(false)
+                .build();
+        chessGameDao.updateIsOn(chessGameEntity);
     }
 }

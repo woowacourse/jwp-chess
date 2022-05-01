@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.domain.game.ChessGame;
 import chess.entity.ChessGameEntity;
+import chess.entity.ChessGameEntityBuilder;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,8 +52,14 @@ class ChessGameDaoTest {
     @DisplayName("ChessGameEntity 로 chess_game table 에 저장한다.")
     void save() {
         String TEST_NAME = "jo";
-
-        Number savedId = chessGameDao.save(new ChessGameEntity(TEST_NAME, SAVED_PASSWORD, ChessGame.createBasic()));
+        ChessGame chessGame = ChessGame.createBasic();
+        ChessGameEntity savingChessGameEntity = new ChessGameEntityBuilder()
+                .setName(TEST_NAME)
+                .setPassword(SAVED_PASSWORD)
+                .setPower(chessGame.isOn())
+                .setTeamValueOfTurn(chessGame.getTurn())
+                .build();
+        Number savedId = chessGameDao.save(savingChessGameEntity);
 
         ChessGameEntity chessGameEntity = chessGameDao.load(savedId.longValue());
         assertThat(chessGameEntity.getName()).isEqualTo(TEST_NAME);
@@ -61,7 +68,11 @@ class ChessGameDaoTest {
     @Test
     @DisplayName("id 를 이용해서 chess_game 를 삭제한다")
     void delete() {
-        chessGameDao.delete(new ChessGameEntity(savedId, SAVED_PASSWORD));
+        ChessGameEntity chessGameEntity = new ChessGameEntityBuilder()
+                .setId(savedId)
+                .setPassword(SAVED_PASSWORD)
+                .build();
+        chessGameDao.delete(chessGameEntity);
 
         List<ChessGameEntity> chessGameEntities = chessGameDao.loadAll();
         assertThat(chessGameEntities.size()).isEqualTo(0);

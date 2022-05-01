@@ -19,7 +19,7 @@ public class ChessGameDto {
     public ChessGameDto(final String name, final ChessGame chessGame) {
         this.boardForHtml = convertBoardForHtml(chessGame.getCurrentBoard());
         this.name = name;
-        this.turn = chessGame.getTurn().getNow().getValue();
+        this.turn = chessGame.getTurn();
         this.result = chessGame.generateResult();
         this.isOn = chessGame.isOn();
     }

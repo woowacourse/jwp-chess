@@ -104,7 +104,7 @@ public class ChessGame {
         return board.getBoard();
     }
 
-    public Turn getTurn() {
-        return turn;
+    public String getTurn() {
+        return turn.getValue();
     }
 }

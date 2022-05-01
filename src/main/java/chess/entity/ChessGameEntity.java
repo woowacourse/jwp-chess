@@ -1,15 +1,12 @@
 package chess.entity;
 
-import chess.domain.game.ChessGame;
-import chess.domain.game.Turn;
-
 public class ChessGameEntity {
 
-    private long id;
-    private String name;
-    private String password;
-    private boolean power;
-    private String teamValueOfTurn;
+    private final long id;
+    private final String name;
+    private final String password;
+    private final boolean power;
+    private final String teamValueOfTurn;
 
     public ChessGameEntity(final long id, final String name, final String password, final boolean power,
                            final String teamValueOfTurn) {
@@ -20,27 +17,10 @@ public class ChessGameEntity {
         this.teamValueOfTurn = teamValueOfTurn;
     }
 
-    public ChessGameEntity(final String name, final String password, final ChessGame chessGame) {
-        this.name = name;
-        this.password = password;
-        this.power = chessGame.isOn();
-        this.teamValueOfTurn = chessGame.getTurn().getNow().getValue();
-    }
-
-    public ChessGameEntity(final long id, final boolean power, final Turn turn) {
-        this.id = id;
-        this.power = power;
-        this.teamValueOfTurn = turn.getNow().getValue();
-    }
-
-    public ChessGameEntity(final long id, final String password) {
-        this.id = id;
-        this.password = password;
-    }
-
-    public ChessGameEntity(final long id, final boolean power) {
-        this.id = id;
-        this.power = power;
+    public void isPower() {
+        if (power) {
+            throw new IllegalStateException("[ERROR] 아직 게임이 끝나지 않아 삭제할 수 없습니다!");
+        }
     }
 
     public long getId() {

@@ -5,12 +5,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.dao.GameDao;
 import chess.dao.JdbcGameDao;
-import chess.dao.JdbcRoomDao;
-import chess.dao.PieceDao;
 import chess.dao.JdbcPieceDao;
+import chess.dao.JdbcRoomDao;
+import chess.dao.JdbcTurnDao;
+import chess.dao.PieceDao;
 import chess.dao.RoomDao;
 import chess.dao.TurnDao;
-import chess.dao.JdbcTurnDao;
 import chess.dto.MoveDto;
 import chess.dto.RoomDto;
 import java.util.List;
@@ -20,8 +20,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("classpath:init.sql")
 class ChessServiceTest {
 
     private ChessService chessService;
@@ -38,40 +40,6 @@ class ChessServiceTest {
 
         this.chessService = new ChessService(pieceDao, turnDao, roomDao, gameDao);
 
-        jdbcTemplate.execute("drop table turn if exists");
-        jdbcTemplate.execute("drop table piece if exists");
-        jdbcTemplate.execute("drop table game if exists");
-        jdbcTemplate.execute("drop table room if exists");
-        jdbcTemplate.execute("CREATE TABLE room\n"
-                + "(\n"
-                + "    id       int         not null auto_increment primary key,\n"
-                + "    title    varchar(30) not null,\n"
-                + "    password varchar(8)  not null\n"
-                + ");\n"
-                + "CREATE TABLE game\n"
-                + "(\n"
-                + "    roomId int        not null primary key,\n"
-                + "    state   varchar(3) not null,\n"
-                + "    foreign key (roomId) REFERENCES room (id)\n"
-                + "        on delete cascade\n"
-                + ");\n"
-                + "CREATE TABLE turn\n"
-                + "(\n"
-                + "    roomId int        not null primary key,\n"
-                + "    team   varchar(5) not null,\n"
-                + "    foreign key (roomId) REFERENCES room (id)\n"
-                + "        on delete cascade\n"
-                + ");\n"
-                + "CREATE TABLE piece\n"
-                + "(\n"
-                + "    roomId   int        not null,\n"
-                + "    position varchar(3) not null,\n"
-                + "    name     varchar(2) not null,\n"
-                + "    team     varchar(5) not null,\n"
-                + "    primary key (roomId, position),\n"
-                + "    foreign key (roomId) REFERENCES room (id)\n"
-                + "        on delete cascade\n"
-                + ");\n");
         RoomDto roomDto = chessService.createRoom(new RoomDto("title", "password"));
         chessService.initializeGame(roomDto.getId());
     }

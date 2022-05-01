@@ -26,7 +26,7 @@ create table piece
         on delete cascade
 );
 
-create table member
+create table memberEntity
 (
     id       int(10)     NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name     varchar(20) NOT NULL,

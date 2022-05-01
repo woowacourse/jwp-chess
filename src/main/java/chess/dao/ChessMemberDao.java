@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.entities.Member;
+import chess.entities.MemberEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -13,23 +13,23 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WebChessMemberDao implements MemberDao<Member> {
+public class ChessMemberDao implements MemberDao<MemberEntity> {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public WebChessMemberDao(NamedParameterJdbcTemplate jdbcTemplate) {
+    public ChessMemberDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void saveAll(List<Member> members, int boardId) {
-        for (Member member : members) {
-            save(member.getName(), boardId);
+    public void saveAll(List<MemberEntity> memberEntities, int boardId) {
+        for (MemberEntity memberEntity : memberEntities) {
+            save(memberEntity.getName(), boardId);
         }
     }
 
     @Override
-    public List<Member> getAllByBoardId(int boardId) {
+    public List<MemberEntity> getAllByBoardId(int boardId) {
         final String sql = "SELECT * FROM member WHERE board_id=:board_id";
 
         List<String> keys = List.of("board_id");
@@ -39,8 +39,8 @@ public class WebChessMemberDao implements MemberDao<Member> {
         return jdbcTemplate.query(sql, parameterSource, (rs, rowNum) -> makeMember(rs));
     }
 
-    private Member makeMember(ResultSet rs) throws SQLException {
-        return new Member(
+    private MemberEntity makeMember(ResultSet rs) throws SQLException {
+        return new MemberEntity(
                 rs.getInt("id"),
                 rs.getString("name"),
                 rs.getInt("board_id")
@@ -48,7 +48,7 @@ public class WebChessMemberDao implements MemberDao<Member> {
     }
 
     @Override
-    public Member save(String name, int boardId) {
+    public MemberEntity save(String name, int boardId) {
         final String sql = "INSERT INTO member(name, board_id) VALUES (:name, :board_id)";
 
         List<String> keys = List.of("name", "board_id");
@@ -58,7 +58,7 @@ public class WebChessMemberDao implements MemberDao<Member> {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, parameterSource, keyHolder);
 
-        return new Member(Objects.requireNonNull(keyHolder.getKey()).intValue(), name, boardId);
+        return new MemberEntity(Objects.requireNonNull(keyHolder.getKey()).intValue(), name, boardId);
     }
 
     @Override

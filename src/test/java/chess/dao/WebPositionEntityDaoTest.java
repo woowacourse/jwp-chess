@@ -3,15 +3,15 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.entities.ChessGame;
+import chess.entities.GameEntity;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Pawn;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import chess.entities.ChessPiece;
-import chess.entities.ChessPosition;
+import chess.entities.PieceEntity;
+import chess.entities.PositionEntity;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -21,50 +21,50 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-class WebChessPositionDaoTest {
+class WebPositionEntityDaoTest {
 
     @Autowired
-    private WebChessPositionDao webChessPositionDao;
+    private ChessPositionDao chessPositionDao;
 
     @Autowired
-    private WebChessBoardDao boardDao;
+    private ChessBoardDao boardDao;
 
     @Autowired
-    private WebChessPieceDao pieceDao;
+    private ChessPieceDao pieceDao;
 
     private int boardId;
     private int positionId;
 
     @BeforeEach
     void setup() {
-        final ChessGame board = boardDao.save(new ChessGame("코린파이팅", "1111"));
+        final GameEntity board = boardDao.save(new GameEntity("코린파이팅", "1111"));
         this.boardId = board.getId();
-        ChessPosition chessPosition = webChessPositionDao.save(new ChessPosition(Column.A, Row.TWO, boardId));
-        this.positionId = chessPosition.getId();
-        pieceDao.save(new ChessPiece(Color.WHITE, new Pawn(), chessPosition.getId()));
+        PositionEntity positionEntity = chessPositionDao.save(new PositionEntity(Column.A, Row.TWO, boardId));
+        this.positionId = positionEntity.getId();
+        pieceDao.save(new PieceEntity(Color.WHITE, new Pawn(), positionEntity.getId()));
     }
 
     @Test
     void save() {
-        final ChessPosition chessPosition = webChessPositionDao.save(new ChessPosition(Column.B, Row.TWO, boardId));
+        final PositionEntity positionEntity = chessPositionDao.save(new PositionEntity(Column.B, Row.TWO, boardId));
         assertAll(
-                () -> assertThat(chessPosition.getColumn()).isEqualTo(Column.B),
-                () -> assertThat(chessPosition.getRow()).isEqualTo(Row.TWO)
+                () -> assertThat(positionEntity.getColumn()).isEqualTo(Column.B),
+                () -> assertThat(positionEntity.getRow()).isEqualTo(Row.TWO)
         );
     }
 
     @Test
     void findByColumnAndRowAndBoardId() {
-        ChessPosition chessPosition = webChessPositionDao.getByColumnAndRowAndBoardId(Column.A, Row.TWO, boardId);
+        PositionEntity positionEntity = chessPositionDao.getByColumnAndRowAndBoardId(Column.A, Row.TWO, boardId);
         assertAll(
-                () -> assertThat(chessPosition.getColumn()).isEqualTo(Column.A),
-                () -> assertThat(chessPosition.getRow()).isEqualTo(Row.TWO)
+                () -> assertThat(positionEntity.getColumn()).isEqualTo(Column.A),
+                () -> assertThat(positionEntity.getRow()).isEqualTo(Row.TWO)
         );
     }
 
     @Test
     void findAllPositionsAndPieces() {
-        Map<Position, Piece> all = webChessPositionDao.findAllPositionsAndPieces(boardId);
+        Map<Position, Piece> all = chessPositionDao.findAllPositionsAndPieces(boardId);
 
         for (Position position : all.keySet()) {
             assertThat(all.get(position).getType()).isInstanceOf(Pawn.class);
@@ -73,21 +73,21 @@ class WebChessPositionDaoTest {
 
     @Test
     void saveAllPositionTest() {
-        final int savedRecords = webChessPositionDao.saveAll(boardId);
+        final int savedRecords = chessPositionDao.saveAll(boardId);
         assertThat(savedRecords).isEqualTo(64);
     }
 
     @Test
     void getIdByColumnAndRowAndBoardId() {
-        int positionId = webChessPositionDao.getIdByColumnAndRowAndBoardId(Column.A, Row.TWO, boardId);
+        int positionId = chessPositionDao.getIdByColumnAndRowAndBoardId(Column.A, Row.TWO, boardId);
 
         assertThat(positionId).isEqualTo(this.positionId);
     }
 
     @Test
     void getPaths() {
-        List<ChessPosition> positions = List.of(new ChessPosition(Column.A, Row.TWO, boardId));
-        List<ChessPosition> paths = webChessPositionDao.getPaths(positions, boardId);
+        List<PositionEntity> positions = List.of(new PositionEntity(Column.A, Row.TWO, boardId));
+        List<PositionEntity> paths = chessPositionDao.getPaths(positions, boardId);
 
         assertThat(paths.get(0).getId()).isEqualTo(positionId);
     }

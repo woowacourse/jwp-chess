@@ -1,6 +1,6 @@
 package chess.dto.response;
 
-import chess.entities.Member;
+import chess.entities.MemberEntity;
 
 public class RoomDto {
 
@@ -9,11 +9,11 @@ public class RoomDto {
     private final String whiteMember;
     private final String blackMember;
 
-    public RoomDto(int roomId, String roomTitle, Member whiteMember, Member blackMember) {
+    public RoomDto(int roomId, String roomTitle, MemberEntity whiteMemberEntity, MemberEntity blackMemberEntity) {
         this.roomId = roomId;
         this.roomTitle = roomTitle;
-        this.whiteMember = whiteMember.getName();
-        this.blackMember = blackMember.getName();
+        this.whiteMember = whiteMemberEntity.getName();
+        this.blackMember = blackMemberEntity.getName();
     }
 
     public int getRoomId() {

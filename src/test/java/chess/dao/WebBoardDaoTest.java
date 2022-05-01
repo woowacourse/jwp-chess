@@ -3,7 +3,7 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.entities.ChessGame;
+import chess.entities.GameEntity;
 import chess.domain.pieces.Color;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -16,26 +16,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 class WebBoardDaoTest {
 
     @Autowired
-    private WebChessBoardDao dao;
+    private ChessBoardDao dao;
 
     int boardId;
 
     @BeforeEach
     void setup() {
-        final ChessGame board = dao.save(new ChessGame("개초보만", "1111"));
+        final GameEntity board = dao.save(new GameEntity("개초보만", "1111"));
         this.boardId = board.getId();
     }
 
     @Test
     void saveTest() {
-        final ChessGame board = dao.save(new ChessGame("개초보만", "1111"));
+        final GameEntity board = dao.save(new GameEntity("개초보만", "1111"));
         assertThat(board.getRoomTitle()).isEqualTo("개초보만");
     }
 
     @Test
     void getByIdTest() {
-        final ChessGame board = dao.save(new ChessGame("개초보만", Color.WHITE, "2222"));
-        final ChessGame foundBoard = dao.getById(board.getId());
+        final GameEntity board = dao.save(new GameEntity("개초보만", Color.WHITE, "2222"));
+        final GameEntity foundBoard = dao.getById(board.getId());
         assertAll(
                 () -> assertThat(foundBoard.getRoomTitle()).isEqualTo("개초보만"),
                 () -> assertThat(foundBoard.getTurn()).isEqualTo(Color.WHITE),
@@ -45,7 +45,7 @@ class WebBoardDaoTest {
 
     @Test
     void deleteBoard() {
-        final ChessGame board = dao.save(new ChessGame("aaa", "1111"));
+        final GameEntity board = dao.save(new GameEntity("aaa", "1111"));
         int affectedRow = dao.deleteByIdAndPassword(board.getId(), board.getPassword());
         assertThat(affectedRow).isEqualTo(1);
     }
@@ -58,7 +58,7 @@ class WebBoardDaoTest {
     @Test
     void deleteAll() {
         dao.deleteAll();
-        List<ChessGame> boards = dao.findAll();
+        List<GameEntity> boards = dao.findAll();
 
         assertThat(boards.size()).isEqualTo(0);
     }
@@ -66,7 +66,7 @@ class WebBoardDaoTest {
     @Test
     void updateTurn() {
         dao.updateTurn(Color.BLACK, boardId);
-        ChessGame chessBoard = dao.getById(boardId);
+        GameEntity chessBoard = dao.getById(boardId);
 
         assertThat(chessBoard.getTurn()).isEqualTo(Color.BLACK);
     }

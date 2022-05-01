@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.pieces.Color;
-import chess.entities.ChessGame;
+import chess.entities.GameEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -16,16 +16,16 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WebChessBoardDao implements BoardDao<ChessGame> {
+public class ChessBoardDao implements BoardDao<GameEntity> {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public WebChessBoardDao(NamedParameterJdbcTemplate jdbcTemplate) {
+    public ChessBoardDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public ChessGame save(ChessGame board) {
+    public GameEntity save(GameEntity board) {
         final String sql = "INSERT INTO board (room_title, turn, password) VALUES (:room_title, :turn, :password)";
 
         List<String> keys = List.of("room_title", "turn", "password");
@@ -35,11 +35,11 @@ public class WebChessBoardDao implements BoardDao<ChessGame> {
 
         jdbcTemplate.update(sql, ParameterSourceCreator.makeParameterSource(keys, values), keyHolder);
         int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
-        return new ChessGame(id, board.getRoomTitle(), board.getTurn(), board.getPassword());
+        return new GameEntity(id, board.getRoomTitle(), board.getTurn(), board.getPassword());
     }
 
     @Override
-    public ChessGame getById(int id) {
+    public GameEntity getById(int id) {
         final String sql = "SELECT * FROM board WHERE id=:id";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", id);
@@ -49,7 +49,7 @@ public class WebChessBoardDao implements BoardDao<ChessGame> {
     }
 
     @Override
-    public List<ChessGame> findAll() {
+    public List<GameEntity> findAll() {
         final String sql = "SELECT * FROM board";
         return jdbcTemplate.query(sql, new MapSqlParameterSource(), (rs, rowNum) -> makeBoard(rs));
     }
@@ -76,8 +76,8 @@ public class WebChessBoardDao implements BoardDao<ChessGame> {
         jdbcTemplate.update(sql, ParameterSourceCreator.makeParameterSource(keys, values));
     }
 
-    private ChessGame makeBoard(ResultSet resultSet) throws SQLException {
-        return new ChessGame(
+    private GameEntity makeBoard(ResultSet resultSet) throws SQLException {
+        return new GameEntity(
                 resultSet.getInt("id"),
                 resultSet.getString("room_title"),
                 Color.findColor(resultSet.getString("turn")),

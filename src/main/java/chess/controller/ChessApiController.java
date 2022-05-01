@@ -1,13 +1,21 @@
 package chess.controller;
 
+import chess.domain.pieces.Color;
 import chess.domain.position.Position;
 import chess.dto.request.MoveDto;
+import chess.dto.request.NewGameInfoDto;
 import chess.dto.response.GameStatusDto;
 import chess.dto.response.StatusDto;
+import chess.entities.GameEntity;
+import chess.entities.MemberEntity;
 import chess.service.GameService;
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(annotations = RestController.class)
-@RequestMapping("/room/{roomId}")
+@RequestMapping("/room")
 public class ChessApiController {
 
     private final GameService gameService;
@@ -26,7 +34,18 @@ public class ChessApiController {
         this.gameService = gameService;
     }
 
-    @PostMapping("/move")
+    @PostMapping
+    public void createRoom(@ModelAttribute NewGameInfoDto newGameInfoDto, HttpServletResponse response)
+            throws IOException {
+        final GameEntity board = new GameEntity(newGameInfoDto.getTitle(), Color.WHITE,
+                List.of(new MemberEntity(newGameInfoDto.getFirstMemberName()),
+                        new MemberEntity(newGameInfoDto.getSecondMemberName())),
+                newGameInfoDto.getPassword());
+        int roomId = gameService.createBoard(board).getId();
+        response.sendRedirect("/room/" + roomId);
+    }
+
+    @PostMapping("/{roomId}/move")
     public ResponseEntity<GameStatusDto> movePiece(@PathVariable("roomId") int roomId, @RequestBody MoveDto moveDto) {
         if (gameService.isEnd(roomId)) {
             throw new IllegalArgumentException("게임이 이미 끝났다.");
@@ -35,7 +54,7 @@ public class ChessApiController {
         return ResponseEntity.ok(new GameStatusDto(gameService.isEnd(roomId)));
     }
 
-    @PostMapping("/end")
+    @PostMapping("/{roomId}/end")
     public ResponseEntity<Void> endGame(@PathVariable("roomId") int id, @RequestParam("password") String password) {
         if (!gameService.isEnd(id)) {
             throw new IllegalArgumentException("진행중인 게임은 삭제할 수 없어~");
@@ -46,7 +65,7 @@ public class ChessApiController {
         return ResponseEntity.ok(null);
     }
 
-    @GetMapping("/status")
+    @GetMapping("/{roomId}/status")
     public StatusDto showStatus(@PathVariable("roomId") int id) {
         return gameService.status(id);
     }

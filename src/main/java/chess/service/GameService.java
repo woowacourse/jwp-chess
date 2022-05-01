@@ -1,10 +1,10 @@
 package chess.service;
 
-import chess.dao.BoardRepository;
-import chess.dao.WebChessBoardDao;
-import chess.dao.WebChessMemberDao;
-import chess.dao.WebChessPieceDao;
-import chess.dao.WebChessPositionDao;
+import chess.dao.GameRepository;
+import chess.dao.ChessBoardDao;
+import chess.dao.ChessMemberDao;
+import chess.dao.ChessPieceDao;
+import chess.dao.ChessPositionDao;
 import chess.domain.game.ChessBoardInitializer;
 import chess.domain.game.ChessBoard;
 import chess.domain.game.BoardInitializer;
@@ -12,9 +12,9 @@ import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
 import chess.dto.response.StatusDto;
-import chess.entities.ChessGame;
-import chess.entities.ChessPiece;
-import chess.entities.ChessPosition;
+import chess.entities.GameEntity;
+import chess.entities.PieceEntity;
+import chess.entities.PositionEntity;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,43 +25,43 @@ import org.springframework.stereotype.Service;
 @Service
 public final class GameService {
 
-    private final BoardRepository boardRepository;
-    private final WebChessBoardDao boardDao;
-    private final WebChessPositionDao positionDao;
-    private final WebChessPieceDao pieceDao;
-    private final WebChessMemberDao memberDao;
+    private final GameRepository gameRepository;
+    private final ChessBoardDao boardDao;
+    private final ChessPositionDao positionDao;
+    private final ChessPieceDao pieceDao;
+    private final ChessMemberDao memberDao;
 
-    public GameService(BoardRepository boardRepository, WebChessBoardDao boardDao, WebChessPositionDao positionDao,
-                       WebChessPieceDao pieceDao, WebChessMemberDao memberDao) {
-        this.boardRepository = boardRepository;
+    public GameService(GameRepository gameRepository, ChessBoardDao boardDao, ChessPositionDao positionDao,
+                       ChessPieceDao pieceDao, ChessMemberDao memberDao) {
+        this.gameRepository = gameRepository;
         this.boardDao = boardDao;
         this.positionDao = positionDao;
         this.pieceDao = pieceDao;
         this.memberDao = memberDao;
     }
 
-    public ChessGame createBoard(final ChessGame board) {
+    public GameEntity createBoard(final GameEntity board) {
         return saveBoard(board, new ChessBoardInitializer());
     }
 
-    public ChessGame saveBoard(final ChessGame board, final BoardInitializer boardInitializer) {
-        final ChessGame savedBoard = boardDao.save(board);
+    public GameEntity saveBoard(final GameEntity board, final BoardInitializer boardInitializer) {
+        final GameEntity savedBoard = boardDao.save(board);
         final Map<Position, Piece> initialize = boardInitializer.initialize();
         positionDao.saveAll(savedBoard.getId());
         for (Position position : initialize.keySet()) {
             int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),
                     savedBoard.getId());
             final Piece piece = initialize.get(position);
-            pieceDao.save(new ChessPiece(piece.getColor(), piece.getType(), lastPositionId));
+            pieceDao.save(new PieceEntity(piece.getColor(), piece.getType(), lastPositionId));
         }
         memberDao.saveAll(board.getMembers(), savedBoard.getId());
         return savedBoard;
     }
 
     public void move(final int roomId, final Position sourceRawPosition, final Position targetRawPosition) {
-        ChessPosition sourcePosition = positionDao.getByColumnAndRowAndBoardId(sourceRawPosition.getColumn(),
+        PositionEntity sourcePosition = positionDao.getByColumnAndRowAndBoardId(sourceRawPosition.getColumn(),
                 sourceRawPosition.getRow(), roomId);
-        ChessPosition targetPosition = positionDao.getByColumnAndRowAndBoardId(targetRawPosition.getColumn(),
+        PositionEntity targetPosition = positionDao.getByColumnAndRowAndBoardId(targetRawPosition.getColumn(),
                 targetRawPosition.getRow(), roomId);
         ChessBoard chessBoard = new ChessBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
         validateTurn(roomId, sourceRawPosition);
@@ -77,13 +77,13 @@ public final class GameService {
     }
 
     private void validateCorrectTurn(int roomId, Piece piece) {
-        final Color turn = boardRepository.getById(roomId).getTurn();
+        final Color turn = gameRepository.getById(roomId).getTurn();
         if (!piece.isSameColor(turn)) {
             throw new IllegalArgumentException("지금은 " + turn.value() + "의 턴입니다.");
         }
     }
 
-    private void updateMovingPiecePosition(ChessPosition sourcePosition, ChessPosition targetPosition,
+    private void updateMovingPiecePosition(PositionEntity sourcePosition, PositionEntity targetPosition,
                                            Optional<Piece> targetPiece) {
         if (targetPiece.isPresent()) {
             pieceDao.deleteByPositionId(targetPosition.getId());
@@ -92,11 +92,11 @@ public final class GameService {
     }
 
     private void changeTurn(int roomId) {
-        boardDao.updateTurn(Color.opposite(boardRepository.getById(roomId).getTurn()), roomId);
+        boardDao.updateTurn(Color.opposite(gameRepository.getById(roomId).getTurn()), roomId);
     }
 
-    public ChessGame getBoard(int roomId) {
-        return boardRepository.getById(roomId);
+    public GameEntity getBoard(int roomId) {
+        return gameRepository.getById(roomId);
     }
 
     public Map<String, Piece> getPieces(int roomId) {
@@ -113,8 +113,7 @@ public final class GameService {
 
     public boolean isEnd(int roomId) {
         ChessBoard chessBoard = new ChessBoard(() -> positionDao.findAllPositionsAndPieces(roomId));
-        final boolean kingDead = chessBoard.isEnd();
-        return kingDead;
+        return chessBoard.isEnd();
     }
 
     public StatusDto status(int roomId) {
@@ -131,7 +130,7 @@ public final class GameService {
         return boardDao.deleteByIdAndPassword(roomId, password) == 1;
     }
 
-    public List<ChessGame> findAllBoard() {
-        return boardRepository.findAll();
+    public List<GameEntity> findAllBoard() {
+        return gameRepository.findAll();
     }
 }

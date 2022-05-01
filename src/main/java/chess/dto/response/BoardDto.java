@@ -1,6 +1,6 @@
 package chess.dto.response;
 
-import chess.entities.Member;
+import chess.entities.MemberEntity;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Row;
@@ -23,12 +23,12 @@ public class BoardDto {
         this.blackMemberName = blackMemberName;
     }
 
-    public static BoardDto of(Map<String, Piece> pieces, String roomName, Member whiteMember, Member blackMember) {
+    public static BoardDto of(Map<String, Piece> pieces, String roomName, MemberEntity whiteMemberEntity, MemberEntity blackMemberEntity) {
         List<List<PieceDto>> boardSymbols = new ArrayList<>();
         for (Integer row : Row.valuesByDescending()) {
             boardSymbols.add(makeLine(pieces, row));
         }
-        return new BoardDto(boardSymbols, roomName, whiteMember.getName(), blackMember.getName());
+        return new BoardDto(boardSymbols, roomName, whiteMemberEntity.getName(), blackMemberEntity.getName());
     }
 
     private static List<PieceDto> makeLine(Map<String, Piece> pieces, Integer row) {

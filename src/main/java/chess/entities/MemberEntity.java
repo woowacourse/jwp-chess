@@ -1,18 +1,18 @@
 package chess.entities;
 
-public class Member {
+public class MemberEntity {
 
     private final Integer id;
     private final String name;
     private final Integer boardId;
 
-    public Member(Integer id, String name, Integer boardId) {
+    public MemberEntity(Integer id, String name, Integer boardId) {
         this.id = id;
         this.name = name;
         this.boardId = boardId;
     }
 
-    public Member(String name) {
+    public MemberEntity(String name) {
         this(null, name, null);
     }
 

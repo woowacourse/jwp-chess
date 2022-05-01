@@ -1,17 +1,17 @@
 package chess;
 
-import chess.dao.WebChessBoardDao;
-import chess.dao.WebChessPieceDao;
-import chess.dao.WebChessPositionDao;
+import chess.dao.ChessBoardDao;
+import chess.dao.ChessPieceDao;
+import chess.dao.ChessPositionDao;
 import chess.domain.game.ChessBoardInitializer;
 import chess.domain.game.BoardInitializer;
-import chess.entities.ChessPiece;
-import chess.entities.Member;
+import chess.entities.MemberEntity;
+import chess.entities.PieceEntity;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
 import chess.dto.request.MoveDto;
-import chess.entities.ChessGame;
+import chess.entities.GameEntity;
 import io.restassured.RestAssured;
 import java.util.List;
 import java.util.Map;
@@ -29,13 +29,13 @@ import org.springframework.http.MediaType;
 class SpringChessApplicationTests {
 
     @Autowired
-    WebChessBoardDao boardDao;
+    ChessBoardDao boardDao;
 
     @Autowired
-    WebChessPositionDao positionDao;
+    ChessPositionDao positionDao;
 
     @Autowired
-    WebChessPieceDao pieceDao;
+    ChessPieceDao pieceDao;
 
     @LocalServerPort
     int port;
@@ -45,8 +45,8 @@ class SpringChessApplicationTests {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        ChessGame board = boardDao.save(
-                new ChessGame("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린")), "1111"));
+        GameEntity board = boardDao.save(
+                new GameEntity("방1", Color.WHITE, List.of(new MemberEntity("쿼리치"), new MemberEntity("코린")), "1111"));
         this.boardId = board.getId();
         BoardInitializer boardInitializer = new ChessBoardInitializer();
         final Map<Position, Piece> initialize = boardInitializer.initialize();
@@ -55,7 +55,7 @@ class SpringChessApplicationTests {
             int lastPositionId = positionDao.getIdByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),
                     board.getId());
             final Piece piece = initialize.get(position);
-            pieceDao.save(new ChessPiece(piece.getColor(), piece.getType(), lastPositionId));
+            pieceDao.save(new PieceEntity(piece.getColor(), piece.getType(), lastPositionId));
         }
     }
 

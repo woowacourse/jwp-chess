@@ -4,7 +4,7 @@ import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.Symbol;
 import chess.domain.position.Column;
-import chess.entities.ChessPiece;
+import chess.entities.PieceEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,26 +17,26 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WebChessPieceDao implements PieceDao<Piece> {
+public class ChessPieceDao implements PieceDao<Piece> {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public WebChessPieceDao(NamedParameterJdbcTemplate jdbcTemplate) {
+    public ChessPieceDao(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ChessPiece save(ChessPiece chessPiece) {
+    public PieceEntity save(PieceEntity pieceEntity) {
         final String sql = "INSERT INTO piece (type, color, position_id) VALUES (:type, :color, :position_id)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         List<String> keys = List.of("type", "color", "position_id");
-        List<Object> values = List.of(chessPiece.getType().symbol().name(), chessPiece.getColor().name(),
-                chessPiece.getPositionId());
+        List<Object> values = List.of(pieceEntity.getType().symbol().name(), pieceEntity.getColor().name(),
+                pieceEntity.getPositionId());
 
         jdbcTemplate.update(sql, ParameterSourceCreator.makeParameterSource(keys, values), keyHolder);
         int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
 
-        return new ChessPiece(id, chessPiece.getColor(), chessPiece.getType(), chessPiece.getPositionId());
+        return new PieceEntity(id, pieceEntity.getColor(), pieceEntity.getType(), pieceEntity.getPositionId());
     }
 
     @Override

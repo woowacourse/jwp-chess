@@ -1,11 +1,11 @@
 package chess.repository;
 
-import chess.repository.dao.entity.GameEntity;
 import chess.model.Color;
 import chess.model.board.Board;
 import chess.model.game.ChessGame;
 import chess.model.game.Status;
 import chess.repository.dao.GameDao;
+import chess.repository.dao.entity.GameEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -1,6 +1,5 @@
 package chess.web.controller;
 
-import chess.service.ChessService;
 import chess.service.RoomService;
 import chess.service.dto.request.CreateGameRequest;
 import org.springframework.stereotype.Controller;

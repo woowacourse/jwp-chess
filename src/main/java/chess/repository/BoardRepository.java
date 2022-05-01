@@ -2,12 +2,12 @@ package chess.repository;
 
 import static java.util.stream.Collectors.toMap;
 
-import chess.repository.dao.entity.PieceEntity;
 import chess.model.board.Board;
 import chess.model.board.Square;
 import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
 import chess.repository.dao.PieceDao;
+import chess.repository.dao.entity.PieceEntity;
 import java.util.Map;
 import org.springframework.stereotype.Repository;
 

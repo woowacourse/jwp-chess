@@ -24,6 +24,7 @@ public class Room {
     public String getName() {
         return name;
     }
+
     public String getPassword() {
         return password.getHashedPassword();
     }

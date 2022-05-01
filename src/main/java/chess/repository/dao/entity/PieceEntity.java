@@ -20,8 +20,8 @@ public class PieceEntity {
         this.color = piece.getColor().name();
     }
 
-
-    public PieceEntity(final Integer id, final Integer gameId, final String square, final String type, final String color) {
+    public PieceEntity(final Integer id, final Integer gameId, final String square, final String type,
+                       final String color) {
         this.id = id;
         this.gameId = gameId;
         this.square = square;

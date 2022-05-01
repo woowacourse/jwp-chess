@@ -4,10 +4,10 @@ import chess.model.game.ChessGame;
 
 public class GameEntity {
     private final int id;
-    private String name;
-    private String password;
     private final String status;
     private final String turn;
+    private String name;
+    private String password;
 
     public GameEntity(final int id, final String name,
                       final String status, final String turn, final String password) {

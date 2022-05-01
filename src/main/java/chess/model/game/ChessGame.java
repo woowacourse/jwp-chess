@@ -19,12 +19,10 @@ public class ChessGame {
         this.status = status;
         this.board = board;
     }
-    
+
     public static ChessGame getReadyInstance() {
         return new ChessGame(Color.WHITE, Status.READY, new Board(new EmptyBoardInitializer()));
     }
-
-
 
     public void start() {
         this.status = Status.PLAYING;

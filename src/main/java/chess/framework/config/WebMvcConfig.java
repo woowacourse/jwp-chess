@@ -14,7 +14,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoggingInterceptor())
                 .order(1)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/static/**", "/**.ico");
+                .excludePathPatterns("/static/**", "/**.ico", "/error");
     }
 
     @Override

@@ -3,6 +3,7 @@ package chess.repository;
 import chess.dao.GameDao;
 import chess.domain.piece.Color;
 import chess.entity.GameEntity;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -10,7 +11,7 @@ public class GameRepository {
 
     private final GameDao gameDao;
 
-    public GameRepository(GameDao gameDao) {
+    public GameRepository(@Qualifier("GameDbDao") GameDao gameDao) {
         this.gameDao = gameDao;
     }
 

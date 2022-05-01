@@ -23,8 +23,8 @@ class RoomDaoTest {
 
     @BeforeEach
     void setUp() {
-        gameDao = new GameDao(jdbcTemplate);
-        roomDao = new RoomDao(jdbcTemplate);
+        gameDao = new GameDbDao(jdbcTemplate);
+        roomDao = new RoomDbDao(jdbcTemplate);
 
         jdbcTemplate.execute("create table game("
                 + "game_id int primary key auto_increment,"

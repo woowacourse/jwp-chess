@@ -6,6 +6,7 @@ import chess.domain.position.Position;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 public final class Board {
 
@@ -38,5 +39,22 @@ public final class Board {
 
     public Piece getPiece(final Position position) {
         return value.get(position);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Board board = (Board) o;
+        return Objects.equals(value, board.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

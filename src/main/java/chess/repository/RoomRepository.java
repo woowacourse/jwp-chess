@@ -1,10 +1,12 @@
 package chess.repository;
 
 import chess.dao.RoomDao;
+import chess.dao.RoomDbDao;
 import chess.dto.RoomDto;
 import chess.entity.RoomEntity;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -12,7 +14,7 @@ public class RoomRepository {
 
     private final RoomDao roomDao;
 
-    public RoomRepository(RoomDao roomDao) {
+    public RoomRepository(@Qualifier("RoomDbDao") RoomDao roomDao) {
         this.roomDao = roomDao;
     }
 

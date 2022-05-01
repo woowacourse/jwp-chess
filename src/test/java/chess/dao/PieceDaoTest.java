@@ -21,8 +21,8 @@ public class PieceDaoTest {
 
     @BeforeEach
     void setUp() {
-        gameDao = new GameDao(jdbcTemplate);
-        pieceDao = new PieceDao(jdbcTemplate);
+        gameDao = new GameDbDao(jdbcTemplate);
+        pieceDao = new PieceDbDao(jdbcTemplate);
 
         jdbcTemplate.execute("create table game("
                 + "game_id int primary key auto_increment,"

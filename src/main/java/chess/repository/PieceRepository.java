@@ -1,6 +1,7 @@
 package chess.repository;
 
 import chess.dao.PieceDao;
+import chess.dao.PieceDbDao;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
@@ -9,7 +10,9 @@ import chess.dto.BoardElementDto;
 import chess.entity.PieceEntity;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,7 +20,7 @@ public class PieceRepository {
 
     private PieceDao pieceDao;
 
-    public PieceRepository(PieceDao pieceDao) {
+    public PieceRepository(@Qualifier("PieceDbDao") PieceDao pieceDao) {
         this.pieceDao = pieceDao;
     }
 

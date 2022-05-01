@@ -78,9 +78,4 @@ public class WebChessController {
     public ResponseEntity<GameDeleteResponseDto> delete(@RequestBody GameDeleteDto gameDeleteDto) {
         return ResponseEntity.ok().body(chessService.deleteGameByGameId(gameDeleteDto));
     }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ExceptionDto> handle(Exception e) {
-        return ResponseEntity.badRequest().body(new ExceptionDto(e.getMessage()));
-    }
 }

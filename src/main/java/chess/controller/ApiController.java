@@ -5,7 +5,6 @@ import chess.dto.GameStatusDto;
 import chess.dto.MoveForm;
 import chess.dto.StatusDto;
 import chess.service.GameService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +18,12 @@ public class ApiController {
     }
 
     @PatchMapping("/room/{roomId}/move")
-    public ResponseEntity<GameStatusDto> moveByCommand(@PathVariable("roomId") int id, @RequestBody MoveForm moveForm) {
+    public GameStatusDto moveByCommand(@PathVariable("roomId") int id, @RequestBody MoveForm moveForm) {
         if (gameService.isEnd(id)) {
             throw new IllegalArgumentException("게임이 종료되어 기물을 움직일 수 없습니다.");
         }
         gameService.move(id, Position.of(moveForm.getSource()), Position.of(moveForm.getTarget()));
-        return new ResponseEntity<>(new GameStatusDto(gameService.isEnd(id)), HttpStatus.OK);
+        return new GameStatusDto(gameService.isEnd(id));
     }
 
     @GetMapping("/room/{roomId}/status")

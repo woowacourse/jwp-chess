@@ -84,7 +84,7 @@ public class ChessGameService {
         return new ChessGameResponse(gameId, pieceDtos, gameDto.getTurn(), gameDto.getStatus());
     }
 
-    public ChessGameResponse movePiece(Long gameId, MoveCommand moveCommand) {
+    public void movePiece(Long gameId, MoveCommand moveCommand) {
         ChessGame game = createGame(gameId);
         game.proceedWith(moveCommand);
         pieceDao.removeByPosition(gameId, moveCommand.to());
@@ -94,7 +94,6 @@ public class ChessGameService {
             gameStatus = GameStatus.PLAYING;
         }
         gameDao.updateGame(gameId, game.getTurnColor().getName(), gameStatus.getName());
-        return getChessGame(gameId);
     }
 
     private ChessGame createGame(Long gameId) {

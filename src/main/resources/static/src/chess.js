@@ -85,13 +85,10 @@ function move(position) {
             source: sourcePosition,
             target: targetPosition
         }),
-        success(data) {
-            let obj = parseToJSON(data);
-            if (obj.status === "finished") {
-                end();
-            }
-            document.getElementById(targetPosition).innerHTML = document.getElementById(sourcePosition).innerHTML;
+        success() {
+            document.getElementById(targetPosition).innerHTML = "";
             document.getElementById(sourcePosition).innerHTML = "";
+            getChess();
         },
         error(request) {
             let obj = JSON.parse(request.responseText);

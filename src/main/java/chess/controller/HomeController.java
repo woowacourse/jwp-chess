@@ -42,7 +42,7 @@ public class HomeController {
     }
 
     @DeleteMapping(value = "/rooms/{id}")
-    public ResponseEntity<Long> deleteRoom(@PathVariable Long id, @RequestBody RoomDeletionRequest roomDeletionRequest) {
+    public ResponseEntity<Void> deleteRoom(@PathVariable Long id, @RequestBody RoomDeletionRequest roomDeletionRequest) {
         chessGameService.deleteGame(id, new PasswordDto(roomDeletionRequest.getPassword()));
         return ResponseEntity.noContent().build();
     }

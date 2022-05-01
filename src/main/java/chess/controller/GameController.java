@@ -1,11 +1,10 @@
 package chess.controller;
 
-import chess.domain.Score;
-import chess.domain.command.MoveCommand;
-import chess.domain.piece.PieceColor;
-import chess.controller.response.ChessGameResponse;
 import chess.controller.request.MoveRequest;
+import chess.controller.response.ChessGameResponse;
 import chess.controller.response.ScoresResponse;
+import chess.domain.Score;
+import chess.domain.piece.PieceColor;
 import chess.serviece.ChessGameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,9 +39,9 @@ public class GameController {
     }
 
     @PutMapping(value = "/{id}/pieces")
-    public ResponseEntity<ChessGameResponse> move(@PathVariable Long id, @RequestBody MoveRequest moveRequest) {
-        MoveCommand moveCommand = moveRequest.toEntity();
-        return ResponseEntity.ok().body(chessGameService.movePiece(id, moveCommand));
+    public ResponseEntity<Void> move(@PathVariable Long id, @RequestBody MoveRequest moveRequest) {
+        chessGameService.movePiece(id, moveRequest.toEntity());
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")

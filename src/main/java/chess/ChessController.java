@@ -42,30 +42,30 @@ public class ChessController {
             .body(id);
     }
 
-    @PostMapping("/rooms/{roomId}")
-    public BoardDto start(@PathVariable long roomId) {
-        return chessService.startNewGame(roomId);
+    @PostMapping("/rooms/{id}")
+    public BoardDto start(@PathVariable long id) {
+        return chessService.startNewGame(id);
     }
 
-    @GetMapping("/rooms/{roomId}")
-    public BoardDto findRoom(@PathVariable long roomId) {
-        return chessService.findRoom(roomId);
+    @GetMapping("/rooms/{id}")
+    public BoardDto findRoom(@PathVariable long id) {
+        return chessService.findRoom(id);
     }
 
-    @DeleteMapping("/rooms/{roomId}")
-    public boolean delete(@PathVariable long roomId, @RequestParam String password) {
-        return chessService.delete(roomId, password);
+    @DeleteMapping("/rooms/{id}")
+    public boolean delete(@PathVariable long id, @RequestParam String password) {
+        return chessService.delete(id, password);
     }
 
-    @PatchMapping("/rooms/{roomId}/move")
-    public BoardDto move(@PathVariable long roomId,
+    @PatchMapping("/rooms/{id}/move")
+    public BoardDto move(@PathVariable long id,
         @RequestBody MoveDto moveDto) {
-        return chessService.move(roomId, moveDto);
+        return chessService.move(id, moveDto);
     }
 
-    @GetMapping("/rooms/{roomId}/status")
-    public Status status(@PathVariable long roomId) {
-        return chessService.status(roomId);
+    @GetMapping("/rooms/{id}/status")
+    public Status status(@PathVariable long id) {
+        return chessService.status(id);
     }
 
     @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class, NoSuchElementException.class})

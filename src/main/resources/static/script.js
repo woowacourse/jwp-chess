@@ -78,6 +78,7 @@ function clearLoginForm() {
     document.getElementById("roomPassword").value = "";
     document.getElementById("roomName").value = "";
 }
+
 function showOnlyGameElement() {
     showElementBlock("whole-board");
     hideElement("create-form");
@@ -265,13 +266,12 @@ async function changePieces(pieces, fromPosition, toPosition) {
     attachPieceInSquare(fromPiece, img, fromSquare);
 }
 
-async function tempAlert(message, timeout)
-{
+async function tempAlert(message, timeout) {
     const width = 400;
     const height = 30;
     const x = window.innerWidth / 2 - (width / 2);
     const y = window.innerHeight / 2 - (height / 2);
-    const alert = window.open('','', `width=${width} height=${height} left=${x} top=${y}`);
+    const alert = window.open('', '', `width=${width} height=${height} left=${x} top=${y}`);
     alert.document.write(message)
     alert.focus()
     setTimeout(() => alert.close(), timeout)
@@ -328,7 +328,6 @@ let gameStatusMap = new Map([
     ["black", "On Game"],
     ["empty", "Deletable"]
 ])
-
 
 
 async function deleteRoom(self) {

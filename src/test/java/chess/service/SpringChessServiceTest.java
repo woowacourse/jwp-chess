@@ -84,7 +84,8 @@ class SpringChessServiceTest {
     @DisplayName("기물을 이동한 정보를 저장할 수 있다")
     void updateBoard() {
         final int targetId = gameIds.get(0);
-        final MoveResponse moveResponse = springChessService.updateBoard(new MoveRequest("pw", "E2", "E4", targetId));
+        final MoveResponse moveResponse = springChessService.updateBoard(targetId,
+                new MoveRequest("pw", "E2", "E4", targetId));
 
         assertAll(
                 () -> assertThat(moveResponse.getMoveResult()).isEqualTo(MoveResult.SUCCESS),

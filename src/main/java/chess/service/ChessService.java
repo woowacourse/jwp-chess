@@ -24,7 +24,7 @@ public interface ChessService {
 
     List<PositionDto> findPositionsById(int gameId);
 
-    MoveResponse updateBoard(MoveRequest moveRequest);
+    MoveResponse updateBoard(long id, MoveRequest moveRequest);
 
     GameDeleteResponse deleteById(GameDeleteRequest gameDeleteRequest);
 

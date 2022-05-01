@@ -81,7 +81,7 @@ public class SpringChessService implements ChessService {
     }
 
     @Override
-    public MoveResponse updateBoard(MoveRequest moveRequest) {
+    public MoveResponse updateBoard(long id, MoveRequest moveRequest) {
         final Board board = boardRepository.findById(moveRequest.getGameId());
         final MoveResult moveResult = board.move(Position.from(moveRequest.getFrom()),
                 Position.from(moveRequest.getTo()));

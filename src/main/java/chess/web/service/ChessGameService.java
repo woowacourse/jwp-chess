@@ -7,10 +7,15 @@ import chess.domain.game.state.RunningGame;
 import chess.domain.piece.Piece;
 import chess.domain.piece.position.Position;
 import chess.domain.piece.property.Color;
+import chess.domain.room.RoomName;
+import chess.domain.room.RoomPassword;
 import chess.web.dao.ChessBoardDao;
 import chess.web.dao.PlayerDao;
+import chess.web.dao.RoomDao;
+import chess.web.dto.CreateRoomDto;
 import chess.web.dto.MoveDto;
 import chess.web.dto.PlayResultDto;
+import chess.web.dto.RoomDto;
 import chess.web.dto.ScoreDto;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,10 +26,12 @@ public class ChessGameService {
 
     private final ChessBoardDao chessBoardDao;
     private final PlayerDao playerDao;
+    private final RoomDao roomDao;
 
-    public ChessGameService(ChessBoardDao chessBoardDao, PlayerDao playerDao) {
+    public ChessGameService(ChessBoardDao chessBoardDao, PlayerDao playerDao, RoomDao roomDao) {
         this.chessBoardDao = chessBoardDao;
         this.playerDao = playerDao;
+        this.roomDao = roomDao;
     }
 
     public ChessGame start() {
@@ -102,5 +109,13 @@ public class ChessGameService {
         Map<Color, Double> score = board.computeScore();
         removeAll();
         return new ScoreDto(score.get(Color.WHITE), score.get(Color.BLACK));
+    }
+
+    public RoomDto createRoom(CreateRoomDto createRoomDto) {
+        String name = createRoomDto.getRoomName();
+        String password = createRoomDto.getPassword();
+        int roomNumber = roomDao.save(RoomName.of(name), RoomPassword.of(password));
+
+        return RoomDto.of(roomNumber, RoomName.of(name));
     }
 }

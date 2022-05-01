@@ -7,7 +7,7 @@
 - [온라인 코드 리뷰 과정](https://github.com/woowacourse/woowacourse-docs/blob/master/maincourse/README.md)
 
 # Step2
-- [ ] 체스방 만들기
+- [x] 체스방 만들기
   - localhost:8080 요청 시 노출되는 페이지에 체스방을 만들 수 있는 버튼이 있다.  
   - 체스방 만들기 버튼을 누르고 체스방 제목과 비밀번호를 입력하면 새로운 체스판이 만들어진다.
   - 체스방에는 고유식별값이 부여된다. (이 고유 식별값은 체스방 주소에서 사용 됨)

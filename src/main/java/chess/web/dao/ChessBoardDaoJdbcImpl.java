@@ -13,12 +13,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ChessBoardJdbcDaoImpl implements ChessBoardDao {
+public class ChessBoardDaoJdbcImpl implements ChessBoardDao {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ChessBoardJdbcDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ChessBoardDaoJdbcImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

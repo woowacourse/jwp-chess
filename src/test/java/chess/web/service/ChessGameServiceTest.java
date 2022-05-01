@@ -9,10 +9,12 @@ import chess.domain.piece.position.Position;
 import chess.domain.piece.property.Color;
 import chess.web.dao.ChessBoardDao;
 import chess.web.dao.PlayerDao;
+import chess.web.dao.RoomDao;
 import chess.web.dto.MoveDto;
 import chess.web.dto.PlayResultDto;
 import chess.web.service.fakedao.FakeChessBoardDao;
 import chess.web.service.fakedao.FakePlayerDao;
+import chess.web.service.fakedao.FakeRoomDao;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +22,8 @@ public class ChessGameServiceTest {
 
     ChessBoardDao chessBoardDao = new FakeChessBoardDao();
     PlayerDao playerDao = new FakePlayerDao();
-    ChessGameService chessGameService = new ChessGameService(chessBoardDao, playerDao);
+    RoomDao roomDao = new FakeRoomDao();
+    ChessGameService chessGameService = new ChessGameService(chessBoardDao, playerDao, roomDao);
 
     @Test
     void start() {

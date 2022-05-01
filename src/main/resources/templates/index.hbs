@@ -14,6 +14,34 @@
     <button class="newGame styled" type="button" onclick="start()">새게임</button>
     <button class="continueGame styled" type="button" onclick="play()">이어서 하기</button>
 
+  <section id="chess-game-list">
+    <h1>체스게임 리스트</h1>
+    <div>
+        방제목: <input type="text" name="roomName" id="room-name">
+        비밀번호: <input type="password" name="password" id="room-password">
+        <button class="create-room" onclick="createGameButton()">생성하기</button>
+    </div>
+    <br/>
+
+    <template>
+      <tr>
+        <td></td>
+        <td><a href=""></a></td>
+      </tr>
+    </template>
+    <table class="chess-room-list">
+      <thead>
+      <tr>
+        <td>번호</td>
+        <td>제목</td>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </section>
+  <hr />
+
 </div>
 </body>
 

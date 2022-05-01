@@ -8,12 +8,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import chess.domain.piece.StartedPawn;
 import chess.domain.piece.position.Position;
 import chess.domain.piece.property.Color;
+import chess.domain.room.RoomName;
+import chess.domain.room.RoomPassword;
 import chess.web.dao.ChessBoardDao;
 import chess.web.dao.PlayerDao;
+import chess.web.dao.RoomDao;
+import chess.web.dto.CreateRoomDto;
 import chess.web.dto.MoveDto;
 import chess.web.service.ChessGameService;
 import chess.web.service.fakedao.FakeChessBoardDao;
 import chess.web.service.fakedao.FakePlayerDao;
+import chess.web.service.fakedao.FakeRoomDao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +40,8 @@ public class ChessGameControllerTest {
 
     ChessBoardDao chessBoardDao = new FakeChessBoardDao();
     PlayerDao playerDao = new FakePlayerDao();
-    ChessGameService chessGameService = new ChessGameService(chessBoardDao, playerDao);
+    RoomDao roomDao = new FakeRoomDao();
+    ChessGameService chessGameService = new ChessGameService(chessBoardDao, playerDao, roomDao);
 
     @BeforeEach
     void setup() {
@@ -80,5 +86,17 @@ public class ChessGameControllerTest {
     void getEnd() throws Exception {
         this.mockMvc.perform(get("/end").accept(MediaType.TEXT_HTML))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void createChessGame() throws Exception {
+        roomDao.save(RoomName.of("첫번째게임"), RoomPassword.of("1234"));
+        String content = objectMapper.writeValueAsString(new CreateRoomDto("첫번째게임", "1234"));
+
+        this.mockMvc.perform(post("/chess-game")
+                        .content(content)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
     }
 }

@@ -41,7 +41,6 @@ public class ChessGameServiceTest {
     void create_duplicate_title_board() {
         //given
         chessGameService.create(title, password);
-        //when
         //then
         assertThatThrownBy(() -> chessGameService.create(title, password))
                 .isInstanceOf(IllegalArgumentException.class);

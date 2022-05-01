@@ -1,8 +1,8 @@
 package chess.controller.page;
 
 import chess.dto.BoardRes;
-import chess.entity.Square;
 import chess.service.ChessService;
+import chess.service.SquareRes;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class WebController {
 
     @GetMapping("/room/{roomId}")
     public ModelAndView findOneRoom(@PathVariable Long roomId) {
-        final List<Square> squares = chessServiceV2.findSquareAllById(roomId);
+        final List<SquareRes> squares = chessServiceV2.findSquareAllById(roomId);
         final BoardRes boardRes = BoardRes.createBoardResToListSquare(squares);
 
         final Map<String, Object> model = new HashMap<>();

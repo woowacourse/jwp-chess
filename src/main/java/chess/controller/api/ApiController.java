@@ -2,11 +2,11 @@ package chess.controller.api;
 
 import chess.dto.MovePositionReq;
 import chess.dto.PasswordReq;
-import chess.dto.RoomAllRes;
+import chess.dto.RoomsRes;
 import chess.dto.RoomCreateReq;
+import chess.dto.RoomRes;
 import chess.dto.StatusRes;
 import chess.dto.WinnerRes;
-import chess.entity.Room;
 import chess.service.ChessService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +25,14 @@ public class ApiController {
 
     private final ChessService chessService;
 
-    public ApiController(ChessService chessService) {
-        this.chessService = chessService;
+    public ApiController(ChessService chessServiceV2) {
+        this.chessService = chessServiceV2;
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity<RoomAllRes> findAllRoom() {
-        final List<Room> rooms = chessService.findAllRoom();
-        return ResponseEntity.ok().body(RoomAllRes.createRoomAllRes(rooms));
+    public ResponseEntity<RoomsRes> findAllRoom() {
+        final List<RoomRes> rooms = chessService.findAllRoom();
+        return ResponseEntity.ok().body(RoomsRes.createRoomAllRes(rooms));
     }
 
     @PostMapping("/room")
@@ -67,8 +67,7 @@ public class ApiController {
 
     @GetMapping("/room/{roomId}/state/end")
     public ResponseEntity<WinnerRes> selectWinner(@PathVariable Long roomId) {
-        final String winner = chessService.findWinnerById(roomId);
-        return ResponseEntity.ok().body(new WinnerRes(winner));
+        return ResponseEntity.ok().body(chessService.findWinnerById(roomId));
     }
 
     @DeleteMapping("/room/{roomId}")

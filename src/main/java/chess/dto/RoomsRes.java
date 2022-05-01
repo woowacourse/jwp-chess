@@ -1,19 +1,18 @@
 package chess.dto;
 
-import chess.entity.Room;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RoomAllRes {
+public class RoomsRes {
 
     private List<RoomRes> rooms;
 
-    private RoomAllRes(List<RoomRes> rooms) {
+    private RoomsRes(List<RoomRes> rooms) {
         this.rooms = rooms;
     }
 
-    public static RoomAllRes createRoomAllRes(List<Room> rooms) {
-        return new RoomAllRes(rooms.stream()
+    public static RoomsRes createRoomAllRes(List<RoomRes> rooms) {
+        return new RoomsRes(rooms.stream()
                 .map(room -> new RoomRes(room.getId(), room.getTitle()))
                 .collect(Collectors.toList()));
     }

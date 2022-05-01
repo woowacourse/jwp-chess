@@ -11,6 +11,8 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
 import chess.domain.state.State;
+import chess.dto.RoomRes;
+import chess.dto.WinnerRes;
 import chess.entity.Room;
 import chess.entity.Square;
 import java.util.HashMap;
@@ -31,8 +33,10 @@ public class ChessService {
         this.squareDao = squareDao;
     }
 
-    public List<Room> findAllRoom() {
-        return roomDao.findAllRoom();
+    public List<RoomRes> findAllRoom() {
+        return roomDao.findAllRoom().stream()
+                .map(room -> new RoomRes(room.getId(), room.getTitle()))
+                .collect(Collectors.toList());
     }
 
     public Long insertRoom(String title, String password) {
@@ -65,8 +69,11 @@ public class ChessService {
         return roomId;
     }
 
-    public List<Square> findSquareAllById(Long roomId) {
-        return squareDao.findSquareAllById(roomId);
+    public List<SquareRes> findSquareAllById(Long roomId) {
+        return squareDao.findSquareAllById(roomId).stream()
+                .map(square -> new SquareRes(
+                        square.getRoomId(), square.getPosition(), square.getSymbol(), square.getColor()))
+                .collect(Collectors.toList());
     }
 
     public List<Double> findStatusById(Long roomId) {
@@ -97,12 +104,12 @@ public class ChessService {
         return updateRoomId;
     }
 
-    public String findWinnerById(Long roomId) {
+    public WinnerRes findWinnerById(Long roomId) {
         final ChessGame chessGame = findChessGame(roomId);
         if (chessGame.isEndGameByPiece()) {
-            return chessGame.getWinner().name();
+            return new WinnerRes(chessGame.getWinner().name());
         }
-        return "NO_WINNER";
+        return new WinnerRes();
     }
 
     @Transactional

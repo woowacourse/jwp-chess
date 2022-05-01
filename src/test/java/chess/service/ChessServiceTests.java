@@ -105,7 +105,7 @@ class ChessServiceTests {
         }
 
         @Test
-        @DisplayName("비밀번호가 일치하지만 방의 상태가 WhiteRunning, BlackRunning일 경우 예외가 발생한다.")
+        @DisplayName("비밀번호가 일치하지만 방의 상태가 WhiteRunning, BlackRunning 일 경우 예외가 발생한다.")
         void invalidState() {
             final Long roomId = chessService.insertRoom("title1", "1111");
             chessService.insertBoard(roomId);

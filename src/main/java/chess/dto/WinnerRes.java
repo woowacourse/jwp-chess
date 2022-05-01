@@ -4,6 +4,10 @@ public class WinnerRes {
 
     private String winner;
 
+    public WinnerRes() {
+        this(null);
+    }
+
     public WinnerRes(String winner) {
         this.winner = winner;
     }

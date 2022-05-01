@@ -1,4 +1,4 @@
-create table Game
+create table game
 (
     id       int         not null auto_increment primary key,
     title    varchar(45) not null,

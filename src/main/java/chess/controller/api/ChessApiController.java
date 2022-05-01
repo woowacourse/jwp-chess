@@ -2,6 +2,7 @@ package chess.controller.api;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import chess.dao.SessionToChessRepository;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.position.Position;
 import chess.dto.request.web.SaveGameRequest;
@@ -27,9 +28,12 @@ public class ChessApiController {
 
     private final ChessService chessService;
 
+    private final SessionToChessRepository sessionToChessRepository;
+
     @GetMapping(value = "first", produces = APPLICATION_JSON_VALUE)
     public GameResponse init(HttpSession session) {
-        ChessBoard chessBoard = chessService.initAndGetChessBoard(session);
+        ChessBoard chessBoard = chessService.createChessBoard();
+        sessionToChessRepository.add(session, chessBoard);
 
         return new GameResponse(chessBoard);
     }
@@ -39,9 +43,10 @@ public class ChessApiController {
                              @RequestParam Position from,
                              @RequestParam Position to) {
 
-        chessService.movePiece(session, from, to);
+        ChessBoard chessBoard = sessionToChessRepository.get(session);
+        chessService.movePiece(chessBoard, from, to);
 
-        return new GameResponse(chessService.getChessBoard(session));
+        return new GameResponse(chessBoard);
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
@@ -51,11 +56,15 @@ public class ChessApiController {
 
     @GetMapping(value = "/last", produces = APPLICATION_JSON_VALUE)
     public GameResponse loadLastGame(HttpSession session) {
-        return chessService.loadLastGame(session);
+
+        ChessBoard chessBoard = chessService.loadLastGame();
+        sessionToChessRepository.add(session, chessBoard);
+
+        return new GameResponse(chessBoard);
     }
 
     @DeleteMapping
     public void deleteGame(HttpSession session) {
-        chessService.delete(session);
+        sessionToChessRepository.delete(session);
     }
 }

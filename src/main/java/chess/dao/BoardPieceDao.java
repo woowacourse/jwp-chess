@@ -8,6 +8,4 @@ public interface BoardPieceDao {
     void save(String gameId, Map<String, String> piecesByPositions);
 
     List<BoardPiece> findLastBoardPiece(String lastGameId);
-
-    void deleteAll();
 }

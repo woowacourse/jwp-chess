@@ -39,7 +39,6 @@ public class ChessViewController {
         }
 
         model.addAttribute("isNewGame", false);
-        chessService.loadLastGame(session);
 
         return "game";
     }

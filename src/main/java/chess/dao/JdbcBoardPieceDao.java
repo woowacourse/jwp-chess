@@ -18,8 +18,6 @@ public class JdbcBoardPieceDao implements BoardPieceDao {
 
     private static final String SAVE_DML = "insert into board_pieces (board_piece_id, game_id, position, piece) values (?, ?, ?, ?)";
     private static final String FIND_LAST_BOARD_PIECE_DML = "select * from board_pieces where game_id = ?";
-    private static final String DELETE_ALL_DML = "delete from board_pieces";
-    public static final String SET_FOREIGN_KEY_CHECKS_DDL = "set foreign_key_checks = ";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -50,18 +48,5 @@ public class JdbcBoardPieceDao implements BoardPieceDao {
     @Override
     public List<BoardPiece> findLastBoardPiece(String lastGameId) {
         return jdbcTemplate.query(FIND_LAST_BOARD_PIECE_DML, boardPieceRowMapper(), lastGameId);
-    }
-
-    @Override
-    public void deleteAll() {
-        jdbcTemplate.update(DELETE_ALL_DML);
-    }
-
-    public void setForeignKeyChecks(boolean isCheck) {
-        if (isCheck) {
-            jdbcTemplate.update(SET_FOREIGN_KEY_CHECKS_DDL + "1");
-            return;
-        }
-        jdbcTemplate.update(SET_FOREIGN_KEY_CHECKS_DDL + "0");
     }
 }

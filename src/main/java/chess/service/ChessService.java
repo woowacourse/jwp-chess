@@ -14,10 +14,7 @@ import chess.domain.entity.Game;
 import chess.domain.gameflow.AlternatingGameFlow;
 import chess.domain.gameflow.GameFlow;
 import chess.dto.request.web.SaveGameRequest;
-import chess.dto.response.web.GameResponse;
-import chess.dao.SessionToChessRepository;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,28 +25,14 @@ public class ChessService {
 
     private final GameDao gameDao;
     private final BoardPieceDao boardPieceDao;
-    private final SessionToChessRepository sessionToChessRepository;
 
-    public ChessBoard initAndGetChessBoard(HttpSession session) {
-        ChessBoard chessBoard = createChessBoard();
-        sessionToChessRepository.add(session, chessBoard);
-        return chessBoard;
-    }
-
-    private ChessBoard createChessBoard() {
+    public ChessBoard createChessBoard() {
         BoardFactory boardFactory = RegularBoardFactory.getInstance();
         GameFlow gameFlow = new AlternatingGameFlow();
         return new ChessBoard(boardFactory, gameFlow);
     }
 
-    public ChessBoard getChessBoard(HttpSession session) {
-        return sessionToChessRepository.get(session);
-    }
-
-    public void movePiece(HttpSession session,
-                          Position from,
-                          Position to) {
-        ChessBoard chessBoard = sessionToChessRepository.get(session);
+    public void movePiece(ChessBoard chessBoard, Position from, Position to) {
         chessBoard.movePiece(from, to);
     }
 
@@ -65,21 +48,14 @@ public class ChessService {
         boardPieceDao.save(gameId, saveGameRequest.getPieces());
     }
 
+
     @Transactional(readOnly = true)
-    public GameResponse loadLastGame(HttpSession session) {
+    public ChessBoard loadLastGame() {
         Game lastGame = gameDao.findLastGame();
         String lastGameId = lastGame.getGameId();
         String lastTeam = lastGame.getLastTeam();
         List<BoardPiece> lastBoardPieces = boardPieceDao.findLastBoardPiece(lastGameId);
         BoardFactory boardFactory = new PositionToPieceBoardFactory(lastBoardPieces);
-        ChessBoard chessBoard = new ChessBoard(boardFactory, lastTeam);
-        sessionToChessRepository.add(session, chessBoard);
-        return new GameResponse(chessBoard);
-    }
-
-    @Transactional
-    public void delete(HttpSession session) {
-        sessionToChessRepository.get(session);
-        sessionToChessRepository.delete(session);
+        return new ChessBoard(boardFactory, lastTeam);
     }
 }

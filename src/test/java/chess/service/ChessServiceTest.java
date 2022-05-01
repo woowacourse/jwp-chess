@@ -12,48 +12,31 @@ import chess.domain.board.ChessBoard;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceTeam;
 import chess.dto.request.web.SaveGameRequest;
-import chess.dto.response.web.GameResponse;
-import chess.dao.SessionToChessRepository;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockHttpSession;
 
 class ChessServiceTest {
 
-    private ChessService service = new ChessService(new FakeGameDao(), new FakeBoardPieceDao(), new SessionToChessRepository());
+    private ChessService service;
 
     @BeforeEach
     void setUp() {
-        service = new ChessService(new FakeGameDao(), new FakeBoardPieceDao(), new SessionToChessRepository());
+        service = new ChessService(new FakeGameDao(), new FakeBoardPieceDao());
     }
-
-    @DisplayName("session 에 해당하는 체스보드를 생성하고 조회가 되는 지 테스트")
-    @Test
-    void create_board_by_session() {
-        MockHttpSession firstSession = new MockHttpSession();
-        MockHttpSession secondSession = new MockHttpSession();
-
-        service.initAndGetChessBoard(firstSession);
-
-        assertThat(service.getChessBoard(firstSession)).isNotNull();
-        assertThat(service.getChessBoard(secondSession)).isNull();
-    }
-
-    @DisplayName("체스보드의 기물을 움직일 수 있는지 테스트")
+    @DisplayName("체스보드를 생성하고 기물을 움직일 수 있는지 테스트")
     @Test
     void save_and_move() {
-        MockHttpSession session = new MockHttpSession();
-
-        ChessBoard chessBoard = service.initAndGetChessBoard(session);
+        ChessBoard chessBoard = service.createChessBoard();
 
         Position from = Position.of(A, TWO);
         Position to = Position.of(A, FOUR);
-        service.movePiece(session, from, to);
+        service.movePiece(chessBoard, from, to);
 
         Piece findPiece = chessBoard.getBoard().get(Position.of(A, FOUR));
         assertThat(findPiece).isInstanceOf(Pawn.class);
@@ -79,7 +62,8 @@ class ChessServiceTest {
         service.saveGame(new SaveGameRequest("White Team", Map.of("b2", "whitePawn"), LocalDateTime.of(2022, 04, 25, 00,00)));
         service.saveGame(new SaveGameRequest("Black Team", Map.of("a7", "blackPawn"), LocalDateTime.of(2022, 04, 26, 00,00)));
 
-        GameResponse gameResponse = service.loadLastGame(new MockHttpSession());
-        assertThat(gameResponse.getTeamName()).isEqualTo("Black Team");
+        ChessBoard chessBoard = service.loadLastGame();
+        Map<Position, Piece> board = chessBoard.getBoard();
+        assertThat(board.get(Position.of("a7"))).isEqualTo(new Pawn(PieceTeam.BLACK));
     }
 }

@@ -29,9 +29,4 @@ public class FakeBoardPieceDao implements BoardPieceDao{
                 .filter(boardPiece -> lastGameId.equals(boardPiece.getGameId()))
                 .collect(Collectors.toUnmodifiableList());
     }
-
-    @Override
-    public void deleteAll() {
-        boardPieces.clear();
-    }
 }

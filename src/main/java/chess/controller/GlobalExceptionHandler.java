@@ -31,24 +31,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({DataAccessException.class})
     public ResponseEntity<ErrorResponseDto> handleSqlException(final DataAccessException e,
                                                                final HttpServletRequest request) {
-        logger.error(createLogMessage(request), e);
+        return log(e, request);
+    }
+
+    private ResponseEntity<ErrorResponseDto> log(final Exception e, final HttpServletRequest request) {
+        String messageFormat = "[{}] {} {}";
+        logger.error(
+                messageFormat,
+                new LocalDateTime(),
+                request.getMethod(),
+                request.getRequestURI(),
+                e
+        );
         return ResponseEntity.badRequest().body(new ErrorResponseDto("요청을 다시 확인해주세요."));
     }
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorResponseDto> handleUnexpectedException(final Exception e,
                                                                       final HttpServletRequest request) {
-        logger.error(createLogMessage(request), e);
-        return ResponseEntity.internalServerError().body(new ErrorResponseDto("예기치 못한 문제가 발생했습니다."));
-    }
-
-    private String createLogMessage(final HttpServletRequest request) {
-        final String message = "[" + new LocalDateTime() + "] "
-                + request.getMethod() + " "
-                + request.getRequestURI();
-        if (request.getQueryString() == null) {
-            return message;
-        }
-        return message + "?" + request.getQueryString();
+        return log(e, request);
     }
 }

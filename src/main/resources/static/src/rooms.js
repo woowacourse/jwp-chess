@@ -7,7 +7,7 @@ function setUpIndex() {
         e.preventDefault();
         let roomName = new FormData(createRoomForm).get("room_name");
         let roomPassword = new FormData(createRoomForm).get("room_password");
-        send("/rooms/create", {
+        send("/rooms", {
                 method: 'post',
                 body: JSON.stringify({'name': roomName, 'password': roomPassword}),
                 headers: new Headers({'Content-Type': 'application/json'})
@@ -34,17 +34,17 @@ function toJSON(form) {
     return JSON.stringify(json);
 }
 
-function remove(roomName) {
+function remove(roomId) {
     var roomPassword = prompt("비밀번호를 입력해주세요.");
-    send("/rooms/remove", {
-        method: 'post',
-        body: JSON.stringify({'name': roomName, 'password': roomPassword}),
+    send("/rooms/" + roomId, {
+        method: 'delete',
+        body: JSON.stringify({'id': roomId, 'password': roomPassword}),
         headers: new Headers({'Content-Type': 'application/json'})
     }, relocate);
 }
 
-function enter(roomName) {
-    send("/rooms/enter/" + roomName, {
+function enter(roomId) {
+    send("/rooms/" + roomId + "/enter", {
         method: 'get'
     }, relocate);
 }

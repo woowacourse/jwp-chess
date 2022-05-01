@@ -21,8 +21,8 @@
       <div class="row room-list">
         {{#each roomStates}}
           <div class="col-md-5 room-item">
-            <span class="game-info-name" id="gameName" onclick="enter(`{{@key}}`);">{{@key}}</span>
-            <button type="button" class="btn btn-danger" id="removeBtn" onclick="remove(`{{@key}}`);" {{this}} >삭제</button>
+            <span class="game-info-name" id="gameName" onclick="enter(`{{@key.id}}`);">{{@key.name}}</span>
+            <button type="button" class="btn btn-danger" id="removeBtn" onclick="remove(`{{@key.id}}`);" {{this}} >삭제</button>
           </div>
         {{/each}}
       </div>
@@ -33,7 +33,7 @@
         방 생성
       </div>
       <div class="create-box">
-        <form action="/rooms/create" class="form-horizontal" method="post" id="create_room_form">
+        <form action="/rooms" class="form-horizontal" method="post" id="create_room_form">
           <div class="create-form form-group">
             <input type="text" class="input-form form-control" name="room_name"  id="room_name" placeholder="게임명">
             <input type="password" class="input-form form-control" name="room_password" id="room_password" placeholder="비밀번호">

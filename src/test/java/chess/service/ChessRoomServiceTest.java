@@ -13,6 +13,7 @@ import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
+import chess.domain.game.State;
 import chess.dto.Arguments;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -104,7 +105,7 @@ class ChessRoomServiceTest {
     @DisplayName("모든 게임 방을 조회한다.")
     public void findAllRoom() {
         chessRoomService.createNewRoom(TEST_CREATION_ROOM_NAME, TEST_CREATION_ROOM_PASSWORD);
-        Map<String,String> roomStates = chessRoomService.findAllRoomState();
+        Map<RoomDto,String> roomStates = chessRoomService.findAllRoomState();
         System.out.println("rooms:  " + roomStates);
         assertThat(roomStates.size()).isEqualTo(2);
     }

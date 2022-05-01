@@ -176,6 +176,7 @@ function drawPiece(horizontal, vertical, type, color) {
 
 // ------------- utils start -----------------
 function relocate(responseJson) {
+    alert("responseJson in relocate =", responseJson);
     console.log("responseJson in relocate =", responseJson);
     window.location.href = responseJson['url'];
 }

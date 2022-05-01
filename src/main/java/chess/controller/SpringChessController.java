@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,12 +29,13 @@ public class SpringChessController {
 
     @GetMapping("/")
     public String showRooms(Model model) {
-        Map<String, String> roomStates = chessRoomService.findAllRoomState();
+//        Map<String, String> roomStates = chessRoomService.findAllRoomState();
+        Map<RoomDto, String> roomStates = chessRoomService.findAllRoomState();
         model.addAttribute("roomStates", roomStates);
         return "rooms";
     }
 
-    @PostMapping("/rooms/create")
+    @PostMapping("/rooms")
     @ResponseBody
     public ResponseEntity<PathResponse> createRoom(@RequestBody String body) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -54,12 +56,18 @@ public class SpringChessController {
         return "game";
     }
 
-    @GetMapping(path = "/rooms/enter/{roomName}")
+    @DeleteMapping("/rooms/{roomId}")
+    public ResponseEntity<PathResponse> removeRoom(@PathVariable("roomId") int roomId, @RequestBody String body) throws JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        RoomDto inputRoomDto = mapper.readValue(body, RoomDto.class);
+        chessRoomService.removeRoom(inputRoomDto);
+        return respondPath("/");
+    }
+
+    @GetMapping(path = "/rooms/{roomId}/enter")
     @ResponseBody
-    public ResponseEntity<PathResponse> enterGame(Model model,
-        @PathVariable("roomName") String roomName) {
-        RoomDto roomDto = chessRoomService.findByName(roomName);
-        return respondPath("/rooms/" + roomDto.getId());
+    public ResponseEntity<PathResponse> enterGame(@PathVariable("roomId") int roomId) {
+        return respondPath("/rooms/" + roomId);
     }
 
     @GetMapping(path = "/rooms/{roomId}/start")
@@ -88,14 +96,6 @@ public class SpringChessController {
         return ResponseEntity.ok().body(Map.of("board", BoardResponse.of(state.getPointPieces()),
             "score", state.getColorScore())
         );
-    }
-
-    @PostMapping("/rooms/remove")
-    public ResponseEntity<PathResponse> removeRoom(@RequestBody String body) throws JsonProcessingException{
-        ObjectMapper mapper = new ObjectMapper();
-        RoomDto bodyRoomDto = mapper.readValue(body, RoomDto.class);
-        chessRoomService.removeRoom(bodyRoomDto);
-        return respondPath("/");
     }
 
     private ResponseEntity<PathResponse> respondPath(String path) {

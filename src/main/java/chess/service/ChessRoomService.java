@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChessRoomService {
-    
+
     private final RoomDao roomDao;
     private final GameDao gameDao;
     private final BoardDao boardDao;
@@ -81,8 +81,9 @@ public class ChessRoomService {
     }
 
     public void removeRoom(RoomDto roomDto) {
-        RoomDto findRoomDto = roomDao.findByName(roomDto.getName());
-        validateRoomName(findRoomDto);
+//        RoomDto findRoomDto = roomDao.findByName(roomDto.getName());
+        RoomDto findRoomDto = roomDao.findById(roomDto.getId());
+//        validateRoomName(findRoomDto);
         GameStateDto gameStateDto = gameDao.readStateAndColor(findRoomDto.getId());
         validateRunningState(gameStateDto.getState());
         validatePassword(roomDto, findRoomDto);
@@ -91,13 +92,15 @@ public class ChessRoomService {
         roomDao.delete(findRoomDto.getId());
     }
 
-    public Map<String, String> findAllRoomState() {
-        Map<String, String> roomStates = new HashMap<>();
+//    public Map<String, String> findAllRoomState() {
+    public Map<RoomDto, String> findAllRoomState() {
+//        Map<String, String> roomStates = new HashMap<>();
+        Map<RoomDto, String> roomStates = new HashMap<>();
         List<RoomDto> roomDtoList = roomDao.findAll();
         for (RoomDto roomDto : roomDtoList) {
             GameStateDto gameStateDto = gameDao.readStateAndColor(roomDto.getId());
             State state = gameStateDto.getState();
-            roomStates.put(roomDto.getName(), state.getDisableOption());
+            roomStates.put(roomDto, state.getDisableOption());
         }
         return roomStates;
     }

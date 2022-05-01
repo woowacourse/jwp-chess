@@ -65,7 +65,8 @@ public class SpringChessService implements ChessService {
 
     @Override
     public Map<Color, Double> findScoreById(int gameId) {
-        return null;
+        final Board board = boardRepository.findById(gameId);
+        return board.getScore();
     }
 
     @Override
@@ -118,7 +119,14 @@ public class SpringChessService implements ChessService {
         if (room.matchPassword(password, passwordEncoder)) {
             return;
         }
-        
+
         throw new PasswordNotMatchedException();
+    }
+
+    @Override
+    public long deleteAll() {
+        final long rows = roomRepository.deleteAll();
+        boardRepository.deleteAll();
+        return rows;
     }
 }

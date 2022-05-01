@@ -3,7 +3,6 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.dao.ChessDao;
 import chess.domain.piece.Color;
 import chess.domain.piece.MoveResult;
 import chess.dto.GameCreateRequest;
@@ -27,9 +26,6 @@ class SpringChessServiceTest {
     @Autowired
     private SpringChessService springChessService;
 
-    @Autowired
-    private ChessDao chessDao;
-
     private List<Integer> gameIds = new ArrayList<>();
 
     @BeforeEach
@@ -37,17 +33,14 @@ class SpringChessServiceTest {
         for (int i = 1; i <= 3; i++) {
             final GameCreateRequest gameRequest = new GameCreateRequest(
                     "test room" + i, "password", "white", "black");
-            final int gameId = chessDao.create(gameRequest);
-            gameIds.add(gameId);
+            final GameCreateResponse gameCreateResponse = springChessService.create(gameRequest);
+            gameIds.add(gameCreateResponse.getId());
         }
     }
 
     @AfterEach
     void clear() {
-        final List<GameDto> all = chessDao.findAll();
-        for (GameDto gameDto : all) {
-            chessDao.deleteById(gameDto.getId());
-        }
+        springChessService.deleteAll();
         gameIds = new ArrayList<>();
     }
 

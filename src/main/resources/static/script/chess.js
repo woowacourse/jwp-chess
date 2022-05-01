@@ -13,14 +13,14 @@ async function reStartGame() {
 
 async function initBoard() {
     let id = location.href.split("/").pop();
-    await fetch("/board/"+id, {
+    await fetch("/game/"+id + '/board', {
         method: 'POST'
     });
 }
 
 async function loadAllPiece() {
     let id = location.href.split("/").pop();
-    const res = await fetch("../board/"+id, {
+    const res = await fetch("../game/" + id + '/board' , {
         method: 'GET'
     });
     const pieces = await res.json();
@@ -100,7 +100,7 @@ async function onClick(event) {
 
 async function patchMove() {
     let id = location.href.split("/").pop();
-    const response = await fetch('/board/' + id, {
+    const response = await fetch('/game/' + id + '/move', {
         method: 'PATCH',
         cache: 'no-cache',
         headers: {

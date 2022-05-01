@@ -26,18 +26,18 @@ public class ApiChessController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/board/{gameId}")
+    @PostMapping("/game/{gameId}/board")
     public ResponseEntity<Void> initBoard(@PathVariable Long gameId) {
         chessService.initGame(gameId);
         return ResponseEntity.created(URI.create("/board/" + gameId)).build();
     }
 
-    @GetMapping("/board/{gameId}")
+    @GetMapping("/game/{gameId}/board")
     public ResponseEntity<BoardDto> getBoardPieces(@PathVariable Long gameId) {
         return ResponseEntity.ok(chessService.getBoard(gameId));
     }
 
-    @PatchMapping("/board/{gameId}")
+    @PatchMapping("/game/{gameId}/move")
     public ResponseEntity<ChessGameDto> move(@PathVariable Long gameId, MoveRequest moveRequest) {
         return ResponseEntity.ok(chessService.move(gameId, moveRequest.getFrom(), moveRequest.getTo()));
     }

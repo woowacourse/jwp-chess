@@ -25,6 +25,6 @@ public class SpringExceptionController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> runtimeException(RuntimeException exception) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 }

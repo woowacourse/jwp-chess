@@ -1,11 +1,14 @@
 package chess.database.dao;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import chess.database.dao.spring.RoomDao;
+import chess.database.dao.spring.SpringGameDao;
+import chess.database.dto.GameStateDto;
 import chess.database.dto.RoomDto;
-import java.util.List;
-
+import chess.domain.game.GameState;
+import chess.domain.game.Ready;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import chess.database.dao.spring.SpringGameDao;
-import chess.database.dto.GameStateDto;
-import chess.domain.game.GameState;
-import chess.domain.game.Ready;
 
 @SpringBootTest
 class GameDaoTest {
@@ -60,10 +58,11 @@ class GameDaoTest {
     public void insert() {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
 
-        List<String> stateAndColor = gameDao.readStateAndColor(roomDto.getId());
+//        List<String> stateAndColor = gameDao.readStateAndColor(roomDto.getId());
+        GameStateDto stateAndColor = gameDao.readStateAndColor(roomDto.getId());
 
-        String stateString = stateAndColor.get(0);
-        String colorString = stateAndColor.get(1);
+        String stateString = stateAndColor.getState().name();
+        String colorString = stateAndColor.getTurnColor().name();
 
         Assertions.assertAll(
             () -> assertThat(stateString).isEqualTo("READY"),
@@ -79,10 +78,11 @@ class GameDaoTest {
 
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         gameDao.updateState(GameStateDto.of(started), roomDto.getId());
-        List<String> stateAndColor = gameDao.readStateAndColor(roomDto.getId());
+//        List<String> stateAndColor = gameDao.readStateAndColor(roomDto.getId());
+        GameStateDto stateAndColor = gameDao.readStateAndColor(roomDto.getId());
 
-        String stateString = stateAndColor.get(0);
-        String colorString = stateAndColor.get(1);
+        String stateString = stateAndColor.getState().name();
+        String colorString = stateAndColor.getTurnColor().name();
 
         assertThat(stateString).isEqualTo("RUNNING");
         assertThat(colorString).isEqualTo("WHITE");

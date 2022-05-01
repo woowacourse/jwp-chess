@@ -14,7 +14,7 @@ public class GameStateResponse {
     }
 
     public static GameStateResponse of(GameState state) {
-        return new GameStateResponse(BoardResponse.of(state.getPointPieces()), state.getState(), state.getColor());
+        return new GameStateResponse(BoardResponse.of(state.getPointPieces()), state.getState().name(), state.getColor());
     }
 
     public BoardResponse getBoard() {

@@ -36,15 +36,18 @@
         - 삭제 시 (게임명, 비밀번호)를 이용하는 것이 아닌 id로 지우도록 수정하고 비밀번호 검증은 service에서 하도록 수정
 - [ ] 클래스명에 Spring이라는 이름을 붙인 이유
 - [x] SpringBoardDao - `validateExist()`, DAO에서 유효성 검사를 하는 것이 적절한지
-- [ ] SpringGameDao - `readStateAndColor()`
+- [x] SpringGameDao - `readStateAndColor()`
     - 응답값이 왜 문자열인지
     - 상태와 색 필드를 같는 클래스를 추가해도 되지 않은지?
+        - `GameStateDto` - `State`, `Color`를 필드로 가지고 있는 클래스로 수정 후 사용
 - [ ] 줄바꿈의 기준
     - 잦은 줄바꿈은 코드를 파악할 때 흐름이 끊김.
 - [ ] ChessRoomService
-    - [ ] `checkDisabledOption()`
+    - [x] `checkDisabledOption()`
         - 서비스에서 게임 규칙과 관련된 처리를 맡기지말고 도메인에서 처리
         - 문자열보다는 enum을 활용
+        - `GameState` 클래스에서 String으로 가지고 있던 state 정보를 `enum`으로 구현
+            - enum 내 `disableOption` 필드로 버튼 옵션 정보 포함
     - [ ] `validateDuplicateRoomName()`
         - `findByName()`의 결과를 변수로 추출
         - 쿼리 결과를 boolean으로 반환하는 메서드로 만들어보면 어떤지

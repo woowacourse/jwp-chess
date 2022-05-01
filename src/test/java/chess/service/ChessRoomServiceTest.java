@@ -14,7 +14,6 @@ import chess.domain.board.InitialBoardGenerator;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import chess.dto.Arguments;
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

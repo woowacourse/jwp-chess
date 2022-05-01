@@ -2,8 +2,8 @@ package chess.database.dao.spring;
 
 import chess.database.dao.GameDao;
 import chess.database.dto.GameStateDto;
-import java.util.ArrayList;
-import java.util.List;
+import chess.domain.Color;
+import chess.domain.game.State;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,28 +17,29 @@ public class SpringGameDao implements GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
-    public List<String> readStateAndColor(int roomId) {
+    public GameStateDto readStateAndColor(int roomId) {
         String sql = "select * from game where room_id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, (resultSet, rowNum)
-                    -> List.of(resultSet.getString("state"), resultSet.getString("turn_color")),
-                roomId);
+            return jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNum) -> GameStateDto.of(
+                    State.valueOf(resultSet.getString("state")),
+                    Color.valueOf(resultSet.getString("turn_color")))
+                , roomId);
         } catch (EmptyResultDataAccessException e) {
-            return new ArrayList<>();
+            return null;
         }
     }
 
     @Override
     public void create(GameStateDto gameStateDto, int roomId) {
         String sql = "insert into game(room_id, turn_color, state) values (?, ?, ?)";
-        jdbcTemplate.update(sql, roomId, gameStateDto.getTurnColor(), gameStateDto.getState());
+        jdbcTemplate.update(sql, roomId, gameStateDto.getTurnColor().name(), gameStateDto.getState().name());
     }
 
     @Override
     public void updateState(GameStateDto gameStateDto, int roomId) {
         final String sql = "UPDATE game SET state = ?, turn_color = ? WHERE room_id = ?";
-        jdbcTemplate.update(sql, gameStateDto.getState(), gameStateDto.getTurnColor(), roomId);
+        jdbcTemplate.update(sql, gameStateDto.getState().name(), gameStateDto.getTurnColor().name(), roomId);
     }
 
     @Override

@@ -8,10 +8,8 @@ public class Finished extends GameState {
 
     private static final String END_MESSAGE = "[ERROR] 이미 게임이 끝났습니다.";
 
-    private static final String STATE = "FINISHED";
-
     public Finished(Board board, Color turnColor) {
-        super(board, turnColor);
+        super(board, turnColor, State.FINISHED);
     }
 
     @Override
@@ -30,13 +28,7 @@ public class Finished extends GameState {
     }
 
     @Override
-    public String getState() {
-        return STATE;
-    }
-
-    @Override
     public boolean isRunnable() {
         return false;
     }
-
 }

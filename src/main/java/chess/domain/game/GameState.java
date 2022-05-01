@@ -10,11 +10,13 @@ import java.util.Map;
 public abstract class GameState {
 
     protected Board board;
+    protected State state;
     protected final Color turnColor;
 
-    public GameState(Board board, Color turnColor) {
+    public GameState(Board board, Color turnColor, State state) {
         this.board = board;
         this.turnColor = turnColor;
+        this.state = state;
     }
 
     public abstract GameState start();
@@ -25,14 +27,20 @@ public abstract class GameState {
 
     public abstract GameState move(Arguments arguments);
 
-    public abstract String getState();
-
     public Map<Point, Piece> getPointPieces() {
         return board.getPointPieces();
     }
 
+    public State getState() {
+        return state;
+    }
+
     public String getColor() {
         return turnColor.name();
+    }
+
+    public Color getTurnColor() {
+        return turnColor;
     }
 
     public Map<Color, Double> getColorScore() {

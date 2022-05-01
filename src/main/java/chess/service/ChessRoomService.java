@@ -14,6 +14,7 @@ import chess.domain.board.CustomBoardGenerator;
 import chess.domain.board.Route;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
+import chess.domain.game.State;
 import chess.dto.Arguments;
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +23,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChessRoomService {
-
-    private static final String RUNNING_STATE = "RUNNING";
-    private static final String DISABLED_OPTION_TRUE = "disabled";
-    private static final String DISABLED_OPTION_FALSE = "";
-
+    
     private final RoomDao roomDao;
     private final GameDao gameDao;
     private final BoardDao boardDao;
@@ -58,12 +55,12 @@ public class ChessRoomService {
     }
 
     public GameState readGameState(int roomId) {
-        List<String> stateAndColor = gameDao.readStateAndColor(roomId);
-        validateExistGame(stateAndColor, roomId);
+        GameStateDto gameStateDto = gameDao.readStateAndColor(roomId);
+        validateExistGame(gameStateDto, roomId);
         BoardDto boardDto = boardDao.readBoard(roomId);
         validateExistRoom(roomId, boardDto);
         Board board = Board.of(new CustomBoardGenerator(boardDto));
-        return GameStateGenerator.generate(board, stateAndColor);
+        return GameStateGenerator.generate(board, gameStateDto);
     }
 
     public GameState moveBoard(int roomId, Arguments arguments) {
@@ -86,8 +83,8 @@ public class ChessRoomService {
     public void removeRoom(RoomDto roomDto) {
         RoomDto findRoomDto = roomDao.findByName(roomDto.getName());
         validateRoomName(findRoomDto);
-        String state = gameDao.readStateAndColor(findRoomDto.getId()).get(0);
-        validateRunningState(state);
+        GameStateDto gameStateDto = gameDao.readStateAndColor(findRoomDto.getId());
+        validateRunningState(gameStateDto.getState());
         validatePassword(roomDto, findRoomDto);
         boardDao.removeBoard(findRoomDto.getId());
         gameDao.removeGame(findRoomDto.getId());
@@ -98,8 +95,9 @@ public class ChessRoomService {
         Map<String, String> roomStates = new HashMap<>();
         List<RoomDto> roomDtoList = roomDao.findAll();
         for (RoomDto roomDto : roomDtoList) {
-            String state = gameDao.readStateAndColor(roomDto.getId()).get(0);
-            roomStates.put(roomDto.getName(), checkDisabledOption(state));
+            GameStateDto gameStateDto = gameDao.readStateAndColor(roomDto.getId());
+            State state = gameStateDto.getState();
+            roomStates.put(roomDto.getName(), state.getDisableOption());
         }
         return roomStates;
     }
@@ -112,21 +110,14 @@ public class ChessRoomService {
         return roomDao.findById(roomId);
     }
 
-    private String checkDisabledOption(String state) {
-        if (state.equals(RUNNING_STATE)) {
-            return DISABLED_OPTION_TRUE;
-        }
-        return DISABLED_OPTION_FALSE;
-    }
-
-    private void validateExistGame(List<String> stateAndColor, int roomId) {
-        if (stateAndColor.isEmpty()) {
+    private void validateExistGame(GameStateDto stateAndColor, int roomId) {
+        if (stateAndColor == null) {
             throw new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다.");
         }
     }
 
     private void validateExistRoom(int roomId, BoardDto boardDto) {
-        if(boardDto.getPointPieces().size() == 0){
+        if (boardDto.getPointPieces().size() == 0) {
             throw new IllegalArgumentException(String.format("[ERROR] %s에 해당하는 번호의 보드가 없습니다.",
                 roomId));
         }
@@ -145,8 +136,8 @@ public class ChessRoomService {
         }
     }
 
-    private void validateRunningState(String state) {
-        if (state.equals(RUNNING_STATE)) {
+    private void validateRunningState(State state) {
+        if (state == State.RUNNING) {
             throw new IllegalArgumentException("[ERROR] 진행 중인 게임은 삭제할 수 없습니다.");
         }
     }

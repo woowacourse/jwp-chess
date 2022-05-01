@@ -7,10 +7,8 @@ import chess.dto.Arguments;
 
 public class Running extends GameState {
 
-    private static final String STATE = "RUNNING";
-
     public Running(Board board, Color turnColor) {
-        super(board, turnColor);
+        super(board, turnColor, State.RUNNING);
     }
 
     @Override
@@ -30,11 +28,6 @@ public class Running extends GameState {
             return new Finished(board, turnColor);
         }
         return new Running(board, turnColor.toggle());
-    }
-
-    @Override
-    public String getState() {
-        return STATE;
     }
 
     @Override

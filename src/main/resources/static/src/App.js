@@ -1,7 +1,8 @@
 const start = document.getElementById('start-button');
 const status = document.getElementById('status-button');
 const IMAGE_PATH = "/images/";
-const path = window.location.pathname;
+const boardIdIndexInUri = 2;
+const boardId = parseInt(window.location.pathname.split("/")[boardIdIndexInUri]);
 const BOARD = document.querySelector("#board");
 const CURRENT_TEAM = document.querySelector("#current-team");
 const SYMBOL_TO_IMAGE_PATH = {
@@ -32,7 +33,10 @@ function showStatusButton() {
 }
 
 function initBoard() {
-    fetch('/api' + path + '/restart')
+    fetch('/api/board/' + boardId + '/initialization'), {
+        method: "PUT", headers: {
+            "Content-Type": "application/json",
+        }}
         .then(res => res.json())
         .then(value => {
             if (value["statusCode"] === 400) {
@@ -66,13 +70,13 @@ function getStatus(scoreResponse) {
 }
 
 status.addEventListener('click', function () {
-    fetch('/api' + path + '/status')
+    fetch('/api/board/' + boardId + '/status')
         .then(res => res.json())
         .then(getStatus);
 })
 
 function loadBoard() {
-    fetch('/api' + path + '/load')
+    fetch('/api/board/' + boardId)
         .then(res => res.json())
         .then(value => {
             if (value["statusCode"] === 400) {
@@ -183,8 +187,8 @@ function movePiece(from, to) {
         from: from, to: to
     }
 
-    fetch('/api' + path + '/move', {
-        method: "POST", headers: {
+    fetch('/api/board/' + boardId, {
+        method: "PATCH", headers: {
             "Content-Type": "application/json",
         }, body: JSON.stringify(request),
     }).then(res => res.json())

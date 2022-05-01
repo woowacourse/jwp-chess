@@ -1,14 +1,14 @@
 package chess.web.service;
 
 import chess.board.Room;
-import chess.web.dao.RoomDao;
+import chess.web.dao.BoardDao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class MockRoomDao implements RoomDao {
+public class MockBoardDao implements BoardDao {
 
     private final Map<Long, Room> mockDb = new HashMap<>();
 

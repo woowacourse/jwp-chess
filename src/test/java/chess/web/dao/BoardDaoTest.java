@@ -14,16 +14,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
-class RoomDaoTest {
+class BoardDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private RoomDao roomDao;
+    private BoardDao boardDao;
 
     @BeforeEach
     void setUp() {
-        roomDao = new RoomDaoImpl(jdbcTemplate);
+        boardDao = new BoardDaoImpl(jdbcTemplate);
     }
 
     @Sql("/sql/chess-setup.sql")
@@ -34,9 +34,9 @@ class RoomDaoTest {
         String title = "title";
         String password = "password";
 
-        Long id = roomDao.save(turn.getTeam().value(), title, password);
+        Long id = boardDao.save(turn.getTeam().value(), title, password);
 
-        Optional<Room> optionalRoom = roomDao.findById(id);
+        Optional<Room> optionalRoom = boardDao.findById(id);
         assertThat(optionalRoom).isPresent();
         assertThat(optionalRoom.get().getTitle()).isEqualTo(title);
         assertThat(optionalRoom.get().getPassword()).isEqualTo(password);
@@ -48,12 +48,12 @@ class RoomDaoTest {
         Turn turn = Turn.init();
         String title = "title";
         String password = "password";
-        Long id = roomDao.save(turn.getTeam().value(), title, password);
+        Long id = boardDao.save(turn.getTeam().value(), title, password);
         Turn changedTurn = turn.change();
 
-        roomDao.updateTurnById(id, changedTurn.getTeam().value());
+        boardDao.updateTurnById(id, changedTurn.getTeam().value());
 
-        Optional<Room> optionalRoom = roomDao.findById(id);
+        Optional<Room> optionalRoom = boardDao.findById(id);
         assertThat(optionalRoom).isPresent();
         assertThat(optionalRoom.get().getTurn()).isEqualTo(changedTurn.getTeam().value());
     }
@@ -65,9 +65,9 @@ class RoomDaoTest {
         Turn turn = Turn.init();
         String title = "title";
         String password = "password";
-        Long id = roomDao.save(turn.getTeam().value(), title, password);
+        Long id = boardDao.save(turn.getTeam().value(), title, password);
 
-        Optional<Room> optionalRoom = roomDao.findById(id);
+        Optional<Room> optionalRoom = boardDao.findById(id);
 
         assertThat(optionalRoom).isPresent();
         assertThat(optionalRoom.get().getTitle()).isEqualTo(title);
@@ -81,11 +81,11 @@ class RoomDaoTest {
         Turn turn = Turn.init();
         String title = "title";
         String password = "password";
-        Long id = roomDao.save(turn.getTeam().value(), title, password);
+        Long id = boardDao.save(turn.getTeam().value(), title, password);
 
-        roomDao.delete(id, password);
+        boardDao.delete(id, password);
 
-        Optional<Room> optionalRoom = roomDao.findById(id);
+        Optional<Room> optionalRoom = boardDao.findById(id);
         assertThat(optionalRoom).isNotPresent();
     }
 
@@ -96,11 +96,11 @@ class RoomDaoTest {
         Turn turn = Turn.init();
         String title = "title";
         String password = "password";
-        Long id = roomDao.save(turn.getTeam().value(), title, password);
+        Long id = boardDao.save(turn.getTeam().value(), title, password);
 
-        roomDao.delete(id, "test");
+        boardDao.delete(id, "test");
 
-        Optional<Room> optionalRoom = roomDao.findById(id);
+        Optional<Room> optionalRoom = boardDao.findById(id);
         assertThat(optionalRoom).isPresent();
         assertThat(optionalRoom.get().getTitle()).isEqualTo(title);
         assertThat(optionalRoom.get().getPassword()).isEqualTo(password);

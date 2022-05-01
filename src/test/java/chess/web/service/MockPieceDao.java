@@ -18,14 +18,14 @@ public class MockPieceDao implements PieceDao {
     }
 
     @Override
-    public void save(Piece piece, Long roomId) {
-        mockDb.put(sequenceId++, convertPieceToFake(piece, roomId));
+    public void save(Piece piece, Long boardId) {
+        mockDb.put(sequenceId++, convertPieceToFake(piece, boardId));
     }
 
     @Override
-    public void updatePieceByPositionAndRoomId(String type, String team, String position, Long roomId) {
+    public void updatePieceByPositionAndBoardId(String type, String team, String position, Long boardId) {
         List<MockPiece> mockPieces = mockDb.values().stream()
-                .filter(mockPiece -> mockPiece.roomId.equals(roomId))
+                .filter(mockPiece -> mockPiece.boardId.equals(boardId))
                 .collect(Collectors.toList());
 
         for (MockPiece mockPiece : mockPieces) {
@@ -38,36 +38,36 @@ public class MockPieceDao implements PieceDao {
     }
 
     @Override
-    public Optional<Piece> findByPositionAndRoomId(String position, Long roomId) {
+    public Optional<Piece> findByPositionAndBoardId(String position, Long boardId) {
         return mockDb.values().stream()
                 .filter(mockPiece -> mockPiece.position.equals(position))
-                .filter(mockPiece -> mockPiece.roomId.equals(roomId))
+                .filter(mockPiece -> mockPiece.boardId.equals(boardId))
                 .map(mockPiece -> PieceFactory.create(mockPiece.position, mockPiece.team, mockPiece.type))
                 .findFirst();
     }
 
     @Override
-    public List<Piece> findAllByRoomId(Long roomId) {
+    public List<Piece> findAllByBoardId(Long boardId) {
         return mockDb.values().stream()
-                .filter(mockPiece -> mockPiece.roomId.equals(roomId))
+                .filter(mockPiece -> mockPiece.boardId.equals(boardId))
                 .map(mockPiece -> PieceFactory.create(mockPiece.position, mockPiece.team, mockPiece.type))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void save(List<Piece> pieces, Long roomId) {
+    public void save(List<Piece> pieces, Long boardId) {
         pieces.stream()
-                .map(piece -> convertPieceToFake(piece, roomId)).
+                .map(piece -> convertPieceToFake(piece, boardId)).
                 forEach(this::saveFakePiece);
     }
 
     @Override
-    public void deleteAllByRoomId(Long roomId) {
+    public void deleteAllByBoardId(Long boardId) {
         mockDb.clear();
     }
 
-    private MockPiece convertPieceToFake(Piece piece, Long roomId) {
-        return new MockPiece(roomId, piece.getPosition().name(), piece.getType(), piece.getTeam().value());
+    private MockPiece convertPieceToFake(Piece piece, Long boardId) {
+        return new MockPiece(boardId, piece.getPosition().name(), piece.getType(), piece.getTeam().value());
     }
 
     private void saveFakePiece(MockPiece mockPiece) {
@@ -75,13 +75,13 @@ public class MockPieceDao implements PieceDao {
     }
 
     private static class MockPiece {
-        private final Long roomId;
+        private final Long boardId;
         private final String position;
         private String type;
         private String team;
 
-        private MockPiece(Long roomId, String position, String type, String team) {
-            this.roomId = roomId;
+        private MockPiece(Long boardId, String position, String type, String team) {
+            this.boardId = boardId;
             this.position = position;
             this.type = type;
             this.team = team;

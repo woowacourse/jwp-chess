@@ -7,7 +7,7 @@ function createRoom() {
         password: password
     };
 
-    fetch('/api/chess', {
+    fetch('/api/board', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -20,10 +20,10 @@ function createRoom() {
         });
 }
 
-function deleteRoom(roomId) {
+function deleteRoom(boardId) {
     let password = prompt("비밀번호를 입력하세요");
 
-    fetch('/api/chess/' + roomId, {
+    fetch('/api/board/' + boardId, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -36,7 +36,7 @@ function deleteRoom(roomId) {
                 return;
             }
             if (value) {
-                alert(roomId + " 방이 삭제되었습니다.");
+                alert(boardId + " 방이 삭제되었습니다.");
                 location.reload();
                 return;
             }

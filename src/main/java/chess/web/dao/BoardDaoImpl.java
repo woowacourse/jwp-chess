@@ -12,7 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoomDaoImpl implements RoomDao {
+public class BoardDaoImpl implements BoardDao {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -25,13 +25,13 @@ public class RoomDaoImpl implements RoomDao {
         );
     };
 
-    public RoomDaoImpl(JdbcTemplate jdbcTemplate) {
+    public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public Long save(String turn, String title, String password) {
-        String query = "INSERT INTO room (turn, title, password) VALUES (?, ?, ?)";
+        String query = "INSERT INTO board (turn, title, password) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
@@ -46,14 +46,14 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public void updateTurnById(Long id, String turn) {
-        final String query = "UPDATE room SET turn = ? WHERE id = ?";
+        final String query = "UPDATE board SET turn = ? WHERE id = ?";
 
         jdbcTemplate.update(query, turn, id);
     }
 
     @Override
     public Optional<Room> findById(Long id) {
-        final String query = "SELECT * FROM room WHERE id = ?";
+        final String query = "SELECT * FROM board WHERE id = ?";
 
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, rowMapper, id));
@@ -64,14 +64,14 @@ public class RoomDaoImpl implements RoomDao {
 
     @Override
     public List<Room> findAll() {
-        final String query = "SELECT * FROM room";
+        final String query = "SELECT * FROM board";
 
         return jdbcTemplate.query(query, rowMapper);
     }
 
     @Override
-    public void delete(Long roomId, String password) {
-        final String query = "DELETE FROM room WHERE id = ? AND password = ?";
-        jdbcTemplate.update(query, roomId, password);
+    public void delete(Long boardId, String password) {
+        final String query = "DELETE FROM board WHERE id = ? AND password = ?";
+        jdbcTemplate.update(query, boardId, password);
     }
 }

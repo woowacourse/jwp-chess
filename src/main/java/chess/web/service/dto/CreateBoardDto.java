@@ -1,11 +1,11 @@
 package chess.web.service.dto;
 
-public class CreateRoomDto {
+public class CreateBoardDto {
 
     private String title;
     private String password;
 
-    public CreateRoomDto(String title, String password) {
+    public CreateBoardDto(String title, String password) {
         this.title = title;
         this.password = password;
     }

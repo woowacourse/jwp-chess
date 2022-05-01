@@ -23,16 +23,19 @@
 
 ---
 
-### API 정리
+### Controller URI 정리
 
+@Controller
 - GET:`/` : 체스 방 리스트를 확인하고 새로운 체스 방을 만들 수 있는 페이지 출력.
-- GET:`/chess/{roomId}` : 체스 게임을 할 수 있는 페이지 출력.
-- POST:`/api/chess/{roomId}` : 새로운 체스 게임을 생성한다.
-- DELETE:`/api/chess/{roomId}` : 체스 방을 제거한다.
-- GET:`/api/chess/{roomId}/load` : 체스 기물 상태를 가져온다.
-- GET:`/api/chess/{roomId}/restart` : 체스 게임을 재시작한다.
-- GET:`/api/chess/{roomId}/status` : 체스 게임의 블랙, 화이트 팀의 점수를 반환한다.
-- POST:`/api/chess/{roomId}/move` : 체스 게임에서 시작 위치, 도착 위치를 JSON으로 전송하면 이동한다. 정상적으로 이동 시 수정된 Board를 반환한다.
+- GET:`/chess/{boardId}` : 체스 게임을 할 수 있는 페이지 출력.
+
+@RestController
+- POST:`/api/board` : 새로운 체스 게임을 생성한다.
+- PUT:`/api/board/{boardId}/initialization` : 체스 게임을 초기화하여 재시작한다.
+- PATCH:`/api/board/{boardId}` : 체스 게임에서 시작 위치, 도착 위치를 JSON으로 전송하면 이동한다. 정상적으로 이동 시 수정된 Board를 반환한다.
+- GET:`/api/board/{boardId}` : 체스 기물 상태를 가져온다.
+- GET:`/api/board/{boardId}/status` : 체스 게임의 블랙, 화이트 팀의 점수를 반환한다.
+- DELETE:`/api/board/{boardId}` : 체스 방을 제거한다.
 
 ---
 
@@ -59,7 +62,7 @@
         - 5xx : 서버의 문제로 에러가 발생함
 - [x] ChessWebController의 `createRoom`의 newId는 board의 id 인지 room의 id 인지 명확하면 좋을 것 같다
     - board, room 테이블을 합치면서 room의 id를 사용하도록 수정했다.
-    - [x] boardId라는 이름을 사용하던 변수 등을 roomId로 수정하기
+    - ~~[x] boardId라는 이름을 사용하던 변수 등을 roomId로 수정하기~~
 - [x] 보통 자원을 지울때는 pk로 지우게 되는데 Room을 지울 때 pk가 아닌 boardId 값으로 지우게 된다. 혹시 같은 boardId를 여러 자원이 가진다면 모두 지우게 되는 것이 의도한 것일까?
     - board와 room 테이블을 합치면서 board_id가 아닌 roomId로 관리하도록 수정했다.
     - PieceDao의 `deleteByboardId()`는 roomId를 만족하는 모든 기물을 삭제하도록 `deleteAllByRoomId()`로 수정하였다.
@@ -76,10 +79,26 @@
     - 더 많은 가치를 만들어 내는 것이 없는지, 불편함은 없는지 등 조금 더 사용자 관점에서 생각해보도록 하자!
 - [ ] Controller에 대한 테스트도 추가해보자.
 - [x] API는 endpoint에 prefix로 `/api`를 붙이기도 한다!
-- [ ] RESTFul API에 대해 공부해보고 endpoint를 수정해보자![참고자료](https://restfulapi.net/)
-    - [ ] `/chess/{roomId}/load`는 체스 보드 하나를 반환하는 API이다. RESTFul API를 공부해보고 수정해보자!
-    - [ ] 자원의 상태를 "변경"하는 경우 Post보다 Put, Patch를 사용해보자.
-    - [ ] restart는 자원의 상태를 변경하는데 Get이 적합할까?
+- [x] RESTFul API에 대해 공부해보고 endpoint를 수정해보자![참고자료](https://restfulapi.net/)
+    - 다음을 중점으로 생각하면서 endpoint를 수정해봤습니다.
+        1. 동사형 사용 금지.
+        2. 적절한 HTTP method 사용.
+        3. URI에서 의도가 전달이 되는지 확인.
+    - `/api/chess`와 `/api/board`중 어느것을 사용할지 고민하다가 `/api/board`로 하기로 했습니다.
+        1. 뒤에 올 `{roomId}`는 Room 테이블의 id입니다. Room 테이블의 정보와 room_id를 외래키로 가진 Piece 테이블의 정보로 board가 만들어지기 때문에 따지고 보면 `/room/{roomId}`이 되어야 할 것 같았습니다.
+        2. 하지만 `/room/{roomId}`라고 한다면 어떤 방인지 이해하기 어려울 것 같았습니다. (당장은 체스방만 있지만 체스 게임을 하는 방, 채팅만 하는 방, 다시보기를 보는 방 등 여러 종류의 방이 생긴다면?)
+        3. 그래서 `/api/chess`와 `/api/board`중 고민하던 중 어차피 데이터베이스의 이름이 chess이기 때문에 `/api/chess`보다는 `/api/board`가 더 명확하다고 생각했습니다. 또 `/api/chess/{chessId}`라는 식의 URI는 맞지 않아보였습니다.
+        4. 그래서 Room이라는 테이블의 이름을 Board로 수정하고 테이블과 URI를 수정해봤습니다.
+        5. Piece는 Board테의블의 pk값을 외래키로 사용하기 때문에 DELETE:`/api/board/1`이라는 요청이 오고 board의 데이터를 지울 때 그 board_id를 가진 Piece의 데이터도 모두 삭제가 되어야 지울 수 있어서 괜찮다고 생각했습니다. 
+    - [x] `/chess/{roomId}/load`는 체스 보드 하나를 반환하는 API이다. RESTFul API를 공부해보고 수정해보자!
+        - 동사형인 load대신 명확하게 board를 가져온다는 의미로 board로 수정했습니다.
+        - ~~전체적으로 앞에 /api를 추가하여 `/api/chess/{roomId}/board`처럼 수정했습니다.~~
+        - GET:`/api/board/{boardId}`로 최종 수정했습니다. 만약 pk키인 id가아니라 다른 값으로 데이터를 찾고싶다면 `@RequestParam`을 이용할 것 같습니다.
+    - [x] 자원의 상태를 "변경"하는 경우 Post보다 Put, Patch를 사용해보자.
+        - 초기화를 할 때는 PUT으로, 기물을 이동하여 일부 기물의 포지션과 타입을 수정할 때는 PATCH를 사용하도록 수정했습니다.
+    - [x] restart는 자원의 상태를 변경하는데 Get이 적합할까?
+        - 자원의 상태를 모두 바꿔버리기 때문에 GET이 아닌 PUT으로 수정했습니다.
+        - restart라는 동사형이 아닌 initialization라는 명사형으로 수정했습니다.
 - [x] Advice에서 특정 에러를 제외한 다른 에러가 발생할 경우 어떻게 처리할 것인가?
     - Exception을 처리하는 ExceptionHandler를 만들어 주었다.
     - ControllerAdvice의 assignableTypes 옵션으로 어떤 컨트롤러에 대한 구체적인 예외 처리를 할 수 있도록 했다.

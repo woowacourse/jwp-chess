@@ -4,7 +4,7 @@ import chess.board.Room;
 import java.util.List;
 import java.util.Optional;
 
-public interface RoomDao {
+public interface BoardDao {
 
     Long save(String turn, String title, String password);
 

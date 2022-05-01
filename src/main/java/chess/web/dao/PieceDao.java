@@ -6,16 +6,16 @@ import java.util.Optional;
 
 public interface PieceDao {
 
-    void save(Piece piece, Long roomId);
+    void save(Piece piece, Long boardId);
 
-    void updatePieceByPositionAndRoomId(final String type, final String team, final String position,
-                                        final Long roomId);
+    void updatePieceByPositionAndBoardId(final String type, final String team, final String position,
+                                         final Long boardId);
 
-    Optional<Piece> findByPositionAndRoomId(final String position, final Long roomId);
+    Optional<Piece> findByPositionAndBoardId(final String position, final Long boardId);
 
-    List<Piece> findAllByRoomId(final Long roomId);
+    List<Piece> findAllByBoardId(final Long boardId);
 
-    void save(final List<Piece> pieces, final Long roomId);
+    void save(final List<Piece> pieces, final Long boardId);
 
-    void deleteAllByRoomId(Long roomId);
+    void deleteAllByBoardId(Long boardId);
 }

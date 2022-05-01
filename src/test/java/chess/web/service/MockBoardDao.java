@@ -39,8 +39,8 @@ public class MockBoardDao implements BoardDao {
 
     @Override
     public void delete(Long id, String password) {
-        Optional<BoardDto> optionalRoom = Optional.ofNullable(mockDb.get(id));
-        if (optionalRoom.isPresent() && optionalRoom.get().getPassword().equals(password)) {
+        Optional<BoardDto> board = Optional.ofNullable(mockDb.get(id));
+        if (board.isPresent() && board.get().getPassword().equals(password)) {
             mockDb.remove(id);
         }
     }

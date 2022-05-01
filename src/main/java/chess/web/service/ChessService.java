@@ -143,14 +143,14 @@ public class ChessService {
     }
 
     private boolean canRemoveRoom(Long boardId, String password) {
-        Optional<BoardDto> room = boardDao.findById(boardId);
-        if (room.isEmpty()) {
+        Optional<BoardDto> board = boardDao.findById(boardId);
+        if (board.isEmpty()) {
             throw new NoSuchElementException("삭제할 체스방이 없습니다.");
         }
-        if (!matchPassword(room.get(), password)) {
+        if (!matchPassword(board.get(), password)) {
             throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
         }
-        if (!isFinishedChess(boardId, room.get())) {
+        if (!isFinishedChess(boardId, board.get())) {
             throw new IllegalStateException("게임이 진행중입니다.");
         }
         return true;

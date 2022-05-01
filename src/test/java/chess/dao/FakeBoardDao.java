@@ -22,7 +22,7 @@ public class FakeBoardDao implements BoardDao {
         Map<Position, Piece> pieces = chessBoard.getPieces();
         Map<String, PieceDto> board = new HashMap<>();
         for (Position position : pieces.keySet()) {
-            String key = position.toString();
+            String key = position.getValue();
             Piece piece = pieces.get(Position.of(key));
             PieceDto pieceDto = new PieceDto(piece.getSymbol().name(), piece.getColor().name());
             board.put(key, pieceDto);
@@ -43,7 +43,7 @@ public class FakeBoardDao implements BoardDao {
     @Override
     public int update(Position position, Piece piece, int gameId) {
         BoardDto boardDto = board.get(gameId);
-        String value = position.toString();
+        String value = position.getValue();
         PieceDto pieceDto = new PieceDto(piece.getSymbol().name(), piece.getColor().name());
         Map<String, PieceDto> board = boardDto.getBoard();
         board.put(value, pieceDto);

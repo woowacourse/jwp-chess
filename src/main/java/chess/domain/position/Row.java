@@ -48,9 +48,4 @@ public enum Row {
     public int getValue() {
         return value;
     }
-
-    @Override
-    public String toString() {
-        return Integer.toString(value);
-    }
 }

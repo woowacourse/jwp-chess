@@ -24,7 +24,7 @@ public class BoardDaoImpl implements BoardDao {
         String sql = "insert into board (position, symbol, color, game_id) values (?, ?, ?, ?)";
 
         List<Object[]> board = chessBoard.getPieces().entrySet().stream()
-                .map(entry -> new Object[]{entry.getKey().toString(), entry.getValue().getSymbol().name(),
+                .map(entry -> new Object[]{entry.getKey().getValue(), entry.getValue().getSymbol().name(),
                         entry.getValue().getColor().name(), gameId})
                 .collect(Collectors.toList());
 
@@ -48,7 +48,7 @@ public class BoardDaoImpl implements BoardDao {
     @Override
     public int update(Position position, Piece piece, int gameId) {
         String sql = "update board set symbol = (?), color = (?) where game_id = (?) and position = (?)";
-        return jdbcTemplate.update(sql, piece.getSymbol().name(), piece.getColor().name(), gameId, position.toString());
+        return jdbcTemplate.update(sql, piece.getSymbol().name(), piece.getColor().name(), gameId, position.getValue());
     }
 
     @Override

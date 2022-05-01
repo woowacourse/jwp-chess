@@ -8,10 +8,10 @@ public interface State {
     State proceed(final ChessBoard chessBoard, final GameCommand gameCommand);
 
     static State of(String value) {
-        if (value.equals("BlackRunning")) {
+        if (value.equals("BlackTurn")) {
             return new BlackRunning();
         }
-        if (value.equals("WhiteRunning")) {
+        if (value.equals("WhiteTurn")) {
             return new WhiteRunning();
         }
         if (value.equals("Finish")) {
@@ -21,4 +21,6 @@ public interface State {
     }
 
     boolean isFinished();
+
+    String getValue();
 }

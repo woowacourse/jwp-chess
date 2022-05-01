@@ -26,7 +26,7 @@ public final class WhiteRunning extends Running {
     }
 
     @Override
-    public String toString() {
-        return "WhiteRunning";
+    public String getValue() {
+        return "WhiteTurn";
     }
 }

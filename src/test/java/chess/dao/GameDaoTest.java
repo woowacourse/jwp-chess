@@ -24,7 +24,7 @@ class GameDaoTest {
 
     @BeforeEach
     void setUp() {
-        gameId = gameDao.save("title", "password", "WhiteRunning");
+        gameId = gameDao.save("title", "password", "WhiteTurn");
     }
 
     @AfterEach
@@ -43,9 +43,9 @@ class GameDaoTest {
     @Test
     @DisplayName("게임의 상태를 조회할 수 있다.")
     void findState() {
-        String state = gameDao.findState(gameId).toString();
+        String state = gameDao.findState(gameId).getValue();
 
-        assertThat(state).isEqualTo("WhiteRunning");
+        assertThat(state).isEqualTo("WhiteTurn");
     }
 
     @Test
@@ -67,9 +67,9 @@ class GameDaoTest {
     @Test
     @DisplayName("게임의 상태를 업데이트할 수 있다.")
     void update() {
-        gameDao.update("BlackRunning", gameId);
-        String state = gameDao.findState(gameId).toString();
+        gameDao.update("BlackTurn", gameId);
+        String state = gameDao.findState(gameId).getValue();
 
-        assertThat(state).isEqualTo("BlackRunning");
+        assertThat(state).isEqualTo("BlackTurn");
     }
 }

@@ -31,7 +31,7 @@ public class BoardDaoTest {
 
     @BeforeEach
     void setUp() {
-        gameId = gameDao.save("title", "password", "WhiteRunning");
+        gameId = gameDao.save("title", "password", "WhiteTurn");
         boardDao.save(new ChessBoard(new NormalPiecesGenerator()), gameId);
     }
 

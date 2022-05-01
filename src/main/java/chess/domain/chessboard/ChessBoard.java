@@ -129,6 +129,6 @@ public class ChessBoard {
     public Map<String, Piece> toMap() {
         return pieces.entrySet()
                 .stream()
-                .collect(Collectors.toMap(m -> m.getKey().toString(), Map.Entry::getValue));
+                .collect(Collectors.toMap(m -> m.getKey().getValue(), Map.Entry::getValue));
     }
 }

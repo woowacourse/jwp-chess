@@ -101,8 +101,15 @@ public class Position {
         return Objects.hash(column, row);
     }
 
+    public String getValue() {
+        return column.name().toLowerCase(Locale.ROOT) + row.getValue();
+    }
+
     @Override
     public String toString() {
-        return column.toString() + row.toString();
+        return "Position{" +
+                "column=" + column +
+                ", row=" + row +
+                '}';
     }
 }

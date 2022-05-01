@@ -38,7 +38,7 @@ public class ChessService {
         ChessGame chessGame = new ChessGame(chessBoard);
         chessGame.playGameByCommand(GameCommand.of("start"));
 
-        int id = gameDao.save(roomDto.getTitle(), roomDto.getPassword(), chessGame.getState().toString());
+        int id = gameDao.save(roomDto.getTitle(), roomDto.getPassword(), chessGame.getState().getValue());
         boardDao.save(chessGame.getChessBoard(), id);
         return id;
     }
@@ -52,7 +52,7 @@ public class ChessService {
         Map<Position, Piece> pieces = chessBoard.getPieces();
         Map<String, PieceDto> board = new HashMap<>();
         for (Position position : pieces.keySet()) {
-            String key = position.toString();
+            String key = position.getValue();
             Piece piece = pieces.get(Position.of(key));
             PieceDto pieceDto = new PieceDto(piece.getSymbol().name(), piece.getColor().name());
             board.put(key, pieceDto);
@@ -72,7 +72,7 @@ public class ChessService {
     }
 
     public String selectState(int gameId) {
-        return gameDao.findState(gameId).toString();
+        return gameDao.findState(gameId).getValue();
     }
 
     public StatusDto selectStatus(int gameId) {
@@ -87,7 +87,7 @@ public class ChessService {
         ChessGame chessGame = new ChessGame(gameDao.findState(gameId), boardDao.findById(gameId));
         chessGame.playGameByCommand(GameCommand.of("move", from, to));
         chessGame.isEndGameByPiece();
-        gameDao.update(chessGame.getState().toString(), gameId);
+        gameDao.update(chessGame.getState().getValue(), gameId);
 
         Map<String, Piece> pieces = chessGame.getChessBoard().toMap();
         boardDao.update(Position.of(to), pieces.get(to), gameId);
@@ -98,7 +98,7 @@ public class ChessService {
     public void endGame(int gameId) {
         ChessGame chessGame = new ChessGame(gameDao.findState(gameId), boardDao.findById(gameId));
         chessGame.playGameByCommand(GameCommand.of("end"));
-        gameDao.update(chessGame.getState().toString(), gameId);
+        gameDao.update(chessGame.getState().getValue(), gameId);
     }
 
     @Transactional
@@ -122,7 +122,7 @@ public class ChessService {
     @Transactional
     public void restartGame(int gameId) {
         ChessBoard chessBoard = new ChessBoard(new NormalPiecesGenerator());
-        int id = gameDao.update("WhiteRunning", gameId);
+        int id = gameDao.update("WhiteTurn", gameId);
         boardDao.delete(gameId);
         boardDao.save(chessBoard, id);
     }

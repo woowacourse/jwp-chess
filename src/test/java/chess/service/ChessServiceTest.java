@@ -104,7 +104,7 @@ public class ChessServiceTest {
     void selectState() {
         String state = chessService.selectState(id);
 
-        assertThat(state).isEqualTo("WhiteRunning");
+        assertThat(state).isEqualTo("WhiteTurn");
     }
 
     @Test
@@ -120,7 +120,7 @@ public class ChessServiceTest {
     void endGame() {
         chessService.endGame(id);
 
-        String state = gameDao.findState(id).toString();
+        String state = gameDao.findState(id).getValue();
 
         assertThat(state).isEqualTo("Finish");
     }
@@ -158,8 +158,8 @@ public class ChessServiceTest {
     void restartGame() {
         chessService.endGame(id);
         chessService.restartGame(id);
-        String state = gameDao.findState(id).toString();
+        String state = gameDao.findState(id).getValue();
 
-        assertThat(state).isEqualTo("WhiteRunning");
+        assertThat(state).isEqualTo("WhiteTurn");
     }
 }

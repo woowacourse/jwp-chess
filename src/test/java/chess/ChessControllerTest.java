@@ -43,16 +43,6 @@ class ChessControllerTest {
     }
 
     @Test
-    @DisplayName("기본 경로 페이지 반환을 검증한다.")
-    void index() {
-        RestAssured.given().log().all()
-            .when().get("/")
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.TEXT_HTML_VALUE);
-    }
-
-    @Test
     @DisplayName("새로운 방 생성 여부를 검증한다.")
     void create() {
         RestAssured.given().log().all()

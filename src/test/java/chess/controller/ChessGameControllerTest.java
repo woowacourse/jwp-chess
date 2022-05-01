@@ -50,14 +50,14 @@ public class ChessGameControllerTest {
             .andExpect(status().is3xxRedirection());
     }
 
-    @DisplayName("Http Method - PUT game/{gameId}/move 체스 말 이동")
+    @DisplayName("Http Method - PUT game/{gameId}/ 체스 말 이동")
     @Test
     void move() throws Exception {
         Map<String, String> input = new HashMap<>();
         input.put("source", "a1");
         input.put("target", "a2");
 
-        mockMvc.perform(put("/game/1/move")
+        mockMvc.perform(put("/game/1/")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(input)))
             .andDo(print())

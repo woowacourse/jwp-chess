@@ -13,7 +13,7 @@ section.addEventListener("mouseup", (event) => {
 
   toInput = findTagId(event);
 
-  fetch("/game/"+gameId+"/move", {
+  fetch("/game/"+gameId+"/", {
     method: 'put',
     redirect: 'follow',
     headers: {

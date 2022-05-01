@@ -104,7 +104,23 @@
 - [x] 체스방 삭제 시 id는 맞지만 비밀번호가 틀린 경우 어떻게 처리할 것인가?
     - 비밀번호가 틀린 경우 `IllegalArgumentException`을 발생시키고 "비밀번호가 틀렸습니다."라는 에러 메시지를 400 코드와 프론트로 반환합니다.
     - 프론트는 400 코드가 전송되면 에러 메시지를 출력합니다.
-- [ ] `!isDeadKing()`과 `isKingAlive()`의 차이점이 무엇이 있을까?
+- [x] `!isDeadKing()`과 `isKingAlive()`의 차이점이 무엇이 있을까? 내 코드와 토니의 코드의 차이점 [리뷰 링크](https://github.com/woowacourse/jwp-chess/pull/426/files/63119ae4ae162dd63282fc6780e8dc83c7b2a7ec#r862330057)
+    1. isXXX()메서드를 사용하면서 영향을 주는 메서드들의 결을 맞추기 위해. 추가로 부정(!) 사용을 최소화하기 위해.
+    2. 저는 두 줄로 나누어 코드를 작성했는데 한줄로 줄일 수 있을 것 같다.
+    ```text
+        boolean deadKing = board.isDeadKing();
+        return !deadKing; // 수정 전
+        return !board.isDeadKing(); // 수정 후
+    ```
+    - is, has, can 등 boolean형을 반환하는 메서드는 가능하면 연관된 여러 메서드들의 결을 통일시키는 것이 좋다고 들었습니다.
+    - 예를 들면 연료가 있어야 자동차가 이동할 수 있다면 자동차가 이동할 수 있는지 확인하는 canMoveCar()라는 메서드에서 hasFuel()이라는 메서드를 쓰는것이 좋다는 의미입니다.
+    - 이런 통일성을 맞추기위 위한 기준은 보통 긍정형으로 메서드를 만드는 것이 좋다고 들었습니다.
+    - 예를들면 isNotKing()보다 isKing()이 좋다는 의미입니다.
+    - 이런 관점에서 `isRunningChess()`메서드에서는 `!isDeadKing()`과 `isKingAlive()`중 `isKingAlive()`를 사용하는 것이 더 좋아보입니다. 왕이 살아있어야 게임이 진행중이기 때문입니다.
+    - `isRunningChess()`와 `isDeadKing()`메서드의 특징이 다르기 때문에 반환을 하면서 !를 붙여줘야하고 코드의 이해도가 낮아질 것 같습니다.
+    - 심지어 프로덕션 코드에서 `if (!isRunningChess())`와 같이 사용되기 때문에 부정을 두번 하고 있어 더 이해도가 낮아질 것 같습니다.
+    - 이 문제를 해결하기 위해 `isKingAlive()`를 만들어 사용하거나 `isRunningChess()`를 `isFinishedChess()`로 수정하고 `isDeadKing()`를 반환하는 것도 방법이 될 것 같습니다.
+    - 저는 새로운 Board에 새로운 메서드를 만들지 않아도 되고 상태에 대한 확인이기 때문에 `isRunningChess()`를 `isFinishedChess()`로 수정하는 방식으로 수정해봤습니다.
 
 - 기존 `JdbcTemplate`없이 영속성 레이어를 구현할 때와 `JdbcTemplate`를 활용할 때의 차이점은 무엇일까?
     - 가장 체감되게 느낀 점 세 가지

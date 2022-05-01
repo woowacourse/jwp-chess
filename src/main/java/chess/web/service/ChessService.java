@@ -150,20 +150,15 @@ public class ChessService {
         if (!matchPassword(room.get(), password)) {
             throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
         }
-        return canRemoveRoom(roomId, room.get());
+        return isFinishedChess(roomId, room.get());
     }
 
-    private boolean canRemoveRoom(Long roomId, Room room) {
-        return !isRunningChess(roomId, room);
-    }
-
-    private boolean isRunningChess(Long roomId, Room room) {
+    private boolean isFinishedChess(Long roomId, Room room) {
         Turn turn = getTurn(room);
         Pieces pieces = Pieces.from(pieceDao.findAllByRoomId(roomId));
         Board board = Board.create(pieces, turn);
 
-        boolean deadKing = board.isDeadKing();
-        return !deadKing;
+        return board.isDeadKing();
     }
 
     private boolean matchPassword(Room room, String password) {

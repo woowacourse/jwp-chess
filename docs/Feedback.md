@@ -42,16 +42,19 @@
         - `GameStateDto` - `State`, `Color`를 필드로 가지고 있는 클래스로 수정 후 사용
 - [ ] 줄바꿈의 기준
     - 잦은 줄바꿈은 코드를 파악할 때 흐름이 끊김.
-- [ ] ChessRoomService
+- [x] ChessRoomService
     - [x] `checkDisabledOption()`
         - 서비스에서 게임 규칙과 관련된 처리를 맡기지말고 도메인에서 처리
         - 문자열보다는 enum을 활용
         - `GameState` 클래스에서 String으로 가지고 있던 state 정보를 `enum`으로 구현
             - enum 내 `disableOption` 필드로 버튼 옵션 정보 포함
-    - [ ] `validateDuplicateRoomName()`
+    - [x] `validateDuplicateRoomName()`
         - `findByName()`의 결과를 변수로 추출
         - 쿼리 결과를 boolean으로 반환하는 메서드로 만들어보면 어떤지
-    - [ ] `validatePassword()`
+        - `RoomDao` - `existRoomName()`메서드를 통해 Boolean 반환할 수 있도록 수정 
+    - [x] `validatePassword()`
         - 유효성 검증이 게임 규칙, 서비스에서 검증하는게 맞는지?
-- [ ] RoomDao
+        - `Room` 클래스를 생성하여 비밀번호 검증 로직 포함하도록 작성
+- [x] RoomDao
     - 반환값을 null 사용 x -> 검증하기 위한 코드로 복잡도가 올라감.
+    - `Optional` 사용

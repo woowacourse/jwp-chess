@@ -50,23 +50,11 @@ public final class Game {
         return this.turn;
     }
 
-    public Position findPosition(Position position) {
-        return board.findPosition(position);
-    }
-
     public boolean isEnd() {
         return board.isEnd();
     }
 
     public double calculateScore(final Color color) {
         return board.calculateScore(color);
-    }
-
-    public Map<Result, Color> calculateScoreWinner() {
-        return board.calculateScoreWinner();
-    }
-
-    public Map<Result, Color> calculateFinalWinner() {
-        return board.calculateFinalWinner();
     }
 }

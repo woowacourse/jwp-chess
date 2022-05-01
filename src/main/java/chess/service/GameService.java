@@ -4,7 +4,6 @@ import chess.dao.BoardDao;
 import chess.dao.MemberDao;
 import chess.dao.PieceDao;
 import chess.dao.PositionDao;
-import chess.domain.game.Board;
 import chess.domain.game.ChessBoard;
 import chess.domain.game.Game;
 import chess.domain.game.Initializer;
@@ -101,8 +100,8 @@ public class GameService {
     }
 
     public boolean isEnd(int roomId) {
-        Board board = new Board(() -> positionDao.findAllPositionsAndPieces(roomId));
-        return board.isEnd();
+        Game game = new Game(() -> positionDao.findAllPositionsAndPieces(roomId), Color.NONE);
+        return game.isEnd();
     }
 
     public StatusDto status(int roomId) {
@@ -110,8 +109,8 @@ public class GameService {
     }
 
     public double calculateScore(int roomId, final Color color) {
-        Board board = new Board(() -> positionDao.findAllPositionsAndPieces(roomId));
-        return board.calculateScore(color);
+        Game game = new Game(() -> positionDao.findAllPositionsAndPieces(roomId), Color.NONE);
+        return game.calculateScore(color);
     }
 
     public boolean end(int roomId, String password) {

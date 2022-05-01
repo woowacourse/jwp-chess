@@ -3,15 +3,27 @@ package chess.domain.board;
 import static chess.domain.piece.Team.WHITE;
 
 import chess.domain.board.position.Position;
+import chess.domain.piece.Bishop;
+import chess.domain.piece.King;
+import chess.domain.piece.Knight;
+import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
+import chess.domain.piece.Queen;
+import chess.domain.piece.Rook;
 import chess.domain.piece.Team;
+import chess.dto.PieceDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Board {
+
+    private static final Map<String, Function<Team, Piece>> PIECE_CREATION_STRATEGY_BY_NAME =
+            Map.of("Pawn", Pawn::new, "King", King::new, "Queen", Queen::new,
+                    "Rook", Rook::new, "Knight", Knight::new, "Bishop", Bishop::new);
 
     private final Map<Position, Piece> pieces;
     private final Team currentTurnTeam;
@@ -24,6 +36,19 @@ public class Board {
     public Board() {
         this(new PieceFactory()
                 .generateInitialPieces(), WHITE);
+    }
+
+    public static Map<Position, Piece> convertToPiece(final List<PieceDto> savedPieces) {
+        final Map<Position, Piece> pieces = new HashMap<>();
+        for (PieceDto pieceDto : savedPieces) {
+            Position position = Position.from(pieceDto.getPosition());
+            Team team = Team.from(pieceDto.getTeam());
+            String name = pieceDto.getName();
+            Piece piece = PIECE_CREATION_STRATEGY_BY_NAME.get(name)
+                    .apply(team);
+            pieces.put(position, piece);
+        }
+        return pieces;
     }
 
     public Board movePiece(final Position sourcePosition, final Position targetPosition) {

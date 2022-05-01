@@ -7,29 +7,18 @@ import chess.dao.PieceDao;
 import chess.dao.RoomDao;
 import chess.domain.board.Board;
 import chess.domain.board.position.Position;
-import chess.domain.piece.Bishop;
-import chess.domain.piece.King;
-import chess.domain.piece.Knight;
-import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
-import chess.domain.piece.Queen;
-import chess.domain.piece.Rook;
 import chess.domain.piece.Team;
 import chess.dto.PieceDto;
 import chess.dto.ScoreDto;
 import chess.entity.Room;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessGameService {
 
-    private static final Map<String, Function<Team, Piece>> PIECE_CREATION_STRATEGY_BY_NAME =
-            Map.of("Pawn", Pawn::new, "King", King::new, "Queen", Queen::new,
-                    "Rook", Rook::new, "Knight", Knight::new, "Bishop", Bishop::new);
     private static final String PLAYING_STATE_VALUE = "playing";
 
     private final PieceDao pieceDao;
@@ -42,20 +31,7 @@ public class ChessGameService {
 
     public Map<Position, Piece> getPieces(final int roomId) {
         final List<PieceDto> savedPieces = pieceDao.findPieces(roomId);
-        return convertToPiece(savedPieces);
-    }
-
-    private Map<Position, Piece> convertToPiece(final List<PieceDto> savedPieces) {
-        final Map<Position, Piece> pieces = new HashMap<>();
-        for (PieceDto pieceDto : savedPieces) {
-            Position position = Position.from(pieceDto.getPosition());
-            Team team = Team.from(pieceDto.getTeam());
-            String name = pieceDto.getName();
-            Piece piece = PIECE_CREATION_STRATEGY_BY_NAME.get(name)
-                    .apply(team);
-            pieces.put(position, piece);
-        }
-        return pieces;
+        return Board.convertToPiece(savedPieces);
     }
 
     public void start(final int roomId) {

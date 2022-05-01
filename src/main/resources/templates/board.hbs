@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Chess Game</title>
     <link rel="stylesheet" href="/style/style.css">
-    <script src="/script/chessBoardInit.js"></script>
 </head>
 <body>
     </br>
@@ -100,7 +99,7 @@
     </div>
     </br>
     <div class="center-object board-buttons">
-        <button class="button start-button">
+        <button class="button start-button" id="reStartButton">
             다시하기
         </button>
         <button class="button status-button">
@@ -112,4 +111,5 @@
     </div>
 </body>
 <script src="/script/chess.js"></script>
+<script>allocateAllPiece()</script>
 </html>

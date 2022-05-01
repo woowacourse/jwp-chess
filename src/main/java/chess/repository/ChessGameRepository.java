@@ -1,5 +1,8 @@
 package chess.repository;
 
+import chess.dao.BoardDao;
+import chess.dao.CurrentStatusDao;
+import chess.dao.GameDao;
 import chess.domain.ChessGame;
 import chess.domain.Position;
 import chess.dto.CurrentStatusDto;
@@ -57,8 +60,8 @@ public class ChessGameRepository {
         return new ChessGame(currentStatusDao.findByGameId(gameId), boardDao.findByGameId(gameId));
     }
 
-    public void saveEnd(long gameId, String state) {
-        currentStatusDao.saveEnd(gameId, state);
+    public void saveState(long gameId, String state) {
+        currentStatusDao.saveState(gameId, state);
     }
 
 }

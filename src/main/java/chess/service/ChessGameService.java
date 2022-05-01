@@ -60,7 +60,7 @@ public class ChessGameService {
     public void end(long gameId) {
         ChessGame chessGame = findGameById(gameId);
         chessGame.end();
-        repository.saveEnd(gameId, chessGame.getStateToString());
+        repository.saveState(gameId, chessGame.getStateToString());
     }
 
     public ScoreDto status(long gameId) {

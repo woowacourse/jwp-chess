@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.dao;
 
 import chess.domain.CurrentStatus;
 import chess.dto.CurrentStatusDto;
@@ -35,7 +35,7 @@ public class CurrentStatusDao {
         jdbcTemplate.update(sql, currentStatus.getState(), currentStatus.getTurn(), gameId);
     }
 
-    public void saveEnd(long gameId, String state) {
+    public void saveState(long gameId, String state) {
         String sql = "UPDATE current_status SET state=? WHERE game_id=?";
         jdbcTemplate.update(sql, state, gameId);
     }

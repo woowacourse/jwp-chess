@@ -55,7 +55,7 @@ public class GameController {
     @PostMapping("/{gameId}/delete")
     public String delete(@PathVariable long gameId, @RequestParam String password) {
         service.delete(gameId, password);
-        return "redirect:../";
+        return "redirect:/";
     }
 
     @ExceptionHandler(RuntimeException.class)

@@ -44,7 +44,7 @@ public class BoardJdbcRepository implements BoardRepository {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         boardDao.deleteById(id);
     }
 

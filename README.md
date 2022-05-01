@@ -8,11 +8,11 @@
 
 ![Generic badge](https://img.shields.io/badge/Level2-chess-green.svg)
 ![Generic badge](https://img.shields.io/badge/test-142_passed-blue.svg)
-![Generic badge](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)
+![Generic badge](https://img.shields.io/badge/version-2.0.0-brightgreen.svg)
 
 > 우아한테크코스 웹 백엔드 4기, 웹 체스 저장소입니다.
 
-[![Video Label](http://img.youtube.com/vi/xGw8WqAIQDY/0.jpg)](https://youtu.be/xGw8WqAIQDY)
+[![Video Label](http://img.youtube.com/vi/xGw8WqAIQDY/0.jpg)](https://www.youtube.com/watch?v=j8U0j-uJ9JA)
 
 # How to Start
 

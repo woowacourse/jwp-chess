@@ -8,13 +8,11 @@ import chess.domain.game.score.Score;
 import chess.domain.piece.PieceColor;
 import chess.dto.request.CreateRoomDto;
 import chess.dto.request.MovePieceDto;
-import chess.dto.response.ErrorDto;
 import chess.dto.response.PieceColorDto;
 import chess.dto.response.RoomDto;
 import chess.dto.response.ScoreResultDto;
 import chess.service.ChessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -81,10 +79,5 @@ public class ChessController {
     @PostMapping("/rooms/{id}/move")
     public void movePiece(@PathVariable String id, @RequestBody MovePieceDto movePieceDto) {
         chessService.movePiece(RoomId.from(id), movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition());
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorDto> handleException(RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
     }
 }

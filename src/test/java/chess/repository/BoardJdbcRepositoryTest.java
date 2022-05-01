@@ -9,6 +9,7 @@ import chess.domain.piece.Piece;
 import chess.dto.GameCreateRequest;
 import chess.dto.MoveRequest;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ class BoardJdbcRepositoryTest {
     private RoomRepository roomRepository;
 
     @Test
+    @DisplayName("Board Repository CRUD 테스트")
     void crud() {
         final GameCreateRequest gameCreateRequest = new GameCreateRequest("test room", "password", "white", "black");
         final long id = roomRepository.save(gameCreateRequest);

@@ -13,14 +13,12 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public String handleClientException(ClientException exception) {
-        exception.printStackTrace();
         return exception.getMessage();
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public String handleException(Exception exception) throws Exception {
-        exception.printStackTrace();
         return exception.getMessage();
     }
 }

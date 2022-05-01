@@ -8,7 +8,6 @@ import chess.domain.GameStatus;
 import chess.domain.chesspiece.Color;
 import chess.dto.request.RoomCreationRequestDto;
 import chess.dto.request.RoomDeletionRequestDto;
-import chess.dto.response.RoomStatusDto;
 import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;

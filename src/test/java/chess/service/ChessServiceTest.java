@@ -14,7 +14,7 @@ import chess.domain.chesspiece.Queen;
 import chess.domain.position.Position;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.response.ChessPieceDto;
-import chess.dto.response.RoomStatusDto;
+import chess.entity.ChessPieceEntity;
 import chess.entity.RoomEntity;
 import chess.exception.NotFoundException;
 import java.util.HashMap;
@@ -89,9 +89,9 @@ class ChessServiceTest {
         chessService.move(roomId, dto);
 
         // then
-        final List<ChessPieceDto> allPiece = chessPieceDao.findAllByRoomId(roomId);
-        final ChessPieceDto actual = allPiece.get(0);
-        assertThat(actual.getPosition()).isEqualTo(to);
+        final List<ChessPieceEntity> allPiece = chessPieceDao.findAllEntityByRoomId(roomId);
+        final Position actual = allPiece.get(0).toPosition();
+        assertThat(actual.getValue()).isEqualTo(to);
     }
 
     @Test

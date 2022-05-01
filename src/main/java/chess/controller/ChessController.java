@@ -39,7 +39,7 @@ public class ChessController {
 
     @GetMapping
     public ResponseEntity<RoomPageDto> findAllRoom(@RequestParam(defaultValue = "1") final Integer page,
-                                   @RequestParam(defaultValue = "10") final Integer size) {
+                                                   @RequestParam(defaultValue = "10") final Integer size) {
         return ResponseEntity.ok(roomService.findAll(page, size));
     }
 

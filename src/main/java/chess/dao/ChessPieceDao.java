@@ -1,10 +1,8 @@
 package chess.dao;
 
 import chess.domain.chesspiece.ChessPiece;
-import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
 import chess.dto.ChessPieceMapper;
-import chess.dto.response.ChessPieceDto;
 import chess.entity.ChessPieceEntity;
 import java.util.Arrays;
 import java.util.List;
@@ -36,23 +34,9 @@ public class ChessPieceDao {
         return jdbcTemplate.query(sql, rowMapper, roomId);
     }
 
-    public List<ChessPieceDto> findAllByRoomId(final int roomId) {
-        final String sql = "SELECT * FROM chess_piece WHERE room_id = ?";
-        final RowMapper<ChessPieceDto> rowMapper = (resultSet, rowNum) -> ChessPieceDto.of(
-                Position.from(resultSet.getString("position")),
-                resultSet.getString("chess_piece"),
-                Color.from(resultSet.getString("color")));
-        return jdbcTemplate.query(sql, rowMapper, roomId);
-    }
-
     public int deleteByRoomIdAndPosition(final int roomId, final Position position) {
         final String sql = "DELETE FROM chess_piece WHERE room_id = ? AND position = ?";
         return jdbcTemplate.update(sql, roomId, position.getValue());
-    }
-
-    public int deleteAllByRoomId(final int roomId) {
-        final String sql = "DELETE FROM chess_piece WHERE room_id = ?";
-        return jdbcTemplate.update(sql, roomId);
     }
 
     @Transactional

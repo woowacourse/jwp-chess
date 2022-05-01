@@ -68,7 +68,7 @@ public class ChessController {
         return chessService.findAllGames();
     }
 
-    @PostMapping("/existed-game/?")
+    @PostMapping("/existed-game/{gameId}")
     public ResponseEntity<ErrorResponse> comparePassword(@RequestBody GameAccessRequest game) {
         if (chessService.checkPassword(game.getGameId(), game.getPassword())) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -76,7 +76,7 @@ public class ChessController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("잘못된 비밀번호 입니다."));
     }
 
-    @DeleteMapping("/existed-game/?")
+    @DeleteMapping("/existed-game/{gameId}")
     public ResponseEntity<ErrorResponse> deleteGame(@RequestBody GameAccessRequest game) {
         if (chessService.deleteGameAfterCheckingPassword(game.getGameId(), game.getPassword())) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

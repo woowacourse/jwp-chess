@@ -2,7 +2,7 @@ async function create() {
     let inputName = prompt("방 이름을 입력하세요.");
     let inputPassword = prompt("삭제할 때 사용할 비밀번호를 입력하세요.");
 
-    let response = await fetch("/create", {
+    let response = await fetch("/rooms", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -46,7 +46,7 @@ function makeRoomList(aRoom, roomList) {
 
 async function showList() {
     let rooms
-    await fetch("/list")
+    await fetch("/rooms")
         .then(res => res.json())
         .then(data => rooms = data);
 
@@ -59,8 +59,8 @@ async function showList() {
 async function deleteRoom(roomId) {
     const inputPassword = prompt("생성시 입력한 비밀번호를 입력해주세요.")
 
-    let response = await fetch("/delete?roomId=" + roomId, {
-        method: 'POST',
+    let response = await fetch("/rooms/" + roomId, {
+        method: 'DELETE',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },

@@ -1,4 +1,4 @@
-package chess;
+package chess.controller;
 
 import chess.dao.JdbcFixture;
 import io.restassured.RestAssured;

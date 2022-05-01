@@ -1,4 +1,4 @@
-package chess;
+package chess.service;
 
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
@@ -134,12 +134,12 @@ public class ChessService {
         RoomEntity room = roomDao.findById(roomId)
                 .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessRoom chessRoom = new ChessRoom(room.getName(), room.getPassword(), room.getTurn());
+        chessRoom.checkSamePassword(passwordDto.getPassword());
         if (chessRoom.isEnd()) {
             squareDao.removeAll(roomId);
             roomDao.deleteRoom(roomId);
             return;
         }
-        chessRoom.checkSamePassword(passwordDto.getPassword());
         throw new IllegalStateException(NOT_END_GAME_MESSAGE);
     }
 }

@@ -1,4 +1,4 @@
-package chess;
+package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -96,6 +96,6 @@ public class ChessServiceTest {
     void delete() {
         chessService.delete(1L, new PasswordDto(""));
         Optional<RoomEntity> roomOptional = roomDao.findById(1L);
-        assertThat(roomOptional.isEmpty()).isTrue();
+        assertThat(roomOptional).isEmpty();
     }
 }

@@ -5,7 +5,7 @@ const roomId = window.location.pathname.split("/")[2];
 
 async function start() {
     let pieces;
-    await fetch("/start?roomId=" + roomId)
+    await fetch("/rooms/" + roomId + "/start")
         .then(res => res.json())
         .then(data => pieces = data)
     turn = pieces.turn;
@@ -16,7 +16,7 @@ async function start() {
 
 async function load() {
     let pieces;
-    let response = await fetch("/load?roomId=" + roomId);
+    let response = await fetch("/rooms/" + roomId + "/load");
 
     if (response.status === 400) {
         const errorMessage = await response.json();
@@ -44,7 +44,9 @@ async function load() {
 }
 
 async function end() {
-    let response = await fetch("/end?roomId=" + roomId);
+    let response = await fetch("/rooms/" + roomId + "/end", {
+        method: 'PATCH'
+    });
 
     if (response.status === 400) {
         const errorMessage = await response.json();
@@ -71,7 +73,7 @@ async function end() {
 
 async function printStatus() {
     let stat;
-    await fetch("/status?roomId=" + roomId)
+    await fetch("/rooms/" + roomId + "/status")
         .then(res => res.json())
         .then(data => stat = data)
     let status = document.getElementById("chess-status");
@@ -133,8 +135,8 @@ async function selectPiece(pieceDiv) {
 
 async function move(fromPosition, toPosition) {
     from = "";
-    let response = await fetch("/move?roomId=" + roomId, {
-        method: 'POST',
+    let response = await fetch("/rooms/" + roomId + "/board", {
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
         },
@@ -163,7 +165,9 @@ async function move(fromPosition, toPosition) {
             "새 게임 혹은 그만하기를 눌러주세요.";
         turnStatus.innerText = "";
 
-        let response = await fetch("/end?roomId=" + roomId);
+        let response = await fetch("/rooms/" + roomId + "/end", {
+            method: "PATCH"
+        });
 
         if (response.status === 400) {
             const errorMessage = await response.json();

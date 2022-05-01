@@ -1,4 +1,4 @@
-package chess;
+package chess.controller;
 
 import static org.hamcrest.Matchers.is;
 
@@ -7,16 +7,9 @@ import chess.dto.MoveDto;
 import chess.dto.PasswordDto;
 import chess.dto.RoomCreationDto;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 
 class ChessApiControllerTest extends ControllerTest {
 
@@ -26,7 +19,7 @@ class ChessApiControllerTest extends ControllerTest {
         RestAssured.given().log().all()
                 .body(roomCreationDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/create")
+                .when().post("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -36,7 +29,7 @@ class ChessApiControllerTest extends ControllerTest {
     @Test
     void start() {
         RestAssured.given().log().all()
-                .when().get("/start?roomId=1")
+                .when().get("/rooms/1/start")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -46,10 +39,10 @@ class ChessApiControllerTest extends ControllerTest {
 
     @Test
     void load() {
-        RestAssured.get("/start?roomId=1");
+        RestAssured.get("/rooms/1/start");
 
         RestAssured.given().log().all()
-                .when().get("/load?roomId=1")
+                .when().get("/rooms/1/load")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -59,13 +52,13 @@ class ChessApiControllerTest extends ControllerTest {
 
     @Test
     void move() {
-        RestAssured.get("/start?roomId=1");
+        RestAssured.get("/rooms/1/start");
         MoveDto moveDto = new MoveDto("a2", "a4");
 
         RestAssured.given().log().all()
                 .body(moveDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/move?roomId=1")
+                .when().patch("/rooms/1/board")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -76,10 +69,10 @@ class ChessApiControllerTest extends ControllerTest {
 
     @Test
     void status() {
-        RestAssured.get("/start?roomId=1");
+        RestAssured.get("/rooms/1/start");
 
         RestAssured.given().log().all()
-                .when().get("/status?roomId=1")
+                .when().get("/rooms/1/status")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -89,13 +82,13 @@ class ChessApiControllerTest extends ControllerTest {
 
     @Test
     void moveExceptionWrongPosition() {
-        RestAssured.get("/start?roomId=1");
+        RestAssured.get("/rooms/1/start");
         MoveDto moveDto = new MoveDto("a2", "a5");
 
         RestAssured.given().log().all()
                 .body(moveDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/move?roomId=1")
+                .when().patch("/rooms/1/board")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -104,13 +97,13 @@ class ChessApiControllerTest extends ControllerTest {
 
     @Test
     void moveExceptionWrongTurn() {
-        RestAssured.get("/start?roomId=1");
+        RestAssured.get("/rooms/1/start");
         MoveDto moveDto = new MoveDto("a7", "a6");
 
         RestAssured.given().log().all()
                 .body(moveDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/move?roomId=1")
+                .when().patch("/rooms/1/board")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -122,7 +115,7 @@ class ChessApiControllerTest extends ControllerTest {
         JdbcFixture.insertRoom(jdbcTemplate, "roma2", "1234", "white");
 
         RestAssured.given().log().all()
-                .when().get("/load?roomId=2")
+                .when().get("/rooms/2/load")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -135,7 +128,7 @@ class ChessApiControllerTest extends ControllerTest {
         JdbcFixture.insertRoom(jdbcTemplate, "roma3", "1234", "white");
 
         RestAssured.given().log().all()
-                .when().get("/list")
+                .when().get("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -145,7 +138,7 @@ class ChessApiControllerTest extends ControllerTest {
     @Test
     void end() {
         RestAssured.given().log().all()
-                .when().get("/end?roomId=1")
+                .when().patch("/rooms/1/end")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("message", is("게임 종료상태로 변경했습니다."));
@@ -159,7 +152,7 @@ class ChessApiControllerTest extends ControllerTest {
         RestAssured.given().log().all()
                 .body(passwordDto)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/delete?roomId=2")
+                .when().delete("/rooms/2")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("message", is("방을 삭제했습니다."));

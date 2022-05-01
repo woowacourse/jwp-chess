@@ -12,10 +12,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InMemoryBoardDao implements BoardDao {
-    private final Map<Integer, BoardDto> boardTable = new HashMap<>();
+    private final Map<Long, BoardDto> boardTable = new HashMap<>();
 
     @Override
-    public void initBoard(int gameId) {
+    public void initBoard(Long gameId) {
         Map<Square, Piece> board = new ChessInitializer().initPieces();
         List<PieceWithSquareDto> pieces = board.keySet().stream()
                 .map(square -> new PieceWithSquareDto(square.getName(), PieceType.getName(board.get(square)),
@@ -25,17 +25,17 @@ public class InMemoryBoardDao implements BoardDao {
     }
 
     @Override
-    public BoardDto getBoardByGameId(int gameId) {
+    public BoardDto getBoardByGameId(Long gameId) {
         return boardTable.get(gameId);
     }
 
     @Override
-    public void remove(int gameId) {
+    public void remove(Long gameId) {
         boardTable.remove(gameId);
     }
 
     @Override
-    public void update(PieceWithSquareDto replacePiece, int gameId) {
+    public void update(PieceWithSquareDto replacePiece, Long gameId) {
         BoardDto boardDto = boardTable.get(gameId);
         for (int i = 0; i < boardDto.getPieces().size(); i++) {
             replaceIfSquareEquals(replacePiece, boardDto, i);
@@ -48,7 +48,7 @@ public class InMemoryBoardDao implements BoardDao {
         }
     }
 
-    public Map<Integer, BoardDto> getBoardTable() {
+    public Map<Long, BoardDto> getBoardTable() {
         return boardTable;
     }
 }

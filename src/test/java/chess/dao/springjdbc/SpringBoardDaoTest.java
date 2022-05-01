@@ -32,46 +32,46 @@ class SpringBoardDaoTest {
     }
 
     @Test
-    @DisplayName("initBoard : 보드를 정상적으로 초기화 하는지 확인")
+    @DisplayName("보드를 정상적으로 초기화 하는지 확인")
     void initBoard() {
         initBoard("first");
-        BoardDto boardDto = springBoardDao.getBoardByGameId(1);
+        BoardDto boardDto = springBoardDao.getBoardByGameId(1L);
 
         assertThat(boardDto.getPieces()).hasSize(64);
     }
 
     private void initBoard(String... names) {
         GameFactory.setUpGames(jdbcTemplate, names);
-        for (int i = 1; i < names.length + 1; i++) {
+        for (long i = 1L; i < names.length + 1L; i++) {
             springBoardDao.initBoard(i);
         }
     }
 
     @Test
-    @DisplayName("getBoardByGameId : 게임id로 보드를 정상적으로 가져오는 확인")
+    @DisplayName("게임id로 보드를 정상적으로 가져오는 확인")
     void getBoardByGameId() {
         initBoard("first", "second");
-        BoardDto boardDto = springBoardDao.getBoardByGameId(2);
+        BoardDto boardDto = springBoardDao.getBoardByGameId(2L);
 
         assertThat(boardDto.getPieces()).hasSize(64);
     }
 
     @Test
-    @DisplayName("remove : 보드가 정상적으로 제거되는지 확인")
+    @DisplayName("보드가 정상적으로 제거되는지 확인")
     void remove() {
         initBoard("first");
-        springBoardDao.remove(1);
+        springBoardDao.remove(1L);
 
-        assertThat(springBoardDao.getBoardByGameId(1).getPieces()).isEmpty();
+        assertThat(springBoardDao.getBoardByGameId(1L).getPieces()).isEmpty();
     }
 
     @Test
-    @DisplayName("update : 보드의 피스 정보들이 정상적으러 업데이트 되는지 확인")
+    @DisplayName("보드의 피스 정보들이 정상적으러 업데이트 되는지 확인")
     void update() {
         initBoard("first");
         PieceWithSquareDto piece = new PieceWithSquareDto("a4", "pawn", "white");
-        springBoardDao.update(piece, 1);
-        BoardDto board = springBoardDao.getBoardByGameId(1);
+        springBoardDao.update(piece, 1L);
+        BoardDto board = springBoardDao.getBoardByGameId(1L);
 
         assertThat(board.getPieces()).contains(piece);
     }

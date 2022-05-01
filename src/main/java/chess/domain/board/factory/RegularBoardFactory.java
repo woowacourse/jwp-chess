@@ -42,9 +42,6 @@ public class RegularBoardFactory implements BoardFactory {
 
     private static final Map<Position, Piece> BOARD = new HashMap<>();
 
-    private RegularBoardFactory() {
-    }
-
     static {
         placeAllEmptyPieces();
         placeBlackPieces();
@@ -87,6 +84,9 @@ public class RegularBoardFactory implements BoardFactory {
             Position findPosition = Position.of(file, rank);
             BOARD.put(findPosition, piecesIterator.next());
         }
+    }
+
+    private RegularBoardFactory() {
     }
 
     @Override

@@ -9,12 +9,10 @@ import chess.domain.game.GameTurn;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.board.SavedBoardGenerator;
-import chess.domain.piece.Piece;
 import chess.domain.position.Square;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ChessService {

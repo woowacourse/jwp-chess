@@ -58,4 +58,10 @@ public class BoardJdbcDao implements BoardDao {
         final String deleteBoardDataSql = "delete from board where game_id = ?";
         jdbcTemplate.update(deleteBoardDataSql, id);
     }
+
+    @Override
+    public void deleteAll() {
+        final String sql = "delete from board";
+        jdbcTemplate.update(sql);
+    }
 }

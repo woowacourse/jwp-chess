@@ -13,4 +13,6 @@ public interface BoardDao {
     void updateMove(MoveRequest moveRequest);
 
     void deleteById(long id);
+
+    void deleteAll();
 }

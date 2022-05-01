@@ -27,4 +27,6 @@ public interface ChessService {
     MoveResponse updateBoard(MoveRequest moveRequest);
 
     GameDeleteResponse deleteById(GameDeleteRequest gameDeleteRequest);
+
+    long deleteAll();
 }

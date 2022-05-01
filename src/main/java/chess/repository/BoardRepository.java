@@ -12,4 +12,6 @@ public interface BoardRepository {
     void updateMove(MoveRequest moveRequest);
 
     void deleteById(int id);
+
+    void deleteAll();
 }

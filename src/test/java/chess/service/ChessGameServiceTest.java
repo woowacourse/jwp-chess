@@ -1,10 +1,9 @@
 package chess.service;
 
+import chess.controller.request.RoomCreationRequest;
 import chess.dao.FakeGameDao;
 import chess.dao.FakePieceDao;
-import chess.dto.GameDto;
 import chess.serviece.ChessGameService;
-import chess.controller.request.RoomCreationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,8 +35,8 @@ public class ChessGameServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(chessService.getGame(id, new GameDto(id, "1234")).getTitle()).isEqualTo(title),
-                () -> assertThat(chessService.getGame(id, new GameDto(id, "1234")).getPassword()).isEqualTo(password)
+                () -> assertThat(chessService.getGame(id).getTitle()).isEqualTo(title),
+                () -> assertThat(chessService.getGame(id).getPassword()).isEqualTo(password)
         );
     }
 
@@ -54,8 +53,8 @@ public class ChessGameServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(chessService.getGame(id, new GameDto(id, "1234")).getTitle()).isEqualTo(title),
-                () -> assertThat(chessService.getGame(id, new GameDto(id, "1234")).getPassword()).isEqualTo(password)
+                () -> assertThat(chessService.getGame(id).getTitle()).isEqualTo(title),
+                () -> assertThat(chessService.getGame(id).getPassword()).isEqualTo(password)
         );
     }
 

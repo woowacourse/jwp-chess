@@ -1,10 +1,8 @@
 package chess.serviece;
 
-import chess.controller.response.ChessGameResponse;
 import chess.controller.request.RoomCreationRequest;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
-import chess.dto.GameDto;
 import chess.domain.ChessGame;
 import chess.domain.GameStatus;
 import chess.domain.Score;
@@ -12,6 +10,7 @@ import chess.domain.command.MoveCommand;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
+import chess.dto.GameDto;
 import chess.dto.PieceDto;
 import chess.serviece.dto.PasswordDto;
 import org.springframework.stereotype.Service;
@@ -47,19 +46,19 @@ public class ChessGameService {
         return new GameDto(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(), turnColor.getName(), "finished");
     }
 
-    private List<PieceDto> convertPieceDtos(Map<Position, Piece> pieces, long gameId) {
+    private List<PieceDto> convertPieceDtos(Map<Position, Piece> pieces, Long gameId) {
         return pieces.entrySet()
                 .stream()
                 .map(entry -> PieceDto.from(entry.getKey(), entry.getValue(), gameId))
                 .collect(Collectors.toList());
     }
 
-    public GameDto getGame(Long id, GameDto gameDto) {
-        String password = gameDao.findPasswordById(id);
-        if (!password.equals(gameDto.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+    public GameDto getGame(Long id) {
         return gameDao.findGameById(id);
+    }
+
+    public List<PieceDto> getPiecesOfGame(Long gameId) {
+       return pieceDao.findPiecesByGameId(gameId);
     }
 
     public List<GameDto> getAllGames() {
@@ -76,12 +75,6 @@ public class ChessGameService {
             throw new IllegalArgumentException("게임이 진행중입니다. 삭제할 수 없습니다.");
         }
         gameDao.removeById(id);
-    }
-
-    public ChessGameResponse getChessGame(Long gameId) {
-        List<PieceDto> pieceDtos = pieceDao.findPiecesByGameId(gameId);
-        GameDto gameDto = gameDao.findGameById(gameId);
-        return new ChessGameResponse(gameId, pieceDtos, gameDto.getTurn(), gameDto.getStatus());
     }
 
     public void movePiece(Long gameId, MoveCommand moveCommand) {

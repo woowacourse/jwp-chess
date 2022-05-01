@@ -5,11 +5,14 @@ import chess.controller.response.ChessGameResponse;
 import chess.controller.response.ScoresResponse;
 import chess.domain.Score;
 import chess.domain.piece.PieceColor;
+import chess.dto.GameDto;
+import chess.dto.PieceDto;
 import chess.serviece.ChessGameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -29,7 +32,9 @@ public class GameController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ChessGameResponse> load(@PathVariable Long id) {
-        return ResponseEntity.ok().body(chessGameService.getChessGame(id));
+        GameDto game = chessGameService.getGame(id);
+        List<PieceDto> pieces = chessGameService.getPiecesOfGame(id);
+        return ResponseEntity.ok().body(new ChessGameResponse(id, pieces, game.getTurn(), game.getStatus()));
     }
 
     @GetMapping("/{id}/score")

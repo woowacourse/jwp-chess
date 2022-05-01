@@ -7,6 +7,7 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +27,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleNotFound(final NotFoundException e) {
         final ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
         return new ResponseEntity<>(errorResponseDto, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({EmptyResultDataAccessException.class})
+    public ResponseEntity<ErrorResponseDto> handleEmptyResultDataAccessException(
+            final EmptyResultDataAccessException e) {
+        return new ResponseEntity<>(new ErrorResponseDto("리소스가 존재하지 않습니다."), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({DataAccessException.class})

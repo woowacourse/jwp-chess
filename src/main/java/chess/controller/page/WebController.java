@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class WebController {
 
-    private ChessService chessServiceV2;
+    private final ChessService chessServiceV2;
 
     public WebController(ChessService chessServiceV2) {
         this.chessServiceV2 = chessServiceV2;

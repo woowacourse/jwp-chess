@@ -23,57 +23,57 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class ApiController {
 
-    private ChessService chessServiceV2;
+    private final ChessService chessService;
 
-    public ApiController(ChessService chessServiceV2) {
-        this.chessServiceV2 = chessServiceV2;
+    public ApiController(ChessService chessService) {
+        this.chessService = chessService;
     }
 
     @GetMapping("/rooms")
     public ResponseEntity<RoomAllRes> findAllRoom() {
-        final List<Room> rooms = chessServiceV2.findAllRoom();
+        final List<Room> rooms = chessService.findAllRoom();
         return ResponseEntity.ok().body(RoomAllRes.createRoomAllRes(rooms));
     }
 
     @PostMapping("/room")
     public ResponseEntity<Void> insertRoom(@RequestBody RoomCreateReq roomCreateReq) {
-        chessServiceV2.insertRoom(roomCreateReq.getTitle(), roomCreateReq.getPassword());
+        chessService.insertRoom(roomCreateReq.getTitle(), roomCreateReq.getPassword());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/room/{roomId}/status")
     public ResponseEntity<StatusRes> selectStatus(@PathVariable Long roomId) {
-        final List<Double> status = chessServiceV2.findStatusById(roomId);
+        final List<Double> status = chessService.findStatusById(roomId);
         return ResponseEntity.ok().body(StatusRes.createStatsRes(status));
     }
 
     @PostMapping("/room/{roomId}/board")
     public ResponseEntity<Void> insertBoard(@PathVariable Long roomId) {
-        chessServiceV2.insertBoard(roomId);
+        chessService.insertBoard(roomId);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/room/{roomId}/square")
     public ResponseEntity<Void> updateSquares(@PathVariable Long roomId, @RequestBody MovePositionReq movePositionReq) {
-        chessServiceV2.updateSquares(roomId, movePositionReq.getFrom(), movePositionReq.getTo());
+        chessService.updateSquares(roomId, movePositionReq.getFrom(), movePositionReq.getTo());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/room/{roomId}/state/end")
     public ResponseEntity<Void> updateStateEnd(@PathVariable Long roomId) {
-        chessServiceV2.updateStateEnd(roomId);
+        chessService.updateStateEnd(roomId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/room/{roomId}/state/end")
     public ResponseEntity<WinnerRes> selectWinner(@PathVariable Long roomId) {
-        final String winner = chessServiceV2.findWinnerById(roomId);
+        final String winner = chessService.findWinnerById(roomId);
         return ResponseEntity.ok().body(new WinnerRes(winner));
     }
 
     @DeleteMapping("/room/{roomId}")
     public ResponseEntity<Void> deleteRoom(@PathVariable Long roomId, @RequestBody PasswordReq passwordReq) {
-        chessServiceV2.deleteRoom(roomId, passwordReq.getPassword());
+        chessService.deleteRoom(roomId, passwordReq.getPassword());
         return ResponseEntity.ok().build();
     }
 }

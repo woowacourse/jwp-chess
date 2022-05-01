@@ -74,4 +74,10 @@ public class ChessController {
         return ResponseEntity.badRequest()
             .body(new ExceptionResponseDto(exception.getMessage()));
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ExceptionResponseDto> handleRuntime(RuntimeException exception) {
+        return ResponseEntity.internalServerError()
+            .body(new ExceptionResponseDto(exception.getMessage()));
+    }
 }

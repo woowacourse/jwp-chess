@@ -4,7 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.board.position.Position;
-import chess.dto.request.web.SaveRequest;
+import chess.dto.request.web.SaveGameRequest;
 import chess.dto.response.web.GameResponse;
 import chess.service.ChessService;
 import javax.servlet.http.HttpSession;
@@ -45,8 +45,8 @@ public class ChessApiController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE)
-    public void saveGame(@RequestBody SaveRequest saveRequest) {
-        chessService.saveGame(saveRequest);
+    public void saveGame(@RequestBody SaveGameRequest saveGameRequest) {
+        chessService.saveGame(saveGameRequest);
     }
 
     @GetMapping(value = "/last", produces = APPLICATION_JSON_VALUE)

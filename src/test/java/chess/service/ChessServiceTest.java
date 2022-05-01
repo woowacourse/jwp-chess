@@ -12,7 +12,7 @@ import chess.domain.board.ChessBoard;
 import chess.domain.board.position.Position;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
-import chess.dto.request.web.SaveRequest;
+import chess.dto.request.web.SaveGameRequest;
 import chess.dto.response.web.GameResponse;
 import chess.repository.SessionToChessRepository;
 import java.time.LocalDateTime;
@@ -63,7 +63,7 @@ class ChessServiceTest {
     @Test
     void create_and_lastFindChessBoard() {
         boolean beforeSave = service.isExistGame();
-        service.saveGame(new SaveRequest("Black Team", new HashMap<>(), LocalDateTime.now()));
+        service.saveGame(new SaveGameRequest("Black Team", new HashMap<>(), LocalDateTime.now()));
         boolean afterSave = service.isExistGame();
 
         assertAll(
@@ -75,9 +75,9 @@ class ChessServiceTest {
     @DisplayName("가장 마지막 데이터를 조회")
     @Test
     void find_lastGame() {
-        service.saveGame(new SaveRequest("White Team", Map.of("a2", "whitePawn"), LocalDateTime.of(2022, 04, 24, 00,00)));
-        service.saveGame(new SaveRequest("White Team", Map.of("b2", "whitePawn"), LocalDateTime.of(2022, 04, 25, 00,00)));
-        service.saveGame(new SaveRequest("Black Team", Map.of("a7", "blackPawn"), LocalDateTime.of(2022, 04, 26, 00,00)));
+        service.saveGame(new SaveGameRequest("White Team", Map.of("a2", "whitePawn"), LocalDateTime.of(2022, 04, 24, 00,00)));
+        service.saveGame(new SaveGameRequest("White Team", Map.of("b2", "whitePawn"), LocalDateTime.of(2022, 04, 25, 00,00)));
+        service.saveGame(new SaveGameRequest("Black Team", Map.of("a7", "blackPawn"), LocalDateTime.of(2022, 04, 26, 00,00)));
 
         GameResponse gameResponse = service.loadLastGame(new MockHttpSession());
         assertThat(gameResponse.getTeamName()).isEqualTo("Black Team");

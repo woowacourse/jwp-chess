@@ -5,7 +5,7 @@ import java.util.Map;
 import lombok.Getter;
 
 @Getter
-public class SaveRequest {
+public class SaveGameRequest {
 
     private String currentTeam;
 
@@ -13,10 +13,10 @@ public class SaveRequest {
 
     private LocalDateTime createdAt;
 
-    public SaveRequest() {
+    public SaveGameRequest() {
     }
 
-    public SaveRequest(String currentTeam, Map<String, String> pieces, LocalDateTime createdAt) {
+    public SaveGameRequest(String currentTeam, Map<String, String> pieces, LocalDateTime createdAt) {
         this.currentTeam = currentTeam;
         this.pieces = pieces;
         this.createdAt = createdAt;

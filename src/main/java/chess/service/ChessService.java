@@ -13,7 +13,7 @@ import chess.domain.entity.BoardPiece;
 import chess.domain.entity.Game;
 import chess.domain.gameflow.AlternatingGameFlow;
 import chess.domain.gameflow.GameFlow;
-import chess.dto.request.web.SaveRequest;
+import chess.dto.request.web.SaveGameRequest;
 import chess.dto.response.web.GameResponse;
 import chess.repository.SessionToChessRepository;
 import java.util.List;
@@ -59,10 +59,10 @@ public class ChessService {
     }
 
     @Transactional
-    public void saveGame(SaveRequest saveRequest) {
+    public void saveGame(SaveGameRequest saveGameRequest) {
         String gameId = createUuid();
-        gameDao.save(gameId, saveRequest.getCurrentTeam(), saveRequest.getCreatedAt());
-        boardPieceDao.save(gameId, saveRequest.getPieces());
+        gameDao.save(gameId, saveGameRequest.getCurrentTeam(), saveGameRequest.getCreatedAt());
+        boardPieceDao.save(gameId, saveGameRequest.getPieces());
     }
 
     @Transactional(readOnly = true)

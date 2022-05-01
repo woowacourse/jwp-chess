@@ -6,11 +6,9 @@ import chess.domain.pieces.Color;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -46,13 +44,16 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
     }
 
     @Override
-    public ChessBoard getById(int id) {
+    public Optional<ChessBoard> findById(int id) {
         final String sql = "SELECT * FROM board WHERE id=:id";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", id);
         SqlParameterSource namedParameters = new MapSqlParameterSource(parameters);
-        return jdbcTemplate.queryForObject(sql, namedParameters,
-                (rs, rowNum) -> makeBoard(rs));
+        final ChessBoard chessBoard = DataAccessUtils.singleResult(jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> makeBoard(rs)));
+        if(chessBoard == null) {
+            return Optional.empty();
+        }
+        return Optional.of(chessBoard);
     }
 
     @Override

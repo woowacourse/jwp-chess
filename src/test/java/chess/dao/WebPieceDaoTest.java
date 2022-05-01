@@ -58,7 +58,7 @@ class WebPieceDaoTest {
 
     @Test
     void findByPositionId() {
-        Piece piece = pieceDao.findByPositionId(positionId);
+        Piece piece = pieceDao.findByPositionId(positionId).get();
         assertAll(
                 () -> assertThat(piece.getType()).isInstanceOf(Pawn.class),
                 () -> assertThat(piece.getColor()).isEqualTo(Color.WHITE)
@@ -83,12 +83,5 @@ class WebPieceDaoTest {
     void getAllPiecesTest() {
         final List<Piece> pieces = pieceDao.getAllByBoardId(boardId);
         assertThat(pieces.size()).isEqualTo(1);
-    }
-
-    @Test
-    void countPawnsOnSameColumn() {
-        int pawnCount = pieceDao.countPawnsOnSameColumn(boardId, Column.A, Color.WHITE);
-
-        assertThat(pawnCount).isEqualTo(1);
     }
 }

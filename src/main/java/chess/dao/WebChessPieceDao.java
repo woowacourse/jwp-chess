@@ -4,6 +4,7 @@ import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.Symbol;
 import chess.domain.position.Column;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Repository
 public class WebChessPieceDao implements PieceDao<Piece> {
@@ -45,12 +43,17 @@ public class WebChessPieceDao implements PieceDao<Piece> {
     }
 
     @Override
-    public Piece findByPositionId(int positionId) {
+    public Optional<Piece> findByPositionId(int positionId) {
         final String sql = "SELECT * FROM piece WHERE position_id=:position_id";
         List<String> keys = List.of("position_id");
         List<Object> values = List.of(positionId);
         SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
-        return jdbcTemplate.queryForObject(sql, namedParameters, (rs, rowNum) -> makePiece(rs));
+
+        final Piece piece = DataAccessUtils.singleResult(jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> makePiece(rs)));
+        if(piece == null) {
+            return Optional.empty();
+        }
+        return Optional.of(piece);
     }
 
     private Piece makePiece(ResultSet resultSet) throws SQLException {
@@ -88,23 +91,6 @@ public class WebChessPieceDao implements PieceDao<Piece> {
         List<Object> values = List.of(boardId);
         SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
         return jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> makePiece(rs));
-    }
-
-    @Override
-    public int countPawnsOnSameColumn(int boardId, Column column, Color color) {
-        final String sql = "SELECT COUNT(*) AS total_count FROM piece pi " +
-                "JOIN position po ON pi.position_id=po.id " +
-                "WHERE po.position_column=:column AND po.board_id=:board_id AND pi.type='PAWN' AND pi.color=:color";
-
-        List<String> keys = List.of("column", "board_id", "color");
-        List<Object> values = List.of(column.value(), boardId, color.name());
-        SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
-
-        Integer wrappedResult = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
-        if (wrappedResult == null) {
-            return WRONG_COUNT;
-        }
-        return wrappedResult;
     }
 
     @Override

@@ -3,12 +3,13 @@ package chess.dao;
 import chess.domain.pieces.Color;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BoardDao<T> {
 
     T save(T target);
 
-    T getById(int id);
+    Optional<T> findById(int id);
 
     List<T> findAll();
 

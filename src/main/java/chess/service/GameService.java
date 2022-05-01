@@ -1,8 +1,11 @@
 package chess.service;
 
-import chess.dao.*;
-import chess.domain.game.ChessBoard;
+import chess.dao.BoardDao;
+import chess.dao.MemberDao;
+import chess.dao.PieceDao;
+import chess.dao.PositionDao;
 import chess.domain.game.Board;
+import chess.domain.game.ChessBoard;
 import chess.domain.game.Initializer;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
@@ -26,8 +29,7 @@ public class GameService {
     private final PieceDao<Piece> pieceDao;
     private final MemberDao<Member> memberDao;
 
-    public GameService(BoardDao<ChessBoard> boardDao, PositionDao<Position> positionDao, PieceDao<Piece> pieceDao,
-                       MemberDao<Member> memberDao) {
+    public GameService(BoardDao<ChessBoard> boardDao, PositionDao<Position> positionDao, PieceDao<Piece> pieceDao, MemberDao<Member> memberDao) {
         this.boardDao = boardDao;
         this.positionDao = positionDao;
         this.pieceDao = pieceDao;
@@ -35,7 +37,7 @@ public class GameService {
     }
 
     @Transactional
-    public ChessBoard saveBoard(final ChessBoard board, final Initializer initializer) {
+    public ChessBoard saveBoard(ChessBoard board, Initializer initializer) {
         final ChessBoard savedBoard = boardDao.save(board);
         final Map<Position, Piece> initialize = initializer.initialize();
         positionDao.saveAll(savedBoard.getId());
@@ -47,8 +49,7 @@ public class GameService {
     private List<Piece> makePieces(ChessBoard savedBoard, Map<Position, Piece> initialize) {
         List<Piece> pieces = new ArrayList<>();
         for (Position position : initialize.keySet()) {
-            int lastPositionId = positionDao.getByColumnAndRowAndBoardId(position.getColumn(), position.getRow(),
-                    savedBoard.getId()).getId();
+            int lastPositionId = positionDao.findByColumnAndRowAndBoardId(position.getColumn(), position.getRow(), savedBoard.getId()).get().getId();
             Piece piece = initialize.get(position);
             pieces.add(new Piece(piece.getColor(), piece.getType(), lastPositionId));
         }
@@ -56,11 +57,9 @@ public class GameService {
     }
 
     @Transactional
-    public void move(final int roomId, final Position sourceRawPosition, final Position targetRawPosition) {
-        Position sourcePosition = positionDao.getByColumnAndRowAndBoardId(sourceRawPosition.getColumn(),
-                sourceRawPosition.getRow(), roomId);
-        Position targetPosition = positionDao.getByColumnAndRowAndBoardId(targetRawPosition.getColumn(),
-                targetRawPosition.getRow(), roomId);
+    public void move(int roomId, Position sourceRawPosition, Position targetRawPosition) {
+        Position sourcePosition = extractPosition(positionDao.findByColumnAndRowAndBoardId(sourceRawPosition.getColumn(), sourceRawPosition.getRow(), roomId));
+        Position targetPosition = extractPosition(positionDao.findByColumnAndRowAndBoardId(targetRawPosition.getColumn(), targetRawPosition.getRow(), roomId));
         Board board = new Board(() -> positionDao.findAllPositionsAndPieces(roomId));
         board.validateMovement(sourcePosition, targetPosition);
         validateTurn(roomId, sourcePosition);
@@ -68,21 +67,35 @@ public class GameService {
         changeTurn(roomId);
     }
 
-    private void validateTurn(final int roomId, final Position sourcePosition) {
-        Piece piece = pieceDao.findByPositionId(
-                positionDao.getIdByColumnAndRowAndBoardId(sourcePosition.getColumn(), sourcePosition.getRow(), roomId));
-        validateCorrectTurn(roomId, piece);
+    private Position extractPosition(Optional<Position> wrappedPosition) {
+        if (wrappedPosition.isEmpty()) {
+            throw new IllegalArgumentException("위치가 존재하지 않습니다.");
+        }
+        return wrappedPosition.get();
+    }
+
+    private void validateTurn(int roomId, Position sourcePosition) {
+        Position position = extractPosition(positionDao.findByColumnAndRowAndBoardId(sourcePosition.getColumn(), sourcePosition.getRow(), roomId));
+        Optional<Piece> wrappedPiece = pieceDao.findByPositionId(position.getId());
+        if (wrappedPiece.isEmpty()) {
+            throw new IllegalArgumentException("말이 존재하지 않습니다.");
+        }
+        validateCorrectTurn(roomId, wrappedPiece.get());
     }
 
     private void validateCorrectTurn(int roomId, Piece piece) {
-        final Color turn = boardDao.getById(roomId).getTurn();
+        Optional<ChessBoard> wrappedBoard = boardDao.findById(roomId);
+        if (wrappedBoard.isEmpty()) {
+            throw new IllegalArgumentException("보드가 존재하지 않습니다.");
+        }
+        ChessBoard chessBoard = wrappedBoard.get();
+        Color turn = chessBoard.getTurn();
         if (!piece.isSameColor(turn)) {
             throw new IllegalArgumentException("지금은 " + turn.value() + "의 턴입니다.");
         }
     }
 
-    private void updateMovingPiecePosition(Position sourcePosition, Position targetPosition,
-                                           Optional<Piece> targetPiece) {
+    private void updateMovingPiecePosition(Position sourcePosition, Position targetPosition, Optional<Piece> targetPiece) {
         if (targetPiece.isPresent()) {
             pieceDao.deleteByPositionId(targetPosition.getId());
         }
@@ -90,21 +103,26 @@ public class GameService {
     }
 
     private void changeTurn(int roomId) {
-        boardDao.updateTurn(Color.opposite(boardDao.getById(roomId).getTurn()), roomId);
+        final Optional<ChessBoard> wrappedBoard = boardDao.findById(roomId);
+        if (wrappedBoard.isEmpty()) {
+            throw new IllegalArgumentException("보드가 존재하지 않습니다.");
+        }
+        boardDao.updateTurn(Color.opposite(wrappedBoard.get().getTurn()), roomId);
     }
 
     public BoardDto getBoard(int roomId) {
-        final ChessBoard board = boardDao.getById(roomId);
+        final Optional<ChessBoard> wrappedBoard = boardDao.findById(roomId);
+        if (wrappedBoard.isEmpty()) {
+            throw new IllegalArgumentException("보드가 존재하지 않습니다.");
+        }
+        final ChessBoard board = wrappedBoard.get();
         final Map<Position, Piece> allPositionsAndPieces = positionDao.findAllPositionsAndPieces(roomId);
         Map<String, Piece> pieces = mapPositionToString(allPositionsAndPieces);
         return BoardDto.of(pieces, board.getRoomTitle(), board.getMembers().get(0), board.getMembers().get(1));
     }
 
     private Map<String, Piece> mapPositionToString(Map<Position, Piece> allPositionsAndPieces) {
-        return allPositionsAndPieces.keySet().stream()
-                .collect(Collectors.toMap(
-                        position -> position.getRow().value() + position.getColumn().name(),
-                        allPositionsAndPieces::get));
+        return allPositionsAndPieces.keySet().stream().collect(Collectors.toMap(position -> position.getRow().value() + position.getColumn().name(), allPositionsAndPieces::get));
     }
 
     public boolean isEnd(int roomId) {
@@ -113,8 +131,7 @@ public class GameService {
     }
 
     public StatusDto status(int roomId) {
-        return new StatusDto(Arrays.stream(Color.values())
-                .collect(Collectors.toMap(Enum::name, color -> calculateScore(roomId, color))));
+        return new StatusDto(Arrays.stream(Color.values()).collect(Collectors.toMap(Enum::name, color -> calculateScore(roomId, color))));
     }
 
     public double calculateScore(int roomId, final Color color) {
@@ -130,8 +147,7 @@ public class GameService {
         List<RoomDto> boardsDto = new ArrayList<>();
         List<ChessBoard> boards = boardDao.findAll();
         for (ChessBoard board : boards) {
-            boardsDto.add(new RoomDto(board.getId(), board.getRoomTitle(), board.getMembers().get(0),
-                    board.getMembers().get(1)));
+            boardsDto.add(new RoomDto(board.getId(), board.getRoomTitle(), board.getMembers().get(0), board.getMembers().get(1)));
         }
         return new RoomsDto(boardsDto);
     }

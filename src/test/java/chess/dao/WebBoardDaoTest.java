@@ -43,7 +43,7 @@ class WebBoardDaoTest {
     @Test
     void getByIdTest() {
         final ChessBoard board = dao.save(new ChessBoard("개초보만", "1234"));
-        final ChessBoard foundBoard = dao.getById(board.getId());
+        final ChessBoard foundBoard = dao.findById(board.getId());
         assertAll(
                 () -> assertThat(foundBoard.getRoomTitle()).isEqualTo("개초보만"),
                 () -> assertThat(foundBoard.getTurn()).isEqualTo(Color.WHITE)
@@ -73,7 +73,7 @@ class WebBoardDaoTest {
     @Test
     void updateTurn() {
         dao.updateTurn(Color.BLACK, boardId);
-        ChessBoard chessBoard = dao.getById(boardId);
+        ChessBoard chessBoard = dao.findById(boardId);
 
         assertThat(chessBoard.getTurn()).isEqualTo(Color.BLACK);
     }

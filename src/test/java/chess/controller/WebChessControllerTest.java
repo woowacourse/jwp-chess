@@ -41,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -59,7 +60,6 @@ class WebChessControllerTest {
 
     @MockBean
     private ChessService chessService;
-
 
     @DisplayName("방 생성 요청이 성공하면, 201 status 및 header 속 Location을 응답한다.")
     @Test
@@ -249,6 +249,28 @@ class WebChessControllerTest {
                 .content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
+            .andExpect(content().string(responseBody));
+    }
+
+    @DisplayName("방 생성 요청시 이미 존재하는 이름으로 생성 요청하면, 400 status 및 예외 메세지를 응답한다.")
+    @Test
+    void create_duplicate() throws Exception {
+
+        final RoomRequestDto roomRequestDto = new RoomRequestDto("똑같은 제목", "1234");
+        final String requestBody = objectMapper.writeValueAsString(roomRequestDto);
+
+        chessService.createRoom(roomRequestDto);
+
+        final ErrorResponseDto errorResponseDto = new ErrorResponseDto("[ERROR] 방 이름이 중복일 수 없습니다.");
+        final String responseBody = objectMapper.writeValueAsString(errorResponseDto);
+
+        given(chessService.createRoom(any(RoomRequestDto.class)))
+            .willThrow(new DuplicateKeyException(""));
+
+        mockMvc.perform(post(REQUEST_MAPPING_URI)
+                .content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
             .andExpect(content().string(responseBody));
     }
 

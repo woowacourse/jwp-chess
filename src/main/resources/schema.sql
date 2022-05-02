@@ -6,7 +6,8 @@ create table room
     password  varchar(100) not null,
     name      varchar(20)  not null,
     team      varchar(10)  not null,
-    game_over boolean      not null
+    game_over boolean      not null,
+    unique key room_uk_name (name)
 );
 
 CREATE TABLE board

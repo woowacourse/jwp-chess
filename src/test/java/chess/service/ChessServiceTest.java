@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +60,16 @@ class ChessServiceTest {
             () -> assertThat(room.getName()).isEqualTo("체스 초보만"),
             () -> assertThat(boardRepository.findBoardByRoomId(room.getId())).hasSize(64)
         );
+    }
+
+    @DisplayName("중복된 이름의 방을 생성하면, DuplicateKeyException 예외가 발생한다.")
+    @Test
+    void createRoom_duplicate() {
+        createTestRoom("체스 초보만1");
+
+        assertThatThrownBy(
+            () -> createTestRoom("체스 초보만1")
+        ).isInstanceOf(DuplicateKeyException.class);
     }
 
     @DisplayName("생성한 체스 방을 모두 가져온다.")

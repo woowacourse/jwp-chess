@@ -1,6 +1,7 @@
 package chess.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.entity.RoomEntity;
 import chess.util.PasswordSha256Encoder;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +49,17 @@ class RoomRepositoryImplTest {
         final RoomEntity roomEntity = new RoomEntity("1234", "체스 초보만", "white", false);
         final RoomEntity insertRoom = roomRepository.insert(roomEntity);
         assertThat(insertRoom.getName()).isEqualTo(roomEntity.getName());
+    }
+
+    @DisplayName("중복된 룸을 생성하면, DuplicateKeyException 예외가 발생한다.")
+    @Test
+    void insert_duplicate() {
+        final RoomEntity roomEntity = new RoomEntity("1234", "체스 초보만", "white", false);
+        roomRepository.insert(roomEntity);
+
+        assertThatThrownBy(
+            () -> roomRepository.insert(roomEntity)
+        ).isInstanceOf(DuplicateKeyException.class);
     }
 
     @DisplayName("룸을 조회한다.")

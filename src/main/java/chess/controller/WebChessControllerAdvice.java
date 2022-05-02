@@ -3,6 +3,7 @@ package chess.controller;
 import chess.dto.response.ErrorResponseDto;
 import chess.exception.RoomNotFoundException;
 import java.util.NoSuchElementException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,12 @@ public class WebChessControllerAdvice {
     public ResponseEntity<ErrorResponseDto> handleNotFoundException(RoomNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(new ErrorResponseDto("[ERROR] 방 정보를 찾을 수 없습니다."));
+    }
+
+    @ExceptionHandler(value = DuplicateKeyException.class)
+    public ResponseEntity<ErrorResponseDto> handleDuplicateRoomNameException(DuplicateKeyException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponseDto("[ERROR] 방 이름이 중복일 수 없습니다."));
     }
 
     @ExceptionHandler(value = Exception.class)

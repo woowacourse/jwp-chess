@@ -182,17 +182,6 @@ public class Board {
                 .collect(Collectors.toSet());
     }
 
-    public Map<String, String> toRaw() {
-        Map<String, String> rawBoard = new HashMap<>();
-        for (Map.Entry<Position, Piece> entrySet : value.entrySet()) {
-            String coordinate = entrySet.getKey().toCoordinate();
-            String fullPieceName = entrySet.getValue().generateFullName();
-            rawBoard.put(coordinate, fullPieceName);
-        }
-
-        return rawBoard;
-    }
-
     public Map<Position, Piece> getValue() {
         return value;
     }

@@ -11,6 +11,12 @@ import chess.domain.game.score.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
+import chess.dto.request.CreateRoomDto;
+import chess.dto.request.MovePieceDto;
+import chess.dto.response.BoardDto;
+import chess.dto.response.PieceColorDto;
+import chess.dto.response.RoomDto;
+import chess.dto.response.ScoreResultDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +34,16 @@ public class ChessService {
         this.boardDao = boardDao;
     }
 
-    public void createRoom(Room room) {
+    public RoomDto createRoom(CreateRoomDto createRoomDto) {
+        Room room = Room.create(createRoomDto.getTitle(), createRoomDto.getPassword());
         roomDao.createRoom(room);
 
+        initializeBoard(room);
+
+        return RoomDto.from(room);
+    }
+
+    private void initializeBoard(Room room) {
         Board initializedBoard = Board.createInitializedBoard();
         for (Entry<Position, Piece> entry : initializedBoard.getValue().entrySet()) {
             Position position = entry.getKey();
@@ -40,7 +53,10 @@ public class ChessService {
         }
     }
 
-    public void deleteRoom(RoomId roomId, RoomPassword roomPassword) {
+    public void deleteRoom(String id, String password) {
+        RoomId roomId = RoomId.from(id);
+        RoomPassword roomPassword = RoomPassword.createByPlainText(password);
+
         if (!generateChessGame(roomId).isEnd()) {
             throw new IllegalStateException("게임이 끝나지 않아서 방을 삭제할 수 없습니다.");
         }
@@ -52,7 +68,11 @@ public class ChessService {
         return roomDao.getAllRooms();
     }
 
-    public void movePiece(RoomId roomId, Position from, Position to) {
+    public void movePiece(String id, MovePieceDto movePieceDto) {
+        RoomId roomId = RoomId.from(id);
+        Position from = movePieceDto.getFromAsPosition();
+        Position to = movePieceDto.getToAsPosition();
+
         ChessGame chessGame = generateChessGame(roomId);
         chessGame.movePiece(from, to);
 
@@ -74,23 +94,26 @@ public class ChessService {
         roomDao.updateTurnToBlack(roomId);
     }
 
-    public PieceColor getCurrentTurn(RoomId roomId) {
-        ChessGame chessGame = generateChessGame(roomId);
+    public PieceColorDto getCurrentTurn(String roomId) {
+        ChessGame chessGame = generateChessGame(RoomId.from(roomId));
         if (chessGame.isWhiteTurn()) {
-            return PieceColor.WHITE;
+            return PieceColorDto.from(PieceColor.WHITE);
         }
 
-        return PieceColor.BLACK;
+        return PieceColorDto.from(PieceColor.BLACK);
     }
 
-    public Score getScore(RoomId roomId, PieceColor pieceColor) {
-        ChessGame chessGame = generateChessGame(roomId);
-        return chessGame.getStatus().getScoreByPieceColor(pieceColor);
+    public ScoreResultDto getScore(String roomId) {
+        ChessGame chessGame = generateChessGame(RoomId.from(roomId));
+        Score whiteScore = chessGame.getStatus().getScoreByPieceColor(PieceColor.WHITE);
+        Score blackScore = chessGame.getStatus().getScoreByPieceColor(PieceColor.BLACK);
+        return ScoreResultDto.of(whiteScore, blackScore);
     }
 
-    public PieceColor getWinColor(RoomId roomId) {
-        ChessGame chessGame = generateChessGame(roomId);
-        return chessGame.getWinColor();
+    public PieceColorDto getWinColor(String roomId) {
+        ChessGame chessGame = generateChessGame(RoomId.from(roomId));
+        PieceColor winColor = chessGame.getWinColor();
+        return PieceColorDto.from(winColor);
     }
 
     private ChessGame generateChessGame(RoomId roomId) {
@@ -99,8 +122,9 @@ public class ChessService {
         return ChessGame.of(board, currentTurn);
     }
 
-    public Board getBoard(RoomId roomId) {
-        return boardDao.getBoard(roomId);
+    public BoardDto getBoard(String roomId) {
+        Board board = boardDao.getBoard(RoomId.from(roomId));
+        return new BoardDto(board);
     }
 
     @Override

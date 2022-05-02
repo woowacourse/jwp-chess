@@ -1,13 +1,8 @@
 package chess.controller;
 
-import chess.domain.board.Board;
-import chess.domain.game.room.Room;
-import chess.domain.game.room.RoomId;
-import chess.domain.game.room.RoomPassword;
-import chess.domain.game.score.Score;
-import chess.domain.piece.PieceColor;
 import chess.dto.request.CreateRoomDto;
 import chess.dto.request.MovePieceDto;
+import chess.dto.response.BoardDto;
 import chess.dto.response.PieceColorDto;
 import chess.dto.response.RoomDto;
 import chess.dto.response.ScoreResultDto;
@@ -31,15 +26,12 @@ public class ChessController {
 
     @PostMapping("/rooms")
     public RoomDto createRoom(@RequestBody CreateRoomDto createRoomDto) {
-        Room room = Room.create(createRoomDto.getTitle(), createRoomDto.getPassword());
-        chessService.createRoom(room);
-
-        return RoomDto.from(room);
+        return chessService.createRoom(createRoomDto);
     }
 
     @DeleteMapping("/rooms/{id}")
     public void deleteRoom(@PathVariable String id, @RequestParam String password) {
-        chessService.deleteRoom(RoomId.from(id), RoomPassword.createByPlainText(password));
+        chessService.deleteRoom(id, password);
     }
 
     @GetMapping("/rooms")
@@ -50,34 +42,29 @@ public class ChessController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/rooms/{id}/board")
-    public Map<String, String> getBoard(@PathVariable String id) {
-        Board board = chessService.getBoard(RoomId.from(id));
-        return board.toRaw();
+    @GetMapping("/rooms/{roomId}/board")
+    public Map<String, String> getBoard(@PathVariable String roomId) {
+        BoardDto board = chessService.getBoard(roomId);
+        return board.getValue();
     }
 
     @GetMapping("/rooms/{id}/turn")
     public PieceColorDto getTurn(@PathVariable String id) {
-        PieceColor currentTurn = chessService.getCurrentTurn(RoomId.from(id));
-        return PieceColorDto.from(currentTurn);
+        return chessService.getCurrentTurn(id);
     }
 
     @GetMapping("/rooms/{id}/score")
     public ScoreResultDto getScore(@PathVariable String id) {
-        RoomId roomId = RoomId.from(id);
-        Score whiteScore = chessService.getScore(roomId, PieceColor.WHITE);
-        Score blackScore = chessService.getScore(roomId, PieceColor.BLACK);
-        return ScoreResultDto.of(whiteScore, blackScore);
+        return chessService.getScore(id);
     }
 
     @GetMapping("/rooms/{id}/winner")
     public PieceColorDto getWinner(@PathVariable String id) {
-        PieceColor winColor = chessService.getWinColor(RoomId.from(id));
-        return PieceColorDto.from(winColor);
+        return chessService.getWinColor(id);
     }
 
     @PostMapping("/rooms/{id}/move")
     public void movePiece(@PathVariable String id, @RequestBody MovePieceDto movePieceDto) {
-        chessService.movePiece(RoomId.from(id), movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition());
+        chessService.movePiece(id, movePieceDto);
     }
 }

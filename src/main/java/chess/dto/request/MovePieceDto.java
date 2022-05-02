@@ -6,6 +6,14 @@ public class MovePieceDto {
     private String from;
     private String to;
 
+    public MovePieceDto() {
+    }
+
+    public MovePieceDto(String from, String to) {
+        this.from = from;
+        this.to = to;
+    }
+
     public String getFrom() {
         return from;
     }

@@ -2,12 +2,18 @@ package chess.service;
 
 import chess.dao.BoardDao;
 import chess.dao.PieceDao;
-import chess.domain.ChessGame;
 import chess.domain.Color;
-import chess.domain.Winner;
+import chess.domain.board.Board;
+import chess.domain.board.BoardInitializer;
 import chess.domain.board.Position;
-import chess.dto.ChessBoardDto;
-import chess.dto.ResponseDto;
+import chess.domain.piece.Piece;
+import chess.dto.BoardInfoDto;
+import chess.dto.CreateBoardDto;
+import chess.dto.ResultDto;
+import chess.dto.StatusDto;
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,93 +21,75 @@ public class ChessGameService {
 
     private final PieceDao pieceDao;
     private final BoardDao boardDao;
-    private ChessGame chessGame;
 
     public ChessGameService(PieceDao pieceDao, BoardDao boardDao) {
         this.pieceDao = pieceDao;
         this.boardDao = boardDao;
     }
 
-    public ResponseDto start() {
-        chessGame = new ChessGame();
-        try {
-            if (pieceDao.existPieces()) {
-                chessGame.load(pieceDao.load(), boardDao.findTurn());
-                return new ResponseDto(200, "");
-            }
-            chessGame.start();
-            return new ResponseDto(200, "");
-        } catch (Exception e) {
-            return new ResponseDto(501, e.getMessage());
+    public List<BoardInfoDto> getBoards() {
+        return boardDao.getAllBoardInfo();
+    }
+
+    public int start(CreateBoardDto createBoardDto) {
+        Board board = new Board(BoardInitializer.createBoard(), Color.WHITE, createBoardDto);
+        int id = boardDao.makeBoard(board);
+        pieceDao.save(BoardInitializer.createBoard(), id);
+        return id;
+    }
+
+    public HttpStatus move(Position source, Position target, int id) {
+        Board board = getBoard(id);
+        board.move(source, target);
+
+        if (board.hasKingCaptured()) {
+            return HttpStatus.ACCEPTED;
         }
+
+        boardDao.updateTurn(board.getTurn(), id);
+        pieceDao.updatePosition(source.stringName(), target.stringName(), id);
+        return HttpStatus.OK;
     }
 
-    public ResponseDto move(String rawSource, String rawTarget) {
-        try {
-            final Position source = Position.from(rawSource);
-            final Position target = Position.from(rawTarget);
-            chessGame.move(source, target);
-            savePieces(source, target);
-            if (!isRunning()) {
-                end();
-                return new ResponseDto(301, "");
-            }
-            return new ResponseDto(302, "");
-        } catch (Exception e) {
-            return new ResponseDto(501, e.getMessage());
-        }
+    public StatusDto status(int id) {
+        Board board = getBoard(id);
+        return StatusDto.of(board.scoreOfWhite(), board.scoreOfBlack());
     }
 
-    private void savePieces(Position source, Position target) {
-        if (pieceDao.existPieces()) {
-            updatePosition(source, target, chessGame.getTurn());
-            return;
-        }
-        save(chessGame.getTurn());
+    public Board getBoard(int boardId) {
+        return new Board(getPieces(boardId), getTurn(boardId), getName(boardId), getPassword(boardId));
     }
 
-    private void updatePosition(Position source, Position target, Color turn) {
-        boardDao.save(turn);
-        pieceDao.updatePosition(source.stringName(), target.stringName());
+    public ResultDto result(int boardId) {
+        Board board = getBoard(boardId);
+        return ResultDto.of(board.scoreOfWhite(), board.scoreOfBlack(), board.findWinner());
     }
 
-    private void save(Color turn) {
-        boardDao.save(turn);
-        pieceDao.save(chessGame.getBoard().getPiecesByPosition());
+    public void end(int id) {
+        boardDao.end(id);
     }
 
-    public ResponseDto end() {
-        try {
-            chessGame.end();
-            pieceDao.delete();
-            boardDao.deleteBoard();
-            return new ResponseDto(200, "");
-        } catch (Exception e) {
-            return new ResponseDto(501, e.getMessage());
-        }
+    public Map<Position, Piece> getPieces(int boardId) {
+        return pieceDao.load(boardId);
     }
 
-    public ChessBoardDto getBoard() {
-        return ChessBoardDto.from(chessGame.getBoard().getPiecesByPosition());
+    public Color getTurn(int id) {
+        return boardDao.findTurn(id);
     }
 
-    public boolean isRunning() {
-        return chessGame.isRunning();
+    private String getName(int boardId) {
+        return boardDao.getName(boardId);
     }
 
-    public double statusOfWhite() {
-        return chessGame.statusOfWhite();
+    private String getPassword(int boardId) {
+        return boardDao.getPassword(boardId);
     }
 
-    public double statusOfBlack() {
-        return chessGame.statusOfBlack();
-    }
+    public void deleteBoard(int id, String password) {
+        Board board = getBoard(id);
+        board.delete(password);
 
-    public Winner findWinner() {
-        return chessGame.findWinner();
-    }
-
-    public Color getTurn() {
-        return chessGame.getTurn();
+        pieceDao.delete(id);
+        boardDao.deleteBoard(id, password);
     }
 }

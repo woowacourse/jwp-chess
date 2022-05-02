@@ -13,32 +13,30 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class PieceJdbcTemplateDao implements PieceDao {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public PieceJdbcTemplateDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void save(Map<Position, Piece> board) {
+    public void save(Map<Position, Piece> board, int boardId) {
         for (Entry<Position, Piece> positionPieceEntry : board.entrySet()) {
-            executeInsertPiece(positionPieceEntry);
+            executeInsertPiece(positionPieceEntry, boardId);
         }
     }
 
-    private void executeInsertPiece(Entry<Position, Piece> positionPieceEntry) {
-        final String sql = "insert into piece (board_id, position, type, color) values (1, ?, ?, ?)";
+    private void executeInsertPiece(Entry<Position, Piece> positionPieceEntry, int boardId) {
+        final String sql = "insert into piece (board_id, position, type, color) values (?, ?, ?, ?)";
         final Position position = positionPieceEntry.getKey();
         final Piece piece = positionPieceEntry.getValue();
-        jdbcTemplate.update(sql, position.stringName(), piece.getSymbol(), piece.getColor().name());
+        jdbcTemplate.update(sql, boardId, position.stringName(), piece.getSymbol(), piece.getColor().name());
     }
 
     @Override
-    public Map<Position, Piece> load() {
-        final String sql = "select position, type, color from piece where board_id = 1";
+    public Map<Position, Piece> load(int boardId) {
         Map<Position, Piece> board = new TreeMap<>();
-
-        final List<Pair> pairs = getPairs(sql);
+        final List<Pair> pairs = getPairs(boardId);
 
         for (Pair pair : pairs) {
             board.put(pair.getPosition(), pair.getPiece());
@@ -46,7 +44,9 @@ public class PieceJdbcTemplateDao implements PieceDao {
         return board;
     }
 
-    private List<Pair> getPairs(String sql) {
+    private List<Pair> getPairs(int boardId) {
+        String sql = "select position, type, color from piece where board_id = " + boardId;
+
         return jdbcTemplate.query(sql, (res, rowNum) -> {
             final Position position = Position.from(res.getString("position"));
             final Type type = Type.from(res.getString("type"));
@@ -56,32 +56,32 @@ public class PieceJdbcTemplateDao implements PieceDao {
     }
 
     @Override
-    public boolean existPieces() {
-        final String sql = "select count(*) from piece where board_id = 1";
-        final Integer pieceCount = jdbcTemplate.queryForObject(sql, Integer.class);
+    public boolean existPieces(int boardId) {
+        final String sql = "select count(*) from piece where board_id = ?";
+        final Integer pieceCount = jdbcTemplate.queryForObject(sql, Integer.class, boardId);
         return !pieceCount.equals(0);
     }
 
     @Override
-    public void delete() {
-        final String sql = "delete from piece where board_id = 1";
-        jdbcTemplate.update(sql);
+    public void delete(int boardId) {
+        final String sql = "delete from piece where board_id = ?";
+        jdbcTemplate.update(sql, boardId);
     }
 
     @Override
-    public void updatePosition(String source, String target) {
-        final String type = getFromSource("type", source);
-        final String color = getFromSource("color", source);
+    public void updatePosition(String source, String target, int boardId) {
+        final String type = getFromSource("type", source, boardId);
+        final String color = getFromSource("color", source, boardId);
 
-        final String updateSourceSql = "update piece set type = '.', color = 'NONE' where position = ? and board_id = 1";
-        final String updateTargetSql = "update piece set type = ?, color = ? where position = ? and board_id = 1";
+        final String updateSourceSql = "update piece set type = '.', color = 'NONE' where position = ? and board_id = ?";
+        final String updateTargetSql = "update piece set type = ?, color = ? where position = ? and board_id = ?";
 
-        jdbcTemplate.update(updateSourceSql, source);
-        jdbcTemplate.update(updateTargetSql, type, color, target);
+        jdbcTemplate.update(updateSourceSql, source, boardId);
+        jdbcTemplate.update(updateTargetSql, type, color, target, boardId);
     }
 
-    private String getFromSource(String column, String source) {
-        final String getFromSourceSql = "select " + column + " from piece where position = ? and board_id = 1";
-        return jdbcTemplate.queryForObject(getFromSourceSql, String.class, source);
+    private String getFromSource(String column, String source, int boardId) {
+        final String getFromSourceSql = "select " + column + " from piece where position = ? and board_id = ?";
+        return jdbcTemplate.queryForObject(getFromSourceSql, String.class, source, boardId);
     }
 }

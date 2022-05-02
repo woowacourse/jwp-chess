@@ -1,6 +1,8 @@
 create table board
 (
-    id int not null,
+    id int not null auto_increment,
+    name varchar(20) not null,
+    password varchar(10) not null,
     turn varchar(5) not null,
     primary key (id)
 );

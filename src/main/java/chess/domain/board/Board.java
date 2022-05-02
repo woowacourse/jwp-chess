@@ -1,8 +1,11 @@
 package chess.domain.board;
 
 import chess.domain.Color;
+import chess.domain.Winner;
 import chess.domain.piece.NullPiece;
 import chess.domain.piece.Piece;
+import chess.dto.BoardInfoDto;
+import chess.dto.CreateBoardDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +19,14 @@ public final class Board {
     private static final String EMPTY_SPACE_EXCEPTION = "이동할 수 있는 기물이 없습니다.";
     private static final String INVALID_TURN_EXCEPTION = "상대 진영의 차례입니다.";
     private static final String INVALID_MOVING_PATH_EXCEPTION = "경로에 기물이 있어 움직일 수 없습니다.";
+    private static final String INVALID_MOVE_STATE = "종료된 게임에서는 이동할 수 없습니다.";
     private static final int ALL_THE_NUMBER_OF_KING = 2;
 
     private final Map<Position, Piece> piecesByPosition;
 
     private Color turn;
+    private String name;
+    private String password;
 
     public Board() {
         this.piecesByPosition = BoardInitializer.createBoard();
@@ -30,6 +36,20 @@ public final class Board {
     public Board(Map<Position, Piece> pieces, Color turn) {
         this.piecesByPosition = pieces;
         this.turn = turn;
+    }
+
+    public Board(Map<Position, Piece> pieces, Color turn, CreateBoardDto createBoardDto) {
+        this.piecesByPosition = pieces;
+        this.turn = turn;
+        this.name = createBoardDto.getName();
+        this.password = createBoardDto.getPassword();
+    }
+
+    public Board(Map<Position, Piece> pieces, Color turn, String name, String password) {
+        this.piecesByPosition = pieces;
+        this.turn = turn;
+        this.name = name;
+        this.password = password;
     }
 
     public void move(Position beforePosition, Position afterPosition) {
@@ -54,6 +74,9 @@ public final class Board {
     }
 
     private void validateMovable(Position beforePosition, Position afterPosition, Piece piece) {
+        if (turn == Color.END) {
+            throw new IllegalStateException(INVALID_MOVE_STATE);
+        }
         if (isBlank(beforePosition)) {
             throw new IllegalArgumentException(EMPTY_SPACE_EXCEPTION);
         }
@@ -122,7 +145,45 @@ public final class Board {
                 .allMatch(Piece::isBlack);
     }
 
+    public Winner findWinner() {
+        if (hasBlackKingCaptured()) {
+            return Winner.WHITE;
+        }
+        if (hasWhiteKingCaptured()) {
+            return Winner.BLACK;
+        }
+        return findWinnerByScore();
+    }
+
+    private Winner findWinnerByScore() {
+        final int compared = Double.compare(scoreOfBlack(), scoreOfWhite());
+        if (compared > 0) {
+            return Winner.BLACK;
+        }
+        if (compared < 0) {
+            return Winner.WHITE;
+        }
+        return Winner.DRAW;
+    }
+
+    public void delete(String inputPassword) {
+        if (!password.equals(inputPassword)) {
+            throw new IllegalArgumentException("잘못된 비밀번호 입력입니다.");
+        }
+        if (turn != Color.END) {
+            throw new IllegalStateException("종료된 게임만 삭제할 수 있습니다.");
+        }
+    }
+
     public Color getTurn() {
         return turn;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

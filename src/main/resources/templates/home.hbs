@@ -7,7 +7,36 @@
 </head>
 <body>
 <div align="center">
-<button type="button" onclick="start()"> 체스게임 시작 </button>
+    <form id="make_board">
+        <div>
+            <label for="name">이름</label>
+            <input type="text" id="name" name="name" placeholder="체스방의 이름을 입력하세요">
+        </div>
+        <div>
+            <label for="password">비밀번호</label>
+            <input type="password" id="password" name="password" placeholder="체스방의 비밀번호를 입력하세요">
+        </div>
+        <input type="button" value="방 만들기" onclick=makeBoard()>
+    </form>
 </div>
+
+<table>
+    <thead>
+    <th>ID</th>
+    <th>이름</th>
+    <th>삭제</th>
+    </thead>
+    <tbody>
+    {{#boards}}
+        <tr>
+            <td>{{id}}</td>
+            <td onclick=getBoard({{id}})>{{name}}</td>
+            <td>
+                <button onclick=deleteBoard({{id}})>삭제</button>
+            </td>
+        </tr>
+    {{/boards}}
+    </tbody>
+</table>
 </body>
 </html>

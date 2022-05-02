@@ -1,21 +1,12 @@
-package chess.dao;
+package chess.dto;
 
-import chess.domain.Color;
-
-public class FakeBoard {
-
-    private final Color turn;
+public class CreateBoardDto {
     private final String name;
     private final String password;
 
-    public FakeBoard(Color turn, String name, String password) {
-        this.turn = turn;
+    public CreateBoardDto(String name, String password) {
         this.name = name;
         this.password = password;
-    }
-
-    public Color getTurn() {
-        return turn;
     }
 
     public String getName() {

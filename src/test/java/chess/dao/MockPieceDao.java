@@ -14,7 +14,7 @@ public class MockPieceDao implements PieceDao {
     private Map<Integer, FakePiece> fakePiece = new HashMap<>();
 
     @Override
-    public void save(Map<Position, Piece> board) {
+    public void save(Map<Position, Piece> board, int boardId) {
         int index = 1;
         for (Entry<Position, Piece> positionPieceEntry : board.entrySet()) {
             Position position = positionPieceEntry.getKey();
@@ -25,7 +25,7 @@ public class MockPieceDao implements PieceDao {
     }
 
     @Override
-    public Map<Position, Piece> load() {
+    public Map<Position, Piece> load(int boardId) {
         Map<Position, Piece> pieces = new TreeMap<>();
         for (FakePiece fakePiece : fakePiece.values()) {
             Position position = Position.from(fakePiece.getPosition());
@@ -37,17 +37,16 @@ public class MockPieceDao implements PieceDao {
     }
 
     @Override
-    public boolean existPieces() {
+    public boolean existPieces(int boardId) {
         return fakePiece.size() > 0;
     }
 
     @Override
-    public void delete() {
+    public void delete(int boardId) {
         fakePiece = new HashMap<>();
     }
 
     @Override
-    public void updatePosition(String source, String target) {
-
+    public void updatePosition(String source, String target, int boardId) {
     }
 }

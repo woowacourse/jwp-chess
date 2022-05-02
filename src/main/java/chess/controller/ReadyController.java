@@ -17,14 +17,14 @@ public class ReadyController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String index(Model model) {
         model.addAttribute("msg", "CLICK TO START! 😝");
         model.addAttribute("games", chessService.getGameIDs());
         return "ready";
     }
 
-    @PostMapping("/")
+    @PostMapping
     public String delete(@ModelAttribute ChessGameDto chessGameDto, Model model) {
         model.addAttribute("msg", "쨘~ 게임 삭제 완료! 😚");
         try {

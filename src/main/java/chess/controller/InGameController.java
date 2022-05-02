@@ -21,7 +21,7 @@ public class InGameController {
         this.chessService = chessService;
     }
 
-    @PostMapping()
+    @PostMapping
     public String runGame(@ModelAttribute ChessGameDto chessGameDto, @RequestParam(name = "restart") String restart,
             Model model) {
         if (isGameExist(chessGameDto) && isNotValidPassword(chessGameDto)) {

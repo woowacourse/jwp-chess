@@ -1,9 +1,8 @@
 package chess.controller;
 
+import chess.dto.MoveRequestDto;
 import chess.dto.RoomInfoDto;
 import chess.service.ChessGameService;
-import java.util.Arrays;
-import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +28,8 @@ public class ChessSpringRestController {
     }
 
     @PatchMapping("/boards/{id}/move")
-    public ResponseEntity<Boolean> move(@PathVariable Long id, @RequestBody String moveRequest) {
-        List<String> command = Arrays.asList(moveRequest.split(" "));
-        chessGameService.move(id, command.get(0), command.get(1));
+    public ResponseEntity<Boolean> move(@PathVariable Long id, @RequestBody MoveRequestDto moveRequestDto) {
+        chessGameService.move(id, moveRequestDto.getSource(), moveRequestDto.getTarget());
         final boolean gameEnd = chessGameService.isGameEnd(id);
         return ResponseEntity.ok().body(gameEnd);
     }

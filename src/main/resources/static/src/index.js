@@ -50,9 +50,12 @@ function movePiece() {
     fetch(`/boards/${boardId}/move`, {
         method: "PATCH",
         headers: {
-            "Content-Type": "text/plain"
+            "Content-Type": "application/json"
         },
-        body: source + " " + target
+        body: JSON.stringify({
+            source: source,
+            target: target
+        })
     }).then(async (res) => {
         document.getElementById(source).style.backgroundColor = '';
         document.getElementById(target).style.backgroundColor = '';

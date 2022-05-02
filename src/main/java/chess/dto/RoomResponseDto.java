@@ -2,17 +2,17 @@ package chess.dto;
 
 public class RoomResponseDto {
 
-    private String id;
+    private int id;
     private String name;
     private String pw;
 
-    public RoomResponseDto(String id, String name, String pw) {
+    public RoomResponseDto(int id, String name, String pw) {
         this.id = id;
         this.name = name;
         this.pw = pw;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

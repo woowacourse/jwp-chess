@@ -16,7 +16,7 @@ public interface GameDao {
 
     List<ChessGame> findHistoriesByMemberId(final Long memberId);
 
-    void move(final Long gameId, final ChessGame game, final String rawFrom, final String rawTo);
+    void move(final long gameId, final ChessGame game, final String rawFrom, final String rawTo);
 
     void terminate(final Long id);
 }

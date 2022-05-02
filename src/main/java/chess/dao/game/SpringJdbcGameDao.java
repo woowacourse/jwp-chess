@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -51,7 +50,6 @@ public class SpringJdbcGameDao implements GameDao {
         );
     }
 
-    @Autowired
     public SpringJdbcGameDao(final JdbcTemplate jdbcTemplate, final PieceDao pieceDao, final MemberDao memberDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.pieceDao = pieceDao;
@@ -111,7 +109,7 @@ public class SpringJdbcGameDao implements GameDao {
     }
 
     @Override
-    public void move(final Long gameId, final ChessGame game, final String rawFrom, final String rawTo) {
+    public void move(final long gameId, final ChessGame game, final String rawFrom, final String rawTo) {
         pieceDao.move(gameId, rawFrom, rawTo);
         reverseTurn(gameId, game);
     }

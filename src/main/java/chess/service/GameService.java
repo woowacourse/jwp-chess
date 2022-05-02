@@ -1,5 +1,6 @@
 package chess.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,10 +29,7 @@ public class GameService {
     }
 
     public List<ChessGame> findPlayingGames() {
-        return gameDao.findAll()
-                .stream()
-                .filter(game -> !game.isEnd())
-                .collect(Collectors.toList());
+        return new ArrayList<>(gameDao.findAll());
     }
 
 

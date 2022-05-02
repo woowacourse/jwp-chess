@@ -19,7 +19,7 @@ public class ChessController {
 
     @GetMapping("/")
     public String renderIndex(Model model) {
-        model.addAttribute("games", roomService.getAllRooms());
+        model.addAttribute("allRooms", roomService.getAllRooms());
         return "index";
     }
 

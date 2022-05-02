@@ -6,7 +6,7 @@ import chess.repository.ChessGameRepository;
 import chess.repository.RoomRepository;
 import chess.repository.dao.GameDao;
 import chess.service.dto.response.DeleteGameResponse;
-import chess.service.dto.response.GamesDto;
+import chess.service.dto.response.RoomsDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,8 +21,8 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public GamesDto getAllRooms() {
-        return new GamesDto(gameDao.findAll());
+    public RoomsDto getAllRooms() {
+        return new RoomsDto(gameDao.findAll());
     }
 
     public void createRoom(String name, String password) {

@@ -15,7 +15,7 @@ import chess.domain.position.Position;
 import chess.domain.position.Rank;
 import chess.domain.vo.Room;
 import chess.dto.ChessGameDto;
-import chess.dto.ChessGameRequest;
+import chess.dto.RoomCreateRequest;
 import chess.dto.GameStatus;
 import chess.dto.MoveRequest;
 import chess.dto.PieceDto;
@@ -50,8 +50,8 @@ public class ChessGameService {
     }
 
     @Transactional
-    public void create(ChessGameRequest chessGameRequest) {
-        Room room = new Room(chessGameRequest.getName(), chessGameRequest.getPassword());
+    public void create(RoomCreateRequest roomCreateRequest) {
+        Room room = new Room(roomCreateRequest.getName(), roomCreateRequest.getPassword());
         int chessGameId = chessGameDao.saveChessGame(ChessGame.start(room));
         Map<Position, Piece> initBoard = ChessBoardInitializer.getInitBoard();
         initBoard.forEach((key, value) -> pieceDao.savePiece(chessGameId, key, value));

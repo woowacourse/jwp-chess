@@ -1,12 +1,12 @@
 package chess.dto;
 
-public class ChessGameRequest {
+public class RoomCreateRequest {
 
     private String name;
 
     private String password;
 
-    public ChessGameRequest(String name, String password) {
+    public RoomCreateRequest(String name, String password) {
         this.name = name;
         this.password = password;
     }

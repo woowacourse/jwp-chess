@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.ChessGameDto;
-import chess.dto.ChessGameRequest;
+import chess.dto.RoomCreateRequest;
 import chess.dto.MoveRequest;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -32,8 +31,8 @@ public class ChessGameController {
     }
 
     @PostMapping("/chess-game")
-    public String createChessGame(@ModelAttribute ChessGameRequest chessGameRequest) {
-        chessGameService.create(chessGameRequest);
+    public String createChessGame(@ModelAttribute RoomCreateRequest roomCreateRequest) {
+        chessGameService.create(roomCreateRequest);
         return "redirect:/";
     }
 

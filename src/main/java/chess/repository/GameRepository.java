@@ -1,13 +1,12 @@
 package chess.repository;
 
-import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.service.PieceFactory;
 import chess.dto.BoardDto;
 import chess.dto.GameStateDto;
 import chess.dto.PieceDto;
+import chess.service.PieceFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,6 +29,10 @@ public class GameRepository {
         return gameStateAndPieces(boardId);
     }
 
+    public int findBoardIdByRoomId(int roomId) {
+        return boardDao.findBoardIdByRoom(roomId).get();
+    }
+
     public Board findBoardByRoomId(int roomId) {
         int boardId = boardDao.findBoardIdByRoom(roomId).get();
 
@@ -40,10 +43,6 @@ public class GameRepository {
         Board board = new Board(() -> pieces);
         board.loadTurn(boardDao.getTurn(boardId));
         return board;
-    }
-
-    public Color getBoardColor(int boardId) {
-        return boardDao.getTurn(boardId);
     }
 
     public void updateBoardState(Board board, int boardId) {

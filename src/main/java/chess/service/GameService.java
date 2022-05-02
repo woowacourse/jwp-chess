@@ -4,11 +4,11 @@ import chess.domain.Color;
 import chess.domain.Result;
 import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
-import chess.repository.GameRepository;
 import chess.dto.BoardDto;
 import chess.dto.CommendDto;
 import chess.dto.PieceDto;
 import chess.dto.ResultDto;
+import chess.repository.GameRepository;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -42,11 +42,9 @@ public class GameService {
     }
 
     public BoardDto loadGame(int roomId) {
+        int boardId = gameRepository.findBoardIdByRoomId(roomId);
         Board board = gameRepository.findBoardByRoomId(roomId);
-//        int boardId = gameRepository.findBoardIdByRoom(roomId);
-//        Board board = gameRepository.loadBoard(boardId);
-//        board.loadTurn(gameRepository.getBoardColor(boardId));
-        return gameStateAndPieces(boardId);
+        return new BoardDto(boardId, board);
     }
 
     public BoardDto gameStateAndPieces(int boardId) {

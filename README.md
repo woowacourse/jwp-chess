@@ -147,7 +147,10 @@
     - 저는 새로운 Board에 새로운 메서드를 만들지 않아도 되고 상태에 대한 확인이기 때문에 `isRunningChess()`를 `isFinishedChess()`로 수정하는 방식으로 수정해봤습니다.
 - [x] REST API의 endpoint의 자원을 표현할 때 복수형으로 수정하자
     - RESTFul API는 endpoint에서 복수형을 사용하자는 규칙을 강조한다.
-- [ ] ApiController에서 모든 에러가 Bad request를 반환하는데 만약 DB나 서버 내부에서 에러가 발생한다면 적절한 status code일까?
+- [x] ApiController에서 모든 에러가 Bad request를 반환하는데 만약 DB나 서버 내부에서 에러가 발생한다면 적절한 status code일까?
+    - `SQLException`, `DataAccessException`이 발생하면 500 status code를 반환하도록 수정했습니다.
+    - `IllegalArgumentException`, `IllegalStateException`, `NoSuchElementException`이 발생하면 400 status code를 반환하도록 수정했습니다.
+    - 어떤 예외가 발생할지 모르는 상황인데 `Exception`으로 모든 예외를 핸들링하는건 적절하지 않은 것 같습니다.
 - [x] 30자 이상의 방 이름, 비밀번호를 입력하면 어떻게 될까요?
     - 값은 저장되지 않고 `DataIntegrityViolationException`이 발생했습니다.
     - 이 예외는 `DataAccessException`를 상속받는 예외입니다.

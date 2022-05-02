@@ -1,4 +1,4 @@
-const gameUrl = '/game';
+const gameUrl = '/room';
 
 const deleteGameButtons = document.getElementsByClassName('delete-game-button');
 

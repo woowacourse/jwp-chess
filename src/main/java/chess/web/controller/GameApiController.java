@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("room/{roomId}/game")
+@RequestMapping("rooms/{roomId}/game")
 public class GameApiController {
 
     private final ChessService chessService;

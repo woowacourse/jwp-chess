@@ -28,7 +28,7 @@ public class ChessController {
         return "index";
     }
 
-    @GetMapping("/room/{roomId}/game")
+    @GetMapping("/rooms/{roomId}/game")
     public String renderBoard(@PathVariable Integer roomId) {
         return "board";
     }

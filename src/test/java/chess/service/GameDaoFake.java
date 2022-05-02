@@ -1,44 +1,57 @@
 package chess.service;
 
-import chess.dao.GameDao;
-import chess.domain.piece.PieceColor;
-import chess.dto.response.ChessGameDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import chess.dao.GameDao;
+import chess.domain.piece.PieceColor;
+import chess.entity.Room;
+
 public class GameDaoFake implements GameDao {
-    private final Map<String, PieceColor> fakeGame = new HashMap<>();
+    private final Map<Integer, PieceColor> fakeGame = new HashMap<>();
 
     @Override
-    public ChessGameDto getGame(String gameId) {
+    public PieceColor getGameTurn(int gameId) {
         PieceColor pieceColor = fakeGame.get(gameId);
-        return ChessGameDto.of(gameId, pieceColor.name());
+        return pieceColor;
     }
 
     @Override
-    public void createGame(String gameId) {
-        fakeGame.put(gameId, PieceColor.WHITE);
+    public int createGameAndGetId(String gameName, String gamePassword) {
+        fakeGame.put(fakeGame.size() + 1, PieceColor.WHITE);
+        return fakeGame.size();
     }
 
     @Override
-    public void deleteGame(String gameId) {
+    public void deleteGame(int gameId) {
         fakeGame.remove(gameId);
     }
 
     @Override
-    public void updateTurnToWhite(String gameId) {
+    public void updateTurnToWhite(int gameId) {
         fakeGame.put(gameId, PieceColor.WHITE);
     }
 
     @Override
-    public void updateTurnToBlack(String gameId) {
+    public void updateTurnToBlack(int gameId) {
         fakeGame.put(gameId, PieceColor.BLACK);
+    }
+
+    @Override
+    public List<Room> inquireAllRooms() {
+        return null;
+    }
+
+    @Override
+    public String getPasswordById(int gameId) {
+        return null;
     }
 
     @Override
     public String toString() {
         return "GameDaoFake{" +
-                "fakeGame=" + fakeGame +
-                '}';
+            "fakeGame=" + fakeGame +
+            '}';
     }
 }

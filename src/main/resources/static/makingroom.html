@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 방 생성</title>
+    <link href="./style.css" rel="stylesheet"/>
+    <script>
+        function onSubmit() {
+            const name = document.getElementsByName("name")[0].value;
+            const password = document.getElementsByName("password")[0].value;
+
+            fetch("/room", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({name, password})
+            }).then(res => res.json())
+                .then(res => {
+                    location.href = "game.html?id=" + res.id;
+                }).catch((e) => {
+                console.log(e.message);
+            })
+        }
+    </script>
+</head>
+<body>
+제목: <input type="text" name="name"><br>
+비밀번호: <input type="text" name="password"><br>
+<button onclick="onSubmit()" class='button'>생성하기</button>
+</body>
+</html>

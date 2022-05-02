@@ -1,31 +1,39 @@
 package chess.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import chess.domain.board.Board;
+import chess.domain.game.score.Score;
+import chess.domain.game.score.ScoreResult;
+import chess.domain.piece.Piece;
+import chess.domain.piece.PieceColor;
+import chess.domain.position.Position;
+import chess.dto.request.CreateRoomDto;
+import chess.dto.request.DeleteRoomDto;
 import chess.dto.request.MovePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
 import chess.dto.response.CommandResultDto;
-import chess.dto.response.PieceColorDto;
-import chess.dto.response.PieceDto;
-import chess.dto.response.PositionDto;
-import chess.dto.response.ScoreResultDto;
+import chess.dto.response.RoomDto;
+import chess.entity.Room;
 import chess.service.ChessService;
 
 @RestController
 public class ChessController {
-    private static final String GAME_ID = "game-id"; // TODO: 여러 게임 방 기능 구현시 제거
     private static final String PIECE_NAME_FORMAT = "%s_%s";
     private static final String WHITE_PIECE_COLOR_NAME = "WHITE";
     private static final String BLACK_PIECE_COLOR_NAME = "BLACK";
+    private static final String MESSAGE_DELETE_SUCCESSFULLY = "삭제되었습니다!";
 
     private final ChessService chessService;
 
@@ -33,16 +41,17 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/board")
-    public ResponseEntity getBoard() {
-        BoardDto boardDto = chessService.getBoard(GAME_ID);
-        return ResponseEntity.ok(boardDtoToRaw(boardDto));
+    //TODO: Dto로 반환하는 것 고려
+    @GetMapping("/board/{id}")
+    public Map<String, String> getBoard(@PathVariable Integer id) {
+        Board board = chessService.getBoard(id);
+        return boardDtoToRaw(board);
     }
 
-    private Map<String, String> boardDtoToRaw(BoardDto boardDto) {
+    private Map<String, String> boardDtoToRaw(Board board) {
         Map<String, String> coordinateAndPiece = new HashMap<>();
-        for (Map.Entry<PositionDto, PieceDto> entrySet : boardDto.getValue().entrySet()) {
-            String coordinate = entrySet.getKey().toPosition().toCoordinate();
+        for (Map.Entry<Position, Piece> entrySet : board.getValue().entrySet()) {
+            String coordinate = entrySet.getKey().toCoordinate();
             String piece = generatePieceName(entrySet.getValue());
             coordinateAndPiece.put(coordinate, piece);
         }
@@ -50,69 +59,85 @@ public class ChessController {
         return coordinateAndPiece;
     }
 
-    private String generatePieceName(PieceDto pieceDto) {
-        String pieceName = pieceDto.getPieceType().name();
-        String pieceColorName = pieceDto.getPieceColor().name();
+    private String generatePieceName(Piece piece) {
+        String pieceName = piece.getPieceType().name();
+        String pieceColorName = piece.getPieceColor().name();
         return String.format(PIECE_NAME_FORMAT, pieceName, pieceColorName);
     }
 
-    @GetMapping("/turn")
-    public ResponseEntity getTurn() {
-        PieceColorDto pieceColorDto = chessService.getCurrentTurn(GAME_ID);
+    @GetMapping("/turn/{id}")
+    public Map<String, String> getTurn(@PathVariable Integer id) {
+        PieceColor pieceColor = chessService.getCurrentTurn(id);
         Map<String, String> responseValue = new HashMap<>();
-        responseValue.put("pieceColor", getColorFromPieceColorDto(pieceColorDto));
-        return ResponseEntity.ok(responseValue);
+        responseValue.put("pieceColor", getColorNameFromPieceColor(pieceColor));
+        return responseValue;
     }
 
-    private String getColorFromPieceColorDto(PieceColorDto pieceColorDto) {
-        if (pieceColorDto.isWhiteTurn()) {
+    private String getColorNameFromPieceColor(PieceColor pieceColor) {
+        if (pieceColor == PieceColor.WHITE) {
             return WHITE_PIECE_COLOR_NAME;
         }
         return BLACK_PIECE_COLOR_NAME;
     }
 
-    @GetMapping("/score")
-    public ResponseEntity getScore() {
-        ScoreResultDto scoreResultDto = chessService.getScore(GAME_ID);
+    @GetMapping("/score/{id}")
+    public Map<String, Double> getScore(@PathVariable Integer id) {
+        ScoreResult scoreResult = chessService.getScore(id);
         Map<String, Double> responseValue = new HashMap<>();
-        responseValue.put("white", scoreResultDto.getWhiteScore());
-        responseValue.put("black", scoreResultDto.getBlackScore());
-        return ResponseEntity.ok(responseValue);
+        saveScorePerTeam(scoreResult, responseValue);
+        return responseValue;
     }
 
-    @GetMapping("/winner")
-    public ResponseEntity getWinner() {
-        PieceColorDto pieceColorDto = chessService.getWinColor(GAME_ID);
+    private void saveScorePerTeam(ScoreResult scoreResult, Map<String, Double> responseValue) {
+        Score whiteScore = scoreResult.getScoreByPieceColor(PieceColor.WHITE);
+        Score blackScore = scoreResult.getScoreByPieceColor(PieceColor.BLACK);
+        responseValue.put("white", whiteScore.getValue());
+        responseValue.put("black", blackScore.getValue());
+    }
+
+    @GetMapping("/winner/{id}")
+    public Map<String, String> getWinner(@PathVariable Integer id) {
+        PieceColor pieceColor = chessService.getWinColor(id);
         Map<String, String> responseValue = new HashMap<>();
-        responseValue.put("pieceColor", getColorFromPieceColorDto(pieceColorDto));
-        return ResponseEntity.ok(responseValue);
+        responseValue.put("pieceColor", getColorNameFromPieceColor(pieceColor));
+        return responseValue;
     }
 
-    @PostMapping("/move")
-    public CommandResultDto movePiece(@RequestBody MovePieceDto movePieceDto) {
-        try {
-            chessService.movePiece(
-                UpdatePiecePositionDto.of(GAME_ID, movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition()));
-        } catch (IllegalStateException e) {
-            return CommandResultDto.of(false, e.getMessage());
-        }
+    @PostMapping("/move/{id}")
+    public CommandResultDto movePiece(@RequestBody MovePieceDto movePieceDto, @PathVariable Integer id) {
+        chessService.movePiece(
+            UpdatePiecePositionDto.of(id, movePieceDto.getFromAsPosition(), movePieceDto.getToAsPosition()));
 
-        return CommandResultDto.of(true, "성공하였습니다.");
+        return new CommandResultDto("");
     }
 
-    // TODO: Exception 으로 catch 하면 안됨
-    @PostMapping("/initialize")
-    public CommandResultDto initialize() {
-        try {
-            chessService.initializeGame(GAME_ID);
-        } catch (Exception e) {
-            return CommandResultDto.of(false, e.getMessage());
-        }
-        return CommandResultDto.of(true, "성공하였습니다.");
+    @PostMapping("/room")
+    public RoomDto createRoom(@RequestBody CreateRoomDto createRoomDto) {
+        String gameName = createRoomDto.getName();
+        String gamePassword = createRoomDto.getPassword();
+        RoomDto roomDto = new RoomDto(chessService.createGameAndGetId(gameName, gamePassword), gameName);
+        return roomDto;
+    }
+
+    @GetMapping("/room")
+    public List<RoomDto> inquireRooms() {
+        List<Room> rooms = chessService.getRooms();
+        return rooms.stream()
+            .map(room -> new RoomDto(room.getId(), room.getName()))
+            .collect(Collectors.toList());
+    }
+
+    @DeleteMapping("/room")
+    public CommandResultDto deleteRoom(@RequestBody DeleteRoomDto deleteRoomDto) {
+        int gameId = deleteRoomDto.getId();
+        String inputPassword = deleteRoomDto.getPassword();
+
+        chessService.deleteRoom(gameId, inputPassword);
+        return new CommandResultDto(MESSAGE_DELETE_SUCCESSFULLY);
     }
 
     @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
-    public ResponseEntity<String> handle(RuntimeException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public CommandResultDto handle(RuntimeException e) {
+        return new CommandResultDto(e.getMessage());
     }
 }

@@ -1,12 +1,5 @@
 package chess.domain.board;
 
-import chess.domain.piece.Piece;
-import chess.domain.piece.PieceColor;
-import chess.domain.piece.PieceFactory;
-import chess.domain.position.Direction;
-import chess.domain.position.Position;
-import chess.domain.position.XAxis;
-import chess.domain.position.YAxis;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +7,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import chess.domain.piece.Piece;
+import chess.domain.piece.PieceColor;
+import chess.domain.piece.PieceFactory;
+import chess.domain.position.Direction;
+import chess.domain.position.Position;
+import chess.domain.position.XAxis;
+import chess.domain.position.YAxis;
 
 public class Board {
     private final Map<Position, Piece> value;
@@ -49,7 +50,7 @@ public class Board {
     }
 
     private static void initializeSpecialPieces(Map<Position, Piece> value, YAxis yAxis,
-                                                PieceColor pieceColor) {
+        PieceColor pieceColor) {
         value.put(Position.of(XAxis.A, yAxis), PieceFactory.createRook(pieceColor));
         value.put(Position.of(XAxis.B, yAxis), PieceFactory.createNight(pieceColor));
         value.put(Position.of(XAxis.C, yAxis), PieceFactory.createBishop(pieceColor));
@@ -64,7 +65,6 @@ public class Board {
         return Optional.ofNullable(value.get(position));
     }
 
-    // TODO: 실패 원인을 클라이언트가 알 수 있게 개선
     public MoveResult executeCommand(Position from, Position to, PieceColor pieceColor) {
         Piece piece = value.get(from);
 
@@ -107,8 +107,8 @@ public class Board {
 
     private boolean hasAnyPiece(List<Position> positions) {
         return positions.stream()
-                .map(value::get)
-                .anyMatch(position -> !Objects.isNull(position));
+            .map(value::get)
+            .anyMatch(position -> !Objects.isNull(position));
     }
 
     private MoveResult move(Position from, Position to) {
@@ -165,25 +165,25 @@ public class Board {
     }
 
     private int countPawnByPositions(PieceColor pieceColor, List<Position> positions) {
-        return (int) positions.stream()
-                .map(value::get)
-                .filter(piece -> !Objects.isNull(piece))
-                .filter(piece -> piece.isSameColorAs(pieceColor))
-                .filter(Piece::isPawn)
-                .count();
+        return (int)positions.stream()
+            .map(value::get)
+            .filter(piece -> !Objects.isNull(piece))
+            .filter(piece -> piece.isSameColorAs(pieceColor))
+            .filter(Piece::isPawn)
+            .count();
     }
 
     public Set<Piece> findPiecesByPieceColor(PieceColor pieceColor) {
         return value.values()
-                .stream()
-                .filter(piece -> piece.isSameColorAs(pieceColor))
-                .collect(Collectors.toSet());
+            .stream()
+            .filter(piece -> piece.isSameColorAs(pieceColor))
+            .collect(Collectors.toSet());
     }
 
     public boolean hasKing(PieceColor pieceColor) {
         return findPiecesByPieceColor(pieceColor)
-                .stream()
-                .anyMatch(Piece::isKing);
+            .stream()
+            .anyMatch(Piece::isKing);
     }
 
     public Map<Position, Piece> getValue() {
@@ -193,7 +193,7 @@ public class Board {
     @Override
     public String toString() {
         return "Board{" +
-                "value=" + value +
-                '}';
+            "value=" + value +
+            '}';
     }
 }

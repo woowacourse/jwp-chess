@@ -8,13 +8,13 @@ import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
 
 public class CreatePieceDto {
-    private final String gameId;
+    private final int gameId;
     private final XAxis xAxis;
     private final YAxis yAxis;
     private final PieceType pieceType;
     private final PieceColor pieceColor;
 
-    private CreatePieceDto(String gameId, XAxis xAxis, YAxis yAxis, PieceType pieceType, PieceColor pieceColor) {
+    private CreatePieceDto(int gameId, XAxis xAxis, YAxis yAxis, PieceType pieceType, PieceColor pieceColor) {
         this.gameId = gameId;
         this.xAxis = xAxis;
         this.yAxis = yAxis;
@@ -22,12 +22,12 @@ public class CreatePieceDto {
         this.pieceColor = pieceColor;
     }
 
-    public static CreatePieceDto of(String gameId, Position position, Piece piece) {
+    public static CreatePieceDto of(int gameId, Position position, Piece piece) {
         return new CreatePieceDto(gameId, position.getXAxis(), position.getYAxis(), piece.getPieceType(),
-                piece.getPieceColor());
+            piece.getPieceColor());
     }
 
-    public String getGameId() {
+    public int getGameId() {
         return gameId;
     }
 
@@ -50,10 +50,10 @@ public class CreatePieceDto {
     @Override
     public String toString() {
         return "CreatePieceDto{" +
-                "xAxis=" + xAxis +
-                ", yAxis=" + yAxis +
-                ", pieceType=" + pieceType +
-                ", pieceColor=" + pieceColor +
-                '}';
+            "xAxis=" + xAxis +
+            ", yAxis=" + yAxis +
+            ", pieceType=" + pieceType +
+            ", pieceColor=" + pieceColor +
+            '}';
     }
 }

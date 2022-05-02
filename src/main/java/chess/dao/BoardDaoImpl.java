@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceType;
@@ -16,7 +17,6 @@ import chess.domain.position.YAxis;
 import chess.dto.request.CreatePieceDto;
 import chess.dto.request.DeletePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
 
 @Repository
 public class BoardDaoImpl implements BoardDao {
@@ -29,19 +29,19 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public BoardDto getBoard(String gameId) {
-        Map<Position, Piece> boardValue = new HashMap<>();
+    public Board getBoard(int gameId) {
+        Map<Position, Piece> board = new HashMap<>();
 
         for (Position position : getPositionsByGameId(gameId)) {
             String query = String.format(
                 "SELECT piece_type, piece_color FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
-            boardValue.put(position, getPieceByGameIdAndPosition(query, gameId, position));
+            board.put(position, getPieceByGameIdAndPosition(query, gameId, position));
         }
 
-        return BoardDto.from(boardValue);
+        return Board.from(board);
     }
 
-    private List<Position> getPositionsByGameId(String gameId) {
+    private List<Position> getPositionsByGameId(int gameId) {
         String query = String.format("SELECT x_axis, y_axis FROM %s WHERE game_id = ?",
             TABLE_NAME);
         List<Position> positions = jdbcTemplate.query(query, (resultSet, rowNum) -> {
@@ -53,7 +53,7 @@ public class BoardDaoImpl implements BoardDao {
         return positions;
     }
 
-    private Piece getPieceByGameIdAndPosition(String sql, String gameId, Position position) {
+    private Piece getPieceByGameIdAndPosition(String sql, int gameId, Position position) {
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
             PieceType pieceType = PieceType.valueOf(resultSet.getString("piece_type"));
             PieceColor pieceColor = PieceColor.valueOf(resultSet.getString("piece_color"));
@@ -77,6 +77,12 @@ public class BoardDaoImpl implements BoardDao {
             "DELETE FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
         jdbcTemplate.update(query, deletePieceDto.getGameId(), deletePieceDto.getXAxisValueAsString(),
             deletePieceDto.getYAxisValueAsString());
+    }
+
+    @Override
+    public void deletePieces(int gameId) {
+        String query = String.format("DELETE FROM %s WHERE game_id = ?", TABLE_NAME);
+        jdbcTemplate.update(query, gameId);
     }
 
     @Override

@@ -1,15 +1,22 @@
 package chess.dao;
 
-import chess.dto.response.ChessGameDto;
+import java.util.List;
+
+import chess.domain.piece.PieceColor;
+import chess.entity.Room;
 
 public interface GameDao {
-    ChessGameDto getGame(String gameId);
+    PieceColor getGameTurn(int gameId);
 
-    void createGame(String gameId);
+    int createGameAndGetId(String gameName, String gamePassword);
 
-    void deleteGame(String gameId);
+    void deleteGame(int gameId);
 
-    void updateTurnToWhite(String gameId);
+    void updateTurnToWhite(int gameId);
 
-    void updateTurnToBlack(String gameId);
+    void updateTurnToBlack(int gameId);
+
+    List<Room> inquireAllRooms();
+
+    String getPasswordById(int gameId);
 }

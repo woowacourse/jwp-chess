@@ -40,8 +40,6 @@ public class Piece {
         return this.pieceColor == other.pieceColor;
     }
 
-    // TODO: 게터 제거해야함
-    // TODO: getScore 가 Piece 의 역할일까?
     public Score getScore() {
         return pieceType.getScore();
     }
@@ -57,8 +55,8 @@ public class Piece {
     @Override
     public String toString() {
         return "Piece{" +
-                "pieceType=" + pieceType +
-                ", pieceColor=" + pieceColor +
-                '}';
+            "pieceType=" + pieceType +
+            ", pieceColor=" + pieceColor +
+            '}';
     }
 }

@@ -1,5 +1,6 @@
 package chess.service;
 
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.springframework.stereotype.Service;
@@ -8,46 +9,44 @@ import chess.dao.BoardDao;
 import chess.dao.GameDao;
 import chess.domain.board.Board;
 import chess.domain.game.ChessGame;
+import chess.domain.game.score.ScoreResult;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.dto.request.CreatePieceDto;
 import chess.dto.request.DeletePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
-import chess.dto.response.ChessGameDto;
-import chess.dto.response.PieceColorDto;
-import chess.dto.response.ScoreResultDto;
+import chess.entity.Room;
 
 @Service
 public class ChessService {
+    private static final String ERROR_MESSAGE_NOT_END_GAME = "게임이 아직 안끝났습니다!";
+    public static final String ERROR_MESSAGE_NOT_EQUAL_PASSWORD = "비밀번호가 일치하지 않습니다!";
     private final GameDao gameDao;
     private final BoardDao boardDao;
-    
+
     public ChessService(GameDao gameDao, BoardDao boardDao) {
         this.gameDao = gameDao;
         this.boardDao = boardDao;
     }
 
-    public void initializeGame(String gameId) {
-        gameDao.deleteGame(gameId);
-        createGame(gameId);
+    public int createGameAndGetId(String gameName, String gamePassword) {
+        int id = gameDao.createGameAndGetId(gameName, gamePassword);
+        createBoard(id);
+        return id;
     }
 
-    public void createGame(String gameId) {
-        gameDao.createGame(gameId);
-
+    private void createBoard(int id) {
         Board initializedBoard = Board.createInitializedBoard();
-        for (Entry<Position, Piece> entry : initializedBoard.getValue().entrySet()) {
-            Position position = entry.getKey();
-            Piece piece = entry.getValue();
 
-            CreatePieceDto createPieceDto = CreatePieceDto.of(gameId, position, piece);
+        for (Entry<Position, Piece> entry : initializedBoard.getValue().entrySet()) {
+            CreatePieceDto createPieceDto = CreatePieceDto.of(id, entry.getKey(), entry.getValue());
             boardDao.createPiece(createPieceDto);
         }
     }
 
     public void movePiece(UpdatePiecePositionDto updatePiecePositionDto) {
-        String gameId = updatePiecePositionDto.getGameId();
+        int gameId = updatePiecePositionDto.getGameId();
 
         ChessGame chessGame = generateChessGame(gameId);
         chessGame.movePiece(updatePiecePositionDto.getFrom(), updatePiecePositionDto.getTo());
@@ -56,12 +55,12 @@ public class ChessService {
         updatePiecePosition(updatePiecePositionDto, gameId);
     }
 
-    private void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto, String gameId) {
+    private void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto, int gameId) {
         boardDao.deletePiece(DeletePieceDto.of(gameId, updatePiecePositionDto.getTo()));
         boardDao.updatePiecePosition(updatePiecePositionDto);
     }
 
-    private void updateGameTurn(String gameId, ChessGame chessGame) {
+    private void updateGameTurn(int gameId, ChessGame chessGame) {
         if (chessGame.isWhiteTurn()) {
             gameDao.updateTurnToWhite(gameId);
             return;
@@ -70,28 +69,55 @@ public class ChessService {
         gameDao.updateTurnToBlack(gameId);
     }
 
-    public PieceColorDto getCurrentTurn(String gameId) {
-        return PieceColorDto.from(generateChessGame(gameId));
+    public PieceColor getCurrentTurn(int gameId) {
+        if (generateChessGame(gameId).isWhiteTurn()) {
+            return PieceColor.WHITE;
+        }
+        return PieceColor.BLACK;
     }
 
-    public ScoreResultDto getScore(String gameId) {
-        return ScoreResultDto.from(generateChessGame(gameId));
+    public ScoreResult getScore(int gameId) {
+        return new ScoreResult(generateChessGame(gameId).getBoard());
     }
 
-    public PieceColorDto getWinColor(String gameId) {
+    public PieceColor getWinColor(int gameId) {
         ChessGame chessGame = generateChessGame(gameId);
-        return PieceColorDto.from(chessGame.getWinColor());
+        return chessGame.getWinColor();
     }
 
-    private ChessGame generateChessGame(String gameId) {
-        BoardDto boardDto = boardDao.getBoard(gameId);
-        ChessGameDto chessGameDto = gameDao.getGame(gameId);
+    private ChessGame generateChessGame(int gameId) {
+        Board board = boardDao.getBoard(gameId);
+        PieceColor gameTurn = gameDao.getGameTurn(gameId);
 
-        return ChessGame.of(boardDto.toBoard(), chessGameDto.getCurrentTurnAsPieceColor());
+        return ChessGame.of(board, gameTurn);
     }
 
-    public BoardDto getBoard(String gameId) {
+    public Board getBoard(int gameId) {
         return boardDao.getBoard(gameId);
+    }
+
+    public List<Room> getRooms() {
+        return gameDao.inquireAllRooms();
+    }
+
+    public void deleteRoom(int gameId, String inputPassword) {
+        checkSamePassword(gameId, inputPassword);
+        checkGameIsEnd(gameId);
+        boardDao.deletePieces(gameId);
+        gameDao.deleteGame(gameId);
+    }
+
+    private void checkGameIsEnd(int gameId) {
+        ChessGame chessGame = generateChessGame(gameId);
+        if (!chessGame.isEnd()) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_NOT_END_GAME);
+        }
+    }
+
+    private void checkSamePassword(int gameId, String inputPassword) {
+        if (!inputPassword.equals(gameDao.getPasswordById(gameId))) {
+            throw new IllegalArgumentException(ERROR_MESSAGE_NOT_EQUAL_PASSWORD);
+        }
     }
 
     @Override
@@ -101,4 +127,5 @@ public class ChessService {
             ", boardDao=" + boardDao +
             '}';
     }
+
 }

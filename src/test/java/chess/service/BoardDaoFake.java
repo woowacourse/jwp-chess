@@ -1,6 +1,10 @@
 package chess.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import chess.dao.BoardDao;
+import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceType;
@@ -8,16 +12,13 @@ import chess.domain.position.Position;
 import chess.dto.request.CreatePieceDto;
 import chess.dto.request.DeletePieceDto;
 import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BoardDaoFake implements BoardDao {
     private final Map<Position, Piece> fakeBoard = new HashMap<>();
 
     @Override
-    public BoardDto getBoard(String gameId) {
-        return BoardDto.from(fakeBoard);
+    public Board getBoard(int gameId) {
+        return Board.from(new HashMap<>(fakeBoard));
     }
 
     @Override
@@ -37,17 +38,20 @@ public class BoardDaoFake implements BoardDao {
     }
 
     @Override
+    public void deletePieces(int gameId) {
+    }
+
+    @Override
     public void updatePiecePosition(UpdatePiecePositionDto updatePiecePositionDto) {
         Position from = updatePiecePositionDto.getFrom();
         Position to = updatePiecePositionDto.getTo();
-
         fakeBoard.put(to, fakeBoard.remove(from));
     }
 
     @Override
     public String toString() {
         return "BoardDaoFake{" +
-                "fakeBoard=" + fakeBoard +
-                '}';
+            "fakeBoard=" + fakeBoard +
+            '}';
     }
 }

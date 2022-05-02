@@ -6,42 +6,30 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import chess.domain.game.score.Score;
+import chess.domain.game.score.ScoreResult;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
 import chess.dto.request.UpdatePiecePositionDto;
-import chess.dto.response.BoardDto;
-import chess.dto.response.ScoreResultDto;
 
 class ChessServiceTest {
-    private final String GAME_ID = "test-game-id";
+    private static final String GAME_NAME = "test";
+    private static final String GAME_PASSWORD = "testPassword";
 
     private ChessService chessService;
+    private int id;
 
     @BeforeEach
     void setUp() {
         chessService = new ChessService(new GameDaoFake(), new BoardDaoFake());
-        chessService.createGame(GAME_ID);
-    }
-
-    @DisplayName("게임 초기화")
-    @Test
-    void initializeGame() {
-        // given
-        chessService.initializeGame(GAME_ID);
-        BoardDto board = chessService.getBoard(GAME_ID);
-
-        // when
-        int actual = board.getValue().keySet().size();
-
-        // then
-        assertThat(actual).isEqualTo(32);
+        id = chessService.createGameAndGetId(GAME_NAME, GAME_PASSWORD);
     }
 
     @DisplayName("기물 이동")
     @Test
     void movePiece() {
         // given
-        UpdatePiecePositionDto updatePiecePositionDto = UpdatePiecePositionDto.of(GAME_ID, Position.from("a2"),
+        UpdatePiecePositionDto updatePiecePositionDto = UpdatePiecePositionDto.of(id, Position.from("a2"),
             Position.from("a3"));
 
         // when & then
@@ -52,7 +40,7 @@ class ChessServiceTest {
     @Test
     void getCurrentTurn() {
         // given & when
-        PieceColor actual = chessService.getCurrentTurn(GAME_ID).getPieceColor();
+        PieceColor actual = chessService.getCurrentTurn(id);
 
         // then
         assertThat(actual).isEqualTo(PieceColor.WHITE);
@@ -62,10 +50,11 @@ class ChessServiceTest {
     @Test
     void getScore_black() {
         // given
-        ScoreResultDto scoreResultDto = chessService.getScore(GAME_ID);
+        ScoreResult scoreResult = chessService.getScore(id);
 
         // when
-        double actual = scoreResultDto.getBlackScore();
+        Score blackScore = scoreResult.getScoreByPieceColor(PieceColor.BLACK);
+        double actual = blackScore.getValue();
 
         // then
         assertThat(actual).isEqualTo(38.0);
@@ -75,10 +64,12 @@ class ChessServiceTest {
     @Test
     void getScore_white() {
         // given
-        ScoreResultDto scoreResultDto = chessService.getScore(GAME_ID);
+        ScoreResult scoreResult = chessService.getScore(id);
 
         // when
-        double actual = scoreResultDto.getWhiteScore();
+        Score whiteScore = scoreResult.getScoreByPieceColor(PieceColor.WHITE);
+
+        double actual = whiteScore.getValue();
 
         // then
         assertThat(actual).isEqualTo(38.0);
@@ -88,23 +79,34 @@ class ChessServiceTest {
     @Test
     void getWinColor() {
         // given
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("b1"),
+        chessService.getBoard(id).toString();
+        chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("b1"),
             Position.from("c3")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("a7"),
+        chessService.getBoard(id).toString();
+
+        chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("a7"),
             Position.from("a6")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("c3"),
+        chessService.getBoard(id).toString();
+
+        chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("c3"),
             Position.from("b5")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("a6"),
+        chessService.getBoard(id).toString();
+
+        chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("a6"),
             Position.from("a5")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("b5"),
+        chessService.getBoard(id).toString();
+
+        chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("b5"),
             Position.from("c7")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("a5"),
+        chessService.getBoard(id).toString();
+
+        chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("a5"),
             Position.from("a4")));
-        chessService.movePiece(UpdatePiecePositionDto.of(GAME_ID, Position.from("c7"),
+        chessService.movePiece(UpdatePiecePositionDto.of(id, Position.from("c7"),
             Position.from("e8")));
 
         // when
-        PieceColor actual = chessService.getWinColor(GAME_ID).getPieceColor();
+        PieceColor actual = chessService.getWinColor(id);
 
         // then
         assertThat(actual).isEqualTo(PieceColor.WHITE);

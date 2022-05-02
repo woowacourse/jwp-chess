@@ -5,21 +5,21 @@ import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
 
 public class DeletePieceDto {
-    private final String gameId;
+    private final int gameId;
     private final XAxis xAxis;
     private final YAxis yAxis;
 
-    private DeletePieceDto(String gameId, XAxis xAxis, YAxis yAxis) {
+    private DeletePieceDto(int gameId, XAxis xAxis, YAxis yAxis) {
         this.gameId = gameId;
         this.xAxis = xAxis;
         this.yAxis = yAxis;
     }
 
-    public static DeletePieceDto of(String gameId, Position position) {
+    public static DeletePieceDto of(int gameId, Position position) {
         return new DeletePieceDto(gameId, position.getXAxis(), position.getYAxis());
     }
 
-    public String getGameId() {
+    public int getGameId() {
         return gameId;
     }
 
@@ -34,9 +34,9 @@ public class DeletePieceDto {
     @Override
     public String toString() {
         return "DeletePieceDto{" +
-                "gameId='" + gameId + '\'' +
-                ", xAxis=" + xAxis +
-                ", yAxis=" + yAxis +
-                '}';
+            "gameId='" + gameId + '\'' +
+            ", xAxis=" + xAxis +
+            ", yAxis=" + yAxis +
+            '}';
     }
 }

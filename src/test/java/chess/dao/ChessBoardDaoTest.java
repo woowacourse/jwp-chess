@@ -10,6 +10,7 @@ import chess.dto.request.GameIdRequest;
 import chess.dto.response.PieceResponse;
 import chess.entity.BoardEntity;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
@@ -51,27 +52,38 @@ class ChessBoardDaoTest {
     }
 
     @Test
+    @DisplayName("기물 불러오기 확인")
     void findAll() {
         List<BoardEntity> pieces = chessBoardDao.findAllPiece(roomId());
+
         assertThat(pieces).hasSize(3);
     }
 
     @Test
+    @DisplayName("기물 저장 확인")
     void saveAll() {
         Map<Position, Piece> board = Map.of(Position.of(Column.A, Row.EIGHT), new Pawn(Team.BLACK));
-        assertThatNoException().isThrownBy(() ->
-                chessBoardDao.savePieces(board, roomId()));
+        chessBoardDao.savePieces(board, roomId());
+
+        assertThat(chessBoardDao.findAllPiece(roomId()).size()).isEqualTo(4);
     }
 
     @Test
+    @DisplayName("기물 위치 업데이트 확인")
     void updatePosition() {
-        assertThatNoException().isThrownBy(() ->
-                chessBoardDao.updatePosition("a7", "a6", roomId()));
+        chessBoardDao.updatePosition("a7", "a6", roomId());
+        List<BoardEntity> allPiece = chessBoardDao.findAllPiece(roomId());
+        long count = allPiece.stream()
+                .filter(piece -> piece.getPosition().equals("a6"))
+                .count();
+
+        assertThat(count).isEqualTo(count);
     }
 
    @Test
    void deleteAllPiece() {
-        assertThatNoException().isThrownBy(() ->
-                chessBoardDao.deleteBoard(1000L));
+        chessBoardDao.deleteBoard(1000L);
+
+        assertThat(chessBoardDao.findAllPiece(1000L).size()).isZero();
    }
 }

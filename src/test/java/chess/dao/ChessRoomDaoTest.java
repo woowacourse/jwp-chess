@@ -9,10 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.*;
 
 @JdbcTest
 public class ChessRoomDaoTest {
@@ -29,28 +29,36 @@ public class ChessRoomDaoTest {
                 1000, "WHITE", "green", "1234");
     }
 
-    @AfterEach
-    void delete() {
-        assertThatNoException().isThrownBy(() -> chessRoomDao.deleteGame(1000));
-    }
-
     @Test
     @DisplayName("체스 게임 방 검색 확인")
     void findRoom() {
-        assertThat(chessRoomDao.findById(new MakeRoomRequest("green", "1234"))).isNotNull();
+        assertThat(chessRoomDao.findById(new MakeRoomRequest("green", "1234")).getId())
+                .isEqualTo(1000);
     }
 
     @Test
     @DisplayName("체스 게임 방 저장 확인")
     void saveRoom() {
-        assertThatNoException().isThrownBy(() -> chessRoomDao.makeGame(Team.WHITE,
-                new MakeRoomRequest("green", "1234")));
+        chessRoomDao.makeGame(Team.WHITE, new MakeRoomRequest("greenn", "12345"));
+
+        assertThat(chessRoomDao.findById(new MakeRoomRequest("greenn", "12345")))
+                .isNotNull();
     }
 
     @Test
     @DisplayName("체스 게임 방 상태 업데이트 확인")
     void updateStatus() {
-        assertThatNoException().isThrownBy(() -> chessRoomDao.updateStatus(Team.WHITE,
-                chessRoomDao.findById(new GameIdRequest(1000L)).getId()));
+        chessRoomDao.updateStatus(Team.WHITE, chessRoomDao.findById(new GameIdRequest(1000L)).getId());
+
+        assertThat(chessRoomDao.findById(new GameIdRequest(1000L)).getStatus()).isEqualTo(Team.WHITE);
+    }
+
+    @Test
+    @DisplayName("체스 게임 방 삭제 확인")
+    void deleteGame() {
+        chessRoomDao.deleteGame(1000);
+
+        assertThatThrownBy(() -> chessRoomDao.findById(new GameIdRequest(1000L)))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

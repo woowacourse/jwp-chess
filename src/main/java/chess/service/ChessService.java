@@ -16,6 +16,7 @@ import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.board.SavedBoardGenerator;
 import chess.domain.piece.Color;
+import chess.domain.piece.Piece;
 import chess.domain.position.Square;
 import chess.dto.ChessGameDto;
 import chess.dto.MovementRequest;
@@ -95,8 +96,8 @@ public class ChessService {
     }
 
     private ChessGame loadSavedChessGame(ChessGameDto chessGameDto) {
-        return new ChessGame(new SavedBoardGenerator(pieceDao.findByGameID(chessGameDto.getGameID())),
-                getTurn(chessGameDto));
+        Map<Square, Piece> board = pieceDao.findByGameID(chessGameDto.getGameID());
+        return new ChessGame(new SavedBoardGenerator(board), getTurn(chessGameDto));
     }
 
     private ChessGame loadNewChessGame() {

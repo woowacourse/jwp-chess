@@ -11,7 +11,7 @@ const createRoomButtonInitializer = {
             let roomTitle = document.getElementById("room-title").value;
             let roomPassword = document.getElementById("room-password").value;
 
-            fetch('/room', {
+            fetch('/rooms', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -113,7 +113,7 @@ const roomListDrawer = {
                         if (room.finished === true) {
                             alert("이미 종료된 게임입니다");
                         } else {
-                            window.location.replace("http://localhost:8080/playroom/" + roomId);
+                            window.location.replace("http://localhost:8080/rooms/" + roomId);
                         }
                     } else {
                         if (httpRequest.readyState === XMLHttpRequest.DONE) {
@@ -160,7 +160,7 @@ const deleteRoomButtonInitializer = {
                 }
 
                 let roomId = deleteButtons[i].id.split("-")[1];
-                httpRequest.open("delete", "/room/" + roomId);
+                httpRequest.open("delete", "/rooms/" + roomId);
                 httpRequest.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 httpRequest.send(JSON.stringify({ "password": roomPassword }));
             })

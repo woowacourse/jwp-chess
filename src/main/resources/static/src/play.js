@@ -25,7 +25,7 @@ const moveInitializer = {
 
 const JsonSender = {
     sendSourceTarget: function (source, target, roomId) {
-        fetch('/room/' + roomId, {
+        fetch('/rooms/' + roomId, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

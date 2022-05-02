@@ -19,7 +19,7 @@ public class ChessGameController {
         return "index";
     }
 
-    @GetMapping("/playroom/{roomId}")
+    @GetMapping("/rooms/{roomId}")
     public String play(@PathVariable("roomId") int roomId) {
         return "play";
     }

@@ -38,12 +38,12 @@ public class ChessGameRestController {
         return service.play(roomId);
     }
 
-    @PatchMapping("/room/{roomId}")
+    @PatchMapping("/rooms/{roomId}")
     public MoveResultDto move(@PathVariable int roomId, @RequestBody MoveDto moveDto) {
         return service.move(moveDto, roomId);
     }
 
-    @PostMapping("/room")
+    @PostMapping("/rooms")
     public CreateRoomResultDto createRoom(@RequestBody CreateRoomRequestDto createRoomRequestDto) {
         return service.createRoom(createRoomRequestDto);
     }
@@ -53,7 +53,7 @@ public class ChessGameRestController {
         return service.findAllRooms();
     }
 
-    @DeleteMapping("/room/{roomId}")
+    @DeleteMapping("/rooms/{roomId}")
     public DeleteResultDto delete(@PathVariable int roomId, @RequestBody DeleteDto deleteDto) {
         return service.delete(roomId, deleteDto);
     }

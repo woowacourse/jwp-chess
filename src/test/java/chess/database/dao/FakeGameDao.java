@@ -3,42 +3,45 @@ package chess.database.dao;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import chess.database.dto.GameStateDto;
-import chess.database.dto.RoomDto;
+import chess.database.entity.GameEntity;
 
 public class FakeGameDao implements GameDao {
 
-    private static class FakeTable {
-        private GameStateDto dto;
-        private String roomName;
-        private String password;
+    private static class FakeRow {
 
-        public FakeTable(GameStateDto dto, String roomName, String password) {
-            this.dto = dto;
-            this.roomName = roomName;
-            this.password = password;
+        private String turnColor;
+        private String state;
+        private final Long roomId;
+
+        public FakeRow(String turnColor, String state, Long roomId) {
+            this.turnColor = turnColor;
+            this.state = state;
+            this.roomId = roomId;
         }
 
-        public GameStateDto getDto() {
-            return dto;
+        public String getTurnColor() {
+            return turnColor;
         }
 
-        public String getRoomName() {
-            return roomName;
+        public String getState() {
+            return state;
         }
 
-        public String getPassword() {
-            return password;
+        public Long getRoomId() {
+            return roomId;
         }
 
-        public void setDto(GameStateDto dto) {
-            this.dto = dto;
+        public void setTurnColor(String turnColor) {
+            this.turnColor = turnColor;
+        }
+
+        public void setState(String state) {
+            this.state = state;
         }
     }
 
-    private final Map<Long, FakeTable> memoryDatabase;
+    private final Map<Long, FakeRow> memoryDatabase;
     private long id;
 
     public FakeGameDao() {
@@ -47,59 +50,34 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public Optional<GameStateDto> findGameById(Long id) {
-        final FakeTable table = memoryDatabase.get(id);
-        if (table == null) {
-            return Optional.empty();
-        }
-        return Optional.of(table.getDto());
-    }
-
-    @Override
-    public Long saveGame(GameStateDto gameStateDto, String roomName, String password) {
-        FakeTable table = new FakeTable(gameStateDto, roomName, password);
-        memoryDatabase.put(id, table);
+    public Long saveGame(GameEntity entity) {
+        memoryDatabase.put(id, new FakeRow(entity.getTurnColor(), entity.getState(), entity.getRoomId()));
         return id++;
     }
 
     @Override
-    public void updateState(GameStateDto gameStateDto, Long id) {
-        final FakeTable table = memoryDatabase.get(id);
-        if (table == null) {
-            return;
-        }
-        table.setDto(gameStateDto);
+    public void updateGame(GameEntity entity) {
+        final FakeRow fakeRow = memoryDatabase.get(entity.getId());
+        fakeRow.setState(entity.getState());
+        fakeRow.setTurnColor(entity.getTurnColor());
     }
 
     @Override
-    public void removeGame(Long id) {
-        memoryDatabase.remove(id);
+    public Optional<GameEntity> findGameById(Long gameId) {
+        final FakeRow fakeRow = memoryDatabase.get(gameId);
+        return Optional.of(new GameEntity(gameId, fakeRow.getTurnColor(), fakeRow.getState(), fakeRow.getRoomId()));
     }
 
     @Override
-    public Optional<GameStateDto> findGameByRoomName(String roomName) {
-        return memoryDatabase.values().stream()
-            .filter(table -> table.getRoomName().equals(roomName))
-            .map(FakeTable::getDto)
-            .findAny();
-    }
-
-    @Override
-    public Optional<RoomDto> findRoomByName(String roomName) {
-        return memoryDatabase.entrySet().stream()
-            .filter(entry -> entry.getValue().getRoomName().equals(roomName))
-            .map(entry -> new RoomDto(
-                entry.getKey(),
-                entry.getValue().getRoomName(),
-                entry.getValue().getPassword())
-            )
-            .findAny();
-    }
-
-    @Override
-    public Map<Long, String> readGameRoomIdAndNames() {
+    public Optional<GameEntity> findGameByRoomId(Long roomId) {
         return memoryDatabase.entrySet()
             .stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getRoomName()));
+            .filter(entry -> entry.getValue().getRoomId().equals(roomId))
+            .map(entry -> new GameEntity(
+                entry.getKey(),
+                entry.getValue().getTurnColor(),
+                entry.getValue().getState(),
+                roomId))
+            .findAny();
     }
 }

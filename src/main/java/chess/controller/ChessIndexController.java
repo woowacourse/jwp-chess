@@ -40,9 +40,9 @@ public class ChessIndexController {
         return respondPath(String.format(ChessViewController.MAIN_PATH_FORMAT, roomId));
     }
 
-    @DeleteMapping(path = "/room")
-    public ResponseEntity<PathResponse> delete(@RequestBody RoomRequest roomRequest) {
-        gameService.deleteGame(roomRequest);
+    @DeleteMapping(path = "/room/{roomId}")
+    public ResponseEntity<PathResponse> delete(@PathVariable Long roomId, @RequestBody RoomRequest roomRequest) {
+        gameService.removeRoom(roomId, roomRequest);
         return respondPath(ChessViewController.ROOT_PATH);
     }
 

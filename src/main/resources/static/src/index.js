@@ -208,16 +208,18 @@ function drawRooms(responseJson) {
     const roomDiv = document.getElementById("rooms");
     roomDiv.innerHTML = "";
     console.log("darwRoom responseJson =", responseJson)
-    for (const roomId in responseJson) {
-        const room = createRoom(roomId, responseJson[roomId]);
+    for (const index in responseJson) {
+        const room = createRoom(responseJson[index]);
         roomDiv.appendChild(room);
     }
 }
 
-function createRoom(roomId, roomName) {
+function createRoom(roomResponse) {
+
+    console.log("roomResponse = ", roomResponse)
     const form = document.createElement("form");
     const enterAnchor = Object.assign(document.createElement('a'),
-        {href: `/main/${roomId}`, innerText: roomName});
+        {href: `/main/${roomResponse['id']}`, innerText: roomResponse['roomName']});
 
     const deleteButton = Object.assign(document.createElement('img'),
         {
@@ -228,9 +230,9 @@ function createRoom(roomId, roomName) {
         });
     deleteButton.onclick = function () {
         const password = prompt("패스워드를 입력하세요 : ");
-        send(`/room`, {
+        send(`/room/${roomResponse['id']}`, {
                 method: 'delete',
-                body: JSON.stringify({roomName: roomName, password: password}),
+                body: JSON.stringify({roomName: roomResponse['roomName'], password: password}),
                 headers: new Headers({'Content-Type': 'application/json'})
             }, relocate);
     }

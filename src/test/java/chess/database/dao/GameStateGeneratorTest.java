@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import chess.database.GameStateGenerator;
-import chess.database.dto.GameStateDto;
 import chess.domain.board.Board;
 import chess.domain.board.BoardFixtures;
 import chess.domain.game.GameState;
@@ -19,9 +18,12 @@ class GameStateGeneratorTest {
     public void createStateByStateAndColorString() {
         // given
         Board board = BoardFixtures.EMPTY;
-        GameStateDto dto = new GameStateDto("READY", "WHITE");
+        final String state = "READY";
+        final String turnColor = "WHITE";
+
         // when
-        GameState generated = GameStateGenerator.generate(board, dto);
+        GameState generated = GameStateGenerator.generate(board, state, turnColor);
+
         // then
         assertThat(generated).isInstanceOf(Ready.class);
     }

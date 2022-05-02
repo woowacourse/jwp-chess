@@ -1,23 +1,27 @@
 package chess.database.dao;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import chess.database.dao.GameDao;
-import chess.database.dto.GameStateDto;
-import chess.database.dto.RoomDto;
+import chess.database.entity.GameEntity;
 
 @Repository
 public class JdbcGameDao implements GameDao {
 
+    public static final RowMapper<GameEntity> GAME_ENTITY_ROW_MAPPER = (resultSet, rowNum) -> new GameEntity(
+        resultSet.getLong("id"),
+        resultSet.getString("turn_color"),
+        resultSet.getString("state"),
+        resultSet.getLong("room_id")
+    );
     private final SimpleJdbcInsert jdbcInsert;
     private final JdbcTemplate jdbcTemplate;
 
@@ -29,79 +33,31 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public Optional<GameStateDto> findGameById(Long id) {
-        String sql = "select * from game where id = ?";
-        try {
-            final GameStateDto gameStateDto = jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> new GameStateDto(
-                    resultSet.getString("state"),
-                    resultSet.getString("turn_color")),
-                id);
-            return Optional.ofNullable(gameStateDto);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+    public Long saveGame(GameEntity entity) {
+        return jdbcInsert.executeAndReturnKey(new BeanPropertySqlParameterSource(entity)).longValue();
     }
 
     @Override
-    public Optional<GameStateDto> findGameByRoomName(String roomName) {
-        String sql = "select * from game where room_name = ?";
-        try {
-            final GameStateDto gameStateDto = jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> new GameStateDto(
-                    resultSet.getString("state"),
-                    resultSet.getString("turn_color")),
-                roomName);
-            return Optional.ofNullable(gameStateDto);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Long saveGame(GameStateDto gameStateDto, String roomName, String password) {
-        Map<String, Object> parameters = Map.of(
-            "room_name", roomName,
-            "password", password,
-            "turn_color", gameStateDto.getTurnColor(),
-            "state", gameStateDto.getState()
-        );
-        final Number idNumber = jdbcInsert.executeAndReturnKey(parameters);
-        return idNumber.longValue();
-    }
-
-    @Override
-    public void updateState(GameStateDto gameStateDto, Long id) {
+    public void updateGame(GameEntity entity) {
         final String sql = "UPDATE game SET state = ?, turn_color = ? WHERE id = ?";
-        jdbcTemplate.update(sql, gameStateDto.getState(), gameStateDto.getTurnColor(), id);
+        jdbcTemplate.update(sql, entity.getState(), entity.getTurnColor(), entity.getId());
     }
 
     @Override
-    public void removeGame(Long id) {
-        final String sql = "DELETE FROM game WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    @Override
-    public Map<Long, String> readGameRoomIdAndNames() {
-        final String sql = "SELECT id, room_name FROM game";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> Map.entry(
-                rs.getLong("id"),
-                rs.getString("room_name"))
-            ).stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    @Override
-    public Optional<RoomDto> findRoomByName(String roomName) {
-        final String sql = "SELECT id, room_name, password FROM game WHERE room_name = ?";
+    public Optional<GameEntity> findGameById(Long id) {
+        final String sql = "SELECT * FROM game WHERE id = ?";
         try {
-            final RoomDto roomDto = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new RoomDto(
-                rs.getLong("id"),
-                rs.getString("room_name"),
-                rs.getString("password")
-            ), roomName);
-            return Optional.ofNullable(roomDto);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, GAME_ENTITY_ROW_MAPPER, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<GameEntity> findGameByRoomId(Long roomId) {
+        final String sql = "SELECT * FROM game WHERE room_id = ?";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, GAME_ENTITY_ROW_MAPPER, roomId));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

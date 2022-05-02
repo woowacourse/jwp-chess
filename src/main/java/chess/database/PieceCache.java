@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import chess.database.dto.PieceDto;
 import chess.domain.Color;
 import chess.domain.piece.Bishop;
 import chess.domain.piece.King;
@@ -37,9 +36,5 @@ public class PieceCache {
             throw new IllegalArgumentException("[ERROR] 해당하는 말이 없습니다.");
         }
         return pieces.get(name.toUpperCase(Locale.ROOT));
-    }
-
-    public static Piece getPiece(PieceDto pieceDto) {
-        return getPiece(pieceDto.getType(), pieceDto.getColor());
     }
 }

@@ -3,7 +3,6 @@ package chess.database;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import chess.database.dto.GameStateDto;
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.game.Finished;
@@ -18,12 +17,8 @@ public class GameStateGenerator {
         "RUNNING", Running::new,
         "FINISHED", Finished::new
     );
-    private static final int STATE_AND_COLOR_SIZE = 2;
-    private static final int STATE_INDEX = 0;
-    private static final int COLOR_INDEX = 1;
 
-    public static GameState generate(Board board, GameStateDto gameStateDto) {
-        return STATE_GENERATOR.get(gameStateDto.getState())
-            .apply(board, Color.of(gameStateDto.getTurnColor()));
+    public static GameState generate(Board board, String state, String turnColor) {
+        return STATE_GENERATOR.get(state).apply(board, Color.of(turnColor));
     }
 }

@@ -40,7 +40,7 @@ public class ChessGameService {
     public ChessGameDto findChessGame(int chessGameId) {
         final ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
         if (chessGameDto == null) {
-            throw new ChessGameException(chessGameId, "해당하는 체스 게임이 존재하지 않습니다.");
+            throw new IllegalArgumentException("해당하는 체스 게임이 존재하지 않습니다.");
         }
         return chessGameDto;
     }

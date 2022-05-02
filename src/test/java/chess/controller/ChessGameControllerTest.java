@@ -105,6 +105,4 @@ class ChessGameControllerTest {
                 flash().attributeExists("errorMessage")
             );
     }
-
-
 }

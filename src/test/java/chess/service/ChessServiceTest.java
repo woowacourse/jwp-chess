@@ -13,23 +13,41 @@ import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
 import chess.entity.BoardEntity;
 import chess.repository.BoardRepository;
+import chess.repository.BoardRepositoryImpl;
+import chess.repository.RoomRepository;
+import chess.repository.RoomRepositoryImpl;
+import javax.sql.DataSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @Transactional
-@SpringBootTest
+@JdbcTest
 class ChessServiceTest {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private DataSource dataSource;
+
+    private BoardRepository boardRepository;
+
+    private RoomRepository roomRepository;
+
     private ChessService chessService;
 
-    @Autowired
-    private BoardRepository boardRepository;
+    @BeforeEach
+    void setUp() {
+        roomRepository = new RoomRepositoryImpl(jdbcTemplate, dataSource);
+        boardRepository = new BoardRepositoryImpl(jdbcTemplate, dataSource);
+        chessService = new ChessService(roomRepository, boardRepository);
+    }
 
     @DisplayName("체스 초보만이라는 이름을 가진 방을 생성한다.")
     @Test

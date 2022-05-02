@@ -4,6 +4,7 @@ import chess.controller.dto.request.CreateGameRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.service.ChessService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.core.Is;
 import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,5 +59,15 @@ public class ChessControllerArgumentsTest {
                         StringContains.containsString("이동할 말의 위치는 NULL 값일 수 없습니다.")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message",
                         StringContains.containsString("이동할 목표 위치는 NULL 값일 수 없습니다.")));
+    }
+
+    @DisplayName("게임 id로 잘못된 타입이 들어오면 Bad Request를 반환한다.")
+    @Test
+    void mismatch_Type_For_Game_Id() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/games/a")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message",
+                        Is.is("잘못된 타입이 들어왔습니다.")));
     }
 }

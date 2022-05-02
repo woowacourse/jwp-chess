@@ -36,4 +36,13 @@ public class Room {
     public boolean getStatus() {
         return status;
     }
+
+    public void validateCanDelete(String password) {
+        if (status) {
+            throw new IllegalArgumentException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
+        if (!this.password.equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+        }
+    }
 }

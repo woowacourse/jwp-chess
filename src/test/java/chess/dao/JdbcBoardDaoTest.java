@@ -10,7 +10,6 @@ import chess.domain.position.Position;
 import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
 import chess.exception.NotFoundRoomException;
-import chess.service.RoomDaoFake;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,7 @@ class JdbcBoardDaoTest {
 
     @BeforeEach
     void setUp() {
-        boardDao = new JdbcBoardDao(jdbcTemplate, new RoomDaoFake());
+        boardDao = new JdbcBoardDao(jdbcTemplate, new JdbcRoomDao(jdbcTemplate));
 
         JdbcRoomDao gameDao = new JdbcRoomDao(jdbcTemplate);
 
@@ -70,6 +69,7 @@ class JdbcBoardDaoTest {
     @Test
     void getBoard() {
         // given & when
+        System.out.println(RoomId.from(TEST_ROOM_ID));
         Board board = boardDao.getBoard(RoomId.from(TEST_ROOM_ID));
 
         // then

@@ -1,8 +1,5 @@
 package chess.domain.game.state;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import chess.domain.board.Board;
 import chess.domain.game.score.ScoreResult;
 import chess.domain.position.Position;
@@ -11,6 +8,9 @@ import chess.domain.position.YAxis;
 import chess.exception.MovePieceFailedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class WhiteTurnTest {
 
@@ -62,7 +62,7 @@ class WhiteTurnTest {
         // when & then
         assertThatThrownBy(() -> whiteTurn.move(Position.of(XAxis.A, YAxis.ONE), Position.of(XAxis.A, YAxis.ONE)))
                 .isInstanceOf(MovePieceFailedException.class)
-                .hasMessage("기물을 움직이는데 실패하였습니다.");
+                .hasMessage("선택된 기물은 해당 위치로 이동할 수 없습니다.");
     }
 
     @DisplayName("한쪽 킹이 죽었다면 기물을 움직일 수 없다.")

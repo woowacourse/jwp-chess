@@ -1,8 +1,5 @@
 package chess.domain.game.state;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import chess.domain.board.Board;
 import chess.domain.game.score.ScoreResult;
 import chess.domain.position.Position;
@@ -12,6 +9,9 @@ import chess.exception.MovePieceFailedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class BlackTurnTest {
     private GameState blackTurn;
@@ -59,7 +59,7 @@ class BlackTurnTest {
         assertThatThrownBy(
                 () -> blackTurn.move(Position.of(XAxis.A, YAxis.EIGHT), Position.of(XAxis.A, YAxis.SEVEN)))
                 .isInstanceOf(MovePieceFailedException.class)
-                .hasMessage("기물을 움직이는데 실패하였습니다.");
+                .hasMessage("도착 지점에 같은편 기물이 존재해 움직일 수 없습니다.");
     }
 
     @DisplayName("한쪽 킹이 죽었다면 기물을 움직일 수 없다.")

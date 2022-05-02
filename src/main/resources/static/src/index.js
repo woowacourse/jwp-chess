@@ -20,7 +20,7 @@ back.addEventListener('click', async function () {
 })
 
 async function load() {
-    await fetch("/rooms/" + id)
+    await fetch("/rooms/game/" + id)
         .then(res => res.json())
         .then(res => {
             if (res.gameStatus == "PLAYING") {
@@ -31,7 +31,7 @@ async function load() {
 }
 
 async function startAndDraw() {
-    await fetch("/rooms/start/" + id)
+    await fetch("/rooms/game/start/" + id)
         .then(res => res.json())
         .then(res => {
             status = res.gameStatus;
@@ -81,7 +81,7 @@ async function movePiece(from, to) {
         roomId: id
     }
 
-    fetch("/rooms/move", {
+    fetch("/rooms/game/move", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -129,7 +129,7 @@ async function getScore() {
     if (status === "") {
         alert("게임을 시작해야합니다.");
     } else {
-        let score = await fetch("/rooms/status/" + id)
+        let score = await fetch("/rooms/game/status/" + id)
         score = await score.json()
         alert(score.message)
     }
@@ -143,7 +143,7 @@ async function endGame() {
     if (status === "") {
         alert("게임을 시작해야합니다.");
     } else {
-        let score = await fetch("/rooms/end/" + id,
+        let score = await fetch("/rooms/game/end/" + id,
         {
             method: 'POST'
         })

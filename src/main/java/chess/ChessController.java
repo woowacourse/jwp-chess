@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,7 @@ import chess.dto.BoardDto;
 import chess.dto.ExceptionResponseDto;
 import chess.dto.MoveDto;
 import chess.dto.RoomDto;
+import chess.exception.InvalidPasswordException;
 
 @RestController
 @RequestMapping("/api")
@@ -75,6 +77,11 @@ public class ChessController {
     public ResponseEntity<ExceptionResponseDto> handle(RuntimeException exception) {
         return ResponseEntity.badRequest()
             .body(new ExceptionResponseDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ExceptionResponseDto> handleUnauthorized(RuntimeException exception) {
+        return new ResponseEntity<>(new ExceptionResponseDto(exception.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(RuntimeException.class)

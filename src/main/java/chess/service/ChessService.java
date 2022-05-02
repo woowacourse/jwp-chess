@@ -82,7 +82,7 @@ public class ChessService {
         return Status.valueOf(status).convertToGameStatus();
     }
 
-    public void move(String source, String target, int gameId) throws SQLException {
+    public void move(String source, String target, int gameId) {
         ChessBoard chessBoard = findBoard(gameId);
 
         if (chessBoard.compareStatus(Status.PLAYING)) {
@@ -101,7 +101,7 @@ public class ChessService {
                 .collect(Collectors.toMap(m -> m.getKey().name(), Map.Entry::getValue));
     }
 
-    public void end(int gameId) throws SQLException {
+    public void end(int gameId) {
         boardDao.delete(gameId);
         gameDao.delete(gameId);
     }
@@ -114,7 +114,7 @@ public class ChessService {
         return chessBoard.compareStatus(status);
     }
 
-    public void deleteGame(int gameId, String password) throws IllegalArgumentException, SQLException {
+    public void deleteGame(int gameId, String password) throws IllegalArgumentException {
         Optional<GameDto> gameDto = gameDao.findById(gameId);
         validateRemovable(password, gameDto);
         end(gameId);

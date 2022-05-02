@@ -58,8 +58,8 @@ public class BoardDaoTest {
 
         dao.saveBoard(1, chessboard);
 
-        assertThat(jdbcTemplate.queryForObject("SELECT position_id FROM board WHERE game_id=1", Long.class)).isEqualTo(1);
-        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1", Long.class)).isEqualTo(1);
+        assertThat(jdbcTemplate.queryForObject("SELECT position_id FROM board WHERE game_id=1", Integer.class)).isEqualTo(1);
+        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1", Integer.class)).isEqualTo(1);
     }
 
     @Test
@@ -71,8 +71,8 @@ public class BoardDaoTest {
 
         dao.saveMove(1, new MovingPositionDto(new MovingPosition("a8", "b8")));
 
-        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1 AND position_id=1",Long.class)).isEqualTo(13);
-        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1 AND position_id=2",Long.class)).isEqualTo(1);
+        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1 AND position_id=1",Integer.class)).isEqualTo(13);
+        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1 AND position_id=2",Integer.class)).isEqualTo(1);
     }
 
 }

@@ -33,55 +33,55 @@ public class ChessGameService {
         repository.saveNewGame(name, password, new CurrentStatusDto(new CurrentStatus()));
     }
 
-    public Map<Long, String> findGameList() {
+    public Map<Integer, String> findGameList() {
         return repository.findGameList();
     }
 
-    public void delete(long gameId, String password) {
+    public void delete(int gameId, String password) {
         validateState(gameId);
         validatePassword(gameId, password);
 
         repository.delete(gameId);
     }
 
-    public void start(long gameId) {
+    public void start(int gameId) {
         ChessGame chessGame = findGameById(gameId);
         chessGame.start();
         repository.saveGame(gameId, chessGame.getChessBoard(), new CurrentStatusDto(chessGame.getCurrentStatus()));
     }
 
-    public void move(long gameId, String from, String to) {
+    public void move(int gameId, String from, String to) {
         MovingPosition movingPosition = new MovingPosition(from, to);
         ChessGame chessGame = findGameById(gameId);
         chessGame.move(movingPosition);
         repository.saveMove(gameId, new MovingPositionDto(movingPosition), new CurrentStatusDto(chessGame.getCurrentStatus()));
     }
 
-    public void end(long gameId) {
+    public void end(int gameId) {
         ChessGame chessGame = findGameById(gameId);
         chessGame.end();
         repository.saveState(gameId, chessGame.getStateToString());
     }
 
-    public ScoreDto status(long gameId) {
+    public ScoreDto status(int gameId) {
         return ScoreCalculator.computeScore(findGameById(gameId).getChessBoard());
     }
 
-    public List<String> getBoardByUnicode(long gameId) {
+    public List<String> getBoardByUnicode(int gameId) {
         return findGameById(gameId).getBoardByUnicode();
     }
 
-    private ChessGame findGameById(long gameId) {
+    private ChessGame findGameById(int gameId) {
         return repository.find(gameId);
     }
 
-    private void validateState(long gameId) {
+    private void validateState(int gameId) {
         if (!repository.find(gameId).canBeDeleted()) {
             throw new IllegalArgumentException(CANNOT_BE_DELETED);
         }
     }
 
-    private void validatePassword(long gameId, String password) {
+    private void validatePassword(int gameId, String password) {
         if (!password.equals(repository.findPasswordById(gameId))) {
             throw new IllegalArgumentException(WRONG_PASSWORD);
         }

@@ -93,8 +93,8 @@ public class ChessGameServiceTest {
 
         service.move(1, "a2", "a4");
 
-        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1 AND position_id=49", Long.class)).isEqualTo(13);
-        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1 AND position_id=33", Long.class)).isEqualTo(11);
+        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1 AND position_id=49", Integer.class)).isEqualTo(13);
+        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1 AND position_id=33", Integer.class)).isEqualTo(11);
     }
 
     @Test

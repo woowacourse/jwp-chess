@@ -34,19 +34,19 @@ public class BoardDao {
                     resultSet.getString("color")
             );
 
-    public Chessboard findByGameId(long gameId) {
+    public Chessboard findByGameId(int gameId) {
         final String boardsSql = "SELECT * FROM board WHERE game_id=? ORDER BY position_id ASC";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(boardsSql, gameId);
 
         Map<Position, Piece> board = new LinkedHashMap<>();
         while (rowSet.next()) {
-            board.put(findPositionById(rowSet.getLong("position_id")), findPieceById(rowSet.getLong("piece_id")));
+            board.put(findPositionById(rowSet.getInt("position_id")), findPieceById(rowSet.getInt("piece_id")));
         }
 
         return new Chessboard(board);
     }
 
-    public void saveBoard(long gameId, Map<Position, Piece> chessboard) {
+    public void saveBoard(int gameId, Map<Position, Piece> chessboard) {
         final String sql = "INSERT INTO board(game_id,piece_id,position_id) values (" +
                 "?," +
                 "(SELECT id FROM piece WHERE type=? AND color=?)," +
@@ -64,40 +64,40 @@ public class BoardDao {
         }
     }
 
-    public void saveMove(long gameId, MovingPositionDto movingPosition) {
-        long fromPositionId = findPosition(movingPosition.getFromX(), movingPosition.getFromY());
-        long fromPieceId = findPieceById(gameId, fromPositionId);
+    public void saveMove(int gameId, MovingPositionDto movingPosition) {
+        int fromPositionId = findPosition(movingPosition.getFromX(), movingPosition.getFromY());
+        int fromPieceId = findPieceById(gameId, fromPositionId);
 
         updatePieceToBlank(gameId, fromPositionId);
         updatePiece(gameId, fromPieceId, findPosition(movingPosition.getToX(), movingPosition.getToY()));
     }
 
-    private Position findPositionById(long id) {
+    private Position findPositionById(int id) {
         final String positionSql = "SELECT x,y FROM position WHERE id = ?";
         return jdbcTemplate.queryForObject(positionSql, positionMapper, id);
     }
 
-    private Piece findPieceById(long id) {
+    private Piece findPieceById(int id) {
         final String pieceSql = "SELECT type,color FROM piece WHERE id = ?";
         return jdbcTemplate.queryForObject(pieceSql, pieceMapper, id);
     }
 
-    private long findPosition(int x, int y) {
+    private int findPosition(int x, int y) {
         String sql = "SELECT id FROM position WHERE x=? AND y=?";
-        return jdbcTemplate.queryForObject(sql, Long.class, x, y);
+        return jdbcTemplate.queryForObject(sql, Integer.class, x, y);
     }
 
-    private long findPieceById(long gameId, long positionId) {
+    private int findPieceById(int gameId, int positionId) {
         String sql = "SELECT piece_id FROM board WHERE game_id=? AND position_id=?";
-        return jdbcTemplate.queryForObject(sql, Long.class, gameId, positionId);
+        return jdbcTemplate.queryForObject(sql, Integer.class, gameId, positionId);
     }
 
-    private void updatePieceToBlank(long gameId, long positionId) {
+    private void updatePieceToBlank(int gameId, int positionId) {
         String sql = "UPDATE board SET piece_id = (SELECT id FROM piece WHERE type='.') WHERE game_id=? AND position_id=?";
         jdbcTemplate.update(sql, gameId, positionId);
     }
 
-    private void updatePiece(long gameId, long pieceId, long positionId) {
+    private void updatePiece(int gameId, int pieceId, int positionId) {
         String sql = "UPDATE board SET piece_id=? WHERE game_id=? AND position_id = ?";
         jdbcTemplate.update(sql, pieceId, gameId, positionId);
     }

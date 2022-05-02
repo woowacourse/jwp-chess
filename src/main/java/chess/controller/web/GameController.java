@@ -19,7 +19,7 @@ public class GameController {
     }
 
     @GetMapping("/{gameId}")
-    public String game(@PathVariable long gameId, Model model) {
+    public String game(@PathVariable int gameId, Model model) {
         model.addAttribute("pieces", service.getBoardByUnicode(gameId));
         model.addAttribute("gameId", gameId);
 
@@ -27,19 +27,19 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/start")
-    public String start(@PathVariable long gameId) {
+    public String start(@PathVariable int gameId) {
         service.start(gameId);
         return "redirect:/game/" + gameId;
     }
 
     @PostMapping("/{gameId}/end")
-    public String end(@PathVariable long gameId) {
+    public String end(@PathVariable int gameId) {
         service.end(gameId);
         return "redirect:/game/" + gameId;
     }
 
     @GetMapping("/{gameId}/status")
-    public String status(@PathVariable long gameId, Model model) {
+    public String status(@PathVariable int gameId, Model model) {
         ScoreDto score = service.status(gameId);
         model.addAttribute("pieces", service.getBoardByUnicode(gameId));
         model.addAttribute("score", score);
@@ -47,13 +47,13 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/move")
-    public String move(@PathVariable long gameId, @RequestParam String from, @RequestParam String to) {
+    public String move(@PathVariable int gameId, @RequestParam String from, @RequestParam String to) {
         service.move(gameId, from, to);
         return "redirect:/game/" + gameId;
     }
 
     @PostMapping("/{gameId}/delete")
-    public String delete(@PathVariable long gameId, @RequestParam String password) {
+    public String delete(@PathVariable int gameId, @RequestParam String password) {
         service.delete(gameId, password);
         return "redirect:/";
     }

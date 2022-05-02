@@ -45,7 +45,7 @@ public class GameDaoTest {
     @Test
     @DisplayName("게임 저장 확인")
     void saveGame() {
-        long gameId = dao.saveGame("name", "password");
+        int gameId = dao.saveGame("name", "password");
 
         assertThat(gameId).isEqualTo(1);
         assertThat(jdbcTemplate.queryForObject("SELECT name FROM game WHERE id=1", String.class)).isEqualTo("name");
@@ -58,10 +58,10 @@ public class GameDaoTest {
         jdbcTemplate.execute("INSERT INTO game(name,password) VALUES ('name','password')");
         jdbcTemplate.execute("INSERT INTO game(name,password) VALUES ('name2','password2')");
 
-        Map<Long, String> gameList = dao.findGameList();
+        Map<Integer, String> gameList = dao.findGameList();
 
-        assertThat(gameList.get(1L)).isEqualTo("name");
-        assertThat(gameList.get(2L)).isEqualTo("name2");
+        assertThat(gameList.get(1)).isEqualTo("name");
+        assertThat(gameList.get(2)).isEqualTo("name2");
     }
 
     @Test

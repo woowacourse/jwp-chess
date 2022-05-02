@@ -90,10 +90,22 @@ public class ChessGameServiceTest {
     }
 
     @Test
-    void move() {
+    void move_game_not_end() {
         MoveResultDto moveResultDto = chessGameService.move(new MoveDto("A2", "A4"), 1);
         ChessCellDto chessCellDto = chessBoardDao.findByPosition(1, "A4");
         assertThat(chessCellDto).isNotNull();
+    }
+
+    @Test
+    void move_game_end() {
+        chessGameService.move(new MoveDto("D2", "D4"), 1);
+        chessGameService.move(new MoveDto("E7", "E5"), 1);
+        chessGameService.move(new MoveDto("D4", "E5"), 1);
+        chessGameService.move(new MoveDto("D7", "D6"), 1);
+        chessGameService.move(new MoveDto("E5", "D6"), 1);
+        chessGameService.move(new MoveDto("E8", "E7"), 1);
+        MoveResultDto moveResultDto = chessGameService.move(new MoveDto("D6", "E7"), 1);
+        assertThat(moveResultDto.getIsGameOver()).isTrue();
     }
 
     @Test
@@ -110,6 +122,7 @@ public class ChessGameServiceTest {
     }
 
     @Test
+
     void createRoom() {
         CreateRoomRequestDto createRoomRequestDto = new CreateRoomRequestDto("testTitle", "testPassword");
         CreateRoomResultDto room = chessGameService.createRoom(createRoomRequestDto);

@@ -15,6 +15,7 @@ const moveInitializer = {
                     let source = positions.substring(0, 2);
                     let target = positions.substring(2, 4);
                     let roomId = window.location.pathname.split("/")[2];
+                    console.log(source, target);
                     JsonSender.sendSourceTarget(source, target, roomId);
                     positions = "";
                 }

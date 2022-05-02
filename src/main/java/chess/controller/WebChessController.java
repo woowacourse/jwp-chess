@@ -2,10 +2,10 @@ package chess.controller;
 
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
-import chess.dto.response.ErrorResponseDto.StatusResponseDto;
 import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
+import chess.dto.response.StatusResponseDto;
 import chess.service.ChessService;
 import java.net.URI;
 import org.springframework.http.HttpStatus;

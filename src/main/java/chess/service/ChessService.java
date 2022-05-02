@@ -12,10 +12,10 @@ import chess.domain.piece.Team;
 import chess.dto.BoardsDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
-import chess.dto.response.ErrorResponseDto.StatusResponseDto;
 import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
+import chess.dto.response.StatusResponseDto;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
 import chess.exception.RoomNotFoundException;
@@ -146,7 +146,7 @@ public class ChessService {
         validateGameOver(targetRoom);
         validatePassword(roomRequestDto, targetRoom);
         final RoomEntity roomEntity = roomRequestDto.toEntity();
-        targetRoom.patch(roomEntity);
+        targetRoom.update(roomEntity);
         final RoomEntity updatedRoom = roomRepository.update(targetRoom);
         return RoomResponseDto.of(updatedRoom);
     }

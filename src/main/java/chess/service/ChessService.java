@@ -30,8 +30,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessService {
 
-    BoardDao boardDao;
-    RoomDao roomDao;
+    private final BoardDao boardDao;
+    private final RoomDao roomDao;
 
     public ChessService(BoardDao boardDao, RoomDao roomDao) {
         this.boardDao = boardDao;

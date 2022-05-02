@@ -38,7 +38,9 @@ function putPiece(boards) {
 }
 
 async function restartGame() {
-    let game = await fetch("/api/chess/rooms/" + id + "/restart")
+    let game = await fetch("/api/chess/rooms/" + id + "/restart", {
+        method: 'PUT'
+    })
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);

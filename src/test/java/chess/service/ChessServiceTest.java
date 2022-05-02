@@ -33,6 +33,7 @@ class ChessServiceTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     @Autowired
     private DataSource dataSource;
 

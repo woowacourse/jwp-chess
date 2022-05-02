@@ -70,7 +70,7 @@ public class ChessRoomRepository implements RoomRepository<Room> {
 
     @Override
     public Room getById(int roomId) {
-        return jdbcTemplate.queryForObject("SELECT * FROM room WHERE id=?", roomRowMapper(), roomId);
+        return jdbcTemplate.queryForObject("SELECT * FROM room WHERE id = ?", roomRowMapper(), roomId);
     }
 
     @Override

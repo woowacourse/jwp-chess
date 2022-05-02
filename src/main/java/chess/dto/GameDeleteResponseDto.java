@@ -4,9 +4,6 @@ public class GameDeleteResponseDto {
     private boolean isDelete;
     private String message;
 
-    public GameDeleteResponseDto() {
-    }
-
     public GameDeleteResponseDto(boolean isDelete, String message) {
         this.isDelete = isDelete;
         this.message = message;

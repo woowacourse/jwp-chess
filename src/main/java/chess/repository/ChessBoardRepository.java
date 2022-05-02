@@ -36,33 +36,33 @@ public class ChessBoardRepository implements BoardRepository<Board> {
 
     @Override
     public int deleteById(int id) {
-        return jdbcTemplate.update("DELETE FROM board WHERE id=?", id);
+        return jdbcTemplate.update("DELETE FROM board WHERE id = ?", id);
     }
 
     @Override
     public Board getById(int id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM board WHERE id=?", boardRowMapper(), id);
+        return jdbcTemplate.queryForObject("SELECT * FROM board WHERE id = ?", boardRowMapper(), id);
     }
 
     @Override
     public int updateStatus(int boardId, Status status) {
-        return jdbcTemplate.update("UPDATE board SET status=? where id=?", status.name(), boardId);
+        return jdbcTemplate.update("UPDATE board SET status = ? where id = ?", status.name(), boardId);
     }
 
     @Override
     public int updateTeamById(int boardId, Team team) {
-        return jdbcTemplate.update("UPDATE board SET team=? where id=?", team.name(), boardId);
+        return jdbcTemplate.update("UPDATE board SET team = ? where id = ?", team.name(), boardId);
     }
 
     @Override
     public Status getStatusById(int boardId) {
-        String status = jdbcTemplate.queryForObject("SELECT status FROM board WHERE id=?", String.class, boardId);
+        String status = jdbcTemplate.queryForObject("SELECT status FROM board WHERE id = ?", String.class, boardId);
         return StatusType.findStatus(status);
     }
 
     @Override
     public Team getTeamById(int boardId) {
-        String team = jdbcTemplate.queryForObject("SELECT team FROM board WHERE id=?", String.class, boardId);
+        String team = jdbcTemplate.queryForObject("SELECT team FROM board WHERE id = ?", String.class, boardId);
         return Team.findTeam(team);
     }
 

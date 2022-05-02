@@ -27,7 +27,9 @@ public class JdbcGameDaoTest {
 
     @BeforeEach
     void setUp() {
-        chessRequestDto = new ChessRequestDto("title", "password", "white", "playing");
+        chessRequestDto = new ChessRequestDto("title", "password");
+        chessRequestDto.setTurn("white");
+        chessRequestDto.setStatus("playing");
     }
 
     @AfterEach

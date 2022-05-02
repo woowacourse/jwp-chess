@@ -12,13 +12,6 @@ public class ChessRequestDto {
         this.password = password;
     }
 
-    public ChessRequestDto(final String title, final String password, final String turn, final String status) {
-        this.title = title;
-        this.password = password;
-        this.turn = turn;
-        this.status = status;
-    }
-
     public void setTurn(final String turn) {
         this.turn = turn;
     }

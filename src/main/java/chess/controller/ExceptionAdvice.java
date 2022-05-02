@@ -6,12 +6,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class SpringExceptionAdvice {
+public class ExceptionAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handle(Exception exception) {
-        return ResponseEntity.badRequest().body(Map.of(
-            "exception", exception.getMessage()
-        ));
+        return ResponseEntity.badRequest()
+            .body(Map.of("exception", exception.getMessage()));
     }
 }

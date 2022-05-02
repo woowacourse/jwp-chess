@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class SpringChessController {
+public class WebChessController {
 
     @Autowired
     private ChessRoomService chessRoomService;
@@ -36,8 +36,7 @@ public class SpringChessController {
 
     @PostMapping("/rooms")
     @ResponseBody
-    public ResponseEntity<PathResponse> createRoom(@RequestBody String body)
-        throws JsonProcessingException {
+    public ResponseEntity<PathResponse> createRoom(@RequestBody String body) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         RoomDto bodyRoomDto = mapper.readValue(body, RoomDto.class);
         RoomDto roomDto = chessRoomService.createNewRoom(bodyRoomDto.getName(),
@@ -58,8 +57,7 @@ public class SpringChessController {
     }
 
     @DeleteMapping("/rooms/{roomId}")
-    public ResponseEntity<PathResponse> removeRoom(@PathVariable("roomId") int roomId,
-        @RequestBody String body) throws JsonProcessingException {
+    public ResponseEntity<PathResponse> removeRoom(@PathVariable("roomId") int roomId, @RequestBody String body) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         RoomDto inputRoomDto = mapper.readValue(body, RoomDto.class);
         chessRoomService.removeRoom(inputRoomDto);

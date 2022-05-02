@@ -25,10 +25,6 @@ public class Arguments {
             .collect(Collectors.toList()));
     }
 
-    public static Arguments ofJson(String jsonString, List<String> parameters) {
-        return new Arguments(readFromJson(jsonString, parameters));
-    }
-
     public static List<String> readFromJson(String body, List<String> parameters) {
         JsonObject jsonObject = JsonParser.parseString(body).getAsJsonObject();
         return parameters.stream()

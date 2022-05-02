@@ -4,6 +4,7 @@ import chess.database.dao.GameDao;
 import chess.database.dto.GameStateDto;
 import chess.domain.Color;
 import chess.domain.game.State;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -19,15 +20,11 @@ public class SpringGameDao implements GameDao {
 
     public GameStateDto readStateAndColor(int roomId) {
         String sql = "select * from game where room_id = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> GameStateDto.of(
-                    State.valueOf(resultSet.getString("state")),
-                    Color.valueOf(resultSet.getString("turn_color")))
-                , roomId);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+            (resultSet, rowNum) -> GameStateDto.of(
+                State.valueOf(resultSet.getString("state")),
+                Color.valueOf(resultSet.getString("turn_color")))
+            , roomId)).orElseThrow(() -> new IllegalArgumentException("[ERROR] 존자하지 않는 게임입니다."));
     }
 
     @Override

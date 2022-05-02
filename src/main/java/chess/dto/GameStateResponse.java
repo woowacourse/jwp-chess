@@ -3,6 +3,7 @@ package chess.dto;
 import chess.domain.game.GameState;
 
 public class GameStateResponse {
+
     private final BoardResponse board;
     private final String state;
     private final String color;

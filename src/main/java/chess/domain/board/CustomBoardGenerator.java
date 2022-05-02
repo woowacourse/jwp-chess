@@ -34,8 +34,7 @@ public class CustomBoardGenerator implements BoardGenerator {
     }
 
     private void generateLine(int verticalIndex) {
-        for (int horizontalIndex = LineNumber.MIN; horizontalIndex <= LineNumber.MAX;
-            horizontalIndex++) {
+        for (int horizontalIndex = LineNumber.MIN; horizontalIndex <= LineNumber.MAX; horizontalIndex++) {
             pointPieces.computeIfAbsent(Point.of(horizontalIndex, verticalIndex),
                 ignored -> Empty.getInstance());
         }

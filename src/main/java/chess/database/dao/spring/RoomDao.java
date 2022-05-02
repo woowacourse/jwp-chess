@@ -23,11 +23,12 @@ public class RoomDao {
 
     public RoomDto findByName(String roomName) {
         String sql = "select * from room where name = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
-                int id = resultSet.getInt("id");
-                String password = resultSet.getString("password");
-                return new RoomDto(id, roomName, password);
-            }, roomName))
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNum) -> {
+                    int id = resultSet.getInt("id");
+                    String password = resultSet.getString("password");
+                    return new RoomDto(id, roomName, password);
+                }, roomName))
             .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당하는 이름의 게임방이 없습니다."));
     }
 
@@ -55,15 +56,13 @@ public class RoomDao {
 
     public boolean existRoomName(String roomName) {
         String sql = "select count(*) from room where name = ?";
-        Optional<Integer> count = Optional.ofNullable(
-            jdbcTemplate.queryForObject(sql, Integer.class, roomName));
+        Optional<Integer> count = Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class, roomName));
         return count.isPresent() && count.get() >= 1;
     }
 
     public boolean existRoomId(int roomId) {
         String sql = "select count(*) from room where id = ?";
-        Optional<Integer> count = Optional.ofNullable(
-            jdbcTemplate.queryForObject(sql, Integer.class, roomId));
+        Optional<Integer> count = Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class, roomId));
         return count.isPresent() && count.get() >= 1;
     }
 }

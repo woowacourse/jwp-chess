@@ -4,7 +4,6 @@ import chess.database.dao.BoardDao;
 import chess.database.dto.BoardDto;
 import chess.database.dto.PieceDto;
 import chess.database.dto.PointDto;
-import chess.database.dto.RouteDto;
 import chess.domain.board.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,17 +23,13 @@ public class SpringBoardDao implements BoardDao {
 
     @Override
     public void saveBoard(BoardDto boardDto, int roomId) {
-        String sql =
-            "insert into board (horizontal_index, vertical_index, piece_type, piece_color, room_id)"
-                + " values (?, ?, ?, ?, ?)";
+        String sql = "insert into board (horizontal_index, vertical_index, piece_type, piece_color, room_id) values (?, ?, ?, ?, ?)";
         Map<PointDto, PieceDto> pointPieceDto = boardDto.getPointPieces();
         List<Object[]> batch = new ArrayList<>();
         for (Map.Entry<PointDto, PieceDto> entry : pointPieceDto.entrySet()) {
             PointDto point = entry.getKey();
             PieceDto piece = entry.getValue();
-            final Object[] objects =
-                {point.getHorizontal(), point.getVertical(), piece.getType(), piece.getColor(),
-                    roomId};
+            final Object[] objects = {point.getHorizontal(), point.getVertical(), piece.getType(), piece.getColor(), roomId};
             batch.add(objects);
         }
         jdbcTemplate.batchUpdate(sql, batch);

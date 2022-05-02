@@ -17,6 +17,7 @@ public class GameStateDto {
     public static GameStateDto of(GameState gameState) {
         return new GameStateDto(gameState.getState(), gameState.getTurnColor());
     }
+
     public static GameStateDto of(State state, Color color) {
         return new GameStateDto(state, color);
     }

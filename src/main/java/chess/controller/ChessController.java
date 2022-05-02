@@ -8,6 +8,8 @@ import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,12 +39,12 @@ public class ChessController {
     }
 
     @GetMapping("/{gameId}")
-    public ChessGameResponse loadGame(@PathVariable Long gameId) {
+    public ChessGameResponse loadGame(@PathVariable @DecimalMin(value = "0") Long gameId) {
         return chessService.loadGame(gameId);
     }
 
     @PostMapping
-    public ResponseEntity<Void> createGame(@RequestBody CreateGameRequest createGameRequest)
+    public ResponseEntity<Void> createGame(@RequestBody @Valid CreateGameRequest createGameRequest)
             throws URISyntaxException {
         Long gameId = chessService.createGame(createGameRequest);
         return ResponseEntity.created(new URI("/game/" + gameId)).build();
@@ -59,7 +61,7 @@ public class ChessController {
     }
 
     @PatchMapping("/{gameId}/pieces")
-    public ChessGameResponse movePiece(@PathVariable Long gameId, @RequestBody MoveRequest moveRequest) {
+    public ChessGameResponse movePiece(@PathVariable Long gameId, @RequestBody @Valid MoveRequest moveRequest) {
         return chessService.move(gameId, moveRequest);
     }
 

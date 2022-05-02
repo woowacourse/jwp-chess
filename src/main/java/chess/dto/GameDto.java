@@ -2,22 +2,36 @@ package chess.dto;
 
 public class GameDto {
 
-    private final String whiteUserName;
-    private final String blackUserName;
-    private final String state;
+    private int id;
+    private String roomName;
+    private String password;
+    private String state;
 
-    public GameDto(String whiteUserName, String blackUserName, String state) {
-        this.whiteUserName = whiteUserName;
-        this.blackUserName = blackUserName;
+    public GameDto() {
+    }
+
+    public GameDto(String roomName, String password, String state) {
+        this.roomName = roomName;
+        this.password = password;
         this.state = state;
     }
 
-    public String getWhiteUserName() {
-        return whiteUserName;
+    public GameDto(int id, String roomName, String state) {
+        this.id = id;
+        this.roomName = roomName;
+        this.state = state;
     }
 
-    public String getBlackUserName() {
-        return blackUserName;
+    public int getId() {
+        return id;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getState() {

@@ -4,53 +4,43 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.piece.Team;
 import chess.dto.GameDto;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest
+@JdbcTest
+@Sql(value = {"/schema.sql"})
 class GameJdbcDaoTest {
 
     @Autowired
-    private GameDao gameDao;
+    private JdbcTemplate jdbcTemplate;
 
-    private int gameId;
+    private GameDao gameDao;
+    private int gameId = 1;
 
     @BeforeEach
-    void init() {
-        gameDao.save(new GameDto("a", "b", "WHITE"));
-        gameId = gameDao.findGameIdByUserName("a", "b");
-    }
-
-    @AfterEach
-    void clear() {
-        gameDao.deleteById(gameId);
-    }
-
-    @Test
-    @DisplayName("유저의 이름으로 게임 아이디를 찾는다.")
-    void findGameIdByUserName() {
-        int gameIdByUserName = gameDao.findGameIdByUserName("a", "b");
-
-        assertThat(gameIdByUserName).isNotZero();
+    void setup() {
+        gameDao = new GameJdbcDao(jdbcTemplate, new BCryptPasswordEncoder());
     }
 
     @Test
     @DisplayName("아이디로 게임 정보를 찾는다.")
     void findById() {
-        GameDto gameDto = gameDao.findById(gameId);
+        GameDto gameDto = gameDao.findGames().get(0);
 
-        assertThat(gameDto.getWhiteUserName()).isEqualTo("a");
+        assertThat(gameDto.getRoomName()).isEqualTo("test");
     }
 
     @Test
     @DisplayName("게임의 상태를 업데이트한다.")
     void update() {
         gameDao.update(Team.BLACK.name(), gameId);
-        GameDto gameDto = gameDao.findById(gameId);
+        GameDto gameDto = gameDao.findGames().get(0);
 
         assertThat(gameDto.getState()).isEqualTo(Team.BLACK.name());
     }

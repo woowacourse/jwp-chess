@@ -5,8 +5,8 @@ create table game
 (
     id              int auto_increment
         primary key,
-    white_user_name varchar(30) not null,
-    black_user_name varchar(30) not null,
+    room_name varchar(30) not null,
+    password varchar(100) not null,
     state           varchar(30) not null
 );
 
@@ -22,3 +22,6 @@ create table board
         foreign key (game_id) references game (id)
             on update cascade on delete cascade
 );
+
+insert into game (id, room_name, password, state) values (1, 'test', 'password', 'WHITE');
+insert into board (symbol, team, position, game_id) values ('PAWN', 'WHITE', 'a2', 1);

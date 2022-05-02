@@ -8,30 +8,33 @@ import chess.domain.board.Board;
 import chess.domain.board.coordinate.Coordinate;
 import chess.domain.game.StatusCalculator;
 import chess.domain.piece.Piece;
+import chess.dto.GameCreateDto;
+import chess.dto.GameDeleteDto;
+import chess.dto.GameDto;
 import chess.dto.MoveRequestDto;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 class ChessServiceTest {
 
     private FakeBoardDao fakeBoardDao = new FakeBoardDao();
-    private ChessService chessService = new ChessService(fakeBoardDao, new FakeGameDao());
+    private ChessService chessService = new ChessService(fakeBoardDao, new FakeGameDao(), new BCryptPasswordEncoder());
     private int gameId;
 
     @BeforeEach
     void init() {
-        chessService.saveGame("a", "b", "WHITE");
-        gameId = chessService.findGameIdByUserName("a", "b");
-        chessService.saveBoard(Board.create(), gameId);
+        gameId = chessService.start(new GameCreateDto("test", "password"));
     }
 
     @AfterEach
     void clear() {
         fakeBoardDao.deleteByGameId(gameId);
-        chessService.deleteGameByGameId(gameId);
+        chessService.deleteGameByGameId(new GameDeleteDto(gameId, "password"));
     }
 
     @Test
@@ -39,15 +42,6 @@ class ChessServiceTest {
     void findBoardByGameId() {
         Board board = chessService.findBoardByGameId(gameId);
         assertThat(board.toMap()).containsAllEntriesOf(Board.create().toMap());
-    }
-
-    @Test
-    @DisplayName("새로운 유저 이름을 받으면 게임을 새로 시작한다.")
-    void start() {
-        chessService.start("c", "d");
-        int gameIdByUserName = chessService.findGameIdByUserName("c", "d");
-
-        assertThat(gameIdByUserName).isEqualTo(2);
     }
 
     @Test
@@ -62,16 +56,19 @@ class ChessServiceTest {
     }
 
     @Test
-    void findGameIdByUserName() {
-        int gameIdByUserName = chessService.findGameIdByUserName("a", "b");
-        assertThat(gameIdByUserName).isEqualTo(1);
-    }
-
-    @Test
+    @DisplayName("게임 결과를 반환한다.")
     void createStatus() {
         StatusCalculator status = chessService.createStatus(gameId);
         Map<String, Double> score = status.createStatus();
 
         assertThat(score.get("WHITE")).isEqualTo(38);
+    }
+
+    @Test
+    @DisplayName("모든 게임 리스트를 반환한다.")
+    void findGames() {
+        List<GameDto> games = chessService.findGames();
+
+        assertThat(games.size()).isEqualTo(1);
     }
 }

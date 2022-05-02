@@ -1,14 +1,6 @@
 package chess.service;
 
-import static chess.domain.game.ChessGame.*;
-
-import chess.dto.MoveRequestDto;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.stereotype.Service;
+import static chess.domain.game.ChessGame.END_STATE;
 
 import chess.dao.BoardDao;
 import chess.dao.GameDao;
@@ -19,19 +11,31 @@ import chess.domain.game.StatusCalculator;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.dto.BoardDto;
+import chess.dto.GameCreateDto;
+import chess.dto.GameDeleteDto;
+import chess.dto.GameDeleteResponseDto;
 import chess.dto.GameDto;
+import chess.dto.MoveRequestDto;
+import chess.exception.NotMatchedPasswordException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
 
-    private static final int NOT_EXIST_GAME = 0;
-
     private final BoardDao boardDao;
     private final GameDao gameDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public ChessService(BoardDao boardDao, GameDao gameDao) {
+    public ChessService(BoardDao boardDao, GameDao gameDao,
+                        PasswordEncoder passwordEncoder) {
         this.boardDao = boardDao;
         this.gameDao = gameDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Board findBoardByGameId(int gameId) {
@@ -43,7 +47,14 @@ public class ChessService {
         return new Board(board);
     }
 
-    public void saveBoard(Board board, int gameId) {
+    public int start(GameCreateDto gameCreateDto) {
+        GameDto gameDto = new GameDto(gameCreateDto.getRoomName(), gameCreateDto.getPassword(), Team.WHITE.name());
+        int gameId = gameDao.save(gameDto);
+        saveBoard(Board.create(), gameId);
+        return gameId;
+    }
+
+    private void saveBoard(Board board, int gameId) {
         List<BoardDto> boardDtos = new ArrayList<>();
         Map<String, Piece> pieces = board.toMap();
 
@@ -55,48 +66,33 @@ public class ChessService {
         boardDao.save(boardDtos, gameId);
     }
 
+    public void move(int gameId, MoveRequestDto moveRequestDto) {
+        Board board = findBoardByGameId(gameId);
+        String state = gameDao.findStateById(gameId);
+
+        ChessGame chessGame = new ChessGame(board, state);
+        String from = moveRequestDto.getFrom();
+        String to = moveRequestDto.getTo();
+        chessGame.move(Coordinate.of(from), Coordinate.of(to));
+        changeState(gameId, state, chessGame);
+
+        updateBoard(board.findPiece(Coordinate.of(from)), from, gameId);
+        updateBoard(board.findPiece(Coordinate.of(to)), to, gameId);
+    }
+
     private void updateBoard(Piece piece, String position, int gameId) {
         BoardDto boardDto = new BoardDto(piece.getSymbol(), piece.getTeam(), position);
 
         boardDao.update(boardDto, gameId);
     }
 
-    public void saveGame(String whiteUserName, String blackUserName, String state) {
-        GameDto gameDto = new GameDto(whiteUserName, blackUserName, state);
-        gameDao.save(gameDto);
-    }
-
-    public void start(String whiteUserName, String blackUserName) {
-        int gameId = findGameIdByUserName(whiteUserName, blackUserName);
-        if (isNotExistGame(gameId)) {
-            saveGame(whiteUserName, blackUserName, Team.WHITE.name());
-            gameId = findGameIdByUserName(whiteUserName, blackUserName);
-            saveBoard(Board.create(), gameId);
-            return;
-        }
-    }
-
-    public void move(int gameId, MoveRequestDto moveRequestDto) {
-        Board board = findBoardByGameId(gameId);
-        GameDto gameDto = gameDao.findById(gameId);
-
-        ChessGame chessGame = new ChessGame(board, gameDto.getState());
-        String from = moveRequestDto.getFrom();
-        String to = moveRequestDto.getTo();
-        chessGame.move(Coordinate.of(from), Coordinate.of(to));
-        changeState(gameId, gameDto, chessGame);
-
-        updateBoard(board.findPiece(Coordinate.of(from)), from, gameId);
-        updateBoard(board.findPiece(Coordinate.of(to)), to, gameId);
-    }
-
-    private void changeState(int gameId, GameDto gameDto, ChessGame chessGame) {
+    private void changeState(int gameId, String state, ChessGame chessGame) {
         if (chessGame.isFinished()) {
             endGame(gameId);
             return;
         }
 
-        changeTurn(gameDto.getState(), gameId);
+        changeTurn(state, gameId);
     }
 
     private void changeTurn(String state, int gameId) {
@@ -111,23 +107,34 @@ public class ChessService {
         gameDao.update(END_STATE, gameId);
     }
 
-    public int findGameIdByUserName(String whiteUserName, String blackUserName) {
-        return gameDao.findGameIdByUserName(whiteUserName, blackUserName);
-    }
-
-    private boolean isNotExistGame(int gameId) {
-        return gameId == NOT_EXIST_GAME;
-    }
-
     public StatusCalculator createStatus(int gameId) {
         Board board = findBoardByGameId(gameId);
-        GameDto gameDto = gameDao.findById(gameId);
+        String state = gameDao.findStateById(gameId);
 
-        ChessGame chessGame = new ChessGame(board, gameDto.getState());
+        ChessGame chessGame = new ChessGame(board, state);
         return chessGame.status();
     }
 
-    public void deleteGameByGameId(int gameId) {
-        gameDao.deleteById(gameId);
+    public GameDeleteResponseDto deleteGameByGameId(GameDeleteDto gameDeleteDto) {
+        validatePassword(gameDeleteDto);
+        gameDao.deleteById(gameDeleteDto.getId());
+        return GameDeleteResponseDto.success();
+    }
+
+    private void validatePassword(GameDeleteDto gameDeleteDto) {
+        if (isSamePassword(gameDeleteDto)) {
+            return;
+        }
+
+        throw new NotMatchedPasswordException();
+    }
+
+    private boolean isSamePassword(GameDeleteDto gameDeleteDto) {
+        String passwordById = gameDao.findPasswordById(gameDeleteDto.getId());
+        return passwordEncoder.matches(gameDeleteDto.getPassword(), passwordById);
+    }
+
+    public List<GameDto> findGames() {
+        return gameDao.findGames();
     }
 }

@@ -4,17 +4,24 @@ import chess.converter.Converter;
 import chess.domain.board.Board;
 import chess.domain.game.StatusCalculator;
 import chess.dto.ExceptionDto;
+import chess.dto.GameCreateDto;
+import chess.dto.GameDeleteDto;
+import chess.dto.GameDeleteResponseDto;
+import chess.dto.GameDto;
 import chess.dto.MoveRequestDto;
 import chess.service.ChessService;
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,23 +42,26 @@ public class WebChessController {
     @GetMapping("/game/{id}")
     public ModelAndView game(@PathVariable("id") int id) {
         Board board = chessService.findBoardByGameId(id);
+        StatusCalculator status = chessService.createStatus(id);
 
-        Map<String, Object> map = Converter.toMap(id, board);
+        Map<String, Object> map = Converter.toMap(id, board, status);
         ModelAndView modelAndView = new ModelAndView("start");
         modelAndView.addObject("board", map);
         return modelAndView;
     }
 
-    @PostMapping("/start")
-    public String start(
-            @RequestParam("white_user_name") String whiteUserName,
-            @RequestParam("black_user_name") String blackUserName) {
-        chessService.start(whiteUserName, blackUserName);
-        int gameId = chessService.findGameIdByUserName(whiteUserName, blackUserName);
+    @GetMapping("/game")
+    public ResponseEntity<List<GameDto>> findGames() {
+        return ResponseEntity.ok().body(chessService.findGames());
+    }
+
+    @PostMapping("/game")
+    public String create(@ModelAttribute GameCreateDto gameCreateDto) {
+        int gameId = chessService.start(gameCreateDto);
         return "redirect:/game/" + gameId;
     }
 
-    @PostMapping("/game/{gameId}/move")
+    @PutMapping("/game/{gameId}/move")
     @ResponseBody
     public ResponseEntity<MoveRequestDto> move(
             @PathVariable("gameId") int gameId, @RequestBody MoveRequestDto moveRequestDto) {
@@ -59,31 +69,13 @@ public class WebChessController {
         return ResponseEntity.ok(moveRequestDto);
     }
 
-    @PostMapping("/stop")
+    @PostMapping("/home")
     public String stop() {
         return "redirect:/";
     }
 
-    @PostMapping("/game/{gameId}/end")
-    public String end(@PathVariable("gameId") int gameId) {
-        chessService.deleteGameByGameId(gameId);
-        return "redirect:/";
-    }
-
-    @GetMapping("/game/{gameId}/status")
-    public ModelAndView status(@PathVariable("gameId") int gameId) {
-        StatusCalculator status = chessService.createStatus(gameId);
-        Board board = chessService.findBoardByGameId(gameId);
-
-        Map<String, Object> map = Converter.toMap(gameId, board, status);
-        ModelAndView modelAndView = new ModelAndView("start");
-        modelAndView.addObject("board", map);
-        return modelAndView;
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseBody
-    public ResponseEntity<ExceptionDto> handle(RuntimeException e) {
-        return ResponseEntity.badRequest().body(new ExceptionDto(e.getMessage()));
+    @DeleteMapping("/game")
+    public ResponseEntity<GameDeleteResponseDto> delete(@RequestBody GameDeleteDto gameDeleteDto) {
+        return ResponseEntity.ok().body(chessService.deleteGameByGameId(gameDeleteDto));
     }
 }

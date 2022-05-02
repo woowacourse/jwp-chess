@@ -41,19 +41,16 @@ public class ChessService {
     }
 
     public Long createGame(CreateGameRequest createGameRequest) {
-        return createGame(createGameRequest.getGameName(), createGameRequest.getPassword());
-    }
-
-    public Long createGame(String gameName, String password) {
         String salt = PasswordEncryptor.generateSalt();
-        GameEntity gameEntity = GameEntity.toSave(gameName, PasswordEncryptor.encrypt(password, salt), salt,
+        GameEntity gameEntity = GameEntity.toSave(createGameRequest.getGameName(),
+                PasswordEncryptor.encrypt(createGameRequest.getPassword(), salt), salt,
                 GameState.READY);
         ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
         Long gameId = gameDao.save(gameEntity);
         saveBoard(gameId, chessGame.getBoard());
         return gameId;
     }
-
+    
     public void saveBoard(Long gameId, Map<Position, Piece> board) {
         board.forEach((position, piece) -> savePiece(gameId, position, piece));
     }

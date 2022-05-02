@@ -18,8 +18,8 @@ public class ChessGameController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/loadBoard/{id}")
-    public ResponseEntity<BoardResponse> loadBoard(@PathVariable Long id) {
+    @GetMapping("/games/{id}")
+    public ResponseEntity<BoardResponse> loadPieces(@PathVariable Long id) {
         BoardResponse initialBoard = chessService.getBoard(id);
         return ResponseEntity.ok().body(initialBoard);
     }
@@ -44,7 +44,7 @@ public class ChessGameController {
         return ResponseEntity.created(URI.create("/reset/" + id)).body(chessService.getBoard(id));
     }
 
-    @GetMapping("/loadGames")
+    @GetMapping("/games")
     public ResponseEntity<GamesResponse> loadGames() {
         return ResponseEntity.ok().body(new GamesResponse(chessService.getGames()));
     }

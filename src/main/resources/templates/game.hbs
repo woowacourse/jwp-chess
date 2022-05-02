@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="css/index.css" rel="stylesheet"/>
+    <title>체스 게임</title>
+    <link href="/css/index.css" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 </head>
 <body>
 
 <h2 > 체스 방 만들기 </h2>
-<form class="input-left" action="/room" method="post">
+<form class="input-left" action="/initialize/board" method="post">
     체스방 제목
     <input type="text" name="name" id="name">
     비밀번호
@@ -17,6 +17,6 @@
     <input type="submit" value="방 생성">
 </form>
 </body>
-<script src="/js/game.js"></script>
+<script src="/js/games.js"></script>
 <script src="/js/board.js"></script>
 </html>

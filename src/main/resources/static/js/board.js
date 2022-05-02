@@ -1,7 +1,7 @@
 function startGame() {
     const url = window.location.href.split('/');
     $.ajax({
-        url: "/loadBoard/" + url[url.length - 1],
+        url: "/games/" + url[url.length - 1],
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         type: "get",

@@ -28,12 +28,12 @@ public class ChessGameViewController {
         return "index";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/game")
     public String returnRoomView() {
-        return "room";
+        return "game";
     }
 
-    @GetMapping("/game-list")
+    @GetMapping("/game/list")
     public String returnGameListView() {
         return "gamelist";
     }
@@ -44,7 +44,7 @@ public class ChessGameViewController {
         return "board";
     }
 
-    @PostMapping("/room")
+    @PostMapping("/initialize/board")
     public String createRoom(MakeRoomRequest makeRoomRequest) {
         Long id = chessService.initializeGame(makeRoomRequest);
         return "redirect:/board/" + id;
@@ -64,11 +64,11 @@ public class ChessGameViewController {
         PrintWriter out = response.getWriter();
         if (chessService.isPossibleDeleteGame(id, passwordRequest.getPassword())) {
             chessService.endGame(id);
-            out.println("<script>alert('체스가 삭제되었습니다.'); location.href='/game-list';</script>");
+            out.println("<script>alert('체스가 삭제되었습니다.'); location.href='/game/list';</script>");
             out.flush();
         }
-        out.println("<script>alert('체스를 종료하고, 올바른 비밀번호를 눌러주세요.'); location.href='/game-list';</script>");
+        out.println("<script>alert('체스를 종료하고, 올바른 비밀번호를 눌러주세요.'); location.href='/game/list';</script>");
         out.flush();
-        return "redirect:/game-list";
+        return "redirect:/game/list";
     }
 }

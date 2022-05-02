@@ -2,7 +2,7 @@ const items = document.querySelector(".items");
 
 function setList() {
     $.ajax({
-        url: "/loadGames",
+        url: "/games",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         type: "get",

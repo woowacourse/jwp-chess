@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import javax.validation.constraints.Size;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +51,7 @@ public class ChessController {
         if (input.replace(" ", "").length() != input.length()) {
             throw new IllegalArgumentException("[ERROR] 입력값에 공백이 포함될 수 없습니다");
         }
-        if (input.trim().isEmpty()) {
+        if (input.trim().isBlank()) {
             throw new IllegalArgumentException("[ERROR] 입력값이 비어있습니다.");
         }
     }

@@ -1,33 +1,6 @@
-drop table board if exists;
-
-drop table chess_game if exists;
-
-drop table game_room if exists;
-
-create table game_room
-(
-    game_room_id varchar(99) primary key,
-    name         varchar(20) not null,
-    password     varchar(20) not null
-);
-
-create table chess_game
-(
-    game_room_id       varchar(99) not null,
-    is_on              bool        not null,
-    team_value_of_turn varchar(20) not null,
-    foreign key (game_room_id) references game_room (game_room_id) on delete cascade
-);
-
-create table board
-(
-    game_room_id          varchar(99) not null,
-    position_column_value varchar(1)  not null,
-    position_row_value    int         not null,
-    piece_name            varchar(20) not null,
-    piece_team_value      varchar(20) not null,
-    foreign key (game_room_id) references game_room (game_room_id) on delete cascade
-);
+delete from board;
+delete from chess_game;
+delete from game_room;
 
 insert into game_room (game_room_id, name, password)
 values ('1111', 'game1', '1111');

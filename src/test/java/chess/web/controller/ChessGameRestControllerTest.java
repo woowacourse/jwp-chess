@@ -1,104 +1,118 @@
 package chess.web.controller;
 
-import chess.web.dto.CreateRoomRequestDto;
-import chess.web.dto.DeleteDto;
-import chess.web.dto.MoveDto;
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+import chess.web.dto.CreateRoomRequestDto;
+import chess.web.dto.CreateRoomResultDto;
+import chess.web.dto.DeleteDto;
+import chess.web.dto.DeleteResultDto;
+import chess.web.dto.MoveDto;
+import chess.web.dto.MoveResultDto;
+import chess.web.dto.PlayResultDto;
+import chess.web.dto.ReadRoomResultDto;
+import chess.web.dto.RoomDto;
+import chess.web.service.ChessGameService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.HashMap;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+@SpringBootTest
+@AutoConfigureMockMvc
 class ChessGameRestControllerTest {
 
-    @LocalServerPort
-    int port;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
+    @MockBean
+    private ChessGameService chessGameService;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Test
+    void create() throws Exception {
+        CreateRoomRequestDto createRoomRequestDto = new CreateRoomRequestDto("testTitle", "testPassword");
+        String parsedCreateRoomRequestDto = objectMapper.writeValueAsString(createRoomRequestDto);
+        CreateRoomResultDto createRoomResultDto = new CreateRoomResultDto(1);
+        given(chessGameService.createRoom(createRoomRequestDto)).willReturn(createRoomResultDto);
+
+        mockMvc.perform(post("/rooms")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(parsedCreateRoomRequestDto))
+                .andExpect(status().isOk());
     }
 
     @Test
-    @Order(1)
-    void create() {
-        CreateRoomRequestDto createRoomRequestDto = new CreateRoomRequestDto("testTitle",  "testPassword");
+    void start() throws Exception {
+        RoomDto roomDto = new RoomDto(1, "testTitle", false, false);
 
-        RestAssured.given().log().all()
-                .body(createRoomRequestDto)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/rooms")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+        given(chessGameService.start(1)).willReturn(roomDto);
+
+        mockMvc.perform(post("/rooms/1/start"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("testTitle")));
+    }
+
+
+    @Test
+    void play() throws Exception {
+        PlayResultDto playResultDto = new PlayResultDto(new HashMap<>(), "WHITE");
+        given(chessGameService.play(1)).willReturn(playResultDto);
+
+        mockMvc.perform(post("/rooms/1/play"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("WHITE")));
     }
 
     @Test
-    @Order(2)
-    void getStart() {
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/rooms/1/start")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+    void readRooms() throws Exception {
+        ReadRoomResultDto readRoomResultDto = new ReadRoomResultDto(new ArrayList<>());
+        given(chessGameService.findAllRooms()).willReturn(readRoomResultDto);
+
+        mockMvc.perform(get("/rooms"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("[]")));
     }
 
     @Test
-    @Order(3)
-    void play() {
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/rooms/1/play")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
-    }
-
-    @Test
-    @Order(4)
-    void readRooms() {
-        RestAssured.given().log().all()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/rooms")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
-    }
-
-    @Test
-    @Order(5)
-    void move() {
+    void move() throws Exception {
         MoveDto moveDto = new MoveDto("A2", "A4");
+        MoveResultDto moveResultDto = new MoveResultDto(new HashMap<>());
+        given(chessGameService.move(moveDto, 1)).willReturn(moveResultDto);
 
-        RestAssured.given().log().all()
-                .body(moveDto)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/rooms/1")
-                .then().log().all();
-//                .statusCode(HttpStatus.OK.value())
-//                .contentType(MediaType.APPLICATION_JSON_VALUE);
+        String parsedMoveDto = objectMapper.writeValueAsString(moveDto);
+
+        mockMvc.perform(patch("/rooms/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(parsedMoveDto))
+                .andExpect(status().isOk());
     }
 
     @Test
-    @Order(6)
-    void delete() {
+    void deleteRoom() throws Exception {
         DeleteDto deleteDto = new DeleteDto("testpassword");
-        RestAssured.given().log().all()
-                .body(deleteDto)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().delete("/rooms/1")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+        DeleteResultDto deleteResultDto = new DeleteResultDto(1, true);
+        given(chessGameService.delete( 1, deleteDto)).willReturn(deleteResultDto);
+
+        String parsedDeleteDto = objectMapper.writeValueAsString(deleteDto);
+
+        mockMvc.perform(delete("/rooms/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(parsedDeleteDto))
+                .andExpect(status().isOk());
     }
 }

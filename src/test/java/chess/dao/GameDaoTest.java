@@ -30,7 +30,7 @@ public class GameDaoTest {
     @DisplayName("게임 저장 테스트")
     @Test
     void save() {
-        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        GameEntity gameEntity = GameEntity.toSave("game", "password", "salt", GameState.READY);
         Long id = gameDao.save(gameEntity);
 
         List<GameEntity> games = gameDao.findAll();
@@ -42,7 +42,7 @@ public class GameDaoTest {
     @DisplayName("전체 게임 조회 테스트")
     @Test
     void find_All_Game_Id() {
-        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        GameEntity gameEntity = GameEntity.toSave("game", "password", "salt", GameState.READY);
         gameDao.save(gameEntity);
 
         List<GameEntity> actual = gameDao.findAll();
@@ -53,7 +53,7 @@ public class GameDaoTest {
     @DisplayName("id에 대한 게임 조회 테스트")
     @Test
     void find_By_Id() {
-        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        GameEntity gameEntity = GameEntity.toSave("game", "password", "salt", GameState.READY);
         Long id = gameDao.save(gameEntity);
 
         GameEntity actual = gameDao.findById(id);
@@ -64,7 +64,7 @@ public class GameDaoTest {
     @DisplayName("게임 정보 업데이트 테스트")
     @Test
     void update() {
-        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        GameEntity gameEntity = GameEntity.toSave("game", "password", "salt", GameState.READY);
         Long id = gameDao.save(gameEntity);
         gameDao.updateState(id, GameState.WHITE_RUNNING);
 
@@ -76,7 +76,7 @@ public class GameDaoTest {
     @DisplayName("게임 삭제 테스트")
     @Test
     void delete() {
-        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        GameEntity gameEntity = GameEntity.toSave("game", "password", "salt", GameState.READY);
         Long id = gameDao.save(gameEntity);
         gameDao.delete(id);
 
@@ -88,7 +88,7 @@ public class GameDaoTest {
     @DisplayName("게임 이름이 중복되는 경우 DuplicateKeyException 발생 테스트")
     @Test
     void duplicated_Name() {
-        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        GameEntity gameEntity = GameEntity.toSave("game", "password", "salt", GameState.READY);
         gameDao.save(gameEntity);
 
         assertThatThrownBy(() -> gameDao.save(gameEntity))

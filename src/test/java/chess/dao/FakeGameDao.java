@@ -26,7 +26,7 @@ public class FakeGameDao extends GameDao {
     public Long save(GameEntity gameEntity) {
         checkDataIntegrityViolation(gameEntity);
         checkDuplicatedName(gameEntity.getName());
-        gameEntity = new GameEntity(autoIncrementId, gameEntity.getName(), gameEntity.getPassword(),
+        gameEntity = GameEntity.toFind(autoIncrementId, gameEntity.getName(), gameEntity.getPassword(),
                 gameEntity.getSalt(), gameEntity.getState());
         games.put(autoIncrementId, gameEntity);
         return autoIncrementId++;
@@ -67,7 +67,8 @@ public class FakeGameDao extends GameDao {
             throw new EmptyResultDataAccessException("존재하지 않는 게임입니다.", 1);
         }
         GameEntity savedEntity = games.get(id);
-        GameEntity updatedEntity = new GameEntity(savedEntity.getId(), savedEntity.getName(), savedEntity.getPassword(),
+        GameEntity updatedEntity = GameEntity.toFind(savedEntity.getId(), savedEntity.getName(),
+                savedEntity.getPassword(),
                 savedEntity.getSalt(), state);
         games.put(id, updatedEntity);
     }

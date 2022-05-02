@@ -40,7 +40,7 @@ public class PieceDaoTest {
         gameDao = new GameDao(dataSource);
         pieceDao = new PieceDao(dataSource);
 
-        GameEntity gameEntity = new GameEntity(null, "game", "password", "salt", GameState.READY);
+        GameEntity gameEntity = GameEntity.toSave("game", "password", "salt", GameState.READY);
         gameId = gameDao.save(gameEntity);
     }
 

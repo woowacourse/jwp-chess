@@ -21,7 +21,7 @@ public class GameDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final SimpleJdbcInsert insertGame;
 
-    private final RowMapper<GameEntity> gameEntityRowMapper = (resultSet, rowNum) -> new GameEntity(
+    private final RowMapper<GameEntity> gameEntityRowMapper = (resultSet, rowNum) -> GameEntity.toFind(
             resultSet.getLong("id"), resultSet.getString("name"),
             resultSet.getString("password"), resultSet.getString("salt"),
             GameState.valueOf(resultSet.getString("state")));

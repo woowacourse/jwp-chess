@@ -46,7 +46,7 @@ public class ChessService {
 
     public Long createGame(String gameName, String password) {
         String salt = PasswordEncryptor.generateSalt();
-        GameEntity gameEntity = new GameEntity(null, gameName, PasswordEncryptor.encrypt(password, salt), salt,
+        GameEntity gameEntity = GameEntity.toSave(gameName, PasswordEncryptor.encrypt(password, salt), salt,
                 GameState.READY);
         ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
         Long gameId = gameDao.save(gameEntity);

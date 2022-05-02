@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ChessSpringController {
@@ -61,29 +60,26 @@ public class ChessSpringController {
         return "redirect:/";
     }
 
-    @ResponseBody
     @GetMapping("/game/{gameId}/start")
-    public GameStatusDto start(@PathVariable int gameId) {
-        return chessGameService.startChessGame(new WebBasicBoardStrategy(), gameId);
+    public ResponseEntity<GameStatusDto> start(@PathVariable int gameId) {
+        GameStatusDto gameStatusDto = chessGameService.startChessGame(new WebBasicBoardStrategy(), gameId);
+        return ResponseEntity.ok().body(gameStatusDto);
     }
 
-    @ResponseBody
     @PostMapping("/game/{gameId}/move")
-    public ResponseEntity move(@RequestBody MoveDto moveDto, @PathVariable int gameId) {
+    public ResponseEntity<GameStatusDto> move(@RequestBody MoveDto moveDto, @PathVariable int gameId) {
         GameStatusDto gameStatusDto = chessGameService.move(moveDto.getFrom(), moveDto.getTo(), gameId);
         return ResponseEntity.ok().body(gameStatusDto);
     }
 
-    @ResponseBody
     @GetMapping("/game/{gameId}/status")
-    public ResponseEntity status(@PathVariable int gameId) {
+    public ResponseEntity<ScoreDto> status(@PathVariable int gameId) {
         ScoreDto scoresDto = chessGameService.createScore(gameId);
         return ResponseEntity.ok().body(scoresDto);
     }
 
-    @ResponseBody
     @GetMapping("/game/{gameId}/end")
-    public ResponseEntity end(@PathVariable int gameId) {
+    public ResponseEntity<WinnerDto> end(@PathVariable int gameId) {
         WinnerDto winnerDto = chessGameService.end(gameId);
         return ResponseEntity.ok().body(winnerDto);
     }

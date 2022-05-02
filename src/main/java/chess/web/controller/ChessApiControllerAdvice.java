@@ -11,6 +11,7 @@ public class ChessApiControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> exception(Exception exception) {
+        exception.printStackTrace();
         String message = exception.getMessage();
         return ResponseEntity.badRequest().body(new ErrorResponseDto(Response.SC_BAD_REQUEST, message));
     }

@@ -29,37 +29,37 @@ public class ChessApiController {
         this.chessService = chessService;
     }
 
-    @PostMapping(value = "/board", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/boards", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> createBoard(@RequestBody CreateBoardDto createBoardDto) {
         Long boardId = chessService.createBoard(createBoardDto.getTitle(), createBoardDto.getPassword());
-        return ResponseEntity.created(URI.create("/board/" + boardId)).body(boardId);
+        return ResponseEntity.created(URI.create("/chess/" + boardId)).body(boardId);
     }
 
-    @PutMapping(value = "/board/{boardId}/initialization", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/boards/{boardId}/initialization", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BoardResponseDto> initBoard(@PathVariable Long boardId) {
         Board board = chessService.initBoard(boardId);
         return ResponseEntity.ok().body(BoardResponseDto.from(board));
     }
 
-    @PatchMapping(value = "/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/boards/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BoardResponseDto> move(@RequestBody MoveDto moveDto, @PathVariable Long boardId) {
         Board board = chessService.move(moveDto, boardId);
         return ResponseEntity.ok().body(BoardResponseDto.from(board));
     }
 
-    @GetMapping(value = "/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/boards/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BoardResponseDto> loadGame(@PathVariable Long boardId) {
         Board board = chessService.loadGame(boardId);
         return ResponseEntity.ok().body(BoardResponseDto.from(board));
     }
 
-    @GetMapping(value = "/board/{boardId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/boards/{boardId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ScoreDto> getStatus(@PathVariable Long boardId) {
         ScoreDto status = chessService.getStatus(boardId);
         return ResponseEntity.ok().body(status);
     }
 
-    @DeleteMapping(value = "/board/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/boards/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> deleteRoom(@RequestBody String password, @PathVariable Long boardId) {
         boolean result = chessService.removeBoard(boardId, password);
         return ResponseEntity.ok().body(result);

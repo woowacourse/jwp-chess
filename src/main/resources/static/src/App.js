@@ -33,7 +33,7 @@ function showStatusButton() {
 }
 
 function initBoard() {
-    fetch('/api/board/' + boardId + '/initialization'), {
+    fetch('/api/boards/' + boardId + '/initialization'), {
         method: "PUT", headers: {
             "Content-Type": "application/json",
         }}
@@ -70,13 +70,13 @@ function getStatus(scoreResponse) {
 }
 
 status.addEventListener('click', function () {
-    fetch('/api/board/' + boardId + '/status')
+    fetch('/api/boards/' + boardId + '/status')
         .then(res => res.json())
         .then(getStatus);
 })
 
 function loadBoard() {
-    fetch('/api/board/' + boardId)
+    fetch('/api/boards/' + boardId)
         .then(res => res.json())
         .then(value => {
             if (value["statusCode"] === 400) {
@@ -187,7 +187,7 @@ function movePiece(from, to) {
         from: from, to: to
     }
 
-    fetch('/api/board/' + boardId, {
+    fetch('/api/boards/' + boardId, {
         method: "PATCH", headers: {
             "Content-Type": "application/json",
         }, body: JSON.stringify(request),

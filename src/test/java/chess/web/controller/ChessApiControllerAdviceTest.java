@@ -51,7 +51,7 @@ class ChessApiControllerAdviceTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveDto)
-                .when().patch("/api/board/" + id)
+                .when().patch("/api/boards/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("statusCode", equalTo(400))
@@ -80,7 +80,7 @@ class ChessApiControllerAdviceTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveDto)
-                .when().patch("/api/board/" + id)
+                .when().patch("/api/boards/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("statusCode", equalTo(400))
@@ -104,7 +104,7 @@ class ChessApiControllerAdviceTest {
     @Sql("/sql/chess-setup.sql")
     @Test
     @DisplayName("체스 게임을 삭제할 수 없다.")
-    void deleteRoomRunningGame() {
+    void deleteBoardRunningGame() {
         final String title = "title";
         final String password = "password";
         Long id = chessService.createBoard(title, password);
@@ -112,7 +112,7 @@ class ChessApiControllerAdviceTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(password)
-                .when().delete("/api/board/" + id)
+                .when().delete("/api/boards/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("statusCode", equalTo(400))
@@ -125,7 +125,7 @@ class ChessApiControllerAdviceTest {
     @Sql("/sql/chess-setup.sql")
     @Test
     @DisplayName("비밀번호가 틀리면 체스 게임을 삭제할 수 없다.")
-    void deleteRoomWrongPassword() {
+    void deleteBoardWrongPassword() {
         final String title = "title";
         final String password = "password";
         Long id = chessService.createBoard(title, password);
@@ -133,7 +133,7 @@ class ChessApiControllerAdviceTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body("wrongPassword")
-                .when().delete("/api/board/" + id)
+                .when().delete("/api/boards/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body("statusCode", equalTo(400))

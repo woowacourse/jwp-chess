@@ -7,7 +7,7 @@ function createBoard() {
         password: password
     };
 
-    fetch('/api/board', {
+    fetch('/api/boards', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -23,7 +23,7 @@ function createBoard() {
 function deleteBoard(boardId) {
     let password = prompt("비밀번호를 입력하세요");
 
-    fetch('/api/board/' + boardId, {
+    fetch('/api/boards/' + boardId, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",

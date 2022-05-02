@@ -56,10 +56,10 @@ class ChessApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(createBoardDto)
-                .when().post("/api/board")
+                .when().post("/api/boards")
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
-                .header("Location", "/board/1");
+                .header("Location", "/chess/1");
     }
 
     @Sql("/sql/chess-setup.sql")
@@ -72,7 +72,7 @@ class ChessApiControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().put("/api/board/" + id + "/initialization")
+                .when().put("/api/boards/" + id + "/initialization")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("turn", equalTo("white"))
@@ -98,7 +98,7 @@ class ChessApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveDto)
-                .when().patch("/api/board/" + id)
+                .when().patch("/api/boards/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("turn", equalTo("black"))
@@ -131,7 +131,7 @@ class ChessApiControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/board/" + id)
+                .when().get("/api/boards/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("turn", equalTo("white"))
@@ -156,7 +156,7 @@ class ChessApiControllerTest {
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/api/board/" + id + "/status")
+                .when().get("/api/boards/" + id + "/status")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("blackTeamScore", equalTo(blackTeamScore))
@@ -169,7 +169,7 @@ class ChessApiControllerTest {
     @Sql("/sql/chess-setup.sql")
     @Test
     @DisplayName("체스 게임을 삭제한다.")
-    void deleteRoom() {
+    void deleteBoard() {
         final String title = "title";
         final String password = "password";
         Long id = chessService.createBoard(title, password);
@@ -182,7 +182,7 @@ class ChessApiControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(password)
-                .when().delete("/api/board/" + id)
+                .when().delete("/api/boards/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("true"));

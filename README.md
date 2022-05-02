@@ -145,7 +145,7 @@
     - 심지어 프로덕션 코드에서 `if (!isRunningChess())`와 같이 사용되기 때문에 부정을 두번 하고 있어 더 이해도가 낮아질 것 같습니다.
     - 이 문제를 해결하기 위해 `isKingAlive()`를 만들어 사용하거나 `isRunningChess()`를 `isFinishedChess()`로 수정하고 `isDeadKing()`를 반환하는 것도 방법이 될 것 같습니다.
     - 저는 새로운 Board에 새로운 메서드를 만들지 않아도 되고 상태에 대한 확인이기 때문에 `isRunningChess()`를 `isFinishedChess()`로 수정하는 방식으로 수정해봤습니다.
-- [ ] API의 endpoint에서 복수형으로 수정하자
+- [x] REST API의 endpoint의 자원을 표현할 때 복수형으로 수정하자
     - RESTFul API는 endpoint에서 복수형을 사용하자는 규칙을 강조한다.
 - [ ] ApiController에서 모든 에러가 Bad request를 반환하는데 만약 DB나 서버 내부에서 에러가 발생한다면 적절한 status code일까?
 - [ ] 30자 이상의 방 이름, 비밀번호를 입력하면 어떻게 될까요?

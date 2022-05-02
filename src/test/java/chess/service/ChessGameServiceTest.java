@@ -15,7 +15,7 @@ import chess.domain.room.Room;
 import chess.dto.GameResultDto;
 import chess.dto.MoveCommandDto;
 import chess.dto.PiecesDto;
-import chess.dto.RoomDto;
+import chess.dto.RoomResponseDto;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +49,7 @@ public class ChessGameServiceTest {
     public void findAllRoom() {
         when(gameDao.findAllRoom()).thenReturn(List.of(new Room(1L, false, Color.WHITE, "방 제목", "비밀번호")));
 
-        List<RoomDto> actual = chessGameService.getAllGames();
+        List<RoomResponseDto> actual = chessGameService.getAllGames();
 
         assertThat(actual.get(0).getId()).isEqualTo(1L);
         assertThat(actual.get(0).getTitle()).isEqualTo("방 제목");

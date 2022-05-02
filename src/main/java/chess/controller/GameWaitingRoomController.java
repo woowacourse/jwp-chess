@@ -3,7 +3,7 @@ package chess.controller;
 import static chess.controller.ChessGameController.getModelWithGameMessage;
 
 import chess.domain.room.Room;
-import chess.dto.RoomDto;
+import chess.dto.RoomRequestDto;
 import chess.service.ChessGameService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -36,15 +36,15 @@ public class GameWaitingRoomController {
         return getModelAndView(gameMessage);
     }
 
-    @DeleteMapping("/game")
-    public String deleteGame(@ModelAttribute RoomDto roomDto) {
+    @DeleteMapping(path = "/game", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    public String deleteGame(@ModelAttribute RoomRequestDto roomDto) {
         chessGameService.cleanGameByIdAndPassword(roomDto.getId(), roomDto.getPassword());
         return "redirect:/";
     }
 
     //TODO room수정
     @PostMapping(path = "/game", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    public ModelAndView createGame(@ModelAttribute RoomDto roomDto) {
+    public ModelAndView createGame(@ModelAttribute RoomRequestDto roomDto) {
         long gameId = chessGameService.create(new Room(roomDto.getTitle(), roomDto.getPassword()));
 
         return getModelWithGameMessage(WELCOME_MESSAGE, "redirect:/game/" + gameId);

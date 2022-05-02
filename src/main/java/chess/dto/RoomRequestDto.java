@@ -1,28 +1,12 @@
 package chess.dto;
 
-import chess.domain.room.Room;
-
-public class RoomDto {
+public class RoomRequestDto {
 
     private long id;
     private String title;
     private String password;
 
-    public RoomDto() {
-    }
-
-    public static RoomDto toDto(Room room) {
-        return new RoomDto(room.getId(), room.getTitle());
-    }
-
-    public RoomDto(long id, String title) {
-        this.id = id;
-        this.title = title;
-    }
-
-    public RoomDto(String title, String password) {
-        this.title = title;
-        this.password = password;
+    public RoomRequestDto() {
     }
 
     public long getId() {

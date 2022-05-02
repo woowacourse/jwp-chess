@@ -11,7 +11,7 @@ import chess.domain.room.Room;
 import chess.dto.GameResultDto;
 import chess.dto.MoveCommandDto;
 import chess.dto.PiecesDto;
-import chess.dto.RoomDto;
+import chess.dto.RoomResponseDto;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -28,10 +28,10 @@ public class ChessGameService {
         this.gameDao = gameDao;
     }
 
-    public List<RoomDto> getAllGames() {
+    public List<RoomResponseDto> getAllGames() {
         List<Room> rooms = gameDao.findAllRoom();
         return rooms.stream()
-            .map(RoomDto::toDto)
+            .map(RoomResponseDto::toDto)
             .collect(Collectors.toList());
     }
 

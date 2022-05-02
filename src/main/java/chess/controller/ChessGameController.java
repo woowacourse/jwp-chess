@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.domain.board.ChessGame;
 import chess.dto.BoardResponse;
 import chess.dto.GameCreationRequest;
 import chess.dto.GameRoomResponse;
@@ -48,15 +47,15 @@ public class ChessGameController {
     @GetMapping("/chess/game/{id}/board")
     @ResponseBody
     public ResponseEntity<BoardResponse> loadSavedGame(@PathVariable long id) {
-        ChessGame chessGame = chessService.loadSavedGame(id);
-        return ResponseEntity.ok(new BoardResponse(chessGame));
+        BoardResponse boardResponse = chessService.loadSavedBoard(id);
+        return ResponseEntity.ok(boardResponse);
     }
 
     @PostMapping("/chess/game/{id}/move")
     @ResponseBody
     public ResponseEntity<BoardResponse> movePiece(@ModelAttribute MoveRequest moveRequest, @PathVariable long id) {
-        ChessGame chessGame = chessService.movePiece(id, moveRequest);
-        return ResponseEntity.ok(new BoardResponse(chessGame));
+        BoardResponse boardResponse = chessService.movePiece(id, moveRequest);
+        return ResponseEntity.ok(boardResponse);
     }
 
     @DeleteMapping(value = "/chess/{id}")

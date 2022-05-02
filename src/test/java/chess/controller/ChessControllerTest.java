@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import chess.domain.board.ChessBoard;
 import chess.domain.board.ChessBoardGenerator;
 import chess.domain.board.ChessGame;
+import chess.dto.BoardResponse;
 import chess.dto.GameRoomResponse;
 import chess.service.ChessService;
 import org.junit.jupiter.api.DisplayName;
@@ -70,9 +71,10 @@ public class ChessControllerTest {
 
         ChessGame testGame = new ChessGame("1", "testGame", "1234", false,
                 new ChessBoard(new ChessBoardGenerator()));
+        BoardResponse boardResponse = new BoardResponse(testGame);
 
-        given(chessService.loadSavedGame(anyLong()))
-                .willReturn(testGame);
+        given(chessService.loadSavedBoard(anyLong()))
+                .willReturn(boardResponse);
 
         mockMvc
                 .perform(get("/chess/game/1/board"))

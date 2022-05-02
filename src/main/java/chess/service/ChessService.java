@@ -6,6 +6,7 @@ import chess.domain.board.ChessGame;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Movement;
 import chess.domain.position.Position;
+import chess.dto.BoardResponse;
 import chess.dto.GameCreationRequest;
 import chess.dto.GameRoomResponse;
 import chess.dto.MoveRequest;
@@ -29,16 +30,20 @@ public class ChessService {
         return chessGameDAO.addGame(gameCreationRequest);
     }
 
-    public ChessGame loadSavedGame(final long gameId) {
-        List<Movement> movementByGameId = movementDAO.findMovementByGameId(gameId);
-        ChessGame chessGame = chessGameDAO.findGameById(gameId);
+    public BoardResponse loadSavedBoard(final long id) {
+        return new BoardResponse(loadSavedGame(id));
+    }
+
+    private ChessGame loadSavedGame(final long id) {
+        List<Movement> movementByGameId = movementDAO.findMovementByGameId(id);
+        ChessGame chessGame = chessGameDAO.findGameById(id);
         for (Movement movement : movementByGameId) {
             chessGame.execute(movement);
         }
         return chessGame;
     }
 
-    public ChessGame movePiece(final long gameId, final MoveRequest moveRequest) {
+    public BoardResponse movePiece(final long gameId, final MoveRequest moveRequest) {
         final ChessGame chessGame = loadSavedGame(gameId);
         validateCurrentTurn(chessGame, Team.valueOf(moveRequest.getTeam()));
         move(chessGame, new Movement(Position.of(moveRequest.getSource()), Position.of(moveRequest.getTarget()),
@@ -46,7 +51,7 @@ public class ChessService {
         if (chessGame.isKingDied()) {
             chessGameDAO.updateGameEnd(gameId);
         }
-        return chessGame;
+        return new BoardResponse(chessGame);
     }
 
     private void validateCurrentTurn(final ChessGame chessGame, final Team team) {

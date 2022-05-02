@@ -47,7 +47,8 @@ public class ChessService {
     }
 
     public int start(GameCreateDto gameCreateDto) {
-        int gameId = gameDao.save(new GameDto(gameCreateDto.getRoomName(), gameCreateDto.getPassword(), Team.WHITE.name()));
+        GameDto gameDto = new GameDto(gameCreateDto.getRoomName(), gameCreateDto.getPassword(), Team.WHITE.name());
+        int gameId = gameDao.save(gameDto);
         saveBoard(Board.create(), gameId);
         return gameId;
     }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/games")
 public class ChessGameController {
 
     private final ChessService chessService;

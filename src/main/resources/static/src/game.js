@@ -22,7 +22,7 @@ const clickButton = (path) => {
 
 const startGame = (path) => {
     const id = path.substring(1);
-    const response = fetch(`/game/${id}`, {
+    const response = fetch(`/games/${id}`, {
         method: "GET",
         headers: {"Content-Type": "application/json"}
     });
@@ -51,7 +51,7 @@ function drawBoard(body) {
 
 function drawTurnBox(id) {
     const turnBox = document.getElementById("turn-box")
-    const response = fetch(`/game/${id}/turn`, {
+    const response = fetch(`/games/${id}/turn`, {
         method: "GET",
         headers: {"Content-Type": "application/json"}
     });
@@ -84,7 +84,7 @@ const clickBLock = async (e, block, id) => {
     }
 
     if (isMovePositionAllSelected()) {
-        const response = await fetch(`/game/${id}/move`, {
+        const response = await fetch(`/games/${id}/move`, {
             method: "PATCH",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(movePosition),
@@ -118,7 +118,7 @@ function endGame() {
 }
 
 const kingDeadEndGame = (id) => {
-    const response = fetch(`/game/${id}/dead`, {
+    const response = fetch(`/games/${id}/dead`, {
         method: "GET",
         header: {"Content-Type": "application/json"}
     });
@@ -141,7 +141,7 @@ const removeEventListener = () => {
 }
 
 const getStatus = (id) => {
-    const response = fetch(`/game/${id}/status`, {
+    const response = fetch(`/games/${id}/status`, {
         method: "GET",
         header: {"Content-Type": "application/json"}
     });

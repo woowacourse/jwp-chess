@@ -1,48 +1,35 @@
 package chess.service;
 
-import chess.dao.game.GameDao;
-import chess.dao.game.PieceDao;
-import chess.dao.member.MemberDao;
-import chess.domain.Board;
-import chess.domain.BoardInitializer;
-import chess.domain.ChessGame;
-import chess.domain.Member;
-import chess.domain.Participant;
-import chess.domain.Result;
-import chess.domain.piece.detail.Team;
-import chess.domain.square.Square;
-import chess.dto.GameResultDto;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import chess.dao.game.GameDao;
+import chess.domain.ChessGame;
+import chess.domain.Result;
+import chess.domain.square.Square;
+import chess.dto.CreateGameRequestDto;
+import chess.dto.GameResultDto;
 
 @Service
 public class GameService {
 
     private final GameDao gameDao;
-    private final MemberDao memberDao;
 
     @Autowired
-    public GameService(final GameDao gameDao, final MemberDao memberDao) {
+    public GameService(final GameDao gameDao) {
         this.gameDao = gameDao;
-        this.memberDao = memberDao;
     }
 
-    public Long createGame(final Long whiteId, final Long blackId) {
-        final Member white = memberDao.findById(whiteId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
-        final Member black = memberDao.findById(blackId).orElseThrow(() -> new RuntimeException("찾는 멤버가 없음!"));
-        final Board board = new Board(BoardInitializer.create());
-        final Participant participant = new Participant(white, black);
-
-        return gameDao.save(new ChessGame(board, Team.WHITE, participant));
+    public Long createGame(final CreateGameRequestDto createGameRequestDto) {
+        return gameDao.save(createGameRequestDto);
     }
 
     public List<ChessGame> findPlayingGames() {
-        return gameDao.findAll()
-                .stream()
-                .filter(game -> !game.isEnd())
-                .collect(Collectors.toList());
+        return new ArrayList<>(gameDao.findAll());
     }
 
 
@@ -110,7 +97,7 @@ public class GameService {
     public void move(final Long gameId, final String rawFrom, final String rawTo) {
         final ChessGame chessGame = findByGameId(gameId);
         chessGame.move(Square.from(rawFrom), Square.from(rawTo));
-        gameDao.move(chessGame, rawFrom, rawTo);
+        gameDao.move(gameId, chessGame, rawFrom, rawTo);
     }
 
     public void terminate(final Long gameId) {

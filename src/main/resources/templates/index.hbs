@@ -21,7 +21,7 @@
     {{#games}}
         <div class="card" style="width: 100%; margin-top: 1vh;">
             <div class="card-body">
-                <h5 class="card-title">{{id}} 번째 게임</h5>
+                <h5 class="card-title">{{title}} 게임</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{{participant.whiteName}} vs {{participant.blackName}}</h6>
                 <a href="/games/{{id}}/play" class="btn btn-dark">입장</a>
             </div>
@@ -38,6 +38,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div>방제목</div>
+                <input id="title" type="text">
+                <div>비밀번호</div>
+                <input id="password" type="password">
                 <div>백팀</div>
                 <select id="white" class="form-control">
                     {{#members}}
@@ -62,11 +66,13 @@
 
 <script>
     const createGame = () => {
+        let title = document.getElementById("title").value;
+        let password = document.getElementById("password").value;
         let whiteId = document.getElementById("white").value;
         let blackId = document.getElementById("black").value;
         fetch("/games", {
             method: "POST",
-            body: JSON.stringify({whiteId: whiteId, blackId: blackId}),
+            body: JSON.stringify({title: title, password: password, whiteId: whiteId, blackId: blackId}),
             headers: {
                 'Content-Type': 'application/json',
             }

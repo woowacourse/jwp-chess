@@ -1,18 +1,18 @@
 package chess.service;
 
-import chess.dao.member.MemberDao;
-import chess.domain.Member;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
+
+import chess.dao.member.MemberDao;
+import chess.domain.Member;
 
 @Service
 public class MemberService {
 
     private final MemberDao memberDao;
 
-    @Autowired
     public MemberService(final MemberDao memberDao) {
         this.memberDao = memberDao;
     }

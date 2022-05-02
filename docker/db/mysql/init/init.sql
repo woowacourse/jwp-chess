@@ -7,6 +7,8 @@ create table Member
 create table Game
 (
     id bigint auto_increment primary key,
+    title varchar(10) not null,
+    password varchar(10) not null,
     turn varchar(10) not null,
     white_member_id bigint,
     black_member_id bigint

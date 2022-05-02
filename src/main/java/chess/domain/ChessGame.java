@@ -1,38 +1,31 @@
 package chess.domain;
 
+import java.util.List;
+import java.util.Map;
+
 import chess.domain.piece.Piece;
 import chess.domain.piece.detail.PieceType;
 import chess.domain.piece.detail.Team;
 import chess.domain.square.File;
 import chess.domain.square.Square;
-import java.util.List;
-import java.util.Map;
 
 public class ChessGame {
 
     private final Long id;
     private final Board board;
+    private final String title;
+    private final String password;
     private Team turn;
     private final Participant participant;
 
 
-    public ChessGame(final Long id, final Board board, final Team turn, final Participant participant) {
+    public ChessGame(final Long id, final Board board, final String title, final String password, final Team turn, final Participant participant) {
         this.id = id;
         this.board = board;
+        this.title = title;
+        this.password = password;
         this.turn = turn;
         this.participant = participant;
-    }
-
-    public ChessGame(final Long id, final Board board, final Team turn) {
-        this(id, board, turn, null);
-    }
-
-    public ChessGame(final Board board, final Team turn, final Participant participant) {
-        this(null, board, turn, participant);
-    }
-
-    public static ChessGame initGame() {
-        return new ChessGame(null, new Board(BoardInitializer.create()), Team.WHITE);
     }
 
     public void move(Square from, Square to) {
@@ -114,6 +107,14 @@ public class ChessGame {
 
     public Board getBoard() {
         return board;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public Team getTurn() {

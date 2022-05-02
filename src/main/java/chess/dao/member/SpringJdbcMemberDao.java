@@ -1,18 +1,21 @@
 package chess.dao.member;
 
-import chess.domain.Member;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import chess.domain.Member;
 
 @Repository
 public class SpringJdbcMemberDao implements MemberDao {
@@ -58,7 +61,11 @@ public class SpringJdbcMemberDao implements MemberDao {
     @Override
     public List<Member> findAll() {
         final String sql = "select id, name from Member";
-        return jdbcTemplate.queryForObject(sql, membersRowMapper);
+        try {
+            return jdbcTemplate.queryForObject(sql, membersRowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
     }
 
     @Override

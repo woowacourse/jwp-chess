@@ -1,20 +1,14 @@
 package chess.controller.spring;
 
-import chess.domain.ChessGame;
-import chess.domain.Result;
-import chess.domain.piece.Piece;
-import chess.domain.square.Rank;
-import chess.dto.CreateGameRequestDto;
-import chess.dto.MoveRequestDto;
-import chess.dto.RankDto;
-import chess.service.GameService;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +17,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import chess.domain.ChessGame;
+import chess.domain.Result;
+import chess.domain.piece.Piece;
+import chess.domain.square.Rank;
+import chess.dto.CreateGameRequestDto;
+import chess.dto.MoveRequestDto;
+import chess.dto.RankDto;
+import chess.service.GameService;
 
 @Controller
 @RequestMapping("/games")
@@ -49,8 +52,10 @@ public class GameController {
     }
 
     @PutMapping("/{gameId}/move")
-    public ResponseEntity<Long> movePiece(@PathVariable final Long gameId,
-                                          @RequestBody final MoveRequestDto moveRequestDto) {
+    public ResponseEntity<Long> movePiece(
+        @PathVariable final Long gameId,
+        @RequestBody final MoveRequestDto moveRequestDto
+    ) {
         gameService.move(gameId, moveRequestDto.getSource(), moveRequestDto.getTarget());
         return ResponseEntity.ok().body(gameId);
     }
@@ -85,7 +90,7 @@ public class GameController {
     }
 
 
-    @PutMapping("/{gameId}/terminate")
+    @DeleteMapping("/{gameId}/terminate")
     @ResponseBody
     public ResponseEntity<Long> terminateGame(@PathVariable final Long gameId) {
         gameService.terminate(gameId);
@@ -95,8 +100,7 @@ public class GameController {
     @PostMapping
     @ResponseBody
     public ResponseEntity<Long> createGame(@RequestBody final CreateGameRequestDto createGameRequestDto) {
-        final Long gameId = gameService.createGame(createGameRequestDto.getWhiteId(),
-                createGameRequestDto.getBlackId());
+        final Long gameId = gameService.createGame(createGameRequestDto);
         return ResponseEntity.created(URI.create("/chessGame/" + gameId)).body(gameId);
     }
 }

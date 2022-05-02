@@ -9,6 +9,7 @@ import chess.repository.dao.BoardDao;
 import chess.repository.dao.RoomDao;
 import chess.repository.entity.BoardEntity;
 import chess.repository.entity.RoomEntity;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
@@ -25,8 +26,16 @@ public class BoardJdbcRepository implements BoardRepository {
     }
 
     @Override
-    public void save(long id) {
-        boardDao.save(id);
+    public Board save(long id) {
+        List<BoardEntity> saved = boardDao.save(new BoardEntity(id));
+        Map<Position, Piece> boardData = saved.stream()
+                .collect(Collectors.toMap(BoardEntity::getPosition, BoardEntity::getPiece));
+        return boardByBoardData(boardData, id);
+    }
+
+    private Board boardByBoardData(Map<Position, Piece> boardData, long id) {
+        final RoomEntity roomEntity = roomDao.findById(id);
+        return BoardFactory.newInstance(boardData, roomEntity.getTurn());
     }
 
     @Override
@@ -34,8 +43,7 @@ public class BoardJdbcRepository implements BoardRepository {
         final Map<Position, Piece> boardData = boardDao.findById(id)
                 .stream()
                 .collect(Collectors.toMap(BoardEntity::getPosition, BoardEntity::getPiece));
-        final RoomEntity roomEntity = roomDao.findById(id);
-        return BoardFactory.newInstance(boardData, roomEntity.getTurn());
+        return boardByBoardData(boardData, id);
     }
 
     @Override

@@ -12,8 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.config.location=classpath:/application-test.yml")
+@Sql("/schema-test.sql")
 class RoomJdbcRepositoryTest {
 
     @Autowired
@@ -33,8 +35,9 @@ class RoomJdbcRepositoryTest {
                 passwordEncoder.encode("password"), "white", "black");
 
         final List<Room> before = roomRepository.findAll();
-        final long id = roomRepository.save(gameCreateRequest);
-        final long id2 = roomRepository.save(gameCreateRequest);
+        Room save = roomRepository.save(gameCreateRequest);
+        Room save1 = roomRepository.save(gameCreateRequest);
+        final long id = save.getId();
         final List<Room> after = roomRepository.findAll();
 
         final Room room = roomRepository.findById(id);

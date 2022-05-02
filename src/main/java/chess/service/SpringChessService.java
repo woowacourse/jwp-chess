@@ -23,8 +23,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class SpringChessService implements ChessService {
 
     private final BoardRepository boardRepository;
@@ -41,12 +43,13 @@ public class SpringChessService implements ChessService {
     @Override
     public GameCreateResponse create(GameCreateRequest gameCreateRequest) {
         gameCreateRequest.setRoomPassword(passwordEncoder.encode(gameCreateRequest.getRoomPassword()));
-        final int id = (int) roomRepository.save(gameCreateRequest);
-        boardRepository.save(id);
-        return new GameCreateResponse(id);
+        Room room = roomRepository.save(gameCreateRequest);
+        boardRepository.save(room.getId());
+        return new GameCreateResponse(room.getId());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<GameDto> findAll() {
         return roomRepository.findAll()
                 .stream()
@@ -55,22 +58,25 @@ public class SpringChessService implements ChessService {
     }
 
     private GameDto getGameDtoByRoom(Room room) {
-        return new GameDto((int) room.getId(), room.getName(), room.getWhite(), room.getBlack(), room.isFinished());
+        return new GameDto(room.getId(), room.getName(), room.getWhite(), room.getBlack(), room.isFinished());
     }
 
     @Override
-    public GameDto findById(int id) {
+    @Transactional(readOnly = true)
+    public GameDto findById(long id) {
         return getGameDtoByRoom(roomRepository.findById(Long.parseLong(String.valueOf(id))));
     }
 
     @Override
-    public Map<Color, Double> findScoreById(int gameId) {
+    @Transactional(readOnly = true)
+    public Map<Color, Double> findScoreById(long gameId) {
         final Board board = boardRepository.findById(gameId);
         return board.getScore();
     }
 
     @Override
-    public List<PositionDto> findPositionsById(int gameId) {
+    @Transactional(readOnly = true)
+    public List<PositionDto> findPositionsById(long gameId) {
         final Board board = boardRepository.findById(gameId);
         final Map<Position, Piece> boardData = board.getBoard();
 

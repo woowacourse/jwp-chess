@@ -18,8 +18,10 @@ public class RoomJdbcRepository implements RoomRepository {
     }
 
     @Override
-    public long save(GameCreateRequest gameCreateRequest) {
-        return roomDao.save(RoomEntity.from(gameCreateRequest));
+    public Room save(GameCreateRequest gameCreateRequest) {
+        RoomEntity saved = roomDao.save(RoomEntity.from(gameCreateRequest));
+        return new Room(saved.getId(), saved.getName(), saved.getPassword(), saved.getWhite(), saved.getBlack(),
+                saved.isFinished());
     }
 
     @Override

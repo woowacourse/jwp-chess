@@ -23,10 +23,13 @@ public class BoardJdbcDao implements BoardDao {
     }
 
     @Override
-    public void save(long id) {
+    public List<BoardEntity> save(BoardEntity boardEntity) {
         final String sql = "insert into board(game_id, position, piece) "
                 + "select ?, initialPosition, initialPiece from initialBoard";
-        jdbcTemplate.update(sql, id);
+
+        long gameId = boardEntity.getGameId();
+        jdbcTemplate.update(sql, gameId);
+        return findById(gameId);
     }
 
     @Override

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface RoomDao {
 
-    long save(RoomEntity roomEntity);
+    RoomEntity save(RoomEntity roomEntity);
 
     RoomEntity findById(long id);
 

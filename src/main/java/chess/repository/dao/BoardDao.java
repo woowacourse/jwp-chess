@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface BoardDao {
 
-    void save(long id);
+    List<BoardEntity> save(BoardEntity boardEntity);
 
     List<BoardEntity> findById(long id);
 

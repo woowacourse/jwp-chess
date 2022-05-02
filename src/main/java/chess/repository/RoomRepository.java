@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface RoomRepository {
 
-    long save(GameCreateRequest gameCreateRequest);
+    Room save(GameCreateRequest gameCreateRequest);
 
     Room findById(long id);
 

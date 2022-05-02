@@ -22,14 +22,14 @@ public class RoomJdbcDao implements RoomDao {
     }
 
     @Override
-    public long save(RoomEntity roomEntity) {
+    public RoomEntity save(RoomEntity roomEntity) {
         final String sql = "insert into game(room_name, room_password, white_name, black_name) values(?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(getPreparedStatementCreator(roomEntity, sql), keyHolder);
 
         final Number key = keyHolder.getKey();
-        return key.intValue();
+        return findById(key.intValue());
     }
 
     private PreparedStatementCreator getPreparedStatementCreator(RoomEntity roomEntity, String sql) {

@@ -3,6 +3,7 @@ package chess.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.domain.Room;
 import chess.domain.board.Board;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
@@ -14,8 +15,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.config.location=classpath:/application-test.yml")
+@Sql("/schema-test.sql")
 class BoardJdbcRepositoryTest {
 
     @Autowired
@@ -30,11 +33,18 @@ class BoardJdbcRepositoryTest {
     }
 
     @Test
+    @DisplayName("Board 생성 테스트")
+    void save() {
+
+    }
+
+    @Test
     @DisplayName("Board Repository CRUD 테스트")
     void crud() {
         final GameCreateRequest gameCreateRequest = new GameCreateRequest("test room", "password", "white", "black");
-        final long id = roomRepository.save(gameCreateRequest);
-        final long id2 = roomRepository.save(gameCreateRequest);
+        Room save = roomRepository.save(gameCreateRequest);
+        Room save1 = roomRepository.save(gameCreateRequest);
+        final long id = save.getId();
         boardRepository.save(id);
 
         final Board found = boardRepository.findById(id);

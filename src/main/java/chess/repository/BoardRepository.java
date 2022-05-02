@@ -5,7 +5,7 @@ import chess.dto.MoveRequest;
 
 public interface BoardRepository {
 
-    void save(long id);
+    Board save(long id);
 
     Board findById(long id);
 

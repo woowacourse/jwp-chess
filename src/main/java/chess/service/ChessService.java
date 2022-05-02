@@ -18,11 +18,11 @@ public interface ChessService {
 
     List<GameDto> findAll();
 
-    GameDto findById(int id);
+    GameDto findById(long id);
 
-    Map<Color, Double> findScoreById(int gameId);
+    Map<Color, Double> findScoreById(long gameId);
 
-    List<PositionDto> findPositionsById(int gameId);
+    List<PositionDto> findPositionsById(long gameId);
 
     MoveResponse updateBoard(long id, MoveRequest moveRequest);
 

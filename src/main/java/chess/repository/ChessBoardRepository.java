@@ -21,6 +21,7 @@ public class ChessBoardRepository implements BoardRepository<Board> {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+
     @Override
     public Board save(Board board) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
@@ -64,6 +65,11 @@ public class ChessBoardRepository implements BoardRepository<Board> {
     public Team getTeamById(int boardId) {
         String team = jdbcTemplate.queryForObject("SELECT team FROM board WHERE id = ?", String.class, boardId);
         return Team.findTeam(team);
+    }
+
+    @Override
+    public Board getBoardById(int boardId) {
+        return jdbcTemplate.queryForObject("SELECT * FROM board WHERE id = ?", boardRowMapper(), boardId);
     }
 
     private RowMapper<Board> boardRowMapper() {

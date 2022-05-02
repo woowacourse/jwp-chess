@@ -48,4 +48,9 @@ public class FakeBoardRepository implements BoardRepository<Board> {
     public Team getTeamById(int roomId) {
         return null;
     }
+
+    @Override
+    public Board getBoardById(int boardId) {
+        return null;
+    }
 }

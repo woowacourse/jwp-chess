@@ -1,5 +1,6 @@
 package chess.repository;
 
+import chess.model.board.Board;
 import chess.model.piece.Team;
 import chess.model.status.Status;
 
@@ -18,4 +19,6 @@ public interface BoardRepository<T> {
     Status getStatusById(int boardId);
 
     Team getTeamById(int roomId);
+
+    Board getBoardById(int boardId);
 }

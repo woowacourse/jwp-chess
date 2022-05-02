@@ -1,23 +1,22 @@
 package chess.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import chess.model.board.Board;
-import chess.model.piece.Initializer;
+import chess.model.board.SquarePieceInitializer;
 import chess.model.piece.Piece;
 import chess.model.piece.Team;
 import chess.model.square.File;
 import chess.model.square.Rank;
 import chess.model.square.Square;
 import chess.model.status.Running;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 @Transactional
@@ -59,7 +58,7 @@ class ChessSquareRepositoryTest {
 
     @Test
     void saveAllSquares() {
-        int saveCount = repository.saveAllSquares(boardId, Initializer.initialize().keySet());
+        int saveCount = repository.saveAllSquares(boardId, SquarePieceInitializer.initialize().keySet());
 
         assertThat(saveCount).isEqualTo(64);
     }

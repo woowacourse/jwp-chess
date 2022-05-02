@@ -4,7 +4,6 @@ import chess.dto.BoardDto;
 import chess.model.board.Board;
 import chess.model.member.Member;
 import chess.model.piece.Empty;
-import chess.model.piece.Initializer;
 import chess.model.piece.Piece;
 import chess.model.piece.Team;
 import chess.model.room.Room;
@@ -46,13 +45,13 @@ public class ChessService {
         this.chessMemberRepository = chessMemberRepository;
     }
 
-    public Room init(String roomTitle, String password, String member1, String member2) {
+    public Room init(String roomTitle, String password, String whiteMemberName, String blackMemberName) {
         Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
-        Map<Square, Piece> startingPieces = Initializer.initialize();
+        Map<Square, Piece> startingPieces = board.initializePiece();
         chessSquareRepository.saveAllSquares(board.getId(), startingPieces.keySet());
         chessPieceRepository.saveAllPieces(mapToPieces(board.getId(), startingPieces));
         Room room = chessRoomRepository.save(new Room(roomTitle, password, board.getId()));
-        chessMemberRepository.saveAll(List.of(new Member(member1), new Member(member2)), room.getId());
+        chessMemberRepository.saveAll(List.of(new Member(whiteMemberName), new Member(blackMemberName)), room.getId());
         return room;
     }
 

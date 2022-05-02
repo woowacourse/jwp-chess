@@ -15,22 +15,22 @@ CREATE TABLE board
     piece_color VARCHAR(10) NOT NULL ,
     square      VARCHAR(10) NOT NULL ,
     game_id     BIGINT NOT NULL,
-    primary key (id),
-    foreign key (game_id) references game (id)
-        on delete cascade
+    PRIMARY KEY (id),
+    FOREIGN KEY (game_id) REFERENCES game (id)
+        ON DELETE CASCADE
 );
 
 ALTER TABLE board ADD UNIQUE (game_id, square);
 
 CREATE TABLE init_board
 (
-    square      varchar(10) not null,
-    piece_type  varchar(10) not null,
-    piece_color varchar(10) not null,
-    primary key (square)
+    square      VARCHAR 10) NOT NULL,
+    piece_type  VARCHAR(10) NOT NULL,
+    piece_color VARCHAR(10) NOT NULL,
+    PRIMARY KEY (square)
 );
 
-insert into init_board
+INSERT INTO init_board
 (square, piece_type, piece_color)
 VALUES ('a1', 'rook', 'white'),
        ('b1', 'knight', 'white'),

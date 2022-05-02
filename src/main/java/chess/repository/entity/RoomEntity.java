@@ -16,9 +16,6 @@ public class RoomEntity {
     private boolean finished;
     private boolean deleted;
 
-    public RoomEntity() {
-    }
-
     public RoomEntity(long id, String name, String password, String white, String black, String winner, String looser,
                       Color turn, boolean finished, boolean deleted) {
         this.id = id;

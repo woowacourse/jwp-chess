@@ -1,32 +1,27 @@
 package chess.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import chess.dao.ChessDao;
 import chess.dao.ChessDaoImpl;
 import chess.domain.piece.Color;
 import chess.domain.state.Result;
 import chess.dto.GameRoomDto;
 import chess.dto.MoveDto;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 @JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ChessServiceTest {
-    //TODO h2 mysql 비교
     private int gameId;
-
     private ChessDao chessDao;
     private ChessService chessService;
 
@@ -117,13 +112,13 @@ public class ChessServiceTest {
 
     private void whiteWinCommand() {
         List<MoveDto> moveDtos = List.of(
-                new MoveDto(gameId, "d2", "d4"),
-                new MoveDto(gameId, "e7", "e5"),
-                new MoveDto(gameId, "d4", "d5"),
-                new MoveDto(gameId, "e8", "e7"),
-                new MoveDto(gameId, "d5", "d6"),
-                new MoveDto(gameId, "e5", "e4"),
-                new MoveDto(gameId, "d6", "e7")
+                new MoveDto(gameId, "D2", "D4"),
+                new MoveDto(gameId, "E7", "E5"),
+                new MoveDto(gameId, "D4", "D5"),
+                new MoveDto(gameId, "E8", "E7"),
+                new MoveDto(gameId, "D5", "D6"),
+                new MoveDto(gameId, "E5", "E4"),
+                new MoveDto(gameId, "D6", "E7")
         );
         for (MoveDto moveDto : moveDtos) {
             chessService.move(moveDto);

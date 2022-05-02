@@ -17,13 +17,6 @@
 //@JdbcTest
 //public class ChessDaoTest {
 //
-//    private final List<PieceAndPositionDto> pieceAndPositionDtos = List.of(
-//            new PieceAndPositionDto(Position.from("A1"), PieceFactory.of("KING", "BLACK")),
-//            new PieceAndPositionDto(Position.from("A2"), PieceFactory.of("PAWN", "BLACK")),
-//            new PieceAndPositionDto(Position.from("B1"), PieceFactory.of("KING", "WHITE")),
-//            new PieceAndPositionDto(Position.from("B2"), PieceFactory.of("PAWN", "WHITE"))
-//    );
-//    private final int testGameId = 1;
 //    private ChessDaoImpl chessDao;
 //
 //    @Autowired
@@ -32,25 +25,6 @@
 //    @BeforeEach
 //    void setUp() {
 //        chessDao = new ChessDaoImpl(jdbcTemplate);
-//
-//        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
-//        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
-//
-//        jdbcTemplate.execute("CREATE TABLE game (" +
-//                "game_id INT PRIMARY KEY NOT NULL," +
-//                "current_turn VARCHAR(10) DEFAULT'white'" +
-//                ");");
-//        jdbcTemplate.execute("CREATE TABLE piece (" +
-//                "piece_id INT PRIMARY KEY AUTO_INCREMENT," +
-//                "game_id INT NOT NULL," +
-//                "piece_name VARCHAR(10) NOT NULL," +
-//                "piece_color VARCHAR(10) NOT NULL," +
-//                "position VARCHAR(2) NOT NULL," +
-//                "FOREIGN KEY (game_id) REFERENCES game(game_id)" +
-//                ");");
-//
-//        jdbcTemplate.update("INSERT INTO game (game_id) VALUES(?)", ChessDaoImpl.DEFAULT_GAME_ID);
-//
 //        initTestPiece();
 //    }
 //
@@ -58,7 +32,8 @@
 //        final var sql = "INSERT INTO piece (game_id, piece_name, piece_color, position) VALUES(?,?,?,?)";
 //
 //        for (final PieceAndPositionDto pieceAndPositionDto : pieceAndPositionDtos) {
-//            jdbcTemplate.update(sql, ChessDaoImpl.DEFAULT_GAME_ID, pieceAndPositionDto.getPieceName(), pieceAndPositionDto.getPieceColor(), pieceAndPositionDto.getPosition());
+//            jdbcTemplate.update(sql, ChessDaoImpl.DEFAULT_GAME_ID, pieceAndPositionDto.getPieceName(),
+//                    pieceAndPositionDto.getPieceColor(), pieceAndPositionDto.getPosition());
 //        }
 //    }
 //
@@ -83,7 +58,8 @@
 //    }
 //
 //    private Integer getPieceCount() {
-//        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM piece WHERE game_id = ?", Integer.class, ChessDaoImpl.DEFAULT_GAME_ID);
+//        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM piece WHERE game_id = ?", Integer.class,
+//                ChessDaoImpl.DEFAULT_GAME_ID);
 //    }
 //
 //    @Test
@@ -91,7 +67,8 @@
 //        final var beforeCount = getPieceCount();
 //        assertThat(beforeCount).isEqualTo(4);
 //
-//        chessDao.savePiece(ChessDaoImpl.DEFAULT_GAME_ID, new PieceAndPositionDto(Position.from("c1"), PieceFactory.of("PAWN", "BLACK")));
+//        chessDao.savePiece(ChessDaoImpl.DEFAULT_GAME_ID,
+//                new PieceAndPositionDto(Position.from("c1"), PieceFactory.of("PAWN", "BLACK")));
 //
 //        final var afterCount = getPieceCount();
 //        assertThat(afterCount).isEqualTo(5);

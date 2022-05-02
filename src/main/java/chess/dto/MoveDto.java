@@ -11,13 +11,6 @@ public final class MoveDto {
         this.from = from;
         this.to = to;
     }
-
-    public MoveDto(final String gameId, final String from, final String to) {
-        this.gameId = Integer.parseInt(gameId);
-        this.from = from;
-        this.to = to;
-    }
-
     public MoveDto() {
     }
 
@@ -35,5 +28,14 @@ public final class MoveDto {
 
     public void setGameId(int gameId) {
         this.gameId = gameId;
+    }
+
+    @Override
+    public String toString() {
+        return "MoveDto{" +
+                "gameId=" + gameId +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
+                '}';
     }
 }

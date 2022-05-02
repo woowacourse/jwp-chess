@@ -52,4 +52,14 @@ public final class ChessGameDto {
     public int hashCode() {
         return Objects.hash(positionsAndPieces, whiteScore, blackScore, result);
     }
+
+    @Override
+    public String toString() {
+        return "ChessGameDto{" +
+                "positionsAndPieces=" + positionsAndPieces +
+                ", whiteScore=" + whiteScore +
+                ", blackScore=" + blackScore +
+                ", result=" + result +
+                '}';
+    }
 }

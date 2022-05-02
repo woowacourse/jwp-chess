@@ -1,18 +1,11 @@
 package chess.controller;
 
 import chess.dto.request.RoomRequest;
-import chess.dto.request.PasswordRequest;
 import chess.service.ChessService;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 
 @Controller
@@ -46,7 +39,7 @@ public class ChessGameViewController {
     }
 
     @PostMapping("/initialize/board")
-    public String createRoom(RoomRequest roomRequest) {
+    public String createRoom(@ModelAttribute RoomRequest roomRequest) {
         Long id = chessService.initializeGame(roomRequest);
         return "redirect:/board/" + id;
     }
@@ -56,20 +49,5 @@ public class ChessGameViewController {
         chessService.validateGameId(id);
         chessService.loadExistGame(id);
         return "redirect:/board/" + id;
-    }
-
-    @DeleteMapping("/{id}")
-    public String deleteGame(@PathVariable Long id, PasswordRequest passwordRequest,
-                             HttpServletResponse response) throws IOException {
-        response.setContentType("text/html; charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        if (chessService.isPossibleDeleteGame(id, passwordRequest.getPassword())) {
-            chessService.endGame(id);
-            out.println("<script>alert('체스가 삭제되었습니다.'); location.href='/game/list';</script>");
-            out.flush();
-        }
-        out.println("<script>alert('체스를 종료하고, 올바른 비밀번호를 눌러주세요.'); location.href='/game/list';</script>");
-        out.flush();
-        return "redirect:/game/list";
     }
 }

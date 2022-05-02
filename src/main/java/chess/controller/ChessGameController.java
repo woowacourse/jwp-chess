@@ -1,8 +1,10 @@
 package chess.controller;
 
+import chess.dto.request.PasswordRequest;
 import chess.dto.response.*;
 import chess.service.ChessService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,5 +56,14 @@ public class ChessGameController {
         chessService.validateGameId(id);
         chessService.updateStateEnd(id);
         return ResponseEntity.ok().body(chessService.findWinner(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteGame(@PathVariable Long id, @RequestBody PasswordRequest passwordRequest) {
+        if (chessService.isPossibleDeleteGame(id, passwordRequest.getPassword())) {
+            chessService.endGame(id);
+            return new ResponseEntity<>("게임 삭제 완료", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("게임을 종료하고, 올바른 비밀번호를 입력해주세요.", HttpStatus.OK);
     }
 }

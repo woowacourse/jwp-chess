@@ -2,7 +2,10 @@ package chess.dto.request;
 
 public class PasswordRequest {
 
-    private final String password;
+    private String password;
+
+    public PasswordRequest() {
+    }
 
     public PasswordRequest(String password) {
         this.password = password;

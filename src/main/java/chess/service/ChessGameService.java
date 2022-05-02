@@ -1,12 +1,14 @@
 package chess.service;
 
+import chess.dao.BoardDao;
+import chess.dao.CurrentStatusDao;
+import chess.dao.GameDao;
 import chess.domain.ChessGame;
 import chess.domain.CurrentStatus;
 import chess.domain.MovingPosition;
 import chess.dto.CurrentStatusDto;
 import chess.dto.MovingPositionDto;
 import chess.dto.ScoreDto;
-import chess.repository.ChessGameRepository;
 import chess.utils.ScoreCalculator;
 import org.springframework.stereotype.Service;
 
@@ -20,47 +22,58 @@ public class ChessGameService {
     private static final String CANNOT_BE_DELETED = "삭제할 수 없는 상태입니다.";
     private static final String WRONG_PASSWORD = "올바르지 않은 비밀번호입니다.";
 
-    private final ChessGameRepository repository;
+    private final BoardDao boardDao;
+    private final CurrentStatusDao currentStatusDao;
+    private final GameDao gameDao;
 
-    public ChessGameService(ChessGameRepository dao) {
-        this.repository = dao;
+    public ChessGameService(BoardDao boardDao, CurrentStatusDao currentStatusDao, GameDao gameDao) {
+        this.boardDao = boardDao;
+        this.currentStatusDao = currentStatusDao;
+        this.gameDao = gameDao;
     }
 
     public void create(String name, String password) {
-        if (repository.isDuplicateName(name)) {
+        if (gameDao.isDuplicateName(name)) {
             throw new IllegalArgumentException(DUPLICATE_NAME);
         }
-        repository.saveNewGame(name, password, new CurrentStatusDto(new CurrentStatus()));
+
+        int gameId = gameDao.saveGame(name, password);
+        currentStatusDao.save(gameId, new CurrentStatusDto(new CurrentStatus()));
     }
 
     public Map<Integer, String> findGameList() {
-        return repository.findGameList();
+        return gameDao.findGameList();
     }
 
     public void delete(int gameId, String password) {
         validateState(gameId);
         validatePassword(gameId, password);
 
-        repository.delete(gameId);
+        gameDao.delete(gameId);
     }
 
     public void start(int gameId) {
         ChessGame chessGame = findGameById(gameId);
         chessGame.start();
-        repository.saveGame(gameId, chessGame.getChessBoard(), new CurrentStatusDto(chessGame.getCurrentStatus()));
+
+        boardDao.saveBoard(gameId, chessGame.getChessBoard());
+        currentStatusDao.update(gameId, new CurrentStatusDto(chessGame.getCurrentStatus()));
     }
 
     public void move(int gameId, String from, String to) {
         MovingPosition movingPosition = new MovingPosition(from, to);
         ChessGame chessGame = findGameById(gameId);
         chessGame.move(movingPosition);
-        repository.saveMove(gameId, new MovingPositionDto(movingPosition), new CurrentStatusDto(chessGame.getCurrentStatus()));
+
+        boardDao.saveMove(gameId, new MovingPositionDto(movingPosition));
+        currentStatusDao.update(gameId, new CurrentStatusDto(chessGame.getCurrentStatus()));
     }
 
     public void end(int gameId) {
         ChessGame chessGame = findGameById(gameId);
         chessGame.end();
-        repository.saveState(gameId, chessGame.getStateToString());
+
+        currentStatusDao.saveState(gameId, chessGame.getStateToString());
     }
 
     public ScoreDto status(int gameId) {
@@ -72,17 +85,17 @@ public class ChessGameService {
     }
 
     private ChessGame findGameById(int gameId) {
-        return repository.find(gameId);
+        return new ChessGame(currentStatusDao.findByGameId(gameId), boardDao.findByGameId(gameId));
     }
 
     private void validateState(int gameId) {
-        if (!repository.find(gameId).canBeDeleted()) {
+        if (findGameById(gameId).canBeDeleted()) {
             throw new IllegalArgumentException(CANNOT_BE_DELETED);
         }
     }
 
     private void validatePassword(int gameId, String password) {
-        if (!password.equals(repository.findPasswordById(gameId))) {
+        if (!password.equals(gameDao.findPasswordById(gameId))) {
             throw new IllegalArgumentException(WRONG_PASSWORD);
         }
     }

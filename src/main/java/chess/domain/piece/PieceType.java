@@ -25,9 +25,9 @@ public enum PieceType {
 
     public static PieceType of(String name) {
         return Arrays.stream(values())
-            .filter(pieceType -> pieceType.name.equals(name))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 체스 말 입니다."));
+                .filter(pieceType -> pieceType.name.equals(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 체스 말 입니다."));
     }
 
     public String getName() {

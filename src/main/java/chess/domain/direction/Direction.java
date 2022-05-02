@@ -35,6 +35,38 @@ public enum Direction {
         this.rank = rank;
     }
 
+    public static Direction findDirection(Position source, Position target) {
+        int rawFileDifference = source.fileRawDifference(target);
+        int rawRankDifference = source.rankRawDifference(target);
+
+        int fileDifference = source.fileDifference(target);
+        int rankDifference = source.rankDifference(target);
+
+        return getDirectionByFileAndRankDifference(rawFileDifference, rawRankDifference, fileDifference,
+                rankDifference);
+    }
+
+    private static Direction getDirectionByFileAndRankDifference(int rawFileDifference, int rawRankDifference,
+                                                                 int fileDifference, int rankDifference) {
+        if (fileDifference == rankDifference) {
+            return Direction.of(fileDifference / rawFileDifference, rankDifference / rawRankDifference);
+        }
+        if (fileDifference == 0) {
+            return Direction.of(rawFileDifference, rankDifference / rawRankDifference);
+        }
+        if (rankDifference == 0) {
+            return Direction.of(fileDifference / rawFileDifference, rawRankDifference);
+        }
+        return Direction.of(rawFileDifference, rawRankDifference);
+    }
+
+    private static Direction of(int file, int rank) {
+        return Arrays.stream(values())
+                .filter(direction -> direction.file == file && direction.rank == rank)
+                .findFirst()
+                .orElse(NONE);
+    }
+
     public List<Position> findPositionsInPath(Position source, Position target) {
         List<Position> positions = new ArrayList<>();
 
@@ -59,47 +91,15 @@ public enum Direction {
         return new ArrayList<>(positions);
     }
 
-    public static Direction findDirection(Position source, Position target) {
-        int rawFileDifference = source.fileRawDifference(target);
-        int rawRankDifference = source.rankRawDifference(target);
-
-        int fileDifference = source.fileDifference(target);
-        int rankDifference = source.rankDifference(target);
-
-        return getDirectionByFileAndRankDifference(rawFileDifference, rawRankDifference, fileDifference,
-            rankDifference);
-    }
-
-    private static Direction getDirectionByFileAndRankDifference(int rawFileDifference, int rawRankDifference,
-        int fileDifference, int rankDifference) {
-        if (fileDifference == rankDifference) {
-            return Direction.of(fileDifference / rawFileDifference, rankDifference / rawRankDifference);
-        }
-        if (fileDifference == 0) {
-            return Direction.of(rawFileDifference, rankDifference / rawRankDifference);
-        }
-        if (rankDifference == 0) {
-            return Direction.of(fileDifference / rawFileDifference, rawRankDifference);
-        }
-        return Direction.of(rawFileDifference, rawRankDifference);
-    }
-
-    private static Direction of(int file, int rank) {
-        return Arrays.stream(values())
-            .filter(direction -> direction.file == file && direction.rank == rank)
-            .findFirst()
-            .orElse(NONE);
-    }
-
     public boolean isLShapeDiagonalDirection() {
         return this == LEFT_LEFT_UP_DIAGONAL
-            || this == LEFT_LEFT_DOWN_DIAGONAL
-            || this == LEFT_UP_UP_DIAGONAL
-            || this == LEFT_DOWN_DOWN_DIAGONAL
-            || this == RIGHT_RIGHT_UP_DIAGONAL
-            || this == RIGHT_RIGHT_DOWN_DIAGONAL
-            || this == RIGHT_UP_UP_DIAGONAL
-            || this == RIGHT_DOWN_DOWN_DIAGONAL;
+                || this == LEFT_LEFT_DOWN_DIAGONAL
+                || this == LEFT_UP_UP_DIAGONAL
+                || this == LEFT_DOWN_DOWN_DIAGONAL
+                || this == RIGHT_RIGHT_UP_DIAGONAL
+                || this == RIGHT_RIGHT_DOWN_DIAGONAL
+                || this == RIGHT_UP_UP_DIAGONAL
+                || this == RIGHT_DOWN_DOWN_DIAGONAL;
     }
 
     public boolean isAttachedDownDirection() {
@@ -112,24 +112,24 @@ public enum Direction {
 
     public boolean isDownwardDiagonalDirection() {
         return this == LEFT_DOWN_DIAGONAL
-            || this == RIGHT_DOWN_DIAGONAL;
+                || this == RIGHT_DOWN_DIAGONAL;
     }
 
     public boolean isUpwardDiagonalDirection() {
         return this == LEFT_UP_DIAGONAL
-            || this == RIGHT_UP_DIAGONAL;
+                || this == RIGHT_UP_DIAGONAL;
     }
 
     public boolean isDiagonalDirection() {
         return isDownwardDiagonalDirection()
-            || isUpwardDiagonalDirection();
+                || isUpwardDiagonalDirection();
     }
 
     public boolean isCrossDirection() {
         return this == LEFT
-            || this == RIGHT
-            || this == UP
-            || this == DOWN;
+                || this == RIGHT
+                || this == UP
+                || this == DOWN;
     }
 
 }

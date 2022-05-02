@@ -72,7 +72,7 @@ public class Bishop extends Piece {
         }
         Bishop bishop = (Bishop) o;
         return color == bishop.color
-            && position == bishop.position;
+                && position == bishop.position;
     }
 
     @Override
@@ -83,9 +83,9 @@ public class Bishop extends Piece {
     @Override
     public String toString() {
         return "Bishop{" +
-            "color=" + color +
-            ", position=" + position +
-            '}';
+                "color=" + color +
+                ", position=" + position +
+                '}';
     }
 
 }

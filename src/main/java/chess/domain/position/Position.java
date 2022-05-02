@@ -22,6 +22,10 @@ public class Position {
         return PositionCache.getCache(file.getFileIdx(), rank.getRankIdx());
     }
 
+    public static Position from(int fileIdx, int rankIdx) {
+        return PositionCache.getCache(fileIdx, rankIdx);
+    }
+
     public boolean hasSameFileIdx(int targetFileIdx) {
         return file.getFileIdx() == targetFileIdx;
     }
@@ -54,10 +58,6 @@ public class Position {
         return this == position;
     }
 
-    public static Position from(int fileIdx, int rankIdx) {
-        return PositionCache.getCache(fileIdx, rankIdx);
-    }
-
     public File getFile() {
         return file;
     }
@@ -77,9 +77,9 @@ public class Position {
     @Override
     public String toString() {
         return "Position{" +
-            "file=" + file +
-            ", rank=" + rank +
-            '}';
+                "file=" + file +
+                ", rank=" + rank +
+                '}';
     }
 
     private static class PositionCache {

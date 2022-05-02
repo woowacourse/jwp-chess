@@ -72,7 +72,7 @@ public class Knight extends Piece {
         }
         Knight knight = (Knight) o;
         return color == knight.color
-            && position == knight.position;
+                && position == knight.position;
     }
 
     @Override
@@ -83,9 +83,9 @@ public class Knight extends Piece {
     @Override
     public String toString() {
         return "Knight{" +
-            "color=" + color +
-            ", position=" + position +
-            '}';
+                "color=" + color +
+                ", position=" + position +
+                '}';
     }
 
 }

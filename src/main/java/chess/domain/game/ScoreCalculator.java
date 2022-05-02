@@ -31,28 +31,28 @@ public class ScoreCalculator {
 
     private double calculateDefaultScore(List<Piece> sameColorPieces) {
         return sameColorPieces.stream()
-            .map(Piece::getScore)
-            .reduce(SUM_BASE_DOUBLE, Double::sum);
+                .map(Piece::getScore)
+                .reduce(SUM_BASE_DOUBLE, Double::sum);
     }
 
     private double calculateSameFilePawnCount(List<Position> pawnPositions) {
         return IntStream.range(0, FILES_TOTAL_SIZE)
-            .map(fileIdx -> extractSameFilePositionCount(pawnPositions, fileIdx))
-            .filter(count -> count >= PAWN_PENALTY_MINIMUM_COUNT)
-            .sum();
+                .map(fileIdx -> extractSameFilePositionCount(pawnPositions, fileIdx))
+                .filter(count -> count >= PAWN_PENALTY_MINIMUM_COUNT)
+                .sum();
     }
 
     private List<Position> extractPawnPositions(List<Piece> sameColorPieces) {
         return sameColorPieces.stream()
-            .filter(Piece::isPawn)
-            .map(Piece::getPosition)
-            .collect(Collectors.toUnmodifiableList());
+                .filter(Piece::isPawn)
+                .map(Piece::getPosition)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     private int extractSameFilePositionCount(List<Position> positions, int fileIdx) {
         return (int) positions.stream()
-            .filter(position -> position.hasSameFileIdx(fileIdx))
-            .count();
+                .filter(position -> position.hasSameFileIdx(fileIdx))
+                .count();
     }
 
 }

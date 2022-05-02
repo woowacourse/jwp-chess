@@ -1,59 +1,51 @@
 const section = document.querySelector("section");
 
-let fromInput;
-let toInput;
+let sourceInput;
+let targetInput;
 let gameId;
 
 section.addEventListener("mousedown", (event) => {
-  saveId();
-  fromInput = findTagId(event);
-})
-
-section.addEventListener("mouseup", (event) => {
-
-  toInput = findTagId(event);
-
-  fetch("/game/"+gameId+"/move", {
-    method: "post",
-    redirect: 'follow',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify({
-      source: fromInput,
-      target: toInput,
-      gameId: gameId
-    }),
-  })
-  .then(res=>{
-     window.location.href = res.url
-   })
-  .catch(error => {
-    alert(error.message)
-  })
+    saveId();
+    sourceInput = findTagId(event);
 })
 
 function saveId() {
-  let url = new URL(window.location.href);
-  gameId = url.pathname.split("/")[2]
-
+    const ID_PATH_INDEX = 2;
+    gameId = new URL(window.location.href).pathname
+        .split("/")[ID_PATH_INDEX];
 }
 
 function findTagId(event) {
-  if (event.target.nodeName === 'IMG') {
-    return event.target.parentNode.id;
-  }
-  return event.target.id;
+    if (event.target.nodeName === 'IMG') {
+        return event.target.parentNode.id;
+    }
+    return event.target.id;
 }
 
-//spark를 썼을 때 에러 처리 하려고
-//java에서 생기는 에러를 잡아서
-//다시 js 에러로 바꿔서 날려줌.
-function status(res) {
-  if (!res.ok) {
-    return res.text().then(text => {
-      throw new Error(text)
-    })
-  }
+section.addEventListener("mouseup", (event) => {
+    targetInput = findTagId(event);
+    return updateGame()
+})
+
+async function exitGame(gameId) {
+    console.log("exit");
+    await fetch(`/game/${gameId}/exit`, {method: "get"})
+    window.location.replace("/");
+}
+
+async function updateGame() {
+    const config = {
+        headers: {'Content-Type': 'application/json'},
+        method: "put",
+        body: JSON.stringify({
+            source: sourceInput,
+            target: targetInput
+        })
+    };
+    const response = await fetch(`/game/${gameId}/move`, config);
+    if (!response.ok) {
+        const errorMessage = await response.text()
+        return alert(errorMessage);
+    }
+    window.location.reload();
 }

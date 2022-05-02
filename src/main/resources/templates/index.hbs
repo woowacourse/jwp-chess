@@ -1,23 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>체스 게임 대기방</title>
-  <link rel="stylesheet" href="./src/index.css">
+    <meta charset="UTF-8">
+    <title>체스 게임 대기방</title>
+    <link rel="stylesheet" href="./src/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<h1>♟️ 체스 게임 대기방♟</h1>
+<h1>♟️ 체스 게임 대기방 ♟️</h1>
 
-<div id="game-entry">
+<div id="boxs">
+    <div id="game-entry">
+        <h2> @ 방 번호를 입력하여 시작하기</h2>
+        <form class="inContent" action="/init" method="post">
+            <label for="game-entry">
+            </label>
+            <br>
+            방 제목 : <input type="text" name="id" value="1234">
+            <br>
+            비밀번호 : <input type="password" name="password" value="1234">
+            <br>
+            <button type="submit">새로운 방 생성</button>
+        </form>
+        {{gameMessage}}
+    </div>
 
-  <form enctype="text/plain" action="/game/start" method="get">
-    <label for="game-entry">방 번호를 입력하여 시작하기 (없을 시 새로 방 생성)</label>
-    <br>
-    <input type="text" name="gameId" value="1234">
-    <button type="submit">입장하기</button>
-  </form>
+    <div class="rooms">
+        <div class="box">
+            <h2>@ 방 리스트</h2>
+        </div>
+        {{#each rooms.users}}
+            <div class="box">
+                <form class="inContent" action="/enter" method="post">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    <input type="hidden" name="password" value="{{this.password}}">
+                    방 : {{this.id}}
+                    <button type="submit">입장하기</button>
+                </form>
 
+                <form class="inContent" action="/exit" method="post">
+                    <input type="hidden" name="id" value="{{this.id}}">
+                    비밀번호
+                    <input type="password" name="password" value="">
+                    <button type="submit">삭제하기</button>
+                </form>
+            </div>
+        {{/each}}
+    </div>
 </div>
 
 </body>

@@ -25,7 +25,7 @@ public class PiecesTest {
     @Test
     void hasLessThanTotalKingCount_false() {
         Pieces pieces = new Pieces(List.of(new King(WHITE, Position.of("e1")),
-            new King(BLACK, Position.of("e8"))));
+                new King(BLACK, Position.of("e8"))));
 
         boolean actual = pieces.hasLessThanTotalKingCount();
 
@@ -60,7 +60,7 @@ public class PiecesTest {
         Pieces pieces = new Pieces(List.of(new King(WHITE, Position.of("e1"))));
 
         List<Piece> actual = pieces.getPieces();
-        List<Piece> expected =  List.of(new King(WHITE, Position.of("e1")));
+        List<Piece> expected = List.of(new King(WHITE, Position.of("e1")));
 
         assertThat(actual).isEqualTo(expected);
     }

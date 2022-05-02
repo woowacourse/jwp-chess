@@ -8,20 +8,14 @@ import java.util.Objects;
 
 public final class Pawn extends Piece {
 
-    private static final PieceType PIECE_TYPE = PieceType.PAWN;
-
-    private static final int MOVABLE_RANK_DIFFERENCE = 1;
-    private static final int JUMPABLE_RANK_DIFFERENCE = 2;
-
     public static final double DEFAULT_SCORE = 1;
     public static final double PENALTY_RATE = 0.5;
-
     public static final Rank BLACK_INIT_RANK = Rank.SEVEN;
     public static final Rank WHITE_INIT_RANK = Rank.TWO;
-
+    private static final PieceType PIECE_TYPE = PieceType.PAWN;
+    private static final int MOVABLE_RANK_DIFFERENCE = 1;
+    private static final int JUMPABLE_RANK_DIFFERENCE = 2;
     private static final String INVALID_ATTACKABLE_POSITION_EXCEPTION_MESSAGE = "공격할 수 없는 위치입니다.";
-
-
 
 
     public Pawn(Color color, Position position) {
@@ -151,7 +145,7 @@ public final class Pawn extends Piece {
         }
         Pawn pawn = (Pawn) o;
         return color == pawn.color
-            && position == pawn.position;
+                && position == pawn.position;
     }
 
     @Override
@@ -162,9 +156,9 @@ public final class Pawn extends Piece {
     @Override
     public String toString() {
         return "Pawn{" +
-            "color=" + color +
-            ", position=" + position +
-            '}';
+                "color=" + color +
+                ", position=" + position +
+                '}';
     }
 
 }

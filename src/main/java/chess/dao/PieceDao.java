@@ -10,56 +10,55 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PieceDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public PieceDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createAllById(List<Piece> pieces, String gameId) {
+    public void createAll(Pieces pieces, String id) {
         final String sql = "insert into piece (name, color, position, game_id) values (?, ?, ?, ?)";
 
-        for (Piece piece : pieces) {
-            jdbcTemplate.update(sql,
-                piece.getName(),
-                piece.getColor().getName(),
-                piece.getPosition().getPosition(),
-                gameId);
-        }
+        jdbcTemplate.batchUpdate(sql, pieces.getPieces(), pieces.size(),
+                (statement, piece) -> {
+                    statement.setString(1, piece.getName());
+                    statement.setString(2, piece.getColor().getName());
+                    statement.setString(3, piece.getPosition().getPosition());
+                    statement.setString(4, id);
+                }
+        );
     }
 
-    public void updateAllByGameId(List<Piece> pieces, String gameId) {
+    public Pieces findAll(String id) {
+        final String sql = "select name, color, position from piece where game_id = ?";
+
+        List<Piece> pieces = jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceFactory.of(
+                resultSet.getString("name"),
+                resultSet.getString("color"),
+                resultSet.getString("position")
+        ), id);
+
+        return new Pieces(pieces);
+    }
+
+    public void updateAll(List<Piece> pieces, String id) {
         final String sql = "UPDATE piece SET position = ? "
                 + "WHERE game_id = ? "
                 + "AND name = ? "
                 + "AND color = ?";
 
-        for (Piece piece : pieces) {
-            jdbcTemplate.update(sql,
-                piece.getPosition().getPosition(),
-                gameId,
-                piece.getName(),
-                piece.getColor().getName());
-        }
+        jdbcTemplate.batchUpdate(sql, pieces, pieces.size(),
+                (statement, piece) -> {
+                    statement.setString(1, piece.getPosition().getPosition());
+                    statement.setString(2, id);
+                    statement.setString(3, piece.getName());
+                    statement.setString(4, piece.getColor().getName());
+                }
+        );
     }
 
-    public Pieces findAllByGameId(String gameId) {
-        final String sql = "select name, color, position from piece where game_id = ?";
-
-        List<Piece> pieces = jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            Piece piece = PieceFactory.of(
-                resultSet.getString("name"),
-                resultSet.getString("color"),
-                resultSet.getString("position")
-            );
-            return piece;
-        }, gameId);
-
-        return new Pieces(pieces);
-    }
-
-    public void deleteAllByGameId(String gameId) {
+    public void deleteAll(String id) {
         final String sql = "delete from piece where game_id = ?";
-        jdbcTemplate.update(sql, gameId);
+        jdbcTemplate.update(sql, id);
     }
 }

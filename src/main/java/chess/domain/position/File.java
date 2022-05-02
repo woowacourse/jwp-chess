@@ -28,16 +28,16 @@ public enum File {
 
     public static File from(String value) {
         return Arrays.stream(values())
-            .filter(file -> file.rawFile.equals(value))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(INVALID_FILE_EXCEPTION_MESSAGE));
+                .filter(file -> file.rawFile.equals(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_FILE_EXCEPTION_MESSAGE));
     }
 
     public static File of(int valueIdx) {
         return Arrays.stream(values())
-            .filter(file -> file.fileIdx == valueIdx)
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(INVALID_FILE_INDEX_EXCEPTION_MESSAGE));
+                .filter(file -> file.fileIdx == valueIdx)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(INVALID_FILE_INDEX_EXCEPTION_MESSAGE));
     }
 
     public boolean hasSameFileIdx(File another) {
@@ -60,9 +60,9 @@ public enum File {
     @Override
     public String toString() {
         return "File{" +
-            "rawFile='" + rawFile + '\'' +
-            ", fileIdx=" + fileIdx +
-            '}';
+                "rawFile='" + rawFile + '\'' +
+                ", fileIdx=" + fileIdx +
+                '}';
     }
 
 }

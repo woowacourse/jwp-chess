@@ -46,6 +46,16 @@ public class ChessRepository {
         return boardDao.load(gameRoomID);
     }
 
+    public void movePiece(
+            final ChessGameEntity chessGameEntity,
+            final BoardEntity sourceBoardEntity,
+            final BoardEntity targetBoardEntity
+    ) {
+        updateChessGame(chessGameEntity);
+        updateBoard(sourceBoardEntity);
+        updateBoard(targetBoardEntity);
+    }
+
     public void updateChessGame(final ChessGameEntity chessGameEntity) {
         chessGameDao.update(chessGameEntity);
     }

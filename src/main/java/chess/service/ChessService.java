@@ -14,8 +14,10 @@ import chess.service.util.BoardEntitiesToBoardConvertor;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ChessService {
 
     private final ChessRepository chessRepository;
@@ -96,13 +98,11 @@ public class ChessService {
     ) {
         ChessGame chessGame = loadChessGame(gameRoomId);
         chessGame.move(sourceColumnValue, sourceRowValue, targetColumnValue, targetRowValue);
-        chessRepository.updateChessGame(new ChessGameEntity(gameRoomId, chessGame));
-        chessRepository.updateBoard(
-                new BoardEntity(gameRoomId, sourceColumnValue, sourceRowValue, chessGame.getCurrentBoard())
-        );
-        chessRepository.updateBoard(
-                new BoardEntity(gameRoomId, targetColumnValue, targetRowValue, chessGame.getCurrentBoard())
-        );
+        BoardEntity sourceBoardEntity =
+                new BoardEntity(gameRoomId, sourceColumnValue, sourceRowValue, chessGame.getCurrentBoard());
+        BoardEntity targetBoardEntity =
+                new BoardEntity(gameRoomId, targetColumnValue, targetRowValue, chessGame.getCurrentBoard());
+        chessRepository.movePiece(new ChessGameEntity(gameRoomId, chessGame), sourceBoardEntity, targetBoardEntity);
     }
 
     public void resetChessRoom(final String gameRoomId) {

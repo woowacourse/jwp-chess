@@ -1,5 +1,6 @@
 package chess.controller;
 
+import javax.validation.Valid;
 import chess.domain.ChessGameService;
 import chess.domain.board.strategy.WebBasicBoardStrategy;
 import chess.dto.GameStatusDto;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,8 +41,8 @@ public class ChessGameSpringController {
     }
 
     @ResponseBody
-    @PostMapping("/move")
-    public ResponseEntity<GameStatusDto> move(@RequestBody MoveDto moveDto) {
+    @PutMapping("/move")
+    public ResponseEntity<GameStatusDto> move(@RequestBody @Valid MoveDto moveDto) {
         GameStatusDto status = chessGameService.move(moveDto.getFrom(), moveDto.getTo(), moveDto.getRoomId());
         return ResponseEntity.ok().body(status);
     }

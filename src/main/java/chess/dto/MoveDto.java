@@ -1,9 +1,14 @@
 package chess.dto;
 
+import org.jetbrains.annotations.NotNull;
+
 public class MoveDto {
 
     private int roomId;
+
+    @NotNull("이동 시작 위치는  필수입니다.")
     private String from;
+    @NotNull("이동 도착 위치는 필수입니다.")
     private String to;
 
     public MoveDto() {

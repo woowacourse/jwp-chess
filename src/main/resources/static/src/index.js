@@ -82,7 +82,7 @@ async function movePiece(from, to) {
     }
 
     fetch("/rooms/game/move", {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             "Content-Type": "application/json",
         },

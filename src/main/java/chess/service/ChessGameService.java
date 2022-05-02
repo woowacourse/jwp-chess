@@ -6,7 +6,7 @@ import chess.domain.command.MoveCommand;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameResult;
 import chess.domain.game.LogIn;
-import chess.entity.Room;
+import chess.domain.game.Room;
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Pieces;
 import java.util.List;

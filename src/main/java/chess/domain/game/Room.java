@@ -1,8 +1,8 @@
-package chess.entity;
+package chess.domain.game;
 
-import chess.domain.game.LogIn;
 import chess.domain.piece.Color;
 import java.util.Objects;
+
 
 public class Room {
     private static final String INCORRECT_PASSWORD_ERROR_MESSAGE = "올바르지 않은 비밀번호 입니다.";

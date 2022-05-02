@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.game.LogIn;
-import chess.entity.Room;
+import chess.domain.game.Room;
 import chess.domain.piece.Color;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;

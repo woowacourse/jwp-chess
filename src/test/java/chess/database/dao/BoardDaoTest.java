@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 class BoardDaoTest {
@@ -64,6 +65,7 @@ class BoardDaoTest {
         boardDao.saveBoard(BoardDto.of(board.getPointPieces()), testRoomDto.getId());
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("말의 위치와 종류를 저장한다.")
     public void insert() {
@@ -77,6 +79,7 @@ class BoardDaoTest {
         boardDao.removeBoard(roomDao.findByName(TEST_CREATION_ROOM_NAME).getId());
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("말의 위치와 종류를 조회한다.")
     public void select() {
@@ -88,17 +91,7 @@ class BoardDaoTest {
         assertThat(boardDto.getPointPieces().size()).isEqualTo(32);
     }
 
-    //TODO: roomDao에서 테스트 해야하는지 고민
-//    @Test
-//    @DisplayName("존재하지 않는 방을 조회하면 예외를 던진다.")
-//    public void selectMissingName() {
-//        // given & when
-//        String name = "missing";
-//        // then
-//        assertThatExceptionOfType(IllegalArgumentException.class)
-//            .isThrownBy(() -> boardDao.readBoard(name));
-//    }
-
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("말의 위치를 움직인다.")
     public void update() {
@@ -110,6 +103,7 @@ class BoardDaoTest {
             .doesNotThrowAnyException();
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("말을 삭제한다.")
     public void delete() {
@@ -118,19 +112,5 @@ class BoardDaoTest {
 
         assertThatCode(() -> boardDao.deletePiece(point, roomDto.getId()))
             .doesNotThrowAnyException();
-    }
-
-    @AfterEach
-    void setDown() {
-        RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
-        RoomDto roomDto2 = roomDao.findByName(TEST_CREATION_ROOM_NAME);
-
-        boardDao.removeBoard(roomDto.getId());
-
-        gameDao.removeGame(roomDto.getId());
-        gameDao.removeGame(roomDto2.getId());
-
-        roomDao.delete(roomDto.getId());
-        roomDao.delete(roomDto2.getId());
     }
 }

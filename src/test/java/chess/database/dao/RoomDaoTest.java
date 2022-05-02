@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 public class RoomDaoTest {
@@ -31,6 +32,7 @@ public class RoomDaoTest {
         roomDao.create(new RoomDto(TEST_ROOM_NAME, TEST_ROOM_PASSWORD));
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임방을 생성한다.")
     public void createRoom() {
@@ -39,12 +41,14 @@ public class RoomDaoTest {
             .doesNotThrowAnyException();
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임방 이름으로 검색한다.")
     public void findByRoomName() {
         assertThat(roomDao.findByName(TEST_ROOM_NAME).getPassword()).isEqualTo(TEST_ROOM_PASSWORD);
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임방 이름과 비밀번호로 삭제한다.")
     public void delete() {
@@ -54,6 +58,7 @@ public class RoomDaoTest {
             .doesNotThrowAnyException();
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임방 목록을 검색한다.")
     public void findAll() {
@@ -62,9 +67,9 @@ public class RoomDaoTest {
 
     @AfterEach
     void afterAll() {
-        int firstId = roomDao.findByName(TEST_ROOM_NAME).getId();
-        int secondId = roomDao.findByName(TEST_ROOM_NAME).getId();
-        roomDao.delete(firstId);
-        roomDao.delete(secondId);
+//        int firstId = roomDao.findByName(TEST_ROOM_NAME).getId();
+//        int secondId = roomDao.findByName(TEST_ROOM_NAME).getId();
+//        roomDao.delete(firstId);
+//        roomDao.delete(secondId);
     }
 }

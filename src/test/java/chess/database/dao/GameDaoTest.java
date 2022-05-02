@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 class GameDaoTest {
@@ -40,6 +41,7 @@ class GameDaoTest {
         gameDao.create(GameStateDto.of(state), roomDto.getId());
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임을 생성한다.")
     public void createGame() {
@@ -53,13 +55,12 @@ class GameDaoTest {
         roomDao.delete(findId);
     }
 
-
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("방 이름으로 게임 상태와 턴 색깔을 조회한다.")
     public void insert() {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
 
-//        List<String> stateAndColor = gameDao.readStateAndColor(roomDto.getId());
         GameStateDto stateAndColor = gameDao.readStateAndColor(roomDto.getId());
 
         String stateString = stateAndColor.getState().name();
@@ -71,6 +72,7 @@ class GameDaoTest {
         );
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("방 이름으로 게임 상태와 턴 색깔을 수정한다.")
     public void update() {
@@ -79,7 +81,7 @@ class GameDaoTest {
 
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         gameDao.updateState(GameStateDto.of(started), roomDto.getId());
-//        List<String> stateAndColor = gameDao.readStateAndColor(roomDto.getId());
+
         GameStateDto stateAndColor = gameDao.readStateAndColor(roomDto.getId());
 
         String stateString = stateAndColor.getState().name();
@@ -87,12 +89,5 @@ class GameDaoTest {
 
         assertThat(stateString).isEqualTo("RUNNING");
         assertThat(colorString).isEqualTo("WHITE");
-    }
-
-    @AfterEach
-    void afterAll() {
-        int firstFindId = roomDao.findByName(TEST_ROOM_NAME).getId();
-        gameDao.removeGame(firstFindId);
-        roomDao.delete(firstFindId);
     }
 }

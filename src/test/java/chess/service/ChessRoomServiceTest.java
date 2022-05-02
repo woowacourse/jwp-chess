@@ -2,6 +2,7 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.database.dao.BoardDao;
 import chess.database.dao.GameDao;
@@ -23,6 +24,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -59,6 +61,7 @@ class ChessRoomServiceTest {
         boardDao.saveBoard(BoardDto.of(board.getPointPieces()), firstRoomDto.getId());
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("새로운 방을 만든다.")
     public void createNewGame() {
@@ -67,7 +70,16 @@ class ChessRoomServiceTest {
             .doesNotThrowAnyException();
     }
 
+    @Sql("/sql/chess-test.sql")
+    @Test
+    @DisplayName("게임 방 이름은 중복될 수 없다.")
+    public void duplicateRoomException() {
+        assertThatThrownBy(() ->
+            chessRoomService.createNewRoom(TEST_ROOM_NAME, TEST_ROOM_PASSWORD))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임 상태를 얻는다.")
     public void readGameState() {
@@ -76,6 +88,7 @@ class ChessRoomServiceTest {
         assertThat(gameState).isInstanceOf(Ready.class);
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임을 시작한다.")
     public void startGame() {
@@ -84,6 +97,7 @@ class ChessRoomServiceTest {
             .doesNotThrowAnyException();
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("말을 움직인다.")
     public void moveBoard() {
@@ -94,6 +108,7 @@ class ChessRoomServiceTest {
         assertThat(moved).isNotNull();
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임을 종료한다.")
     public void finishGame() {
@@ -102,6 +117,7 @@ class ChessRoomServiceTest {
             .doesNotThrowAnyException();
     }
 
+    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("모든 게임 방을 조회한다.")
     public void findAllRoom() {
@@ -111,16 +127,32 @@ class ChessRoomServiceTest {
         assertThat(roomStates.size()).isEqualTo(2);
     }
 
-    @AfterEach
-    void afterEach() {
+    @Sql("/sql/chess-test.sql")
+    @Test
+    @DisplayName("게임방을 삭제한다.")
+    public void removeRoom() {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
-        boardDao.removeBoard(roomDto.getId());
-        gameDao.removeGame(roomDto.getId());
-        roomDao.delete(roomDto.getId());
+        assertThatCode(() -> chessRoomService.removeRoom(roomDto))
+            .doesNotThrowAnyException();
+    }
 
-        RoomDto roomDto2 = roomDao.findByName(secondRoomDto.getName());
-        if (roomDto2 != null) {
-            chessRoomService.removeRoom(roomDto2);
-        }
+    @Sql("/sql/chess-test.sql")
+    @Test
+    @DisplayName("게임 삭제 시 틀린 비밀번호를 입력했다면 예외가 발생한다.")
+    public void removeRoom_validate_password() {
+        assertThatThrownBy(() ->
+            chessRoomService.removeRoom(new RoomDto(1, secondRoomDto.getPassword())))
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Sql("/sql/chess-test.sql")
+    @Test
+    @DisplayName("진행 중인 게임을 삭제하면 예외가 발생한다.")
+    public void removeRoom_running_game() {
+        RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
+        chessRoomService.startGame(roomDto.getId());
+        assertThatThrownBy(() ->
+            chessRoomService.removeRoom(new RoomDto(1, firstRoomDto.getPassword())))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

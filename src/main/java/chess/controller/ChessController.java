@@ -35,7 +35,7 @@ public class ChessController {
             model.addAttribute("msg", e.getMessage());
         }
         model.addAttribute("games", chessService.getGameIds());
-        return "ready";
+        return "redirect:/";
     }
 
     @PostMapping("/games")

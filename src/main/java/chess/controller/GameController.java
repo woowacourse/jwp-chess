@@ -6,7 +6,7 @@ import chess.controller.response.ScoresResponse;
 import chess.domain.Score;
 import chess.domain.piece.PieceColor;
 import chess.serviece.dto.GameDto;
-import chess.dto.PieceDto;
+import chess.serviece.dto.PieceDto;
 import chess.serviece.ChessGameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,7 +34,7 @@ public class GameController {
     public ResponseEntity<ChessGameResponse> load(@PathVariable Long id) {
         GameDto game = chessGameService.getGame(id);
         List<PieceDto> pieces = chessGameService.getPiecesOfGame(id);
-        return ResponseEntity.ok().body(new ChessGameResponse(id, pieces, game.getTurn(), game.getStatus()));
+        return ResponseEntity.ok().body(ChessGameResponse.from(game, pieces));
     }
 
     @GetMapping("/{id}/score")

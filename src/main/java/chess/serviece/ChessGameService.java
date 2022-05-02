@@ -3,16 +3,19 @@ package chess.serviece;
 import chess.controller.request.RoomCreationRequest;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
-import chess.dao.entity.Game;
+import chess.dao.entity.GameEntity;
+import chess.dao.entity.PieceEntity;
 import chess.domain.ChessGame;
 import chess.domain.GameStatus;
 import chess.domain.Score;
 import chess.domain.command.MoveCommand;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
+import chess.domain.piece.PieceFactory;
+import chess.domain.piece.PieceType;
 import chess.domain.position.Position;
 import chess.serviece.dto.GameDto;
-import chess.dto.PieceDto;
+import chess.serviece.dto.PieceDto;
 import chess.serviece.dto.PasswordDto;
 import org.springframework.stereotype.Service;
 
@@ -33,38 +36,50 @@ public class ChessGameService {
 
     public Long addGame(RoomCreationRequest roomCreationRequest) {
         ChessGame chessGame = ChessGame.initGame();
-        long id = gameDao.save(createGame(chessGame, roomCreationRequest));
-        List<PieceDto> pieceDtos = convertPieceDtos(chessGame.getPieces(), id);
-        pieceDao.saveAll(pieceDtos);
+        Long id = gameDao.save(createGame(chessGame, roomCreationRequest));
+        List<PieceEntity> pieces = convertPieceEntities(chessGame.getPieces(), id);
+        pieceDao.saveAll(pieces);
         return id;
     }
 
-    private Game createGame(ChessGame chessGame, RoomCreationRequest roomCreationRequest) {
-        PieceColor turnColor = chessGame.getTurnColor();
-        if (chessGame.isRunning()) {
-            return new Game(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(), turnColor.getName(), "playing");
-        }
-        return new Game(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(), turnColor.getName(), "finished");
-    }
-
-    private List<PieceDto> convertPieceDtos(Map<Position, Piece> pieces, Long gameId) {
+    private List<PieceEntity> convertPieceEntities(Map<Position, Piece> pieces, Long gameId) {
         return pieces.entrySet()
                 .stream()
-                .map(entry -> PieceDto.from(entry.getKey(), entry.getValue(), gameId))
+                .map(entry -> {
+                    Position position = entry.getKey();
+                    PieceType type = entry.getValue().getType();
+                    PieceColor color = entry.getValue().getColor();
+                    return new PieceEntity(position.getName(), type.getName(), color.getName(), gameId);
+                })
                 .collect(Collectors.toList());
     }
 
+    private GameEntity createGame(ChessGame chessGame, RoomCreationRequest roomCreationRequest) {
+        PieceColor turnColor = chessGame.getTurnColor();
+        if (chessGame.isRunning()) {
+            return new GameEntity(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(), turnColor.getName(), "playing");
+        }
+        return new GameEntity(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(), turnColor.getName(), "finished");
+    }
+
     public GameDto getGame(Long id) {
-        Game game = gameDao.findGameById(id);
+        GameEntity game = gameDao.findGameById(id);
         return GameDto.from(game);
     }
 
     public List<PieceDto> getPiecesOfGame(Long gameId) {
-        return pieceDao.findPiecesByGameId(gameId);
+        List<PieceEntity> pieceEntities = pieceDao.findPiecesByGameId(gameId);
+        return convertToPieceDtos(pieceEntities);
+    }
+
+    private List<PieceDto> convertToPieceDtos(List<PieceEntity> pieceEntities) {
+        return pieceEntities.stream()
+                .map(pieceEntity -> new PieceDto(pieceEntity.getPosition(), pieceEntity.getColor(), pieceEntity.getType()))
+                .collect(Collectors.toList());
     }
 
     public List<GameDto> getAllGames() {
-        List<Game> games = gameDao.findAll();
+        List<GameEntity> games = gameDao.findAll();
         return games.stream()
                 .map(GameDto::from)
                 .collect(Collectors.toList());
@@ -95,13 +110,21 @@ public class ChessGameService {
     }
 
     private ChessGame createGame(Long gameId) {
-        List<PieceDto> pieceDtos = pieceDao.findPiecesByGameId(gameId);
-        Game game = gameDao.findGameById(gameId);
-        Map<Position, Piece> pieces = pieceDtos.stream()
-                .map(PieceDto::toPieceEntry)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        List<PieceEntity> pieceEntities = pieceDao.findPiecesByGameId(gameId);
+        GameEntity game = gameDao.findGameById(gameId);
+        Map<Position, Piece> pieces = convertToPieces(pieceEntities);
         return new ChessGame(pieces, PieceColor.find(game.getTurn()));
     }
+
+    private Map<Position, Piece> convertToPieces(List<PieceEntity> pieceEntities) {
+        return pieceEntities.stream()
+                .collect(Collectors.toMap(
+                        pieceEntity -> Position.of(pieceEntity.getPosition()),
+                        pieceEntity -> PieceFactory.find(pieceEntity.getType(), pieceEntity.getColor()),
+                        (piece, piece2) -> piece)
+                );
+    }
+
 
     public Map<PieceColor, Score> getScore(Long gameId) {
         ChessGame game = createGame(gameId);

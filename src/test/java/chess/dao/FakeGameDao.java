@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dao.entity.Game;
+import chess.dao.entity.GameEntity;
 import chess.domain.GameStatus;
 
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ import java.util.Map;
 public class FakeGameDao implements GameDao {
 
     Long id = 0L;
-    private Map<Long, Game> games = new HashMap<>();
+    private Map<Long, GameEntity> games = new HashMap<>();
 
     @Override
-    public Long save(Game game) {
+    public Long save(GameEntity game) {
         games.put(id, game);
         return id++;
     }
@@ -25,7 +25,7 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public Game findGameById(Long id) {
+    public GameEntity findGameById(Long id) {
         return games.get(id);
     }
 
@@ -40,20 +40,20 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public List<Game> findAll() {
+    public List<GameEntity> findAll() {
         return new ArrayList<>(games.values());
     }
 
     @Override
     public void updateGame(Long id, String turn, String status) {
-        Game gameDto = games.get(id);
-        games.replace(id, new Game(id, gameDto.getTitle(), gameDto.getPassword(), turn, status));
+        GameEntity gameDto = games.get(id);
+        games.replace(id, new GameEntity(id, gameDto.getTitle(), gameDto.getPassword(), turn, status));
     }
 
     @Override
     public void updateStatus(Long id, GameStatus status) {
-        Game game = games.get(id);
-        Game updatedGame = new Game(game.getId(), game.getTitle(), game.getPassword(), game.getTurn(), status.getName());
+        GameEntity game = games.get(id);
+        GameEntity updatedGame = new GameEntity(game.getId(), game.getTitle(), game.getPassword(), game.getTurn(), status.getName());
         games.replace(id, updatedGame);
     }
 }

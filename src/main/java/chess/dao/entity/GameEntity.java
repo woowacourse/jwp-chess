@@ -1,6 +1,6 @@
 package chess.dao.entity;
 
-public class Game {
+public class GameEntity {
 
     private Long id;
     private final String title;
@@ -8,7 +8,7 @@ public class Game {
     private final String turn;
     private final String status;
 
-    public Game(Long id, String title, String password, String turn, String status) {
+    public GameEntity(Long id, String title, String password, String turn, String status) {
         this.id = id;
         this.title = title;
         this.password = password;
@@ -16,7 +16,7 @@ public class Game {
         this.status = status;
     }
 
-    public Game(String title, String password, String turn, String status) {
+    public GameEntity(String title, String password, String turn, String status) {
         this.title = title;
         this.password = password;
         this.turn = turn;

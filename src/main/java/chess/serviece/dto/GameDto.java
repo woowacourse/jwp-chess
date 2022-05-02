@@ -1,6 +1,6 @@
 package chess.serviece.dto;
 
-import chess.dao.entity.Game;
+import chess.dao.entity.GameEntity;
 
 public class GameDto {
 
@@ -18,7 +18,7 @@ public class GameDto {
         this.status = status;
     }
 
-    public static GameDto from(Game game) {
+    public static GameDto from(GameEntity game) {
         return new GameDto(game.getId(), game.getTitle(), game.getPassword(), game.getTurn(), game.getStatus());
     }
 

@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dao.entity.Game;
+import chess.dao.entity.GameEntity;
 import chess.domain.GameStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,7 +21,7 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public Long save(Game game) {
+    public Long save(GameEntity game) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final String sql = "insert into game (title, password, turn, status) values (?, ?, ?, ?)";
@@ -46,12 +46,12 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public Game findGameById(Long id) {
+    public GameEntity findGameById(Long id) {
         final String sql = "select * from game where id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
                 (resultSet, rowNum) ->
-                        new Game(
+                        new GameEntity(
                                 resultSet.getLong("id"),
                                 resultSet.getString("title"),
                                 resultSet.getString("password"),
@@ -83,12 +83,12 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public List<Game> findAll() {
+    public List<GameEntity> findAll() {
         final String sql = "select * from game";
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) ->
-                        new Game(
+                        new GameEntity(
                                 resultSet.getLong("id"),
                                 resultSet.getString("title"),
                                 resultSet.getString("password"),

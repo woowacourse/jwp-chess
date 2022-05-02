@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.dao.entity.Game;
+import chess.dao.entity.GameEntity;
 import chess.domain.GameStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +35,7 @@ public class JdbcGameDaoTest {
     @DisplayName("게임 데이터 저장")
     void save() {
         // given
-        Game game = new Game("라라라", "1234", "white", "playing");
+        GameEntity game = new GameEntity("라라라", "1234", "white", "playing");
 
         // when
         long id = gameDao.save(game);
@@ -48,7 +48,7 @@ public class JdbcGameDaoTest {
     @DisplayName("게임 데이터 삭제")
     void remove() {
         // given
-        Game game = new Game("라라라", "1234", "white", "playing");
+        GameEntity game = new GameEntity("라라라", "1234", "white", "playing");
         long id = gameDao.save(game);
 
         // when
@@ -67,11 +67,11 @@ public class JdbcGameDaoTest {
         String password = "1234";
         String turn = "white";
         String status = "playing";
-        Game game = new Game(title, password, turn, status);
+        GameEntity game = new GameEntity(title, password, turn, status);
         long id = gameDao.save(game);
 
         // when
-        Game selectedGame = gameDao.findGameById(id);
+        GameEntity selectedGame = gameDao.findGameById(id);
 
         // then
         assertAll(
@@ -87,13 +87,13 @@ public class JdbcGameDaoTest {
     @DisplayName("모든 게임 데이터 저장")
     void findAll() {
         // given
-        Game game1 = new Game("라라라", "1234", "white", "playing");
-        Game game2 = new Game("룰룰루", "222", "white", "playing");
+        GameEntity game1 = new GameEntity("라라라", "1234", "white", "playing");
+        GameEntity game2 = new GameEntity("룰룰루", "222", "white", "playing");
         gameDao.save(game1);
         gameDao.save(game2);
 
         // when
-        List<Game> games = gameDao.findAll();
+        List<GameEntity> games = gameDao.findAll();
 
         // then
         assertThat(games.size()).isEqualTo(2);
@@ -103,7 +103,7 @@ public class JdbcGameDaoTest {
     @DisplayName("게임 정보 수정")
     void update() {
         // given
-        Game game = new Game("라라라", "1234", "white", "playing");
+        GameEntity game = new GameEntity("라라라", "1234", "white", "playing");
         long id = gameDao.save(game);
 
         // when
@@ -120,7 +120,7 @@ public class JdbcGameDaoTest {
     @DisplayName("게임 상태 업데이트")
     void updateStatus() {
         // given
-        Game game = new Game("라라라", "1234", "white", "playing");
+        GameEntity game = new GameEntity("라라라", "1234", "white", "playing");
         long id = gameDao.save(game);
 
         // when

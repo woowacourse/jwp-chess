@@ -1,7 +1,7 @@
 package chess.dao;
 
+import chess.dao.entity.PieceEntity;
 import chess.domain.position.Position;
-import chess.dto.PieceDto;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -32,42 +32,43 @@ public class JdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public void save(PieceDto pieceDto) {
+    public void save(PieceEntity piece) {
         final String sql = "insert into piece (position, type, color, game_id) values (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor(), pieceDto.getGameId());
+        jdbcTemplate.update(sql, piece.getPosition(), piece.getType(), piece.getColor(), piece.getGameId());
     }
 
     @Override
-    public void saveAll(List<PieceDto> pieceDtos) {
+    public void saveAll(List<PieceEntity> pieces) {
         final String sql = "insert into piece (position, type, color, game_id) values (?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
 
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                PieceDto pieceDto = pieceDtos.get(i);
-                ps.setString(1, pieceDto.getPosition());
-                ps.setString(2, pieceDto.getType());
-                ps.setString(3, pieceDto.getColor());
-                ps.setLong(4, pieceDto.getGameId());
+                PieceEntity piece = pieces.get(i);
+                ps.setString(1, piece.getPosition());
+                ps.setString(2, piece.getType());
+                ps.setString(3, piece.getColor());
+                ps.setLong(4, piece.getGameId());
             }
 
             @Override
             public int getBatchSize() {
-                return pieceDtos.size();
+                return pieces.size();
             }
         });
     }
 
     @Override
-    public List<PieceDto> findPiecesByGameId(Long gameId) {
+    public List<PieceEntity> findPiecesByGameId(Long gameId) {
         final String sql = "select * from piece where game_id = ?";
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) ->
-                        new PieceDto(
+                        new PieceEntity(
+                                resultSet.getLong("id"),
                                 resultSet.getString("position"),
-                                resultSet.getString("color"),
                                 resultSet.getString("type"),
+                                resultSet.getString("color"),
                                 resultSet.getLong("game_id")
                         ),
                 gameId

@@ -1,7 +1,7 @@
 package chess.dao;
 
+import chess.dao.entity.PieceEntity;
 import chess.domain.position.Position;
-import chess.dto.PieceDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class FakePieceDao implements PieceDao {
 
-    private Map<String, PieceDto> pieces = new HashMap<>();
+    private final Map<String, PieceEntity> pieces = new HashMap<>();
 
     @Override
     public void removeByPosition(Long gameId, Position position) {
@@ -24,19 +24,19 @@ public class FakePieceDao implements PieceDao {
     }
 
     @Override
-    public void saveAll(List<PieceDto> pieceDtos) {
-        for (PieceDto pieceDto : pieceDtos) {
-            save(pieceDto);
+    public void saveAll(List<PieceEntity> pieces) {
+        for (PieceEntity piece : pieces) {
+            save(piece);
         }
     }
 
     @Override
-    public void save(PieceDto pieceDto) {
-        pieces.put(pieceDto.getPosition(), pieceDto);
+    public void save(PieceEntity piece) {
+        pieces.put(piece.getPosition(), piece);
     }
 
     @Override
-    public List<PieceDto> findPiecesByGameId(Long gameId) {
+    public List<PieceEntity> findPiecesByGameId(Long gameId) {
         return new ArrayList<>(pieces.values());
     }
 

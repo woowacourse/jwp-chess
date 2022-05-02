@@ -113,4 +113,13 @@ public class PieceFactory {
         }
         throw new IllegalArgumentException("해당 특징의 Piece 를 찾을 수 없습니다.");
     }
+
+
+    public static Piece find(String type, String color) {
+        String key = parsePieceToString(PieceColor.find(color), PieceType.find(type));
+        if (PIECE_CACHE.containsKey(key)) {
+            return PIECE_CACHE.get(key);
+        }
+        throw new IllegalArgumentException("해당 특징의 Piece 를 찾을 수 없습니다.");
+    }
 }

@@ -14,7 +14,6 @@ function setList() {
                 const item =  createItem(game.id, game.name)
                 items.appendChild(item);
             })
-
         },
         error: function (data){
             alert(data)
@@ -45,6 +44,13 @@ function createItem(id, name) {
     const deleteForm = document.createElement("form");
     deleteForm.setAttribute("method", "post");
     deleteForm.setAttribute("action", "/" + id);
+
+    const deleteHidden = document.createElement("input");
+    deleteHidden.setAttribute("type", "hidden");
+    deleteHidden.setAttribute("name", "_method");
+    deleteHidden.setAttribute("value", "delete");
+
+    deleteForm.appendChild(deleteHidden);
 
     const passwordMessage = document.createElement('span');
     passwordMessage.innerText = '비밀번호 입력';

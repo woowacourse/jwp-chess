@@ -55,7 +55,7 @@ public class ChessGameControllerTest {
                 .body("id", is((int) id));
     }
 
-    @DisplayName("기물 move 확인 - POST")
+    @DisplayName("기물 move 확인 - PUT")
     @Test
     @Order(2)
     void movePiece() {
@@ -63,7 +63,7 @@ public class ChessGameControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveResponse)
-                .when().post("/move/" + id)
+                .when().put("/move/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.CREATED.value())
                 .body("size()", is(2))
@@ -113,13 +113,13 @@ public class ChessGameControllerTest {
                 .body("games[0].password", is("1234"));
     }
 
-    @DisplayName("체스 게임 종료 확인 - POST")
+    @DisplayName("체스 게임 종료 확인 - PUT")
     @Test
     @Order(6)
     void endGame() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/end/" + id)
+                .when().put("/end/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("gameState", is("NONE"))

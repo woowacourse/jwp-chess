@@ -5,6 +5,7 @@ import chess.dto.request.PasswordRequest;
 import chess.service.ChessService;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +58,7 @@ public class ChessGameViewController {
         return "redirect:/board/" + id;
     }
 
-    @PostMapping("/{id}")
+    @DeleteMapping("/{id}")
     public String deleteGame(@PathVariable Long id, PasswordRequest passwordRequest,
                              HttpServletResponse response) throws IOException {
         response.setContentType("text/html; charset=UTF-8");

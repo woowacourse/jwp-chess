@@ -19,12 +19,12 @@ public class ChessGameController {
     }
 
     @GetMapping("/games/{id}")
-    public ResponseEntity<BoardResponse> loadPieces(@PathVariable Long id) {
+    public ResponseEntity<BoardResponse> loadBoard(@PathVariable Long id) {
         BoardResponse initialBoard = chessService.getBoard(id);
         return ResponseEntity.ok().body(initialBoard);
     }
 
-    @PostMapping( "/move/{id}")
+    @PutMapping( "/move/{id}")
     public ResponseEntity<GameStateResponse> move(@PathVariable Long id,
                                                   @RequestBody MoveResponse moveResponse) throws SQLException {
         chessService.validateGameId(id);
@@ -49,8 +49,8 @@ public class ChessGameController {
         return ResponseEntity.ok().body(new GamesResponse(chessService.getGames()));
     }
 
-    @PostMapping("/end/{id}")
-    public ResponseEntity<GameStateResponse> endGame(@PathVariable Long id) throws SQLException {
+    @PutMapping("/end/{id}")
+    public ResponseEntity<GameStateResponse> endGameState(@PathVariable Long id) throws SQLException {
         chessService.validateGameId(id);
         chessService.updateStateEnd(id);
         return ResponseEntity.ok().body(chessService.findWinner(id));

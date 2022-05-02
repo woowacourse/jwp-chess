@@ -74,7 +74,7 @@ function reset() {
 function end() {
     $.ajax({
         url: "/end/" + document.getElementById("gameId").innerText,
-        type: "POST",
+        type: "PUT",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {

@@ -79,7 +79,7 @@ public class ChessGameService {
         return GameStatusDto.of(chessGame);
     }
 
-    public GameStatusDto loadChessGame(int gameId) {
+    private GameStatusDto loadChessGame(int gameId) {
         ChessGame chessGame = createCustomChessGame(gameId);
         return GameStatusDto.of(chessGame);
     }

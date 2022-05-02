@@ -7,7 +7,13 @@ public interface PlayerDao {
 
     void save(Color color);
 
+    void saveById(int id, Color of);
+
     Player getPlayer();
 
     void deleteAll();
+
+    Player findById(int id);
+
+    void deleteById(int id);
 }

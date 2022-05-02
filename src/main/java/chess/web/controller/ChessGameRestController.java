@@ -4,12 +4,15 @@ import chess.web.dto.CreateRoomDto;
 import chess.web.dto.MoveDto;
 import chess.web.dto.PlayResultDto;
 import chess.web.dto.RoomDto;
+import chess.web.dto.ScoreDto;
 import chess.web.service.ChessGameService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,15 +25,9 @@ public class ChessGameRestController {
         this.service = service;
     }
 
-    @GetMapping("/load")
-    public ResponseEntity<PlayResultDto> load() {
-        final PlayResultDto playResultDto = service.play();
-        return ResponseEntity.ok(playResultDto);
-    }
-
-    @PostMapping("/move")
+    @PutMapping("/chess-game")
     public ResponseEntity<PlayResultDto> move(@RequestBody MoveDto moveDto) {
-        final PlayResultDto playResultDto = service.move(moveDto);;
+        final PlayResultDto playResultDto = service.move(moveDto);
         return ResponseEntity.ok(playResultDto);
     }
 
@@ -40,9 +37,27 @@ public class ChessGameRestController {
         return new ResponseEntity(roomDto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/chess-game")
-    public ResponseEntity<List<RoomDto>> loadChessGames() {
-        List<RoomDto> roomDtos = service.loadChessGames();
+    @GetMapping("/chess-games")
+    public ResponseEntity<List<RoomDto>> loadRoom() {
+        final List<RoomDto> roomDtos = service.loadChessGames();
         return ResponseEntity.ok(roomDtos);
+    }
+
+    @GetMapping("/chess-game/{id}/board")
+    public ResponseEntity<PlayResultDto> loadChessBoard(@PathVariable int id) {
+        final PlayResultDto playResultDto = service.play(id);
+        return ResponseEntity.ok(playResultDto);
+    }
+
+    @GetMapping("/chess-game/{id}/initialization")
+    public ResponseEntity initialize(@PathVariable int id) {
+        service.start(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/chess-game/{id}/status")
+    public ResponseEntity<ScoreDto> status(@PathVariable int id) {
+        final ScoreDto scoreDto = service.status(id);
+        return ResponseEntity.ok(scoreDto);
     }
 }

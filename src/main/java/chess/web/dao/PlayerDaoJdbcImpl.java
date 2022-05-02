@@ -25,9 +25,31 @@ public class PlayerDaoJdbcImpl implements PlayerDao {
     }
 
     @Override
+    public void saveById(int id, Color color) {
+        final String sql = "insert into player (id, color) values (?, ?)";
+        this.jdbcTemplate.update(
+                sql,
+                id,
+                color.name());
+    }
+
+    @Override
     public void deleteAll() {
         final String sql = "delete from player";
         this.jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        final String sql = "delete from player where id = " + id;
+        this.jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public Player findById(int id) {
+        final String sql = "select color from player where id = " + id;
+        String color = jdbcTemplate.queryForObject(sql, String.class);
+        return Player.of(Color.of(color));
     }
 
     @Override

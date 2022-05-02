@@ -35,18 +35,19 @@ public class ChessGameService {
         this.roomDao = roomDao;
     }
 
-    public ChessGame start() {
+    public ChessGame start(int id) {
         ChessGame chessGame = new ChessGame();
         chessGame.start();
 
-        removeAll();
-        saveAll(chessGame);
+        deleteById(id);
+        saveById(chessGame, id);
 
         return chessGame;
     }
 
     public PlayResultDto move(MoveDto moveDto) {
-        ChessGame chessGame = getChessGame();
+        final int id = moveDto.getId();
+        ChessGame chessGame = getOneChessGame(id);
         String turn = chessGame.getTurn();
 
         chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
@@ -55,60 +56,22 @@ public class ChessGameService {
             return PlayResultDto.of(toBoardDto(board), turn, isChessGameEnd(chessGame));
         }
 
-        removeAll();
-        saveAll(chessGame);
-        return PlayResultDto.of(toBoardDto(board), findTurn().name(), isChessGameEnd(chessGame));
+        deleteById(id);
+        saveById(chessGame, id);
+        return PlayResultDto.of(toBoardDto(board), findOneTurn(id).name(), isChessGameEnd(chessGame));
     }
 
-    public PlayResultDto play() {
-        if (findAllBoard().isEmpty()) {
-            start();
+    public PlayResultDto play(int id) {
+        if (findOneBoard(id).isEmpty()) {
+            start(id);
         }
-        return PlayResultDto.of(toBoardDto(findAllBoard()), findTurn().name(), false);
+        return PlayResultDto.of(toBoardDto(findOneBoard(id)), findOneTurn(id).name(), false);
     }
 
-    private Map<String, Piece> toBoardDto(Map<Position, Piece> board) {
-        Map<String, Piece> boardDto = new HashMap<>();
-        for (Position position : board.keySet()) {
-            Piece piece = board.get(position);
-            boardDto.put(position.toString(), piece);
-        }
-        return boardDto;
-    }
-
-    private void removeAll() {
-        chessBoardDao.deleteAll();
-        playerDao.deleteAll();
-    }
-
-    private void saveAll(ChessGame chessGame) {
-        Map<Position, Piece> chessBoard = chessGame.getBoard();
-        for (Position position : chessBoard.keySet()) {
-            chessBoardDao.save(position, chessBoard.get(position));
-        }
-        playerDao.save(Color.of(chessGame.getTurn()));
-    }
-
-    public ChessGame getChessGame() {
-        return ChessGame.of(new RunningGame(ChessBoard.of(findAllBoard()), findTurn()));
-    }
-
-    private Map<Position, Piece> findAllBoard() {
-        return chessBoardDao.findAll();
-    }
-
-    private Player findTurn() {
-        return playerDao.getPlayer();
-    }
-
-    private boolean isChessGameEnd(ChessGame chessGame) {
-        return chessGame.isFinished();
-    }
-
-    public ScoreDto status() {
-        ChessBoard board = ChessBoard.of(findAllBoard());
+    public ScoreDto status(int id) {
+        ChessBoard board = ChessBoard.of(findOneBoard(id));
         Map<Color, Double> score = board.computeScore();
-        removeAll();
+        deleteById(id);
         return new ScoreDto(score.get(Color.WHITE), score.get(Color.BLACK));
     }
 
@@ -122,5 +85,43 @@ public class ChessGameService {
 
     public List<RoomDto> loadChessGames() {
         return roomDao.findAll();
+    }
+
+    public ChessGame getOneChessGame(int id) {
+        return ChessGame.of(new RunningGame(ChessBoard.of(findOneBoard(id)), findOneTurn(id)));
+    }
+
+    private Map<Position, Piece> findOneBoard(int id) {
+        return chessBoardDao.findById(id);
+    }
+
+    private Player findOneTurn(int id) {
+        return playerDao.findById(id);
+    }
+
+    private boolean isChessGameEnd(ChessGame chessGame) {
+        return chessGame.isFinished();
+    }
+
+    private Map<String, Piece> toBoardDto(Map<Position, Piece> board) {
+        Map<String, Piece> boardDto = new HashMap<>();
+        for (Position position : board.keySet()) {
+            Piece piece = board.get(position);
+            boardDto.put(position.toString(), piece);
+        }
+        return boardDto;
+    }
+
+    private void deleteById(int id) {
+        chessBoardDao.deleteById(id);
+        playerDao.deleteById(id);
+    }
+
+    private void saveById(ChessGame chessGame, int id) {
+        Map<Position, Piece> chessBoard = chessGame.getBoard();
+        for (Position position : chessBoard.keySet()) {
+            chessBoardDao.saveById(id, position, chessBoard.get(position));
+        }
+        playerDao.saveById(id, Color.of(chessGame.getTurn()));
     }
 }

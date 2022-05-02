@@ -24,7 +24,7 @@ public class RoomDaoJdbcImpl implements RoomDao {
 
     private final RowMapper<RoomDto> actorRowMapper = (resultSet, rowNum) -> {
         RoomDto roomDto = RoomDto.of(
-                Integer.parseInt(resultSet.getString("num")),
+                Integer.parseInt(resultSet.getString("id")),
                 RoomName.of(resultSet.getString("name"))
         );
         return roomDto;
@@ -44,7 +44,7 @@ public class RoomDaoJdbcImpl implements RoomDao {
 
     @Override
     public List<RoomDto> findAll() {
-        final String sql = "select num, name from room";
+        final String sql = "select id, name from room";
         List<RoomDto> roomDtos = jdbcTemplate.query(sql, actorRowMapper);
 
         return roomDtos;

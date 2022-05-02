@@ -23,6 +23,10 @@ public class PlayerDaoImpl implements PlayerDao {
     }
 
     @Override
+    public void saveById(int id, Color of) {
+    }
+
+    @Override
     public Player getPlayer() {
         SelectJdbcTemplate jdbcTemplate = new SelectJdbcTemplate() {
             @Override
@@ -54,5 +58,14 @@ public class PlayerDaoImpl implements PlayerDao {
         };
         final String sql = "delete from player";
         jdbcTemplate.executeUpdate(sql);
+    }
+
+    @Override
+    public Player findById(int id) {
+        return null;
+    }
+
+    @Override
+    public void deleteById(int id) {
     }
 }

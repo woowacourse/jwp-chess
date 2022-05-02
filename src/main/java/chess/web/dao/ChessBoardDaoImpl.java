@@ -28,6 +28,10 @@ public class ChessBoardDaoImpl implements ChessBoardDao {
     }
 
     @Override
+    public void saveById(int id, Position position, Piece piece) {
+    }
+
+    @Override
     public void deleteAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate() {
             @Override
@@ -37,6 +41,10 @@ public class ChessBoardDaoImpl implements ChessBoardDao {
         };
         final String sql = "delete from board";
         jdbcTemplate.executeUpdate(sql);
+    }
+
+    @Override
+    public void deleteById(int id) {
     }
 
     public Map<Position, Piece> findAll() {
@@ -61,5 +69,10 @@ public class ChessBoardDaoImpl implements ChessBoardDao {
         jdbcTemplate.executeQuery(sql);
 
         return board;
+    }
+
+    @Override
+    public Map<Position, Piece> findById(int id) {
+        return null;
     }
 }

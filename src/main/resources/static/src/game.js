@@ -1,17 +1,18 @@
+const pathNames = window.location.pathname.split("/");
+const id = pathNames[2];
 let positions = "";
 
 window.onload = async () => {
-    let data = await chessGame;
+    let data = await fetch("/chess-game/" + id + "/board", {
+        method: "GET"
+    })
+    .then(r=>r.json())
+    .then(data => {
+        return data;
+    });
+
     JsonSender.setChessBoard(data);
 }
-
-const chessGame = fetch("/load", {
-    method: "GET"
-})
-.then(r=>r.json())
-.then(data => {
-    return data;
-});
 
 const move = async function (position) {
     positions += position;
@@ -26,12 +27,13 @@ const move = async function (position) {
 
 const JsonSender = {
     sendSourceTarget: function(source, target) {
-        fetch('/move', {
-            method: "POST",
+        fetch('/chess-game', {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
+                id: id,
                 source: source,
                 target: target
             })
@@ -41,7 +43,7 @@ const JsonSender = {
         .then(data => {
             if (data.isFinished === true) {
                 alert(data.turn + "이 승리하였습니다!!!");
-                window.location.replace("/end");
+                window.location.replace("/chess-game/" + id + "/end");
                 return;
             }
 
@@ -56,31 +58,30 @@ const JsonSender = {
     },
 
     setChessBoard: function (chessGame) {
-        let data = chessGame;
-        let chessBoard = data.board;
+        const chessBoard = chessGame.board;
 
-        let turnInfo = document.querySelector(".turnInfo");
-        let turn = turnInfo.querySelector("tbody tr td");
-        turn.innerHTML = '<img src="images/' + data.turn + '_turn.png" class="img"/>';
+        const turnInfo = document.querySelector(".turnInfo");
+        const turn = turnInfo.querySelector("tbody tr td");
+        turn.innerHTML = '<img src="../images/' + chessGame.turn + '_turn.png" class="img"/>';
 
         for (let file = 0; file < 8; file++) {
             for (let rank = 1; rank <= 8; rank++) {
                 const position = toFileName(file) + rank;
-                let piece = chessBoard[position];
+                const piece = chessBoard[position];
 
                 const eachDiv = document.getElementById(position);
                 if (piece) {
-                    eachDiv.innerHTML = '<img src="images/' + piece.name + '_' + piece.color + '.png" class="img"/>';
+                    eachDiv.innerHTML = '<img src="../images/' + piece.name + '_' + piece.color + '.png" class="img"/>';
                     continue;
                 }
-                eachDiv.innerHTML = '<img src="images/empty.png" class="img" />';
+                eachDiv.innerHTML = '<img src="../images/empty.png" class="img" />';
             }
         }
     },
 
     removeChessBoard: function () {
-        let turnInfo = document.querySelector(".turnInfo");
-        let turn = turnInfo.querySelector("tbody tr td");
+        const turnInfo = document.querySelector(".turnInfo");
+        const turn = turnInfo.querySelector("tbody tr td");
         turn.innerHTML = "";
 
         for (let file = 0; file < 8; file++) {
@@ -102,7 +103,7 @@ function toFileName(file) {
 
 async function handleErrors(response) {
     if (!response.ok) {
-        let errorMessage = await response.json().then((data) => {
+        const errorMessage = await response.json().then((data) => {
             return data.errorMessage;
         })
         throw Error(errorMessage);
@@ -110,10 +111,14 @@ async function handleErrors(response) {
     return response;
 }
 
-const start = function () {
-    window.location.replace("/start");
+function lobby() {
+    window.location.replace("/");
 }
 
-const play = function () {
-    window.location.replace("/play");
+async function start() {
+    await fetch("/chess-game/" + id + "/initialization", {
+        method: "GET"
+    });
+
+    window.location.reload();
 }

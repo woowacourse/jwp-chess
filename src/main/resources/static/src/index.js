@@ -32,12 +32,10 @@ function createGameButton() {
 
 window.onload = async () => {
     const rooms = await chessGameRoom;
-    console.log("rooms: " + rooms);
-
     JsonSender.setChessRoom(rooms);
 }
 
-const chessGameRoom = fetch("/chess-game", {
+const chessGameRoom = fetch("/chess-games", {
     method: "GET"
 })
 .then(r=>r.json())
@@ -52,25 +50,17 @@ async function handleCreatedErrors(response) {
     return response;
 }
 
-const start = function () {
-    window.location.replace("/start");
-}
-
-const play = function () {
-    window.location.replace("/play");
-}
-
 const JsonSender = {
     setChessRoom: function (rooms) {
-        let data = rooms;
         let tbody = document.querySelector(".tbody-list");
 
         let html = '';
-        for(let roomNumber in data) {
-            let roomName = data[roomNumber]['roomName']['roomName'];
-            console.log('key:' + roomNumber + ' / ' + 'value:' + roomName);
+        for(let key in rooms) {
+            let id = rooms[key]['roomNumber'];
+            let roomName = rooms[key]['roomName']['roomName'];
             html += '<tr>';
-            html += '<td>' + roomNumber + '</td><td>' + roomName + '</td>';
+            html += '<td>' + id + '</td>';
+            html += '<td onClick="play(' + id + ')">' + roomName + '</td>';
             html += '<td><button class="delete-room" onclick="deleteGameButton()">삭제하기</button></td>';
             html += '</tr>';
         }
@@ -80,4 +70,8 @@ const JsonSender = {
 
 function deleteGameButton() {
 
+}
+
+function play(id) {
+    window.location.replace("/chess-game/" + id);
 }

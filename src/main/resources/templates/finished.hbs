@@ -5,28 +5,29 @@
     <meta charset="UTF-8">
     <title>체스 게임</title>
     <link rel="stylesheet" href="/src/index.css">
-    <script src="/src/game.js"></script>
+    <script src="/src/finished.js"></script>
 </head>
 
 <body>
 <div id="app">
-    <h1>♟️체스</h1>
-    <button class="newGame styled" type="button" onclick="start()">새게임</button>
+  <h1>♟️체스</h1>
+  <button class="lobby styled" type="button" onclick="lobby()">로비로 나가기</button>
+  <button class="newGame styled" type="button" onclick="start()">새게임</button>
 
-    <table>
-        <thead>
-            <tr>
-                <th>화이트</th>
-                <th>블랙</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{whiteScore}}</td>
-                <td>{{blackScore}}</td>
-            </tr>
-        </tbody>
-    </table>
+  <table class="score">
+    <thead>
+      <tr>
+        <th>화이트</th>
+        <th>블랙</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>{{whiteScore}}</td>
+        <td>{{blackScore}}</td>
+      </tr>
+    </tbody>
+  </table>
 
 </div>
 </body>

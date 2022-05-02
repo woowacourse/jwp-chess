@@ -27,14 +27,14 @@ public class ChessGameServiceTest {
 
     @Test
     void start() {
-        ChessGame chessGame = chessGameService.start();
+        ChessGame chessGame = chessGameService.start(1);
 
         assertThat(chessGame.getBoard()).isNotNull();
     }
 
     @Test
     void play() {
-        PlayResultDto playResultDto = chessGameService.play();
+        PlayResultDto playResultDto = chessGameService.play(1);
 
         Map<String, Piece> board = playResultDto.getBoard();
         String turn = playResultDto.getTurn();
@@ -46,7 +46,7 @@ public class ChessGameServiceTest {
     @Test
     void move() {
         chessBoardDao.save(Position.of("a2"), new StartedPawn(Color.WHITE));
-        PlayResultDto playResultDto = chessGameService.move(new MoveDto("a2", "a4"));
+        PlayResultDto playResultDto = chessGameService.move(new MoveDto(1, "a2", "a4"));
 
         Map<String, Piece> board = playResultDto.getBoard();
         boolean isFinished = playResultDto.getIsFinished();

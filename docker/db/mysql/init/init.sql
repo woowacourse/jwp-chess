@@ -1,19 +1,22 @@
 create table board
 (
+    id int(10) not null,
     position varchar(2) not null,
     piece varchar(10) not null,
-    primary key (position)
+    constraint board_PK primary key (id, position),
+    foreign key board_FK (id) REFERENCES room(id) ON UPDATE CASCADE
 );
 
 create table player
 (
+    id int(10) not null primary key,
     color varchar(5) not null,
-    primary key (color)
+    foreign key player_FK (id) REFERENCES room(id) ON UPDATE CASCADE
 );
 
 create table room
 (
-    num int(10) not null AUTO_INCREMENT primary key,
+    id int(10) not null AUTO_INCREMENT primary key,
     name varchar(5) not null,
     password varchar(100) not null
 );

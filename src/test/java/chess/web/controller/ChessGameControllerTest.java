@@ -73,7 +73,7 @@ public class ChessGameControllerTest {
     @Test
     void postMove() throws Exception {
         chessBoardDao.save(Position.of("a2"), new StartedPawn(Color.WHITE));
-        String content = objectMapper.writeValueAsString(new MoveDto("a2", "a4"));
+        String content = objectMapper.writeValueAsString(new MoveDto(1, "a2", "a4"));
 
         this.mockMvc.perform(post("/move")
                         .content(content)

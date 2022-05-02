@@ -3,7 +3,6 @@ package chess.dao;
 import chess.domain.ChessGame;
 import chess.domain.Score;
 import chess.domain.piece.Color;
-import chess.domain.vo.Room;
 import chess.dto.ChessGameDto;
 import chess.dto.GameStatus;
 import java.sql.Connection;
@@ -11,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,7 +21,6 @@ public class ChessGameDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public ChessGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

@@ -1,9 +1,7 @@
 package chess.dao;
 
 import chess.domain.piece.Piece;
-import chess.domain.position.File;
 import chess.domain.position.Position;
-import chess.domain.position.Rank;
 import chess.dto.PieceDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,12 +32,6 @@ public class PieceDao {
         jdbcTemplate
                 .update("DELETE FROM piece WHERE chess_game_id = ? and position = ?", chessGameId, position.toString());
     }
-
-//    public void savePieces(int chessGameId, List<PieceDto> pieceDtos) {
-//        for (PieceDto dto : pieceDtos) {
-//            savePiece(chessGameId, dto.getPosition(), dto.getPiece());
-//        }
-//    }
 
     public void deleteById(int chessGameId) {
         jdbcTemplate.update("DELETE FROM piece WHERE chess_game_id = ?", chessGameId);

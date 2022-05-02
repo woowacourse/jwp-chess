@@ -1,44 +1,65 @@
 package chess.web.controller;
 
-import chess.board.Board;
+import chess.domain.board.Board;
+import chess.web.controller.dto.*;
 import chess.web.service.ChessService;
-import chess.web.service.dto.BoardDto;
-import chess.web.service.dto.MoveDto;
-import chess.web.service.dto.ScoreDto;
+import chess.web.service.RoomService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
+@RequestMapping("/api/chess")
 @RestController
-@RequestMapping("/api")
 public class ChessApiController {
 
     private final ChessService chessService;
+    private final RoomService roomService;
 
-    public ChessApiController(ChessService chessService) {
+    public ChessApiController(ChessService chessService, RoomService roomService) {
         this.chessService = chessService;
+        this.roomService = roomService;
     }
 
-    @GetMapping("/load")
-    public ResponseEntity<BoardDto> loadGame() {
-        Board board = chessService.loadGame(1L);
-        return ResponseEntity.ok().body(BoardDto.from(board));
+    @GetMapping("/{id}")
+    public ResponseEntity<BoardDto> loadGame(@PathVariable Long id) {
+        Board board = chessService.loadGame(id);
+        return ResponseEntity.ok().body(BoardDto.from(id, board));
     }
 
-    @GetMapping("/restart")
-    public ResponseEntity<BoardDto> initBoard() {
-        Board board = chessService.initBoard(1L);
-        return ResponseEntity.ok().body(BoardDto.from(board));
+    @PostMapping("/new")
+    public ResponseEntity<Void> createGame(@RequestBody RoomRequest.TitleAndPassword request) {
+        Long id = roomService.createRoom(request.getTitle(), request.getPassword());
+        return ResponseEntity.created(URI.create("/room/" + id)).build();
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<ScoreDto> getStatus() {
-        ScoreDto status = chessService.getStatus(1L);
+    @GetMapping("/{id}/restart")
+    public ResponseEntity<BoardDto> initBoard(@PathVariable Long id) {
+        Board board = chessService.initBoard(id);
+        return ResponseEntity.ok().body(BoardDto.from(id, board));
+    }
+
+    @GetMapping("/{id}/status")
+    public ResponseEntity<ScoreDto> getStatus(@PathVariable Long id) {
+        ScoreDto status = chessService.getStatus(id);
         return ResponseEntity.ok().body(status);
     }
 
-    @PostMapping("/move")
-    public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto) {
-        Board board = chessService.move(moveDto, 1L);
-        return ResponseEntity.ok().body(BoardDto.from(board));
+    @PostMapping("/{id}/move")
+    public ResponseEntity<BoardDto> move(@RequestBody MoveDto moveDto, @PathVariable Long id) {
+        Board board = chessService.move(moveDto, id);
+        return ResponseEntity.ok().body(BoardDto.from(id, board));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@RequestBody RoomRequest.Password request, @PathVariable Long id) {
+        roomService.delete(request.getPassword(), id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/join")
+    public ResponseEntity<Void> getJoin(@RequestBody RoomRequest.Password request, @PathVariable Long id) {
+        roomService.checkJoinRoom(request.getPassword(), id);
+        return ResponseEntity.ok().build();
     }
 }

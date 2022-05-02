@@ -1,6 +1,6 @@
 const start = document.getElementById('start-button');
 const status = document.getElementById('status-button');
-const IMAGE_PATH = "./images/";
+const IMAGE_PATH = ".././images/";
 const BOARD = document.querySelector("#board");
 const CURRENT_TEAM = document.querySelector("#current-team");
 const SYMBOL_TO_IMAGE_PATH = {
@@ -21,20 +21,21 @@ const SYMBOL_TO_IMAGE_PATH = {
 let boardInfo = "";
 let isChoiced = false;
 let currentTurn = "";
+let gameId = "";
 
-function showStatusButton() {
+function showStatusButton(id) {
+    gameId = id;
     status.style.visibility = 'visible';
 }
 
 function initBoard() {
-    fetch('/api/restart')
+    fetch('/api/' + gameId + '/restart')
         .then(res => res.json())
         .then(imageSetting)
 }
 
 start.addEventListener('click', function () {
     if (start.textContent === "START") {
-        initBoard();
         loadBoard();
         move();
         start.textContent = "RESTART";
@@ -52,13 +53,13 @@ function getStatus(scoreResponse) {
 }
 
 status.addEventListener('click', function () {
-    fetch('/api/status')
+    fetch('/api/chess/' + gameId + '/status')
         .then(res => res.json())
         .then(getStatus)
 })
 
 function loadBoard() {
-    fetch('/api/load')
+    fetch('/api/chess/' + gameId)
         .then(res => res.json())
         .then(imageSetting)
 }
@@ -69,7 +70,6 @@ function imageSetting(response) {
     pieces = response["board"];
     for (const div of divs) {
         const key = div.getAttribute("id");
-
         if (SYMBOL_TO_IMAGE_PATH[pieces[key]] !== undefined) {
             div.style.backgroundImage = "url(" + SYMBOL_TO_IMAGE_PATH[pieces[key]] + ")";
         } else {
@@ -147,7 +147,7 @@ function movePiece(from, to) {
         to: to
     }
 
-    fetch('/api/move', {
+    fetch('/api/chess/' + gameId + '/move', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -158,10 +158,81 @@ function movePiece(from, to) {
 }
 
 function move() {
-
     const divs = BOARD.querySelectorAll("div");
 
     for (const div of divs) {
         div.addEventListener("click", eventMove);
     }
+}
+
+function enterRoom(id) {
+    var password = prompt('패스워드를 입력하세요');
+    const request = {
+        password: password
+    }
+    fetch('/api/chess/' + id + '/join', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw res
+            }
+            window.location.href = "/room/" + id
+            return;
+        }).catch(error => {
+        error.text().then(msg => alert(msg))
+    })
+}
+
+function deleteRoom(id) {
+    var password = prompt('패스워드를 입력하세요');
+    const request = {
+        password: password
+    }
+    fetch('/api/chess/' + id, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+    }).then(res => {
+        if (!res.ok) {
+            throw res
+        }
+    }).catch(error => {
+        error.text().then(msg => alert(msg))
+    })
+}
+
+function goHome() {
+    window.location.href = "/";
+}
+
+function createRoom() {
+    let title = document.getElementById("title").value;
+    let password = document.getElementById("password").value;
+
+    const request = {
+        title: title,
+        password: password
+    };
+
+    fetch('/api/chess/new', {
+        method: 'post',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request)
+    }).then((response) => {
+        if (response.status === 400) {
+            window.alert("제목이 중복되었습니다.")
+            return;
+        }
+        window.alert("방 생성에 성공했습니다.");
+        window.location.href = response.headers.get("Location");
+    });
 }

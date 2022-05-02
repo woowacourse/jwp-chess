@@ -6,10 +6,12 @@ body {
 }
 
 .centered {
+    padding: 10px;
+    margin: 10px;
+    color: cornflowerblue;
+    font-size: 40px;
     text-align: center;
-    width: auto;
-    color: white;
-    height: 230px;
+    height: 150px;
 }
 
 .chess-board {
@@ -18,6 +20,21 @@ body {
     height: 500px;
     margin-top: 30px;
     justify-content: center;
+}
+
+
+.create-button {
+    color: palegreen;
+    border-radius: 5px;
+    margin-left: 4px;
+    font-size: 30px;
+}
+
+.delete-button {
+    color: palevioletred;
+    border-radius: 5px;
+    margin-left: 4px;
+    font-size: 20px;
 }
 
 .white-square {
@@ -74,6 +91,20 @@ body {
     visibility: hidden;
 }
 
+.home-button {
+    color: palevioletred;
+    border-radius: 5px;
+    margin-left: 4px;
+    font-size: 40px;
+}
+
+.ok-button{
+    color: palegreen;
+    border-radius: 5px;
+    margin-left: 4px;
+    font-size: 40px;
+}
+
 .info {
     min-width: 370px;
     height: 50px;
@@ -81,9 +112,9 @@ body {
 }
 
 .info-message {
-    padding: 10px;
+    padding: 19px;
     margin: 15px;
-    width: 600px;
+    width: 480px;
     color: white;
     font-size: 18px;
 }
@@ -96,4 +127,12 @@ body {
     position: absolute;
     width: 300px;
     color: white;
+}
+
+.room-list {
+    color: white;
+    width: 500px;
+    align-content: center;
+    margin: auto;
+    font-size: 30px;
 }

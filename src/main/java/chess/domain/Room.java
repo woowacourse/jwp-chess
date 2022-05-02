@@ -29,10 +29,8 @@ public class Room {
         }
     }
 
-    public void checkPassword(String password) {
-        if (!this.password.equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+    public boolean isPasswordCorrect(String password) {
+        return this.password.equals(password);
     }
 
     public long getId() {
@@ -43,7 +41,4 @@ public class Room {
         return name;
     }
 
-    public String getPassword() {
-        return password;
-    }
 }

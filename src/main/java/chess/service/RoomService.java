@@ -1,17 +1,18 @@
 package chess.service;
 
 import chess.domain.Room;
+import chess.dto.RoomDto;
 import chess.dto.RoomResponseDto;
 import chess.repository.BoardDao;
 import chess.repository.RoomDao;
-import chess.dto.RoomDto;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class RoomService {
 
     private final RoomDao roomDao;
@@ -57,7 +58,7 @@ public class RoomService {
     }
 
     private void checkPassword(Room room, String password) {
-        if (room.getPassword().equals(password)) {
+        if (!room.isPasswordCorrect(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }

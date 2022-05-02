@@ -2,8 +2,12 @@ package chess.service;
 
 import chess.dao.GameDao;
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.domain.auth.PlayerCookie;
+import chess.domain.board.piece.Color;
 import chess.dto.response.EnterGameDto;
 import chess.entity.FullGameEntity;
+import chess.util.CookieUtil;
+import javax.servlet.http.Cookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +18,10 @@ public class AuthService {
 
     public AuthService(GameDao gameDao) {
         this.gameDao = gameDao;
+    }
+
+    public Cookie generateCreatedGameCookie(int gameId) {
+        return CookieUtil.generateGameOwnerCookie(gameId);
     }
 
     @Transactional
@@ -44,5 +52,9 @@ public class AuthService {
         if (!game.hasOpponentOf(authCredentials)) {
             throw new IllegalArgumentException("잘못된 비밀번호를 입력하였습니다.");
         }
+    }
+
+    public Color parseValidCookie(int gameId, PlayerCookie cookie) {
+        return cookie.parsePlayerColorBy(gameId);
     }
 }

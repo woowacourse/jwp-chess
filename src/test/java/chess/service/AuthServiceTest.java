@@ -7,6 +7,8 @@ import chess.domain.auth.AuthCredentials;
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.dto.response.EnterGameDto;
 import chess.fixture.GameDaoStub;
+import chess.util.CookieUtil;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,6 +24,15 @@ class AuthServiceTest {
     void setup() {
         gameDao = new GameDaoStub();
         service = new AuthService(gameDao);
+    }
+
+    @Test
+    void generateCreatedGameCookie_메서드는_게임id를_토대로_방주인의_쿠키를_반환() {
+        Cookie actual = service.generateCreatedGameCookie(1);
+
+        Cookie expected = CookieUtil.generateGameOwnerCookie(1);
+
+        assertThat(actual.getValue()).isEqualTo(expected.getValue());
     }
 
     @DisplayName("loginOrSignInAsOpponent 메서드로 게임의 정보 조회 가능")

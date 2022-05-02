@@ -18,8 +18,8 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handle(RuntimeException exception) {
+    public ResponseEntity<String> handleServerError(RuntimeException exception) {
         logger.error(exception.getMessage());
-        return new ResponseEntity<>("서버에 문제가 발생했습니다.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("서버에 문제가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

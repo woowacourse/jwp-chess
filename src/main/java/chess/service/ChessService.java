@@ -10,7 +10,8 @@ import chess.domain.game.Turn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.dto.BoardsDto;
-import chess.dto.StatusDto;
+import chess.dto.request.RoomAccessRequestDto;
+import chess.dto.response.StatusResponseDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
 import chess.dto.response.GameResponseDto;
@@ -23,6 +24,9 @@ import chess.repository.RoomRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import chess.util.ChessGameAlreadyFinishException;
+import chess.util.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,14 +36,21 @@ public class ChessService {
 
     private final RoomRepository roomRepository;
     private final BoardRepository boardRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ChessService(final RoomRepository roomRepository, final BoardRepository boardRepository) {
+    public ChessService(final RoomRepository roomRepository,
+                        final BoardRepository boardRepository,
+                        final PasswordEncoder passwordEncoder) {
         this.roomRepository = roomRepository;
         this.boardRepository = boardRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public RoomResponseDto createRoom(final RoomRequestDto roomRequestDto) {
-        final RoomEntity room = new RoomEntity(roomRequestDto.getName(), "white", false);
+        final RoomEntity room = new RoomEntity(roomRequestDto.getName(),
+                passwordEncoder.encode(roomRequestDto.getPassword()),
+                Team.WHITE.getValue(),
+                false);
         final RoomEntity createdRoom = roomRepository.insert(room);
         boardRepository.batchInsert(createBoards(createdRoom));
         return RoomResponseDto.of(createdRoom);
@@ -57,8 +68,7 @@ public class ChessService {
     public GameResponseDto enterRoom(final Long roomId) {
         final RoomEntity room = roomRepository.findById(roomId);
         validateGameOver(room);
-        final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
-        return GameResponseDto.of(room, BoardsDto.of(boards));
+        return GameResponseDto.of(room, boardRepository.findBoardByRoomId(roomId));
     }
 
     public GameResponseDto move(final Long id, final MoveRequestDto moveRequestDto) {
@@ -81,7 +91,7 @@ public class ChessService {
         final String turnAfterMove = chessGame.getCurrentTurn().getValue();
         roomRepository.updateTeam(id, turnAfterMove);
         updateGameOver(id, chessGame);
-        return GameResponseDto.of(roomRepository.findById(id), BoardsDto.of(boardRepository.findBoardByRoomId(id)));
+        return GameResponseDto.of(roomRepository.findById(id), boardRepository.findBoardByRoomId(id));
     }
 
     private void updateGameOver(final Long id, final ChessGame chessGame) {
@@ -104,20 +114,34 @@ public class ChessService {
         return RoomsResponseDto.of(rooms);
     }
 
-    public void endRoom(final Long id) {
+    public void endRoom(final Long id, final RoomAccessRequestDto roomAccessRequestDto) {
         final RoomEntity room = roomRepository.findById(id);
+        validatePassword(roomAccessRequestDto.getPassword(), room.getPassword());
         validateGameOver(room);
         roomRepository.updateGameOver(id);
     }
 
-    public StatusDto createStatus(final Long id) {
+    public StatusResponseDto createStatus(final Long id) {
         final Board board = toBoard(boardRepository.findBoardByRoomId(id));
-        return StatusDto.of(new Score(board.getBoard()));
+        return StatusResponseDto.of(new Score(board.getBoard()));
+    }
+
+    public void updateRoomName(final Long id, final RoomRequestDto roomRequestDto) {
+        RoomEntity room = roomRepository.findById(id);
+        validatePassword(roomRequestDto.getPassword(), room.getPassword());
+        validateGameOver(room);
+        roomRepository.updateName(id, roomRequestDto.getName());
     }
 
     private void validateGameOver(final RoomEntity room) {
         if (room.isGameOver()) {
-            throw new IllegalArgumentException("[ERROR] 이미 종료된 게임입니다.");
+            throw new ChessGameAlreadyFinishException("[ERROR] 이미 종료된 게임입니다.");
+        }
+    }
+
+    private void validatePassword(final String password, final String roomPassword) {
+        if (!roomPassword.equals(passwordEncoder.encode(password))) {
+            throw new IllegalArgumentException("[ERROR] 비밀번호가 틀렸습니다.");
         }
     }
 }

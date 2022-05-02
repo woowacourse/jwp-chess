@@ -10,7 +10,7 @@ async function onloadGameBody() {
 
     console.log(game);
 
-    let boards = game.board.boards;
+    let boards = game.boards;
 
     document.querySelectorAll('.piece-image')
         .forEach(cell => cell.addEventListener('click', e => cellClick(e, id)));
@@ -84,9 +84,15 @@ async function onloadIndexBody() {
 
 async function createRoom() {
     const roomName = window.prompt("방 제목을 중복되지 않도록 입력해주세요.");
+    if (roomName === null) {
+        alert("제목 입력은 필수입니다")
+        return;
+    }
+    const password = window.prompt("비밀번호를 설정하세요.")
 
     const bodyValue = {
-        name: roomName
+        name: roomName,
+        password: password
     }
     let response = await fetch("/api/chess/rooms/", {
         method: 'POST',
@@ -123,43 +129,50 @@ async function enterRoom(id) {
 }
 
 
-function updateRoomName(id) {
-
+async function updateRoomName(id) {
     const roomName = window.prompt("바꿀 방 제목을 입력해주세요");
+    if (roomName === null) {
+        return;
+    }
 
-    let f = document.createElement("form");
-    f.setAttribute("method", "post");
-    f.setAttribute("action", "/room/update/"); //url
-    document.body.appendChild(f);
+    const password = window.prompt("비밀번호를 입력해주세요.")
+    const bodyValue = {
+        name: roomName,
+        password: password
+    }
 
-    let i = document.createElement("input");
-    i.setAttribute("type", "hidden");
-    i.setAttribute("name", "roomName"); // key
-    i.setAttribute("value", roomName); // value
-    f.appendChild(i);
-
-    let i2 = document.createElement("input");
-    i2.setAttribute("type", "hidden");
-    i2.setAttribute("name", "roomId"); // key
-    i2.setAttribute("value", id); // value
-    f.appendChild(i2);
-
-    f.submit();
+    await fetch("/api/chess/rooms/" + id,{
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)
+    })
+        .then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        });
+    window.location.reload();
 }
 
-function deleteRoom(id) {
+async function deleteRoom(id) {
+    const password = window.prompt("비밀번호를 입력해주세요.")
+    const bodyValue = {
+        password: password
+    }
+    await fetch("/api/chess/rooms/" + id + "/end",{
+        method:"PATCH",
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)}
+    )
+        .then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        });
+    window.location.reload()
 
-    let f = document.createElement("form");
-    f.setAttribute("method", "post");
-    f.setAttribute("action", "/room/delete/"); //url
-    document.body.appendChild(f);
-
-    let i = document.createElement("input");
-    i.setAttribute("type", "hidden");
-    i.setAttribute("name", "roomId"); // key
-    i.setAttribute("value", id); // value
-    f.appendChild(i);
-
-    console.log(f);
-    f.submit();
 }

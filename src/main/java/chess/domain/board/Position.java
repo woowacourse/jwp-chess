@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class Position implements Comparable<Position> {
 
-    private final static Map<String, Position> CACHE;
+    private static final Map<String, Position> CACHE;
 
     static {
         CACHE = createAll().stream()

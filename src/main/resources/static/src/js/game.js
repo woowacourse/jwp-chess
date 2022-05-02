@@ -27,12 +27,22 @@ async function startGame() {
     savedBoard = await savedBoard.json();
     gameOver = savedBoard.gameOver;
     document.getElementById("roomName").innerText = "방 제목 : " + savedBoard.name
-    return savedBoard.board.boards;
+    return savedBoard.boards;
 }
 
 async function endGame() {
-    await getScore()
-    let savedBoard = await fetch("/api/chess/rooms/" + gameId,{ method:"DELETE"})
+    const password = window.prompt("비밀번호를 입력해주세요.")
+    const bodyValue = {
+        password: password
+    }
+    await fetch("/api/chess/rooms/" + gameId + "/end",{
+        method:"PATCH",
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)}
+    )
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
@@ -82,7 +92,7 @@ function clickMovePosition(e) {
 
 async function movePiece(source, target) {
     const board = await sendMoveInformation(source, target);
-    await updateBoard(board.board.boards);
+    await updateBoard(board.boards);
     await checkGameOver(board.gameOver);
 }
 
@@ -116,11 +126,9 @@ async function sendMoveInformation(source, target) {
 
 async function checkGameOver(gameOverMessage) {
     gameOver = gameOverMessage;
-    if (gameOver === "true") {
+    if (gameOver === true) {
         alert("게임이 종료되었습니다.");
-        let board = endGame();
-        await initializeBoard(board);
-        startButton.textContent = "Start";
+        window.location.href="http://localhost:8080/index.html"
     }
 }
 

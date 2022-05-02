@@ -26,7 +26,7 @@ public class RoomRepositoryImpl implements RoomRepository {
 
     @Override
     public List<RoomEntity> findRooms() {
-        final String sql = "select * from room where game_over = false;";
+        final String sql = "SELECT * FROM room WHERE game_over = false;";
         return jdbcTemplate.query(sql, rowMapper());
     }
 
@@ -34,9 +34,10 @@ public class RoomRepositoryImpl implements RoomRepository {
         return (rs, rowNum) -> {
             final Long id = rs.getLong("id");
             final String name = rs.getString("name");
+            final String password = rs.getString("password");
             final String team = rs.getString("team");
             final boolean gameOver = rs.getBoolean("game_over");
-            return new RoomEntity(id, name, team, gameOver);
+            return new RoomEntity(id, name, password, team, gameOver);
         };
     }
 
@@ -44,24 +45,30 @@ public class RoomRepositoryImpl implements RoomRepository {
     public RoomEntity insert(final RoomEntity room) {
         final SqlParameterSource parameters = new BeanPropertySqlParameterSource(room);
         final Long id = insertActor.executeAndReturnKey(parameters).longValue();
-        return new RoomEntity(id, room.getName(), room.getTeam(), room.isGameOver());
+        return new RoomEntity(id, room.getName(), room.getPassword(), room.getTeam(), room.isGameOver());
     }
 
     @Override
     public void updateTeam(final Long id, final String team) {
-        String sql = "update room set team = ? where id = ?";
+        String sql = "UPDATE room SET team = ? WHERE id = ?";
         jdbcTemplate.update(sql, team, id);
     }
 
     @Override
     public RoomEntity findById(final Long id) {
-        String sql = "select * from room where id = ?";
+        String sql = "SELECT * FROM room WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, rowMapper(), id);
     }
 
     @Override
     public void updateGameOver(final Long id) {
-        String sql = "update room set game_over = true where id = ?";
+        String sql = "UPDATE room SET game_over = true WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public void updateName(final Long id, final String name) {
+        String sql = "UPDATE room SET name = ? WHERE id = ?";
+        jdbcTemplate.update(sql, name, id);
     }
 }

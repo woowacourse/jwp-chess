@@ -1,5 +1,6 @@
 package chess.repository;
 
+import static chess.controller.ControllerTestFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.entity.RoomEntity;
@@ -30,7 +31,7 @@ class RoomRepositoryImplTest {
     @DisplayName("룸을 생성한다.")
     @Test
     void insert() {
-        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final RoomEntity roomEntity = new RoomEntity(ROOM_NAME, ROOM_PASSWORD, WHITE, FALSE);
         final RoomEntity insertRoom = roomRepository.insert(roomEntity);
         assertThat(insertRoom).isEqualTo(roomEntity);
     }
@@ -38,7 +39,7 @@ class RoomRepositoryImplTest {
     @DisplayName("룸의 현재 차례를 업데이트한다.")
     @Test
     void updateTeam() {
-        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final RoomEntity roomEntity = new RoomEntity(ROOM_NAME, ROOM_PASSWORD, WHITE, FALSE);
         final Long id = roomRepository.insert(roomEntity).getId();
         roomRepository.updateTeam(id, "black");
 
@@ -48,10 +49,20 @@ class RoomRepositoryImplTest {
     @DisplayName("룸의 상태를 종료로 변경한다")
     @Test
     void finishRoom() {
-        final RoomEntity roomEntity = new RoomEntity("체스 초보만", "white", false);
+        final RoomEntity roomEntity = new RoomEntity(ROOM_NAME, ROOM_PASSWORD, WHITE, FALSE);
         final Long id = roomRepository.insert(roomEntity).getId();
         roomRepository.updateGameOver(id);
 
         assertThat(roomRepository.findById(id).isGameOver()).isTrue();
+    }
+
+    @DisplayName("룸의 이름을 수정한다.")
+    @Test
+    void updateName() {
+        final RoomEntity roomEntity = new RoomEntity(ROOM_NAME, ROOM_PASSWORD, WHITE, FALSE);
+        final Long id = roomRepository.insert(roomEntity).getId();
+        roomRepository.updateName(id, "체스 왕초보만");
+
+        assertThat(roomRepository.findById(id).getName()).isEqualTo("체스 왕초보만");
     }
 }

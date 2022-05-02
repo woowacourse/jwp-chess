@@ -1,14 +1,15 @@
 package chess.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MoveRequestDto {
 
-    private String source;
-    private String target;
+    private final String source;
+    private final String target;
 
-    private MoveRequestDto() {
-    }
-
-    public MoveRequestDto(final String source, final String target) {
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public MoveRequestDto(@JsonProperty("source") final String source, @JsonProperty("target") final String target) {
         this.source = source;
         this.target = target;
     }

@@ -74,8 +74,8 @@ class ChessGameServiceTest {
     @Test
     @DisplayName("진행 중인 체스 게임은 삭제할 수 없다.")
     void canNotDeleteRunningGame() {
-        service.createNewChessGame(new CreateGameDto("게임1", "1234", "1234"));
-        final DeleteGameDto deleteGameDto = new DeleteGameDto(1, "1234");
+        final int gameId = service.createNewChessGame(new CreateGameDto("게임1", "1234", "1234")).getId();
+        final DeleteGameDto deleteGameDto = new DeleteGameDto(gameId, "1234");
 
         assertThatThrownBy(() -> service.deleteGame(deleteGameDto))
                 .isInstanceOf(IllegalArgumentException.class)

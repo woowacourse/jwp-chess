@@ -16,13 +16,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
-@Sql("/schema.sql")
 class PieceDaoTest {
 
-    private static final int gameId = 1;
     private static final Player whitePlayer = new Player(new WhiteGenerator(), Team.WHITE);
     private static final Player blackPlayer = new Player(new BlackGenerator(), Team.BLACK);
 
@@ -35,24 +32,19 @@ class PieceDaoTest {
     void setUp() {
         chessGameDao = new ChessGameDao(jdbcTemplate);
         pieceDao = new PieceDao(jdbcTemplate);
-        saveGame();
-    }
-
-    private void saveGame() {
-        chessGameDao.saveChessGame("게임1", "1234", Team.WHITE.getName());
-        pieceDao.savePieces(whitePlayer, 1);
-        pieceDao.savePieces(blackPlayer, 1);
     }
 
     @Test
     @DisplayName("체스말을 저정한다.")
     void savePieces() {
+        final int gameId = saveGame();
         assertDoesNotThrow(() -> pieceDao.savePieces(whitePlayer, gameId));
     }
 
     @Test
     @DisplayName("게임 번호와 팀명으로 체스말을 조회한다.")
     void findAllPieceByIdAndTeam() {
+        final int gameId = saveGame();
         final int expected = 16;
 
         final int actual = pieceDao.findAllPieceByIdAndTeam(gameId, Team.WHITE.getName()).size();
@@ -63,6 +55,7 @@ class PieceDaoTest {
     @Test
     @DisplayName("체스말을 삭제한다.")
     void deletePieces() {
+        final int gameId = saveGame();
         final int expected = 0;
 
         pieceDao.deletePieces(gameId);
@@ -79,6 +72,7 @@ class PieceDaoTest {
     @Test
     @DisplayName("특정 위치의 체스말을 삭제한다.")
     void deletePieceByPosition() {
+        final int gameId = saveGame();
         final String position = "a2";
         final String team = Team.WHITE.getName();
 
@@ -96,6 +90,7 @@ class PieceDaoTest {
     @Test
     @DisplayName("특정 위치로 체스말을 이동한다.")
     void updatePiecePosition() {
+        final int gameId = saveGame();
         final String current = "a2";
         final String destination = "a4";
         final String team = Team.WHITE.getName();
@@ -111,5 +106,12 @@ class PieceDaoTest {
             assertThat(whitePieces.stream()
                     .anyMatch(pieceDto -> pieceDto.getPosition().equals(destination))).isTrue();
         });
+    }
+
+    private int saveGame() {
+        final int gameId = chessGameDao.saveChessGame("게임1", "1234", Team.WHITE.getName());
+        pieceDao.savePieces(whitePlayer, gameId);
+        pieceDao.savePieces(blackPlayer, gameId);
+        return gameId;
     }
 }

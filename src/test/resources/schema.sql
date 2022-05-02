@@ -1,6 +1,3 @@
-drop table if exists piece;
-drop table if exists chess_game;
-
 create table chess_game
 (
     id       int         not null auto_increment primary key,

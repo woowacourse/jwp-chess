@@ -55,7 +55,7 @@ async function selectGameIsFinish(roomId) {
     const res = await fetch(`/api/room/${roomId}/state/end`);
 
     const data = await res.json();
-    if (data.winner != "NO_WINNER") {
+    if (data.winner !== null) {
         alert(data.winner + "이 승리했습니다.");
     }
 }

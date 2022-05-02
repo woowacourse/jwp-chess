@@ -26,8 +26,8 @@ public class ChessController {
         return "ready";
     }
 
-    @PostMapping
-    public String delete(@RequestParam String gameId, @RequestParam String password, Model model) {
+    @PostMapping("/delete/{gameId}")
+    public String delete(@PathVariable String gameId, @RequestParam String password, Model model) {
         model.addAttribute("msg", "쨘~ 게임 삭제 완료! 😚");
         try {
             chessService.deleteGameByGameId(gameId, password);

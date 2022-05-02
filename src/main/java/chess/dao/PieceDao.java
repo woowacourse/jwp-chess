@@ -1,13 +1,12 @@
 package chess.dao;
 
 import chess.dao.entity.PieceEntity;
-import chess.domain.position.Position;
 
 import java.util.List;
 
 public interface PieceDao {
 
-    void removeByPosition(Long gameId, Position position);
+    void removeByPosition(Long gameId, String position);
 
     void removeAll();
 
@@ -17,5 +16,5 @@ public interface PieceDao {
 
     List<PieceEntity> findPiecesByGameId(Long gameId);
 
-    void updatePosition(Long gameId, Position position, Position updatedPosition);
+    void updatePosition(Long gameId, String position, String updatedPosition);
 }

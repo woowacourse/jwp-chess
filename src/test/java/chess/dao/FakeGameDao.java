@@ -1,8 +1,6 @@
 package chess.dao;
 
 import chess.dao.entity.GameEntity;
-import chess.domain.GameStatus;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +8,8 @@ import java.util.Map;
 
 public class FakeGameDao implements GameDao {
 
-    Long id = 0L;
-    private Map<Long, GameEntity> games = new HashMap<>();
+    private final Map<Long, GameEntity> games = new HashMap<>();
+    private Long id = 0L;
 
     @Override
     public Long save(GameEntity game) {
@@ -35,8 +33,8 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public GameStatus findStatusById(Long id) {
-        return GameStatus.find(games.get(id).getStatus());
+    public String findStatusById(Long id) {
+        return games.get(id).getStatus();
     }
 
     @Override
@@ -51,9 +49,9 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public void updateStatus(Long id, GameStatus status) {
+    public void updateStatus(Long id, String status) {
         GameEntity game = games.get(id);
-        GameEntity updatedGame = new GameEntity(game.getId(), game.getTitle(), game.getPassword(), game.getTurn(), status.getName());
+        GameEntity updatedGame = new GameEntity(game.getId(), game.getTitle(), game.getPassword(), game.getTurn(), status);
         games.replace(id, updatedGame);
     }
 }

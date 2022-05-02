@@ -1,7 +1,12 @@
 package chess.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import chess.dao.entity.GameEntity;
 import chess.domain.GameStatus;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,12 +15,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Sql("classpath:init.sql")
@@ -125,7 +124,7 @@ public class JdbcGameDaoTest {
 
         // when
         GameStatus gameStatus = GameStatus.FINISHED;
-        gameDao.updateStatus(id, gameStatus);
+        gameDao.updateStatus(id, gameStatus.getName());
 
         // then
         assertThat(gameDao.findGameById(id).getStatus()).isEqualTo(gameStatus.getName());

@@ -1,8 +1,12 @@
 package chess.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import chess.dao.entity.GameEntity;
 import chess.dao.entity.PieceEntity;
-import chess.domain.position.Position;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,12 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @JdbcTest
 @Sql("classpath:init.sql")
@@ -42,7 +40,7 @@ public class JdbcPieceDaoTest {
         pieceDao.save(piece);
 
         // when
-        pieceDao.removeByPosition(id, Position.of("a2"));
+        pieceDao.removeByPosition(id, "a2");
 
         // then
         assertThat(getPieceCount(id)).isEqualTo(0);
@@ -123,7 +121,7 @@ public class JdbcPieceDaoTest {
         pieceDao.saveAll(List.of(pieceA2, pieceA3));
 
         // when
-        pieceDao.updatePosition(id, Position.of("a2"), Position.of("a5"));
+        pieceDao.updatePosition(id, "a2", "a5");
 
         // then
         assertThatCode(

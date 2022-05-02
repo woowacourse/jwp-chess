@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.dao.entity.GameEntity;
-import chess.domain.GameStatus;
 
 import java.util.List;
 
@@ -15,11 +14,11 @@ public interface GameDao {
 
     String findPasswordById(Long id);
 
-    GameStatus findStatusById(Long id);
+    String findStatusById(Long id);
 
     List<GameEntity> findAll();
 
     void updateGame(Long id, String turn, String status);
 
-    void updateStatus(Long id, GameStatus statusDto);
+    void updateStatus(Long id, String status);
 }

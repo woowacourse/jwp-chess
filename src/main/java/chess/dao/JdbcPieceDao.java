@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.dao.entity.PieceEntity;
-import chess.domain.position.Position;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,9 +19,9 @@ public class JdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public void removeByPosition(Long gameId, Position position) {
+    public void removeByPosition(Long gameId, String position) {
         final String sql = "delete from piece where game_id = ? and position = ?";
-        jdbcTemplate.update(sql, gameId, position.getName());
+        jdbcTemplate.update(sql, gameId, position);
     }
 
     @Override
@@ -76,8 +75,8 @@ public class JdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public void updatePosition(Long gameId, Position position, Position updatedPosition) {
+    public void updatePosition(Long gameId, String position, String updatedPosition) {
         final String sql = "update piece set position = ? where game_id = ? and position = ?";
-        jdbcTemplate.update(sql, updatedPosition.getName(), gameId, position.getName());
+        jdbcTemplate.update(sql, updatedPosition, gameId, position);
     }
 }

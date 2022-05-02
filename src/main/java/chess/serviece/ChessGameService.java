@@ -1,5 +1,8 @@
 package chess.serviece;
 
+import static chess.domain.GameStatus.FINISHED;
+import static chess.domain.GameStatus.PLAYING;
+
 import chess.controller.request.RoomCreationRequest;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
@@ -57,9 +60,11 @@ public class ChessGameService {
     private GameEntity createGame(ChessGame chessGame, RoomCreationRequest roomCreationRequest) {
         PieceColor turnColor = chessGame.getTurnColor();
         if (chessGame.isRunning()) {
-            return new GameEntity(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(), turnColor.getName(), "playing");
+            return new GameEntity(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(),
+                    turnColor.getName(), PLAYING.getName());
         }
-        return new GameEntity(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(), turnColor.getName(), "finished");
+        return new GameEntity(roomCreationRequest.getTitle(), roomCreationRequest.getPassword(), turnColor.getName(),
+                FINISHED.getName());
     }
 
     public GameDto getGame(Long id) {
@@ -74,7 +79,8 @@ public class ChessGameService {
 
     private List<PieceDto> convertToPieceDtos(List<PieceEntity> pieceEntities) {
         return pieceEntities.stream()
-                .map(pieceEntity -> new PieceDto(pieceEntity.getPosition(), pieceEntity.getColor(), pieceEntity.getType()))
+                .map(pieceEntity -> new PieceDto(pieceEntity.getPosition(), pieceEntity.getColor(),
+                        pieceEntity.getType()))
                 .collect(Collectors.toList());
     }
 
@@ -90,8 +96,8 @@ public class ChessGameService {
         if (!password.equals(passwordDto.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        GameStatus gameStatus = gameDao.findStatusById(id);
-        if (gameStatus == GameStatus.PLAYING) {
+        String status = gameDao.findStatusById(id);
+        if (GameStatus.find(status) == PLAYING) {
             throw new IllegalArgumentException("게임이 진행중입니다. 삭제할 수 없습니다.");
         }
         gameDao.removeById(id);
@@ -100,11 +106,11 @@ public class ChessGameService {
     public void movePiece(Long gameId, MoveCommand moveCommand) {
         ChessGame game = createGame(gameId);
         game.proceedWith(moveCommand);
-        pieceDao.removeByPosition(gameId, moveCommand.to());
-        pieceDao.updatePosition(gameId, moveCommand.from(), moveCommand.to());
+        pieceDao.removeByPosition(gameId, moveCommand.to().getName());
+        pieceDao.updatePosition(gameId, moveCommand.from().getName(), moveCommand.to().getName());
         GameStatus gameStatus = GameStatus.FINISHED;
         if (game.isRunning()) {
-            gameStatus = GameStatus.PLAYING;
+            gameStatus = PLAYING;
         }
         gameDao.updateGame(gameId, game.getTurnColor().getName(), gameStatus.getName());
     }
@@ -125,14 +131,13 @@ public class ChessGameService {
                 );
     }
 
-
     public Map<PieceColor, Score> getScore(Long gameId) {
         ChessGame game = createGame(gameId);
         return game.calculateScoreByColor();
     }
 
     public Map<PieceColor, Score> finishGame(Long gameId) {
-        gameDao.updateStatus(gameId, GameStatus.FINISHED);
+        gameDao.updateStatus(gameId, GameStatus.FINISHED.getName());
         return getScore(gameId);
     }
 }

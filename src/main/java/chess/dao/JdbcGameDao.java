@@ -1,15 +1,13 @@
 package chess.dao;
 
 import chess.dao.entity.GameEntity;
-import chess.domain.GameStatus;
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class JdbcGameDao implements GameDao {
@@ -73,11 +71,11 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public GameStatus findStatusById(Long id) {
+    public String findStatusById(Long id) {
         final String sql = "select status from game where id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
-                (resultSet, rowNum) -> GameStatus.find(resultSet.getString("status")),
+                (resultSet, rowNum) -> resultSet.getString("status"),
                 id
         );
     }
@@ -105,8 +103,8 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void updateStatus(Long id, GameStatus statusDto) {
+    public void updateStatus(Long id, String status) {
         final String sql = "update game set status = ? where id = ?";
-        jdbcTemplate.update(sql, statusDto.getName(), id);
+        jdbcTemplate.update(sql, status, id);
     }
 }

@@ -1,5 +1,7 @@
 package chess.dao.entity;
 
+import java.util.Objects;
+
 public class PieceEntity {
 
     private Long id;
@@ -41,5 +43,23 @@ public class PieceEntity {
 
     public Long getGameId() {
         return gameId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PieceEntity that = (PieceEntity) o;
+        return Objects.equals(position, that.position) && Objects.equals(type, that.type) && Objects.equals(color,
+                that.color) && Objects.equals(gameId, that.gameId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(position, type, color, gameId);
     }
 }

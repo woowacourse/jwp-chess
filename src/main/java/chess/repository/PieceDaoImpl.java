@@ -2,7 +2,7 @@ package chess.repository;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.web.dto.PieceDto;
+import chess.repository.entity.PieceEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PieceRepositoryImpl implements PieceRepository {
+public class PieceDaoImpl implements PieceDao {
 
     private static final String TABLE_NAME = "piece";
     private static final String KEY_NAME = "id";
@@ -24,7 +24,7 @@ public class PieceRepositoryImpl implements PieceRepository {
     private final SimpleJdbcInsert insertActor;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public PieceRepositoryImpl(DataSource dataSource,
+    public PieceDaoImpl(DataSource dataSource,
         NamedParameterJdbcTemplate jdbcTemplate) {
         this.insertActor = new SimpleJdbcInsert(dataSource)
             .withTableName(TABLE_NAME)
@@ -33,12 +33,12 @@ public class PieceRepositoryImpl implements PieceRepository {
     }
 
     @Override
-    public int save(int boardId, String target, PieceDto pieceDto) {
+    public int save(int boardId, String target, PieceEntity pieceEntity) {
         Map<String, Object> data = Map.of(
             "board_id", boardId,
             "position", target,
-            "color", pieceDto.getColor(),
-            "role", pieceDto.getRole()
+            "color", pieceEntity.getColor(),
+            "role", pieceEntity.getRole()
         );
         return insertActor.executeAndReturnKey(data).intValue();
     }
@@ -56,7 +56,7 @@ public class PieceRepositoryImpl implements PieceRepository {
     }
 
     @Override
-    public Optional<PieceDto> findOne(int boardId, String position) {
+    public Optional<PieceEntity> findOne(int boardId, String position) {
         String sql = "select * from piece where board_id = :boardId and position = :position";
         try {
             return Optional.ofNullable(
@@ -70,14 +70,14 @@ public class PieceRepositoryImpl implements PieceRepository {
     }
 
     @Override
-    public List<PieceDto> findAll(int boardId) {
+    public List<PieceEntity> findAll(int boardId) {
         String sql = "select * from piece where board_id = :boardId";
         return jdbcTemplate.query(sql, Map.of("boardId", boardId), getPieceMapper());
     }
 
-    private RowMapper<PieceDto> getPieceMapper() {
+    private RowMapper<PieceEntity> getPieceMapper() {
         return (resultSet, rowNum) ->
-            new PieceDto(
+            new PieceEntity(
                 resultSet.getString(3),
                 resultSet.getString(4),
                 resultSet.getString(5)
@@ -85,11 +85,11 @@ public class PieceRepositoryImpl implements PieceRepository {
     }
 
     @Override
-    public void updateOne(int boardId, String afterPosition, PieceDto pieceDto) {
+    public void updateOne(int boardId, String afterPosition, PieceEntity pieceEntity) {
         String sql = "update piece set color = :color, role = :role where board_id = :boardId and position = :position";
         jdbcTemplate.update(sql, Map.of(
-            "color", pieceDto.getColor(),
-            "role", pieceDto.getRole(),
+            "color", pieceEntity.getColor(),
+            "role", pieceEntity.getRole(),
             "boardId", boardId,
             "position", afterPosition
         ));

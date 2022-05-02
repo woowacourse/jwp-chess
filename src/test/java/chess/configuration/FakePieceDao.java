@@ -2,28 +2,28 @@ package chess.configuration;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.repository.PieceRepository;
-import chess.web.dto.PieceDto;
+import chess.repository.PieceDao;
+import chess.repository.entity.PieceEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class FakePieceRepository implements PieceRepository {
+public class FakePieceDao implements PieceDao {
 
     private final Map<Integer, PieceData> database = new HashMap<>();
     private int autoIncrementId = 0;
 
     @Override
-    public int save(int boardId, String target, PieceDto pieceDto) {
+    public int save(int boardId, String target, PieceEntity pieceEntity) {
         autoIncrementId++;
         database.put(autoIncrementId,
             new PieceData(
                 boardId,
                 target.toLowerCase(),
-                pieceDto.getColor(),
-                pieceDto.getRole())
+                pieceEntity.getColor(),
+                pieceEntity.getRole())
         );
         return autoIncrementId;
     }
@@ -31,30 +31,30 @@ public class FakePieceRepository implements PieceRepository {
     @Override
     public void saveAll(int boardId, Map<Position, Piece> pieces) {
         for (Position position : pieces.keySet()) {
-            save(boardId, position.name(), PieceDto.from(position, pieces.get(position)));
+            save(boardId, position.name(), PieceEntity.from(position, pieces.get(position)));
         }
     }
 
     @Override
-    public Optional<PieceDto> findOne(int boardId, String position) {
+    public Optional<PieceEntity> findOne(int boardId, String position) {
         return database.values().stream()
             .filter(piece -> piece.getBoardId() == boardId)
             .filter(piece -> piece.getPosition().equals(position))
-            .map(pieceData -> new PieceDto(position, pieceData.color, pieceData.role))
+            .map(pieceData -> new PieceEntity(position, pieceData.color, pieceData.role))
             .findAny();
     }
 
     @Override
-    public List<PieceDto> findAll(int boardId) {
+    public List<PieceEntity> findAll(int boardId) {
         return database.values().stream()
-            .map(pieceData -> new PieceDto(pieceData.getPosition(), pieceData.color, pieceData.getRole()))
+            .map(pieceData -> new PieceEntity(pieceData.getPosition(), pieceData.color, pieceData.getRole()))
             .collect(Collectors.toList());
     }
 
     @Override
-    public void updateOne(int boardId, String afterPosition, PieceDto pieceDto) {
+    public void updateOne(int boardId, String afterPosition, PieceEntity pieceEntity) {
         deleteOne(boardId, afterPosition);
-        save(boardId, afterPosition, pieceDto);
+        save(boardId, afterPosition, pieceEntity);
     }
 
     @Override

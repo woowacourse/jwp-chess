@@ -7,38 +7,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import chess.service.GameService;
-import chess.service.RoomService;
-import chess.domain.Room;
+import chess.domain.board.Board;
+import chess.domain.board.RegularRuleSetup;
+import chess.domain.chessgame.ChessGame;
+import chess.service.ChessGameService;
 
 @Controller
 @RequestMapping("/rooms")
 public class RoomController {
+    private final ChessGameService chessGameService;
 
-    private final RoomService roomService;
-    private final GameService gameService;
-
-    public RoomController(RoomService roomService, GameService gameService) {
-        this.roomService = roomService;
-        this.gameService = gameService;
+    public RoomController(ChessGameService chessGameService) {
+        this.chessGameService = chessGameService;
     }
 
     @PostMapping
     public String createRoom(@RequestParam String name, @RequestParam String password) {
-        Room room = roomService.create(new Room(name, password, false));
-        gameService.startNewGame(room.getId());
-        return "redirect:/rooms/" + room.getId();
+        ChessGame chessGame = chessGameService.create(name, password);
+        return "redirect:/rooms/" + chessGame.getId();
     }
 
     @GetMapping("/{roomId}")
     public String board(@PathVariable int roomId) {
-        roomService.getRoom(roomId);
+        chessGameService.getChessGameById(roomId);
         return "/board.html";
     }
 
     @PostMapping("/{roomId}")
     public String startNewGame(@PathVariable int roomId) {
-        gameService.startNewGame(roomId);
+        chessGameService.startNewGame(roomId);
         return "redirect:/api/rooms/" + roomId;
     }
 }

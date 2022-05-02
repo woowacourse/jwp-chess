@@ -9,8 +9,8 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.role.Pawn;
 import chess.domain.position.Position;
 import chess.domain.GameState;
-import chess.web.dto.PieceDto;
-import chess.domain.Room;
+import chess.repository.entity.PieceEntity;
+import chess.repository.entity.RoomEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -25,40 +25,40 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @JdbcTest
-class PieceRepositoryImplTest {
+class PieceDaoImplTest {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
     private DataSource dataSource;
 
-    private PieceRepository pieceRepository;
+    private PieceDao pieceDao;
 
     private final Board board = new Board(new RegularRuleSetup());
     private int boardId;
 
     @BeforeEach
     void init() {
-        BoardRepository boardRepository = new BoardRepositoryImpl(dataSource, jdbcTemplate);
-        RoomRepository roomRepository = new RoomRepositoryImpl(dataSource, jdbcTemplate);
-        int roomId = roomRepository.save(new Room("summer", "summer", false));
-        boardId = boardRepository.save(roomId, GameState.from(board));
+        BoardDao boardDao = new BoardDaoImpl(dataSource, jdbcTemplate);
+        RoomDao roomDao = new RoomDaoImpl(dataSource, jdbcTemplate);
+        int roomId = roomDao.save(new RoomEntity("summer", "summer"));
+        boardId = boardDao.save(roomId, GameState.from(board));
 
-        pieceRepository = new PieceRepositoryImpl(dataSource, jdbcTemplate);
+        pieceDao = new PieceDaoImpl(dataSource, jdbcTemplate);
     }
 
     @Test
     @DisplayName("Piece 저장")
     void savePiece() {
-        int pieceId = pieceRepository.save(boardId, "a1",
-            PieceDto.from(Position.of("a1"), new Piece(Color.WHITE, new Pawn())));
+        int pieceId = pieceDao.save(boardId, "a1",
+            PieceEntity.from(Position.of("a1"), new Piece(Color.WHITE, new Pawn())));
         assertThat(pieceId).isGreaterThan(0);
     }
 
     @Test
     @DisplayName("여러 piece 저장")
     void saveAll() {
-        pieceRepository.saveAll(boardId, board.getPieces());
+        pieceDao.saveAll(boardId, board.getPieces());
         Integer count = jdbcTemplate.queryForObject(
             "select count(*) from piece where board_id = :boardId",
             Map.of("boardId", this.boardId),
@@ -69,20 +69,20 @@ class PieceRepositoryImplTest {
     @Test
     @DisplayName("피스 1개 조회")
     void findOne() {
-        pieceRepository.save(boardId, "a2", new PieceDto("a1", "WHITE", "q"));
-        PieceDto findPiece = pieceRepository.findOne(boardId, "a2")
+        pieceDao.save(boardId, "a2", new PieceEntity("a1", "WHITE", "q"));
+        PieceEntity findPiece = pieceDao.findOne(boardId, "a2")
             .orElseThrow(NoSuchElementException::new);
 
-        assertThat(findPiece).isEqualTo(new PieceDto("a2", "WHITE", "q"));
+        assertThat(findPiece).isEqualTo(new PieceEntity("a2", "WHITE", "q"));
     }
 
     @Test
     @DisplayName("피스 전체 조회")
     void findAll() {
         Map<Position, Piece> pieces = board.getPieces();
-        pieceRepository.saveAll(boardId, pieces);
+        pieceDao.saveAll(boardId, pieces);
 
-        List<PieceDto> findPieces = pieceRepository.findAll(boardId);
+        List<PieceEntity> findPieces = pieceDao.findAll(boardId);
 
         assertThat(pieces.size()).isEqualTo(findPieces.size());
     }
@@ -90,20 +90,20 @@ class PieceRepositoryImplTest {
     @Test
     @DisplayName("피스 단일 업데이트")
     void updateOne() {
-        pieceRepository.save(boardId, "a1", new PieceDto("a1", "BLACK", "q"));
-        PieceDto updatePiece = new PieceDto("c3", "WHITE", "q");
-        pieceRepository.save(boardId, "c3", updatePiece);
-        pieceRepository.updateOne(boardId, "a1", updatePiece);
-        PieceDto findPiece = pieceRepository.findOne(boardId, "a1").orElseThrow();
+        pieceDao.save(boardId, "a1", new PieceEntity("a1", "BLACK", "q"));
+        PieceEntity updatePiece = new PieceEntity("c3", "WHITE", "q");
+        pieceDao.save(boardId, "c3", updatePiece);
+        pieceDao.updateOne(boardId, "a1", updatePiece);
+        PieceEntity findPiece = pieceDao.findOne(boardId, "a1").orElseThrow();
         assertThat(updatePiece).isEqualTo(findPiece);
     }
 
     @Test
     @DisplayName("피스를 삭제한다")
     void delete() {
-        pieceRepository.save(boardId, "a1", new PieceDto("a1", "BLACK", "q"));
-        pieceRepository.deleteOne(boardId, "a1");
-        Optional<PieceDto> findPiece = pieceRepository.findOne(boardId, "a1");
+        pieceDao.save(boardId, "a1", new PieceEntity("a1", "BLACK", "q"));
+        pieceDao.deleteOne(boardId, "a1");
+        Optional<PieceEntity> findPiece = pieceDao.findOne(boardId, "a1");
         assertThat(findPiece).isEmpty();
     }
 }

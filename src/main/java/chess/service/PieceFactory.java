@@ -8,7 +8,7 @@ import chess.domain.piece.role.Knight;
 import chess.domain.piece.role.Pawn;
 import chess.domain.piece.role.Queen;
 import chess.domain.piece.role.Rook;
-import chess.web.dto.PieceDto;
+import chess.repository.entity.PieceEntity;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class PieceFactory {
         CACHE.put("black_k", new Piece(Color.BLACK, new King()));
     }
 
-    public static Piece build(PieceDto pieceDto) {
-        return CACHE.get(pieceDto.getColor() + "_" + pieceDto.getRole());
+    public static Piece build(PieceEntity pieceEntity) {
+        return CACHE.get(pieceEntity.getColor() + "_" + pieceEntity.getRole());
     }
 }

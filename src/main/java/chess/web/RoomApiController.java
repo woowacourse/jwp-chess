@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import chess.service.GameService;
-import chess.service.RoomService;
+import chess.service.ChessGameService;
 import chess.web.dto.BoardDto;
 import chess.web.dto.RoomResponseDto;
 
@@ -19,27 +18,25 @@ import chess.web.dto.RoomResponseDto;
 @RequestMapping("/api/rooms")
 public class RoomApiController {
 
-	private final RoomService roomService;
-	private final GameService gameService;
+	private final ChessGameService chessGameService;
 
-	public RoomApiController(RoomService roomService, GameService gameService) {
-		this.roomService = roomService;
-		this.gameService = gameService;
+	public RoomApiController(ChessGameService chessGameService) {
+		this.chessGameService = chessGameService;
 	}
 
 	@GetMapping
 	public ResponseEntity<List<RoomResponseDto>> loadRooms() {
-		return ResponseEntity.ok(roomService.findAll());
+		return ResponseEntity.ok(chessGameService.findAllResponseDto());
 	}
 
 	@DeleteMapping("/{roomId}")
 	public ResponseEntity<?> deleteRoom(@PathVariable int roomId, @RequestParam String password) {
-		roomService.delete(roomId, password);
+		chessGameService.delete(roomId, password);
 		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/{roomId}")
 	public ResponseEntity<BoardDto> loadGame(@PathVariable int roomId) {
-		return ResponseEntity.ok(gameService.loadGame(roomId));
+		return ResponseEntity.ok(chessGameService.getBoardDtoByGameId(roomId));
 	}
 }

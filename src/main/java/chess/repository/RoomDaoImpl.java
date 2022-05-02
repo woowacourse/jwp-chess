@@ -1,6 +1,6 @@
 package chess.repository;
 
-import chess.domain.Room;
+import chess.repository.entity.RoomEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoomRepositoryImpl implements RoomRepository {
+public class RoomDaoImpl implements RoomDao {
 
 	private static final String TABLE_NAME = "room";
 	private static final String KEY_NAME = "id";
@@ -26,7 +26,7 @@ public class RoomRepositoryImpl implements RoomRepository {
 	private final SimpleJdbcInsert insertActor;
 	private final NamedParameterJdbcTemplate jdbcTemplate;
 
-	public RoomRepositoryImpl(DataSource dataSource,
+	public RoomDaoImpl(DataSource dataSource,
 		NamedParameterJdbcTemplate jdbcTemplate) {
 		this.insertActor = new SimpleJdbcInsert(dataSource)
 			.withTableName(TABLE_NAME)
@@ -35,16 +35,15 @@ public class RoomRepositoryImpl implements RoomRepository {
 	}
 
 	@Override
-	public int save(Room room) {
+	public int save(RoomEntity room) {
 		return insertActor.executeAndReturnKey(Map.of(
 				"name", room.getName(),
-				"password", room.getPassword(),
-				"end", room.getEnd()))
+				"password", room.getPassword()))
 			.intValue();
 	}
 
 	@Override
-	public Optional<Room> findByName(String name) {
+	public Optional<RoomEntity> findByName(String name) {
 		String sql = "select * from room where name = :name limit 1";
 		try {
 			return Optional.ofNullable(
@@ -55,7 +54,7 @@ public class RoomRepositoryImpl implements RoomRepository {
 	}
 
 	@Override
-	public Optional<Room> findById(int roomId) {
+	public Optional<RoomEntity> findById(int roomId) {
 		String sql = "select * from room where id = :roomId";
 		try {
 			return Optional.ofNullable(
@@ -72,25 +71,17 @@ public class RoomRepositoryImpl implements RoomRepository {
 	}
 
 	@Override
-	public List<Room> findAll() {
+	public List<RoomEntity> findAll() {
 		String sql = "select * from room";
 		return jdbcTemplate.query(sql, getRoomMapper());
 	}
 
-	@Override
-	public void updateEndByBoardId(int boardId, boolean isEnd) {
-		String sql = "update room r join board b on r.id = b.room_id"
-			+ " set end = :end where b.id = :boardId";
-		jdbcTemplate.update(sql, Map.of("end", isEnd, "boardId", boardId));
-	}
-
-	private RowMapper<Room> getRoomMapper() {
-		return (resultSet, rowNum) -> new Room(
+	private RowMapper<RoomEntity> getRoomMapper() {
+		return (resultSet, rowNum) -> new RoomEntity(
 			resultSet.getInt(KEY_INDEX),
-			new Room(
+			new RoomEntity(
 				resultSet.getString(NAME_INDEX),
-				resultSet.getString(PASSWORD_INDEX),
-				resultSet.getBoolean(4)
+				resultSet.getString(PASSWORD_INDEX)
 			));
 	}
 }

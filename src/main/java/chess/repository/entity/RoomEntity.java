@@ -1,8 +1,8 @@
-package chess.domain;
+package chess.repository.entity;
 
 import chess.exception.UserInputException;
 
-public class Room {
+public class RoomEntity {
 
     private static final int NAME_MIN_SIZE = 1;
     private static final int NAME_MAX_SIZE = 16;
@@ -10,21 +10,18 @@ public class Room {
     private int id;
     private final String name;
     private final String password;
-    private boolean end;
 
-    public Room(int id, Room room) {
+    public RoomEntity(int id, RoomEntity room) {
         this.id = id;
         this.name = room.getName();
         this.password = room.getPassword();
-        this.end = room.getEnd();
     }
 
-    public Room(String name, String password, boolean end) {
+    public RoomEntity(String name, String password) {
         validateNameSize(name);
         validatePassword(password);
         this.name = name;
         this.password = password;
-        this.end = end;
     }
 
     private void validateNameSize(String name) {
@@ -39,14 +36,6 @@ public class Room {
         }
     }
 
-    public boolean isRightPassword(String password) {
-        return this.password.equals(password);
-    }
-
-    public void finish() {
-        this.end = true;
-    }
-
     public int getId() {
         return id;
     }
@@ -57,9 +46,5 @@ public class Room {
 
     public String getPassword() {
         return password;
-    }
-
-    public boolean getEnd() {
-        return end;
     }
 }

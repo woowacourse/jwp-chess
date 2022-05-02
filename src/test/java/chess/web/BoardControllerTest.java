@@ -22,8 +22,7 @@ import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.piece.role.Pawn;
 import chess.domain.position.Position;
-import chess.service.GameService;
-import chess.service.RoomService;
+import chess.service.ChessGameService;
 import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
 import chess.web.dto.ResultDto;
@@ -32,9 +31,7 @@ import chess.web.dto.ResultDto;
 public class BoardControllerTest {
 
 	@MockBean
-	private RoomService roomService;
-	@MockBean
-	private GameService gameService;
+	private ChessGameService chessGameService;
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
@@ -49,7 +46,7 @@ public class BoardControllerTest {
 			() -> Map.of(Position.of("a1"), new Piece(Color.WHITE, new Pawn()))));
 		String board = objectMapper.writeValueAsString(boardDto);
 
-		given(gameService.gameStateAndPieces(1))
+		given(chessGameService.getBoardDtoByBoardId(1))
 			.willReturn(boardDto);
 
 		mockMvc.perform(put("/boards/" + 1)
@@ -63,7 +60,7 @@ public class BoardControllerTest {
 	@DisplayName("점수 갱신 요청이 누르면 200응답을 받는다.")
 	void result() throws Exception {
 		ResultDto resultDto = new ResultDto(38, 37, Map.of(Result.WIN, Color.WHITE));
-		given(gameService.gameResult(1))
+		given(chessGameService.getResult(1))
 			.willReturn(resultDto);
 
 		mockMvc.perform(get("/boards/" + 1 + "/result"))
@@ -75,7 +72,7 @@ public class BoardControllerTest {
 	@DisplayName("게임 종료 요청이 오면 200응답을 받는다.")
 	void end() throws Exception {
 		ResultDto resultDto = new ResultDto(38, 37, Map.of(Result.WIN, Color.WHITE));
-		given(gameService.gameFinalResult(1))
+		given(chessGameService.getFinalResult(1))
 			.willReturn(resultDto);
 
 		mockMvc.perform(put("/boards/" + 1 + "/end"))

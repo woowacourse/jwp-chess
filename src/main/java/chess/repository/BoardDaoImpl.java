@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BoardRepositoryImpl implements BoardRepository {
+public class BoardDaoImpl implements BoardDao {
 
     private static final String TABLE_NAME = "board";
     private static final String KEY_NAME = "id";
@@ -18,7 +18,7 @@ public class BoardRepositoryImpl implements BoardRepository {
     private final SimpleJdbcInsert insertActor;
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public BoardRepositoryImpl(DataSource dataSource,
+    public BoardDaoImpl(DataSource dataSource,
         NamedParameterJdbcTemplate jdbcTemplate) {
         this.insertActor = new SimpleJdbcInsert(dataSource)
             .withTableName(TABLE_NAME)

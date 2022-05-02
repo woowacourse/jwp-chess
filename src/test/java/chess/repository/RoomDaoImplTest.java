@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import chess.domain.Room;
+import chess.repository.entity.RoomEntity;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,52 +14,52 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @JdbcTest
-public class RoomRepositoryImplTest {
+public class RoomDaoImplTest {
 
-    private static final Room room = new Room("summer", "summer", false);
+    private static final RoomEntity room = new RoomEntity("summer", "summer");
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
     private DataSource dataSource;
-    private RoomRepository roomRepository;
+    private RoomDao roomDao;
 
     @BeforeEach
     void init() {
-        roomRepository = new RoomRepositoryImpl(dataSource, jdbcTemplate);
+        roomDao = new RoomDaoImpl(dataSource, jdbcTemplate);
     }
 
     @Test
     @DisplayName("뱡 insert")
     void insert() {
-        int id = roomRepository.save(room);
+        int id = roomDao.save(room);
         assertThat(id).isGreaterThan(0);
     }
 
     @Test
     @DisplayName("방 find")
     void find() {
-        roomRepository.save(room);
-        Room findRoom = roomRepository.findByName(room.getName()).orElseThrow();
+        roomDao.save(room);
+        RoomEntity findRoom = roomDao.findByName(room.getName()).orElseThrow();
         assertThat(room.getName()).isEqualTo(findRoom.getName());
     }
 
     @Test
     @DisplayName("이름으로 생성된 방을 삭제한다.")
     void removeByName() {
-        int id = roomRepository.save(room);
-        roomRepository.deleteById(id);
+        int id = roomDao.save(room);
+        roomDao.deleteById(id);
 
-        assertThat(roomRepository.findByName(room.getName())).isEmpty();
+        assertThat(roomDao.findByName(room.getName())).isEmpty();
     }
 
     @Test
     @DisplayName("저장된 전체 방을 찾아온다.")
     void findAll() {
-        roomRepository.save(room);
-        roomRepository.save(new Room("does", "does", false));
+        roomDao.save(room);
+        roomDao.save(new RoomEntity("does", "does"));
 
-        List<Room> rooms = roomRepository.findAll();
+        List<RoomEntity> rooms = roomDao.findAll();
         assertThat(rooms.size()).isEqualTo(2);
     }
 }

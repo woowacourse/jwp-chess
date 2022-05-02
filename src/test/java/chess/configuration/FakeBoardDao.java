@@ -1,13 +1,13 @@
 package chess.configuration;
 
 import chess.domain.Color;
-import chess.repository.BoardRepository;
+import chess.repository.BoardDao;
 import chess.domain.GameState;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class FakeBoardRepository implements BoardRepository {
+public class FakeBoardDao implements BoardDao {
 
     private final Map<Integer, BoardData> database = new HashMap<>();
     private int autoIncrementId = 0;

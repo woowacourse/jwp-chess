@@ -6,33 +6,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import chess.domain.Room;
-import chess.repository.RoomRepository;
+import chess.repository.entity.RoomEntity;
+import chess.repository.RoomDao;
 
-public class FakeRoomRepository implements RoomRepository {
+public class FakeRoomDao implements RoomDao {
 
     private int autoIncrementId = 0;
-    private final Map<Integer, Room> database = new HashMap<>();
+    private final Map<Integer, RoomEntity> database = new HashMap<>();
 
     @Override
-    public int save(Room room) {
+    public int save(RoomEntity room) {
         autoIncrementId++;
         database.put(autoIncrementId,
-            new Room(autoIncrementId, room));
+            new RoomEntity(autoIncrementId, room));
         return autoIncrementId;
     }
 
     @Override
-    public Optional<Room> findByName(String name) {
+    public Optional<RoomEntity> findByName(String name) {
         return database.keySet().stream()
             .filter(key -> database.get(key).getName().equals(name))
-            .map(key -> new Room(
-                key, new Room(database.get(key).getName(), database.get(key).getPassword(), false)))
+            .map(key -> new RoomEntity(
+                key, new RoomEntity(database.get(key).getName(), database.get(key).getPassword())))
             .findAny();
     }
 
     @Override
-    public Optional<Room> findById(int roomId) {
+    public Optional<RoomEntity> findById(int roomId) {
         return Optional.ofNullable(database.get(roomId));
     }
 
@@ -42,12 +42,7 @@ public class FakeRoomRepository implements RoomRepository {
     }
 
     @Override
-    public List<Room> findAll() {
+    public List<RoomEntity> findAll() {
         return new ArrayList<>(database.values());
-    }
-
-    @Override
-    public void updateEndByBoardId(int boardId, boolean isEnd) {
-        database.values().forEach(Room::finish);
     }
 }

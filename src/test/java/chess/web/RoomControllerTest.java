@@ -19,14 +19,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import chess.domain.Color;
-import chess.domain.Room;
 import chess.domain.board.Board;
+import chess.domain.board.RegularRuleSetup;
+import chess.domain.chessgame.ChessGame;
 import chess.domain.piece.Piece;
 import chess.domain.piece.role.Pawn;
 import chess.domain.position.Position;
 import chess.exception.UserInputException;
-import chess.service.GameService;
-import chess.service.RoomService;
+import chess.service.ChessGameService;
 import chess.web.dto.BoardDto;
 import chess.web.dto.RoomResponseDto;
 
@@ -38,9 +38,7 @@ class RoomControllerTest {
 	private static final int ROOM_ID = 1;
 
 	@MockBean
-	private RoomService roomService;
-	@MockBean
-	private GameService gameService;
+	private ChessGameService chessGameService;
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
@@ -49,8 +47,9 @@ class RoomControllerTest {
 	@Test
 	@DisplayName("유효한 이름을 받으면 게임방 입장")
 	void createRoom() throws Exception {
-		given(roomService.create(any(Room.class)))
-			.willReturn(new Room(ROOM_ID, new Room(NAME, PASSWORD, false)));
+		given(chessGameService.create(anyString(), anyString()))
+			.willReturn(ChessGame.createWithId(
+				ROOM_ID, ChessGame.create(NAME, PASSWORD, new Board(new RegularRuleSetup()))));
 
 		mockMvc.perform(post("/rooms")
 				.param("name", NAME)
@@ -62,7 +61,7 @@ class RoomControllerTest {
 	@ParameterizedTest
 	@ValueSource(strings = {"", "16자를넘는방이름은안되니까돌아가"})
 	void nameException(String name) throws Exception {
-		given(roomService.create(any(Room.class)))
+		given(chessGameService.create(anyString(), anyString()))
 			.willThrow(UserInputException.class);
 
 		mockMvc.perform(post("/rooms")
@@ -77,7 +76,7 @@ class RoomControllerTest {
 		List<RoomResponseDto> data = List.of(
 			new RoomResponseDto(ROOM_ID, NAME, false),
 			new RoomResponseDto(2, "does", false));
-		given(roomService.findAll()).willReturn(data);
+		given(chessGameService.findAllResponseDto()).willReturn(data);
 
 		mockMvc.perform(get("/api/rooms"))
 			.andExpect(status().isOk())
@@ -97,7 +96,7 @@ class RoomControllerTest {
 	void loadGame() throws Exception {
 		BoardDto boardDto = new BoardDto(ROOM_ID, new Board(
 			() -> Map.of(Position.of("a1"), new Piece(Color.WHITE, new Pawn()))));
-		given(gameService.loadGame(ROOM_ID))
+		given(chessGameService.getBoardDtoByGameId(ROOM_ID))
 			.willReturn(boardDto);
 
 		mockMvc.perform(get("/api/rooms/" + ROOM_ID))
@@ -117,7 +116,7 @@ class RoomControllerTest {
 	@DisplayName("방 삭제에 실패하면 400 에러가 발생한다.")
 	void deleteRoomException() throws Exception {
 		doThrow(UserInputException.class)
-			.when(roomService).delete(ROOM_ID, PASSWORD);
+			.when(chessGameService).delete(ROOM_ID, PASSWORD);
 
 		mockMvc.perform(delete("/api/rooms/" + ROOM_ID)
 				.param("password", PASSWORD))

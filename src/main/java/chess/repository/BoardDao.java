@@ -3,7 +3,7 @@ package chess.repository;
 import chess.domain.Color;
 import chess.domain.GameState;
 
-public interface BoardRepository {
+public interface BoardDao {
     int save(int roomId, GameState gameState);
 
     Color getTurn(int boardId);

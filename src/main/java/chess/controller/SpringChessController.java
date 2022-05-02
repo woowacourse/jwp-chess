@@ -1,9 +1,9 @@
 package chess.controller;
 
 import chess.database.dto.RoomDto;
+import chess.database.dto.StatusDto;
 import chess.domain.game.GameState;
 import chess.dto.Arguments;
-import chess.dto.BoardResponse;
 import chess.dto.GameStateResponse;
 import chess.dto.PathResponse;
 import chess.service.ChessRoomService;
@@ -93,11 +93,10 @@ public class SpringChessController {
     }
 
     @GetMapping(path = "/rooms/{roomId}/status")
-    public ResponseEntity<Map<String, Object>> status(@PathVariable("roomId") int roomId) {
+    public ResponseEntity<StatusDto> status(@PathVariable("roomId") int roomId) {
         GameState state = chessRoomService.readGameState(roomId);
-        return ResponseEntity.ok().body(Map.of("board", BoardResponse.of(state.getPointPieces()),
-            "score", state.getColorScore())
-        );
+        StatusDto response = new StatusDto(state);
+        return ResponseEntity.ok().body(response);
     }
 
     private ResponseEntity<PathResponse> respondPath(String path) {

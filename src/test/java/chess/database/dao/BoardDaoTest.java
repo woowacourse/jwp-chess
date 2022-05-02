@@ -105,7 +105,8 @@ class BoardDaoTest {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         Route route = Route.of(List.of("a2", "a4"));
 
-        assertThatCode(() -> boardDao.updatePiece(RouteDto.of(route), roomDto.getId()))
+        assertThatCode(
+            () -> boardDao.updatePiece(route.getSource(), route.getDestination(), roomDto.getId()))
             .doesNotThrowAnyException();
     }
 
@@ -115,7 +116,7 @@ class BoardDaoTest {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         Point point = Point.of("b2");
 
-        assertThatCode(() -> boardDao.deletePiece(PointDto.of(point), roomDto.getId()))
+        assertThatCode(() -> boardDao.deletePiece(point, roomDto.getId()))
             .doesNotThrowAnyException();
     }
 

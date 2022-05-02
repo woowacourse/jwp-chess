@@ -5,6 +5,7 @@ import chess.database.dto.BoardDto;
 import chess.database.dto.PieceDto;
 import chess.database.dto.PointDto;
 import chess.database.dto.RouteDto;
+import chess.domain.board.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,16 +57,13 @@ public class SpringBoardDao implements BoardDao {
     }
 
     @Override
-    public void deletePiece(PointDto destination, int roomId) {
+    public void deletePiece(Point destination, int roomId) {
         final String sql = "DELETE FROM board WHERE horizontal_index = ? and vertical_index = ? and room_id = ?";
         jdbcTemplate.update(sql, destination.getHorizontal(), destination.getVertical(), roomId);
     }
 
     @Override
-    public void updatePiece(RouteDto routeDto, int roomId) {
-        PointDto source = routeDto.getSource();
-        PointDto destination = routeDto.getDestination();
-
+    public void updatePiece(Point source, Point destination, int roomId) {
         final String sql = "update board set horizontal_index = ?, vertical_index = ? "
             + "where horizontal_index = ? and vertical_index = ? and room_id = ?";
         jdbcTemplate.update(sql,

@@ -67,8 +67,8 @@ public class ChessRoomService {
         GameState movedState = readGameState(roomId).move(arguments);
         gameDao.updateState(GameStateDto.of(movedState), roomId);
         Route route = Route.of(arguments);
-        boardDao.deletePiece(PointDto.of(route.getDestination()), roomId);
-        boardDao.updatePiece(RouteDto.of(route), roomId);
+        boardDao.deletePiece(route.getDestination(), roomId);
+        boardDao.updatePiece(route.getSource(), route.getDestination(), roomId);
         return movedState;
     }
 

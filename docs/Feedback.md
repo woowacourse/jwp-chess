@@ -25,7 +25,8 @@
 ## 2단계
 
 - [x] `ObjectMapper`를 통해 Gson 라이브러리 의존성 제거
-- [ ] Controller - status 메서드에서 Body를 Map으로 전달한 이유, DTO로 전달하는 것은 어떤지
+- [x] Controller - status 메서드에서 Body를 Map으로 전달한 이유, DTO로 전달하는 것은 어떤지
+    - `StatusDto` - 필드로 board와 score를 Map의 value를 가지도록 구현
 - [ ] Arguments - 컨트롤러에서 정해주는 것이 적절한가?
     - Command 관련 피드백
 - [ ] ExceptionHandler
@@ -51,7 +52,7 @@
     - [x] `validateDuplicateRoomName()`
         - `findByName()`의 결과를 변수로 추출
         - 쿼리 결과를 boolean으로 반환하는 메서드로 만들어보면 어떤지
-        - `RoomDao` - `existRoomName()`메서드를 통해 Boolean 반환할 수 있도록 수정 
+        - `RoomDao` - `existRoomName()`메서드를 통해 Boolean 반환할 수 있도록 수정
     - [x] `validatePassword()`
         - 유효성 검증이 게임 규칙, 서비스에서 검증하는게 맞는지?
         - `Room` 클래스를 생성하여 비밀번호 검증 로직 포함하도록 작성

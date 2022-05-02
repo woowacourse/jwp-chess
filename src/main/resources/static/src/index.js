@@ -192,9 +192,9 @@ function toJSON(form) {
 }
 
 function showStatus(responseJson) {
-    let string = 'WHITE SCORE = ' + responseJson['score']['WHITE'] +
+    let string = 'WHITE SCORE = ' + responseJson.score['WHITE'] +
         '\n' +
-        'BLACK SCORE = ' + responseJson['score']['BLACK'];
+        'BLACK SCORE = ' + responseJson.score['BLACK'];
     alert(string);
 }
 

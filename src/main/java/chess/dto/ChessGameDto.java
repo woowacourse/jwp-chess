@@ -7,33 +7,16 @@ public class ChessGameDto {
 
     private Long id;
     private final Room room;
-    private final String gameProgress;
-    private final String gameProgressBadge;
+    private final boolean running;
 
-    public ChessGameDto(final Long id, final Room room, final String gameProgress, final String gameProgressBadge) {
+    private ChessGameDto(final Long id, final Room room, final boolean running) {
         this.id = id;
         this.room = room;
-        this.gameProgress = gameProgress;
-        this.gameProgressBadge = gameProgressBadge;
+        this.running = running;
     }
 
     public static ChessGameDto from(final ChessGame game) {
-        return new ChessGameDto(game.getId(), game.getRoom(),
-                createGameProgress(game.isInProgress()), createGameProgressBadge(game.isInProgress()) );
-    }
-
-    private static String createGameProgressBadge(final boolean inProgress) {
-        if (inProgress) {
-            return "badge bg-success";
-        }
-        return "badge bg-danger";
-    }
-
-    private static String createGameProgress(final boolean inProgress) {
-        if (inProgress) {
-            return "게임 진행 중";
-        }
-        return "게임 종료";
+        return new ChessGameDto(game.getId(), game.getRoom(), game.isInProgress());
     }
 
     public Long getId() {
@@ -44,11 +27,7 @@ public class ChessGameDto {
         return room;
     }
 
-    public String getGameProgress() {
-        return gameProgress;
-    }
-
-    public String getGameProgressBadge() {
-        return gameProgressBadge;
+    public boolean isRunning() {
+        return running;
     }
 }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,7 @@ public class ChessController {
         model.put("games", games);
         model.put("members", members);
 
+        System.out.println("###" + games.stream().map(ChessGameDto::isRunning).collect(Collectors.toList()));
         return new ModelAndView("index", model);
     }
 

@@ -25,9 +25,15 @@
                 <h6 class="card-subtitle mb-2 text-muted">{{room.participant.whiteName}}
                     vs {{room.participant.blackName}}
                 </h6>
-                <h6 class="card-subtitle mb-2 text-muted">
-                    <span class="{{gameProgressBadge}}">{{gameProgress}}</span>
-                </h6>
+                {{#running}}
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        <span class="badge bg-success">게임 진행 중</span>
+                    </h6>
+                {{else}}
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        <span class="badge bg-danger">게임 종료</span>
+                    </h6>
+                {{/running}}
                 <a onclick="validatePassword({{id}})" class="btn btn-dark">입장</a>
                 <a onclick="deleteGame({{id}})" class="btn btn-danger">삭제</a>
             </div>

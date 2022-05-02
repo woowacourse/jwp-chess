@@ -33,6 +33,11 @@ public class ChessService {
         this.squareDao = squareDao;
     }
 
+    public RoomRes findRoomById(Long roomId) {
+        final Room room = roomDao.findRoomById(roomId);
+        return new RoomRes(room.getId(), room.getTitle());
+    }
+
     public List<RoomRes> findAllRoom() {
         return roomDao.findAllRoom().stream()
                 .map(room -> new RoomRes(room.getId(), room.getTitle()))

@@ -32,7 +32,7 @@ class ChessServiceTests {
     void insertRoom() {
         final Long roomId = chessService.insertRoom("title1", "1111");
 
-        assertThat(roomId).isInstanceOf(Long.class);
+        assertThat(chessService.findRoomById(roomId).getTitle()).isEqualTo("title1");
     }
 
     @Test
@@ -41,7 +41,7 @@ class ChessServiceTests {
         final Long roomId = chessService.insertRoom("title1", "1111");
         final Long updateRoomId = chessService.insertBoard(roomId);
 
-        assertThat(updateRoomId).isInstanceOf(Long.class);
+        assertThat(chessService.findSquareAllById(updateRoomId)).hasSize(64);
     }
 
     @Test

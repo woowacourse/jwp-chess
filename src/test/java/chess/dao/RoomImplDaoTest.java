@@ -1,6 +1,7 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.entity.Room;
@@ -12,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-@TestPropertySource(properties = "spring.config.location=classpath:application-test.yml" )
+@TestPropertySource(properties = "spring.config.location=classpath:application-test.yml")
 @SpringBootTest
 @Transactional
 class RoomImplDaoTest {
@@ -28,7 +29,12 @@ class RoomImplDaoTest {
 
         final List<Room> rooms = roomDao.findAllRoom();
 
-        assertThat(rooms).hasSize(2);
+        assertThat(rooms).hasSize(2)
+                .extracting("state", "title", "password")
+                .contains(
+                        tuple("Ready", "title1", "1111"),
+                        tuple("Ready", "title1", "1111")
+                );
     }
 
     @Test
@@ -36,27 +42,31 @@ class RoomImplDaoTest {
     void insertRoom() {
         Long roomId = roomDao.insertRoom("title1", "1111");
 
-        assertThat(roomId).isInstanceOf(Long.class);
+        assertThat(roomDao.findRoomById(roomId))
+                .extracting("state", "title", "password")
+                .contains("Ready", "title1", "1111");
     }
 
     @Test
     @DisplayName("일련번호를 통해 방의 상태를 변경할 수 있다.")
     void updateStateById() {
-        final Long roomId = insertTestRoom("title", "Ready");
+        final Long roomId = insertTestRoom("title1", "1111");
 
         final Long updateRoomId = roomDao.updateStateById(roomId, "WhiteRunning");
 
-        assertThat(roomDao.findRoomById(updateRoomId).getState()).isEqualTo("WhiteRunning");
+        assertThat(roomDao.findRoomById(updateRoomId))
+                .extracting("state", "title", "password")
+                .contains("WhiteRunning", "title1", "1111");
     }
 
     @Test
     @DisplayName("일련번호를 통해 방을 조회할 수 있다.")
     void findRoomById() {
-        final Long roomId = insertTestRoom("title", "1111");
+        final Long roomId = insertTestRoom("title1", "1111");
 
-        final Room room = roomDao.findRoomById(roomId);
-
-        assertThat(room).isInstanceOf(Room.class);
+        assertThat(roomDao.findRoomById(roomId))
+                .extracting("state", "title", "password")
+                .contains("Ready", "title1", "1111");
     }
 
     @Test

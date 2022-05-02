@@ -22,6 +22,6 @@ public class ResultController {
         GameResult gameResult = chessService.getGameResult(gameID);
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
-        return "status";
+        return "final";
     }
 }

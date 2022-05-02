@@ -11,8 +11,8 @@ public class KingTest {
     @Test
     @DisplayName("킹을 오른쪽으로 한칸 움직일 수 있다")
     void canMove_a1_a2() {
-        King king = new King(Color.BLACK);
-        Boolean canMove = king.canMove(new Movement(0, 1), new None(Color.NONE));
+        King king = new King(Color.BLACK,0);
+        Boolean canMove = king.canMove(new Movement(0, 1), new None(Color.NONE,0));
 
         assertThat(canMove).isTrue();
     }
@@ -20,8 +20,8 @@ public class KingTest {
     @Test
     @DisplayName("킹을 위쪽으로 한칸 이동 가능하다")
     void canMove_a1_b1() {
-        King king = new King(Color.BLACK);
-        Boolean canMove = king.canMove(new Movement(1, 0), new None(Color.NONE));
+        King king = new King(Color.BLACK,0);
+        Boolean canMove = king.canMove(new Movement(1, 0), new None(Color.NONE,0));
 
         assertThat(canMove).isTrue();
     }
@@ -29,8 +29,8 @@ public class KingTest {
     @Test
     @DisplayName("킹을 오른쪽으로 한칸, 위쪽으로 한칸 이동 가능하다")
     void canMove_a1_b2() {
-        King king = new King(Color.BLACK);
-        Boolean canMove = king.canMove(new Movement(1, 1), new None(Color.NONE));
+        King king = new King(Color.BLACK,0);
+        Boolean canMove = king.canMove(new Movement(1, 1), new None(Color.NONE,0));
 
         assertThat(canMove).isTrue();
     }
@@ -38,8 +38,8 @@ public class KingTest {
     @Test
     @DisplayName("킹을 오른쪽으로 두칸, 위쪽으로 두칸 이동 불가능하다")
     void canMove_a1_c3() {
-        King king = new King(Color.BLACK);
-        Boolean canMove = king.canMove(new Movement(2, 2), new None(Color.NONE));
+        King king = new King(Color.BLACK,0);
+        Boolean canMove = king.canMove(new Movement(2, 2), new None(Color.NONE,0));
 
         assertThat(canMove).isFalse();
     }

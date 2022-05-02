@@ -35,7 +35,7 @@ public class IndexControllerTest {
 
         mvc.perform(get("/newgame"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("newgame"));
+                .andExpect(view().name("new"));
     }
 
     @Test

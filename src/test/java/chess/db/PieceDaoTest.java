@@ -10,23 +10,19 @@ import org.junit.jupiter.api.Test;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameTurn;
 import chess.domain.board.InitialBoardGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@JdbcTest
+@SpringBootTest
 public class PieceDaoTest {
-    private final static String DRIVER = "com.mysql.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://localhost:3306/chess";
-    private static final String USER = "user";
-    private static final String PASSWORD = "password";
-    private org.springframework.jdbc.datasource.DriverManagerDataSource dataSource;
+
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void initTable() {
-        dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource(URL, USER, PASSWORD);
-        dataSource.setDriverClassName(DRIVER);
-        jdbcTemplate = new JdbcTemplate(dataSource);
         ChessGameDao chessGameDao = new ChessGameDao(jdbcTemplate);
         chessGameDao.save("test", "test", new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
     }

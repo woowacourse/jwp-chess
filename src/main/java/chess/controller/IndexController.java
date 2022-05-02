@@ -22,7 +22,7 @@ public class IndexController {
 
     @GetMapping("/newgame")
     public String newGame() {
-        return "newgame";
+        return "new";
     }
 
     @GetMapping("/create")
@@ -42,9 +42,7 @@ public class IndexController {
 
     @GetMapping("/delete")
     public String deleteGame(@RequestParam String gameID, @RequestParam String inputPW, Model model) {
-        if (chessService.checkPassword(gameID, inputPW)) {
-            chessService.deleteGame(gameID);
-        }
+        chessService.checkAndDeleteGame(gameID, inputPW);
         model.addAttribute("rooms", chessService.loadGameLists());
         return "redirect:/";
     }

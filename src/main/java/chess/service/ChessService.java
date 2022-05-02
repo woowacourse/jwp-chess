@@ -39,13 +39,11 @@ public class ChessService {
         loadPieces(gameID);
     }
 
-    public void deleteGame(String gameID) {
-        chessGameDao.delete(gameID);
-        pieceDao.deleteAll(gameID);
-    }
-
-    public boolean checkPassword(String gameID, String inputPW) {
-        return chessGameDao.checkPassword(gameID, inputPW);
+    public void checkAndDeleteGame(String gameID, String inputPW) {
+        if(chessGameDao.checkPassword(gameID, inputPW)){
+            chessGameDao.delete(gameID);
+            pieceDao.deleteAll(gameID);
+        }
     }
 
     public GameTurn getTurn(String gameID) {

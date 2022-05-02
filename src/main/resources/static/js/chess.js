@@ -198,7 +198,7 @@ window.onload = async function () {
 function fetchNewChess() {
     let roomId = document.getElementById("room-id").value;
     fetch('http://localhost:8080/rooms/' + roomId + '/new', {
-        method: 'GET',
+        method: 'POST',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         },

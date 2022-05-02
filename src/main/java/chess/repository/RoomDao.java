@@ -1,6 +1,6 @@
 package chess.repository;
 
-import chess.web.dto.RoomDto;
+import chess.dto.RoomDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

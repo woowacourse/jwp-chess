@@ -1,7 +1,7 @@
 package chess.repository;
 
 import chess.domain.Color;
-import chess.web.dto.GameStateDto;
+import chess.dto.GameStateDto;
 import java.util.Map;
 import java.util.Optional;
 import javax.sql.DataSource;

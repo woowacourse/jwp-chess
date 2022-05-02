@@ -1,10 +1,10 @@
-package chess.web;
+package chess.controller;
 
 import chess.domain.Room;
 import chess.service.GameService;
 import chess.service.RoomService;
-import chess.web.dto.BoardDto;
-import chess.web.dto.RoomDto;
+import chess.dto.BoardDto;
+import chess.dto.RoomDto;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;

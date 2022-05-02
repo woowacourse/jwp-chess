@@ -5,9 +5,9 @@ import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.service.PieceFactory;
-import chess.web.dto.BoardDto;
-import chess.web.dto.GameStateDto;
-import chess.web.dto.PieceDto;
+import chess.dto.BoardDto;
+import chess.dto.GameStateDto;
+import chess.dto.PieceDto;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,8 +30,16 @@ public class GameRepository {
         return gameStateAndPieces(boardId);
     }
 
-    public int findBoardIdByRoom(int roomId) {
-        return boardDao.findBoardIdByRoom(roomId).get();
+    public Board findBoardByRoomId(int roomId) {
+        int boardId = boardDao.findBoardIdByRoom(roomId).get();
+
+        Map<Position, Piece> pieces = new HashMap<>();
+        for (PieceDto pieceDto : pieceDao.findAll(boardId)) {
+            pieces.put(Position.of(pieceDto.getPosition()), PieceFactory.build(pieceDto));
+        }
+        Board board = new Board(() -> pieces);
+        board.loadTurn(boardDao.getTurn(boardId));
+        return board;
     }
 
     public Color getBoardColor(int boardId) {

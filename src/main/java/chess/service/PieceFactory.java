@@ -8,7 +8,7 @@ import chess.domain.piece.role.Knight;
 import chess.domain.piece.role.Pawn;
 import chess.domain.piece.role.Queen;
 import chess.domain.piece.role.Rook;
-import chess.web.dto.PieceDto;
+import chess.dto.PieceDto;
 import java.util.HashMap;
 import java.util.Map;
 

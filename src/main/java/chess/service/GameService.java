@@ -5,10 +5,10 @@ import chess.domain.Result;
 import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
 import chess.repository.GameRepository;
-import chess.web.dto.BoardDto;
-import chess.web.dto.CommendDto;
-import chess.web.dto.PieceDto;
-import chess.web.dto.ResultDto;
+import chess.dto.BoardDto;
+import chess.dto.CommendDto;
+import chess.dto.PieceDto;
+import chess.dto.ResultDto;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -42,9 +42,10 @@ public class GameService {
     }
 
     public BoardDto loadGame(int roomId) {
-        int boardId = gameRepository.findBoardIdByRoom(roomId);
-        Board board = gameRepository.loadBoard(boardId);
-        board.loadTurn(gameRepository.getBoardColor(boardId));
+        Board board = gameRepository.findBoardByRoomId(roomId);
+//        int boardId = gameRepository.findBoardIdByRoom(roomId);
+//        Board board = gameRepository.loadBoard(boardId);
+//        board.loadTurn(gameRepository.getBoardColor(boardId));
         return gameStateAndPieces(boardId);
     }
 

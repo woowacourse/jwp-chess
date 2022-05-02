@@ -3,7 +3,7 @@ package chess.service;
 import chess.domain.Room;
 import chess.repository.BoardDao;
 import chess.repository.RoomDao;
-import chess.web.dto.RoomDto;
+import chess.dto.RoomDto;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

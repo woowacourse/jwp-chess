@@ -28,17 +28,6 @@ public class JdbcGameDaoTest {
     @BeforeEach
     void setUp() {
         chessRequestDto = new ChessRequestDto("title", "password", "white", "playing");
-
-        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
-        jdbcTemplate.execute("create table game\n"
-                + "(\n"
-                + "    game_id int         not null auto_increment,\n"
-                + "    title     varchar(20) not null,\n"
-                + "    password  varchar(20) not null,"
-                + "    turn    varchar(20) not null,\n"
-                + "    status    varchar(20) not null,\n"
-                + "    primary key (game_id)\n"
-                + ");");
     }
 
     @AfterEach

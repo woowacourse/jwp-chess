@@ -1,7 +1,9 @@
 const body = document.getElementsByTagName('body')[0]
 body.addEventListener('click', onClick)
 const squareIdList = [];
-const id = location.href.split("/").pop();
+const pathArray = window.location.pathname.split('/');
+const id = pathArray[2];
+const gameUri = location.href
 
 const startButtons = document.getElementsByClassName('start-button');
 for (const startButton of startButtons) {
@@ -12,8 +14,7 @@ for (const startButton of startButtons) {
 }
 
 async function putNewBoard() {
-    let id = location.href.split("/").pop();
-    const res = await fetch("/board/"+id, {
+    const res = await fetch(gameUri + '/board', {
         method: 'POST'
     });
     if (!res.ok) {
@@ -23,8 +24,7 @@ async function putNewBoard() {
 }
 
 async function allocateAllPiece() {
-    let id = location.href.split("/").pop();
-    const res = await fetch("../board/"+id, {
+    const res = await fetch(gameUri + '/board', {
         method: 'GET'
     });
     const pieces = await res.json();
@@ -66,8 +66,6 @@ async function onClick(event) {
     }
 
     function onCellClick() {
-        //TODO : 셀 선택 색깔 칠하기 버그
-        //target.closest("td").classList.toggle("clicked")
         const table = target.parentElement.parentElement
         makeAllCellsNotClicked(table)
         return target.closest("td").id
@@ -105,8 +103,7 @@ async function onClick(event) {
 }
 
 async function patchMove() {
-    let id = location.href.split("/").pop();
-    fetch('/board/' + id, {
+    fetch(gameUri + '/board', {
         method: 'PATCH',
         cache: 'no-cache',
         headers: {
@@ -127,7 +124,7 @@ async function patchMove() {
 }
 
 async function getResult() {
-    fetch('/status/' + id, {
+    fetch(gameUri + '/status', {
         method: 'GET'
     }).then(res => res.json())
         .then(json => {
@@ -147,7 +144,7 @@ async function getResult() {
 }
 
 async function endGame() {
-    fetch('/game-end/' + id, {
+    fetch(gameUri + '/game-end', {
         method: 'PUT'
     }).then(res => res.json())
         .then(json => {

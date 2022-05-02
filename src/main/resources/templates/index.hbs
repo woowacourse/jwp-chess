@@ -11,21 +11,21 @@
     </div>
     <h2 class="main-message center-object">게임 목록</h2>
     <div>
-        <table class="game-table center-object" id="games">
+        <table class="room-table center-object" id="rooms">
             <tr>
-                <td class="game-cell"><h3>게임 이름</h3></td>
-                <td class="game-cell"><h3>상태</h3></td>
-                <td class="game-cell"></td>
+                <td class="room-cell"><h3>게임 이름</h3></td>
+                <td class="room-cell"><h3>상태</h3></td>
+                <td class="room-cell"></td>
             </tr>
             {{#each allRooms.rooms}}
             <tr>
-                <td class="game-cell" id="{{this.name}}">
-                    <a href ="/game/{{this.id}}">
+                <td class="room-cell" id="{{this.name}}">
+                    <a href ="/room/{{this.id}}/game">
                         <h3>{{this.name}}</h3>
                     </a>
                 </td>
-                <td class="game-cell" id="{{this.status}}">{{this.status}}</td>
-                <td class="game-cell">
+                <td class="room-cell" id="{{this.status}}">{{this.status}}</td>
+                <td class="room-cell">
                     <button class="button delete-game-button" type="button" id="{{this.id}}">삭제</button>
                 </td>
             </tr>
@@ -34,11 +34,11 @@
     </div>
     </br>
     <div class="center-object">
-        <form action="/game" method="post" >
-            <label for="name">새 게임 만들기: </label>
+        <form action="/room" method="post" >
+            <label for="name">새 게임방 만들기: </label>
             <input type="text" name="name" id="name" placeholder="이름" required>
             <input type="password" name="password" id="password" placeholder="암호" required>
-            <button id='create-game-button' type="submit">만들기!</button>
+            <button id="create-room-button" type="submit">만들기!</button>
         </form>
     </div>
     <script src="/script/index.js"></script>

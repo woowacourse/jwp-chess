@@ -66,11 +66,11 @@ body {
     background-color: chartreuse;
 }
 
-.game-table {
+.room-table {
     border-collapse: collapse;
 }
 
-.game-cell {
+.room-cell {
     border: 2px solid;
     width:  150px;
     height: auto;

@@ -13,15 +13,15 @@ function createBoard() {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(request),
-    }).then(res => res.json())
-        .then(value => {
-            if (value["statusCode"] !== 200) {
-                alert(value["errorMessage"]);
-                return;
-            }
-            alert("생성된 방 번호는 " + value + "입니다.")
-            location.reload();
-        });
+    }).then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        throw new Error(value["errorMessage"]);
+    }).then(value => {
+        alert("생성된 방 번호는 " + value + "입니다.");
+        location.reload();
+    }).catch(reason => alert(reason));
 }
 
 function deleteBoard(boardId) {

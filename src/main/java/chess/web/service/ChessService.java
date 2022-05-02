@@ -33,19 +33,15 @@ public class ChessService {
         this.boardDao = boardDao;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Board loadGame(Long boardId) {
         BoardEntity boardEntity = boardDao.findById(boardId)
                 .orElseThrow(() -> new NoSuchElementException("없는 체스방입니다."));
         Turn turn = getTurn(boardEntity);
 
         List<Piece> pieces = pieceDao.findAllByBoardId(boardId);
-        Board board = Board.create(Pieces.from(pieces), turn);
 
-        if (board.isDeadKing() || pieces.isEmpty()) {
-            return initBoard(boardId);
-        }
-        return board;
+        return Board.create(Pieces.from(pieces), turn);
     }
 
     @Transactional

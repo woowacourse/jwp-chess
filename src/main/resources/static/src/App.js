@@ -44,6 +44,10 @@ function initBoard() {
                 drawBoard();
                 return;
             }
+            if (value["board"].size === 0) {
+                initBoard();
+                return;
+            }
             imageSetting(value);
             drawBoard();
         });
@@ -91,6 +95,7 @@ function loadBoard() {
 
 function imageSetting(response) {
     boardInfo = response;
+    pieces = undefined;
     if (response["board"] !== undefined) {
         pieces = response["board"];
     }

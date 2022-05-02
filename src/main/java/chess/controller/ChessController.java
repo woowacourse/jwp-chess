@@ -4,11 +4,12 @@ import chess.domain.board.Position;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameRoom;
 import chess.domain.piece.Piece;
-import chess.service.Service;
+import chess.service.ChessService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,22 +17,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 
-@org.springframework.stereotype.Controller
-public class Controller {
+@Controller
+public class ChessController {
 
     private static final int COLUMN_INDEX = 0;
     private static final int ROW_INDEX = 1;
 
-    private final Service service;
+    private final ChessService chessService;
 
-    public Controller(final Service service) {
-        this.service = service;
+    public ChessController(final ChessService chessService) {
+        this.chessService = chessService;
     }
 
     @GetMapping("/")
     public String getIndexPage(final Model model) {
         Map<String, Object> attributes = new HashMap<>();
-        attributes.put("gameRooms", service.loadAllGameRooms());
+        attributes.put("gameRooms", chessService.loadAllGameRooms());
         model.addAllAttributes(attributes);
         return "index";
     }
@@ -41,7 +42,7 @@ public class Controller {
         validateInputString(name);
         validateInputString(password);
         String gameRoomId = String.valueOf(name.hashCode());
-        service.createGameRoom(gameRoomId, name, password);
+        chessService.createGameRoom(gameRoomId, name, password);
         return new RedirectView("/game/" + gameRoomId);
     }
 
@@ -56,7 +57,7 @@ public class Controller {
 
     @GetMapping("/game/{gameRoomId}")
     public String getChessGamePage(final Model model, final @PathVariable String gameRoomId) {
-        GameRoom gameRoom = service.loadGameRoom(gameRoomId);
+        GameRoom gameRoom = chessService.loadGameRoom(gameRoomId);
         ChessGame chessGame = gameRoom.getChessGame();
         model.addAllAttributes(convertBoardForModel(chessGame.getCurrentBoard()));
         model.addAttribute("gameRoomId", gameRoom.getGameRoomId());
@@ -80,14 +81,14 @@ public class Controller {
 
     @PostMapping("/end/{gameRoomId}")
     public RedirectView endChessGame(final @PathVariable String gameRoomId) {
-        service.endChessGame(gameRoomId);
+        chessService.endChessGame(gameRoomId);
         return new RedirectView("/game/" + gameRoomId);
     }
 
     @PostMapping("/delete/{gameRoomId}")
     public RedirectView deleteGameRoom(final @PathVariable String gameRoomId, final @RequestParam String password) {
         validateInputString(password);
-        service.deleteGameRoom(gameRoomId, password);
+        chessService.deleteGameRoom(gameRoomId, password);
         return new RedirectView("/");
     }
 
@@ -99,7 +100,7 @@ public class Controller {
         validateInputString(target);
         char[] sourcesElements = source.toLowerCase().toCharArray();
         char[] targetElements = target.toLowerCase().toCharArray();
-        service.movePiece(
+        chessService.movePiece(
                 gameRoomId,
                 sourcesElements[COLUMN_INDEX],
                 Character.getNumericValue(sourcesElements[ROW_INDEX]),
@@ -111,7 +112,7 @@ public class Controller {
 
     @PostMapping("/reset/{gameRoomId}")
     public RedirectView resetChessGame(final @PathVariable String gameRoomId) {
-        service.resetChessRoom(gameRoomId);
+        chessService.resetChessRoom(gameRoomId);
         return new RedirectView("/game/" + gameRoomId);
     }
 }

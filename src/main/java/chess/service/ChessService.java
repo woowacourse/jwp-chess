@@ -14,15 +14,16 @@ import chess.repository.entity.GameRoomEntity;
 import chess.service.util.BoardEntitiesToBoardConvertor;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
-@org.springframework.stereotype.Service
-public class Service {
+@Service
+public class ChessService {
 
     private final GameRoomDao gameRoomDao;
     private final ChessGameDao chessGameDao;
     private final BoardDao boardDao;
 
-    public Service(GameRoomDao gameRoomDao, ChessGameDao chessGameDao, BoardDao boardDao) {
+    public ChessService(GameRoomDao gameRoomDao, ChessGameDao chessGameDao, BoardDao boardDao) {
         this.gameRoomDao = gameRoomDao;
         this.chessGameDao = chessGameDao;
         this.boardDao = boardDao;

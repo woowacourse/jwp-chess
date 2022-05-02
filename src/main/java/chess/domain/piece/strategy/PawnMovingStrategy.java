@@ -4,6 +4,7 @@ import chess.domain.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
 import java.util.List;
 
 public abstract class PawnMovingStrategy implements MovingStrategy {
@@ -27,12 +28,12 @@ public abstract class PawnMovingStrategy implements MovingStrategy {
         if (canCapture(board, targetPosition, movingInfo)) {
             return;
         }
-        throw new IllegalArgumentException("해당 기물이 갈 수 없는 경로입니다.");
+        throw new InvalidMoveException("해당 기물이 갈 수 없는 경로입니다.");
     }
 
     private void validateDirection(MovingInfo movingInfo) {
         if (!movingInfo.isContainedDirection(directions)) {
-            throw new IllegalArgumentException("해당 기물이 갈 수 없는 경로입니다.");
+            throw new InvalidMoveException("해당 기물이 갈 수 없는 경로입니다.");
         }
     }
 

@@ -8,7 +8,6 @@ function restartGame(gameId) {
             id: gameId,
         })
     }).then((response) => {
-        console.log(gameId)
         if (response.status !== 204) {
             throw response;
         }

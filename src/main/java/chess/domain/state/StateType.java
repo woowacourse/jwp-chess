@@ -1,6 +1,7 @@
 package chess.domain.state;
 
 import chess.domain.ChessBoard;
+import chess.exception.InvalidChessStateException;
 import java.util.Arrays;
 import java.util.function.Function;
 
@@ -26,7 +27,7 @@ public enum StateType {
         return Arrays.stream(values())
                 .filter(state -> state.getNotation().equals(notation))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상태입니다."));
+                .orElseThrow(() -> new InvalidChessStateException("존재하지 않는 상태입니다."));
     }
 
     public State newState(ChessBoard chessBoard) {

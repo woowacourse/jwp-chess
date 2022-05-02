@@ -4,6 +4,7 @@ import chess.domain.generator.BoardGenerator;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
 import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
 import java.util.List;
 
 public class ChessBoard {
@@ -38,13 +39,13 @@ public class ChessBoard {
 
     private void validateSamePosition(Position sourcePosition, Position targetPosition) {
         if (sourcePosition.equals(targetPosition)) {
-            throw new IllegalArgumentException("source 위치와 target 위치는 같을 수 없습니다.");
+            throw new InvalidMoveException("source 위치와 target 위치는 같을 수 없습니다.");
         }
     }
 
     private void validateEmptyPiece(Piece piece) {
         if (piece.isEmpty()) {
-            throw new IllegalArgumentException("source 위치에 기물이 존재하지 않습니다.");
+            throw new InvalidMoveException("source 위치에 기물이 존재하지 않습니다.");
         }
     }
 

@@ -3,6 +3,7 @@ package chess.domain.state;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import chess.exception.InvalidChessStateException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,7 @@ public class ReadyTest {
     void Ready에서_end실행_예외가_발생한다() {
         State state = new Ready();
 
-        assertThatThrownBy(() -> state.end()).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> state.end()).isInstanceOf(InvalidChessStateException.class);
     }
 
     @DisplayName("Ready에서 move를 실행하면 예외가 발생한다.")
@@ -31,7 +32,7 @@ public class ReadyTest {
     void Ready에서_move실행_예외가_발생한다() {
         State state = new Ready();
 
-        assertThatThrownBy(() -> state.move("a1", "a2")).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> state.move("a1", "a2")).isInstanceOf(InvalidChessStateException.class);
     }
 
     @DisplayName("Ready에서 isFinished를 호출하면 false가 반환된다.")
@@ -47,6 +48,6 @@ public class ReadyTest {
     void Ready에서_winner실행_예외가_발생한다() {
         State state = new Ready();
 
-        assertThatThrownBy(() -> state.winner()).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> state.winner()).isInstanceOf(InvalidChessStateException.class);
     }
 }

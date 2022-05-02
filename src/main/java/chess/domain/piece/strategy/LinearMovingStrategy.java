@@ -4,6 +4,7 @@ import chess.domain.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
 import java.util.List;
 
 public class LinearMovingStrategy implements MovingStrategy {
@@ -34,19 +35,19 @@ public class LinearMovingStrategy implements MovingStrategy {
         Piece targetPiece = board.findPiece(targetPosition);
 
         if(sourcePiece.isSameColor(targetPiece)) {
-            throw new IllegalArgumentException("같은 진영 기물은 공격할 수 없습니다.");
+            throw new InvalidMoveException("같은 진영 기물은 공격할 수 없습니다.");
         }
     }
 
     private void validateDirection(Direction direction) {
         if (!directions.contains(direction)) {
-            throw new IllegalArgumentException("해당 기물이 갈 수 없는 경로입니다.");
+            throw new InvalidMoveException("해당 기물이 갈 수 없는 경로입니다.");
         }
     }
 
     private void validateExistPiece(Piece currentPiece) {
         if (!currentPiece.isEmpty()) {
-            throw new IllegalArgumentException("경로에 기물이 존재하여 이동할 수 없습니다.");
+            throw new InvalidMoveException("경로에 기물이 존재하여 이동할 수 없습니다.");
         }
     }
 }

@@ -2,6 +2,7 @@ package chess.domain.state;
 
 import chess.domain.ChessBoard;
 import chess.domain.Result;
+import chess.exception.InvalidChessStateException;
 
 public abstract class Running extends Started {
 
@@ -11,7 +12,7 @@ public abstract class Running extends Started {
 
     @Override
     public final State start() {
-        throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_ERROR_MASSAGE);
+        throw new InvalidChessStateException(INVALID_CHESS_STATE_EXCEPTION);
     }
 
     @Override
@@ -31,6 +32,6 @@ public abstract class Running extends Started {
 
     @Override
     public final Result winner() {
-        throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_ERROR_MASSAGE);
+        throw new InvalidChessStateException(INVALID_CHESS_STATE_EXCEPTION);
     }
 }

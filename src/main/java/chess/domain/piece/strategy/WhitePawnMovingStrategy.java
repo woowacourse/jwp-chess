@@ -6,6 +6,7 @@ import static chess.domain.position.Direction.TOP_RIGHT;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Direction;
+import chess.exception.InvalidMoveException;
 import java.util.List;
 
 public class WhitePawnMovingStrategy extends PawnMovingStrategy {
@@ -20,7 +21,7 @@ public class WhitePawnMovingStrategy extends PawnMovingStrategy {
     @Override
     public void validateSameColor(Piece targetPiece) {
         if (!targetPiece.isBlack()) {
-            throw new IllegalArgumentException("공격은 다른 진영만 가능합니다.");
+            throw new InvalidMoveException("공격은 다른 진영만 가능합니다.");
         }
     }
 }

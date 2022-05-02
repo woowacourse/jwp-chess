@@ -1,5 +1,6 @@
 package chess.domain;
 
+import chess.exception.ChessGameException;
 import java.util.Arrays;
 import java.util.function.DoublePredicate;
 
@@ -20,7 +21,7 @@ public enum Result {
         return Arrays.stream(values())
                 .filter(result -> result.condition.test(Double.compare(whiteScore, blackScore)))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게임 결과입니다."));
+                .orElseThrow(() -> new ChessGameException("존재하지 않는 게임 결과입니다."));
     }
 
     public boolean isDraw() {

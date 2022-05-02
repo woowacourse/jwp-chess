@@ -8,6 +8,7 @@ import chess.domain.generator.InitBoardGenerator;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.domain.state.StateType;
+import chess.exception.ChessGameException;
 import chess.web.dao.GameDao;
 import chess.web.dao.PieceDao;
 import chess.web.dto.board.BoardDto;
@@ -87,10 +88,10 @@ public class ChessService {
 
     private void validateDeleteGame(int gameId, String password, String realPassword) {
         if (!realPassword.equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 잘못되었습니다.");
+            throw new ChessGameException("비밀번호가 잘못되었습니다.");
         }
         if (isChessRunning(gameId)) {
-            throw new IllegalArgumentException("게임이 아직 진행중입니다.");
+            throw new ChessGameException("게임이 아직 진행중입니다.");
         }
     }
 

@@ -1,5 +1,6 @@
 package chess.domain.position;
 
+import chess.exception.InvalidMoveException;
 import java.util.Arrays;
 
 public enum Direction {
@@ -32,7 +33,7 @@ public enum Direction {
         return Arrays.stream(values())
                 .filter(direction -> direction.degree == degree)
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new InvalidMoveException("존재하지 않는 방향입니다."));
     }
 
     private static double getDegree(int ordinateCoordinate, int abscissaCoordinate) {

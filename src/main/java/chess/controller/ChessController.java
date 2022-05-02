@@ -2,27 +2,46 @@ package chess.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import chess.dto.ChessGameRequest;
 import chess.domain.piece.Color;
+import chess.dto.ChessGameRequest;
 import chess.dto.MovementRequest;
 import chess.service.ChessService;
 
 @Controller
-@RequestMapping("/games")
-public class InGameController {
+public class ChessController {
     private final ChessService chessService;
 
-    public InGameController(ChessService chessService) {
+    public ChessController(ChessService chessService) {
         this.chessService = chessService;
     }
 
+    @GetMapping
+    public String index(Model model) {
+        model.addAttribute("msg", "CLICK TO START! 😝");
+        model.addAttribute("games", chessService.getGameIds());
+        return "ready";
+    }
+
     @PostMapping
-    public String runGame(@ModelAttribute ChessGameRequest chessGameRequest, @RequestParam(name = "restart") String restart,
+    public String delete(@ModelAttribute ChessGameRequest chessGameRequest, Model model) {
+        model.addAttribute("msg", "쨘~ 게임 삭제 완료! 😚");
+        try {
+            chessService.deleteGameByGameId(chessGameRequest);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("msg", e.getMessage());
+        }
+        model.addAttribute("games", chessService.getGameIds());
+        return "ready";
+    }
+
+    @PostMapping("/games")
+    public String runGame(@ModelAttribute ChessGameRequest chessGameRequest,
+            @RequestParam(name = "restart") String restart,
             Model model) {
         if (isGameExist(chessGameRequest) && isNotValidPassword(chessGameRequest)) {
             model.addAttribute("msg", "비밀 번호 틀렸지롱~ 🤪");
@@ -49,7 +68,7 @@ public class InGameController {
         model.addAttribute("blackScore", chessService.calculateScore(chessGameRequest, Color.BLACK));
     }
 
-    @PostMapping(value = "/{gameId}/move")
+    @PostMapping(value = "/games/{gameId}/move")
     public String movePiece(@ModelAttribute ChessGameRequest chessGameRequest, @ModelAttribute MovementRequest movement,
             Model model) {
         executeMove(chessGameRequest, model, movement);
@@ -63,7 +82,8 @@ public class InGameController {
         return "ingame";
     }
 
-    private void executeMove(ChessGameRequest chessGameRequest, Model model, @ModelAttribute MovementRequest movementRequest) {
+    private void executeMove(ChessGameRequest chessGameRequest, Model model,
+            @ModelAttribute MovementRequest movementRequest) {
         try {
             chessService.movePiece(chessGameRequest, movementRequest);
             model.addAllAttributes(chessService.getSavedEmojis(chessGameRequest));
@@ -72,5 +92,13 @@ public class InGameController {
             model.addAllAttributes(chessService.getSavedEmojis(chessGameRequest));
             model.addAttribute("msg", e.getMessage());
         }
+    }
+
+    @GetMapping("/results")
+    public String showResult(@ModelAttribute ChessGameRequest chessGameRequest, Model model) {
+
+        model.addAttribute("whiteScore", chessService.calculateScore(chessGameRequest, Color.WHITE));
+        model.addAttribute("blackScore", chessService.calculateScore(chessGameRequest, Color.BLACK));
+        return "status";
     }
 }

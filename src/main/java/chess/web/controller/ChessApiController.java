@@ -60,7 +60,7 @@ public class ChessApiController {
     }
 
     @DeleteMapping(value = "/boards/{boardId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> deleteRoom(@RequestBody String password, @PathVariable Long boardId) {
+    public ResponseEntity<Boolean> deleteBoard(@RequestBody String password, @PathVariable Long boardId) {
         boolean result = chessService.removeBoard(boardId, password);
         return ResponseEntity.ok().body(result);
     }

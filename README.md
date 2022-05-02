@@ -60,13 +60,13 @@
         - 3xx : 리다이렉션 상태를 나타내어 사용자에게 대안을 제시함
         - 4xx : 클라이언트의 문제로 에러가 발생함
         - 5xx : 서버의 문제로 에러가 발생함
-- [x] ChessWebController의 `createRoom`의 newId는 board의 id 인지 room의 id 인지 명확하면 좋을 것 같다
+- [x] ChessWebController의 `createBoard`의 newId는 board의 id 인지 room의 id 인지 명확하면 좋을 것 같다
     - board, room 테이블을 합치면서 room의 id를 사용하도록 수정했다.
     - ~~[x] boardId라는 이름을 사용하던 변수 등을 roomId로 수정하기~~
 - [x] 보통 자원을 지울때는 pk로 지우게 되는데 Room을 지울 때 pk가 아닌 boardId 값으로 지우게 된다. 혹시 같은 boardId를 여러 자원이 가진다면 모두 지우게 되는 것이 의도한 것일까?
     - board와 room 테이블을 합치면서 board_id가 아닌 roomId로 관리하도록 수정했다.
-    - PieceDao의 `deleteByboardId()`는 roomId를 만족하는 모든 기물을 삭제하도록 `deleteAllByRoomId()`로 수정하였다.
-    - RoomDao는 `delete()`를 사용하여 pk값인 id와 password값을 파라미터로 받아 삭제한다.
+    - PieceDao의 `deleteByboardId()`는 roomId를 만족하는 모든 기물을 삭제하도록 `deleteAllByBoardId()`로 수정하였다.
+    - BoardDao는 `delete()`를 사용하여 pk값인 id와 password값을 파라미터로 받아 삭제한다.
         - DB에 id와 password가 같은 데이터가 있는지 확인하는 방식(예를들면 `findByIdAndPassword()`)으로 패스워드 일치를 확인하고 `delete(id)`를 하는 식으로 할까 생각했었는데 글을 삭제하기 위해 무조건 비밀번호가 필요하다고 생각하여 `delete(id, password)`로 DAO 메서드를 만들었다.
 - [x] 여러 DAO를 사용하여 자원을 처리하다가 에러가 발생해서 프로그램이 중단된다면 게임의 데이터는 어떤 상태로 유지 될까요?
     - 원자성과 트랜잭션을 키워드로 학습해보고 문제를 해결해볼까요?
@@ -109,11 +109,11 @@
     - ControllerAdvice의 assignableTypes 옵션으로 어떤 컨트롤러에 대한 구체적인 예외 처리를 할 수 있도록 했다.
     - `@Controller`에서는 `NoSuchElementException`이 발생 시 체스방이 없다는 페이지를 출력하고 이 외 다른 에러의 경우 에러 메시지와 함께 error 페이지를 출력하도록 했다.
     - `@RestController`에서는 모든 에러에 대해서 같은 동작을 하게 될 것 같아서 기존의 `IllegalArgumentException`핸들러를 `Exception`핸들러로 수정했다.
-- [x] RoomDao의 `updateTurnById()`는 Long을 반환하는데 이것이 사용되는 곳이 있을까?
+- [x] BoardDao의 `updateTurnById()`는 Long을 반환하는데 이것이 사용되는 곳이 있을까?
     - `save()` 처럼 수정하고나서 그 id로 값을 찾아와 무언가를 할 수 있다고 생각했는데 이미 `updateTurnById()`에서 파라미터로 id를 사용하기 때문에 그럴 필요가 없었다.
     - 그래서 반환형을 Long이 아닌 void로 수정하였다.
 - [x] 전체적으로 테스트의 이름과 DisplayName 등을 확인하고 수정하기
-- [x] RoomDaoTest 파일의 가장 마지막 줄에 개행 문자가 없으면 깃헙에서 경고를 보여주는 이유가 무엇일까?
+- [x] BoardDaoTest 파일의 가장 마지막 줄에 개행 문자가 없으면 깃헙에서 경고를 보여주는 이유가 무엇일까?
     - 경고의 내용은 "no newline at end of file"이다.
     - 마지막 줄에 개행 문자가 있어야하는 이유는 "POSIX"라는 표준에서 그렇게 정했기 때문이다. 
     - 단순한 빈 줄이 아닌 개행 문자가 와야한다. (\n, \r, \r\n)
@@ -150,7 +150,7 @@
 - [ ] ApiController에서 모든 에러가 Bad request를 반환하는데 만약 DB나 서버 내부에서 에러가 발생한다면 적절한 status code일까?
 - [ ] 30자 이상의 방 이름, 비밀번호를 입력하면 어떻게 될까요?
 - [ ] ChessApiController의 `loadGame()`에서 기물이 없거나 게임이 끝나면 초기화시켜주어 상태를 변화시킨다. 수정하자!
-- [ ] 남아있는 Room의 흔적을 지우자. 
+- [x] 남아있는 Room의 흔적을 지우자. 
 - [ ] assertAll()의 장점을 생각해보고 적용해보자
 
 ---

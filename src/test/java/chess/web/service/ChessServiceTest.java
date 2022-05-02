@@ -140,7 +140,7 @@ class ChessServiceTest {
 
     @Test
     @DisplayName("게임이 진행 중이라면 생성된 체스방을 삭제할 수 없다.")
-    void removeRoomFailInRunningGame() {
+    void removeBoardFailInRunningGame() {
         String title = "title";
         String password = "password";
         Long boardId = chessService.createBoard(title, password);

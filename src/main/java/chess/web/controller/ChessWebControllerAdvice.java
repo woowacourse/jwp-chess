@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ChessWebControllerAdvice {
 
     @ExceptionHandler(NoSuchElementException.class)
-    public String hasNotChessRoom(NoSuchElementException exception) {
+    public String hasNotChessBoard(NoSuchElementException exception) {
         return "noChess";
     }
 

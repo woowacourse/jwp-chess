@@ -138,7 +138,7 @@ public class ChessService {
 
     @Transactional
     public boolean removeBoard(Long boardId, String password) {
-        if (!canRemoveRoom(boardId, password)) {
+        if (!canRemoveBoard(boardId, password)) {
             return false;
         }
         pieceDao.deleteAllByBoardId(boardId);
@@ -146,7 +146,7 @@ public class ChessService {
         return true;
     }
 
-    private boolean canRemoveRoom(Long boardId, String password) {
+    private boolean canRemoveBoard(Long boardId, String password) {
         Optional<BoardEntity> board = boardDao.findById(boardId);
         if (board.isEmpty()) {
             throw new NoSuchElementException("삭제할 체스방이 없습니다.");

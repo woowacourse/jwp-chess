@@ -29,7 +29,7 @@ public class SpringWebChessController {
     }
 
     @PostMapping("/create")
-    public String create(@RequestParam String title, @RequestParam String password) throws IllegalArgumentException {
+    public String create(@RequestParam String title, @RequestParam String password) {
         long gameId = chessService.create(title, password);
         return "redirect:/play/" + gameId;
     }
@@ -47,7 +47,7 @@ public class SpringWebChessController {
 
     @PostMapping(value = "/move/{gameId}")
     @ResponseBody
-    public void move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int gameId) throws SQLException, IllegalArgumentException {
+    public void move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int gameId) {
         chessService.move(moveRequestDto.getSource(), moveRequestDto.getTarget(), gameId);
     }
 
@@ -64,19 +64,19 @@ public class SpringWebChessController {
     }
 
     @DeleteMapping("/delete/{gameId}")
-    public String delete(@PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto) throws IllegalArgumentException, SQLException {
+    public String delete(@PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto) {
         chessService.deleteGame(gameId, removeRequestDto.getPassword());
         return "lobby";
     }
 
     @GetMapping("/end/{gameId}")
     @ResponseBody
-    public void end(@PathVariable int gameId) throws SQLException, IllegalArgumentException {
+    public void end(@PathVariable int gameId) {
         chessService.end(gameId);
     }
 
     @GetMapping("/result/{gameId}")
-    public String result(Model model, @PathVariable int gameId) throws SQLException {
+    public String result(Model model, @PathVariable int gameId) {
         ChessBoard chessBoard = chessService.findBoard(gameId);
         model.addAttribute("play", true);
         model.addAttribute("status", chessService.status(chessBoard));

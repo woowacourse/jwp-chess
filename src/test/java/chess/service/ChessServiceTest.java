@@ -3,14 +3,14 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import chess.controller.dto.request.CreateGameRequest;
-import chess.controller.dto.response.ChessGameResponse;
-import chess.controller.dto.response.ChessGamesResponse;
 import chess.dao.FakeGameDao;
 import chess.dao.FakePieceDao;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.domain.GameState;
+import chess.dto.request.CreateGameRequest;
+import chess.dto.response.ChessGameResponse;
+import chess.dto.response.ChessGamesResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

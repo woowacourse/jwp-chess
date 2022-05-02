@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.controller.dto.request.CreateGameRequest;
-import chess.controller.dto.request.MoveRequest;
+import chess.dto.request.CreateGameRequest;
+import chess.dto.request.MoveRequest;
 import chess.service.ChessService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.Is;

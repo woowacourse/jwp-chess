@@ -1,4 +1,4 @@
-package chess.controller.dto.response;
+package chess.dto.response;
 
 import chess.domain.board.Position;
 import chess.domain.board.Row;
@@ -31,7 +31,7 @@ public class PieceResponse {
         return PieceType.valueOf(pieceType.toUpperCase(Locale.ROOT))
                 .createPiece(Color.valueOf(color.toUpperCase(Locale.ROOT)));
     }
-    
+
     public String getPosition() {
         return position;
     }

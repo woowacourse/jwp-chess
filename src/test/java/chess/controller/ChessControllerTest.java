@@ -1,9 +1,9 @@
 package chess.controller;
 
-import chess.controller.dto.request.CreateGameRequest;
-import chess.controller.dto.request.MoveRequest;
 import chess.dao.GameDao;
 import chess.domain.GameState;
+import chess.dto.request.CreateGameRequest;
+import chess.dto.request.MoveRequest;
 import chess.service.ChessService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

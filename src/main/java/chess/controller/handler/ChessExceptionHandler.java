@@ -1,6 +1,6 @@
 package chess.controller.handler;
 
-import chess.controller.dto.response.ErrorResponse;
+import chess.dto.response.ErrorResponse;
 import java.util.stream.Collectors;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;

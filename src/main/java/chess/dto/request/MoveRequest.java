@@ -1,4 +1,4 @@
-package chess.controller.dto.request;
+package chess.dto.request;
 
 import javax.validation.constraints.NotNull;
 

@@ -1,4 +1,4 @@
-package chess.controller.dto.response;
+package chess.dto.response;
 
 public class GameRoomResponse {
 

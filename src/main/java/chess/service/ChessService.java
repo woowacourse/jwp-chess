@@ -1,12 +1,5 @@
 package chess.service;
 
-import chess.controller.dto.request.CreateGameRequest;
-import chess.controller.dto.request.MoveRequest;
-import chess.controller.dto.response.ChessGameResponse;
-import chess.controller.dto.response.ChessGamesResponse;
-import chess.controller.dto.response.GameRoomResponse;
-import chess.controller.dto.response.PieceResponse;
-import chess.controller.dto.response.StatusResponse;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.dao.entity.GameEntity;
@@ -18,6 +11,13 @@ import chess.domain.board.Position;
 import chess.domain.board.Row;
 import chess.domain.board.strategy.CreateCompleteBoardStrategy;
 import chess.domain.piece.Piece;
+import chess.dto.request.CreateGameRequest;
+import chess.dto.request.MoveRequest;
+import chess.dto.response.ChessGameResponse;
+import chess.dto.response.ChessGamesResponse;
+import chess.dto.response.GameRoomResponse;
+import chess.dto.response.PieceResponse;
+import chess.dto.response.StatusResponse;
 import chess.util.PasswordEncryptor;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class ChessService {
         saveBoard(gameId, chessGame.getBoard());
         return gameId;
     }
-    
+
     public void saveBoard(Long gameId, Map<Position, Piece> board) {
         board.forEach((position, piece) -> savePiece(gameId, position, piece));
     }

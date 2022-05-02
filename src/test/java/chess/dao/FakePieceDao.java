@@ -1,8 +1,8 @@
 package chess.dao;
 
-import chess.controller.dto.response.PieceResponse;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
+import chess.dto.response.PieceResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

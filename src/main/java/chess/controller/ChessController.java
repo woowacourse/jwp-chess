@@ -1,10 +1,10 @@
 package chess.controller;
 
-import chess.controller.dto.request.CreateGameRequest;
-import chess.controller.dto.request.MoveRequest;
-import chess.controller.dto.response.ChessGameResponse;
-import chess.controller.dto.response.ChessGamesResponse;
-import chess.controller.dto.response.StatusResponse;
+import chess.dto.request.CreateGameRequest;
+import chess.dto.request.MoveRequest;
+import chess.dto.response.ChessGameResponse;
+import chess.dto.response.ChessGamesResponse;
+import chess.dto.response.StatusResponse;
 import chess.service.ChessService;
 import java.net.URI;
 import java.net.URISyntaxException;

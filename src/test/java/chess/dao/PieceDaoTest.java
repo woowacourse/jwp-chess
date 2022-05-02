@@ -6,12 +6,12 @@ import static chess.domain.CachedPosition.b2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-import chess.controller.dto.response.PieceResponse;
 import chess.dao.entity.GameEntity;
 import chess.domain.GameState;
 import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
+import chess.dto.response.PieceResponse;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;

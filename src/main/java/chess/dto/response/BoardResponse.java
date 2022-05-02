@@ -1,4 +1,4 @@
-package chess.controller.dto.response;
+package chess.dto.response;
 
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;

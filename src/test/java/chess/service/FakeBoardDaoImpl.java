@@ -5,22 +5,16 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
 import chess.domain.state.BoardInitialize;
-import chess.dto.response.PieceDto;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class FakeBoardDaoImpl implements BoardDao {
 
     HashMap<Long, Map<Position, Piece>> piecesOfRooms = new HashMap<>();
 
     @Override
-    public List<PieceDto> findAll(Long roomId) {
-        Map<Position, Piece> pieces = piecesOfRooms.get(roomId);
-        return pieces.keySet().stream()
-            .map(i -> new PieceDto(i.getPositionToString(), pieces.get(i).getSymbol()))
-            .collect(Collectors.toList());
+    public Map<Position, Piece> findAll(Long roomId) {
+        return piecesOfRooms.get(roomId);
     }
 
     @Override

@@ -1,13 +1,12 @@
 package chess.dao;
 
 import chess.domain.piece.Piece;
+import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
-import chess.dto.response.PieceDto;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Map;
 
 @Repository
 public class BoardDaoImpl implements BoardDao {
@@ -19,14 +18,14 @@ public class BoardDaoImpl implements BoardDao {
     }
 
     @Override
-    public List<PieceDto> findAll(Long roomId) {
+    public Map<Position, Piece> findAll(Long roomId) {
         String sql = "select * from board where room_id = ?";
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new PieceDto(
-                    rs.getString("position"),
-                    rs.getString("symbol")
-                ),
-            roomId);
+        Map<Position, Piece> pieces = new HashMap<>();
+        jdbcTemplate.query(sql,
+            (rs, rowNum) -> pieces.put(
+                Position.from(rs.getString("position")),
+                Pieces.find(rs.getString("symbol"))), roomId);
+        return pieces;
     }
 
     @Override

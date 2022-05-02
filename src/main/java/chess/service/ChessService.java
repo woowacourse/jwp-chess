@@ -6,7 +6,6 @@ import chess.domain.Score;
 import chess.domain.Team;
 import chess.domain.piece.Blank;
 import chess.domain.piece.Piece;
-import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
 import chess.domain.state.BlackTurn;
 import chess.domain.state.BoardInitialize;
@@ -21,7 +20,6 @@ import chess.dto.response.RoomDto;
 import chess.dto.response.ScoreDto;
 import chess.dto.response.StatusDto;
 import chess.entity.Room;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -74,19 +72,8 @@ public class ChessService {
 
     private GameState getGameState(Long roomId) {
         Room room = getRoom(roomId);
-        Map<Position, Piece> board = getPiecesOfRoom(room);
+        Map<Position, Piece> board = boardDao.findAll(room.getId());
         return createTurn(room, board);
-    }
-
-    private Map<Position, Piece> getPiecesOfRoom(Room room) {
-        List<PieceDto> pieces = boardDao.findAll(room.getId());
-        Map<Position, Piece> board = new HashMap<>();
-        for (PieceDto pieceOfPieces : pieces) {
-            Piece piece = Pieces.find(pieceOfPieces.getSymbol());
-            Position position = Position.from(pieceOfPieces.getPosition());
-            board.put(position, piece);
-        }
-        return board;
     }
 
     private Playing createTurn(Room room, Map<Position, Piece> board) {
@@ -98,9 +85,16 @@ public class ChessService {
     }
 
     public BoardDto getBoard(Long roomId) {
-        List<PieceDto> pieces = boardDao.findAll(roomId);
         Room room = getRoom(roomId);
+        List<PieceDto> pieces = getPieces(roomId);
         return new BoardDto(pieces, room.getTeam());
+    }
+
+    private List<PieceDto> getPieces(Long roomId) {
+        Map<Position, Piece> pieces = boardDao.findAll(roomId);
+        return pieces.keySet().stream()
+            .map(i -> new PieceDto(i.getPositionToString(), pieces.get(i).getSymbol()))
+            .collect(Collectors.toList());
     }
 
     public BoardDto resetBy(Long roomId) {

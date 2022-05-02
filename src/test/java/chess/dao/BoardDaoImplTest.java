@@ -1,7 +1,10 @@
 package chess.dao;
 
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 import chess.domain.state.BoardInitialize;
 import chess.dto.response.PieceDto;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,14 +65,14 @@ class BoardDaoImplTest {
 
     @Test
     void findAll() {
-        List<PieceDto> pieces = boardDaoImpl.findAll(1L);
+        Map<Position, Piece> pieces = boardDaoImpl.findAll(1L);
         assertThat(pieces.size()).isEqualTo(3);
     }
 
     @Test
     void saveAll() {
         boardDaoImpl.saveAll(BoardInitialize.create(), 2L);
-        List<PieceDto> pieces = boardDaoImpl.findAll(2L);
+        Map<Position, Piece> pieces = boardDaoImpl.findAll(2L);
         assertThat(pieces.size()).isEqualTo(64);
     }
 

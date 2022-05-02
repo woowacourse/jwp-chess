@@ -11,17 +11,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(properties = "spring.config.location=classpath:/application-test.yml")
 @Sql("/schema-test.sql")
 class RoomJdbcRepositoryTest {
 
+    public static final GameCreateRequest CREATE_FIXTURE = new GameCreateRequest("test room", "password", "white",
+            "black");
     @Autowired
     private RoomRepository roomRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setup() {
@@ -29,31 +28,36 @@ class RoomJdbcRepositoryTest {
     }
 
     @Test
-    @DisplayName("Room Repository CRUD 테스트")
-    void crud() {
-        final GameCreateRequest gameCreateRequest = new GameCreateRequest("test room",
-                passwordEncoder.encode("password"), "white", "black");
+    @DisplayName("Room 생성 테스트")
+    void save() {
+        Room room = roomRepository.save(CREATE_FIXTURE);
+        Room expected = new Room(room.getId(), "test room", "password");
 
-        final List<Room> before = roomRepository.findAll();
-        Room save = roomRepository.save(gameCreateRequest);
-        Room save1 = roomRepository.save(gameCreateRequest);
-        final long id = save.getId();
-        final List<Room> after = roomRepository.findAll();
+        assertThat(room).isEqualTo(expected);
+    }
 
-        final Room room = roomRepository.findById(id);
+    @Test
+    @DisplayName("Room 조회 테스트")
+    void findById() {
+        Room room = roomRepository.save(CREATE_FIXTURE);
+        Room roomById = roomRepository.findById(room.getId());
 
-        roomRepository.deleteById(id);
-        final List<Room> delete1 = roomRepository.findAll();
+        assertThat(roomById).isEqualTo(room);
+    }
 
-        roomRepository.deleteAll();
-        final List<Room> deleteAll = roomRepository.findAll();
+    @Test
+    @DisplayName("Room 삭제 테스트")
+    void deleteById() {
+        Room room = roomRepository.save(CREATE_FIXTURE);
+        List<Room> roomsAfterSave = roomRepository.findAll();
+
+        long rows = roomRepository.deleteById(room.getId());
+        List<Room> roomsAfterDelete = roomRepository.findAll();
 
         assertAll(
-                () -> assertThat(before.isEmpty()).isTrue(),
-                () -> assertThat(after.isEmpty()).isFalse(),
-                () -> assertThat(room.matchPassword("password", passwordEncoder)).isTrue(),
-                () -> assertThat(delete1.size() == 1).isTrue(),
-                () -> assertThat(deleteAll.isEmpty()).isTrue()
+                () -> assertThat(roomsAfterSave).isNotEmpty(),
+                () -> assertThat(rows).isOne(),
+                () -> assertThat(roomsAfterDelete).isEmpty()
         );
     }
 }

@@ -66,7 +66,7 @@ function reset() {
 function end() {
     $.ajax({
         url: "/rooms/" + roomId,
-        type: "PUT",
+        type: "PATCH",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {

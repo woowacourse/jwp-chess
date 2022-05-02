@@ -58,12 +58,12 @@ public class ChessController {
         return ResponseEntity.ok().body(chessService.getScoreBy(roomId));
     }
 
-    @PatchMapping("/rooms/{roomId}")
+    @PutMapping("/rooms/{roomId}")
     public ResponseEntity<BoardDto> reset(@PathVariable Long roomId) {
         return ResponseEntity.ok().body(chessService.resetBy(roomId));
     }
 
-    @PutMapping("/rooms/{roomId}")
+    @PatchMapping("/rooms/{roomId}")
     public ResponseEntity<GameStateDto> end(@PathVariable Long roomId) {
         return ResponseEntity.ok().body(chessService.endBy(roomId));
     }

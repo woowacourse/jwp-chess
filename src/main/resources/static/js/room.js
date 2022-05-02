@@ -69,7 +69,7 @@ function createRoom() {
     data: JSON.stringify(object),
     success: function (data) {
       alert("생성되었습니다.")
-      window.reload();
+      location.reload();
     },
     error: function (data) {
       alert(JSON.stringify(data.responseText))

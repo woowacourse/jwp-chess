@@ -132,9 +132,9 @@ public class ChessService {
         pieceDao.insertNone(gameId, new Square(source));
     }
 
-    public List<ChessGameDto> getGameIds() {
+    public List<GameIdResponse> getGameIds() {
         return chessGameDao.findAllGame().stream()
-                .map(gameId -> new ChessGameDto(gameId, null))
+                .map(GameIdResponse::new)
                 .collect(Collectors.toList());
     }
 

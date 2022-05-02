@@ -4,7 +4,6 @@ import chess.domain.game.score.Score;
 import chess.domain.position.Position;
 
 public class Piece {
-    private static final String PIECE_NAME_FORMAT = "%s_%s";
 
     private final PieceType pieceType;
     private final PieceColor pieceColor;
@@ -42,14 +41,6 @@ public class Piece {
         return this.pieceColor == other.pieceColor;
     }
 
-    public String generateFullName() {
-        String pieceName = pieceType.name();
-        String pieceColorName = pieceColor.name();
-        return String.format(PIECE_NAME_FORMAT, pieceName, pieceColorName);
-    }
-
-    // TODO: 게터 제거해야함
-    // TODO: getScore 가 Piece 의 역할일까?
     public Score getScore() {
         return pieceType.getScore();
     }

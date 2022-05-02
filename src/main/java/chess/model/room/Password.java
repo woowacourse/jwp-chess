@@ -2,7 +2,7 @@ package chess.model.room;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-public class Password {
+class Password {
 
     private final String hashedPassword;
 

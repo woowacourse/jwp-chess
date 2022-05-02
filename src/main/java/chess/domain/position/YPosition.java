@@ -1,5 +1,7 @@
 package chess.domain.position;
 
+import chess.exception.InvalidMoveException;
+
 import java.util.Arrays;
 
 public enum YPosition {
@@ -23,14 +25,14 @@ public enum YPosition {
         return Arrays.stream(values())
                 .filter(value -> value.yPosition == yPosition)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 세로축이 잘못 입력되었습니다."));
+                .orElseThrow(() -> new InvalidMoveException("[ERROR] 세로축이 잘못 입력되었습니다."));
     }
 
     public static YPosition of(final String symbol) {
         return Arrays.stream(values())
                 .filter(value -> value.yPosition == Integer.parseInt(symbol))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 세로축이 잘못 입력되었습니다."));
+                .orElseThrow(() -> new InvalidMoveException("[ERROR] 세로축이 잘못 입력되었습니다."));
     }
 
     public static boolean checkRange(final int yPosition) {

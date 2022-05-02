@@ -11,6 +11,7 @@ import chess.domain.piece.unit.Rook;
 import chess.domain.position.Position;
 import chess.domain.position.XPosition;
 import chess.domain.position.YPosition;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

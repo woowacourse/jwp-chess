@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>ZERO Chess</title>
-    <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/files/css/style.css" rel="stylesheet"/>
 </head>
 <body>
 <h1> GAME : {{chessGameRoom.name}}</h1>
-<h2> <a href="/"> MOVE LOBBY</a></h2>
+<h2><a href="/"> MOVE LOBBY</a></h2>
 <div id="game-result" class="none">
     <h2>WINNER:<span id="winner"></span></h2>
 </div>
@@ -15,8 +15,8 @@
 <div id="board"></div>
 <input id="gameId" type="hidden" value="{{chessGameRoom.id}}">
 
-<h3 align = "center">TURN : <span id="currentTurn"></span></h3>
-<table border="2" width ="300" height="30" align = "center" class="game-list">
+<h3 align="center">TURN : <span id="currentTurn"></span></h3>
+<table border="2" width="300" height="30" align="center" class="game-list">
     <tr>
         <td align="center"><h3>BLACK : <span id="blackScore"></span></h3></td>
         <td align="center"><h3>WHITE : <span id="whiteScore"></span></h3></td>
@@ -25,5 +25,5 @@
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="module" src="/js/game.js"></script>
+<script type="module" src="/files/js/game.js"></script>
 </html>

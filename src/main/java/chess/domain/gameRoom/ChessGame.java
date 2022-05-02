@@ -1,18 +1,20 @@
-package chess.dao;
+package chess.domain.gameRoom;
 
 import chess.domain.board.BoardGenerator;
 import chess.domain.board.ChessBoard;
 import chess.domain.board.ChessBoardGenerator;
+import chess.domain.game.Movement;
 import chess.domain.position.Position;
 
 public final class ChessGame {
 
     private String id;
     private String name;
+    private String password;
     private boolean isEnd;
     private ChessBoard chessBoard;
 
-    public ChessGame(final BoardGenerator boardGenerator) {
+    private ChessGame(final BoardGenerator boardGenerator) {
         this.chessBoard = new ChessBoard(boardGenerator);
     }
 
@@ -48,7 +50,15 @@ public final class ChessGame {
         return chessBoard;
     }
 
-    public boolean isGameSet() {
+    public boolean isKingDied() {
         return !chessBoard.checkKingExist();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -1,5 +1,7 @@
 package chess.domain.position;
 
+import chess.exception.InvalidMoveException;
+
 import java.util.Arrays;
 
 public enum XPosition {
@@ -25,14 +27,14 @@ public enum XPosition {
         return Arrays.stream(values())
                 .filter(value -> value.xPosition == xPosition)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 가로축이 잘못 입력되었습니다."));
+                .orElseThrow(() -> new InvalidMoveException("[ERROR] 가로축이 잘못 입력되었습니다."));
     }
 
     public static XPosition of(final String symbol) {
         return Arrays.stream(values())
                 .filter(value -> value.symbol.equals(symbol.toLowerCase()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 가로축이 잘못 입력되었습니다."));
+                .orElseThrow(() -> new InvalidMoveException("[ERROR] 가로축이 잘못 입력되었습니다."));
     }
 
     public static boolean checkRange(final int xPosition) {

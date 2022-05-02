@@ -3,24 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>ZERO CHESS</title>
-    <link href="/css/lobby.css" rel="stylesheet"/>
+    <link href="/files/css/lobby.css" rel="stylesheet"/>
 </head>
 <body>
 <h1>ZERO Chess</h1>
 <br><br>
 <form action="/chess/new" method="post">
-    <input type="text" name="gameName" placeholder="NEW GAME">
+    <input type="text" name="gameName" placeholder="NEW GAME NAME" pattern=".{0}|.{1,10}" required title="Either 0 OR (1 to 10 chars)">
+    <input type="password" name="password" placeholder="PASSWORD" pattern=".{0}|.{4,10}" required title="Either 0 OR (4 to 10 chars)">
     <input type="submit" value="NEW GAME START">
 </form>
 
 <br>
 <h2>CLICK ON THE ROOM</h2>
-<table border="2" width ="500" height="300" align = "center" class="game-list">
+<table border="2" width ="600" height="100" align = "center" class="game-list">
+    <tr>
+        <td width ="100">
+            Number
+        </td>
+        <td width ="400">
+            GAME NAME
+        </td>
+        <td width ="100">
+            DELETE
+        </td>
+    </tr>
+</table>
+<table border="2" width ="600" height="300" align = "center" class="game-list">
     {{#games}}
     <tr>
-       <td><a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a></td>
+        <td width ="100">
+            {{id}}
+        </td>
+        <td width ="400">
+            <a href="/chess/game/{{id}}" class="game-item">{{name}}</a>
+        </td>
+        <td width ="100">
+            <input type="button" onclick="func({{id}})" VALUE="DELETE" style="background-color: red">
+        </td>
     </tr>
     {{/games}}
 </table>
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="/files/js/lobby.js"></script>
 </html>

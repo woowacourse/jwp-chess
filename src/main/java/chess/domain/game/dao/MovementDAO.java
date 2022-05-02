@@ -1,5 +1,6 @@
-package chess.dao;
+package chess.domain.game.dao;
 
+import chess.domain.game.Movement;
 import chess.domain.position.Position;
 
 import java.util.List;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Repository;
 public class MovementDAO {
 
     private final RowMapper<Movement> movementRowMapper = (rs, rowNum) -> new Movement(
-            Position.of(rs.getString("m.source_position")),
-            Position.of(rs.getString("m.target_position"))
+            Position.of(rs.getString("source")),
+            Position.of(rs.getString("target"))
     );
     private final JdbcTemplate jdbcTemplate;
 
@@ -21,13 +22,13 @@ public class MovementDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int addMoveCommand(final Movement movement) {
-        String sql = "INSERT INTO movement (game_id, source_position, target_position, turn)"
+    public void addMoveCommand(final Movement movement) {
+        String sql = "INSERT INTO movement (game_id, source, target, turn)"
                 + "SELECT ?, ?, ?, ?"
                 + "WHERE (SELECT turn FROM movement WHERE game_id = ? ORDER BY created_at DESC LIMIT 1) = ?"
                 + "   OR (SELECT turn FROM movement WHERE game_id = ? ORDER BY created_at DESC LIMIT 1) IS NULL;";
 
-        return jdbcTemplate.update(sql,
+        jdbcTemplate.update(sql,
                 movement.getGameId(),
                 movement.getSource(),
                 movement.getTarget(),

@@ -1,40 +1,42 @@
 package chess.service;
 
-import chess.domain.board.ChessBoardGenerator;
+import chess.domain.game.Movement;
+import chess.domain.game.dao.MovementDAO;
+import chess.domain.game.dto.MoveRequest;
+import chess.domain.gameRoom.ChessGame;
+import chess.domain.gameRoom.dao.ChessGameRoomDAO;
+import chess.domain.gameRoom.dto.ChessGameRoomPassInfoResponse;
+import chess.domain.gameRoom.dto.ChessGameRoomShowInfoResponse;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
-import chess.dao.ChessGame;
-import chess.dao.ChessGameDAO;
-import chess.dao.Movement;
-import chess.dao.MovementDAO;
-import chess.dto.ChessGameRoomInfoDTO;
-
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import chess.exception.InvalidDeleteFailException;
+import chess.exception.InvalidMoveException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
-public final class ChessService {
+public class ChessService {
 
-    private final ChessGameDAO chessGameDAO;
+    private final ChessGameRoomDAO chessGameDAO;
     private final MovementDAO movementDAO;
 
-    public ChessService(final ChessGameDAO chessGameDAO, final MovementDAO movementDAO) {
+    public ChessService(final ChessGameRoomDAO chessGameDAO, final MovementDAO movementDAO) {
         this.chessGameDAO = chessGameDAO;
         this.movementDAO = movementDAO;
     }
 
-    public String addChessGame(final String gameName) {
-        ChessGame chessGame = new ChessGame(new ChessBoardGenerator());
+    public String addChessGame(final String gameName, final String password) {
+        ChessGame chessGame = ChessGame.initChessGame();
         chessGame.setName(gameName);
+        chessGame.setPassword(password);
 
         return chessGameDAO.addGame(chessGame);
     }
 
-    public ChessGame getChessGamePlayed(final String gameId) {
+    @Transactional(readOnly = true)
+    public ChessGame getChessGame(final String gameId) {
         List<Movement> movementByGameId = movementDAO.findMovementByGameId(gameId);
         ChessGame chessGame = ChessGame.initChessGame();
         for (Movement movement : movementByGameId) {
@@ -44,12 +46,15 @@ public final class ChessService {
         return chessGame;
     }
 
-    public ChessGame movePiece(final String gameId, final String source, final String target, final Team team)
-            throws SQLException {
-        final ChessGame chessGame = getChessGamePlayed(gameId);
+    public ChessGame movePiece(final String gameId, final MoveRequest moveRequest) {
+        final ChessGame chessGame = getChessGame(gameId);
+        final String source = moveRequest.getSource();
+        final String target = moveRequest.getTarget();
+        final Team team = moveRequest.getTeam();
+
         validateCurrentTurn(chessGame, team);
         move(chessGame, new Movement(Position.of(source), Position.of(target)), team);
-        if (chessGame.isGameSet()) {
+        if (chessGame.isKingDied()) {
             chessGameDAO.updateGameEnd(gameId);
         }
         return chessGame;
@@ -57,7 +62,7 @@ public final class ChessService {
 
     private void validateCurrentTurn(final ChessGame chessGame, final Team team) {
         if (!chessGame.getChessBoard().getCurrentTurn().equals(team)) {
-            throw new IllegalArgumentException("플레이어의 턴이 아닙니다");
+            throw new InvalidMoveException("[ERROR] 플레이어의 턴이 아닙니다");
         }
     }
 
@@ -65,34 +70,24 @@ public final class ChessService {
         chessGame.execute(movement);
         movement.setGameId(chessGame.getId());
         movement.setTeam(team);
-        int insertedRowCount = movementDAO.addMoveCommand(movement);
-
-        if (insertedRowCount == 0) {
-            throw new IllegalArgumentException("플레이어의 턴이 아닙니다");
-        }
+        movementDAO.addMoveCommand(movement);
     }
 
-    private Map<String, Object> result(final ChessGame chessGame) {
-        Map<String, Object> model = new HashMap<>();
-        model.put("winner", chessGame.getChessBoard().calculateWhoWinner().toString());
-
-        return model;
-    }
-
-    public List<ChessGameRoomInfoDTO> getGames() {
+    @Transactional(readOnly = true)
+    public List<ChessGameRoomShowInfoResponse> getGames() {
         return chessGameDAO.findActiveGames();
     }
 
-    public ChessGameRoomInfoDTO findGameById(String id) {
-        return chessGameDAO.findGameById(id);
+    @Transactional(readOnly = true)
+    public ChessGameRoomShowInfoResponse findGameById(String id) {
+        return chessGameDAO.findShowGameById(id);
     }
 
-    public Map<String, Object> getResult(ChessGame chessGame) {
-        final Map<String, Object> model = new HashMap<>();
-        chessGameDAO.updateGameEnd(chessGame.getId());
-        model.put("gameResult", result(chessGame));
-        model.put("isGameSet", Boolean.TRUE);
-
-        return model;
+    public void deleteGameByIdAndPassword(String id, String password) {
+        ChessGameRoomPassInfoResponse chessGameRoom = chessGameDAO.findPassGameById(id);
+        if (!chessGameRoom.checkEqualPassword(password)){
+            throw new InvalidDeleteFailException("[ERROR] DELETE를 실패하였습니다.");
+        }
+        chessGameDAO.deleteGameByIdAndPassword(id, password);
     }
 }

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.board.ChessBoardGenerator;
-import chess.dto.GameStatus;
+import chess.domain.gameRoom.GameStatus;
 import chess.domain.piece.unit.Bishop;
 import chess.domain.piece.unit.Pawn;
 import chess.domain.piece.unit.Piece;
@@ -14,6 +14,8 @@ import chess.domain.piece.unit.Rook;
 import chess.domain.position.Position;
 import chess.domain.classification.Result;
 import java.util.stream.Stream;
+
+import chess.exception.InvalidMoveException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,7 +30,7 @@ class ChessBoardTest {
         ChessBoard chessBoard = new ChessBoard(new ChessBoardGenerator());
         Position source = PositionFixtures.B3;
 
-        assertThatThrownBy(() -> chessBoard.move(source, PositionFixtures.B4)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> chessBoard.move(source, PositionFixtures.B4)).isInstanceOf(InvalidMoveException.class);
     }
 
     @Test
@@ -44,7 +46,7 @@ class ChessBoardTest {
     void moveOwnTurnOwnPieceFail() {
         ChessBoard chessBoard = new ChessBoard(new ChessBoardGenerator());
 
-        assertThatThrownBy(() -> chessBoard.move(PositionFixtures.B7, PositionFixtures.B6)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> chessBoard.move(PositionFixtures.B7, PositionFixtures.B6)).isInstanceOf(InvalidMoveException.class);
     }
 
     @Test
@@ -86,7 +88,7 @@ class ChessBoardTest {
         customBoardGenerator.add(target, new Rook(WHITE));
         ChessBoard chessBoard = new ChessBoard(customBoardGenerator);
 
-        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(InvalidMoveException.class);
     }
 
     @Test
@@ -102,7 +104,7 @@ class ChessBoardTest {
         customBoardGenerator.add(target, new Bishop(BLACK));
         ChessBoard chessBoard = new ChessBoard(customBoardGenerator);
 
-        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(InvalidMoveException.class);
     }
 
     @ParameterizedTest
@@ -142,7 +144,7 @@ class ChessBoardTest {
         customBoardGenerator.add(waypoint, new Pawn(BLACK));
         ChessBoard chessBoard = new ChessBoard(customBoardGenerator);
 
-        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(InvalidMoveException.class);
     }
 
     @ParameterizedTest
@@ -157,7 +159,7 @@ class ChessBoardTest {
         customBoardGenerator.add(waypoint, new Pawn(BLACK));
         ChessBoard chessBoard = new ChessBoard(customBoardGenerator);
 
-        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(InvalidMoveException.class);
     }
 
     private static Stream<Position> immovableTwoSpace() {
@@ -188,7 +190,7 @@ class ChessBoardTest {
         customBoardGenerator.add(source, new Pawn(WHITE));
         ChessBoard chessBoard = new ChessBoard(customBoardGenerator);
 
-        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(InvalidMoveException.class);
     }
 
     private static Stream<Position> attackPawnPositions() {
@@ -206,7 +208,7 @@ class ChessBoardTest {
         customBoardGenerator.add(target, new Pawn(BLACK));
         ChessBoard chessBoard = new ChessBoard(customBoardGenerator);
 
-        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(InvalidMoveException.class);
     }
 
     private static Stream<Position> attackPawnImpossiblePositions() {
@@ -259,7 +261,7 @@ class ChessBoardTest {
         customBoardGenerator.add(wayPoint, new Pawn(WHITE));
         ChessBoard chessBoard = new ChessBoard(customBoardGenerator);
 
-        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> chessBoard.move(source, target)).isInstanceOf(InvalidMoveException.class);
     }
 
     private static Stream<Arguments> rookImpossiblePositions() {

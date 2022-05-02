@@ -4,6 +4,8 @@ import chess.domain.piece.property.PieceFeature;
 import chess.domain.piece.unit.Piece;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
+
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +34,7 @@ public final class ChessBoard {
     private void validateSource(final Position source) {
         Piece sourcePiece = board.get(source);
         if (sourcePiece == null) {
-            throw new IllegalArgumentException("[ERROR] 선택한 위치는 기물이 존재하지 않습니다.");
+            throw new InvalidMoveException("[ERROR] 선택한 위치는 기물이 존재하지 않습니다.");
         }
         sourcePiece.calculateDirections(source);
     }
@@ -40,21 +42,21 @@ public final class ChessBoard {
     private void validateTarget(final Position target) {
         Piece targetPiece = board.get(target);
         if (!(targetPiece == null || !targetPiece.checkSameTeam(currentTurn))) {
-            throw new IllegalArgumentException("[ERROR] 자신의 기물이 위치한 곳으로 이동할 수 없습니다.");
+            throw new InvalidMoveException("[ERROR] 자신의 기물이 위치한 곳으로 이동할 수 없습니다.");
         }
     }
 
     private void validateCurrentTurn(final Position source, final Position target) {
         Piece sourcePiece = board.get(source);
         if (!sourcePiece.checkSameTeam(this.currentTurn) || source.equals(target)) {
-            throw new IllegalArgumentException("[ERROR] 선택한 위치는 자신의 기물의 위치가 아닙니다.");
+            throw new InvalidMoveException("[ERROR] 선택한 위치는 자신의 기물의 위치가 아닙니다.");
         }
     }
 
     private void validateRoute(final Position source, final Position target) {
         boolean isNullRoute = checkRouteNull(source, target);
         if (isNullRoute != true) {
-            throw new IllegalArgumentException("[ERROR] 경로에 다른 기물이 존재합니다.");
+            throw new InvalidMoveException("[ERROR] 경로에 다른 기물이 존재합니다.");
         }
     }
 
@@ -69,7 +71,7 @@ public final class ChessBoard {
         Piece sourcePiece = board.get(source);
         boolean targetIsNull = board.get(target) == null;
         if (!sourcePiece.availableMove(source, target, targetIsNull)) {
-            throw new IllegalArgumentException("[ERROR] 선택한 위치로 이동할 수 없습니다.");
+            throw new InvalidMoveException("[ERROR] 선택한 위치로 이동할 수 없습니다.");
         }
     }
 

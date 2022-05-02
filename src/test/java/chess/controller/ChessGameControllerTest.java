@@ -56,6 +56,23 @@ class ChessGameControllerTest {
     }
 
     @Test
+    @DisplayName("체스 게임 방 접속")
+    void notExistsChessGameId() throws Exception {
+        Mockito.when(chessGameService.findChessGame(1))
+            .thenThrow(new IllegalArgumentException("해당하는 체스 게임이 존재하지 않습니다."));
+        Mockito.when(chessGameService.findPieces(1)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/chess-game").param("id", String.valueOf(1)))
+            .andDo(print())
+            .andExpectAll(
+                status().is3xxRedirection(),
+                redirectedUrl("/error"),
+                flash().attributeExists("hasError"),
+                flash().attributeExists("errorMessage")
+            );
+    }
+
+    @Test
     @DisplayName("정상적인 기물 이동")
     void move() throws Exception {
         Mockito.when(chessGameService.move(any()))

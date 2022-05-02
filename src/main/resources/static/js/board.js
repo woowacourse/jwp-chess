@@ -1,9 +1,10 @@
 let currentClickPosition = '';
 let currentPiece = '';
 let destinationClickPosition = '';
-let isRun = false;
+let roomId;
 
-const initMapEvent = () => {
+const initMapEvent = (id) => {
+    roomId = id;
     for (let file = 0; file < 8; file++) {
         for (let rank = 1; rank <= 8; rank++) {
             const positionTag = document.getElementById(intToFile(file) + rank);
@@ -32,7 +33,7 @@ const toPieceFullName = (name) => {
 const markPiece = (position, pieceKind) => {
     const piece = document.createElement("img");
     piece.className = 'chess-piece';
-    piece.src = "images/" + pieceKind + ".png";
+    piece.src = "/images/" + pieceKind + ".png";
     position.appendChild(piece);
 }
 
@@ -53,12 +54,12 @@ const markCurrentPiece = (e) => {
 }
 
 const markDestinationPiece = async (e) => {
+    checkEndGame();
     destinationClickPosition = e.currentTarget;
     currentClickPosition.style.backgroundColor = '';
     const chessMap = await movePiece();
     if (chessMap.chessMap) {
         showChessMap(chessMap.chessMap);
-        checkEndGame(chessMap.isRunning);
     }
 }
 
@@ -78,11 +79,16 @@ const showChessMap = (chessMap) => {
 }
 
 const movePiece = async () => {
+    if (!await isRun()) {
+        alert("게임이 종료되어 움직일 수 없습니다.");
+        return;
+    }
+
     const bodyValue = {
         currentPosition: currentClickPosition.id,
         destinationPosition: destinationClickPosition.id
     };
-    let chessMap = await fetch('/move', {
+    let chessMap = await fetch('/move/' + roomId, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -94,49 +100,71 @@ const movePiece = async () => {
     destinationClickPosition = '';
     chessMap = await chessMap.json();
     await showError(chessMap.message);
+
+    let isRunning = chessMap.isRunning;
+    if (isRunning == false) {
+        alert("게임 끝");
+        await showResult(roomId);
+    }
     return chessMap;
 }
 
-const checkEndGame = (isRunning) => {
-    if (!isRunning) {
-        alert('게임 종료');
-        return showResult();
+const isRun = async () => {
+    let response = await fetch('/state/' + roomId);
+    const result = await response.text();
+    return result == "run";
+}
+
+const checkEndGame = () => {
+    if (!isRun()) {
+        alert("게임 종료");
+        return showResult(roomId);
     }
 }
 
-const load = async () => {
-    isRun = true;
-    let chessMap = await fetch('/load');
+const load = async (id) => {
+    let chessMap = await fetch('/chessMap/' + id);
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
 }
 
-const restartChess = async () => {
-    isRun = true;
-    let chessMap = await fetch('/start');
+const restartChess = async (id) => {
+    let chessMap = await fetch('/chessMap/' + id, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        }
+    });
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
 }
 
-const showStatus = async () => {
-    if (!isRun) {
+const showStatus = async (id) => {
+    if (!await isRun()) {
         alert('먼저 게임을 시작하거나 이어해주세요.');
         return;
     }
-    let status = await fetch('/status');
+    let status = await fetch('/status/' + id);
     status = await status.json();
     alert(status.scoreStatus);
 }
 
-const showResult = async () => {
-    if (!isRun) {
+const showResult = async (id) => {
+    if (!await isRun()) {
         alert('먼저 게임을 시작하거나 이어해주세요.');
         return;
     }
-    let result = await fetch('/end');
+    let result = await fetch('/end/' + id, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        }
+    });
+    console.log(result);
     result = await result.json();
     alert(result.result);
-    await restartChess();
 }
 
 const showError = async (message) => {
@@ -145,4 +173,9 @@ const showError = async (message) => {
         return;
     }
     document.getElementById('message-info').innerHTML = '';
+}
+
+const goHome = async () => {
+    location.href = "/";
+    return;
 }

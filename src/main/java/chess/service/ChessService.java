@@ -1,10 +1,13 @@
 package chess.service;
 
+import chess.dao.GameDao;
 import chess.dao.PieceDao;
+import chess.dao.RoomDao;
 import chess.dao.TurnDao;
 import chess.domain.ChessWebGame;
 import chess.domain.Position;
 import chess.domain.Result;
+import chess.domain.State;
 import chess.domain.generator.BlackGenerator;
 import chess.domain.generator.WhiteGenerator;
 import chess.domain.piece.Bishop;
@@ -19,6 +22,7 @@ import chess.domain.player.Team;
 import chess.dto.MoveDto;
 import chess.dto.PieceDto;
 import chess.dto.ResultDto;
+import chess.dto.RoomDto;
 import chess.dto.ScoreDto;
 import chess.dto.TurnDto;
 import chess.view.ChessMap;
@@ -33,33 +37,38 @@ public class ChessService {
 
     private final PieceDao pieceDao;
     private final TurnDao turnDao;
+    private final RoomDao roomDao;
+    private final GameDao gameDao;
 
-    public ChessService(PieceDao pieceDao, TurnDao turnDao) {
+    public ChessService(PieceDao pieceDao, TurnDao turnDao, RoomDao roomDao, GameDao gameDao) {
         this.pieceDao = pieceDao;
         this.turnDao = turnDao;
+        this.roomDao = roomDao;
+        this.gameDao = gameDao;
     }
 
-    public ChessMap initializeGame() {
-        pieceDao.endPieces();
-        pieceDao.initializePieces(new Player(new BlackGenerator(), Team.BLACK));
-        pieceDao.initializePieces(new Player(new WhiteGenerator(), Team.WHITE));
-        turnDao.resetTurn();
+    public ChessMap initializeGame(int roomId) {
+        pieceDao.deletePieces(roomId);
+        pieceDao.insertAllPieces(roomId, new Player(new BlackGenerator(), Team.BLACK));
+        pieceDao.insertAllPieces(roomId, new Player(new WhiteGenerator(), Team.WHITE));
+        turnDao.updateTurn(roomId, Team.WHITE.getName());
+        gameDao.updateState(roomId, State.RUN.getValue());
 
         final ChessWebGame chessWebGame = new ChessWebGame();
         return chessWebGame.initializeChessGame();
     }
 
-    public ChessMap load() {
+    public ChessMap load(int roomId) {
         final ChessWebGame chessWebGame = new ChessWebGame();
-        loadPieces(chessWebGame);
-        loadTurn(chessWebGame);
+        loadPieces(roomId, chessWebGame);
+        loadTurn(roomId, chessWebGame);
 
         return chessWebGame.createMap();
     }
 
-    private void loadPieces(final ChessWebGame chessWebGame) {
-        final List<PieceDto> whitePiecesDto = pieceDao.findPiecesByTeam(Team.WHITE);
-        final List<PieceDto> blackPiecesDto = pieceDao.findPiecesByTeam(Team.BLACK);
+    private void loadPieces(int roomId, final ChessWebGame chessWebGame) {
+        final List<PieceDto> whitePiecesDto = pieceDao.findPiecesByTeam(roomId, Team.WHITE);
+        final List<PieceDto> blackPiecesDto = pieceDao.findPiecesByTeam(roomId, Team.BLACK);
         final List<Piece> whitePieces = whitePiecesDto.stream()
                 .map(this::findPiece)
                 .collect(Collectors.toUnmodifiableList());
@@ -82,35 +91,43 @@ public class ChessService {
         return pieces.get(name);
     }
 
-    private void loadTurn(final ChessWebGame chessWebGame) {
-        final TurnDto turnDto = turnDao.findTurn();
+    private void loadTurn(final int roomId, final ChessWebGame chessWebGame) {
+        final TurnDto turnDto = turnDao.findTurn(roomId);
         Team turn = Team.from(turnDto.getTurn());
         chessWebGame.loadTurn(turn);
     }
 
-    public ChessMap move(final MoveDto moveDto) {
+    public ChessMap move(final int roomId, final MoveDto moveDto) {
         final Position currentPosition = Position.of(moveDto.getCurrentPosition());
         final Position destinationPosition = Position.of(moveDto.getDestinationPosition());
-        final TurnDto turnDto = turnDao.findTurn();
-
-        final ChessWebGame chessWebGame = loadGame();
+        final TurnDto turnDto = turnDao.findTurn(roomId);
+        final ChessWebGame chessWebGame = loadGame(roomId);
         chessWebGame.move(currentPosition, destinationPosition);
         chessWebGame.changeTurn();
-        pieceDao.removePieceByCaptured(moveDto);
-        pieceDao.updatePiece(moveDto);
-        turnDao.updateTurn(turnDto.getTurn());
+        pieceDao.removePieceByCaptured(roomId, moveDto);
+        pieceDao.updatePiece(roomId, moveDto);
+        updateTurn(roomId, turnDto);
         return chessWebGame.createMap();
     }
 
-    private ChessWebGame loadGame() {
+    private void updateTurn(int roomId, TurnDto turnDto) {
+        String turn = turnDto.getTurn();
+        if (turn.equals(Team.WHITE.getName())) {
+            turnDao.changeTurn(roomId, Team.BLACK.getName(), Team.WHITE.getName());
+            return;
+        }
+        turnDao.changeTurn(roomId, Team.WHITE.getName(), Team.BLACK.getName());
+    }
+
+    private ChessWebGame loadGame(int roomId) {
         final ChessWebGame chessWebGame = new ChessWebGame();
-        loadPieces(chessWebGame);
-        loadTurn(chessWebGame);
+        loadPieces(roomId, chessWebGame);
+        loadTurn(roomId, chessWebGame);
         return chessWebGame;
     }
 
-    public ScoreDto getStatus() {
-        final ChessWebGame chessWebGame = loadGame();
+    public ScoreDto getStatus(int roomId) {
+        final ChessWebGame chessWebGame = loadGame(roomId);
         final Map<String, Double> scores = chessWebGame.getScoreStatus();
         final Double whiteScore = scores.get(Team.WHITE.getName());
         final Double blackScore = scores.get(Team.BLACK.getName());
@@ -120,9 +137,53 @@ public class ChessService {
         return new ScoreDto(status);
     }
 
-    public ResultDto getResult() {
-        final ChessWebGame chessWebGame = loadGame();
+    public ResultDto getResult(int roomId) {
+        final ChessWebGame chessWebGame = loadGame(roomId);
         final Result result = chessWebGame.getResult();
         return new ResultDto(result.getResult());
+    }
+
+    public List<RoomDto> getRooms() {
+        return roomDao.getRooms();
+    }
+
+    public RoomDto createRoom(RoomDto roomDto) {
+        roomDao.createRoom(roomDto);
+
+        int roomId = roomDao.getRecentCreatedRoomId();
+        gameDao.insertState(roomId, State.RUN.getValue());
+        turnDao.insertTurn(roomId, Team.WHITE.getName());
+
+        return new RoomDto(roomId, roomDto.getTitle(), roomDto.getPassword());
+    }
+
+    public void checkPassword(RoomDto roomDto) {
+        if (!roomDao.matchPassword(roomDto.getId(), roomDto.getPassword())) {
+            throw new IllegalArgumentException("올바르지 않은 비밀번호 입니다.");
+        }
+    }
+
+    public void endGame(int roomId) {
+        gameDao.updateState(roomId, State.END.getValue());
+    }
+
+    public void deleteRoom(RoomDto roomDto) {
+        checkGameState(roomDto.getId());
+        checkPassword(roomDto);
+        roomDao.deleteRoom(roomDto);
+    }
+
+    private void checkGameState(int roomId) {
+        if (!gameDao.getState(roomId).equals(State.END.getValue())) {
+            throw new IllegalArgumentException("종료된 게임만 삭제할 수 있습니다.");
+        }
+    }
+
+    public String getState(int roomId) {
+        return gameDao.getState(roomId);
+    }
+
+    public boolean hasTwoKing(int roomId) {
+        return pieceDao.getKingCount(roomId) == 2;
     }
 }

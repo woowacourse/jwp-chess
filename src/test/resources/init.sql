@@ -1,3 +1,8 @@
+drop table game if exists;
+drop table turn if exists;
+drop table piece if exists;
+drop table room if exists;
+
 CREATE TABLE room
 (
     id       int         not null auto_increment primary key,
@@ -8,7 +13,7 @@ CREATE TABLE room
 CREATE TABLE game
 (
     roomId int        not null primary key,
-    state   varchar(3) not null,
+    state  varchar(3) not null,
     foreign key (roomId) REFERENCES room (id)
         on delete cascade
 );

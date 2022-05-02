@@ -1,5 +1,8 @@
 package chess.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import chess.controller.request.RoomCreationRequest;
 import chess.dao.FakeGameDao;
 import chess.dao.FakePieceDao;
@@ -7,9 +10,6 @@ import chess.serviece.ChessGameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class ChessGameServiceTest {
 
@@ -41,7 +41,7 @@ public class ChessGameServiceTest {
     }
 
     @Test
-    @DisplayName("게임 검색")
+    @DisplayName("id에 해당하는 게임 검색")
     void getGame() {
         // given
         RoomCreationRequest roomCreationRequest = new RoomCreationRequest();
@@ -59,7 +59,7 @@ public class ChessGameServiceTest {
     }
 
     @Test
-    @DisplayName("게임 검색")
+    @DisplayName("모든 게임 리스트 검색")
     void getAllGame() {
         // given
         RoomCreationRequest roomCreationRequest1 = new RoomCreationRequest();

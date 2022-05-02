@@ -52,7 +52,7 @@ public class GameService {
         List<PieceDto> rawBoard = boardDao.load(gameNo);
         Map<Position, Piece> board = rawBoard.stream()
                 .collect(Collectors.toMap(
-                        pieceDto2 -> parsePosition(pieceDto2.getPosition()),
+                        pieceDto -> parsePosition(pieceDto.getPosition()),
                         this::parsePiece
                 ));
         return ChessGame.load(board, gameDao.isWhiteTurn(gameNo));

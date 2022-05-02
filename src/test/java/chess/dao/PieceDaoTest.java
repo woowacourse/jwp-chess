@@ -4,11 +4,7 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.piece.ChessmenInitializer;
-import chess.domain.piece.Color;
-import chess.domain.piece.King;
 import chess.domain.piece.Piece;
-import chess.domain.piece.Pieces;
-import chess.domain.position.Position;
 import chess.domain.room.Room;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,29 +43,6 @@ public class PieceDaoTest {
         pieceDao.createAllByGameId(pieces, gameId);
 
         assertThat(pieceDao.findAllByGameId(gameId).getPieces()).hasSize(32);
-    }
-
-    @DisplayName("updateAllByGameId 실행시 해당 gameId의 piece들의 정보가 바뀐다.")
-    @Test
-    void updateAllByGameId() {
-        pieceDao.createAllByGameId(pieces, gameId);
-        pieces.remove(pieces.size() - 1);
-        pieces.add(new King(Color.BLACK, Position.of("h2")));
-
-        pieceDao.updateAllByGameId(pieces, gameId);
-        Pieces moved = pieceDao.findAllByGameId(gameId);
-
-        assertThat(moved.extractPiece(Position.of("h2")).getName()).isEqualTo("king");
-    }
-
-    @DisplayName("deleteAllByGameId 실행시 해당 gameId의 piece들이 사라진다.")
-    @Test
-    void deleteAllByGameId() {
-        pieceDao.createAllByGameId(pieces, gameId);
-
-        pieceDao.deleteAllByGameId(gameId);
-
-        assertThat(pieceDao.findAllByGameId(gameId).getPieces()).hasSize(0);
     }
 
 }

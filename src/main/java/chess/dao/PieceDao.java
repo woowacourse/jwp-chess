@@ -29,22 +29,6 @@ public class PieceDao {
         );
     }
 
-    public void updateAllByGameId(List<Piece> pieces, long gameId) {
-        final String sql = "UPDATE piece SET position = ? "
-            + "WHERE game_id = ? "
-            + "AND name = ? "
-            + "AND color = ?";
-
-        jdbcTemplate.batchUpdate(sql, pieces, pieces.size(),
-            (statement, piece) -> {
-                statement.setString(1, piece.getPosition().getPosition());
-                statement.setLong(2, gameId);
-                statement.setString(3, piece.getName());
-                statement.setString(4, piece.getColor().getName());
-            }
-        );
-    }
-
     public Pieces findAllByGameId(long gameId) {
         final String sql = "select name, color, position from piece where game_id = ?";
 
@@ -57,14 +41,9 @@ public class PieceDao {
         return new Pieces(pieces);
     }
 
-    public void deleteAllByGameId(long gameId) {
-        final String sql = "delete from piece where game_id = ?";
-        jdbcTemplate.update(sql, gameId);
-    }
-
     public boolean exists(long gameId, String target) {
-        final String sql = "select count(*) from piece where game_id = ? and position = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, gameId, target) > 0;
+        final String sql = "select exists (select game_id from piece where game_id = ? and position = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, gameId, target);
     }
 
     public void deleteByGameIdAndPosition(long gameId, String position) {

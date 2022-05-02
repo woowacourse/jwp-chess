@@ -46,12 +46,6 @@ public class GameDao {
         return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public boolean exists(String id) {
-        final String sql = "select count(*) from game where id = ?";
-
-        return jdbcTemplate.queryForObject(sql, Integer.class, id) > 0;
-    }
-
     public void updateTurnById(Color nextTurn, long id) {
         final String sql = "update game set turn = ? where id = ?";
 

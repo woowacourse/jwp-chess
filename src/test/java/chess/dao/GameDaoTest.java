@@ -27,13 +27,6 @@ public class GameDaoTest {
         id = gameDao.createByTitleAndPassword(new Room("게임방제목", "password486"));
     }
 
-    @DisplayName("게임을 만들 때 title과 password를 입력받는다.")
-    @Test
-    void createById() {
-        long gameId = gameDao.createByTitleAndPassword(new Room("게임방입니다~", "password486"));
-        assertThat(gameDao.exists(String.valueOf(gameId))).isTrue();
-    }
-
     @DisplayName("게임이 끝나지 않은 경우 end_flag는 false이다.")
     @Test
     void findEndFlagById_false() {
@@ -60,14 +53,6 @@ public class GameDaoTest {
         gameDao.updateEndFlagById(true, id);
 
         assertThat(gameDao.findRoomById(id).getEndFlag()).isTrue();
-    }
-
-    @DisplayName("게임 삭제시 더이상 게임은 존재하지 않는다.")
-    @Test
-    void deleteById_게임_삭제_성공() {
-        gameDao.deleteById(id);
-
-        assertThat(gameDao.exists("1234")).isFalse();
     }
 
 }

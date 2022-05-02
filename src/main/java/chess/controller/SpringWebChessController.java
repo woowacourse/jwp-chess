@@ -5,13 +5,9 @@ import chess.controller.dto.RemoveRequestDto;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.service.ChessService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.SQLException;
 
 @Controller
 public class SpringWebChessController {

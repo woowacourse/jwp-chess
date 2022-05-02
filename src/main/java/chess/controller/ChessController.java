@@ -25,7 +25,7 @@ public class ChessController {
     }
 
     @GetMapping(path = "/room/{id}")
-    public ModelAndView printCurrentBoard(@PathVariable("id") Long id, @RequestParam(required = false) String message) {
+    public ModelAndView printCurrentBoard(@PathVariable Long id, @RequestParam(required = false) String message) {
         List<String> commands = commandService.findAllByRoomID(id);
         State state = commandService.getCurrentState(commands);
         StateDto stateDto = StateDto.of(commandService.getCurrentState(commands));

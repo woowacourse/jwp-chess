@@ -8,7 +8,7 @@
 <h1> 체스게임 </h1>
 {{this.message}}
 
-<form action="/room/create" method="get">
+<form action="/form/room-create" method="get">
     <input type="submit" value="체스방 생성" />
 </form>
 
@@ -17,7 +17,7 @@
         <form action="/room/{{this.id}}" method="get">
             {{this.name}}방 <input type="submit" value="참가" />
         </form>
-        <form action="/room/{{this.id}}/delete" method="get">
+        <form action="/form/room-delete/{{this.id}}" method="get">
             <input type="submit" value="체스방 삭제" />
         </form>
     </div>

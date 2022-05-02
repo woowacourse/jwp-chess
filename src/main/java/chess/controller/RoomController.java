@@ -29,7 +29,7 @@ public class RoomController {
         return modelAndView;
     }
 
-    @GetMapping("/room/create")
+    @GetMapping("/form/room-create")
     public String createRoomPage() {
         return "createRoom";
     }
@@ -40,12 +40,12 @@ public class RoomController {
         return "redirect:/";
     }
 
-    @GetMapping("/room/{id}/delete")
-    public ModelAndView deleteRoomPage(@PathVariable Long id, @RequestParam(required = false) String failMessage) {
+    @GetMapping("/form/room-delete/{roomId}")
+    public ModelAndView deleteRoomPage(@PathVariable Long roomId, @RequestParam(required = false) String failMessage) {
         ModelAndView modelAndView = new ModelAndView("deleteRoom");
-        modelAndView.addObject("id", id);
+        modelAndView.addObject("id", roomId);
         modelAndView.addObject("failMessage", failMessage);
-        if (commandService.getCurrentState(commandService.findAllByRoomID(id)).isRunning()) {
+        if (commandService.getCurrentState(commandService.findAllByRoomID(roomId)).isRunning()) {
             modelAndView.setViewName("index");
             modelAndView.addObject("message", "아직 게임 중인 방입니다.");
             modelAndView.addObject("rooms", roomService.findAllRooms());
@@ -53,12 +53,12 @@ public class RoomController {
         return modelAndView;
     }
 
-    @PostMapping("/room/{id}")
-    public String deleteRoom(RedirectAttributes redirectAttributes, @PathVariable Long id, @RequestParam String password) {
-        if (roomService.delete(id, password)) {
+    @PostMapping("/room/{roomId}")
+    public String deleteRoom(RedirectAttributes redirectAttributes, @PathVariable Long roomId, @RequestParam String password) {
+        if (roomService.delete(roomId, password)) {
             return "redirect:/";
         }
         redirectAttributes.addAttribute("failMessage", "다시 입력해주세요.");
-        return "redirect:/room/" + id + "/delete";
+        return "redirect:/room/" + roomId + "/delete";
     }
 }

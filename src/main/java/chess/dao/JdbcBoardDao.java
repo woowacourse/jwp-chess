@@ -1,26 +1,28 @@
 package chess.dao;
 
 import chess.domain.board.Board;
-import chess.domain.game.GameId;
+import chess.domain.game.room.RoomId;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
 import chess.domain.piece.PieceType;
 import chess.domain.position.Position;
 import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Repository
-public class BoardDaoImpl implements BoardDao {
+public class JdbcBoardDao implements BoardDao {
     private static final String TABLE_NAME = "board";
 
     private final JdbcTemplate jdbcTemplate;
+    private final RoomDao roomDao;
 
     private final RowMapper<Position> positionMapper = (resultSet, rowNum) -> {
         XAxis xAxis = XAxis.getByValue(resultSet.getString("x_axis"));
@@ -35,18 +37,23 @@ public class BoardDaoImpl implements BoardDao {
     };
 
     @Autowired
-    public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
+    public JdbcBoardDao(JdbcTemplate jdbcTemplate, RoomDao roomDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.roomDao = roomDao;
     }
 
     @Override
-    public Board getBoard(GameId gameId) {
-        Map<Position, Piece> boardValue = new HashMap<>();
-        String query = String.format(
-                "SELECT piece_type, piece_color FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
+    public Board getBoard(RoomId roomId) {
+        roomDao.validateRoomExisting(roomId);
 
-        for (Position position : getPositionsByGameId(gameId)) {
-            Piece piece = jdbcTemplate.queryForObject(query, pieceRowMapper, gameId.getGameId(),
+        Map<Position, Piece> boardValue = new HashMap<>();
+
+        String query = String.format(
+                "SELECT piece_type, piece_color FROM %s WHERE room_id = ? AND x_axis = ? AND y_axis = ?",
+                TABLE_NAME);
+
+        for (Position position : getPositionsByRoomId(roomId)) {
+            Piece piece = jdbcTemplate.queryForObject(query, pieceRowMapper, roomId.getValue(),
                     position.getXAxis().getValueAsString(), position.getYAxis().getValueAsString());
             boardValue.put(position, piece);
         }
@@ -54,32 +61,34 @@ public class BoardDaoImpl implements BoardDao {
         return Board.from(boardValue);
     }
 
-    private List<Position> getPositionsByGameId(GameId gameId) {
-        String query = String.format("SELECT x_axis, y_axis FROM %s WHERE game_id = ?", TABLE_NAME);
-        return jdbcTemplate.query(query, positionMapper, gameId.getGameId());
+    private List<Position> getPositionsByRoomId(RoomId roomId) {
+        String query = String.format("SELECT x_axis, y_axis FROM %s WHERE room_id = ?", TABLE_NAME);
+        return jdbcTemplate.query(query, positionMapper, roomId.getValue());
     }
 
     @Override
-    public void createPiece(GameId gameId, Position position, Piece piece) {
+    public void createPiece(RoomId roomId, Position position, Piece piece) {
         String query = String.format(
-                "INSERT INTO %s(game_id, x_axis, y_axis, piece_type, piece_color) VALUES(?, ?, ?, ?, ?)", TABLE_NAME);
-        jdbcTemplate.update(query, gameId.getGameId(), position.getXAxis().getValueAsString(),
+                "INSERT INTO %s(room_id, x_axis, y_axis, piece_type, piece_color) VALUES(?, ?, ?, ?, ?)",
+                TABLE_NAME);
+        jdbcTemplate.update(query, roomId.getValue(), position.getXAxis().getValueAsString(),
                 position.getYAxis().getValueAsString(), piece.getPieceType().name(), piece.getPieceColor().name());
     }
 
     @Override
-    public void deletePiece(GameId gameid, Position position) {
+    public void deletePiece(RoomId roomId, Position position) {
         String query = String.format(
-                "DELETE FROM %s WHERE game_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
-        jdbcTemplate.update(query, gameid.getGameId(), position.getXAxis().getValueAsString(),
+                "DELETE FROM %s WHERE room_id = ? AND x_axis = ? AND y_axis = ?", TABLE_NAME);
+        jdbcTemplate.update(query, roomId.getValue(), position.getXAxis().getValueAsString(),
                 position.getYAxis().getValueAsString());
     }
 
     @Override
-    public void updatePiecePosition(GameId gameId, Position from, Position to) {
+    public void updatePiecePosition(RoomId roomId, Position from, Position to) {
         String query = String.format(
-                "UPDATE %s SET x_axis = ?, y_axis = ? WHERE x_axis = ? AND y_axis = ? AND game_id = ?", TABLE_NAME);
+                "UPDATE %s SET x_axis = ?, y_axis = ? WHERE x_axis = ? AND y_axis = ? AND room_id = ?",
+                TABLE_NAME);
         jdbcTemplate.update(query, to.getXAxis().getValueAsString(), to.getYAxis().getValueAsString(),
-                from.getXAxis().getValueAsString(), from.getYAxis().getValueAsString(), gameId.getGameId());
+                from.getXAxis().getValueAsString(), from.getYAxis().getValueAsString(), roomId.getValue());
     }
 }

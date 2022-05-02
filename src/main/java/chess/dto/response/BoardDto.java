@@ -3,60 +3,43 @@ package chess.dto.response;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
+import chess.domain.position.XAxis;
+import chess.domain.position.YAxis;
+
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 public class BoardDto {
-    private final Map<PositionDto, PieceDto> board;
+    private static final String PIECE_NAME_FORMAT = "%s_%s";
 
-    private BoardDto(Map<PositionDto, PieceDto> board) {
-        this.board = board;
-    }
+    private final Map<String, String> value;
 
-    public static BoardDto from(Board board) {
-        Map<PositionDto, PieceDto> value = new HashMap<>();
-
-        for (Position position : Position.getAllPositions()) {
-            PositionDto positionDto = PositionDto.from(position);
-            board.find(position).ifPresent(piece -> value.put(positionDto, PieceDto.from(piece)));
+    public BoardDto(Board board) {
+        Map<String, String> rawBoard = new HashMap<>();
+        for (Map.Entry<Position, Piece> entrySet : board.getValue().entrySet()) {
+            String coordinate = generatePositionName(entrySet.getKey());
+            String fullPieceName = generatePieceName(entrySet.getValue());
+            rawBoard.put(coordinate, fullPieceName);
         }
 
-        return new BoardDto(value);
+        this.value = rawBoard;
     }
 
-    public static BoardDto from(Map<Position, Piece> boardValue) {
-        Map<PositionDto, PieceDto> dtoValue = boardValue.entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        entrySet -> PositionDto.from(entrySet.getKey()),
-                        entrySet -> PieceDto.from(entrySet.getValue())
-                ));
-
-        return new BoardDto(dtoValue);
+    private String generatePositionName(Position position) {
+        XAxis xAxis = position.getXAxis();
+        YAxis yAxis = position.getYAxis();
+        return xAxis.name().toLowerCase(Locale.ROOT) + yAxis.getValue();
     }
 
-    public Board toBoard() {
-        Map<Position, Piece> boardValue = new HashMap<>();
-
-        for (Entry<PositionDto, PieceDto> entrySet : this.board.entrySet()) {
-            Piece piece = entrySet.getValue().toPiece();
-            Position position = entrySet.getKey().toPosition();
-            boardValue.put(position, piece);
-        }
-
-        return Board.from(boardValue);
+    private String generatePieceName(Piece piece) {
+        String pieceName = piece.getPieceType().name();
+        String pieceColorName = piece.getPieceColor().name();
+        return String.format(PIECE_NAME_FORMAT, pieceName, pieceColorName);
     }
 
-    public Map<PositionDto, PieceDto> getValue() {
-        return Map.copyOf(board);
-    }
 
-    @Override
-    public String toString() {
-        return "BoardDto{" +
-                "board=" + board +
-                '}';
+    public Map<String, String> getValue() {
+        return value;
     }
 }

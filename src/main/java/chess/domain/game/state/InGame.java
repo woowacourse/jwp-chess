@@ -5,6 +5,8 @@ import chess.domain.board.MoveResult;
 import chess.domain.game.score.ScoreResult;
 import chess.domain.piece.PieceColor;
 import chess.domain.position.Position;
+import chess.exception.MovePieceFailedException;
+import chess.exception.WinnerIsNotExisting;
 
 public abstract class InGame implements GameState {
 
@@ -26,7 +28,7 @@ public abstract class InGame implements GameState {
 
         MoveResult moveResult = board.executeCommand(from, to, getCurrentPieceColor());
         if (!moveResult.isMoveSuccess()) {
-            throw new IllegalStateException("말을 이동하는 것에 실패했습니다.");
+            throw new MovePieceFailedException(moveResult.getMessage());
         }
 
         return getNextTurnState();
@@ -52,7 +54,7 @@ public abstract class InGame implements GameState {
             return PieceColor.WHITE;
         }
 
-        throw new IllegalStateException("아직 양쪽의 킹이 모두 살아있습니다.");
+        throw new WinnerIsNotExisting();
     }
 
     @Override

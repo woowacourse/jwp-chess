@@ -7,12 +7,8 @@ import chess.domain.position.Direction;
 import chess.domain.position.Position;
 import chess.domain.position.XAxis;
 import chess.domain.position.YAxis;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Board {

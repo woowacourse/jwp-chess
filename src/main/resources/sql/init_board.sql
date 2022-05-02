@@ -1,3 +1,5 @@
+DROP TABLE room, board IF EXISTS;
+
 CREATE TABLE room
 (
     id       VARCHAR(36) NOT NULL,

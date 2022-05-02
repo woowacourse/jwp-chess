@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+</head>
+
+<body>
+<div>
+    <center>
+        <h1>♟ 웹 체스 게임 ♟</h1>
+        <table border=1 cellpadding=10>
+            {{#each list}}
+            <tr>
+                <td>
+                    <a href="/game/{{id}}">{{title}}</a>
+                </td>
+                <td>
+                    <form action="/delete/{{id}}" method="post">
+                        <input type="submit" value="삭제">
+                    </form>
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </center>
+</div>
+</body>
+</html>

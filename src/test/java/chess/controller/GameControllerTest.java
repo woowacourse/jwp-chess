@@ -15,7 +15,7 @@ import chess.dto.MoveDto;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class ChessControllerTest {
+class GameControllerTest {
 
     @LocalServerPort
     int port;
@@ -30,19 +30,20 @@ class ChessControllerTest {
     void start() {
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/game/start")
+            .when().post("/game/0/start")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("values.size()", is(64));
+        RestAssured.post("/game/0/end");
     }
 
     @DisplayName("체스 게임을 종료하고 게임보드 데이터가 전송된다.")
     @Test
     void end() {
-        start();
+        RestAssured.post("/game/0/start");
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/game/end")
+            .when().post("/game/0/end")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("values.size()", is(64));
@@ -51,24 +52,27 @@ class ChessControllerTest {
     @DisplayName("체스 게임 중 간에 게임점수 데이터가 전송된다.")
     @Test
     void status() {
+        RestAssured.post("/game/0/start");
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/game/status")
+            .when().get("/game/0/status")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("score.size()", is(2));
+        RestAssured.post("/game/0/end");
     }
 
     @DisplayName("저장 되어 있는 체스 게임을 불러온다.")
     @Test
     void load() {
-        start();
+        RestAssured.post("/game/0/start");
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/game/load")
+            .when().get("/game/0/load")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("values.size()", is(64));
+        RestAssured.post("/game/0/end");
     }
 
     @DisplayName("체스 기물을 이동시킨다.")
@@ -76,13 +80,14 @@ class ChessControllerTest {
     void move() {
         MoveDto moveDto = new MoveDto("a2", "a3");
 
-        start();
+        RestAssured.post("/game/0/start");
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(moveDto)
-            .when().post("/game/move")
+            .when().post("/game/0/move")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("values.size()", is(64));
+        RestAssured.post("/game/0/end");
     }
 }

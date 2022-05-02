@@ -1,15 +1,47 @@
 package chess.dao;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import chess.dao.converter.StateToStringConverter;
+import chess.dao.converter.StringToStateConverter;
 import chess.model.board.Board;
 import chess.model.state.State;
 
-public interface StateDao {
+@Repository
+public class StateDao {
 
-    void insert(final State state);
+    private final JdbcTemplate jdbcTemplate;
 
-    State find(final Board board);
+    public StateDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-    int delete();
+    public void insert(Long id, final State state) {
+        final String sql = "insert into state (chess_id, name) values (?, ?)";
+        final String stateName = StateToStringConverter.convert(state);
+        jdbcTemplate.update(sql, id, stateName);
+    }
 
-    void update(final State nowState, final State nextState);
+    public State find(Long id, final Board board) {
+        final String sql = "select name from state where chess_id = ?";
+        return jdbcTemplate.queryForObject(
+            sql,
+            (resultSet, rowNum) -> {
+                String name = resultSet.getString("name");
+                return StringToStateConverter.convert(name, board);
+            }, id);
+    }
+
+    public int delete(Long id) {
+        final String sql = "delete from state where chess_id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
+
+    public void update(Long id, final State nowState, final State nextState) {
+        final String sql = "update state set name = ? where chess_id = ? and name = ?";
+        final String nowStateName = StateToStringConverter.convert(nowState);
+        final String nextStateName = StateToStringConverter.convert(nextState);
+        jdbcTemplate.update(sql, nextStateName, id, nowStateName);
+    }
 }

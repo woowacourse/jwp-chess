@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -28,7 +29,7 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public List<BoardEntity> findBoardByRoomId(final Long roomId) {
-        String sql = "select * from board where room_id = ?";
+        String sql = "SELECT * FROM board WHERE room_id = ?";
         return jdbcTemplate.query(sql, rowMapper(), roomId);
     }
 
@@ -43,22 +44,27 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public void updatePosition(final BoardEntity board) {
-        final String sql = "update board set piece = ? where room_id = ? and position = ?";
+    public BoardEntity updatePosition(final BoardEntity board) {
+        final String sql = "UPDATE board SET piece = ? WHERE room_id = ? AND position = ?";
         jdbcTemplate.update(sql, board.getPiece(), board.getRoomId(), board.getPosition());
+        return board;
     }
 
     @Override
-    public void updateBatchPositions(final List<BoardEntity> board) {
-        final String sql = "update board set piece = ? where room_id = ? and position = ?";
+    public void batchUpdatePositions(final List<BoardEntity> board) {
+        final String sql = "UPDATE board SET piece = ? WHERE room_id = ? AND position = ?";
         jdbcTemplate.batchUpdate(sql,
             board,
             board.size(),
-            (PreparedStatement ps, BoardEntity boardEntity) -> {
-                ps.setString(1, boardEntity.getPiece());
-                ps.setLong(2, boardEntity.getRoomId());
-                ps.setString(3, boardEntity.getPosition());
-            });
+            preparedStatementSetter());
+    }
+
+    private ParameterizedPreparedStatementSetter<BoardEntity> preparedStatementSetter() {
+        return (PreparedStatement ps, BoardEntity boardEntity) -> {
+            ps.setString(1, boardEntity.getPiece());
+            ps.setLong(2, boardEntity.getRoomId());
+            ps.setString(3, boardEntity.getPosition());
+        };
     }
 
     @Override
@@ -75,14 +81,14 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public BoardEntity findBoardByRoomIdAndPosition(final Long roomId, final String position) {
-        final String sql = "select * from board where room_id = ? and position = ?";
+        final String sql = "SELECT * FROM board WHERE room_id = ? AND position = ?";
 
         return jdbcTemplate.queryForObject(sql, rowMapper(), roomId, position);
     }
 
     @Override
     public void delete(final Long roomId) {
-        String sql = "delete from board where room_id = ?";
+        String sql = "DELETE FROM board WHERE room_id = ?";
         jdbcTemplate.update(sql, roomId);
     }
 }

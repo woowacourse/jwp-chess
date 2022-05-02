@@ -100,7 +100,7 @@ public class ChessService {
             chessGame.getPieceName(sourcePosition));
         final BoardEntity targetBoardEntity = new BoardEntity(id, targetPosition,
             chessGame.getPieceName(targetPosition));
-        boardRepository.updateBatchPositions(List.of(sourceBoardEntity, targetBoardEntity));
+        boardRepository.batchUpdatePositions(List.of(sourceBoardEntity, targetBoardEntity));
 
         final String turnAfterMove = chessGame.getCurrentTurn().getValue();
         roomRepository.updateTeam(id, turnAfterMove);
@@ -147,7 +147,7 @@ public class ChessService {
         validatePassword(roomRequestDto, targetRoom);
         final RoomEntity roomEntity = roomRequestDto.toEntity();
         targetRoom.patch(roomEntity);
-        final RoomEntity updatedRoom = roomRepository.save(targetRoom);
+        final RoomEntity updatedRoom = roomRepository.update(targetRoom);
         return RoomResponseDto.of(updatedRoom);
     }
 
@@ -162,10 +162,10 @@ public class ChessService {
         }
     }
 
-    public RoomResponseDto reCreateRoom(final Long id) {
+    public RoomResponseDto recreateRoom(final Long id) {
         RoomEntity targetRoom = roomRepository.findById(id);
         targetRoom = new RoomEntity(id, targetRoom.getPassword(), targetRoom.getName(), "white", false);
-        roomRepository.save(targetRoom);
+        roomRepository.update(targetRoom);
 
         boardRepository.delete(id);
         boardRepository.batchInsert(createBoards(targetRoom));

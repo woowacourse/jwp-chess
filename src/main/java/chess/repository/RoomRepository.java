@@ -14,5 +14,5 @@ public interface RoomRepository {
 
     void updateGameOver(Long id);
 
-    RoomEntity save(RoomEntity room);
+    RoomEntity update(RoomEntity room);
 }

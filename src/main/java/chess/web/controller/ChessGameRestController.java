@@ -28,12 +28,12 @@ public class ChessGameRestController {
         this.service = service;
     }
 
-    @PostMapping("/start/{roomId}")
+    @PostMapping("/rooms/{roomId}/start")
     public RoomDto start(@PathVariable int roomId) {
         return service.start(roomId);
     }
 
-    @PostMapping("/play/{roomId}")
+    @PostMapping("/rooms/{roomId}/play")
     public PlayResultDto play(@PathVariable int roomId) {
         return service.play(roomId);
     }

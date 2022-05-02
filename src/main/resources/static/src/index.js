@@ -123,7 +123,7 @@ const roomListDrawer = {
                     }
                 }
 
-                httpRequest.open("POST", "/start/" + roomId);
+                httpRequest.open("POST", "/rooms/" + roomId + "/start");
                 httpRequest.send();
             })
         }

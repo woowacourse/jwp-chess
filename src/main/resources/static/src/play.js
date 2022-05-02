@@ -68,7 +68,7 @@ const boardDrawer = {
         }
 
         let roomId = window.location.pathname.split("/")[2];
-        httpRequest.open("POST", "/play/" + roomId);
+        httpRequest.open("POST", "/rooms/" + roomId + "/play");
         httpRequest.send();
     },
 

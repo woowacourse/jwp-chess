@@ -46,7 +46,7 @@ class ChessGameRestControllerTest {
     void getStart() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/start/1")
+                .when().post("/rooms/1/start")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE);
@@ -57,7 +57,7 @@ class ChessGameRestControllerTest {
     void play() {
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/play/1")
+                .when().post("/rooms/1/play")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(MediaType.APPLICATION_JSON_VALUE);
@@ -83,7 +83,7 @@ class ChessGameRestControllerTest {
                 .body(moveDto)
                 .accept(MediaType.APPLICATION_JSON_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().patch("/move/1")
+                .when().patch("/rooms/1")
                 .then().log().all();
 //                .statusCode(HttpStatus.OK.value())
 //                .contentType(MediaType.APPLICATION_JSON_VALUE);

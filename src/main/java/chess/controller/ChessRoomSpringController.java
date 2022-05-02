@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.domain.ChessGameService;
+import chess.domain.RoomService;
 import chess.dto.DeleteDto;
 import chess.dto.GameStatusDto;
 import chess.dto.RoomResponseDto;
@@ -19,9 +20,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ChessRoomSpringController {
 
     private final ChessGameService chessGameService;
+    private final RoomService roomService;
 
-    public ChessRoomSpringController(ChessGameService chessGameService) {
+    public ChessRoomSpringController(ChessGameService chessGameService, RoomService roomService) {
         this.chessGameService = chessGameService;
+        this.roomService = roomService;
     }
 
     @GetMapping("/")
@@ -31,7 +34,8 @@ public class ChessRoomSpringController {
 
     @PostMapping("/")
     public String create(@RequestParam("name") String name, @RequestParam("pw") String pw) {
-        chessGameService.createRoom(name, pw);
+      int id =  roomService.createRoom(name, pw);
+      chessGameService.createGame(id);
         return "redirect:/";
     }
 
@@ -42,14 +46,14 @@ public class ChessRoomSpringController {
 
     @DeleteMapping("/room")
     public ResponseEntity<GameStatusDto> deleteRoom(@RequestBody DeleteDto deleteDto) {
-        chessGameService.deleteRoom(deleteDto.getPw(), deleteDto.getId());
+        roomService.deleteRoom(deleteDto.getPw(), deleteDto.getId());
         return ResponseEntity.ok().build();
     }
 
     @ResponseBody
     @GetMapping("/list")
     public ResponseEntity<List<RoomResponseDto>> list() {
-        List<RoomResponseDto> rooms = chessGameService.getRooms();
+        List<RoomResponseDto> rooms = roomService.getRooms();
         return ResponseEntity.ok().body(rooms);
     }
 }

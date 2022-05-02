@@ -23,49 +23,37 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ChessGameService {
 
     public static final String WIN_MESSAGE = "승리 팀은 : %s 입니다.";
-    private static final int SUCCEED_COUNT = 0;
 
     private final BoardDao boardDao;
     private final TurnDao turnDao;
     private final GameStatusDao gameStatusDao;
-    private final RoomDao roomDao;
 
-    public ChessGameService(BoardDao boardDao, TurnDao turnDao, GameStatusDao gameStatusDao,
-                            RoomDao roomDao) {
+
+    public ChessGameService(BoardDao boardDao, TurnDao turnDao, GameStatusDao gameStatusDao
+    ) {
         this.boardDao = boardDao;
         this.turnDao = turnDao;
         this.gameStatusDao = gameStatusDao;
-        this.roomDao = roomDao;
     }
 
-    public int createRoom(String name, String pw) {
-        int roomId = roomDao.create(name, pw);
+    public int createGame( int roomId) {
         turnDao.create(Team.WHITE, roomId);
         gameStatusDao.create(GameStatus.READY, roomId);
         boardDao.create(createInitBoard(), roomId);
         return roomId;
     }
 
-    public void deleteRoom(String pw, int roomId) {
-        int returnDeleteColumnCount = roomDao.deleteRoom(pw, roomId);
-        if (returnDeleteColumnCount == SUCCEED_COUNT) {
-            throw new IllegalArgumentException("비밀번호가 달라 방을 지울 수 없습니다.");
-        }
-    }
-
     private Map<String, String> createInitBoard() {
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
         return board.toMap();
-    }
-
-    public List<RoomResponseDto> getRooms() {
-        return roomDao.getRooms();
     }
 
     public GameStatusDto startChessGame(BoardGenerationStrategy strategy, int roomId) {

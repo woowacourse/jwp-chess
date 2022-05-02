@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
-@Sql(value = {"../../../resources/schema.sql"})
+@Sql(value = {"/schema.sql"})
 class GameJdbcDaoTest {
 
     @Autowired

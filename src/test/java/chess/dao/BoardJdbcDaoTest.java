@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
-@Sql(value = {"../../../resources/schema.sql"})
+@Sql(value = {"/schema.sql"})
 class BoardJdbcDaoTest {
 
     @Autowired

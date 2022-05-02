@@ -20,7 +20,7 @@ public class JdbcTemplateGameStatusDaoTest {
 
     @BeforeEach
     void setUp() {
-        JdbcTemplateGameDao jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate);
+        JdbcTemplateGameDao jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate, new GameMapper());
         id = jdbcTemplateGameDao.create("asdf", "1234");
         jdbcTemplateGameStatusDao = new JdbcTemplateGameStatusDao(jdbcTemplate);
         jdbcTemplateGameStatusDao.init(id);

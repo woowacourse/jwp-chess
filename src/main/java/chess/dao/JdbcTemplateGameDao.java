@@ -2,8 +2,6 @@ package chess.dao;
 
 import chess.dto.GameDto;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,9 +16,11 @@ public class JdbcTemplateGameDao implements GameDao {
     private static final int DELETE_SUCCESS_VALUE = 1;
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<GameDto> rowMapper;
 
-    public JdbcTemplateGameDao(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateGameDao(JdbcTemplate jdbcTemplate, RowMapper<GameDto> rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.rowMapper = rowMapper;
     }
 
     @Override
@@ -42,12 +42,7 @@ public class JdbcTemplateGameDao implements GameDao {
     @Override
     public List<GameDto> find() {
         String sql = "select * from game";
-        return jdbcTemplate.query(sql, new RowMapper<GameDto>() {
-            @Override
-            public GameDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new GameDto(rs.getInt("id"), rs.getString("title"));
-            }
-        });
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override

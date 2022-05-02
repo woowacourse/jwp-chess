@@ -24,7 +24,7 @@ public class JdbcTemplateGameDaoTest {
 
     @BeforeEach
     void create() {
-        jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate);
+        jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate, new GameMapper());
         id = jdbcTemplateGameDao.create("asdf", "1234");
     }
 

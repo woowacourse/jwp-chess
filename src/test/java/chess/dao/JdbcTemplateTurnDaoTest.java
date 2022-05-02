@@ -20,7 +20,7 @@ public class JdbcTemplateTurnDaoTest {
 
     @BeforeEach
     void setUp() {
-        JdbcTemplateGameDao jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate);
+        JdbcTemplateGameDao jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate, new GameMapper());
         id = jdbcTemplateGameDao.create("asdf", "1234");
         jdbcTemplateTurnDao = new JdbcTemplateTurnDao(jdbcTemplate);
         jdbcTemplateTurnDao.init(id);

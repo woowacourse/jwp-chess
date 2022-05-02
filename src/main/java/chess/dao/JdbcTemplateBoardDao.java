@@ -6,15 +6,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class JdbcTemplateBoardDao implements BoardDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<BoardDto> rowMapper;
 
-    public JdbcTemplateBoardDao(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateBoardDao(JdbcTemplate jdbcTemplate, RowMapper<BoardDto> rowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.rowMapper = rowMapper;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class JdbcTemplateBoardDao implements BoardDao {
     @Override
     public Map<String, String> getBoard(int gameId) {
         final String sql = "select * from board where game_id = ?";
-        List<BoardDto> value = jdbcTemplate.query(sql, new BoardMapper(), gameId);
+        List<BoardDto> value = jdbcTemplate.query(sql, rowMapper, gameId);
         return value.stream().collect(Collectors.toMap(BoardDto::getPosition, BoardDto::getPiece));
     }
 

@@ -25,9 +25,9 @@ public class JdbcTemplateBoardDaoTest {
 
     @BeforeEach
     void setUp() {
-        JdbcTemplateGameDao jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate);
+        JdbcTemplateGameDao jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate, new GameMapper());
         id = jdbcTemplateGameDao.create("asdf", "1234");
-        jdbcTemplateBoardDao = new JdbcTemplateBoardDao(jdbcTemplate);
+        jdbcTemplateBoardDao = new JdbcTemplateBoardDao(jdbcTemplate, new BoardMapper());
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
         jdbcTemplateBoardDao.init(board.toMap(), id);

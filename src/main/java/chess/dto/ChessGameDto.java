@@ -17,7 +17,7 @@ public class ChessGameDto {
         this.gameProgressBadge = gameProgressBadge;
     }
 
-    public static ChessGameDto toDto(final ChessGame game) {
+    public static ChessGameDto from(final ChessGame game) {
         return new ChessGameDto(game.getId(), game.getRoom(),
                 createGameProgress(game.isInProgress()), createGameProgressBadge(game.isInProgress()) );
     }

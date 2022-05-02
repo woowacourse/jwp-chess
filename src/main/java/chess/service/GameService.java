@@ -40,7 +40,7 @@ public class GameService {
 
     public List<ChessGameDto> findPlayingGames() {
         return gameDao.findAll().stream()
-                .map(ChessGameDto::toDto)
+                .map(ChessGameDto::from)
                 .collect(Collectors.toList());
     }
 

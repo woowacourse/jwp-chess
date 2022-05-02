@@ -1,5 +1,7 @@
 package chess.domain.board;
 
+import chess.exception.NotMovableException;
+import chess.exception.PieceNotFoundException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -28,10 +30,10 @@ public class Board {
     public Board move(Coordinate from, Coordinate to) {
         Piece piece = findPiece(from);
         if (piece.isEmpty()) {
-            throw new IllegalArgumentException("해당 위치에 말이 존재하지 않습니다.");
+            throw new PieceNotFoundException();
         }
         if (!piece.isMovable(this, from, to)) {
-            throw new IllegalArgumentException("해당 위치로 움직일 수 없습니다.");
+            throw new NotMovableException();
         }
 
         swapPiece(from, to);

@@ -16,6 +16,7 @@ import chess.dto.GameDeleteDto;
 import chess.dto.GameDeleteResponseDto;
 import chess.dto.GameDto;
 import chess.dto.MoveRequestDto;
+import chess.exception.NotMatchedPasswordException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -115,11 +116,17 @@ public class ChessService {
     }
 
     public GameDeleteResponseDto deleteGameByGameId(GameDeleteDto gameDeleteDto) {
+        validatePassword(gameDeleteDto);
+        gameDao.deleteById(gameDeleteDto.getId());
+        return GameDeleteResponseDto.success();
+    }
+
+    private void validatePassword(GameDeleteDto gameDeleteDto) {
         if (isSamePassword(gameDeleteDto)) {
-            gameDao.deleteById(gameDeleteDto.getId());
-            return GameDeleteResponseDto.success();
+            return;
         }
-        return GameDeleteResponseDto.fail();
+
+        throw new NotMatchedPasswordException();
     }
 
     private boolean isSamePassword(GameDeleteDto gameDeleteDto) {

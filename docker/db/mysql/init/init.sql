@@ -2,7 +2,7 @@ create table room
 (
     id        bigint       not null primary key auto_increment,
     password  varchar(100) not null,
-    name      varchar(20)  not null,
+    name      varchar(20)  not null unique key,
     team      varchar(10)  not null,
     game_over boolean      not null
 );

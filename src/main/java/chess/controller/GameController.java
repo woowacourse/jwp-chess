@@ -72,14 +72,15 @@ public class GameController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteGame(@PathVariable int id,
+    public ResponseEntity<Void> deleteGame(@PathVariable int id,
                            EncryptedAuthCredentials authCredentials) {
         chessService.deleteFinishedGame(id, authCredentials);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/info")
-    public SearchResultDto searchGame(@PathVariable int id) {
-        return chessService.searchGame(id);
+    public ResponseEntity<SearchResultDto> searchGame(@PathVariable int id) {
+        return ResponseEntity.ok(chessService.searchGame(id));
     }
 
     @PostMapping("/{id}/auth")

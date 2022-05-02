@@ -41,9 +41,9 @@ class PlayerCookieTest {
 
         @Test
         void 게임의_id값이_잘못된_경우_예외발생() {
-           assertThatThrownBy(() -> whiteCookie.parsePlayerColorBy(INVALID_GAME_ID))
-                   .isInstanceOf(InvalidAccessException.class)
-                   .hasMessage("해당 게임의 플레이어가 아닙니다.");
+            assertThatThrownBy(() -> whiteCookie.parsePlayerColorBy(INVALID_GAME_ID))
+                    .isInstanceOf(InvalidAccessException.class)
+                    .hasMessage("해당 게임의 플레이어가 아닙니다.");
         }
     }
 

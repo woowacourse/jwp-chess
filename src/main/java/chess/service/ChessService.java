@@ -66,13 +66,14 @@ public class ChessService {
     }
 
     public ChessBoard findBoard(int gameId) {
-        Optional<GameDto> game = gameDao.findById(gameId);
+        GameDto game = gameDao.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게임이 존재하지 않습니다."));
         List<PieceDto> boardInfo = boardDao.findByGameId(gameId);
         HashMap<Position, ChessPiece> board = new HashMap<>();
         for (PieceDto pieceDto : boardInfo) {
             board.put(new Position(pieceDto.getPosition()), Type.from(pieceDto.getPiece()).createPiece(Color.from(pieceDto.getColor())));
         }
-        return new ChessBoard(board, convertToGameStatus(game.get().getStatus()), game.get().getTurn());
+        return new ChessBoard(board, convertToGameStatus(game.getStatus()), game.getTurn());
     }
 
     private Status convertToGameStatus(String status) {
@@ -113,14 +114,15 @@ public class ChessService {
     }
 
     public void deleteGame(int gameId, String password) throws IllegalArgumentException {
-        Optional<GameDto> gameDto = gameDao.findById(gameId);
+        GameDto gameDto = gameDao.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게임이 존재하지 않습니다."));
         validateRemovable(password, gameDto);
         end(gameId);
     }
 
-    private void validateRemovable(String password, Optional<GameDto> gameDto) {
-        validateStatus(Status.valueOf(gameDto.get().getStatus()));
-        validatePassword(gameDto.get(), password);
+    private void validateRemovable(String password, GameDto gameDto) {
+        validateStatus(Status.valueOf(gameDto.getStatus()));
+        validatePassword(gameDto, password);
     }
 
     private void validateStatus(Status gameStatus) {

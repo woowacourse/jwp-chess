@@ -62,7 +62,7 @@ public class GameDao {
     public Optional<GameDto> findById(int id) {
         final String sql = "select * from game where id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeGameDto(rs), id));
+            return Optional.of(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeGameDto(rs), id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         } catch (Exception exception) {

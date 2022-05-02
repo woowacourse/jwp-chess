@@ -13,7 +13,7 @@
 <form action="/" method="get" class="inlineBtn">
     <input type="submit" value="HOME" class="btn" id="home"/>
 </form>
-<form action="/delete" method="get" class="textBoxWrapper">
+<form action="/delete/{{gameID}}/{{inputPW}}" method="get" class="textBoxWrapper">
     <span class ="gameIDBOX">GAME ID : <input value={{gameID}} style="background-color: lightgray" type="text" name="gameID" readonly /></span>
     <span class ="gameIDBOX">GAME PW : <input type="text" name="inputPW"/></span>
     <input type="submit" value="DELETE" class="btn" id="home">

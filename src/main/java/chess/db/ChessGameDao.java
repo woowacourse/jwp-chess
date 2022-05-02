@@ -18,9 +18,8 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(String gameID, String gamePW, ChessGame chessGame) {
+    public void save(String gameID, String gamePW, String gameCode, ChessGame chessGame) {
         String sql = "insert into chessGame (gameID, gamePW, gameCode, turn) values (?, ?, ?, ?)";
-        String gameCode = "hash" + gameID + gamePW + "val";
         jdbcTemplate.update(sql, gameID, gamePW, gameCode, chessGame.getTurn().name());
     }
 

@@ -34,7 +34,7 @@ public class ChessGameDaoTest {
     void findTurnByID() {
         ChessGameDao chessGameDao = new ChessGameDao(jdbcTemplate);
         ChessGame chessGame = new ChessGame(new InitialBoardGenerator(), GameTurn.BLACK);
-        chessGameDao.save("test", "test", chessGame);
+        chessGameDao.save("test", "test", "hashtesttestval", chessGame);
 
         assertThat(chessGameDao.findTurnByID("test")).isEqualTo("BLACK");
     }

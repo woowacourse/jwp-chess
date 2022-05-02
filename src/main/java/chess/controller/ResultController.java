@@ -18,8 +18,7 @@ public class ResultController {
 
     @GetMapping("/status")
     public String showResult(@RequestParam String gameCode, Model model) {
-        final String gameID = chessService.findGameID(gameCode);
-        GameResult gameResult = chessService.getGameResult(gameID);
+        GameResult gameResult = chessService.getGameResult(gameCode);
         model.addAttribute("whiteScore", gameResult.calculateScore(Color.WHITE));
         model.addAttribute("blackScore", gameResult.calculateScore(Color.BLACK));
         return "final";

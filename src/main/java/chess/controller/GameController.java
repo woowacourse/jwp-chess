@@ -8,7 +8,7 @@ import chess.dto.request.MoveRouteDto;
 import chess.dto.response.EnterGameDto;
 import chess.dto.response.SearchResultDto;
 import chess.service.AuthService;
-import chess.service.ChessService;
+import chess.service.GameService;
 import java.net.URI;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -31,11 +31,11 @@ public class GameController {
     private static final String PLAY_GAME_HTML_TEMPLATE_PATH = "play_game";
     private static final String RESPONSE_MODEL_KEY = "response";
 
-    private final ChessService chessService;
+    private final GameService gameService;
     private final AuthService authService;
 
-    public GameController(ChessService chessService, AuthService authService) {
-        this.chessService = chessService;
+    public GameController(GameService gameService, AuthService authService) {
+        this.gameService = gameService;
         this.authService = authService;
     }
 
@@ -49,7 +49,7 @@ public class GameController {
     @PostMapping
     public ResponseEntity<Integer> createGame(EncryptedAuthCredentials authCredentials,
                                               HttpServletResponse response) {
-        int gameId = chessService.initGame(authCredentials);
+        int gameId = gameService.initGame(authCredentials);
         Cookie cookie = authService.generateCreatedGameCookie(gameId);
 
         response.addCookie(cookie);
@@ -67,20 +67,20 @@ public class GameController {
                                    PlayerCookie cookie,
                                    @RequestBody MoveRouteDto moveRoute) {
         Color playerColor = authService.parseValidCookie(id, cookie);
-        chessService.playGame(id, new MoveEvent(moveRoute.toDomain()), playerColor);
+        gameService.playGame(id, new MoveEvent(moveRoute.toDomain()), playerColor);
         return getGameModelAndView(id);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGame(@PathVariable int id,
                            EncryptedAuthCredentials authCredentials) {
-        chessService.deleteFinishedGame(id, authCredentials);
+        gameService.deleteFinishedGame(id, authCredentials);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}/info")
     public ResponseEntity<SearchResultDto> searchGame(@PathVariable int id) {
-        return ResponseEntity.ok(chessService.searchGame(id));
+        return ResponseEntity.ok(gameService.searchGame(id));
     }
 
     @PostMapping("/{id}/auth")
@@ -95,7 +95,7 @@ public class GameController {
     private ModelAndView getGameModelAndView(int id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(PLAY_GAME_HTML_TEMPLATE_PATH);
-        modelAndView.addObject(RESPONSE_MODEL_KEY, chessService.findGame(id));
+        modelAndView.addObject(RESPONSE_MODEL_KEY, gameService.findGame(id));
         return modelAndView;
     }
 }

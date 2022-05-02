@@ -26,18 +26,19 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("NonAsciiCharacters")
-class ChessServiceTest {
+class GameServiceTest {
 
     private static final MoveEvent GAME_ONE_VALID_BLACK_MOVE = new MoveEvent("a7 a5");
+
     private GameDaoStub gameDao;
     private EventDaoStub eventDao;
-    private ChessService service;
+    private GameService service;
 
     @BeforeEach
     void setup() {
         gameDao = new GameDaoStub();
         eventDao = new EventDaoStub();
-        service = new ChessService(gameDao, eventDao);
+        service = new GameService(gameDao, eventDao);
     }
 
     @Test
@@ -174,7 +175,7 @@ class ChessServiceTest {
 
         @Test
         void 현재_플레이어의_진영이_본인의_차례가_아닌_경우_예외를_발생시킨다() {
-            assertThatThrownBy(() ->  service.playGame(1, GAME_ONE_VALID_BLACK_MOVE, Color.WHITE))
+            assertThatThrownBy(() -> service.playGame(1, GAME_ONE_VALID_BLACK_MOVE, Color.WHITE))
                     .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("상대방이 움직일 차례입니다!");
         }

@@ -22,12 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ChessService {
+public class GameService {
 
     private final GameDao gameDao;
     private final EventDao eventDao;
 
-    public ChessService(GameDao gameDao, EventDao eventDao) {
+    public GameService(GameDao gameDao, EventDao eventDao) {
         this.gameDao = gameDao;
         this.eventDao = eventDao;
     }

@@ -11,10 +11,10 @@ import chess.config.AuthArgumentResolver;
 import chess.config.CookieArgumentResolver;
 import chess.exception.ExceptionResolver;
 import chess.fixture.AuthServiceStub;
-import chess.fixture.ChessServiceStub;
+import chess.fixture.GameServiceStub;
 import chess.fixture.GameDaoStub;
 import chess.service.AuthService;
-import chess.service.ChessService;
+import chess.service.GameService;
 import chess.util.CookieUtil;
 import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,8 +35,8 @@ class GameControllerTest {
     @BeforeEach
     public void setUp() {
         AuthService authService = new AuthServiceStub();
-        ChessService chessService = new ChessServiceStub();
-        GameController gameController = new GameController(chessService, authService);
+        GameService gameService = new GameServiceStub();
+        GameController gameController = new GameController(gameService, authService);
         mockMvc = MockMvcBuilders.standaloneSetup(gameController)
                 .setCustomArgumentResolvers(new AuthArgumentResolver(), new CookieArgumentResolver())
                 .setControllerAdvice(new ExceptionResolver())

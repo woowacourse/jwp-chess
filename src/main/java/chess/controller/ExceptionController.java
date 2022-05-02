@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.dto.response.ErrorDto;
 import chess.exception.IncorrectPasswordException;
+import chess.exception.MovePieceFailedException;
 import chess.exception.NotFoundRoomException;
 import chess.exception.WinnerIsNotExisting;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,13 @@ public class ExceptionController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorDto> handleException(RuntimeException e) {
+    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})
+    public ResponseEntity<ErrorDto> handleBadRequest(RuntimeException e) {
+        return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(MovePieceFailedException.class)
+    public ResponseEntity<ErrorDto> handleMovePieceFailed(MovePieceFailedException e) {
         return ResponseEntity.badRequest().body(new ErrorDto(e.getMessage()));
     }
 }

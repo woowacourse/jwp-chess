@@ -32,12 +32,12 @@ public class JdbcTemplateGameStatusDao implements GameStatusDao {
 
     @Override
     public void reset(int gameId) {
-        removeAll(gameId);
+        deleteById(gameId);
         String sql = "insert into game_status (status, game_id) values (?, ?)";
         jdbcTemplate.update(sql, GameStatus.READY.toString(), gameId);
     }
 
-    private void removeAll(int gameId) {
+    private void deleteById(int gameId) {
         String sql = "delete from game_status where game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }

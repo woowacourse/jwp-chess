@@ -41,10 +41,10 @@ public class JdbcTemplateBoardDao implements BoardDao {
 
     @Override
     public void reset(Map<String, String> board, int gameId) {
-        removeAll(gameId);
+        deleteById(gameId);
     }
 
-    private void removeAll(int gameId) {
+    private void deleteById(int gameId) {
         String sql = "delete from board where game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }

@@ -32,12 +32,12 @@ public class JdbcTemplateTurnDao implements TurnDao {
 
     @Override
     public void reset(int gameId) {
-        removeAll(gameId);
+        deleteById(gameId);
         String sql = "insert into turn (team, game_id) values (?, ?)";
         jdbcTemplate.update(sql, Team.WHITE.toString(), gameId);
     }
 
-    private void removeAll(int gameId) {
+    private void deleteById(int gameId) {
         String sql = "delete from turn where game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }

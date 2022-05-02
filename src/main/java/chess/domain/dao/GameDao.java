@@ -21,7 +21,7 @@ import java.util.Optional;
 @Repository
 public class GameDao {
 
-    private static final List EMPTY_RESULT = Collections.EMPTY_LIST;
+    private static final List<GameDto> EMPTY_RESULT = Collections.emptyList();
     private final JdbcTemplate jdbcTemplate;
 
     public GameDao(JdbcTemplate jdbcTemplate) {

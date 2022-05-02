@@ -1,9 +1,11 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.entity.CommandEntity;
 import chess.entity.RoomEntity;
+import chess.exception.DeleteRoomException;
 import chess.repository.RoomDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,5 +47,13 @@ public class CommandServiceTest {
         commandService.create(roomId, "move b7 b5");
         commandService.create(roomId, "move c2 c4");
         assertThat(commandService.findAllByRoomID(roomId)).containsExactly("move b2 b4", "move b7 b5", "move c2 c4");
+    }
+
+    @DisplayName("id에 해당되는 방이 실행중인지 검증한다.")
+    @Test
+    void checkRunning() {
+        RoomEntity room1 = roomDao.insert(new RoomEntity("room1", "1234"));
+        assertThatThrownBy(() -> commandService.checkRunning(room1.getId()))
+                .isInstanceOf(DeleteRoomException.class);
     }
 }

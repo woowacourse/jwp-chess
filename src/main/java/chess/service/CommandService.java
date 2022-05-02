@@ -3,6 +3,7 @@ package chess.service;
 import chess.domain.state.Start;
 import chess.domain.state.State;
 import chess.entity.CommandEntity;
+import chess.exception.DeleteRoomException;
 import chess.repository.CommandDao;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,5 +35,11 @@ public class CommandService {
             state = state.proceed(command);
         }
         return state;
+    }
+
+    public void checkRunning(Long roomId) {
+        if (getCurrentState(findAllByRoomID(roomId)).isRunning()) {
+            throw new DeleteRoomException("아직 게임 중인 방입니다.");
+        }
     }
 }

@@ -1,6 +1,8 @@
 package chess.controller;
 
+import chess.exception.DeleteRoomException;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,5 +25,11 @@ public class ExceptionsController {
         ModelAndView modelAndView = new ModelAndView("exception");
         modelAndView.addObject("message", "서버에서 예외 오류가 발생했습니다.");
         return modelAndView;
+    }
+
+    @ExceptionHandler(DeleteRoomException.class)
+    public String deleteRoomException(RedirectAttributes redirectAttributes, DeleteRoomException deleteRoomException) {
+        redirectAttributes.addAttribute("message", deleteRoomException.getMessage());
+        return "redirect:/";
     }
 }

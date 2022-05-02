@@ -24,7 +24,8 @@ public class RoomController {
     }
 
     @GetMapping
-    public String index(Model model) {
+    public String index(Model model, @RequestParam(required = false) String message) {
+        model.addAttribute("message", message);
         model.addAttribute("rooms", roomService.findAllRooms());
         return "index";
     }
@@ -45,11 +46,7 @@ public class RoomController {
         ModelAndView modelAndView = new ModelAndView("deleteRoom");
         modelAndView.addObject("id", roomId);
         modelAndView.addObject("failMessage", failMessage);
-        if (commandService.getCurrentState(commandService.findAllByRoomID(roomId)).isRunning()) {
-            modelAndView.setViewName("index");
-            modelAndView.addObject("message", "아직 게임 중인 방입니다.");
-            modelAndView.addObject("rooms", roomService.findAllRooms());
-        }
+        commandService.checkRunning(roomId);
         return modelAndView;
     }
 

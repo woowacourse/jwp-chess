@@ -55,7 +55,7 @@ class ChessControllerTest {
     }
 
     @Test
-    @DisplayName("이미 존재하는 이름일 경우 400대 응답을 던진다.")
+    @DisplayName("이미 존재하는 이름일 경우 400 응답을 던진다.")
     void createExceptionAlreadyExists() {
         RestAssured.given().log().all()
             .body("name=roma&password=pw12345678")
@@ -141,7 +141,7 @@ class ChessControllerTest {
     }
 
     @Test
-    @DisplayName("이동할 수 없는 위치인 경우 400대 응답을 던진다.")
+    @DisplayName("이동할 수 없는 위치인 경우 400 응답을 던진다.")
     void moveExceptionWrongPosition() {
         RestAssured.post(API_URL_PREFIX + "/rooms/" + id);
         MoveDto moveDto = new MoveDto("a2", "a5");
@@ -157,7 +157,7 @@ class ChessControllerTest {
     }
 
     @Test
-    @DisplayName("해당 색의 차례가 아닐 경우 400대 응답을 던진다.")
+    @DisplayName("해당 색의 차례가 아닐 경우 400 응답을 던진다.")
     void moveExceptionWrongTurn() {
         RestAssured.post(API_URL_PREFIX + "/rooms/" + id);
         MoveDto moveDto = new MoveDto("a7", "a6");
@@ -173,7 +173,7 @@ class ChessControllerTest {
     }
 
     @Test
-    @DisplayName("아직 게임을 시작하지 않은 방에서 불러오기를 할 경우 400대 응답을 던진다.")
+    @DisplayName("아직 게임을 시작하지 않은 방에서 불러오기를 할 경우 400 응답을 던진다.")
     void findExceptionBeforeInit() {
         RestAssured.given().log().all()
             .when().get(API_URL_PREFIX + "/rooms/" + id)
@@ -200,19 +200,20 @@ class ChessControllerTest {
     }
 
     @Test
-    @DisplayName("turn이 empty가 아닐 경우 삭제 시도하면 400대 응답을 던진다.")
+    @DisplayName("turn이 empty가 아닐 경우 삭제 시도하면 400 응답을 던진다.")
     void deleteNotAllowedException() {
         RestAssured.given().log().all()
             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-            .body("password=pw")
+            .body("password=pw12345678")
             .when().delete(API_URL_PREFIX + "/rooms/" + id)
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
-            .contentType(MediaType.APPLICATION_JSON_VALUE);
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("message", is("진행중인 방은 삭제할 수 없습니다."));
     }
 
     @Test
-    @DisplayName("비밀번호가 틀릴 경우 400대 응답을 던진다.")
+    @DisplayName("비밀번호가 틀릴 경우 401 응답을 던진다.")
     void deleteInvalidPassword() {
         RestAssured.given().log().all()
             .body("name=sojukang&password=1234567890")
@@ -224,7 +225,8 @@ class ChessControllerTest {
             .body("password=12345678901")
             .when().delete(API_URL_PREFIX + "/rooms/" + (id + 1))
             .then().log().all()
-            .statusCode(HttpStatus.BAD_REQUEST.value())
-            .contentType(MediaType.APPLICATION_JSON_VALUE);
+            .statusCode(HttpStatus.UNAUTHORIZED.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("message", is("Password가 일치하지 않습니다."));
     }
 }

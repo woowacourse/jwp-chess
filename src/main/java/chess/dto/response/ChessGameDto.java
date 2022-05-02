@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.response;
 
 import chess.domain.ChessGame;
 import chess.domain.ChessMap;
@@ -11,7 +11,7 @@ public class ChessGameDto {
     private final String turn;
     private final boolean isRunning;
 
-    private ChessGameDto(String gameName, char[][] chessMap, String turn, boolean isRunning) {
+    public ChessGameDto(String gameName, char[][] chessMap, String turn, boolean isRunning) {
         this.gameName = gameName;
         this.chessMap = chessMap;
         this.turn = turn;

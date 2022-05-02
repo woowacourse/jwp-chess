@@ -5,6 +5,7 @@ import static chess.domain.piece.State.createPieceByState;
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessGame;
+import chess.domain.ChessMap;
 import chess.domain.GameResult;
 import chess.domain.generator.BlackGenerator;
 import chess.domain.generator.WhiteGenerator;
@@ -13,9 +14,13 @@ import chess.domain.piece.State;
 import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
-import chess.dto.ChessGameDto;
+import chess.dto.ChessGameInfoDto;
 import chess.dto.PieceDto;
-import chess.dto.StatusDto;
+import chess.dto.request.CreateGameDto;
+import chess.dto.request.DeleteGameDto;
+import chess.dto.response.ChessGameDto;
+import chess.dto.response.ChessGameStatusDto;
+import chess.dto.response.PlayerScoreDto;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -31,16 +36,37 @@ public class ChessGameService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGameDto createNewChessGame(final String gameName) {
-        final boolean isDuplicate = chessGameDao.isDuplicateGameName(gameName);
-        if (isDuplicate) {
+    public ChessGameStatusDto createNewChessGame(final CreateGameDto createGameDto) {
+        validatePassword(createGameDto.getPassword(), createGameDto.getPasswordCheck());
+        validateDuplicateName(createGameDto.getChessGameName());
+
+        final String gameName = createGameDto.getChessGameName();
+        final String password = createGameDto.getPassword();
+        return saveChessGame(gameName, password);
+    }
+
+    private void validatePassword(final String password, final String passwordCheck) {
+        boolean isSame = password.equals(passwordCheck);
+        if (!isSame) {
+            throw new IllegalArgumentException("입력한 비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    private void validateDuplicateName(final String gameName) {
+        final int count = chessGameDao.findChessGameCountByName(gameName);
+        if (count > 0) {
             throw new IllegalArgumentException("중복된 게임 이름입니다.");
         }
+    }
+
+    private ChessGameStatusDto saveChessGame(String gameName, String password) {
         final ChessGame chessGame = initializeChessGame();
-        final int chessGameId = chessGameDao.createNewChessGame(chessGame, gameName);
-        pieceDao.savePieces(chessGame.getCurrentPlayer(), chessGameId);
-        pieceDao.savePieces(chessGame.getOpponentPlayer(), chessGameId);
-        return ChessGameDto.of(chessGame, gameName);
+
+        chessGameDao.saveChessGame(gameName, password, chessGame.getTurn().getName());
+        final int gameId = chessGameDao.findChessGameIdByName(gameName);
+        pieceDao.savePieces(chessGame.getCurrentPlayer(), gameId);
+        pieceDao.savePieces(chessGame.getOpponentPlayer(), gameId);
+        return new ChessGameStatusDto(gameId, gameName, chessGame.getTurn().getName());
     }
 
     private ChessGame initializeChessGame() {
@@ -49,28 +75,34 @@ public class ChessGameService {
         return new ChessGame(whitePlayer, blackPlayer);
     }
 
-    public StatusDto findStatus(final String gameName) {
-        final ChessGame chessGame = findGameByName(gameName);
-        final List<GameResult> gameResult = chessGame.findGameResult();
-        final GameResult whitePlayerResult = gameResult.get(0);
-        final GameResult blackPlayerResult = gameResult.get(1);
-        return StatusDto.of(whitePlayerResult, blackPlayerResult);
-    }
-
-    public void finishGame(final String gameName) {
-        final int gameId = findGameIdByGameName(gameName);
+    public void deleteGame(final DeleteGameDto deleteGameDto) {
+        int gameId = deleteGameDto.getId();
+        validateDeleteGame(gameId, deleteGameDto.getPassword());
         pieceDao.deletePieces(gameId);
         chessGameDao.deleteChessGame(gameId);
     }
 
-    public ChessGameDto loadChessGame(final String gameName) {
-        final ChessGame chessGame = findGameByName(gameName);
-        return ChessGameDto.of(chessGame, gameName);
+    private void validateDeleteGame(final int gameId, final String password) {
+        boolean isRunning = chessGameDao.findChessGame(gameId).isRunning();
+        if (isRunning) {
+            throw new IllegalArgumentException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
+
+        final int passwordsMatchCount = chessGameDao.findChessGameByIdAndPassword(gameId, password);
+        final boolean isWrongPassword = passwordsMatchCount == 0;
+        if (isWrongPassword) {
+            throw new IllegalArgumentException("암호가 다릅니다.");
+        }
     }
 
-    public ChessGameDto move(final String gameName, final String current, final String destination) {
-        final int gameId = findGameIdByGameName(gameName);
-        final ChessGame chessGame = findGameByName(gameName);
+    public ChessMap loadChessMap(final int gameId) {
+        final List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(gameId, Team.WHITE.getName());
+        final List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(gameId, Team.BLACK.getName());
+        return ChessMap.of(toPieces(whitePieces), toPieces(blackPieces));
+    }
+
+    public ChessGameDto move(final int gameId, final String gameName, final String current, final String destination) {
+        final ChessGame chessGame = findChessGame(gameId);
         final Player currentPlayer = chessGame.getCurrentPlayer();
         final Player opponentPlayer = chessGame.getOpponentPlayer();
         chessGame.move(currentPlayer, opponentPlayer, new Position(current), new Position(destination));
@@ -80,19 +112,14 @@ public class ChessGameService {
         return ChessGameDto.of(chessGame, gameName);
     }
 
-    private ChessGame findGameByName(final String gameName) {
-        final int chessGameId = findGameIdByGameName(gameName);
-        final String currentTurn = chessGameDao.findCurrentTurn(chessGameId);
-        final List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(chessGameId, Team.WHITE.getName());
-        final List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(chessGameId, Team.BLACK.getName());
+    public ChessGame findChessGame(final int gameId) {
+        final String currentTurn = chessGameDao.findCurrentTurn(gameId);
+        final List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(gameId, Team.WHITE.getName());
+        final List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(gameId, Team.BLACK.getName());
         final Player whitePlayer = new Player(toPieces(whitePieces), Team.WHITE);
         final Player blackPlayer = new Player(toPieces(blackPieces), Team.BLACK);
 
         return new ChessGame(whitePlayer, blackPlayer, Team.from(currentTurn));
-    }
-
-    private int findGameIdByGameName(final String gameName) {
-        return chessGameDao.findChessGameIdByName(gameName);
     }
 
     private static List<Piece> toPieces(final List<PieceDto> piecesDto) {
@@ -103,5 +130,21 @@ public class ChessGameService {
             pieces.add(createPieceByState(state, position));
         }
         return pieces;
+    }
+
+    public PlayerScoreDto findStatus(final int gameId) {
+        final ChessGame chessGame = findChessGame(gameId);
+        final List<GameResult> gameResult = chessGame.findGameResult();
+        final GameResult whitePlayerResult = gameResult.get(0);
+        final GameResult blackPlayerResult = gameResult.get(1);
+        return PlayerScoreDto.of(whitePlayerResult, blackPlayerResult);
+    }
+
+    public List<ChessGameStatusDto> findAllChessGame() {
+        return ChessGameInfoDto.from(chessGameDao.findAllChessGame());
+    }
+
+    public ChessGameStatusDto findGameInfoById(final int gameId) {
+        return ChessGameInfoDto.from(chessGameDao.findChessGame(gameId));
     }
 }

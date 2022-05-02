@@ -1,10 +1,14 @@
 package chess.dao;
 
-import chess.domain.ChessGame;
 import chess.domain.player.Team;
-import chess.exception.ExecuteQueryException;
-import org.springframework.dao.DataAccessException;
+import chess.dto.ChessGameInfoDto;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,64 +20,67 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public int saveChessGame(final String gameName, final String password, final String turn) {
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
+        final String sql = "insert into chess_game (name, password, turn, running) values (?, ?, ?, ?)";
+        jdbcTemplate.update((Connection con) -> {
+            PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"ID"});
+            pstmt.setString(1, gameName);
+            pstmt.setString(2, password);
+            pstmt.setString(3, turn);
+            pstmt.setBoolean(4, true);
+            return pstmt;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
+    }
+
+    public int findChessGameCountByName(final String gameName) {
+        final String sql = "select count(*) from chess_game where name = (?)";
+        return jdbcTemplate.queryForObject(sql, Integer.class, gameName);
+    }
+
     public int findChessGameIdByName(final String gameName) {
         final String sql = "select id from chess_game where name = (?)";
-        try {
-            return jdbcTemplate.queryForObject(sql, Integer.class, gameName);
-        } catch (DataAccessException e) {
-            throw new ExecuteQueryException("체스 게임 정보 불러오는데 실패했습니다.");
-        }
-    }
-
-    public boolean isDuplicateGameName(final String gameName) {
-        final String sql = "select id from chess_game where name = (?)";
-        try {
-            jdbcTemplate.queryForObject(sql, Integer.class, gameName);
-            return true;
-        } catch (DataAccessException e) {
-            return false;
-        }
-    }
-
-    public int createNewChessGame(final ChessGame chessGame, final String gameName) {
-        saveChessGame(gameName, chessGame.getTurn());
-        final int chessGameId = findChessGameIdByName(gameName);
-        return chessGameId;
-    }
-
-    private void saveChessGame(final String gameName, final Team turn) {
-        final String sql = "insert into chess_game (name, turn) values (?, ?)";
-        try {
-            jdbcTemplate.update(sql, gameName, turn.getName());
-        } catch (DataAccessException e) {
-            throw new ExecuteQueryException("게임을 저장할 수 없습니다.");
-        }
+        return jdbcTemplate.queryForObject(sql, Integer.class, gameName);
     }
 
     public String findCurrentTurn(final int chessGameId) {
         final String sql = "select turn from chess_game where id = (?)";
-        try {
-            return jdbcTemplate.queryForObject(sql, String.class, chessGameId);
-        } catch (DataAccessException e) {
-            throw new ExecuteQueryException("현재 턴 정보 불러오기가 실패했습니다.");
-        }
+        return jdbcTemplate.queryForObject(sql, String.class, chessGameId);
     }
 
     public void deleteChessGame(final int chessGameId) {
         final String sql = "delete from chess_game where id = (?)";
-        try {
-            jdbcTemplate.update(sql, chessGameId);
-        } catch (DataAccessException e) {
-            throw new ExecuteQueryException("게임을 삭제할 수 없습니다.");
-        }
+        jdbcTemplate.update(sql, chessGameId);
     }
 
     public void updateGameTurn(final int gameId, final Team nextTurn) {
         final String sql = "update chess_game set turn = (?) where id = (?)";
-        try {
-            jdbcTemplate.update(sql, nextTurn.getName(), gameId);
-        } catch (DataAccessException e) {
-            throw new ExecuteQueryException("턴 정보 업데이트에 실패했습니다.");
-        }
+        jdbcTemplate.update(sql, nextTurn.getName(), gameId);
+    }
+
+    public List<ChessGameInfoDto> findAllChessGame() {
+        final String sql = "select id, name, turn, running from chess_game";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new ChessGameInfoDto(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("turn"),
+                rs.getBoolean("running")
+        ));
+    }
+
+    public int findChessGameByIdAndPassword(final int gameId, final String password) {
+        final String sql = "select count(*) from chess_game where id = (?) and password = (?)";
+        return jdbcTemplate.queryForObject(sql, Integer.class, gameId, password);
+    }
+
+    public ChessGameInfoDto findChessGame(final int gameId) {
+        final String sql = "select id, name, turn, running from chess_game where id = (?)";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ChessGameInfoDto(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("turn"),
+                rs.getBoolean("running")
+        ), gameId);
     }
 }

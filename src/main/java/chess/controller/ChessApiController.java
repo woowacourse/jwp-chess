@@ -30,7 +30,7 @@ public class ChessApiController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/score/{gameId}")
+    @GetMapping("/game/{gameId}/score")
     public ResponseEntity<Result> gameScore(@PathVariable("gameId") Long gameId) {
         final ChessGame chessGame = gameService.findByGameId(gameId);
         final Result result = chessGame.createResult();
@@ -46,7 +46,7 @@ public class ChessApiController {
         return ResponseEntity.created(URI.create("/member/" + memberId)).body(memberId);
     }
 
-    @PostMapping("/terminate/{gameId}")
+    @PostMapping("/game/{gameId}/terminate")
     public ResponseEntity<Long> terminateGame(@PathVariable("gameId") final Long gameId) {
         gameService.terminate(gameId);
 
@@ -73,7 +73,7 @@ public class ChessApiController {
         return ResponseEntity.ok(true);
     }
 
-    @PutMapping("/move/{gameId}")
+    @PutMapping("/game/{gameId}/move")
     public ResponseEntity<Long> movePiece(@PathVariable("gameId") final Long gameId,
                                           @RequestBody final MoveCommandDto moveCommandDto) {
         gameService.move(gameId, moveCommandDto.getRawFrom(), moveCommandDto.getRawTo());

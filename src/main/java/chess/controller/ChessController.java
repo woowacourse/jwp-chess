@@ -44,12 +44,12 @@ public class ChessController {
         return new ModelAndView("index", model);
     }
 
-    @GetMapping("/play/{gameId}")
+    @GetMapping("/game/{gameId}")
     public ModelAndView playGame(@PathVariable("gameId") Long gameId) {
         final ChessGame chessGame = gameService.findByGameId(gameId);
         final Map<String, Object> model = new HashMap<>();
         if (chessGame.isEnd()) {
-            return new ModelAndView("redirect:/result/" + gameId);
+            return new ModelAndView("redirect:/game/" + gameId + "/result");
         }
 
         model.put("turn", chessGame.getTurn());
@@ -59,7 +59,7 @@ public class ChessController {
         return new ModelAndView("play", model);
     }
 
-    @GetMapping("/result/{gameId}")
+    @GetMapping("/game/{gameId}/result")
     public ModelAndView gameResult(@PathVariable("gameId") Long gameId) {
         final ChessGame chessGame = gameService.findByGameId(gameId);
         final Result result = chessGame.createResult();
@@ -72,7 +72,7 @@ public class ChessController {
         return new ModelAndView("result", model);
     }
 
-    @GetMapping("/history/{memberId}")
+    @GetMapping("/member/{memberId}/history")
     public ModelAndView history(@PathVariable("memberId") Long memberId) {
         final List<GameResultDto> history = gameService.findHistoriesByMemberId(memberId);
         final Map<String, Object> model = new HashMap<>();

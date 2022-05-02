@@ -10,7 +10,7 @@ public enum Symbol {
     PAWN("p", 1, new Pawn()),
     QUEEN("q", 9, new Queen()),
     ROOK("r", 5, new Rook()),
-    BLANK("blank.png", 0, null),
+    BLANK("blank", 0, new Blank()),
     ;
 
     private final String value;

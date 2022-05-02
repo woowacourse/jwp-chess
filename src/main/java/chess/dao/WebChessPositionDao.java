@@ -6,19 +6,18 @@ import chess.domain.pieces.Symbol;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import javax.swing.text.html.Option;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 @Repository
 public class WebChessPositionDao implements PositionDao<Position> {
@@ -46,7 +45,7 @@ public class WebChessPositionDao implements PositionDao<Position> {
     }
 
     @Override
-    public Position getByColumnAndRowAndBoardId(Column column, Row row, int boardId) {
+    public Optional<Position> findByColumnAndRowAndBoardId(Column column, Row row, int boardId) {
         final String sql = "SELECT id, position_column, position_row, board_id " +
                 "FROM position " +
                 "WHERE position_column=:position_column AND position_row=:position_row AND board_id=:board_id";
@@ -55,7 +54,8 @@ public class WebChessPositionDao implements PositionDao<Position> {
         List<Object> values = List.of(column.value(), row.value(), boardId);
         SqlParameterSource namedParameters = ParameterSourceCreator.makeParameterSource(keys, values);
 
-        return jdbcTemplate.queryForObject(sql, namedParameters, (rs, rowNum) -> makePosition(rs, "id"));
+        Position position = DataAccessUtils.singleResult(jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> makePosition(rs, "id")));
+        return Optional.ofNullable(position);
     }
 
     @Override
@@ -79,11 +79,6 @@ public class WebChessPositionDao implements PositionDao<Position> {
                             .addValue("board_id", boardId)
                             .getValues());
         }
-    }
-
-    @Override
-    public int getIdByColumnAndRowAndBoardId(Column column, Row row, int boardId) {
-        return getByColumnAndRowAndBoardId(column, row, boardId).getId();
     }
 
     @Override
@@ -123,15 +118,6 @@ public class WebChessPositionDao implements PositionDao<Position> {
         int position_id = (int) map.get("position_id");
 
         return new Piece(piece_id, Color.findColor(color), Symbol.findSymbol(type).type(), position_id);
-    }
-
-    @Override
-    public List<Position> getPaths(List<Position> positions, int roomId) {
-        List<Position> realPositions = new ArrayList<>();
-        for (Position position : positions) {
-            realPositions.add(getByColumnAndRowAndBoardId(position.getColumn(), position.getRow(), roomId));
-        }
-        return realPositions;
     }
 
     private Position makePosition(ResultSet resultSet, String idLabel) throws SQLException {

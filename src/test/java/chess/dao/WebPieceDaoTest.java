@@ -1,49 +1,53 @@
 package chess.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
-import chess.domain.game.ChessBoard;
+import chess.domain.game.BoardEntity;
+import chess.domain.pieces.Blank;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Pawn;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+@JdbcTest
 class WebPieceDaoTest {
 
-    @Autowired
-    private WebChessPositionDao webChessPositionDao;
-
-    @Autowired
-    private WebChessPieceDao webPieceDao;
-
-    @Autowired
-    private WebChessBoardDao boardDao;
+    private final PositionDao<Position> positionDao;
+    private final PieceDao<Piece> pieceDao;
+    private final BoardDao<BoardEntity> boardDao;
 
     private int boardId;
     private int positionId;
 
+    @Autowired
+    WebPieceDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
+        positionDao = new WebChessPositionDao(jdbcTemplate);
+        pieceDao = new WebChessPieceDao(jdbcTemplate);
+        boardDao = new WebChessBoardDao(new WebChessMemberDao(jdbcTemplate), jdbcTemplate);
+    }
+
     @BeforeEach
     void setup() {
-        final ChessBoard board = boardDao.save(new ChessBoard("corinne"));
+        final BoardEntity board = boardDao.save(new BoardEntity("corinne", "1234"));
         this.boardId = board.getId();
-        final Position position = webChessPositionDao.save(new Position(Column.A, Row.TWO, board.getId()));
+        final Position position = positionDao.save(new Position(Column.A, Row.TWO, board.getId()));
         this.positionId = position.getId();
-        final Piece piece = webPieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
+        pieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
     }
 
     @Test
     void saveTest() {
-        final Piece piece = webPieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
+        final Piece piece = pieceDao.save(new Piece(Color.WHITE, new Pawn(), positionId));
         assertAll(
                 () -> assertThat(piece.getType()).isInstanceOf(Pawn.class),
                 () -> assertThat(piece.getColor()).isEqualTo(Color.WHITE),
@@ -53,7 +57,7 @@ class WebPieceDaoTest {
 
     @Test
     void findByPositionId() {
-        Piece piece = webPieceDao.findByPositionId(positionId).get();
+        Piece piece = pieceDao.findByPositionId(positionId).get();
         assertAll(
                 () -> assertThat(piece.getType()).isInstanceOf(Pawn.class),
                 () -> assertThat(piece.getColor()).isEqualTo(Color.WHITE)
@@ -61,34 +65,21 @@ class WebPieceDaoTest {
     }
 
     @Test
-    void updatePiecePositionId() {
-        final int sourcePositionId = positionId;
-        final int targetPositionId = webChessPositionDao.save(new Position(Column.A, Row.TWO, boardId)).getId();
-        int affectedRow = webPieceDao.updatePositionId(sourcePositionId, targetPositionId);
+    void updatePiece() {
+        Piece sourcePiece = pieceDao.findByPositionId(positionId).get();
+        int affectedRow = pieceDao.updatePiece(sourcePiece, new Piece(Color.NONE, new Blank()));
         assertThat(affectedRow).isEqualTo(1);
     }
 
     @Test
     void deletePieceByPositionId() {
-        int affectedRows = webPieceDao.deleteByPositionId(positionId);
+        int affectedRows = pieceDao.deleteByPositionId(positionId);
         assertThat(affectedRows).isEqualTo(1);
     }
 
     @Test
     void getAllPiecesTest() {
-        final List<Piece> pieces = webPieceDao.getAllByBoardId(boardId);
+        final List<Piece> pieces = pieceDao.getAllByBoardId(boardId);
         assertThat(pieces.size()).isEqualTo(1);
-    }
-
-    @Test
-    void countPawnsOnSameColumn() {
-        int pawnCount = webPieceDao.countPawnsOnSameColumn(boardId, Column.A, Color.WHITE);
-
-        assertThat(pawnCount).isEqualTo(1);
-    }
-
-    @AfterEach
-    void setDown() {
-        boardDao.deleteAll();
     }
 }

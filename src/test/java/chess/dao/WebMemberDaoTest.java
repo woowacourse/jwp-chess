@@ -1,31 +1,36 @@
 package chess.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
-import chess.domain.game.ChessBoard;
+import chess.domain.game.BoardEntity;
 import chess.domain.member.Member;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+@JdbcTest
 class WebMemberDaoTest {
 
-    @Autowired
-    private WebChessMemberDao dao;
-
-    @Autowired
-    private WebChessBoardDao boardDao;
+    private final MemberDao<Member> dao;
+    private final BoardDao<BoardEntity> boardDao;
 
     private int boardId;
 
+    @Autowired
+    WebMemberDaoTest(NamedParameterJdbcTemplate jdbcTemplate) {
+        dao = new WebChessMemberDao(jdbcTemplate);
+        boardDao = new WebChessBoardDao(dao, jdbcTemplate);
+    }
+
     @BeforeEach
     void setup() {
-        final ChessBoard board = boardDao.save(new ChessBoard("에덴파이팅~!"));
+        final BoardEntity board = boardDao.save(new BoardEntity("에덴파이팅~!", "1234"));
         this.boardId = board.getId();
         dao.saveAll(List.of(new Member("쿼리치"), new Member("코린")), boardId);
     }
@@ -52,7 +57,6 @@ class WebMemberDaoTest {
                 () -> assertThat(members.get(0).getName()).isEqualTo("쿼리치"),
                 () -> assertThat(members.get(1).getName()).isEqualTo("코린")
         );
-
     }
 
     @AfterEach

@@ -19,13 +19,13 @@ public class ViewConverter {
     }
 
     public static String findImageName(Map<String, Piece> pieces, Integer row, Column column) {
-        if (pieces.containsKey(row + column.name())) {
-            final Piece piece = pieces.get(row + column.name());
-            if (piece.isSameColor(Color.WHITE)) {
-                return "white-" + piece.symbol() + ".png";
-            }
+        final Piece piece = pieces.get(row + column.name());
+        if (piece.isSameColor(Color.WHITE)) {
+            return "white-" + piece.symbol() + ".png";
+        }
+        if (piece.isSameColor(Color.BLACK)) {
             return "black-" + piece.symbol() + ".png";
         }
-        return Symbol.BLANK.value();
+        return piece.symbol() + ".png";
     }
 }

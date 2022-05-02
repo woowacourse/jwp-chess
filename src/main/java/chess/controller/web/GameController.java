@@ -53,10 +53,4 @@ public class GameController {
         return "redirect:/game/" + gameId;
     }
 
-    @PostMapping("/{gameId}/delete")
-    public String delete(@PathVariable int gameId, @RequestParam String password) {
-        service.delete(gameId, password);
-        return "redirect:/";
-    }
-
 }

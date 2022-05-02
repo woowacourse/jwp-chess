@@ -3,10 +3,7 @@ package chess.controller.web;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @ControllerAdvice
@@ -27,6 +24,12 @@ public class IndexController {
     @PostMapping("/createGame")
     public String createGame(@RequestParam String name, @RequestParam String password) {
         service.create(name, password);
+        return "redirect:/";
+    }
+
+    @PostMapping("/{gameId}/delete")
+    public String delete(@PathVariable int gameId, @RequestParam String password) {
+        service.delete(gameId, password);
         return "redirect:/";
     }
 

@@ -335,24 +335,28 @@
         <!-- TWO LINE -->
     </section>
     <section class="user-ui">
-        <form class="move" method="post" action="/move/{{chess_game_name}}">
+        <form class="move" method="post" action="/games/move/{{id}}">
             <h2>🎯 체스 기물 이동 🎯</h2>
             <input type="text" name="source" placeholder="Source Position">
             <input type="text" name="target" placeholder="Target Position">
             <input type="submit" value="MOVE">
         </form>
         <div class="status">
-            <p>{{turn.now.value}} 턴</p>
+            <p>{{turn}} 턴</p>
             {{#result}}
             <p>BLACK 팀 점수 : {{blackScore}}</p>
             <p>WHITE 팀 점수 : {{whiteScore}}</p>
             <p>승리 팀 : {{winningTeam.value}} ({{winningTeam.winningType}})</p>
             {{/result}}
         </div>
-        <form class="button" method="post" action="/reset/{{chess_game_name}}">
+        <form class="button" method="post" action="/games/reset/{{id}}">
             <p class="info">🧨 체스 게임을 리셋합니다.</p>
             <input type="submit" value="RESET GAME">
         </form>
+        <form class="button" method="post" action="/games/end/{{id}}">
+                    <p class="info">🔚 체스 게임을 종료합니다.</p>
+                    <input type="submit" value="END GAME">
+                </form>
         <form class="button" action="/">
             <p class="info">🏠 홈 화면으로 돌아가기</p>
             <input type="submit" value="HOME">

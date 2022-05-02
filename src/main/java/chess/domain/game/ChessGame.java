@@ -15,21 +15,18 @@ public class ChessGame {
     private static final int ONE_DEAD_KING = 1;
     private static final int FIRST_INDEX_OF_ALIVE_KINGS = 0;
 
-    private final String name;
     private final Board board;
     private final GameSwitch gameSwitch;
     private final Turn turn;
 
-    public ChessGame(final String name, final Board board, final GameSwitch gameSwitch, final Turn turn) {
-        this.name = name;
+    public ChessGame(final Board board, final GameSwitch gameSwitch, final Turn turn) {
         this.board = board;
         this.gameSwitch = gameSwitch;
         this.turn = turn;
     }
 
-    public static ChessGame createBasic(final String name) {
+    public static ChessGame createBasic() {
         return new ChessGame(
-                name,
                 BoardFactory.createInitChessBoard(),
                 new GameSwitch(true),
                 new Turn(Team.WHITE)
@@ -103,15 +100,11 @@ public class ChessGame {
         return new Result(getCurrentBoard(), searchTeamOfDeadKingWhenSingleKingAlive());
     }
 
-    public String getName() {
-        return name;
-    }
-
     public Map<Position, Piece> getCurrentBoard() {
         return board.getBoard();
     }
 
-    public Turn getTurn() {
-        return turn;
+    public String getTurn() {
+        return turn.getValue();
     }
 }

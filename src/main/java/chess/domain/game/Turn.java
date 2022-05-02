@@ -21,7 +21,7 @@ public class Turn {
         return this.now == team;
     }
 
-    public Team getNow() {
-        return now;
+    public String getValue() {
+        return now.getValue();
     }
 }

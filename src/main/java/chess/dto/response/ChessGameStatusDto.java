@@ -1,20 +1,20 @@
 package chess.dto.response;
 
-public class ChessGameInfoDto {
+public class ChessGameStatusDto {
 
     private final int id;
     private final String name;
     private final String turn;
     private final boolean running;
 
-    public ChessGameInfoDto(int id, String name, String turn, boolean running) {
+    public ChessGameStatusDto(int id, String name, String turn, boolean running) {
         this.id = id;
         this.name = name;
         this.turn = turn;
         this.running = running;
     }
 
-    public ChessGameInfoDto(int id, String name, String turn) {
+    public ChessGameStatusDto(int id, String name, String turn) {
         this(id, name, turn, true);
     }
 

@@ -18,8 +18,8 @@ import chess.dto.PieceDto;
 import chess.dto.request.CreateGameDto;
 import chess.dto.request.DeleteGameDto;
 import chess.dto.response.ChessGameDto;
-import chess.dto.response.ChessGameInfoDto;
-import chess.dto.response.StatusDto;
+import chess.dto.response.ChessGameStatusDto;
+import chess.dto.response.PlayerScoreDto;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class ChessGameService {
         this.pieceDao = pieceDao;
     }
 
-    public ChessGameInfoDto createNewChessGame(final CreateGameDto createGameDto) {
+    public ChessGameStatusDto createNewChessGame(final CreateGameDto createGameDto) {
         validatePassword(createGameDto.getPassword(), createGameDto.getPasswordCheck());
         validateDuplicateName(createGameDto.getChessGameName());
 
@@ -58,14 +58,14 @@ public class ChessGameService {
         }
     }
 
-    private ChessGameInfoDto saveChessGame(String gameName, String password) {
+    private ChessGameStatusDto saveChessGame(String gameName, String password) {
         final ChessGame chessGame = initializeChessGame();
 
         chessGameDao.saveChessGame(gameName, password, chessGame.getTurn().getName());
         final int gameId = chessGameDao.findChessGameIdByName(gameName);
         pieceDao.savePieces(chessGame.getCurrentPlayer(), gameId);
         pieceDao.savePieces(chessGame.getOpponentPlayer(), gameId);
-        return new ChessGameInfoDto(gameId, gameName, chessGame.getTurn().getName());
+        return new ChessGameStatusDto(gameId, gameName, chessGame.getTurn().getName());
     }
 
     private ChessGame initializeChessGame() {
@@ -131,19 +131,19 @@ public class ChessGameService {
         return pieces;
     }
 
-    public StatusDto findStatus(final int gameId) {
+    public PlayerScoreDto findStatus(final int gameId) {
         final ChessGame chessGame = findChessGame(gameId);
         final List<GameResult> gameResult = chessGame.findGameResult();
         final GameResult whitePlayerResult = gameResult.get(0);
         final GameResult blackPlayerResult = gameResult.get(1);
-        return StatusDto.of(whitePlayerResult, blackPlayerResult);
+        return PlayerScoreDto.of(whitePlayerResult, blackPlayerResult);
     }
 
-    public List<ChessGameInfoDto> findAllChessGame() {
+    public List<ChessGameStatusDto> findAllChessGame() {
         return chessGameDao.findAllChessGame();
     }
 
-    public ChessGameInfoDto findGameInfoById(final int gameId) {
+    public ChessGameStatusDto findGameInfoById(final int gameId) {
         return chessGameDao.findChessGame(gameId);
     }
 }

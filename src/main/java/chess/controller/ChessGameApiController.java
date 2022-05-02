@@ -4,8 +4,8 @@ import chess.dto.request.CreateGameDto;
 import chess.dto.request.DeleteGameDto;
 import chess.dto.request.MovePositionDto;
 import chess.dto.response.ChessGameDto;
-import chess.dto.response.ChessGameInfoDto;
-import chess.dto.response.StatusDto;
+import chess.dto.response.ChessGameStatusDto;
+import chess.dto.response.PlayerScoreDto;
 import chess.service.ChessGameService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +29,19 @@ public class ChessGameApiController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ChessGameInfoDto>> findAllChessGame() {
+    public ResponseEntity<List<ChessGameStatusDto>> findAllChessGame() {
         return ResponseEntity.ok(chessGameService.findAllChessGame());
     }
 
     @PostMapping
-    public ResponseEntity<ChessGameInfoDto> createNewGame(@RequestBody CreateGameDto createGameDto) {
-        final ChessGameInfoDto newChessGame = chessGameService.createNewChessGame(createGameDto);
+    public ResponseEntity<ChessGameStatusDto> createNewGame(@RequestBody CreateGameDto createGameDto) {
+        final ChessGameStatusDto newChessGame = chessGameService.createNewChessGame(createGameDto);
         return ResponseEntity.ok(newChessGame);
     }
 
     @GetMapping("/{gameId}/status")
-    public ResponseEntity<StatusDto> findStatusByGameName(@PathVariable int gameId) {
-        final StatusDto status = chessGameService.findStatus(gameId);
+    public ResponseEntity<PlayerScoreDto> findStatusByGameName(@PathVariable int gameId) {
+        final PlayerScoreDto status = chessGameService.findStatus(gameId);
         return ResponseEntity.ok(status);
     }
 
@@ -54,7 +54,7 @@ public class ChessGameApiController {
     @GetMapping("/{gameId}/load")
     public ResponseEntity<ChessGameDto> loadGame(@PathVariable int gameId) {
         final char[][] chessMap = chessGameService.loadChessMap(gameId).getChessMap();
-        final ChessGameInfoDto info = chessGameService.findGameInfoById(gameId);
+        final ChessGameStatusDto info = chessGameService.findGameInfoById(gameId);
 
         return ResponseEntity.ok(new ChessGameDto(info.getName(), chessMap, info.getTurn(), info.isRunning()));
     }

@@ -14,8 +14,8 @@ import chess.domain.player.Result;
 import chess.domain.player.Team;
 import chess.dto.request.CreateGameDto;
 import chess.dto.request.DeleteGameDto;
-import chess.dto.response.ChessGameInfoDto;
-import chess.dto.response.StatusDto;
+import chess.dto.response.ChessGameStatusDto;
+import chess.dto.response.PlayerScoreDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ class ChessGameServiceTest {
         final String gameName = "게임1";
         final CreateGameDto createGameDto = new CreateGameDto(gameName, "1234", "1234");
 
-        final ChessGameInfoDto newChessGame = service.createNewChessGame(createGameDto);
+        final ChessGameStatusDto newChessGame = service.createNewChessGame(createGameDto);
 
         assertThat(newChessGame.getName()).isEqualTo(gameName);
     }
@@ -100,7 +100,7 @@ class ChessGameServiceTest {
     void findChessGame() {
         final int gameId = service.createNewChessGame(new CreateGameDto("게임1", "1234", "1234")).getId();
 
-        final ChessGameInfoDto gameInfo = service.findGameInfoById(gameId);
+        final ChessGameStatusDto gameInfo = service.findGameInfoById(gameId);
 
         assertAll(() -> {
             assertThat(gameInfo.getId()).isEqualTo(gameId);
@@ -117,7 +117,7 @@ class ChessGameServiceTest {
         final double expectedScore = 38;
         final String expectedResult = Result.DRAW.getValue();
 
-        final StatusDto status = service.findStatus(gameId);
+        final PlayerScoreDto status = service.findStatus(gameId);
 
         assertAll(() -> {
             assertThat(status.getWhitePlayerScore()).isEqualTo(expectedScore);

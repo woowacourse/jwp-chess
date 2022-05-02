@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.domain.player.Team;
-import chess.dto.response.ChessGameInfoDto;
+import chess.dto.response.ChessGameStatusDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class ChessGameDaoTest {
     @DisplayName("체스 게임을 저장한다.")
     void saveChessGame() {
         final int gameId = saveGame("슬로", "1234", "화이트");
-        final ChessGameInfoDto chessGame = chessGameDao.findChessGame(gameId);
+        final ChessGameStatusDto chessGame = chessGameDao.findChessGame(gameId);
         assertAll(() -> {
             assertThat(chessGame.getId()).isEqualTo(gameId);
             assertThat(chessGame.getName()).isEqualTo("슬로");
@@ -103,7 +103,7 @@ class ChessGameDaoTest {
     @DisplayName("번호로 게임을 찾는다.")
     void findChessGame() {
         final int gameId = saveGame("슬로", "1234", "화이트");
-        final ChessGameInfoDto chessGame = chessGameDao.findChessGame(gameId);
+        final ChessGameStatusDto chessGame = chessGameDao.findChessGame(gameId);
 
         assertAll(() -> {
                     assertThat(chessGame.getId()).isEqualTo(gameId);

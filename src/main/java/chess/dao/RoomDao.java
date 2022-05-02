@@ -3,8 +3,7 @@ package chess.dao;
 import chess.domain.Team;
 import chess.dto.request.GameIdRequest;
 import chess.dto.request.MakeRoomRequest;
-import chess.dto.response.RoomResponse;
-import chess.dto.response.RoomStatusResponse;
+import chess.entity.RoomEntity;
 
 import java.util.List;
 
@@ -12,11 +11,11 @@ public interface RoomDao {
 
     void makeGame(Team team, MakeRoomRequest makeRoomRequest);
 
-    List<RoomResponse> getGames();
+    List<RoomEntity> getGames();
 
-    RoomStatusResponse findById(MakeRoomRequest makeRoomRequest);
+    RoomEntity findById(MakeRoomRequest makeRoomRequest);
 
-    RoomResponse findById(GameIdRequest gameIdRequest);
+    RoomEntity findById(GameIdRequest gameIdRequest);
 
     boolean isExistId(GameIdRequest gameIdRequest);
 

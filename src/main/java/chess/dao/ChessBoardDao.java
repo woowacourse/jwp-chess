@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.response.PieceResponse;
+import chess.entity.BoardEntity;
 
 @Repository
 public class ChessBoardDao implements BoardDao {
@@ -32,15 +32,15 @@ public class ChessBoardDao implements BoardDao {
     }
 
     @Override
-    public List<PieceResponse> findAllPiece(long roomId) {
+    public List<BoardEntity> findAllPiece(long roomId) {
         String sql = "select * from board where room_id = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
-                        new PieceResponse(
+                        new BoardEntity(
+                                rs.getLong("id"),
                                 rs.getString("position"),
-                                rs.getString("symbol")
-                        ),
-                roomId);
+                                rs.getString("symbol"),
+                                rs.getLong("room_id")), roomId);
     }
 
     @Override

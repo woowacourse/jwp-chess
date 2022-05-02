@@ -2,9 +2,8 @@ package chess.dao;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.dto.response.PieceResponse;
+import chess.entity.BoardEntity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class FakeBoardDao implements BoardDao {
 
-    private final Map<Long, FakePiece> boards = new HashMap<>();
+    private final Map<Long, BoardEntity> boards = new HashMap<>();
 
     private long id = 0L;
 
@@ -20,23 +19,17 @@ public class FakeBoardDao implements BoardDao {
     public void savePieces(Map<Position, Piece> board, long roomId) {
         for (Position position : board.keySet()) {
             id++;
-            boards.put(id, new FakePiece(position.toSymbol(), board.get(position).getSymbol(), roomId));
+            boards.put(id, new BoardEntity(id, position.toSymbol(), board.get(position).getSymbol(), roomId));
         }
     }
 
     @Override
-    public List<PieceResponse> findAllPiece(long roomId) {
-        List<PieceResponse> pieceResponses = new ArrayList<>();
-        List<FakePiece> fakePieces = boards.keySet()
+    public List<BoardEntity> findAllPiece(long roomId) {
+        return boards.keySet()
                 .stream()
                 .filter(key -> boards.get(key).getRoomId() == roomId)
                 .map(boards::get)
                 .collect(Collectors.toList());
-
-        for (FakePiece fakePiece : fakePieces) {
-            pieceResponses.add(new PieceResponse(fakePiece.getPosition(), fakePiece.getSymbol()));
-        }
-        return pieceResponses;
     }
 
     @Override
@@ -48,7 +41,7 @@ public class FakeBoardDao implements BoardDao {
 
     private void updateIfAvailable(String symbol, String destination, long roomId, Long idx) {
         if (boards.get(idx).getPosition().equals(destination) && boards.get(idx).getRoomId() == roomId) {
-            boards.put(idx, new FakePiece(symbol, destination, roomId));
+            boards.put(idx, new BoardEntity(id, symbol, destination, roomId));
         }
     }
 

@@ -56,7 +56,7 @@ class ChessServiceTest {
     void endStatus() {
         Long id = chessService.initializeGame(new MakeRoomRequest("lawn", "2"));
         chessService.updateStateEnd(id);
-        assertThat(fakeRoomDao.findById(new GameIdRequest(id)).status()).isEqualTo(Team.NONE);
+        assertThat(fakeRoomDao.findById(new GameIdRequest(id)).getStatus()).isEqualTo(Team.NONE);
     }
 
     @Test

@@ -2,12 +2,12 @@ package chess.dao;
 
 import chess.dto.request.GameIdRequest;
 import chess.dto.request.MakeRoomRequest;
-import chess.dto.response.RoomStatusResponse;
+import chess.entity.RoomEntity;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import chess.domain.Team;
-import chess.dto.response.RoomResponse;
 
 import java.util.List;
 
@@ -27,10 +27,10 @@ public class ChessRoomDao implements RoomDao {
     }
 
     @Override
-    public List<RoomResponse> getGames() {
+    public List<RoomEntity> getGames() {
         final String sql = "select * from room";
         return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new RoomResponse(rs.getLong("id"),
+                new RoomEntity(rs.getLong("id"),
                         Team.valueOf(rs.getString("status")),
                         rs.getString("name"),
                         rs.getString("password")
@@ -38,14 +38,14 @@ public class ChessRoomDao implements RoomDao {
     }
 
     @Override
-    public RoomStatusResponse findById(MakeRoomRequest makeRoomRequest) {
+    public RoomEntity findById(MakeRoomRequest makeRoomRequest) {
         final String sql = "select * from room where name = ?";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                            new RoomStatusResponse(
-                                    rs.getLong("id"),
-                                    Team.valueOf(rs.getString("status"))
-                            ),
+                    new RoomEntity(rs.getLong("id"),
+                            Team.valueOf(rs.getString("status")),
+                            rs.getString("name"),
+                            rs.getString("password")),
                     makeRoomRequest.getName());
         } catch (Exception e) {
             return null;
@@ -53,14 +53,14 @@ public class ChessRoomDao implements RoomDao {
     }
 
     @Override
-    public RoomResponse findById(GameIdRequest gameIdRequest) {
+    public RoomEntity findById(GameIdRequest gameIdRequest) {
         final String sql = "select * from room where id = ?";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                new RoomResponse(rs.getLong("id"),
+                new RoomEntity(rs.getLong("id"),
                         Team.valueOf(rs.getString("status")),
                         rs.getString("name"),
-                        rs.getString("password")
-                ), gameIdRequest.getId());
+                        rs.getString("password")),
+                gameIdRequest.getId());
     }
 
     @Override

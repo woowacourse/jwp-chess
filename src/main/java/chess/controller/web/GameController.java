@@ -6,7 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller()
+@Controller
+@ControllerAdvice
 @RequestMapping("/game")
 public class GameController {
 
@@ -58,9 +59,4 @@ public class GameController {
         return "redirect:/";
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    private String handelException(Exception e, Model model) {
-        model.addAttribute("error", e.getMessage());
-        return "error";
-    }
 }

@@ -1,7 +1,7 @@
 package chess.dao;
 
+import chess.domain.game.BoardEntity;
 import chess.domain.game.BoardInitializer;
-import chess.domain.game.ChessBoard;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Map;
@@ -42,8 +41,8 @@ class ChessControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        ChessBoard board = boardDao.save(
-                new ChessBoard("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린")), "111"));
+        BoardEntity board = boardDao.save(
+                new BoardEntity("방1", Color.WHITE, List.of(new Member("쿼리치"), new Member("코린")), "111"));
 
         this.boardId = board.getId();
         positionDao.saveAll(boardId);

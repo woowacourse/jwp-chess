@@ -4,7 +4,7 @@ import chess.dao.BoardDao;
 import chess.dao.MemberDao;
 import chess.dao.PieceDao;
 import chess.dao.PositionDao;
-import chess.domain.game.ChessBoard;
+import chess.domain.game.BoardEntity;
 import chess.domain.game.Game;
 import chess.domain.game.Initializer;
 import chess.domain.member.Member;
@@ -25,12 +25,12 @@ import java.util.stream.Collectors;
 @Service
 public class GameService {
 
-    private final BoardDao<ChessBoard> boardDao;
+    private final BoardDao<BoardEntity> boardDao;
     private final PositionDao<Position> positionDao;
     private final PieceDao<Piece> pieceDao;
     private final MemberDao<Member> memberDao;
 
-    public GameService(BoardDao<ChessBoard> boardDao, PositionDao<Position> positionDao, PieceDao<Piece> pieceDao, MemberDao<Member> memberDao) {
+    public GameService(BoardDao<BoardEntity> boardDao, PositionDao<Position> positionDao, PieceDao<Piece> pieceDao, MemberDao<Member> memberDao) {
         this.boardDao = boardDao;
         this.positionDao = positionDao;
         this.pieceDao = pieceDao;
@@ -38,8 +38,8 @@ public class GameService {
     }
 
     @Transactional
-    public ChessBoard saveBoard(ChessBoard board, Initializer initializer) {
-        final ChessBoard savedBoard = boardDao.save(board);
+    public BoardEntity saveBoard(BoardEntity board, Initializer initializer) {
+        final BoardEntity savedBoard = boardDao.save(board);
         final Map<Position, Piece> initialize = initializer.initialize();
         positionDao.saveAll(savedBoard.getId());
         pieceDao.saveAll(makePieces(savedBoard, initialize));
@@ -47,7 +47,7 @@ public class GameService {
         return savedBoard;
     }
 
-    private List<Piece> makePieces(ChessBoard savedBoard, Map<Position, Piece> initialize) {
+    private List<Piece> makePieces(BoardEntity savedBoard, Map<Position, Piece> initialize) {
         List<Piece> pieces = new ArrayList<>();
         for (Position position : initialize.keySet()) {
             int lastPositionId = positionDao.findByColumnAndRowAndBoardId(position.getColumn(), position.getRow(), savedBoard.getId()).get().getId();
@@ -59,7 +59,7 @@ public class GameService {
 
     @Transactional
     public void move(int roomId, Position sourceRawPosition, Position targetRawPosition) {
-        final Optional<ChessBoard> wrappedBoard = boardDao.findById(roomId);
+        final Optional<BoardEntity> wrappedBoard = boardDao.findById(roomId);
         if (wrappedBoard.isEmpty()) {
             throw new IllegalArgumentException("보드가 존재하지 않습니다.");
         }
@@ -85,11 +85,11 @@ public class GameService {
     }
 
     public BoardDto getBoard(int roomId) {
-        final Optional<ChessBoard> wrappedBoard = boardDao.findById(roomId);
+        final Optional<BoardEntity> wrappedBoard = boardDao.findById(roomId);
         if (wrappedBoard.isEmpty()) {
             throw new IllegalArgumentException("보드가 존재하지 않습니다.");
         }
-        final ChessBoard board = wrappedBoard.get();
+        final BoardEntity board = wrappedBoard.get();
         final Map<Position, Piece> allPositionsAndPieces = positionDao.findAllPositionsAndPieces(roomId);
         Map<String, Piece> pieces = mapPositionToString(allPositionsAndPieces);
         return BoardDto.of(pieces, board.getRoomTitle(), board.getMembers().get(0), board.getMembers().get(1));
@@ -119,8 +119,8 @@ public class GameService {
 
     public RoomsDto getRooms() {
         List<RoomDto> boardsDto = new ArrayList<>();
-        List<ChessBoard> boards = boardDao.findAll();
-        for (ChessBoard board : boards) {
+        List<BoardEntity> boards = boardDao.findAll();
+        for (BoardEntity board : boards) {
             boardsDto.add(new RoomDto(board.getId(), board.getRoomTitle(), board.getMembers().get(0), board.getMembers().get(1)));
         }
         return new RoomsDto(boardsDto);

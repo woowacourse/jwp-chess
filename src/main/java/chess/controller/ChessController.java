@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.domain.game.BoardInitializer;
-import chess.domain.game.ChessBoard;
+import chess.domain.game.BoardEntity;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 import chess.dto.RequestDto;
@@ -34,14 +34,14 @@ public class ChessController {
 
     @PostMapping("/room")
     public String createRoom(@ModelAttribute RequestDto requestDto) {
-        final ChessBoard board = new ChessBoard(requestDto.getTitle(), Color.WHITE,
+        final BoardEntity board = new BoardEntity(requestDto.getTitle(), Color.WHITE,
                 List.of(new Member(requestDto.getFirstMemberName()), new Member(requestDto.getSecondMemberName())), requestDto.getPassword());
         int roomId = gameService.saveBoard(board, new BoardInitializer()).getId();
         return "redirect:/room/" + roomId;
     }
 
     @GetMapping("/room/{roomId}")
-    public ModelAndView showRoom(@PathVariable("roomId") int id, Model model) {
+    public ModelAndView showRoom(@PathVariable("roomId") int id) {
         ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("roomId", id);
         modelAndView.addObject("board", gameService.getBoard(id));

@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.game.ChessBoard;
+import chess.domain.game.BoardEntity;
 import chess.domain.member.Member;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class WebMemberDaoTest {
 
     private final MemberDao<Member> dao;
-    private final BoardDao<ChessBoard> boardDao;
+    private final BoardDao<BoardEntity> boardDao;
 
     private int boardId;
 
@@ -31,7 +30,7 @@ class WebMemberDaoTest {
 
     @BeforeEach
     void setup() {
-        final ChessBoard board = boardDao.save(new ChessBoard("에덴파이팅~!", "1234"));
+        final BoardEntity board = boardDao.save(new BoardEntity("에덴파이팅~!", "1234"));
         this.boardId = board.getId();
         dao.saveAll(List.of(new Member("쿼리치"), new Member("코린")), boardId);
     }

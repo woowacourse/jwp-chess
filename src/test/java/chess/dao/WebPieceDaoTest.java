@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.game.ChessBoard;
+import chess.domain.game.BoardEntity;
 import chess.domain.pieces.Blank;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Pawn;
@@ -13,10 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -26,7 +24,7 @@ class WebPieceDaoTest {
 
     private final PositionDao<Position> positionDao;
     private final PieceDao<Piece> pieceDao;
-    private final BoardDao<ChessBoard> boardDao;
+    private final BoardDao<BoardEntity> boardDao;
 
     private int boardId;
     private int positionId;
@@ -40,7 +38,7 @@ class WebPieceDaoTest {
 
     @BeforeEach
     void setup() {
-        final ChessBoard board = boardDao.save(new ChessBoard("corinne", "1234"));
+        final BoardEntity board = boardDao.save(new BoardEntity("corinne", "1234"));
         this.boardId = board.getId();
         final Position position = positionDao.save(new Position(Column.A, Row.TWO, board.getId()));
         this.positionId = position.getId();

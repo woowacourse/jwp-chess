@@ -6,7 +6,7 @@ import chess.domain.pieces.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ChessBoard {
+public final class BoardEntity {
 
     private final Integer id;
     private final String roomTitle;
@@ -14,7 +14,7 @@ public final class ChessBoard {
     private final List<Member> members;
     private final String password;
 
-    public ChessBoard(Integer id, String roomTitle, Color turn, List<Member> members, String password) {
+    public BoardEntity(Integer id, String roomTitle, Color turn, List<Member> members, String password) {
         this.id = id;
         this.roomTitle = roomTitle;
         this.turn = turn;
@@ -22,15 +22,15 @@ public final class ChessBoard {
         this.password = password;
     }
 
-    public ChessBoard(Integer roomId, String roomTitle, Color turn) {
+    public BoardEntity(Integer roomId, String roomTitle, Color turn) {
         this(roomId, roomTitle, turn, new ArrayList<>(), null);
     }
 
-    public ChessBoard(String roomTitle, Color turn, List<Member> members, String password) {
+    public BoardEntity(String roomTitle, Color turn, List<Member> members, String password) {
         this(null, roomTitle, turn, members, password);
     }
 
-    public ChessBoard(String roomTitle, String password) {
+    public BoardEntity(String roomTitle, String password) {
         this(null, roomTitle, Color.WHITE, new ArrayList<>(), password);
     }
 

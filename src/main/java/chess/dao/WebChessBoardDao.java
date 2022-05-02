@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.domain.game.ChessBoard;
+import chess.domain.game.BoardEntity;
 import chess.domain.member.Member;
 import chess.domain.pieces.Color;
 
@@ -17,7 +17,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WebChessBoardDao implements BoardDao<ChessBoard> {
+public class WebChessBoardDao implements BoardDao<BoardEntity> {
 
     private final MemberDao<Member> memberDao;
 
@@ -30,7 +30,7 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
     }
 
     @Override
-    public ChessBoard save(ChessBoard board) {
+    public BoardEntity save(BoardEntity board) {
         final String sql = "INSERT INTO board (room_title, turn, password) VALUES (:room_title, :turn, :password)";
 
         List<String> keys = List.of("room_title", "turn", "password");
@@ -40,21 +40,21 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
 
         jdbcTemplate.update(sql, ParameterSourceCreator.makeParameterSource(keys, values), keyHolder);
         int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
-        return new ChessBoard(id, board.getRoomTitle(), board.getTurn());
+        return new BoardEntity(id, board.getRoomTitle(), board.getTurn());
     }
 
     @Override
-    public Optional<ChessBoard> findById(int id) {
+    public Optional<BoardEntity> findById(int id) {
         final String sql = "SELECT * FROM board WHERE id=:id";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", id);
         SqlParameterSource namedParameters = new MapSqlParameterSource(parameters);
-        final ChessBoard chessBoard = DataAccessUtils.singleResult(jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> makeBoard(rs)));
+        final BoardEntity chessBoard = DataAccessUtils.singleResult(jdbcTemplate.query(sql, namedParameters, (rs, rowNum) -> makeBoard(rs)));
         return Optional.ofNullable(chessBoard);
     }
 
     @Override
-    public List<ChessBoard> findAll() {
+    public List<BoardEntity> findAll() {
         final String sql = "SELECT * FROM board";
         return jdbcTemplate.query(sql, new MapSqlParameterSource(), (rs, rowNum) -> makeBoard(rs));
     }
@@ -81,8 +81,8 @@ public class WebChessBoardDao implements BoardDao<ChessBoard> {
         jdbcTemplate.update(sql, ParameterSourceCreator.makeParameterSource(keys, values));
     }
 
-    private ChessBoard makeBoard(ResultSet resultSet) throws SQLException {
-        return new ChessBoard(
+    private BoardEntity makeBoard(ResultSet resultSet) throws SQLException {
+        return new BoardEntity(
                 resultSet.getInt("id"),
                 resultSet.getString("room_title"),
                 Color.findColor(resultSet.getString("turn")),

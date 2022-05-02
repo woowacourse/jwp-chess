@@ -1,19 +1,17 @@
 package chess.dao;
 
-import chess.domain.game.ChessBoard;
+import chess.domain.game.BoardEntity;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Pawn;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Map;
 
@@ -24,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 class WebChessPositionDaoTest {
 
     private final PositionDao<Position> positionDao;
-    private final BoardDao<ChessBoard> boardDao;
+    private final BoardDao<BoardEntity> boardDao;
     private final PieceDao<Piece> pieceDao;
 
     private int boardId;
@@ -38,7 +36,7 @@ class WebChessPositionDaoTest {
 
     @BeforeEach
     void setup() {
-        final ChessBoard board = boardDao.save(new ChessBoard("코린파이팅", "1234"));
+        final BoardEntity board = boardDao.save(new BoardEntity("코린파이팅", "1234"));
         this.boardId = board.getId();
         Position position = positionDao.save(new Position(Column.A, Row.TWO, boardId));
         pieceDao.save(new Piece(Color.WHITE, new Pawn(), position.getId()));

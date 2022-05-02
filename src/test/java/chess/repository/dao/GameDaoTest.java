@@ -20,6 +20,8 @@ import chess.repository.dao.dto.game.GameUpdateDto;
 @JdbcTest
 class GameDaoTest {
 
+    private static final Long SAVED_GAME_ID = 1L;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private GameDao gameDao;
@@ -29,33 +31,47 @@ class GameDaoTest {
         gameDao = new GameDao(jdbcTemplate);
     }
 
-    @DisplayName("데이터 저장 및 조회가 가능해야 한다.")
+    @DisplayName("데이터를 저장할 수 있어야 한다.")
     @Test
-    void saveAndFind() {
-        final boolean finished = false;
-        final String currentTurnColor = WHITE.getName();
-        final Long id = gameDao.save(new GameDto(0L, "title", "password",
-                1L, 2L, finished, currentTurnColor));
+    void save() {
+        final Long id = gameDao.save(
+                new GameDto(0L, "title", "password",
+                        1L, 2L, false, WHITE.getName())
+        );
+        assertThat(gameDao.findById(id)).isNotNull();
+    }
 
-        final GameDto gameDto = gameDao.findById(id);
+    @DisplayName("데이터를 조회할 수 있어야 한다.")
+    @Test
+    void findById() {
+        final GameDto gameDto = gameDao.findById(SAVED_GAME_ID);
         assertAll(() -> {
-            assertThat(gameDto.getFinished()).isEqualTo(finished);
-            assertThat(gameDto.getCurrentTurnColor()).isEqualTo(currentTurnColor);
+            assertThat(gameDto.getTitle()).isEqualTo("title");
+            assertThat(gameDto.getPassword()).isEqualTo("password");
+            assertThat(gameDto.getPlayer_id1()).isEqualTo(1);
+            assertThat(gameDto.getPlayer_id2()).isEqualTo(2);
+            assertThat(gameDto.getFinished()).isFalse();
+            assertThat(gameDto.getCurrentTurnColor()).isEqualTo("White");
         });
+    }
+
+    @DisplayName("존재하지 않는 데이터 조회 시, 예외를 발생시켜야 한다.")
+    @Test
+    void notExistException() {
+        final Long notFoundGameId = 100L;
+        assertThatThrownBy(() -> gameDao.findById(notFoundGameId))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @DisplayName("데이터를 수정할 수 있어야 한다.")
     @Test
     void update() {
-        final Long id = gameDao.save(new GameDto(0L, "title", "password",
-                1L, 2L, false, WHITE.getName()));
-
         final boolean finished = true;
         final String currentTurnColor = BLACK.getName();
-        final GameUpdateDto gameUpdateDto = new GameUpdateDto(id, finished, currentTurnColor);
+        final GameUpdateDto gameUpdateDto = new GameUpdateDto(SAVED_GAME_ID, finished, currentTurnColor);
         gameDao.update(gameUpdateDto);
 
-        final GameDto updatedGameDto = gameDao.findById(id);
+        final GameDto updatedGameDto = gameDao.findById(SAVED_GAME_ID);
         assertAll(() -> {
             assertThat(updatedGameDto.getFinished()).isEqualTo(finished);
             assertThat(updatedGameDto.getCurrentTurnColor()).isEqualTo(currentTurnColor);
@@ -65,11 +81,8 @@ class GameDaoTest {
     @DisplayName("데이터를 삭제할 수 있어야 한다.")
     @Test
     void remove() {
-        final Long id = gameDao.save(new GameDto(0L, "title", "password",
-                1L, 2L, false, WHITE.getName()));
-        gameDao.remove(id);
-
-        assertThatThrownBy(() -> gameDao.findById(id))
+        gameDao.remove(SAVED_GAME_ID);
+        assertThatThrownBy(() -> gameDao.findById(SAVED_GAME_ID))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

@@ -18,6 +18,8 @@ import chess.repository.dao.dto.player.PlayerDto;
 @JdbcTest
 class PlayerDaoTest {
 
+    private static final Long SAVED_PLAYER_ID = 1L;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     private PlayerDao playerDao;
@@ -27,39 +29,48 @@ class PlayerDaoTest {
         playerDao = new PlayerDao(jdbcTemplate);
     }
 
-    @DisplayName("데이터 저장 및 조회가 가능해야 한다.")
+    @DisplayName("데이터를 저장할 수 있어야 한다.")
     @Test
-    void saveAndFind() {
-        final String colorName = WHITE.getName();
-        final String pieces = "a1:Rook,a2:Pawn";
-        final Long id = playerDao.save(new PlayerDto(0L, colorName, pieces));
+    void save() {
+        final Long id = playerDao.save(
+                new PlayerDto(0L, WHITE.getName(), "a1:Rook,a2:Pawn"));
+        assertThat(playerDao.findById(id)).isNotNull();
+    }
 
-        final PlayerDto playerDto = playerDao.findById(id);
+    @DisplayName("데이터를 조회할 수 있어야 한다.")
+    @Test
+    void findById() {
+        final PlayerDto playerDto = playerDao.findById(SAVED_PLAYER_ID);
         assertAll(() -> {
-            assertThat(playerDto.getColorName()).isEqualTo(colorName);
-            assertThat(playerDto.getPieces()).isEqualTo(pieces);
+            assertThat(playerDto.getColorName()).isEqualTo("White");
+            assertThat(playerDto.getPieces()).isEqualTo("a1:King");
         });
+    }
+
+    @DisplayName("존재하지 않는 데이터 조회 시, 예외를 발생시켜야 한다.")
+    @Test
+    void notExistException() {
+        final Long notFoundGameId = 100L;
+        assertThatThrownBy(() -> playerDao.findById(notFoundGameId))
+                .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
     @DisplayName("데이터를 수정할 수 있어야 한다.")
     @Test
     void update() {
-        final Long id = playerDao.save(new PlayerDto(0L, WHITE.getName(), "a1:Rook,a2:Pawn"));
         final String expectedPieces = "a3:Rook,a4:Pawn";
-        final PlayerDto playerDto = new PlayerDto(id, WHITE.getName(), expectedPieces);
+        final PlayerDto playerDto = new PlayerDto(SAVED_PLAYER_ID, WHITE.getName(), expectedPieces);
         playerDao.update(playerDto);
 
-        final PlayerDto updatedPlayerDto = playerDao.findById(id);
+        final PlayerDto updatedPlayerDto = playerDao.findById(SAVED_PLAYER_ID);
         assertThat(updatedPlayerDto.getPieces()).isEqualTo(expectedPieces);
     }
 
     @DisplayName("데이터를 삭제할 수 있어야 한다.")
     @Test
     void remove() {
-        final Long id = playerDao.save(new PlayerDto(0L, WHITE.getName(), "a1:Rook,a2:Pawn"));
-        playerDao.remove(id);
-
-        assertThatThrownBy(() -> playerDao.findById(id))
+        playerDao.remove(SAVED_PLAYER_ID);
+        assertThatThrownBy(() -> playerDao.findById(SAVED_PLAYER_ID))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 }

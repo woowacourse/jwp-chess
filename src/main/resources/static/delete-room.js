@@ -12,7 +12,12 @@ const DeleteRoom = () => {
             await deleteRoom(id, password);
             location.href = "/";
         } catch (e) {
-            alert(e.message);
+            if (e.response.status === 404) {
+                alert("방을 찾을 수 없습니다.");
+                return;
+            }
+
+            alert(e.response.data.message);
         }
     }
 

@@ -1,30 +1,18 @@
 const API_HOST = "http://localhost:8080"
 
 const fetchAsGet = async (path) => {
-    try {
-        const response = await axios.get(`${API_HOST}${path}`);
-        return response.data;
-    } catch (e) {
-        throw new Error(e.response.data.message);
-    }
+    const response = await axios.get(`${API_HOST}${path}`);
+    return response.data;
 }
 
 const fetchAsPost = async (path, body) => {
-    try {
-        const response = await axios.post(`${API_HOST}${path}`, body);
-        return response.data;
-    } catch (e) {
-        throw new Error(e.response.data.message);
-    }
+    const response = await axios.post(`${API_HOST}${path}`, body);
+    return response.data;
 }
 
 const fetchAsDelete = async (path) => {
-    try {
-        const response = await axios.delete(`${API_HOST}${path}`);
-        return response;
-    } catch (e) {
-        throw new Error(e.response.data.message);
-    }
+    const response = await axios.delete(`${API_HOST}${path}`);
+    return response;
 }
 
 const fetchRooms = async () => {

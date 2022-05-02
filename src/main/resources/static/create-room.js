@@ -15,7 +15,7 @@ const CreateRoom = () => {
             const room = await createRoom(title, password);
             location.href = `/game.html?id=${room.id}`;
         } catch (e) {
-            alert(e.message);
+            alert(e.response.data.message);
         }
     }
 

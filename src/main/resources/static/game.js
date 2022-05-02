@@ -153,8 +153,13 @@ const Game = () => {
         fetchBoard(id)
             .then(board => setBoard(board))
             .catch(e => {
-                alert(e.message);
-                location.href = "/";
+                if (e.response.status === 404) {
+                    alert("방을 찾을 수 없습니다.");
+                    location.href = "/";
+                    return;
+                }
+
+                alert(e.response.data.message)
             });
     }, [selected]);
 
@@ -186,7 +191,7 @@ const Game = () => {
         try {
             await move(id, selected, coordinate);
         } catch (e) {
-            alert(e.message);
+            alert(e.response.data.message);
         }
 
         setSelected(null);

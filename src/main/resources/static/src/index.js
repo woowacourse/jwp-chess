@@ -34,13 +34,14 @@ function checkStatus() {
     fetch('/room/' + element.value + 'status', {
         method: "GET",
         headers: {
-            "Content-Type": "text/plain",
+            "Content-Type": "application/json",
         }
     }).then((response) => {
         response.json().then(data => {
+            console.log(data);
             document.getElementById("statusResult")
-                .innerHTML = "검은말 : " + data.BLACK + "<br >"
-                + "흰말 : " + data.WHITE + "<br >"
+                .innerHTML = "검은말 : " + data.score.BLACK + "<br >"
+                + "흰말 : " + data.score.WHITE + "<br >"
                 + "우승자 : " + data.winner;
         });
     });

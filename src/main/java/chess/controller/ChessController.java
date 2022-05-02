@@ -64,8 +64,8 @@ public class ChessController {
 
     @GetMapping("/room/{roomId}/status")
     @ResponseBody
-    public String status(@PathVariable int roomId) {
-        return ScoreDto.from(chessService.status(roomId)).toString();
+    public ScoreDto status(@PathVariable int roomId) {
+        return ScoreDto.from(chessService.status(roomId));
     }
 
     @PostMapping("/room/{roomId}/end")

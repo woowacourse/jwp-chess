@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import chess.controller.dto.ChessRequestDto;
 import chess.service.dto.GameDto;
 import chess.service.dto.GameStatusDto;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,11 @@ public class JdbcGameDaoTest {
                 + "    status    varchar(20) not null,\n"
                 + "    primary key (game_id)\n"
                 + ");");
+    }
+
+    @AfterEach
+    void afterEach() {
+        jdbcTemplate.execute("delete from game");
     }
 
     @Test

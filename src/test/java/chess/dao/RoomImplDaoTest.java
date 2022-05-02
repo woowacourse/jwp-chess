@@ -31,9 +31,9 @@ class RoomImplDaoTest {
 
         assertThat(rooms).hasSize(2)
                 .extracting("state", "title", "password")
-                .contains(
+                .containsExactly(
                         tuple("Ready", "title1", "1111"),
-                        tuple("Ready", "title1", "1111")
+                        tuple("Ready", "title2", "1111")
                 );
     }
 

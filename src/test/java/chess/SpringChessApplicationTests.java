@@ -3,15 +3,17 @@ package chess;
 import chess.dao.ChessBoardDao;
 import chess.dao.ChessPieceDao;
 import chess.dao.ChessPositionDao;
-import chess.domain.game.ChessBoardInitializer;
+import chess.domain.Game;
 import chess.domain.game.BoardInitializer;
-import chess.entities.MemberEntity;
-import chess.entities.PieceEntity;
+import chess.domain.game.ChessBoard;
+import chess.domain.game.ChessBoardInitializer;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Position;
 import chess.dto.request.MoveDto;
 import chess.entities.GameEntity;
+import chess.entities.MemberEntity;
+import chess.entities.PieceEntity;
 import io.restassured.RestAssured;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +48,8 @@ class SpringChessApplicationTests {
     void setUp() {
         RestAssured.port = port;
         GameEntity board = boardDao.save(
-                new GameEntity("방1", Color.WHITE, List.of(new MemberEntity("쿼리치"), new MemberEntity("코린")), "1111"));
+                new GameEntity("방1", List.of(new MemberEntity("쿼리치"), new MemberEntity("코린")), "1111",
+                        new Game(new ChessBoard(new ChessBoardInitializer()), Color.WHITE)));
         this.boardId = board.getId();
         BoardInitializer boardInitializer = new ChessBoardInitializer();
         final Map<Position, Piece> initialize = boardInitializer.initialize();

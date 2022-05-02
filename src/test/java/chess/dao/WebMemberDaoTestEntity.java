@@ -3,6 +3,10 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.domain.Game;
+import chess.domain.game.ChessBoard;
+import chess.domain.game.ChessBoardInitializer;
+import chess.domain.pieces.Color;
 import chess.entities.GameEntity;
 import chess.entities.MemberEntity;
 import java.util.List;
@@ -25,7 +29,7 @@ class WebMemberDaoTestEntity {
 
     @BeforeEach
     void setup() {
-        final GameEntity board = boardDao.save(new GameEntity("에덴파이팅~!", "1111"));
+        final GameEntity board = boardDao.save(new GameEntity("에덴파이팅~!", "1111", new Game(new ChessBoard(new ChessBoardInitializer()), Color.WHITE)));
         this.boardId = board.getId();
         dao.saveAll(List.of(new MemberEntity("쿼리치"), new MemberEntity("코린")), boardId);
     }

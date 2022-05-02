@@ -28,8 +28,10 @@ public class ChessWebController {
         List<RoomDto> boardsDto = new ArrayList<>();
         List<GameEntity> boards = gameService.findAllBoard();
         for (GameEntity board : boards) {
-            boardsDto.add(new RoomDto(board.getId(), board.getRoomTitle(), board.getMembers().get(0),
-                    board.getMembers().get(1)));
+            boardsDto.add(new RoomDto(board.getId(),
+                    board.getRoomTitle(),
+                    board.getMemberEntities().get(0),
+                    board.getMemberEntities().get(1)));
         }
         model.addAttribute("boards", new RoomsDto(boardsDto));
         return "home";
@@ -41,7 +43,9 @@ public class ChessWebController {
         GameEntity board = gameService.getBoard(id);
         Map<String, Piece> pieces = gameService.getPieces(id);
         model.addAttribute("board",
-                BoardDto.of(pieces, board.getRoomTitle(), board.getMembers().get(0), board.getMembers().get(1)));
+                BoardDto.of(pieces, board.getRoomTitle(),
+                        board.getMemberEntities().get(0),
+                        board.getMemberEntities().get(1)));
         return "index";
     }
 }

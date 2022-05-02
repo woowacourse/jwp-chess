@@ -1,5 +1,8 @@
 package chess.dao;
 
+import chess.domain.Game;
+import chess.domain.game.ChessBoard;
+import chess.domain.game.ChessBoardInitializer;
 import chess.domain.pieces.Color;
 import chess.entities.GameEntity;
 import java.sql.ResultSet;
@@ -29,13 +32,13 @@ public class ChessBoardDao implements BoardDao<GameEntity> {
         final String sql = "INSERT INTO board (room_title, turn, password) VALUES (:room_title, :turn, :password)";
 
         List<String> keys = List.of("room_title", "turn", "password");
-        List<Object> values = List.of(board.getRoomTitle(), board.getTurn().name(), board.getPassword());
+        List<Object> values = List.of(board.getRoomTitle(), board.getGame().getTurn().name(), board.getPassword());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(sql, ParameterSourceCreator.makeParameterSource(keys, values), keyHolder);
         int id = Objects.requireNonNull(keyHolder.getKey()).intValue();
-        return new GameEntity(id, board.getRoomTitle(), board.getTurn(), board.getPassword());
+        return new GameEntity(id, board.getRoomTitle(), board.getPassword(), board.getGame());
     }
 
     @Override
@@ -80,7 +83,7 @@ public class ChessBoardDao implements BoardDao<GameEntity> {
         return new GameEntity(
                 resultSet.getInt("id"),
                 resultSet.getString("room_title"),
-                Color.findColor(resultSet.getString("turn")),
-                resultSet.getString("password"));
+                resultSet.getString("password"),
+                new Game(new ChessBoard(new ChessBoardInitializer()), Color.findColor(resultSet.getString("turn"))));
     }
 }

@@ -1,5 +1,8 @@
 package chess.controller;
 
+import chess.domain.Game;
+import chess.domain.game.ChessBoard;
+import chess.domain.game.ChessBoardInitializer;
 import chess.domain.pieces.Color;
 import chess.domain.position.Position;
 import chess.dto.request.MoveDto;
@@ -37,10 +40,11 @@ public class ChessApiController {
     @PostMapping
     public void createRoom(@ModelAttribute NewGameInfoDto newGameInfoDto, HttpServletResponse response)
             throws IOException {
-        final GameEntity board = new GameEntity(newGameInfoDto.getTitle(), Color.WHITE,
+        final GameEntity board = new GameEntity(newGameInfoDto.getTitle(),
                 List.of(new MemberEntity(newGameInfoDto.getFirstMemberName()),
                         new MemberEntity(newGameInfoDto.getSecondMemberName())),
-                newGameInfoDto.getPassword());
+                newGameInfoDto.getPassword(),
+                new Game(new ChessBoard(new ChessBoardInitializer()), Color.WHITE));
         int roomId = gameService.createBoard(board).getId();
         response.sendRedirect("/room/" + roomId);
     }

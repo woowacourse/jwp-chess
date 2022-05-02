@@ -2,7 +2,7 @@ package chess.service;
 
 import chess.dao.BoardDao;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceFactory;
+import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
 import chess.domain.state.BoardInitialize;
 import chess.dto.response.PieceDto;
@@ -37,6 +37,6 @@ public class FakeBoardDaoImpl implements BoardDao {
     public void updatePosition(String symbol, String position, Long roomId) {
         Map<Position, Piece> pieces = this.piecesOfRooms.get(roomId);
         Piece piece = pieces.get(Position.from(position));
-        pieces.put(Position.from(position), PieceFactory.create(piece.getSymbol()));
+        pieces.put(Position.from(position), Pieces.find(piece.getSymbol()));
     }
 }

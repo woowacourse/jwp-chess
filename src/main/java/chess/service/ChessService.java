@@ -6,15 +6,15 @@ import chess.domain.Score;
 import chess.domain.Team;
 import chess.domain.piece.Blank;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceFactory;
+import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
 import chess.domain.state.BlackTurn;
 import chess.domain.state.BoardInitialize;
 import chess.domain.state.GameState;
 import chess.domain.state.Playing;
 import chess.domain.state.WhiteTurn;
-import chess.dto.response.BoardDto;
 import chess.dto.request.CreateRoomDto;
+import chess.dto.response.BoardDto;
 import chess.dto.response.GameStateDto;
 import chess.dto.response.PieceDto;
 import chess.dto.response.RoomDto;
@@ -82,7 +82,7 @@ public class ChessService {
         List<PieceDto> pieces = boardDao.findAll(room.getId());
         Map<Position, Piece> board = new HashMap<>();
         for (PieceDto pieceOfPieces : pieces) {
-            Piece piece = PieceFactory.create(pieceOfPieces.getSymbol());
+            Piece piece = Pieces.find(pieceOfPieces.getSymbol());
             Position position = Position.from(pieceOfPieces.getPosition());
             board.put(position, piece);
         }

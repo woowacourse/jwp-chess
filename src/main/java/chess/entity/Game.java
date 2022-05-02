@@ -14,6 +14,12 @@ public class Game {
         this.state = state;
     }
 
+    public Game(String title, String password, String state) {
+        this.title = title;
+        this.password = password;
+        this.state = state;
+    }
+
     public int getId() {
         return id;
     }

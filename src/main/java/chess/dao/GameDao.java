@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GameDao {
 
-    int save(String title, String password, String state);
+    int save(Game game);
 
     List<Game> findAll();
 

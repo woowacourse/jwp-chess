@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,18 +41,15 @@ public class ChessService {
         ChessGame chessGame = new ChessGame(chessBoard);
         chessGame.playGameByCommand(GameCommand.of("start"));
 
-        int id = gameDao.save(roomDto.getTitle(), roomDto.getPassword(), chessGame.getState().getValue());
+        int id = gameDao.save(new Game(roomDto.getTitle(), roomDto.getPassword(), chessGame.getState().getValue()));
         boardDao.save(chessGame.getChessBoard(), id);
         return id;
     }
 
     public List<GameDto> findGame() {
-        List<GameDto> gameDtos = new ArrayList<>();
-        List<Game> games = gameDao.findAll();
-        for (Game game : games) {
-            gameDtos.add(new GameDto(game.getId(), game.getTitle(), game.getState()));
-        }
-        return gameDtos;
+        return gameDao.findAll().stream()
+                .map(GameDto::of)
+                .collect(Collectors.toList());
     }
 
     public BoardDto selectBoard(int id) {

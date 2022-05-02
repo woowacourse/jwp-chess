@@ -8,6 +8,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Symbol;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
+import chess.entity.Game;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +32,7 @@ public class BoardDaoTest {
 
     @BeforeEach
     void setUp() {
-        gameId = gameDao.save("title", "password", "WhiteTurn");
+        gameId = gameDao.save(new Game("title", "password", "WhiteTurn"));
         boardDao.save(new ChessBoard(new NormalPiecesGenerator()), gameId);
     }
 

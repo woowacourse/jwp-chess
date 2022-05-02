@@ -19,13 +19,13 @@ public class GameDaoImpl implements GameDao {
     }
 
     @Override
-    public int save(String title, String password, String state) {
+    public int save(Game game) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("game")
                 .usingGeneratedKeyColumns("id");
         Map<String, String> params = new HashMap<>();
-        params.put("title", title);
-        params.put("password", password);
-        params.put("state", state);
+        params.put("title", game.getTitle());
+        params.put("password", game.getPassword());
+        params.put("state", game.getState());
 
         int id = simpleJdbcInsert.executeAndReturnKey(params).intValue();
         return id;

@@ -24,7 +24,7 @@ class GameDaoTest {
 
     @BeforeEach
     void setUp() {
-        gameId = gameDao.save("title", "password", "WhiteTurn");
+        gameId = gameDao.save(new Game("title", "password", "WhiteTurn"));
     }
 
     @AfterEach

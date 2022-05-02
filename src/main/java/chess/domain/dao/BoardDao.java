@@ -26,7 +26,7 @@ public class BoardDao {
         try {
             jdbcTemplate.update(sql, gameId, position, piece, color);
         } catch (Exception e) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -35,7 +35,7 @@ public class BoardDao {
         try {
             return jdbcTemplate.query(sql, (resultSet, rowNum) -> makePieceDto(resultSet), gameId);
         } catch (Exception e) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -61,7 +61,7 @@ public class BoardDao {
             jdbcTemplate.update(sql);
             jdbcTemplate.update("alter table Board alter column id restart with 1");
         } catch (Exception e) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -70,7 +70,7 @@ public class BoardDao {
         try {
             jdbcTemplate.update(sql, gameId);
         } catch (Exception e) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -84,7 +84,7 @@ public class BoardDao {
         try {
             jdbcTemplate.update(sql, target, gameId, source);
         } catch (Exception e) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -95,7 +95,7 @@ public class BoardDao {
         } catch (EmptyResultDataAccessException e) {
             return;
         } catch (Exception e) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 }

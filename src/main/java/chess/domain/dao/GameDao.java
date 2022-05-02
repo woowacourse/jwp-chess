@@ -35,7 +35,7 @@ public class GameDao {
             jdbcTemplate.update(connection -> makeCreateStatement(chessBoard, title, password, sql, connection), keyHolder);
             return keyHolder.getKey().intValue();
         } catch (Exception exception) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -55,7 +55,7 @@ public class GameDao {
         } catch (EmptyResultDataAccessException noResult) {
             return EMPTY_RESULT;
         } catch (Exception exception) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -66,7 +66,7 @@ public class GameDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         } catch (Exception exception) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -85,7 +85,7 @@ public class GameDao {
         try {
             jdbcTemplate.update(sql, turn, gameId);
         } catch (Exception e) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -94,7 +94,7 @@ public class GameDao {
         try {
             jdbcTemplate.update(sql, Status.END.getName(), gameId);
         } catch (Exception e) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -104,7 +104,7 @@ public class GameDao {
             jdbcTemplate.update(sql, gameId);
         } catch (Exception exception) {
             exception.printStackTrace();
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 
@@ -114,7 +114,7 @@ public class GameDao {
             jdbcTemplate.update(sql);
             jdbcTemplate.update("alter table Game alter column id restart with 1");
         } catch (Exception exception) {
-            throw new NoExecuteQuery("요청이 정상적으로 실행되지 않았습니다.");
+            throw new NoExecuteQuery();
         }
     }
 }

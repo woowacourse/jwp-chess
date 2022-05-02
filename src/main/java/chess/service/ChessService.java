@@ -21,6 +21,7 @@ import chess.domain.position.Square;
 import chess.dto.ChessGameRequest;
 import chess.dto.GameIdResponse;
 import chess.dto.MovementRequest;
+import chess.dto.ScoreResponse;
 
 @Service
 public class ChessService {
@@ -172,11 +173,15 @@ public class ChessService {
         }
     }
 
-    public double calculateScore(ChessGameRequest chessGameRequest, Color color) {
+    public ScoreResponse calculateScore(ChessGameRequest chessGameRequest) {
         try {
-            return getSavedGameResult(chessGameRequest.getGameId()).calculateScore(color);
+            double whiteScore = getSavedGameResult(chessGameRequest.getGameId()).calculateScore(Color.WHITE);
+            double blackScore = getSavedGameResult(chessGameRequest.getGameId()).calculateScore(Color.BLACK);
+            return new ScoreResponse(whiteScore, blackScore);
         } catch (IllegalArgumentException e) {
-            return createGameResult().calculateScore(color);
+            double whiteScore =  createGameResult().calculateScore(Color.WHITE);
+            double blackScore = createGameResult().calculateScore(Color.BLACK);
+            return new ScoreResponse(whiteScore, blackScore);
         }
     }
 

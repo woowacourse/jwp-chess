@@ -64,8 +64,7 @@ public class ChessController {
     }
 
     private void addScores(Model model, ChessGameRequest chessGameRequest) {
-        model.addAttribute("whiteScore", chessService.calculateScore(chessGameRequest, Color.WHITE));
-        model.addAttribute("blackScore", chessService.calculateScore(chessGameRequest, Color.BLACK));
+        model.addAttribute("score", chessService.calculateScore(chessGameRequest));
     }
 
     @PostMapping(value = "/games/{gameId}/move")
@@ -97,8 +96,7 @@ public class ChessController {
     @GetMapping("/results")
     public String showResult(@ModelAttribute ChessGameRequest chessGameRequest, Model model) {
 
-        model.addAttribute("whiteScore", chessService.calculateScore(chessGameRequest, Color.WHITE));
-        model.addAttribute("blackScore", chessService.calculateScore(chessGameRequest, Color.BLACK));
+        model.addAttribute("score", chessService.calculateScore(chessGameRequest));
         return "status";
     }
 }

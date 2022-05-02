@@ -53,6 +53,10 @@ public class ChessGame {
         return chessBoard.isEnd();
     }
 
+    public boolean isRunningState() {
+        return state.toString().equals("BlackRunning") || state.toString().equals("WhiteRunning");
+    }
+
     public Map<Color, Double> calculateScore() {
         final Map<Color, Double> scores = new HashMap<>();
         final ScoreCalculator calculator = new ScoreCalculator(chessBoard.getPieces());

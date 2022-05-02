@@ -106,7 +106,7 @@ public class ChessService {
     }
 
     public Long updateStateEnd(Long roomId) {
-        final Long updateRoomId = roomDao.updateStateById(roomId, "Finished");
+        final Long updateRoomId = roomDao.updateStateById(roomId, "Finish");
         return updateRoomId;
     }
 
@@ -124,7 +124,9 @@ public class ChessService {
         if (!room.getPassword().equals(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        if (room.getState().equals("WhiteRunning") || room.getState().equals("BlackRunning")) {
+
+        ChessGame chessGame = new ChessGame(State.of(room.getState()), null);
+        if (chessGame.isRunningState()) {
             throw new IllegalStateException("게임이 실행중일 경우 게임을 삭제할 수 없습니다.");
         }
         return roomDao.deleteRoom(roomId);

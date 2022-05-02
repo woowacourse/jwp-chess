@@ -51,9 +51,9 @@ public class LogIn {
 
     @Override
     public String toString() {
-        return "LogInDto{" +
-                "gameId='" + id + '\'' +
-                ", gamePassword='" + password + '\'' +
+        return "LogIn{" +
+                "id='" + id + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

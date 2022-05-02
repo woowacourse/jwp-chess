@@ -1,7 +1,9 @@
 package chess.controller;
 
-import chess.controller.view.BoardView;
+import dto.GameResultDto;
+import dto.PiecesDto;
 import chess.service.ChessGameService;
+import dto.UsersDto;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -29,7 +31,7 @@ public class ViewController {
     public ModelAndView toIndex(@RequestParam(required = false, defaultValue = "") String gameMessage) {
         ModelAndView modelAndView = new ModelAndView("index");
         modelAndView.addObject("gameMessage", gameMessage);
-        modelAndView.addObject("rooms", chessGameService.getRooms());
+        modelAndView.addObject("rooms", UsersDto.of(chessGameService.getRooms()));
         return modelAndView;
     }
 
@@ -37,9 +39,9 @@ public class ViewController {
     public ModelAndView toGame(@PathVariable String id) {
         chessGameService.getGameStatus(id);
         ModelAndView modelAndView = new ModelAndView("game");
-        modelAndView.addObject("pieces", BoardView.of(chessGameService.getPieces(id)).getBoardView());
+        modelAndView.addObject("board", PiecesDto.of(chessGameService.getPieces(id)));
         modelAndView.addObject("id", id);
-        modelAndView.addObject("status", chessGameService.calculateGameResult(id));
+        modelAndView.addObject("status", GameResultDto.of(chessGameService.calculateGameResult(id)));
         return modelAndView;
     }
 

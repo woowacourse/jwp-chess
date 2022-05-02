@@ -2,12 +2,12 @@ package dto;
 
 import chess.domain.game.LogIn;
 
-public class LogInDto {
+public class UserDto {
 
     private final String id;
     private final String password;
 
-    public LogInDto(String id, String password) {
+    public UserDto(String id, String password) {
         this.id = id;
         this.password = password;
     }

@@ -2,6 +2,83 @@ let currentClickPosition = '';
 let currentPiece = '';
 let destinationClickPosition = '';
 let isRun = false;
+let roomId;
+
+const showRooms = async () => {
+    let rooms = await getRoomList();
+    Object.values(rooms).forEach((value) => {
+        const roomListTag = document.getElementById("chess-room-list");
+        const roomTag = document.createElement("div");
+
+        const roomNameTag = document.createElement("a");
+        roomNameTag.id = value.id;
+        roomNameTag.innerHTML = value.name;
+        roomNameTag.addEventListener('click', enterRoom);
+
+        const roomRemoveBtnTag = document.createElement("button");
+        roomRemoveBtnTag.innerHTML = '삭제';
+        roomRemoveBtnTag.id = value.id;
+        roomRemoveBtnTag.addEventListener('click', deleteRoom);
+
+        roomTag.appendChild(roomNameTag);
+        roomTag.appendChild(roomRemoveBtnTag);
+        roomListTag.appendChild(roomTag);
+    });
+}
+
+const getRoomList = async () => {
+    let rooms = await fetch('/rooms');
+    rooms = await rooms.json();
+    return rooms;
+}
+
+const makeRoomByRequest = async () => {
+    const roomName = document.getElementById('roomName').value;
+    const roomPassword = document.getElementById('roomPassword').value;
+    if (!validateRoom(roomName, roomPassword)) {
+        return;
+    }
+    const bodyValue = {
+        name: roomName,
+        password: roomPassword
+    };
+    roomId = await fetch('/start', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)
+    });
+    roomId = await roomId.json();
+    initMapEvent();
+    await restartChess();
+}
+
+const validateRoom = (roomName, roomPassword) => {
+    if (roomName.length < 1 || roomName.length > 25) {
+        alert('방 제목을 1자 이상 25자 이하로 입력해주세요');
+        return false;
+    }
+    if (roomPassword.length < 1 || roomPassword.length > 15) {
+        alert('방 비밀번호를 1자 이상 15자 이하로 입력해주세요.');
+        return false;
+    }
+    return true;
+}
+
+const enterRoom = async (e) => {
+    isRun = true;
+    roomId = e.target.id;
+    let chessMap = await fetch('/load/' + roomId);
+    initMapEvent();
+    currentClickPosition = '';
+    destinationClickPosition = '';
+    chessMap = await chessMap.json();
+    showChessMap(chessMap.chessMap);
+    showChessMenu();
+    document.getElementById('message-info').innerHTML = e.target.innerText + ' 방에 입장하셨습니다!';
+}
 
 const initMapEvent = () => {
     for (let file = 0; file < 8; file++) {
@@ -10,6 +87,33 @@ const initMapEvent = () => {
             positionTag.addEventListener('click', clickToMove);
         }
     }
+}
+
+const deleteRoom = async (e) => {
+    const password = window.prompt('비밀번호를 입력하세요');
+    if (password.length < 1 || password.length > 15) {
+        alert('비밀번호를 1자 이상 15자 이하로 입력해주세요');
+        return;
+    }
+    const bodyValue = {
+        password: password
+    };
+    await fetch('/delete/' + e.target.id, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(bodyValue)
+    }).then(async response => {
+        let data = await response.json();
+        if (response.ok) {
+            window.location.reload();
+            alert('방을 삭제했습니다.');
+            return;
+        }
+        return Promise.reject(data.message);
+    }).catch(error => showError(error));
 }
 
 const intToFile = (value) => {
@@ -37,6 +141,9 @@ const markPiece = (position, pieceKind) => {
 }
 
 const clickToMove = async (e) => {
+    if (!isRun) {
+        return;
+    }
     if (currentClickPosition === '' && e.target.classList.contains('chess-piece')) {
         markCurrentPiece(e);
         return;
@@ -82,8 +189,8 @@ const movePiece = async () => {
         currentPosition: currentClickPosition.id,
         destinationPosition: destinationClickPosition.id
     };
-    let chessMap = await fetch('/move', {
-        method: 'POST',
+    let chessMap = await fetch('/' + roomId + '/move', {
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
             'Accept': 'application/json'
@@ -100,49 +207,57 @@ const movePiece = async () => {
 const checkEndGame = (isRunning) => {
     if (!isRunning) {
         alert('게임 종료');
+        isRun = false;
         return showResult();
     }
 }
 
-const load = async () => {
-    isRun = true;
-    let chessMap = await fetch('/load');
-    chessMap = await chessMap.json();
-    showChessMap(chessMap.chessMap);
-}
-
 const restartChess = async () => {
     isRun = true;
-    let chessMap = await fetch('/start');
+    let chessMap = await fetch('/' + roomId);
     chessMap = await chessMap.json();
     showChessMap(chessMap.chessMap);
+    showChessMenu();
+    document.getElementById('message-info').innerHTML = '체스게임이 시작됐습니다!';
+}
+
+const showChessMenu = () => {
+    document.getElementById("chess-room").style.display = 'none';
+    document.getElementById("chess-menu").style.display = 'block';
 }
 
 const showStatus = async () => {
-    if (!isRun) {
-        alert('먼저 게임을 시작하거나 이어해주세요.');
-        return;
-    }
-    let status = await fetch('/status');
+    let status = await fetch('/' + roomId + '/status');
     status = await status.json();
     alert(status.scoreStatus);
 }
 
 const showResult = async () => {
-    if (!isRun) {
-        alert('먼저 게임을 시작하거나 이어해주세요.');
-        return;
-    }
-    let result = await fetch('/end');
-    result = await result.json();
-    alert(result.result);
-    await restartChess();
+    await fetch('/' + roomId + '/end', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        }
+    }).then(async response => {
+        let data = await response.json();
+        if (response.ok) {
+            alert(data.result);
+            await restartChess();
+            return;
+        }
+        return Promise.reject(data.message);
+    }).catch(error => showError(error));
 }
 
 const showError = async (message) => {
-    if (message) {
-        document.getElementById('message-info').innerHTML = message;
+    if (!message) {
+        document.getElementById('message-info').innerHTML = '';
         return;
     }
-    document.getElementById('message-info').innerHTML = '';
+    if (!isRun) {
+        alert(message);
+        return;
+    }
+    document.getElementById('message-info').innerHTML = message;
 }

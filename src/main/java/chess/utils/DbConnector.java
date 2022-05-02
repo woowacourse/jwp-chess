@@ -1,6 +1,7 @@
 package chess.utils;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class DbConnector {
 
@@ -17,17 +18,5 @@ public class DbConnector {
             e.printStackTrace();
         }
         return conn;
-    }
-
-    public static int getCountResult(final String sql) {
-        try (Connection conn = getConnection()) {
-            PreparedStatement statement = conn.prepareStatement(sql);
-            final ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            return resultSet.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new IllegalStateException("데이터 계산을 실패하였습니다.");
-        }
     }
 }

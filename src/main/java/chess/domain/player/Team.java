@@ -20,6 +20,16 @@ public enum Team {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
     }
 
+    public static String getOpponentTeamName(String team) {
+        if (team.equals(WHITE.name)) {
+            return BLACK.name;
+        }
+        if (team.equals(BLACK.name)) {
+            return WHITE.name;
+        }
+        throw new IllegalArgumentException("존재하지 않는 팀입니다.");
+    }
+
     public String getName() {
         return name;
     }

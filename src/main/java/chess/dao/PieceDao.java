@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface PieceDao {
 
-    void initializePieces(final Player player);
+    void initializePieces(final long roomId, final Player player);
 
-    List<PieceDto> findPiecesByTeam(final Team team);
+    List<PieceDto> findPiecesByTeam(final long roomId, final Team team);
 
-    void updatePiece(final MoveDto moveDto);
+    void updatePiece(final long roomId, final MoveDto moveDto);
 
-    void removePieceByCaptured(final MoveDto moveDto);
+    void removePieceByCaptured(final long roomId, final MoveDto moveDto);
 
-    void endPieces();
+    void endPieces(final long roomId);
 }

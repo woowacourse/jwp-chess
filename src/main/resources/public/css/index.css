@@ -38,6 +38,31 @@ html, body {
     background-color: sandybrown;
 }
 
+.chess-room {
+    margin-right: 120px;
+    margin-top: 120px;
+    float: right;
+    border: 1px solid white;
+    color: white;
+    justify-content: right;
+    line-height: 50px;
+    width: 480px;
+    height: 480px;
+}
+
+.chess-room-list {
+    align-items: center;
+    text-align: center;
+    font-size: 1em;
+    color: white;
+    border: 1px solid darksalmon;
+    margin-left: 30px;
+    margin-top: 20px;
+    width: 410px;
+    height: 400px;
+    overflow: auto;
+}
+
 .chess-menu {
     margin-right: 120px;
     margin-top: 120px;
@@ -47,6 +72,7 @@ html, body {
     line-height: 50px;
     width: 480px;
     height: 480px;
+    display: none;
 }
 
 .message-info {
@@ -58,7 +84,7 @@ html, body {
     margin-left: 30px;
     margin-top: 10px;
     width: 410px;
-    height: 140px;
+    height: 300px;
 }
 
 .btn {
@@ -71,6 +97,12 @@ html, body {
     margin-left: 30px;
     width: 410px;
     height: 80px;
+}
+
+a:hover {
+    text-decoration: underline;
+    text-decoration-color: cornflowerblue;
+    color: aqua;
 }
 
 button:focus {

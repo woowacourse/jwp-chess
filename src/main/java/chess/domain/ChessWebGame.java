@@ -13,18 +13,20 @@ import java.util.Map;
 
 public class ChessWebGame {
 
+    private final ChessRoom chessRoom;
     private Player whitePlayer;
     private Player blackPlayer;
     private Team turn;
 
-    public ChessWebGame(Player whitePlayer, Player blackPlayer) {
+    public ChessWebGame(Player whitePlayer, Player blackPlayer, ChessRoom chessRoom) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         this.turn = Team.WHITE;
+        this.chessRoom = chessRoom;
     }
 
-    public ChessWebGame() {
-        this(new Player(new WhiteGenerator(), Team.WHITE), new Player(new BlackGenerator(), Team.BLACK));
+    public ChessWebGame(ChessRoom chessRoom) {
+        this(new Player(new WhiteGenerator(), Team.WHITE), new Player(new BlackGenerator(), Team.BLACK), chessRoom);
     }
 
     public ChessMap initializeChessGame() {
@@ -132,5 +134,9 @@ public class ChessWebGame {
         final double whiteScore = whitePlayer.calculateScore();
         final double blackScore = blackPlayer.calculateScore();
         return Result.of(whiteScore, blackScore);
+    }
+
+    public String getChessRoomName() {
+        return chessRoom.getName();
     }
 }

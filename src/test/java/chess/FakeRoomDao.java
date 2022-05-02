@@ -17,8 +17,9 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public void save(Room room) {
+    public long save(Room room) {
         rooms.add(new Room(id++, room.getName(), room.getPassword(), room.getTurn()));
+        return id - 1;
     }
 
     @Override

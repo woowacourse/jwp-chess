@@ -6,7 +6,7 @@ import java.util.Optional;
 import chess.entity.Room;
 
 public interface RoomDao {
-    void save(Room room);
+    long save(Room room);
 
     Optional<Room> findByName(String name);
 

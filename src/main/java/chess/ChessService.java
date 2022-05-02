@@ -121,9 +121,8 @@ public class ChessService {
         if (room.isPresent()) {
             throw new IllegalArgumentException(DUPLICATED_ROOM_NAME_MESSAGE);
         }
-        Room newRoom = new Room(name, password);
-        roomDao.save(newRoom);
-        return roomDao.findByNameAndPassword(name, password).get();
+        long id = roomDao.save(new Room(name, password));
+        return new Room(id, name, password, EMPTY.getName());
     }
 
     public List<RoomDto> findAllRooms() {

@@ -1,10 +1,16 @@
 package chess.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import chess.entity.Room;
@@ -19,9 +25,18 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public void save(Room room) {
+    public long save(Room room) {
         String sql = "insert into room (name, password, turn) values (?, ?, ?)";
-        jdbcTemplate.update(sql, room.getName(), room.getPassword(), room.getTurn());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
+            ps.setString(1, room.getName());
+            ps.setString(2, room.getPassword());
+            ps.setString(3, room.getTurn());
+            return ps;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     @Override
@@ -30,12 +45,7 @@ public class RoomDaoImpl implements RoomDao {
 
         try {
             Room room = jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new Room(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("password"),
-                    rs.getString("turn")
-                ), roomId);
+                (rs, rowNum) -> getCompleteRoom(rs), roomId);
             return Optional.ofNullable(room);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -48,12 +58,7 @@ public class RoomDaoImpl implements RoomDao {
 
         try {
             Room room = jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new Room(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("password"),
-                    rs.getString("turn")
-                ), name);
+                (rs, rowNum) -> getCompleteRoom(rs), name);
             return Optional.ofNullable(room);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -66,12 +71,7 @@ public class RoomDaoImpl implements RoomDao {
 
         try {
             Room room = jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new Room(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("password"),
-                    rs.getString("turn")
-                ), name, password);
+                (rs, rowNum) -> getCompleteRoom(rs), name, password);
             return Optional.ofNullable(room);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -100,12 +100,7 @@ public class RoomDaoImpl implements RoomDao {
 
         try {
             Room room = jdbcTemplate.queryForObject(sql,
-                (rs, rowNum) -> new Room(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("password"),
-                    rs.getString("turn")
-                ), id, password);
+                (rs, rowNum) -> getCompleteRoom(rs), id, password);
             return Optional.ofNullable(room);
         } catch (EmptyResultDataAccessException exception) {
             return Optional.empty();
@@ -116,5 +111,13 @@ public class RoomDaoImpl implements RoomDao {
     public void delete(long roomId) {
         String sql = "delete from room where id = ?";
         jdbcTemplate.update(sql, roomId);
+    }
+
+    private Room getCompleteRoom(ResultSet rs) throws SQLException {
+        return new Room(
+            rs.getLong("id"),
+            rs.getString("name"),
+            rs.getString("password"),
+            rs.getString("turn"));
     }
 }

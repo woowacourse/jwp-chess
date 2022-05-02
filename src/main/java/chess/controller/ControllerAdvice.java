@@ -2,6 +2,7 @@ package chess.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,13 +13,13 @@ public class ControllerAdvice {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> IllegalArgumentExceptionHandle(RuntimeException exception) {
+    public ResponseEntity<String> handleBadRequest(RuntimeException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> ExceptionHandle(Exception exception) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handle(RuntimeException exception) {
         logger.error(exception.getMessage());
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<>("서버에 문제가 발생했습니다.", HttpStatus.NOT_FOUND);
     }
 }

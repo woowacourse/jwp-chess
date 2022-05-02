@@ -149,4 +149,11 @@ public class ChessService {
         Room room = getRoom(roomId);
         return new StatusDto(room.getStatus());
     }
+
+    public void validateExistRoom(Long roomId) {
+        Optional<Room> room = roomDao.findById(roomId);
+        if (room.isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 방입니다.");
+        }
+    }
 }

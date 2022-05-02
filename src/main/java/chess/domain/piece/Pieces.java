@@ -31,7 +31,7 @@ public enum Pieces {
             .filter(i -> i.symbol.equals(symbol))
             .map(Pieces::getPiece)
             .findAny()
-            .orElseThrow(() -> new IllegalArgumentException("일치하는 말이 존재하지 않습니다."));
+            .orElseThrow(() -> new IllegalArgumentException("symbol과 일치하는 말이 존재하지 않습니다."));
     }
 
     public Piece getPiece() {

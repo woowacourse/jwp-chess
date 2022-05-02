@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.domain.player.Team;
-import chess.dto.response.ChessGameStatusDto;
+import chess.dto.ChessGameInfoDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -59,9 +59,9 @@ public class ChessGameDao {
         jdbcTemplate.update(sql, nextTurn.getName(), gameId);
     }
 
-    public List<ChessGameStatusDto> findAllChessGame() {
+    public List<ChessGameInfoDto> findAllChessGame() {
         final String sql = "select id, name, turn, running from chess_game";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new ChessGameStatusDto(
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new ChessGameInfoDto(
                 rs.getInt("id"),
                 rs.getString("name"),
                 rs.getString("turn"),
@@ -74,9 +74,9 @@ public class ChessGameDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, gameId, password);
     }
 
-    public ChessGameStatusDto findChessGame(final int gameId) {
+    public ChessGameInfoDto findChessGame(final int gameId) {
         final String sql = "select id, name, turn, running from chess_game where id = (?)";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ChessGameStatusDto(
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ChessGameInfoDto(
                 rs.getInt("id"),
                 rs.getString("name"),
                 rs.getString("turn"),

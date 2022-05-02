@@ -14,6 +14,7 @@ import chess.domain.piece.State;
 import chess.domain.player.Player;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
+import chess.dto.ChessGameInfoDto;
 import chess.dto.PieceDto;
 import chess.dto.request.CreateGameDto;
 import chess.dto.request.DeleteGameDto;
@@ -140,10 +141,10 @@ public class ChessGameService {
     }
 
     public List<ChessGameStatusDto> findAllChessGame() {
-        return chessGameDao.findAllChessGame();
+        return ChessGameInfoDto.from(chessGameDao.findAllChessGame());
     }
 
     public ChessGameStatusDto findGameInfoById(final int gameId) {
-        return chessGameDao.findChessGame(gameId);
+        return ChessGameInfoDto.from(chessGameDao.findChessGame(gameId));
     }
 }

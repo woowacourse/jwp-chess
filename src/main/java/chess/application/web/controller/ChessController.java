@@ -80,10 +80,15 @@ public class ChessController {
 
     @PostMapping(path = "/game")
     public String movePiece(RedirectAttributes redirectAttributes, @RequestParam("roomId") int roomId, @RequestParam("command") String command) {
-        currentState(roomId).proceed(command);
+        try {
+            redirectAttributes.addAttribute("roomId", roomId);
+            currentState(roomId).proceed(command);
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addAttribute("message", e.getMessage());
+            return "redirect:game";
+        }
         commandDao.insert(roomId, command);
         redirectAttributes.addAttribute("message", "실행한 명령어: " + command);
-        redirectAttributes.addAttribute("roomId", roomId);
         return "redirect:game";
     }
 

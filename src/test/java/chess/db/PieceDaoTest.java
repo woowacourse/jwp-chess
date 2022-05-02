@@ -47,7 +47,7 @@ public class PieceDaoTest {
         PieceDao pieceDao = new PieceDao(jdbcTemplate);
         pieceDao.initPieces("test");
 
-        assertThatNoException().isThrownBy(() -> pieceDao.findByGameID("test"));
+        assertThatNoException().isThrownBy(() -> pieceDao.findByGameId("test"));
     }
 
     @DisplayName("존재하지 않는 게임에 대한 검색은 예외를 반환한다")
@@ -56,7 +56,7 @@ public class PieceDaoTest {
         PieceDao pieceDao = new PieceDao(jdbcTemplate);
         pieceDao.initPieces("test");
 
-        assertThatThrownBy(() -> pieceDao.findByGameID("test1"))
+        assertThatThrownBy(() -> pieceDao.findByGameId("test1"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("헉.. 저장 안한거 아냐? 그런 게임은 없어!");
     }

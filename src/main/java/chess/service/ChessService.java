@@ -42,32 +42,32 @@ public class ChessService {
     }
 
     private ChessGame loadChessGame(ChessGameDto chessGameDto, String restart) {
-        String gameID = chessGameDto.getGameID();
+        String gameId = chessGameDto.getGameId();
         try {
-            pieceDao.findByGameID(gameID);
+            pieceDao.findByGameId(gameId);
         } catch (IllegalArgumentException e) {
-            initBoard(gameID);
+            initBoard(gameId);
         }
         if ("true".equals(restart)) {
-            initBoard(gameID);
+            initBoard(gameId);
         }
-        loadTurn(gameID, restart);
+        loadTurn(gameId, restart);
         return loadGame(chessGameDto);
     }
 
-    private void initBoard(String gameID) {
-        pieceDao.deleteByGameID(gameID);
-        pieceDao.initPieces(gameID);
+    private void initBoard(String gameId) {
+        pieceDao.deleteByGameId(gameId);
+        pieceDao.initPieces(gameId);
     }
 
-    private void loadTurn(String gameID, String restart) {
+    private void loadTurn(String gameId, String restart) {
         if ("true".equals(restart)) {
-            chessGameDao.initTurn(gameID);
+            chessGameDao.initTurn(gameId);
         }
     }
 
     private ChessGame loadGame(ChessGameDto chessGameDto) {
-        String gameID = chessGameDto.getGameID();
+        String gameId = chessGameDto.getGameId();
         ChessGame chessGame;
         try {
             GameTurn gameTurn = getTurn(chessGameDto);
@@ -75,13 +75,13 @@ public class ChessService {
             chessGame = loadSavedChessGame(chessGameDto);
         } catch (RuntimeException e) {
             chessGame = loadNewChessGame();
-            startGame(gameID, chessGameDto.getPassword(), chessGame);
+            startGame(gameId, chessGameDto.getPassword(), chessGame);
         }
         return chessGame;
     }
 
     public GameTurn getTurn(ChessGameDto chessGameDto) {
-        return GameTurn.find(chessGameDao.findTurnByID(chessGameDto.getGameID()));
+        return GameTurn.find(chessGameDao.findTurnById(chessGameDto.getGameId()));
     }
 
     private void checkCanContinue(GameTurn gameTurn) {
@@ -96,7 +96,7 @@ public class ChessService {
     }
 
     private ChessGame loadSavedChessGame(ChessGameDto chessGameDto) {
-        Map<Square, Piece> board = pieceDao.findByGameID(chessGameDto.getGameID());
+        Map<Square, Piece> board = pieceDao.findByGameId(chessGameDto.getGameId());
         return new ChessGame(new SavedBoardGenerator(board), getTurn(chessGameDto));
     }
 
@@ -104,9 +104,9 @@ public class ChessService {
         return new ChessGame(new InitialBoardGenerator(), GameTurn.READY);
     }
 
-    private void startGame(String gameID, String password, ChessGame chessGame) {
-        chessGameDao.save(gameID, password, chessGame);
-        updateTurn(gameID, chessGame);
+    private void startGame(String gameId, String password, ChessGame chessGame) {
+        chessGameDao.save(gameId, password, chessGame);
+        updateTurn(gameId, chessGame);
     }
 
     public void movePiece(ChessGameDto chessGameDto, MovementRequest movementRequest) {
@@ -115,38 +115,38 @@ public class ChessService {
         ChessGame chessGame = loadSavedChessGame(chessGameDto);
         chessGame.move(new Square(source), new Square(target));
 
-        String gameID = chessGameDto.getGameID();
-        updateTurn(gameID, chessGame);
-        updatePosition(gameID, source, target);
+        String gameId = chessGameDto.getGameId();
+        updateTurn(gameId, chessGame);
+        updatePosition(gameId, source, target);
     }
 
-    private void updateTurn(String gameID, ChessGame chessGame) {
-        chessGameDao.updateTurn(gameID, chessGame);
+    private void updateTurn(String gameId, ChessGame chessGame) {
+        chessGameDao.updateTurn(gameId, chessGame);
     }
 
-    private void updatePosition(String gameID, String source, String target) {
-        pieceDao.deleteByPosition(new Square(target), gameID);
-        pieceDao.updatePosition(new Square(source), new Square(target), gameID);
-        pieceDao.insertNone(gameID, new Square(source));
+    private void updatePosition(String gameId, String source, String target) {
+        pieceDao.deleteByPosition(new Square(target), gameId);
+        pieceDao.updatePosition(new Square(source), new Square(target), gameId);
+        pieceDao.insertNone(gameId, new Square(source));
     }
 
-    public List<ChessGameDto> getGameIDs() {
+    public List<ChessGameDto> getGameIds() {
         return chessGameDao.findAllGame().stream()
-                .map(gameID -> new ChessGameDto(gameID, null))
+                .map(gameId -> new ChessGameDto(gameId, null))
                 .collect(Collectors.toList());
     }
 
-    public void deleteGameByGameID(ChessGameDto chessGameDto) {
-        String gameID = chessGameDto.getGameID();
+    public void deleteGameByGameId(ChessGameDto chessGameDto) {
+        String gameId = chessGameDto.getGameId();
         String password = chessGameDto.getPassword();
-        checkPassword(gameID, password);
-        checkCanDelete(GameTurn.find(chessGameDao.findTurnByID(gameID)));
-        chessGameDao.deleteByGameID(gameID, password);
-        pieceDao.deleteByGameID(gameID);
+        checkPassword(gameId, password);
+        checkCanDelete(GameTurn.find(chessGameDao.findTurnById(gameId)));
+        chessGameDao.deleteByGameId(gameId, password);
+        pieceDao.deleteByGameId(gameId);
     }
 
-    private void checkPassword(String gameID, String password) {
-        if (!chessGameDao.findPasswordByGameID(gameID, password)) {
+    private void checkPassword(String gameId, String password) {
+        if (!chessGameDao.findPasswordByGameId(gameId, password)) {
             throw new IllegalArgumentException("비밀 번호 틀렸지롱~ 🤪");
         }
     }
@@ -158,12 +158,12 @@ public class ChessService {
     }
 
     public boolean isValidPassword(ChessGameDto chessGameDto) {
-        return chessGameDao.findPasswordByGameID(chessGameDto.getGameID(), chessGameDto.getPassword());
+        return chessGameDao.findPasswordByGameId(chessGameDto.getGameId(), chessGameDto.getPassword());
     }
 
     public boolean isGameExist(ChessGameDto chessGameDto) {
         try {
-            chessGameDao.findTurnByID(chessGameDto.getGameID());
+            chessGameDao.findTurnById(chessGameDto.getGameId());
             return true;
         } catch (IncorrectResultSizeDataAccessException e) {
             return false;
@@ -184,7 +184,7 @@ public class ChessService {
     }
 
     private GameResult getSavedGameResult(ChessGameDto chessGameDto) {
-        Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameID(chessGameDto.getGameID())));
+        Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameId(chessGameDto.getGameId())));
         return new GameResult(board);
     }
 }

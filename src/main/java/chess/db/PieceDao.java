@@ -24,53 +24,53 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void initPieces(String gameID) {
-        String sql = "insert into piece (position, type, color, gameID) values (?, ?, ?, ?)";
+    public void initPieces(String gameId) {
+        String sql = "insert into piece (position, type, color, gameId) values (?, ?, ?, ?)";
 
         List<Object[]> data = new ArrayList<>();
-        insertPieces(gameID, data);
+        insertPieces(gameId, data);
         jdbcTemplate.batchUpdate(sql, data);
     }
 
-    private void insertPieces(String gameID, List<Object[]> data) {
+    private void insertPieces(String gameId, List<Object[]> data) {
         for (Column column : Column.values()) {
-            insertPiecesInRow(gameID, data, column);
+            insertPiecesInRow(gameId, data, column);
         }
     }
 
-    private void insertPiecesInRow(String gameID, List<Object[]> data, Column column) {
+    private void insertPiecesInRow(String gameId, List<Object[]> data, Column column) {
         for (Row row : Row.values()) {
             data.add(new Object[]{new Square(column, row).getName(),
                     InitialPositionPieceGenerator.getType(column, row).name(),
                     InitialPositionPieceGenerator.getColor(row).name(),
-                    gameID});
+                    gameId});
         }
     }
 
-    public void deleteByPosition(Square target, String gameID) {
-        String sql = "delete from piece where position = ? and gameID = ?";
-        jdbcTemplate.update(sql, target.getName(), gameID);
+    public void deleteByPosition(Square target, String gameId) {
+        String sql = "delete from piece where position = ? and gameId = ?";
+        jdbcTemplate.update(sql, target.getName(), gameId);
     }
 
-    public void updatePosition(Square source, Square target, String gameID) {
-        String sql = "update piece set position = ? where position = ? and gameID = ?";
-        jdbcTemplate.update(sql, target.getName(), source.getName(), gameID);
+    public void updatePosition(Square source, Square target, String gameId) {
+        String sql = "update piece set position = ? where position = ? and gameId = ?";
+        jdbcTemplate.update(sql, target.getName(), source.getName(), gameId);
     }
 
-    public void insertNone(String gameID, Square source) {
-        String sql = "insert into piece (position, type, color, gameID) values (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, source.getName(), InitialPositionPieceGenerator.NONE.name(), Color.NONE.name(), gameID);
+    public void insertNone(String gameId, Square source) {
+        String sql = "insert into piece (position, type, color, gameId) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, source.getName(), InitialPositionPieceGenerator.NONE.name(), Color.NONE.name(), gameId);
     }
 
-    public void deleteByGameID(String gameID) {
-        String sql = "delete from piece where gameID = ?";
-        jdbcTemplate.update(sql, gameID);
+    public void deleteByGameId(String gameId) {
+        String sql = "delete from piece where gameId = ?";
+        jdbcTemplate.update(sql, gameId);
     }
 
-    public Map<Square, Piece> findByGameID(String gameID) {
-        String sql = "select position, type, color from piece where gameID = ?";
+    public Map<Square, Piece> findByGameId(String gameId) {
+        String sql = "select position, type, color from piece where gameId = ?";
         Map<Square, Piece> board = new HashMap<>();
-        List<Map<String, Object>> data = jdbcTemplate.queryForList(sql, gameID);
+        List<Map<String, Object>> data = jdbcTemplate.queryForList(sql, gameId);
         loadBoard(board, data);
         checkGameExist(board);
         return board;

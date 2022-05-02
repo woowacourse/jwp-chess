@@ -32,7 +32,7 @@ body {
     display: block;
 }
 
-.gameIDBox {
+input.gameIdBox {
     width: 250px;
 }
 

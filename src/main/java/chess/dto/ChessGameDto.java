@@ -1,16 +1,16 @@
 package chess.dto;
 
 public class ChessGameDto {
-    private String gameID;
+    private String gameId;
     private String password;
 
-    public ChessGameDto(String gameID, String password) {
-        this.gameID = gameID;
+    public ChessGameDto(String gameId, String password) {
+        this.gameId = gameId;
         this.password = password;
     }
 
-    public String getGameID() {
-        return gameID;
+    public String getGameId() {
+        return gameId;
     }
 
     public String getPassword() {

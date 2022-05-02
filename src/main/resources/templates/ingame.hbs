@@ -11,7 +11,7 @@
     <input type="submit" value="SAVE" class="btn" id="end"/>
 </form>
 <form action="/games" method="post" class="inlineBtn">
-    <input type="text" name="gameID" class="invisible" value="{{chessGameDto.gameID}}" />
+    <input type="text" name="gameId" class="invisible" value="{{chessGameDto.gameId}}" />
     <input type="text" name="password" class="invisible" value="{{chessGameDto.password}}" />
     <input type="text" name="restart" class="invisible" value="true" />
     <input type="submit" value="RESTART" class="btn" id="restart">
@@ -118,7 +118,7 @@
         <th></th>
     </tbody>
 </table>
-<form action="/games/{{chessGameDto.gameID}}/move" method="post" class="textBoxWrapper">
+<form action="/games/{{chessGameDto.gameId}}/move" method="post" class="textBoxWrapper">
     <input type="text" name="password" class="invisible" value="{{chessGameDto.password}}" />
     FROM : <input type="text" name="source" class="textBox"/>
     TO : <input type="text" name="target" class="textBox"/>

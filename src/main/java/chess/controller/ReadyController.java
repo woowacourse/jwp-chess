@@ -20,7 +20,7 @@ public class ReadyController {
     @GetMapping
     public String index(Model model) {
         model.addAttribute("msg", "CLICK TO START! 😝");
-        model.addAttribute("games", chessService.getGameIDs());
+        model.addAttribute("games", chessService.getGameIds());
         return "ready";
     }
 
@@ -28,11 +28,11 @@ public class ReadyController {
     public String delete(@ModelAttribute ChessGameDto chessGameDto, Model model) {
         model.addAttribute("msg", "쨘~ 게임 삭제 완료! 😚");
         try {
-            chessService.deleteGameByGameID(chessGameDto);
+            chessService.deleteGameByGameId(chessGameDto);
         } catch (IllegalArgumentException e) {
             model.addAttribute("msg", e.getMessage());
         }
-        model.addAttribute("games", chessService.getGameIDs());
+        model.addAttribute("games", chessService.getGameIds());
         return "ready";
     }
 }

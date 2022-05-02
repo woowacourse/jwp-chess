@@ -26,7 +26,7 @@ public class InGameController {
             Model model) {
         if (isGameExist(chessGameDto) && isNotValidPassword(chessGameDto)) {
             model.addAttribute("msg", "비밀 번호 틀렸지롱~ 🤪");
-            model.addAttribute("games", chessService.getGameIDs());
+            model.addAttribute("games", chessService.getGameIds());
             return "ready";
         }
         addScores(model, chessGameDto);
@@ -49,7 +49,7 @@ public class InGameController {
         model.addAttribute("blackScore", chessService.calculateScore(chessGameDto, Color.BLACK));
     }
 
-    @PostMapping(value = "/{gameID}/move")
+    @PostMapping(value = "/{gameId}/move")
     public String movePiece(@ModelAttribute ChessGameDto chessGameDto, @ModelAttribute MovementRequest movement,
             Model model) {
         executeMove(chessGameDto, model, movement);

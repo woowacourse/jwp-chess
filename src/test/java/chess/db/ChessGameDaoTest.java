@@ -41,6 +41,6 @@ public class ChessGameDaoTest {
         ChessGame chessGame = new ChessGame(new InitialBoardGenerator(), GameTurn.BLACK);
         chessGameDao.save("test", "test", chessGame);
 
-        assertThat(chessGameDao.findTurnByID("test")).isEqualTo("BLACK");
+        assertThat(chessGameDao.findTurnById("test")).isEqualTo("BLACK");
     }
 }

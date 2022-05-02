@@ -6,6 +6,7 @@ import chess.service.dto.GameStatusDto;
 import chess.service.dto.RoomResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GameDao {
 
@@ -23,5 +24,5 @@ public interface GameDao {
 
     String findPassword(int id);
 
-    Integer findLastGameId();
+    Optional<Integer> findLastGameId();
 }

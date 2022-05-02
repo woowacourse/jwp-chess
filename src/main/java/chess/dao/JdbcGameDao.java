@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.controller.dto.ChessRequestDto;
-import chess.domain.piece.PieceColor;
 import chess.service.dto.GameDto;
 import chess.service.dto.GameStatusDto;
 import chess.service.dto.RoomResponseDto;
@@ -13,11 +12,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcGameDao implements GameDao {
-
-    private static final int NO_GAME = 0;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -91,14 +89,15 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public Integer findLastGameId() {
+    public Optional<Integer> findLastGameId() {
         final String sql = "select game_id from game order by game_id desc limit 1";
+        Optional<Integer> lastGameId = Optional.empty();
         try {
-            return jdbcTemplate.queryForObject(sql, Integer.class);
+            lastGameId = Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class));
         } catch (Exception e) {
             e.printStackTrace();
-            return NO_GAME;
         }
+        return lastGameId;
     }
 
     private RowMapper<GameDto> getGameDtoRowMapper() {

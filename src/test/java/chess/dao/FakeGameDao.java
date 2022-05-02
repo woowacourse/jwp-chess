@@ -6,6 +6,7 @@ import chess.service.dto.GameStatusDto;
 import chess.service.dto.RoomResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public class FakeGameDao implements GameDao {
 
@@ -47,7 +48,10 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public Integer findLastGameId() {
-        return 1;
+    public Optional<Integer> findLastGameId() {
+        if (gameDto == null) {
+            return Optional.empty();
+        }
+        return Optional.of(1);
     }
 }

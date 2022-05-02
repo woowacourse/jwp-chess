@@ -28,6 +28,7 @@ public class ChessService {
 
     private static final String DEFAULT_TURN = PieceColor.WHITE.getName();
     private static final String DEFAULT_STATUS = GameStatusDto.PLAYING.getName();
+    private static final int NO_GAME = 0;
 
     private final PieceDao pieceDao;
     private final GameDao gameDao;
@@ -56,7 +57,7 @@ public class ChessService {
     }
 
     private int getGameId() {
-        return gameDao.findLastGameId() + 1;
+        return gameDao.findLastGameId().orElse(NO_GAME) + 1;
     }
 
     public ChessResponseDto getChess(final int id) {

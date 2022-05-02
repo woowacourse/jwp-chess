@@ -22,14 +22,14 @@ public class RoomService {
         this.boardDao = boardDao;
     }
 
-    public RoomDto create(Room room) {
-        int id = roomDao.save(room.getName(), room.getPassword());
-        return roomDao.findById(id).get();
+    public RoomResponseDto create(RoomDto roomDto) {
+        int id = roomDao.save(roomDto.getName(), roomDto.getPassword());
+        return RoomResponseDto.from(roomDao.findById(id));
     }
 
     public void delete(int roomId, String password) {
         Optional<Integer> boardId = boardDao.findBoardIdByRoom(roomId);
-        Optional<RoomDto> room = roomDao.findById(roomId);
+        Room room = roomDao.findById(roomId);
         checkPassword(room, password);
         if (boardId.isEmpty()) {
             roomDao.delete(roomId);
@@ -47,11 +47,7 @@ public class RoomService {
     }
 
     public void validateId(int roomId) {
-        Optional<RoomDto> roomDto = roomDao.findById(roomId);
-        if (roomDto.isEmpty()) {
-            throw new IllegalArgumentException("유효하지 않은 체스방 주소입니다.");
-        }
-
+        roomDao.findById(roomId);
     }
 
     private void checkGameEnd(Optional<Integer> boardId) {
@@ -60,8 +56,8 @@ public class RoomService {
         }
     }
 
-    private void checkPassword(Optional<RoomDto> room, String password) {
-        if (!room.get().getPassword().equals(password)) {
+    private void checkPassword(Room room, String password) {
+        if (room.getPassword().equals(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }

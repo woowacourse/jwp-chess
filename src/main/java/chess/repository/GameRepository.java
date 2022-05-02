@@ -93,4 +93,16 @@ public class GameRepository {
         Board board = loadBoard(boardId);
         return new BoardDto(boardId, board);
     }
+
+    public void movePiece(int boardId, Board board, String source, String target) {
+        PieceDto pieceDto = findPiece(boardId, source).get();
+        deletePiece(boardId, source);
+        Optional<PieceDto> targetPieceDto = findPiece(boardId, target);
+        if (targetPieceDto.isPresent()) {
+            updatePiece(boardId, target, pieceDto);
+            return;
+        }
+        savePiece(boardId, target, pieceDto);
+        updateBoardState(board, boardId);
+    }
 }

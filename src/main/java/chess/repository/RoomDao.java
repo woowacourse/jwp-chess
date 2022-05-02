@@ -1,12 +1,9 @@
 package chess.repository;
 
 import chess.domain.Room;
-import chess.dto.RoomDto;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import javax.sql.DataSource;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -18,6 +15,7 @@ public class RoomDao {
     private static final String KEY_NAME = "id";
     private static final int KEY_INDEX = 1;
     private static final int NAME_INDEX = 2;
+    private static final int PASSWORD_INDEX = 3;
 
     private final SimpleJdbcInsert insertActor;
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -38,22 +36,16 @@ public class RoomDao {
         String sql = "select * from room";
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) ->
-                        new Room(resultSet.getInt(1), resultSet.getString(2),
-                                resultSet.getString(3)));
+                        new Room(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX),
+                                resultSet.getString(PASSWORD_INDEX)));
     }
 
-    public Optional<RoomDto> findById(int roomId) {
+    public Room findById(int roomId) {
         String sql = "select * from room where id = :roomId";
-        try {
-            return Optional.ofNullable(
-                    jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId),
-                            (resultSet, rowNum) ->
-                                    new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX),
-                                            resultSet.getString(3))
-                    ));
-        } catch (EmptyResultDataAccessException exception) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.queryForObject(sql, Map.of("roomId", roomId),
+                (resultSet, rowNum) ->
+                        new Room(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX),
+                                resultSet.getString(PASSWORD_INDEX)));
     }
 
     public void delete(int roomId) {

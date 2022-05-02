@@ -35,9 +35,9 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createRoom(Room room) {
-        RoomDto roomDto = roomService.create(room);
-        return ResponseEntity.ok(Map.of("url", "/rooms/" + roomDto.getId()));
+    public ResponseEntity<Map<String, String>> createRoom(RoomDto roomDto) {
+        RoomResponseDto roomResponseDto = roomService.create(roomDto);
+        return ResponseEntity.ok(Map.of("url", "/rooms/" + roomResponseDto.getId()));
     }
 
     @GetMapping("/{roomId}")

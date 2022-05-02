@@ -6,12 +6,10 @@ import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
 import chess.dto.BoardDto;
 import chess.dto.CommendDto;
-import chess.dto.PieceDto;
 import chess.dto.ResultDto;
 import chess.repository.GameRepository;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,11 +31,7 @@ public class GameService {
         String target = commendDto.getTarget();
         Board board = gameRepository.loadBoard(boardId);
         board.move(source, target);
-
-        PieceDto pieceDto = gameRepository.findPiece(boardId, source).get();
-        deleteMovedPieceFromSource(boardId, source);
-        updateMovedPieceToTarget(boardId, target, pieceDto);
-        updateGameState(board, boardId);
+        gameRepository.movePiece(boardId, board, source, target);
     }
 
     public BoardDto loadGame(int roomId) {
@@ -57,23 +51,6 @@ public class GameService {
 
     public ResultDto gameFinalResult(int boardId) {
         return getFinalResultDto(gameRepository.loadBoard(boardId));
-    }
-
-    private void updateMovedPieceToTarget(int boardId, String target, PieceDto pickedPieceDto) {
-        Optional<PieceDto> targetPieceDto = gameRepository.findPiece(boardId, target);
-        if (targetPieceDto.isPresent()) {
-            gameRepository.updatePiece(boardId, target, pickedPieceDto);
-            return;
-        }
-        gameRepository.savePiece(boardId, target, pickedPieceDto);
-    }
-
-    private void deleteMovedPieceFromSource(int boardId, String source) {
-        gameRepository.deletePiece(boardId, source);
-    }
-
-    private void updateGameState(Board board, int boardId) {
-        gameRepository.updateBoardState(board, boardId);
     }
 
     private ResultDto getResultDto(Board board) {

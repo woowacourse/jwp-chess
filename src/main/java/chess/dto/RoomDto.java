@@ -2,18 +2,12 @@ package chess.dto;
 
 public class RoomDto {
 
-    private final long id;
     private final String name;
     private final String password;
 
-    public RoomDto(long id, String name, String password) {
-        this.id = id;
+    public RoomDto(String name, String password) {
         this.name = name;
         this.password = password;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public String getName() {

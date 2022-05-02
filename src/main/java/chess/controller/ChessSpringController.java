@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -60,7 +61,7 @@ public class ChessSpringController {
         return "redirect:/";
     }
 
-    @GetMapping("/game/{gameId}/start")
+    @PutMapping("/game/{gameId}/start")
     public ResponseEntity<GameStatusDto> start(@PathVariable int gameId) {
         GameStatusDto gameStatusDto = chessGameService.startChessGame(new WebBasicBoardStrategy(), gameId);
         return ResponseEntity.ok().body(gameStatusDto);
@@ -78,7 +79,7 @@ public class ChessSpringController {
         return ResponseEntity.ok().body(scoresDto);
     }
 
-    @GetMapping("/game/{gameId}/end")
+    @PutMapping("/game/{gameId}/end")
     public ResponseEntity<WinnerDto> end(@PathVariable int gameId) {
         WinnerDto winnerDto = chessGameService.end(gameId);
         return ResponseEntity.ok().body(winnerDto);

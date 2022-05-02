@@ -143,13 +143,14 @@ public class ChessGameService {
         ChessGame chessGame = createCustomChessGame(gameId);
         checkReady(gameId);
         Result result = chessGame.stop();
+        gameStatusDao.update(gameStatusDao.getStatus(gameId), chessGame.getGameStatus().toString(), gameId);
         return createEndScore(result, gameId);
     }
 
     private WinnerDto createEndScore(Result result, int gameId) {
         WinnerDto winnerDto = null;
         if (gameStatusDao.getStatus(gameId).equals(GameStatus.CHECK_MATE.toString())) {
-           winnerDto = WinnerDto.of(result);
+            winnerDto = WinnerDto.of(result);
         }
         resetBoard(gameId);
         turnDao.reset(gameId);

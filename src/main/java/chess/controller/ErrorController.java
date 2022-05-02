@@ -23,6 +23,4 @@ public class ErrorController {
     public ResponseEntity<String> errorDbResponse() {
         return ResponseEntity.badRequest().body("게임이나 보드가 존재하지 않습니다.");
     }
-
-
 }

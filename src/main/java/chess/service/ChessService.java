@@ -135,14 +135,15 @@ public class ChessService {
     private ChessGame findChessGame(Long roomId) {
         final Room room = roomDao.findRoomById(roomId);
         final List<Square> squares = squareDao.findSquareAllById(roomId);
+        if (squares.size() == 0) {
+            throw new IllegalStateException("아직 게임이 시작되지 않았습니다.");
+        }
 
         final Map<Position, Piece> board = new HashMap<>();
         for (Square square : squares) {
             board.put(Position.of(square.getPosition()), Piece.of(square.getColor(), square.getSymbol()));
         }
-
-        ChessGame chessGame = new ChessGame(State.of(room.getState()), new ChessBoard(board));
-        return chessGame;
+        return new ChessGame(State.of(room.getState()), new ChessBoard(board));
     }
 
     private void playChessGame(ChessGame chessGame, String from, String to) {

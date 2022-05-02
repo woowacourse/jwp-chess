@@ -16,7 +16,7 @@
                 <input type="text" id="title" name="title">
                 <label for="password">비밀번호</label>
                 <input type="password" id="password" name="password">
-                <button id="create-button">방 생성</button>
+                <input type="submit" id="create-button" value="방 생성">
             </form>
         </div>
         <div class="room-list">
@@ -28,13 +28,25 @@
 <script type="text/javascript">
     function deleteRoom(id) {
         const passwordInput = window.prompt('방을 삭제하려면 비밀번호를 입력하세요');
-        fetch('./game/' + id, {
-                method: 'DELETE',
-                body: passwordInput
-            }).then((response) => response.json())
-            .catch((error) => window.alert("서버 문제로 삭제하지 못했습니다."))
-            .then((data) =>  window.alert(data.message))
-            .then(() => loadGames());
+
+        const form = document.createElement("form");
+        form.setAttribute("action", "/game/" + id);
+        form.setAttribute("method", "post");
+
+        const method = document.createElement("input");
+        method.setAttribute("type", "hidden");
+        method.setAttribute("name", "_method");
+        method.setAttribute("value", "delete");
+        form.appendChild(method);
+
+        const password = document.createElement("input");
+        password.setAttribute("type", "hidden");
+        password.setAttribute("name", "password");
+        password.setAttribute("value", passwordInput);
+        form.appendChild(password);
+
+        document.body.appendChild(form);
+        form.submit();
     }
 
     function loadGames() {
@@ -80,17 +92,6 @@
         td.appendChild(button);
         return td;
     }
-
-    document.forms['create-form'].addEventListener('submit', (event) => {
-        event.preventDefault();
-        fetch(event.target.action, {
-            method: 'POST',
-            body: new URLSearchParams(new FormData(event.target))
-            }).then((response) => response.json())
-              .catch((error) => window.alert("서버 문제로 생성하지 못했습니다."))
-              .then((data) =>  window.alert(data.message))
-              .then(() => loadGames());
-    });
 
     window.onload = function() {
         loadGames();

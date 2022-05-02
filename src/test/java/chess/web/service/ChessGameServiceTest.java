@@ -1,9 +1,12 @@
 package chess.web.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 import chess.domain.game.ChessGame;
+import chess.domain.game.state.Player;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceFactory;
 import chess.domain.piece.position.Position;
 import chess.web.dao.ChessBoardDao;
 import chess.web.dao.ChessBoardDaoImpl;
@@ -19,91 +22,83 @@ import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
 import chess.web.dto.ReadRoomResultDto;
 import chess.web.dto.RoomDto;
-import chess.web.dto.StartResultDto;
-import chess.web.service.fakedao.FakeChessBoardDao;
-import chess.web.service.fakedao.FakePlayerDao;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.web.servlet.MockMvc;
 
-@JdbcTest
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ChessGameServiceTest {
 
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
     private ChessBoardDao chessBoardDao;
+
+    @MockBean
     private RoomDao roomDao;
-    private ChessGameService chessGameService;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    ChessGameService chessGameService;
+
+    RoomDto roomDto;
+    Map<Position, Piece> board = new HashMap<>();
 
     @BeforeEach
     void setUp() {
-        chessBoardDao = new ChessBoardDaoImpl(jdbcTemplate);
-        roomDao = new RoomDaoImpl(jdbcTemplate);
-        chessGameService = new ChessGameService(chessBoardDao, roomDao);
+        board.put(Position.of("A2"), PieceFactory.PAWN_WHITE.getPiece());
+        roomDto = new RoomDto(1, "testTitle", false, false);
 
-        jdbcTemplate.execute("create table room "
-                + "("
-                + "    id int(10) NOT NULL AUTO_INCREMENT, "
-                + "    title varchar(255), "
-                + "    password varchar(255) NOT NULL, "
-                + "    color varchar(5) NOT NULL DEFAULT 'WHITE', "
-                + "    finished boolean default 0, "
-                + "    deleted boolean default 0,"
-                + "    primary key (id) "
-                + ");");
+        given(roomDao.isStartable(1)).willReturn(roomDto);
+        given(chessBoardDao.findAllPieces(1)).willReturn(board);
+        given(roomDao.getPlayer(1)).willReturn(Player.WHITE);
 
-        jdbcTemplate.execute("insert into room (title, password) values ('testTitle', 'testPassword')");
-
-        jdbcTemplate.execute("create table board "
-                + "("
-                + "    board_id int(10) NOT NULL AUTO_INCREMENT, "
-                + "    position varchar(2) NOT NULL, "
-                + "    piece varchar(10) NOT NULL, "
-                + "    room_id int(10) NOT NULL, "
-                + "    primary key (board_id), "
-                + "    foreign key (room_id) references room (id)"
-                + ");");
-
-        ChessGame chessGame = new ChessGame();
-        chessGame.start();
-        Map<Position, Piece> chessBoard = chessGame.getBoard();
-        for (Position position : chessBoard.keySet()) {
-            chessBoardDao.save(position, chessBoard.get(position), 1);
-        }
-    }
-
-    @AfterEach
-    void cleanUp() {
-        jdbcTemplate.execute("DROP TABLE board IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE room IF EXISTS");
     }
 
     @Test
-    void start() {
-        RoomDto roomDto = chessGameService.start(1);
-        assertThat(roomDto).isNotNull();
+    void start_roomExist() {
+        RoomDto roomDto = new RoomDto(1, "testTitle", false, false);
+        given(chessBoardDao.boardExistInRoom(1)).willReturn(true);
+        given(roomDao.isStartable(1)).willReturn(roomDto);
+
+        RoomDto roomDtoResult = chessGameService.start(1);
+        assertThat(roomDtoResult).isEqualTo(roomDto);
+    }
+
+    @Test
+    void start_roomNotExist() {
+        RoomDto roomDto = new RoomDto(1, "testTitle", false, false);
+        given(chessBoardDao.boardExistInRoom(1)).willReturn(false);
+        given(roomDao.isStartable(1)).willReturn(roomDto);
+
+        RoomDto roomDtoResult = chessGameService.start(1);
+        assertThat(roomDtoResult).isNotNull();
     }
 
     @Test
     void move_game_not_end() {
         MoveResultDto moveResultDto = chessGameService.move(new MoveDto("A2", "A4"), 1);
-        ChessCellDto chessCellDto = chessBoardDao.findByPosition(1, "A4");
-        assertThat(chessCellDto).isNotNull();
+        assertThat(moveResultDto).isNotNull();
     }
 
     @Test
     void move_game_end() {
-        chessGameService.move(new MoveDto("D2", "D4"), 1);
-        chessGameService.move(new MoveDto("E7", "E5"), 1);
-        chessGameService.move(new MoveDto("D4", "E5"), 1);
-        chessGameService.move(new MoveDto("D7", "D6"), 1);
-        chessGameService.move(new MoveDto("E5", "D6"), 1);
-        chessGameService.move(new MoveDto("E8", "E7"), 1);
+        board.put(Position.of("E7"), PieceFactory.KING_BLACK.getPiece());
+        board.put(Position.of("D6"), PieceFactory.PAWN_WHITE.getPiece());
+
+        given(chessBoardDao.findAllPieces(1)).willReturn(board);
+
         MoveResultDto moveResultDto = chessGameService.move(new MoveDto("D6", "E7"), 1);
         assertThat(moveResultDto.getIsGameOver()).isTrue();
     }
@@ -112,17 +107,16 @@ public class ChessGameServiceTest {
     void play() {
         PlayResultDto playResultDto = chessGameService.play(1);
 
-        assertThat(playResultDto.getBoard().size()).isEqualTo(32);
+        assertThat(playResultDto.getBoard()).isNotNull();
     }
 
     @Test
     void getChessGame() {
         ChessGame chessGame = chessGameService.getChessGame(1);
-        assertThat(chessGame.getBoard().size()).isEqualTo(32);
+        assertThat(chessGame.getBoard()).isNotNull();
     }
 
     @Test
-
     void createRoom() {
         CreateRoomRequestDto createRoomRequestDto = new CreateRoomRequestDto("testTitle", "testPassword");
         CreateRoomResultDto room = chessGameService.createRoom(createRoomRequestDto);
@@ -131,13 +125,20 @@ public class ChessGameServiceTest {
 
     @Test
     void findAllRooms() {
-        ReadRoomResultDto readRoomResultDto = chessGameService.findAllRooms();
-        assertThat(readRoomResultDto.getRooms().size()).isEqualTo(1);
+        ReadRoomResultDto readRoomResultDto = new ReadRoomResultDto(List.of(new RoomDto()));
+        given(roomDao.findAll()).willReturn(readRoomResultDto);
+        ReadRoomResultDto findAllRoomsResult = chessGameService.findAllRooms();
+        assertThat(findAllRoomsResult.getRooms().size()).isEqualTo(1);
     }
 
     @Test
     void delete() {
-        DeleteResultDto deleteResultDto = chessGameService.delete(1, new DeleteDto("testPassword"));
-        assertThat(deleteResultDto.isDeleted()).isEqualTo(true);
+        DeleteDto deleteDto = new DeleteDto("testPassword");
+        DeleteResultDto deleteResultDto = new DeleteResultDto(1, true);
+
+        given(roomDao.delete(1, deleteDto)).willReturn(deleteResultDto);
+
+        DeleteResultDto deleteResult = chessGameService.delete(1, deleteDto);
+        assertThat(deleteResult.isDeleted()).isEqualTo(true);
     }
 }

@@ -2,6 +2,7 @@ package chess.web.controller;
 
 import chess.web.dto.CreateRoomDto;
 import chess.web.dto.MoveDto;
+import chess.web.dto.PasswordDto;
 import chess.web.dto.PlayResultDto;
 import chess.web.dto.RoomDto;
 import chess.web.dto.ScoreDto;
@@ -9,6 +10,7 @@ import chess.web.service.ChessGameService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -59,5 +61,21 @@ public class ChessGameRestController {
     public ResponseEntity<ScoreDto> status(@PathVariable int id) {
         final ScoreDto scoreDto = service.status(id);
         return ResponseEntity.ok(scoreDto);
+    }
+
+    @DeleteMapping("/chess-game/{id}")
+    public ResponseEntity deleteRoom(@PathVariable int id) {
+        service.deleteRoomById(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/chess-game/{id}/password")
+    public ResponseEntity confirmPassword(@PathVariable int id, @RequestBody PasswordDto password) {
+        boolean result = service.confirmPassword(id, password.getPassword());
+        if (!result) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

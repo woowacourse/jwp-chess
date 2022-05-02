@@ -124,4 +124,12 @@ public class ChessGameService {
         }
         playerDao.saveById(id, Color.of(chessGame.getTurn()));
     }
+
+    public void deleteRoomById(int id) {
+        roomDao.deleteById(id);
+    }
+
+    public boolean confirmPassword(int id, String password) {
+        return roomDao.confirmPassword(id, password);
+    }
 }

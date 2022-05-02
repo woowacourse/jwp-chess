@@ -49,4 +49,17 @@ public class RoomDaoJdbcImpl implements RoomDao {
 
         return roomDtos;
     }
+
+    @Override
+    public void deleteById(int id) {
+        final String sql = "delete from room where id = " + id;
+        this.jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public boolean confirmPassword(int id, String password) {
+        final String sql = "select password from room where id = " + id;
+        final String dbPassword = jdbcTemplate.queryForObject(sql, String.class);
+        return passwordEncoder.matches(password, dbPassword);
+    }
 }

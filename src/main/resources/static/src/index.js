@@ -60,18 +60,54 @@ const JsonSender = {
             let roomName = rooms[key]['roomName']['roomName'];
             html += '<tr>';
             html += '<td>' + id + '</td>';
-            html += '<td onClick="play(' + id + ')">' + roomName + '</td>';
-            html += '<td><button class="delete-room" onclick="deleteGameButton()">삭제하기</button></td>';
+            html += '<td onclick="play(' + id + ')">' + roomName + '</td>';
+            html += '<td><button class="delete-room" onclick="deleteGameButton(' + id + ')">삭제하기</button></td>';
             html += '</tr>';
         }
         tbody.innerHTML = html;
     }
 }
 
-function deleteGameButton() {
-
-}
-
 function play(id) {
     window.location.replace("/chess-game/" + id);
+}
+
+async function deleteGameButton(id) {
+    const password = prompt("비밀번호를 입력해주세요.");
+    const result = await confirmPassword(id, password);
+    if (result) {
+        await fetch('/chess-game/' + id, {
+            method: 'DELETE',
+        });
+
+        alert("방 삭제가 완료되었습니다.")
+    }
+
+    window.location.reload();
+}
+
+async function confirmPassword(id, password) {
+    console.log("프론트: " + password);
+    await fetch('/chess-game/' + id + '/password', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            password: password
+        })
+    })
+    .then(handleDeleteErrors)
+    .catch(function (error) {
+        alert(error.message);
+        return false;
+    });
+    return true;
+}
+
+async function handleDeleteErrors(response) {
+    if (response.status != 200) {
+        throw Error("패스워드가 일치하지 않습니다. 다시 한번 확인해주세요.");
+    }
+    return response;
 }

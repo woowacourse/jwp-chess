@@ -10,4 +10,8 @@ public interface RoomDao {
     int save(RoomName name, RoomPassword password);
 
     List<RoomDto> findAll();
+
+    void deleteById(int id);
+
+    boolean confirmPassword(int id, String password);
 }

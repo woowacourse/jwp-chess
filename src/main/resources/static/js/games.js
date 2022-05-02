@@ -25,17 +25,19 @@ function deleteGame(id) {
     const object = {
         "password": document.getElementById("password").value
     }
+    alert(document.getElementById("password").value);
     $.ajax({
         url: "/" + id,
+        //dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         type: "delete",
         data: JSON.stringify(object),
         success: function (data) {
-            location.reload();
-            alert(data);
+            alert("성공");
         },
         error: function (data){
-            alert(JSON.stringify(data));
+            window.reload();
+            alert("실패");
         }
     })
 }
@@ -60,25 +62,39 @@ function createItem(id, name) {
     room.setAttribute("value", "체스방 이름:" + name + " 체스방 번호:" + id)
     participate.appendChild(room);
 
-    const deleteForm = document.createElement("input");
-    deleteForm.setAttribute("id", "password");
+    const deleteForm = document.createElement("form");
+    deleteForm.setAttribute("method", "post");
+    deleteForm.setAttribute("action", "/" + id);
+
+    const deleteHidden = document.createElement("input");
+    deleteHidden.setAttribute("type", "hidden");
+    deleteHidden.setAttribute("name", "_method");
+    deleteHidden.setAttribute("value", "delete");
+
+    deleteForm.appendChild(deleteHidden);
+
     const passwordMessage = document.createElement('span');
     passwordMessage.innerText = '비밀번호 입력';
 
     deleteForm.appendChild(passwordMessage);
 
-    const send = document.createElement("button");
-    send.setAttribute("onclick", "deleteGame("+id+")");
-    send.textContent = "방 삭제";
+    const password = document.createElement("input");
+    password.setAttribute("name", "password");
+    password.setAttribute("id", "password");
+
+    const send = document.createElement("input");
+    send.setAttribute("type", "submit");
+    send.setAttribute("value", "방 삭제");
 
     const blank = document.createElement('br');
 
+    deleteForm.appendChild(password);
+    deleteForm.appendChild(send);
+
     item.appendChild(participate);
     item.appendChild(deleteForm);
-    item.appendChild(send);
 
     itemRow.appendChild(item);
     itemRow.appendChild(blank);
-
     return itemRow;
 }

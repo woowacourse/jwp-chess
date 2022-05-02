@@ -9,9 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Sql("classpath:sql/init_room.sql")
 @JdbcTest
 public class JdbcRoomDaoTest {
     private static final String TEST_ROOM_ID = "TEST-GAME-ID";
@@ -25,13 +27,6 @@ public class JdbcRoomDaoTest {
     @BeforeEach
     void setUp() {
         gameDao = new JdbcRoomDao(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE game("
-                + "id   VARCHAR(36) NOT NULL,"
-                + "turn ENUM('WHITE', 'BLACK'),"
-                + "PRIMARY KEY (id))"
-        );
     }
 
     @DisplayName("새로운 게임을 game 테이블에 생성한다.")

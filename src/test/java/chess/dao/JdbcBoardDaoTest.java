@@ -16,10 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Sql("classpath:sql/init_board.sql")
 @JdbcTest
 class JdbcBoardDaoTest {
     private static final String TEST_ROOM_ID = "TEST-GAME-ID";
@@ -42,25 +44,6 @@ class JdbcBoardDaoTest {
         boardDao = new JdbcBoardDao(jdbcTemplate, new JdbcRoomDao(jdbcTemplate));
 
         JdbcRoomDao gameDao = new JdbcRoomDao(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE room, board IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE room("
-                + "id       VARCHAR(36) NOT NULL,"
-                + "title    VARCHAR(50) NOT NULL,"
-                + "password VARCHAR(64) NOT NULL,"
-                + "turn ENUM('WHITE', 'BLACK'),"
-                + "PRIMARY KEY (id))"
-        );
-
-        jdbcTemplate.execute("CREATE TABLE board("
-                + "room_id     VARCHAR(36) NOT NULL,"
-                + "x_axis      ENUM('1', '2', '3', '4', '5', '6', '7', '8'),"
-                + "y_axis      ENUM('1', '2', '3', '4', '5', '6', '7', '8'),"
-                + "piece_type  ENUM('PAWN', 'ROOK', 'KNIGHT', 'BISHOP', 'QUEEN', 'KING'),"
-                + "piece_color ENUM('WHITE', 'BLACK'),"
-                + "PRIMARY KEY (room_id, x_axis, y_axis),"
-                + "FOREIGN KEY (room_id) REFERENCES room (id) ON DELETE CASCADE)"
-        );
 
         gameDao.createRoom(Room.from(TEST_ROOM_ID, TEST_ROOM_TITLE, TEST_ROOM_PASSWORD));
     }

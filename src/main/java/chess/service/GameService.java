@@ -9,8 +9,8 @@ import chess.domain.Room;
 import chess.domain.board.Route;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
-import chess.dto.Arguments;
 import chess.dto.RoomRequest;
+import chess.dto.RouteRequest;
 import chess.repository.GameRepository;
 import chess.repository.RoomRepository;
 
@@ -32,27 +32,6 @@ public class GameService {
     public Long createNewGame(RoomRequest roomRequest) {
         Room room = Room.createRoomEncoded(roomRequest, encoder);
         return roomRepository.createRoom(room, new Ready());
-    }
-
-    public void startGame(Long gameId) {
-        GameState state = gameRepository.findGameById(gameId).start();
-        gameRepository.updateState(state, gameId);
-    }
-
-    public void finishGame(Long gameId) {
-        GameState state = gameRepository.findGameById(gameId).finish();
-        gameRepository.updateState(state, gameId);
-    }
-
-    public GameState readGameState(Long gameId) {
-        return gameRepository.findGameById(gameId);
-    }
-
-    public GameState moveBoard(Long gameId, Arguments arguments) {
-        Route route = Route.of(arguments);
-        final GameState moved = gameRepository.findGameById(gameId).move(arguments); // TODO: arguments to route
-        gameRepository.updateState(moved, route, gameId);
-        return moved;
     }
 
     public void removeRoom(Long roomId, RoomRequest roomRequest) {
@@ -77,5 +56,30 @@ public class GameService {
 
     public List<Room> readGameRooms() {
         return roomRepository.findAllRooms();
+    }
+
+    public Long findGameIdByRoomId(Long roomId) {
+        return gameRepository.findGameIdByRoomId(roomId);
+    }
+
+    public GameState moveBoard(Long gameId, RouteRequest routeRequest) {
+        final Route route = Route.of(routeRequest.getSource(), routeRequest.getDestination());
+        final GameState moved = gameRepository.findGameById(gameId).move(route);
+        gameRepository.updateState(moved, route, gameId);
+        return moved;
+    }
+
+    public GameState readGameState(Long gameId) {
+        return gameRepository.findGameById(gameId);
+    }
+
+    public void startGame(Long gameId) {
+        final GameState started = gameRepository.findGameById(gameId).start();
+        gameRepository.updateState(started, gameId);
+    }
+
+    public void finishGame(Long gameId) {
+        final GameState finished = gameRepository.findGameById(gameId).finish();
+        gameRepository.updateState(finished, gameId);
     }
 }

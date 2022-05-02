@@ -32,7 +32,7 @@ public class RoomRepository {
         final Long roomId = roomDao.saveRoom(RoomEntity.from(room.getRoomName(), room.getPassword()));
         final Long gameId = gameDao.saveGame(GameEntity.fromRoomId(gameState, roomId));
         pieceDao.saveBoard(toPieceEntities(gameState, gameId));
-        return gameId;
+        return roomId;
     }
 
     private List<PieceEntity> toPieceEntities(GameState gameState, Long gameId) {

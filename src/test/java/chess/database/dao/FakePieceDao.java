@@ -116,7 +116,7 @@ public class FakePieceDao implements PieceDao {
             .filter(row -> row.getHorizontalIndex().equals(pointEntity.getHorizontalIndex()) &&
                 row.getVerticalIndex().equals(pointEntity.getVerticalIndex()))
             .findAny()
-            .orElseThrow(IllegalArgumentException::new);
+            .orElse(new FakeRow("EMPTY", "NONE", pointEntity.getHorizontalIndex(), pointEntity.getVerticalIndex(), 0L));
     }
 
     @Override

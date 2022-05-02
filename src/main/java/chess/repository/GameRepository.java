@@ -43,10 +43,7 @@ public class GameRepository {
     }
 
     public GameState findGameById(Long gameId) {
-        final GameEntity gameEntity = findGameOrThrow(gameId);
-        List<PieceEntity> pieceEntities = findBoardOrThrow(gameId);
-
-        return toGameState(gameEntity, pieceEntities);
+        return toGameState(findGameOrThrow(gameId), findBoardOrThrow(gameId));
     }
 
     private GameState toGameState(GameEntity gameEntity, List<PieceEntity> pieceEntities) {
@@ -79,7 +76,6 @@ public class GameRepository {
     public GameState findGameByRoomId(Long roomId) {
         final GameEntity gameEntity = findGameByRoomIdOrThrow(roomId);
         List<PieceEntity> pieceEntities = findBoardOrThrow(gameEntity.getId());
-
         return toGameState(gameEntity, pieceEntities);
     }
 
@@ -88,5 +84,10 @@ public class GameRepository {
             .orElseThrow(() -> new IllegalArgumentException(
                 String.format("[ERROR] %d 방 번호에 해당하는 게임이 없습니다.", roomId)
             ));
+    }
+
+    public Long findGameIdByRoomId(Long roomId) {
+        final GameEntity entity = findGameByRoomIdOrThrow(roomId);
+        return entity.getId();
     }
 }

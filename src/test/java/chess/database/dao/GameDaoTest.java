@@ -2,7 +2,6 @@ package chess.database.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
 import chess.database.entity.GameEntity;
 import chess.database.entity.RoomEntity;
@@ -91,7 +89,6 @@ class GameDaoTest {
             () -> assertThat(gameEntity.getTurnColor()).isEqualTo("WHITE")
         );
 
-
     }
 
     @Test
@@ -104,7 +101,6 @@ class GameDaoTest {
         // then
         assertThat(isPresent).isTrue();
     }
-
 
     @AfterEach
     void setDown() {

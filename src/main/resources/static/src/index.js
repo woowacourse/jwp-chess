@@ -3,7 +3,7 @@ function setUpIndex() {
     const createForm = document.getElementById("create_form");
     createForm.addEventListener("submit", e => {
         e.preventDefault();
-        send("/create", {
+        send("/room", {
             method: 'post',
             body: toJSON(createForm),
             headers: new Headers({'Content-Type': 'application/json'})
@@ -69,9 +69,9 @@ function setUpMain(state) {
     const statusForm = document.getElementById("status_form");
     statusForm.addEventListener("submit", e => {
         e.preventDefault();
-        const roomId = getLastPath();
+        const gameId = getLastPath();
 
-        send("/status/" + roomId, {
+        send(`/board/${gameId}/status`, {
             method: 'get'
         }, showStatus);
     });
@@ -79,10 +79,10 @@ function setUpMain(state) {
     const startForm = document.getElementById("start_form");
     startForm.addEventListener("submit", e => {
         e.preventDefault();
-        const roomId = getLastPath();
-        send("/start/" + roomId, {
+        const gameId = getLastPath();
+        send(`/game/${gameId}/start`, {
             method: 'PATCH',
-            body: JSON.stringify({}),
+            body: JSON.stringify({'command': 'start'}),
             headers: new Headers({'Content-Type': 'application/json'})
         }, relocate);
     });
@@ -91,8 +91,10 @@ function setUpMain(state) {
     endForm.addEventListener("submit", e => {
         e.preventDefault();
         const roomId = getLastPath();
-        send("/end/" + roomId, {
-            method: 'PATCH'
+        send(`/game/${gameId}/end`, {
+            method: 'PATCH',
+            body: JSON.stringify({'command': 'end'}),
+            headers: new Headers({'Content-Type': 'application/json'})
         }, relocate);
     });
 
@@ -128,8 +130,8 @@ function moveByClick(source, destination) {
     }
     console.log('move by click called', source, destination);
 
-    const roomId = getLastPath();
-    send("/move/" + roomId, {
+    const gameId = getLastPath();
+    send("/board/" + gameId, {
         method: 'PATCH',
         body: JSON.stringify({'source': source.id, 'destination': destination.id}),
         headers: new Headers({'Content-Type': 'application/json'})
@@ -219,8 +221,12 @@ function createRoom(roomResponse) {
     console.log("roomResponse = ", roomResponse)
     const form = document.createElement("form");
     const enterAnchor = Object.assign(document.createElement('a'),
-        {href: `/main/${roomResponse['id']}`, innerText: roomResponse['roomName']});
-
+        {href: `/room/${roomResponse['id']}`, innerText: roomResponse['roomName']});
+    enterAnchor.onclick = function () {
+        send(`/room/${roomResponse['id']}`, {
+            method: 'get'
+        }, relocate);
+    }
     const deleteButton = Object.assign(document.createElement('img'),
         {
             src: '/images/X_BUTTON.png',
@@ -231,10 +237,10 @@ function createRoom(roomResponse) {
     deleteButton.onclick = function () {
         const password = prompt("패스워드를 입력하세요 : ");
         send(`/room/${roomResponse['id']}`, {
-                method: 'delete',
-                body: JSON.stringify({roomName: roomResponse['roomName'], password: password}),
-                headers: new Headers({'Content-Type': 'application/json'})
-            }, relocate);
+            method: 'delete',
+            body: JSON.stringify({roomName: roomResponse['roomName'], password: password}),
+            headers: new Headers({'Content-Type': 'application/json'})
+        }, relocate);
     }
 
     form.appendChild(enterAnchor);

@@ -1,6 +1,5 @@
 package chess.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +15,10 @@ public class ChessViewController {
     public static final String MAIN_PATH_FORMAT = "/main/%d";
     public static final String ROOT_PATH = "/";
 
-    private final GameService gameService;
+    private final GameService service;
 
-    @Autowired
-    public ChessViewController(GameService gameService) {
-        this.gameService = gameService;
+    public ChessViewController(GameService service) {
+        this.service = service;
     }
 
     @GetMapping("/")
@@ -30,10 +28,9 @@ public class ChessViewController {
 
     @GetMapping(path = "/main/{roomId}")
     public String showGame(Model model, @PathVariable Long roomId) {
-        GameState state = gameService.readGameState(roomId);
+        GameState state = service.readGameState(roomId);
         GameStateResponse response = GameStateResponse.of(state);
         model.addAttribute("response", response);
         return "game";
     }
-
 }

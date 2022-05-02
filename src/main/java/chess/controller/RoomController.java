@@ -1,6 +1,7 @@
 package chess.controller;
 
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,32 +13,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 import chess.dto.PathResponse;
 import chess.dto.RoomRequest;
+import chess.dto.RoomResponse;
 import chess.service.GameService;
 
 @RestController
-public class ChessIndexController {
+public class RoomController {
 
     private final GameService gameService;
 
-    public ChessIndexController(GameService gameService) {
+    public RoomController(GameService gameService) {
         this.gameService = gameService;
     }
 
     @GetMapping(path = "/rooms")
-    public ResponseEntity<Map<Long, String>> rooms() {
-        final Map<Long, String> gameRooms = gameService.readGameRooms();
-        return ResponseEntity.ok().body(gameRooms);
+    public ResponseEntity<List<RoomResponse>> rooms() {
+        List<RoomResponse> responses = gameService.readGameRooms()
+            .stream()
+            .map(RoomResponse::from)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok().body(responses);
     }
 
-    @PostMapping(path = "/create")
+    @PostMapping(path = "/room")
     public ResponseEntity<PathResponse> create(@RequestBody RoomRequest roomRequest) {
-        final Long id = gameService.createNewGame(roomRequest);
-        return respondPath(String.format(ChessViewController.MAIN_PATH_FORMAT, id));
+        final Long roomId = gameService.createNewGame(roomRequest);
+        final Long gameId = gameService.findGameIdByRoomId(roomId);
+        return respondPath(String.format(ChessViewController.MAIN_PATH_FORMAT, gameId));
     }
 
-    @GetMapping(path = "/enter/{roomId}")
+    @GetMapping(path = "/room/{roomId}")
     public ResponseEntity<PathResponse> enter(@PathVariable Long roomId) {
-        return respondPath(String.format(ChessViewController.MAIN_PATH_FORMAT, roomId));
+        Long gameId = gameService.findGameIdByRoomId(roomId);
+        return respondPath(String.format(ChessViewController.MAIN_PATH_FORMAT, gameId));
     }
 
     @DeleteMapping(path = "/room/{roomId}")

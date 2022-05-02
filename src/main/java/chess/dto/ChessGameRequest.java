@@ -1,10 +1,10 @@
 package chess.dto;
 
-public class ChessGameDto {
+public class ChessGameRequest {
     private String gameId;
     private String password;
 
-    public ChessGameDto(String gameId, String password) {
+    public ChessGameRequest(String gameId, String password) {
         this.gameId = gameId;
         this.password = password;
     }

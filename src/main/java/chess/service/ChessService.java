@@ -18,7 +18,8 @@ import chess.domain.board.SavedBoardGenerator;
 import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.position.Square;
-import chess.dto.ChessGameDto;
+import chess.dto.ChessGameRequest;
+import chess.dto.GameIdResponse;
 import chess.dto.MovementRequest;
 
 @Service
@@ -31,18 +32,18 @@ public class ChessService {
         this.pieceDao = pieceDao;
     }
 
-    public Map<String, String> getEmojis(ChessGameDto chessGameDto, String restart) {
-        ChessGame chessGame = loadChessGame(chessGameDto, restart);
+    public Map<String, String> getEmojis(ChessGameRequest chessGameRequest, String restart) {
+        ChessGame chessGame = loadChessGame(chessGameRequest, restart);
         return chessGame.getEmojis();
     }
 
-    public Map<String, String> getSavedEmojis(ChessGameDto chessGameDto) {
-        ChessGame chessGame = loadSavedChessGame(chessGameDto);
+    public Map<String, String> getSavedEmojis(ChessGameRequest chessGameRequest) {
+        ChessGame chessGame = loadSavedChessGame(chessGameRequest.getGameId());
         return chessGame.getEmojis();
     }
 
-    private ChessGame loadChessGame(ChessGameDto chessGameDto, String restart) {
-        String gameId = chessGameDto.getGameId();
+    private ChessGame loadChessGame(ChessGameRequest chessGameRequest, String restart) {
+        String gameId = chessGameRequest.getGameId();
         try {
             pieceDao.findByGameId(gameId);
         } catch (IllegalArgumentException e) {
@@ -52,7 +53,7 @@ public class ChessService {
             initBoard(gameId);
         }
         loadTurn(gameId, restart);
-        return loadGame(chessGameDto);
+        return loadGame(chessGameRequest);
     }
 
     private void initBoard(String gameId) {
@@ -66,22 +67,22 @@ public class ChessService {
         }
     }
 
-    private ChessGame loadGame(ChessGameDto chessGameDto) {
-        String gameId = chessGameDto.getGameId();
+    private ChessGame loadGame(ChessGameRequest chessGameRequest) {
+        String gameId = chessGameRequest.getGameId();
         ChessGame chessGame;
         try {
-            GameTurn gameTurn = getTurn(chessGameDto);
+            GameTurn gameTurn = getTurn(gameId);
             checkCanContinue(gameTurn);
-            chessGame = loadSavedChessGame(chessGameDto);
+            chessGame = loadSavedChessGame(gameId);
         } catch (RuntimeException e) {
             chessGame = loadNewChessGame();
-            startGame(gameId, chessGameDto.getPassword(), chessGame);
+            startGame(gameId, chessGameRequest.getPassword(), chessGame);
         }
         return chessGame;
     }
 
-    public GameTurn getTurn(ChessGameDto chessGameDto) {
-        return GameTurn.find(chessGameDao.findTurnById(chessGameDto.getGameId()));
+    public GameTurn getTurn(String gameId) {
+        return GameTurn.find(chessGameDao.findTurnById(gameId));
     }
 
     private void checkCanContinue(GameTurn gameTurn) {
@@ -90,14 +91,14 @@ public class ChessService {
         }
     }
 
-    public boolean isKingDie(ChessGameDto chessGameDto) {
-        ChessGame chessGame = loadSavedChessGame(chessGameDto);
+    public boolean isKingDie(ChessGameRequest chessGameRequest) {
+        ChessGame chessGame = loadSavedChessGame(chessGameRequest.getGameId());
         return chessGame.isKingDie();
     }
 
-    private ChessGame loadSavedChessGame(ChessGameDto chessGameDto) {
-        Map<Square, Piece> board = pieceDao.findByGameId(chessGameDto.getGameId());
-        return new ChessGame(new SavedBoardGenerator(board), getTurn(chessGameDto));
+    private ChessGame loadSavedChessGame(String gameId) {
+        Map<Square, Piece> board = pieceDao.findByGameId(gameId);
+        return new ChessGame(new SavedBoardGenerator(board), getTurn(gameId));
     }
 
     private ChessGame loadNewChessGame() {
@@ -109,13 +110,14 @@ public class ChessService {
         updateTurn(gameId, chessGame);
     }
 
-    public void movePiece(ChessGameDto chessGameDto, MovementRequest movementRequest) {
+    public void movePiece(ChessGameRequest chessGameRequest, MovementRequest movementRequest) {
         String source = movementRequest.getSource();
         String target = movementRequest.getTarget();
-        ChessGame chessGame = loadSavedChessGame(chessGameDto);
+        String gameId = chessGameRequest.getGameId();
+
+        ChessGame chessGame = loadSavedChessGame(gameId);
         chessGame.move(new Square(source), new Square(target));
 
-        String gameId = chessGameDto.getGameId();
         updateTurn(gameId, chessGame);
         updatePosition(gameId, source, target);
     }
@@ -136,9 +138,9 @@ public class ChessService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteGameByGameId(ChessGameDto chessGameDto) {
-        String gameId = chessGameDto.getGameId();
-        String password = chessGameDto.getPassword();
+    public void deleteGameByGameId(ChessGameRequest chessGameRequest) {
+        String gameId = chessGameRequest.getGameId();
+        String password = chessGameRequest.getPassword();
         checkPassword(gameId, password);
         checkCanDelete(GameTurn.find(chessGameDao.findTurnById(gameId)));
         chessGameDao.deleteByGameId(gameId, password);
@@ -157,22 +159,22 @@ public class ChessService {
         }
     }
 
-    public boolean isValidPassword(ChessGameDto chessGameDto) {
-        return chessGameDao.findPasswordByGameId(chessGameDto.getGameId(), chessGameDto.getPassword());
+    public boolean isValidPassword(ChessGameRequest chessGameRequest) {
+        return chessGameDao.findPasswordByGameId(chessGameRequest.getGameId(), chessGameRequest.getPassword());
     }
 
-    public boolean isGameExist(ChessGameDto chessGameDto) {
+    public boolean isGameExist(ChessGameRequest chessGameRequest) {
         try {
-            chessGameDao.findTurnById(chessGameDto.getGameId());
+            chessGameDao.findTurnById(chessGameRequest.getGameId());
             return true;
         } catch (IncorrectResultSizeDataAccessException e) {
             return false;
         }
     }
 
-    public double calculateScore(ChessGameDto chessGameDto, Color color) {
+    public double calculateScore(ChessGameRequest chessGameRequest, Color color) {
         try {
-            return getSavedGameResult(chessGameDto).calculateScore(color);
+            return getSavedGameResult(chessGameRequest.getGameId()).calculateScore(color);
         } catch (IllegalArgumentException e) {
             return createGameResult().calculateScore(color);
         }
@@ -183,8 +185,8 @@ public class ChessService {
         return new GameResult(board);
     }
 
-    private GameResult getSavedGameResult(ChessGameDto chessGameDto) {
-        Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameId(chessGameDto.getGameId())));
+    private GameResult getSavedGameResult(String gameId) {
+        Board board = new Board(new SavedBoardGenerator(pieceDao.findByGameId(gameId)));
         return new GameResult(board);
     }
 }

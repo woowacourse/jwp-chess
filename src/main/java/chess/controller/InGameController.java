@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import chess.dto.ChessGameDto;
+import chess.dto.ChessGameRequest;
 import chess.domain.piece.Color;
 import chess.dto.MovementRequest;
 import chess.service.ChessService;
@@ -22,40 +22,40 @@ public class InGameController {
     }
 
     @PostMapping
-    public String runGame(@ModelAttribute ChessGameDto chessGameDto, @RequestParam(name = "restart") String restart,
+    public String runGame(@ModelAttribute ChessGameRequest chessGameRequest, @RequestParam(name = "restart") String restart,
             Model model) {
-        if (isGameExist(chessGameDto) && isNotValidPassword(chessGameDto)) {
+        if (isGameExist(chessGameRequest) && isNotValidPassword(chessGameRequest)) {
             model.addAttribute("msg", "비밀 번호 틀렸지롱~ 🤪");
             model.addAttribute("games", chessService.getGameIds());
             return "ready";
         }
-        addScores(model, chessGameDto);
+        addScores(model, chessGameRequest);
 
-        model.addAllAttributes(chessService.getEmojis(chessGameDto, restart));
+        model.addAllAttributes(chessService.getEmojis(chessGameRequest, restart));
         model.addAttribute("msg", "누가 이기나 보자구~!");
         return "ingame";
     }
 
-    private boolean isGameExist(ChessGameDto chessGameDto) {
-        return chessService.isGameExist(chessGameDto);
+    private boolean isGameExist(ChessGameRequest chessGameRequest) {
+        return chessService.isGameExist(chessGameRequest);
     }
 
-    private boolean isNotValidPassword(ChessGameDto chessGameDto) {
-        return !chessService.isValidPassword(chessGameDto);
+    private boolean isNotValidPassword(ChessGameRequest chessGameRequest) {
+        return !chessService.isValidPassword(chessGameRequest);
     }
 
-    private void addScores(Model model, ChessGameDto chessGameDto) {
-        model.addAttribute("whiteScore", chessService.calculateScore(chessGameDto, Color.WHITE));
-        model.addAttribute("blackScore", chessService.calculateScore(chessGameDto, Color.BLACK));
+    private void addScores(Model model, ChessGameRequest chessGameRequest) {
+        model.addAttribute("whiteScore", chessService.calculateScore(chessGameRequest, Color.WHITE));
+        model.addAttribute("blackScore", chessService.calculateScore(chessGameRequest, Color.BLACK));
     }
 
     @PostMapping(value = "/{gameId}/move")
-    public String movePiece(@ModelAttribute ChessGameDto chessGameDto, @ModelAttribute MovementRequest movement,
+    public String movePiece(@ModelAttribute ChessGameRequest chessGameRequest, @ModelAttribute MovementRequest movement,
             Model model) {
-        executeMove(chessGameDto, model, movement);
-        addScores(model, chessGameDto);
+        executeMove(chessGameRequest, model, movement);
+        addScores(model, chessGameRequest);
 
-        if (chessService.isKingDie(chessGameDto)) {
+        if (chessService.isKingDie(chessGameRequest)) {
             model.addAttribute("msg", "킹 잡았다!! 게임 끝~!~!");
             return "finished";
         }
@@ -63,13 +63,13 @@ public class InGameController {
         return "ingame";
     }
 
-    private void executeMove(ChessGameDto chessGameDto, Model model, @ModelAttribute MovementRequest movementRequest) {
+    private void executeMove(ChessGameRequest chessGameRequest, Model model, @ModelAttribute MovementRequest movementRequest) {
         try {
-            chessService.movePiece(chessGameDto, movementRequest);
-            model.addAllAttributes(chessService.getSavedEmojis(chessGameDto));
+            chessService.movePiece(chessGameRequest, movementRequest);
+            model.addAllAttributes(chessService.getSavedEmojis(chessGameRequest));
             model.addAttribute("msg", "누가 이기나 보자구~!");
         } catch (IllegalArgumentException e) {
-            model.addAllAttributes(chessService.getSavedEmojis(chessGameDto));
+            model.addAllAttributes(chessService.getSavedEmojis(chessGameRequest));
             model.addAttribute("msg", e.getMessage());
         }
     }

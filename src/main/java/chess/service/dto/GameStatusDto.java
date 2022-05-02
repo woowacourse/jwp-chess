@@ -8,8 +8,12 @@ public enum GameStatusDto {
 
     private final String name;
 
-    GameStatusDto(String name) {
+    GameStatusDto(final String name) {
         this.name = name;
+    }
+
+    public static boolean isFinished(final String status) {
+        return FINISHED.name.equals(status);
     }
 
     public String getName() {

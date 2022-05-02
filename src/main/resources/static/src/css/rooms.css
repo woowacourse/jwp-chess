@@ -1,0 +1,15 @@
+.title {
+    text-align: center;
+}
+
+.content {
+    text-align: center;
+}
+
+.room_info {
+    display: none;
+}
+
+.room_info div {
+    padding: 5px;
+}

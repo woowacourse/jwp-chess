@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.service.dto.ChessRequestDto;
 import chess.dao.FakeGameDao;
 import chess.dao.FakePieceDao;
 import chess.domain.command.MoveCommand;
@@ -33,7 +34,9 @@ public class ChessServiceTest {
                 .map(entry -> PieceDto.of(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
 
-        ChessResponseDto chessResponseDto = chessService.initializeGame();
+        ChessRequestDto chessRequestDto = new ChessRequestDto("title", "password");
+        int chessId = chessService.start(chessRequestDto);
+        ChessResponseDto chessResponseDto = chessService.getChess(chessId);
 
         assertAll(
                 () -> assertThat(chessResponseDto.getPieces().size()).isEqualTo(32),
@@ -46,9 +49,10 @@ public class ChessServiceTest {
     @Test
     @DisplayName("기물 이동")
     void movePiece() {
-        chessService.initializeGame();
+        ChessRequestDto chessRequestDto = new ChessRequestDto("title", "password");
+        chessService.start(chessRequestDto);
 
-        ChessResponseDto chessResponseDto = chessService.movePiece(MoveCommand.of("e2", "e4"));
+        ChessResponseDto chessResponseDto = chessService.movePiece(1, MoveCommand.of("e2", "e4"));
 
         assertAll(
                 () -> assertThat(chessResponseDto.getPieces().size()).isEqualTo(32),
@@ -65,9 +69,10 @@ public class ChessServiceTest {
                 .stream()
                 .map(entry -> PieceDto.of(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
-        chessService.initializeGame();
+        ChessRequestDto chessRequestDto = new ChessRequestDto("title", "password");
+        chessService.start(chessRequestDto);
 
-        ChessResponseDto chessResponseDto = chessService.getChess();
+        ChessResponseDto chessResponseDto = chessService.getChess(1);
 
         assertAll(
                 () -> assertThat(chessResponseDto.getPieces().size()).isEqualTo(32),

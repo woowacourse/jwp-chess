@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dao.query.PieceQuery;
 import chess.domain.position.Position;
 import chess.service.dto.PieceDto;
 
@@ -24,42 +25,42 @@ public class JdbcPieceDao implements PieceDao {
     }
 
     @Override
-    public void remove(Position position) {
-        final String sql = "delete from piece where position = ?";
-        jdbcTemplate.update(sql, position.getName());
+    public void remove(final int id, final Position position) {
+        final String sql = PieceQuery.DELETE_PIECE.getValue();
+        jdbcTemplate.update(sql, id, position.getName());
     }
 
     @Override
-    public void removeAll() {
-        final String sql = "delete from piece";
-        jdbcTemplate.update(sql);
+    public void removeAll(final int id) {
+        final String sql = PieceQuery.DELETE_ALL_PIECE.getValue();
+        jdbcTemplate.update(sql, id);
     }
 
     @Override
-    public void saveAll(List<PieceDto> pieceDtos) {
-        final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
-        jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(pieceDtos));
+    public void saveAll(final int id, final List<PieceDto> pieceDtos) {
+        final String sql = PieceQuery.INSERT_PIECE.getValue();
+        jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(pieceDtos, id));
     }
 
     @Override
-    public void save(PieceDto pieceDto) {
-        final String sql = "insert into piece (position, type, color) values (?, ?, ?)";
-        jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor());
+    public void save(final int id, final PieceDto pieceDto) {
+        final String sql = PieceQuery.INSERT_PIECE.getValue();
+        jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor(), id);
     }
 
     @Override
-    public List<PieceDto> findAll() {
-        final String sql = "select * from piece";
-        return jdbcTemplate.query(sql, getPieceDtoRowMapper());
+    public List<PieceDto> findAll(final int id) {
+        final String sql = PieceQuery.SELECT_ALL_PIECE.getValue();
+        return jdbcTemplate.query(sql, getPieceDtoRowMapper(), id);
     }
 
     @Override
-    public void modifyPosition(Position source, Position target) {
-        final String sql = "update piece set position = ? where position = ?";
-        jdbcTemplate.update(sql, target.getName(), source.getName());
+    public void modifyPosition(final int id, final Position source, final Position target) {
+        final String sql = PieceQuery.UPDATE_PIECE_POSITION.getValue();
+        jdbcTemplate.update(sql, target.getName(), id, source.getName());
     }
 
-    private BatchPreparedStatementSetter getBatchPreparedStatementSetter(List<PieceDto> pieceDtos) {
+    private BatchPreparedStatementSetter getBatchPreparedStatementSetter(final List<PieceDto> pieceDtos, final int id) {
         return new BatchPreparedStatementSetter() {
 
             @Override
@@ -68,6 +69,7 @@ public class JdbcPieceDao implements PieceDao {
                 ps.setString(1, pieceDto.getPosition());
                 ps.setString(2, pieceDto.getType());
                 ps.setString(3, pieceDto.getColor());
+                ps.setInt(4, id);
             }
 
             @Override

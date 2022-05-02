@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>♟ LA KONG 's Chess Game ♟</title>
+    <link href="/src/css/rooms.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/src/js/rooms.js"></script>
+    <script src="/src/js/util.js"></script>
+</head>
+<body>
+<div id="board_div" class="title">
+    <div style="font-size: xx-large; padding-top:30px">♟ <b style="color: orange;">LA KONG</b> 's Chess Game ♟</div>
+</div>
+<div class="content">
+    <input type="button" value="방 만들기" id="open_room" />
+    <div class="room_info">
+        <div>방 이름 : <input type="text" id="title" /></div>
+        <div>비밀번호 : <input type="password" id="password" /></div>
+        <div><input type="button" value="시작" id="start" /></div>
+    </div>
+    <div id="rooms_wrap">
+        <ul id="rooms"></ul>
+        <div id="check_password_wrap" style="display: none;">
+            <input type="text" id="deletedRoomId" value="" hidden/>
+            비밀번호 확인 : <input type="password" id="check_password" />
+            <input type="button" value="취소" onclick="cancel()" />
+            <input type="button" value="입력" onclick="deleteGame()" />
+        </div>
+    </div>
+</div>
+</body>

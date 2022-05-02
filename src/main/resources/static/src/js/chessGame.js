@@ -2,10 +2,16 @@ window.onload = function () {
     getChess();
 };
 
+function getChessId() {
+    let url = location.href.split("/");
+    return url[url.length - 1];
+}
+
 function getChess() {
+    let chessId = getChessId();
     $.ajax({
-        url: "/chess-game/load",
-        type: 'get',
+        url: "/chess-game/pieces/" + chessId,
+        type: "get",
         success(data) {
             clearPieces();
             let obj = parseToJSON(data);
@@ -59,8 +65,8 @@ function setPieces(pieces) {
 
 function start() {
     $.ajax({
-        url: "/chess-game/start",
-        type: 'post',
+        url: "/chess-game",
+        type: "post",
         success(data) {
             clearPieces();
             let obj = parseToJSON(data);
@@ -87,11 +93,12 @@ function move(position) {
         return;
     }
 
+    let chessId = getChessId();
     let sourcePosition = positions[0];
     let targetPosition = positions[1];
     $.ajax({
-        url: "/chess-game/move",
-        type: 'post',
+        url: "/chess-game/move/" + chessId,
+        type: "put",
         traditional: true,
         beforeSend: function (xhr) {
              xhr.setRequestHeader("Content-type","application/json");
@@ -117,9 +124,10 @@ function move(position) {
 }
 
 function showScore() {
+    let chessId = getChessId();
     $.ajax({
-        url: "/chess-game/score",
-        type: 'get',
+        url: "/chess-game/score/" + chessId,
+        type: "get",
         success(data) {
             let score = parseToJSON(data);
             var message = "";
@@ -141,9 +149,10 @@ function showScore() {
 }
 
 function end() {
+    let chessId = getChessId();
     $.ajax({
-        url: "/chess-game/end",
-        type: 'post',
+        url: "/chess-game/end/" + chessId,
+        type: "put",
         success(data) {
             let status = parseToJSON(data);
             var message = "게임 종료 !!!\n♟ 게임 결과 ♟\n";
@@ -164,11 +173,4 @@ function end() {
             alert(obj.message);
         }
     });
-}
-
-function parseToJSON(data) {
-    if (typeof data == "string") {
-        data = JSON.parse(data);
-    }
-    return data;
 }

@@ -1,17 +1,28 @@
 package chess.dao;
 
+import chess.service.dto.ChessRequestDto;
 import chess.service.dto.GameDto;
 import chess.service.dto.GameStatusDto;
+import chess.service.dto.RoomResponseDto;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface GameDao {
 
-    void removeAll();
+    void removeAll(int id);
 
-    void save(GameDto gameDto);
+    void save(int id, ChessRequestDto chessRequestDto);
 
-    void modify(GameDto gameDto);
+    void modify(int id, GameDto gameDto);
 
-    void modifyStatus(GameStatusDto statusDto);
+    void modifyStatus(int id, GameStatusDto statusDto);
 
-    GameDto find();
+    GameDto find(int id);
+
+    List<RoomResponseDto> findAll();
+
+    String findPassword(int id);
+
+    Optional<Integer> findLastGameId();
 }

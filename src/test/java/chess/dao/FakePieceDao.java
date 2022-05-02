@@ -13,35 +13,35 @@ public class FakePieceDao implements PieceDao {
     private final Map<String, PieceDto> pieces = new HashMap<>();
 
     @Override
-    public void remove(Position position) {
+    public void remove(final int id, final Position position) {
         String positionName = position.getName();
         pieces.remove(positionName);
     }
 
     @Override
-    public void removeAll() {
+    public void removeAll(final int id) {
         pieces.clear();
     }
 
     @Override
-    public void saveAll(List<PieceDto> pieceDtos) {
+    public void saveAll(final int id, final List<PieceDto> pieceDtos) {
         for (PieceDto pieceDto : pieceDtos) {
-            save(pieceDto);
+            save(id, pieceDto);
         }
     }
 
     @Override
-    public void save(PieceDto pieceDto) {
+    public void save(final int id, final PieceDto pieceDto) {
         pieces.put(pieceDto.getPosition(), pieceDto);
     }
 
     @Override
-    public List<PieceDto> findAll() {
+    public List<PieceDto> findAll(final int id) {
         return new ArrayList<>(pieces.values());
     }
 
     @Override
-    public void modifyPosition(Position source, Position target) {
+    public void modifyPosition(final int id, final Position source, final Position target) {
         PieceDto pieceDto = pieces.get(source.getName());
         pieceDto.setPosition(target.getName());
         pieces.remove(source.getName());

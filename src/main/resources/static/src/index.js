@@ -22,7 +22,7 @@ function create() {
         if (!res.ok) {
             throw new Error(await res.text());
         }
-        location.reload();
+        location.replace(res.url);
     }).catch(error =>
         alert(error.message));
 }

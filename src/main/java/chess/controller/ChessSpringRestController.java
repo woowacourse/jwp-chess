@@ -3,6 +3,7 @@ package chess.controller;
 import chess.dto.MoveRequestDto;
 import chess.dto.RoomInfoDto;
 import chess.service.ChessGameService;
+import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,8 @@ public class ChessSpringRestController {
     @PostMapping("/")
     public ResponseEntity<String> create(@Valid @RequestBody RoomInfoDto roomInfoDto) {
         chessGameService.create(roomInfoDto.getTitle(), roomInfoDto.getPassword());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/")).build();
+
     }
 
     @PatchMapping("/boards/{id}/move")

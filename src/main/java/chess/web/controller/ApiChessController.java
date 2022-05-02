@@ -29,7 +29,7 @@ public class ApiChessController {
     @PostMapping("/game/{gameId}/board")
     public ResponseEntity<Void> initBoard(@PathVariable Long gameId) {
         chessService.initGame(gameId);
-        return ResponseEntity.created(URI.create("/board/" + gameId)).build();
+        return ResponseEntity.created(URI.create("/game/" + gameId + "/board")).build();
     }
 
     @GetMapping("/game/{gameId}/board")

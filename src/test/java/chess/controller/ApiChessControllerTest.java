@@ -48,10 +48,10 @@ class ApiChessControllerTest {
         chessService.initGame(id);
 
         RestAssured.given().log().all()
-            .when().post("/board/" + id)
+            .when().post("/game/" + id + "/board")
             .then().log().all()
             .statusCode(HttpStatus.CREATED.value())
-            .header("Location", is("/board/" + id));
+            .header("Location", is("/game/" + id + "/board"));
     }
 
     @DisplayName("해당 게임의 board를 가져온다.")
@@ -61,7 +61,7 @@ class ApiChessControllerTest {
 
         RestAssured.given().log().all()
             .accept(MediaType.APPLICATION_JSON_VALUE)
-            .when().get("/board/" + id)
+            .when().get("/game/" + id + "/board")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("pieces.size()", is(64));

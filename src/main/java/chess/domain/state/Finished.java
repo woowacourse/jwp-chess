@@ -18,7 +18,7 @@ public class Finished implements GameState {
 
     @Override
     public Piece getPiece(Position position) {
-        return null;
+        throw new IllegalArgumentException("게임이 끝났습니다.");
     }
 
     @Override

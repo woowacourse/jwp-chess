@@ -9,8 +9,8 @@ import java.util.Objects;
 public class Position {
 
     private static final Map<String, Position> POSITIONS = new HashMap<>();
-    private final static int POSITION_ROW_INDEX = 1;
-    private final static int POSITION_COLUMN_INDEX = 0;
+    private static final int POSITION_ROW_INDEX = 1;
+    private static final int POSITION_COLUMN_INDEX = 0;
 
     private final Column col;
     private final Row row;

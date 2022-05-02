@@ -12,7 +12,7 @@ import java.util.Map;
 @Repository
 public class BoardDaoImpl implements BoardDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

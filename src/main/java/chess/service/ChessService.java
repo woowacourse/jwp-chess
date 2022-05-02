@@ -24,6 +24,7 @@ import chess.entity.Room;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class ChessService {
         boardDao.saveAll(BoardInitialize.create(), roomId);
     }
 
-    public List<RoomDto> findRoomList() {
+    public List<RoomDto> findRooms() {
         List<Room> rooms = roomDao.findAll();
         return rooms.stream()
             .map(room -> new RoomDto(room.getId(), room.getTeam(), room.getTitle(),
@@ -52,7 +53,7 @@ public class ChessService {
     }
 
     public void deleteBy(Long roomId, String password) {
-        Room room = roomDao.findById(roomId);
+        Room room = getRoom(roomId);
         if (room.getStatus()) {
             throw new IllegalArgumentException("진행 중인 게임은 삭제할 수 없습니다.");
         }
@@ -63,6 +64,14 @@ public class ChessService {
         throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
     }
 
+    private Room getRoom(Long roomId) {
+        Optional<Room> room = roomDao.findById(roomId);
+        if (room.isEmpty()) {
+            throw new IllegalArgumentException("Room이 존재하지 않습니다.");
+        }
+        return room.get();
+    }
+
     public ScoreDto getScoreBy(Long roomId) {
         GameState gameState = getGameState(roomId);
         Score score = new Score(gameState.getBoard());
@@ -70,7 +79,7 @@ public class ChessService {
     }
 
     private GameState getGameState(Long roomId) {
-        Room room = roomDao.findById(roomId);
+        Room room = getRoom(roomId);
         Map<Position, Piece> board = getPiecesOfRoom(room);
         return createTurn(room, board);
     }
@@ -96,7 +105,7 @@ public class ChessService {
 
     public BoardDto getBoard(Long roomId) {
         List<PieceDto> pieces = boardDao.findAll(roomId);
-        Room room = roomDao.findById(roomId);
+        Room room = getRoom(roomId);
         return new BoardDto(pieces, room.getTeam());
     }
 
@@ -109,7 +118,7 @@ public class ChessService {
     }
 
     public GameStateDto findGameStateBy(Long roomId) {
-        Room room = roomDao.findById(roomId);
+        Room room = getRoom(roomId);
         return new GameStateDto(room.getTeam(), room.getStatus());
     }
 
@@ -140,7 +149,7 @@ public class ChessService {
     }
 
     public StatusDto getStatus(Long roomId) {
-        Room room = roomDao.findById(roomId);
+        Room room = getRoom(roomId);
         return new StatusDto(room.getStatus());
     }
 }

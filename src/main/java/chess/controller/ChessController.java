@@ -32,7 +32,7 @@ public class ChessController {
 
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomDto>> getRooms() {
-        return ResponseEntity.ok().body(chessService.findRoomList());
+        return ResponseEntity.ok().body(chessService.findRooms());
     }
 
     @PostMapping("/rooms")

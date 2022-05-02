@@ -3,10 +3,11 @@ package chess.dao;
 import chess.domain.Team;
 import chess.entity.Room;
 import java.util.List;
+import java.util.Optional;
 
 public interface RoomDao {
 
-    Room findById(Long roomId);
+    Optional<Room> findById(Long roomId);
 
     void deleteBy(Long roomId, String password);
 

@@ -6,6 +6,7 @@ import chess.entity.Room;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FakeRoomDaoImpl implements RoomDao {
@@ -13,8 +14,8 @@ public class FakeRoomDaoImpl implements RoomDao {
     private final Map<Long, Room> rooms = new HashMap<>();
 
     @Override
-    public Room findById(Long roomId) {
-        return rooms.get(roomId);
+    public Optional<Room> findById(Long roomId) {
+        return Optional.ofNullable(rooms.get(roomId));
     }
 
     @Override

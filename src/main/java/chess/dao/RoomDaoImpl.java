@@ -4,6 +4,7 @@ import chess.domain.Team;
 import chess.entity.Room;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -19,20 +20,16 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Room findById(Long roomId) {
+    public Optional<Room> findById(Long roomId) {
         final String sql = "select * from room  where id = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                new Room(
-                    rs.getLong("id"),
-                    Team.valueOf(rs.getString("team")),
-                    rs.getString("title"),
-                    rs.getString("password"),
-                    rs.getBoolean("status")
-                ), roomId);
-        } catch (Exception exception) {
-            return null;
-        }
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+            new Room(
+                rs.getLong("id"),
+                Team.valueOf(rs.getString("team")),
+                rs.getString("title"),
+                rs.getString("password"),
+                rs.getBoolean("status")
+            ), roomId));
     }
 
     @Override

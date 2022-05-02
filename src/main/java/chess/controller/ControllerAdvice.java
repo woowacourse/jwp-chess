@@ -19,6 +19,6 @@ public class ControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> ExceptionHandle(Exception exception) {
         logger.error(exception.getMessage());
-        return ResponseEntity.badRequest().body("서버에 문제가 발생했습니다.");
+        return ResponseEntity.notFound().build();
     }
 }

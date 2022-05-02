@@ -44,7 +44,7 @@ class ChessServiceTest {
 
     @Test
     void findRoomList() {
-        List<RoomDto> rooms = chessService.findRoomList();
+        List<RoomDto> rooms = chessService.findRooms();
         assertThat(rooms.size()).isEqualTo(2);
     }
 

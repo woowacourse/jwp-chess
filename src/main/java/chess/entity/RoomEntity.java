@@ -45,7 +45,7 @@ public class RoomEntity {
         return gameOver;
     }
 
-    public void patch(final RoomEntity roomEntity) {
+    public void update(final RoomEntity roomEntity) {
         if (roomEntity.name != null) {
             this.name = roomEntity.name;
         }

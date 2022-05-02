@@ -87,7 +87,7 @@ class RoomRepositoryImplTest {
         final RoomEntity targetRoom = roomRepository.insert(roomEntity);
         final RoomEntity nameChangedRoom = new RoomEntity(null, PasswordSha256Encoder.encode("1234"), "체스 고수만", null,
             null);
-        targetRoom.patch(nameChangedRoom);
+        targetRoom.update(nameChangedRoom);
         roomRepository.update(targetRoom);
 
         assertThat(roomRepository.findById(targetRoom.getId()).getName()).isEqualTo("체스 고수만");

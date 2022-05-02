@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,28 +28,28 @@ public class ChessSpringRestController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PatchMapping("/board/move")
-    public ResponseEntity<Boolean> move(@RequestParam(name = "id") Long id, @RequestBody String moveRequest) {
+    @PatchMapping("/boards/{id}/move")
+    public ResponseEntity<Boolean> move(@PathVariable Long id, @RequestBody String moveRequest) {
         List<String> command = Arrays.asList(moveRequest.split(" "));
         chessGameService.move(id, command.get(0), command.get(1));
         final boolean gameEnd = chessGameService.isGameEnd(id);
         return ResponseEntity.ok().body(gameEnd);
     }
 
-    @PostMapping("/board/end")
-    public ResponseEntity<String> end(@RequestParam(name = "id") Long id) {
+    @PostMapping("/boards/{id}/end")
+    public ResponseEntity<String> end(@PathVariable Long id) {
         chessGameService.end(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/board/restart")
-    public ResponseEntity<String> restart(@RequestParam(name = "id") Long id) {
+    @PostMapping("/boards/{id}/restart")
+    public ResponseEntity<String> restart(@PathVariable Long id) {
         chessGameService.restart(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/board")
-    public ResponseEntity<String> delete(@RequestParam(name = "id") Long id, @RequestBody String password) {
+    @DeleteMapping("/boards/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id, @RequestBody String password) {
         chessGameService.delete(id, password);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

@@ -5,7 +5,7 @@ import chess.dto.StatusDto;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -24,8 +24,8 @@ public class ChessSpringController {
         return modelAndView;
     }
 
-    @GetMapping("/board")
-    public ModelAndView board(@RequestParam(name = "id") Long id) {
+    @GetMapping("/boards/{id}")
+    public ModelAndView board(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView
                 .addObject("boardDto", chessGameService.getBoard(id));
@@ -33,8 +33,8 @@ public class ChessSpringController {
         return modelAndView;
     }
 
-    @GetMapping("/board/chess-status")
-    public ModelAndView status(@RequestParam(name = "id") Long id) {
+    @GetMapping("/boards/{id}/chess-status")
+    public ModelAndView status(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView
                 .addObject("status",
@@ -43,8 +43,8 @@ public class ChessSpringController {
         return modelAndView;
     }
 
-    @GetMapping("/board/chess-result")
-    public ModelAndView result(@RequestParam(name = "id") Long id) {
+    @GetMapping("/boards/{id}/chess-result")
+    public ModelAndView result(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView
                 .addObject("result", ResultDto

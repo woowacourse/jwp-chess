@@ -2,7 +2,7 @@ let source = '';
 let target = '';
 
 function join(id) {
-    location.replace(`/board?id=${id}`);
+    location.replace(`/boards/${id}`);
 }
 
 function create() {
@@ -45,9 +45,9 @@ function move(id) {
 }
 
 function movePiece() {
-    const params = new URLSearchParams(location.search);
-    const boardId = params.get('id');
-    fetch(`/board/move?id=${boardId}`, {
+    let url = window.location.pathname;
+    const boardId = url.substring(url.lastIndexOf('/') + 1);
+    fetch(`/boards/${boardId}/move`, {
         method: "PATCH",
         headers: {
             "Content-Type": "text/plain"
@@ -72,41 +72,41 @@ function movePiece() {
 }
 
 function end() {
-    const params = new URLSearchParams(location.search);
-    const boardId = params.get('id');
-    fetch(`/board/end?id=${boardId}`, {
+    let url = window.location.pathname;
+    const boardId = url.substring(url.lastIndexOf('/') + 1);
+    fetch(`/boards/${boardId}/end`, {
         method: "POST"
     }).then(async res => {
         if (!res.ok) {
             throw new Error(await res.text())
         }
-        location.replace(`/board/chess-result?id=${boardId}`);
+        location.replace(`/boards/${boardId}/chess-result`);
     }).catch(error => alert(error.message));
 }
 
 function restart() {
-    const params = new URLSearchParams(location.search);
-    const boardId = params.get('id');
-    fetch(`/board/restart?id=${boardId}`, {
+    let url = window.location.pathname;
+    const boardId = url.substring(url.lastIndexOf('/') + 1);
+    fetch(`/boards/${boardId}/restart`, {
         method: "POST"
     }).then(async res => {
         if (!res.ok) {
             throw new Error(await res.text());
         }
-        location.replace(`/board?id=${boardId}`);
+        location.replace(`/boards/${boardId}`);
     }).catch(error => alert(error.message));
 }
 
 function showStatus() {
-    const params = new URLSearchParams(location.search);
-    const boardId = params.get('id');
-    location.replace(`/board/chess-status?id=${boardId}`);
+    let url = window.location.pathname;
+    const boardId = url.substring(url.lastIndexOf('/') + 1);
+    location.replace(`/boards/${boardId}/chess-status`);
 }
 
 function showBoard() {
-    const params = new URLSearchParams(location.search);
-    const boardId = params.get('id');
-    location.replace(`/board?id=${boardId}`);
+    let url = window.location.pathname;
+    const boardId = url.substring(url.lastIndexOf('/') + 1);
+    location.replace(`/boards/${boardId}`);
 }
 
 function deleteBoard(id) {
@@ -114,7 +114,7 @@ function deleteBoard(id) {
     if (inputPassword == null) {
         return;
     }
-    fetch(`/board?id=${id}`, {
+    fetch(`/boards/${id}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "text/plain"

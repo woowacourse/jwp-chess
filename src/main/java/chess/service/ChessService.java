@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import chess.domain.ChessRepository;
 import chess.domain.Position;
 import chess.domain.game.Game;
-import chess.repository.ChessRepository;
 import chess.service.dto.ServiceDtoAssembler;
 import chess.service.dto.response.GameResponseDto;
 import chess.service.dto.response.GameStatusResponseDto;

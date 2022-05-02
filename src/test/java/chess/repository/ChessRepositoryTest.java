@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import chess.domain.ChessRepository;
 import chess.domain.Position;
 import chess.domain.game.Game;
 import chess.repository.dao.GameDao;
@@ -28,7 +29,7 @@ class ChessRepositoryTest {
     void setUp() {
         final GameDao gameDao = new GameDao(jdbcTemplate);
         final PlayerDao playerDao = new PlayerDao(jdbcTemplate);
-        this.chessRepository = new ChessRepository(gameDao, playerDao);
+        this.chessRepository = new ChessRepositoryImpl(gameDao, playerDao);
     }
 
     @DisplayName("데이터를 저장할 수 있어야 한다.")

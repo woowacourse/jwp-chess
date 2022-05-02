@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
+import chess.domain.ChessRepository;
 import chess.domain.game.Game;
 import chess.domain.player.Player;
 import chess.domain.player.Players;
@@ -17,12 +18,12 @@ import chess.repository.dto.RepositoryDtoAssembler;
 import chess.repository.dto.game.GameStatus;
 
 @Repository
-public class ChessRepository {
+public class ChessRepositoryImpl implements ChessRepository {
 
     private final GameDao gameDao;
     private final PlayerDao playerDao;
 
-    public ChessRepository(final GameDao gameDao, final PlayerDao playerDao) {
+    public ChessRepositoryImpl(final GameDao gameDao, final PlayerDao playerDao) {
         this.gameDao = gameDao;
         this.playerDao = playerDao;
     }
@@ -56,7 +57,7 @@ public class ChessRepository {
         return DaoDtoAssembler.game(gameId, players, gameDto);
     }
 
-    public Player findPlayerById(final Long playerId) {
+    private Player findPlayerById(final Long playerId) {
         final PlayerDto playerDto = playerDao.findById(playerId);
         return DaoDtoAssembler.player(playerDto);
     }

@@ -113,22 +113,25 @@ public class ChessService {
         }
     }
 
-    public void validatePassword(final PasswordRequestDto passwordRequestDto) {
+    public void remove(final int id, final PasswordRequestDto passwordRequestDto) {
+        validatePassword(passwordRequestDto);
+        validateStatus(id);
+
+        pieceDao.removeAll(id);
+        gameDao.removeAll(id);
+    }
+
+    private void validatePassword(final PasswordRequestDto passwordRequestDto) {
         String correctPassword = gameDao.findPassword(passwordRequestDto.getId());
         if (!correctPassword.equals(passwordRequestDto.getPassword())) {
             throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
     }
 
-    public void validateStatus(final int id) {
+    private void validateStatus(final int id) {
         GameDto gameDto = gameDao.find(id);
         if (!GameStatusDto.isFinished(gameDto.getStatus())) {
             throw new IllegalArgumentException("게임이 진행중이므로 삭제할 수 없습니다.");
         }
-    }
-
-    public void remove(final int id) {
-        pieceDao.removeAll(id);
-        gameDao.removeAll(id);
     }
 }

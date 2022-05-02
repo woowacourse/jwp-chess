@@ -65,8 +65,6 @@ public class ChessController {
 
     @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void delete(@PathVariable int id, @RequestBody PasswordRequestDto passwordRequestDto) {
-        chessService.validatePassword(passwordRequestDto);
-        chessService.validateStatus(id);
-        chessService.remove(id);
+        chessService.remove(id, passwordRequestDto);
     }
 }

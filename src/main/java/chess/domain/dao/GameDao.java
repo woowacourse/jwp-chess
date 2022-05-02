@@ -89,7 +89,7 @@ public class GameDao {
         }
     }
 
-    public void updateStatus(int gameId) {
+    public void endGame(int gameId) {
         final String sql = "update Game set status = ? where id = ?";
         try {
             jdbcTemplate.update(sql, Status.END.getName(), gameId);

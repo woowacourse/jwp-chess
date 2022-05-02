@@ -90,7 +90,7 @@ public class ChessService {
         gameDao.updateTurn(chessBoard.getCurrentTurn().name(), gameId);
 
         if (checkStatus(chessBoard, Status.END)) {
-            gameDao.updateStatus(gameId);
+            gameDao.endGame(gameId);
         }
     }
 

@@ -114,7 +114,7 @@ function isEven(r, f) {
 
 function placeChessPiece(position, pieceImage) {
   $("#chess-board td#" + position).append(
-    `<img src="images/${pieceImage}.png" />`
+    `<img src="/images/${pieceImage}.png" />`
   );
 }
 

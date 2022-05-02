@@ -3,11 +3,21 @@ $(document).ready(function () {
 });
 
 function triggerEvents() {
-  $("button#move").click(function () {
-    movePiece();
+  $("button#room-delete").click(function () {
+    deleteClickEvent();
   });
 
-  $("button#save-game").click(function () {
-    saveGame();
+  $("button#first-game").click(function () {
+    debugger;
+    location.replace("/games/first");
   });
+}
+
+function deleteClickEvent() {
+  let isDel = confirm("delete this event ? ");
+  if (isDel) {
+    alert("deleted ... ");
+    return;
+  }
+  console.log("cancel");
 }

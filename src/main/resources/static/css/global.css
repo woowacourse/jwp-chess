@@ -1,8 +1,11 @@
-body {
-    background-color: beige;
+* {
     font-family: 'Jua', sans-serif;
     font-weight: normal;
     font-style: normal;
+}
+
+body {
+    background-color: beige;
 }
 
 button {
@@ -16,4 +19,8 @@ button {
     text-decoration: none;
 
     cursor: pointer;
+}
+
+input {
+    border-radius: 5px;
 }

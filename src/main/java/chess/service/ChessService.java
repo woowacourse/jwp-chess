@@ -123,21 +123,24 @@ public class ChessService {
     }
 
     public void deleteGame(Long gameId, String password) {
-        authenticate(gameId, password);
-        GameState gameState = gameDao.findById(gameId).getState();
-        if (!gameState.isFinished()) {
-            throw new IllegalArgumentException("게임이 종료되기 전에는 삭제할 수 없습니다.");
-        }
+        GameEntity gameEntity = gameDao.findById(gameId);
+        authenticate(password, gameEntity);
+        validateDeletable(gameEntity);
         gameDao.delete(gameId);
     }
 
-    private void authenticate(Long gameId, String password) {
-        GameEntity gameEntity = gameDao.findById(gameId);
+    private void authenticate(String password, GameEntity gameEntity) {
         String actualPassword = gameEntity.getPassword();
         String salt = gameEntity.getSalt();
         String sentPassword = PasswordEncryptor.encrypt(password, salt);
         if (!sentPassword.equals(actualPassword)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    private void validateDeletable(GameEntity gameEntity) {
+        if (!gameEntity.getState().isFinished()) {
+            throw new IllegalArgumentException("게임이 종료되기 전에는 삭제할 수 없습니다.");
         }
     }
 

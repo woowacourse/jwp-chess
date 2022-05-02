@@ -33,12 +33,6 @@ public class JdbcGameDao implements GameDao {
     }
 
     @Override
-    public void save(final int id, final GameDto gameDto) {
-        final String sql = "insert into game (game_id, turn, status) values (?, ?, ?)";
-        jdbcTemplate.update(sql, id, gameDto.getTurn(), gameDto.getStatus());
-    }
-
-    @Override
     public void save(final int id, final ChessRequestDto chessRequestDto) {
         final String sql = "insert into game (game_id, title, password, turn, status) values (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, id,

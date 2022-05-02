@@ -11,8 +11,6 @@ public interface GameDao {
 
     void removeAll(int id);
 
-    void save(int id, GameDto gameDto);
-
     void save(int id, ChessRequestDto chessRequestDto);
 
     void modify(int id, GameDto gameDto);

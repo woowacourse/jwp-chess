@@ -17,11 +17,6 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public void save(int id, GameDto gameDto) {
-        this.gameDto = gameDto;
-    }
-
-    @Override
     public void save(int id, ChessRequestDto chessRequestDto) {
         this.gameDto = GameDto.of(chessRequestDto.getTurn(), chessRequestDto.getStatus());
     }

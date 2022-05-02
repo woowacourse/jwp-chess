@@ -61,6 +61,17 @@ class GameDaoTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 게임일 경우 비어있는 객체를 반환한다.")
+    void findById_Exception() {
+        //given
+        gameCreate();
+        //when
+        Optional<GameDto> actual = gameDao.findById(2);
+        //then
+        assertThat(actual).isEqualTo(Optional.empty());
+    }
+
+    @Test
     @DisplayName("지정 아이디를 가진 게임을 삭제한다.")
     void delete() {
         //given

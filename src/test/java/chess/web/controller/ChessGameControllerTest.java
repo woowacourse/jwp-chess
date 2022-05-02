@@ -32,7 +32,7 @@ public class ChessGameControllerTest {
     @Test
     void getPlay() {
         RestAssured.given().log().all()
-                .when().get("/playroom/1")
+                .when().get("/rooms/1")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.HTML);

@@ -28,7 +28,7 @@ public class ChessGameRestController {
         this.service = service;
     }
 
-    @GetMapping("/start/{roomId}")
+    @PostMapping("/start/{roomId}")
     public RoomDto start(@PathVariable int roomId) {
         return service.start(roomId);
     }

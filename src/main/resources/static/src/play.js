@@ -89,7 +89,6 @@ const boardDrawer = {
     draw: function(chessBoard) {
         boardDrawer.initBoard();
         let board = chessBoard;
-        //let turn = chessBoard.turn;
 
         let rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
         let columns = ['1', '2', '3', '4', '5', '6', '7', '8'];

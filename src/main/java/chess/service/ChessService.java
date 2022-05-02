@@ -10,7 +10,7 @@ import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
 import chess.domain.state.*;
 import chess.dto.request.GameIdRequest;
-import chess.dto.request.MakeRoomRequest;
+import chess.dto.request.RoomRequest;
 import chess.dto.response.*;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
@@ -38,15 +38,15 @@ public class ChessService {
         }
     }
 
-    public Long initializeGame(MakeRoomRequest makeRoomRequest) {
-        RoomEntity room = chessRoomDao.findById(makeRoomRequest);
+    public Long initializeGame(RoomRequest roomRequest) {
+        RoomEntity room = chessRoomDao.findById(roomRequest);
         if (room == null) {
-            chessRoomDao.makeGame(Team.WHITE, makeRoomRequest);
-            createGameState(chessRoomDao.findById(makeRoomRequest).getId());
-            room = chessRoomDao.findById(makeRoomRequest);
+            chessRoomDao.makeGame(Team.WHITE, roomRequest);
+            createGameState(chessRoomDao.findById(roomRequest).getId());
+            room = chessRoomDao.findById(roomRequest);
         }
         initializeGameState(room);
-        return chessRoomDao.findById(makeRoomRequest).getId();
+        return chessRoomDao.findById(roomRequest).getId();
     }
 
     public void loadExistGame(long id) {

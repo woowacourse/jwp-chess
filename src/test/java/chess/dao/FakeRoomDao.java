@@ -2,7 +2,7 @@ package chess.dao;
 
 import chess.domain.Team;
 import chess.dto.request.GameIdRequest;
-import chess.dto.request.MakeRoomRequest;
+import chess.dto.request.RoomRequest;
 import chess.entity.RoomEntity;
 
 import java.util.HashMap;
@@ -18,9 +18,9 @@ public class FakeRoomDao implements RoomDao {
     private long id = 0L;
 
     @Override
-    public void makeGame(Team team, MakeRoomRequest makeRoomRequest) {
+    public void makeGame(Team team, RoomRequest roomRequest) {
         id++;
-        games.put(id, new RoomEntity(id, team, makeRoomRequest.getName(), makeRoomRequest.getPassword()));
+        games.put(id, new RoomEntity(id, team, roomRequest.getName(), roomRequest.getPassword()));
     }
 
     @Override
@@ -32,12 +32,12 @@ public class FakeRoomDao implements RoomDao {
     }
 
     @Override
-    public RoomEntity findById(MakeRoomRequest makeRoomRequest) {
+    public RoomEntity findById(RoomRequest roomRequest) {
         RoomEntity room = games
                 .keySet()
                 .stream()
                 .filter(key -> games.get(key).getName()
-                        .equals(makeRoomRequest.getName()))
+                        .equals(roomRequest.getName()))
                 .map(games::get)
                 .findAny()
                 .orElse(null);

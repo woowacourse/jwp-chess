@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.request.MakeRoomRequest;
+import chess.dto.request.RoomRequest;
 import chess.dto.request.PasswordRequest;
 import chess.service.ChessService;
 
@@ -46,8 +46,8 @@ public class ChessGameViewController {
     }
 
     @PostMapping("/initialize/board")
-    public String createRoom(MakeRoomRequest makeRoomRequest) {
-        Long id = chessService.initializeGame(makeRoomRequest);
+    public String createRoom(RoomRequest roomRequest) {
+        Long id = chessService.initializeGame(roomRequest);
         return "redirect:/board/" + id;
     }
 

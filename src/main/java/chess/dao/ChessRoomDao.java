@@ -1,7 +1,7 @@
 package chess.dao;
 
 import chess.dto.request.GameIdRequest;
-import chess.dto.request.MakeRoomRequest;
+import chess.dto.request.RoomRequest;
 import chess.entity.RoomEntity;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,9 +21,9 @@ public class ChessRoomDao implements RoomDao {
     }
 
     @Override
-    public void makeGame(Team team, MakeRoomRequest makeRoomRequest) {
+    public void makeGame(Team team, RoomRequest roomRequest) {
         final String sql = "insert into room (status, name, password) values(?, ?, ?)";
-        jdbcTemplate.update(sql, team.name(), makeRoomRequest.getName(), makeRoomRequest.getPassword());
+        jdbcTemplate.update(sql, team.name(), roomRequest.getName(), roomRequest.getPassword());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ChessRoomDao implements RoomDao {
     }
 
     @Override
-    public RoomEntity findById(MakeRoomRequest makeRoomRequest) {
+    public RoomEntity findById(RoomRequest roomRequest) {
         final String sql = "select * from room where name = ?";
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
@@ -46,7 +46,7 @@ public class ChessRoomDao implements RoomDao {
                             Team.valueOf(rs.getString("status")),
                             rs.getString("name"),
                             rs.getString("password")),
-                    makeRoomRequest.getName());
+                    roomRequest.getName());
         } catch (Exception e) {
             return null;
         }

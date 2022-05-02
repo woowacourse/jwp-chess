@@ -1,8 +1,7 @@
 package controller;
 
 import chess.SpringChessApplication;
-import chess.dao.ChessRoomDao;
-import chess.dto.request.MakeRoomRequest;
+import chess.dto.request.RoomRequest;
 import chess.dto.response.MoveResponse;
 
 import chess.service.ChessService;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import io.restassured.RestAssured;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.hamcrest.core.Is.is;
 
@@ -33,7 +31,7 @@ public class ChessGameControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        id = chessService.initializeGame(new MakeRoomRequest("green green", "1234"));
+        id = chessService.initializeGame(new RoomRequest("green green", "1234"));
     }
 
     @AfterEach

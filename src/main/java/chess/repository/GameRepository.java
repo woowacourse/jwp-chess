@@ -23,10 +23,20 @@ public class GameRepository {
         this.pieceDao = pieceDao;
     }
 
-    public BoardDto saveGame(int roomId, Board board) {
+    public BoardDto saveNewGame(int roomId, Board board) {
+        deleteOldGame(roomId);
+        int boardId = saveGame(roomId, board);
+        return gameStateAndPieces(boardId);
+    }
+
+    private int saveGame(int roomId, Board board) {
         int boardId = boardDao.save(roomId, getGameStateDto(board));
         pieceDao.saveAll(boardId, board.getPieces());
-        return gameStateAndPieces(boardId);
+        return boardId;
+    }
+
+    private void deleteOldGame(int roomId) {
+        boardDao.deleteByRoom(roomId);
     }
 
     public int findBoardIdByRoomId(int roomId) {
@@ -47,10 +57,6 @@ public class GameRepository {
 
     public void updateBoardState(Board board, int boardId) {
         boardDao.updateState(boardId, getGameStateDto(board));
-    }
-
-    public void deleteOldBoard(int roomId) {
-        boardDao.deleteByRoom(roomId);
     }
 
     public Board loadBoard(int boardId) {

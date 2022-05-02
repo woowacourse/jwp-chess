@@ -25,8 +25,7 @@ public class GameService {
 
     public BoardDto newBoard(int roomId) {
         Board board = new Board(new RegularRuleSetup());
-        gameRepository.deleteOldBoard(roomId);
-        return gameRepository.saveGame(roomId, board);
+        return gameRepository.saveNewGame(roomId, board);
     }
 
     public void move(int boardId, CommendDto commendDto) {

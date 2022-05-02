@@ -1,5 +1,7 @@
 package chess.dto;
 
+import java.util.Objects;
+
 public final class GameCreationRequest {
 
     private final String name;

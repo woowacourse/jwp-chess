@@ -73,8 +73,12 @@ public class ChessService {
         return chessGameDAO.findAllGames();
     }
 
-    public GameRoomResponse findGameById(long id) {
-        return GameRoomResponse.from(chessGameDAO.findGameById(id));
+    public GameRoomResponse findRoomToEnter(long id, final String password) {
+        ChessGame game = chessGameDAO.findGameById(id);
+        if (!game.isPasswordMatch(password)) {
+            throw new InvalidPasswordException();
+        }
+        return GameRoomResponse.from(game);
     }
 
     public void deleteGame(final long gameId, final String password) {

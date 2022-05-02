@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -33,13 +34,13 @@ public class ChessGameController {
 
     @PostMapping(value = "/chess/new", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String createGame(@ModelAttribute GameCreationRequest gameCreationRequest) {
-        long gameId = chessService.addChessGame(gameCreationRequest);
-        return "redirect:/chess/game/" + gameId;
+        chessService.addChessGame(gameCreationRequest);
+        return "redirect:/";
     }
 
-    @GetMapping("/chess/game/{id}")
-    public String showChessGameRoom(@PathVariable long id, Model model) {
-        GameRoomResponse chessGameRoomResponse = chessService.findGameById(id);
+    @PostMapping("/chess/game/{id}")
+    public String showChessGameRoom(@PathVariable long id, @RequestParam String password, Model model) {
+        GameRoomResponse chessGameRoomResponse = chessService.findRoomToEnter(id, password);
         model.addAttribute("chessGameRoom", chessGameRoomResponse);
         return "game";
     }

@@ -21,6 +21,11 @@
     <tr>
        <td>
            <a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a>
+           <form action="/chess/game/{{id}}" method="post">
+               <label for="password">방 비밀번호</label>
+               <input type="password" id="password" name="password">
+               <button type="submit">입장</button>
+           </form>
            <button id="deleteBtn" onclick="deleteBtnHandler({{id}})">삭제</button>
        </td>
     </tr>

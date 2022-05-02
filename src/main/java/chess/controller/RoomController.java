@@ -52,7 +52,7 @@ public class RoomController {
         return ResponseEntity.ok(Map.of("url", "/"));
     }
 
-    @GetMapping(value = "/{roomId}/new")
+    @PostMapping(value = "/{roomId}/new")
     public ResponseEntity<BoardDto> startNewGame(@PathVariable int roomId) {
         return ResponseEntity.ok(gameService.newBoard(roomId));
     }

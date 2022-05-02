@@ -16,11 +16,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 public class ChessExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorResponse> handleTypeMismatch() {
-        return ResponseEntity.badRequest().body(new ErrorResponse("잘못된 타입이 들어왔습니다."));
-    }
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException e) {
         e.printStackTrace();
@@ -42,6 +37,11 @@ public class ChessExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch() {
+        return ResponseEntity.badRequest().body(new ErrorResponse("잘못된 타입이 들어왔습니다."));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleInvalidArguments(MethodArgumentNotValidException e) {
         String errorMessage = e.getBindingResult()
@@ -49,5 +49,10 @@ public class ChessExceptionHandler {
                 .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.joining(System.lineSeparator()));
         return ResponseEntity.badRequest().body(new ErrorResponse(errorMessage));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleEtcException() {
+        return ResponseEntity.internalServerError().body(new ErrorResponse("서버의 요청 처리에 문제가 있습니다."));
     }
 }

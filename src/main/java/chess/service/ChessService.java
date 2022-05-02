@@ -59,9 +59,7 @@ public class ChessService {
     }
 
     private void savePiece(Long gameId, Position position, Piece piece) {
-        if (pieceDao.find(gameId, position).isEmpty()) {
-            pieceDao.save(gameId, position, piece);
-        }
+        pieceDao.save(gameId, position, piece);
     }
 
     public ChessGamesResponse loadAllGames() {

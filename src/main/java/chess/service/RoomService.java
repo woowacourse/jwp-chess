@@ -33,20 +33,21 @@ public class RoomService {
         List<Room> rooms = chessRoomRepository.findAll();
         for (Room room : rooms) {
             List<Member> membersByRoom = chessMemberRepository.findMembersByRoomId(room.getId());
-            boolean isEnd = chessBoardRepository.getStatusById(room.getBoardId()).isEnd();
+            Board board = chessBoardRepository.getBoardById(room.getBoardId());
             roomsDto.add(
-                    new RoomDto(room.getId(), room.getTitle(), room.getPassword(), membersByRoom, isEnd));
+                    new RoomDto(room.getId(), room.getTitle(), room.getPassword(), membersByRoom, board.isEnd()));
         }
         return new RoomsDto(roomsDto);
     }
 
     public GameDeleteResponseDto deleteRoom(int id, String password) {
         Room room = chessRoomRepository.getById(id);
-        if (room.isSamePassword(password)) {
-            chessRoomRepository.deleteById(id);
-            return new GameDeleteResponseDto(true, "삭제되었습니다.");
+
+        if (!room.isSamePassword(password)) {
+            return new GameDeleteResponseDto(false,"비밀번호가 일치하지 않습니다.");
         }
-        return new GameDeleteResponseDto(false, "삭제할 수 없습니다.");
+        chessRoomRepository.deleteById(id);
+        return new GameDeleteResponseDto(true, "삭제되었습니다.");
     }
 
 }

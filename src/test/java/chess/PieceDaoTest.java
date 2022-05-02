@@ -18,35 +18,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 class PieceDaoTest {
-    PieceDao pieceDao;
-    GameDao gameDao;
+    private PieceDao pieceDao;
+    private GameDao gameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void initPieceDaoTest() {
-        jdbcTemplate.execute("DROP TABLE PIECES IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE GAMES IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE games\n" +
-                "(\n" +
-                "    game_id  int         not null AUTO_INCREMENT,\n" +
-                "    name     varchar(64) not null,\n" +
-                "    password varchar(64) not null,\n" +
-                "    turn     varchar(5)  not null,\n" +
-                "    primary key (game_id)\n" +
-                ");");
         gameDao = new GameDao(jdbcTemplate);
-        jdbcTemplate.execute("CREATE TABLE pieces\n" +
-                "(\n" +
-                "    piece_id int         not null AUTO_INCREMENT,\n" +
-                "    position varchar(4)  not null,\n" +
-                "    name     varchar(10) not null,\n" +
-                "    game_id int not null,\n" +
-                "    primary key (piece_id),\n" +
-                "    foreign key(game_id) references GAMES (game_id)\n" +
-                ");");
-
         pieceDao = new PieceDao(jdbcTemplate);
     }
 

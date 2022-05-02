@@ -2,37 +2,28 @@ package chess;
 
 import chess.entity.GameEntity;
 import chess.model.dao.GameDao;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Sql("classpath:schema.sql")
 @JdbcTest
 class GameDaoTest {
-    GameDao gameDao;
+    private GameDao gameDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void initPieceDaoTest() {
-        jdbcTemplate.execute("DROP TABLE GAMES IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE games\n" +
-                "(\n" +
-                "    game_id  int         not null AUTO_INCREMENT,\n" +
-                "    name     varchar(64) not null,\n" +
-                "    password varchar(64) not null,\n" +
-                "    turn     varchar(5)  not null,\n" +
-                "    primary key (game_id)\n" +
-                ");");
         gameDao = new GameDao(jdbcTemplate);
     }
 

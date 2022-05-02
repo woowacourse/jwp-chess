@@ -23,6 +23,11 @@ public class FakeGameDao implements GameDao{
     }
 
     @Override
+    public void createGame(String game_id, String roomName, String roomEncryptedPassword, String teamName, LocalDateTime createdAt) {
+
+    }
+
+    @Override
     public Game findLastGame() {
         return games.stream()
                 .max(Comparator.comparing(Game::getCreatedAt))

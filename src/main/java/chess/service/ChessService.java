@@ -14,7 +14,9 @@ import chess.domain.entity.Game;
 import chess.domain.gameflow.AlternatingGameFlow;
 import chess.domain.gameflow.GameFlow;
 import chess.dto.request.web.SaveGameRequest;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +50,17 @@ public class ChessService {
         boardPieceDao.save(gameId, saveGameRequest.getPieces());
     }
 
+    @Transactional
+    public void mergeGame(String gameId,
+                          String roomName,
+                          String encryptedRoomPassword,
+                          Map<String, String> pieces,
+                          String teamName,
+                          LocalDateTime createdAt
+                          ) {
+        gameDao.createGame(gameId, roomName, encryptedRoomPassword, teamName, createdAt);
+        boardPieceDao.save(gameId, pieces);
+    }
 
     @Transactional(readOnly = true)
     public ChessBoard loadLastGame() {

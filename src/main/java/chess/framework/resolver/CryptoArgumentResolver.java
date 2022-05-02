@@ -1,6 +1,7 @@
 package chess.framework.resolver;
 
 import chess.domain.crypto.EncryptedRoom;
+import chess.util.CryptoUtils;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -27,6 +28,8 @@ public class CryptoArgumentResolver implements HandlerMethodArgumentResolver {
         String roomName = request.getParameter("room-name");
         String roomPassword = request.getParameter("room-password");
 
-        return new EncryptedRoom(roomName, roomPassword);
+        String encryptedRoomPassword = CryptoUtils.encrypt(roomPassword);
+
+        return new EncryptedRoom(roomName, encryptedRoomPassword);
     }
 }

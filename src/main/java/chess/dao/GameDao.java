@@ -8,6 +8,12 @@ public interface GameDao {
 
     void save(String gameId, String lastTeamName, LocalDateTime createdAt);
 
+    void createGame(String game_id,
+              String roomName,
+              String roomEncryptedPassword,
+              String teamName,
+              LocalDateTime createdAt);
+
     Game findLastGame();
 
     void deleteAll();

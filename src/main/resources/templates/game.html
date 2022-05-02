@@ -16,7 +16,10 @@
 <script src="/js/game.js"></script>
 <body>
 
-  <input id="isNewGame" type="hidden" th:value="${isNewGame}">
+  <input id="is-new-game" type="hidden" th:value="${isNewGame}">
+  <input id="created-room-id" type="hidden" th:value="${createdRoomId}">
+  <input id="room-name" type="hidden" th:value="${roomName}">
+  <input id="encrypted-room-password" type="hidden" th:value="${encryptedRoomPassword}">
 
   <div class="container">
     <div class="sub-container">

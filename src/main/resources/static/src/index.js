@@ -146,16 +146,16 @@ function drawTurn(color) {
 }
 
 function drawBoardByResponse(responseJson) {
-    drawBoard(responseJson['board']);
-    drawTurn(responseJson['color']);
-    if (responseJson['state'] === "FINISHED") {
+    drawBoard(responseJson.board);
+    drawTurn(responseJson.color);
+    if (responseJson.state === "FINISHED") {
         alert("킹이 잡혔습니다.");
         relocate({'url': "/"})
     }
 }
 
-function drawBoard(board) {
-    const responses = board['pieceResponses']
+function drawBoard(response) {
+    const responses = response['pieceResponses']
     for (let index in responses) {
         const piece = responses[index]
         drawPiece(piece['horizontalIndex'], piece['verticalIndex'], piece['type'], piece['color']);
@@ -176,7 +176,6 @@ function drawPiece(horizontal, vertical, type, color) {
 
 // ------------- utils start -----------------
 function relocate(responseJson) {
-    alert("responseJson in relocate =", responseJson);
     console.log("responseJson in relocate =", responseJson);
     window.location.href = responseJson['url'];
 }

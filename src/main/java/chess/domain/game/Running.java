@@ -1,5 +1,6 @@
 package chess.domain.game;
 
+import chess.database.dto.RouteDto;
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.Route;
@@ -24,6 +25,15 @@ public class Running extends GameState {
     @Override
     public GameState move(Arguments arguments) {
         board = board.move(Route.of(arguments), turnColor);
+        if (board.isKingDead()) {
+            return new Finished(board, turnColor);
+        }
+        return new Running(board, turnColor.toggle());
+    }
+
+    @Override
+    public GameState move(RouteDto routeDto) {
+        board = board.move(Route.of(routeDto), turnColor);
         if (board.isKingDead()) {
             return new Finished(board, turnColor);
         }

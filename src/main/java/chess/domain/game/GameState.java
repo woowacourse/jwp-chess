@@ -1,5 +1,6 @@
 package chess.domain.game;
 
+import chess.database.dto.RouteDto;
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.Point;
@@ -26,6 +27,8 @@ public abstract class GameState {
     public abstract boolean isRunnable();
 
     public abstract GameState move(Arguments arguments);
+
+    public abstract GameState move(RouteDto routeDto);
 
     public Map<Point, Piece> getPointPieces() {
         return board.getPointPieces();

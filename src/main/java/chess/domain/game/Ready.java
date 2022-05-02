@@ -1,5 +1,6 @@
 package chess.domain.game;
 
+import chess.database.dto.RouteDto;
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
@@ -27,6 +28,11 @@ public class Ready extends GameState {
 
     @Override
     public GameState move(Arguments arguments) {
+        throw new UnsupportedOperationException("[ERROR] 아직 게임이 시작되지 않았습니다..");
+    }
+
+    @Override
+    public GameState move(RouteDto routeDto) {
         throw new UnsupportedOperationException("[ERROR] 아직 게임이 시작되지 않았습니다..");
     }
 

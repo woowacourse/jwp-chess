@@ -1,9 +1,9 @@
 package chess.controller;
 
 import chess.database.dto.RoomDto;
+import chess.database.dto.RouteDto;
 import chess.database.dto.StatusDto;
 import chess.domain.game.GameState;
-import chess.dto.Arguments;
 import chess.dto.GameStateResponse;
 import chess.dto.PathResponse;
 import chess.service.ChessRoomService;
@@ -79,10 +79,10 @@ public class SpringChessController {
     }
 
     @PostMapping(path = "/rooms/{roomId}/move")
-    public ResponseEntity<GameStateResponse> move(@PathVariable("roomId") int roomId,
-        @RequestBody String body) {
-        final Arguments arguments = Arguments.ofJson(body, Command.MOVE.getParameters());
-        GameState state = chessRoomService.moveBoard(roomId, arguments);
+    public ResponseEntity<GameStateResponse> move(@PathVariable("roomId") int roomId, @RequestBody String body) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        RouteDto routeDto = mapper.readValue(body, RouteDto.class);
+        GameState state = chessRoomService.moveBoard(roomId, routeDto);
         return ResponseEntity.ok().body(GameStateResponse.of(state));
     }
 

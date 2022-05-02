@@ -6,7 +6,6 @@ import chess.database.dao.GameDao;
 import chess.database.dao.spring.RoomDao;
 import chess.database.dto.BoardDto;
 import chess.database.dto.GameStateDto;
-import chess.database.dto.PointDto;
 import chess.database.dto.RoomDto;
 import chess.database.dto.RouteDto;
 import chess.domain.Room;
@@ -16,7 +15,6 @@ import chess.domain.board.Route;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import chess.domain.game.State;
-import chess.dto.Arguments;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,10 +61,10 @@ public class ChessRoomService {
         return GameStateGenerator.generate(board, gameStateDto);
     }
 
-    public GameState moveBoard(int roomId, Arguments arguments) {
-        GameState movedState = readGameState(roomId).move(arguments);
+    public GameState moveBoard(int roomId, RouteDto routeDto) {
+        GameState movedState = readGameState(roomId).move(routeDto);
         gameDao.updateState(GameStateDto.of(movedState), roomId);
-        Route route = Route.of(arguments);
+        Route route = Route.of(routeDto);
         boardDao.deletePiece(route.getDestination(), roomId);
         boardDao.updatePiece(route.getSource(), route.getDestination(), roomId);
         return movedState;

@@ -9,6 +9,7 @@ import chess.database.dao.spring.RoomDao;
 import chess.database.dto.BoardDto;
 import chess.database.dto.GameStateDto;
 import chess.database.dto.RoomDto;
+import chess.database.dto.RouteDto;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.game.GameState;
@@ -87,9 +88,9 @@ class ChessRoomServiceTest {
     @DisplayName("말을 움직인다.")
     public void moveBoard() {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
-        Arguments arguments = Arguments.ofArray(new String[]{"a2", "a4"}, 0);
+        RouteDto routeDto = new RouteDto("a2", "a4");
         chessRoomService.startGame(roomDto.getId());
-        GameState moved = chessRoomService.moveBoard(roomDto.getId(), arguments);
+        GameState moved = chessRoomService.moveBoard(roomDto.getId(), routeDto);
         assertThat(moved).isNotNull();
     }
 
@@ -105,7 +106,7 @@ class ChessRoomServiceTest {
     @DisplayName("모든 게임 방을 조회한다.")
     public void findAllRoom() {
         chessRoomService.createNewRoom(TEST_CREATION_ROOM_NAME, TEST_CREATION_ROOM_PASSWORD);
-        Map<RoomDto,String> roomStates = chessRoomService.findAllRoomState();
+        Map<RoomDto, String> roomStates = chessRoomService.findAllRoomState();
         System.out.println("rooms:  " + roomStates);
         assertThat(roomStates.size()).isEqualTo(2);
     }

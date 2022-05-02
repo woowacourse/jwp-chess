@@ -1,0 +1,8 @@
+spring:
+  h2:
+    console:
+      enabled: true
+
+  sql:
+    init:
+      schema-locations: classpath:data/schema-test.sql

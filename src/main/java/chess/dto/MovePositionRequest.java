@@ -1,14 +1,14 @@
 package chess.dto;
 
-public class MoveDto {
+public class MovePositionRequest {
 
     private String from;
     private String to;
 
-    public MoveDto() {
+    public MovePositionRequest() {
     }
 
-    public MoveDto(String from, String to) {
+    public MovePositionRequest(String from, String to) {
         this.from = from;
         this.to = to;
     }

@@ -19,7 +19,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@TestPropertySource("classpath:application-test.properties")
 @Sql("classpath:schema.sql")
 class SpringGameDaoTest {
 

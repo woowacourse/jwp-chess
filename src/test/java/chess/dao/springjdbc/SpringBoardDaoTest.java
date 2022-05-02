@@ -12,12 +12,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@TestPropertySource("classpath:application-test.properties")
 @Sql("classpath:schema.sql")
 class SpringBoardDaoTest {
 

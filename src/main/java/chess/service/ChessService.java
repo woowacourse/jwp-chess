@@ -64,7 +64,7 @@ public class ChessService {
     public Long insertBoard(Long roomId) {
         ChessBoard chessBoard = new ChessBoard(new NormalPiecesGenerator());
         List<Square> board = chessBoard.getPieces().entrySet().stream()
-                .map(entry -> new Square(roomId, entry.getKey().toString(),
+                .map(entry -> new Square(null, roomId, entry.getKey().toString(),
                         entry.getValue().getSymbol().name(), entry.getValue().getColor().name()))
                 .collect(Collectors.toList());
 
@@ -98,9 +98,9 @@ public class ChessService {
         roomDao.updateStateById(roomId, chessGame.getState().toString());
 
         Map<String, Piece> pieces = chessGame.getChessBoard().toMap();
-        squareDao.updateSquare(new Square(roomId, target,
+        squareDao.updateSquare(new Square(null, roomId, target,
                 pieces.get(target).getSymbol().toString(), pieces.get(target).getColor().toString()));
-        squareDao.updateSquare(new Square(roomId, source,
+        squareDao.updateSquare(new Square(null, roomId, source,
                 EmptyPiece.getInstance().getSymbol().toString(), EmptyPiece.getInstance().getColor().toString()));
     }
 

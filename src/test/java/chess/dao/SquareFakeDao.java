@@ -28,7 +28,7 @@ public class SquareFakeDao implements SquareDao {
         return memoryDbSquare.entrySet().stream()
                 .filter(entry -> entry.getValue().getRoomId() == roomId)
                 .map(entry -> new Square(
-                        entry.getValue().getRoomId(), entry.getValue().getPosition(),
+                        entry.getKey(), entry.getValue().getRoomId(), entry.getValue().getPosition(),
                         entry.getValue().getSymbol(), entry.getValue().getColor()))
                 .collect(Collectors.toList());
     }

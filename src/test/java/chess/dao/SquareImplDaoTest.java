@@ -32,7 +32,7 @@ class SquareImplDaoTest {
         Long roomId = insertTestRoom("title", "1111");
         ChessBoard chessBoard = new ChessBoard(new NormalPiecesGenerator());
         List<Square> board = chessBoard.getPieces().entrySet().stream()
-                .map(entry -> new Square(roomId, entry.getKey().toString(),
+                .map(entry -> new Square(null, roomId, entry.getKey().toString(),
                         entry.getValue().getSymbol().name(), entry.getValue().getColor().name()))
                 .collect(Collectors.toList());
 
@@ -65,7 +65,7 @@ class SquareImplDaoTest {
         Long roomId = insertTestRoom("title", "1111");
         ChessBoard chessBoard = new ChessBoard(new NormalPiecesGenerator());
         List<Square> board = chessBoard.getPieces().entrySet().stream()
-                .map(entry -> new Square(roomId, entry.getKey().toString(),
+                .map(entry -> new Square(null, roomId, entry.getKey().toString(),
                         entry.getValue().getSymbol().name(), entry.getValue().getColor().name()))
                 .collect(Collectors.toList());
         squareDao.insertSquareAll(roomId, board);

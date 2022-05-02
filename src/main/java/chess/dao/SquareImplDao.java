@@ -43,6 +43,7 @@ public class SquareImplDao implements SquareDao {
         String sql = "SELECT * FROM square WHERE room_id = (?)";
 
         return jdbcTemplate.query(sql, (rs, ronNum) -> new Square(
+                rs.getLong("id"),
                 rs.getLong("room_id"),
                 rs.getString("position"),
                 rs.getString("symbol"),

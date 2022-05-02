@@ -7,12 +7,21 @@
 <body>
 <h1> 체스게임 </h1>
 {{this.message}}
-<form action="/start" method="post">
-    <input type="submit" value="새로 하기">
+
+<form action="/form/room-create" method="get">
+    <input type="submit" value="체스방 생성" />
 </form>
-<form action="/game" method="get">
-    <input type="submit" value="이어 하기" name="message">
-</form>
+
+{{#this.rooms}}
+    <div>
+        <form action="/room/{{this.id}}" method="get" style="display:inline">
+            {{this.name}}방 <input type="submit" value="참가" />
+        </form>
+        <form action="/form/room-delete/{{this.id}}" method="get" style="display:inline">
+            <input type="submit" value="체스방 삭제" />
+        </form>
+    </div>
+{{/this.rooms}}
 
 </body>
 </html>

@@ -71,7 +71,7 @@ public class ChessController {
         ModelAndView modelAndView = new ModelAndView(getViewName(state));
         modelAndView.addObject("squares", showChessBoard(state.getBoard()));
         modelAndView.addObject("player", playerName(state.getPlayer()));
-        modelAndView.addObject("commands", commandDao.findAll(roomId));
+        modelAndView.addObject("commands", commandDao.findAllById(roomId));
         modelAndView.addObject("message", message);
         modelAndView.addObject("roomId", roomId);
         modelAndView.addObject("name", roomsDao.findNameById(roomId));
@@ -119,6 +119,7 @@ public class ChessController {
             ModelAndView modelAndView = new ModelAndView("index");
             modelAndView.addObject("message", "진행 중인 게임은 삭제할 수 없습니다.");
             modelAndView.addObject("rooms", roomsDao.findAll());
+            modelAndView.addObject("roomCount", roomsDao.countRooms());
             return modelAndView;
         }
         ModelAndView modelAndView = new ModelAndView("remove");
@@ -128,7 +129,7 @@ public class ChessController {
     }
 
     private State currentState(final int id) {
-        List<String> commands = commandDao.findAll(id);
+        List<String> commands = commandDao.findAllById(id);
         State state = Start.of();
         for (String command : commands) {
             state = state.proceed(command);

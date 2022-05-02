@@ -19,7 +19,7 @@ public class CommandDao {
         jdbcTemplate.update(sql, id, command);
     }
 
-    public List<String> findAll(final int id) {
+    public List<String> findAllById(final int id) {
         String sql = String.format("select command from command where id = %d", id);
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             return resultSet.getString("command");

@@ -10,7 +10,10 @@ import java.util.Objects;
 @Repository
 public class RoomsDao {
 
-    public final JdbcTemplate jdbcTemplate;
+    public static final int EXISTS_ROOM = 1;
+    public static final int INITIAL_ROOM_ID = 0;
+    public static final int ADD_ROOM_ID = 1;
+    private final JdbcTemplate jdbcTemplate;
 
     public RoomsDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -18,7 +21,6 @@ public class RoomsDao {
 
     public void insertRoom(final int roomId, final String name, final String password) {
         final String sql = "insert into rooms (id, name, password) values (?, ?, ?)";
-        System.out.println(roomId);
         jdbcTemplate.update(sql, roomId, name, hashedPassword(password));
         clearCommandsInRoom(roomId);
     }
@@ -29,14 +31,11 @@ public class RoomsDao {
     }
 
     public int createRoomId() {
-        return usableRoomId(countRooms());
-    }
-
-    private int usableRoomId(final int roomId) {
-        if (exists(roomId)) {
-            return usableRoomId(roomId + 1);
+        if (countRooms() >= EXISTS_ROOM) {
+            final String sql = "select id from rooms order by id desc limit 1";
+            return jdbcTemplate.queryForObject(sql, Integer.class) + ADD_ROOM_ID;
         }
-        return roomId;
+        return INITIAL_ROOM_ID;
     }
 
     public int countRooms() {
@@ -47,11 +46,6 @@ public class RoomsDao {
     public String findNameById(final int id) {
         final String sql = String.format("select name from rooms where id = %d", id);
         return jdbcTemplate.queryForObject(sql, String.class);
-    }
-
-    private boolean exists(final int id) {
-        final String sql = String.format("select exists(select id from rooms where id = %d)", id);
-        return jdbcTemplate.queryForObject(sql, Integer.class) == 1;
     }
 
     private String hashedPassword(final String password) {

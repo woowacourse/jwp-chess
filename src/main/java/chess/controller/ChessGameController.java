@@ -24,8 +24,8 @@ public class ChessGameController {
         this.chessGameService = chessGameService;
     }
 
-    @GetMapping("/chess-game")
-    public String chessGame(@RequestParam int id, Model model) {
+    @GetMapping("/chess-game/{id}")
+    public String chessGame(@PathVariable int id, Model model) {
         model.addAttribute("chessGame", chessGameService.findChessGame(id));
         model.addAttribute("pieces", chessGameService.findPieces(id));
         return "chess-game";
@@ -44,7 +44,7 @@ public class ChessGameController {
             attributes.addFlashAttribute("isFinished", true);
             attributes.addFlashAttribute("winner", chessGameDto.getWinner());
         }
-        return "redirect:/chess-game?id=" + chessGameDto.getId();
+        return "redirect:/chess-game/" + chessGameDto.getId();
     }
 
     @DeleteMapping("/chess-game/{id}")

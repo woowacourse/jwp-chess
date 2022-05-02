@@ -45,7 +45,7 @@ class ChessGameControllerTest {
             .thenReturn(new ChessGameDto(1, "hoho", GameStatus.RUNNING, new Score(), new Score(), Color.WHITE));
         Mockito.when(chessGameService.findPieces(1)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/chess-game").param("id", String.valueOf(1)))
+        mockMvc.perform(get("/chess-game/{id}", 1))
             .andDo(print())
             .andExpectAll(
                 status().isOk(),
@@ -62,7 +62,7 @@ class ChessGameControllerTest {
             .thenThrow(new IllegalArgumentException("해당하는 체스 게임이 존재하지 않습니다."));
         Mockito.when(chessGameService.findPieces(1)).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/chess-game").param("id", String.valueOf(1)))
+        mockMvc.perform(get("/chess-game/{id}", 1))
             .andDo(print())
             .andExpectAll(
                 status().is3xxRedirection(),

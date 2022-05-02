@@ -2,8 +2,13 @@ package chess.dao;
 
 import chess.domain.player.Team;
 import chess.dto.response.ChessGameInfoDto;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,8 +21,17 @@ public class ChessGameDao {
     }
 
     public int saveChessGame(final String gameName, final String password, final String turn) {
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
         final String sql = "insert into chess_game (name, password, turn, running) values (?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, gameName, password, turn, true);
+        jdbcTemplate.update((Connection con) -> {
+            PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"ID"});
+            pstmt.setString(1, gameName);
+            pstmt.setString(2, password);
+            pstmt.setString(3, turn);
+            pstmt.setBoolean(4, true);
+            return pstmt;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
     public int findChessGameCountByName(final String gameName) {

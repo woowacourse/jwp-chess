@@ -15,6 +15,10 @@ function createBoard() {
         body: JSON.stringify(request),
     }).then(res => res.json())
         .then(value => {
+            if (value["statusCode"] !== 200) {
+                alert(value["errorMessage"]);
+                return;
+            }
             alert("생성된 방 번호는 " + value + "입니다.")
             location.reload();
         });

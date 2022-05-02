@@ -148,7 +148,11 @@
 - [x] REST API의 endpoint의 자원을 표현할 때 복수형으로 수정하자
     - RESTFul API는 endpoint에서 복수형을 사용하자는 규칙을 강조한다.
 - [ ] ApiController에서 모든 에러가 Bad request를 반환하는데 만약 DB나 서버 내부에서 에러가 발생한다면 적절한 status code일까?
-- [ ] 30자 이상의 방 이름, 비밀번호를 입력하면 어떻게 될까요?
+- [x] 30자 이상의 방 이름, 비밀번호를 입력하면 어떻게 될까요?
+    - 값은 저장되지 않고 `DataIntegrityViolationException`이 발생했습니다.
+    - 이 예외는 `DataAccessException`를 상속받는 예외입니다.
+    - 이 상황 말고도 데이터에 잘못 접근하거나 처리할 때 `DataAccessException`예외가 발생했는데 보통은 사용자가 잘못된 값을 입력하거나 잘못된 데이터를 받아오면서 발생했기 때문에 400에러를 발생시켜도 된다고 생각했습니다.
+    - 제가 생각한 상태코드는 400이지만 혹시 수정이 될 수 있다고 생각하여 메서드로 분리했습니다.
 - [ ] ChessApiController의 `loadGame()`에서 기물이 없거나 게임이 끝나면 초기화시켜주어 상태를 변화시킨다. 수정하자!
 - [x] 남아있는 Room의 흔적을 지우자. 
 - [ ] assertAll()의 장점을 생각해보고 적용해보자

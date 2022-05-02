@@ -66,7 +66,7 @@ public class ChessApiController {
         return ResponseEntity.created(URI.create("/chessGame/" + gameId)).body(gameId);
     }
 
-    @PostMapping("/{gameId}/password")
+    @PostMapping("/game/{gameId}/password")
     public ResponseEntity<Boolean> validatePassword(@PathVariable final Long gameId,
                                                     @RequestBody final GamePasswordDto gamePasswordDto) {
         gameService.validatePassword(gameId, gamePasswordDto.getPassword());
@@ -89,7 +89,7 @@ public class ChessApiController {
         return ResponseEntity.ok().body(memberId);
     }
 
-    @DeleteMapping("/{gameId}")
+    @DeleteMapping("/game/{gameId}")
     public ResponseEntity<Long> deleteGame(@PathVariable("gameId") final Long gameId,
                                            @RequestBody final GamePasswordDto gamePasswordDto) {
         gameService.deleteGameById(gameId, gamePasswordDto.getPassword());

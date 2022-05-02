@@ -12,6 +12,7 @@ import chess.domain.Member;
 import chess.domain.Participant;
 import chess.domain.Room;
 import chess.domain.piece.detail.Team;
+import chess.dto.GamePasswordDto;
 import chess.dto.MoveCommandDto;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -138,9 +139,9 @@ class ChessControllerTest {
         gameDao.save(game);
 
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .body("password=123")
-                .when().post(1L + "/password")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new GamePasswordDto("123"))
+                .when().post("/game/" + 1L + "/password")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
@@ -153,7 +154,7 @@ class ChessControllerTest {
         final Board board = new Board(BoardInitializer.create());
         final Participant participant = new Participant(one, two);
         final Room room = new Room("some", "123", participant);
-        final ChessGame game = new ChessGame(2L, board, Team.WHITE, room);
+        final ChessGame game = new ChessGame(1L, board, Team.WHITE, room);
         game.terminate();
 
         memberDao.save(one);
@@ -161,9 +162,9 @@ class ChessControllerTest {
         gameDao.save(game);
 
         RestAssured.given().log().all()
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .body("password=123")
-                .when().delete("/" + 1L)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(new GamePasswordDto("123"))
+                .when().delete("/game/" + 1L)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("1"));

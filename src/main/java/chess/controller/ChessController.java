@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,9 +73,11 @@ public class ChessController {
 
     @GetMapping("/member/{memberId}/history")
     public ModelAndView history(@PathVariable("memberId") Long memberId) {
-        final List<GameResultDto> history = gameService.findHistoriesByMemberId(memberId);
-        final Map<String, Object> model = new HashMap<>();
+        final List<ChessGameDto> history = gameService.findHistoriesByMemberId(memberId).stream()
+                .map(ChessGameDto::from)
+                .collect(Collectors.toList());
 
+        final Map<String, Object> model = new HashMap<>();
         model.put("history", history);
 
         return new ModelAndView("history", model);

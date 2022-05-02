@@ -80,7 +80,7 @@
 <script>
     const validatePassword = (gameId) => {
         let password = prompt("비밀번호를 입력하세요");
-        fetch(`/${gameId}/password`, {
+        fetch(`/game/${gameId}/password`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -97,7 +97,7 @@
     }
     const validate2 = (gameId) => {
         let password = prompt("비밀번호를 입력하세요");
-        fetch(`/${gameId}/password`, {
+        fetch(`/game/${gameId}/password`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -121,7 +121,7 @@
         }
         let password = prompt("비밀번호를 입력하세요");
 
-        fetch(`/${gameId}`, {
+        fetch(`/game/${gameId}`, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json',

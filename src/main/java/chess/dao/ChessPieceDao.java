@@ -20,7 +20,7 @@ public class ChessPieceDao {
     public void saveAll(final Long gameId, List<Piece> pieces) {
         final String sql = "insert into "
                 + "Piece(square_file, square_rank, team, piece_type, game_id) "
-                + "values (?, ?, ?, ?, ?);";
+                + "values (?, ?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override

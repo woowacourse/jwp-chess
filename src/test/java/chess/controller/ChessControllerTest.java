@@ -71,7 +71,7 @@ class ChessControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new MoveCommandDto("a2", "a4"))
-                .when().put("/move/" + 1L)
+                .when().put("/game/" + 1L + "/move")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body(is("1"));
@@ -96,7 +96,7 @@ class ChessControllerTest {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(moveCommandDto)
-                .when().put("/move/" + 1L)
+                .when().put("/game/" + 1L + "/move")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(equalTo("해당 위치로 이동할 수 없습니다."));
@@ -118,7 +118,7 @@ class ChessControllerTest {
 
         RestAssured.given().log().all()
                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/result/" + 1L)
+                .when().get("/game/" + 1L + "/result")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }

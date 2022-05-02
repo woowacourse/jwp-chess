@@ -1,14 +1,14 @@
 package chess.dto;
 
-public class RoomCreateReq {
+public class RoomCreateRequest {
 
     private String title;
     private String password;
 
-    public RoomCreateReq() {
+    public RoomCreateRequest() {
     }
 
-    public RoomCreateReq(String title, String password) {
+    public RoomCreateRequest(String title, String password) {
         this.title = title;
         this.password = password;
     }

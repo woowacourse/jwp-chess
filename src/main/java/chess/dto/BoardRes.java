@@ -1,6 +1,6 @@
 package chess.dto;
 
-import chess.service.SquareRes;
+import chess.service.SquareResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +13,9 @@ public class BoardRes {
         this.board = board;
     }
 
-    public static BoardRes createBoardResToListSquare(List<SquareRes> squares) {
+    public static BoardRes createBoardResToListSquare(List<SquareResponse> squares) {
         Map<String, PieceRes> pieces = new HashMap<>();
-        for (SquareRes square : squares) {
+        for (SquareResponse square : squares) {
             pieces.put(square.getPosition(), new PieceRes(square.getSymbol(), square.getColor()));
         }
         return new BoardRes(pieces);

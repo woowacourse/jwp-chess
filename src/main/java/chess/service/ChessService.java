@@ -11,7 +11,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
 import chess.domain.state.State;
-import chess.dto.RoomRes;
+import chess.dto.RoomResponse;
 import chess.dto.WinnerRes;
 import chess.entity.Room;
 import chess.entity.Square;
@@ -33,14 +33,14 @@ public class ChessService {
         this.squareDao = squareDao;
     }
 
-    public RoomRes findRoomById(Long roomId) {
+    public RoomResponse findRoomById(Long roomId) {
         final Room room = roomDao.findRoomById(roomId);
-        return new RoomRes(room.getId(), room.getTitle());
+        return new RoomResponse(room.getId(), room.getTitle());
     }
 
-    public List<RoomRes> findAllRoom() {
+    public List<RoomResponse> findAllRoom() {
         return roomDao.findAllRoom().stream()
-                .map(room -> new RoomRes(room.getId(), room.getTitle()))
+                .map(room -> new RoomResponse(room.getId(), room.getTitle()))
                 .collect(Collectors.toList());
     }
 
@@ -74,9 +74,9 @@ public class ChessService {
         return roomId;
     }
 
-    public List<SquareRes> findSquareAllById(Long roomId) {
+    public List<SquareResponse> findSquareAllById(Long roomId) {
         return squareDao.findSquareAllById(roomId).stream()
-                .map(square -> new SquareRes(
+                .map(square -> new SquareResponse(
                         square.getRoomId(), square.getPosition(), square.getSymbol(), square.getColor()))
                 .collect(Collectors.toList());
     }

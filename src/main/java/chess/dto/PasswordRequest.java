@@ -1,13 +1,13 @@
 package chess.dto;
 
-public class PasswordReq {
+public class PasswordRequest {
 
     private String password;
 
-    private PasswordReq() {
+    private PasswordRequest() {
     }
 
-    public PasswordReq(String password) {
+    public PasswordRequest(String password) {
         this.password = password;
     }
 

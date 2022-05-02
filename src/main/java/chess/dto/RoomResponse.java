@@ -1,11 +1,11 @@
 package chess.dto;
 
-public class RoomRes {
+public class RoomResponse {
 
     private Long id;
     private String title;
 
-    public RoomRes(Long id, String title) {
+    public RoomResponse(Long id, String title) {
         this.id = id;
         this.title = title;
     }

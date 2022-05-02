@@ -1,11 +1,11 @@
 package chess.controller.api;
 
-import chess.dto.MovePositionReq;
-import chess.dto.PasswordReq;
-import chess.dto.RoomsRes;
-import chess.dto.RoomCreateReq;
-import chess.dto.RoomRes;
-import chess.dto.StatusRes;
+import chess.dto.MovePositionRequest;
+import chess.dto.PasswordRequest;
+import chess.dto.RoomsResponse;
+import chess.dto.RoomCreateRequest;
+import chess.dto.RoomResponse;
+import chess.dto.StatusResponse;
 import chess.dto.WinnerRes;
 import chess.service.ChessService;
 import java.util.List;
@@ -30,21 +30,21 @@ public class ApiController {
     }
 
     @GetMapping("/rooms")
-    public ResponseEntity<RoomsRes> findAllRoom() {
-        final List<RoomRes> rooms = chessService.findAllRoom();
-        return ResponseEntity.ok().body(RoomsRes.createRoomAllRes(rooms));
+    public ResponseEntity<RoomsResponse> findAllRoom() {
+        final List<RoomResponse> rooms = chessService.findAllRoom();
+        return ResponseEntity.ok().body(RoomsResponse.createRoomsResponse(rooms));
     }
 
     @PostMapping("/room")
-    public ResponseEntity<Void> insertRoom(@RequestBody RoomCreateReq roomCreateReq) {
-        chessService.insertRoom(roomCreateReq.getTitle(), roomCreateReq.getPassword());
+    public ResponseEntity<Void> insertRoom(@RequestBody RoomCreateRequest roomCreateRequest) {
+        chessService.insertRoom(roomCreateRequest.getTitle(), roomCreateRequest.getPassword());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/room/{roomId}/status")
-    public ResponseEntity<StatusRes> selectStatus(@PathVariable Long roomId) {
+    public ResponseEntity<StatusResponse> selectStatus(@PathVariable Long roomId) {
         final List<Double> status = chessService.findStatusById(roomId);
-        return ResponseEntity.ok().body(StatusRes.createStatsRes(status));
+        return ResponseEntity.ok().body(StatusResponse.createStatsResponse(status));
     }
 
     @PostMapping("/room/{roomId}/board")
@@ -54,8 +54,9 @@ public class ApiController {
     }
 
     @PutMapping("/room/{roomId}/square")
-    public ResponseEntity<Void> updateSquares(@PathVariable Long roomId, @RequestBody MovePositionReq movePositionReq) {
-        chessService.updateSquares(roomId, movePositionReq.getFrom(), movePositionReq.getTo());
+    public ResponseEntity<Void> updateSquares(@PathVariable Long roomId,
+                                              @RequestBody MovePositionRequest movePositionRequest) {
+        chessService.updateSquares(roomId, movePositionRequest.getFrom(), movePositionRequest.getTo());
         return ResponseEntity.ok().build();
     }
 
@@ -71,8 +72,8 @@ public class ApiController {
     }
 
     @DeleteMapping("/room/{roomId}")
-    public ResponseEntity<Void> deleteRoom(@PathVariable Long roomId, @RequestBody PasswordReq passwordReq) {
-        chessService.deleteRoom(roomId, passwordReq.getPassword());
+    public ResponseEntity<Void> deleteRoom(@PathVariable Long roomId, @RequestBody PasswordRequest passwordRequest) {
+        chessService.deleteRoom(roomId, passwordRequest.getPassword());
         return ResponseEntity.ok().build();
     }
 }

@@ -47,9 +47,8 @@ public class SpringWebChessController {
 
     @PostMapping(value = "/move/{gameId}")
     @ResponseBody
-    public ResponseEntity<HttpStatus> move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int gameId) throws SQLException, IllegalArgumentException {
+    public void move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int gameId) throws SQLException, IllegalArgumentException {
         chessService.move(moveRequestDto.getSource(), moveRequestDto.getTarget(), gameId);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/status/{gameId}")
@@ -72,9 +71,8 @@ public class SpringWebChessController {
 
     @GetMapping("/end/{gameId}")
     @ResponseBody
-    public ResponseEntity<HttpStatus> end(@PathVariable int gameId) throws SQLException, IllegalArgumentException {
+    public void end(@PathVariable int gameId) throws SQLException, IllegalArgumentException {
         chessService.end(gameId);
-        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/result/{gameId}")

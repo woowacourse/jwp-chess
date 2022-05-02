@@ -1,6 +1,7 @@
 package chess.domain;
 
 import chess.repository.entity.RoomEntity;
+import java.util.Objects;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class Room {
@@ -56,5 +57,22 @@ public class Room {
 
     public boolean isFinished() {
         return finished;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Room room = (Room) o;
+        return id == room.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

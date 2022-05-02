@@ -22,7 +22,7 @@ public class GameService {
     }
 
     public BoardDto newBoard(int roomId) {
-        Board board = new Board(new RegularRuleSetup());
+        Board board = new Board(new RegularRuleSetup(), Color.WHITE);
         return gameRepository.saveNewGame(roomId, board);
     }
 

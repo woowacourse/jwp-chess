@@ -24,14 +24,14 @@ class BoardTest {
     @Test
     @DisplayName("보드는 체스판을 입력받는다")
     void board_createdByGenerator() {
-        Board board = new Board(new RegularRuleSetup());
+        Board board = new Board(new RegularRuleSetup(), Color.WHITE);
         assertThat(board).isNotNull();
     }
 
     @Test
     @DisplayName("존재하지 않는 source를 움직이면 예외를 발생한다")
     void thrown_sourceNotExist() {
-        Board board = new Board(new RegularRuleSetup());
+        Board board = new Board(new RegularRuleSetup(), Color.WHITE);
         assertThatThrownBy(() -> board.move("a3", "a4"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("해당 위치에 말이 존재하지 않습니다.");
@@ -40,7 +40,7 @@ class BoardTest {
     @Test
     @DisplayName("출발지와 목적지가 같으면 예외를 발생한다")
     void thrown_sourceEqualsTarget() {
-        Board board = new Board(new RegularRuleSetup());
+        Board board = new Board(new RegularRuleSetup(), Color.WHITE);
         assertThatThrownBy(() -> board.move("a3", "a3"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("출발지와 목적지가 동일합니다.");
@@ -54,7 +54,7 @@ class BoardTest {
             Piece whitePawn = new Piece(Color.WHITE, new Pawn());
             pieces.put(Position.of("a2"), whitePawn);
             return pieces;
-        });
+        }, Color.WHITE);
 
         assertThatThrownBy(() -> board.move("a2", "b3"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -70,7 +70,7 @@ class BoardTest {
             pieces.put(Position.of("a2"), whitePawn);
             pieces.put(Position.of("b3"), new Piece(Color.BLACK, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         board.move("a2", "b3");
         assertThat(board.findPiece(Position.of("b3")).get()).isEqualTo(whitePawn);
@@ -85,7 +85,7 @@ class BoardTest {
             pieces.put(Position.of("a2"), whitePawn);
             pieces.put(Position.of("a4"), new Piece(Color.BLACK, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         assertThatThrownBy(() -> board.move("a2", "a4"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -101,7 +101,7 @@ class BoardTest {
             pieces.put(Position.of("a2"), whitePawn);
             pieces.put(Position.of("a3"), new Piece(Color.BLACK, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         assertThatThrownBy(() -> board.move("a2", "a4"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -116,7 +116,7 @@ class BoardTest {
             pieces.put(Position.of("b8"), new Piece(Color.BLACK, new Rook()));
             pieces.put(Position.of("b3"), new Piece(Color.BLACK, new Pawn()));
             return pieces;
-        });
+        }, Color.BLACK);
 
         assertThatThrownBy(() -> board.move("b8", "b3"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -132,7 +132,7 @@ class BoardTest {
             pieces.put(Position.of("b5"), new Piece(Color.WHITE, new Pawn()));
             pieces.put(Position.of("b3"), new Piece(Color.BLACK, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         assertThatThrownBy(() -> board.move("b8", "b3"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -148,7 +148,7 @@ class BoardTest {
             pieces.put(Position.of("d6"), new Piece(Color.WHITE, new Pawn()));
             pieces.put(Position.of("e5"), new Piece(Color.BLACK, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         assertThatThrownBy(() -> board.move("b8", "e5"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -166,7 +166,7 @@ class BoardTest {
             pieces.put(Position.of("c8"), new Piece(Color.WHITE, new Pawn()));
             pieces.put(Position.of("d7"), new Piece(Color.BLACK, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         board.move("b8", "d7");
         assertThat(board.findPiece(Position.of("d7")).get()).isEqualTo(piece);
@@ -181,7 +181,7 @@ class BoardTest {
             pieces.put(Position.of("b5"), new Piece(Color.WHITE, new Pawn()));
             pieces.put(Position.of("b8"), new Piece(Color.BLACK, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         assertThatThrownBy(() -> board.move("b3", "b8"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -197,7 +197,7 @@ class BoardTest {
             pieces.put(Position.of("e3"), new Piece(Color.WHITE, new Pawn()));
             pieces.put(Position.of("f3"), new Piece(Color.BLACK, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         assertThatThrownBy(() -> board.move("b3", "f3"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -213,7 +213,7 @@ class BoardTest {
             pieces.put(Position.of("d4"), new Piece(Color.WHITE, new Pawn()));
             pieces.put(Position.of("b2"), new Piece(Color.BLACK, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         assertThatThrownBy(() -> board.move("g7", "b2"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -229,7 +229,7 @@ class BoardTest {
             pieces.put(Position.of("d4"), new Piece(Color.WHITE, new King()));
             pieces.put(Position.of("g1"), new Piece(Color.WHITE, new Rook()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         board.move("g1", "g7");
         assertThat(board.isEnd()).isTrue();
@@ -248,7 +248,7 @@ class BoardTest {
             pieces.put(Position.of("a1"), new Piece(Color.WHITE, new Bishop()));
             pieces.put(Position.of("h2"), new Piece(Color.WHITE, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         assertAll(
                 () -> assertThat(board.calculateScore(Color.WHITE)).isEqualTo(20.5),
@@ -268,7 +268,7 @@ class BoardTest {
             pieces.put(Position.of("a4"), new Piece(Color.WHITE, new Pawn()));
             pieces.put(Position.of("b4"), new Piece(Color.WHITE, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         assertThat(board.calculateScore(Color.WHITE)).isEqualTo(2);
     }
@@ -285,7 +285,7 @@ class BoardTest {
             pieces.put(Position.of("a4"), new Piece(Color.WHITE, new Pawn()));
             pieces.put(Position.of("b4"), new Piece(Color.WHITE, new Pawn()));
             return pieces;
-        });
+        }, Color.WHITE);
 
         board.move("a5", "a6");
         assertThatThrownBy(() -> board.move("a4", "a5"))

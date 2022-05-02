@@ -50,8 +50,7 @@ public class GameRepository {
         for (PieceDto pieceDto : pieceDao.findAll(boardId)) {
             pieces.put(Position.of(pieceDto.getPosition()), PieceFactory.build(pieceDto));
         }
-        Board board = new Board(() -> pieces);
-        board.loadTurn(boardDao.getTurn(boardId));
+        Board board = new Board(() -> pieces, boardDao.getTurn(boardId));
         return board;
     }
 
@@ -64,8 +63,7 @@ public class GameRepository {
         for (PieceDto pieceDto : pieceDao.findAll(boardId)) {
             pieces.put(Position.of(pieceDto.getPosition()), PieceFactory.build(pieceDto));
         }
-        Board board = new Board(() -> pieces);
-        board.loadTurn(boardDao.getTurn(boardId));
+        Board board = new Board(() -> pieces, boardDao.getTurn(boardId));
         return board;
     }
 

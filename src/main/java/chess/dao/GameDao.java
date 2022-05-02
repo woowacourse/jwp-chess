@@ -2,6 +2,7 @@ package chess.dao;
 
 import chess.domain.entity.Game;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface GameDao {
     boolean isExistGame();
@@ -13,6 +14,8 @@ public interface GameDao {
               String roomEncryptedPassword,
               String teamName,
               LocalDateTime createdAt);
+
+    List<Game> findAll();
 
     Game findLastGame();
 

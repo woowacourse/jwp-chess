@@ -28,6 +28,11 @@ public class FakeGameDao implements GameDao{
     }
 
     @Override
+    public List<Game> findAll() {
+        return null;
+    }
+
+    @Override
     public Game findLastGame() {
         return games.stream()
                 .max(Comparator.comparing(Game::getCreatedAt))

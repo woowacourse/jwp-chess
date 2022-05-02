@@ -39,6 +39,11 @@ public class ChessService {
     }
 
     @Transactional(readOnly = true)
+    public List<Game> findAll() {
+        return gameDao.findAll();
+    }
+
+    @Transactional(readOnly = true)
     public boolean isExistGame() {
         return gameDao.isExistGame();
     }

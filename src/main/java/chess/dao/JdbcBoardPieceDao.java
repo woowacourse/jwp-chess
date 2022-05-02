@@ -21,7 +21,7 @@ public class JdbcBoardPieceDao implements BoardPieceDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static RowMapper<BoardPiece> boardPieceRowMapper() {
+    private static final RowMapper<BoardPiece> BOARD_PIECE_ROW_MAPPER() {
         return (rs, rowNum) -> new BoardPiece(
                 rs.getString("board_piece_id"),
                 rs.getString("game_id"),
@@ -47,6 +47,6 @@ public class JdbcBoardPieceDao implements BoardPieceDao {
 
     @Override
     public List<BoardPiece> findLastBoardPiece(String lastGameId) {
-        return jdbcTemplate.query(FIND_LAST_BOARD_PIECE_DML, boardPieceRowMapper(), lastGameId);
+        return jdbcTemplate.query(FIND_LAST_BOARD_PIECE_DML, BOARD_PIECE_ROW_MAPPER(), lastGameId);
     }
 }

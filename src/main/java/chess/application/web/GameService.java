@@ -48,22 +48,12 @@ public class GameService {
         boardDao.insert(gameNo, BoardInitializer.get().getSquares());
     }
 
-    public ChessGame load(long gameNo) {
-        List<PieceDto> rawBoard = boardDao.load(gameNo);
-        Map<Position, Piece> board = rawBoard.stream()
-                .collect(Collectors.toMap(
-                        pieceDto -> parsePosition(pieceDto.getPosition()),
-                        this::parsePiece
-                ));
-        return ChessGame.load(board, gameDao.isWhiteTurn(gameNo));
-    }
-
     public String loadGameTitle(long gameNo) {
         return gameDao.loadTitle(gameNo);
     }
 
-    public Map<String, Object> modelPlayingBoard(ChessGame chessGame) {
-        Map<Position, Piece> board = chessGame.getBoardSquares();
+    public Map<String, Object> modelPlayingBoard(long gameNo) {
+        Map<Position, Piece> board = load(gameNo).getBoardSquares();
         return board.entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> entry.getKey().toString(),
@@ -81,7 +71,8 @@ public class GameService {
         return type.generatePiece(camp);
     }
 
-    public void move(long gameNo, ChessGame chessGame, String source, String target) {
+    public void move(long gameNo, String source, String target) {
+        ChessGame chessGame = load(gameNo);
         chessGame.move(parsePosition(source), parsePosition(target));
         save(gameNo, chessGame);
     }
@@ -96,18 +87,14 @@ public class GameService {
                 EXPRESSIONS_ROW.get(rawPosition.charAt(INDEX_ROW)));
     }
 
-    public Map<String, Object> modelStatus(ChessGame chessGame) {
-        return status(chessGame).entrySet().stream()
+    public Map<String, Object> modelStatus(long gameNo) {
+        return load(gameNo).getScores().entrySet().stream()
                 .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
     }
 
-    public Map<Camp, Score> status(ChessGame chessGame) {
-        return chessGame.getScores();
-    }
-
-    public Map<String, Object> end(long gameNo, ChessGame chessGame) {
+    public Map<String, Object> end(long gameNo) {
         gameDao.end(gameNo);
-        return modelResult(chessGame);
+        return modelResult(load(gameNo));
     }
 
     private Map<String, Object> modelResult(ChessGame chessGame) {
@@ -120,8 +107,18 @@ public class GameService {
         return model;
     }
 
-    public boolean isGameFinished(long gameNo, ChessGame chessGame) {
-        return chessGame.isFinished() || !gameDao.isRunning(gameNo);
+    public boolean isGameFinished(long gameNo) {
+        return load(gameNo).isFinished() || !gameDao.isRunning(gameNo);
+    }
+
+    private ChessGame load(long gameNo) {
+        List<PieceDto> rawBoard = boardDao.load(gameNo);
+        Map<Position, Piece> board = rawBoard.stream()
+                .collect(Collectors.toMap(
+                        pieceDto -> parsePosition(pieceDto.getPosition()),
+                        this::parsePiece
+                ));
+        return ChessGame.load(board, gameDao.isWhiteTurn(gameNo));
     }
 
     public void delete(long gameNo, String password) {

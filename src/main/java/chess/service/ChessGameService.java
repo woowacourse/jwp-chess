@@ -36,8 +36,9 @@ public class ChessGameService {
     }
 
     @Transactional
-    public long create(String title, String password) {
-        long gameId = gameDao.createByTitleAndPassword(title, password);
+    public long create(Room room) {
+
+        long gameId = gameDao.createByTitleAndPassword(room);
         Pieces chessmen = ChessmenInitializer.init();
         pieceDao.createAllByGameId(chessmen.getPieces(), gameId);
         return gameId;

@@ -20,14 +20,14 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long createByTitleAndPassword(String title, String password) {
+    public long createByTitleAndPassword(Room room) {
         final String sql = "insert into game (title, password) values (?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, title);
-            ps.setString(2, password);
+            ps.setString(1, room.getTitle());
+            ps.setString(2, room.getPassword());
             return ps;
         }, keyHolder);
 

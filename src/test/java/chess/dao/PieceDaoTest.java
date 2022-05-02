@@ -1,7 +1,6 @@
 package chess.dao;
 
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.piece.ChessmenInitializer;
@@ -10,6 +9,7 @@ import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
 import chess.domain.position.Position;
+import chess.domain.room.Room;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +37,7 @@ public class PieceDaoTest {
         GameDao gameDao = new GameDao(jdbcTemplate);
         pieceDao = new PieceDao(jdbcTemplate);
 
-        gameId = gameDao.createByTitleAndPassword("게임방제목", "password486");
+        gameId = gameDao.createByTitleAndPassword(new Room("게임방제목", "password486"));
         pieces = ChessmenInitializer.init().getPieces();
     }
 

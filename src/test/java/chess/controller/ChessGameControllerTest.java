@@ -1,7 +1,6 @@
 package chess.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,24 +29,13 @@ public class ChessGameControllerTest {
     private ObjectMapper objectMapper;
 
 
-    @DisplayName("Http Method - POST /game/start 게임 생성")
-    @Test
-    void createGame() throws Exception {
-        mockMvc.perform(post("/game/start")
-                .contentType("application/x-www-form-urlencoded")
-                .param("title", "방제목11")
-                .param("password", "비밀번호22"))
-            .andDo(print())
-            .andExpect(status().is3xxRedirection());
-    }
-
     @DisplayName("Http Method - GET /game/{gameId} 게임 가져오기")
     @Test
     void getGameByGameId() throws Exception {
 
         mockMvc.perform(get("/game/1"))
             .andDo(print())
-            .andExpect(status().is3xxRedirection());
+            .andExpect(status().isOk());
     }
 
     @DisplayName("Http Method - PUT game/{gameId}/ 체스 말 이동")
@@ -64,7 +52,7 @@ public class ChessGameControllerTest {
             .andExpect(status().is3xxRedirection());
     }
 
-    @DisplayName("Http Method - get game/ 게임 나가기")
+    @DisplayName("Http Method - get /game/ 게임 나가기")
     @Test
     void exitGame() throws Exception {
         mockMvc.perform(get("/game/"))

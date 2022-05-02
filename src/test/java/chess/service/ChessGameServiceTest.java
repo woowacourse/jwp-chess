@@ -58,9 +58,10 @@ public class ChessGameServiceTest {
     @DisplayName("제목과 비밀번호로 방을 생성하면 방의 아이디를 반환한다.")
     @Test
     public void create() {
-        when(gameDao.createByTitleAndPassword("hello", "world")).thenReturn(1L);
+        Room room = new Room("hello", "world");
+        when(gameDao.createByTitleAndPassword(room)).thenReturn(1L);
 
-        long actual = chessGameService.create("hello", "world");
+        long actual = chessGameService.create(room);
 
         assertThat(actual).isEqualTo(1L);
     }

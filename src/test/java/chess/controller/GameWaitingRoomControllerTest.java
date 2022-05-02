@@ -2,10 +2,10 @@ package chess.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,6 @@ public class GameWaitingRoomControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-
     @DisplayName("Http Method - GET / 게임 방 목록 조회")
     @Test
     void getRooms() throws Exception {
@@ -35,11 +31,22 @@ public class GameWaitingRoomControllerTest {
             .andExpect(status().isOk());
     }
 
-    @DisplayName("Http Method - DELETE / 게임 삭제")
+    @DisplayName("Http Method - POST /game 게임 생성")
+    @Test
+    void createGame() throws Exception {
+        mockMvc.perform(post("/game")
+                .contentType("application/x-www-form-urlencoded")
+                .param("title", "방제목11")
+                .param("password", "비밀번호22"))
+            .andDo(print())
+            .andExpect(status().is3xxRedirection());
+    }
+
+    @DisplayName("Http Method - DELETE /game 게임 삭제")
     @Test
     void getGameByGameId() throws Exception {
 
-        mockMvc.perform(delete("/")
+        mockMvc.perform(delete("/game")
                 .contentType("application/x-www-form-urlencoded")
                 .param("id", "2")
                 .param("password", "비밀번호"))

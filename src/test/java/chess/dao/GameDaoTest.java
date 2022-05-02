@@ -3,6 +3,7 @@ package chess.dao;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import chess.domain.piece.Color;
+import chess.domain.room.Room;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,13 +24,13 @@ public class GameDaoTest {
     @BeforeEach
     void setUp() {
         gameDao = new GameDao(jdbcTemplate);
-        id = gameDao.createByTitleAndPassword("게임방제목", "password486");
+        id = gameDao.createByTitleAndPassword(new Room("게임방제목", "password486"));
     }
 
     @DisplayName("게임을 만들 때 title과 password를 입력받는다.")
     @Test
     void createById() {
-        long gameId = gameDao.createByTitleAndPassword("게임방입니다~", "password486");
+        long gameId = gameDao.createByTitleAndPassword(new Room("게임방입니다~", "password486"));
         assertThat(gameDao.exists(String.valueOf(gameId))).isTrue();
     }
 

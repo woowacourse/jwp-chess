@@ -17,6 +17,11 @@ const DeleteRoom = () => {
                 return;
             }
 
+            if (e.response.status === 500) {
+                alert("알 수 없는 서버 에러가 발생하였습니다.");
+                return;
+            }
+
             alert(e.response.data.message);
         }
     }

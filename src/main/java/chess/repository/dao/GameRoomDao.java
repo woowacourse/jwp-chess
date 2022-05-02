@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.repository.dao;
 
 import chess.repository.entity.GameRoomEntity;
 import java.util.HashMap;

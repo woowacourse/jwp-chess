@@ -3,6 +3,7 @@ package chess.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import chess.repository.dao.GameRoomDao;
 import chess.repository.entity.GameRoomEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

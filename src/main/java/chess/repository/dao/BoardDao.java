@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.repository.dao;
 
 import chess.repository.entity.BoardEntity;
 import java.util.List;
@@ -33,7 +33,6 @@ public class BoardDao {
         SqlParameterSource source = new MapSqlParameterSource("gameRoomId", gameRoomId);
         List<BoardEntity> boardEntities =
                 namedParameterJdbcTemplate.query(selectSql, source, getBoardEntityRowMapper());
-        validateBoardExist(boardEntities);
         return boardEntities;
     }
 
@@ -47,13 +46,7 @@ public class BoardDao {
         );
     }
 
-    private void validateBoardExist(final List<BoardEntity> boardEntities) {
-        if (boardEntities.size() == 0) {
-            throw new IllegalArgumentException("[ERROR] Board 가 존재하지 않습니다.");
-        }
-    }
-
-    public void updateBoard(final BoardEntity boardEntity) {
+    public void update(final BoardEntity boardEntity) {
         String updateSql = "update board set piece_name=:pieceName, piece_team_value=:pieceTeamValue"
                 + " where game_room_id=:gameRoomId"
                 + " and position_column_value=:positionColumnValue"

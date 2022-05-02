@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.repository.dao.BoardDao;
 import chess.repository.entity.BoardEntity;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,14 +52,6 @@ public class BoardDaoTest {
     }
 
     @Test
-    @DisplayName("조회할 board table 데이터가 존재하지 않을 때 예외를 발생시킨다.")
-    void validateBoardExist() {
-        assertThatThrownBy(() -> boardDao.load("3333"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] Board 가 존재하지 않습니다.");
-    }
-
-    @Test
     @DisplayName("BoardEntity 를 이용해서 board table 데이터를 업데이트 한다")
     void updatePiece() {
         BoardEntity newBoardEntity = new BoardEntity(
@@ -69,7 +62,7 @@ public class BoardDaoTest {
                 "BLACK"
         );
 
-        boardDao.updateBoard(newBoardEntity);
+        boardDao.update(newBoardEntity);
 
         List<BoardEntity> loadedBoardEntities = boardDao.load("2222");
         assertAll(

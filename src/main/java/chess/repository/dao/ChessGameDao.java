@@ -1,4 +1,4 @@
-package chess.repository;
+package chess.repository.dao;
 
 import chess.repository.entity.ChessGameEntity;
 import org.springframework.jdbc.core.RowMapper;
@@ -38,7 +38,7 @@ public class ChessGameDao {
         );
     }
 
-    public void updateChessGame(final ChessGameEntity chessGameEntity) {
+    public void update(final ChessGameEntity chessGameEntity) {
         String updateSql = "update chess_game set is_on=:isOn, team_value_of_turn=:teamValueOfTurn where game_room_id=:gameRoomId";
         SqlParameterSource source = new BeanPropertySqlParameterSource(chessGameEntity);
         namedParameterJdbcTemplate.update(updateSql, source);

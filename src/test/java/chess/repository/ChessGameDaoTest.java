@@ -3,6 +3,7 @@ package chess.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import chess.repository.dao.ChessGameDao;
 import chess.repository.entity.ChessGameEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +57,7 @@ class ChessGameDaoTest {
     void updatePiece() {
         ChessGameEntity newChessGameEntity = new ChessGameEntity("1111", false, "WHITE");
 
-        chessGameDao.updateChessGame(newChessGameEntity);
+        chessGameDao.update(newChessGameEntity);
 
         ChessGameEntity loadedChessGameEntity = chessGameDao.load("1111");
         assertAll(

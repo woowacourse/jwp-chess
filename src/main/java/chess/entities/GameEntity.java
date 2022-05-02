@@ -1,6 +1,7 @@
 package chess.entities;
 
 import chess.domain.Game;
+import chess.domain.pieces.Color;
 import chess.domain.position.Position;
 import java.util.List;
 
@@ -60,6 +61,14 @@ public final class GameEntity {
         game.move(sourceRawPosition, targetRawPosition);
     }
 
+    public Double calculateScore(Color color) {
+        return game.calculateScore(color);
+    }
+
+    public boolean isEnd() {
+        return game.isEnd();
+    }
+
     public int getId() {
         return id;
     }
@@ -78,16 +87,5 @@ public final class GameEntity {
 
     public Game getGame() {
         return game;
-    }
-
-    @Override
-    public String toString() {
-        return "GameEntity{" +
-                "id=" + id +
-                ", roomTitle='" + roomTitle + '\'' +
-                ", memberEntities=" + memberEntities +
-                ", password='" + password + '\'' +
-                ", game=" + game +
-                '}';
     }
 }

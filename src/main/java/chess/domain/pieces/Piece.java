@@ -1,7 +1,6 @@
 package chess.domain.pieces;
 
 import chess.domain.position.Position;
-
 import java.util.Objects;
 
 public final class Piece {

@@ -44,6 +44,14 @@ public final class Game {
         turn = Color.opposite(turn);
     }
 
+    public Double calculateScore(Color color) {
+        return chessBoard.calculateScore(color);
+    }
+
+    public boolean isEnd() {
+        return chessBoard.isEnd();
+    }
+
     public ChessBoard getChessBoard() {
         return chessBoard;
     }

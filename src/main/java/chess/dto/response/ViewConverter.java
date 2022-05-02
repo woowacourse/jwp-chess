@@ -4,7 +4,6 @@ import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.pieces.Symbol;
 import chess.domain.position.Column;
-
 import java.util.Map;
 
 public class ViewConverter {

@@ -3,7 +3,6 @@ package chess.dao;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Row;
-
 import chess.entities.PositionEntity;
 import java.util.List;
 import java.util.Map;

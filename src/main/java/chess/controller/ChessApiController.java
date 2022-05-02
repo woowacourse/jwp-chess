@@ -58,6 +58,11 @@ public class ChessApiController {
         return ResponseEntity.ok(new GameStatusDto(gameService.isEnd(roomId)));
     }
 
+    @GetMapping("/{roomId}/status")
+    public StatusDto showStatus(@PathVariable("roomId") int id) {
+        return new StatusDto(gameService.status(id));
+    }
+
     @PostMapping("/{roomId}/end")
     public ResponseEntity<Void> endGame(@PathVariable("roomId") int id, @RequestParam("password") String password) {
         if (!gameService.isEnd(id)) {
@@ -67,11 +72,6 @@ public class ChessApiController {
             throw new IllegalArgumentException("게임 삭제에 실패하였습니다.");
         }
         return ResponseEntity.ok(null);
-    }
-
-    @GetMapping("/{roomId}/status")
-    public StatusDto showStatus(@PathVariable("roomId") int id) {
-        return gameService.status(id);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

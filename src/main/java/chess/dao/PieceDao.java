@@ -3,7 +3,6 @@ package chess.dao;
 import chess.domain.pieces.Color;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
-
 import java.util.List;
 import java.util.Optional;
 

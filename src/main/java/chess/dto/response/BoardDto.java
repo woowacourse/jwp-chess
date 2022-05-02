@@ -1,10 +1,9 @@
 package chess.dto.response;
 
-import chess.entities.MemberEntity;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Row;
-
+import chess.entities.MemberEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

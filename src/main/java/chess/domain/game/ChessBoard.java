@@ -6,8 +6,10 @@ import chess.domain.position.Column;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public final class ChessBoard {
 

@@ -6,13 +6,16 @@ import chess.dto.MovingPositionDto;
 import chess.piece.Color;
 import chess.piece.King;
 import chess.piece.Piece;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.PreparedStatement;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,24 +24,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BoardDaoTest {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private BoardDao dao;
 
-    @BeforeEach
-    void setUp() {
+    @AfterEach()
+    void clear() {
         jdbcTemplate.execute("DELETE FROM game");
-        jdbcTemplate.execute("ALTER TABLE game AUTO_INCREMENT = 1");
     }
 
     @Test
     @DisplayName("올바른 체스보드를 불러오는지 확인")
     void findByGameId() {
-        jdbcTemplate.execute("INSERT INTO game(name,password) VALUES ('name','password')");
-        jdbcTemplate.execute("INSERT INTO board(game_id,piece_id,position_id) values (1,1,1)");
+        int id = insertAndGetId();
+        jdbcTemplate.update("INSERT INTO board(game_id,piece_id,position_id) values (?,1,1)", id);
 
-        Map<Position, Piece> chessboard = dao.findByGameId(1).getBoard();
+        Map<Position, Piece> chessboard = dao.findByGameId(id).getBoard();
 
         for (Position position : chessboard.keySet()) {
             assertThat(position.getX()).isEqualTo(0);
@@ -53,26 +55,38 @@ public class BoardDaoTest {
     @Test
     @DisplayName("올바르게 저장하는지 확인")
     void saveBoard() {
-        jdbcTemplate.execute("INSERT INTO game(name,password) VALUES ('name','password')");
+        int id = insertAndGetId();
         Map<Position, Piece> chessboard = Map.of(new Position(0, 0), new King(Color.WHITE));
 
-        dao.saveBoard(1, chessboard);
+        dao.saveBoard(id, chessboard);
 
-        assertThat(jdbcTemplate.queryForObject("SELECT position_id FROM board WHERE game_id=1", Integer.class)).isEqualTo(1);
-        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1", Integer.class)).isEqualTo(1);
+        assertThat(jdbcTemplate.queryForObject("SELECT position_id FROM board WHERE game_id=?", Integer.class, id)).isEqualTo(1);
+        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=?", Integer.class, id)).isEqualTo(1);
     }
 
     @Test
     @DisplayName("움직인 경우 올바르게 저장하는지 확인")
     void saveMove() {
-        jdbcTemplate.execute("INSERT INTO game(name,password) VALUES ('name','password')");
-        jdbcTemplate.execute("INSERT INTO board(game_id,position_id,piece_id) VALUES (1,1,1)");
-        jdbcTemplate.execute("INSERT INTO board(game_id,position_id,piece_id) VALUES (1,2,2)");
+        int id = insertAndGetId();
+        jdbcTemplate.update("INSERT INTO board(game_id,position_id,piece_id) VALUES (?,1,1)", id);
+        jdbcTemplate.update("INSERT INTO board(game_id,position_id,piece_id) VALUES (?,2,2)", id);
 
-        dao.saveMove(1, new MovingPositionDto(new MovingPosition("a8", "b8")));
+        dao.saveMove(id, new MovingPositionDto(new MovingPosition("a8", "b8")));
 
-        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1 AND position_id=1",Integer.class)).isEqualTo(13);
-        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=1 AND position_id=2",Integer.class)).isEqualTo(1);
+        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=? AND position_id=1", Integer.class, id)).isEqualTo(13);
+        assertThat(jdbcTemplate.queryForObject("SELECT piece_id FROM board WHERE game_id=? AND position_id=2", Integer.class, id)).isEqualTo(1);
+    }
+
+    private int insertAndGetId() {
+        final String sql = "INSERT INTO game(name,password) VALUES ('name','password')";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
 }

@@ -2,12 +2,16 @@ package chess.dao;
 
 import chess.domain.CurrentStatus;
 import chess.dto.CurrentStatusDto;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+import java.sql.PreparedStatement;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,19 +24,18 @@ public class CurrentStatusDaoTest {
     @Autowired
     private CurrentStatusDao dao;
 
-    @BeforeEach
-    void setUp() {
+    @AfterEach()
+    void clear() {
         jdbcTemplate.execute("DELETE FROM game");
-        jdbcTemplate.execute("ALTER TABLE game AUTO_INCREMENT = 1");
     }
 
     @Test
     @DisplayName("gamId를 통해 올바른 현재 상태를 찾아오는지 확인")
     void findGameById() {
-        jdbcTemplate.execute("INSERT INTO game(name,password) VALUES ('name','password')");
-        jdbcTemplate.execute("INSERT INTO current_status(game_id,state,turn) VALUES (1,'READY', 'WHITE')");
+        int id = insertAndGetId();
+        jdbcTemplate.update("INSERT INTO current_status(game_id,state,turn) VALUES (?,'READY', 'WHITE')", id);
 
-        CurrentStatus currentStatus = dao.findByGameId(1);
+        CurrentStatus currentStatus = dao.findByGameId(id);
 
         assertThat(currentStatus.getStateToString()).isEqualTo("READY");
         assertThat(currentStatus.getTurnToString()).isEqualTo("WHITE");
@@ -41,37 +44,48 @@ public class CurrentStatusDaoTest {
     @Test
     @DisplayName("현재상태 저장 확인")
     void save() {
-        jdbcTemplate.execute("INSERT INTO game(name,password) VALUES ('name','password')");
-
+        int id = insertAndGetId();
         CurrentStatus currentStatus = new CurrentStatus();
-        dao.save(1, new CurrentStatusDto(currentStatus));
+        dao.save(id, new CurrentStatusDto(currentStatus));
 
-        assertThat(jdbcTemplate.queryForObject("SELECT state FROM current_status WHERE game_id=1", String.class)).isEqualTo("READY");
-        assertThat(jdbcTemplate.queryForObject("SELECT turn FROM current_status WHERE game_id=1", String.class)).isEqualTo("WHITE");
+        assertThat(jdbcTemplate.queryForObject("SELECT state FROM current_status WHERE game_id=?", String.class, id)).isEqualTo("READY");
+        assertThat(jdbcTemplate.queryForObject("SELECT turn FROM current_status WHERE game_id=?", String.class, id)).isEqualTo("WHITE");
     }
 
     @Test
     @DisplayName("현재상태 수정 확인")
     void update() {
-        jdbcTemplate.execute("INSERT INTO game(name,password) VALUES ('name','password')");
-        jdbcTemplate.execute("INSERT INTO current_status(game_id,state,turn) VALUES (1,'READY','WHITE')");
+        int id = insertAndGetId();
+        jdbcTemplate.update("INSERT INTO current_status(game_id,state,turn) VALUES (?,'READY','WHITE')", id);
 
         CurrentStatus currentStatus = new CurrentStatus("PLAY", "BLACK");
-        dao.update(1, new CurrentStatusDto(currentStatus));
+        dao.update(id, new CurrentStatusDto(currentStatus));
 
-        assertThat(jdbcTemplate.queryForObject("SELECT state FROM current_status WHERE game_id=1", String.class)).isEqualTo("PLAY");
-        assertThat(jdbcTemplate.queryForObject("SELECT turn FROM current_status WHERE game_id=1", String.class)).isEqualTo("BLACK");
+        assertThat(jdbcTemplate.queryForObject("SELECT state FROM current_status WHERE game_id=?", String.class, id)).isEqualTo("PLAY");
+        assertThat(jdbcTemplate.queryForObject("SELECT turn FROM current_status WHERE game_id=?", String.class, id)).isEqualTo("BLACK");
     }
 
     @Test
     @DisplayName("원하는상태로 수정하는지 확인")
     void saveState() {
-        jdbcTemplate.execute("INSERT INTO game(name,password) VALUES ('name','password')");
-        jdbcTemplate.execute("INSERT INTO current_status(game_id,state,turn) VALUES (1,'READY','WHITE')");
+        int id = insertAndGetId();
+        jdbcTemplate.update("INSERT INTO current_status(game_id,state,turn) VALUES (?,'READY','WHITE')", id);
 
-        dao.saveState(1, "FINISH");
+        dao.saveState(id, "FINISH");
 
-        assertThat(jdbcTemplate.queryForObject("SELECT state FROM current_status WHERE game_id=1", String.class)).isEqualTo("FINISH");
+        assertThat(jdbcTemplate.queryForObject("SELECT state FROM current_status WHERE game_id=?", String.class, id)).isEqualTo("FINISH");
+    }
+
+    private int insertAndGetId() {
+        final String sql = "INSERT INTO game(name,password) VALUES ('name','password')";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
     }
 
 }

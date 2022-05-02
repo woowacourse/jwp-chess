@@ -1,13 +1,13 @@
 package chess.model.piece;
 
-import static chess.model.strategy.move.Direction.NORTHEAST;
-import static chess.model.strategy.move.Direction.NORTHWEST;
-import static chess.model.strategy.move.Direction.SOUTHEAST;
-import static chess.model.strategy.move.Direction.SOUTHWEST;
+import static chess.model.piece.strategy.move.Direction.NORTHEAST;
+import static chess.model.piece.strategy.move.Direction.NORTHWEST;
+import static chess.model.piece.strategy.move.Direction.SOUTHEAST;
+import static chess.model.piece.strategy.move.Direction.SOUTHWEST;
 
 import chess.model.Color;
-import chess.model.strategy.UnlimitedMovableStrategy;
-import chess.model.strategy.move.Direction;
+import chess.model.piece.strategy.UnlimitedMovableStrategy;
+import chess.model.piece.strategy.move.Direction;
 import java.util.List;
 
 public final class Bishop extends Piece {

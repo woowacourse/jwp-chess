@@ -2,8 +2,8 @@ package chess.model.board;
 
 import chess.model.File;
 import chess.model.Rank;
-import chess.model.strategy.move.Direction;
-import chess.model.strategy.move.Distance;
+import chess.model.piece.strategy.move.Direction;
+import chess.model.piece.strategy.move.Distance;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;

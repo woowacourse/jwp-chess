@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.model.File;
 import chess.model.Rank;
-import chess.model.strategy.move.Direction;
-import chess.model.strategy.move.Distance;
+import chess.model.piece.strategy.move.Direction;
+import chess.model.piece.strategy.move.Distance;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

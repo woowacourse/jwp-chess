@@ -3,8 +3,8 @@ package chess.model.board;
 import chess.model.game.GameResult;
 import chess.model.piece.Empty;
 import chess.model.piece.Piece;
-import chess.model.strategy.move.Direction;
-import chess.model.strategy.move.MoveType;
+import chess.model.piece.strategy.move.Direction;
+import chess.model.piece.strategy.move.MoveType;
 import java.util.HashMap;
 import java.util.Map;
 

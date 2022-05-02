@@ -1,7 +1,7 @@
 package chess.model.piece;
 
 import chess.model.Color;
-import chess.model.strategy.NonMovableStrategy;
+import chess.model.piece.strategy.NonMovableStrategy;
 
 public class Empty extends Piece {
 

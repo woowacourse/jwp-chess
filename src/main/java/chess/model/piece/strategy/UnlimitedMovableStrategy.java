@@ -1,8 +1,8 @@
-package chess.model.strategy;
+package chess.model.piece.strategy;
 
 import chess.model.board.Square;
-import chess.model.strategy.move.Direction;
-import chess.model.strategy.move.MoveType;
+import chess.model.piece.strategy.move.Direction;
+import chess.model.piece.strategy.move.MoveType;
 import java.util.List;
 
 public class UnlimitedMovableStrategy implements MovableStrategy {

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.model.Color;
 import chess.model.board.Square;
-import chess.model.strategy.move.MoveType;
+import chess.model.piece.strategy.move.MoveType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

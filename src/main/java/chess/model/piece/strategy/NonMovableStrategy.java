@@ -1,7 +1,7 @@
-package chess.model.strategy;
+package chess.model.piece.strategy;
 
 import chess.model.board.Square;
-import chess.model.strategy.move.MoveType;
+import chess.model.piece.strategy.move.MoveType;
 
 public class NonMovableStrategy implements MovableStrategy {
     @Override

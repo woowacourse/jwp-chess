@@ -3,8 +3,8 @@ package chess.model.piece;
 import chess.model.Color;
 import chess.model.board.Square;
 import chess.model.piece.pawn.Pawn;
-import chess.model.strategy.MovableStrategy;
-import chess.model.strategy.move.MoveType;
+import chess.model.piece.strategy.MovableStrategy;
+import chess.model.piece.strategy.move.MoveType;
 import java.util.Objects;
 
 public abstract class Piece {

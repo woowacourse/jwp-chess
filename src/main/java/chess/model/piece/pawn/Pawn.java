@@ -3,7 +3,7 @@ package chess.model.piece.pawn;
 import chess.model.Color;
 import chess.model.piece.Piece;
 import chess.model.piece.Point;
-import chess.model.strategy.PawnMovableStrategy;
+import chess.model.piece.strategy.PawnMovableStrategy;
 
 public class Pawn extends Piece {
 

@@ -1,4 +1,4 @@
-package chess.model.strategy.move;
+package chess.model.piece.strategy.move;
 
 import java.util.HashMap;
 import java.util.Map;

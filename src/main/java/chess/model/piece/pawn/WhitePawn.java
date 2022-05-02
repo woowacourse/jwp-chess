@@ -2,8 +2,8 @@ package chess.model.piece.pawn;
 
 import chess.model.Color;
 import chess.model.Rank;
-import chess.model.strategy.PawnMovableStrategy;
-import chess.model.strategy.move.Direction;
+import chess.model.piece.strategy.PawnMovableStrategy;
+import chess.model.piece.strategy.move.Direction;
 import java.util.List;
 
 public class WhitePawn extends Pawn {

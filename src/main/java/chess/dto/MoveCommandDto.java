@@ -5,7 +5,7 @@ public class MoveCommandDto {
     private String rawFrom;
     private String rawTo;
 
-    public MoveCommandDto() {
+    private MoveCommandDto() {
     }
 
     public MoveCommandDto(final String rawFrom, final String rawTo) {

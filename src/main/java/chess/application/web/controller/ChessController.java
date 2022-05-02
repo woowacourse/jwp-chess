@@ -8,11 +8,11 @@ import chess.piece.Piece;
 import chess.state.Start;
 import chess.state.State;
 import chess.state.Status;
+import chess.application.web.dto.RoomDto;
 import chess.view.Square;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -113,9 +113,9 @@ public class ChessController {
         return "redirect:";
     }
 
-    @GetMapping(path = "/check-password")
-    public ModelAndView checkPassword(@RequestParam int roomId, @RequestParam String name) {
-        if (currentState(roomId).isRunning()) {
+    @PostMapping(path = "/check-password")
+    public ModelAndView checkPassword(@ModelAttribute RoomDto room) {
+        if (currentState(room.getId()).isRunning()) {
             ModelAndView modelAndView = new ModelAndView("index");
             modelAndView.addObject("message", "진행 중인 게임은 삭제할 수 없습니다.");
             modelAndView.addObject("rooms", roomsDao.findAll());
@@ -123,8 +123,8 @@ public class ChessController {
             return modelAndView;
         }
         ModelAndView modelAndView = new ModelAndView("remove");
-        modelAndView.addObject("roomId", roomId);
-        modelAndView.addObject("name", name);
+        modelAndView.addObject("roomId", room.getId());
+        modelAndView.addObject("name", room.getName());
         return modelAndView;
     }
 

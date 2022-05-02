@@ -1,11 +1,10 @@
 package chess.application.web.dao;
 
-import chess.view.Room;
+import chess.application.web.dto.RoomDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class RoomsDao {
@@ -53,10 +52,10 @@ public class RoomsDao {
         return jdbcTemplate.queryForObject(sql, String.class);
     }
 
-    public List<Room> findAll() {
+    public List<RoomDto> findAll() {
         final String sql = "select id, name from rooms";
         return jdbcTemplate.query(sql,
-                ((rs, rowNum) -> new Room(rs.getInt("id"), rs.getString("name"))));
+                ((rs, rowNum) -> new RoomDto(rs.getInt("id"), rs.getString("name"))));
     }
 
     public void removeRoom(final int roomId, final String password) {

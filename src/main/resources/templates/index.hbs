@@ -13,7 +13,7 @@
 <h2>진행중인 게임 목록</h2>
 <h3> 아이디 : 이름 </h3>
 {{#this.rooms}}
-<form action="/check-password" method="get">
+<form action="/check-password" method="post">
 <input type="submit" value="삭제">
 {{this.id}} : <a href="enter/?roomId={{this.id}}"> {{this.name}} </a>
 <input type="hidden" value="{{this.name}}" name="name">

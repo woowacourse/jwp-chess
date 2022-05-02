@@ -88,8 +88,7 @@ class ChessGameControllerTest {
             .andDo(print())
             .andExpectAll(
                 status().is3xxRedirection(),
-                redirectedUrl("/chess-game?id=" + 1),
-                flash().attributeCount(0)
+                redirectedUrl("/chess-game/" + 1)
             );
     }
 

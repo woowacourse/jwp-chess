@@ -37,7 +37,7 @@ public class PieceDao {
         jdbcTemplate.update("DELETE FROM piece WHERE chess_game_id = ?", chessGameId);
     }
 
-    public void deleteById() {
+    public void deleteAll() {
         jdbcTemplate.update("DELETE FROM piece");
     }
 

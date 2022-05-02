@@ -27,10 +27,7 @@ public class ChessGameDaoTest {
     @BeforeEach
     void setUp() {
         pieceDao = new PieceDao(jdbcTemplate);
-        pieceDao.deleteById();
-
         chessGameDao = new ChessGameDao(jdbcTemplate);
-        chessGameDao.deleteAll();
         chessGameDao.saveChessGame(
             new ChessGame(
             new Room("Chess Game", "1234"),
@@ -42,7 +39,7 @@ public class ChessGameDaoTest {
 
     @AfterEach
     void tearDown() {
-        pieceDao.deleteById();
+        pieceDao.deleteAll();
         chessGameDao.deleteAll();
     }
 

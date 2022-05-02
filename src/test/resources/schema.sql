@@ -1,3 +1,6 @@
+drop table if exists piece;
+drop table if exists chess_game;
+
 create table chess_game
 (
     id       int         not null auto_increment primary key,
@@ -16,6 +19,3 @@ create table piece
     chess_game_id int        not null,
     foreign key (chess_game_id) references chess_game (id)
 );
-
-insert into chess_game (name, password, turn, running) values ('슬로', '1234','화이트', true);
-insert into chess_game (name, password, turn, running) values ('슬로2', '1234','화이트', true);

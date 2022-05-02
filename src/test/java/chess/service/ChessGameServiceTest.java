@@ -130,7 +130,8 @@ class ChessGameServiceTest {
     @Test
     @DisplayName("모든 체스 게임을 조회한다.")
     void findAllChessGame() {
-        final int expected = 2;
+        service.createNewChessGame(new CreateGameDto("게임1", "1234", "1234"));
+        final int expected = 1;
 
         final int actual = service.findAllChessGame().size();
 

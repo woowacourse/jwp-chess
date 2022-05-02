@@ -16,8 +16,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("/schema.sql")
 class PieceDaoTest {
 
     private static final int gameId = 1;
@@ -34,6 +36,12 @@ class PieceDaoTest {
         chessGameDao = new ChessGameDao(jdbcTemplate);
         pieceDao = new PieceDao(jdbcTemplate);
         saveGame();
+    }
+
+    private void saveGame() {
+        chessGameDao.saveChessGame("게임1", "1234", Team.WHITE.getName());
+        pieceDao.savePieces(whitePlayer, 1);
+        pieceDao.savePieces(blackPlayer, 1);
     }
 
     @Test
@@ -103,11 +111,5 @@ class PieceDaoTest {
             assertThat(whitePieces.stream()
                     .anyMatch(pieceDto -> pieceDto.getPosition().equals(destination))).isTrue();
         });
-    }
-
-    private void saveGame() {
-        chessGameDao.saveChessGame("게임1", "1234", Team.WHITE.getName());
-        pieceDao.savePieces(whitePlayer, 1);
-        pieceDao.savePieces(blackPlayer, 1);
     }
 }

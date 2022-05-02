@@ -48,12 +48,6 @@ public class GameService {
         boardDao.insert(gameNo, BoardInitializer.get().getSquares());
     }
 
-    public void checkPassword(long gameNo, String password) {
-        if (!gameDao.loadPassword(gameNo).equals(password)) {
-            throw new IllegalArgumentException("비밀번호를 확인하세요.");
-        }
-    }
-
     public ChessGame load(long gameNo) {
         List<PieceDto> rawBoard = boardDao.load(gameNo);
         Map<Position, Piece> board = rawBoard.stream()
@@ -87,8 +81,14 @@ public class GameService {
         return type.generatePiece(camp);
     }
 
-    public void move(String source, String target, ChessGame chessGame) {
+    public void move(long gameNo, ChessGame chessGame, String source, String target) {
         chessGame.move(parsePosition(source), parsePosition(target));
+        save(gameNo, chessGame);
+    }
+
+    private void save(long gameNo, ChessGame chessGame) {
+        gameDao.update(gameNo, chessGame.isWhiteTurn());
+        boardDao.update(gameNo, chessGame.getBoardSquares());
     }
 
     private Position parsePosition(String rawPosition) {
@@ -103,11 +103,6 @@ public class GameService {
 
     public Map<Camp, Score> status(ChessGame chessGame) {
         return chessGame.getScores();
-    }
-
-    public void save(long gameNo, ChessGame chessGame) {
-        gameDao.update(gameNo, chessGame.isWhiteTurn());
-        boardDao.update(gameNo, chessGame.getBoardSquares());
     }
 
     public Map<String, Object> end(long gameNo, ChessGame chessGame) {
@@ -129,11 +124,22 @@ public class GameService {
         return chessGame.isFinished() || !gameDao.isRunning(gameNo);
     }
 
-    public void delete(long gameNo) {
+    public void delete(long gameNo, String password) {
+        checkPassword(gameNo, password);
+        checkStatus(gameNo);
+        boardDao.delete(gameNo);
+        gameDao.delete(gameNo);
+    }
+
+    private void checkPassword(long gameNo, String password) {
+        if (!gameDao.loadPassword(gameNo).equals(password)) {
+            throw new IllegalArgumentException("비밀번호를 확인하세요.");
+        }
+    }
+
+    private void checkStatus(long gameNo) {
         if (gameDao.isRunning(gameNo)) {
             throw new IllegalStateException("진행 중인 게임은 삭제할 수 없습니다.");
         }
-        boardDao.delete(gameNo);
-        gameDao.delete(gameNo);
     }
 }

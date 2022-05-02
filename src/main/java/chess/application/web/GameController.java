@@ -50,8 +50,7 @@ public class GameController {
     @DeleteMapping("/game/{gameNo}")
     public ResponseEntity<String> delete(@PathVariable long gameNo, @RequestBody String password) {
         try {
-            gameService.checkPassword(gameNo, password);
-            gameService.delete(gameNo);
+            gameService.delete(gameNo, password);
             return createMessageResponse(HttpStatus.OK, "방이 삭제되었습니다.");
         } catch (IllegalArgumentException e) {
             return createMessageResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
@@ -75,8 +74,7 @@ public class GameController {
     public String move(Model model, @PathVariable int gameNo,
                        @RequestParam String source, @RequestParam String target) {
         ChessGame chessGame = gameService.load(gameNo);
-        gameService.move(source, target, chessGame);
-        gameService.save(gameNo, chessGame);
+        gameService.move(gameNo, chessGame, source, target);
         return play(model, gameNo);
     }
 

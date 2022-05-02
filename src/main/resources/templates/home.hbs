@@ -1,0 +1,33 @@
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link rel="stylesheet" href="/src/home.css">
+</head>
+
+<body>
+
+<h1 class="title">♟️ 체스</h1>
+<form method="post" action="/game">
+    <div id="info_form">
+        <input class="info" type="text" name="roomTitle" placeholder="방 이름을 입력해주세요." autofocus required>
+        <input class="info" type="password" name="password" placeholder="비밀번호를 입력해주세요." required>
+        <input class="info" type="submit" value="방 생성"/>
+    </div>
+</form>
+
+{{#each games}}
+    <ul>
+        <li>
+            <button class="enter" onclick="location.href = '/game/{{this.id}}'">{{this.roomTitle}}</button>
+            <form id="room_form" action="/game/{{this.id}}" method="post">
+                <input type="hidden" name="_method" value="delete">
+                <input class="room" name="password" placeholder="비밀번호를 입력해주세요.">
+                <button id="delete" class="room" type="submit">삭제하기</button>
+                <span>{{value}}</span>
+            </form>
+        </li>
+    </ul>
+    <br>
+{{/each}}
+</body>
+</html>

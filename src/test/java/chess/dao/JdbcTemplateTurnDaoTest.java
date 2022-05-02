@@ -13,34 +13,37 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class JdbcTemplateTurnDaoTest {
 
     private JdbcTemplateTurnDao jdbcTemplateTurnDao;
+    private int id;
 
     @Autowired
     private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     @BeforeEach
     void setUp() {
+        JdbcTemplateGameDao jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate, new GameMapper());
+        id = jdbcTemplateGameDao.create("asdf", "1234");
         jdbcTemplateTurnDao = new JdbcTemplateTurnDao(jdbcTemplate);
-        jdbcTemplateTurnDao.init();
+        jdbcTemplateTurnDao.init(id);
     }
 
 
     @Test
     @DisplayName("초기 값을 확인한다.")
     void getTurn() {
-        assertThat(jdbcTemplateTurnDao.getTurn()).isEqualTo("white");
+        assertThat(jdbcTemplateTurnDao.getTurn(id)).isEqualTo("white");
     }
 
     @Test
     @DisplayName("차례를 변경 후, 변경 값을 확인한다.")
     void update() {
         jdbcTemplateTurnDao.update("white", "black");
-        assertThat(jdbcTemplateTurnDao.getTurn()).isEqualTo("black");
+        assertThat(jdbcTemplateTurnDao.getTurn(id)).isEqualTo("black");
     }
 
     @Test
     @DisplayName("리셋을 확인한다.")
     void reset() {
-        jdbcTemplateTurnDao.reset();
-        assertThat(jdbcTemplateTurnDao.getTurn()).isEqualTo("white");
+        jdbcTemplateTurnDao.reset(id);
+        assertThat(jdbcTemplateTurnDao.getTurn(id)).isEqualTo("white");
     }
 }

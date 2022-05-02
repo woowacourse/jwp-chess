@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.dao.TurnDao;
 import chess.domain.piece.Team;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,8 +14,8 @@ public class JdbcTemplateTurnDao implements TurnDao {
     }
 
     @Override
-    public void init() {
-        jdbcTemplate.update("INSERT INTO turn(team) VALUES (?)", "white");
+    public void init(int gameId) {
+        jdbcTemplate.update("INSERT INTO turn(team, game_id) VALUES (?, ?)", "white", gameId);
     }
 
     @Override
@@ -26,20 +25,20 @@ public class JdbcTemplateTurnDao implements TurnDao {
     }
 
     @Override
-    public String getTurn() {
-        String sql = "select * from turn";
-        return jdbcTemplate.queryForObject(sql, String.class);
+    public String getTurn(int gameId) {
+        String sql = "select team from turn where game_id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }
 
     @Override
-    public void reset() {
-        removeAll();
-        String sql = "insert into turn (team) values (?)";
-        jdbcTemplate.update(sql, Team.WHITE.toString());
+    public void reset(int gameId) {
+        deleteById(gameId);
+        String sql = "insert into turn (team, game_id) values (?, ?)";
+        jdbcTemplate.update(sql, Team.WHITE.toString(), gameId);
     }
 
-    private void removeAll() {
-        String sql = "truncate table turn";
-        this.jdbcTemplate.execute(sql);
+    private void deleteById(int gameId) {
+        String sql = "delete from turn where game_id = ?";
+        jdbcTemplate.update(sql, gameId);
     }
 }

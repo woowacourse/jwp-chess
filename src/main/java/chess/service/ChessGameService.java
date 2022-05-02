@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.dao.BoardDao;
+import chess.dao.GameDao;
 import chess.dao.GameStatusDao;
 import chess.dao.TurnDao;
 import chess.domain.ChessGame;
@@ -15,8 +16,11 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.PieceConvertor;
 import chess.domain.piece.Team;
 import chess.domain.position.Position;
+import chess.dto.GameDto;
 import chess.dto.GameStatusDto;
 import chess.dto.ScoreDto;
+import chess.dto.WinnerDto;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -26,73 +30,89 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessGameService {
 
-    public static final String WIN_MESSAGE = "승리 팀은 : %s 입니다.";
+    private static final String PASSWORD_DIFFERENCE = "비밀번호가 일치하지 않습니다.";
+    private static final String NON_REMOVABLE_ROOM = "실행중인 방은 삭제할 수 없습니다.";
+    private static final String REMOVABLE_STATUS = "READY";
 
     private final BoardDao boardDao;
     private final TurnDao turnDao;
     private final GameStatusDao gameStatusDao;
+    private final GameDao gameDao;
 
     @Autowired
-    public ChessGameService(BoardDao boardDao, TurnDao turnDao, GameStatusDao gameStatusDao) {
+    public ChessGameService(BoardDao boardDao, TurnDao turnDao, GameStatusDao gameStatusDao, GameDao gameDao) {
         this.boardDao = boardDao;
         this.turnDao = turnDao;
         this.gameStatusDao = gameStatusDao;
+        this.gameDao = gameDao;
     }
 
-    public void init() {
-        try {
-            turnDao.getTurn();
-        } catch (Exception e) {
-            turnDao.init();
-            gameStatusDao.init();
+    public void create(GameDto gameDto) {
+        int id = gameDao.create(gameDto.getRoomTitle(), gameDto.getPassword());
+        turnDao.init(id);
+        gameStatusDao.init(id);
+    }
+
+    public List<GameDto> find() {
+        return gameDao.find();
+    }
+
+    public void delete(int id, String password) {
+        String status = gameStatusDao.getStatus(id);
+        if (!REMOVABLE_STATUS.equalsIgnoreCase(status)) {
+            throw new IllegalArgumentException(NON_REMOVABLE_ROOM);
+        }
+        boolean isDeleted = gameDao.delete(id, password);
+        if (!isDeleted) {
+            throw new IllegalArgumentException(PASSWORD_DIFFERENCE);
         }
     }
 
-    public GameStatusDto startChessGame(BoardGenerationStrategy strategy) {
-        if (gameStatusDao.getStatus().equals(GameStatus.PLAYING.toString())) {
-            return loadChessGame();
+    public GameStatusDto startChessGame(BoardGenerationStrategy strategy, int gameId) {
+        if (gameStatusDao.getStatus(gameId).equals(GameStatus.PLAYING.toString())) {
+            return loadChessGame(gameId);
         }
         ChessGame chessGame = new ChessGame();
         chessGame.startGame(strategy);
-        boardDao.init(chessGame.toMap());
-        gameStatusDao.update(gameStatusDao.getStatus(), chessGame.getGameStatus().toString());
+        boardDao.init(chessGame.toMap(), gameId);
+        gameStatusDao.update(gameStatusDao.getStatus(gameId), chessGame.getGameStatus().toString(), gameId);
         return GameStatusDto.of(chessGame);
     }
 
-    public GameStatusDto loadChessGame() {
-        ChessGame chessGame = createCustomChessGame();
+    private GameStatusDto loadChessGame(int gameId) {
+        ChessGame chessGame = createCustomChessGame(gameId);
         return GameStatusDto.of(chessGame);
     }
 
-    public ScoreDto createScore() {
-        Board board = createCustomBoard(boardDao.getBoard());
+    public ScoreDto createScore(int gameId) {
+        Board board = createCustomBoard(boardDao.getBoard(gameId));
         Result result = board.createResult();
         return ScoreDto.of(result);
     }
 
-    public GameStatusDto move(String from, String to) {
-        checkReady();
+    public GameStatusDto move(String from, String to, int gameId) {
+        checkReady(gameId);
 
-        ChessGame chessGame = createCustomChessGame();
-        moveAndUpdateBoard(from, to, chessGame);
+        ChessGame chessGame = createCustomChessGame(gameId);
+        moveAndUpdateBoard(from, to, chessGame, gameId);
         chessGame.checkGameStatus();
 
-        turnDao.update(turnDao.getTurn(), chessGame.getTurn().toString());
-        gameStatusDao.update(gameStatusDao.getStatus(), chessGame.getGameStatus().toString());
+        turnDao.update(turnDao.getTurn(gameId), chessGame.getTurn().toString());
+        gameStatusDao.update(gameStatusDao.getStatus(gameId), chessGame.getGameStatus().toString(), gameId);
 
         return GameStatusDto.of(chessGame);
     }
 
-    private void checkReady() {
-        GameStatus gameStatus = GameStatus.of(gameStatusDao.getStatus());
+    private void checkReady(int gameId) {
+        GameStatus gameStatus = GameStatus.of(gameStatusDao.getStatus(gameId));
         if (gameStatus.isReady()) {
             throw new IllegalArgumentException("체스 게임을 시작해야 합니다.");
         }
     }
 
-    private ChessGame createCustomChessGame() {
-        return new ChessGame(Team.of(turnDao.getTurn()), GameStatus.of(gameStatusDao.getStatus()),
-                createCustomBoard(boardDao.getBoard()));
+    private ChessGame createCustomChessGame(int gameId) {
+        return new ChessGame(Team.of(turnDao.getTurn(gameId)), GameStatus.of(gameStatusDao.getStatus(gameId)),
+                createCustomBoard(boardDao.getBoard(gameId)));
     }
 
     private Board createCustomBoard(Map<String, String> data) {
@@ -111,42 +131,43 @@ public class ChessGameService {
         return strategy;
     }
 
-    private void moveAndUpdateBoard(String fromData, String toData, ChessGame chessGame) {
+    private void moveAndUpdateBoard(String fromData, String toData, ChessGame chessGame, int gameId) {
         Position from = new Position(fromData);
         Position to = new Position(toData);
         chessGame.move(from, to);
-        boardDao.update(from.toString(), new Blank().toString());
-        boardDao.update(to.toString(), chessGame.takePieceByPosition(to).toString());
+        boardDao.update(from.toString(), new Blank().toString(), gameId);
+        boardDao.update(to.toString(), chessGame.takePieceByPosition(to).toString(), gameId);
     }
 
-    public ScoreDto end() {
-        ChessGame chessGame = createCustomChessGame();
-        checkReady();
+    public WinnerDto end(int gameId) {
+        ChessGame chessGame = createCustomChessGame(gameId);
+        checkReady(gameId);
         Result result = chessGame.stop();
-        return createEndScore(result);
+        gameStatusDao.update(gameStatusDao.getStatus(gameId), chessGame.getGameStatus().toString(), gameId);
+        return createEndScore(result, gameId);
     }
 
-    private ScoreDto createEndScore(Result result) {
-        ScoreDto scoreDto = null;
-        if (gameStatusDao.getStatus().equals(GameStatus.CHECK_MATE.toString())) {
-            scoreDto = new ScoreDto(String.format(WIN_MESSAGE, Team.of(turnDao.getTurn()).change()));
+    private WinnerDto createEndScore(Result result, int gameId) {
+        WinnerDto winnerDto = null;
+        if (gameStatusDao.getStatus(gameId).equals(GameStatus.CHECK_MATE.toString())) {
+            winnerDto = WinnerDto.of(result);
         }
-        resetBoard();
-        turnDao.reset();
-        gameStatusDao.reset();
-        return selectScoreDto(result, scoreDto);
+        resetBoard(gameId);
+        turnDao.reset(gameId);
+        gameStatusDao.reset(gameId);
+        return selectScoreDto(result, winnerDto);
     }
 
-    private void resetBoard() {
+    private void resetBoard(int gameId) {
         Board board = new Board();
         board.initBoard(new WebBasicBoardStrategy());
-        boardDao.reset(board.toMap());
+        boardDao.reset(board.toMap(), gameId);
     }
 
-    private ScoreDto selectScoreDto(Result result, ScoreDto scoreDto) {
-        if (Objects.isNull(scoreDto)) {
-            return ScoreDto.of(result);
+    private WinnerDto selectScoreDto(Result result, WinnerDto winnerDto) {
+        if (Objects.isNull(winnerDto)) {
+            return WinnerDto.of(result);
         }
-        return scoreDto;
+        return winnerDto;
     }
 }

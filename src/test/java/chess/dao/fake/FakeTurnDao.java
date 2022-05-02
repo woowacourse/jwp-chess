@@ -7,7 +7,7 @@ public class FakeTurnDao implements TurnDao {
     private String turn = "white";
 
     @Override
-    public void init() {
+    public void init(int gameId) {
         turn = "white";
     }
 
@@ -17,12 +17,12 @@ public class FakeTurnDao implements TurnDao {
     }
 
     @Override
-    public String getTurn() {
+    public String getTurn(int gameId) {
         return turn;
     }
 
     @Override
-    public void reset() {
+    public void reset(int gameId) {
         turn = "white";
     }
 }

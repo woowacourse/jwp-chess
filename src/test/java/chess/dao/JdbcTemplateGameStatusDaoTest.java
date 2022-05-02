@@ -13,14 +13,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class JdbcTemplateGameStatusDaoTest {
 
     private JdbcTemplateGameStatusDao jdbcTemplateGameStatusDao;
+    private int id;
 
     @Autowired
     private JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     @BeforeEach
     void setUp() {
+        JdbcTemplateGameDao jdbcTemplateGameDao = new JdbcTemplateGameDao(jdbcTemplate, new GameMapper());
+        id = jdbcTemplateGameDao.create("asdf", "1234");
         jdbcTemplateGameStatusDao = new JdbcTemplateGameStatusDao(jdbcTemplate);
-        jdbcTemplateGameStatusDao.init();
+        jdbcTemplateGameStatusDao.init(id);
     }
 
     @DisplayName("초기 값을 확인한다.")
@@ -30,7 +33,7 @@ public class JdbcTemplateGameStatusDaoTest {
         GameStatus initStatus = GameStatus.READY;
 
         // then
-        Assertions.assertThat(jdbcTemplateGameStatusDao.getStatus()).isEqualTo(initStatus.toString());
+        Assertions.assertThat(jdbcTemplateGameStatusDao.getStatus(id)).isEqualTo(initStatus.toString());
     }
 
     @DisplayName("상태를 변경 후 변경 값을 확인한다.")
@@ -40,9 +43,9 @@ public class JdbcTemplateGameStatusDaoTest {
         GameStatus initStatus = GameStatus.READY;
         GameStatus nextStatus = GameStatus.PLAYING;
         //when
-        jdbcTemplateGameStatusDao.update(initStatus.toString(), nextStatus.toString());
+        jdbcTemplateGameStatusDao.update(initStatus.toString(), nextStatus.toString(), id);
         // then
-        Assertions.assertThat(jdbcTemplateGameStatusDao.getStatus()).isEqualTo(nextStatus.toString());
+        Assertions.assertThat(jdbcTemplateGameStatusDao.getStatus(id)).isEqualTo(nextStatus.toString());
     }
 
     @DisplayName("리셋을 확인한다.")
@@ -52,9 +55,9 @@ public class JdbcTemplateGameStatusDaoTest {
         GameStatus initStatus = GameStatus.READY;
         GameStatus nextStatus = GameStatus.PLAYING;
         //when
-        jdbcTemplateGameStatusDao.update(initStatus.toString(), nextStatus.toString());
-        jdbcTemplateGameStatusDao.reset();
+        jdbcTemplateGameStatusDao.update(initStatus.toString(), nextStatus.toString(), id);
+        jdbcTemplateGameStatusDao.reset(id);
         // then
-        Assertions.assertThat(jdbcTemplateGameStatusDao.getStatus()).isEqualTo(initStatus.toString());
+        Assertions.assertThat(jdbcTemplateGameStatusDao.getStatus(id)).isEqualTo(initStatus.toString());
     }
 }

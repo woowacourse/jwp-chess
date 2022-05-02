@@ -21,7 +21,7 @@ class BoardDaoTest {
         boardDao = new FakeBoardDao(new BasicBoardStrategy());
         Board board = new Board();
         board.initBoard(new BasicBoardStrategy());
-        boardDao.reset(board.toMap());
+        boardDao.reset(board.toMap(), 1);
     }
 
     @Test
@@ -29,33 +29,33 @@ class BoardDaoTest {
     void getBoard() {
         Board board = new Board();
         board.initBoard(new BasicBoardStrategy());
-        assertThat(boardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(boardDao.getBoard(1)).isEqualTo(board.toMap());
     }
 
     @Test
     @DisplayName("이동 업데이트 로직을 확인한다.")
     void update() {
-        boardDao.update("a3", "white_pawn");
-        boardDao.update("a2", "blank");
+        boardDao.update("a3", "white_pawn", 1);
+        boardDao.update("a2", "blank", 1);
 
         Board board = new Board();
         board.initBoard(new BasicBoardStrategy());
         board.move(new Position("a3"), new WhitePawn());
         board.move(new Position("a2"), new Blank());
 
-        assertThat(boardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(boardDao.getBoard(1)).isEqualTo(board.toMap());
     }
 
     @Test
     @DisplayName("리셋을 확인한다.")
     void reset() {
-        boardDao.update("a3", "white_pawn");
-        boardDao.update("a2", "blank");
+        boardDao.update("a3", "white_pawn", 1);
+        boardDao.update("a2", "blank", 1);
 
         Board board = new Board();
 
-        boardDao.reset(board.toMap());
+        boardDao.reset(board.toMap(), 1);
 
-        assertThat(boardDao.getBoard()).isEqualTo(board.toMap());
+        assertThat(boardDao.getBoard(1)).isEqualTo(board.toMap());
     }
 }

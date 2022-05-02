@@ -11,7 +11,12 @@ start.addEventListener('click', async function () {
 })
 
 async function startAndDraw() {
-    await fetch("/start")
+    await fetch(location.pathname + "/start", {
+        method: 'PUT',
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
         .then(res => res.json())
         .then(res => {
             status = res.gameStatus;
@@ -60,7 +65,7 @@ async function movePiece(from, to) {
         to: to
     }
 
-    fetch("/move", {
+    fetch(location.pathname + "/move", {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -108,9 +113,9 @@ async function getScore() {
     if (status == "") {
         alert("게임을 시작해야합니다.");
     } else {
-        let score = await fetch("/status")
+        let score = await fetch(location.pathname + "/status")
         score = await score.json()
-        alert(score.message)
+        alert("무승부 입니다!\nwhite : " + score.whiteScore + "점\n" + "black : " + score.blackScore + "점")
     }
 }
 
@@ -122,13 +127,19 @@ async function endGame() {
     if (status == "") {
         alert("게임을 시작해야합니다.");
     } else {
-        let score = await fetch("/end")
-        score = await score.json()
+        let score = await fetch(location.pathname + "/end", {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        score = await score.json();
+        console.log(score);
         if (status == "END") {
             alert("게임을 종료합니다.\n" + score.message);
         }
         if (status == "CHECK_MATE") {
-            alert("승부가 결정되었습니다!!.\n" + score.message);
+            alert("승부가 결정되었습니다!!.\n" + "승리 팀은 " + score.team + "입니다.");
         }
 
         status = "";

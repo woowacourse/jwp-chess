@@ -1,0 +1,54 @@
+.info {
+    width: 500px;
+    height: 32px;
+    font-size: 15px;
+    border: 0;
+    border-radius: 15px;
+    outline: none;
+    padding-left: 10px;
+    background-color: #4C4C4C;
+    color: white;
+}
+
+.enter {
+    width: 120px;
+    height: 40px;
+    color: #4C4C4C;
+    background: #FFD9EC;
+    font-size: 16px;
+    border: none;
+    border-radius: 20px;
+}
+
+.room {
+    border-radius: 20px;
+    color: #4C4C4C;
+    background: #FFD9EC;
+}
+
+#info_form {
+    text-align: center;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+#room_form {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.title {
+    text-align: center;
+    color: #4C4C4C;
+    font-size: 40px;
+}
+
+ul {
+    list-style: none;
+    text-align: center;
+}
+
+button {
+    display: inline-block;
+}

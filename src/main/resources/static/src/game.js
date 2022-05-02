@@ -13,7 +13,7 @@ section.addEventListener("mouseup", (event) => {
 
   toInput = findTagId(event);
 
-  fetch("/game/"+gameId+"/", {
+  fetch("/game/" + gameId + "/", {
     method: 'put',
     redirect: 'follow',
     headers: {
@@ -25,9 +25,9 @@ section.addEventListener("mouseup", (event) => {
       target: toInput,
     }),
   })
-  .then(res=>{
-     window.location.href = res.url
-   })
+  .then(res => {
+    window.location.href = res.url
+  })
   .catch(error => {
     alert(error.message)
   })

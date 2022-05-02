@@ -1,5 +1,6 @@
 package chess.controller;
 
+import chess.entity.RoomEntity;
 import chess.service.CommandService;
 import chess.service.RoomService;
 
@@ -42,20 +43,19 @@ public class RoomController {
     }
 
     @GetMapping("/form/room-delete/{roomId}")
-    public ModelAndView deleteRoomPage(@PathVariable Long roomId, @RequestParam(required = false) String failMessage) {
+    public ModelAndView deleteRoomPage(@PathVariable Long roomId) {
         ModelAndView modelAndView = new ModelAndView("deleteRoom");
         modelAndView.addObject("id", roomId);
-        modelAndView.addObject("failMessage", failMessage);
         commandService.checkRunning(roomId);
         return modelAndView;
     }
 
     @PostMapping("/room/{roomId}")
     public String deleteRoom(RedirectAttributes redirectAttributes, @PathVariable Long roomId, @RequestParam String password) {
-        if (roomService.delete(roomId, password)) {
-            return "redirect:/";
-        }
-        redirectAttributes.addAttribute("failMessage", "다시 입력해주세요.");
-        return "redirect:/room/" + roomId + "/delete";
+        RoomEntity roomEntity = roomService.findById(roomId);
+        roomService.delete(roomId, password);
+        redirectAttributes.addAttribute("message", roomEntity.getName() +
+                "방이 삭제되었습니다.");
+        return "redirect:/";
     }
 }

@@ -14,10 +14,10 @@
 
 {{#this.rooms}}
     <div>
-        <form action="/room/{{this.id}}" method="get">
+        <form action="/room/{{this.id}}" method="get" style="display:inline">
             {{this.name}}방 <input type="submit" value="참가" />
         </form>
-        <form action="/form/room-delete/{{this.id}}" method="get">
+        <form action="/form/room-delete/{{this.id}}" method="get" style="display:inline">
             <input type="submit" value="체스방 삭제" />
         </form>
     </div>

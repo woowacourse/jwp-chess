@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.entity.RoomEntity;
+import chess.exception.DeleteRoomException;
 import chess.repository.RoomDao;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,14 @@ public class RoomService {
         return roomDao.findAll();
     }
 
-    public boolean delete(Long id, String password) {
-        if (roomDao.findById(id).getPassword().equals(password)) {
-            roomDao.deleteById(id);
-            return true;
+    public RoomEntity findById(Long roomId) {
+        return roomDao.findById(roomId);
+    }
+
+    public void delete(Long id, String password) {
+        if (!roomDao.findById(id).getPassword().equals(password)) {
+            throw new DeleteRoomException("비밀번호를 잘못 입력했습니다.");
         }
-        return false;
+        roomDao.deleteById(id);
     }
 }

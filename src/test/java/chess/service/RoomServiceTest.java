@@ -1,9 +1,11 @@
 package chess.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.entity.RoomEntity;
 
+import chess.exception.DeleteRoomException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,12 +42,11 @@ public class RoomServiceTest {
         assertThat(rooms.size()).isEqualTo(3);
     }
 
-    @DisplayName("비밀번호가 일치하는지 확인하고 방을 삭제한다.")
+    @DisplayName("비밀번호가 일치하는지 검증한다.")
     @Test
     void delete() {
         RoomEntity roomEntity = roomService.create("room1", "1234");
-        assertThat(roomService.delete(roomEntity.getId(), "123")).isFalse();
-        assertThat(roomService.delete(roomEntity.getId(), "1234")).isTrue();
-
+        assertThatThrownBy(() -> roomService.delete(roomEntity.getId(), "123"))
+                .isInstanceOf(DeleteRoomException.class);
     }
 }

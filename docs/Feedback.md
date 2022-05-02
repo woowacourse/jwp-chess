@@ -27,12 +27,12 @@
 - [x] `ObjectMapper`를 통해 Gson 라이브러리 의존성 제거
 - [x] Controller - status 메서드에서 Body를 Map으로 전달한 이유, DTO로 전달하는 것은 어떤지
     - `StatusDto` - 필드로 board와 score를 Map의 value를 가지도록 구현
-- [ ] Arguments - 컨트롤러에서 정해주는 것이 적절한가?
+- [x] Arguments - 컨트롤러에서 정해주는 것이 적절한가?
     - Command 관련 피드백
 - [ ] ExceptionHandler
     - RuntimeException -> Exception으로 바꾼 이유
-- [ ] DAO에서 Dto가 필요한지
-    - [ ] BoardDao
+- [x] DAO에서 Dto가 필요한지
+    - [x] BoardDao
     - [x] RoomDao
         - 삭제 시 (게임명, 비밀번호)를 이용하는 것이 아닌 id로 지우도록 수정하고 비밀번호 검증은 service에서 하도록 수정
 - [ ] 클래스명에 Spring이라는 이름을 붙인 이유

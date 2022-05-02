@@ -28,7 +28,7 @@ public class ChessServiceTest {
     @BeforeEach
     void initTable() {
         ChessGameDao chessGameDao = new ChessGameDao(jdbcTemplate);
-        chessGameDao.save("test", "test", new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
+        chessGameDao.save("test", "test", "hashtesttestval",new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
 
         PieceDao pieceDao = new PieceDao(jdbcTemplate);
         pieceDao.save("test");
@@ -46,15 +46,15 @@ public class ChessServiceTest {
     }
 
     @Test
-    @DisplayName("gameID를 이용해 DB로부터 불러온 turn이 해당 gameTurn과 일치한다")
+    @DisplayName("gameCode를 이용해 DB로부터 불러온 turn이 해당 gameTurn과 일치한다")
     void getTurn() {
-        assertThat(chessService.getTurn("test")).isEqualTo(GameTurn.WHITE);
+        assertThat(chessService.getTurn("hashtesttestval")).isEqualTo(GameTurn.WHITE);
     }
 
     @Test
-    @DisplayName("gameID를 이용해 DB로부터 불러온 chessGame의 종료여부가 실제 종료여부 일치한다")
+    @DisplayName("gameCode를 이용해 DB로부터 불러온 chessGame의 종료여부가 실제 종료여부 일치한다")
     void isFinished() {
-        assertThat(chessService.isFinished("test")).isEqualTo(false);
+        assertThat(chessService.isFinished("hashtesttestval")).isEqualTo(false);
     }
 
     @Test

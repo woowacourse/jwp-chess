@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -41,8 +40,8 @@ public class IndexController {
         return "delete";
     }
 
-    @DeleteMapping("/delete/{gameID}/{inputPW}")
-    public String deleteGame(@PathVariable String gameID, @PathVariable String inputPW, Model model) {
+    @GetMapping("/delete")
+    public String deleteGame(@RequestParam String gameID, @RequestParam String inputPW, Model model) {
         chessService.checkAndDeleteGame(gameID, inputPW);
         model.addAttribute("rooms", chessService.loadGameLists());
         return "redirect:/";

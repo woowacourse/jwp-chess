@@ -24,7 +24,7 @@ public class PieceDaoTest {
     @BeforeEach
     void initTable() {
         ChessGameDao chessGameDao = new ChessGameDao(jdbcTemplate);
-        chessGameDao.save("test", "test", new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
+        chessGameDao.save("test", "test", "hashtesttestval",new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
     }
 
     @AfterEach

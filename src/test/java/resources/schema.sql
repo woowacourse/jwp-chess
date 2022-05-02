@@ -1,3 +1,6 @@
+DROP TABLE board IF EXISTS;
+DROP TABLE room IF EXISTS;
+
 create table room
 (
     id int(10) NOT NULL AUTO_INCREMENT,
@@ -18,3 +21,5 @@ create table board
     primary key (board_id),
     foreign key (room_id) references room (id)
 );
+
+insert into board (position, piece, room_id) values ('a2', 'p_WHITE', 1);

@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.console.controller;
 
 import chess.console.command.Command;
 import java.util.NoSuchElementException;

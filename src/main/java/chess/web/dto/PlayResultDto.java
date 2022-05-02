@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayResultDto {
-    private Map<String, Piece> board = new HashMap<>();
+    private Map<String, Piece> board;
     private String turn;
 
     public PlayResultDto(Map<String, Piece> board, String turn) {

@@ -33,4 +33,8 @@ public enum Player {
             .findFirst()
             .orElseThrow(() -> new NoSuchElementException("턴을 바꿀 수 없습니다."));
     }
+
+    public Color getColor() {
+        return color;
+    }
 }

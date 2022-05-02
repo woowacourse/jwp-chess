@@ -7,12 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import spark.Response;
 
 @RestControllerAdvice
 public class WebChessExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {IllegalArgumentException.class, NoExecuteQuery.class})
-    private ResponseEntity<Object> handleConflict(RuntimeException e) {
+    private ResponseEntity<ResponseDto> handleConflict(RuntimeException e) {
         e.printStackTrace();
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -20,7 +21,7 @@ public class WebChessExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {Exception.class})
-    private ResponseEntity<Object> generalHandleConflict(RuntimeException e) {
+    private ResponseEntity<ResponseDto> generalHandleConflict(RuntimeException e) {
         e.printStackTrace();
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

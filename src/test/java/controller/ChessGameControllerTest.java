@@ -1,6 +1,7 @@
 package controller;
 
 import chess.SpringChessApplication;
+import chess.dao.ChessRoomDao;
 import chess.dto.request.MakeRoomRequest;
 import chess.dto.response.MoveResponse;
 
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import io.restassured.RestAssured;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.hamcrest.core.Is.is;
 
@@ -45,7 +47,7 @@ public class ChessGameControllerTest {
     void getBoard() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/loadBoard/" + id)
+                .when().get("/games/" + id)
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
                 .body("pieces.size()", is(64))
@@ -103,12 +105,12 @@ public class ChessGameControllerTest {
     void getGameList() {
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().get("/loadGames")
+                .when().get("/games")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("games.id[0]", is((int) id))
-                .body("games.name[0]", is("green green"))
-                .body("games.password[0]", is("1234"));
+                .body("games[0].id", is((int) id))
+                .body("games[0].name", is("green green"))
+                .body("games[0].password", is("1234"));
     }
 
     @DisplayName("체스 게임 종료 확인 - POST")

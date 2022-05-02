@@ -25,7 +25,7 @@ public class ChessRoomDaoTest {
     @BeforeEach
     void setUp() {
         chessRoomDao = new ChessRoomDao(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE room IF EXISTS CASCADE");
+        /*jdbcTemplate.execute("DROP TABLE room IF EXISTS CASCADE");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS room(" +
                 "  id bigint NOT NULL AUTO_INCREMENT,\n" +
                 "  status varchar(50) NOT NULL,\n" +
@@ -33,8 +33,8 @@ public class ChessRoomDaoTest {
                 "  password varchar(20) NOT NULL,\n" +
                 "  PRIMARY KEY (id)" +
                 ")");
-
-        jdbcTemplate.update("insert into room (id, status, name, password) values(?, ?, ?, ?)",
+        */
+        jdbcTemplate.update("insert into room(id, status, name, password) values(?, ?, ?, ?)",
                 1000, "WHITE", "green", "1234");
     }
 

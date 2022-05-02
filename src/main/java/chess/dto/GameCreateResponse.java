@@ -2,13 +2,13 @@ package chess.dto;
 
 public class GameCreateResponse {
 
-    private int id;
+    private long id;
 
-    public GameCreateResponse(int id) {
+    public GameCreateResponse(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 }

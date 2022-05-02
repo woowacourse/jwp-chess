@@ -2,7 +2,7 @@ package chess.dto;
 
 public class GameDto {
 
-    private int id;
+    private long id;
     private String roomName;
     private String whiteName;
     private String blackName;
@@ -11,7 +11,7 @@ public class GameDto {
     public GameDto() {
     }
 
-    public GameDto(int id, String roomName, String whiteName, String blackName, boolean isFinished) {
+    public GameDto(long id, String roomName, String whiteName, String blackName, boolean isFinished) {
         this.id = id;
         this.roomName = roomName;
         this.whiteName = whiteName;
@@ -19,7 +19,7 @@ public class GameDto {
         this.isFinished = isFinished;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

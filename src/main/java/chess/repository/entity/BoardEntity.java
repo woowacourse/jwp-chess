@@ -15,6 +15,10 @@ public class BoardEntity {
         this.piece = piece;
     }
 
+    public BoardEntity(long gameId) {
+        this.gameId = gameId;
+    }
+
     public long getGameId() {
         return gameId;
     }

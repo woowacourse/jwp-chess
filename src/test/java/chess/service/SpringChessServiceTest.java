@@ -26,7 +26,7 @@ class SpringChessServiceTest {
     @Autowired
     private SpringChessService springChessService;
 
-    private List<Integer> gameIds = new ArrayList<>();
+    private List<Long> gameIds = new ArrayList<>();
 
     @BeforeEach
     void setup() {
@@ -50,7 +50,7 @@ class SpringChessServiceTest {
         final GameCreateResponse gameCreateResponse = springChessService.create(
                 new GameCreateRequest("room", "password", "white", "black"));
 
-        final int id = gameCreateResponse.getId();
+        final long id = gameCreateResponse.getId();
         assertThat(springChessService.findById(id)).isNotNull();
     }
 
@@ -64,7 +64,7 @@ class SpringChessServiceTest {
     @Test
     @DisplayName("게임 아이디로 단일 게임을 조회할 수 있다.")
     void findById() {
-        final int targetId = gameIds.get(0);
+        final long targetId = gameIds.get(0);
         final GameDto gameDto = springChessService.findById(targetId);
         assertThat(gameDto.getRoomName()).isEqualTo("test room1");
     }
@@ -72,7 +72,7 @@ class SpringChessServiceTest {
     @Test
     @DisplayName("게임 아이디로 점수를 조회할 수 있다.")
     void findScoreById() {
-        final int targetId = gameIds.get(0);
+        final long targetId = gameIds.get(0);
         final Map<Color, Double> scoreById = springChessService.findScoreById(targetId);
         assertAll(
                 () -> assertThat(scoreById.get(Color.WHITE)).isEqualTo(38.0),
@@ -83,7 +83,7 @@ class SpringChessServiceTest {
     @Test
     @DisplayName("기물을 이동한 정보를 저장할 수 있다")
     void updateBoard() {
-        final int targetId = gameIds.get(0);
+        final long targetId = gameIds.get(0);
         final MoveResponse moveResponse = springChessService.updateBoard(targetId,
                 new MoveRequest("pw", "E2", "E4", targetId));
 

@@ -1,12 +1,11 @@
 package chess.domain.piece;
 
-import java.util.Collections;
-import java.util.List;
-
 import chess.domain.piece.detail.Direction;
 import chess.domain.piece.detail.PieceType;
 import chess.domain.piece.detail.Team;
 import chess.domain.square.Square;
+import java.util.Collections;
+import java.util.List;
 
 public class Blank extends Piece {
 

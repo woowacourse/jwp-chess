@@ -2,14 +2,12 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import chess.domain.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import chess.domain.Member;
 
 class MockMemberDaoTest {
 
@@ -18,8 +16,8 @@ class MockMemberDaoTest {
     void save() {
         final MockMemberDao repository = new MockMemberDao();
         final Member member = new Member("alex");
-        repository.save(member);
-        assertThat(repository.findById(1L).get().getName()).isEqualTo(member.getName());
+        final Member savedMember = repository.save(member);
+        assertThat(savedMember.getName()).isEqualTo(member.getName());
     }
 
     @Test

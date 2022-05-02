@@ -1,10 +1,9 @@
 package chess.dto;
 
+import chess.domain.piece.Piece;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import chess.domain.piece.Piece;
 
 public class RankDto {
 
@@ -16,7 +15,7 @@ public class RankDto {
         this.rankLine = rankLine;
     }
 
-    public static RankDto toDto(List<Piece> pieces, int rankLine) {
+    public static RankDto of(List<Piece> pieces, int rankLine) {
         return new RankDto(toPieceSignature(pieces), rankLine);
     }
 

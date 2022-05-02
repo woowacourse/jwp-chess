@@ -1,5 +1,7 @@
 package chess.dao;
 
+import chess.domain.ChessGame;
+import chess.domain.square.Square;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,18 +10,16 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import chess.domain.ChessGame;
-
 public class MockGameDao implements GameDao {
 
     private final static Map<Long, ChessGame> store = new ConcurrentHashMap<>();
     private static int nextId = 1;
 
     @Override
-    public Long save(ChessGame game) {
-        game = new ChessGame((long) nextId++, game.getBoard(), game.getTurn(), game.getParticipant());
+    public ChessGame save(ChessGame game) {
+        game = new ChessGame((long) nextId++, game.getBoard(), game.getTurn(), game.getRoom());
         store.put(game.getId(), game);
-        return game.getId();
+        return game;
     }
 
     @Override
@@ -43,7 +43,21 @@ public class MockGameDao implements GameDao {
     }
 
     @Override
-    public void update(ChessGame game) {
+    public void terminate(ChessGame game) {
+        game.terminate();
         store.put(game.getId(), game);
+    }
+
+    @Override
+    public void updateByMove(final ChessGame game, final String rawFrom, final String rawTo) {
+        final Square from = Square.from(rawFrom);
+        final Square to = Square.from(rawTo);
+        game.move(from, to);
+        store.put(game.getId(), game);
+    }
+
+    @Override
+    public void deleteGameById(final Long id) {
+        store.remove(id);
     }
 }

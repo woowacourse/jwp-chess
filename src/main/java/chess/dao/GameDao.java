@@ -1,13 +1,12 @@
 package chess.dao;
 
+import chess.domain.ChessGame;
 import java.util.List;
 import java.util.Optional;
 
-import chess.domain.ChessGame;
-
 public interface GameDao {
 
-    Long save(final ChessGame game);
+    ChessGame save(final ChessGame game);
 
     Optional<ChessGame> findById(final Long id);
 
@@ -15,5 +14,9 @@ public interface GameDao {
 
     List<ChessGame> findHistoriesByMemberId(final Long memberId);
 
-    void update(final ChessGame game);
+    void terminate(final ChessGame game);
+
+    void updateByMove(final ChessGame chessGame, final String rawFrom, final String rawTo);
+
+    void deleteGameById(final Long id);
 }

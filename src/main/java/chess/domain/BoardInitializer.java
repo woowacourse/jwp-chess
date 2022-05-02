@@ -4,9 +4,6 @@ import static chess.domain.piece.detail.Team.BLACK;
 import static chess.domain.piece.detail.Team.NONE;
 import static chess.domain.piece.detail.Team.WHITE;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import chess.domain.piece.Blank;
 import chess.domain.piece.Piece;
 import chess.domain.piece.multiplemove.Bishop;
@@ -18,6 +15,8 @@ import chess.domain.piece.singlemove.Knight;
 import chess.domain.square.File;
 import chess.domain.square.Rank;
 import chess.domain.square.Square;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BoardInitializer {
 

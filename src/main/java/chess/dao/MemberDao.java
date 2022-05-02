@@ -1,13 +1,12 @@
 package chess.dao;
 
+import chess.domain.Member;
 import java.util.List;
 import java.util.Optional;
 
-import chess.domain.Member;
-
 public interface MemberDao {
 
-    Long save(final Member member);
+    Member save(final Member member);
 
     Optional<Member> findById(final Long id);
 

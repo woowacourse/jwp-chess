@@ -7,14 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-
 import chess.domain.piece.Piece;
 import chess.domain.piece.detail.Team;
 import chess.domain.piece.multiplemove.Bishop;
@@ -24,6 +16,12 @@ import chess.domain.piece.pawn.Pawn;
 import chess.domain.piece.singlemove.King;
 import chess.domain.piece.singlemove.Knight;
 import chess.domain.square.Square;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class ChessGameTest {
 

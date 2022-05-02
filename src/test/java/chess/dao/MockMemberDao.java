@@ -1,22 +1,21 @@
 package chess.dao;
 
+import chess.domain.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import chess.domain.Member;
-
 public class MockMemberDao implements MemberDao {
     private static final Map<Long, Member> store = new ConcurrentHashMap<>();
     private static int nextId = 1;
 
     @Override
-    public Long save(Member member) {
+    public Member save(Member member) {
         member = new Member((long) nextId++, member.getName());
         store.put(member.getId(), member);
-        return member.getId();
+        return member;
     }
 
     @Override

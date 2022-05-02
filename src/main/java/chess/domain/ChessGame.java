@@ -1,35 +1,33 @@
 package chess.domain;
 
-import java.util.List;
-import java.util.Map;
-
 import chess.domain.piece.Piece;
 import chess.domain.piece.detail.PieceType;
 import chess.domain.piece.detail.Team;
 import chess.domain.square.File;
 import chess.domain.square.Square;
+import java.util.List;
+import java.util.Map;
 
 public class ChessGame {
 
     private Long id;
+    private final Room room;
     private final Board board;
     private Team turn;
-    private Participant participant;
 
-
-    public ChessGame(final Long id, final Board board, final Team turn, final Participant participant) {
+    public ChessGame(final Long id, final Board board, final Team turn, final Room room) {
         this.id = id;
         this.board = board;
         this.turn = turn;
-        this.participant = participant;
+        this.room = room;
     }
 
     public ChessGame(final Long id, final Board board, final Team turn) {
         this(id, board, turn, null);
     }
 
-    public ChessGame(final Board board, final Team turn, final Participant participant) {
-        this(null, board, turn, participant);
+    public ChessGame(final Board board, final Team turn, final Room room) {
+        this(null, board, turn, room);
     }
 
     public static ChessGame initGame() {
@@ -52,6 +50,10 @@ public class ChessGame {
 
     public void terminate() {
         turn = Team.NONE;
+    }
+
+    public boolean isInProgress() {
+        return turn == Team.WHITE || turn == Team.BLACK;
     }
 
     public boolean isEnd() {
@@ -121,21 +123,25 @@ public class ChessGame {
         return turn;
     }
 
+    public Room getRoom() {
+        return room;
+    }
+
     public Participant getParticipant() {
-        return participant;
+        return room.getParticipant();
     }
 
     public Long getWhiteId() {
-        return participant.getWhiteId();
+        return room.getParticipant().getWhiteId();
     }
 
     public Long getBlackId() {
-        return participant.getBlackId();
+        return room.getParticipant().getBlackId();
     }
 
     public Long getWinnerId() {
         Result result = createResult();
         final Team team = result.getWinner();
-        return participant.getIdByTeam(team);
+        return room.getParticipant().getIdByTeam(team);
     }
 }

@@ -1,27 +1,25 @@
 package chess.dao;
 
+import chess.domain.Member;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
-import chess.domain.Member;
-
 @Repository
-public class DatabaseMemberDao implements MemberDao {
+public class ChessMemberDao implements MemberDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public DatabaseMemberDao(final JdbcTemplate jdbcTemplate) {
+    public ChessMemberDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Long save(Member member) {
+    public Member save(Member member) {
         final String sql = "insert into Member (name) values (?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -30,7 +28,9 @@ public class DatabaseMemberDao implements MemberDao {
             return ps;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        final long memberId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        return new Member(memberId, member.getName());
     }
 
     @Override

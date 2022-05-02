@@ -2,17 +2,15 @@ package chess.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.junit.jupiter.api.Test;
-
 import chess.domain.piece.Piece;
 import chess.domain.piece.detail.PieceType;
 import chess.domain.square.File;
 import chess.domain.square.Rank;
 import chess.domain.square.Square;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.junit.jupiter.api.Test;
 
 class BoardInitializerTest {
 

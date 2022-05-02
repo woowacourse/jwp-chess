@@ -1,6 +1,11 @@
 package chess.view;
 
-import static chess.domain.classification.CommandCase.*;
+import static chess.domain.classification.CommandCase.ELSE;
+import static chess.domain.classification.CommandCase.END;
+import static chess.domain.classification.CommandCase.MOVE;
+import static chess.domain.classification.CommandCase.START;
+import static chess.domain.classification.CommandCase.STATUS;
+import static chess.domain.classification.CommandCase.checkStart;
 
 import chess.domain.classification.Command;
 import chess.domain.classification.CommandCase;

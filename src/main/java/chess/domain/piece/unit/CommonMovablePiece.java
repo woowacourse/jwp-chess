@@ -2,9 +2,9 @@ package chess.domain.piece.unit;
 
 import chess.domain.piece.property.Direction;
 import chess.domain.piece.property.PieceInfo;
+import chess.domain.position.Position;
 import chess.domain.position.XPosition;
 import chess.domain.position.YPosition;
-import chess.domain.position.Position;
 import java.util.ArrayList;
 import java.util.List;
 

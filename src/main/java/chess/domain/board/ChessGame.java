@@ -20,6 +20,25 @@ public final class ChessGame {
         this.chessBoard = chessBoard;
     }
 
+    public void execute(final Movement movement) {
+        chessBoard.move(
+                Position.of(movement.getSource()),
+                Position.of(movement.getTarget())
+        );
+    }
+
+    public boolean isKingDied() {
+        return !chessBoard.checkKingExist();
+    }
+
+    public boolean isPasswordMatch(final String password) {
+        return this.password.equals(password);
+    }
+
+    public boolean isEnd() {
+        return isEnd;
+    }
+
     public String getName() {
         return name;
     }
@@ -32,26 +51,7 @@ public final class ChessGame {
         return password;
     }
 
-    public void execute(final Movement movement) {
-        chessBoard.move(
-                Position.of(movement.getSource()),
-                Position.of(movement.getTarget())
-        );
-    }
-
     public ChessBoard getChessBoard() {
         return chessBoard;
-    }
-
-    public boolean isKingDied() {
-        return !chessBoard.checkKingExist();
-    }
-
-    public boolean isEnd() {
-        return isEnd;
-    }
-
-    public boolean isPasswordMatch(final String password) {
-        return this.password.equals(password);
     }
 }

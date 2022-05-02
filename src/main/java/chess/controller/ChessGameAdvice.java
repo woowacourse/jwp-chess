@@ -7,8 +7,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ChessGameAdvice {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handle(Exception exception) {
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<String> handle(Exception exception) {
+//        return ResponseEntity.badRequest().body(exception.getMessage());
+//    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleBadRequest(IllegalArgumentException exception) {
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

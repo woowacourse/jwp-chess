@@ -40,14 +40,14 @@ public class ChessGameController {
 
     @GetMapping("/chess/game/{id}")
     public String showChessGameRoom(@PathVariable long id, Model model) {
-        GameRoomResponse chessGameRoomInfoDTO = chessService.findGameById(id);
-        model.addAttribute("chessGameRoom", chessGameRoomInfoDTO);
+        GameRoomResponse chessGameRoomResponse = chessService.findGameById(id);
+        model.addAttribute("chessGameRoom", chessGameRoomResponse);
         return "game";
     }
 
     @GetMapping("/chess/game/{id}/board")
     @ResponseBody
-    public ResponseEntity<BoardResponse> createBoard(@PathVariable long id) {
+    public ResponseEntity<BoardResponse> loadSavedGame(@PathVariable long id) {
         ChessGame chessGame = chessService.loadSavedGame(id);
         return ResponseEntity.ok(new BoardResponse(chessGame));
     }

@@ -9,11 +9,13 @@ import chess.domain.position.Position;
 import chess.dto.GameCreationRequest;
 import chess.dto.GameRoomResponse;
 import chess.dto.MoveRequest;
+import chess.exception.InvalidPasswordException;
+import chess.exception.RunningGameDeletionException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public final class ChessService {
+public class ChessService {
 
     private final ChessGameDAO chessGameDAO;
     private final MovementDAO movementDAO;
@@ -71,12 +73,12 @@ public final class ChessService {
     }
 
     public void deleteGame(final long gameId, final String password) {
-        ChessGame chessGame = loadSavedGame(gameId);
+        ChessGame chessGame = chessGameDAO.findGameById(gameId);
         if (!chessGame.isPasswordMatch(password)) {
-            throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+            throw new InvalidPasswordException();
         }
         if (!chessGame.isEnd()) {
-            throw new IllegalArgumentException("진행중인 게임은 삭제할 수 없습니다.");
+            throw new RunningGameDeletionException();
         }
         chessGameDAO.deleteGame(gameId);
     }

@@ -1,8 +1,8 @@
 package chess.domain.board;
 
 import chess.domain.piece.property.PieceFeature;
-import chess.domain.piece.unit.Piece;
 import chess.domain.piece.property.Team;
+import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;
 import java.util.List;
 import java.util.Map;

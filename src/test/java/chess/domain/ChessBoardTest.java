@@ -1,18 +1,22 @@
 package chess.domain;
 
-import static chess.domain.piece.property.Team.*;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static chess.domain.piece.property.Team.BLACK;
+import static chess.domain.piece.property.Team.WHITE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import chess.domain.board.ChessBoard;
 import chess.domain.board.ChessBoardGenerator;
-import chess.dto.GameStatus;
+import chess.domain.classification.Result;
 import chess.domain.piece.unit.Bishop;
 import chess.domain.piece.unit.Pawn;
 import chess.domain.piece.unit.Piece;
 import chess.domain.piece.unit.Rook;
 import chess.domain.position.Position;
-import chess.domain.classification.Result;
+import chess.dto.GameStatus;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

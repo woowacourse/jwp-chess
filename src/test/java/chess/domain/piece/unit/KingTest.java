@@ -1,7 +1,22 @@
 package chess.domain.piece.unit;
 
-import static chess.domain.piece.property.Team.*;
-import static chess.domain.PositionFixtures.*;
+import static chess.domain.PositionFixtures.A1;
+import static chess.domain.PositionFixtures.A2;
+import static chess.domain.PositionFixtures.A3;
+import static chess.domain.PositionFixtures.A4;
+import static chess.domain.PositionFixtures.B1;
+import static chess.domain.PositionFixtures.B2;
+import static chess.domain.PositionFixtures.B3;
+import static chess.domain.PositionFixtures.B4;
+import static chess.domain.PositionFixtures.C1;
+import static chess.domain.PositionFixtures.C2;
+import static chess.domain.PositionFixtures.C3;
+import static chess.domain.PositionFixtures.C4;
+import static chess.domain.PositionFixtures.D1;
+import static chess.domain.PositionFixtures.D2;
+import static chess.domain.PositionFixtures.D3;
+import static chess.domain.PositionFixtures.D4;
+import static chess.domain.piece.property.Team.WHITE;
 
 import chess.domain.position.Position;
 import java.util.stream.Stream;

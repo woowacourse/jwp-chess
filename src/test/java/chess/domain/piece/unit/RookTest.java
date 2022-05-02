@@ -1,6 +1,6 @@
 package chess.domain.piece.unit;
 
-import static chess.domain.piece.property.Team.*;
+import static chess.domain.piece.property.Team.WHITE;
 
 import chess.domain.PositionFixtures;
 import chess.domain.position.Position;

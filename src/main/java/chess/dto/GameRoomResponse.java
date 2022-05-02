@@ -6,16 +6,14 @@ public final class GameRoomResponse {
 
     private final String id;
     private final String name;
-    private final String password;
 
-    public GameRoomResponse(final String id, final String name, final String password) {
+    public GameRoomResponse(final String id, final String name) {
         this.id = id;
         this.name = name;
-        this.password = password;
     }
 
     public static GameRoomResponse from(final ChessGame chessGame) {
-        return new GameRoomResponse(chessGame.getId(), chessGame.getName(), chessGame.getPassword());
+        return new GameRoomResponse(chessGame.getId(), chessGame.getName());
     }
 
     public String getId() {
@@ -24,10 +22,6 @@ public final class GameRoomResponse {
 
     public String getName() {
         return name;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override

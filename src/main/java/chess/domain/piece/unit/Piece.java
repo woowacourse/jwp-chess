@@ -1,8 +1,8 @@
 package chess.domain.piece.unit;
 
+import chess.domain.piece.property.Direction;
 import chess.domain.piece.property.Team;
 import chess.domain.position.Position;
-import chess.domain.piece.property.Direction;
 import java.util.List;
 
 public interface Piece {

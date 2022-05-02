@@ -3,6 +3,8 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.dto.GameCreationRequest;
+import chess.exception.InvalidPasswordException;
+import chess.exception.RunningGameDeletionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,7 @@ class ChessServiceTest {
         chessService.addChessGame(new GameCreationRequest("test", "1234"));
 
         assertThatThrownBy(() -> chessService.deleteGame(1, "123"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("비밀번호");
+                .isInstanceOf(InvalidPasswordException.class);
     }
 
     @Test
@@ -30,7 +31,6 @@ class ChessServiceTest {
         chessService.addChessGame(new GameCreationRequest("test", "1234"));
 
         assertThatThrownBy(() -> chessService.deleteGame(1, "1234"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("진행중인 게임");
+                .isInstanceOf(RunningGameDeletionException.class);
     }
 }

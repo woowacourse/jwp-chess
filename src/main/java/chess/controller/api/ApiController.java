@@ -6,7 +6,7 @@ import chess.dto.RoomsResponse;
 import chess.dto.RoomCreateRequest;
 import chess.dto.RoomResponse;
 import chess.dto.StatusResponse;
-import chess.dto.WinnerRes;
+import chess.dto.WinnerResponse;
 import chess.service.ChessService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -67,7 +67,7 @@ public class ApiController {
     }
 
     @GetMapping("/room/{roomId}/state/end")
-    public ResponseEntity<WinnerRes> selectWinner(@PathVariable Long roomId) {
+    public ResponseEntity<WinnerResponse> selectWinner(@PathVariable Long roomId) {
         return ResponseEntity.ok().body(chessService.findWinnerById(roomId));
     }
 

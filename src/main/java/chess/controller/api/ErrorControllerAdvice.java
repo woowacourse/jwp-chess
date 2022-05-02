@@ -1,6 +1,6 @@
 package chess.controller.api;
 
-import chess.dto.ErrorRes;
+import chess.dto.ErrorResponse;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ErrorControllerAdvice {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorRes> argumentErrorResponse(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(new ErrorRes(e.getMessage()));
+    public ResponseEntity<ErrorResponse> argumentErrorResponse(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ErrorRes> stateErrorResponse(IllegalStateException e) {
-        return ResponseEntity.badRequest().body(new ErrorRes(e.getMessage()));
+    public ResponseEntity<ErrorResponse> stateErrorResponse(IllegalStateException e) {
+        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<ErrorRes> errorDbResponse() {
-        return ResponseEntity.badRequest().body(new ErrorRes("값이 존재하지 않습니다."));
+    public ResponseEntity<ErrorResponse> errorDbResponse() {
+        return ResponseEntity.badRequest().body(new ErrorResponse("값이 존재하지 않습니다."));
     }
 }

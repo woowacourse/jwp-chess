@@ -1,4 +1,4 @@
-package chess.service;
+package chess.dto;
 
 public class SquareResponse {
 

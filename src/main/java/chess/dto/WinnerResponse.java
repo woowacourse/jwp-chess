@@ -1,14 +1,14 @@
 package chess.dto;
 
-public class WinnerRes {
+public class WinnerResponse {
 
     private String winner;
 
-    public WinnerRes() {
+    public WinnerResponse() {
         this(null);
     }
 
-    public WinnerRes(String winner) {
+    public WinnerResponse(String winner) {
         this.winner = winner;
     }
 

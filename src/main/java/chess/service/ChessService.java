@@ -12,7 +12,8 @@ import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
 import chess.domain.state.State;
 import chess.dto.RoomResponse;
-import chess.dto.WinnerRes;
+import chess.dto.SquareResponse;
+import chess.dto.WinnerResponse;
 import chess.entity.Room;
 import chess.entity.Square;
 import java.util.HashMap;
@@ -109,12 +110,12 @@ public class ChessService {
         return updateRoomId;
     }
 
-    public WinnerRes findWinnerById(Long roomId) {
+    public WinnerResponse findWinnerById(Long roomId) {
         final ChessGame chessGame = findChessGame(roomId);
         if (chessGame.isEndGameByPiece()) {
-            return new WinnerRes(chessGame.getWinner().name());
+            return new WinnerResponse(chessGame.getWinner().name());
         }
-        return new WinnerRes();
+        return new WinnerResponse();
     }
 
     @Transactional

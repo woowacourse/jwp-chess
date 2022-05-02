@@ -1,11 +1,11 @@
 package chess.dto;
 
-public class PieceRes {
+public class PieceResponse {
 
     private String symbol;
     private String color;
 
-    public PieceRes(String symbol, String color) {
+    public PieceResponse(String symbol, String color) {
         this.symbol = symbol;
         this.color = color;
     }

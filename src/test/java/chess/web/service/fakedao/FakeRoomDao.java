@@ -27,4 +27,14 @@ public class FakeRoomDao implements RoomDao {
         }
         return roomDtos;
     }
+
+    @Override
+    public void deleteById(int id) {
+
+    }
+
+    @Override
+    public boolean confirmPassword(int id, String password) {
+        return false;
+    }
 }

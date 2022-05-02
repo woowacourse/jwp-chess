@@ -1,6 +1,8 @@
 package chess.web.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Piece;
@@ -39,8 +41,7 @@ public class ChessGameServiceTest {
         Map<String, Piece> board = playResultDto.getBoard();
         String turn = playResultDto.getTurn();
 
-        assertThat(board).isNotNull();
-        assertThat(turn).isNotNull();
+        assertAll(() -> assertNotNull(board), () -> assertNotNull(turn));
     }
 
     @Test

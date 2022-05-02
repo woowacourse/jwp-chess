@@ -3,7 +3,6 @@ package chess.dao;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.domain.state.BoardInitialize;
-import chess.dto.response.PieceDto;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -51,9 +51,18 @@ public class ChessService {
     }
 
     public void deleteBy(Long roomId, String password) {
-        Room room = getRoom(roomId);
-        room.validateCanDelete(password);
+        validateCanDelete(roomId, password);
         roomDao.deleteBy(roomId, password);
+    }
+
+    private void validateCanDelete(Long roomId, String password) {
+        Room room = getRoom(roomId);
+        if (room.matchPassword(password)) {
+            throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+        }
+        if (room.isFinished()) {
+            throw new IllegalArgumentException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
     }
 
     private Room getRoom(Long roomId) {

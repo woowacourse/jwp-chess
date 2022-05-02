@@ -81,7 +81,9 @@ class QueenTest {
         Piece king = new King(Position.of('e', '5'), Team.BLACK);
         List<Position> intervalPosition = queen.getIntervalPosition(king);
 
-        assertThat(intervalPosition.contains(Position.of('f', '6'))).isTrue();
-        assertThat(intervalPosition.contains(Position.of('g', '7'))).isTrue();
+        assertAll(
+                () -> assertThat(intervalPosition.contains(Position.of('f', '6'))).isTrue(),
+                () -> assertThat(intervalPosition.contains(Position.of('g', '7'))).isTrue()
+        );
     }
 }

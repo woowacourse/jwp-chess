@@ -1,6 +1,7 @@
 package chess.web.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.board.Turn;
 import chess.board.piece.Piece;
@@ -45,8 +46,10 @@ class PieceDaoTest {
         List<Piece> updatedPieces = pieceDao.findAllByBoardId(id);
         Piece updatedPiece = updatedPieces.get(0);
 
-        assertThat(updatedPiece.getType()).isEqualTo(newType);
-        assertThat(updatedPiece.getTeam().value()).isEqualTo(newTeam);
+        assertAll(
+                () -> assertThat(updatedPiece.getType()).isEqualTo(newType),
+                () -> assertThat(updatedPiece.getTeam().value()).isEqualTo(newTeam)
+        );
     }
 
     @Sql("/sql/chess-setup.sql")

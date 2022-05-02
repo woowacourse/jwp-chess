@@ -161,7 +161,10 @@
     - 더 확실하게 관리하기 위해 `@Transactional`의 `readOnly = true`옵션을 추가해주었습니다.
     - `@Transactional`의 `readOnly = true`옵션이 있는 상태로 상태가 변하면 405 status code가 반환되는 것을 확인했습니다.
 - [x] 남아있는 Room의 흔적을 지우자. 
-- [ ] assertAll()의 장점을 생각해보고 적용해보자
+- [x] `assertAll()`의 장점을 생각해보고 적용해보자
+    - `assertAll()`는 모든 테스트가 실행될 때 까지 예외를 발생시키지 않아 모든 테스트를 우선은 검증한다는 의미입니다.
+    - `assertThat(A)`, `assertThat(B)`, `assertThat(C)` 순서대로 검증을 하고 있다가 만약 `assertThat(A)`에서 실패한다면 B와 C는 검증조차 하지않게되는데 이런 경우 B, C 테스트는 A 테스트에 의존하게 된다.
+    - 불필요하게 검증들이 서로 의존하지 않도록 하기위해 `assertAll()`을 사용한다.
 
 ---
 

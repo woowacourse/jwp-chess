@@ -1,6 +1,7 @@
 package chess.web.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.board.BoardEntity;
 import chess.board.Turn;
@@ -37,9 +38,11 @@ class BoardDaoTest {
         Long id = boardDao.save(turn.getTeam().value(), title, password);
 
         Optional<BoardEntity> board = boardDao.findById(id);
-        assertThat(board).isPresent();
-        assertThat(board.get().getTitle()).isEqualTo(title);
-        assertThat(board.get().getPassword()).isEqualTo(password);
+        assertAll(
+                () -> assertThat(board).isPresent(),
+                () -> assertThat(board.get().getTitle()).isEqualTo(title),
+                () -> assertThat(board.get().getPassword()).isEqualTo(password)
+        );
     }
 
     @Sql("/sql/chess-setup.sql")
@@ -55,8 +58,10 @@ class BoardDaoTest {
         boardDao.updateTurnById(id, changedTurn.getTeam().value());
 
         Optional<BoardEntity> board = boardDao.findById(id);
-        assertThat(board).isPresent();
-        assertThat(board.get().getTurn()).isEqualTo(changedTurn.getTeam().value());
+        assertAll(
+                () -> assertThat(board).isPresent(),
+                () -> assertThat(board.get().getTurn()).isEqualTo(changedTurn.getTeam().value())
+        );
     }
 
     @Sql("/sql/chess-setup.sql")
@@ -70,9 +75,11 @@ class BoardDaoTest {
 
         Optional<BoardEntity> board = boardDao.findById(id);
 
-        assertThat(board).isPresent();
-        assertThat(board.get().getTitle()).isEqualTo(title);
-        assertThat(board.get().getPassword()).isEqualTo(password);
+        assertAll(
+                () -> assertThat(board).isPresent(),
+                () -> assertThat(board.get().getTitle()).isEqualTo(title),
+                () -> assertThat(board.get().getPassword()).isEqualTo(password)
+        );
     }
 
     @Sql("/sql/chess-setup.sql")
@@ -102,8 +109,10 @@ class BoardDaoTest {
         boardDao.delete(id, "test");
 
         Optional<BoardEntity> board = boardDao.findById(id);
-        assertThat(board).isPresent();
-        assertThat(board.get().getTitle()).isEqualTo(title);
-        assertThat(board.get().getPassword()).isEqualTo(password);
+        assertAll(
+                () -> assertThat(board).isPresent(),
+                () -> assertThat(board.get().getTitle()).isEqualTo(title),
+                () -> assertThat(board.get().getPassword()).isEqualTo(password)
+        );
     }
 }

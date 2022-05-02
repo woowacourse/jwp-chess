@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.board.Board;
 import chess.board.Turn;
@@ -108,10 +109,12 @@ class ChessApiControllerTest {
         List<Piece> savedPieces = chessService.loadGame(id).getPieces().getPieces();
         Optional<Piece> pieceByFromPosition = findByPosition(savedPieces, Position.from(fromPosition));
         Optional<Piece> pieceByToPosition = findByPosition(savedPieces, Position.from(toPosition));
-        assertThat(pieceByFromPosition).isPresent();
-        assertThat(pieceByToPosition).isPresent();
-        assertThat(pieceByFromPosition.get()).isInstanceOf(Empty.class);
-        assertThat(pieceByToPosition.get()).isInstanceOf(Pawn.class);
+        assertAll(
+                () -> assertThat(pieceByFromPosition).isPresent(),
+                () -> assertThat(pieceByToPosition).isPresent(),
+                () -> assertThat(pieceByFromPosition.get()).isInstanceOf(Empty.class),
+                () -> assertThat(pieceByToPosition.get()).isInstanceOf(Pawn.class)
+        );
     }
 
     private Optional<Piece> findByPosition(List<Piece> pieces, Position position) {
@@ -162,8 +165,10 @@ class ChessApiControllerTest {
                 .body("blackTeamScore", equalTo(blackTeamScore))
                 .body("whiteTeamScore", equalTo(whiteTeamScore));
 
-        assertThat(scoreDto.getBlackTeamScore()).isEqualTo(38D);
-        assertThat(scoreDto.getWhiteTeamScore()).isEqualTo(38D);
+        assertAll(
+                () -> assertThat(scoreDto.getBlackTeamScore()).isEqualTo(38D),
+                () -> assertThat(scoreDto.getWhiteTeamScore()).isEqualTo(38D)
+        );
     }
 
     @Sql("/sql/chess-setup.sql")

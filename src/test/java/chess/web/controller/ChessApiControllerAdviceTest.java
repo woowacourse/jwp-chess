@@ -3,6 +3,7 @@ package chess.web.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.board.piece.Empty;
 import chess.board.piece.Pawn;
@@ -60,10 +61,13 @@ class ChessApiControllerAdviceTest {
         List<Piece> savedPieces = chessService.loadGame(id).getPieces().getPieces();
         Optional<Piece> pieceByFromPosition = findByPosition(savedPieces, Position.from(fromPosition));
         Optional<Piece> pieceByToPosition = findByPosition(savedPieces, Position.from(toPosition));
-        assertThat(pieceByFromPosition).isPresent();
-        assertThat(pieceByToPosition).isPresent();
-        assertThat(pieceByFromPosition.get()).isInstanceOf(Pawn.class);
-        assertThat(pieceByToPosition.get()).isInstanceOf(Empty.class);
+
+        assertAll(
+                () -> assertThat(pieceByFromPosition).isPresent(),
+                () -> assertThat(pieceByToPosition).isPresent(),
+                () -> assertThat(pieceByFromPosition.get()).isInstanceOf(Pawn.class),
+                () -> assertThat(pieceByToPosition.get()).isInstanceOf(Empty.class)
+        );
     }
 
     @Sql("/sql/chess-setup.sql")
@@ -89,10 +93,12 @@ class ChessApiControllerAdviceTest {
         List<Piece> savedPieces = chessService.loadGame(id).getPieces().getPieces();
         Optional<Piece> pieceByFromPosition = findByPosition(savedPieces, Position.from(fromPosition));
         Optional<Piece> pieceByToPosition = findByPosition(savedPieces, Position.from(toPosition));
-        assertThat(pieceByFromPosition).isPresent();
-        assertThat(pieceByToPosition).isPresent();
-        assertThat(pieceByFromPosition.get()).isInstanceOf(Pawn.class);
-        assertThat(pieceByToPosition.get()).isInstanceOf(Empty.class);
+        assertAll(
+                () -> assertThat(pieceByFromPosition).isPresent(),
+                () -> assertThat(pieceByToPosition).isPresent(),
+                () -> assertThat(pieceByFromPosition.get()).isInstanceOf(Pawn.class),
+                () -> assertThat(pieceByToPosition.get()).isInstanceOf(Empty.class)
+        );
     }
 
     private Optional<Piece> findByPosition(List<Piece> pieces, Position position) {

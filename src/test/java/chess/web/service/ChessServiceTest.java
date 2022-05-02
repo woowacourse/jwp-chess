@@ -70,8 +70,10 @@ class ChessServiceTest {
         Board initBoard = chessService.initBoard(boardId);
 
         Pieces pieces = initBoard.getPieces();
-        assertThat(pieces.getPieces().size()).isEqualTo(64);
-        assertThat(pieces.getPieces().containsAll(Pieces.createInit().getPieces())).isTrue();
+        assertAll(
+                () -> assertThat(pieces.getPieces().size()).isEqualTo(64),
+                () -> assertThat(pieces.getPieces().containsAll(Pieces.createInit().getPieces())).isTrue()
+        );
     }
 
     @Test
@@ -82,8 +84,10 @@ class ChessServiceTest {
 
         ScoreDto status = chessService.getStatus(boardId);
 
-        assertThat(status.getBlackTeamScore()).isEqualTo(38D);
-        assertThat(status.getWhiteTeamScore()).isEqualTo(38D);
+        assertAll(
+                () -> assertThat(status.getBlackTeamScore()).isEqualTo(38D),
+                () -> assertThat(status.getWhiteTeamScore()).isEqualTo(38D)
+        );
     }
 
     @Test
@@ -95,9 +99,11 @@ class ChessServiceTest {
         Long boardId = chessService.createBoard(title, password);
 
         Optional<BoardEntity> board = boardDao.findById(boardId);
-        assertThat(board).isPresent();
-        assertThat(board.get().getTitle()).isEqualTo(title);
-        assertThat(board.get().getPassword()).isEqualTo(password);
+        assertAll(
+                () -> assertThat(board).isPresent(),
+                () -> assertThat(board.get().getTitle()).isEqualTo(title),
+                () -> assertThat(board.get().getPassword()).isEqualTo(password)
+        );
     }
 
     @Test
@@ -112,9 +118,11 @@ class ChessServiceTest {
 
         List<BoardDto> boardDtos = chessService.getBoards();
 
-        assertThat(boardDtos.size()).isEqualTo(2);
-        assertThat(boardDtos.get(0).getTitle()).isEqualTo(title1);
-        assertThat(boardDtos.get(1).getTitle()).isEqualTo(title2);
+        assertAll(
+                () -> assertThat(boardDtos.size()).isEqualTo(2),
+                () -> assertThat(boardDtos.get(0).getTitle()).isEqualTo(title1),
+                () -> assertThat(boardDtos.get(1).getTitle()).isEqualTo(title2)
+        );
     }
 
     @Test
@@ -134,8 +142,10 @@ class ChessServiceTest {
         long resultCount = chessService.getBoards().stream()
                 .filter(board -> board.getId().equals(boardId))
                 .count();
-        assertThat(result).isTrue();
-        assertThat(resultCount).isZero();
+        assertAll(
+                () -> assertThat(result).isTrue(),
+                () -> assertThat(resultCount).isZero()
+        );
     }
 
     @Test

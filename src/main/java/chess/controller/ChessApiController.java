@@ -3,6 +3,7 @@ package chess.controller;
 import chess.domain.ChessGame;
 import chess.domain.Result;
 import chess.dto.GameCreationDto;
+import chess.dto.GamePasswordDto;
 import chess.dto.MoveCommandDto;
 import chess.service.GameService;
 import chess.service.MemberService;
@@ -67,8 +68,8 @@ public class ChessApiController {
 
     @PostMapping("/{gameId}/password")
     public ResponseEntity<Boolean> validatePassword(@PathVariable final Long gameId,
-                                                    @RequestParam final String password) {
-        gameService.validatePassword(gameId, password);
+                                                    @RequestBody final GamePasswordDto gamePasswordDto) {
+        gameService.validatePassword(gameId, gamePasswordDto.getPassword());
 
         return ResponseEntity.ok(true);
     }
@@ -90,8 +91,8 @@ public class ChessApiController {
 
     @DeleteMapping("/{gameId}")
     public ResponseEntity<Long> deleteGame(@PathVariable("gameId") final Long gameId,
-                                           @RequestParam final String password) {
-        gameService.deleteGameById(gameId, password);
+                                           @RequestBody final GamePasswordDto gamePasswordDto) {
+        gameService.deleteGameById(gameId, gamePasswordDto.getPassword());
 
         return ResponseEntity.ok().body(gameId);
     }

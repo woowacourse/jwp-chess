@@ -11,6 +11,14 @@ public class GameFactory {
         List<Object[]> params = Arrays.stream(names)
                 .map(name -> new Object[]{name})
                 .collect(Collectors.toList());
-        jdbcTemplate.batchUpdate("INSERT INTO game SET name = ?", params);
+        jdbcTemplate.batchUpdate("INSERT INTO game SET name = ?, password = 'password'", params);
+        //setUpBoardsToGames(jdbcTemplate, names);
+    }
+
+    private static void setUpBoardsToGames(JdbcTemplate jdbcTemplate, String... names) {
+        for (int i = 1; i < names.length + 1; i++) {
+            jdbcTemplate.update("INSERT INTO piece SET square = 'a1', "
+                    + "piece_color = 'white', piece_type = 'pawn', game_id = ?", i);
+        }
     }
 }

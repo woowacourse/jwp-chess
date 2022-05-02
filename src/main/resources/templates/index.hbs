@@ -11,16 +11,36 @@
     </div>
     <h2 class="main-message center-object">게임 목록</h2>
     <div>
-        {{#each games.games}}
-        <a class="center-object" href ="/board/{{this.id}}"><h2>{{this.name}}</h2></a>
+        <table class="room-table center-object" id="rooms">
+            <tr>
+                <td class="room-cell"><h3>게임 이름</h3></td>
+                <td class="room-cell"><h3>상태</h3></td>
+                <td class="room-cell"></td>
+            </tr>
+            {{#each allRooms.rooms}}
+            <tr>
+                <td class="room-cell" id="{{this.name}}">
+                    <a href ="/rooms/{{this.id}}/game">
+                        <h3>{{this.name}}</h3>
+                    </a>
+                </td>
+                <td class="room-cell" id="{{this.status}}">{{this.status}}</td>
+                <td class="room-cell">
+                    <button class="button delete-game-button" type="button" id="{{this.id}}">삭제</button>
+                </td>
+            </tr>
         {{/each}}
+        </table>
     </div>
+    </br>
     <div class="center-object">
-        <form action="/board" method="post" >
-            <label for="name">새로운 게임 이름: </label>
-            <input type="text" name="name" id="name" required>
-            <input type="submit">
+        <form action="/room" method="post" >
+            <label for="name">새 게임방 만들기: </label>
+            <input type="text" name="name" id="name" placeholder="이름" required>
+            <input type="password" name="password" id="password" placeholder="암호" required>
+            <button id="create-room-button" type="submit">만들기!</button>
         </form>
     </div>
+    <script src="/script/index.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 package chess.console.view;
 
-import chess.service.dto.GameResultDto;
+import chess.service.dto.response.GameResultDto;
 import java.util.List;
 import java.util.Map;
 

@@ -1,17 +1,17 @@
 package chess.model.piece;
 
-import static chess.model.strategy.move.Direction.EEN;
-import static chess.model.strategy.move.Direction.EES;
-import static chess.model.strategy.move.Direction.NNE;
-import static chess.model.strategy.move.Direction.NNW;
-import static chess.model.strategy.move.Direction.SSE;
-import static chess.model.strategy.move.Direction.SSW;
-import static chess.model.strategy.move.Direction.WWN;
-import static chess.model.strategy.move.Direction.WWS;
+import static chess.model.piece.strategy.move.Direction.EEN;
+import static chess.model.piece.strategy.move.Direction.EES;
+import static chess.model.piece.strategy.move.Direction.NNE;
+import static chess.model.piece.strategy.move.Direction.NNW;
+import static chess.model.piece.strategy.move.Direction.SSE;
+import static chess.model.piece.strategy.move.Direction.SSW;
+import static chess.model.piece.strategy.move.Direction.WWN;
+import static chess.model.piece.strategy.move.Direction.WWS;
 
 import chess.model.Color;
-import chess.model.strategy.LimitedMovableStrategy;
-import chess.model.strategy.move.Direction;
+import chess.model.piece.strategy.LimitedMovableStrategy;
+import chess.model.piece.strategy.move.Direction;
 import java.util.List;
 
 public final class Knight extends Piece {

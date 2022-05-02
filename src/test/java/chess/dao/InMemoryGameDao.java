@@ -1,5 +1,7 @@
 package chess.dao;
 
+import chess.repository.dao.entity.GameEntity;
+import chess.repository.dao.GameDao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,18 +15,30 @@ public class InMemoryGameDao implements GameDao {
     private int id = 1;
 
     @Override
-    public int createGame(String name) {
-        gameTable.put(id++, new GameEntity(1, name, DEFAULT_STATUS, DEFAULT_TURN));
-        return id;
+    public int createGame(String name, String password) {
+        gameTable.put(id, new GameEntity(id, name, DEFAULT_STATUS, DEFAULT_TURN, password));
+        return id++;
     }
 
     @Override
-    public void update(GameEntity dto) {
-        gameTable.put(dto.getId(), dto);
+    public int deleteGame(Integer id) {
+        gameTable.remove(id);
+        return 1;
     }
 
     @Override
-    public GameEntity findById(int id) {
+    public String findPasswordById(Integer gameId) {
+        return gameTable.get(gameId).getPassword();
+    }
+
+    @Override
+    public int update(GameEntity entity) {
+        gameTable.put(entity.getId(), entity);
+        return 1;
+    }
+
+    @Override
+    public GameEntity findById(Integer id) {
         return gameTable.get(id);
     }
 

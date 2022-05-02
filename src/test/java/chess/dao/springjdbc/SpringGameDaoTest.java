@@ -3,7 +3,8 @@ package chess.dao.springjdbc;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.dao.GameEntity;
+import chess.repository.dao.entity.GameEntity;
+import chess.repository.dao.springjdbc.SpringGameDao;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +34,7 @@ class SpringGameDaoTest {
     }
 
     @Test
-    @DisplayName("findById : 게임의 id를 통해 게임 조회가 정상적인지 확인")
+    @DisplayName("게임의 id를 통해 게임 조회가 정상적인지 확인")
     void findById() {
         GameFactory.setUpGames(jdbcTemplate, "first");
         GameEntity foundGame = springGameDao.findById(1);
@@ -41,19 +42,20 @@ class SpringGameDaoTest {
     }
 
     @Test
-    @DisplayName("update : 게임의 상태와 턴을 업데이트 하는지 확인")
+    @DisplayName("게임의 상태와 턴을 업데이트 하는지 확인")
     void update() {
         GameFactory.setUpGames(jdbcTemplate, "first");
-        springGameDao.update(new GameEntity(1, "first", "READY", "BLACK"));
+        int affectedRows = springGameDao.update(new GameEntity(1, "first", "READY", "BLACK", "password"));
         GameEntity foundGame = springGameDao.findById(1);
         assertAll(() -> {
+            assertThat(affectedRows).isEqualTo(1);
             assertThat(foundGame.getTurn()).isEqualTo("BLACK");
             assertThat(foundGame.getStatus()).isEqualTo("READY");
         });
     }
 
     @Test
-    @DisplayName("findAll: 저장된 모든 게임이 조회되는지 확인")
+    @DisplayName("저장된 모든 게임이 조회되는지 확인")
     void findAll() {
         GameFactory.setUpGames(jdbcTemplate, "first", "second");
         List<GameEntity> games = springGameDao.findAll();
@@ -61,9 +63,29 @@ class SpringGameDaoTest {
     }
 
     @Test
-    @DisplayName("createGame: 이름을 받아 게임을 만든 후 id값을 적절하게 반환하는지 확인")
+    @DisplayName("이름과 암호를 받아 게임을 만든 후 id값을 적절하게 반환하는지 확인")
     void createGame() {
-        int createdGameId = springGameDao.createGame("testGameName");
+        int createdGameId = springGameDao.createGame("testGameName", "testPassword");
         assertThat(createdGameId).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("게임 id를 받아 해당 게임을 삭제")
+    void deleteGame() {
+        GameFactory.setUpGames(jdbcTemplate, "first", "second");
+        int affectedRows = springGameDao.deleteGame(1);
+        int remainGames = springGameDao.findAll().size();
+        assertAll(() -> {
+            assertThat(affectedRows).isOne();
+            assertThat(remainGames).isOne();
+        });
+    }
+
+    @Test
+    @DisplayName("getPassword: 게임 id에 해당하는 비밀번호를 가져온다.")
+    void getPassword() {
+        GameFactory.setUpGames(jdbcTemplate, "first");
+        String password = springGameDao.findPasswordById(1);
+        assertThat(password).isEqualTo("password");
     }
 }

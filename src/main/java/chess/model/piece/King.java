@@ -1,17 +1,17 @@
 package chess.model.piece;
 
-import static chess.model.strategy.move.Direction.EAST;
-import static chess.model.strategy.move.Direction.NORTH;
-import static chess.model.strategy.move.Direction.NORTHEAST;
-import static chess.model.strategy.move.Direction.NORTHWEST;
-import static chess.model.strategy.move.Direction.SOUTH;
-import static chess.model.strategy.move.Direction.SOUTHEAST;
-import static chess.model.strategy.move.Direction.SOUTHWEST;
-import static chess.model.strategy.move.Direction.WEST;
+import static chess.model.piece.strategy.move.Direction.EAST;
+import static chess.model.piece.strategy.move.Direction.NORTH;
+import static chess.model.piece.strategy.move.Direction.NORTHEAST;
+import static chess.model.piece.strategy.move.Direction.NORTHWEST;
+import static chess.model.piece.strategy.move.Direction.SOUTH;
+import static chess.model.piece.strategy.move.Direction.SOUTHEAST;
+import static chess.model.piece.strategy.move.Direction.SOUTHWEST;
+import static chess.model.piece.strategy.move.Direction.WEST;
 
 import chess.model.Color;
-import chess.model.strategy.LimitedMovableStrategy;
-import chess.model.strategy.move.Direction;
+import chess.model.piece.strategy.LimitedMovableStrategy;
+import chess.model.piece.strategy.move.Direction;
 import java.util.List;
 
 public final class King extends Piece {

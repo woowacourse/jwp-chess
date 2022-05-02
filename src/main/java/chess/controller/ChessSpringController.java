@@ -45,49 +45,49 @@ public class ChessSpringController {
     }
 
     @DeleteMapping("/room")
-    public ResponseEntity deleteRoom(@RequestBody DeleteDto deleteDto) {
+    public ResponseEntity<GameStatusDto> deleteRoom(@RequestBody DeleteDto deleteDto) {
         chessGameService.deleteRoom(deleteDto.getPw(), deleteDto.getId());
         return ResponseEntity.ok().build();
     }
 
     @ResponseBody
     @GetMapping("/list")
-    public ResponseEntity list() {
+    public ResponseEntity<List<RoomResponseDto>> list() {
         List<RoomResponseDto> rooms = chessGameService.getRooms();
         return ResponseEntity.ok().body(rooms);
     }
 
     @ResponseBody
     @GetMapping("/rooms/{id}")
-    public ResponseEntity load(@PathVariable int id) {
+    public ResponseEntity<GameStatusDto> load(@PathVariable int id) {
         GameStatusDto status = chessGameService.loadChessGame(id);
         return ResponseEntity.ok().body(status);
     }
 
     @ResponseBody
     @GetMapping("/rooms/start/{id}")
-    public ResponseEntity start(@PathVariable int id) {
+    public ResponseEntity<GameStatusDto> start(@PathVariable int id) {
         GameStatusDto status = chessGameService.startChessGame(new WebBasicBoardStrategy(), id);
         return ResponseEntity.ok().body(status);
     }
 
     @ResponseBody
     @PostMapping("/rooms/move")
-    public ResponseEntity move(@RequestBody MoveDto moveDto) {
+    public ResponseEntity<GameStatusDto> move(@RequestBody MoveDto moveDto) {
         GameStatusDto status = chessGameService.move(moveDto.getFrom(), moveDto.getTo(), moveDto.getRoomId());
         return ResponseEntity.ok().body(status);
     }
 
     @ResponseBody
     @GetMapping("/rooms/status/{id}")
-    public ResponseEntity status(@PathVariable int id) {
+    public ResponseEntity<ScoreDto> status(@PathVariable int id) {
         ScoreDto score = chessGameService.createScore(id);
         return ResponseEntity.ok().body(score);
     }
 
     @ResponseBody
     @PostMapping("/rooms/end/{id}")
-    public ResponseEntity end(@PathVariable int id) {
+    public ResponseEntity<ScoreDto> end(@PathVariable int id) {
         ScoreDto score = chessGameService.end(id);
         return ResponseEntity.ok().body(score);
     }

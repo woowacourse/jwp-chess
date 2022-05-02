@@ -12,10 +12,10 @@ public class MockMemberDao implements MemberDao {
     private static int nextId = 1;
 
     @Override
-    public Long save(Member member) {
+    public Member save(Member member) {
         member = new Member((long) nextId++, member.getName());
         store.put(member.getId(), member);
-        return member.getId();
+        return member;
     }
 
     @Override

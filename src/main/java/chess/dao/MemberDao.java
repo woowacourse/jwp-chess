@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface MemberDao {
 
-    Long save(final Member member);
+    Member save(final Member member);
 
     Optional<Member> findById(final Long id);
 

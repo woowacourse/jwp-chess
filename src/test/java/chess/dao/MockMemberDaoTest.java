@@ -16,8 +16,8 @@ class MockMemberDaoTest {
     void save() {
         final MockMemberDao repository = new MockMemberDao();
         final Member member = new Member("alex");
-        repository.save(member);
-        assertThat(repository.findById(1L).get().getName()).isEqualTo(member.getName());
+        final Member savedMember = repository.save(member);
+        assertThat(savedMember.getName()).isEqualTo(member.getName());
     }
 
     @Test

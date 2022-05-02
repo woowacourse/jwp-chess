@@ -28,9 +28,9 @@ class MockGameDaoTest {
         final Room room = new Room("some", "123", participant);
         final ChessGame game = new ChessGame(2L, board, Team.WHITE, room);
 
-        dao.save(game);
+        final ChessGame savedGame = dao.save(game);
 
-        assertThat(dao.findById(1L).get().getTurn()).isEqualTo(game.getTurn());
+        assertThat(savedGame.getTurn()).isEqualTo(game.getTurn());
     }
 
     @Test

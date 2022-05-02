@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface GameDao {
 
-    Long save(final ChessGame game);
+    ChessGame save(final ChessGame game);
 
     Optional<ChessGame> findById(final Long id);
 

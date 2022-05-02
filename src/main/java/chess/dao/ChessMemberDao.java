@@ -19,7 +19,7 @@ public class ChessMemberDao implements MemberDao {
     }
 
     @Override
-    public Long save(Member member) {
+    public Member save(Member member) {
         final String sql = "insert into Member (name) values (?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -28,7 +28,9 @@ public class ChessMemberDao implements MemberDao {
             return ps;
         }, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        final long memberId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        return new Member(memberId, member.getName());
     }
 
     @Override

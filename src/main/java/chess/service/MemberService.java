@@ -19,11 +19,10 @@ public class MemberService {
     }
 
     public Long addMember(final String memberName) {
-        return memberDao.save(new Member(memberName));
+        return memberDao.save(new Member(memberName)).getId();
     }
 
     public void deleteMember(final Long memberId) {
         memberDao.deleteById(memberId);
     }
 }
-

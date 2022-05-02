@@ -35,7 +35,7 @@ public class GameService {
         final Participant participant = new Participant(white, black);
         final Room room = new Room(title, password, participant);
 
-        return gameDao.save(new ChessGame(board, Team.WHITE, room));
+        return gameDao.save(new ChessGame(board, Team.WHITE, room)).getId();
     }
 
     public List<ChessGameDto> findPlayingGames() {

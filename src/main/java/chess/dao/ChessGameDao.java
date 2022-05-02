@@ -37,10 +37,10 @@ public class ChessGameDao implements GameDao {
     }
 
     @Override
-    public Long save(ChessGame game) {
+    public ChessGame save(ChessGame game) {
         final Long gameId = saveGame(game);
         savePieces(gameId, game.getBoard());
-        return gameId;
+        return new ChessGame(gameId, game.getBoard(), game.getTurn(), game.getRoom());
     }
 
     @Override

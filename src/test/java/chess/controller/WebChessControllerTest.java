@@ -29,7 +29,7 @@ import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
-import chess.exception.NotFoundException;
+import chess.exception.RoomNotFoundException;
 import chess.service.ChessService;
 import chess.util.PasswordSha256Encoder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -116,7 +116,7 @@ class WebChessControllerTest {
         final String responseBody = objectMapper.writeValueAsString(errorResponseDto);
 
         given(chessService.getCurrentBoards(invalidRoomId))
-            .willThrow(new NotFoundException(1));
+            .willThrow(new RoomNotFoundException(1));
 
         mockMvc.perform(get(REQUEST_MAPPING_URI + "/" + invalidRoomId))
             .andExpect(status().isNotFound())
@@ -243,7 +243,7 @@ class WebChessControllerTest {
         final String responseBody = objectMapper.writeValueAsString(errorResponseDto);
 
         given(chessService.updateRoom(anyLong(), any()))
-            .willThrow(new NotFoundException(1));
+            .willThrow(new RoomNotFoundException(1));
 
         mockMvc.perform(patch(REQUEST_MAPPING_URI + "/" + invalidRoomId)
                 .content(requestBody)

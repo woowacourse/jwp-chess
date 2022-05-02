@@ -18,7 +18,7 @@ import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
-import chess.exception.NotFoundException;
+import chess.exception.RoomNotFoundException;
 import chess.repository.BoardRepository;
 import chess.repository.RoomRepository;
 import chess.util.PasswordSha256Encoder;
@@ -77,7 +77,7 @@ public class ChessService {
         try {
             targetRoom = roomRepository.findById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException(1);
+            throw new RoomNotFoundException(1);
         }
         return targetRoom;
     }

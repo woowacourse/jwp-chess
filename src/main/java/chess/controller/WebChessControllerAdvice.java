@@ -1,7 +1,7 @@
 package chess.controller;
 
 import chess.dto.response.ErrorResponseDto;
-import chess.exception.NotFoundException;
+import chess.exception.RoomNotFoundException;
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +19,8 @@ public class WebChessControllerAdvice {
             .body(new ErrorResponseDto(e.getMessage()));
     }
 
-    @ExceptionHandler(value = NotFoundException.class)
-    public ResponseEntity<ErrorResponseDto> handleNotFoundException(NotFoundException e) {
+    @ExceptionHandler(value = RoomNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleNotFoundException(RoomNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(new ErrorResponseDto("[ERROR] 방 정보를 찾을 수 없습니다."));
     }

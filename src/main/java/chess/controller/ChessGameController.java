@@ -48,8 +48,8 @@ public class ChessGameController {
     }
 
     @PutMapping(path = "/{gameId}/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String move(@PathVariable long gameId, @RequestBody MoveCommandDto MoveCommandDto) {
-        chessGameService.move(gameId, MoveCommandDto);
+    public String move(@PathVariable long gameId, @RequestBody MoveCommandDto moveCommandDto) {
+        chessGameService.move(gameId, moveCommandDto);
         return "redirect:/game/" + gameId;
     }
 

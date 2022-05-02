@@ -10,7 +10,7 @@ public abstract class Running extends Started {
 
     @Override
     public boolean isRunning() {
-        return true;
+        return !board.isEndSituation();
     }
 
     @Override

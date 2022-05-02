@@ -49,6 +49,6 @@ public final class Turn extends Running{
 
     @Override
     public Player getPlayer() {
-        return player;
+        return player.getOpponent();
     }
 }

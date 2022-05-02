@@ -14,7 +14,9 @@
             <img src="images/{{this.symbol}}.png" id="{{this.position}}"/>
             {{/this.squares}}
         </div>
+        Room ID: {{this.roomId}}
         <form action="/result" method="post">
+        <input type="hidden" value="{{this.roomId}}" name="roomId" />
             <input type="submit" value="결과 출력">
         </form>
         <form action="/" method="get">

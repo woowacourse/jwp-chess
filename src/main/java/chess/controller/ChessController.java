@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.controller.dto.ChessRequestDto;
-import chess.controller.dto.PasswordRequestDto;
+import chess.service.dto.ChessRequestDto;
+import chess.service.dto.PasswordRequestDto;
 import chess.domain.command.MoveCommand;
 import chess.service.dto.ChessResponseDto;
 import chess.controller.dto.MoveCommandDto;

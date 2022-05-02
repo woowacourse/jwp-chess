@@ -1,6 +1,6 @@
 package chess.service;
 
-import chess.controller.dto.ChessRequestDto;
+import chess.service.dto.ChessRequestDto;
 import chess.dao.FakeGameDao;
 import chess.dao.FakePieceDao;
 import chess.domain.command.MoveCommand;

@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.controller.dto.ChessRequestDto;
+import chess.service.dto.ChessRequestDto;
 import chess.service.dto.GameDto;
 import chess.service.dto.GameStatusDto;
 import chess.service.dto.RoomResponseDto;

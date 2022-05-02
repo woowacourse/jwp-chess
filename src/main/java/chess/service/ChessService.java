@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.controller.dto.ChessRequestDto;
-import chess.controller.dto.PasswordRequestDto;
+import chess.service.dto.ChessRequestDto;
+import chess.service.dto.PasswordRequestDto;
 import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessGame;

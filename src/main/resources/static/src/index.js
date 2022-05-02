@@ -11,7 +11,7 @@ function deleteGame(gameId) {
             password: password
         })
     }).then((response) => {
-        if (response.status === 400) {
+        if (response.status === 400 || response.status === 500) {
             throw response;
         }
         if (response.status === 200) {

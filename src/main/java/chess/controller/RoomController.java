@@ -4,6 +4,7 @@ import chess.service.CommandService;
 import chess.service.RoomService;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +23,10 @@ public class RoomController {
         this.commandService = commandService;
     }
 
-    @GetMapping("/")
-    public ModelAndView index() {
-        ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("rooms", roomService.findAllRooms());
-        return modelAndView;
+    @GetMapping
+    public String index(Model model) {
+        model.addAttribute("rooms", roomService.findAllRooms());
+        return "index";
     }
 
     @GetMapping("/form/room-create")

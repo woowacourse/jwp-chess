@@ -21,7 +21,6 @@ public class ChessBoardRepository implements BoardRepository<Board> {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     @Override
     public Board save(Board board) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);

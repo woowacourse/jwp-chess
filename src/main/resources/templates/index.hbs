@@ -38,7 +38,7 @@
 
         <form action="/game" method="post">
           <input type="hidden" name="_method" value="delete">
-          <div class="box-{{id}}">
+          <div id="box-{{id}}">
             <input type="button" value="삭제하기" class="main-button" onclick="add_textbox({{id}})">
             <input type="hidden" name="id" value={{id}}>
           </div>
@@ -53,7 +53,7 @@
   const add_textbox = (id) => {
     const box = document.getElementById("box-" + id);
     const newP = document.createElement('p');
-    newP.innerHTML = "<input type='password' name='password'> <button type='submit' id='main-button'>비밀번호 입력</button>";
+    newP.innerHTML = "<input type='password' name='password'> <button type='submit' class='main-button'>비밀번호 입력</button>";
     box.appendChild(newP);
   }
   const remove = (obj) => {

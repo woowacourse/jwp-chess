@@ -1,21 +1,13 @@
-package chess.dto;
+package chess.controller.request;
 
 import chess.domain.command.MoveCommand;
 
-public class MoveCommandDto {
+public class MoveRequest {
 
     private String source;
     private String target;
 
-    public MoveCommandDto() {
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
+    public MoveRequest() {
     }
 
     public String getSource() {

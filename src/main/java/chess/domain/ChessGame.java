@@ -3,6 +3,7 @@ package chess.domain;
 import chess.domain.command.MoveCommand;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceColor;
+import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,10 @@ public final class ChessGame {
     public ChessGame(Map<Position, Piece> pieces, PieceColor turnColor) {
         this.board = new Board(pieces);
         this.turnColor = turnColor;
+    }
+
+    public static ChessGame initGame() {
+        return new ChessGame(PieceFactory.createChessPieces(), PieceColor.WHITE);
     }
 
     public void proceedWith(MoveCommand moveCommand) {

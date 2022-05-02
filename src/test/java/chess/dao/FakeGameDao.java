@@ -1,35 +1,57 @@
 package chess.dao;
 
-
-import chess.dto.GameDto;
-import chess.dto.GameStatusDto;
+import chess.dao.entity.GameEntity;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FakeGameDao implements GameDao {
 
-    private GameDto gameDto;
+    private final Map<Long, GameEntity> games = new HashMap<>();
+    private Long id = 0L;
 
     @Override
-    public void removeAll() {
-        gameDto = null;
+    public Long save(GameEntity game) {
+        games.put(id, game);
+        return id++;
     }
 
     @Override
-    public void save(GameDto gameDto) {
-        this.gameDto = gameDto;
+    public void removeById(Long id) {
+        games.remove(id);
     }
 
     @Override
-    public void update(GameDto gameDto) {
-        this.gameDto = gameDto;
+    public GameEntity findGameById(Long id) {
+        return games.get(id);
     }
 
     @Override
-    public void updateStatus(GameStatusDto statusDto) {
-        this.gameDto = new GameDto(this.gameDto.getTurn(), statusDto.getName());
+    public String findPasswordById(Long id) {
+        return games.get(id).getPassword();
     }
 
     @Override
-    public GameDto find() {
-        return gameDto;
+    public String findStatusById(Long id) {
+        return games.get(id).getStatus();
+    }
+
+    @Override
+    public List<GameEntity> findAll() {
+        return new ArrayList<>(games.values());
+    }
+
+    @Override
+    public void updateGame(Long id, String turn, String status) {
+        GameEntity gameDto = games.get(id);
+        games.replace(id, new GameEntity(id, gameDto.getTitle(), gameDto.getPassword(), turn, status));
+    }
+
+    @Override
+    public void updateStatus(Long id, String status) {
+        GameEntity game = games.get(id);
+        GameEntity updatedGame = new GameEntity(game.getId(), game.getTitle(), game.getPassword(), game.getTurn(), status);
+        games.replace(id, updatedGame);
     }
 }

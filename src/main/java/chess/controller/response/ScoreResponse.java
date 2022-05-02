@@ -1,20 +1,20 @@
-package chess.dto;
+package chess.controller.response;
 
 import chess.domain.Score;
 import chess.domain.piece.PieceColor;
 
-public class ScoreDto {
+public class ScoreResponse {
 
     private final String name;
     private final double score;
 
-    private ScoreDto(String name, double score) {
+    private ScoreResponse(String name, double score) {
         this.name = name;
         this.score = score;
     }
 
-    public static ScoreDto of(PieceColor color, Score score) {
-        return new ScoreDto(color.name(), score.getValue());
+    public static ScoreResponse of(PieceColor color, Score score) {
+        return new ScoreResponse(color.name(), score.getValue());
     }
 
     public String getName() {

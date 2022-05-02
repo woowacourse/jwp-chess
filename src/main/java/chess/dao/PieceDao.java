@@ -1,21 +1,20 @@
 package chess.dao;
 
-import chess.domain.position.Position;
-import chess.dto.PieceDto;
+import chess.dao.entity.PieceEntity;
 
 import java.util.List;
 
 public interface PieceDao {
 
-    void remove(Position position);
+    void removeByPosition(Long gameId, String position);
 
     void removeAll();
 
-    void saveAll(List<PieceDto> pieceDtos);
+    void save(PieceEntity piece);
 
-    void save(PieceDto pieceDto);
+    void saveAll(List<PieceEntity> pieces);
 
-    List<PieceDto> findAll();
+    List<PieceEntity> findPiecesByGameId(Long gameId);
 
-    void update(Position source, Position target);
+    void updatePosition(Long gameId, String position, String updatedPosition);
 }

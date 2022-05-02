@@ -1,18 +1,23 @@
-package chess.dto;
+package chess.serviece.dto;
 
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceColor;
-import chess.domain.piece.PieceFactory;
-import chess.domain.piece.PieceType;
 import chess.domain.position.Position;
 
-import java.util.Map;
 import java.util.Objects;
 
 public class PieceDto {
+
     private String position;
-    private final String color;
-    private final String type;
+    private String color;
+    private String type;
+    private Long gameId;
+
+    public PieceDto(String position, String color, String type, Long gameId) {
+        this.position = position;
+        this.color = color;
+        this.type = type;
+        this.gameId = gameId;
+    }
 
     public PieceDto(String position, String color, String type) {
         this.position = position;
@@ -20,22 +25,12 @@ public class PieceDto {
         this.type = type;
     }
 
-    public static Map.Entry<Position, Piece> toPieceEntry(PieceDto pieceDto) {
-        PieceType type = PieceType.find(pieceDto.getType());
-        PieceColor color = PieceColor.find(pieceDto.getColor());
-        return Map.entry(Position.of(pieceDto.position), PieceFactory.find(type, color));
-    }
-
-    public static PieceDto from(Position position, Piece piece) {
-        return new PieceDto(position.getName(), piece.getColor().getName(), piece.getType().getName());
+    public static PieceDto from(Position position, Piece piece, Long gameId) {
+        return new PieceDto(position.getName(), piece.getColor().getName(), piece.getType().getName(), gameId);
     }
 
     public static PieceDto of(String position, String color, String type) {
         return new PieceDto(position, color, type);
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
     }
 
     public String getPosition() {
@@ -48,6 +43,10 @@ public class PieceDto {
 
     public String getType() {
         return type;
+    }
+
+    public Long getGameId() {
+        return gameId;
     }
 
     @Override

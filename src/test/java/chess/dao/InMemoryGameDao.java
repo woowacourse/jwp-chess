@@ -52,7 +52,7 @@ public class InMemoryGameDao implements GameDao {
     public void updateStatus(StatusDto statusDto, Long id) {
         String replaceStatus = statusDto.getStatus();
         ChessGameDto chessGameDto = gameTable.get(id);
-        ChessGameDto replaceChessGameDto = new ChessGameDto(chessGameDto.getId(), chessGameDto.getName(), replaceStatus,
+        ChessGameDto replaceChessGameDto = new ChessGameDto(chessGameDto.getId(), replaceStatus,
                 chessGameDto.getTurn());
         gameTable.put(1L, replaceChessGameDto);
     }

@@ -7,20 +7,13 @@ public class ChessGameDto {
     private String name;
     private String password;
 
-    public ChessGameDto(Long id, String name, String status, String turn) {
-        this.id = id;
-        this.name = name;
-        this.status = status;
-        this.turn = turn;
-    }
-
     public ChessGameDto(Long id, String status, String turn) {
         this.id = id;
         this.status = status;
         this.turn = turn;
     }
 
-    public ChessGameDto(Long id, String name, String status, String turn,  String password) {
+    public ChessGameDto(Long id, String name, String status, String turn, String password) {
         this.status = status;
         this.turn = turn;
         this.id = id;

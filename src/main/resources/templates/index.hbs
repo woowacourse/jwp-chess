@@ -89,7 +89,7 @@
         const password = prompt("체스방 비밀번호를 입력하세요", "")
         $.ajax({
             url: "/games/" + gameId + "/remove",
-            type: "post",
+            type: "delete",
             data: {
                 "password": password
             }

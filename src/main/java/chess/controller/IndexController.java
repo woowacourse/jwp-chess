@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import chess.controller.dto.ControllerDtoAssembler;
 import chess.controller.dto.response.GameStatusResponse;
@@ -20,7 +21,7 @@ public class IndexController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/")
+    @RequestMapping("/")
     public String index(final Model model) {
         final List<GameStatusResponse> games = chessService.listGames()
                 .stream()

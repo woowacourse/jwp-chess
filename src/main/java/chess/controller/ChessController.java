@@ -3,6 +3,7 @@ package chess.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,7 @@ public class ChessController {
         return "redirect:/games/" + chessService.createNewGame(title, password);
     }
 
-    @PostMapping("/{gameId}/remove")
+    @DeleteMapping("/{gameId}/remove")
     public String removeGame(@PathVariable("gameId") final Long gameId,
                              @RequestParam("password") final String password) {
         chessService.removeGame(gameId, password);
@@ -67,7 +68,7 @@ public class ChessController {
         return ControllerDtoAssembler.playerScoresResponse(playerScoresResponseDto);
     }
 
-    @GetMapping("/{gameId}/end")
+    @PostMapping("/{gameId}/end")
     public String endGame(@PathVariable("gameId") final Long gameId, final Model model) {
         return renderBoard(chessService.endGame(gameId), model);
     }

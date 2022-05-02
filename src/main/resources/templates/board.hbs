@@ -88,7 +88,7 @@
     <div id="optionDiv">
         <button type="button" onclick="location.href='/';">목록으로 돌아가기</button>
         {{#unless game.finished}}
-        <button type="button" onclick="location.href='/games/{{game.gameId}}/end';">게임 종료하기</button>
+        <button type="button" onclick=endGame()>게임 종료하기</button>
         {{/unless}}
     </div>
 </div>
@@ -195,6 +195,16 @@
                     scoreMessage += `${color}의 점수는 ${score}입니다.\n`
                 }
                 alert(scoreMessage);
+            }
+        })
+    }
+
+    function endGame() {
+        $.ajax({
+            url: "/games/{{game.gameId}}/end",
+            type: "post",
+            success() {
+                location.reload()
             }
         })
     }

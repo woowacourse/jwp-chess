@@ -7,12 +7,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<link rel="stylesheet" href="css/common.css">
-<!-- <script src="js/game.js"></script> -->
+<script src="/library/jquery-3.6.0.js"></script>
+<script src="js/index.js"></script>
+
+<link rel="stylesheet" href="css/index.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 <body>
     <h2>Chess Game</h2>
     <hr />
-    <button onclick="location.href='new-game'">PLAY NEW GAME</button>
-    <button onclick="location.href='load-game'">LOAD LAST GAME</button>
+        <form action="/games/first" method="post">
+            <div class="container"></div>
+                <table style="width:30vw" class="sub-container">
+                    <tr>
+                        <td>id : </td>
+                        <td><input id="room-name" name="room-name" /></td>
+                    </tr>
+                    <tr>
+                        <td>password : </td>
+                        <td><input id="room-password" name="room-password" /></td>
+                    </tr>
+                </table>
+                <button class="sub-container">CREATE</button>
+            </div>
+        </form>
+    <br /><br />
+    <h2>List of Chess Game</h2>
+    <hr />
+    <br />
+    <table id="room-list" style="width:50vw">
+        <tr>
+            <th>방 이름</th>
+            <th>생성일</th>
+            <th>방 비밀번호</th>
+            <th>삭제</th>
+        </tr>
+        <tr>
+            <td id="room-name" val="123456">필즈의 방</td>
+            <td id="room-create-ad">2022-05-02</td>
+            <td><input id="room-password" name="room-password" type="password"></td>
+            <td><button id="room-delete">DELETE</button></td>
+        </tr>
+    </table>
 </body>
 </html>

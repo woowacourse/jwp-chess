@@ -7,35 +7,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="css/game.css">
-<script src="library/jquery-3.6.0.js"></script>
-<script src="js/game.js"></script>
+
+<script src="/library/jquery-3.6.0.js"></script>
+<script src="/js/game.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/game.css">
+
 <body>
 
-  <input id="isNewGame" type="hidden" th:value="${isNewGame}"></input>
-  <table id="chess-board">
-  </table>
+  <input id="is-new-game" type="hidden" th:value="${isNewGame}">
+  <input id="created-room-id" type="hidden" th:value="${createdRoomId}">
+  <input id="room-name" type="hidden" th:value="${roomName}">
+  <input id="encrypted-room-password" type="hidden" th:value="${encryptedRoomPassword}">
 
-  <br /><br />
+  <div class="container">
+    <div class="sub-container">
+      <table id="chess-board"></table>
+    </div>
 
-  현재 팀: <span id="current-team"></span>
+    <div class="sub-container">
+      <table style="width:30vw">
+        <tr>
+          <td>Current Team</td>
+          <td id="current-team" class="">White Team</td>
+        </tr>
+      </table>
+      <br /><br /><br />
+      <table style="width:30vw" id="team-score">
+        <caption>Team Scores</caption>
+        <tr>
+          <th>White</th>
+          <th>Black</th>
+        </tr>
+        <tr>
+          <td id="white-score">0.0</td>
+          <td id="black-score">0.0</td>
+        </tr>
+      </table>
+      <br /><br />
+      <button id="save-game">SAVE</button>
+    </div>
 
-  <table style="width:100%" id="team-score">
-    <caption>Team Scores</caption>
-    <tr>
-      <th>White</th>
-      <th>Black</th>
-    </tr>
-    <tr>
-      <td id="white-score">0.0</td>
-      <td id="black-score">0.0</td>
-    </tr>
-  </table>
+  </div>
 
-  <br />
-  <br />
-  
-  <button id="save-game">게임저장</button>
 </body>
 </html>

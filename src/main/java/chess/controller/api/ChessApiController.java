@@ -30,7 +30,7 @@ public class ChessApiController {
 
     private final SessionToChessRepository sessionToChessRepository;
 
-    @GetMapping(value = "first", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/first", produces = APPLICATION_JSON_VALUE)
     public GameResponse init(HttpSession session) {
         ChessBoard chessBoard = chessService.createChessBoard();
         sessionToChessRepository.add(session, chessBoard);

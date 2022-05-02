@@ -23,7 +23,7 @@ $(document).ready(function () {
 });
 
 function isNewGame() {
-  return JSON.parse($("#isNewGame").val());
+  return JSON.parse($("#is-new-game").val());
 }
 
 function initChessBoard() {
@@ -60,7 +60,34 @@ function initChessPieces() {
       placeChessPieces(data.board);
       setCurrentTeam(data.teamName);
       setTeamScore(data.teamNameToScore);
+      createRoom();
     })
+    .fail(function (xhr, status, errorThrown) {
+      console.log(xhr);
+      alert(xhr.responseText);
+    });
+}
+
+/**
+    private String encryptedRoomPassword;
+    private Map<String, String> pieces;
+ */
+
+function createRoom() {
+  const createdRoomId = $("#created-room-id").val();
+  const gameData = {
+    roomName: $("#room-name").val(),
+    encryptedRoomPassword: $("#encrypted-room-password").val(),
+    pieces: getPieces(),
+  };
+
+  $.ajax({
+    url: `/rooms/${createdRoomId}`,
+    method: "POST",
+    data: JSON.stringify(gameData),
+    contentType: "application/json",
+  })
+    .done(function (data) {})
     .fail(function (xhr, status, errorThrown) {
       console.log(xhr);
       alert(xhr.responseText);
@@ -114,7 +141,7 @@ function isEven(r, f) {
 
 function placeChessPiece(position, pieceImage) {
   $("#chess-board td#" + position).append(
-    `<img src="images/${pieceImage}.png" />`
+    `<img src="/images/${pieceImage}.png" />`
   );
 }
 
@@ -177,6 +204,18 @@ function clearPieceImages() {
 
 function setCurrentTeam(teamName) {
   $("#current-team").text(teamName);
+
+  $("#current-team").removeClass();
+
+  switch (teamName.toLowerCase()) {
+    case "white team":
+      $("#current-team").addClass("current-team white");
+      break;
+
+    case "black team":
+      $("#current-team").addClass("current-team black");
+      break;
+  }
 }
 
 function setTeamScore(teamNameToScore) {

@@ -26,6 +26,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessService {
 
+    private static final String DEFAULT_TURN = PieceColor.WHITE.getName();
+    private static final String DEFAULT_STATUS = GameStatusDto.PLAYING.getName();
+
     private final PieceDao pieceDao;
     private final GameDao gameDao;
 
@@ -36,6 +39,7 @@ public class ChessService {
     }
 
     public int start(final ChessRequestDto chessRequestDto) {
+        initChessGame(chessRequestDto);
         int gameId = getGameId();
         try {
             pieceDao.saveAll(gameId, getInitPieceDtos());
@@ -44,6 +48,11 @@ public class ChessService {
             throw new IllegalArgumentException("게임을 초기화할 수 없습니다.");
         }
         return gameId;
+    }
+
+    private void initChessGame(final ChessRequestDto chessRequestDto) {
+        chessRequestDto.setTurn(DEFAULT_TURN);
+        chessRequestDto.setStatus(DEFAULT_STATUS);
     }
 
     private int getGameId() {

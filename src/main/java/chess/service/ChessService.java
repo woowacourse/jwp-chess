@@ -57,7 +57,7 @@ public class ChessService {
 
     private void validateCanDelete(Long roomId, String password) {
         Room room = getRoom(roomId);
-        if (room.matchPassword(password)) {
+        if (!room.matchPassword(password)) {
             throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
         }
         if (room.isFinished()) {

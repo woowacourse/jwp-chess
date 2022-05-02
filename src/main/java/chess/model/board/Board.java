@@ -1,13 +1,20 @@
 package chess.model.board;
 
 import chess.dto.ScoreResult;
-import chess.model.piece.*;
+import chess.model.piece.Bishop;
+import chess.model.piece.Empty;
+import chess.model.piece.King;
+import chess.model.piece.Knight;
+import chess.model.piece.Pawn;
+import chess.model.piece.Piece;
+import chess.model.piece.Queen;
+import chess.model.piece.Rook;
+import chess.model.piece.Team;
 import chess.model.square.File;
 import chess.model.square.Rank;
 import chess.model.square.Square;
 import chess.model.status.Ready;
 import chess.model.status.Status;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +25,9 @@ public final class Board {
     private static final int LINE_RANGE = 8;
     private static final int PROPER_KING_COUNT = 2;
 
+    private int id;
     private Map<Square, Piece> board;
     private Status status;
-    private int id;
     private Team team;
 
     public Board() {
@@ -162,5 +169,14 @@ public final class Board {
 
     public Team getTeam() {
         return team;
+    }
+
+    public Map<Square, Piece> initializePiece() {
+        this.board = SquarePieceInitializer.initialize();
+        return board;
+    }
+
+    public boolean isEnd() {
+        return status.isEnd();
     }
 }

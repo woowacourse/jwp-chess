@@ -46,16 +46,4 @@ public class ScoreDto {
     public Map<String, Double> getScore() {
         return score;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("{");
-        for (String team : score.keySet()) {
-            stringBuilder.append("\"").append(team).append("\" : ").append(score.get(team)).append(",");
-        }
-        stringBuilder.append("\"").append("winner").append("\" : ").append("\"").append(winner).append("\"");
-        stringBuilder.append("}");
-        return stringBuilder.toString();
-    }
 }

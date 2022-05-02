@@ -1,25 +1,27 @@
 package chess.service;
 
 import chess.dto.BoardDto;
-import chess.dto.RoomDto;
-import chess.dto.RoomsDto;
 import chess.model.board.Board;
 import chess.model.member.Member;
-import chess.model.piece.*;
+import chess.model.piece.Empty;
+import chess.model.piece.Piece;
+import chess.model.piece.Team;
 import chess.model.room.Room;
 import chess.model.square.File;
 import chess.model.square.Square;
 import chess.model.status.End;
 import chess.model.status.Running;
 import chess.model.status.Status;
-import chess.repository.*;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
+import chess.repository.BoardRepository;
+import chess.repository.MemberRepository;
+import chess.repository.PieceRepository;
+import chess.repository.RoomRepository;
+import chess.repository.SquareRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
@@ -43,13 +45,13 @@ public class ChessService {
         this.chessMemberRepository = chessMemberRepository;
     }
 
-    public Room init(String roomTitle, String member1, String member2) {
+    public Room init(String roomTitle, String password, String whiteMemberName, String blackMemberName) {
         Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
-        Map<Square, Piece> startingPieces = Initializer.initialize();
+        Map<Square, Piece> startingPieces = board.initializePiece();
         chessSquareRepository.saveAllSquares(board.getId(), startingPieces.keySet());
         chessPieceRepository.saveAllPieces(mapToPieces(board.getId(), startingPieces));
-        Room room = chessRoomRepository.save(new Room(roomTitle, board.getId()));
-        chessMemberRepository.saveAll(List.of(new Member(member1), new Member(member2)), room.getId());
+        Room room = chessRoomRepository.save(new Room(roomTitle, password, board.getId()));
+        chessMemberRepository.saveAll(List.of(new Member(whiteMemberName), new Member(blackMemberName)), room.getId());
         return room;
     }
 
@@ -63,20 +65,10 @@ public class ChessService {
         return chessSquareRepository.getBySquareAndBoardId(square, board);
     }
 
-    public RoomsDto getRooms() {
-        List<RoomDto> roomsDto = new ArrayList<>();
-        List<Room> rooms = chessRoomRepository.findAllByBoardStatus(new Running());
-        for (Room room : rooms) {
-            List<Member> membersByRoom = chessMemberRepository.findMembersByRoomId(room.getId());
-            roomsDto.add(
-                    new RoomDto(room.getId(), room.getTitle(), membersByRoom));
-        }
-        return new RoomsDto(roomsDto);
-    }
-
     public BoardDto getBoard(int roomId) {
         final Room room = chessRoomRepository.getById(roomId);
-        final Map<Square, Piece> allPositionsAndPieces = chessSquareRepository.findAllSquaresAndPieces(room.getBoardId());
+        final Map<Square, Piece> allPositionsAndPieces = chessSquareRepository.findAllSquaresAndPieces(
+                room.getBoardId());
         List<Member> members = chessMemberRepository.findMembersByRoomId(roomId);
         return BoardDto.of(
                 allPositionsAndPieces,
@@ -151,4 +143,5 @@ public class ChessService {
         Room room = chessRoomRepository.getById(roomId);
         chessBoardRepository.updateStatus(room.getBoardId(), new End());
     }
+
 }

@@ -1,5 +1,14 @@
-package chess.model.piece;
+package chess.model.board;
 
+import chess.model.piece.Bishop;
+import chess.model.piece.Empty;
+import chess.model.piece.King;
+import chess.model.piece.Knight;
+import chess.model.piece.Pawn;
+import chess.model.piece.Piece;
+import chess.model.piece.Queen;
+import chess.model.piece.Rook;
+import chess.model.piece.Team;
 import chess.model.square.File;
 import chess.model.square.Rank;
 import chess.model.square.Square;
@@ -9,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Initializer {
+public class SquarePieceInitializer {
 
     private static final int LINE_RANGE = 8;
 
@@ -63,11 +72,11 @@ public class Initializer {
     private static void fillSquareByFile(Rank rank, Map<Square, Piece> startingMembers) {
         for (File file : File.values()) {
             Square square = Square.of(file, rank);
-            checkEmpty(square, startingMembers);
+            fillEmpty(square, startingMembers);
         }
     }
 
-    private static void checkEmpty(Square square, Map<Square, Piece> startingMembers) {
+    private static void fillEmpty(Square square, Map<Square, Piece> startingMembers) {
         if (!startingMembers.containsKey(square)) {
             startingMembers.put(square, new Empty());
         }

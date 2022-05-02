@@ -42,17 +42,17 @@ public class ChessPieceRepository implements PieceRepository<Piece> {
 
     @Override
     public Piece findBySquareId(int squareId) {
-        return jdbcTemplate.queryForObject("SELECT * FROM piece WHERE square_id=?", pieceRowMapper(), squareId);
+        return jdbcTemplate.queryForObject("SELECT * FROM piece WHERE square_id = ?", pieceRowMapper(), squareId);
     }
 
     @Override
     public int updatePieceSquareId(int originSquareId, int newSquareId) {
-        return jdbcTemplate.update("UPDATE piece SET square_id=? WHERE square_id=?", newSquareId, originSquareId);
+        return jdbcTemplate.update("UPDATE piece SET square_id=? WHERE square_id = ?", newSquareId, originSquareId);
     }
 
     @Override
     public int deletePieceBySquareId(int squareId) {
-        return jdbcTemplate.update("DELETE FROM piece WHERE square_id=?", squareId);
+        return jdbcTemplate.update("DELETE FROM piece WHERE square_id = ?", squareId);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ChessPieceRepository implements PieceRepository<Piece> {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(
                 "SELECT pi.id, pi.type, pi.team, pi.square_id FROM piece pi "
                         + "JOIN square po ON pi.square_id=po.id "
-                        + "JOIN board nb ON po.board_id=nb.id WHERE nb.id=?", boardId);
+                        + "JOIN board nb ON po.board_id = nb.id WHERE nb.id = ?", boardId);
         List<Piece> pieces = new ArrayList<>();
         while (sqlRowSet.next()) {
             pieces.add(
@@ -79,7 +79,7 @@ public class ChessPieceRepository implements PieceRepository<Piece> {
         return jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) AS total_count FROM piece pi " +
                         "JOIN square s ON pi.square_id = s.id " +
-                        "WHERE s.square_file=? AND s.board_id=? AND pi.type='p' AND pi.team=?",
+                        "WHERE s.square_file = ? AND s.board_id = ? AND pi.type = 'p' AND pi.team = ?",
                 Integer.class,
                 file.value(), roomId, team.name()
         );

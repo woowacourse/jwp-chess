@@ -21,7 +21,7 @@ public class ChessMemberRepository implements MemberRepository<Member> {
 
     @Override
     public List<Member> findMembersByRoomId(int roomId) {
-        return jdbcTemplate.query("SELECT * FROM member WHERE room_id=?", memberRowMapper(), roomId);
+        return jdbcTemplate.query("SELECT * FROM member WHERE room_id = ?", memberRowMapper(), roomId);
     }
 
     @Override

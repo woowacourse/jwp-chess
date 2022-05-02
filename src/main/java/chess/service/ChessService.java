@@ -174,11 +174,11 @@ public class ChessService {
         try {
             return getSavedGameResult(chessGameDto).calculateScore(color);
         } catch (IllegalArgumentException e) {
-            return getGameResult().calculateScore(color);
+            return createGameResult().calculateScore(color);
         }
     }
 
-    private GameResult getGameResult() {
+    private GameResult createGameResult() {
         Board board = new Board(new InitialBoardGenerator());
         return new GameResult(board);
     }

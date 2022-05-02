@@ -79,10 +79,6 @@ public class ChessGameService {
         chessGameDao.deleteByIdAndPassword(chessGameId, password);
     }
 
-    public boolean isFinished(GameStatus status) {
-        return status.isFinished();
-    }
-
     private ChessBoard createChessBoard(List<PieceDto> pieces, Color color) {
         return new ChessBoard(createBoard(pieces), color);
     }

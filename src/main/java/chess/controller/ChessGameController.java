@@ -1,8 +1,8 @@
 package chess.controller;
 
 import chess.dto.ChessGameDto;
-import chess.dto.RoomCreateRequest;
 import chess.dto.MoveRequest;
+import chess.dto.RoomCreateRequest;
 import chess.service.ChessGameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,10 +39,8 @@ public class ChessGameController {
     @PostMapping("/chess-game/move")
     public String move(@ModelAttribute MoveRequest moveRequest, RedirectAttributes attributes) {
         ChessGameDto chessGameDto = chessGameService.move(moveRequest);
-        if (chessGameService.isFinished(chessGameDto.getStatus())) {
-            attributes.addFlashAttribute("isFinished", true);
-            attributes.addFlashAttribute("winner", chessGameDto.getWinner());
-        }
+        attributes.addFlashAttribute("isFinished", chessGameDto.getStatus().isFinished());
+        attributes.addFlashAttribute("winner", chessGameDto.getWinner());
         return "redirect:/chess-game/" + chessGameDto.getId();
     }
 

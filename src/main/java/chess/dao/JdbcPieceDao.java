@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dao.query.PieceQuery;
 import chess.domain.position.Position;
 import chess.service.dto.PieceDto;
 
@@ -25,37 +26,37 @@ public class JdbcPieceDao implements PieceDao {
 
     @Override
     public void remove(final int id, final Position position) {
-        final String sql = "delete from piece where game_id = ? and position = ?";
+        final String sql = PieceQuery.DELETE_PIECE.getValue();
         jdbcTemplate.update(sql, id, position.getName());
     }
 
     @Override
     public void removeAll(final int id) {
-        final String sql = "delete from piece where game_id = ?";
+        final String sql = PieceQuery.DELETE_ALL_PIECE.getValue();
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public void saveAll(final int id, final List<PieceDto> pieceDtos) {
-        final String sql = "insert into piece (position, type, color, game_id) values (?, ?, ?, ?)";
+        final String sql = PieceQuery.INSERT_PIECE.getValue();
         jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(pieceDtos, id));
     }
 
     @Override
     public void save(final int id, final PieceDto pieceDto) {
-        final String sql = "insert into piece (position, type, color, game_id) values (?, ?, ?, ?)";
+        final String sql = PieceQuery.INSERT_PIECE.getValue();
         jdbcTemplate.update(sql, pieceDto.getPosition(), pieceDto.getType(), pieceDto.getColor(), id);
     }
 
     @Override
     public List<PieceDto> findAll(final int id) {
-        final String sql = "select * from piece where game_id = ?";
+        final String sql = PieceQuery.SELECT_ALL_PIECE.getValue();
         return jdbcTemplate.query(sql, getPieceDtoRowMapper(), id);
     }
 
     @Override
     public void modifyPosition(final int id, final Position source, final Position target) {
-        final String sql = "update piece set position = ? where game_id = ? and position = ?";
+        final String sql = PieceQuery.UPDATE_PIECE_POSITION.getValue();
         jdbcTemplate.update(sql, target.getName(), id, source.getName());
     }
 

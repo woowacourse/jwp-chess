@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dao.query.GameQuery;
 import chess.service.dto.ChessRequestDto;
 import chess.service.dto.GameDto;
 import chess.service.dto.GameStatusDto;
@@ -26,13 +27,13 @@ public class JdbcGameDao implements GameDao {
 
     @Override
     public void removeAll(final int id) {
-        final String sql = "delete from game where game_id = ?";
+        final String sql = GameQuery.DELETE_GAME.getValue();
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public void save(final int id, final ChessRequestDto chessRequestDto) {
-        final String sql = "insert into game (game_id, title, password, turn, status) values (?, ?, ?, ?, ?)";
+        final String sql = GameQuery.INSERT_GAME.getValue();
         jdbcTemplate.update(sql, id,
                 chessRequestDto.getTitle(), chessRequestDto.getPassword(),
                 chessRequestDto.getTurn(), chessRequestDto.getStatus());
@@ -40,19 +41,19 @@ public class JdbcGameDao implements GameDao {
 
     @Override
     public void modify(final int id, final GameDto gameDto) {
-        final String sql = "update game set turn = ?, status = ? where game_id = ?";
+        final String sql = GameQuery.UPDATE_GAME.getValue();
         jdbcTemplate.update(sql, gameDto.getTurn(), gameDto.getStatus(), id);
     }
 
     @Override
     public void modifyStatus(final int id, final GameStatusDto statusDto) {
-        final String sql = "update game set status = ? where game_id = ?";
+        final String sql = GameQuery.UPDATE_GAME_STATUS.getValue();
         jdbcTemplate.update(sql, statusDto.getName(), id);
     }
 
     @Override
     public GameDto find(final int id) {
-        final String sql = "select * from game where game_id = ?";
+        final String sql = GameQuery.SELECT_GAME.getValue();
         try {
             return jdbcTemplate.queryForObject(sql, getGameDtoRowMapper(), id);
         } catch (EmptyResultDataAccessException e) {
@@ -63,7 +64,7 @@ public class JdbcGameDao implements GameDao {
 
     @Override
     public List<RoomResponseDto> findAll() {
-        final String sql = "select * from game";
+        final String sql = GameQuery.SELECT_ALL_GAME.getValue();
         try {
             return jdbcTemplate.query(sql,
                     (resultSet, rowNum) ->
@@ -79,7 +80,7 @@ public class JdbcGameDao implements GameDao {
 
     @Override
     public String findPassword(final int id) {
-        final String sql = "select password from game where game_id = ?";
+        final String sql = GameQuery.SELECT_GAME_PASSWORD.getValue();
         try {
             return jdbcTemplate.queryForObject(sql, String.class, id);
         } catch (EmptyResultDataAccessException e) {
@@ -90,7 +91,7 @@ public class JdbcGameDao implements GameDao {
 
     @Override
     public Optional<Integer> findLastGameId() {
-        final String sql = "select game_id from game order by game_id desc limit 1";
+        final String sql = GameQuery.SELECT_LAST_GAME_ID.getValue();
         Optional<Integer> lastGameId = Optional.empty();
         try {
             lastGameId = Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class));

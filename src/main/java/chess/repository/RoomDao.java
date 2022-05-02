@@ -1,5 +1,6 @@
 package chess.repository;
 
+import chess.domain.Room;
 import chess.dto.RoomDto;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +34,12 @@ public class RoomDao {
         return insertActor.executeAndReturnKey(Map.of("name", name, "password", password)).intValue();
     }
 
-    public List<RoomDto> findAll() {
+    public List<Room> findAll() {
         String sql = "select * from room";
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) ->
-                        new RoomDto(resultSet.getInt(KEY_INDEX), resultSet.getString(NAME_INDEX),
-                                resultSet.getString(2)));
+                        new Room(resultSet.getInt(1), resultSet.getString(2),
+                                resultSet.getString(3)));
     }
 
     public Optional<RoomDto> findById(int roomId) {

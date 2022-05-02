@@ -1,6 +1,7 @@
 package chess.service;
 
 import chess.domain.Room;
+import chess.dto.RoomResponseDto;
 import chess.repository.BoardDao;
 import chess.repository.RoomDao;
 import chess.dto.RoomDto;
@@ -38,10 +39,10 @@ public class RoomService {
         roomDao.delete(roomId);
     }
 
-    public List<Map<String, String>> findRooms() {
-        List<RoomDto> data = roomDao.findAll();
-        return data.stream()
-                .map(room -> Map.of("id", String.valueOf(room.getId()), "name", room.getName()))
+    public List<RoomResponseDto> findRooms() {
+        List<Room> rooms = roomDao.findAll();
+        return rooms.stream()
+                .map(room -> RoomResponseDto.from(room))
                 .collect(Collectors.toList());
     }
 

@@ -1,6 +1,7 @@
 package chess.controller;
 
 import chess.domain.Room;
+import chess.dto.RoomResponseDto;
 import chess.service.GameService;
 import chess.service.RoomService;
 import chess.dto.BoardDto;
@@ -29,7 +30,7 @@ public class RoomController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Map<String, String>>> findRooms() {
+    public ResponseEntity<List<RoomResponseDto>> findRooms() {
         return ResponseEntity.ok(roomService.findRooms());
     }
 

@@ -2,7 +2,6 @@ package chess.controller;
 
 import chess.controller.dto.MoveRequestDto;
 import chess.controller.dto.RemoveRequestDto;
-import chess.controller.dto.ResponseDto;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.service.ChessService;

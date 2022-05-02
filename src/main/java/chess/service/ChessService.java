@@ -6,8 +6,6 @@ import chess.domain.game.Color;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
-import chess.domain.game.status.GameStatus;
-import chess.domain.game.status.Playing;
 import chess.domain.piece.ChessPiece;
 import chess.domain.piece.Type;
 import chess.domain.position.Position;
@@ -15,7 +13,6 @@ import chess.service.dto.GameDto;
 import chess.service.dto.PieceDto;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +45,7 @@ public class ChessService {
 
     private ChessBoard makeNewGame() {
         ChessBoard chessBoard = ChessBoardFactory.initBoard();
-        chessBoard.changeStatus(new Playing());
+        chessBoard.changeStatus(Status.PLAYING);
         return chessBoard;
     }
 
@@ -78,8 +75,9 @@ public class ChessService {
         return new ChessBoard(board, convertToGameStatus(game.get().getStatus()), game.get().getTurn());
     }
 
-    private GameStatus convertToGameStatus(String status) {
-        return Status.valueOf(status).convertToGameStatus();
+    private Status convertToGameStatus(String status) {
+        return Status.valueOf(status);
+        //.convertToGameStatus();
     }
 
     public void move(String source, String target, int gameId) {

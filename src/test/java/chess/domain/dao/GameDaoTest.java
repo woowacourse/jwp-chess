@@ -1,8 +1,8 @@
 package chess.domain.dao;
 
+import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
-import chess.domain.game.status.Playing;
 import chess.service.dto.GameDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,7 @@ class GameDaoTest {
 
     private ChessBoard initTestChessBoard() {
         ChessBoard chessBoard = ChessBoardFactory.initBoard();
-        chessBoard.changeStatus(new Playing());
+        chessBoard.changeStatus(Status.PLAYING);
         return chessBoard;
     }
 

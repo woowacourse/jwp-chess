@@ -1,28 +1,21 @@
 package chess.domain.game;
 
-import chess.domain.game.status.End;
-import chess.domain.game.status.GameStatus;
-import chess.domain.game.status.Playing;
-import chess.domain.game.status.Ready;
-
 public enum Status {
-    READY("READY", new Ready()),
-    PLAYING("PLAYING", new Playing()),
-    END("END", new End());
+    READY("READY"),
+    PLAYING("PLAYING"),
+    END("END");
 
     private final String name;
-    private final GameStatus convertToGameStatus;
 
-    Status(String name, GameStatus convertToGameStatus) {
+    Status(String name) {
         this.name = name;
-        this.convertToGameStatus = convertToGameStatus;
     }
 
     public String getName() {
         return name;
     }
 
-    public GameStatus convertToGameStatus() {
-        return convertToGameStatus;
+    public Status checkStatus() {
+        return this;
     }
 }

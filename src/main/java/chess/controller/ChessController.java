@@ -3,7 +3,6 @@ package chess.controller;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
-import chess.domain.game.status.Playing;
 import chess.domain.position.Position;
 import chess.view.Command;
 import chess.view.InputView;
@@ -43,7 +42,7 @@ public class ChessController {
     private void runStartCommand(ChessBoard chessBoard) {
         try {
             checkBeforeStart(chessBoard);
-            chessBoard.changeStatus(new Playing());
+            chessBoard.changeStatus(Status.PLAYING);
             OutputView.printChessBoard(chessBoard);
         } catch (IllegalArgumentException e) {
             OutputView.printError(e.getMessage());

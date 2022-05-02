@@ -4,14 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.auth.EncryptedAuthCredentials;
-import chess.domain.auth.PlayerCookie;
 import chess.domain.board.piece.Color;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.event.MoveEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
-import chess.dto.response.CreatedGameDto;
 import chess.dto.response.SearchResultDto;
 import chess.dto.view.FullGameDto;
 import chess.dto.view.GameCountDto;
@@ -21,7 +19,6 @@ import chess.dto.view.GameSnapshotDto;
 import chess.exception.InvalidAccessException;
 import chess.fixture.EventDaoStub;
 import chess.fixture.GameDaoStub;
-import chess.util.CookieUtil;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -131,12 +128,12 @@ class ChessServiceTest {
     }
 
     @Test
-    void initGame_메서드는_새로운_게임을_DB에_저장하고_생성된_게임ID가_담긴_데이터를_반환한다() {
+    void initGame_메서드는_새로운_게임을_DB에_저장하고_생성된_게임의_ID를_반환한다() {
         EncryptedAuthCredentials authCredentials = new EncryptedAuthCredentials("유효한_게임명", "비밀번호");
         int existingGameCount = GameDaoStub.TOTAL_GAME_COUNT;
 
-        CreatedGameDto actual = service.initGame(authCredentials);
-        CreatedGameDto expected = CreatedGameDto.of(existingGameCount + 1);
+        int actual = service.initGame(authCredentials);
+        int expected = existingGameCount + 1;
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -147,7 +144,7 @@ class ChessServiceTest {
 
         @Test
         void 이동_명령에_따라_체스말을_이동시킨다() {
-            service.playGame(1, GAME_ONE_VALID_BLACK_MOVE, getPlayerCookieOf(1, Color.BLACK));
+            service.playGame(1, GAME_ONE_VALID_BLACK_MOVE, Color.BLACK);
             FullGameDto actual = service.findGame(1);
 
             GameSnapshotDto expectedGame = currentGameSnapshotOfGameIdOne()
@@ -161,8 +158,7 @@ class ChessServiceTest {
 
         @Test
         void 이동_명령에_따라_체스말을_이동시키며_게임이_종료된_경우_OVER로_상태를_변경한다() {
-            service.playGame(2, new MoveEvent("b5 e8"),
-                    getPlayerCookieOf(2, Color.WHITE));
+            service.playGame(2, new MoveEvent("b5 e8"), Color.WHITE);
 
             boolean actual = gameDao.checkRunning(2);
 
@@ -171,29 +167,14 @@ class ChessServiceTest {
 
         @Test
         void 존재하지_않는_게임인_경우_예외를_발생시킨다() {
-            assertThatThrownBy(() -> service.playGame(999999, new MoveEvent("b5 e8"),
-                    getPlayerCookieOf(999999, Color.WHITE)))
+            assertThatThrownBy(() -> service.playGame(999999, new MoveEvent("b5 e8"), Color.WHITE))
                     .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("존재하지 않는 게임입니다.");
         }
-    }
-
-    @DisplayName("playGame 메서드에 잘못된 플레이어 인증 정보를 전달했을 때의 예외처리 테스트")
-    @Nested
-    class PlayGameAuthTest {
 
         @Test
-        void 다른_게임과_관련된_쿠키값인_경우_예외를_발생시킨다() {
-            assertThatThrownBy(() ->  service.playGame(1, GAME_ONE_VALID_BLACK_MOVE,
-                    getPlayerCookieOf(99999, Color.BLACK)))
-                    .isInstanceOf(InvalidAccessException.class)
-                    .hasMessage("해당 게임의 플레이어가 아닙니다.");
-        }
-
-        @Test
-        void 본인의_차례가_아닌_플레이어의_쿠키값의_경우_예외를_발생시킨다() {
-            assertThatThrownBy(() ->  service.playGame(1, GAME_ONE_VALID_BLACK_MOVE,
-                    getPlayerCookieOf(1, Color.WHITE)))
+        void 현재_플레이어의_진영이_본인의_차례가_아닌_경우_예외를_발생시킨다() {
+            assertThatThrownBy(() ->  service.playGame(1, GAME_ONE_VALID_BLACK_MOVE, Color.WHITE))
                     .isInstanceOf(InvalidAccessException.class)
                     .hasMessage("상대방이 움직일 차례입니다!");
         }
@@ -244,12 +225,5 @@ class ChessServiceTest {
                 .play(new MoveEvent("e2 e4"))
                 .play(new MoveEvent("d7 d5"))
                 .play(new MoveEvent("f1 b5"));
-    }
-
-    private PlayerCookie getPlayerCookieOf(int gameId, Color playerColor) {
-        if (playerColor == Color.WHITE) {
-            return PlayerCookie.of(CookieUtil.generateGameOwnerCookie(gameId));
-        }
-        return PlayerCookie.of(CookieUtil.generateOpponentCookie(gameId));
     }
 }

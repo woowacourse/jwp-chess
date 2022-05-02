@@ -2,14 +2,15 @@ package chess.controller;
 
 import chess.domain.auth.EncryptedAuthCredentials;
 import chess.domain.auth.PlayerCookie;
+import chess.domain.board.piece.Color;
 import chess.domain.event.MoveEvent;
 import chess.dto.request.MoveRouteDto;
-import chess.dto.response.CreatedGameDto;
 import chess.dto.response.EnterGameDto;
 import chess.dto.response.SearchResultDto;
 import chess.service.AuthService;
 import chess.service.ChessService;
 import java.net.URI;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,9 +49,10 @@ public class GameController {
     @PostMapping
     public ResponseEntity<Integer> createGame(EncryptedAuthCredentials authCredentials,
                                               HttpServletResponse response) {
-        CreatedGameDto createdGame = chessService.initGame(authCredentials);
-        response.addCookie(createdGame.getCookie());
-        int gameId = createdGame.getGameId();
+        int gameId = chessService.initGame(authCredentials);
+        Cookie cookie = authService.generateCreatedGameCookie(gameId);
+
+        response.addCookie(cookie);
         URI location = URI.create("/game/" + gameId);
         return ResponseEntity.created(location).body(gameId);
     }
@@ -64,7 +66,8 @@ public class GameController {
     public ModelAndView updateGame(@PathVariable int id,
                                    PlayerCookie cookie,
                                    @RequestBody MoveRouteDto moveRoute) {
-        chessService.playGame(id, new MoveEvent(moveRoute.toDomain()), cookie);
+        Color playerColor = authService.parseValidCookie(id, cookie);
+        chessService.playGame(id, new MoveEvent(moveRoute.toDomain()), playerColor);
         return getGameModelAndView(id);
     }
 

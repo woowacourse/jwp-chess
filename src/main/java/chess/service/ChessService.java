@@ -3,13 +3,11 @@ package chess.service;
 import chess.dao.EventDao;
 import chess.dao.GameDao;
 import chess.domain.auth.EncryptedAuthCredentials;
-import chess.domain.auth.PlayerCookie;
 import chess.domain.board.piece.Color;
 import chess.domain.event.Event;
 import chess.domain.event.InitEvent;
 import chess.domain.game.Game;
 import chess.domain.game.NewGame;
-import chess.dto.response.CreatedGameDto;
 import chess.dto.response.SearchResultDto;
 import chess.dto.view.FullGameDto;
 import chess.dto.view.GameCountDto;
@@ -66,25 +64,24 @@ public class ChessService {
     }
 
     @Transactional
-    public CreatedGameDto initGame(EncryptedAuthCredentials authCredentials) {
+    public int initGame(EncryptedAuthCredentials authCredentials) {
         int gameId = gameDao.saveAndGetGeneratedId(authCredentials);
         eventDao.save(gameId, new InitEvent());
-        return CreatedGameDto.of(gameId);
+        return gameId;
     }
 
     @Transactional
-    public void playGame(int gameId, Event moveEvent, PlayerCookie cookie) {
+    public void playGame(int gameId, Event moveEvent, Color playerColor) {
         Game game = currentSnapShotOf(gameId);
 
-        validateTurn(gameId, cookie, game);
+        validateTurn(playerColor, game);
         game = game.play(moveEvent);
 
         eventDao.save(gameId, moveEvent);
         finishGameOnEnd(gameId, game);
     }
 
-    private void validateTurn(int gameId, PlayerCookie cookie, Game game) {
-        Color playerColor = cookie.parsePlayerColorBy(gameId);
+    private void validateTurn(Color playerColor, Game game) {
         if (!game.isValidTurn(playerColor)) {
             throw new InvalidAccessException(InvalidStatus.INVALID_TURN);
         }

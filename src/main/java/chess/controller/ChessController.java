@@ -1,7 +1,6 @@
 package chess.controller;
 
 import chess.domain.piece.Color;
-import chess.dto.ExceptionResponse;
 import chess.dto.GameCreateRequest;
 import chess.dto.GameCreateResponse;
 import chess.dto.GameDeleteRequest;
@@ -10,16 +9,12 @@ import chess.dto.GameDto;
 import chess.dto.MoveRequest;
 import chess.dto.MoveResponse;
 import chess.dto.PositionDto;
-import chess.exception.DeleteFailOnPlayingException;
-import chess.exception.PasswordNotMatchedException;
 import chess.service.ChessService;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,21 +66,5 @@ public class ChessController {
     @DeleteMapping
     public ResponseEntity<GameDeleteResponse> deleteById(@RequestBody GameDeleteRequest gameDeleteRequest) {
         return new ResponseEntity<>(chessService.deleteById(gameDeleteRequest), HttpStatus.OK);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> unknownExceptionHandler(Exception e) {
-        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler({IllegalArgumentException.class, NoSuchElementException.class,
-            DeleteFailOnPlayingException.class, IllegalStateException.class})
-    public ResponseEntity<ExceptionResponse> knownExceptionHandler(Exception e) {
-        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler({PasswordNotMatchedException.class})
-    public ResponseEntity<ExceptionResponse> unauthorizedExceptionHandler(Exception e) {
-        return new ResponseEntity<>(new ExceptionResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 }

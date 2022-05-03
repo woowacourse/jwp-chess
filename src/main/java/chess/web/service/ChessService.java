@@ -92,14 +92,14 @@ public class ChessService {
     private ChessGame getChessGame(int gameId) {
         PiecesDto piecesDto = new PiecesDto(getPieces(gameId));
         ChessBoard chessBoard = new ChessBoard(piecesDto.toBoard());
-        return new ChessGame(getCurrentChessSate(gameId).newState(chessBoard));
+        return new ChessGame(getCurrentChessState(gameId).newState(chessBoard));
     }
 
     private List<PieceDto> getPieces(int gameId) {
         return pieceDao.findAllByGameId(gameId);
     }
 
-    public StateType getCurrentChessSate(int gameId) {
+    public StateType getCurrentChessState(int gameId) {
         return gameDao.findStateById(gameId);
     }
 
@@ -131,19 +131,19 @@ public class ChessService {
 
     public ResultDto getChessResult(int gameId) {
         ChessGame chessGame = getChessGame(gameId);
-        endGame(chessGame);
+        endGame(chessGame, gameId);
 
         double blackScore = getScore(gameId, Color.BLACK);
         double whiteScore = getScore(gameId, Color.WHITE);
 
-        gameDao.updateStateById(gameId, StateType.END);
 
         return new ResultDto(gameId, blackScore, whiteScore, chessGame.result());
     }
 
-    private void endGame(ChessGame chessGame) {
+    private void endGame(ChessGame chessGame, int gameId) {
         if (!chessGame.isFinished()) {
             chessGame.end();
+            gameDao.updateStateById(gameId, StateType.END);
         }
     }
 }

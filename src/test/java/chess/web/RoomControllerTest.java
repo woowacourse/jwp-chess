@@ -3,6 +3,7 @@ package chess.web;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 
+import chess.domain.Room;
 import chess.repository.RoomDao;
 import io.restassured.RestAssured;
 import java.util.Map;
@@ -16,7 +17,7 @@ import org.springframework.http.HttpStatus;
 class RoomControllerTest extends SpringBootTestConfig {
 
     @Autowired
-    private RoomDao roomDao;
+    RoomDao roomDao;
 
     @DisplayName("유효한 이름을 받으면 게임방 생성")
     @Test
@@ -29,7 +30,7 @@ class RoomControllerTest extends SpringBootTestConfig {
                 .when().post("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value())
-                .body("url", containsString("/rooms/"));
+                .body("name", containsString("summer"));
     }
 
     @DisplayName("부적절한 이름이 입력되면 400 에러 발생")
@@ -45,24 +46,27 @@ class RoomControllerTest extends SpringBootTestConfig {
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
-//    @DisplayName("존재하는 모든 방 조회")
-//    @Test
-//    void findRooms() {
-//        roomDao.save("does", "password");
-//        RestAssured.given().log().all()
-//                .when().get("/rooms")
-//                .then().log().all()
-//                .statusCode(HttpStatus.OK.value())
-//                .body("size()", is(2));
-//    }
-//
-//    @DisplayName("존재하는 방에 대한 새로운 보드 생성 요청")
-//    @Test
-//    void newGame() {
-//        RestAssured.given().log().all()
-//                .when().get("/rooms/1/new")
-//                .then().log().all()
-//                .statusCode(HttpStatus.OK.value());
-//    }
+    @DisplayName("존재하는 모든 방 조회")
+    @Test
+    void findRooms() {
+        roomDao.save(new Room("testRoom1", "password"));
+        roomDao.save(new Room("testRoom2", "password"));
+        int expectedSize = roomDao.findAll().size();
+        RestAssured.given().log().all()
+                .when().get("/rooms")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(expectedSize));
+    }
+
+    @DisplayName("존재하는 방에 대한 새로운 보드 생성 요청")
+    @Test
+    void newGame() {
+        int id = roomDao.save(new Room("does", "password"));
+        RestAssured.given().log().all()
+                .when().post("/rooms/" + id + "/new")
+                .then().log().all()
+                .statusCode(HttpStatus.OK.value());
+    }
 
 }

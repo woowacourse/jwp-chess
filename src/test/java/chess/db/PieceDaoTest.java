@@ -2,10 +2,6 @@ package chess.db;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import chess.domain.ChessGame;
 import chess.domain.GameTurn;
 import chess.domain.board.InitialBoardGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -33,7 +29,7 @@ public class PieceDaoTest {
         dataSource.setDriverClassName(DRIVER);
         jdbcTemplate = new JdbcTemplate(dataSource);
         ChessGameDao chessGameDao = new ChessGameDao(jdbcTemplate);
-        chessGameDao.save("test", new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
+        chessGameDao.save("test", "test", new ChessGame(new InitialBoardGenerator(), GameTurn.WHITE));
     }
 
     @AfterEach
@@ -49,18 +45,18 @@ public class PieceDaoTest {
     @Test
     void findByGameID() {
         PieceDao pieceDao = new PieceDao(jdbcTemplate);
-        pieceDao.save("test");
+        pieceDao.initPieces("test");
 
-        assertThatNoException().isThrownBy(() -> pieceDao.findByGameID("test"));
+        assertThatNoException().isThrownBy(() -> pieceDao.findByGameId("test"));
     }
 
     @DisplayName("존재하지 않는 게임에 대한 검색은 예외를 반환한다")
     @Test
     void findByGameID_NoSuchGame() {
         PieceDao pieceDao = new PieceDao(jdbcTemplate);
-        pieceDao.save("test");
+        pieceDao.initPieces("test");
 
-        assertThatThrownBy(() -> pieceDao.findByGameID("test1"))
+        assertThatThrownBy(() -> pieceDao.findByGameId("test1"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("헉.. 저장 안한거 아냐? 그런 게임은 없어!");
     }

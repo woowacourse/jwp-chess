@@ -13,13 +13,16 @@ body {
 }
 
 #welcomeMessage {
-    font-size: 50px;
+    font-size: 45px;
     text-align: center;
     margin-bottom: 20px;
 }
 
 #start {
-    margin-left: 20px;
+    float: right;
+}
+
+#delete {
     float: right;
 }
 
@@ -29,8 +32,8 @@ body {
     display: block;
 }
 
-.gameIDBox {
-    width: 350px;
+input.gameIdBox {
+    width: 250px;
 }
 
 #find {
@@ -57,7 +60,7 @@ body {
 }
 
 input {
-    font-size: 50px;
+    font-size: 40px;
     padding: 0 20px;
 }
 
@@ -81,7 +84,7 @@ input {
 }
 
 .textBoxWrapper {
-    font-size: 50px;
+    font-size: 45px;
 }
 
 .textBox {
@@ -97,7 +100,7 @@ input {
 }
 
 .score {
-    font-size: 50px;
+    font-size: 45px;
     margin-bottom: 10px;
 }
 

@@ -7,12 +7,37 @@
 </head>
 <body>
 <div id="welcomeMessage">
-    CLICK TO START! 😆
+    {{msg}}
 </div>
-<form action="/ingame" method="get" class="textBoxWrapper">
+<form action="/games" method="post" class="textBoxWrapper">
     <input type="text" name="restart" class="invisible" value="false" />
-    GAME ID : <input type="text" name="gameID" class="gameIDBox"/>
+    GAME ID : <input type="text" name="gameId" class="gameIdBox"/>
+    <br>
+    PASSWORD : <input type="text" name="password" class="gameIdBox"/>
     <input type="submit" value="START" class="btn" id="start">
 </form>
+<br>
+<br>
+{{#games}}
+    <div class="textBoxWrapper">
+        <form action="/games" method="post" class="inlineBtn">
+            GAME ID: {{gameId}}
+            <br>
+            PASSWORD : <input type="text" name="password" class="gameIdBox"/>
+            <input class="invisible" name="gameId" value="{{gameId}}" type="text">
+            <input type="text" name="restart" class="invisible" value="false" />
+            <input type="submit" value="START" class="btn" id="start">
+        </form>
+    </div>
+    <div class="textBoxWrapper">
+        <form action="/delete/{{gameId}}" method="post" class="inlineBtn">
+            <input class="invisible" name="gameId" value="{{gameId}}" type="text">
+            PASSWORD : <input type="text" name="password" class="gameIdBox"/>
+            <input type="submit" value="DELETE" class="btn" id="delete">
+        </form>
+    </div>
+    <br>
+    <br>
+{{/games}}
 </body>
 </html>

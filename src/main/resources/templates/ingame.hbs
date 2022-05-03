@@ -10,8 +10,9 @@
 <form action="/" method="get" class="inlineBtn">
     <input type="submit" value="SAVE" class="btn" id="end"/>
 </form>
-<form action="/ingame" method="get" class="inlineBtn">
-    <input type="text" name="gameID" class="invisible" value={{gameID}} />
+<form action="/games" method="post" class="inlineBtn">
+    <input type="text" name="gameId" class="invisible" value="{{gameId}}" />
+    <input type="text" name="password" class="invisible" value="{{password}}" />
     <input type="text" name="restart" class="invisible" value="true" />
     <input type="submit" value="RESTART" class="btn" id="restart">
 </form>
@@ -117,7 +118,8 @@
         <th></th>
     </tbody>
 </table>
-<form action="/ingame/{{gameID}}" method="post" class="textBoxWrapper">
+<form action="/games/{{gameId}}" method="post" class="textBoxWrapper">
+    <input type="text" name="password" class="invisible" value="{{password}}" />
     FROM : <input type="text" name="source" class="textBox"/>
     TO : <input type="text" name="target" class="textBox"/>
     <input type="submit" value="MOVE" class="btn" id="move"/>
@@ -125,10 +127,10 @@
 <br>
 <div>
     <span class="score">
-        화이트 팀 : {{whiteScore}} 점
+        화이트 팀 : {{score.whiteScore}} 점
     </span>
     <span class="score">
-        블랙 팀 : {{blackScore}} 점
+        블랙 팀 : {{score.blackScore}} 점
     </span>
 </div>
 </body>

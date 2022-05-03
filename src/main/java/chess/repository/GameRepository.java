@@ -23,22 +23,6 @@ public class GameRepository {
         this.pieceDao = pieceDao;
     }
 
-    public BoardDto saveNewGame(int roomId, Board board) {
-        deleteOldGame(roomId);
-        int boardId = saveGame(roomId, board);
-        return gameStateAndPieces(boardId);
-    }
-
-    private int saveGame(int roomId, Board board) {
-        int boardId = boardDao.save(roomId, getGameStateDto(board));
-        pieceDao.saveAll(boardId, board.getPieces());
-        return boardId;
-    }
-
-    private void deleteOldGame(int roomId) {
-        boardDao.deleteByRoom(roomId);
-    }
-
     public int findBoardIdByRoomId(int roomId) {
         return boardDao.findBoardIdByRoom(roomId).get();
     }
@@ -46,10 +30,6 @@ public class GameRepository {
     public Board findBoardByRoomId(int roomId) {
         int boardId = boardDao.findBoardIdByRoom(roomId).get();
         return findBoardByBoardId(boardId);
-    }
-
-    public void updateBoardState(Board board, int boardId) {
-        boardDao.updateState(boardId, getGameStateDto(board));
     }
 
     public Board findBoardByBoardId(int boardId) {
@@ -60,30 +40,19 @@ public class GameRepository {
         Board board = new Board(() -> pieces, boardDao.getTurn(boardId));
         return board;
     }
-
-    public void savePiece(int boardId, String position, PieceDto pieceDto) {
-        pieceDao.save(boardId, position, pieceDto);
-    }
-
+    
     public Optional<PieceDto> findPiece(int boardId, String position) {
         return pieceDao.findOne(boardId, position);
     }
 
-    public void updatePiece(int boardId, String position, PieceDto pieceDto) {
-        pieceDao.updateOne(boardId, position, pieceDto);
+    public void updateBoardState(Board board, int boardId) {
+        boardDao.updateState(boardId, getGameStateDto(board));
     }
 
-    public void deletePiece(int boardId, String position) {
-        pieceDao.deleteOne(boardId, position);
-    }
-
-    private GameStateDto getGameStateDto(Board board) {
-        return GameStateDto.from(board);
-    }
-
-    private BoardDto gameStateAndPieces(int boardId) {
-        Board board = findBoardByBoardId(boardId);
-        return new BoardDto(boardId, board);
+    public BoardDto saveNewGame(int roomId, Board board) {
+        deleteOldGame(roomId);
+        int boardId = saveGame(roomId, board);
+        return gameStateAndPieces(boardId);
     }
 
     public void movePiece(int boardId, Board board, String source, String target) {
@@ -97,4 +66,36 @@ public class GameRepository {
         savePiece(boardId, target, pieceDto);
         updateBoardState(board, boardId);
     }
+
+    public void savePiece(int boardId, String position, PieceDto pieceDto) {
+        pieceDao.save(boardId, position, pieceDto);
+    }
+
+    public void updatePiece(int boardId, String position, PieceDto pieceDto) {
+        pieceDao.updateOne(boardId, position, pieceDto);
+    }
+
+    public void deletePiece(int boardId, String position) {
+        pieceDao.deleteOne(boardId, position);
+    }
+
+    private int saveGame(int roomId, Board board) {
+        int boardId = boardDao.save(roomId, getGameStateDto(board));
+        pieceDao.saveAll(boardId, board.getPieces());
+        return boardId;
+    }
+
+    private void deleteOldGame(int roomId) {
+        boardDao.deleteByRoom(roomId);
+    }
+
+    private GameStateDto getGameStateDto(Board board) {
+        return GameStateDto.from(board);
+    }
+
+    private BoardDto gameStateAndPieces(int boardId) {
+        Board board = findBoardByBoardId(boardId);
+        return new BoardDto(boardId, board);
+    }
+
 }

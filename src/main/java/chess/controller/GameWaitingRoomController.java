@@ -26,8 +26,8 @@ public class GameWaitingRoomController {
         this.chessGameService = chessGameService;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ModelAndView exception(RuntimeException e) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ModelAndView exception(IllegalArgumentException e) {
         return getModelAndView(e.getMessage());
     }
 
@@ -42,7 +42,6 @@ public class GameWaitingRoomController {
         return "redirect:/";
     }
 
-    //TODO room수정
     @PostMapping(path = "/game", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ModelAndView createGame(@ModelAttribute RoomRequestDto roomDto) {
         long gameId = chessGameService.create(new Room(roomDto.getTitle(), roomDto.getPassword()));

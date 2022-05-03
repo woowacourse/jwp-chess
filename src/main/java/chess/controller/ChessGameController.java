@@ -27,8 +27,8 @@ public class ChessGameController {
         this.chessGameService = chessGameService;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ModelAndView exception(HttpServletRequest request, RuntimeException e) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ModelAndView exception(HttpServletRequest request, IllegalArgumentException e) {
         long gameId = Long.parseLong(request.getRequestURI().split("/")[2]);
         return getModelWithGameMessage(e.getMessage(), "redirect:/game/" + gameId);
     }

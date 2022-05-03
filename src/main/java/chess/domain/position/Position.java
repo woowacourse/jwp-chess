@@ -7,9 +7,10 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Position {
+
     private static final Map<String, Position> POSITIONS = new HashMap<>();
-    private final static int POSITION_ROW_INDEX = 1;
-    private final static int POSITION_COLUMN_INDEX = 0;
+    private static final int POSITION_ROW_INDEX = 1;
+    private static final int POSITION_COLUMN_INDEX = 0;
 
     private final Column col;
     private final Row row;
@@ -70,8 +71,12 @@ public class Position {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Position position = (Position) o;
         return col == position.col && row == position.row;
     }
@@ -84,8 +89,8 @@ public class Position {
     @Override
     public String toString() {
         return "Position{" +
-                "col=" + col +
-                ", row=" + row +
-                '}';
+            "col=" + col +
+            ", row=" + row +
+            '}';
     }
 }

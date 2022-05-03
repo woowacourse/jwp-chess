@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Score {
+
     private static final int EXIST_PAWN_NEIGHBORS = 1;
     private static final int PLUS_PAWN_NEIGHBORS_COUNT = 1;
     private static final int PAWN_NEIGHBORS_DEFAULT_COUNT = 0;
@@ -25,7 +26,7 @@ public class Score {
     private float createTotalScore(Map<Position, Piece> board, Team team) {
         float totalScore = 0;
         Map<Column, Integer> pawnNeighbors = new EnumMap<>(Column.class);
-        for (Column col: Column.values()) {
+        for (Column col : Column.values()) {
             totalScore += calculateTotalScore(board, col, team);
             addPawnNeighbors(board, team, pawnNeighbors, col);
         }
@@ -50,16 +51,19 @@ public class Score {
         return minusScore;
     }
 
-    private void addPawnNeighbors(Map<Position, Piece> board, Team team, Map<Column, Integer> pawnNeighbors, Column col) {
+    private void addPawnNeighbors(Map<Position, Piece> board, Team team,
+        Map<Column, Integer> pawnNeighbors, Column col) {
         for (Row row : Row.values()) {
             Piece piece = board.get(Position.of(col, row));
             addCountPawnNeighbors(team, pawnNeighbors, col, piece);
         }
     }
 
-    private void addCountPawnNeighbors(Team team, Map<Column, Integer> pawnNeighbors, Column col, Piece piece) {
+    private void addCountPawnNeighbors(Team team, Map<Column, Integer> pawnNeighbors, Column col,
+        Piece piece) {
         if (piece.isPawn() && team.matchTeam(piece.getTeam())) {
-            pawnNeighbors.put(col, pawnNeighbors.getOrDefault(col, PAWN_NEIGHBORS_DEFAULT_COUNT) + PLUS_PAWN_NEIGHBORS_COUNT);
+            pawnNeighbors.put(col, pawnNeighbors.getOrDefault(col, PAWN_NEIGHBORS_DEFAULT_COUNT)
+                + PLUS_PAWN_NEIGHBORS_COUNT);
         }
     }
 

@@ -1,8 +1,9 @@
-package chess.dto;
+package chess.dto.response;
 
 import chess.domain.Team;
 
 public class GameStateDto {
+
     private final Team gameState;
     private final boolean isRunning;
 

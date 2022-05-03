@@ -1,9 +1,12 @@
+const url = location.href.split('/');
+const roomId = url[url.length - 1];
+
 function setBoard() {
     $.ajax({
-        url: "/board",
+        url: `/rooms/${roomId}/board`,
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
-        type: "get",
+        type: "GET",
         success: function (data) {
             const pieces = data.pieces;
             const team = data.team;
@@ -41,8 +44,8 @@ let piece = {
 
 function reset() {
     $.ajax({
-        url: "/reset",
-        type: "POST",
+        url: "/rooms/"+roomId,
+        type: "PUT",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
@@ -62,8 +65,8 @@ function reset() {
 
 function end() {
     $.ajax({
-        url: "/end",
-        type: "POST",
+        url: "/rooms/" + roomId,
+        type: "PATCH",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
@@ -81,3 +84,5 @@ function end() {
         }
     })
 }
+
+

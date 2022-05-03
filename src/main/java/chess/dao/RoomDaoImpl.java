@@ -1,12 +1,18 @@
 package chess.dao;
 
 import chess.domain.Team;
-import chess.dto.RoomDto;
+import chess.entity.Room;
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoomDaoImpl implements RoomDao{
+public class RoomDaoImpl implements RoomDao {
+
     private JdbcTemplate jdbcTemplate;
 
     public RoomDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -14,31 +20,62 @@ public class RoomDaoImpl implements RoomDao{
     }
 
     @Override
-    public RoomDto findById(long roomId) {
+    public Optional<Room> findById(Long roomId) {
         final String sql = "select * from room  where id = ?";
-        try{
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                    new RoomDto(
-                            rs.getLong("id"),
-                            Team.valueOf(rs.getString("status"))
-                    ), roomId);
-        }catch (Exception exception) {
-            return null;
-        }
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+            new Room(
+                rs.getLong("id"),
+                Team.valueOf(rs.getString("team")),
+                rs.getString("title"),
+                rs.getString("password"),
+                rs.getBoolean("status")
+            ), roomId));
     }
+
     @Override
-    public void delete(long roomId) {
-        final String sql = "delete from room where id = ?";
-        jdbcTemplate.update(sql, roomId);
+    public void deleteBy(Long roomId, String password) {
+        final String sql = "delete from room where id = ? and password = ?";
+        jdbcTemplate.update(sql, roomId, password);
     }
+
     @Override
-    public void save(long roomId, Team team) {
-        final String sql = "insert into room (id, status) values(?, ?)";
-        jdbcTemplate.update(sql, roomId, team.name());
+    public Long save(String title, String password) {
+        final String sql = "insert into room (team, title, password, status) values(?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, Team.WHITE.name());
+            ps.setString(2, title);
+            ps.setString(3, password);
+            ps.setBoolean(4, true);
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
+
     @Override
-    public void updateStatus(Team team, long roomId) {
-        final String sql = "update room set status = ? where id = ?";
+    public void updateTeam(Team team, Long roomId) {
+        final String sql = "update room set team = ? where id = ?";
         jdbcTemplate.update(sql, team.name(), roomId);
+    }
+
+    @Override
+    public List<Room> findAll() {
+        final String sql = "select * from room";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new Room(
+            rs.getLong("id"),
+            Team.valueOf(rs.getString("team")),
+            rs.getString("title"),
+            rs.getString("password"),
+            rs.getBoolean("status")
+        ));
+    }
+
+    @Override
+    public void updateStatus(Long roomId, boolean status) {
+        final String sql = "update room set status = ? where id = ?";
+        jdbcTemplate.update(sql, status, roomId);
     }
 }

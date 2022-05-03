@@ -1,6 +1,7 @@
-package chess.dto;
+package chess.dto.response;
 
 public class PieceDto {
+
     public String position;
     public String symbol;
 

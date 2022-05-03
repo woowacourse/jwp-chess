@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Rook extends Piece {
+
     private static final String SYMBOL = "R";
     private static final float SCORE = 5.0f;
 
@@ -18,7 +19,7 @@ public class Rook extends Piece {
     public List<Position> findPath(Position source, Position destination) {
         Direction direction = findDirection(source, destination);
         return getPath(destination, direction,
-                source.plusDirection(direction));
+            source.plusDirection(direction));
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Bishop extends Piece {
+
     private static final String SYMBOL = "B";
     private static final float SCORE = 3.0f;
 
@@ -22,6 +23,7 @@ public class Bishop extends Piece {
 
     @Override
     protected List<Direction> getDirections() {
-        return Arrays.asList(Direction.NORTHEAST, Direction.SOUTHEAST, Direction.SOUTHWEST, Direction.NORTHWEST);
+        return Arrays.asList(Direction.NORTHEAST, Direction.SOUTHEAST, Direction.SOUTHWEST,
+            Direction.NORTHWEST);
     }
 }

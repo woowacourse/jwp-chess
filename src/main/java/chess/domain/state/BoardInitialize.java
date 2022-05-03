@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BoardInitialize {
+
     private static final Map<Position, Piece> BOARD = new HashMap<>();
 
     public static Map<Position, Piece> create() {

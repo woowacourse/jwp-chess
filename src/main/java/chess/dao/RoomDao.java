@@ -1,14 +1,21 @@
 package chess.dao;
 
 import chess.domain.Team;
-import chess.dto.RoomDto;
+import chess.entity.Room;
+import java.util.List;
+import java.util.Optional;
 
 public interface RoomDao {
-    RoomDto findById(long roomId);
 
-    void delete(long roomId);
+    Optional<Room> findById(Long roomId);
 
-    void save(long roomId, Team team);
+    void deleteBy(Long roomId, String password);
 
-    void updateStatus(Team team, long roomId);
+    Long save(String title, String password);
+
+    void updateTeam(Team team, Long roomId);
+
+    void updateStatus(Long roomId, boolean status);
+
+    List<Room> findAll();
 }

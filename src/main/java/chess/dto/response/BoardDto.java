@@ -1,10 +1,11 @@
-package chess.dto;
+package chess.dto.response;
 
 import chess.domain.Team;
 
 import java.util.List;
 
 public class BoardDto {
+
     private final List<PieceDto> pieces;
     private final Team team;
 

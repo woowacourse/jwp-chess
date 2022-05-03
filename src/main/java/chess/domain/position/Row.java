@@ -20,17 +20,17 @@ public enum Row {
 
     public static Row find(int value) {
         return Arrays.stream(values())
-                .filter(i -> i.value == value)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Row 값 입니다."));
+            .filter(i -> i.value == value)
+            .findAny()
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Row 값 입니다."));
     }
 
     public static Row find(char value) {
         int rowValue = Character.getNumericValue(value);
         return Arrays.stream(values())
-                .filter(i -> i.value == rowValue)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Row 값 입니다."));
+            .filter(i -> i.value == rowValue)
+            .findAny()
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 Row 값 입니다."));
     }
 
     public int getDifference(Row row) {

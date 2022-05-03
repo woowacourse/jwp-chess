@@ -5,6 +5,7 @@ import static org.hamcrest.core.StringContains.containsString;
 
 import chess.domain.Room;
 import chess.repository.RoomDao;
+import chess.web.SpringBootTestConfig;
 import io.restassured.RestAssured;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +18,7 @@ import org.springframework.http.HttpStatus;
 class RoomControllerTest extends SpringBootTestConfig {
 
     @Autowired
-    RoomDao roomDao;
+    private RoomDao roomDao;
 
     @DisplayName("유효한 이름을 받으면 게임방 생성")
     @Test

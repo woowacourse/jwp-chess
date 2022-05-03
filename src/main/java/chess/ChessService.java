@@ -1,5 +1,7 @@
 package chess;
 
+import static chess.domain.piece.Color.*;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import chess.dao.RoomDao;
 import chess.dao.SquareDao;
@@ -18,8 +21,10 @@ import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import chess.dto.BoardDto;
 import chess.dto.MoveDto;
+import chess.dto.RoomDto;
 import chess.entity.Room;
 import chess.entity.Square;
+import chess.exception.InvalidPasswordException;
 import chess.utils.PieceFactory;
 
 @Service
@@ -28,6 +33,8 @@ public class ChessService {
     private static final String NO_ROOM_MESSAGE = "해당 ID와 일치하는 Room이 존재하지 않습니다.";
     private static final String NO_SQUARE_MESSAGE = "해당 방, 위치에 존재하는 Square가 없습니다.";
     private static final String NO_SQUARES_MESSAGE = "해당 ID에 체스게임이 초기화되지 않았습니다.";
+    private static final String DELETE_NOT_ALLOWED_WHEN_RUNNING_MESSAGE = "진행중인 방은 삭제할 수 없습니다.";
+    private static final String DUPLICATED_ROOM_NAME_MESSAGE = "중복된 방 이름입니다.";
 
     private final RoomDao roomDao;
     private final SquareDao squareDao;
@@ -37,30 +44,32 @@ public class ChessService {
         this.squareDao = squareDao;
     }
 
-    public BoardDto startNewGame(String roomName) {
-        Room room = roomDao.findByName(roomName)
+    @Transactional(rollbackFor = Exception.class)
+    public BoardDto startNewGame(long roomId) {
+        Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
 
         ChessGame chessGame = new ChessGame();
         chessGame.start();
-        squareDao.removeAll(room.getId());
         Map<Position, Piece> board = chessGame.getBoard();
         List<Square> squares = convertBoardToSquares(board);
+        squareDao.removeAll(room.getId());
         squareDao.saveAll(squares, room.getId());
         roomDao.update(room.getId(), chessGame.getTurn());
         return BoardDto.of(board, chessGame.getTurn());
     }
 
-    public BoardDto load(String roomName) {
-        Room room = roomDao.findByName(roomName)
+    public BoardDto findRoom(long roomId) {
+        Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
 
         return BoardDto.of(chessBoard.getPieces(), room.getTurn());
     }
 
-    public BoardDto move(String roomName, MoveDto moveDto) {
-        Room room = roomDao.findByName(roomName)
+    @Transactional(rollbackFor = Exception.class)
+    public BoardDto move(long roomId, MoveDto moveDto) {
+        Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessGame chessGame = ChessGame.of(loadChessBoard(room.getId()), room.getTurn());
         chessGame.move(moveDto.getFrom(), moveDto.getTo());
@@ -74,7 +83,7 @@ public class ChessService {
         String fromPiece = squareDao.findByRoomIdAndPosition(roomId, moveDto.getFrom())
             .orElseThrow(() -> new NoSuchElementException(NO_SQUARE_MESSAGE))
             .getPiece();
-        squareDao.update(roomId, moveDto.getFrom(), "empty");
+        squareDao.update(roomId, moveDto.getFrom(), EMPTY.getName());
         squareDao.update(roomId, moveDto.getTo(), fromPiece);
     }
 
@@ -98,8 +107,8 @@ public class ChessService {
         return new ChessBoard(() -> board);
     }
 
-    public Status status(String roomName) {
-        Room room = roomDao.findByName(roomName)
+    public Status status(long roomId) {
+        Room room = roomDao.findById(roomId)
             .orElseThrow(() -> new NoSuchElementException(NO_ROOM_MESSAGE));
         ChessBoard chessBoard = loadChessBoard(room.getId());
         ChessGame chessGame = ChessGame.of(chessBoard, room.getTurn());
@@ -107,13 +116,36 @@ public class ChessService {
         return chessGame.status();
     }
 
-    public boolean createRoom(String name) {
+    public Room createRoom(String name, String password) {
         Optional<Room> room = roomDao.findByName(name);
-        if (room.isEmpty()) {
-            Room newRoom = new Room(name);
-            roomDao.save(newRoom);
-            return true;
+        if (room.isPresent()) {
+            throw new IllegalArgumentException(DUPLICATED_ROOM_NAME_MESSAGE);
         }
-        return false;
+        long id = roomDao.save(new Room(name, password));
+        return new Room(id, name, password, EMPTY.getName());
+    }
+
+    public List<RoomDto> findAllRooms() {
+        return roomDao.findAll().stream()
+            .map(RoomDto::from)
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(long roomId, String password) {
+        Optional<Room> optionalRoom = roomDao.findByIdAndPassword(roomId, password);
+        if (optionalRoom.isEmpty()) {
+            throw new InvalidPasswordException();
+        }
+        validateDeletableState(optionalRoom.get());
+
+        squareDao.removeAll(roomId);
+        roomDao.delete(roomId);
+    }
+
+    private void validateDeletableState(Room room) {
+        if (!room.isDeletable()) {
+            throw new IllegalStateException(DELETE_NOT_ALLOWED_WHEN_RUNNING_MESSAGE);
+        }
     }
 }

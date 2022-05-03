@@ -3,6 +3,7 @@ package chess;
 import static org.hamcrest.Matchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,44 +22,55 @@ import io.restassured.RestAssured;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ChessControllerTest {
 
+    private static final long id = 1L;
+    private static final String API_URL_PREFIX = "/api";
+
     @LocalServerPort
     int port;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
+        JdbcFixture jdbcFixture = new JdbcFixture(jdbcTemplate);
         RestAssured.port = port;
-        JdbcFixture.dropTable(jdbcTemplate, "square");
-        JdbcFixture.dropTable(jdbcTemplate, "room");
-        JdbcFixture.createRoomTable(jdbcTemplate);
-        JdbcFixture.createSquareTable(jdbcTemplate);
-        JdbcFixture.insertRoom(jdbcTemplate, "roma", "white");
+        jdbcFixture.dropTable("square");
+        jdbcFixture.dropTable("room");
+        jdbcFixture.createRoomTable();
+        jdbcFixture.createSquareTable();
+        jdbcFixture.insertRoom("roma", "white", "pw12345678");
     }
 
     @Test
-    void index() {
+    @DisplayName("새로운 방 생성 여부를 검증한다.")
+    void create() {
         RestAssured.given().log().all()
-            .when().get("/")
+            .body("name=sojukang&password=1234567890")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .when().post(API_URL_PREFIX + "/rooms")
             .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.TEXT_HTML_VALUE);
+            .statusCode(HttpStatus.CREATED.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
 
     @Test
-    void room() {
+    @DisplayName("이미 존재하는 이름일 경우 400 응답을 던진다.")
+    void createExceptionAlreadyExists() {
         RestAssured.given().log().all()
-            .when().get("/room?name=roma")
+            .body("name=roma&password=pw12345678")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .when().post(API_URL_PREFIX + "/rooms")
             .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .contentType(MediaType.TEXT_HTML_VALUE);
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE);
     }
 
     @Test
+    @DisplayName("게임 시작시 턴과 보드의 반환값을 검증한다.")
     void start() {
         RestAssured.given().log().all()
-            .when().get("/start?name=roma")
+            .when().post(API_URL_PREFIX + "/rooms/" + id)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -67,11 +79,12 @@ class ChessControllerTest {
     }
 
     @Test
-    void load() {
-        RestAssured.get("/start?name=roma");
+    @DisplayName("저장된 게임 정보 불러오기를 검증한다.")
+    void findRoom() {
+        RestAssured.post(API_URL_PREFIX + "/rooms/" + id);
 
         RestAssured.given().log().all()
-            .when().get("/load?name=roma")
+            .when().get(API_URL_PREFIX + "/rooms/" + id)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -80,14 +93,31 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("전체 방 조회 기능을 검증한다.")
+    void findAllRooms() {
+        RestAssured.given().log().all()
+            .body("name=sojukang&password=1234567890")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .when().post(API_URL_PREFIX + "/rooms");
+
+        RestAssured.given().log().all()
+            .when().get(API_URL_PREFIX + "/rooms")
+            .then().log().all()
+            .statusCode(HttpStatus.OK.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("rooms.size()", is(2));
+    }
+
+    @Test
+    @DisplayName("체스 말 이동 기능을 검증한다.")
     void move() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.post(API_URL_PREFIX + "/rooms/" + id);
         MoveDto moveDto = new MoveDto("a2", "a4");
 
         RestAssured.given().log().all()
             .body(moveDto)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/move?name=roma")
+            .when().patch(API_URL_PREFIX + "/rooms/" + id + "/move")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -97,11 +127,12 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("점수 출력 기능을 검증한다.")
     void status() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.post(API_URL_PREFIX + "/rooms/" + id);
 
         RestAssured.given().log().all()
-            .when().get("/status?name=roma")
+            .when().get(API_URL_PREFIX + "/rooms/" + id + "/status")
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -110,14 +141,15 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("이동할 수 없는 위치인 경우 400 응답을 던진다.")
     void moveExceptionWrongPosition() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.post(API_URL_PREFIX + "/rooms/" + id);
         MoveDto moveDto = new MoveDto("a2", "a5");
 
         RestAssured.given().log().all()
             .body(moveDto)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/move?name=roma")
+            .when().patch(API_URL_PREFIX + "/rooms/" + id + "/move")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -125,14 +157,15 @@ class ChessControllerTest {
     }
 
     @Test
+    @DisplayName("해당 색의 차례가 아닐 경우 400 응답을 던진다.")
     void moveExceptionWrongTurn() {
-        RestAssured.get("/start?name=roma");
+        RestAssured.post(API_URL_PREFIX + "/rooms/" + id);
         MoveDto moveDto = new MoveDto("a7", "a6");
 
         RestAssured.given().log().all()
             .body(moveDto)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .when().post("/move?name=roma")
+            .when().patch(API_URL_PREFIX + "/rooms/" + id + "/move")
             .then().log().all()
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -140,14 +173,60 @@ class ChessControllerTest {
     }
 
     @Test
-    void loadExceptionBeforeInit() {
-        RestAssured.get("/room?name=sojukang");
+    @DisplayName("아직 게임을 시작하지 않은 방에서 불러오기를 할 경우 400 응답을 던진다.")
+    void findExceptionBeforeInit() {
+        RestAssured.given().log().all()
+            .when().get(API_URL_PREFIX + "/rooms/" + id)
+            .then().log().all()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("message", is("해당 ID에 체스게임이 초기화되지 않았습니다."));
+    }
+
+    @Test
+    @DisplayName("방 삭제 성공시 204 상태를 응답한다.")
+    void delete() {
+        RestAssured.given().log().all()
+            .body("name=sojukang&password=1234567890")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .when().post(API_URL_PREFIX + "/rooms");
 
         RestAssured.given().log().all()
-            .when().get("/load?name=sojukang")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .body("password=1234567890")
+            .when().delete(API_URL_PREFIX + "/rooms/" + (id + 1))
             .then().log().all()
-            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @DisplayName("turn이 empty가 아닐 경우 삭제 시도하면 400 응답을 던진다.")
+    void deleteNotAllowedException() {
+        RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .body("password=pw12345678")
+            .when().delete(API_URL_PREFIX + "/rooms/" + id)
+            .then().log().all()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body("error", is("Internal Server Error"));
+            .body("message", is("진행중인 방은 삭제할 수 없습니다."));
+    }
+
+    @Test
+    @DisplayName("비밀번호가 틀릴 경우 401 응답을 던진다.")
+    void deleteInvalidPassword() {
+        RestAssured.given().log().all()
+            .body("name=sojukang&password=1234567890")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .when().post(API_URL_PREFIX + "/rooms");
+
+        RestAssured.given().log().all()
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .body("password=12345678901")
+            .when().delete(API_URL_PREFIX + "/rooms/" + (id + 1))
+            .then().log().all()
+            .statusCode(HttpStatus.UNAUTHORIZED.value())
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body("message", is("Password가 일치하지 않습니다."));
     }
 }

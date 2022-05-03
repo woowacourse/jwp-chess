@@ -1,21 +1,31 @@
 package chess;
 
+import java.net.URI;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import chess.domain.Status;
 import chess.dto.BoardDto;
 import chess.dto.ExceptionResponseDto;
 import chess.dto.MoveDto;
+import chess.dto.RoomDto;
+import chess.exception.InvalidPasswordException;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class ChessController {
 
     private final ChessService chessService;
@@ -24,47 +34,59 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @GetMapping("/")
-    public String index() {
-        return "roby.html";
+    @GetMapping("/rooms")
+    public List<RoomDto> findAllRooms() {
+        return chessService.findAllRooms();
     }
 
-    @GetMapping("/room")
-    public String room(@RequestParam String name,
-        Model model) {
-        chessService.createRoom(name);
-        model.addAttribute("name", name);
-        return "room.html";
+    @PostMapping("/rooms")
+    public ResponseEntity<Long> create(@RequestParam String name, @RequestParam String password) {
+        long id = chessService.createRoom(name, password).getId();
+        return ResponseEntity.created(URI.create("/rooms/" + id))
+            .body(id);
     }
 
-    @GetMapping("/start")
-    @ResponseBody
-    public BoardDto start(@RequestParam String name) {
-        return chessService.startNewGame(name);
+    @PostMapping("/rooms/{id}")
+    public BoardDto start(@PathVariable long id) {
+        return chessService.startNewGame(id);
     }
 
-    @GetMapping("/load")
-    @ResponseBody
-    public BoardDto load(@RequestParam String name) {
-        return chessService.load(name);
+    @GetMapping("/rooms/{id}")
+    public BoardDto findRoom(@PathVariable long id) {
+        return chessService.findRoom(id);
     }
 
-    @PostMapping("/move")
-    @ResponseBody
-    public BoardDto move(@RequestParam String name,
+    @DeleteMapping("/rooms/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id, @RequestParam String password) {
+        chessService.delete(id, password);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/rooms/{id}/move")
+    public BoardDto move(@PathVariable long id,
         @RequestBody MoveDto moveDto) {
-        return chessService.move(name, moveDto);
+        return chessService.move(id, moveDto);
     }
 
-    @GetMapping("/status")
-    @ResponseBody
-    public Status status(@RequestParam String name) {
-        return chessService.status(name);
+    @GetMapping("/rooms/{id}/status")
+    public Status status(@PathVariable long id) {
+        return chessService.status(id);
     }
 
-    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class})
+    @ExceptionHandler({IllegalStateException.class, IllegalArgumentException.class, NoSuchElementException.class})
     public ResponseEntity<ExceptionResponseDto> handle(RuntimeException exception) {
         return ResponseEntity.badRequest()
+            .body(new ExceptionResponseDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ExceptionResponseDto> handleUnauthorized(RuntimeException exception) {
+        return new ResponseEntity<>(new ExceptionResponseDto(exception.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ExceptionResponseDto> handleRuntime(RuntimeException exception) {
+        return ResponseEntity.internalServerError()
             .body(new ExceptionResponseDto(exception.getMessage()));
     }
 }

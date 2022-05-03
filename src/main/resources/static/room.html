@@ -8,15 +8,43 @@
 <body>
 <div class="container">
     <h1 class="chess-header">🏛ROMA CHESS🏛</h1>
-    <div class="container">
+    <div class="chess-button-container">
+        <div id="create-form">
+            <div id="name-form">방 제목: <input id="roomName" type="text" name="name"></div>
+            비밀번호: <input type="password" id="roomPassword" name="password">
+            <input type="button" id="create-room" class="chess-btn" value="방 생성" onclick="create()">
+        </div>
+    </div>
+    <div id="index" class="chess-button-container">
+        <input type="button" id="showCreateForm" class="chess-btn" value="새 게임" onclick="showCreateForm()">
+        <input type="button" class="chess-btn" value="방 목록" onclick="rooms()">
+    </div>
+
+    <table id="rooms">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Game Status</th>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <div id="whole-board">
         <div class="chess-button-container">
             <div id="chess-status"></div>
             <div id="turn-status"></div>
-            <button class="chess-btn" onclick="start()">새 게임</button>
-            <button class="chess-btn" onclick="load()">불러오기</button>
+            <button class="chess-btn" onclick="newGame()">새 게임</button>
+            <button class="chess-btn" onclick="start()">게임 시작</button>
+            <button class="chess-btn" onclick="findRoom()">불러오기</button>
             <button class="chess-btn" onclick="end()">그만하기</button>
         </div>
+
         <div class="chess-board">
+
             <div></div>
             <div class="column-header">a</div>
             <div class="column-header">b</div>
@@ -126,6 +154,7 @@
             <div class="column-header">g</div>
             <div class="column-header">h</div>
             <div></div>
+
         </div>
     </div>
 </div>

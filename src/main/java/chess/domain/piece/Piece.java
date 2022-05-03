@@ -50,7 +50,7 @@ public abstract class Piece {
 
     public String convertToString() {
         if (isEmpty()) {
-            return "empty";
+            return color.getName();
         }
         return String.format("%s_%s", color.name().toLowerCase(), type.name().toLowerCase());
     }

@@ -30,7 +30,7 @@ public class GameDaoTest {
 
     @DisplayName("게임이 끝나지 않은 경우 end_flag는 false이다.")
     @Test
-    void findEndFlagById_false() {
+    void findRoomById_end_flag_false() {
         assertThat(gameDao.findRoomById(id).getEndFlag()).isFalse();
     }
 
@@ -41,10 +41,10 @@ public class GameDaoTest {
         assertThat(gameDao.findAllRoom()).hasSize(2);
     }
 
-    @DisplayName("turn칼럼에는 불가능한 turn이 저장되며 초깃값은 black이다.")
+    @DisplayName("turn칼럼에는 불가능한 turn이 저장되며 초깃값은 white이다.")
     @Test
-    void findTurnById() {
-        assertThat(gameDao.findRoomById(id).getTurn()).isEqualTo(Color.BLACK);
+    void findRoomById_turn_white() {
+        assertThat(gameDao.findRoomById(id).getTurn()).isEqualTo(Color.WHITE);
     }
 
     @DisplayName("turn 업데이트 성공")

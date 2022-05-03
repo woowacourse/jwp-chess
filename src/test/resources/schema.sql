@@ -5,7 +5,7 @@ drop table if exists game;
 create table game
 (
     id       int AUTO_INCREMENT PRIMARY KEY,
-    turn     varchar(10)  not null default 'black',
+    turn     varchar(10)  not null default 'white',
     end_flag tinyint(1) not null default false,
     title    varchar(100) not null,
     password varchar(100) not null

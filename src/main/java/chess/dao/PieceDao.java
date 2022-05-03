@@ -41,9 +41,9 @@ public class PieceDao {
         return new Pieces(pieces);
     }
 
-    public boolean exists(long gameId, String target) {
+    public boolean exists(long gameId, String position) {
         final String sql = "select exists (select game_id from piece where game_id = ? and position = ?)";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, gameId, target);
+        return jdbcTemplate.queryForObject(sql, Boolean.class, gameId, position);
     }
 
     public void deleteByGameIdAndPosition(long gameId, String position) {

@@ -1,5 +1,7 @@
 package chess.dto;
 
+import chess.domain.piece.Piece;
+
 public class PieceDto {
 
     private String symbol;
@@ -8,6 +10,10 @@ public class PieceDto {
     public PieceDto(String symbol, String color) {
         this.symbol = symbol;
         this.color = color;
+    }
+
+    public static PieceDto from(Piece piece) {
+        return new PieceDto(piece.getSymbol().name(), piece.getColor().name());
     }
 
     public String getSymbol() {

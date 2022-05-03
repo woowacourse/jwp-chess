@@ -11,14 +11,12 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
 import chess.domain.state.State;
+import chess.domain.state.StateName;
 import chess.dto.BoardDto;
 import chess.dto.GameDto;
-import chess.dto.PieceDto;
 import chess.dto.RoomDto;
 import chess.dto.StatusDto;
 import chess.entity.Game;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,11 +36,8 @@ public class ChessService {
 
     @Transactional
     public int insertGame(RoomDto roomDto, ChessBoard chessBoard) {
-        ChessGame chessGame = new ChessGame(chessBoard);
-        chessGame.playGameByCommand(GameCommand.of("start"));
-
-        int id = gameDao.save(new Game(roomDto.getTitle(), roomDto.getPassword(), chessGame.getState().getValue()));
-        boardDao.save(chessGame.getChessBoard(), id);
+        int id = gameDao.save(new Game(roomDto.getTitle(), roomDto.getPassword(), StateName.WHITE_TURN.getValue()));
+        boardDao.save(chessBoard, id);
         return id;
     }
 
@@ -54,24 +49,14 @@ public class ChessService {
 
     public BoardDto selectBoard(int id) {
         ChessBoard chessBoard = boardDao.findById(id);
-        Map<Position, Piece> pieces = chessBoard.getPieces();
-        Map<String, PieceDto> board = new HashMap<>();
-        for (Position position : pieces.keySet()) {
-            String key = position.getValue();
-            Piece piece = pieces.get(Position.of(key));
-            PieceDto pieceDto = new PieceDto(piece.getSymbol().name(), piece.getColor().name());
-            board.put(key, pieceDto);
-        }
-        return new BoardDto(board);
+        return BoardDto.from(chessBoard);
     }
 
     public String selectWinner(int gameId) {
-        State state = gameDao.findState(gameId);
         ChessBoard chessBoard = boardDao.findById(gameId);
 
-        ChessGame chessGame = new ChessGame(state, chessBoard);
-        if (chessGame.isEndGameByPiece()) {
-            return chessGame.getWinner().name();
+        if (chessBoard.isEnd()) {
+            return chessBoard.getWinner().name();
         }
         return null;
     }
@@ -89,21 +74,23 @@ public class ChessService {
 
     @Transactional
     public void movePiece(int gameId, String from, String to) {
+        ChessBoard chessBoard = boardDao.findById(gameId);
         ChessGame chessGame = new ChessGame(gameDao.findState(gameId), boardDao.findById(gameId));
+        playChessGame(from, to, chessGame);
+
+        gameDao.update(chessGame.getState().getValue(), gameId);
+        boardDao.update(Position.of(to), chessBoard.selectPiece(Position.of(from)), gameId);
+        boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameId);
+    }
+
+    private void playChessGame(String from, String to, ChessGame chessGame) {
         chessGame.playGameByCommand(GameCommand.of("move", from, to));
         chessGame.isEndGameByPiece();
-        gameDao.update(chessGame.getState().getValue(), gameId);
-
-        Map<String, Piece> pieces = chessGame.getChessBoard().toMap();
-        boardDao.update(Position.of(to), pieces.get(to), gameId);
-        boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameId);
     }
 
     @Transactional
     public void endGame(int gameId) {
-        ChessGame chessGame = new ChessGame(gameDao.findState(gameId), boardDao.findById(gameId));
-        chessGame.playGameByCommand(GameCommand.of("end"));
-        gameDao.update(chessGame.getState().getValue(), gameId);
+        gameDao.update(StateName.FINISH.getValue(), gameId);
     }
 
     @Transactional
@@ -127,7 +114,7 @@ public class ChessService {
     @Transactional
     public void restartGame(int gameId) {
         ChessBoard chessBoard = new ChessBoard(new NormalPiecesGenerator());
-        int id = gameDao.update("WhiteTurn", gameId);
+        int id = gameDao.update(StateName.WHITE_TURN.getValue(), gameId);
         boardDao.delete(gameId);
         boardDao.save(chessBoard, id);
     }

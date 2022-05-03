@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import chess.domain.BoardFixtures;
 import chess.domain.ChessBoard;
 import chess.domain.generator.InitBoardGenerator;
+import chess.domain.position.Position;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ public class WhiteTurnTest {
     void WhiteTurn에서_move실행_BlackTurn으로_상태가_변경된다() {
         State state = new WhiteTurn(new ChessBoard(new InitBoardGenerator()));
 
-        state = state.move("a2", "a3");
+        state = state.move(new Position("a2"), new Position("a3"));
 
         assertThat(state).isInstanceOf(BlackTurn.class);
     }
@@ -25,7 +26,7 @@ public class WhiteTurnTest {
     void WhiteTurn에서_move실행_King을_잡은경우_WhiteWin으로_상태가_변경된다() {
         State state = new WhiteTurn(BoardFixtures.generateBlackKingChessBoard());
 
-        state = state.move("a7", "a8");
+        state = state.move(new Position("a7"), new Position("a8"));
 
         assertThat(state).isInstanceOf(WhiteWin.class);
     }

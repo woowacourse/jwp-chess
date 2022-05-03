@@ -21,12 +21,18 @@ public class ChessGame {
         state = state.end();
     }
 
-    public void move(String source, String target) {
+    public void move(Position source, Position target) {
         state = state.move(source, target);
     }
 
     public boolean isRunning() {
         return state.isRunning();
+    }
+
+    public void checkRunning() {
+        if (isRunning()) {
+            throw new IllegalArgumentException("게임이 아직 진행중입니다.");
+        }
     }
 
     public boolean isFinished() {
@@ -48,5 +54,9 @@ public class ChessGame {
 
     public StateType getStateType() {
         return state.getStateType();
+    }
+
+    public Board board() {
+        return state.chessBoard().getBoard();
     }
 }

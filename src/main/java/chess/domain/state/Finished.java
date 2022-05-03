@@ -1,6 +1,7 @@
 package chess.domain.state;
 
 import chess.domain.ChessBoard;
+import chess.domain.position.Position;
 
 public abstract class Finished extends Started {
 
@@ -20,7 +21,7 @@ public abstract class Finished extends Started {
     }
 
     @Override
-    public final State move(String source, String target) {
+    public final State move(Position source, Position target) {
         throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_ERROR_MASSAGE);
     }
 

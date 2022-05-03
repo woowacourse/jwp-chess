@@ -3,6 +3,7 @@ package chess.domain.state;
 import chess.domain.ChessBoard;
 import chess.domain.Result;
 import chess.domain.generator.EmptyBoardGenerator;
+import chess.domain.position.Position;
 
 public class Ready extends Started {
 
@@ -24,7 +25,7 @@ public class Ready extends Started {
     }
 
     @Override
-    public State move(String source, String target) {
+    public State move(Position source, Position target) {
         throw new UnsupportedOperationException(ERROR_MESSAGE_GAME_NOT_START);
     }
 

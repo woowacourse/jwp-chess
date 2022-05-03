@@ -4,6 +4,7 @@ import chess.domain.Board;
 import chess.domain.ChessBoard;
 import chess.domain.ChessGame;
 import chess.domain.Color;
+import chess.domain.Game;
 import chess.domain.generator.InitBoardGenerator;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
@@ -73,20 +74,12 @@ public class ChessService {
     public void deleteGame(GameRequestDto gameRequestDto) {
         int gameId = gameRequestDto.getId();
         String password = gameRequestDto.getPassword();
-        String realPassword = gameDao.findPasswordById(gameId);
+        Game game = new Game(gameId, password);
 
-        validateDeleteGame(gameId, password, realPassword);
+        game.matchesPassword(gameDao.findPasswordById(gameId));
+        getChessGame(gameId).checkRunning();
 
         gameDao.deleteGameById(gameId);
-    }
-
-    private void validateDeleteGame(int gameId, String password, String realPassword) {
-        if (!realPassword.equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 잘못되었습니다.");
-        }
-        if (getChessGame(gameId).isRunning()) {
-            throw new IllegalArgumentException("게임이 아직 진행중입니다.");
-        }
     }
 
     private ChessGame getChessGame(int gameId) {
@@ -113,11 +106,12 @@ public class ChessService {
     }
 
     public MoveResponseDto getMoveResult(int gameId, MoveRequestDto moveRequestDto) {
-        ChessGame chessGame = getChessGame(gameId);
-
-        chessGame.move(moveRequestDto.getSource(), moveRequestDto.getTarget());
         Position sourcePosition = new Position(moveRequestDto.getSource());
         Position targetPosition = new Position(moveRequestDto.getTarget());
+
+        ChessGame chessGame = getChessGame(gameId);
+        chessGame.move(sourcePosition, targetPosition);
+
         move(gameId, chessGame, sourcePosition, targetPosition);
 
         return new MoveResponseDto(chessGame.isFinished());

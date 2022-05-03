@@ -5,7 +5,7 @@ public class RouteRequest {
     private final String source;
     private final String destination;
 
-    public RouteRequest() {
+    private RouteRequest() {
         this.source = null;
         this.destination = null;
     }

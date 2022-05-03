@@ -10,7 +10,7 @@ public class RoomRequest {
     private final String roomName;
     private final String password;
 
-    public RoomRequest() {
+    private RoomRequest() {
         this(null, null);
     }
 

@@ -7,7 +7,7 @@ public class RoomResponse {
     private final Long id;
     private final String roomName;
 
-    public RoomResponse() {
+    private RoomResponse() {
         this(null, null);
     }
 

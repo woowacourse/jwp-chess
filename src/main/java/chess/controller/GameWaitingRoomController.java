@@ -26,8 +26,8 @@ public class GameWaitingRoomController {
         this.chessGameService = chessGameService;
     }
 
-    @ExceptionHandler(Exception.class)
-    public ModelAndView exception(Exception e) {
+    @ExceptionHandler(RuntimeException.class)
+    public ModelAndView exception(RuntimeException e) {
         return getModelAndView(e.getMessage());
     }
 

@@ -27,8 +27,8 @@ public class ChessGameController {
         this.chessGameService = chessGameService;
     }
 
-    @ExceptionHandler(Exception.class)
-    public ModelAndView exception(HttpServletRequest request, Exception e) {
+    @ExceptionHandler(RuntimeException.class)
+    public ModelAndView exception(HttpServletRequest request, RuntimeException e) {
         long gameId = Long.parseLong(request.getRequestURI().split("/")[2]);
         return getModelWithGameMessage(e.getMessage(), "redirect:/game/" + gameId);
     }

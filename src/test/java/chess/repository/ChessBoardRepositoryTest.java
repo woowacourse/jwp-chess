@@ -1,68 +1,79 @@
 package chess.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import chess.model.board.Board;
 import chess.model.piece.Team;
 import chess.model.status.End;
 import chess.model.status.Ready;
 import chess.model.status.Status;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-@SpringBootTest
-@Transactional
+@DataJdbcTest
+@Sql("test-schema.sql")
 class ChessBoardRepositoryTest {
 
-    @Autowired
-    private ChessBoardRepository chessBoardRepository;
-    private Board board;
+    private final ChessBoardRepository chessBoardRepository;
 
-    @BeforeEach
-    void setup() {
-        board = chessBoardRepository.save(new Board(new Ready(), Team.WHITE));
+    @Autowired
+    ChessBoardRepositoryTest(JdbcTemplate jdbcTemplate) {
+        chessBoardRepository = new ChessBoardRepository(jdbcTemplate);
     }
 
     @Test
     void saveTest() {
-        board = chessBoardRepository.save(new Board(new Ready(), Team.BLACK));
-        assertThat(board.getStatus()).isInstanceOf(Ready.class);
-    }
+        //when
+        Board board = chessBoardRepository.save(new Board(new Ready(), Team.BLACK));
 
-    @Test
-    void deleteBoard() {
-        int affectedRow = chessBoardRepository.deleteById(board.getId());
-
-        assertThat(affectedRow).isEqualTo(1);
+        //then
+        assertThat(board).isNotNull();
     }
 
     @Test
     void getByIdTest() {
+        //given
+        Board board = chessBoardRepository.save(new Board(new Ready(), Team.BLACK));
+        //when
         final Board foundBoard = chessBoardRepository.getById(board.getId());
 
+        //then
         assertThat(foundBoard.getStatus()).isInstanceOf(Ready.class);
     }
 
     @Test
     void updateStatus() {
-        chessBoardRepository.updateStatus(board.getId(), new End());
-        Board dbBoard = chessBoardRepository.getById(this.board.getId());
-        assertThat(dbBoard.getStatus()).isInstanceOf(End.class);
+        //given
+        Board board = chessBoardRepository.save(new Board(new Ready(), Team.BLACK));
+        //when
+        int affectedRowCount = chessBoardRepository.updateStatus(board.getId(), new End());
+
+        //then
+        assertThat(affectedRowCount).isEqualTo(1);
     }
 
     @Test
     void updateTeam() {
-        chessBoardRepository.updateTeamById(board.getId(), Team.BLACK);
-        Board dbBoard = chessBoardRepository.getById(this.board.getId());
-        assertThat(dbBoard.getTeam()).isEqualTo(Team.BLACK);
+        //given
+        Board board = chessBoardRepository.save(new Board(new Ready(), Team.BLACK));
+        //when
+        int affectedRowCount = chessBoardRepository.updateTeamById(board.getId(), Team.BLACK);
+
+        //then
+        assertThat(affectedRowCount).isEqualTo(1);
     }
 
     @Test
     void getStatusById() {
+        //given
+        Board board = chessBoardRepository.save(new Board(new Ready(), Team.BLACK));
+        //when
         Status status = chessBoardRepository.getStatusById(board.getId());
+
+        //then
         assertThat(status.name()).isEqualTo("ready");
     }
 }

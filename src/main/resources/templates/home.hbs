@@ -9,7 +9,7 @@
 <div align="center">
     <div>
         <h3>방 만들기</h3>
-        <form id="roomForm" enctype="text/plain" action="/room" method="POST">
+        <form id="roomForm" action="/room" method="POST">
             <div>
                 <label> 방이름
                     <input type="text" id="roomName" name="roomName"/>
@@ -25,21 +25,33 @@
                     <input type="text" id="blackName" name="blackName"/>
                 </label>
             </div>
+            <div>
+                <label> 방 비밀번호
+                    <input type="password" id="password" name="password"/>
+                </label>
+            </div>
         </form>
         <button id="makeButton" onclick="makeRoom()">방만들기</button>
     </div>
     <div>
         <h3>방 목록</h3>
         {{#rooms}}
-        <table>
+        <table border = "1" bgcolor=#186aa8 bordercolor="white" style="color:#ffffff" >
             {{#roomsDto}}
             {{#this}}
-            <tr>
+            <th>방 이름</th>
+            <th>흰 말</th>
+            <th>검정말</th>
+            <th>게임 상태</th>
+            <th>삭제하기</th>
+            <tr align="center" bgcolor="white" style="color:#000000">
                 <td>
                     <a href="/room/{{roomId}}">{{roomTitle}}</a>
-                    {{whiteMember}}
-                    {{blackMember}}
                 </td>
+                    <td>{{whiteMember}}</td>
+                    <td>{{blackMember}}</td>
+                    <td>{{gameStatus}}</td>
+                    <td><button id="deleteRoom" onclick="deleteRoom({{roomId}}, '{{gameStatus}}')">삭제</button></td>
             </tr>
             {{/this}}
             {{/roomsDto}}

@@ -24,11 +24,11 @@ public class FakeMemberRepository implements MemberRepository<Member> {
 
     @Override
     public Member save(String name, int roomId) {
-        return null;
+        throw new UnsupportedOperationException("테스트에서 사용하지 않는 메서드입니다.");
     }
 
     @Override
     public void saveAll(List<Member> members, int roomId) {
-
+        throw new UnsupportedOperationException("테스트에서 사용하지 않는 메서드입니다.");
     }
 }

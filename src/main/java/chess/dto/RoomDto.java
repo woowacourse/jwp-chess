@@ -11,11 +11,14 @@ public class RoomDto {
     private final String whiteMember;
     private final String blackMember;
 
-    public RoomDto(int roomId, String roomTitle, List<Member> members) {
+    private final String gameStatus;
+
+    public RoomDto(int roomId, String roomTitle, List<Member> members, String gameStatus) {
         this.roomId = roomId;
         this.roomTitle = roomTitle;
         this.whiteMember = members.get(0).getName();
         this.blackMember = members.get(1).getName();
+        this.gameStatus = gameStatus;
     }
 
     public int getRoomId() {
@@ -32,5 +35,9 @@ public class RoomDto {
 
     public String getBlackMember() {
         return blackMember;
+    }
+
+    public String getGameStatus() {
+        return gameStatus;
     }
 }

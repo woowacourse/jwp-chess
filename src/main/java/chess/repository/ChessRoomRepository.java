@@ -1,7 +1,7 @@
 package chess.repository;
 
+import chess.dto.RoomContentDto;
 import chess.model.room.Room;
-import chess.model.status.Status;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -21,29 +21,32 @@ public class ChessRoomRepository implements RoomRepository<Room> {
     public ChessRoomRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
-    public List<Room> findAllByBoardStatus(Status status) {
+    public List<RoomContentDto> findAll() {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(
-                "SELECT * FROM room r " +
-                        "JOIN board b on r.board_id=b.id WHERE b.status=?", status.name());
-        List<Room> rooms = new ArrayList<>();
+                "SELECT r.id, r.title, r.board_id, b.status FROM room r " +
+                        "JOIN board b on r.board_id=b.id");
+        List<RoomContentDto> rooms = new ArrayList<>();
         while (sqlRowSet.next())
-            rooms.add(new Room(
+            rooms.add(new RoomContentDto(
                     sqlRowSet.getInt("id"),
                     sqlRowSet.getString("title"),
-                    sqlRowSet.getInt("board_id"))
+                    sqlRowSet.getInt("board_id"),
+                    sqlRowSet.getString("status"))
             );
         return rooms;
     }
 
     @Override
-    public Room save(Room room) {
+    public Room save(Room room, String password) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         simpleJdbcInsert.withTableName("room").usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("title", room.getTitle());
         parameters.put("board_id", room.getBoardId());
+        parameters.put("password", password);
 
         Number number = simpleJdbcInsert.executeAndReturnKey(parameters);
         return new Room(number.intValue(), room.getTitle(), room.getBoardId());
@@ -52,6 +55,11 @@ public class ChessRoomRepository implements RoomRepository<Room> {
     @Override
     public Room getById(int roomId) {
         return jdbcTemplate.queryForObject("SELECT * FROM room WHERE id=?", getRoomRowMapper(), roomId);
+    }
+
+    @Override
+    public String getPasswordById(int roomId) {
+        return jdbcTemplate.queryForObject("SELECT password FROM room WHERE id=?", String.class, roomId);
     }
 
     private RowMapper<Room> getRoomRowMapper() {

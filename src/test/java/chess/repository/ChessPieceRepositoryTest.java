@@ -11,52 +11,60 @@ import chess.model.status.Running;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
-@Transactional
+@DataJdbcTest
+@Sql("test-schema.sql")
 class ChessPieceRepositoryTest {
 
-    @Autowired
-    private ChessPieceRepository chessPieceRepository;
+    private final ChessPieceRepository chessPieceRepository;
+
+    private final ChessSquareRepository chessSquareRepository;
+
+    private final ChessBoardRepository chessBoardRepository;
+    private Board board;
+    private Square square;
 
     @Autowired
-    private ChessSquareRepository chessSquareRepository;
-    @Autowired
-    private ChessBoardRepository chessBoardRepository;
-    private int boardId;
-    private int squareId;
+    ChessPieceRepositoryTest(JdbcTemplate jdbcTemplate) {
+        this.chessPieceRepository = new ChessPieceRepository(jdbcTemplate);
+        this.chessSquareRepository = new ChessSquareRepository(jdbcTemplate);
+        this.chessBoardRepository = new ChessBoardRepository(jdbcTemplate);
+    }
 
     @BeforeEach
     void setup() {
-        final Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
-        this.boardId = board.getId();
-        final Square square = chessSquareRepository.save(new Square(File.A, Rank.TWO, board.getId()));
-        this.squareId = square.getId();
-        chessPieceRepository.save(new Pawn(Team.WHITE), squareId);
+        board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
+        square = chessSquareRepository.save(new Square(File.A, Rank.TWO, board.getId()));
     }
 
     @Test
     void saveTest() {
-        final Piece piece = chessPieceRepository.save(new Pawn(Team.WHITE), squareId);
+        //when
+        final Piece piece = chessPieceRepository.save(new Pawn(Team.WHITE), square.getId());
 
+        //then
         assertAll(
                 () -> assertThat(piece.name()).isEqualTo("p"),
-                () -> assertThat(piece.team()).isEqualTo(Team.WHITE),
-                () -> assertThat(piece.getSquareId()).isEqualTo(squareId)
+                () -> assertThat(piece.team()).isEqualTo(Team.WHITE)
         );
     }
 
     @Test
     void findBySquareId() {
-        Piece piece = chessPieceRepository.findBySquareId(squareId);
+        //given
+        chessPieceRepository.save(new Pawn(Team.WHITE), square.getId());
+        //when
+        Piece piece = chessPieceRepository.findBySquareId(square.getId());
 
+        //then
         assertAll(
                 () -> assertThat(piece.name()).isEqualTo("p"),
                 () -> assertThat(piece.team()).isEqualTo(Team.WHITE)
@@ -65,24 +73,37 @@ class ChessPieceRepositoryTest {
 
     @Test
     void deletePieceBySquareId() {
-        int affectedRows = chessPieceRepository.deletePieceBySquareId(squareId);
+        //given
+        chessPieceRepository.save(new Pawn(Team.WHITE), square.getId());
+        //when
+        int affectedRows = chessPieceRepository.deletePieceBySquareId(square.getId());
 
+        //then
         assertThat(affectedRows).isEqualTo(1);
     }
 
     @Test
     void updatePieceSquareId() {
-        final int originSquareId = squareId;
-        final int newSquareId = chessSquareRepository.save(new Square(File.A, Rank.FOUR, boardId)).getId();
-        int affectedRow = chessPieceRepository.updatePieceSquareId(originSquareId, newSquareId);
+        //given
+        chessPieceRepository.save(new Pawn(Team.WHITE), square.getId());
+        final int originalSquareId = square.getId();
+        final int newSquareId = chessSquareRepository.save(new Square(File.A, Rank.FOUR, board.getId())).getId();
 
+        //when
+        int affectedRow = chessPieceRepository.updatePieceSquareId(originalSquareId, newSquareId);
+
+        //then
         assertThat(affectedRow).isEqualTo(1);
     }
 
     @Test
     void getAllPiecesByBoardId() {
-        List<Piece> pieces = chessPieceRepository.getAllPiecesByBoardId(boardId);
+        //given
+        chessPieceRepository.save(new Pawn(Team.WHITE), square.getId());
+        //when
+        List<Piece> pieces = chessPieceRepository.getAllPiecesByBoardId(board.getId());
 
+        //then
         assertThat(pieces.size()).isEqualTo(1);
     }
 }

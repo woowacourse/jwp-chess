@@ -6,7 +6,6 @@ import chess.model.square.Rank;
 import chess.model.square.Square;
 import chess.repository.SquareRepository;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +13,7 @@ public class FakeSquareRepository implements SquareRepository<Square> {
 
     @Override
     public Square save(Square square) {
-        return null;
+        throw new UnsupportedOperationException("테스트에서 사용하지 않는 메서드입니다.");
     }
 
     @Override
@@ -24,16 +23,12 @@ public class FakeSquareRepository implements SquareRepository<Square> {
 
     @Override
     public int saveAllSquares(int boardId, Set<Square> squares) {
-        return 0;
+        throw new UnsupportedOperationException("테스트에서 사용하지 않는 메서드입니다.");
     }
 
     @Override
     public Map<Square, Piece> findAllSquaresAndPieces(int boardId) {
-        return null;
+        throw new UnsupportedOperationException("테스트에서 사용하지 않는 메서드입니다.");
     }
 
-    @Override
-    public List<Square> getPaths(List<Square> squares, int roomId) {
-        return null;
-    }
 }

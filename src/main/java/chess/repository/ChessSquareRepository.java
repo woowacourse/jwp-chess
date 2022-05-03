@@ -91,15 +91,6 @@ public class ChessSquareRepository implements SquareRepository<Square> {
                 resultSet.getInt("board_id"));
     }
 
-    @Override
-    public List<Square> getPaths(List<Square> squares, int roomId) {
-        List<Square> realSquares = new ArrayList<>();
-        for (Square square : squares) {
-            realSquares.add(getBySquareAndBoardId(square, roomId));
-        }
-        return realSquares;
-    }
-
     private RowMapper<Square> getRowMapper() {
         return (resultSet, rowNum) -> new Square(
                 resultSet.getInt("id"),

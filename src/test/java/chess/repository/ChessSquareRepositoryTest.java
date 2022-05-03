@@ -11,35 +11,40 @@ import chess.model.status.Running;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@SpringBootTest
-@Transactional
+@DataJdbcTest
+@Sql("test-schema.sql")
 class ChessSquareRepositoryTest {
 
-    @Autowired
-    private ChessSquareRepository repository;
-    @Autowired
-    private ChessBoardRepository chessBoardRepository;
+    private final ChessSquareRepository chessSquareRepository;
+    private final ChessBoardRepository chessBoardRepository;
     private int boardId;
     private Square square;
+
+    @Autowired
+    ChessSquareRepositoryTest(JdbcTemplate jdbcTemplate) {
+        this.chessSquareRepository = new ChessSquareRepository(jdbcTemplate);
+        this.chessBoardRepository = new ChessBoardRepository(jdbcTemplate);
+    }
 
     @BeforeEach
     void setup() {
         final Board board = chessBoardRepository.save(new Board(new Running(), Team.WHITE));
         this.boardId = board.getId();
-        this.square = repository.save(new Square(File.A, Rank.TWO, boardId));
+        this.square = chessSquareRepository.save(new Square(File.A, Rank.TWO, boardId));
     }
 
     @Test
     void save() {
-        final Square square = repository.save(new Square(File.B, Rank.TWO, boardId));
+        final Square square = chessSquareRepository.save(new Square(File.B, Rank.TWO, boardId));
 
         assertAll(
                 () -> assertThat(square.getFile()).isEqualTo(File.B),
@@ -49,7 +54,7 @@ class ChessSquareRepositoryTest {
 
     @Test
     void getBySquareTest() {
-        final Square square = repository.getBySquareAndBoardId(new Square(File.A, Rank.TWO), boardId);
+        final Square square = chessSquareRepository.getBySquareAndBoardId(new Square(File.A, Rank.TWO), boardId);
 
         assertAll(
                 () -> assertThat(square.getFile()).isEqualTo(File.A),
@@ -59,14 +64,14 @@ class ChessSquareRepositoryTest {
 
     @Test
     void saveAllSquares() {
-        int saveCount = repository.saveAllSquares(boardId, Initializer.initialize().keySet());
+        int saveCount = chessSquareRepository.saveAllSquares(boardId, Initializer.initialize().keySet());
 
         assertThat(saveCount).isEqualTo(64);
     }
 
     @Test
     void findAllSquaresAndPieces() {
-        Map<Square, Piece> all = repository.findAllSquaresAndPieces(boardId);
+        Map<Square, Piece> all = chessSquareRepository.findAllSquaresAndPieces(boardId);
 
         for (Square square : all.keySet()) {
             assertThat(all.get(square).name()).isEqualTo("p");

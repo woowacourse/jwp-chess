@@ -16,12 +16,12 @@ public class FakeBoardRepository implements BoardRepository<Board> {
 
     @Override
     public Board save(Board board) {
-        return new Board(1, new Running(), Team.WHITE);
+        return new Board(fakeAutoIncrementId, new Running(), Team.WHITE);
     }
 
     @Override
-    public int deleteById(int id) {
-        return 0;
+    public int deleteByRoomId(int id) {
+        return fakeAutoIncrementId;
     }
 
     @Override
@@ -31,21 +31,21 @@ public class FakeBoardRepository implements BoardRepository<Board> {
 
     @Override
     public int updateStatus(int boardId, Status status) {
-        return 0;
+        throw new UnsupportedOperationException("테스트에서 사용하지 않는 메서드입니다.");
     }
 
     @Override
     public int updateTeamById(int boardId, Team team) {
-        return 0;
+        throw new UnsupportedOperationException("테스트에서 사용하지 않는 메서드입니다.");
     }
 
     @Override
     public Status getStatusById(int boardId) {
-        return null;
+        return new Running();
     }
 
     @Override
     public Team getTeamById(int roomId) {
-        return null;
+        return Team.WHITE;
     }
 }

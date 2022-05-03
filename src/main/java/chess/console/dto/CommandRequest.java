@@ -1,11 +1,11 @@
 package chess.console.dto;
 
 import chess.console.controller.Command;
+import chess.domain.position.Position;
 import java.util.List;
 
 public class CommandRequest {
 
-    private static final String DEFAULT_POSITION = "";
     private static final int COMMAND_INDEX = 0;
     private static final int SOURCE_INDEX = 1;
     private static final int TARGET_INDEX = 2;
@@ -13,14 +13,14 @@ public class CommandRequest {
     private static final int MOVE_COMMAND_SIZE = 3;
 
     private final Command command;
-    private final String source;
-    private final String target;
+    private Position source;
+    private Position target;
 
     private CommandRequest(Command command) {
-        this(command, DEFAULT_POSITION, DEFAULT_POSITION);
+        this.command = command;
     }
 
-    private CommandRequest(Command command, String source, String target) {
+    private CommandRequest(Command command, Position source, Position target) {
         this.command = command;
         this.source = source;
         this.target = target;
@@ -31,12 +31,13 @@ public class CommandRequest {
         if (inputs.size() == 1) {
             return new CommandRequest(Command.from(inputs.get(COMMAND_INDEX)));
         }
-        return new CommandRequest(Command.from(inputs.get(COMMAND_INDEX)), inputs.get(SOURCE_INDEX), inputs.get(
-                TARGET_INDEX));
+        return new CommandRequest(Command.from(inputs.get(COMMAND_INDEX)),
+                new Position(inputs.get(SOURCE_INDEX)),
+                new Position(inputs.get(TARGET_INDEX)));
     }
 
     private static void validateLength(List<String> inputs) {
-        if(!(inputs.size() == DEFAULT_COMMAND_SIZE || inputs.size() == MOVE_COMMAND_SIZE)) {
+        if (!(inputs.size() == DEFAULT_COMMAND_SIZE || inputs.size() == MOVE_COMMAND_SIZE)) {
             throw new IllegalArgumentException("명령어의 형식이 잘못되었습니다.");
         }
     }
@@ -45,11 +46,11 @@ public class CommandRequest {
         return command;
     }
 
-    public String getSource() {
+    public Position getSource() {
         return source;
     }
 
-    public String getTarget() {
+    public Position getTarget() {
         return target;
     }
 }

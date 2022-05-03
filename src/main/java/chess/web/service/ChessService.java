@@ -126,9 +126,7 @@ public class ChessService {
         ChessGame chessGame = getChessGame(gameId);
 
         chessGame.move(movePositionsDto.getSource(), movePositionsDto.getTarget());
-        Position sourcePosition = new Position(movePositionsDto.getSource());
-        Position targetPosition = new Position(movePositionsDto.getTarget());
-        move(gameId, chessGame, sourcePosition, targetPosition);
+        move(gameId, chessGame, movePositionsDto.getSource(), movePositionsDto.getTarget());
 
         return new MoveResultDto(chessGame.isFinished());
     }

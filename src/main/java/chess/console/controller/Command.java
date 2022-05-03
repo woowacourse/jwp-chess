@@ -3,6 +3,7 @@ package chess.console.controller;
 import chess.console.view.OutputView;
 import chess.domain.ChessGame;
 import chess.domain.Color;
+import chess.domain.position.Position;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -30,9 +31,9 @@ public enum Command {
     });
 
     private final String type;
-    private final BiConsumer<ChessGame, List<String>> consumer;
+    private final BiConsumer<ChessGame, List<Position>> consumer;
 
-    Command(String type, BiConsumer<ChessGame, List<String>> consumer) {
+    Command(String type, BiConsumer<ChessGame, List<Position>> consumer) {
         this.type = type;
         this.consumer = consumer;
     }
@@ -44,7 +45,7 @@ public enum Command {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 명령입니다."));
     }
 
-    public void execute(ChessGame chessGame, String source, String target) {
+    public void execute(ChessGame chessGame, Position source, Position target) {
         consumer.accept(chessGame, List.of(source, target));
     }
 }

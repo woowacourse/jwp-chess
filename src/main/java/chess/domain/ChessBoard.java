@@ -25,16 +25,14 @@ public class ChessBoard {
         board.init();
     }
 
-    public void move(String source, String target) {
-        Position sourcePosition = new Position(source);
-        Position targetPosition = new Position(target);
-        validateSamePosition(sourcePosition, targetPosition);
+    public void move(Position source, Position target) {
+        validateSamePosition(source, target);
 
-        Piece sourcePiece = board.findPiece(sourcePosition);
+        Piece sourcePiece = board.findPiece(source);
         validateEmptyPiece(sourcePiece);
-        sourcePiece.validateMove(board, sourcePosition, targetPosition);
+        sourcePiece.validateMove(board, source, target);
 
-        board.movePiece(sourcePosition, targetPosition);
+        board.movePiece(source, target);
     }
 
     private void validateSamePosition(Position sourcePosition, Position targetPosition) {
@@ -53,8 +51,8 @@ public class ChessBoard {
         return board.calculateScore(color);
     }
 
-    public boolean isTurn(String source, Color color) {
-        Piece sourcePiece = board.findPiece(new Position(source));
+    public boolean isTurn(Position source, Color color) {
+        Piece sourcePiece = board.findPiece(source);
         return sourcePiece.isSameColor(color);
     }
 

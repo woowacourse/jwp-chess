@@ -1,20 +1,22 @@
 package chess.web.dto.board;
 
+import chess.domain.position.Position;
+
 public class MovePositionsDto {
 
-    private final String source;
-    private final String target;
+    private final Position source;
+    private final Position target;
 
-    public MovePositionsDto(String source, String target) {
+    public MovePositionsDto(Position source, Position target) {
         this.source = source;
         this.target = target;
     }
 
-    public String getSource() {
+    public Position getSource() {
         return source;
     }
 
-    public String getTarget() {
+    public Position getTarget() {
         return target;
     }
 }

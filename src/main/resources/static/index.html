@@ -4,27 +4,30 @@
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="/img/favicon.png"/>
     <link rel="stylesheet" href="/css/button.css">
+    <link rel="stylesheet" href="/css/roomCreatePopup.css">
+    <link rel="stylesheet" href="/css/room.css">
+    <script defer src="/js/index.js"></script>
     <title>체스</title>
 </head>
 <body>
-<h1>방 번호를 입력해주세요 ♟</h1>
-<input type="number" id="gameIdInput"/>
+<h1>Level 2, 웹 체스</h1>
+
 <div>
-    <button type="button" class="button-30" id="gameEnterButton">입장하기</button>
+    <button type="button" class="button-30" id="roomCreateButton">방 만들기</button>
 </div>
-<h2></h2>
-<script>
-    document.getElementById('gameEnterButton').addEventListener('click', () => {
-        const inputGameId = Number(document.getElementById('gameIdInput').value);
 
-        if (Number.isInteger(inputGameId) && inputGameId > 0) {
-            location.href = `/game/${inputGameId}`;
-            return;
-        }
+<div id="roomCreatePopup" class="invisible">
+    <h2>방 만들기</h2><br>
+    <input id="roomNameInput" type="text" placeholder="방 제목"/><br>
+    <input id="roomPasswordInput" type="password" placeholder="비밀번호"/><br>
+    <input id="whiteNameInput" type="text" placeholder="흰색 닉네임"/><br>
+    <input id="blackNameInput" type="text" placeholder="검정색 닉네임"/><br>
+    <button id="sendRoomCreateRequestButton" class="button-30" type="button">방 만들기</button>
+    <button id="closeRoomCreatePopupButton" class="button-30" type="button">취소</button>
+</div>
 
-        document.querySelector('h2').innerText = '양의 정수만 입력 가능합니다 😅';
-        setTimeout(() => document.querySelector('h2').innerText = '', 2000);
-    })
-</script>
+<div id="roomContainer">
+</div>
+
 </body>
 </html>

@@ -1,0 +1,16 @@
+#roomContainer {
+    border: 5px solid black;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin-top: 50px;
+    padding: 30px;
+}
+
+.room {
+    border: 5px solid pink;
+    height: 100px;
+    width: 45%;
+    margin: 0 auto;
+    margin-top: 25px;
+}

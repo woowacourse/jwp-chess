@@ -72,10 +72,6 @@ public final class Board {
         return board.containsKey(position);
     }
 
-    public boolean isTurnOf(Position from, Color currentTurn) {
-        return board.getOrDefault(from, Piece.EMPTY).isSameColor(currentTurn);
-    }
-
     public Map<Color, Double> getScore() {
         final Map<Color, Double> scoreByColor = calculateRawSum();
 

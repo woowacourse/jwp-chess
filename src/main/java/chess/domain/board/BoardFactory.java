@@ -6,14 +6,12 @@ import chess.domain.piece.King;
 import chess.domain.piece.Knight;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
-import chess.domain.piece.PieceFactory;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public final class BoardFactory {
@@ -67,13 +65,7 @@ public final class BoardFactory {
         return new Board(board);
     }
 
-    public static Board newInstance(Map<String, String> boardByGameId, Color color) {
-        final Map<Position, Piece> board = boardByGameId.entrySet()
-                .stream()
-                .map(entry -> Map.entry(
-                        Position.from(entry.getKey()),
-                        PieceFactory.getInstance(entry.getValue())))
-                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+    public static Board newInstance(Map<Position, Piece> board, Color color) {
         return new Board(board, color);
     }
 }

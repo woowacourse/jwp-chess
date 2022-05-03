@@ -1,3 +1,7 @@
+drop table if exists initialBoard;
+drop table if exists board;
+drop table if exists game;
+
 create table game
 (
     id            int auto_increment

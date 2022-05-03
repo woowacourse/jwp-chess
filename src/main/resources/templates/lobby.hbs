@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 미션</title>
+    <link rel="icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/src/lobby.css">
+</head>
+<body>
+<div class="main-container">
+    <h1>엘리의 체스 게임</h1>
+    <button class="create-modal-btn" onclick="openCreateModal()">게임 방 생성</button>
+    <h2>게임 방 목록</h2>
+    <ul class="room-list-group"></ul>
+
+    <div class="modal" id="create-modal">
+        <div class="modal-container">
+            <h1>게임 방 만들기</h1>
+            <br/>
+            <input type="text" id="create-input-name" placeholder="방 이름" maxlength="10"/>
+            <input type="password" id="create-input-password" placeholder="비밀번호" maxlength="20"/>
+            <button onclick="createRoom()">생성</button>
+            <button onclick="closeCreateModal()">취소</button>
+            <div class="error" id="create-modal-error"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="delete-modal">
+        <div class="modal-container">
+            <h1>게임 방 삭제하기</h1>
+            <br/>
+            <span id="delete-modal-name"></span>
+            <input type="password" id="delete-input-password" placeholder="비밀번호" maxlength="20"/>
+            <button onclick="deleteRoom()">삭제</button>
+            <button onclick="closeDeleteModal()">취소</button>
+            <div class="error" id="delete-modal-error"></div>
+        </div>
+    </div>
+</div>
+
+<script src="/src/lobby.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.service.RoomService;
+import chess.service.ChessService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,19 +8,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class ChessWebController {
 
-    private final RoomService roomService;
+    private final ChessService chessService;
 
-    public ChessWebController(final RoomService roomService) {
-        this.roomService = roomService;
+    public ChessWebController(final ChessService chessService) {
+        this.chessService = chessService;
     }
 
     @GetMapping("/")
     public String index() {
-        return "index";
+        return "lobby";
     }
 
-    @GetMapping("/room/{roomName}")
-    public String room(@PathVariable final String roomName) {
+    @GetMapping("/room/{roomId}")
+    public String room(@PathVariable final Long roomId) {
+        chessService.checkRoomExist(roomId);
         return "room";
     }
 }

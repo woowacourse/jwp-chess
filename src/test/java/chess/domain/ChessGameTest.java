@@ -10,6 +10,7 @@ import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Color;
 import chess.domain.chesspiece.King;
 import chess.domain.position.Position;
+import chess.exception.IllegalCommandException;
 import chess.result.MoveResult;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,8 +40,8 @@ class ChessGameTest {
 
         // then
         assertThatThrownBy(() -> chessGame.move(Position.from("a1"), Position.from("a2")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("게임이 시작되지 않았습니다.");
+                .isInstanceOf(IllegalCommandException.class)
+                .hasMessage("게임이 진행중일 때만 기물을 움직일 수 있습니다.");
     }
 
     @Test
@@ -85,8 +86,8 @@ class ChessGameTest {
 
         // then
         assertThatThrownBy(() -> chessGame.move(Position.from("a1"), Position.from("a2")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("게임이 시작되지 않았습니다.");
+                .isInstanceOf(IllegalCommandException.class)
+                .hasMessage("게임이 진행중일 때만 기물을 움직일 수 있습니다.");
     }
 
     @Test
@@ -98,8 +99,8 @@ class ChessGameTest {
 
         // then
         assertThatThrownBy(() -> chessGame.move(Position.from("a1"), Position.from("a2")))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("게임이 이미 종료되었습니다.");
+                .isInstanceOf(IllegalCommandException.class)
+                .hasMessage("게임이 진행중일 때만 기물을 움직일 수 있습니다.");
     }
 
     @Test
@@ -112,18 +113,5 @@ class ChessGameTest {
         assertThatThrownBy(() -> chessGame.calculateScore())
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("게임이 시작되지 않았습니다.");
-    }
-
-    @Test
-    @DisplayName("게임을 종료된 후 status 하면 예외가 터진다.")
-    void calculateScore_after_end() {
-        // given
-        final ChessGame chessGame = new ChessGame(ChessBoardFactory.createChessBoard());
-        chessGame.end();
-
-        // then
-        assertThatThrownBy(() -> chessGame.calculateScore())
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("게임이 이미 종료되었습니다.");
     }
 }

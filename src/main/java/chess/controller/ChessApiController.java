@@ -1,22 +1,16 @@
 package chess.controller;
 
-import chess.domain.Score;
-import chess.dto.ChessPieceDto;
-import chess.dto.CurrentTurnDto;
-import chess.dto.ErrorResponseDto;
-import chess.dto.MoveRequestDto;
-import chess.dto.RoomNameDto;
-import chess.result.EndResult;
-import chess.result.MoveResult;
+import chess.dto.request.MoveRequestDto;
+import chess.dto.request.RoomDeleteRequestDto;
+import chess.dto.request.RoomRequestDto;
+import chess.dto.response.PieceResponseDto;
+import chess.dto.response.RoomResponseDto;
+import chess.dto.response.ScoreResponseDto;
 import chess.service.ChessService;
-import chess.service.RoomService;
 import java.net.URI;
 import java.util.List;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,69 +20,65 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/rooms")
+@RequestMapping("/api/rooms")
 public class ChessApiController {
 
-    private final RoomService roomService;
     private final ChessService chessService;
 
-    public ChessApiController(final RoomService roomService, final ChessService chessService) {
-        this.roomService = roomService;
+    public ChessApiController(final ChessService chessService) {
         this.chessService = chessService;
     }
 
     @GetMapping
-    public ResponseEntity<List<RoomNameDto>> findAllRoomName() {
-        final List<RoomNameDto> roomNames = roomService.findAllRoomName();
-        return ResponseEntity.ok(roomNames);
+    public ResponseEntity<List<RoomResponseDto>> loadAllRoom() {
+        final List<RoomResponseDto> rooms = chessService.loadAllRoom();
+        return ResponseEntity.ok(rooms);
     }
 
     @PostMapping
-    public ResponseEntity createRoom(@RequestBody final RoomNameDto roomNameDto) {
-        roomService.createRoom(roomNameDto);
-        return ResponseEntity.created(URI.create("/rooms/" + roomNameDto.getName())).build();
+    public ResponseEntity<RoomResponseDto> createRoom(@RequestBody final RoomRequestDto roomRequestDto) {
+        final RoomResponseDto roomResponseDto = chessService.createRoom(roomRequestDto);
+        return ResponseEntity.created(URI.create("/rooms/" + roomResponseDto.getId()))
+                .body(roomResponseDto);
     }
 
-    @DeleteMapping("/{roomName}")
-    public ResponseEntity deleteRoom(@PathVariable final String roomName) {
-        roomService.deleteRoom(roomName);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/{id}")
+    public ResponseEntity<RoomResponseDto> loadRoom(@PathVariable Long id) {
+        final RoomResponseDto room = chessService.loadRoom(id);
+        return ResponseEntity.ok(room);
     }
 
-    @GetMapping("/{roomName}/pieces")
-    public ResponseEntity<List<ChessPieceDto>> findPieces(@PathVariable final String roomName) {
-        final List<ChessPieceDto> chessPieces = chessService.findAllPiece(roomName);
-        return ResponseEntity.ok(chessPieces);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRoom(@PathVariable final Long id,
+                                        @RequestBody final RoomDeleteRequestDto roomDeleteRequestDto) {
+        chessService.deleteRoom(id, roomDeleteRequestDto);
+        return ResponseEntity.noContent()
+                .build();
     }
 
-    @PostMapping("/{roomName}/pieces")
-    public ResponseEntity createPieces(@PathVariable final String roomName) {
-        chessService.initPiece(roomName);
-        return ResponseEntity.created(URI.create("/rooms/" + roomName + "/pieces")).build();
+    @GetMapping("/{id}/pieces")
+    public ResponseEntity<List<PieceResponseDto>> loadAllPiece(@PathVariable Long id) {
+        final List<PieceResponseDto> pieces = chessService.loadAllPiece(id);
+        return ResponseEntity.ok(pieces);
     }
 
-    @PatchMapping("/{roomName}/pieces")
-    public ResponseEntity<MoveResult> movePiece(@PathVariable final String roomName,
-                                                @RequestBody final MoveRequestDto moveRequestDto) {
-        final MoveResult moveResult = chessService.move(roomName, moveRequestDto);
-        return ResponseEntity.ok(moveResult);
+    @PatchMapping("/{id}/pieces")
+    public ResponseEntity<Void> movePiece(@PathVariable Long id, @RequestBody final MoveRequestDto moveRequestDto) {
+        chessService.movePiece(id, moveRequestDto);
+        return ResponseEntity.ok()
+                .build();
     }
 
-    @GetMapping("/{roomName}/scores")
-    public ResponseEntity<Score> findScore(@PathVariable final String roomName) {
-        final Score score = chessService.findScore(roomName);
-        return ResponseEntity.ok(score);
+    @GetMapping("/{id}/scores")
+    public ResponseEntity<ScoreResponseDto> loadScore(@PathVariable final Long id) {
+        final ScoreResponseDto scoreResponseDto = chessService.loadScore(id);
+        return ResponseEntity.ok(scoreResponseDto);
     }
 
-    @GetMapping("/{roomName}/turn")
-    public ResponseEntity<CurrentTurnDto> findTurn(@PathVariable final String roomName) {
-        final CurrentTurnDto currentTurn = roomService.findCurrentTurn(roomName);
-        return ResponseEntity.ok(currentTurn);
-    }
-
-    @GetMapping("/{roomName}/result")
-    public ResponseEntity<EndResult> findResult(@PathVariable final String roomName) {
-        final EndResult endResult = chessService.result(roomName);
-        return ResponseEntity.ok(endResult);
+    @PatchMapping("/{id}/end")
+    public ResponseEntity<Void> endGame(@PathVariable final long id) {
+        chessService.end(id);
+        return ResponseEntity.ok()
+                .build();
     }
 }

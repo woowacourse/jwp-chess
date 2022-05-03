@@ -33,9 +33,10 @@ public enum GameStatus {
         if (this.equals(READY)) {
             throw new IllegalArgumentException("게임이 시작되지 않았습니다.");
         }
-        if (isEnd()) {
-            throw new IllegalArgumentException("게임이 이미 종료되었습니다.");
-        }
+    }
+
+    public boolean isPlaying() {
+        return this.equals(PLAYING);
     }
 
     public boolean isEnd() {

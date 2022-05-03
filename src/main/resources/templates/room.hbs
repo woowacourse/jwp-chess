@@ -7,225 +7,105 @@
     <link rel="stylesheet" href="/src/room.css">
 </head>
 <body>
-
-<div id="chessBoard" class="outer_box">
-
-    <div class="inner_box white" id="a8"></div>
-    <div class="inner_box black" id="b8"></div>
-    <div class="inner_box white" id="c8"></div>
-    <div class="inner_box black" id="d8"></div>
-    <div class="inner_box white" id="e8"></div>
-    <div class="inner_box black" id="f8"></div>
-    <div class="inner_box white" id="g8"></div>
-    <div class="inner_box black" id="h8"></div>
-
-    <div class="inner_box black" id="a7"></div>
-    <div class="inner_box white" id="b7"></div>
-    <div class="inner_box black" id="c7"></div>
-    <div class="inner_box white" id="d7"></div>
-    <div class="inner_box black" id="e7"></div>
-    <div class="inner_box white" id="f7"></div>
-    <div class="inner_box black" id="g7"></div>
-    <div class="inner_box white" id="h7"></div>
-
-    <div class="inner_box white" id="a6"></div>
-    <div class="inner_box black" id="b6"></div>
-    <div class="inner_box white" id="c6"></div>
-    <div class="inner_box black" id="d6"></div>
-    <div class="inner_box white" id="e6"></div>
-    <div class="inner_box black" id="f6"></div>
-    <div class="inner_box white" id="g6"></div>
-    <div class="inner_box black" id="h6"></div>
-
-    <div class="inner_box black" id="a5"></div>
-    <div class="inner_box white" id="b5"></div>
-    <div class="inner_box black" id="c5"></div>
-    <div class="inner_box white" id="d5"></div>
-    <div class="inner_box black" id="e5"></div>
-    <div class="inner_box white" id="f5"></div>
-    <div class="inner_box black" id="g5"></div>
-    <div class="inner_box white" id="h5"></div>
-
-    <div class="inner_box white" id="a4"></div>
-    <div class="inner_box black" id="b4"></div>
-    <div class="inner_box white" id="c4"></div>
-    <div class="inner_box black" id="d4"></div>
-    <div class="inner_box white" id="e4"></div>
-    <div class="inner_box black" id="f4"></div>
-    <div class="inner_box white" id="g4"></div>
-    <div class="inner_box black" id="h4"></div>
-
-    <div class="inner_box black" id="a3"></div>
-    <div class="inner_box white" id="b3"></div>
-    <div class="inner_box black" id="c3"></div>
-    <div class="inner_box white" id="d3"></div>
-    <div class="inner_box black" id="e3"></div>
-    <div class="inner_box white" id="f3"></div>
-    <div class="inner_box black" id="g3"></div>
-    <div class="inner_box white" id="h3"></div>
-
-    <div class="inner_box white" id="a2"></div>
-    <div class="inner_box black" id="b2"></div>
-    <div class="inner_box white" id="c2"></div>
-    <div class="inner_box black" id="d2"></div>
-    <div class="inner_box white" id="e2"></div>
-    <div class="inner_box black" id="f2"></div>
-    <div class="inner_box white" id="g2"></div>
-    <div class="inner_box black" id="h2"></div>
-
-    <div class="inner_box black" id="a1"></div>
-    <div class="inner_box white" id="b1"></div>
-    <div class="inner_box black" id="c1"></div>
-    <div class="inner_box white" id="d1"></div>
-    <div class="inner_box black" id="e1"></div>
-    <div class="inner_box white" id="f1"></div>
-    <div class="inner_box black" id="g1"></div>
-    <div class="inner_box white" id="h1"></div>
-</div>
-<div class="score_board">
-    <div class="turn" id="turn">
-        <div class="turn_box" id="black_turn">
-            <img src="/images/king_black.png" height="128" width="128"/>
-            <div class="win_text" id="black_win">WIN!</div>
+<div class="main-container">
+    <h1 class="name"></h1>
+    <div class="info-container">
+        <div class="turn-group" id="turn">
+            <div class="turn-box" id="white_turn">
+                <img id="white-turn-image" src="/images/king_white.png"/>
+                <div id="whiteScore"></div>
+                <div class="win_text" id="white_win">WIN!</div>
+            </div>
+            <div class="turn-box" id="black_turn">
+                <img id="black-turn-image" src="/images/king_black.png"/>
+                <div id="blackScore"></div>
+                <div class="win_text" id="black_win">WIN!</div>
+            </div>
+            <div class="draw_text" id="draw">DRAW!</div>
         </div>
-        <div class="turn_box" id="white_turn">
-            <img src="/images/king_white.png" height="128" width="128"/>
-            <div class="win_text" id="white_win">WIN!</div>
+        <div class="menu-group">
+            <button onclick="endGame()">종료</button>
+            <button onclick="exitRoom()">나가기</button>
         </div>
-        <div class="draw_text" id="draw">DRAW!</div>
     </div>
-    <div class="inner_score">
-        <div class="score" id="whiteScore"></div>
-        <div class="score" id="blackScore"></div>
-    </div>
-    <div class="inner_score">
-        <button class="ui-button" id="start" onclick="exitRoom()">나가기</button>
-        <button class="ui-button" id="end" onclick="end()">종료</button>
-    </div>
-    <div class="inner_score">
-        <div class="error" id="error"></div>
-    </div>
+
+    <section id="chessBoard" class="outer-box">
+        <div class="inner-box white" id="a8"></div>
+        <div class="inner-box black" id="b8"></div>
+        <div class="inner-box white" id="c8"></div>
+        <div class="inner-box black" id="d8"></div>
+        <div class="inner-box white" id="e8"></div>
+        <div class="inner-box black" id="f8"></div>
+        <div class="inner-box white" id="g8"></div>
+        <div class="inner-box black" id="h8"></div>
+
+        <div class="inner-box black" id="a7"></div>
+        <div class="inner-box white" id="b7"></div>
+        <div class="inner-box black" id="c7"></div>
+        <div class="inner-box white" id="d7"></div>
+        <div class="inner-box black" id="e7"></div>
+        <div class="inner-box white" id="f7"></div>
+        <div class="inner-box black" id="g7"></div>
+        <div class="inner-box white" id="h7"></div>
+
+        <div class="inner-box white" id="a6"></div>
+        <div class="inner-box black" id="b6"></div>
+        <div class="inner-box white" id="c6"></div>
+        <div class="inner-box black" id="d6"></div>
+        <div class="inner-box white" id="e6"></div>
+        <div class="inner-box black" id="f6"></div>
+        <div class="inner-box white" id="g6"></div>
+        <div class="inner-box black" id="h6"></div>
+
+        <div class="inner-box black" id="a5"></div>
+        <div class="inner-box white" id="b5"></div>
+        <div class="inner-box black" id="c5"></div>
+        <div class="inner-box white" id="d5"></div>
+        <div class="inner-box black" id="e5"></div>
+        <div class="inner-box white" id="f5"></div>
+        <div class="inner-box black" id="g5"></div>
+        <div class="inner-box white" id="h5"></div>
+
+        <div class="inner-box white" id="a4"></div>
+        <div class="inner-box black" id="b4"></div>
+        <div class="inner-box white" id="c4"></div>
+        <div class="inner-box black" id="d4"></div>
+        <div class="inner-box white" id="e4"></div>
+        <div class="inner-box black" id="f4"></div>
+        <div class="inner-box white" id="g4"></div>
+        <div class="inner-box black" id="h4"></div>
+
+        <div class="inner-box black" id="a3"></div>
+        <div class="inner-box white" id="b3"></div>
+        <div class="inner-box black" id="c3"></div>
+        <div class="inner-box white" id="d3"></div>
+        <div class="inner-box black" id="e3"></div>
+        <div class="inner-box white" id="f3"></div>
+        <div class="inner-box black" id="g3"></div>
+        <div class="inner-box white" id="h3"></div>
+
+        <div class="inner-box white" id="a2"></div>
+        <div class="inner-box black" id="b2"></div>
+        <div class="inner-box white" id="c2"></div>
+        <div class="inner-box black" id="d2"></div>
+        <div class="inner-box white" id="e2"></div>
+        <div class="inner-box black" id="f2"></div>
+        <div class="inner-box white" id="g2"></div>
+        <div class="inner-box black" id="h2"></div>
+
+        <div class="inner-box black" id="a1"></div>
+        <div class="inner-box white" id="b1"></div>
+        <div class="inner-box black" id="c1"></div>
+        <div class="inner-box white" id="d1"></div>
+        <div class="inner-box black" id="e1"></div>
+        <div class="inner-box white" id="f1"></div>
+        <div class="inner-box black" id="g1"></div>
+        <div class="inner-box white" id="h1"></div>
+    </section>
+
+    <div class="error" id="error"></div>
 </div>
 
-<script>
-    let from = "";
-    let to = "";
-    let roomName = "{{roomName}}";
-
-    fetchPieces();
-    fetchScores();
-    fetchTurn();
-
-    chessBoard.addEventListener("click", ({target: {id}}) => {
-        if (from === "") {
-            from = id;
-        } else if (to === "") {
-            to = id;
-            move();
-            from = "";
-            to = "";
-        }
-    })
-
-    async function move() {
-        document.getElementById("error").innerText = "";
-
-        const res = await fetch(`/rooms/${roomName}/pieces`, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: "PATCH",
-            body: JSON.stringify({from: `${from}`, to: `${to}`})
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-            document.getElementById("error").innerText = data.message;
-        }
-
-        fetchPieces();
-        fetchScores();
-        fetchTurn();
-    }
-
-    async function end() {
-        const res = await fetch(`/rooms/${roomName}/result`);
-        const data = await res.json();
-
-        if (!res.ok) {
-            document.getElementById("error").innerText = data.message;
-            return;
-        }
-
-        let winColor = "";
-        if (data.score.whiteScore > data.score.blackScore) {
-            winColor = "white";
-        } else if (data.score.whiteScore < data.score.blackScore) {
-            winColor = "black";
-        } else {
-            winColor = "draw";
-        }
-        let element = document.getElementById(winColor);
-        if (winColor !== "draw") {
-            element = document.getElementById(winColor + "_win");
-        }
-        element.style.visibility = "visible";
-    }
-
-    function exitRoom() {
-        window.location.href = "/";
-    }
-
-    async function fetchPieces() {
-        clearBoard();
-
-        const res = await fetch(`/rooms/${roomName}/pieces`);
-        const datas = await res.json();
-
-        datas.forEach(data => {
-            const element = document.getElementById(data.position);
-            const img = document.createElement("img");
-            img.src = `/images/${data.pieceType}_${data.color.toLocaleLowerCase()}.png`;
-            img.id = `${data.position}`;
-            img.alt = "piece";
-            img.className = "piece_img";
-            element.appendChild(img);
-        });
-    }
-
-
-    async function fetchScores() {
-        const res = await fetch(`/rooms/${roomName}/scores`);
-        const data = await res.json();
-
-        if (!res.ok) {
-            document.getElementById("error").innerText = data.message;
-            return;
-        }
-
-        document.getElementById('whiteScore').innerText = `WHITE 점수 : ${data.whiteScore}`;
-        document.getElementById('blackScore').innerText = `BLACK 점수 : ${data.blackScore}`;
-    }
-
-    async function fetchTurn() {
-        let res = await fetch(`/rooms/${roomName}/turn`);
-        res = await res.json();
-
-        const turns = document.getElementById("turn");
-        for (let i = 0; i < 2; i++) {
-            turns.children[i].style.boxShadow = "none";
-        }
-        const currentTurn = document.getElementById(res.currentTurn.toLowerCase() + "_turn");
-        currentTurn.style.boxShadow = "0 0 10px 2px darkred";
-    }
-
-    function clearBoard() {
-        const chessBoard = document.getElementById("chessBoard");
-        for (let i = 0; i < chessBoard.children.length; i++) {
-            chessBoard.children[i].innerHTML = `<div id=${chessBoard.children[i].id}></div>`
-        }
-    }
-</script>
-
+<script src="/src/room.js"></script>
 </body>
 </html>

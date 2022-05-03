@@ -29,7 +29,7 @@ public class GameService {
     public void move(int boardId, CommendDto commendDto) {
         String source = commendDto.getSource();
         String target = commendDto.getTarget();
-        Board board = gameRepository.loadBoard(boardId);
+        Board board = gameRepository.findBoardByBoardId(boardId);
         board.move(source, target);
         gameRepository.movePiece(boardId, board, source, target);
     }
@@ -41,16 +41,16 @@ public class GameService {
     }
 
     public BoardDto gameStateAndPieces(int boardId) {
-        Board board = gameRepository.loadBoard(boardId);
+        Board board = gameRepository.findBoardByBoardId(boardId);
         return new BoardDto(boardId, board);
     }
 
     public ResultDto gameResult(int boardId) {
-        return getResultDto(gameRepository.loadBoard(boardId));
+        return getResultDto(gameRepository.findBoardByBoardId(boardId));
     }
 
     public ResultDto gameFinalResult(int boardId) {
-        return getFinalResultDto(gameRepository.loadBoard(boardId));
+        return getFinalResultDto(gameRepository.findBoardByBoardId(boardId));
     }
 
     private ResultDto getResultDto(Board board) {

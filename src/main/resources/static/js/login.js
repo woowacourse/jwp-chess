@@ -82,7 +82,7 @@ function fetchNewRoom() {
             if (res.message) {
                 throw new Error(res.message);
             }
-            window.location.href = res.url;
+            window.location.href = "/rooms/" + res.id;
         })
         .catch(err => {
             showErrorMessage(err.message);
@@ -100,7 +100,7 @@ function fetchDeleteRoom() {
             if (res.message) {
                 throw new Error(res.message);
             }
-            window.location.href = res.url;
+            window.location.reload();
         })
         .catch(err => {
             document.getElementById('confirm-password').value = '';

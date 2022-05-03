@@ -1,13 +1,11 @@
 package chess.controller;
 
-import chess.domain.Room;
+import chess.dto.BoardDto;
+import chess.dto.RoomDto;
 import chess.dto.RoomResponseDto;
 import chess.service.GameService;
 import chess.service.RoomService;
-import chess.dto.BoardDto;
-import chess.dto.RoomDto;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,9 +33,8 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createRoom(RoomDto roomDto) {
-        RoomResponseDto roomResponseDto = roomService.create(roomDto);
-        return ResponseEntity.ok(Map.of("url", "/rooms/" + roomResponseDto.getId()));
+    public ResponseEntity<RoomResponseDto> createRoom(RoomDto roomDto) {
+        return ResponseEntity.ok(roomService.create(roomDto));
     }
 
     @GetMapping("/{roomId}")
@@ -47,9 +44,9 @@ public class RoomController {
     }
 
     @DeleteMapping("/{roomId}")
-    public ResponseEntity<Map<String, String>> deleteRoom(@PathVariable int roomId, @RequestParam String password) {
+    public ResponseEntity<Void> deleteRoom(@PathVariable int roomId, @RequestParam String password) {
         roomService.delete(roomId, password);
-        return ResponseEntity.ok(Map.of("url", "/"));
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping(value = "/{roomId}/new")

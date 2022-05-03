@@ -45,20 +45,14 @@ public class GameRepository {
 
     public Board findBoardByRoomId(int roomId) {
         int boardId = boardDao.findBoardIdByRoom(roomId).get();
-
-        Map<Position, Piece> pieces = new HashMap<>();
-        for (PieceDto pieceDto : pieceDao.findAll(boardId)) {
-            pieces.put(Position.of(pieceDto.getPosition()), PieceFactory.build(pieceDto));
-        }
-        Board board = new Board(() -> pieces, boardDao.getTurn(boardId));
-        return board;
+        return findBoardByBoardId(boardId);
     }
 
     public void updateBoardState(Board board, int boardId) {
         boardDao.updateState(boardId, getGameStateDto(board));
     }
 
-    public Board loadBoard(int boardId) {
+    public Board findBoardByBoardId(int boardId) {
         Map<Position, Piece> pieces = new HashMap<>();
         for (PieceDto pieceDto : pieceDao.findAll(boardId)) {
             pieces.put(Position.of(pieceDto.getPosition()), PieceFactory.build(pieceDto));
@@ -88,7 +82,7 @@ public class GameRepository {
     }
 
     private BoardDto gameStateAndPieces(int boardId) {
-        Board board = loadBoard(boardId);
+        Board board = findBoardByBoardId(boardId);
         return new BoardDto(boardId, board);
     }
 

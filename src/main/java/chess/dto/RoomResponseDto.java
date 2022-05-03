@@ -16,6 +16,10 @@ public class RoomResponseDto {
         return new RoomResponseDto(room.getId(), room.getName());
     }
 
+    public static RoomResponseDto of(long id, Room room) {
+        return new RoomResponseDto(id, room.getName());
+    }
+
     public long getId() {
         return id;
     }

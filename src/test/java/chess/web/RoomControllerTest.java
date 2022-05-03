@@ -39,7 +39,7 @@ class RoomControllerTest extends SpringBootTestConfig {
         final String password = "password";
 
         RestAssured.given().log().all()
-                .formParam("name", name, "password", password)
+                .formParams("name", name, "password", password)
                 .when().post("/rooms")
                 .then().log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());

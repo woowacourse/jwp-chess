@@ -28,8 +28,9 @@ public class RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int save(String name, String password) {
-        return insertActor.executeAndReturnKey(Map.of("name", name, "password", password)).intValue();
+    public int save(Room room) {
+        return insertActor.executeAndReturnKey(
+                Map.of("name", room.getName(), "password", room.getPassword())).intValue();
     }
 
     public List<Room> findAll() {

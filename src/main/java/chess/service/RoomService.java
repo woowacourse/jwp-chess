@@ -24,8 +24,9 @@ public class RoomService {
     }
 
     public RoomResponseDto create(RoomDto roomDto) {
-        int id = roomDao.save(roomDto.getName(), roomDto.getPassword());
-        return RoomResponseDto.from(roomDao.findById(id));
+        Room room = new Room(roomDto.getName(), roomDto.getPassword());
+        int id = roomDao.save(room);
+        return RoomResponseDto.of(id, room);
     }
 
     public void delete(int roomId, String password) {
@@ -43,7 +44,7 @@ public class RoomService {
     public List<RoomResponseDto> findRooms() {
         List<Room> rooms = roomDao.findAll();
         return rooms.stream()
-                .map(room -> RoomResponseDto.from(room))
+                .map(RoomResponseDto::from)
                 .collect(Collectors.toList());
     }
 

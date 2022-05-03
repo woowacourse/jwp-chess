@@ -1,20 +1,16 @@
 async function onloadIndexBody() {
-    //1) GET 요청
     let rooms = await fetch("/api/chess/rooms/")
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         })
     rooms = await rooms.json();
-    // console.log(rooms.roomResponseDtos);
     let roomSpace = document.querySelector("ul.class-list");
     Object.values(rooms.roomResponseDtos).forEach(function (value) {
 
-        // console.log(value.name);
         //li-시작------------------------------------------------
         const li = document.createElement("li");
         li.className = "class-card";
-        // li.textContent = value.name
 
         //li-img
         const img = document.createElement("img");
@@ -42,8 +38,8 @@ async function onloadIndexBody() {
 
         const divInnerFirstDelete = document.createElement("div");
         divInnerFirstDelete.className = "class-delete";
-        divInnerFirstDelete.setAttribute("onclick", "deleteRoom(" + value.id + ");");
-        divInnerFirstDelete.innerText = "삭제";
+        divInnerFirstDelete.setAttribute("onclick", "endRoom(" + value.id + ");");
+        divInnerFirstDelete.innerText = "종료";
 
         divInnerFirst.appendChild(divInnerFirstId);
         divInnerFirst.appendChild(divInnerFirstUpdate);
@@ -80,26 +76,32 @@ async function onloadIndexBody() {
 
 async function createRoom() {
     const roomName = window.prompt("방 제목을 중복되지 않도록 입력해주세요.");
-
-    //1) dto의 필드명과 일치하도록 body안에 데이터 만들기
-    const bodyValue = {
-        name: roomName
+    if (roomName === null | roomName === "") {
+        alert("방 제목은 빈칸일 수 없습니다.")
+        return;
     }
-    //2) POST 요청
-    let response = await fetch("/api/chess/rooms/", {
+
+    const password = window.prompt("비밀번호를 입력해주세요.");
+    if (password === null | password === "") {
+        alert("비밀번호는 빈칸일 수 없습니다.")
+        return;
+    }
+
+    const bodyValue = {
+        name: roomName,
+        password: password
+    }
+    await fetch("/api/chess/rooms/", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
             'Accept': 'application/json'
-        },
-        body: JSON.stringify(bodyValue)
+        }, body: JSON.stringify(bodyValue)
     })
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         });
-
-    // console.log(response);
 
     window.location.reload();
 }
@@ -107,64 +109,72 @@ async function createRoom() {
 async function handleErrors(response) {
     if (!response.ok) {
         let message = await response.json();
-        // console.log(response)
         throw Error(message.errorMessage);
     }
     return response;
 }
 
 async function enterRoom(id) {
-    let response = await fetch("/api/chess/rooms/" + id + "/enter")
+    let response = await fetch("/api/chess/rooms/" + id)
         .then(handleErrors)
         .catch(function (error) {
             alert(error.message);
         })
-    // console.log("response>>>", response);
-    // controller에서 ok/notFound 나눠서 처리
-    // -> front에서 response.ok아닐시 처리되도록 handleErrors()가 처리해줌
-    // -> 여긴 ok로 통과상태니 그냥 redirect
+
     window.location.replace("/game.html?id=" + id);
 }
 
+async function endRoom(id) {
+    const password = window.prompt("비밀번호를 입력해주세요.");
+    if (password === null | password === "") {
+        alert("비밀번호는 빈칸일 수 없습니다.")
+        return;
+    }
 
-function updateRoomName(id) {
+    const bodyValue = {
+        password: password
+    }
 
-    const roomName = window.prompt("바꿀 방 제목을 입력해주세요");
+    await fetch("/api/chess/rooms/" + id + "/end", {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8',
+            'Accept': 'application/json'
+        }, body: JSON.stringify(bodyValue)
+    }).then(handleErrors)
+        .catch(function (error) {
+            alert(error.message)
+        });
 
-    let f = document.createElement("form");
-    f.setAttribute("method", "post");
-    f.setAttribute("action", "/room/update/"); //url
-    document.body.appendChild(f);
-
-    let i = document.createElement("input");
-    i.setAttribute("type", "hidden");
-    i.setAttribute("name", "roomName"); // key
-    i.setAttribute("value", roomName); // value
-    f.appendChild(i);
-
-    let i2 = document.createElement("input");
-    i2.setAttribute("type", "hidden");
-    i2.setAttribute("name", "roomId"); // key
-    i2.setAttribute("value", id); // value
-    f.appendChild(i2);
-
-    f.submit();
+    window.location.reload();
 }
 
+async function updateRoomName(id) {
+    const roomName = window.prompt("바꿀 방 제목을 입력해주세요");
+    if (roomName === null | roomName === "") {
+        alert("방 제목은 빈칸일 수 없습니다.")
+        return;
+    }
 
-function deleteRoom(id) {
+    const password = window.prompt("비밀번호를 입력해주세요.");
+    if (password === null | password === "") {
+        alert("비밀번호는 빈칸일 수 없습니다.")
+        return;
+    }
 
-    let f = document.createElement("form");
-    f.setAttribute("method", "post");
-    f.setAttribute("action", "/room/delete/"); //url
-    document.body.appendChild(f);
+    const bodyValue = {
+        name: roomName,
+        password: password
+    }
 
-    let i = document.createElement("input");
-    i.setAttribute("type", "hidden");
-    i.setAttribute("name", "roomId"); // key
-    i.setAttribute("value", id); // value
-    f.appendChild(i);
+    let response = await fetch("/api/chess/rooms/" + id, {
+        method: "PATCH", headers: {
+            'Content-Type': 'application/json;charset=utf-8', 'Accept': 'application/json'
+        }, body: JSON.stringify(bodyValue)
+    }).then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        });
 
-    console.log(f);
-    f.submit();
+    window.location.reload();
 }

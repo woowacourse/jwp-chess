@@ -13,8 +13,8 @@ class BishopTest {
     @DisplayName("컬러를 none으로 생성하면 에러가 발생한다.")
     void constructorException() {
         assertThatThrownBy(() -> new Bishop(Team.NONE))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 팀을 입력해주세요.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("[ERROR] 팀을 입력해주세요.");
     }
 
     @Test

@@ -11,7 +11,8 @@ public class GameResponseDto {
     private BoardsDto board;
 
 
-    private GameResponseDto(final Long id, final String name, final String team, final boolean gameOver, final BoardsDto board) {
+    private GameResponseDto(final Long id, final String name, final String team, final boolean gameOver,
+                            final BoardsDto board) {
         this.id = id;
         this.name = name;
         this.team = team;

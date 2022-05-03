@@ -8,7 +8,7 @@ public final class Blank extends Piece {
     private static final String NAME = " ";
 
     public Blank() {
-        super(Team.NONE, NAME ,POINT);
+        super(Team.NONE, NAME, POINT);
     }
 
     @Override

@@ -2,18 +2,24 @@ package chess.entity;
 
 public class RoomEntity {
     private Long id;
+    private String password;
     private String name;
     private String team;
-    private boolean gameOver;
+    private Boolean gameOver;
 
-    public RoomEntity(final Long id, final String name, final String team, final boolean gameOver) {
+    public RoomEntity(final Long id, final String password, final String name,
+                      final String team, final Boolean gameOver) {
         this.id = id;
+        this.password = password;
         this.name = name;
         this.team = team;
         this.gameOver = gameOver;
     }
 
-    public RoomEntity(final String name, final String team, final boolean gameOver) {
+    public RoomEntity(final String password, final String name, final String team,
+                      final Boolean gameOver) {
+        this.id = null;
+        this.password = password;
         this.name = name;
         this.team = team;
         this.gameOver = gameOver;
@@ -21,6 +27,10 @@ public class RoomEntity {
 
     public Long getId() {
         return id;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getName() {
@@ -35,31 +45,15 @@ public class RoomEntity {
         return gameOver;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
+    public void update(final RoomEntity roomEntity) {
+        if (roomEntity.name != null) {
+            this.name = roomEntity.name;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+        if (roomEntity.team != null) {
+            this.team = roomEntity.team;
         }
-
-        final RoomEntity that = (RoomEntity) o;
-
-        if (isGameOver() != that.isGameOver()) {
-            return false;
+        if (roomEntity.gameOver != null) {
+            this.gameOver = roomEntity.gameOver;
         }
-        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) {
-            return false;
-        }
-        return getTeam() != null ? getTeam().equals(that.getTeam()) : that.getTeam() == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getName() != null ? getName().hashCode() : 0;
-        result = 31 * result + (getTeam() != null ? getTeam().hashCode() : 0);
-        result = 31 * result + (isGameOver() ? 1 : 0);
-        return result;
     }
 }

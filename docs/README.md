@@ -1,15 +1,17 @@
 ## 접속 정보
 
 ### db 정보
+
 - docker
     - prod db: mysql / port: 13306
         - init.sql
-    - test db: h2(tesdb, MySQL mode) / mem 
+    - test db: h2(tesdb, MySQL mode) / mem
         - schema.sql
 - db_name: chess
     - table_name: room, board
-        
+
 ### 접속 방법
+
 1. `docker`를 실행한다(설치를 확인한다)
 2. 프로젝트내 docker/db내 폴더에서 query, db_name, 접속port를 확인한다
     - mysql/
@@ -54,10 +56,21 @@
     - [x] 게임 종료 - 방을 game over로 변경한다
 
 - controller
-    - [x] 방 생성 - post api/chess/rooms
-    - [x] 방 전체조회 - get api/chess/rooms
-    - [x] 방 입장 - get api/chess/rooms/{id}/enter
-    - [x] 체스 현재 정보 조회 - get api/chess/rooms/{id}
-    - [x] 체스 기물 이동 - post api/chess/rooms/{id}/move
-    - [x] 체스 종료 및 결과계산 - patch api/chess/rooms/{id}
-    - [x] 체스 점수 출력 - get api/chess/rooms/{id}/status
+    - [x] 방 생성
+        - POST api/chess/rooms
+    - [x] 방 전체조회
+        - GET api/chess/rooms
+    - [x] 방 입장
+        - GET api/chess/rooms/{id}
+    - [x] 방 종료
+        - UPDATE api/chess/rooms/{id}/end
+    - [x] 방 제목 변경
+        - PATCH api/chess/rooms/{id}
+    - [x] 체스 현재 정보 조회
+        - GET api/chess/rooms/{id}
+    - [x] 체스 기물 이동
+        - POST api/chess/rooms/{id}/move
+    - [x] 체스 점수 출력
+        - GET api/chess/rooms/{id}/status
+    - [x] 체스 재시작
+        - GET api/chess/rooms/{id}/restart

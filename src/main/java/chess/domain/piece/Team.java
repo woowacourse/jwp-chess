@@ -16,9 +16,9 @@ public enum Team {
 
     public static Team of(final String color) {
         return Arrays.stream(values())
-                .filter(team -> color.equals(team.value))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 팀입니다."));
+            .filter(team -> color.equals(team.value))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 팀입니다."));
     }
 
     public Team oppositeTeam() {

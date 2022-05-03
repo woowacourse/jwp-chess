@@ -2,13 +2,13 @@ package chess.domain.board;
 
 import chess.domain.piece.Bishop;
 import chess.domain.piece.Blank;
-import chess.domain.piece.Team;
 import chess.domain.piece.King;
 import chess.domain.piece.Knight;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
+import chess.domain.piece.Team;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,7 +34,7 @@ public class BoardFactory {
         for (Row row : Row.values()) {
             for (Column column : Column.values()) {
                 emptyBoard.put(Position.valueOf(column.getName() + row.getValue()),
-                        new Blank());
+                    new Blank());
             }
         }
         return emptyBoard;
@@ -42,14 +42,14 @@ public class BoardFactory {
 
     private static void initFirstLine(final Team team, Row row, final Map<Position, Piece> board) {
         List<Piece> pieces = List.of(
-                new Rook(team),
-                new Knight(team),
-                new Bishop(team),
-                new Queen(team),
-                new King(team),
-                new Bishop(team),
-                new Knight(team),
-                new Rook(team)
+            new Rook(team),
+            new Knight(team),
+            new Bishop(team),
+            new Queen(team),
+            new King(team),
+            new Bishop(team),
+            new Knight(team),
+            new Rook(team)
         );
         Column[] columns = Column.values();
         for (int i = 0; i < columns.length; i++) {

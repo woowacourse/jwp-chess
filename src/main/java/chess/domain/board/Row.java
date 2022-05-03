@@ -21,9 +21,9 @@ public enum Row {
 
     private static Row of(final int value) {
         return Arrays.stream(values())
-                .filter(it -> it.value == value)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("[ERROR] 존재하지 않는 Row 입니다."));
+            .filter(it -> it.value == value)
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("[ERROR] 존재하지 않는 Row 입니다."));
     }
 
     public Row move(final int vertical) {

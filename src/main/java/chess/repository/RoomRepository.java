@@ -13,4 +13,6 @@ public interface RoomRepository {
     RoomEntity findById(Long id);
 
     void updateGameOver(Long id);
+
+    RoomEntity update(RoomEntity room);
 }

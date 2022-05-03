@@ -10,19 +10,22 @@ import chess.domain.game.Turn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
 import chess.dto.BoardsDto;
-import chess.dto.StatusDto;
 import chess.dto.request.MoveRequestDto;
 import chess.dto.request.RoomRequestDto;
 import chess.dto.response.GameResponseDto;
 import chess.dto.response.RoomResponseDto;
 import chess.dto.response.RoomsResponseDto;
+import chess.dto.response.StatusResponseDto;
 import chess.entity.BoardEntity;
 import chess.entity.RoomEntity;
+import chess.exception.RoomNotFoundException;
 import chess.repository.BoardRepository;
 import chess.repository.RoomRepository;
+import chess.util.PasswordSha256Encoder;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,39 +42,55 @@ public class ChessService {
     }
 
     public RoomResponseDto createRoom(final RoomRequestDto roomRequestDto) {
-        final RoomEntity room = new RoomEntity(roomRequestDto.getName(), "white", false);
+        final RoomEntity room = new RoomEntity(PasswordSha256Encoder.encode(roomRequestDto.getPassword()),
+            roomRequestDto.getName(), "white", false);
+        validateCreateRoom(room);
         final RoomEntity createdRoom = roomRepository.insert(room);
         boardRepository.batchInsert(createBoards(createdRoom));
         return RoomResponseDto.of(createdRoom);
     }
 
-    private List<BoardEntity> createBoards(final RoomEntity createdRoom) {
+    private void validateCreateRoom(final RoomEntity roomEntity) {
+        if (roomEntity.getId() != null) {
+            throw new IllegalArgumentException("[ERROR] 잘못된 방 생성 요청입니다.");
+        }
+    }
+
+    private List<BoardEntity> createBoards(final RoomEntity room) {
         final Map<Position, Piece> board = BoardFactory.initialize();
         return board.entrySet().stream()
-            .map(entry -> new BoardEntity(createdRoom.getId(),
+            .map(entry -> new BoardEntity(room.getId(),
                 entry.getKey().convertPositionToString(),
                 entry.getValue().convertPieceToString()))
             .collect(Collectors.toList());
     }
 
-    public RoomEntity enterRoom(final Long roomId) {
-        final RoomEntity roomEntity = roomRepository.findById(roomId);
-        validateGameOver(roomEntity);
-        return roomEntity;
+    public GameResponseDto getCurrentBoards(final Long roomId) {
+        final RoomEntity targetRoom = getValidRoom(roomId);
+        validateGameOver(targetRoom);
+        final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
+        return GameResponseDto.of(targetRoom, BoardsDto.of(boards));
     }
 
-    public GameResponseDto getCurrentBoard(final Long roomId) {
-        final RoomEntity room = roomRepository.findById(roomId);
-        final List<BoardEntity> boards = boardRepository.findBoardByRoomId(roomId);
-        return GameResponseDto.of(room, BoardsDto.of(boards));
+    private RoomEntity getValidRoom(final Long id) {
+        final RoomEntity targetRoom;
+        try {
+            targetRoom = roomRepository.findById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new RoomNotFoundException(1);
+        }
+        return targetRoom;
+    }
+
+    private void validateGameOver(final RoomEntity room) {
+        if (room.isGameOver()) {
+            throw new IllegalArgumentException("[ERROR] 이미 종료된 게임입니다.");
+        }
     }
 
     public GameResponseDto move(final Long id, final MoveRequestDto moveRequestDto) {
-        final RoomEntity room = roomRepository.findById(id);
-        validateGameOver(room);
-        final List<BoardEntity> boardEntity = boardRepository.findBoardByRoomId(id);
+        final ChessGame chessGame = new ChessGame(getBoard(id), new Turn(Team.of(getValidRoom(id).getTeam())));
 
-        final ChessGame chessGame = new ChessGame(toBoard(boardEntity), new Turn(Team.of(room.getTeam())));
         final String sourcePosition = moveRequestDto.getSource();
         final String targetPosition = moveRequestDto.getTarget();
 
@@ -81,7 +100,7 @@ public class ChessService {
             chessGame.getPieceName(sourcePosition));
         final BoardEntity targetBoardEntity = new BoardEntity(id, targetPosition,
             chessGame.getPieceName(targetPosition));
-        boardRepository.updateBatchPositions(List.of(sourceBoardEntity, targetBoardEntity));
+        boardRepository.batchUpdatePositions(List.of(sourceBoardEntity, targetBoardEntity));
 
         final String turnAfterMove = chessGame.getCurrentTurn().getValue();
         roomRepository.updateTeam(id, turnAfterMove);
@@ -95,11 +114,11 @@ public class ChessService {
         }
     }
 
-    private Board toBoard(final List<BoardEntity> boardEntity) {
+    private Board getBoard(final Long id) {
+        final List<BoardEntity> boardEntity = boardRepository.findBoardByRoomId(id);
         final Map<Position, Piece> board = boardEntity.stream()
             .collect(Collectors.toMap(it -> Position.valueOf(it.getPosition()),
                 it -> PieceFactory.createPiece(it.getPiece())));
-
         return new Board(board);
     }
 
@@ -109,20 +128,48 @@ public class ChessService {
         return RoomsResponseDto.of(rooms);
     }
 
-    public void endRoom(final Long id) {
-        final RoomEntity room = roomRepository.findById(id);
-        validateGameOver(room);
-        roomRepository.updateGameOver(id);
-    }
-
-    public StatusDto createStatus(final Long id) {
-        final Board board = toBoard(boardRepository.findBoardByRoomId(id));
-        return StatusDto.of(new Score(board.getBoard()));
-    }
-
-    private void validateGameOver(final RoomEntity room) {
-        if (room.isGameOver()) {
-            throw new IllegalArgumentException("[ERROR] 이미 종료된 게임입니다.");
+    public void endRoom(final Long id, final RoomRequestDto roomRequestDto) {
+        final RoomEntity targetRoom = getValidRoom(id);
+        validatePassword(roomRequestDto, targetRoom);
+        if (!targetRoom.isGameOver()) {
+            roomRepository.updateGameOver(targetRoom.getId());
         }
+    }
+
+    public StatusResponseDto calculateStatus(final Long id) {
+        final Board board = getBoard(id);
+        return StatusResponseDto.of(new Score(board.getBoard()));
+    }
+
+    public RoomResponseDto updateRoom(final Long id, final RoomRequestDto roomRequestDto) {
+        final RoomEntity targetRoom = getValidRoom(id);
+        validateGameOver(targetRoom);
+        validatePassword(roomRequestDto, targetRoom);
+        final RoomEntity roomEntity = roomRequestDto.toEntity();
+        targetRoom.update(roomEntity);
+        final RoomEntity updatedRoom = roomRepository.update(targetRoom);
+        return RoomResponseDto.of(updatedRoom);
+    }
+
+    private void validatePassword(final RoomRequestDto roomRequestDto, final RoomEntity targetRoom) {
+        if (roomRequestDto.getPassword() == null) {
+            return;
+        }
+        final String requestPassword = PasswordSha256Encoder.encode(roomRequestDto.getPassword());
+        final String encodedPassword = targetRoom.getPassword();
+        if (!requestPassword.equals(encodedPassword)) {
+            throw new IllegalArgumentException("[ERROR] 비밀번호가 틀렸습니다.");
+        }
+    }
+
+    public RoomResponseDto recreateRoom(final Long id) {
+        RoomEntity targetRoom = roomRepository.findById(id);
+        targetRoom = new RoomEntity(id, targetRoom.getPassword(), targetRoom.getName(), "white", false);
+        roomRepository.update(targetRoom);
+
+        boardRepository.delete(id);
+        boardRepository.batchInsert(createBoards(targetRoom));
+
+        return RoomResponseDto.of(targetRoom);
     }
 }

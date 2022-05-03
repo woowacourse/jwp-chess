@@ -79,7 +79,6 @@ public class ConsoleChessController {
 
     private void printStatus(final ChessGame chessGame) {
         Score score = new Score(chessGame.getCurrentBoard());
-
         double whiteScore = score.calculateScore(Team.WHITE);
         double blackScore = score.calculateScore(Team.BLACK);
         OutputView.printScore(whiteScore, blackScore, score.calculateWinningTeam(whiteScore, blackScore).getValue());

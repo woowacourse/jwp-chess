@@ -47,8 +47,8 @@ class PositionTest {
     @DisplayName("범위를 초과한 포지션을 가져오면 에러가 발생한다.")
     void valueOfException() {
         assertThatThrownBy(() -> Position.valueOf("i8"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 올바르지 않은 Position 입력입니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("[ERROR] 올바르지 않은 Position 입력입니다.");
     }
 
     @Test
@@ -89,12 +89,12 @@ class PositionTest {
     @DisplayName("더 작은 포지션을 반환한다.")
     void compareSmaller() {
         assertAll(
-                () -> assertThat(Position.valueOf("a8")
-                        .compareSmaller(Position.valueOf("a3")))
-                        .isEqualTo(Position.valueOf("a8")),
-                () -> assertThat(Position.valueOf("a8")
-                        .compareSmaller(Position.valueOf("h8")))
-                        .isEqualTo(Position.valueOf("a8"))
+            () -> assertThat(Position.valueOf("a8")
+                .compareSmaller(Position.valueOf("a3")))
+                .isEqualTo(Position.valueOf("a8")),
+            () -> assertThat(Position.valueOf("a8")
+                .compareSmaller(Position.valueOf("h8")))
+                .isEqualTo(Position.valueOf("a8"))
         );
     }
 }

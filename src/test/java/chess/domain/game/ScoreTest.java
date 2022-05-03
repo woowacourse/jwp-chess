@@ -40,7 +40,7 @@ class ScoreTest {
 
         Score score = new Score(board.getBoard());
         assertThat(score.calculateWinningTeam(score.calculateScore(Team.WHITE),
-                score.calculateScore(Team.BLACK))).isEqualTo(Team.BLACK);
+            score.calculateScore(Team.BLACK))).isEqualTo(Team.BLACK);
     }
 
     @Test
@@ -51,6 +51,6 @@ class ScoreTest {
 
         Score score = new Score(board.getBoard());
         assertThat(score.calculateWinningTeam(score.calculateScore(Team.WHITE),
-                score.calculateScore(Team.BLACK))).isEqualTo(Team.WHITE);
+            score.calculateScore(Team.BLACK))).isEqualTo(Team.WHITE);
     }
 }

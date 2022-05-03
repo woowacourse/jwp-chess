@@ -37,9 +37,9 @@ public enum PieceFactory {
 
     public static Piece createPiece(final String name) {
         return Arrays.stream(values())
-                .filter(value -> name.equals(value.name))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 피스입니다."))
-                .piece;
+            .filter(value -> name.equals(value.name))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 피스입니다."))
+            .piece;
     }
 }

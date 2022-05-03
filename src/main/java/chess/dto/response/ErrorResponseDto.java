@@ -1,4 +1,4 @@
-package chess.dto;
+package chess.dto.response;
 
 public class ErrorResponseDto {
 
@@ -11,4 +11,5 @@ public class ErrorResponseDto {
     public String getErrorMessage() {
         return errorMessage;
     }
+
 }

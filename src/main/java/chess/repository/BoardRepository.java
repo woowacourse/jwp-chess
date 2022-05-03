@@ -7,13 +7,15 @@ public interface BoardRepository {
 
     List<BoardEntity> findBoardByRoomId(final Long roomId);
 
-    void updatePosition(final BoardEntity board);
+    BoardEntity updatePosition(final BoardEntity board);
 
-    void updateBatchPositions(final List<BoardEntity> board);
+    void batchUpdatePositions(final List<BoardEntity> board);
 
     BoardEntity insert(final BoardEntity board);
 
     void batchInsert(final List<BoardEntity> boards);
 
     BoardEntity findBoardByRoomIdAndPosition(final Long roomId, final String position);
+
+    void delete(Long roomId);
 }

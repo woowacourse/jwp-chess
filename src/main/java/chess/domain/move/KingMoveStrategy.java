@@ -7,14 +7,14 @@ import java.util.List;
 public final class KingMoveStrategy extends FirstRowMoveStrategy {
 
     private static final List<MovePattern> MOVE_PATTERNS = List.of(
-            MovePattern.NORTH,
-            MovePattern.NORTHEAST,
-            MovePattern.EAST,
-            MovePattern.SOUTHEAST,
-            MovePattern.SOUTH,
-            MovePattern.SOUTHWEST,
-            MovePattern.WEST,
-            MovePattern.NORTHWEST
+        MovePattern.NORTH,
+        MovePattern.NORTHEAST,
+        MovePattern.EAST,
+        MovePattern.SOUTHEAST,
+        MovePattern.SOUTH,
+        MovePattern.SOUTHWEST,
+        MovePattern.WEST,
+        MovePattern.NORTHWEST
     );
 
     @Override

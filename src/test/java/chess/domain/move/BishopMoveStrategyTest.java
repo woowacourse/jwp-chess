@@ -57,7 +57,7 @@ class BishopMoveStrategyTest {
         Position target = Position.valueOf("e6");
 
         assertThatThrownBy(() -> bishopMoveStrategy.isPieceExistWhenHorizon(board, source, Distance.of(source, target)))
-                .isInstanceOf(UnsupportedOperationException.class);
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
@@ -66,7 +66,8 @@ class BishopMoveStrategyTest {
         Position source = Position.valueOf("c8");
         Position target = Position.valueOf("e6");
 
-        assertThatThrownBy(() -> bishopMoveStrategy.isPieceExistWhenVertical(board, source, Distance.of(source, target)))
-                .isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(
+            () -> bishopMoveStrategy.isPieceExistWhenVertical(board, source, Distance.of(source, target)))
+            .isInstanceOf(UnsupportedOperationException.class);
     }
 }

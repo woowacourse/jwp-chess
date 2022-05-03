@@ -1,7 +1,6 @@
 package chess.dao;
 
 import chess.domain.pieces.Color;
-
 import java.util.List;
 
 public interface BoardDao<T> {
@@ -12,7 +11,7 @@ public interface BoardDao<T> {
 
     List<T> findAll();
 
-    int deleteById(int id);
+    int deleteByIdAndPassword(int id, String password);
 
     void deleteAll();
 

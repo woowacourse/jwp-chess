@@ -3,15 +3,15 @@ package chess.dao;
 import chess.domain.pieces.Piece;
 import chess.domain.position.Column;
 import chess.domain.position.Row;
-
+import chess.entities.PositionEntity;
 import java.util.List;
 import java.util.Map;
 
 public interface PositionDao<T> {
 
-    T save(T position);
+    PositionEntity save(PositionEntity position);
 
-    T getByColumnAndRowAndBoardId(Column column, Row row, int boardId);
+    PositionEntity getByColumnAndRowAndBoardId(Column column, Row row, int boardId);
 
     int saveAll(int boardId);
 
@@ -19,7 +19,7 @@ public interface PositionDao<T> {
 
     Map<T, Piece> findAllPositionsAndPieces(int boardId);
 
-    List<T> getPaths(List<T> positions, int roomId);
+    List<PositionEntity> getPaths(List<PositionEntity> positions, int roomId);
 
     void deleteAll();
 }

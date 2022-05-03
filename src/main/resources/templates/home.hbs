@@ -26,6 +26,11 @@
                     <input type="text" id="secondMemberName" name="secondMemberName"/>
                 </label>
             </div>
+            <div>
+                <label> 비밀번호
+                    <input type="password" id="password" name="password"/>
+                </label>
+            </div>
         </form>
         <button id="makeButton" onclick="makeRoom()">방만들기</button>
     </div>
@@ -40,6 +45,7 @@
                     <a href="/room/{{roomId}}">{{roomTitle}}</a>
                     {{whiteMember}}
                     {{blackMember}}
+                    <button id="deleteButton" onclick="deleteRoom({{roomId}})">삭제</button>
                 </td>
             </tr>
             {{/this}}

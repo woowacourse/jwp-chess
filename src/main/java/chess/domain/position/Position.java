@@ -1,6 +1,11 @@
 package chess.domain.position;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public final class Position {
 
@@ -8,24 +13,12 @@ public final class Position {
     private static final int COLUMN_ROW_LENGTH = 2;
     private static final Map<String, Position> caches = new HashMap<>();
 
-    private final Integer id;
     private final Column column;
     private final Row row;
-    private final Integer boardId;
-
-    public Position(final Integer id, final Column column, final Row row, final Integer boardId) {
-        this.id = id;
-        this.column = column;
-        this.row = row;
-        this.boardId = boardId;
-    }
 
     public Position(final Column column, final Row row) {
-        this(null, column, row, null);
-    }
-
-    public Position(final Column column, final Row row, final int boardId) {
-        this(null, column, row, boardId);
+        this.column = column;
+        this.row = row;
     }
 
     public static Position of(final String value) {
@@ -97,14 +90,6 @@ public final class Position {
         return row;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public int getBoardId() {
-        return boardId;
-    }
-
     private List<Position> calculateByDirection(final Position target, final Direction direction) {
         if (direction.isVertical()) {
             return verticalPaths(target);
@@ -146,8 +131,12 @@ public final class Position {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Position)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Position)) {
+            return false;
+        }
         Position position = (Position) o;
         return column == position.column && row == position.row;
     }

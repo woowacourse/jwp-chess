@@ -51,15 +51,17 @@ function sendToServer(first, second) {
     fetch(`/room/${element.value}/move`, {
         method: "POST",
         headers: {
-            "Content-Type": "text/plain",
+            "Content-Type": "application/json",
         },
-        body: "command=move " + first + " " + second
+        body: JSON.stringify({start: `${first}`, target: `${second}`})
     }).then((response) => {
+            console.log(response.status);
+            if (response.status === 400) {
+                throw response;
+                return;
+            }
             response.json().then(data => {
                 console.log(data.finished);
-                if (data.status === 400) {
-                    alert(data.errorMessage);
-                }
                 if (data.finished === true) {
                     alert("게임이 종료되었습니다.");
                     document.location.href = `/`
@@ -68,6 +70,11 @@ function sendToServer(first, second) {
                 location.reload();
             });
         }
-    );
+    ).catch(err => {
+        err.text().then(msg => {
+            alert(msg);
+            location.reload();
+        })
+    });
 }
 

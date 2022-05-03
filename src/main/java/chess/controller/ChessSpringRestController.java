@@ -26,7 +26,6 @@ public class ChessSpringRestController {
     public ResponseEntity<String> create(@Valid @RequestBody RoomInfoDto roomInfoDto) {
         chessGameService.create(roomInfoDto.getTitle(), roomInfoDto.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED).location(URI.create("/")).build();
-
     }
 
     @PatchMapping("/boards/{id}/move")

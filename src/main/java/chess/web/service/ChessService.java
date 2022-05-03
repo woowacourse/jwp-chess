@@ -92,14 +92,14 @@ public class ChessService {
     private ChessGame getChessGame(int gameId) {
         PiecesDto piecesDto = new PiecesDto(getPieces(gameId));
         ChessBoard chessBoard = new ChessBoard(piecesDto.toBoard());
-        return new ChessGame(getCurrentChessState(gameId).newState(chessBoard));
+        return new ChessGame(getCurrentChessSate(gameId).newState(chessBoard));
     }
 
     private List<PieceDto> getPieces(int gameId) {
         return pieceDao.findAllByGameId(gameId);
     }
 
-    public StateType getCurrentChessState(int gameId) {
+    public StateType getCurrentChessSate(int gameId) {
         return gameDao.findStateById(gameId);
     }
 
@@ -112,7 +112,7 @@ public class ChessService {
         return getChessGame(gameId).score(color);
     }
 
-    public GameOverDto getIsGameOver(int gameId, MovePositionsDto movePositionsDto) {
+    public GameOverDto getMoveResult(int gameId, MovePositionsDto movePositionsDto) {
         ChessGame chessGame = getChessGame(gameId);
 
         chessGame.move(movePositionsDto.getSource(), movePositionsDto.getTarget());

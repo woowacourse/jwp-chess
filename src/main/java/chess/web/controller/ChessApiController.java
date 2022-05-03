@@ -31,6 +31,6 @@ public class ChessApiController {
     @PatchMapping("/game/{gameId}/move")
     public ResponseEntity<GameOverDto> move(@PathVariable int gameId,
                                             @RequestBody MovePositionsDto movePositionsDto) {
-        return ResponseEntity.ok(chessService.getIsGameOver(gameId, movePositionsDto));
+        return ResponseEntity.ok(chessService.getMoveResult(gameId, movePositionsDto));
     }
 }

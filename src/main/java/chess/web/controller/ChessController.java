@@ -32,7 +32,7 @@ public class ChessController {
 
     @GetMapping("/game/{gameId}")
     public String showGame(@PathVariable int gameId, final Model model) {
-        if (chessService.getCurrentChessState(gameId) == StateType.END) {
+        if (chessService.getCurrentChessSate(gameId) == StateType.END) {
             return "redirect:/game/" + gameId + "/result";
         }
         model.addAttribute("chessStatus", chessService.getBoard(gameId));

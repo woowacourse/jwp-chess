@@ -1,7 +1,7 @@
 package chess.web.dao;
 
 import chess.domain.state.StateType;
-import chess.web.dto.game.TitleDto;
+import chess.web.dto.game.GameResponseDto;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,8 +19,8 @@ public class GameDaoJdbcImpl implements GameDao {
         );
     };
 
-    private static final RowMapper<TitleDto> GAME_DTO_ROW_MAPPER = (resultSet, rowNum) -> {
-        return new TitleDto(
+    private static final RowMapper<GameResponseDto> GAME_DTO_ROW_MAPPER = (resultSet, rowNum) -> {
+        return new GameResponseDto(
                 resultSet.getInt("id"),
                 resultSet.getString("title")
         );
@@ -67,7 +67,7 @@ public class GameDaoJdbcImpl implements GameDao {
     }
 
     @Override
-    public List<TitleDto> findAll() {
+    public List<GameResponseDto> findAll() {
         final String sql = "select id, title from game";
         return jdbcTemplate.query(sql, GAME_DTO_ROW_MAPPER);
     }

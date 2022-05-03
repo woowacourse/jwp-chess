@@ -1,11 +1,11 @@
 package chess.web.dto.board;
 
-public class MovePositionsDto {
+public class MoveRequestDto {
 
     private final String source;
     private final String target;
 
-    public MovePositionsDto(String source, String target) {
+    public MoveRequestDto(String source, String target) {
         this.source = source;
         this.target = target;
     }

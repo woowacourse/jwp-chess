@@ -11,13 +11,13 @@ import chess.domain.state.StateType;
 import chess.web.dao.GameDao;
 import chess.web.dao.PieceDao;
 import chess.web.dto.board.BoardDto;
-import chess.web.dto.board.MovePositionsDto;
-import chess.web.dto.board.GameOverDto;
+import chess.web.dto.board.MoveRequestDto;
+import chess.web.dto.board.MoveResponseDto;
 import chess.web.dto.board.PieceDto;
 import chess.web.dto.board.PiecesDto;
 import chess.web.dto.board.ResultDto;
-import chess.web.dto.game.PasswordDto;
-import chess.web.dto.game.TitleDto;
+import chess.web.dto.game.GameRequestDto;
+import chess.web.dto.game.GameResponseDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -66,13 +66,13 @@ public class ChessService {
         }
     }
 
-    public List<TitleDto> getAllGame() {
+    public List<GameResponseDto> getAllGame() {
         return gameDao.findAll();
     }
 
-    public void deleteGame(PasswordDto passwordDto) {
-        int gameId = passwordDto.getId();
-        String password = passwordDto.getPassword();
+    public void deleteGame(GameRequestDto gameRequestDto) {
+        int gameId = gameRequestDto.getId();
+        String password = gameRequestDto.getPassword();
         String realPassword = gameDao.findPasswordById(gameId);
 
         validateDeleteGame(gameId, password, realPassword);
@@ -112,15 +112,15 @@ public class ChessService {
         return getChessGame(gameId).score(color);
     }
 
-    public GameOverDto getMoveResult(int gameId, MovePositionsDto movePositionsDto) {
+    public MoveResponseDto getMoveResult(int gameId, MoveRequestDto moveRequestDto) {
         ChessGame chessGame = getChessGame(gameId);
 
-        chessGame.move(movePositionsDto.getSource(), movePositionsDto.getTarget());
-        Position sourcePosition = new Position(movePositionsDto.getSource());
-        Position targetPosition = new Position(movePositionsDto.getTarget());
+        chessGame.move(moveRequestDto.getSource(), moveRequestDto.getTarget());
+        Position sourcePosition = new Position(moveRequestDto.getSource());
+        Position targetPosition = new Position(moveRequestDto.getTarget());
         move(gameId, chessGame, sourcePosition, targetPosition);
 
-        return new GameOverDto(chessGame.isFinished());
+        return new MoveResponseDto(chessGame.isFinished());
     }
 
     private void move(int gameId, ChessGame chessGame, Position target, Position source) {

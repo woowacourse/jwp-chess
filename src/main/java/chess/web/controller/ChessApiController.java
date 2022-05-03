@@ -1,8 +1,8 @@
 package chess.web.controller;
 
-import chess.web.dto.board.GameOverDto;
-import chess.web.dto.board.MovePositionsDto;
-import chess.web.dto.game.PasswordDto;
+import chess.web.dto.board.MoveResponseDto;
+import chess.web.dto.board.MoveRequestDto;
+import chess.web.dto.game.GameRequestDto;
 import chess.web.service.ChessService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +24,13 @@ public class ChessApiController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteGame(@RequestBody PasswordDto passwordDto) {
-        chessService.deleteGame(passwordDto);
+    public void deleteGame(@RequestBody GameRequestDto gameRequestDto) {
+        chessService.deleteGame(gameRequestDto);
     }
 
     @PatchMapping("/game/{gameId}/move")
-    public ResponseEntity<GameOverDto> move(@PathVariable int gameId,
-                                            @RequestBody MovePositionsDto movePositionsDto) {
-        return ResponseEntity.ok(chessService.getMoveResult(gameId, movePositionsDto));
+    public ResponseEntity<MoveResponseDto> move(@PathVariable int gameId,
+                                                @RequestBody MoveRequestDto moveRequestDto) {
+        return ResponseEntity.ok(chessService.getMoveResult(gameId, moveRequestDto));
     }
 }

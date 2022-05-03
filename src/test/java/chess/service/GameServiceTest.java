@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import chess.database.dao.FakeGameDao;
@@ -26,13 +27,11 @@ import chess.dto.RouteRequest;
 import chess.repository.GameRepository;
 import chess.repository.RoomRepository;
 
-@SpringBootTest
 class GameServiceTest {
 
     public static final String TEST_ROOM_NAME = "TEST-GAME";
 
-    @Autowired
-    private PasswordEncoder encoder;
+    private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     private GameRepository gameRepository;
     private RoomRepository roomRepository;

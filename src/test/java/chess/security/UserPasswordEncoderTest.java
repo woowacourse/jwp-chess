@@ -6,17 +6,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootTest
 public class UserPasswordEncoderTest {
 
-    private final PasswordEncoder encoder;
-
-    @Autowired
-    public UserPasswordEncoderTest(PasswordEncoder encoder) {
-        this.encoder = encoder;
-    }
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Test
     @DisplayName("평문을 인코딩한다.")

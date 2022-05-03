@@ -6,7 +6,7 @@
 </head>
 <body>
 <div align="left">
-    <button type="button" onclick="location.href='/chess';"> 뒤로가기 </button>
+    <button type="button" onclick="showBoard()"> 뒤로가기 </button>
 </div>
 <div align="center">
     {{#status}}
@@ -14,6 +14,6 @@
         <p> 흑색 점수: {{status.black}}</p>
     {{/status}}
 </div>
-
 </body>
+<script type="text/javascript" src="/src/index.js"></script>
 </html>

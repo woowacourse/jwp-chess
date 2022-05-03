@@ -1,12 +1,23 @@
 package chess.dao;
 
+import chess.domain.ChessGame;
 import chess.domain.Color;
+import chess.dto.RoomDto;
+import java.util.List;
 
 public interface BoardDao {
 
-    void save(Color turn);
+    Color findTurn(Long boardId);
 
-    Color findTurn();
+    void deleteBoard(Long boardId);
 
-    void deleteBoard();
+    boolean existsBoardByName(String title);
+
+    Long save(ChessGame chessGame);
+
+    void updateTurn(Long boardId, Color turn);
+
+    List<RoomDto> findAllRooms();
+
+    String findPasswordById(Long boardId);
 }

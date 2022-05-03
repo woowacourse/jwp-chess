@@ -4,117 +4,88 @@ import chess.domain.Color;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Type;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class PieceDaoImpl implements PieceDao {
+    private final JdbcTemplate jdbcTemplate;
 
-    @Override
-    public void save(Map<Position, Piece> board) {
-        insertPiece(board);
+    public PieceDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    private void insertPiece(Map<Position, Piece> board) {
-        final Connection connection = DBConnector.getConnection();
-        final String sql = "insert into piece (board_id, position, type, color) values (1, ?, ?, ?)";
+    @Override
+    public Map<Position, Piece> load(Long boardId) {
+        final String sql = "select position, type, color from piece where board_id = ?";
+        Map<Position, Piece> board = new TreeMap<>();
+
+        final List<Pair> query = executeLoad(sql, boardId);
+
+        for (Pair pair : query) {
+            board.put(pair.getPosition(), pair.getPiece());
+        }
+        return board;
+    }
+
+    private List<Pair> executeLoad(String sql, Long boardId) {
+        final List<Pair> query = jdbcTemplate.query(sql, (res, rowNum) -> {
+            final Position position = Position.from(res.getString("position"));
+            final Type type = Type.from(res.getString("type"));
+            final Piece piece = type.makePiece(Color.from(res.getString("color")));
+            return new Pair(position, piece);
+        }, boardId);
+        return query;
+    }
+
+    @Override
+    public void delete(Long boardId) {
+        final String sql = "delete from piece where board_id = ?";
+        jdbcTemplate.update(sql, boardId);
+    }
+
+    @Override
+    public void updatePosition(Long boardId, String source, String target) {
+        final String type = getFromSource("type", source, boardId);
+        final String color = getFromSource("color", source, boardId);
+
+        final String updateSourceSql = "update piece set type = '.', color = 'NONE' where position = ? and board_id = ?";
+        final String updateTargetSql = "update piece set type = ?, color = ? where position = ? and board_id = ?";
+
+        jdbcTemplate.update(updateSourceSql, source, boardId);
+        jdbcTemplate.update(updateTargetSql, type, color, target, boardId);
+    }
+
+    private String getFromSource(String column, String source, Long boardId) {
+        final String getFromSourceSql = "select " + column + " from piece where position = ? and board_id = ?";
+        return jdbcTemplate.queryForObject(getFromSourceSql, String.class, source, boardId);
+    }
+
+    @Override
+    public void save(Map<Position, Piece> board, Long boardId) {
         for (Entry<Position, Piece> positionPieceEntry : board.entrySet()) {
-            executeInsertPiece(connection, sql, positionPieceEntry);
+            executeInsertPiece(positionPieceEntry, boardId);
         }
     }
 
-    private void executeInsertPiece(Connection connection, String sql,
-                                    Entry<Position, Piece> positionPieceEntry) {
-        Position position = positionPieceEntry.getKey();
-        Piece piece = positionPieceEntry.getValue();
-        try (final PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, position.stringName());
-            statement.setString(2, piece.getSymbol());
-            statement.setString(3, piece.getColor().name());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new IllegalArgumentException("예상치 못한 에러가 발생했습니다. 다시 시도해주세요.");
-        }
+    private void executeInsertPiece(Entry<Position, Piece> positionPieceEntry, Long boardId) {
+        final String sql = "insert into piece (board_id, position, type, color) values (?, ?, ?, ?)";
+        final Position position = positionPieceEntry.getKey();
+        final Piece piece = positionPieceEntry.getValue();
+        jdbcTemplate.update(sql, boardId, position.stringName(), piece.getSymbol(), piece.getColor().name());
     }
 
     @Override
-    public Map<Position, Piece> load() {
-
-        final String sql = "select position, type, color from piece where board_id = 1";
-        final Map<Position, Piece> pieces = new TreeMap<>();
-        try (final Connection connection = DBConnector.getConnection();
-             final PreparedStatement statement = connection.prepareStatement(sql)) {
-            executeLoad(pieces, statement);
-        } catch (SQLException e) {
-            throw new IllegalArgumentException("예상치 못한 에러가 발생했습니다. 다시 시도해주세요.");
-        }
-        return pieces;
-    }
-
-    private void executeLoad(Map<Position, Piece> pieces, PreparedStatement statement) throws SQLException {
-        final ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            Position position = Position.from(resultSet.getString("position"));
-            Type type = Type.from(resultSet.getString("type"));
-            Piece piece = type.makePiece(Color.from(resultSet.getString("color")));
-            pieces.put(position, piece);
-        }
-    }
-
-    @Override
-    public boolean existPieces() {
-        final String sql = "select id from piece where board_id = 1";
-        try (final Connection connection = DBConnector.getConnection();
-             final PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            final ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
-        } catch (SQLException e) {
-            throw new IllegalArgumentException("예상치 못한 에러가 발생했습니다. 다시 시도해주세요.");
-        }
-    }
-
-    @Override
-    public void delete() {
-        final String sql = "delete from piece where board_id = 1";
-        try (final Connection connection = DBConnector.getConnection();
-             final PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new IllegalArgumentException("예상치 못한 에러가 발생했습니다. 다시 시도해주세요.");
-        }
-    }
-
-    @Override
-    public void updatePosition(String source, String target) {
-        final String getSourcePieceSql = "select type, color from piece where position = ? and board_id = 1";
-        final String updateSourceSql = "update piece set type = '.', color = 'NONE' where position = ? and board_id = 1";
-        final String updateTargetSql = "update piece set type = ?, color = ? where position = ? and board_id = 1";
-        try (final Connection connection = DBConnector.getConnection();
-             final PreparedStatement statement1 = connection.prepareStatement(getSourcePieceSql);
-             final PreparedStatement statement2 = connection.prepareStatement(updateSourceSql);
-             final PreparedStatement statement3 = connection.prepareStatement(updateTargetSql)) {
-
-            statement1.setString(1, source);
-            final ResultSet resultSet = statement1.executeQuery();
-            if (!resultSet.next()) {
-                throw new SQLException();
-            }
-            final String type = resultSet.getString("type");
-            final String color = resultSet.getString("color");
-            statement2.setString(1, source);
-            statement2.executeUpdate();
-            statement3.setString(1, type);
-            statement3.setString(2, color);
-            statement3.setString(3, target);
-            statement3.executeUpdate();
-        } catch (SQLException e) {
-            throw new IllegalArgumentException("예상치 못한 에러가 발생했습니다. 다시 시도해주세요.");
+    public void updateAll(Map<Position, Piece> board, Long boardId) {
+        final String sql = "update piece set type = ?, color = ? where position = ? and board_id = ?";
+        for (Entry<Position, Piece> boardEntry : board.entrySet()) {
+            final Position position = boardEntry.getKey();
+            final Piece piece = boardEntry.getValue();
+            jdbcTemplate.update(sql, piece.getSymbol(), piece.getColor().name(), position.stringName(), boardId);
         }
     }
 }

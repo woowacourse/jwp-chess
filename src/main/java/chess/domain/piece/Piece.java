@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,19 +12,8 @@ public abstract class Piece {
     private static final Map<String, Piece> cache = new HashMap<>();
 
     static {
-        cache.put("WHITEKING", new King(Color.WHITE));
-        cache.put("BLACKKING", new King(Color.BLACK));
-        cache.put("WHITEQUEEN", new Queen(Color.WHITE));
-        cache.put("BLACKQUEEN", new Queen(Color.BLACK));
-        cache.put("WHITEROOK", new Rook(Color.WHITE));
-        cache.put("BLACKROOK", new Rook(Color.BLACK));
-        cache.put("WHITEKNIGHT", new Knight(Color.WHITE));
-        cache.put("BLACKKNIGHT", new Knight(Color.BLACK));
-        cache.put("WHITEBISHOP", new Bishop(Color.WHITE));
-        cache.put("BLACKBISHOP", new Bishop(Color.BLACK));
-        cache.put("WHITEPAWN", new Pawn(Color.WHITE));
-        cache.put("BLACKPAWN", new Pawn(Color.BLACK));
-        cache.put("EMPTYEMPTY", EmptyPiece.getInstance());
+        Arrays.stream(PieceName.values()).forEach(
+                gamePiece -> cache.put(gamePiece.getValue(), gamePiece.getPiece()));
     }
 
     protected final Symbol symbol;

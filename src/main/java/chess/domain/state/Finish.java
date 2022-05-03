@@ -23,7 +23,8 @@ public final class Finish implements State {
         return true;
     }
 
+    @Override
     public String getValue() {
-        return "Finish";
+        return StateName.FINISH.getValue();
     }
 }

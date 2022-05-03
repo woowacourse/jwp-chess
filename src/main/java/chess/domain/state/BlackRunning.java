@@ -27,6 +27,6 @@ public final class BlackRunning extends Running {
 
     @Override
     public String getValue() {
-        return "BlackTurn";
+        return StateName.BLACK_TURN.getValue();
     }
 }

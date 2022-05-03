@@ -1,10 +1,10 @@
-package chess.dto;
+package chess.dto.response;
 
-public class ScoreDto {
+public class ScoreResponse {
     private final float whiteScore;
     private final float blackScore;
 
-    public ScoreDto(float whiteScore, float blackScore) {
+    public ScoreResponse(float whiteScore, float blackScore) {
         this.whiteScore = whiteScore;
         this.blackScore = blackScore;
     }

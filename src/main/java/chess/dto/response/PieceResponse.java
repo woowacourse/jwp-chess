@@ -1,10 +1,10 @@
-package chess.dto;
+package chess.dto.response;
 
-public class PieceDto {
+public class PieceResponse {
     public String position;
     public String symbol;
 
-    public PieceDto(String position, String symbol) {
+    public PieceResponse(String position, String symbol) {
         this.position = position;
         this.symbol = symbol;
     }

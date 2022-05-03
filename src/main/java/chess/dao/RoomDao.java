@@ -1,45 +1,25 @@
 package chess.dao;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
-
 import chess.domain.Team;
-import chess.dto.RoomDto;
+import chess.dto.request.GameIdRequest;
+import chess.dto.request.RoomRequest;
+import chess.entity.RoomEntity;
 
-@Repository
-public class RoomDao {
+import java.util.List;
 
-    private final JdbcTemplate jdbcTemplate;
+public interface RoomDao {
 
-    public RoomDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    void makeGame(Team team, RoomRequest roomRequest);
 
-    public void makeGame(Team team) {
-        final String sql = "insert into room (status) values(?)";
-        jdbcTemplate.update(sql, team.name());
-    }
+    List<RoomEntity> getGames();
 
-    public RoomDto findById() {
-        final String sql = "select * from room";
-        try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                    new RoomDto(
-                            rs.getLong("id"),
-                            Team.valueOf(rs.getString("status"))
-                    ));
-        } catch (Exception e) {
-            return null;
-        }
-    }
+    RoomEntity findById(RoomRequest roomRequest);
 
-    public void updateStatus(Team team, long roomId) {
-        final String sql = "update room set status = ? where id = ?";
-        jdbcTemplate.update(sql, team.name(), roomId);
-    }
+    RoomEntity findById(GameIdRequest gameIdRequest);
 
-    public void deleteGame() {
-        final String sql = "delete from room";
-        jdbcTemplate.update(sql);
-    }
+    boolean isExistId(GameIdRequest gameIdRequest);
+
+    void updateStatus(Team team, long roomId);
+
+    void deleteGame(long roomId);
 }

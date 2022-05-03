@@ -1,12 +1,12 @@
-package chess.dto;
+package chess.dto.response;
 
 import chess.domain.Team;
 
-public class GameStateDto {
+public class GameStateResponse {
     private final Team gameState;
     private final boolean isRunning;
 
-    public GameStateDto(Team gameState, boolean isFinished) {
+    public GameStateResponse(Team gameState, boolean isFinished) {
         this.gameState = gameState;
         this.isRunning = isFinished;
     }

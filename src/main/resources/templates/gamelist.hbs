@@ -8,7 +8,13 @@
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 </head>
 <body>
-    <form class="make-game" action="/game"> <input class="button" type="submit" value="체스방 만들기"> </form>
-    <form class="game-list" action="/game/list"> <input class="button" type="submit" value="체스방 목록 조회하기"> </form>
+    <div class="items"></div>
 </body>
+<script src="/js/games.js"></script>
+<script src="/js/board.js"></script>
+<script>
+    window.onload = function () {
+        setList();
+    }
+</script>
 </html>

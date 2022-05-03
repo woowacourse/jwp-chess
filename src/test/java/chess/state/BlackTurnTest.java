@@ -79,7 +79,7 @@ class BlackTurnTest {
         GameState whiteTurn = board.move(source, destination);
 
         // then
-        Team result = whiteTurn.getTeam();
+        Team result = whiteTurn.team();
         assertThat(result).isEqualTo(Team.WHITE);
     }
 }

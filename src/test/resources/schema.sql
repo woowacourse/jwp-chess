@@ -14,6 +14,5 @@ CREATE TABLE board
     symbol varchar(50) NOT NULL,
     room_id bigint NOT NULL,
     PRIMARY KEY (id),
-    KEY room_id (room_id),
     CONSTRAINT id FOREIGN KEY (room_id) REFERENCES room (id) ON DELETE CASCADE ON UPDATE CASCADE
 );

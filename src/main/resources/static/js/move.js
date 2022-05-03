@@ -10,19 +10,20 @@ function move(position) {
         "source": sourcePosition,
         "destination": position,
     }
-
     movePiece(object, position);
 }
 
 function movePiece(object, position) {
     $.ajax({
-        url: "/move",
-        type: "POST",
+        url: "/move/" + document.getElementById("gameId").innerText,
+        type: "PUT",
         accept: 'application/json; charset=utf-8',
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify(object),
         success(data) {
             let result = data;
+            const team = data.team;
+            document.getElementById("turn").innerText = team + " Turn";
             printGameState(result);
             changePiece(position);
         },

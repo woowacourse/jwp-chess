@@ -1,18 +1,26 @@
-function setBoard() {
+function startGame() {
+    const url = window.location.href.split('/');
     $.ajax({
-        url: "/board",
+        url: "/games/" + url[url.length - 1],
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         type: "get",
         success: function (data) {
+            const url = window.location.href.split('/');
+            document.getElementById("gameId").innerText = url[url.length - 1]
+            if (data.pieces.length === 0) {
+                location.reload();
+            }
             const pieces = data.pieces;
             const team = data.team;
             document.getElementById("turn").innerText = team + " Turn";
             $.each(pieces, function(index, piece) {
                 findById(piece.position, piece.symbol);
             })
+
         },
         error: function (data){
+            alert(JSON.stringify(data))
             alert(data)
         }
     })
@@ -41,18 +49,21 @@ let piece = {
 
 function reset() {
     $.ajax({
-        url: "/reset",
+        url: "/reset/" + document.getElementById("gameId").innerText,
         type: "POST",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             const team = data.team;
             const pieces = data.pieces;
+
+            document.getElementById("gameId").innerText = data.id;
             document.getElementById("turn").innerText = team + " Turn";
             location.reload()
             $.each(pieces, function(index, piece) {
                 findById(piece.position, piece.symbol);
             })
+            
         },
         error: function (data){
             alert(data);
@@ -62,12 +73,12 @@ function reset() {
 
 function end() {
     $.ajax({
-        url: "/end",
-        type: "POST",
+        url: "/end/" + document.getElementById("gameId").innerText,
+        type: "PUT",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            if (data.running === false) {
+            if (data.running === true) {
                 const winningTeam = data.gameState;
                 alert("게임이 종료되었습니다." + "우승자는 "+ winningTeam);
             }

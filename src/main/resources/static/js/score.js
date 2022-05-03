@@ -1,6 +1,7 @@
 function getScore() {
+    const url = window.location.href.split('/');
     $.ajax({
-        url: "/status",
+        url: "/status/" + url[url.length - 1],
         type: "GET",
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',

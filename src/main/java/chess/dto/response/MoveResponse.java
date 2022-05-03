@@ -1,10 +1,10 @@
-package chess.dto;
+package chess.dto.response;
 
-public class MoveDto {
+public class MoveResponse {
     private final String source;
     private final String destination;
 
-    public MoveDto(String source, String destination) {
+    public MoveResponse(String source, String destination) {
         this.source = source;
         this.destination = destination;
     }

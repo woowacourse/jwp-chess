@@ -1,5 +1,7 @@
 package chess.domain;
 
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 import chess.domain.state.State;
 import chess.domain.state.StateType;
 
@@ -40,9 +42,8 @@ public class ChessGame {
         return state.winner();
     }
 
-    public Board board() {
-        ChessBoard chessBoard = state.chessBoard();
-        return chessBoard.getBoard();
+    public Piece findPiece(Position position) {
+        return state.chessBoard().getPieceByPosition(position);
     }
 
     public StateType getStateType() {

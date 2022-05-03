@@ -69,4 +69,8 @@ public class ChessBoard {
     public Board getBoard() {
         return board;
     }
+
+    public Piece getPieceByPosition(Position position) {
+        return board.getPiece(position);
+    }
 }

@@ -125,8 +125,8 @@ public class ChessService {
 
     private void move(int gameId, ChessGame chessGame, Position target, Position source) {
         gameDao.updateStateById(gameId, chessGame.getStateType());
-        pieceDao.updateByGameId(gameId, new PieceDto(chessGame.board().findPiece(target), target));
-        pieceDao.updateByGameId(gameId, new PieceDto(chessGame.board().findPiece(source), source));
+        pieceDao.updateByGameId(gameId, new PieceDto(chessGame.findPiece(target), target));
+        pieceDao.updateByGameId(gameId, new PieceDto(chessGame.findPiece(source), source));
     }
 
     public ResultDto getChessResult(int gameId) {
@@ -135,7 +135,6 @@ public class ChessService {
 
         double blackScore = getScore(gameId, Color.BLACK);
         double whiteScore = getScore(gameId, Color.WHITE);
-
 
         return new ResultDto(gameId, blackScore, whiteScore, chessGame.result());
     }

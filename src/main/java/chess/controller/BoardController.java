@@ -1,7 +1,5 @@
 package chess.controller;
 
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -10,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import chess.domain.game.GameState;
-import chess.dto.BoardResponse;
 import chess.dto.GameStateResponse;
 import chess.dto.RouteRequest;
+import chess.dto.ScoreResponse;
 import chess.service.GameService;
 
 @RestController
@@ -33,11 +31,10 @@ public class BoardController {
     }
 
     @GetMapping(path = "/board/{gameId}/status")
-    public ResponseEntity<Map<String, Object>> status(@PathVariable Long gameId) {
+    public ResponseEntity<ScoreResponse> status(@PathVariable Long gameId) {
+        System.out.println("WHAT THE FUCK");
         GameState state = service.readGameState(gameId);
-        return ResponseEntity.ok().body(Map.of("board", BoardResponse.of(state.getPointPieces()),
-            "score", state.getColorScore())
-        );
+        return ResponseEntity.ok().body(ScoreResponse.of(state.getColorScore()));
     }
 
 }

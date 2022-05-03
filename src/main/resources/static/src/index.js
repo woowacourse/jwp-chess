@@ -72,7 +72,7 @@ function setUpMain(state) {
         const gameId = getLastPath();
 
         send(`/board/${gameId}/status`, {
-            method: 'get'
+            method: 'GET'
         }, showStatus);
     });
 
@@ -82,25 +82,22 @@ function setUpMain(state) {
         const gameId = getLastPath();
         send(`/game/${gameId}/start`, {
             method: 'PATCH',
-            body: JSON.stringify({'command': 'start'}),
-            headers: new Headers({'Content-Type': 'application/json'})
         }, relocate);
     });
 
     const endForm = document.getElementById("end_form");
     endForm.addEventListener("submit", e => {
         e.preventDefault();
-        const roomId = getLastPath();
+        const gameId = getLastPath();
         send(`/game/${gameId}/end`, {
             method: 'PATCH',
-            body: JSON.stringify({'command': 'end'}),
-            headers: new Headers({'Content-Type': 'application/json'})
         }, relocate);
     });
 
     setUpState(state, {'status': statusForm, 'start': startForm, 'end': endForm});
     console.log("setup done")
 }
+
 
 // -------- init end ---------
 
@@ -131,7 +128,7 @@ function moveByClick(source, destination) {
     console.log('move by click called', source, destination);
 
     const gameId = getLastPath();
-    send("/board/" + gameId, {
+    send(`/board/${gameId}/move`, {
         method: 'PATCH',
         body: JSON.stringify({'source': source.id, 'destination': destination.id}),
         headers: new Headers({'Content-Type': 'application/json'})
@@ -295,9 +292,10 @@ function getLastPath() {
 }
 
 function showStatus(responseJson) {
-    let string = 'WHITE SCORE = ' + responseJson['score']['WHITE'] +
+    const colorScore = responseJson['colorScore'];
+    let string = 'WHITE SCORE = ' + colorScore['WHITE'] +
         '\n' +
-        'BLACK SCORE = ' + responseJson['score']['BLACK'];
+        'BLACK SCORE = ' + colorScore['BLACK'];
     alert(string);
 }
 

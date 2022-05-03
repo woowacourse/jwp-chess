@@ -11,27 +11,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class PieceDaoTest {
+    private static final String PASSWORD = "password";
+    private static final String GAME_NAME = "test";
     @Autowired
     private ChessGameDao chessGameDao;
     @Autowired
     private PieceDao pieceDao;
 
     @AfterEach
-    private void rollback() {
-        chessGameDao.remove("test");
+    void rollback() {
+        chessGameDao.remove(GAME_NAME);
     }
 
     @DisplayName("피스들 저장 테스트")
     @Test
     public void save() {
         //given
-        ChessGame chessGame = new ChessGame("test");
+        ChessGame chessGame = new ChessGame(GAME_NAME);
         ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
 
         //when
-        chessGameDao.save(chessGameDto);
+        Long id = chessGameDao.save(chessGameDto, PASSWORD);
 
         //then
-        Assertions.assertDoesNotThrow(() -> pieceDao.save(chessGameDto));
+        Assertions.assertDoesNotThrow(() -> pieceDao.save(id, chessGameDto));
     }
 }

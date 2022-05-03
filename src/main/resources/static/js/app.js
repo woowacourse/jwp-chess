@@ -66,14 +66,33 @@ function restart() {
     }
 }
 
-function makeForm(gamename, command) {
-
-    console.log(gamename);
-    console.log(command);
+function makeForm(id, command) {
     const form = document.createElement("form");
 
     form.setAttribute("method", "get");
-    form.setAttribute("action", "/game/" + gamename + "/" + command);
+    form.setAttribute("action", "/game/" + id + "/" + command);
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function lobby() {
+    const form = document.createElement("form");
+
+    form.setAttribute("method", "get");
+    form.setAttribute("action", "/");
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function deleteGame(gameName) {
+    let password = prompt('비밀번호를 입력하세요.');
+
+    const form = document.createElement("form");
+    form.setAttribute("method", "post");
+    form.setAttribute("action", "/delete");
+    form.appendChild(createInput("game_name", gameName));
+    form.appendChild(createInput("password", password));
+
     document.body.appendChild(form);
     form.submit();
 }

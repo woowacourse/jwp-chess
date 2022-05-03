@@ -3,6 +3,7 @@ package chess.domain.strategy;
 import chess.domain.ChessBoard;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
+import chess.exception.IllegalMoveException;
 
 public final class RookMoveStrategy extends CommonMovingStrategy {
     @Override
@@ -12,7 +13,7 @@ public final class RookMoveStrategy extends CommonMovingStrategy {
         Direction direction = Direction.of(source, target);
 
         if (!direction.isLinearDirection()) {
-            throw new IllegalArgumentException("상하좌우로만 움직일 수 있습니다.");
+            throw new IllegalMoveException("상하좌우로만 움직일 수 있습니다.");
         }
     }
 }

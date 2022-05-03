@@ -3,6 +3,7 @@ package chess.domain.strategy;
 import chess.domain.ChessBoard;
 import chess.domain.position.Direction;
 import chess.domain.position.Position;
+import chess.exception.IllegalMoveException;
 
 public final class BishopMoveStrategy extends CommonMovingStrategy {
 
@@ -13,7 +14,7 @@ public final class BishopMoveStrategy extends CommonMovingStrategy {
         Direction direction = Direction.of(source, target);
 
         if (!direction.isDiagonalDirection()) {
-            throw new IllegalArgumentException("대각선으로만 움직일 수 있습니다.");
+            throw new IllegalMoveException("대각선으로만 움직일 수 있습니다.");
         }
     }
 }

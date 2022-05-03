@@ -1,5 +1,6 @@
 package chess.domain.position;
 
+import chess.exception.IllegalMoveException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class Positions {
         char second = token.charAt(RANK_INDEX);
 
         if (!File.isFile(first) || !Rank.isRank(Character.getNumericValue(second))) {
-            throw new IllegalArgumentException("형식이 잘못되었거나 범위를 벗어났습니다.");
+            throw new IllegalMoveException("형식이 잘못되었거나 범위를 벗어났습니다.");
         }
     }
 

@@ -9,7 +9,7 @@
     <title>Chess Game</title>
 </head>
 <body>
-<h1 style="text-align: center; margin-bottom: 50px;">디우의 체스게임에 오신것을 환영하지 않습니다.</h1>
+<h1 style="text-align: center; margin-bottom: 50px;">디우의 체스게임에 오신것을 환영합니다.</h1>
 <div id="container">
     <div id="chessboard">
         <div id="chessboard-container">
@@ -472,9 +472,9 @@
     </div>
     <div class="buttons-container">
         <div class="btn-group">
-            <button onclick="restart()" type="submit" class="btn btn-primary">재시작</button>
-            <button type="submit" class="btn btn-success" onclick = "makeForm('{{gameName}}', 'status')">점수</button>
-            <button type="submit" class="btn btn-danger" onclick = "makeForm('{{gameName}}', 'end')">게임 종료</button>
+            <button type="submit" class="btn btn-primary" onclick = "makeForm('{{id}}', 'status')">점수</button>
+            <button type="submit" class="btn btn-danger" onclick = "makeForm('{{id}}', 'end')">게임 종료</button>
+            <button type="submit" class="btn btn-success" onclick = "lobby()">로비로 돌아가기</button>
         </div>
         <div class="info">
             <div>

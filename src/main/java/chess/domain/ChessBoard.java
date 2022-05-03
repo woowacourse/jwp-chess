@@ -12,6 +12,7 @@ import chess.domain.piece.Team;
 import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Positions;
+import chess.exception.IllegalMoveException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ChessBoard {
         Piece piece = cells.get(position);
 
         if (piece == null) {
-            throw new IllegalArgumentException("해당 위치에 말이 없습니다.");
+            throw new IllegalMoveException("해당 위치에 말이 없습니다.");
         }
 
         return piece.getTeam();

@@ -1,21 +1,18 @@
 package chess.web.dao;
 
-import chess.board.Board;
-import chess.board.Turn;
+import chess.board.BoardEntity;
+import java.util.List;
 import java.util.Optional;
 
 public interface BoardDao {
-    void save(Long boardId, Turn turn);
 
-    Optional<Turn> findTurnById(Long id);
+    Long save(String turn, String title, String password);
 
-    void updateTurnById(Long id, String newTurn);
+    void updateTurnById(Long id, String turn);
 
-    Long save();
+    Optional<BoardEntity> findById(Long id);
 
-    // FIXME 사용하는 곳 없음
-    Optional<Board> findById(Long id);
+    List<BoardEntity> findAll();
 
-    void deleteById(Long id);
-
+    void delete(Long id, String password);
 }

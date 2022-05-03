@@ -1,15 +1,17 @@
-package chess.web.service.dto;
+package chess.board;
 
-public class BoardDto {
+public class BoardEntity {
 
     private final Long id;
     private final String turn;
     private final String title;
+    private final String password;
 
-    public BoardDto(Long id, String turn, String title) {
+    public BoardEntity(Long id, String turn, String title, String password) {
         this.id = id;
         this.turn = turn;
         this.title = title;
+        this.password = password;
     }
 
     public Long getId() {
@@ -22,5 +24,9 @@ public class BoardDto {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

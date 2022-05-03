@@ -1,16 +1,18 @@
 package chess.web.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-import chess.board.Board;
-import chess.board.Team;
+import chess.board.BoardEntity;
 import chess.board.Turn;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
 class BoardDaoTest {
@@ -19,66 +21,98 @@ class BoardDaoTest {
     private JdbcTemplate jdbcTemplate;
 
     private BoardDao boardDao;
-    private Long boardId;
 
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS piece");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS board");
-
-        jdbcTemplate.execute("CREATE TABLE board (" +
-                " id   INT(10) not null AUTO_INCREMENT," +
-                " turn VARCHAR (5) not null," +
-                " primary key (id))");
-
-        jdbcTemplate.execute("CREATE TABLE piece (" +
-                " id       INT(10) not null AUTO_INCREMENT," +
-                " board_id INT(10)," +
-                " position CHAR(2)," +
-                " type     VARCHAR (20) not null," +
-                " team     VARCHAR (10) not null," +
-                " foreign key (board_id) references board (id) ON DELETE CASCADE ," +
-                " primary key (id))");
-
         boardDao = new BoardDaoImpl(jdbcTemplate);
-
-        boardId = boardDao.save();
     }
 
+    @Sql("/sql/chess-setup.sql")
     @Test
-    @DisplayName("처음 저장된 board가 초기화된 Turn과 동일한지 테스트")
-    void findTurnById() {
-        //when
-        Turn turn = boardDao.findTurnById(boardId).get();
-        //then
-        assertThat(turn).isEqualTo(Turn.init());
-    }
-
-    @Test
-    @DisplayName("현재 턴을 black으로 업데이트하면 DB에 반영이 되는지 테스트")
-    void updateTurnById() {
-        //when
-        boardDao.updateTurnById(boardId, "black");
-        Turn turn = boardDao.findTurnById(boardId).get();
-        //then
-        assertThat(turn).isEqualTo(new Turn(Team.BLACK));
-    }
-
-    @Test
-    @DisplayName("새로운 보드판이 만들어지면 pk값이 1 증가한다.")
+    @DisplayName("체스방을 저장한다.")
     void save() {
-        //when
-        Long saveId = boardDao.save();
-        //then
-        assertThat(boardId + 1).isEqualTo(saveId);
-        boardDao.deleteById(saveId);
+        Turn turn = Turn.init();
+        String title = "title";
+        String password = "password";
 
+        Long id = boardDao.save(turn.getTeam().value(), title, password);
+
+        Optional<BoardEntity> board = boardDao.findById(id);
+        assertAll(
+                () -> assertThat(board).isPresent(),
+                () -> assertThat(board.get().getTitle()).isEqualTo(title),
+                () -> assertThat(board.get().getPassword()).isEqualTo(password)
+        );
     }
 
+    @Sql("/sql/chess-setup.sql")
     @Test
-    @DisplayName("현재 board판만 있고 piece들은 없으므로 size가 0이어야 한다.")
+    @DisplayName("id에 맞는 체스 게임의 순서를 수정한다.")
+    void updateTurnById() {
+        Turn turn = Turn.init();
+        String title = "title";
+        String password = "password";
+        Long id = boardDao.save(turn.getTeam().value(), title, password);
+        Turn changedTurn = turn.change();
+
+        boardDao.updateTurnById(id, changedTurn.getTeam().value());
+
+        Optional<BoardEntity> board = boardDao.findById(id);
+        assertAll(
+                () -> assertThat(board).isPresent(),
+                () -> assertThat(board.get().getTurn()).isEqualTo(changedTurn.getTeam().value())
+        );
+    }
+
+    @Sql("/sql/chess-setup.sql")
+    @Test
+    @DisplayName("id에 맞는 체스방의 정보를 반환한다.")
     void findById() {
-        Board board = boardDao.findById(boardId).get();
-        assertThat(board.getPieces().getPieces().size()).isEqualTo(0);
+        Turn turn = Turn.init();
+        String title = "title";
+        String password = "password";
+        Long id = boardDao.save(turn.getTeam().value(), title, password);
+
+        Optional<BoardEntity> board = boardDao.findById(id);
+
+        assertAll(
+                () -> assertThat(board).isPresent(),
+                () -> assertThat(board.get().getTitle()).isEqualTo(title),
+                () -> assertThat(board.get().getPassword()).isEqualTo(password)
+        );
+    }
+
+    @Sql("/sql/chess-setup.sql")
+    @Test
+    @DisplayName("id와 패스워드가 맞다면 체스방을 제거한다.")
+    void delete() {
+        Turn turn = Turn.init();
+        String title = "title";
+        String password = "password";
+        Long id = boardDao.save(turn.getTeam().value(), title, password);
+
+        boardDao.delete(id, password);
+
+        Optional<BoardEntity> board = boardDao.findById(id);
+        assertThat(board).isNotPresent();
+    }
+
+    @Sql("/sql/chess-setup.sql")
+    @Test
+    @DisplayName("비밀번호가 틀리면 체스방을 제거할 수 없다.")
+    void deleteWrongPassword() {
+        Turn turn = Turn.init();
+        String title = "title";
+        String password = "password";
+        Long id = boardDao.save(turn.getTeam().value(), title, password);
+
+        boardDao.delete(id, "test");
+
+        Optional<BoardEntity> board = boardDao.findById(id);
+        assertAll(
+                () -> assertThat(board).isPresent(),
+                () -> assertThat(board.get().getTitle()).isEqualTo(title),
+                () -> assertThat(board.get().getPassword()).isEqualTo(password)
+        );
     }
 }

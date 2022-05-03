@@ -82,7 +82,7 @@ public class PieceDaoImpl implements PieceDao {
     }
 
     @Override
-    public void deleteByBoardId(Long boardId) {
+    public void deleteAllByBoardId(Long boardId) {
         final String query = "DELETE FROM piece WHERE board_id = ?";
         jdbcTemplate.update(query, boardId);
     }

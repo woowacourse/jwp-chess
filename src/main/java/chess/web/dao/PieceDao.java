@@ -17,5 +17,5 @@ public interface PieceDao {
 
     void save(final List<Piece> pieces, final Long boardId);
 
-    void deleteByBoardId(Long boardId);
+    void deleteAllByBoardId(Long boardId);
 }

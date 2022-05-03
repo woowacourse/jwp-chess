@@ -2,6 +2,7 @@ package chess.board.piece;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.board.Board;
@@ -76,7 +77,9 @@ class BishopTest {
         Piece king = new King(Position.of('e', '5'), Team.BLACK);
         List<Position> intervalPosition = bishop.getIntervalPosition(king);
 
-        assertThat(intervalPosition.contains(Position.of('f', '6'))).isTrue();
-        assertThat(intervalPosition.contains(Position.of('g', '7'))).isTrue();
+        assertAll(
+                () -> assertThat(intervalPosition.contains(Position.of('f', '6'))).isTrue(),
+                () -> assertThat(intervalPosition.contains(Position.of('g', '7'))).isTrue()
+        );
     }
 }

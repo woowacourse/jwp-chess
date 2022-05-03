@@ -1,6 +1,8 @@
 const start = document.getElementById('start-button');
 const status = document.getElementById('status-button');
-const IMAGE_PATH = "./images/";
+const IMAGE_PATH = "/images/";
+const boardIdIndexInUri = 2;
+const boardId = parseInt(window.location.pathname.split("/")[boardIdIndexInUri]);
 const BOARD = document.querySelector("#board");
 const CURRENT_TEAM = document.querySelector("#current-team");
 const SYMBOL_TO_IMAGE_PATH = {
@@ -24,15 +26,31 @@ let boardInfo = "";
 let isChoiced = false;
 let currentTurn = "";
 let isFinished = GAME_RUNNING;
+let pieces;
 
 function showStatusButton() {
     status.style.visibility = 'visible';
 }
 
 function initBoard() {
-    fetch('/api/restart')
+    fetch('/api/boards/' + boardId + '/initialization'), {
+        method: "PUT", headers: {
+            "Content-Type": "application/json",
+        }}
         .then(res => res.json())
-        .then(imageSetting)
+        .then(value => {
+            if (value["statusCode"] === 400) {
+                alert(value["errorMessage"]);
+                drawBoard();
+                return;
+            }
+            if (value["board"].size === 0) {
+                initBoard();
+                return;
+            }
+            imageSetting(value);
+            drawBoard();
+        });
 }
 
 start.addEventListener('click', function () {
@@ -56,21 +74,44 @@ function getStatus(scoreResponse) {
 }
 
 status.addEventListener('click', function () {
-    fetch('/api/status')
+    fetch('/api/boards/' + boardId + '/status')
         .then(res => res.json())
-        .then(getStatus)
+        .then(getStatus);
 })
 
 function loadBoard() {
-    fetch('/api/load')
+    fetch('/api/boards/' + boardId)
         .then(res => res.json())
-        .then(imageSetting)
+        .then(value => {
+            if (value["statusCode"] === 400) {
+                alert(value["errorMessage"]);
+                drawBoard();
+                return;
+            }
+            imageSetting(value);
+            drawBoard();
+        });
 }
 
 function imageSetting(response) {
-    const divs = BOARD.querySelectorAll("div");
     boardInfo = response;
-    pieces = response["board"];
+    pieces = undefined;
+    if (response["board"] !== undefined) {
+        pieces = response["board"];
+    }
+    turnSetting(response)
+}
+
+function turnSetting(response) {
+    if (response["finish"] === true) {
+        isFinished = GAME_FINISHED;
+        return;
+    }
+    currentTurn = getTurnByResponse(response);
+}
+
+function drawBoard() {
+    const divs = BOARD.querySelectorAll("div");
     for (const div of divs) {
         const key = div.getAttribute("id");
 
@@ -80,19 +121,13 @@ function imageSetting(response) {
             div.style.backgroundImage = null;
         }
     }
-    turnSetting(response)
-}
 
-function turnSetting(response) {
-    if (response["finish"] === true) {
+    if (isFinished) {
         document.querySelector("#view-type").textContent = "승리자 :ㅤ";
-        isFinished = GAME_FINISHED;
         alert("게임이 종료되었습니다. 승리자는 : " + CURRENT_TEAM.textContent + "입니다.");
         return;
     }
-
     document.querySelector("#view-type").textContent = "현재 턴 :ㅤ"
-    currentTurn = getTurnByResponse(response);
     CURRENT_TEAM.textContent = currentTurn
 }
 
@@ -125,8 +160,7 @@ function eventMove(event) {
             window.alert("기물을 선택하세요!");
             return
         }
-        if (turn === "white" && pieces[position] !== pieces[position].toLowerCase() ||
-            turn === "black" && pieces[position] !== pieces[position].toUpperCase()) {
+        if (turn === "white" && pieces[position] !== pieces[position].toLowerCase() || turn === "black" && pieces[position] !== pieces[position].toUpperCase()) {
             window.alert("자신의 기물을 선택하세요!");
             return;
         }
@@ -155,18 +189,23 @@ function movePiece(from, to) {
     }
 
     const request = {
-        from: from,
-        to: to
+        from: from, to: to
     }
 
-    fetch('/api/move', {
-        method: "POST",
-        headers: {
+    fetch('/api/boards/' + boardId, {
+        method: "PATCH", headers: {
             "Content-Type": "application/json",
-        },
-        body: JSON.stringify(request),
+        }, body: JSON.stringify(request),
     }).then(res => res.json())
-        .then(res => imageSetting(res));
+        .then(value => {
+            if (value["statusCode"] === 400) {
+                alert(value["errorMessage"]);
+                drawBoard();
+                return;
+            }
+            imageSetting(value);
+            drawBoard();
+        });
 }
 
 function move() {

@@ -1,6 +1,6 @@
 package chess;
 
-import chess.entity.GameEntity;
+import chess.model.entity.GameEntity;
 import chess.model.dao.GameDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

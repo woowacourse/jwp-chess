@@ -1,6 +1,6 @@
 package chess.model.dto;
 
-import chess.entity.GameEntity;
+import chess.model.entity.GameEntity;
 
 public class GameInfoDto {
     private Long gameId;

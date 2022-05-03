@@ -1,6 +1,6 @@
 package chess.model.dao;
 
-import chess.entity.GameEntity;
+import chess.model.entity.GameEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;

@@ -1,4 +1,4 @@
-package chess.entity;
+package chess.model.entity;
 
 public class GameEntity {
     private final Long gameId;

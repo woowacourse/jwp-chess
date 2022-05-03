@@ -1,7 +1,7 @@
 package chess.service;
 
-import chess.entity.GameEntity;
-import chess.entity.PieceEntity;
+import chess.model.entity.GameEntity;
+import chess.model.entity.PieceEntity;
 import chess.model.ChessGame;
 import chess.model.GameResult;
 import chess.model.Turn;

@@ -1,4 +1,4 @@
-package chess.entity;
+package chess.model.entity;
 
 public class PieceEntity {
     private final String name;

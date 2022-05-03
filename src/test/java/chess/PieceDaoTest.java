@@ -1,6 +1,6 @@
 package chess;
 
-import chess.entity.PieceEntity;
+import chess.model.entity.PieceEntity;
 import chess.model.board.BoardFactory;
 import chess.model.dao.GameDao;
 import chess.model.dao.PieceDao;

@@ -20,9 +20,9 @@ public class GameDao {
 
     public long initGame(String name, String password) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into games (name, password, turn) values (?, ?, ?)";
+        String sql = "insert into game (name, password, turn) values (?, ?, ?)";
         jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"game_id"});
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, password);
             preparedStatement.setString(3, INIT_TURN);
@@ -33,12 +33,12 @@ public class GameDao {
     }
 
     public List<GameEntity> findAll() {
-        String sql = "select game_id, name, password, turn from games";
+        String sql = "select id, name, password, turn from game";
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
                     return new GameEntity(
-                            resultSet.getLong("game_id"),
+                            resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getString("password"),
                             resultSet.getString("turn")
@@ -46,28 +46,28 @@ public class GameDao {
                 });
     }
 
-    public String findTurnById(Long gameId) {
-        String query = "select turn from games where game_id = ?";
-        return jdbcTemplate.queryForObject(query, String.class, gameId);
+    public String findTurnById(Long id) {
+        String query = "select turn from game where id = ?";
+        return jdbcTemplate.queryForObject(query, String.class, id);
     }
 
-    public String findPwdById(Long gameId) {
-        String query = "select password from games where game_id = ?";
-        return jdbcTemplate.queryForObject(query, String.class, gameId);
+    public String findPwdById(Long id) {
+        String query = "select password from game where id = ?";
+        return jdbcTemplate.queryForObject(query, String.class, id);
     }
 
-    public void update(String nextTurn, Long gameId) {
-        String query = "UPDATE games SET turn = (?) where game_id = ?";
-        jdbcTemplate.update(query, nextTurn, gameId);
+    public void update(String nextTurn, Long id) {
+        String query = "UPDATE game SET turn = (?) where id = ?";
+        jdbcTemplate.update(query, nextTurn, id);
     }
 
-    public void deleteByGameId(Long id) {
-        String sql = "DELETE FROM games where game_id = ?";
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM game where id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     public void deleteAll() {
-        String sql = "DELETE FROM games";
+        String sql = "DELETE FROM game";
         jdbcTemplate.update(sql);
     }
 }

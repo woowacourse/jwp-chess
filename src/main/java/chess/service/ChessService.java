@@ -85,7 +85,7 @@ public class ChessService {
 
         if (confirmPassword.equals(storedPassword)) {
             pieceDao.deleteByGameId(id);
-            gameDao.deleteByGameId(id);
+            gameDao.deleteById(id);
             return;
         }
         throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");

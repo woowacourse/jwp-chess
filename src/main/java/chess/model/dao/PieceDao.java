@@ -22,22 +22,15 @@ public class PieceDao {
         return (piece.getTeam().name() + "-" + piece.getName()).toLowerCase();
     }
 
-    public void init(Board board) {
-        String query = "insert into pieces (position, name, game_id) values (?, ?, ?)";
-        for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
-            jdbcTemplate.update(query, entry.getKey().getPosition(), getPieceName(entry.getValue()), 1);
-        }
-    }
-
     public void init(Board board, Long gameId) {
-        String query = "insert into pieces (position, name, game_id) values (?, ?, ?)";
+        String query = "insert into piece (position, name, game_id) values (?, ?, ?)";
         for (Map.Entry<Position, Piece> entry : board.getBoard().entrySet()) {
             jdbcTemplate.update(query, entry.getKey().getPosition(), getPieceName(entry.getValue()), gameId);
         }
     }
 
     public List<PieceEntity> findAllPieces() {
-        String sql = "select position, name from pieces";
+        String sql = "select position, name from piece";
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
@@ -49,8 +42,8 @@ public class PieceDao {
                 });
     }
 
-    public List<PieceEntity> findAllByGameId(long gameId) {
-        String sql = "select position, name from pieces where game_id = ?";
+    public List<PieceEntity> findAllByGameId(Long gameId) {
+        String sql = "select position, name from piece where game_id = ?";
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
@@ -63,22 +56,22 @@ public class PieceDao {
     }
 
     public String findPieceNameByPositionAndGameId(String source, Long gameId) {
-        String sql = "select name from pieces where position = ? and game_id = ?";
+        String sql = "select name from piece where position = ? and game_id = ?";
         return jdbcTemplate.queryForObject(sql, String.class, source, gameId);
     }
 
     public void updateByPositionAndGameId(String position, String pieceName, Long gameId) {
-        String sql = "UPDATE pieces SET name = (?) WHERE position = (?) and game_id = ?";
+        String sql = "UPDATE piece SET name = (?) WHERE position = (?) and game_id = ?";
         jdbcTemplate.update(sql, pieceName, position, gameId);
     }
 
     public void deleteAll() {
-        String query = "DELETE FROM pieces";
+        String query = "DELETE FROM piece";
         jdbcTemplate.update(query);
     }
 
     public void deleteByGameId(Long id) {
-        String sql = "DELETE FROM pieces WHERE game_id = ?";
+        String sql = "DELETE FROM piece WHERE game_id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

@@ -54,7 +54,7 @@ class GameDaoTest {
     void deleteByGameId() {
         long id = gameDao.initGame("room1", "1234");
 
-        gameDao.deleteByGameId(id);
+        gameDao.deleteById(id);
 
         assertThat(gameDao.findAll().size()).isZero();
     }

@@ -1,6 +1,6 @@
 package chess.application.web;
 
-import chess.dto.GameDto;
+import chess.domain.Room;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class GameRestController {
     }
 
     @GetMapping("/games")
-    public ResponseEntity<List<GameDto>> list() {
+    public ResponseEntity<List<Room>> list() {
         return ResponseEntity.ok().body(gameService.list());
     }
 

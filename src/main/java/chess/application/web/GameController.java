@@ -47,7 +47,7 @@ public class GameController {
     }
 
     private String play(Model model, long gameNo) {
-        if (gameService.isGameFinished(gameNo)) {
+        if (!gameService.isGameRunning(gameNo)) {
             return end(model, gameNo);
         }
         model.addAttribute("gameNo", gameNo);

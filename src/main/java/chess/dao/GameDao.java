@@ -1,8 +1,7 @@
 package chess.dao;
 
-import chess.dto.GameDto;
+import chess.domain.ChessGame;
 import java.sql.PreparedStatement;
-import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,63 +15,49 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<GameDto> selectGames() {
-        final String sql = "select no, title from game";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new GameDto(
-                resultSet.getInt("no"),
-                resultSet.getString("title"))
-        );
-    }
-
-    public long insert(GameDto game) {
-        final String sql = "insert into game (running, white_turn, title, password) values (?,?,?,?)";
+    public long insert(ChessGame game, long roomNo) {
+        final String sql = "insert into game (room_no, running, white_turn) values (?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"no"});
-            ps.setBoolean(1, game.isRunning());
-            ps.setBoolean(2, game.isWhiteTurn());
-            ps.setString(3, game.getTitle());
-            ps.setString(4, game.getPassword());
+            ps.setLong(1, roomNo);
+            ps.setBoolean(2, game.isRunning());
+            ps.setBoolean(3, game.isWhiteTurn());
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
     }
 
-    public String loadPassword(long gameNo) {
-        final String sql = "select password from game where no = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, gameNo);
+    public long findNoByRoom(long roomNo) {
+        final String sql = "select no from game where room_no = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, roomNo);
     }
 
-    public String loadTitle(long gameNo) {
-        final String sql = "select title from game where no = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, gameNo);
+    public boolean isRunning(long roomNo) {
+        final String sql = "select running from game where room_no = ?";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, roomNo);
     }
 
-    public boolean isRunning(long gameNo) {
-        final String sql = "select running from game where no = ?";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, gameNo);
+    public void update(long roomNo, boolean whiteTurn) {
+        final String sql = "update game set white_turn = ? where room_no = ?";
+        jdbcTemplate.update(sql, whiteTurn, roomNo);
     }
 
-    public void update(long gameNo, boolean whiteTurn) {
-        final String sql = "update game set white_turn = ? where no = ?";
-        jdbcTemplate.update(sql, whiteTurn, gameNo);
+    public boolean isWhiteTurn(long roomNo) {
+        final String sql = "select white_turn from game where room_no = ?";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, roomNo);
     }
 
-    public boolean isWhiteTurn(long gameNo) {
-        final String sql = "select white_turn from game where no = ?";
-
-        return jdbcTemplate.queryForObject(sql, Boolean.class, gameNo);
+    public void end(long roomNo) {
+        final String sql = "update game set running = ? where room_no = ?";
+        jdbcTemplate.update(sql, false, roomNo);
     }
 
-    public void end(long gameNo) {
-        final String sql = "update game set running = ? where no = ?";
-        jdbcTemplate.update(sql, false, gameNo);
-    }
-
-    public void delete(long gameNo) {
-        final String sql = "delete from game where no = ?";
-        jdbcTemplate.update(sql, gameNo);
+    public void delete(long roomNo) {
+        final String sql = "delete from game where room_no = ?";
+        jdbcTemplate.update(sql, roomNo);
     }
 }

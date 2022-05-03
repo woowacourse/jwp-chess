@@ -5,14 +5,13 @@ import static chess.view.Expressions.EXPRESSIONS_ROW;
 
 import chess.dao.BoardDao;
 import chess.dao.GameDao;
+import chess.dao.RoomDao;
 import chess.domain.Camp;
 import chess.domain.ChessGame;
-import chess.domain.Score;
-import chess.domain.board.BoardInitializer;
+import chess.domain.Room;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Type;
-import chess.dto.GameDto;
 import chess.dto.PieceDto;
 import java.util.HashMap;
 import java.util.List;
@@ -30,30 +29,34 @@ public class GameService {
 
     private final GameDao gameDao;
     private final BoardDao boardDao;
+    private final RoomDao roomDao;
 
-    public GameService(GameDao gameDao, BoardDao boardDao) {
+    public GameService(GameDao gameDao, BoardDao boardDao, RoomDao roomDao) {
         this.gameDao = gameDao;
         this.boardDao = boardDao;
+        this.roomDao = roomDao;
     }
 
-    public List<GameDto> list() {
-        return gameDao.selectGames();
+    public List<Room> list() {
+        return roomDao.selectAll();
     }
 
     public void createRoom(String title, String password) {
         if (title.isBlank() || password.isBlank()) {
             throw new IllegalArgumentException("방 제목과 비밀번호를 입력하세요.");
         }
-        long gameNo = gameDao.insert(GameDto.fromNewGame(title, password));
-        boardDao.insert(gameNo, BoardInitializer.get().getSquares());
+        long roomNo = roomDao.insert(Room.create(title, password));
+        ChessGame game = ChessGame.create();
+        long gameNo = gameDao.insert(game, roomNo);
+        boardDao.insert(gameNo, game.getBoardSquares());
     }
 
-    public String loadGameTitle(long gameNo) {
-        return gameDao.loadTitle(gameNo);
+    public String loadGameTitle(long roomNo) {
+        return roomDao.loadTitle(roomNo);
     }
 
-    public Map<String, Object> modelPlayingBoard(long gameNo) {
-        Map<Position, Piece> board = load(gameNo).getBoardSquares();
+    public Map<String, Object> modelPlayingBoard(long roomNo) {
+        Map<Position, Piece> board = load(gameDao.findNoByRoom(roomNo)).getBoardSquares();
         return board.entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> entry.getKey().toString(),
@@ -71,15 +74,15 @@ public class GameService {
         return type.generatePiece(camp);
     }
 
-    public void move(long gameNo, String source, String target) {
-        ChessGame chessGame = load(gameNo);
+    public void move(long roomNo, String source, String target) {
+        ChessGame chessGame = load(roomNo);
         chessGame.move(parsePosition(source), parsePosition(target));
-        save(gameNo, chessGame);
+        save(roomNo, chessGame);
     }
 
-    private void save(long gameNo, ChessGame chessGame) {
-        gameDao.update(gameNo, chessGame.isWhiteTurn());
-        boardDao.update(gameNo, chessGame.getBoardSquares());
+    private void save(long roomNo, ChessGame chessGame) {
+        gameDao.update(roomNo, chessGame.isWhiteTurn());
+        boardDao.update(gameDao.findNoByRoom(roomNo), chessGame.getBoardSquares());
     }
 
     private Position parsePosition(String rawPosition) {
@@ -87,14 +90,14 @@ public class GameService {
                 EXPRESSIONS_ROW.get(rawPosition.charAt(INDEX_ROW)));
     }
 
-    public Map<String, Object> modelStatus(long gameNo) {
-        return load(gameNo).getScores().entrySet().stream()
+    public Map<String, Object> modelStatus(long roomNo) {
+        return load(roomNo).getScores().entrySet().stream()
                 .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
     }
 
-    public Map<String, Object> end(long gameNo) {
-        gameDao.end(gameNo);
-        return modelResult(load(gameNo));
+    public Map<String, Object> end(long roomNo) {
+        gameDao.end(roomNo);
+        return modelResult(load(roomNo));
     }
 
     private Map<String, Object> modelResult(ChessGame chessGame) {
@@ -107,35 +110,36 @@ public class GameService {
         return model;
     }
 
-    public boolean isGameFinished(long gameNo) {
-        return load(gameNo).isFinished() || !gameDao.isRunning(gameNo);
+    public boolean isGameRunning(long roomNo) {
+        return load(roomNo).isRunning();
     }
 
-    private ChessGame load(long gameNo) {
-        List<PieceDto> rawBoard = boardDao.load(gameNo);
+    private ChessGame load(long roomNo) {
+        List<PieceDto> rawBoard = boardDao.load(gameDao.findNoByRoom(roomNo));
         Map<Position, Piece> board = rawBoard.stream()
                 .collect(Collectors.toMap(
                         pieceDto -> parsePosition(pieceDto.getPosition()),
                         this::parsePiece
                 ));
-        return ChessGame.load(board, gameDao.isWhiteTurn(gameNo));
+        return ChessGame.load(board, gameDao.isWhiteTurn(roomNo), gameDao.isRunning(roomNo));
     }
 
-    public void delete(long gameNo, String password) {
-        checkPassword(gameNo, password);
-        checkStatus(gameNo);
-        boardDao.delete(gameNo);
-        gameDao.delete(gameNo);
+    public void delete(long roomNo, String password) {
+        checkPassword(roomNo, password);
+        checkStatus(roomNo);
+        boardDao.delete(gameDao.findNoByRoom(roomNo));
+        gameDao.delete(roomNo);
+        roomDao.delete(roomNo);
     }
 
-    private void checkPassword(long gameNo, String password) {
-        if (!gameDao.loadPassword(gameNo).equals(password)) {
+    private void checkPassword(long roomNo, String password) {
+        if (!roomDao.loadPassword(roomNo).equals(password)) {
             throw new IllegalArgumentException("비밀번호를 확인하세요.");
         }
     }
 
-    private void checkStatus(long gameNo) {
-        if (gameDao.isRunning(gameNo)) {
+    private void checkStatus(long roomNo) {
+        if (gameDao.isRunning(roomNo)) {
             throw new IllegalStateException("진행 중인 게임은 삭제할 수 없습니다.");
         }
     }

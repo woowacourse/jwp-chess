@@ -1,5 +1,7 @@
 package chess.controller;
 
+import chess.controller.dto.GameDto;
+import chess.controller.dto.request.GameAccessRequest;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.ErrorResponse;
@@ -7,8 +9,11 @@ import chess.controller.dto.response.StatusResponse;
 import chess.service.ChessService;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +63,28 @@ public class ChessController {
         return chessService.end(gameId);
     }
 
+    @GetMapping("")
+    public List<GameDto> findAllGames() {
+        return chessService.findAllGames();
+    }
+
+    @PostMapping("/existed-game/{gameId}")
+    public ResponseEntity<ErrorResponse> comparePassword(@RequestBody GameAccessRequest game) {
+        if (chessService.checkPassword(game.getGameId(), game.getPassword())) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("잘못된 비밀번호 입니다."));
+    }
+
+    @DeleteMapping("/existed-game/{gameId}")
+    public ResponseEntity<ErrorResponse> deleteGame(@RequestBody GameAccessRequest game) {
+        if (chessService.deleteGameAfterCheckingPassword(game.getGameId(), game.getPassword())) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse("게임이 끝난 상태가 아니거나 올바른 비밀번호가 아닙니다."));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
@@ -67,5 +94,6 @@ public class ChessController {
     public ResponseEntity<Void> handleDataNotFound() {
         return ResponseEntity.notFound().build();
     }
+
 }
 

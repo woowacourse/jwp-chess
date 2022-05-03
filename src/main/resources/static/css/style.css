@@ -92,3 +92,56 @@ div {
 .status {
   font-size: 3vmin;
 }
+
+#game-id-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#modal {
+  visibility: hidden;
+}
+
+#modal__box {
+  height: 400px;
+  width: 500px;
+  background-color: white;
+  border: solid 4px lavender;
+  box-shadow: 10px 5px 5px lavender;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -250px;
+  margin-top: -200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#modal__games {
+  height: 300px;
+  width: 450px;
+  border: solid 2px lavender;
+  overflow: scroll;
+}
+
+.box__close-button {
+  align-self: end;
+}
+
+#box__close-button:hover {
+  cursor: grab;
+}
+
+#box__title {
+  margin-top: 0;
+}
+
+.games__game {
+  width: 100%;
+  height: 20px;
+  border-bottom: solid 2px #cadebf;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.controller.dto.GameDto;
 import chess.controller.dto.request.MoveRequest;
 import chess.controller.dto.response.ChessGameResponse;
 import chess.controller.dto.response.PieceResponse;
@@ -8,6 +9,7 @@ import chess.dao.GameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessGame;
 import chess.domain.GameState;
+import chess.domain.Room;
 import chess.domain.board.Board;
 import chess.domain.board.Column;
 import chess.domain.board.Position;
@@ -15,6 +17,7 @@ import chess.domain.board.Row;
 import chess.domain.board.strategy.CreateCompleteBoardStrategy;
 import chess.domain.piece.Piece;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -31,7 +34,7 @@ public class ChessService {
     private final GameDao gameDao;
     private final PieceDao pieceDao;
 
-    private final Map<Long, ChessGame> chessGames;
+    private final Map<Room, ChessGame> chessGames;
 
     public ChessService(GameDao gameDao, PieceDao pieceDao) {
         this.gameDao = gameDao;
@@ -39,11 +42,22 @@ public class ChessService {
         this.chessGames = new HashMap<>();
     }
 
+    public int getGameId(String name, String password) {
+        Optional<Integer> gameId = gameDao.find(name, password);
+        if (gameId.isEmpty()) {
+            gameDao.save(name, password);
+            final int newGameId = gameDao.find(name, password).get();
+            saveBoard(newGameId, (new CreateCompleteBoardStrategy()).createPieces());
+            return newGameId;
+        }
+        return gameId.get();
+    }
+
     public ChessGameResponse loadGame(long gameId) {
         Optional<GameState> maybeGameState = gameDao.load(gameId);
         GameState gameState = maybeGameState.orElseThrow(NoSuchElementException::new);
         Board board = createBoard(gameId);
-        chessGames.put(gameId, new ChessGame(board, gameState));
+        chessGames.put(new Room(gameId), new ChessGame(board, gameState));
         return new ChessGameResponse(getChessGame(gameId));
     }
 
@@ -58,22 +72,22 @@ public class ChessService {
     }
 
     private ChessGame getChessGame(long gameId) {
-        if (!chessGames.containsKey(gameId)) {
+        final Room room = new Room(gameId);
+        if (!chessGames.containsKey(room)) {
             throw new IllegalArgumentException(NOT_HAVE_GAME);
         }
-        return chessGames.get(gameId);
+        return chessGames.get(room);
     }
 
     public ChessGameResponse createGame(long gameId) {
         ChessGame chessGame = new ChessGame(new Board(new CreateCompleteBoardStrategy()));
-        gameDao.save(gameId);
         saveBoard(gameId, chessGame.getBoard());
-        chessGames.put(gameId, chessGame);
+        chessGames.put(new Room(gameId), chessGame);
         return new ChessGameResponse(chessGame);
     }
 
     public ChessGameResponse restartGame(long gameId) {
-        gameDao.delete(gameId);
+        gameDao.updateState(gameId, GameState.READY);
         return createGame(gameId);
     }
 
@@ -128,8 +142,22 @@ public class ChessService {
         return new ChessGameResponse(chessGame);
     }
 
-    public void deleteGame(long gameId) {
-        gameDao.delete(gameId);
+    public boolean deleteGameAfterCheckingPassword(long gameId, String password) {
+        final Room room = new Room(gameId, password);
+        if (isFulfillDeleteCondition(room)) {
+            gameDao.delete(gameId);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isFulfillDeleteCondition(final Room room) {
+        final long gameId = room.getId();
+        final String existedPassword = gameDao.findPassword(gameId);
+        Optional<GameState> gameState = gameDao.load(room.getId());
+        return room.checkPassword(existedPassword)
+                && gameState.isPresent()
+                && gameState.get() == GameState.FINISHED;
     }
 
     private Position parseStringToPosition(final String rawPosition) {
@@ -137,5 +165,15 @@ public class ChessService {
         final Column column = Column.from(separatedPosition[ROW_INDEX]);
         final Row row = Row.from(separatedPosition[COLUMN_INDEX]);
         return new Position(column, row);
+    }
+
+    public List<GameDto> findAllGames() {
+        return gameDao.findAll();
+    }
+
+    public boolean checkPassword(long gameId, String password) {
+        final String existedPassword = gameDao.findPassword(gameId);
+        final Room room = new Room(gameId, password);
+        return room.checkPassword(existedPassword);
     }
 }

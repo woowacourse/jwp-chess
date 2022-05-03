@@ -11,5 +11,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(new AuthArgumentResolver());
+        argumentResolvers.add(new CookieArgumentResolver());
     }
 }

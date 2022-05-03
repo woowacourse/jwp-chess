@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.entity.FullGameEntity;
 import chess.entity.GameEntity;
+import chess.exception.InvalidAccessException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -29,7 +31,7 @@ class GameDaoTest {
     void findAll_메서드로_존재하는_모든_게임_정보를_조회가능() {
         List<GameEntity> actual = dao.findAll();
 
-        List<GameEntity> expected = findAllTestData();
+        List<GameEntity> expected = getAllInitialEntities();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -49,9 +51,30 @@ class GameDaoTest {
 
         @Test
         void 게임이_존재하지_않는_경우_예외발생() {
-         assertThatThrownBy(() -> dao.findById(99999))
-                 .isInstanceOf(IllegalArgumentException.class)
-                 .hasMessage("존재하지 않는 게임입니다.");
+            assertThatThrownBy(() -> dao.findById(99999))
+                    .isInstanceOf(InvalidAccessException.class)
+                    .hasMessage("존재하지 않는 게임입니다.");
+        }
+    }
+
+    @DisplayName("findFullDataById 메서드로 id에 해당되는 모든 데이터 조회가능")
+    @Nested
+    class FindFullDataByIdTest {
+
+        @Test
+        void 존재하는_게임_조회가능() {
+            FullGameEntity actual = dao.findFullDataById(1);
+
+            FullGameEntity expected = new FullGameEntity(1, "진행중인_게임", "encrypted1", "enemy1", true);
+
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        @Test
+        void 게임이_존재하지_않는_경우_예외발생() {
+            assertThatThrownBy(() -> dao.findFullDataById(99999))
+                    .isInstanceOf(InvalidAccessException.class)
+                    .hasMessage("존재하지 않는 게임입니다.");
         }
     }
 
@@ -73,14 +96,14 @@ class GameDaoTest {
     void countAll_메서드로_여태까지_저장된_모든_데이터의_개수_조회가능() {
         int actual = dao.countAll();
 
-        assertThat(actual).isEqualTo(3);
+        assertThat(actual).isEqualTo(5);
     }
 
     @Test
     void countRunningGames_메서드로_running값이_참인_데이터의_개수_조회가능() {
         int actual = dao.countRunningGames();
 
-        assertThat(actual).isEqualTo(2);
+        assertThat(actual).isEqualTo(4);
     }
 
     @DisplayName("saveAndGetGeneratedId 메서드는 게임 저장 후 id값 반환")
@@ -92,7 +115,9 @@ class GameDaoTest {
             int actual = dao.saveAndGetGeneratedId(
                     new EncryptedAuthCredentials("name", "passwordHash"));
 
-            assertThat(actual).isGreaterThan(findAllTestData().size());
+            int previousDataCount = getAllInitialEntities().size();
+
+            assertThat(actual).isGreaterThan(previousDataCount);
         }
 
         @Test
@@ -102,6 +127,39 @@ class GameDaoTest {
             assertThatThrownBy(() -> dao.saveAndGetGeneratedId(invalidAuthInfo))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("게임을 생성하는데 실패하였습니다.");
+        }
+    }
+
+    @DisplayName("saveOpponent 메서드는 상대방 플레이어의 정보를 저장")
+    @Nested
+    class SaveOpponentTest {
+
+        @Test
+        void 방명에_대응되는_게임에_아직_상대방_플레이어가_없으면_저장_성공() {
+            dao.saveOpponent(new EncryptedAuthCredentials("참여자가_없는_게임", "비밀번호"));
+
+            String actual = jdbcTemplate.queryForObject(
+                    "SELECT opponent_password FROM game WHERE name = '참여자가_없는_게임'", String.class);
+
+            assertThat(actual).isEqualTo("비밀번호");
+        }
+
+        @Test
+        void 방주인의_비밀번호와_중복된_비밀번호_입력시_예외발생() {
+            EncryptedAuthCredentials invalidAuthInfo = new EncryptedAuthCredentials("참여자가_없는_게임", "encrypted5");
+
+            assertThatThrownBy(() -> dao.saveOpponent(invalidAuthInfo))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("상대방 플레이어 저장에 실패하였습니다.");
+        }
+
+        @Test
+        void 이미_상대방_플레이어가_존재하는_경우_예외발생() {
+            EncryptedAuthCredentials invalidAuthInfo = new EncryptedAuthCredentials("참여자가_있는_게임", "비밀번호");
+
+            assertThatThrownBy(() -> dao.saveOpponent(invalidAuthInfo))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("상대방 플레이어 저장에 실패하였습니다.");
         }
     }
 
@@ -145,10 +203,12 @@ class GameDaoTest {
         }
     }
 
-    private List<GameEntity> findAllTestData() {
+    private List<GameEntity> getAllInitialEntities() {
         return List.of(
                 new GameEntity(1, "진행중인_게임", true),
                 new GameEntity(2, "종료된_게임", false),
-                new GameEntity(3, "이미_존재하는_게임명", true));
+                new GameEntity(3, "이미_존재하는_게임명", true),
+                new GameEntity(4, "참여자가_있는_게임", true),
+                new GameEntity(5, "참여자가_없는_게임", true));
     }
 }

@@ -15,7 +15,7 @@
     <div>현재 {{runningCount}}개의 게임이 진행 중입니다.</div>
     {{/gameCount}}
 </section>
-<form action="/game/search" id="search-form">
+<form id="search-form">
     <label for="num_input">게임 ID</label>
     <input type="number" min="1" id="num_input" name="game_id" placeholder="ex) 1"/>
     <input type="submit" value="검색"/>
@@ -25,7 +25,11 @@
     <ul>
         {{#games}}
         <li class="game_link_box">
-            <a href="/game/{{id}}">{{name}}</a>
+            <form action="/game/{{id}}" id="{{id}}" class="enter-form">
+                <div class="game_name">{{name}}</div>
+                <input type="password" required class="password_input" name="password" placeholder="비밀번호"/>
+                <input type="submit" value="참여!"/>
+            </form>
         </li>
         {{/games}}
     </ul>
@@ -34,5 +38,6 @@
     <a href="/">뒤로가기!</a>
 </section>
 <script src="/scripts/search-game.js"></script>
+<script src="/scripts/enter-game.js"></script>
 </body>
 </html>

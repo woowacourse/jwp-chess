@@ -1,18 +1,20 @@
 package chess.domain.auth;
 
-import static chess.util.HashUtils.hash;
+import static chess.util.HashUtil.hash;
 
 import java.util.Map;
 import org.springframework.boot.json.BasicJsonParser;
 
 public class AuthCredentials {
 
+    private static final int PASSWORD_MIN_LENGTH = 5;
     private static final BasicJsonParser jsonParser = new BasicJsonParser();
 
     private final String name;
     private final String password;
 
-    private AuthCredentials(String name, String password) {
+    public AuthCredentials(String name, String password) {
+        validateLength(password);
         this.name = name;
         this.password = password;
     }
@@ -24,6 +26,12 @@ public class AuthCredentials {
 
     public EncryptedAuthCredentials toEncrypted() {
         return new EncryptedAuthCredentials(name, hash(password));
+    }
+
+    private void validateLength(String password) {
+        if (password.length() < PASSWORD_MIN_LENGTH) {
+            throw new IllegalArgumentException("비밀번호는 최소 5글자 이상이어야 합니다!");
+        }
     }
 
     @Override

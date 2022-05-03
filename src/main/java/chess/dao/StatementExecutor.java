@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.exception.InternalServerException;
 import java.util.function.Supplier;
 import org.springframework.dao.DataAccessException;
 
@@ -15,7 +16,7 @@ public class StatementExecutor<T> {
         try {
             return statement.get();
         } catch (DataAccessException e) {
-            throw new IllegalArgumentException("데이터베이스 접속 과정에 문제가 발생하였습니다.");
+            throw new InternalServerException("데이터베이스 접속 과정에 문제가 발생하였습니다.");
         }
     }
 
@@ -25,6 +26,11 @@ public class StatementExecutor<T> {
         } catch (DataAccessException e) {
             throw exceptionSupplier.get();
         }
+    }
+
+    public boolean countAndCheckExistence() {
+        int foundRowCount = (int) execute();
+        return foundRowCount > 0;
     }
 
     public void updateAndThrowOnNonEffected(Supplier<RuntimeException> exceptionSupplier) {

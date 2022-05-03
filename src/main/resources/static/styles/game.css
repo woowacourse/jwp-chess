@@ -32,6 +32,14 @@ body {
     background-color: rgba(0, 0, 0, 0.8);
 }
 
+#login-form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 15px;
+}
+
 #WHITE_TURN,
 #BLACK_TURN {
     display:none;

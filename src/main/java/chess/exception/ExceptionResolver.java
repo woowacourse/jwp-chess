@@ -1,4 +1,4 @@
-package chess.controller;
+package chess.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,5 +19,10 @@ public class ExceptionResolver {
     @ExceptionHandler
     public ResponseEntity<String> handleException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException(InvalidAccessException e) {
+        return new ResponseEntity<>(e.getMessage(), e.getStatus());
     }
 }

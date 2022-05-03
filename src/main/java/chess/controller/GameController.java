@@ -1,10 +1,18 @@
 package chess.controller;
 
 import chess.domain.auth.EncryptedAuthCredentials;
+import chess.domain.auth.PlayerCookie;
+import chess.domain.board.piece.Color;
 import chess.domain.event.MoveEvent;
 import chess.dto.request.MoveRouteDto;
+import chess.dto.response.EnterGameDto;
 import chess.dto.response.SearchResultDto;
-import chess.service.ChessService;
+import chess.service.AuthService;
+import chess.service.GameService;
+import java.net.URI;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,10 +31,12 @@ public class GameController {
     private static final String PLAY_GAME_HTML_TEMPLATE_PATH = "play_game";
     private static final String RESPONSE_MODEL_KEY = "response";
 
-    private final ChessService chessService;
+    private final GameService gameService;
+    private final AuthService authService;
 
-    public GameController(ChessService chessService) {
-        this.chessService = chessService;
+    public GameController(GameService gameService, AuthService authService) {
+        this.gameService = gameService;
+        this.authService = authService;
     }
 
     @GetMapping
@@ -38,8 +47,14 @@ public class GameController {
     }
 
     @PostMapping
-    public int createGame(EncryptedAuthCredentials authCredentials) {
-        return chessService.initGame(authCredentials);
+    public ResponseEntity<Integer> createGame(EncryptedAuthCredentials authCredentials,
+                                              HttpServletResponse response) {
+        int gameId = gameService.initGame(authCredentials);
+        Cookie cookie = authService.generateCreatedGameCookie(gameId);
+
+        response.addCookie(cookie);
+        URI location = URI.create("/game/" + gameId);
+        return ResponseEntity.created(location).body(gameId);
     }
 
     @GetMapping("/{id}")
@@ -49,26 +64,38 @@ public class GameController {
 
     @PutMapping("/{id}")
     public ModelAndView updateGame(@PathVariable int id,
+                                   PlayerCookie cookie,
                                    @RequestBody MoveRouteDto moveRoute) {
-        chessService.playGame(id, new MoveEvent(moveRoute.toDomain()));
+        Color playerColor = authService.parseValidCookie(id, cookie);
+        gameService.playGame(id, new MoveEvent(moveRoute.toDomain()), playerColor);
         return getGameModelAndView(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteGame(@PathVariable int id,
+    public ResponseEntity<Void> deleteGame(@PathVariable int id,
                            EncryptedAuthCredentials authCredentials) {
-        chessService.deleteFinishedGame(id, authCredentials);
+        gameService.deleteFinishedGame(id, authCredentials);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/search")
-    public SearchResultDto searchGame(@RequestParam(name = "game_id") int gameId) {
-        return chessService.searchGame(gameId);
+    @GetMapping("/{id}/info")
+    public ResponseEntity<SearchResultDto> searchGame(@PathVariable int id) {
+        return ResponseEntity.ok(gameService.searchGame(id));
+    }
+
+    @PostMapping("/{id}/auth")
+    public ResponseEntity<String> enterGame(@PathVariable int id,
+                                            EncryptedAuthCredentials authCredentials,
+                                            HttpServletResponse response) {
+        EnterGameDto enterGameDto = authService.loginOrSignUpAsOpponent(id, authCredentials);
+        response.addCookie(enterGameDto.getCookie());
+        return ResponseEntity.ok(enterGameDto.getMessage());
     }
 
     private ModelAndView getGameModelAndView(int id) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName(PLAY_GAME_HTML_TEMPLATE_PATH);
-        modelAndView.addObject(RESPONSE_MODEL_KEY, chessService.findGame(id));
+        modelAndView.addObject(RESPONSE_MODEL_KEY, gameService.findGame(id));
         return modelAndView;
     }
 }

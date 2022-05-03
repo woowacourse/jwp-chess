@@ -12,7 +12,6 @@ import static chess.domain.position.Rank.SEVEN;
 import static chess.domain.position.Rank.SIX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;

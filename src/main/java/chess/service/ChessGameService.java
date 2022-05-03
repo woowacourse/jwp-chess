@@ -5,29 +5,28 @@ import chess.controller.Movement;
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.ChessBoard;
-import chess.domain.Score;
-import chess.domain.piece.Bishop;
+import chess.domain.ChessBoardInitializer;
+import chess.domain.ChessGame;
 import chess.domain.piece.Color;
-import chess.domain.piece.King;
-import chess.domain.piece.Knight;
-import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
-import chess.domain.piece.Queen;
-import chess.domain.piece.Rook;
+import chess.domain.piece.PieceStorage;
 import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
+import chess.domain.vo.Room;
 import chess.dto.ChessGameDto;
+import chess.dto.RoomCreateRequest;
 import chess.dto.GameStatus;
+import chess.dto.MoveRequest;
 import chess.dto.PieceDto;
 import chess.exception.ChessGameException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ChessGameService {
 
     private final PieceDao pieceDao;
@@ -38,10 +37,10 @@ public class ChessGameService {
         this.chessGameDao = chessGameDao;
     }
 
-    public ChessGameDto getOrSaveChessGame(int chessGameId) {
-        ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
-        if (!chessGameDto.getStatus().isRunning()) {
-            return prepareNewChessGame(chessGameDto);
+    public ChessGameDto findChessGame(int chessGameId) {
+        final ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
+        if (chessGameDto == null) {
+            throw new IllegalArgumentException("해당하는 체스 게임이 존재하지 않습니다.");
         }
         return chessGameDto;
     }
@@ -50,35 +49,46 @@ public class ChessGameService {
         return pieceDao.findPieces(chessGameId);
     }
 
-    public ChessGameDto move(int chessGameId, Movement movement) {
+    @Transactional
+    public void create(RoomCreateRequest roomCreateRequest) {
+        Room room = new Room(roomCreateRequest.getName(), roomCreateRequest.getPassword());
+        int chessGameId = chessGameDao.saveChessGame(ChessGame.start(room));
+        Map<Position, Piece> initBoard = ChessBoardInitializer.getInitBoard();
+        initBoard.forEach((key, value) -> pieceDao.savePiece(chessGameId, key, value));
+    }
+
+    @Transactional
+    public ChessGameDto move(MoveRequest moveRequest) {
+        int chessGameId = moveRequest.getId();
+        Movement movement = new Movement(moveRequest.getFrom(), moveRequest.getTo());
         List<PieceDto> pieces = pieceDao.findPieces(chessGameId);
         ChessGameDto chessGameDto = chessGameDao.findById(chessGameId);
-        ChessBoard chessBoard = createChessBoard(pieces, chessGameDto);
+        if (chessGameDto.getStatus().isFinished()) {
+            throw new ChessGameException(chessGameDto.getId(), "게임이 종료되었습니다.");
+        }
+        ChessBoard chessBoard = createChessBoard(pieces, chessGameDto.getCurrentColor());
         movePiece(chessGameId, movement, chessBoard);
         return updateChessBoard(chessBoard, movement, chessGameDto);
-    }
-
-    public int create(String name) {
-        return chessGameDao.saveChessGame(name, GameStatus.READY, Color.WHITE, new Score(), new Score());
-    }
-
-    public ChessGameDto prepareChessGame(ChessGameDto chessGameDto) {
-        ChessGameDto newChessGameDto = createNewChessGameDto(chessGameDto);
-        chessGameDao.updateChessGame(newChessGameDto);
-        return newChessGameDto;
     }
 
     public List<ChessGameDto> findAll() {
         return chessGameDao.findAll();
     }
 
-    private ChessBoard createChessBoard(List<PieceDto> pieces, ChessGameDto chessGameDto) {
-        return new ChessBoard(createBoard(pieces), chessGameDto.getCurrentColor());
+    public void deleteRoom(int chessGameId, String password) {
+        chessGameDao.deleteByIdAndPassword(chessGameId, password);
+    }
+
+    private ChessBoard createChessBoard(List<PieceDto> pieces, Color color) {
+        return new ChessBoard(createBoard(pieces), color);
     }
 
     private Map<Position, Piece> createBoard(List<PieceDto> pieces) {
         return pieces.stream()
-                .collect(toMap(PieceDto::getPosition, PieceDto::createPiece));
+            .collect(toMap(
+                pieceDto -> createPosition(pieceDto.getPosition()),
+                pieceDto -> PieceStorage.valueOf(pieceDto.getType(), pieceDto.getColor()))
+            );
     }
 
     private void movePiece(int chessGameId, Movement movement, ChessBoard chessBoard) {
@@ -87,18 +97,6 @@ public class ChessGameService {
         } catch (IllegalArgumentException | IllegalStateException e) {
             throw new ChessGameException(chessGameId, e.getMessage());
         }
-    }
-
-    private ChessGameDto createNewChessGameDto(ChessGameDto chessGameDto) {
-        return new ChessGameDto(
-            chessGameDto.getId(),
-            chessGameDto.getName(),
-            GameStatus.RUNNING,
-            new Score(),
-            new Score(),
-            Color.WHITE,
-            chessGameDto.getWinner()
-        );
     }
 
     private ChessGameDto updateChessBoard(ChessBoard chessBoard, Movement movement, ChessGameDto chessGameDto) {
@@ -110,7 +108,7 @@ public class ChessGameService {
         Map<Position, Piece> board = chessBoard.getBoard();
         pieceDao.deletePieceByPosition(chessGameDto.getId(), movement.getFrom());
         pieceDao.deletePieceByPosition(chessGameDto.getId(), movement.getTo());
-        pieceDao.savePiece(chessGameDto.getId(), new PieceDto(movement.getTo(), board.get(movement.getTo())));
+        pieceDao.savePiece(chessGameDto.getId(), movement.getTo(), board.get(movement.getTo()));
     }
 
     private ChessGameDto updateChessGame(ChessBoard chessBoard, ChessGameDto chessGameDto) {
@@ -132,58 +130,9 @@ public class ChessGameService {
                 chessBoard.getScore(Color.WHITE), chessBoard.getCurrentColor(), winner);
     }
 
-    private ChessGameDto prepareNewChessGame(ChessGameDto chessGameDto) {
-        preparePieces(chessGameDto);
-        return prepareChessGame(chessGameDto);
-    }
-
-    private void preparePieces(ChessGameDto chessGameDto) {
-        pieceDao.deleteAll(chessGameDto.getId());
-        pieceDao.savePieces(chessGameDto.getId(), createPieces());
-    }
-
-    private List<PieceDto> createPieces() {
-        return Stream.concat(createWhitePieces().stream(), createBlackPieces().stream())
-                .collect(Collectors.toList());
-    }
-
-    private static List<PieceDto> createWhitePieces() {
-        return List.of(
-                new PieceDto(new Position(File.A, Rank.ONE), new Rook(Color.WHITE)),
-                new PieceDto(new Position(File.B, Rank.ONE), new Knight(Color.WHITE)),
-                new PieceDto(new Position(File.C, Rank.ONE), new Bishop(Color.WHITE)),
-                new PieceDto(new Position(File.D, Rank.ONE), new Queen(Color.WHITE)),
-                new PieceDto(new Position(File.E, Rank.ONE), new King(Color.WHITE)),
-                new PieceDto(new Position(File.F, Rank.ONE), new Bishop(Color.WHITE)),
-                new PieceDto(new Position(File.G, Rank.ONE), new Knight(Color.WHITE)),
-                new PieceDto(new Position(File.H, Rank.ONE), new Rook(Color.WHITE)),
-                new PieceDto(new Position(File.A, Rank.TWO), new Pawn(Color.WHITE)),
-                new PieceDto(new Position(File.B, Rank.TWO), new Pawn(Color.WHITE)),
-                new PieceDto(new Position(File.C, Rank.TWO), new Pawn(Color.WHITE)),
-                new PieceDto(new Position(File.D, Rank.TWO), new Pawn(Color.WHITE)),
-                new PieceDto(new Position(File.E, Rank.TWO), new Pawn(Color.WHITE)),
-                new PieceDto(new Position(File.F, Rank.TWO), new Pawn(Color.WHITE)),
-                new PieceDto(new Position(File.G, Rank.TWO), new Pawn(Color.WHITE)),
-                new PieceDto(new Position(File.H, Rank.TWO), new Pawn(Color.WHITE)));
-    }
-
-    private static List<PieceDto> createBlackPieces() {
-        return List.of(
-                new PieceDto(new Position(File.A, Rank.EIGHT), new Rook(Color.BLACK)),
-                new PieceDto(new Position(File.B, Rank.EIGHT), new Knight(Color.BLACK)),
-                new PieceDto(new Position(File.C, Rank.EIGHT), new Bishop(Color.BLACK)),
-                new PieceDto(new Position(File.D, Rank.EIGHT), new Queen(Color.BLACK)),
-                new PieceDto(new Position(File.E, Rank.EIGHT), new King(Color.BLACK)),
-                new PieceDto(new Position(File.F, Rank.EIGHT), new Bishop(Color.BLACK)),
-                new PieceDto(new Position(File.G, Rank.EIGHT), new Knight(Color.BLACK)),
-                new PieceDto(new Position(File.H, Rank.EIGHT), new Rook(Color.BLACK)),
-                new PieceDto(new Position(File.A, Rank.SEVEN), new Pawn(Color.BLACK)),
-                new PieceDto(new Position(File.B, Rank.SEVEN), new Pawn(Color.BLACK)),
-                new PieceDto(new Position(File.C, Rank.SEVEN), new Pawn(Color.BLACK)),
-                new PieceDto(new Position(File.D, Rank.SEVEN), new Pawn(Color.BLACK)),
-                new PieceDto(new Position(File.E, Rank.SEVEN), new Pawn(Color.BLACK)),
-                new PieceDto(new Position(File.F, Rank.SEVEN), new Pawn(Color.BLACK)),
-                new PieceDto(new Position(File.G, Rank.SEVEN), new Pawn(Color.BLACK)),
-                new PieceDto(new Position(File.H, Rank.SEVEN), new Pawn(Color.BLACK)));
+    private Position createPosition(String position) {
+        File file = File.valueOf(position.substring(0, 1));
+        Rank rank = Rank.find(position.substring(1, 2));
+        return new Position(file, rank);
     }
 }

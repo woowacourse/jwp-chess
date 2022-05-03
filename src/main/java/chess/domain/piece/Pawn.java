@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 public class Pawn extends Piece {
-
     private static final Rank BLACK_START_RANK = Rank.SEVEN;
     private static final Rank WHITE_START_RANK = Rank.TWO;
 
@@ -20,7 +19,7 @@ public class Pawn extends Piece {
     private static final int START_MOVE_DISTANCE = 2;
 
     public Pawn(Color color) {
-        super(color);
+        super(Name.PAWN, color);
     }
 
     @Override

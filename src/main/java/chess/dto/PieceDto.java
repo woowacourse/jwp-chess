@@ -1,58 +1,25 @@
 package chess.dto;
 
-import chess.domain.position.Position;
-import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
-import java.util.Objects;
-
 public class PieceDto {
+    private final String position;
+    private final String type;
+    private final String color;
 
-    private final Position position;
-    private final Color color;
-    private final PieceType type;
-
-    public PieceDto(Position position, PieceType type, Color color) {
+    public PieceDto(String position, String type, String color) {
         this.position = position;
         this.type = type;
         this.color = color;
     }
 
-    public PieceDto(Position position, Piece piece) {
-        this.position = position;
-        this.color = piece.getColor();
-        this.type = PieceType.valueOf(piece);
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public PieceType getType() {
-        return type;
-    }
-
-    public Position getPosition() {
+    public String getPosition() {
         return position;
     }
 
-    public Piece createPiece() {
-        return type.createPiece(color);
+    public String getType() {
+        return type;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        PieceDto pieceDto = (PieceDto) o;
-        return Objects.equals(position, pieceDto.position) && color == pieceDto.color && type == pieceDto.type;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(position, color, type);
+    public String getColor() {
+        return color;
     }
 }

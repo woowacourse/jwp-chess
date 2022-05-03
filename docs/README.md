@@ -36,3 +36,9 @@ CREATE TABLE piece
 ```
 
 SpringChessApplication 실행후 localhost:8080 접속
+
+
+## 추가 기능 구현목록
+- [x] 체스방 생성시 비밀번호를 입력받는다.
+- [x] 체스방을 비밀번호로 삭제한다.
+  - [x] 게임이 진행중이라면 삭제할 수 없다.

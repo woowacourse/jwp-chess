@@ -7,11 +7,10 @@ import chess.domain.position.Position;
 import java.math.BigDecimal;
 
 public class Bishop extends Piece {
-
     private static final BigDecimal BISHOP_POINT = new BigDecimal("3");
 
     public Bishop(Color color) {
-        super(color);
+        super(Name.BISHOP, color);
     }
 
     @Override
@@ -26,4 +25,5 @@ public class Bishop extends Piece {
     public BigDecimal getPoint() {
         return BISHOP_POINT;
     }
+
 }

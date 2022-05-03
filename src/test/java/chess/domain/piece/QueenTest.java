@@ -14,7 +14,6 @@ import static chess.domain.position.Rank.SIX;
 import static chess.domain.position.Rank.THREE;
 import static chess.domain.position.Rank.TWO;
 import static org.assertj.core.api.Assertions.assertThat;
-
 import chess.domain.piece.movementcondition.BaseMovementCondition;
 import chess.domain.position.Position;
 import java.util.stream.Stream;

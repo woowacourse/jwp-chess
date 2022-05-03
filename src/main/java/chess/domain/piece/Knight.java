@@ -7,11 +7,10 @@ import chess.domain.position.Position;
 import java.math.BigDecimal;
 
 public class Knight extends Piece {
-
     private static final BigDecimal KNIGHT_POINT = new BigDecimal("2.5");
 
     public Knight(Color color) {
-        super(color);
+        super(Name.KNIGHT, color);
     }
 
     @Override

@@ -12,4 +12,8 @@ public enum GameStatus {
     public boolean isRunning() {
         return this == RUNNING;
     }
+
+    public boolean isReady() {
+        return this == READY;
+    }
 }

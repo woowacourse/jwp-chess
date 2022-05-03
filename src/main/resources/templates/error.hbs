@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link rel="stylesheet" href="/src/chess-game.css">
+</head>
+<script src="/src/chess-game.js"></script>
+<h1>에러 페이지입니다. </h1>
+<div class="message">
+    {{#hasError}}
+        <span>{{errorMessage}}</span>
+    {{/hasError}}
+</div>
+<div class="back">
+    <input type="button" value="로비로 돌아가기" onclick="location.href='/'"/>
+</div>
+
+</body>
+</html>

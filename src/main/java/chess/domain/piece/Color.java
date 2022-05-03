@@ -19,4 +19,8 @@ public enum Color {
         }
         return WHITE;
     }
+
+    public boolean equals(String color) {
+        return this.name().equals(color.toUpperCase());
+    }
 }

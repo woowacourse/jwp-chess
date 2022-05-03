@@ -8,7 +8,6 @@ import static chess.domain.position.Rank.FOUR;
 import static chess.domain.position.Rank.SEVEN;
 import static chess.domain.position.Rank.SIX;
 import static org.assertj.core.api.Assertions.assertThat;
-
 import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;

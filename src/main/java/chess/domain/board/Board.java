@@ -17,7 +17,7 @@ import java.util.Map;
 public class Board {
 
     private static final String PIECE_DOES_NOT_EXIST = "해당 위치에 말이 존재하지 않습니다.";
-    private static final String CANNOT_MOVE_OPPONENT_PIECE = "상대편 말은 욺직일 수 없습니다.";
+    private static final String CANNOT_MOVE_OPPONENT_PIECE = "상대편 말은 움직일 수 없습니다.";
     private static final String ANOTHER_PIECE_EXIST_IN_PATH = "다른 말이 경로에 존재해 이동할 수 없습니다.";
     private static final double PAWN_MINUS_SCORE = 0.5;
 

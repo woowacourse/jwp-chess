@@ -10,18 +10,130 @@ body {
   font-style: normal;
 }
 
+#game-list {
+  margin: 5vmin;
+  background: lavender;
+  border-radius: 20px;
+  width: 50vmin;
+  height: 50vmin;
+}
+
+#games {
+  overflow: auto;
+  font-size: 3vmin;
+  height: 46vmin;
+  margin: 2vmin 0;
+}
+
+#games::-webkit-scrollbar {
+  width: 1vmin;
+}
+
+#games::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background-color: #8977ad;
+}
+
+#games::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.game-info {
+  cursor: pointer;
+}
+
 .explanation {
   margin: 1vmin;
   font-size: 3vmin;
 }
 
+#modal.modal-overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px) brightness(60%);
+  -webkit-backdrop-filter: blur(2px) brightness(60%);
+}
+
+#modal .modal-window {
+  background: lavender;
+  box-shadow: 0 8px 32px 0 #8977ad;
+  border-radius: 10px;
+  width: 60vmin;
+  height: 60vmin;
+  position: relative;
+  padding: 10px;
+}
+
+#modal .title {
+  padding-left: 10px;
+  display: inline;
+}
+
+#modal .title h2 {
+  display: inline;
+}
+
+#modal .close-area {
+  display: inline;
+  float: right;
+  padding-right: 10px;
+  cursor: pointer;
+}
+
+#modal .content {
+  margin: 10vmin 2vmin;
+}
+
+#create-game-form {
+  margin-top: 5vmin;
+}
+
+.input-section {
+  align-items: center;
+  justify-content: center;
+}
+
+.form-explanation {
+  font-size: 5vmin;
+}
+
+.submit-section {
+  display: flex;
+  width: 100%;
+  height: 5vmin;
+  align-items: end;
+  justify-content: end;
+}
+
+label {
+  display: flex;
+  justify-content: center;
+}
+
+input[type=password] {
+  font-family: serif;
+}
+
 input {
   margin: 2vmin;
+  width: 90%;
+  height: 4vmin;
   font-size: 3vmin;
   font-family: 'BMHANNAPro', monospace;
+  border: none;
 }
 
 .submit {
+  text-align: end;
+  height: 6vmin;
+  font-size: 5vmin !important;
   border: none;
 }
 

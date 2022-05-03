@@ -1,8 +1,12 @@
-package chess.controller.dto.request;
+package chess.dto.request;
+
+import javax.validation.constraints.NotNull;
 
 public class MoveRequest {
 
+    @NotNull(message = "이동할 말의 위치는 NULL 값일 수 없습니다.")
     private String start;
+    @NotNull(message = "이동할 목표 위치는 NULL 값일 수 없습니다.")
     private String target;
 
     public MoveRequest() {

@@ -9,23 +9,44 @@
 <body>
 <div>
   <div id="contents">
-    <div id="title-bar">
+    <section id="title-bar">
       Chess With Me
-    </div>
+    </section>
     <div class="explanation">
-      Input the game number!
+      진행중인 게임
     </div>
-    <form method="get" id="game-id-form" action="/game">
-      <label>
-        <input type="text" name="gameId"/>
-      </label>
-      <input type="submit" class="submit button" value="submit">
-    </form>
-    <div class="explanation">
-      or...
-    </div>
+    <section id="game-list">
+      <div id="games"></div>
+    </section>
     <div id="buttons">
-      <div id="random-start-button" class="button">start random game</div>
+      <div id="create-game-button" class="button">새 게임 시작</div>
+    </div>
+  </div>
+</div>
+<div id="modal" class="modal-overlay hidden">
+  <div class="modal-window">
+    <div class="title">
+      <h2>새 게임 시작하기</h2>
+    </div>
+    <div class="close-area" id="close-button">X</div>
+    <div class="content">
+      <form method="post" id="create-game-form" action="/games" onsubmit="return false">
+        <section class="input-section">
+          <div class="form-explanation">게임 이름</div>
+          <label>
+            <input type="text" name="gameName" required/>
+          </label>
+        </section>
+        <section class="input-section">
+          <div class="form-explanation">비밀번호</div>
+          <label>
+            <input type="password" name="password" required/>
+          </label>
+        </section>
+        <section class="submit-section">
+          <input type="submit" id="submit-button" class="submit button" value="생성">
+        </section>
+      </form>
     </div>
   </div>
 </div>

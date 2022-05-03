@@ -215,7 +215,7 @@ class BoardTest {
 
         assertThatThrownBy(() -> board.move(start, target, Color.WHITE))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("상대편 말은 욺직일 수 없습니다.");
+                .hasMessageContaining("상대편 말은 움직일 수 없습니다.");
     }
 
     @DisplayName("특정 말의 개수가 제대로 카운트 되는지 확인한다.")

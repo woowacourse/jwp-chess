@@ -12,15 +12,36 @@
     Chess With Me
   </div>
   <div id="buttons">
-    <div id="start-button" class="button">start</div>
-    <div id="reset-button" class="button hidden">reset</div>
-    <div id="status-button" class="button">status</div>
-    <div id="end-button" class="button">end</div>
+    <div id="start-button" class="button">게임 시작</div>
+    <div id="reset-button" class="button hidden">초기화</div>
+    <div id="status-button" class="button">점수 확인</div>
+    <div id="delete-button" class="button">게임 삭제</div>
   </div>
   <section id="chess-section">
   </section>
   <div id="turn-info" class="status"></div>
   <div id="score" class="status"></div>
+</div>
+<div id="modal" class="modal-overlay hidden">
+  <div class="modal-window">
+    <div class="title">
+      <h2>게임을 삭제하시겠습니까??</h2>
+    </div>
+    <div class="close-area" id="close-button">X</div>
+    <div class="content">
+      <form id="delete-game-form" action="/games" onsubmit="return false">
+        <section class="input-section">
+          <div class="form-explanation">비밀번호</div>
+          <label>
+            <input type="password" name="password" required/>
+          </label>
+        </section>
+        <section class="submit-section">
+          <input type="submit" id="submit-button" class="submit button" value="게임 삭제">
+        </section>
+      </form>
+    </div>
+  </div>
 </div>
 </body>
 </html>

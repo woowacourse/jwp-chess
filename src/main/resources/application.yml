@@ -1,6 +1,10 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:13306/chess?useSSL=false&allowPublicKeyRetrieval=TRUE
     username: root
     password: root
+server:
+  error:
+    whitelabel:
+      enabled: false

@@ -14,7 +14,7 @@ function deleteGame(gameId) {
         if (response.status === 400 || response.status === 500) {
             throw response;
         }
-        if (response.status === 200) {
+        if (response.status === 204) {
             alert("성공적으로 삭제하였습니다.");
         }
         location.reload();

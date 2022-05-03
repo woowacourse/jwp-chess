@@ -1,6 +1,7 @@
 package chess.dao;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.piece.Color;
 import chess.domain.room.Room;
@@ -33,6 +34,13 @@ public class GameDaoTest {
         assertThat(gameDao.findRoomById(id).getEndFlag()).isFalse();
     }
 
+    @DisplayName("존재하는 모든 게임 방에 대한 정보를 반환한다.")
+    @Test
+    void findAllRoom() {
+        gameDao.createByTitleAndPassword(new Room("게임방제목2", "password4862"));
+        assertThat(gameDao.findAllRoom()).hasSize(2);
+    }
+
     @DisplayName("turn칼럼에는 불가능한 turn이 저장되며 초깃값은 black이다.")
     @Test
     void findTurnById() {
@@ -53,6 +61,15 @@ public class GameDaoTest {
         gameDao.updateEndFlagById(true, id);
 
         assertThat(gameDao.findRoomById(id).getEndFlag()).isTrue();
+    }
+
+    @DisplayName("게임 삭제 성공")
+    @Test
+    void deleteById() {
+        gameDao.updateEndFlagById(true, id);
+        gameDao.deleteById(id);
+
+        assertThat(gameDao.findAllRoom()).hasSize(0);
     }
 
 }

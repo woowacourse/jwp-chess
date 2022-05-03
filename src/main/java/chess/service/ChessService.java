@@ -1,59 +1,37 @@
 package chess.service;
 
-import chess.domain.dao.BoardJdbcTemplateDao;
-import chess.domain.dao.GameJdbcTemplateDao;
-import chess.domain.dto.GameDto;
-import chess.domain.dto.PieceDto;
+import chess.domain.dao.BoardDao;
+import chess.domain.dao.GameDao;
 import chess.domain.game.Color;
 import chess.domain.game.Status;
 import chess.domain.game.board.ChessBoard;
 import chess.domain.game.board.ChessBoardFactory;
-import chess.domain.game.status.End;
-import chess.domain.game.status.Playing;
 import chess.domain.piece.ChessPiece;
 import chess.domain.piece.Type;
 import chess.domain.position.Position;
+import chess.service.dto.GameDto;
+import chess.service.dto.PieceDto;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class ChessService {
 
-    private static final int EMPTY_RESULT = 0;
+    private final BoardDao boardDao;
+    private final GameDao gameDao;
 
-    private final BoardJdbcTemplateDao boardDao;
-    private final GameJdbcTemplateDao gameDao;
-    private ChessBoard chessBoard = null;
-
-    public ChessService(BoardJdbcTemplateDao boardDao, GameJdbcTemplateDao gameDao) {
+    public ChessService(BoardDao boardDao, GameDao gameDao) {
         this.boardDao = boardDao;
         this.gameDao = gameDao;
     }
 
-    public void start() {
-        int lastGameId = gameDao.findLastGameId();
-        if (isNotSaved(lastGameId)) {
-            makeNewGame();
-            return;
-        }
-        loadLastGame(lastGameId);
-    }
-
-    private boolean isNotSaved(int lastGameId) {
-        return lastGameId == EMPTY_RESULT;
-    }
-
-    private void makeNewGame() {
-        chessBoard = ChessBoardFactory.initBoard();
-        chessBoard.changeStatus(new Playing());
-    }
-
-    public void save() {
-        int gameId = gameDao.save(chessBoard);
+    public long create(String title, String password) {
+        ChessBoard chessBoard = makeNewGame();
+        int gameId = gameDao.create(chessBoard, title, password);
         for (Map.Entry<String, ChessPiece> entry : chessBoard.convertToMap().entrySet()) {
             boardDao.save(
                     gameId,
@@ -61,6 +39,13 @@ public class ChessService {
                     getPiece(entry),
                     getColor(entry));
         }
+        return gameId;
+    }
+
+    private ChessBoard makeNewGame() {
+        ChessBoard chessBoard = ChessBoardFactory.initBoard();
+        chessBoard.changeStatus(Status.PLAYING);
+        return chessBoard;
     }
 
     private String getPosition(Map.Entry<String, ChessPiece> entry) {
@@ -75,50 +60,83 @@ public class ChessService {
         return entry.getValue().getColor().name();
     }
 
-    private void loadLastGame(int lastGameId) {
+    public List<GameDto> findAllGame() {
+        return gameDao.findAll();
+    }
+
+    public ChessBoard findBoard(int gameId) {
+        GameDto game = gameDao.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게임이 존재하지 않습니다."));
+        List<PieceDto> boardInfo = boardDao.findByGameId(gameId);
         HashMap<Position, ChessPiece> board = new HashMap<>();
-        for (PieceDto pieceDto : boardDao.findByGameId(lastGameId)) {
-            ChessPiece piece = makePiece(pieceDto);
-            board.put(new Position(pieceDto.getPosition()), piece);
+        for (PieceDto pieceDto : boardInfo) {
+            board.put(new Position(pieceDto.getPosition()), Type.from(pieceDto.getPiece()).createPiece(Color.from(pieceDto.getColor())));
         }
-        GameDto game = gameDao.findById(lastGameId);
-        chessBoard = new ChessBoard(board, new Playing(), game.getTurn());
+        return new ChessBoard(board, convertToGameStatus(game.getStatus()), game.getTurn());
     }
 
-    private ChessPiece makePiece(PieceDto pieceDto) {
-        return Type.from(pieceDto.getPiece()).createPiece(getPieceColor(pieceDto));
+    private Status convertToGameStatus(String status) {
+        return Status.valueOf(status);
+        //.convertToGameStatus();
     }
 
-    private Color getPieceColor(PieceDto pieceDto) {
-        return Color.from(pieceDto.getColor());
-    }
+    public void move(String source, String target, int gameId) {
+        ChessBoard chessBoard = findBoard(gameId);
 
-    public void move(String source, String target) {
         if (chessBoard.compareStatus(Status.PLAYING)) {
             chessBoard.move(new Position(source), new Position(target));
         }
+        boardDao.updateMovePiece(gameId, source, target);
+        gameDao.updateTurn(chessBoard.getCurrentTurn().name(), gameId);
+
+        if (checkStatus(chessBoard, Status.END)) {
+            gameDao.endGame(gameId);
+        }
     }
 
-    public Map<String, Double> status() {
+    public Map<String, Double> status(ChessBoard chessBoard) {
         return chessBoard.calculateScore().entrySet().stream()
                 .collect(Collectors.toMap(m -> m.getKey().name(), Map.Entry::getValue));
     }
 
-    public void end() throws SQLException {
-        chessBoard.changeStatus(new End());
-        boardDao.delete(gameDao.findLastGameId());
-        gameDao.delete();
+    public void end(int gameId) {
+        boardDao.delete(gameId);
+        gameDao.delete(gameId);
     }
 
-    public String findWinner() {
+    public String findWinner(ChessBoard chessBoard) {
         return chessBoard.decideWinner().name();
     }
 
-    public Map<String, String> currentBoardForUI() {
-        return chessBoard.convertToImageName();
+    public boolean checkStatus(ChessBoard chessBoard, Status status) {
+        return chessBoard.compareStatus(status);
     }
 
-    public boolean checkStatus(Status status) {
-        return chessBoard.compareStatus(status);
+    public void deleteGame(int gameId, String password) throws IllegalArgumentException {
+        GameDto gameDto = gameDao.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게임이 존재하지 않습니다."));
+        validateRemovable(password, gameDto);
+        end(gameId);
+    }
+
+    private void validateRemovable(String password, GameDto gameDto) {
+        validateStatus(Status.valueOf(gameDto.getStatus()));
+        validatePassword(gameDto, password);
+    }
+
+    private void validateStatus(Status gameStatus) {
+        if (gameStatus != Status.END) {
+            throw new IllegalArgumentException("종료된 게임만 삭제할 수 있습니다");
+        }
+    }
+
+    private void validatePassword(GameDto gameDto, String password) {
+        if (!gameDto.getPassword().equals(password)) {
+            throw new IllegalArgumentException("올바르지 않은 비밀번호입니다.");
+        }
+    }
+
+    public Map<String, String> currentBoardForUI(ChessBoard chessBoard) {
+        return chessBoard.convertToImageName();
     }
 }

@@ -58,3 +58,26 @@ table, td, th {
     border-collapse: collapse;
     border: 1px solid black;
 }
+
+.game-title {
+    text-align: center;
+    text-decoration: none;
+    font-size: 42px;
+    color: black;
+}
+
+.a {
+    text-align: center;
+    text-decoration: none;
+    color: red;
+}
+
+.game {
+    position: center;
+    background: antiquewhite;
+    clear: both;
+}
+
+.btn {
+    float: right;
+}

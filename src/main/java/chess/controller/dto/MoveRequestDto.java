@@ -1,4 +1,4 @@
-package chess.domain.dto;
+package chess.controller.dto;
 
 public class MoveRequestDto {
 

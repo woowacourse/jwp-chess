@@ -1,19 +1,13 @@
 package chess.controller;
 
-import chess.domain.dto.MoveRequestDto;
-import chess.domain.dto.ResponseDto;
+import chess.controller.dto.MoveRequestDto;
+import chess.controller.dto.RemoveRequestDto;
 import chess.domain.game.Status;
+import chess.domain.game.board.ChessBoard;
 import chess.service.ChessService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.sql.SQLException;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class SpringWebChessController {
@@ -25,86 +19,65 @@ public class SpringWebChessController {
     }
 
     @GetMapping("/")
-    public String index() {
-        return "game";
+    public String index(Model model) {
+        model.addAttribute("games", chessService.findAllGame());
+        return "lobby";
     }
 
-    @PostMapping("/start")
-    public ResponseEntity<ResponseDto> start() {
-        try {
-            chessService.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseDto("정상적으로 시작되지 않았습니다."));
-        }
-        return new ResponseEntity(HttpStatus.OK);
+    @PostMapping("/create")
+    public String create(@RequestParam String title, @RequestParam String password) {
+        long gameId = chessService.create(title, password);
+        return "redirect:/play/" + gameId;
     }
 
-    @GetMapping("/play")
-    public String play(Model model) {
-        if (chessService.checkStatus(Status.END)) {
-            return "redirect:result";
+    @GetMapping("/play/{gameId}")
+    public String play(Model model, @PathVariable int gameId) {
+        ChessBoard chessBoard = chessService.findBoard(gameId);
+        if (chessService.checkStatus(chessBoard, Status.END)) {
+            return "redirect:/result/" + gameId;
         }
         model.addAttribute("play", true);
-        model.addAttribute("board", chessService.currentBoardForUI());
+        model.addAttribute("board", chessService.currentBoardForUI(chessBoard));
         return "game";
     }
 
-    @PostMapping(value = "/move", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDto> move(@RequestBody MoveRequestDto moveRequestDto) throws SQLException {
-        try {
-            chessService.move(moveRequestDto.getSource(), moveRequestDto.getTarget());
-            if (chessService.checkStatus(Status.END)) {
-                chessService.end();
-            }
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseDto(e.getMessage()));
-        }
-        return new ResponseEntity(HttpStatus.OK);
+    @PostMapping(value = "/move/{gameId}")
+    @ResponseBody
+    public void move(@RequestBody MoveRequestDto moveRequestDto, @PathVariable int gameId) {
+        chessService.move(moveRequestDto.getSource(), moveRequestDto.getTarget(), gameId);
     }
 
-    @GetMapping("/status")
-    public String status(Model model) {
-        if (chessService.checkStatus(Status.PLAYING)) {
+    @GetMapping("/status/{gameId}")
+    public String status(Model model, @PathVariable int gameId) {
+        ChessBoard chessBoard = chessService.findBoard(gameId);
+        if (chessService.checkStatus(chessBoard, Status.PLAYING)) {
             model.addAttribute("play", true);
-            model.addAttribute("status", chessService.status());
-            model.addAttribute("board", chessService.currentBoardForUI());
+            model.addAttribute("status", chessService.status(chessBoard));
+            model.addAttribute("board", chessService.currentBoardForUI(chessBoard));
             return "game";
         }
         return "redirect:/end";
     }
 
-    @PostMapping("/save")
-    public String save() {
-        if (chessService.checkStatus(Status.PLAYING)) {
-            chessService.save();
-        }
-        return "redirect:/play";
+    @DeleteMapping("/delete/{gameId}")
+    public String delete(@PathVariable int gameId, @RequestBody RemoveRequestDto removeRequestDto) {
+        chessService.deleteGame(gameId, removeRequestDto.getPassword());
+        return "lobby";
     }
 
-    @GetMapping("/end")
-    public ResponseEntity<ResponseDto> end() {
-        try {
-            chessService.end();
-        } catch (IllegalArgumentException | SQLException e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ResponseDto(e.getMessage()));
-        }
-        return new ResponseEntity(HttpStatus.OK);
+    @GetMapping("/end/{gameId}")
+    @ResponseBody
+    public void end(@PathVariable int gameId) {
+        chessService.end(gameId);
     }
 
-    @GetMapping("/result")
-    public String result(Model model) throws SQLException {
-        chessService.end();
+    @GetMapping("/result/{gameId}")
+    public String result(Model model, @PathVariable int gameId) {
+        ChessBoard chessBoard = chessService.findBoard(gameId);
         model.addAttribute("play", true);
-        model.addAttribute("status", chessService.status());
-        model.addAttribute("board", chessService.currentBoardForUI());
-        model.addAttribute("winner", chessService.findWinner());
+        model.addAttribute("status", chessService.status(chessBoard));
+        model.addAttribute("board", chessService.currentBoardForUI(chessBoard));
+        model.addAttribute("winner", chessService.findWinner(chessBoard));
         return "game";
     }
 }

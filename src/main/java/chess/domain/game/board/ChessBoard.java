@@ -3,9 +3,6 @@ package chess.domain.game.board;
 import chess.domain.game.Color;
 import chess.domain.game.Score;
 import chess.domain.game.Status;
-import chess.domain.game.status.End;
-import chess.domain.game.status.GameStatus;
-import chess.domain.game.status.Ready;
 import chess.domain.piece.ChessPiece;
 import chess.domain.piece.Pawn;
 import chess.domain.position.Direction;
@@ -21,15 +18,17 @@ public class ChessBoard {
 
     private final Map<Position, ChessPiece> chessBoard;
     private Color currentTurn = Color.WHITE;
-    private chess.domain.game.status.GameStatus gameStatus = new Ready();
+    //    private GameStatus gameStatus = new Ready();
+    private Status gameStatus = Status.READY;
 
     public ChessBoard(Map<Position, ChessPiece> board) {
         this.chessBoard = board;
     }
 
-    public ChessBoard(HashMap<Position, ChessPiece> board, chess.domain.game.status.GameStatus status, Color turn) {
+    public ChessBoard(HashMap<Position, ChessPiece> board, Status status, Color turn) {
         this.chessBoard = board;
         this.currentTurn = turn;
+        //this.gameStatus = status;
         this.gameStatus = status;
     }
 
@@ -139,7 +138,7 @@ public class ChessBoard {
     private void checkMate(Position target) {
         ChessPiece pieceOfTo = chessBoard.get(target);
         if (pieceOfTo != null && pieceOfTo.isKing()) {
-            gameStatus = new End();
+            gameStatus = Status.END;
         }
     }
 
@@ -194,7 +193,7 @@ public class ChessBoard {
         return currentTurn.toOpposite();
     }
 
-    public void changeStatus(GameStatus status) {
+    public void changeStatus(Status status) {
         gameStatus = status;
     }
 

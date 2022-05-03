@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ChessGame!</title>
+    <link href="/src/game.css" rel="stylesheet"/>
+</head>
+
+<body>
+<script src="/src/App.js" type="text/javascript"></script>
+<h1> ChessGame Lobby </h1>
+<div class="button">
+            <form action="/create" method="post">
+                <input type="text" name="title" placeholder="GAME TITLE"  required title="Either 0 OR (1 to 10 chars)">
+                <input type="password" name="password" placeholder="PASSWORD" required title="Either 0 OR (1 to 10 chars)">
+                <input type="submit" value="게임 생성하기">
+            </form>
+</div>
+
+<h2>게임 목록</h2>
+{{#games}}
+    <div class = "game">
+    <a href ="/play/{{id}}" class="game-title"> {{title}} </a>
+        <button class="btn" onclick="deleteGame({{id}})">
+                 삭제하기
+        </button>
+    </div>
+{{/games}}
+</body>

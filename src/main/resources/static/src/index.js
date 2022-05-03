@@ -1,17 +1,37 @@
 const start = document.querySelector("#start")
 const score = document.querySelector("#status")
+const back = document.querySelector("#back")
 const end = document.querySelector("#end")
+const id = new URL(window.location).searchParams.get('id')
+
 
 let from = ""
 let to = ""
 let status = ""
 
+window.onload = load
+
 start.addEventListener('click', async function () {
     startAndDraw()
 })
 
+back.addEventListener('click', async function () {
+    window.location.replace("/");
+})
+
+async function load() {
+    await fetch("/rooms/game/" + id)
+        .then(res => res.json())
+        .then(res => {
+            if (res.gameStatus == "PLAYING") {
+                status = res.gameStatus;
+                drawBoard(res.board)
+            }
+        })
+}
+
 async function startAndDraw() {
-    await fetch("/start")
+    await fetch("/rooms/game/start/" + id)
         .then(res => res.json())
         .then(res => {
             status = res.gameStatus;
@@ -57,11 +77,12 @@ function tryMove(e) {
 async function movePiece(from, to) {
     const bodyValue = {
         from: from,
-        to: to
+        to: to,
+        roomId: id
     }
 
-    fetch("/move", {
-        method: 'POST',
+    fetch("/rooms/game/move", {
+        method: 'PUT',
         headers: {
             "Content-Type": "application/json",
         },
@@ -105,10 +126,10 @@ score.addEventListener('click', async function () {
 })
 
 async function getScore() {
-    if (status == "") {
+    if (status === "") {
         alert("게임을 시작해야합니다.");
     } else {
-        let score = await fetch("/status")
+        let score = await fetch("/rooms/game/status/" + id)
         score = await score.json()
         alert(score.message)
     }
@@ -119,19 +140,23 @@ end.addEventListener('click', async function () {
 })
 
 async function endGame() {
-    if (status == "") {
+    if (status === "") {
         alert("게임을 시작해야합니다.");
     } else {
-        let score = await fetch("/end")
+        let score = await fetch("/rooms/game/end/" + id,
+        {
+            method: 'POST'
+        })
         score = await score.json()
-        if (status == "END") {
+        if (status === "PLAYING") {
             alert("게임을 종료합니다.\n" + score.message);
         }
-        if (status == "CHECK_MATE") {
+        if (status === "CHECK_MATE") {
             alert("승부가 결정되었습니다!!.\n" + score.message);
         }
 
         status = "";
-        window.location.replace("/");
+        window.location.reload();
     }
 }
+

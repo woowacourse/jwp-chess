@@ -1,12 +1,14 @@
 package chess.dao;
 
+import chess.domain.piece.Team;
+
 public interface TurnDao {
 
-    void init();
+    void create(Team data, int roomId);
 
-    void update(String nowTurn, String nextTurn);
+    void update(String nowTurn, String nextTurn, int roomId);
 
-    String getTurn();
+    String getTurn(int roomId);
 
-    void reset();
+    void reset(Team data, int roomId);
 }

@@ -1,8 +1,12 @@
 package chess.dto;
 
 public class BoardDto {
-    private final String position;
-    private final String piece;
+
+    private String position;
+    private String piece;
+
+    public BoardDto() {
+    }
 
     public BoardDto(String position, String piece) {
         this.position = position;

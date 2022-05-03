@@ -13,7 +13,10 @@ public class ScoreDto {
     private static final String SCORE_GUIDE_MESSAGE = "점\n";
     private static final int DRAW_STANDARD = 2;
 
-    private final String message;
+    private String message;
+
+    public ScoreDto() {
+    }
 
     public ScoreDto(String message) {
         this.message = message;

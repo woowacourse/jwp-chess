@@ -28,7 +28,7 @@ ALTER TABLE board ADD UNIQUE (game_id, square);
 
 CREATE TABLE init_board
 (
-    square      VARCHAR 10) NOT NULL,
+    square      VARCHAR(10) NOT NULL,
     piece_type  VARCHAR(10) NOT NULL,
     piece_color VARCHAR(10) NOT NULL,
     PRIMARY KEY (square)

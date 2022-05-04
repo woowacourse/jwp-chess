@@ -9,6 +9,7 @@ import chess.service.dto.BoardDto;
 import chess.service.dto.ChessGameDto;
 import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
+import chess.web.controller.dto.MoveRequest;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ class ChessServiceTest {
     void move() {
         service.createGame("firstGame", "1a2s3d4f");
         service.initGame(1L);
-        service.move(1L, "a2", "a4");
+        service.move(1L, new MoveRequest("a2", "a4"));
         ChessGameDto chessGameDto = gameDao.getGameTable().get(1L);
         BoardDto boardDto = boardDao.getBoardTable().get(1L);
         boolean fromSquareIsEmpty = boardDto.getPieces().stream()

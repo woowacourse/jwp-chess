@@ -80,7 +80,7 @@ class ApiChessControllerTest {
     @Test
     void deleteGame() {
         Long id = chessService.createGame("game", "1234");
-        GameRequest request = new GameRequest(id, "1234");
+        GameRequest request = new GameRequest("1234");
         chessService.endGame(id);
 
         RestAssured.given().log().all()

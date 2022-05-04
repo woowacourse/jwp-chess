@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/game/{gameId}")
 public class ApiChessController {
 
     private final ChessService chessService;
@@ -26,35 +28,35 @@ public class ApiChessController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/game/{gameId}/board")
+    @PostMapping("/board")
     public ResponseEntity<Void> initBoard(@PathVariable Long gameId) {
         chessService.initGame(gameId);
         return ResponseEntity.created(URI.create("/game/" + gameId + "/board")).build();
     }
 
-    @GetMapping("/game/{gameId}/board")
+    @GetMapping("/board")
     public ResponseEntity<BoardDto> getBoardPieces(@PathVariable Long gameId) {
         return ResponseEntity.ok(chessService.getBoard(gameId));
     }
 
-    @PatchMapping("/game/{gameId}/move")
+    @PatchMapping("/move")
     public ResponseEntity<ChessGameDto> move(@PathVariable Long gameId, MoveRequest moveRequest) {
-        return ResponseEntity.ok(chessService.move(gameId, moveRequest.getFrom(), moveRequest.getTo()));
+        return ResponseEntity.ok(chessService.move(gameId, moveRequest));
     }
 
-    @PutMapping("/game/{gameId}/end")
+    @PutMapping("/end")
     public ResponseEntity<Void> endGame(@PathVariable Long gameId) {
         chessService.endGame(gameId);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/game")
-    public ResponseEntity<Void> deleteGame(@RequestBody GameRequest gameRequest) {
-        chessService.deleteGame(gameRequest);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteGame(@PathVariable Long gameId, @RequestBody GameRequest gameRequest) {
+        chessService.deleteGame(gameId, gameRequest.getPassword());
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/game/{gameId}/status")
+    @GetMapping("/status")
     public ResponseEntity<GameResultDto> getResult(@PathVariable Long gameId) {
         GameResultDto gameResultDto = chessService.getResult(gameId);
         chessService.endGame(gameId);

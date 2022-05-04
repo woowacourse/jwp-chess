@@ -31,7 +31,7 @@ public final class Ready implements State {
     }
 
     @Override
-    public String toString() {
+    public String getValue() {
         return "Ready";
     }
 }

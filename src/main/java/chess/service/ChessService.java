@@ -1,22 +1,25 @@
 package chess.service;
 
-import chess.repository.BoardDao;
-import chess.repository.GameDao;
+import chess.dao.BoardDao;
+import chess.dao.GameDao;
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.command.GameCommand;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
 import chess.domain.piece.EmptyPiece;
-import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
 import chess.domain.state.State;
+import chess.domain.state.StateName;
 import chess.dto.BoardDto;
-import chess.dto.PieceDto;
+import chess.dto.GameDto;
+import chess.dto.RoomDto;
 import chess.dto.StatusDto;
-import java.util.HashMap;
+import chess.entity.Game;
+import chess.entity.Square;
+import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,74 +29,95 @@ public class ChessService {
     private final GameDao gameDao;
     private final BoardDao boardDao;
 
-    @Autowired
     public ChessService(GameDao gameDao, BoardDao boardDao) {
         this.gameDao = gameDao;
         this.boardDao = boardDao;
     }
 
-    public BoardDto selectBoard() {
-        ChessBoard chessBoard = boardDao.find();
-        Map<Position, Piece> pieces = chessBoard.getPieces();
-        Map<String, PieceDto> board = new HashMap<>();
-        for (Position position : pieces.keySet()) {
-            String key = position.toString();
-            Piece piece = pieces.get(Position.of(key));
-            PieceDto pieceDto = new PieceDto(piece.getSymbol().name(), piece.getColor().name());
-            board.put(key, pieceDto);
-        }
-        return new BoardDto(board);
+    @Transactional
+    public int insertGame(RoomDto roomDto, ChessBoard chessBoard) {
+        int id = gameDao.save(new Game(roomDto.getTitle(), roomDto.getPassword(), StateName.WHITE_TURN.getValue()));
+        boardDao.save(Square.from(chessBoard, id));
+        return id;
     }
 
-    public String selectWinner() {
-        if (gameDao.findGameCount() == 0) {
-            return null;
-        }
-        ChessBoard chessBoard = boardDao.find();
-        State state = gameDao.findState();
+    public List<GameDto> findGame() {
+        return gameDao.findAll().stream()
+                .map(GameDto::of)
+                .collect(Collectors.toList());
+    }
 
-        ChessGame chessGame = new ChessGame(state, chessBoard);
-        if (chessGame.isEndGameByPiece()) {
-            return chessGame.getWinner().name();
+    public BoardDto selectBoard(int gameId) {
+        return BoardDto.of(boardDao.findById(gameId));
+    }
+
+    public String selectWinner(int gameId) {
+        ChessBoard chessBoard = Square.toBoard((boardDao.findById(gameId)));
+
+        if (chessBoard.isEnd()) {
+            return chessBoard.getWinner().name();
         }
         return null;
     }
 
-    @Transactional
-    public void insertGame() {
-        ChessGame chessGame = new ChessGame(new NormalPiecesGenerator());
-        chessGame.playGameByCommand(GameCommand.of("start"));
+    public String selectState(int gameId) {
+        Game game = gameDao.findById(gameId);
+        return game.getState();
+    }
 
-        gameDao.delete();
-        gameDao.save(chessGame.getState().toString());
-        boardDao.save(chessGame.getChessBoard(), gameDao.findId());
+    public StatusDto selectStatus(int gameId) {
+        Game game = gameDao.findById(gameId);
+        ChessBoard chessBoard = Square.toBoard((boardDao.findById(gameId)));
+        ChessGame chessGame = new ChessGame(State.of(game.getState()), chessBoard);
+        Map<Color, Double> scores = chessGame.calculateScore();
+        return new StatusDto(scores);
     }
 
     @Transactional
-    public void updateBoard(String from, String to) {
-        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
+    public void movePiece(int gameId, String from, String to) {
+        Game game = gameDao.findById(gameId);
+        ChessBoard chessBoard = Square.toBoard((boardDao.findById(gameId)));
+        ChessGame chessGame = new ChessGame(State.of(game.getState()), chessBoard);
+        playChessGame(from, to, chessGame);
+
+        gameDao.update(new Game(chessGame.getState().getValue(), gameId));
+        boardDao.update(new Square(to, chessBoard.selectPiece(Position.of(to)), gameId));
+        boardDao.update(new Square(from, EmptyPiece.getInstance(), gameId));
+    }
+
+    private void playChessGame(String from, String to, ChessGame chessGame) {
         chessGame.playGameByCommand(GameCommand.of("move", from, to));
         chessGame.isEndGameByPiece();
-        gameDao.update(chessGame.getState().toString(), gameDao.findId());
-
-        Map<String, Piece> pieces = chessGame.getChessBoard().toMap();
-        boardDao.update(Position.of(to), pieces.get(to), gameDao.findId());
-        boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameDao.findId());
-    }
-
-    public StatusDto selectStatus() {
-        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
-        chessGame.playGameByCommand(GameCommand.of("status"));
-        Map<Color, Double> scores = chessGame.calculateScore();
-
-        return new StatusDto(scores.get(Color.WHITE), scores.get(Color.BLACK));
     }
 
     @Transactional
-    public void deleteGame() {
-        ChessGame chessGame = new ChessGame(gameDao.findState(), boardDao.find());
+    public void endGame(int gameId) {
+        gameDao.update(new Game(StateName.FINISH.getValue(), gameId));
+    }
 
-        chessGame.playGameByCommand(GameCommand.of("end"));
-        gameDao.delete();
+    @Transactional
+    public void deleteGame(int gameId, String password) {
+        Game game = gameDao.findById(gameId);
+        State state = State.of(game.getState());
+        validateState(state);
+        if (game.isSamePassword(password)) {
+            gameDao.delete(gameId);
+            return;
+        }
+        throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+    }
+
+    private void validateState(State state) {
+        if (!state.isFinished()) {
+            throw new IllegalStateException("진행중인 게임은 삭제할 수 없습니다.");
+        }
+    }
+
+    @Transactional
+    public void restartGame(int gameId) {
+        ChessBoard chessBoard = new ChessBoard(new NormalPiecesGenerator());
+        int id = gameDao.update(new Game(StateName.WHITE_TURN.getValue(), gameId));
+        boardDao.delete(gameId);
+        boardDao.save(Square.from(chessBoard, id));
     }
 }

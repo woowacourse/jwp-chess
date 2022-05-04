@@ -1,64 +1,88 @@
 package chess.controller;
 
+import chess.domain.chessboard.ChessBoard;
+import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.dto.BoardDto;
+import chess.dto.GameDto;
 import chess.dto.MoveDto;
+import chess.dto.RoomDto;
 import chess.dto.StatusDto;
 import chess.service.ChessService;
-import java.util.HashMap;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class WebController {
 
     private final ChessService chessService;
 
-    @Autowired
     public WebController(ChessService chessService) {
         this.chessService = chessService;
     }
 
     @GetMapping("/")
-    public ModelAndView selectGame() {
-        BoardDto boardDto = chessService.selectBoard();
-        String winner = chessService.selectWinner();
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("board", boardDto);
-        model.put("winner", winner);
-
-        return new ModelAndView("index", model);
+    public String selectGame(Model model) {
+        List<GameDto> games = chessService.findGame();
+        model.addAttribute("game", games);
+        return "index";
     }
 
-    @GetMapping("/game")
-    public ModelAndView insertGame() {
-        chessService.insertGame();
-        return new ModelAndView("redirect:/");
+    @PostMapping("/game")
+    public String insertGame(RoomDto roomDto) {
+        chessService.insertGame(roomDto, new ChessBoard(new NormalPiecesGenerator()));
+        return "redirect:/";
     }
 
-    @PutMapping("/game/board")
-    public ModelAndView updateBoard(MoveDto moveDto) {
-        chessService.updateBoard(moveDto.getFrom(), moveDto.getTo());
-        return new ModelAndView("redirect:/");
+    @GetMapping("/game/{gameId}")
+    public String startGame(@PathVariable int gameId, Model model) {
+        BoardDto boardDto = chessService.selectBoard(gameId);
+        String winner = chessService.selectWinner(gameId);
+        String state = chessService.selectState(gameId);
+
+        model.addAttribute("board", boardDto);
+        model.addAttribute("id", gameId);
+        model.addAttribute("winner", winner);
+        model.addAttribute("state", state);
+
+        return "game";
     }
 
-    @GetMapping("/game/status")
+    @PutMapping("/game/board/{gameId}")
+    public String movePiece(@PathVariable int gameId, MoveDto moveDto) {
+        chessService.movePiece(gameId, moveDto.getFrom(), moveDto.getTo());
+        return "redirect:/game/" + gameId;
+    }
+
+    @PutMapping("/game/{gameId}")
+    public String restartGame(@PathVariable int gameId) {
+        chessService.restartGame(gameId);
+        return "redirect:/game/" + gameId;
+    }
+
+    @GetMapping("/game/status/{gameId}")
     @ResponseBody
-    public ResponseEntity<StatusDto> selectStatus() {
-        StatusDto statusDto = chessService.selectStatus();
+    public ResponseEntity<StatusDto> selectStatus(@PathVariable int gameId) {
+        StatusDto statusDto = chessService.selectStatus(gameId);
         return ResponseEntity.ok().body(statusDto);
     }
 
-    @DeleteMapping("/game")
-    public ModelAndView deleteGame() {
-        chessService.deleteGame();
-        return new ModelAndView("redirect:/");
+    @PutMapping("/game/end/{gameId}")
+    public String endGame(@PathVariable int gameId) {
+        chessService.endGame(gameId);
+        return "redirect:/";
+    }
+
+    @DeleteMapping("/game/{gameId}")
+    public String deleteGame(@PathVariable int gameId, String password) {
+        chessService.deleteGame(gameId, password);
+        return "redirect:/";
     }
 }

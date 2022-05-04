@@ -24,7 +24,7 @@ public final class Finish implements State {
     }
 
     @Override
-    public String toString() {
-        return "Finish";
+    public String getValue() {
+        return StateName.FINISH.getValue();
     }
 }

@@ -46,9 +46,4 @@ public enum Column {
     public int getValue() {
         return value;
     }
-
-    @Override
-    public String toString() {
-        return name().toLowerCase(Locale.ROOT);
-    }
 }

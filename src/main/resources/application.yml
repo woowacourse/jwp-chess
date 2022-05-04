@@ -1,12 +1,4 @@
 spring:
-  profiles:
-    group:
-      "default": "default"
-      "test": "test"
-
----
-
-spring:
   config:
     activate:
       on-profile: "default"
@@ -17,18 +9,11 @@ spring:
     username: root
     password: root
 
+#  sql:
+#    init:
+#      mode: always
+
   mvc:
     hiddenmethod:
       filter:
         enabled: true
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: "test"
-
-  h2:
-    console:
-      enabled: true

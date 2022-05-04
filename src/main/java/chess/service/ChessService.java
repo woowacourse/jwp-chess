@@ -4,6 +4,7 @@ import chess.domain.ChessGame;
 import chess.domain.board.BoardInitializer;
 import chess.domain.position.Position;
 import chess.domain.state.Running;
+import chess.domain.state.State;
 import chess.domain.state.StateFactory;
 import chess.dto.ChessGameDto;
 import chess.dto.DeleteRequestDto;
@@ -43,8 +44,8 @@ public final class ChessService {
 
     public ChessGameDto newGame(int gameId) {
         initGame(gameId);
-        ChessGame chessGame = new ChessGame(new Running(gameRepository.getColor(gameId),
-                pieceRepository.getBoard(gameId)));
+        State state = new Running(gameRepository.getColor(gameId), pieceRepository.getBoard(gameId));
+        ChessGame chessGame = new ChessGame(state);
         return new ChessGameDto(pieceRepository.findAll(gameId), chessGame.status());
     }
 

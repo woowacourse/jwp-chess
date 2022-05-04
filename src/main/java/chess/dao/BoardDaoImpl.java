@@ -12,7 +12,7 @@ public class BoardDaoImpl implements BoardDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    private RowMapper<Square> squareRowMapper = (rs, rowNum) ->
+    private RowMapper<Square> rowMapper = (rs, rowNum) ->
             new Square(
                     rs.getString("position"),
                     rs.getString("symbol"),
@@ -41,7 +41,7 @@ public class BoardDaoImpl implements BoardDao {
     @Override
     public List<Square> findById(int id) {
         String sql = "select position, symbol, color from board where game_id = ?";
-        return jdbcTemplate.query(sql, squareRowMapper, id);
+        return jdbcTemplate.query(sql, rowMapper, id);
     }
 
     @Override

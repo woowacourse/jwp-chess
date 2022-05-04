@@ -1,6 +1,5 @@
 package chess.dao;
 
-import chess.domain.state.State;
 import chess.entity.Game;
 import java.util.HashMap;
 import java.util.List;
@@ -15,17 +14,13 @@ public class GameDaoImpl implements GameDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    private RowMapper<Game> gameRowMapper = (rs, rowNum) ->
+    private RowMapper<Game> rowMapper = (rs, rowNum) ->
             new Game(
                     rs.getInt("id"),
                     rs.getString("title"),
                     rs.getString("password"),
                     rs.getString("state")
             );
-
-    private RowMapper<State> stateRowMapper = (rs, rowNum) ->
-            State.of(rs.getString("state"));
-
 
     public GameDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -46,19 +41,13 @@ public class GameDaoImpl implements GameDao {
     @Override
     public List<Game> findAll() {
         String sql = "select * from game";
-        return jdbcTemplate.query(sql, gameRowMapper);
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public Game findById(int id) {
         String sql = "select * from game where id = ?";
-        return jdbcTemplate.queryForObject(sql, gameRowMapper, id);
-    }
-
-    @Override
-    public State findState(int id) {
-        String sql = "select state from game where id = ?";
-        return jdbcTemplate.queryForObject(sql, stateRowMapper, id);
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     @Override

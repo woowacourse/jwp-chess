@@ -47,18 +47,11 @@ class GameDaoTest {
     }
 
     @Test
-    @DisplayName("게임의 상태를 조회할 수 있다.")
-    void findState() {
-        String state = gameDao.findState(gameId).getValue();
-
-        assertThat(state).isEqualTo("WhiteTurn");
-    }
-
-    @Test
     @DisplayName("게임의 상태를 업데이트할 수 있다.")
     void update() {
         gameDao.update(new Game("BlackTurn", gameId));
-        String state = gameDao.findState(gameId).getValue();
+        Game game = gameDao.findById(gameId);
+        String state = game.getState();
 
         assertThat(state).isEqualTo("BlackTurn");
     }

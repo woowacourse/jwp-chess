@@ -33,13 +33,6 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public State findState(int id) {
-        Game game = this.game.get(id);
-        String state = game.getState();
-        return State.of(state);
-    }
-
-    @Override
     public int update(Game game) {
         Game oldGame = this.game.get(game.getId());
         this.game.put(game.getId(), new Game(game.getId(), oldGame.getTitle(), oldGame.getPassword(), game.getState()));

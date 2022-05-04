@@ -19,6 +19,7 @@ import chess.dto.GameDto;
 import chess.dto.PieceDto;
 import chess.dto.RoomDto;
 import chess.dto.StatusDto;
+import chess.entity.Game;
 import chess.entity.Square;
 import java.util.HashMap;
 import java.util.List;
@@ -124,7 +125,8 @@ public class ChessServiceTest {
     @DisplayName("게임을 종료시킬 수 있다.")
     void endGame() {
         chessService.endGame(id);
-        String state = gameDao.findState(id).getValue();
+        Game game = gameDao.findById(id);
+        String state = game.getState();
 
         assertThat(state).isEqualTo("Finish");
     }
@@ -162,7 +164,8 @@ public class ChessServiceTest {
     void restartGame() {
         chessService.endGame(id);
         chessService.restartGame(id);
-        String state = gameDao.findState(id).getValue();
+        Game game = gameDao.findById(id);
+        String state = game.getState();
 
         assertThat(state).isEqualTo("WhiteTurn");
     }

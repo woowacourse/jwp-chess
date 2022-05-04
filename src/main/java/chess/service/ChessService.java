@@ -14,9 +14,9 @@ import chess.domain.state.StateName;
 import chess.dto.BoardDto;
 import chess.dto.GameDto;
 import chess.dto.RoomDto;
-import chess.entity.Square;
 import chess.dto.StatusDto;
 import chess.entity.Game;
+import chess.entity.Square;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,8 +47,8 @@ public class ChessService {
                 .collect(Collectors.toList());
     }
 
-    public BoardDto selectBoard(int id) {
-        return BoardDto.of(boardDao.findById(id));
+    public BoardDto selectBoard(int gameId) {
+        return BoardDto.of(boardDao.findById(gameId));
     }
 
     public String selectWinner(int gameId) {
@@ -61,13 +61,15 @@ public class ChessService {
     }
 
     public String selectState(int gameId) {
-        return gameDao.findState(gameId).getValue();
+        Game game = gameDao.findById(gameId);
+        return game.getState();
     }
 
     public StatusDto selectStatus(int gameId) {
+        Game game = gameDao.findById(gameId);
         ChessBoard chessBoard = Square.toBoard((boardDao.findById(gameId)));
 
-        ChessGame chessGame = new ChessGame(gameDao.findState(gameId), chessBoard);
+        ChessGame chessGame = new ChessGame(State.of(game.getState()), chessBoard);
         Map<Color, Double> scores = chessGame.calculateScore();
 
         return new StatusDto(scores);
@@ -75,8 +77,9 @@ public class ChessService {
 
     @Transactional
     public void movePiece(int gameId, String from, String to) {
+        Game game = gameDao.findById(gameId);
         ChessBoard chessBoard = Square.toBoard((boardDao.findById(gameId)));
-        ChessGame chessGame = new ChessGame(gameDao.findState(gameId), chessBoard);
+        ChessGame chessGame = new ChessGame(State.of(game.getState()), chessBoard);
         playChessGame(from, to, chessGame);
 
         gameDao.update(new Game(chessGame.getState().getValue(), gameId));
@@ -97,7 +100,7 @@ public class ChessService {
     @Transactional
     public void deleteGame(int gameId, String password) {
         Game game = gameDao.findById(gameId);
-        State state = gameDao.findState(gameId);
+        State state = State.of(game.getState());
         validateState(state);
         if (game.isSamePassword(password)) {
             gameDao.delete(gameId);

@@ -1,12 +1,12 @@
 const startButton = document.querySelector("#start-button");
-const restartButton = document.querySelector("#restart-button");
+const loadButton = document.querySelector("#load-button");
 const endButton = document.querySelector("#end-button");
 const chessBoard = document.querySelector("table");
 const whiteScore = document.querySelector("#white-score");
 const blackScore = document.querySelector("#black-score");
 
 startButton.addEventListener("click", onClickStartButton);
-restartButton.addEventListener("click", onClickRestartButton);
+loadButton.addEventListener("click", onClickLoadButton);
 endButton.addEventListener("click", onClickEndButton);
 chessBoard.addEventListener("click", onClickBoard);
 
@@ -59,8 +59,8 @@ function createPieceImage ({color, name}) {
     return image;
 }
 
-async function onClickRestartButton () {
-    const response = await fetch(`/restart/${gameId}`);
+async function onClickLoadButton () {
+    const response = await fetch(`/load/${gameId}`);
     const data = await response.json();
 
     if (response.ok) {

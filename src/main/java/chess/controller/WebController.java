@@ -45,8 +45,9 @@ public class WebController {
         return ResponseEntity.ok().body(chessService.newGame(id));
     }
 
-    @GetMapping("/restart/{id}")
+    @GetMapping("/load/{id}")
     public ResponseEntity<ChessGameDto> restart(@PathVariable("id") int id) {
+        System.out.println("@@@@@@@@@@@@@@load@@@@@@@@@@@@@@@@@@@@@@");
         return ResponseEntity.ok().body(chessService.loadGame(id));
     }
 

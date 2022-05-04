@@ -1,7 +1,7 @@
 package chess.controller;
 
-import chess.model.dto.GameInfosDto;
-import chess.model.dto.RoomDto;
+import chess.model.dto.GameInfosResponse;
+import chess.model.dto.RoomRequest;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,13 +21,13 @@ public class ChessHomeController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity startNewGame(@RequestBody RoomDto roomDto) {
-        chessService.start(roomDto);
+    public ResponseEntity<Void> startNewGame(@RequestBody RoomRequest roomRequest) {
+        chessService.start(roomRequest);
         return ResponseEntity.created(URI.create("/")).build();
     }
 
     @GetMapping("/games")
-    public ResponseEntity<GameInfosDto> getAllGames() {
+    public ResponseEntity<GameInfosResponse> getAllGames() {
         return ResponseEntity.ok(chessService.getAllGames());
     }
 }

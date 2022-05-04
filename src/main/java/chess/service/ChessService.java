@@ -32,36 +32,36 @@ public class ChessService {
         this.gameDao = gameDao;
     }
 
-    public Long start(RoomDto roomDto) {
-        long gameId = initGame(roomDto);
+    public Long start(RoomRequest roomRequest) {
+        long gameId = initGame(roomRequest);
         initBoard(gameId);
 
         return gameId;
     }
 
-    public GameInfosDto getAllGames() {
+    public GameInfosResponse getAllGames() {
         List<GameEntity> games = gameDao.findAll();
-        return new GameInfosDto(games.stream()
-                .map(GameInfoDto::from)
+        return new GameInfosResponse(games.stream()
+                .map(GameInfoResponse::from)
                 .collect(Collectors.toList()));
     }
 
-    public WebBoardDto move(MoveDto moveDto, Long id) {
+    public BoardResponse move(MoveRequest moveRequest, Long id) {
         ChessGame chessGame = findChessGameById(id);
         Turn turn = Turn.from(gameDao.findTurnById(id));
-        chessGame.move(Position.from(moveDto.getSource()), Position.from(moveDto.getTarget()), turn);
+        chessGame.move(Position.from(moveRequest.getSource()), Position.from(moveRequest.getTarget()), turn);
 
-        updateGame(moveDto, id, turn);
+        updateGame(moveRequest, id, turn);
 
         if (chessGame.isKingDead()) {
             gameDao.update(turn.finish(), id);
         }
 
-        return WebBoardDto.from(chessGame.getBoard());
+        return BoardResponse.from(chessGame.getBoard());
     }
 
-    public WebBoardDto getBoardByGameId(long gameId) {
-        return WebBoardDto.from(toBoard(pieceDao.findAllByGameId(gameId)));
+    public BoardResponse getBoardByGameId(long gameId) {
+        return BoardResponse.from(toBoard(pieceDao.findAllByGameId(gameId)));
     }
 
     public String getTurn(Long id) {
@@ -91,18 +91,18 @@ public class ChessService {
         throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
     }
 
-    private long initGame(RoomDto roomDto) {
-        return gameDao.initGame(roomDto.getRoomName(), roomDto.getPassword());
+    private long initGame(RoomRequest roomRequest) {
+        return gameDao.initGame(roomRequest.getRoomName(), roomRequest.getPassword());
     }
 
     private void initBoard(Long gameId) {
         pieceDao.init(BoardFactory.create(), gameId);
     }
 
-    private void updateGame(MoveDto moveDto, Long id, Turn turn) {
-        Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPositionAndGameId(moveDto.getSource(), id));
-        pieceDao.updateByPositionAndGameId(moveDto.getTarget(), PieceDao.getPieceName(sourcePiece), id);
-        pieceDao.updateByPositionAndGameId(moveDto.getSource(), PIECE_NONE, id);
+    private void updateGame(MoveRequest moveRequest, Long id, Turn turn) {
+        Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPositionAndGameId(moveRequest.getSource(), id));
+        pieceDao.updateByPositionAndGameId(moveRequest.getTarget(), PieceDao.getPieceName(sourcePiece), id);
+        pieceDao.updateByPositionAndGameId(moveRequest.getSource(), PIECE_NONE, id);
         gameDao.update(turn.change().getThisTurn(), id);
     }
 

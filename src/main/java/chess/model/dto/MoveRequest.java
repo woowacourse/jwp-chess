@@ -1,10 +1,10 @@
 package chess.model.dto;
 
-public class MoveDto {
+public class MoveRequest {
     private String source;
     private String target;
 
-    public MoveDto(String source, String target) {
+    public MoveRequest(String source, String target) {
         this.source = source;
         this.target = target;
     }

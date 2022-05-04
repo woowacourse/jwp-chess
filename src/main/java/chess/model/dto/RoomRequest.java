@@ -1,10 +1,10 @@
 package chess.model.dto;
 
-public class RoomDto {
+public class RoomRequest {
     private final String roomName;
     private String password;
 
-    public RoomDto(String roomName, String password) {
+    public RoomRequest(String roomName, String password) {
         this.roomName = roomName;
         this.password = password;
     }

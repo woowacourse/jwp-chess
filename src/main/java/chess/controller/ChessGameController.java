@@ -1,8 +1,8 @@
 package chess.controller;
 
 import chess.model.GameResult;
-import chess.model.dto.MoveDto;
-import chess.model.dto.WebBoardDto;
+import chess.model.dto.MoveRequest;
+import chess.model.dto.BoardResponse;
 import chess.service.ChessService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class ChessGameController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, String>> getGame(@PathVariable Long id) {
-        WebBoardDto board = chessService.getBoardByGameId(id);
+        BoardResponse board = chessService.getBoardByGameId(id);
         return ResponseEntity.ok(board.getWebBoard());
     }
 
@@ -31,8 +31,8 @@ public class ChessGameController {
     }
 
     @PatchMapping("/{id}/move")
-    public ResponseEntity<Map<String, String>> move(@PathVariable Long id, @RequestBody MoveDto moveCommand) {
-        WebBoardDto board = chessService.move(moveCommand, id);
+    public ResponseEntity<Map<String, String>> move(@PathVariable Long id, @RequestBody MoveRequest moveCommand) {
+        BoardResponse board = chessService.move(moveCommand, id);
         return ResponseEntity.ok(board.getWebBoard());
     }
 

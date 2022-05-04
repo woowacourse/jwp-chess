@@ -13,6 +13,7 @@ import chess.dto.DeleteRequestDto;
 import chess.dto.DeleteResponseDto;
 import chess.dto.PieceDto;
 import chess.dto.RoomDto;
+import chess.exception.WrongPasswordException;
 import chess.repository.GameRepository;
 import chess.repository.PieceRepository;
 import chess.repository.RoomRepository;
@@ -91,5 +92,13 @@ public class ChessServiceTest {
         chessService.createRoom("chess2", "0000");
         DeleteResponseDto deleteResponseDto = chessService.deleteGame(new DeleteRequestDto(2, "0000"));
         assertThat(deleteResponseDto.getIsDeleted()).isTrue();
+    }
+
+    @Test
+    void delteGameWrongPasswordTest() {
+        chessService.createRoom("chess2", "0000");
+        DeleteRequestDto deleteRequestDto = new DeleteRequestDto(2, "1234");
+        assertThatThrownBy(() -> chessService.deleteGame(deleteRequestDto))
+                .isInstanceOf(WrongPasswordException.class);
     }
 }

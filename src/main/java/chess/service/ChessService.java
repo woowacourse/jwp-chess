@@ -9,6 +9,7 @@ import chess.dto.ChessGameDto;
 import chess.dto.DeleteRequestDto;
 import chess.dto.DeleteResponseDto;
 import chess.dto.RoomDto;
+import chess.exception.WrongPasswordException;
 import chess.repository.GameRepository;
 import chess.repository.PieceRepository;
 import chess.repository.RoomRepository;
@@ -74,7 +75,7 @@ public final class ChessService {
             gameRepository.deleteGame(deleteRequestDto.getId());
             return DeleteResponseDto.success();
         }
-        return DeleteResponseDto.fail();
+        throw new WrongPasswordException();
     }
 
     private void updateBoard(String from, String to, int gameId, String turn) {

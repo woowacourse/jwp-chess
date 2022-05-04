@@ -7,7 +7,6 @@ import chess.dto.MoveDto;
 import chess.dto.RoomDto;
 import chess.service.ChessService;
 import chess.view.WebInputValicator;
-import com.google.gson.Gson;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -74,11 +73,5 @@ public class WebController {
         WebInputValicator.checkRoomPassword(password);
         chessService.createRoom(name, password);
         return "redirect:/";
-    }
-
-    @ExceptionHandler({RuntimeException.class})
-    private ResponseEntity<String> handleException(final RuntimeException exception) {
-        Gson gson = new Gson();
-        return ResponseEntity.badRequest().body(gson.toJson(exception.getMessage()));
     }
 }

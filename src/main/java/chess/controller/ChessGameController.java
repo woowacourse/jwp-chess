@@ -26,8 +26,9 @@ public class ChessGameController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteGame(@PathVariable Long id, @RequestBody String confirmPwd) {
+    public ResponseEntity<Void> deleteGame(@PathVariable Long id, @RequestBody String confirmPwd) {
         chessService.deleteByGameId(confirmPwd, id);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/move")

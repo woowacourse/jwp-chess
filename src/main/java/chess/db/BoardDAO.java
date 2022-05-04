@@ -53,6 +53,4 @@ public class BoardDAO {
     private void insert(Position position, Piece piece, String roomId) {
         jdbcTemplate.update(INSERT_ONE_PIECE_SQL, position.getPosition(), piece.getName(), piece.getColor(), roomId);
     }
-
-
 }

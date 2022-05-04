@@ -56,10 +56,6 @@ public class State {
         return color;
     }
 
-    public StateSwitch getStateSwitch() {
-        return stateSwitch;
-    }
-
     public Board getBoard() {
         return board;
     }

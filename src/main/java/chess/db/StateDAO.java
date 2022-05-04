@@ -43,15 +43,6 @@ public class StateDAO {
         jdbcTemplate.update(CONVERT_COLOR_SQL, color.name(), roomId);
     }
 
-    public boolean isSaved(String roomId) {
-        int count = jdbcTemplate.queryForObject(CHECK_SAVE_SQL, Integer.class, roomId);
-        return count > 0;
-    }
-
-    public void terminateDB(String roomId) {
-        jdbcTemplate.update(TERMINATE_GAME_SQL, roomId);
-    }
-
     public void initializeRoom(String name, String password) {
         jdbcTemplate.update(INITIALIZE_ROOM_SQL, name, password);
     }
@@ -62,11 +53,6 @@ public class StateDAO {
 
     public void terminateState(String roomId) {
         jdbcTemplate.update(TERMINATE_STATE_SQL, StateSwitch.OFF.name(), roomId);
-    }
-
-    public String findAllUsers() {
-        List<String> ids = jdbcTemplate.query(FIND_ALL_USERS_SQL, stringRowMapper);
-        return String.join(DELIMITER, ids);
     }
 
     public boolean isEndedGame(String id) {

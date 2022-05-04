@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.BoardFixtures;
 import chess.domain.ChessBoard;
+import chess.exception.InvalidChessStateException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,7 @@ public class RunningTest {
     void Running에서_start실행_예외가_발생한다() {
         State state = new WhiteTurn(chessBoard);
 
-        assertThatThrownBy(() -> state.start()).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> state.start()).isInstanceOf(InvalidChessStateException.class);
     }
 
     @DisplayName("Running에서 end를 실행하면 End 상태로 변경된다.")
@@ -43,6 +44,6 @@ public class RunningTest {
     void Running에서_winner실행_예외가_발생한다() {
         State state = new WhiteTurn(chessBoard);
 
-        assertThatThrownBy(() -> state.winner()).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> state.winner()).isInstanceOf(InvalidChessStateException.class);
     }
 }

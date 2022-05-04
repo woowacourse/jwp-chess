@@ -7,6 +7,7 @@ import chess.domain.Board;
 import chess.domain.BoardFixtures;
 import chess.domain.Color;
 import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,7 +36,7 @@ class PawnTest {
         Position targetPosition = new Position("c5");
 
         assertThatThrownBy(() -> WHITE_PAWN.validateMove(board, sourcePosition, targetPosition))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidMoveException.class);
     }
 
     @DisplayName("white pawn이 시작점에서 두 칸 이동할 때 경로에 기물이 있는 경우 예외가 발생한다.")
@@ -70,7 +71,7 @@ class PawnTest {
         Position targetPosition = new Position("c5");
 
         assertThatThrownBy(() -> WHITE_PAWN.validateMove(board, sourcePosition, targetPosition))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidMoveException.class);
     }
 
     @DisplayName("white pawn이 공격하는 경우 대각선으로 이동 가능하다.")
@@ -106,7 +107,7 @@ class PawnTest {
         board.place(targetPosition, new Pawn(Color.WHITE));
 
         assertThatThrownBy(() -> WHITE_PAWN.validateMove(board, sourcePosition, targetPosition))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidMoveException.class);
     }
 
     // black
@@ -151,7 +152,7 @@ class PawnTest {
         Position targetPosition = new Position("d4");
 
         assertThatThrownBy(() -> BLACK_PAWN.validateMove(board, sourcePosition, targetPosition))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidMoveException.class);
     }
 
     @DisplayName("black pawn이 공격하는 경우 대각선으로 이동 가능하다.")
@@ -187,6 +188,6 @@ class PawnTest {
         board.place(targetPosition, new Pawn(Color.BLACK));
 
         assertThatThrownBy(() -> BLACK_PAWN.validateMove(board, sourcePosition, targetPosition))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidMoveException.class);
     }
 }

@@ -1,6 +1,8 @@
 package chess.domain.state;
 
 import chess.domain.ChessBoard;
+import chess.domain.position.Position;
+import chess.exception.InvalidChessStateException;
 
 public abstract class Finished extends Started {
 
@@ -16,12 +18,12 @@ public abstract class Finished extends Started {
 
     @Override
     public final State end() {
-        throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_ERROR_MASSAGE);
+        throw new InvalidChessStateException(INVALID_CHESS_STATE_EXCEPTION);
     }
 
     @Override
-    public final State move(String source, String target) {
-        throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_ERROR_MASSAGE);
+    public final State move(Position source, Position target) {
+        throw new InvalidChessStateException(INVALID_CHESS_STATE_EXCEPTION);
     }
 
     @Override

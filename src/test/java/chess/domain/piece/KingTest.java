@@ -7,6 +7,7 @@ import chess.domain.Board;
 import chess.domain.BoardFixtures;
 import chess.domain.Color;
 import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +50,7 @@ public class KingTest {
         board.place(KING_SOURCE_POSITION, KING);
 
         Assertions.assertThatThrownBy(() -> KING.validateMove(board, KING_SOURCE_POSITION, targetPosition))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidMoveException.class);
     }
 
     @DisplayName("target 위치에 같은 진영의 기물이 위치한 경우 경우 예외를 던진다.")
@@ -63,7 +64,7 @@ public class KingTest {
         board.place(targetPosition, pawn);
 
         assertThatThrownBy(() -> KING.validateMove(board, KING_SOURCE_POSITION, targetPosition))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidMoveException.class)
                 .hasMessage("같은 진영 기물은 공격할 수 없습니다.");
     }
 }

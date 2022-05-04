@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.BoardFixtures;
 import chess.domain.ChessBoard;
+import chess.domain.position.Position;
+import chess.exception.InvalidChessStateException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +29,7 @@ public class FinishedTest {
     void Finished에서_end실행_예외가_발생한다() {
         State state = new WhiteWin(chessBoard);
 
-        assertThatThrownBy(state::end).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(state::end).isInstanceOf(InvalidChessStateException.class);
     }
 
     @DisplayName("Finished에서 move를 실행하면 예외가 발생한다.")
@@ -35,7 +37,8 @@ public class FinishedTest {
     void Finished에서_move실행_예외가_발생한다() {
         State state = new WhiteWin(chessBoard);
 
-        assertThatThrownBy(() -> state.move("a1", "a2")).isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> state.move(new Position("a1"), new Position("a2")))
+                .isInstanceOf(InvalidChessStateException.class);
     }
 
     @DisplayName("Running에서 isFinished를 호출하면 true가 반환된다.")

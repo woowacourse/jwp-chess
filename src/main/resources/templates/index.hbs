@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
-    <title>Chess</title>
-    <link rel="stylesheet" href="/src/index.css">
-    <script type="text/javascript" src="/src/index.js"></script>
+    <title>파잉의 체스게임</title>
+    <link rel="stylesheet" href="/files/src/index.css">
+    <script type="text/javascript" src="/files/src/index.js"></script>
 </head>
-
 <body>
 <div class="chess-game">
-    <h1>♗혼돈의 체스 게임♗</h1>
-    {{#chessStatus}}
-    <div>
-        Black 진영 점수 VS White 진영 점수
-        <div class="score">{{blackScore}}&nbsp;&nbsp;&nbsp;&nbsp;{{whiteScore}}</div>
-    </div>
-    <section class="chess-board">
-        {{#piecesDto}}
-        {{#pieces}}
-        <div class="{{position}}" id="{{position}}" onclick="clicked(this.id)">
-            <img src="images/{{color}}_{{pieceType}}.png" class="img"/>
-        </div>
-        {{/pieces}}
-        {{/piecesDto}}
-    {{/chessStatus}}
-    </section>
-    <br/>
-    <form action="/result" method="get">
-        <button> 게임종료</button>
+    <h1>♗파잉의 체스 게임♗</h1>
+</div>
+
+<div>
+    <h2>게임방 만들기</h2>
+    <form action="/" method="post" >
+        <input placeholder="방 제목" name="title" type="text" required>
+        <input placeholder="방 비밀번호" name="password" type="text" required>
+        <input type="submit" value="만들기">
     </form>
 </div>
+
+<div>
+    <h2>게임방 목록</h2>
+    {{#games}}
+        <div class="game-list-container">
+            <a href="/game/{{id}}">{{title}}</a>
+            <div onclick="deleteGame({{id}})">
+                <button>삭제</button>
+            </div>
+        </div>
+        <br/>
+    {{/games}}
+</div>
+
 </body>
 </html>

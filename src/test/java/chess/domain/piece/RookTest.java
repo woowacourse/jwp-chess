@@ -7,6 +7,7 @@ import chess.domain.Board;
 import chess.domain.BoardFixtures;
 import chess.domain.Color;
 import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
@@ -60,7 +61,7 @@ class RookTest {
         board.place(ROOK_SOURCE_POSITION, ROOK);
 
         assertThatThrownBy(() -> ROOK.validateMove(board, ROOK_SOURCE_POSITION, targetPosition))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidMoveException.class);
     }
 
     @DisplayName("이동 가능한 위치 중간에 기물이 위치한 경우 경우 예외를 던진다.")
@@ -72,7 +73,7 @@ class RookTest {
         board.place(ROOK_SOURCE_POSITION, ROOK);
 
         assertThatThrownBy(() -> ROOK.validateMove(board, ROOK_SOURCE_POSITION, new Position(target)))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidMoveException.class)
                 .hasMessage("경로에 기물이 존재하여 이동할 수 없습니다.");
     }
 
@@ -86,7 +87,7 @@ class RookTest {
         board.place(targetPosition, new Pawn(Color.WHITE));
 
         assertThatThrownBy(() -> ROOK.validateMove(board, ROOK_SOURCE_POSITION, targetPosition))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidMoveException.class)
                 .hasMessage("같은 진영 기물은 공격할 수 없습니다.");
     }
 }

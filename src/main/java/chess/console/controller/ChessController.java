@@ -6,6 +6,7 @@ import chess.console.view.OutputView;
 import chess.domain.ChessGame;
 import chess.domain.Color;
 import chess.domain.state.Ready;
+import chess.exception.ChessGameException;
 
 public class ChessController {
 
@@ -27,7 +28,7 @@ public class ChessController {
             Command command = commandRequest.getCommand();
 
             command.execute(chessGame, commandRequest.getSource(), commandRequest.getTarget());
-        } catch (IllegalArgumentException | UnsupportedOperationException e) {
+        } catch (IllegalArgumentException | ChessGameException e) {
             OutputView.printErrorMessage(e.getMessage());
             playChess(chessGame);
         }

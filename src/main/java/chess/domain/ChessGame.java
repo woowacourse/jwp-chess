@@ -1,5 +1,6 @@
 package chess.domain;
 
+import chess.domain.position.Position;
 import chess.domain.state.State;
 import chess.domain.state.StateType;
 
@@ -19,7 +20,7 @@ public class ChessGame {
         state = state.end();
     }
 
-    public void move(String source, String target) {
+    public void move(Position source, Position target) {
         state = state.move(source, target);
     }
 

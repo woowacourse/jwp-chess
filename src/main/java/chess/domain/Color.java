@@ -1,5 +1,6 @@
 package chess.domain;
 
+import chess.exception.ChessGameException;
 import java.util.Arrays;
 
 public enum Color {
@@ -19,7 +20,7 @@ public enum Color {
         return Arrays.stream(values())
                 .filter(color -> color.name.equals(colorName))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 색깔입니다."));
+                .orElseThrow(() -> new ChessGameException("존재하지 않는 색깔입니다."));
     }
 
     public boolean isBlack() {

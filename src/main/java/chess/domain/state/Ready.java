@@ -3,6 +3,8 @@ package chess.domain.state;
 import chess.domain.ChessBoard;
 import chess.domain.Result;
 import chess.domain.generator.EmptyBoardGenerator;
+import chess.domain.position.Position;
+import chess.exception.InvalidChessStateException;
 
 public class Ready extends Started {
 
@@ -20,12 +22,12 @@ public class Ready extends Started {
 
     @Override
     public State end() {
-        throw new UnsupportedOperationException(ERROR_MESSAGE_GAME_NOT_START);
+        throw new InvalidChessStateException(ERROR_MESSAGE_GAME_NOT_START);
     }
 
     @Override
-    public State move(String source, String target) {
-        throw new UnsupportedOperationException(ERROR_MESSAGE_GAME_NOT_START);
+    public State move(Position source, Position target) {
+        throw new InvalidChessStateException(ERROR_MESSAGE_GAME_NOT_START);
     }
 
     @Override
@@ -40,7 +42,7 @@ public class Ready extends Started {
 
     @Override
     public Result winner() {
-        throw new UnsupportedOperationException(ERROR_MESSAGE_GAME_NOT_START);
+        throw new InvalidChessStateException(ERROR_MESSAGE_GAME_NOT_START);
     }
 
     @Override

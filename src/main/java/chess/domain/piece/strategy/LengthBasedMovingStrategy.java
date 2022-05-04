@@ -3,6 +3,7 @@ package chess.domain.piece.strategy;
 import chess.domain.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
 import java.util.function.IntPredicate;
 
 public class LengthBasedMovingStrategy implements MovingStrategy {
@@ -24,7 +25,7 @@ public class LengthBasedMovingStrategy implements MovingStrategy {
         int fileLength = Math.abs(sourcePosition.getFileIndex() - targetPosition.getFileIndex());
 
         if (condition.test(square(rankLength) + square(fileLength))) {
-            throw new IllegalArgumentException("해당 기물이 갈 수 없는 경로입니다.");
+            throw new InvalidMoveException("해당 기물이 갈 수 없는 경로입니다.");
         }
     }
 
@@ -37,7 +38,7 @@ public class LengthBasedMovingStrategy implements MovingStrategy {
         Piece targetPiece = board.findPiece(targetPosition);
 
         if (sourcePiece.isSameColor(targetPiece)) {
-            throw new IllegalArgumentException("같은 진영 기물은 공격할 수 없습니다.");
+            throw new InvalidMoveException("같은 진영 기물은 공격할 수 없습니다.");
         }
     }
 }

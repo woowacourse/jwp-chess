@@ -31,6 +31,6 @@ out/
 ### VS Code ###
 .vscode/
 
-### DOCKER ###
-/docker/db/
-!docker/db/mysql/init/init.sql
+### DOCKER ##
+/docker/db/mysql/config
+/docker/db/mysql/data

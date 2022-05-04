@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.domain.generator.InitBoardGenerator;
+import chess.domain.position.Position;
+import chess.exception.InvalidMoveException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +24,7 @@ public class ChessBoardTest {
     void 잘못된_위치_정보인_경우_예외를_던진다() {
         ChessBoard chessBoard = BoardFixtures.generateInitChessBoard();
 
-        assertThatThrownBy(() -> chessBoard.move("i1", "a1"))
+        assertThatThrownBy(() -> chessBoard.move(new Position("i1"), new Position("a1")))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -31,8 +33,8 @@ public class ChessBoardTest {
     void source_위치의_기물이_존재하지_않으면_예외를_던진다() {
         ChessBoard chessBoard = BoardFixtures.generateEmptyChessBoard();
 
-        assertThatThrownBy(() -> chessBoard.move("b1", "c3"))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> chessBoard.move(new Position("b1"), new Position("c3")))
+                .isInstanceOf(InvalidMoveException.class);
     }
 
     @DisplayName("source와 target이 동일한 경우 예외를 던진다.")
@@ -40,8 +42,8 @@ public class ChessBoardTest {
     void source와_target이_동일한_경우_예외를_던진다() {
         ChessBoard chessBoard = BoardFixtures.generateInitChessBoard();
 
-        assertThatThrownBy(() -> chessBoard.move("b8", "b8"))
-                .isInstanceOf(IllegalArgumentException.class)
+        assertThatThrownBy(() -> chessBoard.move(new Position("b8"), new Position("b8")))
+                .isInstanceOf(InvalidMoveException.class)
                 .hasMessage("source 위치와 target 위치는 같을 수 없습니다.");
     }
 

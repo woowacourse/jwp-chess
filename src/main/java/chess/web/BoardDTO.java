@@ -11,32 +11,23 @@ public class BoardDTO {
 
     private Map<String, Element> data;
 
-    private BoardDTO() {
-    }
+    private BoardDTO() {}
 
-    public static BoardDTO buildModel() {
+    private static BoardDTO buildModel() {
         return new BoardDTO();
     }
 
-    public void generateUpdatedDTO(Map<Position, Piece> original) {
+    public static BoardDTO generateUpdatedDTO(Map<Position, Piece> original) {
+        BoardDTO boardDTO = buildModel();
         Map<String, Element> model = new HashMap<>();
         for (Position position : original.keySet()) {
             model.put(position.getPosition(), Element.from(original.get(position)));
         }
-        this.data = model;
+        boardDTO.data = model;
+        return boardDTO;
     }
 
     public Map<String, Element> getData() {
         return data;
-    }
-
-    public void updateWithScore(Board board, ChessScore chessScore) {
-        Map<String, Element> model = new HashMap<>();
-        Map<Position, Piece> original = board.getPieces();
-        for (Position position : original.keySet()) {
-            model.put(position.getPosition(), Element.from(original.get(position)));
-        }
-        model.put("score", Element.from(chessScore));
-        this.data = model;
     }
 }

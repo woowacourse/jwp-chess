@@ -21,7 +21,7 @@ public class RoomDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public boolean isNameDuplicated(String roomName) {
+    public boolean isNameExist(String roomName) {
         return jdbcTemplate.queryForObject(EXIST_NAME_SQL, Integer.class, roomName) > 0;
     }
 

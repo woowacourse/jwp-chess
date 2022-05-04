@@ -1,18 +1,13 @@
 package chess.controller;
 
-import chess.domain.position.Position;
 import chess.web.BoardDTO;
 import chess.web.ChessForm;
 import chess.web.MoveForm;
 import chess.web.WebChessGame;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.util.Set;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -39,7 +34,6 @@ public class WebChessController {
     private static final String REDIRECT_INDEX_OR_RUN = "redirect:/indexOrRun";
     private static final String SAVE_DONE_URL = "save_done";
 
-    private final BoardDTO boardDTO = BoardDTO.buildModel();
     private final WebChessGame webChessGame;
 
     public WebChessController(WebChessGame webChessGame) {
@@ -63,24 +57,20 @@ public class WebChessController {
 
     @GetMapping(value = "/searchSave")
     public String searchSave(Model model) {
-        List<String> allNames = webChessGame.findAllSavedGame();
-        model.addAttribute("names", allNames);
+        webChessGame.findAllSavedGame(model);
         return SEARCH_GAME_URL;
     }
 
     @GetMapping(value = "/searchEnd")
     public String searchEnd(Model model) {
-        List<String> allNames = webChessGame.findAllEndedGame();
-        model.addAttribute("names", allNames.toArray());
+        webChessGame.findAllEndedGame(model);
         return SEARCH_END_URL;
     }
 
     @PostMapping(value = "/newGame")
     public String generateNewGame(Model model, ChessForm chessForm) {
         try {
-            webChessGame.validateDuplicateName(chessForm);
-            webChessGame.initializeGame(boardDTO, chessForm);
-            webChessGame.saveBoard(chessForm.getRoomName());
+            webChessGame.generateNewGame(chessForm, model);
             return REDIRECT_GAME_RUN + "?roomName=" + chessForm.getRoomName();
         }
         catch (IllegalArgumentException exception) {
@@ -91,9 +81,7 @@ public class WebChessController {
 
     @GetMapping(value = "/gameRun", params = "roomName")
     public String runGame(Model model, @RequestParam("roomName") String roomName) {
-        model.addAttribute("roomName", roomName);
-        model.addAttribute("color", webChessGame.getColor(roomName));
-        updateDTO(model);
+        webChessGame.runGameGetMethod(roomName, model);
         return GAME_RUN_URL;
     }
 
@@ -101,63 +89,44 @@ public class WebChessController {
     public String runGame(ChessForm chessForm, MoveForm moveForm, Model model) {
         model.addAttribute("roomName", chessForm.getRoomName());
         try {
-            webChessGame.executeOneTurn(chessForm, moveForm, boardDTO);
-            updateDTO(model);
-            model.addAttribute("color", webChessGame.getColor(chessForm.getRoomName()));
+            webChessGame.runGamePostMethod(chessForm, moveForm, model);
             if (webChessGame.isKingDead()) {
                 return REDIRECT_GAME_END + "?roomName=" + chessForm.getRoomName();
             }
             return GAME_RUN_URL;
         } catch (IllegalArgumentException exception) {
             model.addAttribute(EXCEPTION, exception.getMessage());
-            updateDTO(model);
             return RUN_EXCEPTION_URL;
-        }
-    }
-
-    private void updateDTO(Model model) {
-        Set<String> keys = boardDTO.getData().keySet();
-        for (String key : keys) {
-            model.addAttribute(key, boardDTO.getData().get(key));
         }
     }
 
     @PostMapping(value = "/gameScore")
     public String gameScore(ChessForm chessForm, Model model) {
-        model.addAttribute("roomName", chessForm.getRoomName());
-        model.addAttribute("whiteScore", webChessGame.calculateScore().getWhiteScore());
-        model.addAttribute("blackScore", webChessGame.calculateScore().getBlackScore());
-        updateDTO(model);
+        webChessGame.gameScore(chessForm, model);
         return SCORE_URL;
     }
 
     @PostMapping(value = "/gameSave")
     public String gameSave(ChessForm chessForm, Model model) {
-        webChessGame.saveBoard(chessForm.getRoomName());
-        model.addAttribute("roomName", chessForm.getRoomName());
-        updateDTO(model);
+        webChessGame.gameSave(chessForm, model);
         return SAVE_DONE_URL;
     }
 
     @PostMapping(value = "/gameEnd")
     public String gameEnd(ChessForm chessForm, Model model) {
-        model.addAttribute("roomName", chessForm.getRoomName());
-        webChessGame.terminateState(chessForm.getRoomName());
-        updateDTO(model);
+        webChessGame.gameEnd(chessForm.getRoomName(), model);
         return FINISHED_URL;
     }
 
     @GetMapping(value = "/gameEnd", params = "roomName")
     public String gameEnd(@RequestParam("roomName") String name, Model model) {
-        model.addAttribute("roomName", name);
-        webChessGame.terminateState(name);
-        updateDTO(model);
+        webChessGame.gameEnd(name, model);
         return FINISHED_URL;
     }
 
     @PostMapping(value = "/sendPassword")
     public String checkPassword(ChessForm chessForm, Model model) {
-        if (webChessGame.checkPassword(chessForm.getRoomName(), chessForm.getPassword())) {
+        if (webChessGame.isPasswordSame(chessForm.getRoomName(), chessForm.getPassword())) {
             return REDIRECT_MATCH + "?roomName=" + chessForm.getRoomName();
         }
         model.addAttribute("roomName", chessForm.getRoomName());
@@ -172,14 +141,10 @@ public class WebChessController {
 
     @GetMapping(value = "/sendPassword", params = "roomName")
     public String checkPassword(@RequestParam("roomName") String name, Model model) {
-        model.addAttribute("roomName", name);
+        webChessGame.checkPassword(name, model);
         if (webChessGame.isEndedGame(name)) {
-            webChessGame.getEndGameBoard(name, boardDTO);
-            updateDTO(model);
-            model.addAttribute("passwordtype", "을 삭제");
             return PASSWORD_SEND_URL;
         }
-        model.addAttribute("passwordtype", "에 참여");
         return PASSWORD_SEND_URL;
     }
 
@@ -196,12 +161,11 @@ public class WebChessController {
     }
 
     @GetMapping(value = "/indexOrRun", params = "roomName")
-    public String redirectByCondition(@RequestParam("roomName") String name) {
-        if (webChessGame.isEndedGame(name)) {
-            webChessGame.deleteRoom(name);
+    public String redirectByCondition(@RequestParam("roomName") String name, Model model) {
+        webChessGame.redirectByCondition(name, model);
+        if (!webChessGame.doesNameExist(name)) {
             return REDIRECT_INDEX;
         }
-        webChessGame.loadBoard(name, boardDTO);
         return REDIRECT_GAME_RUN + "?roomName=" + name;
     }
 }

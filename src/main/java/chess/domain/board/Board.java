@@ -20,12 +20,12 @@ public class Board {
         board.put(source, new Blank());
     }
 
-    public Team getTeamOfPiece(final Position position) {
-        return board.get(position).getTeam();
-    }
-
     public Piece getPiece(final Position position) {
         return board.get(position);
+    }
+
+    public Team getTeamOfPiece(final Position position) {
+        return board.get(position).getTeam();
     }
 
     public Map<Position, Piece> getBoard() {

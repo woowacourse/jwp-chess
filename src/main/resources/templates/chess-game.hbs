@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>체스 게임</title>
-    <link rel="stylesheet" href="/src/game.css">
+    <link rel="stylesheet" href="/src/chess-game.css">
 </head>
 <body>
 <div>
-    <h1>♟️ 게임 이름 : {{chess_game_name}}</h1>
+    <h1>♟️ 게임 이름 : {{name}}</h1>
     <section class="chess-board">
         <div class="black-square">
             {{#a8}}
@@ -335,10 +335,10 @@
         <!-- TWO LINE -->
     </section>
     <section class="user-ui">
-        <form class="move" method="post" action="/move/{{chess_game_name}}">
+        <form class="move" method="post" action="/move-piece/{{gameRoomId}}">
             <h2>🎯 체스 기물 이동 🎯</h2>
-            <input type="text" name="source" placeholder="Source Position">
-            <input type="text" name="target" placeholder="Target Position">
+            <input type="text" name="source" placeholder="Source Position" minlength="2" maxlength="2"/>
+            <input type="text" name="target" placeholder="Target Position" minlength="2" maxlength="2"/>
             <input type="submit" value="MOVE">
         </form>
         <div class="status">
@@ -349,7 +349,11 @@
             <p>승리 팀 : {{winningTeam.value}} ({{winningTeam.winningType}})</p>
             {{/result}}
         </div>
-        <form class="button" method="post" action="/reset/{{chess_game_name}}">
+        <form class="button" method="post" action="/end/{{gameRoomId}}">
+            <p class="info">👋 게임을 종료합니다.</p>
+            <input type="submit" value="END GAME">
+        </form>
+        <form class="button" method="post" action="/reset/{{gameRoomId}}">
             <p class="info">🧨 체스 게임을 리셋합니다.</p>
             <input type="submit" value="RESET GAME">
         </form>

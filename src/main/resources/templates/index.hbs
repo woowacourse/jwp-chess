@@ -10,20 +10,22 @@
     <img src="/images/TITLE.png" class="img"/>
     <div>
         <p class="info">🕹 새 게임 만들기</p>
-        <form action="/create_chess_game" method="post">
-            <input type="text" name="name"/>
+        <form action="/create-game-room" method="post">
+            <input type="text" name="name" placeholder="name" minlength="1" maxlength="20"/>
+            <input type="password" name="password" placeholder="password" minlength="1" maxlength="20"/>
             <input type="submit" value="생성">
         </form>
     </div>
     <div>
         <p class="info">📝 게임 목록</p>
-        {{#chess_games}}
-        <form action="delete/{{name}}" method="post">
-            <a class="name" href="/game/{{name}}">{{name}}</a>
+        {{#gameRooms}}
+        <form action="delete/{{gameRoomId}}" method="post">
+            <a class="name" href="/game/{{gameRoomId}}">{{name}}</a>
+            <input type="password" name="password" placeholder="password" minlength="1" maxlength="20"/>
             <input type="submit" value="삭제">
         </form>
         <br/>
-        {{/chess_games}}
+        {{/gameRooms}}
     </div>
 </div>
 </body>

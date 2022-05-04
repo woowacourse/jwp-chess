@@ -8,29 +8,29 @@ import java.util.Map;
 
 public class BoardEntity {
 
-    private final String name;
+    private final String gameRoomId;
     private final String positionColumnValue;
     private final int positionRowValue;
     private final String pieceName;
     private final String pieceTeamValue;
 
-    public BoardEntity(String name,
+    public BoardEntity(String gameRoomId,
                        String positionColumnValue,
                        int positionRowValue,
                        String pieceName,
                        String pieceTeamValue) {
-        this.name = name;
+        this.gameRoomId = gameRoomId;
         this.positionColumnValue = positionColumnValue;
         this.positionRowValue = positionRowValue;
         this.pieceName = pieceName;
         this.pieceTeamValue = pieceTeamValue;
     }
 
-    public BoardEntity(String name,
+    public BoardEntity(String gameRoomId,
                        char columnValue,
                        int rowValue,
                        Map<Position, Piece> currentBoard) {
-        this.name = name;
+        this.gameRoomId = gameRoomId;
         positionColumnValue = String.valueOf(columnValue);
         positionRowValue = rowValue;
         Piece piece = currentBoard.get(Position.of(columnValue, positionRowValue));
@@ -38,11 +38,12 @@ public class BoardEntity {
         pieceTeamValue = piece.getTeam().getValue();
     }
 
-    public static List<BoardEntity> generateBoardEntities(final String name, final Map<Position, Piece> board) {
+    public static List<BoardEntity> generateBoardEntities(String gameRoomId, Map<Position, Piece> board) {
         List<BoardEntity> boardEntities = new ArrayList<>();
         for (Position position : board.keySet()) {
             Piece piece = board.get(position);
-            BoardEntity boardEntity = new BoardEntity(name,
+            BoardEntity boardEntity = new BoardEntity(
+                    gameRoomId,
                     String.valueOf(position.getColumn().getValue()),
                     position.getRow().getValue(),
                     piece.getName(),
@@ -53,8 +54,8 @@ public class BoardEntity {
         return boardEntities;
     }
 
-    public String getName() {
-        return name;
+    public String getGameRoomId() {
+        return gameRoomId;
     }
 
     public String getPositionColumnValue() {

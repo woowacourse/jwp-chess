@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link rel="stylesheet" href="/src/game-result.css">
+</head>
+<body>
+<div>
+    <section class="user-ui">
+        <div class="status">
+            <h1>< 게임 종료 ></h1>
+            <h1>{{name}}</h1>
+            {{#result}}
+                <p>BLACK 팀 점수 : {{blackScore}}</p>
+                <p>WHITE 팀 점수 : {{whiteScore}}</p>
+                <p>승리 팀 : {{winningTeam.value}} ({{winningTeam.winningType}})</p>
+            {{/result}}
+        </div>
+        <form class="button" method="post" action="/reset/{{gameRoomId}}">
+            <p class="info">🧨 체스 게임을 리셋합니다.</p>
+            <input type="submit" value="RESET GAME">
+        </form>
+        <form class="button" action="/">
+            <p class="info">🏠 홈 화면으로 돌아가기</p>
+            <input type="submit" value="HOME">
+        </form>
+    </section>
+</div>
+</body>
+</html>

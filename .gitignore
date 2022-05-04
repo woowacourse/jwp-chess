@@ -30,6 +30,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### DOCKER ###
-/docker/db/

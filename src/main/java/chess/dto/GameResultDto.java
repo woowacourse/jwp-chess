@@ -1,5 +1,7 @@
 package chess.dto;
 
+import chess.domain.game.GameResult;
+
 public class GameResultDto {
 
     private String winner;
@@ -9,10 +11,14 @@ public class GameResultDto {
     public GameResultDto() {
     }
 
-    public GameResultDto(String winner, double whiteScore, double blackScore) {
+    private GameResultDto(String winner, double whiteScore, double blackScore) {
         this.winner = winner;
         this.whiteScore = whiteScore;
         this.blackScore = blackScore;
+    }
+
+    public static GameResultDto toDto(GameResult gameResult) {
+        return new GameResultDto(gameResult.getWinner().getName(), gameResult.getWhiteScore(), gameResult.getBlackScore());
     }
 
     public String getWinner() {

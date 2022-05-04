@@ -1,7 +1,14 @@
 package chess.dao;
 
 import chess.domain.piece.Color;
+import chess.domain.room.Room;
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -13,47 +20,56 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createById(String gameId) {
-        final String sql = "insert into game (id, turn) values (?, ?)";
+    public long createByTitleAndPassword(Room room) {
+        final String sql = "insert into game (title, password) values (?, ?)";
 
-        jdbcTemplate.update(sql, gameId, Color.BLACK.getName());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, room.getTitle());
+            ps.setString(2, room.getPassword());
+            return ps;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public boolean isInId(String gameId) {
-        final String sql = "select count(*) from game where id = ?";
+    public Room findRoomById(long id) {
+        final String sql = "select id, end_flag, turn, title, password from game where id = ?";
 
-        return jdbcTemplate.queryForObject(sql, Integer.class, gameId) > 0;
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
     }
 
-    public boolean findForceEndFlagById(String gameId) {
-        final String sql = "select force_end_flag from game where id = ?";
+    public List<Room> findAllRoom() {
+        final String sql = "select id, end_flag, turn, title, password from game";
 
-        return jdbcTemplate.queryForObject(sql, Boolean.class, gameId);
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public Color findTurnById(String gameId) {
-        final String sql = "select turn from game where id = ?";
-
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                Color.of(resultSet.getString("turn")), gameId);
-    }
-
-    public void updateTurnById(Color nextTurn, String gameId) {
+    public void updateTurnById(Color nextTurn, long id) {
         final String sql = "update game set turn = ? where id = ?";
 
-        jdbcTemplate.update(sql, nextTurn.getName(), gameId);
+        jdbcTemplate.update(sql, nextTurn.getName(), id);
     }
 
-    public void updateForceEndFlagById(boolean forceEndFlag, String gameId) {
-        final String sql = "update game set force_end_flag = ? where id = ?";
+    public void updateEndFlagById(boolean endFlag, long id) {
+        final String sql = "update game set end_flag = ? where id = ?";
 
-        jdbcTemplate.update(sql, forceEndFlag, gameId);
+        jdbcTemplate.update(sql, endFlag, id);
     }
 
-    public void deleteById(String gameId) {
+    public void deleteById(long id) {
         final String sql = "delete from game where id = ?";
 
-        jdbcTemplate.update(sql, gameId);
+        jdbcTemplate.update(sql, id);
     }
+
+    private final RowMapper<Room> actorRowMapper = (resultSet, rowNum) -> new Room(
+        resultSet.getLong("id"),
+        resultSet.getBoolean("end_flag"),
+        Color.of(resultSet.getString("turn")),
+        resultSet.getString("title"),
+        resultSet.getString("password")
+    );
 
 }

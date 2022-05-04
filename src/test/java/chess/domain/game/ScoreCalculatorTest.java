@@ -1,8 +1,7 @@
-package chess.domain;
+package chess.domain.game;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import chess.domain.game.ScoreCalculator;
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Color;
 import chess.domain.piece.Pawn;
@@ -16,13 +15,12 @@ import org.junit.jupiter.api.Test;
 
 public class ScoreCalculatorTest {
 
-    private static final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
     private static final ScoreCalculator scoreCalculator = new ScoreCalculator();
     private Pieces chessmen;
 
     @BeforeEach
     void setup() {
-        chessmen = chessmenInitializer.init();
+        chessmen = ChessmenInitializer.init();
     }
 
     @DisplayName("초기 상태의 점수 합은 38이다.")

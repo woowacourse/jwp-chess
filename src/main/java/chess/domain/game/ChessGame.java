@@ -14,33 +14,12 @@ public class ChessGame {
     private static final String PIECE_OCCUPIED_IN_PATH_EXCEPTION_MESSAGE = "가는 길목에 다른 말이 있어 이동할 수 없습니다.";
     private static final String GAME_END_EXCEPTION_MESSAGE = "게임이 끝난 후에는 경기를 더 진행할 수 없습니다.";
 
-    private Pieces chessmen;
+    private final Pieces chessmen;
     private Color turn;
-    private boolean forceEndFlag;
 
-    public ChessGame(boolean forceEndFlag, Pieces chessmen, Color turn) {
-        this.forceEndFlag = forceEndFlag;
+    public ChessGame(Pieces chessmen, Color turn) {
         this.chessmen = chessmen;
         this.turn = turn;
-    }
-
-    private ChessGame(Pieces chessmen) {
-        this.forceEndFlag = false;
-        this.chessmen = chessmen;
-        this.turn = Color.BLACK;
-    }
-
-    public ChessGame() {
-        forceEndFlag = false;
-        this.chessmen = new Pieces(List.of());
-    }
-
-    public static ChessGame of(Pieces chessmen) {
-        return new ChessGame(chessmen);
-    }
-
-    public static ChessGame of() {
-        return new ChessGame();
     }
 
     public void moveChessmen(MoveCommand moveCommand) {
@@ -68,7 +47,7 @@ public class ChessGame {
     }
 
     private void validateTurn(Piece sourcePiece) {
-        if (sourcePiece.isSameColor(turn)) {
+        if (!sourcePiece.isSameColor(turn)) {
             throw new IllegalArgumentException(TURN_EXCEPTION_MESSAGE);
         }
     }
@@ -106,11 +85,7 @@ public class ChessGame {
     }
 
     public boolean isEnd() {
-        return forceEndFlag || chessmen.hasLessThanTotalKingCount();
-    }
-
-    public void forceEnd() {
-        forceEndFlag = true;
+        return chessmen.hasLessThanTotalKingCount();
     }
 
     public Pieces getChessmen() {
@@ -119,14 +94,6 @@ public class ChessGame {
 
     public Color getTurn() {
         return turn;
-    }
-
-    public boolean getForceEndFlag() {
-        return forceEndFlag;
-    }
-
-    public void clean() {
-        chessmen = new Pieces(List.of());
     }
 
     @Override

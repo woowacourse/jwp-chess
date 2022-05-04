@@ -1,13 +1,10 @@
-package chess.domain;
+package chess.domain.game;
 
-import static chess.domain.piece.Color.BLACK;
 import static chess.domain.piece.Color.WHITE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 
 import chess.domain.command.MoveCommand;
-import chess.domain.game.ChessGame;
-import chess.domain.game.GameResult;
 import chess.domain.piece.ChessmenInitializer;
 import chess.domain.piece.Color;
 import chess.domain.piece.King;
@@ -21,16 +18,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class ChessGameDaoTest {
+public class ChessGameTest {
 
-    ChessmenInitializer chessmenInitializer;
-    ChessGame chessGame;
+    private ChessGame chessGame;
 
 
     @BeforeEach
     void setup_chessGame() {
-        chessmenInitializer = new ChessmenInitializer();
-        chessGame = ChessGame.of(chessmenInitializer.init());
+        chessGame = new ChessGame(ChessmenInitializer.init(), Color.WHITE);
     }
 
     @DisplayName("체스말이 이동할 수 있는 위치면 이동에 성공한다.")
@@ -140,7 +135,7 @@ public class ChessGameDaoTest {
     @DisplayName("King이 한 개라도 죽으면 게임은 끝난다.")
     @Test
     void isEnd_true() {
-        chessGame = ChessGame.of(new Pieces(List.of(new King(WHITE, Position.of("e1")))));
+        chessGame = new ChessGame(new Pieces(List.of(new King(WHITE, Position.of("e1")))), Color.WHITE);
 
         boolean actual = chessGame.isEnd();
 
@@ -152,7 +147,7 @@ public class ChessGameDaoTest {
     void calculateGameResult() {
         double actual = GameResult.calculate(chessGame.getChessmen())
             .getBlackScore();
-        double expected = new GameResultDto(BLACK.getName(), 38.0, 38.0)
+        double expected = GameResultDto.toDto(new GameResult(Color.BLACK, 38, 38))
             .getBlackScore();
 
         assertThat(actual).isEqualTo(expected);

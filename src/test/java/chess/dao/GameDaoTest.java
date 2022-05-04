@@ -1,20 +1,23 @@
 package chess.dao;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.piece.Color;
+import chess.domain.room.Room;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+
 
 @JdbcTest
 public class GameDaoTest {
 
     private GameDao gameDao;
+    private long id;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -22,74 +25,51 @@ public class GameDaoTest {
     @BeforeEach
     void setUp() {
         gameDao = new GameDao(jdbcTemplate);
-
-        jdbcTemplate.execute("DROP TABLE game IF EXISTS");
-
-        jdbcTemplate.execute("create table game("
-            + "id varchar(100) not null unique, "
-            + "turn varchar(10) not null, "
-            + "force_end_flag tinyint(1) not null default false"
-            + ")");
+        id = gameDao.createByTitleAndPassword(new Room("게임방제목", "password486"));
     }
 
+    @DisplayName("게임이 끝나지 않은 경우 end_flag는 false이다.")
     @Test
-    void isExistId_게임생성_성공시_true를_반환() {
-        gameDao.createById("1234");
-        assertThat(gameDao.isInId("1234")).isTrue();
+    void findRoomById_end_flag_false() {
+        assertThat(gameDao.findRoomById(id).getEndFlag()).isFalse();
     }
 
+    @DisplayName("존재하는 모든 게임 방에 대한 정보를 반환한다.")
     @Test
-    void isExistId_게임생성_실패시_false를_반환() {
-        gameDao.createById("1234");
-        assertThat(gameDao.isInId("123")).isFalse();
+    void findAllRoom() {
+        gameDao.createByTitleAndPassword(new Room("게임방제목2", "password4862"));
+        assertThat(gameDao.findAllRoom()).hasSize(2);
     }
 
+    @DisplayName("turn칼럼에는 불가능한 turn이 저장되며 초깃값은 white이다.")
     @Test
-    void findForceEndFlagById_게임이_끝나지_않으면_foce_end_flag는_false() {
-        gameDao.createById("1234");
-        assertThat(gameDao.findForceEndFlagById("1234")).isFalse();
+    void findRoomById_turn_white() {
+        assertThat(gameDao.findRoomById(id).getTurn()).isEqualTo(Color.WHITE);
     }
 
+    @DisplayName("turn 업데이트 성공")
     @Test
-    void findForceEndFlagById_존재하지_않는_게임아이디_조회시_예외가_발생한다() {
-        gameDao.createById("1234");
-        assertThatThrownBy(() -> gameDao.findForceEndFlagById("124"))
-            .isInstanceOf(EmptyResultDataAccessException.class);
+    void updateTurnById() {
+        gameDao.updateTurnById(Color.WHITE, id);
+
+        assertThat(gameDao.findRoomById(id).getTurn()).isEqualTo(Color.WHITE);
     }
 
+    @DisplayName("end_flag 업데이트 성공")
     @Test
-    void findTurnById_초기_불가능한_turn은_black이다() {
-        gameDao.createById("1234");
-        assertThat(gameDao.findTurnById("1234")).isEqualTo(Color.BLACK);
+    void updateEndFlagById() {
+        gameDao.updateEndFlagById(true, id);
+
+        assertThat(gameDao.findRoomById(id).getEndFlag()).isTrue();
     }
 
+    @DisplayName("게임 삭제 성공")
     @Test
-    void updateTurnById_turn_업데이트_성공() {
-        gameDao.createById("1234");
+    void deleteById() {
+        gameDao.updateEndFlagById(true, id);
+        gameDao.deleteById(id);
 
-        gameDao.updateTurnById(Color.WHITE, "1234");
-
-        assertThat(gameDao.findTurnById("1234")).isEqualTo(Color.WHITE);
+        assertThat(gameDao.findAllRoom()).hasSize(0);
     }
-
-    @Test
-    void updateForceEndFlagById_force_end_flag_업데이트_성공() {
-        gameDao.createById("1234");
-
-        gameDao.updateForceEndFlagById(true, "1234");
-
-        assertThat(gameDao.findForceEndFlagById("1234")).isEqualTo(true);
-    }
-
-    @Test
-    void deleteById_게임_삭제_성공() {
-        gameDao.createById("1234");
-        assertThat(gameDao.isInId("1234")).isTrue();
-
-        gameDao.deleteById("1234");
-
-        assertThat(gameDao.isInId("1234")).isFalse();
-    }
-
 
 }

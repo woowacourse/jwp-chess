@@ -6,93 +6,84 @@ import chess.domain.command.MoveCommand;
 import chess.domain.game.ChessGame;
 import chess.domain.game.GameResult;
 import chess.domain.piece.ChessmenInitializer;
-import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
 import chess.domain.piece.Pieces;
+import chess.domain.room.Room;
 import chess.dto.GameResultDto;
 import chess.dto.MoveCommandDto;
-import chess.dto.PieceDto;
 import chess.dto.PiecesDto;
-import java.util.ArrayList;
+import chess.dto.RoomResponseDto;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessGameService {
 
-    private final ChessmenInitializer chessmenInitializer = new ChessmenInitializer();
-
     private final PieceDao pieceDao;
     private final GameDao gameDao;
-
 
     public ChessGameService(PieceDao pieceDao, GameDao gameDao) {
         this.pieceDao = pieceDao;
         this.gameDao = gameDao;
     }
 
-    public void createOrGet(String gameId) {
-        if (!gameDao.isInId(gameId)) {
-            initGame(gameId);
-        }
+    public List<RoomResponseDto> getAllGames() {
+        List<Room> rooms = gameDao.findAllRoom();
+        return rooms.stream()
+            .map(RoomResponseDto::toDto)
+            .collect(Collectors.toList());
     }
 
-    private void initGame(String gameId) {
-        gameDao.createById(gameId);
-        Pieces chessmen = chessmenInitializer.init();
-        pieceDao.createAllById(chessmen.getPieces(), gameId);
+    @Transactional
+    public long create(Room room) {
+
+        long gameId = gameDao.createByTitleAndPassword(room);
+        Pieces chessmen = ChessmenInitializer.init();
+        pieceDao.createAllByGameId(chessmen.getPieces(), gameId);
+        return gameId;
     }
 
-    public ChessGame getGameStatus(String gameId) {
-        boolean forceEndFlag = gameDao.findForceEndFlagById(gameId);
-        Color turn = gameDao.findTurnById(gameId);
+    public PiecesDto findCurrentPieces(long gameId) {
+        return PiecesDto.toDto(findChessGame(gameId).getChessmen());
+    }
+
+    private ChessGame findChessGame(long gameId) {
+        Room room = gameDao.findRoomById(gameId);
         Pieces chessmen = pieceDao.findAllByGameId(gameId);
-        return new ChessGame(forceEndFlag, chessmen, turn);
+        return new ChessGame(chessmen, room.getTurn());
     }
 
-    public PiecesDto getCurrentGame(String gameId) {
-        return new PiecesDto(toDto(getGameStatus(gameId).getChessmen()));
+    public GameResultDto calculateGameResult(long gameId) {
+        GameResult gameResult = GameResult.calculate(findChessGame(gameId).getChessmen());
+        return GameResultDto.toDto(gameResult);
     }
 
-    private List<PieceDto> toDto(Pieces chessmen) {
-        List<PieceDto> pieces = new ArrayList<>();
-        for (Piece piece : chessmen.getPieces()) {
-            pieces.add(new PieceDto(piece.getPosition().getPosition(),
-                piece.getColor().getName(),
-                piece.getName()));
-        }
-        return pieces;
-    }
-
-    public GameResultDto calculateGameResult(String gameId) {
-        GameResult gameResult = GameResult.calculate(getGameStatus(gameId).getChessmen());
-        return new GameResultDto(gameResult.getWinner().getName(),
-            gameResult.getWhiteScore(),
-            gameResult.getBlackScore());
-    }
-
-    public void cleanGame(String gameId) {
-        pieceDao.deleteAllByGameId(gameId);
-        gameDao.deleteById(gameId);
-    }
-
-    public void move(String gameId, MoveCommandDto moveCommandDto) {
+    @Transactional
+    public void move(long gameId, MoveCommandDto moveCommandDto) {
         String from = moveCommandDto.getSource();
         String to = moveCommandDto.getTarget();
-        getGameStatus(gameId).moveChessmen(new MoveCommand(from, to));
-        saveMove(gameId, moveCommandDto);
+        ChessGame chessGame = findChessGame(gameId);
+
+        chessGame.moveChessmen(new MoveCommand(from, to));
+
+        saveMove(gameId, moveCommandDto, chessGame);
     }
 
-    private void saveMove(String gameId, MoveCommandDto moveCommandDto) {
-        ChessGame chessGame = getGameStatus(gameId);
-        chessGame.moveChessmen(moveCommandDto.toEntity());
-        boolean forceEndFlag = chessGame.getForceEndFlag();
-        Color turn = chessGame.getTurn();
+    private void saveMove(long gameId, MoveCommandDto moveCommandDto, ChessGame chessGame) {
+        if (pieceDao.exists(gameId, moveCommandDto.getTarget())) {
+            pieceDao.deleteByGameIdAndPosition(gameId, moveCommandDto.getTarget());
+        }
+        pieceDao.updateByGameIdAndPosition(gameId, moveCommandDto.getSource(), moveCommandDto.getTarget());
+        gameDao.updateTurnById(chessGame.getTurn(), gameId);
+        gameDao.updateEndFlagById(chessGame.isEnd(), gameId);
+    }
 
-        pieceDao.deleteAllByGameId(gameId);
-        pieceDao.createAllById(chessGame.getChessmen().getPieces(), gameId);
-        gameDao.updateTurnById(turn, gameId);
-        gameDao.updateForceEndFlagById(forceEndFlag, gameId);
+    @Transactional
+    public void cleanGameByIdAndPassword(long id, String password) {
+        Room room = gameDao.findRoomById(id);
+        room.validateDeletable(password);
+        gameDao.deleteById(id);
     }
 
 }

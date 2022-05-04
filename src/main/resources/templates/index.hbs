@@ -10,15 +10,55 @@
 <h1>♟️ 체스 게임 대기방♟</h1>
 
 <div id="game-entry">
+  <b>주인장 메세지: {{gameMessage}}</b>
 
-  <form enctype="text/plain" action="/game/start" method="get">
-    <label for="game-entry">방 번호를 입력하여 시작하기 (없을 시 새로 방 생성)</label>
+  <br>
+
+  <form action="/game" method="post">
+    <label for="game-entry">방 이름과 비밀번호를 입력하여 방 만들기</label>
     <br>
-    <input type="text" name="gameId" value="1234">
-    <button type="submit">입장하기</button>
+    <input type="text" name="title" value="왕초보만 53">
+    <input type="password" name="password">
+    <button type="submit">방 만들기</button>
   </form>
+  <br>
+
+  <br>
+  존재하는 방들
+  <br>
+
+  <ul class="room_list">
+    {{#each rooms}}
+      <div class="room">
+        <form enctype="text/plain" action="/game/{{id}}" method="get">
+          방번호: {{id}} | 방이름: {{title}}
+          <br>
+          <button type="submit" class="main-button">입장하기</button>
+        </form>
+
+        <form action="/game" method="post">
+          <input type="hidden" name="_method" value="delete">
+          <div id="box-{{id}}">
+            <input type="button" value="삭제하기" class="main-button" onclick="add_textbox({{id}})">
+            <input type="hidden" name="id" value={{id}}>
+          </div>
+        </form>
+      </div>
+    {{/each}}
+  </ul>
+
 
 </div>
-
+<script>
+  const add_textbox = (id) => {
+    const box = document.getElementById("box-" + id);
+    const newP = document.createElement('p');
+    newP.innerHTML = "<input type='password' name='password'> <button type='submit' class='main-button'>비밀번호 입력</button>";
+    box.appendChild(newP);
+  }
+  const remove = (obj) => {
+    document.getElementById('box').removeChild(obj.parentNode);
+  }
+</script>
 </body>
 </html>

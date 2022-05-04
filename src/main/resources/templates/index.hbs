@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link rel="stylesheet" type="text/css" href="indexStyle.css">
+</head>
+
+<body>
+
+<h1 id="title"> Chess Game</h1>
+
+<div class="left">
+
+    <form action="/createGame" method="post">
+        <table class="createGame">
+            <tr>
+                <td>방 이름 :</td>
+                <td><input type="text" name="name"></td>
+            </tr>
+            <tr>
+                <td>비밀번호 :</td>
+                <td><input type="text" name="password"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="생성"></td>
+            </tr>
+        </table>
+
+    </form>
+
+</div>
+
+<div class="right">
+    {{#each gameList}}
+        <div class="gameList">
+            <a href="/game/{{@key}}">{{this}}</a>
+            <form action="/{{@key}}/delete" method="post">
+                <input type="text" name="password" value="비밀번호를 입력해주세요">
+                <input type="submit" value="삭제">
+            </form>
+        </div>
+    {{/each}}
+</div>
+
+</body>
+
+</html>

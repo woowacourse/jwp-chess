@@ -1,0 +1,35 @@
+body {
+    width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+div.left {
+    width: 50%;
+    float: left;
+    margin: 0 auto;
+    position: relative;
+    left: 10%;
+}
+
+div.right {
+    width: 50%;
+    float: right;
+    margin: 0 auto;
+}
+
+table.createGame {
+    border: 5px solid cornflowerblue;
+    padding: 20px;
+    margin: 20px;
+    text-align: center;
+}
+
+div.gameList {
+    width: 200px;
+    border: 5px solid cornflowerblue;
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+    font-size: 30px;
+}

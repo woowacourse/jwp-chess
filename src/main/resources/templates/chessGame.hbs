@@ -4,36 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <title>체스 게임</title>
-    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="stylesheet" type="text/css" href="/chessGameStyle.css">
 </head>
 
 <body>
 
 <h1 id="title"> Chess Game</h1>
 <div class="right">
-    <form action="/start" method="get">
+    <form action="/game/{{gameId}}/start" method="post">
         <button>시작</button>
     </form>
 
-    <form action="/end" method="get">
+    <form action="/game/{{gameId}}/end" method="post">
         <button>종료</button>
     </form>
 
-    <form action="/restart" method="get">
-        <button>재시작</button>
-    </form>
-
-    <form action="/save" method="get">
-        <button>저장</button>
-    </form>
-
-    <form action="/status" method="get">
+    <form action="/game/{{gameId}}/status" method="get">
         <button>점수</button>
+    </form>
+
+    <form action="/" method="get">
+        <button>메인으로 돌아가기</button>
     </form>
 
     <br/><br/>
 
-    <form action="/move" method="post">
+    <form action="/game/{{gameId}}/move" method="post">
         움직일 말의 위치와 움직일 위치를 입력하고 이동 버튼을 눌러주세요.
         <table class="move">
             <tr>
@@ -50,13 +46,9 @@
 
     <br/><br/>
 
-    <div class="error">
-        <h2>{{error}}</h2>
-    </div>
-
     <div class="score">
         {{#each score}}
-        {{@key}} : {{this}} <br/>
+            {{@key}} : {{this}} <br/>
         {{/each}}
     </div>
 

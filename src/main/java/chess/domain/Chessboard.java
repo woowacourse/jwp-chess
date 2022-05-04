@@ -18,7 +18,7 @@ public class Chessboard {
         this.board = board;
     }
 
-    public void move(MovingPosition movingPosition, Turn turn) {
+    public void move(MovingPosition movingPosition, Color turn) {
         validate(movingPosition, turn);
         movePiece(movingPosition);
     }
@@ -36,7 +36,7 @@ public class Chessboard {
         return Collections.unmodifiableMap(board);
     }
 
-    private void validate(MovingPosition movingPosition, Turn turn) {
+    private void validate(MovingPosition movingPosition, Color turn) {
         Piece from = board.get(movingPosition.getFrom());
         Piece to = board.get(movingPosition.getTo());
 
@@ -53,8 +53,8 @@ public class Chessboard {
         }
     }
 
-    private void validateTurn(Piece from, Turn turn) {
-        if (!turn.isRightTurn(from.getColor())) {
+    private void validateTurn(Piece from, Color turn) {
+        if (!from.isSameColor(turn)) {
             throw new IllegalArgumentException("상대편의 기물은 움직일 수 없습니다.");
         }
     }

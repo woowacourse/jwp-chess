@@ -6,7 +6,7 @@ import chess.dto.DeleteResponseDto;
 import chess.dto.MoveDto;
 import chess.dto.RoomDto;
 import chess.service.ChessService;
-import chess.view.WebInputView;
+import chess.view.WebInputValicator;
 import com.google.gson.Gson;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -70,8 +70,8 @@ public class WebController {
     @PostMapping("/roomInformation")
     public String createRoom(@RequestParam(value="name") String name,
                              @RequestParam(value="password") String password) {
-        WebInputView.validateRoomName(name);
-        WebInputView.validateRoomPassword(password);
+        WebInputValicator.checkRoomName(name);
+        WebInputValicator.checkRoomPassword(password);
         chessService.createRoom(name, password);
         return "redirect:/";
     }

@@ -3,13 +3,11 @@ package chess.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.chessboard.ChessBoard;
-import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
 import chess.domain.piece.Symbol;
 import chess.domain.piece.generator.NormalPiecesGenerator;
-import chess.domain.position.Position;
 import chess.entity.Game;
-import java.util.Map;
+import chess.entity.Square;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,29 +29,30 @@ public class BoardDaoTest {
     @BeforeEach
     void setUp() {
         gameId = gameDao.save(new Game("title", "password", "WhiteTurn"));
-        boardDao.save(new ChessBoard(new NormalPiecesGenerator()), gameId);
+        boardDao.save(Square.from(new ChessBoard(new NormalPiecesGenerator()), gameId));
     }
 
     @Test
     @DisplayName("체스 보드를 조회할 수 있다.")
     void findById() {
-        var chessBoard = boardDao.findById(gameId);
+        var squares = boardDao.findById(gameId);
 
-        assertThat(chessBoard).isInstanceOf(ChessBoard.class);
+        assertThat(squares.get(0)).isInstanceOf(Square.class);
     }
 
     @Test
     @DisplayName("체스 보드를 업데이트할 수 있다.")
     void update() {
-        Position position = Position.of("a2");
-        Piece piece = Piece.of(Color.BLACK, Symbol.PAWN);
+        Square square = new Square("a1", "PAWN", "WHITE", gameId);
 
-        boardDao.update(position, piece, gameId);
-        ChessBoard chessBoard = boardDao.findById(gameId);
-        Map<Position, Piece> pieces = chessBoard.getPieces();
-        Piece actual = pieces.get(position);
+        boardDao.update(square);
+        List<Square> squares = boardDao.findById(gameId);
+        Square actual = squares.stream()
+                .filter(it -> it.getPosition().equals("a1"))
+                .findAny()
+                .orElseThrow(IllegalArgumentException::new);
 
-        assertThat(actual).isEqualTo(piece);
+        assertThat(actual.getSymbol()).isEqualTo(Symbol.PAWN.name());
     }
 
     @Test
@@ -61,7 +60,7 @@ public class BoardDaoTest {
     void delete() {
         boardDao.delete(gameId);
 
-        ChessBoard chessBoard = boardDao.findById(gameId);
-        assertThat(chessBoard.getPieces()).isEmpty();
+        List<Square> squares = boardDao.findById(gameId);
+        assertThat(squares).isEmpty();
     }
 }

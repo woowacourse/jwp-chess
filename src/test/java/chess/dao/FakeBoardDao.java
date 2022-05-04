@@ -1,59 +1,40 @@
 package chess.dao;
 
-import chess.domain.chessboard.ChessBoard;
-import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
-import chess.domain.piece.Symbol;
-import chess.domain.position.Position;
-import chess.dto.BoardDto;
-import chess.dto.PieceDto;
-import java.util.HashMap;
-import java.util.Map;
+import chess.entity.Square;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class FakeBoardDao implements BoardDao {
 
-    private final Map<Integer, BoardDto> board;
+    private final List<Square> board;
 
     public FakeBoardDao() {
-        this.board = new HashMap<>();
+        this.board = new ArrayList<>();
     }
 
     @Override
-    public void save(ChessBoard chessBoard, int gameId) {
-        Map<Position, Piece> pieces = chessBoard.getPieces();
-        Map<String, PieceDto> board = new HashMap<>();
-        for (Position position : pieces.keySet()) {
-            String key = position.getValue();
-            Piece piece = pieces.get(Position.of(key));
-            PieceDto pieceDto = new PieceDto(piece.getSymbol().name(), piece.getColor().name());
-            board.put(key, pieceDto);
-        }
-        this.board.put(gameId, new BoardDto(board));
+    public void save(List<Square> squares) {
+        this.board.addAll(squares);
     }
 
     @Override
-    public ChessBoard findById(int id) {
-        Map<String, PieceDto> board = this.board.get(id).getBoard();
-        Map<Position, Piece> pieces = board.entrySet().stream()
-                .collect(Collectors.toMap(
-                        entry -> Position.of(entry.getKey()),
-                        entry -> createPiece(entry.getValue())));
-        return new ChessBoard(pieces);
-    }
-
-    private Piece createPiece(PieceDto pieceDto) {
-        return Piece.of(Color.valueOf(pieceDto.getColor()), Symbol.valueOf(pieceDto.getSymbol()));
+    public List<Square> findById(int id) {
+        return board.stream()
+                .filter(square -> square.getGameId() == id)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public int update(Position position, Piece piece, int gameId) {
-        BoardDto boardDto = board.get(gameId);
-        String value = position.getValue();
-        PieceDto pieceDto = new PieceDto(piece.getSymbol().name(), piece.getColor().name());
-        Map<String, PieceDto> board = boardDto.getBoard();
-        board.put(value, pieceDto);
-        return gameId;
+    public int update(Square square) {
+        Square square1 = board.stream()
+                .filter(it -> it.getGameId() == square.getGameId() && it.getPosition().equals(square.getPosition()))
+                .findAny()
+                .orElseThrow(IllegalArgumentException::new);
+        board.remove(square1);
+
+        board.add(square);
+        return square.getGameId();
     }
 
     @Override

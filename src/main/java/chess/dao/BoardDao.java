@@ -1,16 +1,15 @@
 package chess.dao;
 
-import chess.domain.chessboard.ChessBoard;
-import chess.domain.piece.Piece;
-import chess.domain.position.Position;
+import chess.entity.Square;
+import java.util.List;
 
 public interface BoardDao {
 
-    void save(ChessBoard chessBoard, int gameId);
+    void save(List<Square> squares);
 
-    ChessBoard findById(int id);
+    List<Square> findById(int id);
 
-    int update(Position position, Piece piece, int gameId);
+    int update(Square square);
 
     void delete(int gameId);
 }

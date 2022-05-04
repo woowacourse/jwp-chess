@@ -16,6 +16,10 @@ public class PieceDto {
         return new PieceDto(piece.getSymbol().name(), piece.getColor().name());
     }
 
+    public Piece toPiece() {
+        return Piece.of(color, symbol);
+    }
+
     public String getSymbol() {
         return symbol;
     }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,18 @@ import org.springframework.stereotype.Repository;
 public class GameDaoImpl implements GameDao {
 
     private JdbcTemplate jdbcTemplate;
+
+    private RowMapper<Game> gameRowMapper = (rs, rowNum) ->
+            new Game(
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    rs.getString("password"),
+                    rs.getString("state")
+            );
+
+    private RowMapper<State> stateRowMapper = (rs, rowNum) ->
+            State.of(rs.getString("state"));
+
 
     public GameDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -27,44 +40,32 @@ public class GameDaoImpl implements GameDao {
         params.put("password", game.getPassword());
         params.put("state", game.getState());
 
-        int id = simpleJdbcInsert.executeAndReturnKey(params).intValue();
-        return id;
+        return simpleJdbcInsert.executeAndReturnKey(params).intValue();
     }
 
     @Override
     public List<Game> findAll() {
         String sql = "select * from game";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Game game = new Game(rs.getInt("id"), rs.getString("title"), rs.getString("password"),
-                    rs.getString("state"));
-            return game;
-        });
+        return jdbcTemplate.query(sql, gameRowMapper);
     }
 
     @Override
     public Game findById(int id) {
         String sql = "select * from game where id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            Game game = new Game(rs.getInt("id"), rs.getString("title"), rs.getString("password"),
-                    rs.getString("state"));
-            return game;
-        }, id);
+        return jdbcTemplate.queryForObject(sql, gameRowMapper, id);
     }
 
     @Override
     public State findState(int id) {
         String sql = "select state from game where id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            State state = State.of(rs.getString("state"));
-            return state;
-        }, id);
+        return jdbcTemplate.queryForObject(sql, stateRowMapper, id);
     }
 
     @Override
-    public int update(String state, int id) {
-        String sql = "update game set state=? where id=?";
-        jdbcTemplate.update(sql, state, id);
-        return id;
+    public int update(Game game) {
+        String sql = "update game set state=? where id = ?";
+        jdbcTemplate.update(sql, game.getState(), game.getId());
+        return game.getId();
     }
 
     @Override

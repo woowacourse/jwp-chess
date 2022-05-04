@@ -40,10 +40,10 @@ public class FakeGameDao implements GameDao {
     }
 
     @Override
-    public int update(String state, int id) {
-        Game game = this.game.get(id);
-        this.game.put(id, new Game(game.getId(), game.getTitle(), game.getPassword(), state));
-        return id;
+    public int update(Game game) {
+        Game oldGame = this.game.get(game.getId());
+        this.game.put(game.getId(), new Game(game.getId(), oldGame.getTitle(), oldGame.getPassword(), game.getState()));
+        return game.getId();
     }
 
     @Override

@@ -93,17 +93,6 @@ public class ChessServiceTest {
     }
 
     @Test
-    @DisplayName("보드를 업데이트할 수 있다.")
-    void updateBoard() {
-        chessService.movePiece(id, "a2", "a3");
-
-        ChessBoard chessBoard = boardDao.findById(id);
-        Piece piece = chessBoard.selectPiece(Position.of("a3"));
-
-        assertThat(piece).isEqualTo(Piece.of(Color.WHITE, Symbol.PAWN));
-    }
-
-    @Test
     @DisplayName("게임의 상태 불러올 수 있다.")
     void selectState() {
         String state = chessService.selectState(id);
@@ -120,10 +109,20 @@ public class ChessServiceTest {
     }
 
     @Test
+    @DisplayName("보드에서 말을 움직일 수 있다.")
+    void movePiece() {
+        chessService.movePiece(id, "a2", "a3");
+        BoardDto boardDto = BoardDto.of(boardDao.findById(id));
+        ChessBoard chessBoard = boardDto.toBoard();
+        Piece piece = chessBoard.selectPiece(Position.of("a3"));
+
+        assertThat(piece).isEqualTo(Piece.of(Color.WHITE, Symbol.PAWN));
+    }
+
+    @Test
     @DisplayName("게임을 종료시킬 수 있다.")
     void endGame() {
         chessService.endGame(id);
-
         String state = gameDao.findState(id).getValue();
 
         assertThat(state).isEqualTo("Finish");

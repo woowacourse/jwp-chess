@@ -1,13 +1,10 @@
 package chess.dao;
 
-import chess.domain.chessboard.ChessBoard;
-import chess.domain.piece.Piece;
-import chess.domain.position.Position;
-import java.util.HashMap;
+import chess.entity.Square;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -15,40 +12,43 @@ public class BoardDaoImpl implements BoardDao {
 
     private JdbcTemplate jdbcTemplate;
 
+    private RowMapper<Square> squareRowMapper = (rs, rowNum) ->
+            new Square(
+                    rs.getString("position"),
+                    rs.getString("symbol"),
+                    rs.getString("color")
+            );
+
     public BoardDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public void save(ChessBoard chessBoard, int gameId) {
+    public void save(List<Square> squares) {
         String sql = "insert into board (position, symbol, color, game_id) values (?, ?, ?, ?)";
 
-        List<Object[]> board = chessBoard.getPieces().entrySet().stream()
-                .map(entry -> new Object[]{entry.getKey().getValue(), entry.getValue().getSymbol().name(),
-                        entry.getValue().getColor().name(), gameId})
+        List<Object[]> board = squares.stream()
+                .map(square -> new Object[]{
+                        square.getPosition(),
+                        square.getSymbol(),
+                        square.getColor(),
+                        square.getGameId()})
                 .collect(Collectors.toList());
 
         jdbcTemplate.batchUpdate(sql, board);
     }
 
     @Override
-    public ChessBoard findById(int id) {
+    public List<Square> findById(int id) {
         String sql = "select position, symbol, color from board where game_id = ?";
-
-        List<Map<String, Object>> squares = jdbcTemplate.queryForList(sql, id);
-        Map<Position, Piece> board = new HashMap<>();
-        for (Map<String, Object> square : squares) {
-            board.put(
-                    Position.of((String) square.get("position")),
-                    Piece.of((String) square.get("color"), (String) square.get("symbol")));
-        }
-        return new ChessBoard(board);
+        return jdbcTemplate.query(sql, squareRowMapper, id);
     }
 
     @Override
-    public int update(Position position, Piece piece, int gameId) {
-        String sql = "update board set symbol = (?), color = (?) where game_id = (?) and position = (?)";
-        return jdbcTemplate.update(sql, piece.getSymbol().name(), piece.getColor().name(), gameId, position.getValue());
+    public int update(Square square) {
+        String sql = "update board set symbol = ?, color = ? where game_id = ? and position = ?";
+        return jdbcTemplate.update(sql, square.getSymbol(), square.getColor(), square.getGameId(),
+                square.getPosition());
     }
 
     @Override

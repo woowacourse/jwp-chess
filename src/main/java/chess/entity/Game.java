@@ -20,6 +20,11 @@ public class Game {
         this.state = state;
     }
 
+    public Game(String state, int id) {
+        this.state = state;
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
@@ -34,5 +39,15 @@ public class Game {
 
     public String getState() {
         return state;
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", password='" + password + '\'' +
+                ", state='" + state + '\'' +
+                '}';
     }
 }

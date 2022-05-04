@@ -7,7 +7,6 @@ import chess.domain.command.GameCommand;
 import chess.domain.game.ChessGame;
 import chess.domain.piece.Color;
 import chess.domain.piece.EmptyPiece;
-import chess.domain.piece.Piece;
 import chess.domain.piece.generator.NormalPiecesGenerator;
 import chess.domain.position.Position;
 import chess.domain.state.State;
@@ -15,6 +14,7 @@ import chess.domain.state.StateName;
 import chess.dto.BoardDto;
 import chess.dto.GameDto;
 import chess.dto.RoomDto;
+import chess.entity.Square;
 import chess.dto.StatusDto;
 import chess.entity.Game;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ChessService {
     @Transactional
     public int insertGame(RoomDto roomDto, ChessBoard chessBoard) {
         int id = gameDao.save(new Game(roomDto.getTitle(), roomDto.getPassword(), StateName.WHITE_TURN.getValue()));
-        boardDao.save(chessBoard, id);
+        boardDao.save(Square.from(chessBoard, id));
         return id;
     }
 
@@ -48,12 +48,12 @@ public class ChessService {
     }
 
     public BoardDto selectBoard(int id) {
-        ChessBoard chessBoard = boardDao.findById(id);
-        return BoardDto.from(chessBoard);
+        return BoardDto.of(boardDao.findById(id));
     }
 
     public String selectWinner(int gameId) {
-        ChessBoard chessBoard = boardDao.findById(gameId);
+        BoardDto boardDto = BoardDto.of(boardDao.findById(gameId));
+        ChessBoard chessBoard = boardDto.toBoard();
 
         if (chessBoard.isEnd()) {
             return chessBoard.getWinner().name();
@@ -66,7 +66,10 @@ public class ChessService {
     }
 
     public StatusDto selectStatus(int gameId) {
-        ChessGame chessGame = new ChessGame(gameDao.findState(gameId), boardDao.findById(gameId));
+        BoardDto boardDto = BoardDto.of(boardDao.findById(gameId));
+        ChessBoard chessBoard = boardDto.toBoard();
+
+        ChessGame chessGame = new ChessGame(gameDao.findState(gameId), chessBoard);
         Map<Color, Double> scores = chessGame.calculateScore();
 
         return new StatusDto(scores);
@@ -74,13 +77,15 @@ public class ChessService {
 
     @Transactional
     public void movePiece(int gameId, String from, String to) {
-        ChessBoard chessBoard = boardDao.findById(gameId);
-        ChessGame chessGame = new ChessGame(gameDao.findState(gameId), boardDao.findById(gameId));
+        BoardDto boardDto = BoardDto.of(boardDao.findById(gameId));
+        ChessBoard chessBoard = boardDto.toBoard();
+
+        ChessGame chessGame = new ChessGame(gameDao.findState(gameId), chessBoard);
         playChessGame(from, to, chessGame);
 
-        gameDao.update(chessGame.getState().getValue(), gameId);
-        boardDao.update(Position.of(to), chessBoard.selectPiece(Position.of(from)), gameId);
-        boardDao.update(Position.of(from), EmptyPiece.getInstance(), gameId);
+        gameDao.update(new Game(chessGame.getState().getValue(), gameId));
+        boardDao.update(new Square(to, chessBoard.selectPiece(Position.of(to)), gameId));
+        boardDao.update(new Square(from, EmptyPiece.getInstance(), gameId));
     }
 
     private void playChessGame(String from, String to, ChessGame chessGame) {
@@ -90,7 +95,7 @@ public class ChessService {
 
     @Transactional
     public void endGame(int gameId) {
-        gameDao.update(StateName.FINISH.getValue(), gameId);
+        gameDao.update(new Game(StateName.FINISH.getValue(), gameId));
     }
 
     @Transactional
@@ -114,8 +119,8 @@ public class ChessService {
     @Transactional
     public void restartGame(int gameId) {
         ChessBoard chessBoard = new ChessBoard(new NormalPiecesGenerator());
-        int id = gameDao.update(StateName.WHITE_TURN.getValue(), gameId);
+        int id = gameDao.update(new Game(StateName.WHITE_TURN.getValue(), gameId));
         boardDao.delete(gameId);
-        boardDao.save(chessBoard, id);
+        boardDao.save(Square.from(chessBoard, id));
     }
 }

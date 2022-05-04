@@ -14,7 +14,7 @@ public interface GameDao {
 
     State findState(int id);
 
-    int update(String state, int id);
+    int update(Game game);
 
     int delete(int id);
 }

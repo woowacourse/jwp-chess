@@ -17,7 +17,7 @@ public class PieceRepositoryTest {
     @BeforeEach
     void setUp() {
         pieceRepository = new PieceRepository(new FakePieceDao());
-        pieceRepository.saveAllPieceToStorage(1, new BoardInitializer().init());
+        pieceRepository.saveAllPiece(1, new BoardInitializer().init());
     }
 
     @AfterEach
@@ -46,7 +46,7 @@ public class PieceRepositoryTest {
 
     @Test
     void getBoardFromStorageTest() {
-        Board board = pieceRepository.getBoardFromStorage(1);
+        Board board = pieceRepository.getBoard(1);
         Board initBoard = new Board(new BoardInitializer());
         assertThat(board).isEqualTo(initBoard);
     }

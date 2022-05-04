@@ -10,7 +10,6 @@ import chess.dto.BoardElementDto;
 import chess.entity.PieceEntity;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -24,7 +23,7 @@ public class PieceRepository {
         this.pieceDao = pieceDao;
     }
 
-    public void saveAllPieceToStorage(int gameId, Map<Position, Piece> boardElements) {
+    public void saveAllPiece(int gameId, Map<Position, Piece> boardElements) {
         List<PieceEntity> pieceEntities = convertToEntities(gameId, boardElements);
         for (PieceEntity pieceEntity : pieceEntities) {
             pieceDao.insert(pieceEntity);
@@ -46,7 +45,7 @@ public class PieceRepository {
                 PieceEntity.of(gameId, pieceEntity.getPieceName(), pieceEntity.getPieceColor(), to));
     }
 
-    public Board getBoardFromStorage(int gameId) {
+    public Board getBoard(int gameId) {
         return convertToBoard(convertToBoardElementDtos(pieceDao.findAll(PieceEntity.of(gameId))));
     }
 

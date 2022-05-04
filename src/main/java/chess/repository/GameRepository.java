@@ -15,7 +15,7 @@ public class GameRepository {
         this.gameDao = gameDao;
     }
 
-    public Color getColorFromStorage(int gameId) {
+    public Color getColor(int gameId) {
         return Color.from(gameDao.findById(GameEntity.of(gameId)).getTurn());
     }
 

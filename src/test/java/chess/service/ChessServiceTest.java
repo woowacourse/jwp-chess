@@ -45,7 +45,7 @@ public class ChessServiceTest {
 
     @Test
     void createRoomTest() {
-        Color color = gameRepository.getColorFromStorage(1);
+        Color color = gameRepository.getColor(1);
         List<BoardElementDto> boardElementDtos = pieceRepository.findAll(1);
         List<RoomDto> roomDtos = roomRepository.findAll();
         assertThat(color.isWhite() && boardElementDtos.size() == 32 && roomDtos.size() == 1).isTrue();
@@ -55,7 +55,7 @@ public class ChessServiceTest {
     void newGameTest() {
         chessService.newGame(1);
         List<BoardElementDto> boardElementDtos = pieceRepository.findAll(1);
-        Color color = gameRepository.getColorFromStorage(1);
+        Color color = gameRepository.getColor(1);
         String status = roomRepository.findAll().get(0).getStatus();
         assertThat(color.isWhite() && boardElementDtos.size() == 32 && status.equals("PLAY")).isTrue();
     }
@@ -75,7 +75,7 @@ public class ChessServiceTest {
         ChessGameDto chessGameDto = chessService.move(1, "A2", "A4");
         Map<String, PieceDto> positionsAndPieces = chessGameDto.getPositionsAndPieces();
         Set<String> positions = positionsAndPieces.keySet();
-        Color turn = gameRepository.getColorFromStorage(1);
+        Color turn = gameRepository.getColor(1);
         assertThat(positions.size() == 32 && positions.contains("A4") && !turn.isWhite()).isTrue();
     }
 

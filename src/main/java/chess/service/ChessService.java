@@ -33,7 +33,7 @@ public final class ChessService {
         int gameId = gameRepository.saveGameGetKey("WHITE");
         RoomDto roomDto = new RoomDto(gameId, roomName, password, "STOP");
         roomRepository.save(roomDto);
-        pieceRepository.saveAllPieceToStorage(gameId, new BoardInitializer().init());
+        pieceRepository.saveAllPiece(gameId, new BoardInitializer().init());
     }
 
     public List<RoomDto> loadRooms() {
@@ -42,22 +42,22 @@ public final class ChessService {
 
     public ChessGameDto newGame(int gameId) {
         initGame(gameId);
-        ChessGame chessGame = new ChessGame(new Running(gameRepository.getColorFromStorage(gameId),
-                pieceRepository.getBoardFromStorage(gameId)));
+        ChessGame chessGame = new ChessGame(new Running(gameRepository.getColor(gameId),
+                pieceRepository.getBoard(gameId)));
         return new ChessGameDto(pieceRepository.findAll(gameId), chessGame.status());
     }
 
     public ChessGameDto loadGame(int gameId) {
-        ChessGame chessGame = new ChessGame(StateFactory.of(gameRepository.getColorFromStorage(gameId),
-                pieceRepository.getBoardFromStorage(gameId)));
+        ChessGame chessGame = new ChessGame(StateFactory.of(gameRepository.getColor(gameId),
+                pieceRepository.getBoard(gameId)));
         return new ChessGameDto(pieceRepository.findAll(gameId), chessGame.status());
     }
 
     public ChessGameDto move(int gameId, final String from, final String to) {
-        ChessGame chessGame = new ChessGame(StateFactory.of(gameRepository.getColorFromStorage(gameId),
-                pieceRepository.getBoardFromStorage(gameId)));
+        ChessGame chessGame = new ChessGame(StateFactory.of(gameRepository.getColor(gameId),
+                pieceRepository.getBoard(gameId)));
         chessGame.move(Position.from(from), Position.from(to));
-        final var nextColor = gameRepository.getColorFromStorage(gameId).next();
+        final var nextColor = gameRepository.getColor(gameId).next();
         updateBoard(from, to, gameId, nextColor.name());
         return new ChessGameDto(pieceRepository.findAll(gameId), chessGame.status());
     }
@@ -85,7 +85,7 @@ public final class ChessService {
 
     private void initGame(int gameId) {
         pieceRepository.deleteAllPiece(gameId);
-        pieceRepository.saveAllPieceToStorage(gameId, new BoardInitializer().init());
+        pieceRepository.saveAllPiece(gameId, new BoardInitializer().init());
         gameRepository.update(gameId, "WHITE");
         roomRepository.updateStatus(gameId, "PLAY");
     }

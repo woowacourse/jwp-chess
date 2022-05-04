@@ -3,7 +3,7 @@ package chess.domain.game;
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
-import chess.dto.Arguments;
+import chess.domain.board.Route;
 
 public class Ready extends GameState {
 
@@ -28,7 +28,7 @@ public class Ready extends GameState {
     }
 
     @Override
-    public GameState move(Arguments arguments) {
+    public GameState move(Route route) {
         throw new UnsupportedOperationException("[ERROR] 아직 게임이 시작되지 않았습니다..");
     }
 

@@ -2,86 +2,84 @@ package chess.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import chess.database.GameStateGenerator;
-import chess.database.dao.BoardDao;
-import chess.database.dao.GameDao;
-import chess.database.dto.BoardDto;
-import chess.database.dto.GameStateDto;
-import chess.database.dto.PointDto;
-import chess.database.dto.RouteDto;
-import chess.domain.board.Board;
-import chess.domain.board.CustomBoardGenerator;
+import chess.domain.Room;
 import chess.domain.board.Route;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
-import chess.dto.Arguments;
+import chess.dto.RoomRequest;
+import chess.dto.RouteRequest;
+import chess.repository.GameRepository;
+import chess.repository.RoomRepository;
 
 @Service
 public class GameService {
 
-    private final GameDao gameDao;
-    private final BoardDao boardDao;
+    private final GameRepository gameRepository;
+    private final RoomRepository roomRepository;
+    private final PasswordEncoder encoder;
 
-    public GameService(GameDao gameDao, BoardDao boardDao) {
-        this.gameDao = gameDao;
-        this.boardDao = boardDao;
+    public GameService(GameRepository gameRepository,
+        RoomRepository roomRepository,
+        PasswordEncoder encoder) {
+        this.gameRepository = gameRepository;
+        this.roomRepository = roomRepository;
+        this.encoder = encoder;
     }
 
-    public void createNewGame(String roomName) {
-        validateDistinctGame(roomName);
-        GameState state = new Ready();
-        gameDao.saveGame(GameStateDto.of(state), roomName);
-        boardDao.saveBoard(BoardDto.of(state.getPointPieces()), roomName);
+    public Long createNewGame(RoomRequest roomRequest) {
+        Room room = Room.createRoomEncoded(roomRequest, encoder);
+        return roomRepository.createRoom(room, new Ready());
     }
 
-    private void validateDistinctGame(String roomName) {
-        List<String> stateAndColor = gameDao.readStateAndColor(roomName);
-        if (!stateAndColor.isEmpty()) {
-            throw new IllegalArgumentException(String.format("[ERROR] %s 이름의 방이 이미 존재합니다.", roomName));
+    public void removeRoom(Long roomId, RoomRequest roomRequest) {
+        validatePasswordMatches(roomId, roomRequest);
+        validateGameNotRunning(roomId);
+        roomRepository.deleteRoom(roomId);
+    }
+
+    private void validatePasswordMatches(Long roomId, RoomRequest roomRequest) {
+        final Room room = roomRepository.findRoomById(roomId);
+        if (!room.isPasswordMatches(roomRequest.getPassword(), encoder)) {
+            throw new IllegalArgumentException("[ERROR] 패스워드가 올바르지 않습니다.");
         }
     }
 
-    public void startGame(String roomName) {
-        GameState state = readGameState(roomName).start();
-        gameDao.updateState(GameStateDto.of(state), roomName);
-    }
-
-    public void finishGame(String roomName) {
-        GameState state = readGameState(roomName).finish();
-        gameDao.updateState(GameStateDto.of(state), roomName);
-    }
-
-    public GameState readGameState(String roomName) {
-        List<String> stateAndColor = gameDao.readStateAndColor(roomName);
-        validateExistGame(stateAndColor, roomName);
-
-        BoardDto boardDto = boardDao.readBoard(roomName);
-        Board board = Board.of(new CustomBoardGenerator(boardDto));
-        return GameStateGenerator.generate(board, stateAndColor);
-    }
-
-    private void validateExistGame(List<String> stateAndColor, String roomName) {
-        if (stateAndColor.isEmpty()) {
-            throw new IllegalArgumentException(
-                String.format("[ERROR] %s 이름에 해당하는 방이 없습니다.", roomName)
-            );
+    private void validateGameNotRunning(Long roomId) {
+        final GameState state = gameRepository.findGameByRoomId(roomId);
+        if (state.isRunnable()) {
+            throw new IllegalStateException("[ERROR] 진행중인 게임은 삭제할 수 없습니다.");
         }
     }
 
-    public GameState moveBoard(String roomName, Arguments arguments) {
-        GameState movedState = readGameState(roomName).move(arguments);
-        gameDao.updateState(GameStateDto.of(movedState), roomName);
-
-        Route route = Route.of(arguments);
-        boardDao.deletePiece(PointDto.of(route.getDestination()), roomName);
-        boardDao.updatePiece(RouteDto.of(route), roomName);
-        return movedState;
+    public List<Room> readGameRooms() {
+        return roomRepository.findAllRooms();
     }
 
-    public void removeGameAndBoard(String roomName) {
-        boardDao.removeBoard(roomName);
-        gameDao.removeGame(roomName);
+    public Long findGameIdByRoomId(Long roomId) {
+        return gameRepository.findGameIdByRoomId(roomId);
+    }
+
+    public GameState moveBoard(Long gameId, RouteRequest routeRequest) {
+        final Route route = Route.of(routeRequest.getSource(), routeRequest.getDestination());
+        final GameState moved = gameRepository.findGameById(gameId).move(route);
+        gameRepository.updateState(moved, route, gameId);
+        return moved;
+    }
+
+    public GameState readGameState(Long gameId) {
+        return gameRepository.findGameById(gameId);
+    }
+
+    public void startGame(Long gameId) {
+        final GameState started = gameRepository.findGameById(gameId).start();
+        gameRepository.updateState(started, gameId);
+    }
+
+    public void finishGame(Long gameId) {
+        final GameState finished = gameRepository.findGameById(gameId).finish();
+        gameRepository.updateState(finished, gameId);
     }
 }

@@ -3,13 +3,12 @@ package chess.domain.board;
 import java.util.List;
 
 import chess.domain.piece.move.Direction;
-import chess.dto.Arguments;
 
 public class Route {
 
     private static final int ARGUMENT_SIZE = 2;
-    private static final int ARGUMENT_FROM_INDEX = 0;
-    private static final int ARGUMENT_TO_INDEX = 1;
+    private static final int ARGUMENT_SOURCE_INDEX = 0;
+    private static final int ARGUMENT_DESTINATION_INDEX = 1;
 
     private final Point source;
     private final Point destination;
@@ -19,15 +18,13 @@ public class Route {
         this.destination = destination;
     }
 
-    public static Route of(List<String> arguments) {
-        validateSize(arguments);
-        return new Route(Point.of(arguments.get(ARGUMENT_FROM_INDEX)),
-            Point.of(arguments.get(ARGUMENT_TO_INDEX)));
+    public static Route of(String source, String destination) {
+        return new Route(Point.of(source), Point.of(destination));
     }
 
-    public static Route of(Arguments argumentsObject) {
-        List<String> arguments = argumentsObject.getArguments();
-        return of(arguments);
+    public static Route of(List<String> arguments) {
+        validateSize(arguments);
+        return of(arguments.get(ARGUMENT_SOURCE_INDEX), arguments.get(ARGUMENT_DESTINATION_INDEX));
     }
 
     private static void validateSize(List<String> arguments) {

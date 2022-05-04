@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title> 체스 게임 </title>
     <link rel="stylesheet" href="/src/index.css">
-<!--    <link rel="stylesheet" href="../static/src/index.css">-->
     <script src="/src/index.js"></script>
 </head>
 <body>
@@ -12,15 +11,26 @@
 
     <section id="index-container">
         <h1> 체스 게임 </h1>
-        <form action="/create" method="get" id="create_form">
-            <input type="text" name="room_name" id="room_name" class="input"/>
-            <input type="submit" value="시작하기" id="create_button" class="button">
-        </form>
+
+        <button id='create_button' onclick='toggleHidden("create_form");'> 새게임 만들기 </button>
+        <button id='enter_button'> 게임 목록 불러오기 </button>
+
+        <div id="view-container">
+            <form action="/create" method="get" id="create_form" class="hidden">
+                <label htmlFor="room_name"> 방 이름 </label>
+                <input type="text" name="room_name" id="room_name" className="input"/>
+                <br/>
+                <label htmlFor="password"> 비밀번호 </label>
+                <input type="password" name="password" id="password" className="input"/>
+                <br/>
+                <input type="submit" value="시작하기" id="create_button" className="button">
+            </form>
+
+            <div id="rooms">
+            <div>
+        </div>
+
         <br/>
-        <form action="/enter" method="get" id="enter_form">
-            <input type="text" name="room_name" id="game_id" class="input">
-            <input type="submit" value="이어하기" class="button">
-        </form>
     </section>
 </div>
 <script> setUpIndex(); </script>

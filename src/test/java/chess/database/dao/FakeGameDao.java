@@ -1,47 +1,83 @@
 package chess.database.dao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import chess.database.dto.GameStateDto;
+import chess.database.entity.GameEntity;
 
 public class FakeGameDao implements GameDao {
 
-    private static final int STATE_INDEX = 0;
-    private static final int COLOR_INDEX = 1;
+    private static class FakeRow {
 
-    private final Map<String, List<String>> memoryDatabase;
+        private String turnColor;
+        private String state;
+        private final Long roomId;
+
+        public FakeRow(String turnColor, String state, Long roomId) {
+            this.turnColor = turnColor;
+            this.state = state;
+            this.roomId = roomId;
+        }
+
+        public String getTurnColor() {
+            return turnColor;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public Long getRoomId() {
+            return roomId;
+        }
+
+        public void setTurnColor(String turnColor) {
+            this.turnColor = turnColor;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+    }
+
+    private final Map<Long, FakeRow> memoryDatabase;
+    private long id;
 
     public FakeGameDao() {
         this.memoryDatabase = new HashMap<>();
+        this.id = 1L;
     }
 
     @Override
-    public List<String> readStateAndColor(String roomName) {
-        final List<String> stateAndColor = memoryDatabase.get(roomName);
-        if (stateAndColor == null) {
-            return new ArrayList<>();
-        }
-        return stateAndColor;
+    public Long saveGame(GameEntity entity) {
+        memoryDatabase.put(id, new FakeRow(entity.getTurnColor(), entity.getState(), entity.getRoomId()));
+        return id++;
     }
 
     @Override
-    public void saveGame(GameStateDto gameStateDto, String roomName) {
-        memoryDatabase.put(roomName, Arrays.asList(gameStateDto.getState(), gameStateDto.getTurnColor()));
+    public void updateGame(GameEntity entity) {
+        final FakeRow fakeRow = memoryDatabase.get(entity.getId());
+        fakeRow.setState(entity.getState());
+        fakeRow.setTurnColor(entity.getTurnColor());
     }
 
     @Override
-    public void updateState(GameStateDto gameStateDto, String roomName) {
-        List<String> target = memoryDatabase.get(roomName);
-        target.set(STATE_INDEX, gameStateDto.getState());
-        target.set(COLOR_INDEX, gameStateDto.getTurnColor());
+    public Optional<GameEntity> findGameById(Long gameId) {
+        final FakeRow fakeRow = memoryDatabase.get(gameId);
+        return Optional.of(new GameEntity(gameId, fakeRow.getTurnColor(), fakeRow.getState(), fakeRow.getRoomId()));
     }
 
     @Override
-    public void removeGame(String roomName) {
-        memoryDatabase.remove(roomName);
+    public Optional<GameEntity> findGameByRoomId(Long roomId) {
+        return memoryDatabase.entrySet()
+            .stream()
+            .filter(entry -> entry.getValue().getRoomId().equals(roomId))
+            .map(entry -> new GameEntity(
+                entry.getKey(),
+                entry.getValue().getTurnColor(),
+                entry.getValue().getState(),
+                roomId))
+            .findAny();
     }
 }

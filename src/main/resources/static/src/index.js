@@ -1,23 +1,28 @@
-
 // -------- init start ---------
 function setUpIndex() {
     const createForm = document.getElementById("create_form");
     createForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = new FormData(createForm).get("room_name");
-        send("/create?room_name=" + roomName, {
-            method: 'get'
+        send("/room", {
+            method: 'post',
+            body: toJSON(createForm),
+            headers: new Headers({'Content-Type': 'application/json'})
         }, relocate);
     })
 
-    const enterForm = document.getElementById("enter_form");
-    enterForm.addEventListener("submit", e => {
-        e.preventDefault();
-        let roomName = new FormData(enterForm).get("room_name");
-        send("/enter?room_name=" + roomName, {
-            method: 'get'
-        }, relocate);
+    const rooms = document.getElementById("enter_button");
+    rooms.addEventListener("click", e => {
+        send("/rooms", {method: 'get'}, drawRooms);
     })
+
+    // const enterForm = document.getElementById("enter_form");
+    // enterForm.addEventListener("submit", e => {
+    //     e.preventDefault();
+    //     let roomName = new FormData(enterForm).get("room_name");
+    //     send("/enter?room_name=" + roomName, {
+    //         method: 'get'
+    //     }, relocate);
+    // })
 
     console.log("setupIndex done")
 }
@@ -25,6 +30,7 @@ function setUpIndex() {
 function setUpState(state, forms) {
     const clickable = 'clickable';
     const nonClickable = 'non-clickable';
+
     function toggle(formObject) {
         const object = formObject.getElementsByTagName('input')[0];
         console.log("toggling object = ", object);
@@ -63,27 +69,28 @@ function setUpMain(state) {
     const statusForm = document.getElementById("status_form");
     statusForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = getCurrentParam("room_name");
-        send("/status?room_name=" + roomName, {
-            method: 'get'
+        const gameId = getLastPath();
+
+        send(`/board/${gameId}/status`, {
+            method: 'GET'
         }, showStatus);
     });
 
     const startForm = document.getElementById("start_form");
     startForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = getCurrentParam("room_name");
-        send("/start?room_name=" + roomName, {
-            method: 'get'
+        const gameId = getLastPath();
+        send(`/game/${gameId}/start`, {
+            method: 'PATCH',
         }, relocate);
     });
 
     const endForm = document.getElementById("end_form");
     endForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = getCurrentParam("room_name");
-        send("/end?room_name=" + roomName, {
-            method: 'get'
+        const gameId = getLastPath();
+        send(`/game/${gameId}/end`, {
+            method: 'PATCH',
         }, relocate);
     });
 
@@ -91,12 +98,11 @@ function setUpMain(state) {
     console.log("setup done")
 }
 
+
 // -------- init end ---------
 
 
-
 // --------- draw start ---------
-
 
 
 let source = null;
@@ -121,9 +127,9 @@ function moveByClick(source, destination) {
     }
     console.log('move by click called', source, destination);
 
-    let roomName = getCurrentParam("room_name");
-    send("/move?room_name=" + roomName, {
-        method: 'post',
+    const gameId = getLastPath();
+    send(`/board/${gameId}/move`, {
+        method: 'PATCH',
         body: JSON.stringify({'source': source.id, 'destination': destination.id}),
         headers: new Headers({'Content-Type': 'application/json'})
     }, drawBoardByResponse);
@@ -196,11 +202,69 @@ function drawPiece(horizontal, vertical, type, color) {
     point.innerHTML = '';
     board.rows[8 - vertical].cells[horizontal - 1].appendChild(image);
 }
+
+function drawRooms(responseJson) {
+    const roomDiv = document.getElementById("rooms");
+    roomDiv.innerHTML = "";
+    console.log("darwRoom responseJson =", responseJson)
+    for (const index in responseJson) {
+        const room = createRoom(responseJson[index]);
+        roomDiv.appendChild(room);
+    }
+}
+
+function createRoom(roomResponse) {
+
+    console.log("roomResponse = ", roomResponse)
+    const form = document.createElement("form");
+    const enterAnchor = Object.assign(document.createElement('a'),
+        {href: `/room/${roomResponse['id']}`, innerText: roomResponse['roomName']});
+    enterAnchor.onclick = function () {
+        send(`/room/${roomResponse['id']}`, {
+            method: 'get'
+        }, relocate);
+    }
+    const deleteButton = Object.assign(document.createElement('img'),
+        {
+            src: '/images/X_BUTTON.png',
+            height: '15',
+            style: "cursor: pointer;",
+            width: '15'
+        });
+    deleteButton.onclick = function () {
+        const password = prompt("패스워드를 입력하세요 : ");
+        send(`/room/${roomResponse['id']}`, {
+            method: 'delete',
+            body: JSON.stringify({roomName: roomResponse['roomName'], password: password}),
+            headers: new Headers({'Content-Type': 'application/json'})
+        }, relocate);
+    }
+
+    form.appendChild(enterAnchor);
+    form.appendChild(deleteButton);
+    return form;
+}
+
+
+function toggleHidden(targetId) {
+    const element = document.getElementById(targetId);
+    if (element.classList.contains("hidden")) {
+        element.classList.remove("hidden");
+    } else {
+        element.classList.add("hidden");
+    }
+}
+
+// }
 // ------------ draw end ------------
 
 
-
 // ------------- utils start -----------------
+
+function log(responseJson) {
+    console.log('logging ...', responseJson);
+}
+
 function relocate(responseJson) {
     console.log("responseJson in relocate =", responseJson);
     window.location.href = responseJson['url'];
@@ -221,10 +285,17 @@ function getCurrentParam(key) {
     return params.get(key);
 }
 
+function getLastPath() {
+    const pathName = new URL(document.location).pathname;
+    const splitted = pathName.split("/");
+    return splitted[splitted.length - 1];
+}
+
 function showStatus(responseJson) {
-    let string = 'WHITE SCORE = ' + responseJson['score']['WHITE'] +
+    const colorScore = responseJson['colorScore'];
+    let string = 'WHITE SCORE = ' + colorScore['WHITE'] +
         '\n' +
-        'BLACK SCORE = ' + responseJson['score']['BLACK'];
+        'BLACK SCORE = ' + colorScore['BLACK'];
     alert(string);
 }
 
@@ -244,4 +315,5 @@ async function send(path, fetchBody, handler) {
         handler(responseJson);
     }
 }
+
 // --------------- utils end ------------------

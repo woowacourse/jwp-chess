@@ -2,48 +2,119 @@ package chess.service;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import chess.database.dao.FakeBoardDao;
 import chess.database.dao.FakeGameDao;
-import chess.database.dto.GameStateDto;
+import chess.database.dao.FakePieceDao;
+import chess.database.dao.FakeRoomDao;
+import chess.database.dao.GameDao;
+import chess.database.dao.PieceDao;
+import chess.database.dao.RoomDao;
+import chess.domain.Room;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
-import chess.dto.Arguments;
+import chess.dto.RoomRequest;
+import chess.dto.RouteRequest;
+import chess.repository.GameRepository;
+import chess.repository.RoomRepository;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class GameServiceTest {
 
-    private static final String TEST_ROOM_NAME = "TESTING";
-    private static final String TEST_CREATION_ROOM_NAME = "TESTING2";
-    private static final FakeGameDao gameDao = new FakeGameDao();
-    private static final FakeBoardDao boardDao = new FakeBoardDao();
-    private static final GameService service = new GameService(gameDao, boardDao);
+    public static final String TEST_ROOM_NAME = "TEST-GAME";
+
+    private PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    private GameRepository gameRepository;
+    private RoomRepository roomRepository;
+
+    private GameService service;
+    private Long roomId;
+    private Long gameId;
 
     @BeforeEach
     void setUp() {
-        service.createNewGame(TEST_ROOM_NAME);
+        RoomDao roomDao = new FakeRoomDao();
+        GameDao gameDao = new FakeGameDao();
+        PieceDao pieceDao = new FakePieceDao();
+
+        roomRepository = new RoomRepository(roomDao, gameDao, pieceDao);
+        gameRepository = new GameRepository(gameDao, pieceDao);
+        service = new GameService(gameRepository, roomRepository, encoder);
+
+        roomId = service.createNewGame(new RoomRequest("TEST-GAME", "TEST-PASSWORD"));
+        gameId = gameRepository.findGameIdByRoomId(roomId);
     }
 
     @Test
     @DisplayName("새로운 방을 만든다.")
     public void createNewGame() {
-        assertThatCode(() -> service.createNewGame(TEST_CREATION_ROOM_NAME))
+        assertThatCode(() -> service.createNewGame(new RoomRequest("TEST-GAME2", "TEST-PASSWORD")))
             .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("게임 목록을 얻는다.")
+    public void readGames() {
+        // given & when
+        final List<Room> rooms = service.readGameRooms();
+        // then
+        assertThat(rooms.size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("게임을 삭제한다.")
+    public void deleteGame() {
+        // given & when
+        String password = "TEST-PASSWORD";
+        final GameState state = gameRepository.findGameByRoomId(roomId);
+        final Long gameId = gameRepository.findGameIdByRoomId(roomId);
+        final GameState finished = state.finish();
+        gameRepository.updateState(finished, gameId);
+
+        // then
+        assertThatCode(() -> service.removeRoom(roomId, new RoomRequest(TEST_ROOM_NAME, password)))
+            .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("잘못된 패스워드를 입력하면 게임을 삭제할 수 없다.")
+    public void deleteGameWithWrongPassword() {
+        // given
+        String password = "WRONG-PASSWORD";
+
+        // then
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> service.removeRoom(roomId, new RoomRequest(TEST_ROOM_NAME, password)));
+    }
+
+    @Test
+    @DisplayName("진행중인 게임은 삭제할 수 없다.")
+    public void deleteRunningGame() {
+        // given & when
+        String password = "TEST-PASSWORD";
+
+        // when
+        assertThatExceptionOfType(IllegalStateException.class)
+            .isThrownBy(() -> service.removeRoom(roomId, new RoomRequest(TEST_ROOM_NAME, password)));
+
+        // then
     }
 
     @Test
     @DisplayName("게임 상태를 얻는다.")
     public void readGameState() {
         // given
-        String roomName = TEST_ROOM_NAME;
         // when
-        GameState gameState = service.readGameState(roomName);
+        GameState gameState = service.readGameState(gameId);
         // then
         assertThat(gameState).isInstanceOf(Ready.class);
     }
@@ -51,10 +122,7 @@ class GameServiceTest {
     @Test
     @DisplayName("게임을 시작한다.")
     public void startGame() {
-        // given & when
-        String roomName = TEST_ROOM_NAME;
-        // then
-        assertThatCode(() -> service.startGame(roomName))
+        assertThatCode(() -> service.startGame(gameId))
             .doesNotThrowAnyException();
     }
 
@@ -62,15 +130,9 @@ class GameServiceTest {
     @DisplayName("말을 움직인다.")
     public void moveBoard() {
         // given
-        String roomName = TEST_ROOM_NAME;
-        Arguments arguments = Arguments.ofArray(new String[] {"a2", "a4"}, 0);
-
-        GameState gameState = service.readGameState(roomName);
-        GameState started = gameState.start();
-        gameDao.saveGame(GameStateDto.of(started), roomName);
-
+        service.startGame(gameId);
         // when
-        GameState moved = service.moveBoard(roomName, arguments);
+        GameState moved = service.moveBoard(gameId, new RouteRequest("a2", "a3"));
         // then
         assertThat(moved).isNotNull();
     }
@@ -79,18 +141,14 @@ class GameServiceTest {
     @DisplayName("게임을 종료한다.")
     public void finishGame() {
         // given & when
-        String roomName = TEST_ROOM_NAME;
 
         // then
-        assertThatCode(() -> service.finishGame(roomName))
+        assertThatCode(() -> service.finishGame(gameId))
             .doesNotThrowAnyException();
     }
 
     @AfterEach
     void setDown() {
-        gameDao.removeGame(TEST_ROOM_NAME);
-        boardDao.removeBoard(TEST_ROOM_NAME);
-        gameDao.removeGame(TEST_CREATION_ROOM_NAME);
-        boardDao.removeBoard(TEST_CREATION_ROOM_NAME);
+        roomRepository.deleteRoom(roomId);
     }
 }

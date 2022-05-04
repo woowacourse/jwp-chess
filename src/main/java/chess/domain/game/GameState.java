@@ -5,8 +5,8 @@ import java.util.Map;
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.Point;
+import chess.domain.board.Route;
 import chess.domain.piece.Piece;
-import chess.dto.Arguments;
 
 public abstract class GameState {
 
@@ -24,7 +24,7 @@ public abstract class GameState {
 
     public abstract boolean isRunnable();
 
-    public abstract GameState move(Arguments arguments);
+    public abstract GameState move(Route route);
 
     public abstract String getState();
 

@@ -2,7 +2,10 @@ package chess.database.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import javax.sql.DataSource;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -10,77 +13,97 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import chess.database.dao.spring.SpringGameDao;
-import chess.database.dto.GameStateDto;
-import chess.database.dao.vanilla.JdbcConnector;
-import chess.database.dao.vanilla.JdbcGameDao;
+import chess.database.entity.GameEntity;
+import chess.database.entity.RoomEntity;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 
-@SpringBootTest
+@JdbcTest
 class GameDaoTest {
 
-    private static final String TEST_ROOM_NAME = "TESTING";
-    private static final String TEST_CREATION_ROOM_NAME = "TESTING2";
+    private static final Supplier<RuntimeException> RUNTIME_EXCEPTION_SUPPLIER =
+        () -> new RuntimeException("[ERROR] 방이 존재하지 않습니다.");
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private DataSource dataSource;
+
+    private RoomDao roomDao;
     private GameDao dao;
+    private Long roomId;
+    private Long gameId;
 
     @BeforeEach
     void setUp() {
-        dao = new SpringGameDao(jdbcTemplate);
-        GameState state = new Ready();
-        dao.saveGame(GameStateDto.of(state), TEST_ROOM_NAME);
+        roomDao = new JdbcRoomDao(dataSource, jdbcTemplate);
+        roomId = roomDao.saveRoom(RoomEntity.from("TEST-ROOM-NAME", "TEST-PASSWORD"));
+
+        dao = new JdbcGameDao(dataSource, jdbcTemplate);
+        gameId = dao.saveGame(GameEntity.fromRoomId(new Ready(), roomId));
     }
 
     @Test
     @DisplayName("게임을 생성한다.")
     public void createGame() {
-        GameState state = new Ready();
-        assertThatCode(() -> dao.saveGame(GameStateDto.of(state), TEST_CREATION_ROOM_NAME))
-            .doesNotThrowAnyException();
+        // given
+        final GameEntity gameEntity = GameEntity.fromRoomId(new Ready(), roomId);
+
+        // when
+        final Long savedId = dao.saveGame(gameEntity);
+
+        // then
+        assertThat(savedId).isNotNull();
     }
 
     @Test
-    @DisplayName("방 이름으로 게임 상태와 턴 색깔을 조회한다.")
+    @DisplayName("ID로 게임 상태와 턴 색깔을 조회한다.")
     public void insert() {
-        // given
-        List<String> stateAndColor = dao.readStateAndColor(TEST_ROOM_NAME);
-        // when
-
-        String stateString = stateAndColor.get(0);
-        String colorString = stateAndColor.get(1);
+        // given & when
+        final GameEntity entity = dao.findGameById(gameId).orElseThrow(RUNTIME_EXCEPTION_SUPPLIER);
         // then
         Assertions.assertAll(
-            () -> assertThat(stateString).isEqualTo("READY"),
-            () -> assertThat(colorString).isEqualTo("WHITE")
+            () -> assertThat(entity.getState()).isEqualTo("READY"),
+            () -> assertThat(entity.getTurnColor()).isEqualTo("WHITE")
         );
     }
 
     @Test
-    @DisplayName("방 이름으로 게임 상태와 턴 색깔을 수정한다.")
+    @DisplayName("ID로 게임 상태와 턴 색깔을 수정한다.")
     public void update() {
         // given
         GameState state = new Ready();
         GameState started = state.start();
-        // when
-        dao.updateState(GameStateDto.of(started), TEST_ROOM_NAME);
-        List<String> stateAndColor = dao.readStateAndColor(TEST_ROOM_NAME);
 
-        String stateString = stateAndColor.get(0);
-        String colorString = stateAndColor.get(1);
+        // when
+        dao.updateGame(GameEntity.from(started, gameId));
+        final GameEntity gameEntity = dao.findGameById(gameId).orElseThrow(RUNTIME_EXCEPTION_SUPPLIER);
+
         // then
-        assertThat(stateString).isEqualTo("RUNNING");
-        assertThat(colorString).isEqualTo("WHITE");
+        Assertions.assertAll(
+            () -> assertThat(gameEntity.getState()).isEqualTo("RUNNING"),
+            () -> assertThat(gameEntity.getTurnColor()).isEqualTo("WHITE")
+        );
+
+    }
+
+    @Test
+    @DisplayName("방 ID로 게임을 찾는다.")
+    public void findGameByRoomName() {
+        // given
+        final Optional<GameEntity> optionalEntity = dao.findGameByRoomId(roomId);
+        // when
+        final boolean isPresent = optionalEntity.isPresent();
+        // then
+        assertThat(isPresent).isTrue();
     }
 
     @AfterEach
-    void afterAll() {
-        dao.removeGame(TEST_ROOM_NAME);
-        dao.removeGame(TEST_CREATION_ROOM_NAME);
+    void setDown() {
+        roomDao.deleteRoom(roomId);
     }
 }

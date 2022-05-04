@@ -1,3 +1,7 @@
+DROP TABLE piece IF EXISTS;
+DROP TABLE game IF EXISTS;
+DROP TABLE room IF EXISTS;
+
 CREATE TABLE room (
     id          BIGINT          AUTO_INCREMENT,
     room_name   VARCHAR(100)    NOT NULL UNIQUE,

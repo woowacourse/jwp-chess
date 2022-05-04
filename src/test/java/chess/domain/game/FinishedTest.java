@@ -2,12 +2,14 @@ package chess.domain.game;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import chess.domain.Color;
 import chess.domain.board.BoardFixtures;
-import chess.dto.Arguments;
+import chess.domain.board.Route;
 
 class FinishedTest {
 
@@ -34,12 +36,12 @@ class FinishedTest {
     @Test
     @DisplayName("종료상태에서는 이동할 수 없다.")
     void throwsExceptionWithTryingToMove() {
-        Arguments ignored = Arguments.ofArray(new String[] {"a1", "a2"}, 0);
+        final Route route = Route.of(List.of("a1", "a2"));
 
         GameState state = new Finished(BoardFixtures.INITIAL, Color.WHITE);
 
         assertThatExceptionOfType(UnsupportedOperationException.class)
-            .isThrownBy(() -> state.move(ignored));
+            .isThrownBy(() -> state.move(route));
     }
 
     @Test

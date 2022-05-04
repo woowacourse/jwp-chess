@@ -2,7 +2,7 @@ package chess.domain.game;
 
 import chess.domain.Color;
 import chess.domain.board.Board;
-import chess.dto.Arguments;
+import chess.domain.board.Route;
 
 public class Finished extends GameState {
 
@@ -25,7 +25,7 @@ public class Finished extends GameState {
     }
 
     @Override
-    public GameState move(Arguments arguments) {
+    public GameState move(Route route) {
         throw new UnsupportedOperationException(END_MESSAGE);
     }
 

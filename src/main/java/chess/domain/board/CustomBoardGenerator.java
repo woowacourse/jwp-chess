@@ -2,10 +2,7 @@ package chess.domain.board;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import chess.database.PieceCache;
-import chess.database.dto.BoardDto;
 import chess.domain.piece.Empty;
 import chess.domain.piece.Piece;
 
@@ -15,15 +12,6 @@ public class CustomBoardGenerator implements BoardGenerator {
 
     public CustomBoardGenerator(Map<Point, Piece> pointPieces) {
         this.pointPieces = new HashMap<>(pointPieces);
-    }
-
-    public CustomBoardGenerator(BoardDto boardDto) {
-        this.pointPieces = boardDto.getPointPieces().entrySet()
-            .stream()
-            .collect(Collectors.toMap(
-                entry -> Point.of(entry.getKey()),
-                entry -> PieceCache.getPiece(entry.getValue())
-            ));
     }
 
     @Override

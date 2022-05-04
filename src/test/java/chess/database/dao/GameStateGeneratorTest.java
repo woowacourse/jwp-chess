@@ -2,8 +2,6 @@ package chess.database.dao;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,21 +18,13 @@ class GameStateGeneratorTest {
     public void createStateByStateAndColorString() {
         // given
         Board board = BoardFixtures.EMPTY;
-        List<String> stateAndColor = List.of("READY", "WHITE");
+        final String state = "READY";
+        final String turnColor = "WHITE";
+
         // when
-        GameState generated = GameStateGenerator.generate(board, stateAndColor);
+        GameState generated = GameStateGenerator.generate(board, state, turnColor);
+
         // then
         assertThat(generated).isInstanceOf(Ready.class);
-    }
-
-    @Test
-    @DisplayName("리스트의 길이가 맞지 않으면 예외를 던진다.")
-    public void throwsExceptionWithInvalidSize() {
-        // given & when
-        Board board = BoardFixtures.EMPTY;
-        List<String> stateAndColor = List.of("READY", "WHITE", "wrong");
-        // then
-        assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> GameStateGenerator.generate(board, stateAndColor));
     }
 }

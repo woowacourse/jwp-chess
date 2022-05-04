@@ -68,10 +68,8 @@ public class ChessService {
     public StatusDto selectStatus(int gameId) {
         Game game = gameDao.findById(gameId);
         ChessBoard chessBoard = Square.toBoard((boardDao.findById(gameId)));
-
         ChessGame chessGame = new ChessGame(State.of(game.getState()), chessBoard);
         Map<Color, Double> scores = chessGame.calculateScore();
-
         return new StatusDto(scores);
     }
 

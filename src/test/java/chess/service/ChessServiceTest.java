@@ -115,7 +115,6 @@ public class ChessServiceTest {
     void movePiece() {
         chessService.movePiece(id, "a2", "a3");
         ChessBoard chessBoard = Square.toBoard(boardDao.findById(id));
-
         Piece piece = chessBoard.selectPiece(Position.of("a3"));
 
         assertThat(piece).isEqualTo(Piece.of(Color.WHITE, Symbol.PAWN));

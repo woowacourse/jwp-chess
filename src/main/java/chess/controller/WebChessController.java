@@ -42,7 +42,6 @@ public class WebChessController {
     private final BoardDTO boardDTO = BoardDTO.buildModel();
     private final WebChessGame webChessGame;
 
-    @Autowired
     public WebChessController(WebChessGame webChessGame) {
         this.webChessGame = webChessGame;
     }

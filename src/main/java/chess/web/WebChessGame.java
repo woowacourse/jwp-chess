@@ -18,16 +18,16 @@ public class WebChessGame {
 
     private static final String DUPLICATED_ROOM_NAME = "이미 만들어진 방 이름입니다.";
 
-    @Autowired
-    private BoardDAO boardDAO;
-
-    @Autowired
-    private StateDAO stateDAO;
-
-    @Autowired
-    private RoomDAO roomDAO;
-
+    private final BoardDAO boardDAO;
+    private final StateDAO stateDAO;
+    private final RoomDAO roomDAO;
     private State state;
+
+    public WebChessGame(BoardDAO boardDAO, StateDAO stateDAO, RoomDAO roomDAO) {
+        this.boardDAO = boardDAO;
+        this.stateDAO = stateDAO;
+        this.roomDAO = roomDAO;
+    }
 
     public void initializeGame(BoardDTO boardDTO, ChessForm chessForm) {
         String roomName = chessForm.getRoomName();

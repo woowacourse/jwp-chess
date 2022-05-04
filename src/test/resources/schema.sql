@@ -4,8 +4,9 @@ DROP TABLE init_board IF EXISTS;
 
 CREATE TABLE game
 (
-    id     INT NOT NULL AUTO_INCREMENT UNIQUE,
+    id     BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
     name   VARCHAR(20) NOT NULL ,
+    password VARCHAR(255) NOT NULL,
     status VARCHAR(10) NOT NULL DEFAULT 'empty',
     turn   VARCHAR(10) NOT NULL DEFAULT 'white',
     PRIMARY KEY (id)
@@ -13,26 +14,27 @@ CREATE TABLE game
 
 CREATE TABLE board
 (
-    id          INT NOT NULL AUTO_INCREMENT UNIQUE,
+    id          BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
     piece_type  VARCHAR(10) NOT NULL ,
     piece_color VARCHAR(10) NOT NULL ,
     square      VARCHAR(10) NOT NULL ,
-    game_id     INT NOT NULL,
-    primary key (id),
-    foreign key (game_id) references game (id)
+    game_id     BIGINT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (game_id) REFERENCES game (id)
+        ON DELETE CASCADE
 );
 
 ALTER TABLE board ADD UNIQUE (game_id, square);
 
 CREATE TABLE init_board
 (
-    square      varchar(10) not null,
-    piece_type  varchar(10) not null,
-    piece_color varchar(10) not null,
-    primary key (square)
+    square      VARCHAR(10) NOT NULL,
+    piece_type  VARCHAR(10) NOT NULL,
+    piece_color VARCHAR(10) NOT NULL,
+    PRIMARY KEY (square)
 );
 
-insert into init_board
+INSERT INTO init_board
 (square, piece_type, piece_color)
 VALUES ('a1', 'rook', 'white'),
        ('b1', 'knight', 'white'),

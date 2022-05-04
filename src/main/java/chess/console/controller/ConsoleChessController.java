@@ -9,7 +9,6 @@ import chess.model.Rank;
 import chess.model.board.Board;
 import chess.model.board.Square;
 import chess.model.piece.PieceType;
-import chess.service.ChessService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -7,11 +7,17 @@ import chess.service.dto.StatusDto;
 public interface GameDao {
     void update(ChessGameDto dto);
 
-    ChessGameDto findById(int id);
+    ChessGameDto findById(Long id);
 
-    void updateStatus(StatusDto statusDto, int id);
+    void updateStatus(StatusDto statusDto, Long id);
 
     GamesDto findAll();
 
-    int createGame(String name);
+    Long createGame(String name, String password);
+
+    void deleteGame(Long id);
+
+    boolean existsById(Long id);
+
+    void removeAll();
 }

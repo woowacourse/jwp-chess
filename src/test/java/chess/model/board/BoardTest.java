@@ -9,6 +9,7 @@ import chess.model.Rank;
 import chess.model.piece.Piece;
 import chess.model.piece.Rook;
 import chess.model.piece.pawn.Pawn;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

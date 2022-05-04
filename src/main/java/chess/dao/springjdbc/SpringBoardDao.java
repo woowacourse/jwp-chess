@@ -23,27 +23,26 @@ public class SpringBoardDao implements BoardDao {
     }
 
     @Override
-    public void initBoard(int gameId) {
+    public void initBoard(Long gameId) {
         String sql = "INSERT INTO board (game_id, piece_type, piece_color, square)\n"
-                + "SELECT ?, init.piece_type, init.piece_color, init.square FROM init_board AS init\n"
-                + "ON duplicate KEY UPDATE piece_type = init.piece_type, piece_color = init.piece_color";
+            + "SELECT ?, init.piece_type, init.piece_color, init.square FROM init_board AS init";
         jdbcTemplate.update(sql, gameId);
     }
 
     @Override
-    public BoardDto getBoardByGameId(int id) {
+    public BoardDto getBoardByGameId(Long gameId) {
         String sql = "SELECT piece_type, piece_color, square FROM board WHERE game_id = ?";
-        return new BoardDto(jdbcTemplate.query(sql, pieceRowMapper, id));
+        return new BoardDto(jdbcTemplate.query(sql, pieceRowMapper, gameId));
     }
 
     @Override
-    public void remove(int id) {
+    public void remove(Long id) {
         String sql = "DELETE FROM board WHERE game_id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
-    public void update(PieceWithSquareDto piece, int gameId) {
+    public void update(PieceWithSquareDto piece, Long gameId) {
         String sql = "UPDATE board SET piece_type = ?, piece_color = ? WHERE square = ? AND game_id = ?";
         jdbcTemplate.update(sql, piece.getType(), piece.getColor(), piece.getSquare(), gameId);
     }

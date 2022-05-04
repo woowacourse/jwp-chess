@@ -5,18 +5,15 @@ import chess.domain.piece.Piece;
 import chess.dto.PieceDto;
 import java.util.List;
 import java.util.Map;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface PieceDao {
+    List<PieceDto> findPieces(final int roomIndex);
 
-    void saveAllPieces(final Map<Position, Piece> board);
+    void saveAllPieces(final int roomId, final Map<Position, Piece> board);
 
-    List<PieceDto> findAllPieces();
+    void removePiece(final int roomId, final String position);
 
-    void removePieceByPosition(final String position);
+    void savePiece(final int roomId, final String position, final Piece piece);
 
-    void savePiece(final String position, final Piece piece);
-
-    void removeAllPieces();
+    void removeAllPieces(final int roomId);
 }

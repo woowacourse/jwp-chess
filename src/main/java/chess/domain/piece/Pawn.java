@@ -1,5 +1,7 @@
 package chess.domain.piece;
 
+import static chess.domain.board.position.Rank.SEVEN;
+import static chess.domain.board.position.Rank.TWO;
 import static chess.domain.piece.Team.BLACK;
 import static chess.domain.piece.Team.WHITE;
 
@@ -16,8 +18,6 @@ public class Pawn extends PromotablePiece {
 
     private static final Map<Team, Integer> DIRECTION_VALUE_BY_TEAM = Map.of(BLACK, 1, WHITE, -1);
 
-    private boolean isFirstMove = true;
-
     public Pawn(final Team team) {
         super(team);
     }
@@ -26,12 +26,17 @@ public class Pawn extends PromotablePiece {
     public boolean canMove(final Position sourcePosition,
                            final Position targetPosition,
                            final List<Position> otherPositions) {
-        if (isFirstMove) {
+        if (isFirstMove(sourcePosition)) {
             return canMoveFirst(sourcePosition, targetPosition, otherPositions) ||
                     canAttackMove(sourcePosition, targetPosition, otherPositions);
         }
         return canMoveNotFirst(sourcePosition, targetPosition, otherPositions) ||
                 canAttackMove(sourcePosition, targetPosition, otherPositions);
+    }
+
+    private boolean isFirstMove(final Position sourcePosition) {
+        return (team == WHITE && sourcePosition.isInRank(TWO)) ||
+                (team == BLACK && sourcePosition.isInRank(SEVEN));
     }
 
     private boolean canMoveFirst(final Position sourcePosition,
@@ -40,7 +45,6 @@ public class Pawn extends PromotablePiece {
         final int directionValue = DIRECTION_VALUE_BY_TEAM.get(team);
         final BiPredicate<Integer, Integer> firstMoveCondition = (fileMove, rankMove) ->
                 fileMove == 0 && (rankMove == 1 * directionValue || rankMove == 2 * directionValue);
-        isFirstMove = false;
 
         return sourcePosition.canMove(targetPosition, firstMoveCondition) &&
                 !sourcePosition.isOtherPieceInPathToTarget(targetPosition, otherPositions) &&

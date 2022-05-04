@@ -18,43 +18,42 @@ public class PieceDaoImpl implements PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<PieceDto> pieceDtoRowMapper = (resultSet, rowNum) ->
-            new PieceDto(
-                    resultSet.getString("position"),
-                    resultSet.getString("team"),
-                    resultSet.getString("name")
-            );
+    private static final RowMapper<PieceDto> actorRowMapper = (resultSet, rowNum) -> new PieceDto(
+            resultSet.getString("name"),
+            resultSet.getString("position"),
+            resultSet.getString("teamColor")
+    );
 
     @Override
-    public void saveAllPieces(final Map<Position, Piece> board) {
-        final String sql = "insert into piece (position, team, name) values (?, ?, ?)";
+    public List<PieceDto> findPieces(final int roomId) {
+        final String sql = "select * from piece where roomId = ?";
+        return jdbcTemplate.query(sql, actorRowMapper, roomId);
+    }
+
+    @Override
+    public void saveAllPieces(final int roomId, final Map<Position, Piece> board) {
+        final String sql = "insert into piece (roomId, name, position, teamColor) values (?, ?, ?, ?)";
         for (Position position : board.keySet()) {
             final Piece piece = board.get(position);
-            jdbcTemplate.update(sql, position.toString(), piece.getTeam(), piece.getName());
+            jdbcTemplate.update(sql, roomId, piece.getName(), position.toString(), piece.getTeam());
         }
     }
 
     @Override
-    public List<PieceDto> findAllPieces() {
-        final String sql = "select position, team, name from piece";
-        return jdbcTemplate.query(sql, pieceDtoRowMapper);
+    public void removePiece(final int roomId, final String position) {
+        final String sql = "delete from piece where roomId = ? and position = ?";
+        jdbcTemplate.update(sql, roomId, position);
     }
 
     @Override
-    public void removePieceByPosition(final String position) {
-        final String sql = "delete from piece where position = (?)";
-        jdbcTemplate.update(sql, position);
+    public void savePiece(final int roomId, final String position, final Piece piece) {
+        final String sql = "insert into piece (roomId, name, position, teamColor) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, roomId, piece.getName(), position, piece.getTeam());
     }
 
     @Override
-    public void savePiece(final String position, final Piece piece) {
-        final String sql = "insert into piece (position, team, name) values (?, ?, ?)";
-        jdbcTemplate.update(sql, position, piece.getTeam(), piece.getName());
-    }
-
-    @Override
-    public void removeAllPieces() {
-        final String sql = "delete from piece";
-        jdbcTemplate.update(sql);
+    public void removeAllPieces(final int roomId) {
+        final String sql = "delete from piece where roomId = ?";
+        jdbcTemplate.update(sql, roomId);
     }
 }

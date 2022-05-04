@@ -3,15 +3,27 @@ package chess.domain.board;
 import static chess.domain.piece.Team.WHITE;
 
 import chess.domain.board.position.Position;
+import chess.domain.piece.Bishop;
+import chess.domain.piece.King;
+import chess.domain.piece.Knight;
+import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
+import chess.domain.piece.Queen;
+import chess.domain.piece.Rook;
 import chess.domain.piece.Team;
+import chess.dto.PieceDto;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Board {
+
+    private static final Map<String, Function<Team, Piece>> PIECE_CREATION_STRATEGY_BY_NAME =
+            Map.of("Pawn", Pawn::new, "King", King::new, "Queen", Queen::new,
+                    "Rook", Rook::new, "Knight", Knight::new, "Bishop", Bishop::new);
 
     private final Map<Position, Piece> pieces;
     private final Team currentTurnTeam;
@@ -26,12 +38,22 @@ public class Board {
                 .generateInitialPieces(), WHITE);
     }
 
+    public static Map<Position, Piece> convertToPiece(final List<PieceDto> savedPieces) {
+        final Map<Position, Piece> pieces = new HashMap<>();
+        for (PieceDto pieceDto : savedPieces) {
+            Position position = Position.from(pieceDto.getPosition());
+            Team team = Team.from(pieceDto.getTeam());
+            String name = pieceDto.getName();
+            Piece piece = PIECE_CREATION_STRATEGY_BY_NAME.get(name)
+                    .apply(team);
+            pieces.put(position, piece);
+        }
+        return pieces;
+    }
+
     public Board movePiece(final Position sourcePosition, final Position targetPosition) {
         final Piece sourcePiece = pieces.get(sourcePosition);
-
-        validateTurn(sourcePiece);
-        validateSameTeamTargetPositionPiece(sourcePiece, targetPosition);
-        validateMovement(sourcePosition, targetPosition);
+        validateMovementCondition(sourcePosition, targetPosition, sourcePiece);
 
         Map<Position, Piece> movedPieces = new HashMap<>(pieces);
         movedPieces.remove(sourcePosition);
@@ -39,7 +61,26 @@ public class Board {
         return new Board(movedPieces, currentTurnTeam.turnToNext());
     }
 
-    private void validateMovement(final Position sourcePosition, final Position targetPosition) {
+    private void validateMovementCondition(final Position sourcePosition,
+                                           final Position targetPosition,
+                                           final Piece sourcePiece) {
+        validateGameIsOver();
+        validateTurn(sourcePiece);
+        validateSameTeamTargetPositionPiece(sourcePiece, targetPosition);
+        validatePieceMovementStrategy(sourcePosition, targetPosition);
+    }
+
+    private void validateGameIsOver() {
+        final int countOfKing = (int) pieces.values()
+                .stream()
+                .filter(Piece::isKing)
+                .count();
+        if (countOfKing == 1) {
+            throw new IllegalStateException("King이 죽어 게임이 종료되었습니다.");
+        }
+    }
+
+    private void validatePieceMovementStrategy(final Position sourcePosition, final Position targetPosition) {
         final Piece sourcePiece = pieces.get(sourcePosition);
         if (!sourcePiece.canMove(sourcePosition, targetPosition, getOtherPositions(sourcePosition))) {
             throw new IllegalArgumentException("기물을 이동시킬 수 없습니다.");
@@ -69,13 +110,6 @@ public class Board {
                 .collect(Collectors.toList());
     }
 
-    public boolean hasOneKing() {
-        return pieces.values()
-                .stream()
-                .filter(Piece::isKing)
-                .count() == 1;
-    }
-
     public double getTotalPoint(Team team) {
         final Map<Position, Piece> teamPieces = pieces.entrySet()
                 .stream()
@@ -85,27 +119,8 @@ public class Board {
         return TotalScore.getTotalPoint(teamPieces);
     }
 
-    public Board promotePawn(final Position sourcePosition, final String promotionType) {
-        final Piece piece = pieces.get(sourcePosition);
-        validatePromoteCondition(sourcePosition, piece);
-        pieces.put(sourcePosition, piece.promote(promotionType));
-        return new Board(pieces, currentTurnTeam);
-    }
-
-    private void validatePromoteCondition(final Position position, final Piece piece) {
-        if (!piece.canPromote(position)) {
-            throw new IllegalArgumentException("해당 기물은 프로모션 할 수 없습니다.");
-        }
-    }
-
     public Map<Position, Piece> getPieces() {
         return pieces;
-    }
-
-    public boolean hasPromotionPawnIn(final Position sourcePosition) {
-        return pieces.values()
-                .stream()
-                .anyMatch(piece -> piece.canPromote(sourcePosition));
     }
 
     public Team getTurn() {

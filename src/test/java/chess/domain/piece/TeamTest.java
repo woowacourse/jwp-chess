@@ -11,6 +11,17 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class TeamTest {
 
+    @Test
+    @DisplayName("잘못된 값으로 Team 객체를 반환받으려하면 예외를 발생시킨다.")
+    void createExceptionByInvalidValue() {
+        //given
+        final String invalidValue = "WWHITE";
+        //when then
+        assertThatThrownBy(() -> Team.from(invalidValue))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("존재하지 않는 팀입니다.");
+    }
+
     @ParameterizedTest
     @DisplayName("Rank 값을 받아 팀 컬러를 반환한다.")
     @CsvSource(value = {"ONE, WHITE", "TWO, WHITE", "SEVEN, BLACK", "EIGHT, BLACK"})

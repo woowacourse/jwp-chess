@@ -5,10 +5,10 @@ import static chess.domain.piece.Team.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import chess.domain.board.position.Position;
-import chess.domain.piece.Knight;
+import chess.domain.piece.King;
 import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
-import chess.domain.piece.Rook;
+import chess.domain.piece.Queen;
 import chess.dto.PieceDto;
 import java.util.List;
 import java.util.Map;
@@ -18,68 +18,94 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
+@Sql("classpath:pieceDaoTest.sql")
 class PieceDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private PieceDaoImpl pieceDaoImpl;
+    private PieceDao pieceDao;
 
     @BeforeEach
     void setUp() {
-        pieceDaoImpl = new PieceDaoImpl(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE piece IF EXISTS");
-        jdbcTemplate.execute("create table piece("
-                + "position varchar(2) not null, team varchar(5) not null ,"
-                + "name varchar(6) not null, primary key (position))");
-    }
-
-    @Test
-    @DisplayName("위치에 따른 기물들을 받아 위치, 팀, 이름을 DB에 저장할 수 있다.")
-    void saveAll() {
-        //given
-        final Map<Position, Piece> board = Map.of(
-                Position.from("a1"), new Pawn(WHITE),
-                Position.from("a2"), new Knight(BLACK),
-                Position.from("a3"), new Rook(WHITE)
+        pieceDao = new PieceDaoImpl(jdbcTemplate);
+        final Map<Position, Piece> pieces = Map.of(
+                Position.from("e1"), new King(WHITE),
+                Position.from("d1"), new Queen(WHITE),
+                Position.from("e8"), new King(BLACK),
+                Position.from("d8"), new Queen(BLACK)
         );
-        pieceDaoImpl.saveAllPieces(board);
-        //when
-        final List<PieceDto> pieces = pieceDaoImpl.findAllPieces();
-        //then
-        assertThat(pieces).contains(new PieceDto("a1", "WHITE", "Pawn"))
-                .contains(new PieceDto("a2", "BLACK", "Knight"))
-                .contains(new PieceDto("a3", "WHITE", "Rook"));
+        pieceDao.saveAllPieces(1, pieces);
     }
 
     @Test
-    @DisplayName("위치 값과 기물을 받아, 해당 위치 값 데이터를 기물 정보로 업데이트 시킨다.")
-    void removeByPosition() {
+    @DisplayName("체스방에 해당하는 기물들을 반환한다.")
+    void findPiecesByRoomIndex() {
         //given
-        pieceDaoImpl.saveAllPieces(Map.of(Position.from("a2"), new Pawn(BLACK)));
-        pieceDaoImpl.removePieceByPosition("a2");
+        final int expected = 4;
+        final int roomId = 1;
+
         //when
-        final List<PieceDto> pieces = pieceDaoImpl.findAllPieces();
+        final List<PieceDto> actual = pieceDao.findPieces(roomId);
+
         //then
-        assertThat(pieces).doesNotContain(new PieceDto("a2", "WHITE", "Knight"));
+        assertThat(actual).hasSize(expected);
     }
 
     @Test
-    @DisplayName("position에 해당 하는 기물 정보를 업데이트한다.")
-    void update() {
+    @DisplayName("체스 방의 기물중 넘겨받은 위치 값을 가진 기물을 삭제한다.")
+    void removePiece() {
         //given
-        final Piece piece = new Pawn(BLACK);
-        pieceDaoImpl.saveAllPieces(Map.of(
-                Position.from("a2"), new Pawn(BLACK),
-                Position.from("a3"), new Knight(WHITE)));
-        pieceDaoImpl.removePieceByPosition("a2");
-        pieceDaoImpl.removePieceByPosition("a3");
-        pieceDaoImpl.savePiece("a3", piece);
+        final int roomId = 1;
+        final String position = "d8";
+        pieceDao.removePiece(roomId, position);
+
         //when
-        final List<PieceDto> actual = pieceDaoImpl.findAllPieces();
+        final int count = countPieceConditionOf(1, "Queen", position, "WHITE");
+
         //then
-        assertThat(actual).contains(new PieceDto("a3", "BLACK", "Pawn"));
+        assertThat(count).isZero();
+    }
+
+    @Test
+    @DisplayName("기물 정보를 저장한다.")
+    void savePiece() {
+        //given
+        final int roomId = 1;
+        final String position = "f2";
+        final Piece piece = new Pawn(WHITE);
+        pieceDao.savePiece(roomId, position, piece);
+
+        //when
+        final int count = countPieceConditionOf(roomId, "Pawn", position, "WHITE");
+
+        //then
+        assertThat(count).isEqualTo(1);
+    }
+
+    private int countPieceConditionOf(final int roomId, final String name,
+                                      final String position, final String teamColor) {
+        return (int) pieceDao.findPieces(roomId)
+                .stream()
+                .filter(pieceDto -> pieceDto.getName().equals(name))
+                .filter(pieceDto -> pieceDto.getPosition().equals(position))
+                .filter(pieceDto -> pieceDto.getTeam().equals(teamColor))
+                .count();
+    }
+
+    @Test
+    @DisplayName("모든 기물 정보들을 삭제한다.")
+    void removeAll() {
+        //given
+        pieceDao.removeAllPieces(1);
+
+        //when
+        final List<PieceDto> pieces = pieceDao.findPieces(1);
+
+        //then
+        assertThat(pieces).isEmpty();
     }
 }

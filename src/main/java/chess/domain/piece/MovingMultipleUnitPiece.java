@@ -8,8 +8,8 @@ import java.util.List;
 public abstract class MovingMultipleUnitPiece extends Piece {
     List<UnitDirection> movableDirections;
 
-    MovingMultipleUnitPiece(Color color, double score, List<UnitDirection> directions) {
-        super(color, score);
+    MovingMultipleUnitPiece(Color color, double score, int moveCount, List<UnitDirection> directions) {
+        super(color, score, moveCount);
         this.movableDirections = directions;
     }
 
@@ -32,4 +32,7 @@ public abstract class MovingMultipleUnitPiece extends Piece {
     public boolean isKing() {
         return false;
     }
+
+    @Override
+    abstract public boolean isRook();
 }

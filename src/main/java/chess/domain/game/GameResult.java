@@ -1,4 +1,4 @@
-package chess.domain;
+package chess.domain.game;
 
 import chess.domain.board.Board;
 import chess.domain.piece.Color;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public final class GameResult {
+public class GameResult {
     private static final double PAWN_PENALTY_SCORE = 0.5;
 
     private final Board board;

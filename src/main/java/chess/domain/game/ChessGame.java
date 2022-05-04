@@ -1,4 +1,4 @@
-package chess.domain;
+package chess.domain.game;
 
 import chess.domain.board.Board;
 import chess.domain.board.BoardGenerator;
@@ -16,9 +16,18 @@ public final class ChessGame {
     public ChessGame(BoardGenerator boardGenerator, GameTurn gameTurn) {
         this.board = new Board(boardGenerator);
         this.turn = gameTurn;
+    }
+
+    public void startGame() {
         if (turn.equals(GameTurn.READY)) {
             this.turn = GameTurn.WHITE;
         }
+    }
+
+    public boolean isCastable(Square source, Square target) {
+        return board.isRightTurn(source, turn.getColor())
+                && board.isRightTurn(target, turn.getColor())
+                && board.isCastable(source, target);
     }
 
     public void move(Square source, Square target) {
@@ -27,6 +36,11 @@ public final class ChessGame {
         turn = turn.switchColor();
         checkKingDie(target);
         board = board.move(source, target);
+    }
+
+    public void doCastling(Square source, Square target) {
+        board = board.castle(source, target);
+        turn = turn.switchColor();
     }
 
     private void checkTurn(Square source) {
@@ -61,5 +75,13 @@ public final class ChessGame {
 
     public GameTurn getTurn() {
         return turn;
+    }
+
+    public void doPromotion(Square target) {
+        board = board.doPromotion(target);
+    }
+
+    public boolean isPromotionAvailable(Square target) {
+        return board.getBoard().get(target).isPawn() && target.isEndRank();
     }
 }

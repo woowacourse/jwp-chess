@@ -9,8 +9,8 @@ import static chess.domain.position.UnitDirection.*;
 
 public final class Pawn extends MovingUnitPiece {
     private final static String BUG_MESSAGE_COLOR = "[BUG] 폰은 색상을 가져야합니다.";
-    private static final String WHITE_PAWN = "♙";
-    private static final String BLACK_PAWN = "♟";
+    private static final String WHITE_PAWN = "white_pawn";
+    private static final String BLACK_PAWN = "black_pawn";
     private static final List<UnitDirection> MOVABLE_DIRECTIONS;
     private static final List<UnitDirection> ATTACK_DIRECTIONS = List.of(EN, WN);
     private static final List<UnitDirection> START_DIRECTIONS = List.of(NN);
@@ -20,11 +20,8 @@ public final class Pawn extends MovingUnitPiece {
         MOVABLE_DIRECTIONS = List.of(N);
     }
 
-    private boolean start;
-
-    Pawn(Color color) {
-        super(color, 1, MOVABLE_DIRECTIONS);
-        this.start = true;
+    Pawn(Color color, int moveCount) {
+        super(color, 1, moveCount, MOVABLE_DIRECTIONS);
     }
 
     @Override
@@ -56,12 +53,8 @@ public final class Pawn extends MovingUnitPiece {
             movement = movement.flipAboutX();
         }
 
-        if (checkCanAttack(movement, target) || checkIsStart(movement, target)
-                || checkCanMove(movement, target)) {
-            this.start = false;
-            return true;
-        }
-        return false;
+        return (checkCanAttack(movement, target) || checkIsStart(movement, target)
+                || checkCanMove(movement, target));
     }
 
     private boolean checkCanAttack(Movement movement, Piece target) {
@@ -70,7 +63,7 @@ public final class Pawn extends MovingUnitPiece {
 
     private boolean checkIsStart(Movement movement, Piece target) {
         checkTarget(target);
-        return start && movement.hasSame(START_DIRECTIONS);
+        return !isDisplaced() && movement.hasSame(START_DIRECTIONS);
     }
 
     private boolean checkCanMove(Movement movement, Piece target) {

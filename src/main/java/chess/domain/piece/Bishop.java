@@ -8,16 +8,16 @@ import static chess.domain.position.UnitDirection.*;
 
 public final class Bishop extends MovingMultipleUnitPiece {
     private final static String BUG_MESSAGE_COLOR = "[BUG] 비숍은 색상을 가져야합니다.";
-    private static final String BLACK_BISHOP = "♝";
-    private static final String WHITE_BISHOP = "♗";
+    private static final String BLACK_BISHOP = "black_bishop";
+    private static final String WHITE_BISHOP = "white_bishop";
     private static final List<UnitDirection> MOVABLE_DIRECTIONS;
 
     static {
         MOVABLE_DIRECTIONS = List.of(EN, ES, WS, WN);
     }
 
-    Bishop(Color color) {
-        super(color, 3, MOVABLE_DIRECTIONS);
+    Bishop(Color color, int moveCount) {
+        super(color, 3, moveCount, MOVABLE_DIRECTIONS);
     }
 
     @Override
@@ -32,4 +32,9 @@ public final class Bishop extends MovingMultipleUnitPiece {
 
         return WHITE_BISHOP;
     }
+
+    @Override
+    public boolean isRook(){
+        return false;
+    };
 }

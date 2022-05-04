@@ -1,9 +1,32 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>모두의 체스</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <link rel="shortcut icon" type="image/x-icon" href="/image/pandavicon.ico" />
+    <title>판다의 체스 - 아직 시작 안했지롱!</title>
+    <meta charset="UTF-8">
 </head>
 <body>
-<h1>Hello World</h1>
+<div id="welcomeMessage">
+    CLICK TO START! 😆
+</div>
+<form action="/newgame" method="get" class="inlineBtn-newgame">
+    <input type="submit" value="NEW GAME" class="btn" id="create"/>
+</form>
+<div class="room-list-container">
+    <span id="room-title">방 목록</span>
+    <ul class="room-list">
+        {{#rooms}}
+            <li class="room">
+                <a class="room-name" href="./ingame?gameCode={{gameCode}}">{{gameID}}</a>
+                {{#if isFinished}}
+                    <a class="room-delete" href="./checkPW?gameCode={{gameCode}}">삭제</a>
+                {{else}}
+                    <a class="room-delete" style="background-color:gray">삭제</a>
+                {{/if}}
+            </li>
+        {{/rooms}}
+    </ul>
+</div>
 </body>
 </html>

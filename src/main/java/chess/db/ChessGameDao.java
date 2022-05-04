@@ -1,9 +1,13 @@
 package chess.db;
 
-import chess.domain.ChessGame;
+import chess.domain.game.ChessGame;
+import chess.domain.game.GameEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.util.List;
 
 @Repository
@@ -14,9 +18,14 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(String gameID, ChessGame chessGame) {
-        String sql = "insert into chessGame (gameID, turn) values (?, ?)";
-        jdbcTemplate.update(sql, gameID, chessGame.getTurn().name());
+    public void save(String gameID, String gamePW, String gameCode, ChessGame chessGame) {
+        String sql = "insert into chessGame (gameID, gamePW, gameCode, turn) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, gameID, gamePW, gameCode, chessGame.getTurn().name());
+    }
+
+    public void delete(String gameID) {
+        String sql = "delete from chessGame where gameID = ?";
+        jdbcTemplate.update(sql, gameID);
     }
 
     public void updateTurn(String gameID, ChessGame chessGame) {
@@ -28,5 +37,34 @@ public class ChessGameDao {
         String sql = "select turn from chessGame where gameID = ?";
         final List<String> turns = jdbcTemplate.queryForList(sql, String.class, gameID);
         return turns.get(0);
+    }
+
+    public boolean checkPassword(String gameID, String inputPW) {
+        String sql = "select gamePW from chessGame where gameID = ?";
+        final List<String> passwords = jdbcTemplate.queryForList(sql, String.class, gameID);
+        String gamePW = passwords.get(0);
+        return inputPW.equals(gamePW);
+    }
+
+    public List<GameEntity> findAllGames() {
+        String sql = "select gameID, gameCode, turn from chessGame";
+        return jdbcTemplate.query(sql, new GameMapper());
+    }
+
+    public String findIDByCode(String gameCode) {
+        String sql = "select gameID from chessGame where gameCode = ?";
+        final List<String> gameIDs = jdbcTemplate.queryForList(sql, String.class, gameCode);
+        return gameIDs.get(0);
+    }
+
+    private static final class GameMapper implements RowMapper {
+        public Object mapRow(ResultSet rs, int rowCnt) throws SQLException {
+            GameEntity gameEntry = new GameEntity();
+            gameEntry.setGameID(rs.getString("gameID"));
+            gameEntry.setGameCode(rs.getString("gameCode"));
+            gameEntry.setIsFinished(rs.getString("turn"));
+            return gameEntry;
+        }
+
     }
 }

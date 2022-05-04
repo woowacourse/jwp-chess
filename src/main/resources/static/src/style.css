@@ -1,7 +1,8 @@
 body {
     font-family: 'BMHANNAPro', monospace;
-    position:absolute;
-    top:50%; left:50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
 }
 
@@ -49,7 +50,7 @@ body {
 }
 
 .message {
-    font-size: 50px;
+    font-size: 30px;
 }
 
 #end {
@@ -57,15 +58,36 @@ body {
 }
 
 input {
-    font-size: 50px;
+    font-size: 30px;
     padding: 0 20px;
 }
 
-.chess-board { border-spacing: 0; border-collapse: collapse; text-align: center; margin: 20px; }
-.chess-board th { padding: .5em; font-size: 35px; }
-.chess-board td { border: 0 solid; width: 80px; height: 80px; font-size: 70px; }
-.chess-board .light { background: #ffffe1; }
-.chess-board .dark { background: #e0e0ff; }
+.chess-board {
+    border-spacing: 0;
+    border-collapse: collapse;
+    text-align: center;
+    margin: 20px 0 0;
+}
+
+.chess-board th {
+    padding: .5em;
+    font-size: 35px;
+}
+
+.chess-board td {
+    border: 0 solid;
+    width: 70px;
+    height: 70px;
+    font-size: 60px;
+}
+
+.chess-board .light {
+    background: #ffffe1;
+}
+
+.chess-board .dark {
+    background: #e0e0ff;
+}
 
 .btn {
     font-family: 'BMHANNAPro', monospace;
@@ -96,8 +118,16 @@ input {
     display: inline;
 }
 
+.inlineBtn-newgame {
+    display: inline;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .score {
-    font-size: 50px;
+    font-size: 30px;
     margin-bottom: 10px;
 }
 
@@ -108,4 +138,53 @@ input {
 
 .invisible {
     display: none;
+}
+
+.room-list-container {
+    text-align: center;
+    height: 100px;
+    position: relative;
+    margin-top: 150px;
+    border-top: 3px solid black;
+}
+
+.room-list {
+    list-style: none;
+}
+
+#room-title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid black;
+}
+
+.room {
+    justify-content: space-between;
+}
+
+.room-name {
+    width: 50px;
+    background-color: #ffffe1;
+    font-size: xx-large;
+    text-decoration: none;
+    color: sandybrown;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.room-delete {
+    width: 30px;
+    background-color: #ffffe1;
+    font-size: xx-large;
+    text-decoration: none;
+    color: sandybrown;
+    text-align: center;
+    border: 1px solid black;
+}
+
+td:hover {
+    background-color: deepskyblue;
+    font-size: 300%;
 }

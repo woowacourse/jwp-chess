@@ -22,10 +22,11 @@ public final class Board {
     private static final String ERROR_SOURCE_AND_TARGET_SAME = "출발지와 목적지가 동일합니다.";
 
     private final Pieces pieces;
-    private Color turn = Color.WHITE;
+    private Color turn;
 
-    public Board(final PiecesSetup piecesSetup) {
+    public Board(final PiecesSetup piecesSetup, Color turn) {
         pieces = new Pieces(piecesSetup);
+        this.turn = turn;
     }
 
     public void move(String source, String target) {

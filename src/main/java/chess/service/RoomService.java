@@ -1,43 +1,67 @@
 package chess.service;
 
-import chess.repository.RoomRepository;
-import chess.web.dto.RoomDto;
+import chess.domain.Room;
+import chess.dto.RoomDto;
+import chess.dto.RoomResponseDto;
+import chess.repository.BoardDao;
+import chess.repository.RoomDao;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class RoomService {
 
-    private static final int NAME_MIN_SIZE = 1;
-    private static final int NAME_MAX_SIZE = 16;
-    private static final String ERROR_NAME_SIZE = "방 이름은 1자 이상, 16자 이하입니다.";
+    private final RoomDao roomDao;
+    private final BoardDao boardDao;
 
-    private final RoomRepository roomRepository;
-
-    public RoomService(RoomRepository roomRepository) {
-        this.roomRepository = roomRepository;
+    public RoomService(RoomDao roomDao, BoardDao boardDao) {
+        this.roomDao = roomDao;
+        this.boardDao = boardDao;
     }
 
-    public RoomDto create(String name) {
-        validateNameSize(name);
-        Optional<RoomDto> roomDto = roomRepository.find(name);
-        if (roomDto.isEmpty()) {
-            roomRepository.save(name);
-        }
-        return roomRepository.find(name).get();
+    public RoomResponseDto create(RoomDto roomDto) {
+        Room room = new Room(roomDto.getName(), roomDto.getPassword());
+        int id = roomDao.save(room);
+        return RoomResponseDto.of(id, room);
     }
 
-    private void validateNameSize(String name) {
-        if (name.length() < NAME_MIN_SIZE || name.length() > NAME_MAX_SIZE) {
-            throw new IllegalArgumentException(ERROR_NAME_SIZE);
+    public void delete(int roomId, String password) {
+        Optional<Integer> boardId = boardDao.findBoardIdByRoom(roomId);
+        Room room = roomDao.findById(roomId);
+        checkPassword(room, password);
+        if (boardId.isEmpty()) {
+            roomDao.delete(roomId);
+            return;
         }
+        checkGameEnd(boardId);
+        roomDao.delete(roomId);
+    }
+
+    public List<RoomResponseDto> findRooms() {
+        List<Room> rooms = roomDao.findAll();
+        return rooms.stream()
+                .map(RoomResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     public void validateId(int roomId) {
-        Optional<RoomDto> roomDto = roomRepository.findById(roomId);
-        if (roomDto.isEmpty()) {
-            throw new IllegalArgumentException("유효하지 않은 체스방 주소입니다.");
-        }
-
+        roomDao.findById(roomId);
     }
+
+    private void checkGameEnd(Optional<Integer> boardId) {
+        if (!boardDao.getEnd(boardId.get())) {
+            throw new IllegalArgumentException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
+    }
+
+    private void checkPassword(Room room, String password) {
+        if (!room.isPasswordCorrect(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
 }

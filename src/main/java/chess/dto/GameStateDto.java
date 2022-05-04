@@ -1,15 +1,15 @@
-package chess.web.dto;
+package chess.dto;
 
 import chess.domain.Color;
 import chess.domain.board.Board;
 
 public class GameStateDto {
 
-    private final String end;
+    private final boolean end;
     private final String turn;
 
     private GameStateDto(boolean end, Color turn) {
-        this.end = String.valueOf(end);
+        this.end = end;
         this.turn = turn.name().toLowerCase();
     }
 
@@ -17,7 +17,7 @@ public class GameStateDto {
         return new GameStateDto(board.isEnd(), board.getTurn());
     }
 
-    public String getEnd() {
+    public boolean getEnd() {
         return end;
     }
 

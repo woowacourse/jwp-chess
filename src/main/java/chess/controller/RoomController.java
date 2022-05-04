@@ -1,11 +1,14 @@
-package chess.web;
+package chess.controller;
 
+import chess.dto.BoardDto;
+import chess.dto.RoomDto;
+import chess.dto.RoomResponseDto;
 import chess.service.GameService;
 import chess.service.RoomService;
-import chess.web.dto.BoardDto;
-import chess.web.dto.RoomDto;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,10 +27,14 @@ public class RoomController {
         this.gameService = gameService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<RoomResponseDto>> findRooms() {
+        return ResponseEntity.ok(roomService.findRooms());
+    }
+
     @PostMapping
-    public String createRoom(@RequestParam String name) {
-        RoomDto roomDto = roomService.create(name);
-        return "redirect:/rooms/" + roomDto.getId();
+    public ResponseEntity<RoomResponseDto> createRoom(RoomDto roomDto) {
+        return ResponseEntity.ok(roomService.create(roomDto));
     }
 
     @GetMapping("/{roomId}")
@@ -36,13 +43,14 @@ public class RoomController {
         return "/board.html";
     }
 
-    @GetMapping(value = "/{roomId}", params = "command=start")
-    public ResponseEntity<BoardDto> startNewGame(@PathVariable int roomId) {
-        return ResponseEntity.ok(gameService.startNewGame(roomId));
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<Void> deleteRoom(@PathVariable int roomId, @RequestParam String password) {
+        roomService.delete(roomId, password);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/{roomId}", params = "command=load")
-    public ResponseEntity<BoardDto> loadGame(@PathVariable int roomId) {
-        return ResponseEntity.ok(gameService.loadGame(roomId));
+    @PostMapping(value = "/{roomId}/new")
+    public ResponseEntity<BoardDto> startNewGame(@PathVariable int roomId) {
+        return ResponseEntity.ok(gameService.newBoard(roomId));
     }
 }

@@ -4,106 +4,53 @@ import chess.domain.Color;
 import chess.domain.Result;
 import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
-import chess.domain.position.Position;
-import chess.repository.BoardRepository;
-import chess.repository.PieceRepository;
-import chess.web.dto.BoardDto;
-import chess.web.dto.CommendDto;
-import chess.web.dto.GameStateDto;
-import chess.web.dto.PieceDto;
-import chess.web.dto.ResultDto;
+import chess.dto.BoardDto;
+import chess.dto.CommendDto;
+import chess.dto.ResultDto;
+import chess.repository.GameRepository;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
 
-    private final PieceRepository pieceRepository;
-    private final BoardRepository boardRepository;
+    private final GameRepository gameRepository;
 
-    public GameService(PieceRepository pieceRepository, BoardRepository boardRepository) {
-        this.pieceRepository = pieceRepository;
-        this.boardRepository = boardRepository;
+    public GameService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
     }
 
-    public BoardDto startNewGame(int roomId) {
-        Board board = new Board(new RegularRuleSetup());
-
-        boardRepository.deleteByRoom(roomId);
-
-        int boardId = boardRepository.save(roomId, getGameStateDto(board));
-        saveNewPieces(board, boardId);
-        return gameStateAndPieces(boardId);
+    public BoardDto newBoard(int roomId) {
+        Board board = new Board(new RegularRuleSetup(), Color.WHITE);
+        return gameRepository.saveNewGame(roomId, board);
     }
 
     public void move(int boardId, CommendDto commendDto) {
         String source = commendDto.getSource();
         String target = commendDto.getTarget();
-        Board board = loadBoard(boardId);
+        Board board = gameRepository.findBoardByBoardId(boardId);
         board.move(source, target);
-
-        PieceDto pieceDto = pieceRepository.findOne(boardId, source)
-                .orElseThrow(IllegalArgumentException::new);
-        deleteMovedPieceFromSource(boardId, source);
-        updateMovedPieceToTarget(boardId, target, pieceDto);
-        updateGameState(board, boardId);
+        gameRepository.movePiece(boardId, board, source, target);
     }
 
     public BoardDto loadGame(int roomId) {
-        int boardId = boardRepository.getBoardIdByRoom(roomId);
-        Board board = loadBoard(boardId);
-        board.loadTurn(boardRepository.getTurn(boardId));
-        return gameStateAndPieces(boardId);
+        int boardId = gameRepository.findBoardIdByRoomId(roomId);
+        Board board = gameRepository.findBoardByRoomId(roomId);
+        return new BoardDto(boardId, board);
     }
 
     public BoardDto gameStateAndPieces(int boardId) {
-        Board board = loadBoard(boardId);
+        Board board = gameRepository.findBoardByBoardId(boardId);
         return new BoardDto(boardId, board);
     }
 
     public ResultDto gameResult(int boardId) {
-        return getResultDto(loadBoard(boardId));
+        return getResultDto(gameRepository.findBoardByBoardId(boardId));
     }
 
     public ResultDto gameFinalResult(int boardId) {
-        return getFinalResultDto(loadBoard(boardId));
-    }
-
-    private void updateMovedPieceToTarget(int boardId, String target, PieceDto pickedPieceDto) {
-        Optional<PieceDto> targetPieceDto = pieceRepository.findOne(boardId, target);
-        if (targetPieceDto.isPresent()) {
-            pieceRepository.updateOne(boardId, target, pickedPieceDto);
-            return;
-        }
-        pieceRepository.save(boardId, target, pickedPieceDto);
-    }
-
-    private void deleteMovedPieceFromSource(int boardId, String source) {
-        pieceRepository.deleteOne(boardId, source);
-    }
-
-    private void updateGameState(Board board, int boardId) {
-        boardRepository.updateTurn(boardId, getGameStateDto(board));
-    }
-
-    private Board loadBoard(int boardId) {
-        Map<Position, chess.domain.piece.Piece> pieces = new HashMap<>();
-        for (PieceDto pieceDto : pieceRepository.findAll(boardId)) {
-            pieces.put(Position.of(pieceDto.getPosition()), PieceFactory.build(pieceDto));
-        }
-        Board board = new Board(() -> pieces);
-        board.loadTurn(boardRepository.getTurn(boardId));
-        return board;
-    }
-
-    private void saveNewPieces(Board board, int boardId) {
-        pieceRepository.saveAll(boardId, board.getPieces());
-    }
-
-    private GameStateDto getGameStateDto(Board board) {
-        return GameStateDto.from(board);
+        return getFinalResultDto(gameRepository.findBoardByBoardId(boardId));
     }
 
     private ResultDto getResultDto(Board board) {

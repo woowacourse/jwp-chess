@@ -122,7 +122,7 @@ function toggleState(state) {
     document.getElementById('white-message').innerHTML = '';
     document.getElementById('black-message').innerHTML = '';
     end = state.end;
-    if (end === 'true') {
+    if (end) {
         disableLoadGame();
         return;
     }
@@ -146,7 +146,7 @@ function updateResult(result) {
 }
 
 function checkEnd(state) {
-    if (state.end === 'true') {
+    if (state.end) {
         fetchFinalResult();
     }
 }
@@ -197,8 +197,8 @@ window.onload = async function () {
 
 function fetchNewChess() {
     let roomId = document.getElementById("room-id").value;
-    fetch('http://localhost:8080/rooms/' + roomId + '?command=start', {
-        method: 'GET',
+    fetch('http://localhost:8080/rooms/' + roomId + '/new', {
+        method: 'POST',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         },
@@ -220,7 +220,7 @@ function fetchLoadChess() {
         return;
     }
     let roomId = document.getElementById("room-id").value;
-    fetch('http://localhost:8080/rooms/' + roomId + '?command=load', {
+    fetch('http://localhost:8080/boards?roomId=' + roomId, {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -238,8 +238,8 @@ function fetchLoadChess() {
 
 function fetchMove(source, target) {
     let boardId = document.getElementById("board-id").value;
-    fetch('http://localhost:8080/boards/' + boardId + '?command=move', {
-        method: 'POST',
+    fetch('http://localhost:8080/boards/' + boardId, {
+        method: 'PATCH',
         body: JSON.stringify({
             source: source,
             target: target
@@ -257,6 +257,7 @@ function fetchMove(source, target) {
             initPieces(res.pieces);
             checkEnd(res.state);
         })
+        .then(res => fetchResult())
         .catch(err => {
             showErrorMessage(err.message);
             resetSourceAndTarget();
@@ -272,7 +273,7 @@ function fetchResult() {
         return;
     }
     let boardId = document.getElementById("board-id").value;
-    fetch('http://localhost:8080/boards/' + boardId + '?command=result', {
+    fetch('http://localhost:8080/boards/' + boardId + '/result', {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -284,7 +285,7 @@ function fetchResult() {
 
 function fetchFinalResult() {
     let boardId = document.getElementById("board-id").value;
-    fetch('http://localhost:8080/boards/' + boardId + '?command=end', {
+    fetch('http://localhost:8080/boards/' + boardId + '/end', {
         method: 'GET',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',

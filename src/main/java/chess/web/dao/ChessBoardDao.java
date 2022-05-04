@@ -8,7 +8,13 @@ public interface ChessBoardDao {
 
     void save(Position position, Piece piece);
 
+    void saveById(int id, Position position, Piece piece);
+
     void deleteAll();
 
+    void deleteById(int id);
+
     Map<Position, Piece> findAll();
+
+    Map<Position, Piece> findById(int id);
 }

@@ -11,24 +11,35 @@
 <body>
 <div id="app">
   <h1>♟️체스</h1>
+  <section id="chess-game-list">
+    <h1>체스게임 리스트</h1>
+    <div>
+        방제목: <input type="text" name="roomName" id="room-name">
+        비밀번호: <input type="password" name="password" id="room-password">
+        <button class="create-room" onclick="createGameButton()">생성하기</button>
+    </div>
+    <br/>
 
-  <table class="select">
-    <thead>
-    <tr>
-      <th colspan=2">아래 2개 중 선택하세요.</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td>
-        <a href="/start">새 게임</a>
-      </td>
-      <td>
-        <a href="/play">이전 게임 이어서 하기</a>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+    <template>
+      <tr>
+        <td></td>
+        <td><a href=""></a></td>
+      </tr>
+    </template>
+
+    <table class="chess-room-list">
+      <thead>
+      <tr>
+        <td>번호</td>
+        <td>제목</td>
+        <td>삭제하기</td>
+      </tr>
+      </thead>
+      <tbody class="tbody-list">
+      </tbody>
+    </table>
+  </section>
+  <hr />
 
 </div>
 </body>

@@ -7,13 +7,18 @@ import chess.domain.game.state.RunningGame;
 import chess.domain.piece.Piece;
 import chess.domain.piece.position.Position;
 import chess.domain.piece.property.Color;
+import chess.domain.room.RoomName;
+import chess.domain.room.RoomPassword;
 import chess.web.dao.ChessBoardDao;
 import chess.web.dao.PlayerDao;
+import chess.web.dao.RoomDao;
+import chess.web.dto.CreateRoomDto;
 import chess.web.dto.MoveDto;
-import chess.web.dto.MoveResultDto;
 import chess.web.dto.PlayResultDto;
+import chess.web.dto.RoomDto;
 import chess.web.dto.ScoreDto;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
@@ -22,84 +27,109 @@ public class ChessGameService {
 
     private final ChessBoardDao chessBoardDao;
     private final PlayerDao playerDao;
+    private final RoomDao roomDao;
 
-    public ChessGameService(ChessBoardDao chessBoardDao, PlayerDao playerDao) {
+    public ChessGameService(ChessBoardDao chessBoardDao, PlayerDao playerDao, RoomDao roomDao) {
         this.chessBoardDao = chessBoardDao;
         this.playerDao = playerDao;
+        this.roomDao = roomDao;
     }
 
-    public ChessGame start() {
+    public ChessGame start(int id) {
         ChessGame chessGame = new ChessGame();
         chessGame.start();
 
-        removeAll();
-        saveAll(chessGame);
+        deleteById(id);
+        saveById(chessGame, id);
 
         return chessGame;
     }
 
-    public MoveResultDto move(MoveDto moveDto) {
-        ChessGame chessGame = getChessGame();
+    public PlayResultDto move(MoveDto moveDto) {
+        final int id = moveDto.getId();
+        ChessGame chessGame = getOneChessGame(id);
         String turn = chessGame.getTurn();
 
         chessGame.move(Position.of(moveDto.getSource()), Position.of(moveDto.getTarget()));
+        Map<Position, Piece> board = chessGame.getBoard();
         if (isChessGameEnd(chessGame)) {
-            return MoveResultDto.of(true, turn);
-        }
-        removeAll();
-        saveAll(chessGame);
-
-        return MoveResultDto.of(false, null);
-    }
-
-    public PlayResultDto play() {
-        if (findAllBoard().isEmpty()) {
-            start();
+            return PlayResultDto.of(toBoardDto(board), turn, isChessGameEnd(chessGame));
         }
 
-        Map<Position, Piece> board = findAllBoard();
-        Map<String, Piece> boardDto = new HashMap<>();
-        for (Position position : board.keySet()) {
-            Piece piece = board.get(position);
-            boardDto.put(position.toString(), piece);
+        deleteById(id);
+        saveById(chessGame, id);
+        return PlayResultDto.of(toBoardDto(board), findOneTurn(id).name(), isChessGameEnd(chessGame));
+    }
+
+    public PlayResultDto play(int id) {
+        if (findOneBoard(id).isEmpty()) {
+            start(id);
         }
-
-        return PlayResultDto.of(boardDto, findTurn().name());
+        return PlayResultDto.of(toBoardDto(findOneBoard(id)), findOneTurn(id).name(), false);
     }
 
-    private void removeAll() {
-        chessBoardDao.deleteAll();
-        playerDao.deleteAll();
+    public ScoreDto status(int id) {
+        ChessBoard board = ChessBoard.of(findOneBoard(id));
+        Map<Color, Double> score = board.computeScore();
+        deleteById(id);
+        return new ScoreDto(score.get(Color.WHITE), score.get(Color.BLACK));
     }
 
-    private void saveAll(ChessGame chessGame) {
-        Map<Position, Piece> chessBoard = chessGame.getBoard();
-        for (Position position : chessBoard.keySet()) {
-            chessBoardDao.save(position, chessBoard.get(position));
-        }
-        playerDao.save(Color.of(chessGame.getTurn()));
+    public RoomDto createRoom(CreateRoomDto createRoomDto) {
+        String name = createRoomDto.getRoomName();
+        String password = createRoomDto.getPassword();
+        int roomNumber = roomDao.save(RoomName.of(name), RoomPassword.of(password));
+
+        return RoomDto.of(roomNumber, RoomName.of(name));
     }
 
-    public ChessGame getChessGame() {
-        return ChessGame.of(new RunningGame(ChessBoard.of(findAllBoard()), findTurn()));
+    public List<RoomDto> loadChessGames() {
+        return roomDao.findAll();
     }
 
-    private Map<Position, Piece> findAllBoard() {
-        return chessBoardDao.findAll();
+    public ChessGame getOneChessGame(int id) {
+        return ChessGame.of(new RunningGame(ChessBoard.of(findOneBoard(id)), findOneTurn(id)));
     }
 
-    private Player findTurn() {
-        return playerDao.getPlayer();
+    private Map<Position, Piece> findOneBoard(int id) {
+        return chessBoardDao.findById(id);
+    }
+
+    private Player findOneTurn(int id) {
+        return playerDao.findById(id);
     }
 
     private boolean isChessGameEnd(ChessGame chessGame) {
         return chessGame.isFinished();
     }
 
-    public ScoreDto status() {
-        ChessBoard board = ChessBoard.of(findAllBoard());
-        Map<Color, Double> score = board.computeScore();
-        removeAll();
-        return new ScoreDto(score.get(Color.WHITE), score.get(Color.BLACK));
+    private Map<String, Piece> toBoardDto(Map<Position, Piece> board) {
+        Map<String, Piece> boardDto = new HashMap<>();
+        for (Position position : board.keySet()) {
+            Piece piece = board.get(position);
+            boardDto.put(position.toString(), piece);
+        }
+        return boardDto;
+    }
+
+    private void deleteById(int id) {
+        chessBoardDao.deleteById(id);
+        playerDao.deleteById(id);
+    }
+
+    private void saveById(ChessGame chessGame, int id) {
+        Map<Position, Piece> chessBoard = chessGame.getBoard();
+        for (Position position : chessBoard.keySet()) {
+            chessBoardDao.saveById(id, position, chessBoard.get(position));
+        }
+        playerDao.saveById(id, Color.of(chessGame.getTurn()));
+    }
+
+    public void deleteRoomById(int id) {
+        roomDao.deleteById(id);
+    }
+
+    public boolean confirmPassword(int id, String password) {
+        return roomDao.confirmPassword(id, password);
     }
 }

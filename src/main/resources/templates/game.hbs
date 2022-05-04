@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>체스 게임</title>
+    <link rel="stylesheet" href="/src/index.css">
+    <script src="/src/game.js"></script>
+</head>
+
+<body>
+<div id="app">
+  <h1>♟️체스</h1>
+  <button class="lobby styled" type="button" onclick="lobby()">로비로 나가기</button>
+  <button class="newGame styled" type="button" onclick="start()">새게임</button>
+
+  <table class="turnInfo">
+    <thead>
+    <tr>
+      <th>현재 턴</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <section class="chess-ui">
+
+    <div class="black-square" id="A8" onclick='move("A8")'></div>
+    <div class="white-square" id="B8" onclick='move("B8")'></div>
+    <div class="black-square" id="C8" onclick='move("C8")'></div>
+    <div class="white-square" id="D8" onclick='move("D8")'></div>
+    <div class="black-square" id="E8" onclick='move("E8")'></div>
+    <div class="white-square" id="F8" onclick='move("F8")'></div>
+    <div class="black-square" id="G8" onclick='move("G8")'></div>
+    <div class="white-square" id="H8" onclick='move("H8")'></div>
+
+    <div class="white-square" id="A7" onclick='move("A7")'></div>
+    <div class="black-square" id="B7" onclick='move("B7")'></div>
+    <div class="white-square" id="C7" onclick='move("C7")'></div>
+    <div class="black-square" id="D7" onclick='move("D7")'></div>
+    <div class="white-square" id="E7" onclick='move("E7")'></div>
+    <div class="black-square" id="F7" onclick='move("F7")'></div>
+    <div class="white-square" id="G7" onclick='move("G7")'></div>
+    <div class="black-square" id="H7" onclick='move("H7")'></div>
+
+    <div class="black-square" id="A6" onclick='move("A6")'></div>
+    <div class="white-square" id="B6" onclick='move("B6")'></div>
+    <div class="black-square" id="C6" onclick='move("C6")'></div>
+    <div class="white-square" id="D6" onclick='move("D6")'></div>
+    <div class="black-square" id="E6" onclick='move("E6")'></div>
+    <div class="white-square" id="F6" onclick='move("F6")'></div>
+    <div class="black-square" id="G6" onclick='move("G6")'></div>
+    <div class="white-square" id="H6" onclick='move("H6")'></div>
+
+    <div class="white-square" id="A5" onclick='move("A5")'></div>
+    <div class="black-square" id="B5" onclick='move("B5")'></div>
+    <div class="white-square" id="C5" onclick='move("C5")'></div>
+    <div class="black-square" id="D5" onclick='move("D5")'></div>
+    <div class="white-square" id="E5" onclick='move("E5")'></div>
+    <div class="black-square" id="F5" onclick='move("F5")'></div>
+    <div class="white-square" id="G5" onclick='move("G5")'></div>
+    <div class="black-square" id="H5" onclick='move("H5")'></div>
+
+    <div class="black-square" id="A4" onclick='move("A4")'></div>
+    <div class="white-square" id="B4" onclick='move("B4")'></div>
+    <div class="black-square" id="C4" onclick='move("C4")'></div>
+    <div class="white-square" id="D4" onclick='move("D4")'></div>
+    <div class="black-square" id="E4" onclick='move("E4")'></div>
+    <div class="white-square" id="F4" onclick='move("F4")'></div>
+    <div class="black-square" id="G4" onclick='move("G4")'></div>
+    <div class="white-square" id="H4" onclick='move("H4")'></div>
+
+    <div class="white-square" id="A3" onclick='move("A3")'></div>
+    <div class="black-square" id="B3" onclick='move("B3")'></div>
+    <div class="white-square" id="C3" onclick='move("C3")'></div>
+    <div class="black-square" id="D3" onclick='move("D3")'></div>
+    <div class="white-square" id="E3" onclick='move("E3")'></div>
+    <div class="black-square" id="F3" onclick='move("F3")'></div>
+    <div class="white-square" id="G3" onclick='move("G3")'></div>
+    <div class="black-square" id="H3" onclick='move("H3")'></div>
+
+    <div class="black-square" id="A2" onclick='move("A2")'></div>
+    <div class="white-square" id="B2" onclick='move("B2")'></div>
+    <div class="black-square" id="C2" onclick='move("C2")'></div>
+    <div class="white-square" id="D2" onclick='move("D2")'></div>
+    <div class="black-square" id="E2" onclick='move("E2")'></div>
+    <div class="white-square" id="F2" onclick='move("F2")'></div>
+    <div class="black-square" id="G2" onclick='move("G2")'></div>
+    <div class="white-square" id="H2" onclick='move("H2")'></div>
+
+    <div class="white-square" id="A1" onclick='move("A1")'></div>
+    <div class="black-square" id="B1" onclick='move("B1")'></div>
+    <div class="white-square" id="C1" onclick='move("C1")'></div>
+    <div class="black-square" id="D1" onclick='move("D1")'></div>
+    <div class="white-square" id="E1" onclick='move("E1")'></div>
+    <div class="black-square" id="F1" onclick='move("F1")'></div>
+    <div class="white-square" id="G1" onclick='move("G1")'></div>
+    <div class="black-square" id="H1" onclick='move("H1")'></div>
+
+  </section>
+</div>
+</body>
+
+</html>

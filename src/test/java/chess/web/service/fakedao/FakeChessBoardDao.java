@@ -16,12 +16,27 @@ public class FakeChessBoardDao implements ChessBoardDao {
     }
 
     @Override
+    public void saveById(int id, Position position, Piece piece) {
+
+    }
+
+    @Override
     public void deleteAll() {
         repository.clear();
     }
 
     @Override
+    public void deleteById(int id) {
+
+    }
+
+    @Override
     public Map<Position, Piece> findAll() {
         return repository;
+    }
+
+    @Override
+    public Map<Position, Piece> findById(int id) {
+        return null;
     }
 }

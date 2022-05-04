@@ -18,6 +18,11 @@ public class FakePlayerDao implements PlayerDao {
     }
 
     @Override
+    public void saveById(int id, Color of) {
+
+    }
+
+    @Override
     public Player getPlayer() {
         return Player.of(repository.get(0));
     }
@@ -25,5 +30,15 @@ public class FakePlayerDao implements PlayerDao {
     @Override
     public void deleteAll() {
         repository.clear();
+    }
+
+    @Override
+    public Player findById(int id) {
+        return null;
+    }
+
+    @Override
+    public void deleteById(int id) {
+
     }
 }

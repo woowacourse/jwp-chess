@@ -25,6 +25,10 @@ public class Game {
         this.id = id;
     }
 
+    public boolean isSamePassword(String password) {
+        return this.password.equals(password);
+    }
+
     public int getId() {
         return id;
     }

@@ -43,6 +43,14 @@ public class Square {
         return squares;
     }
 
+    public static ChessBoard toBoard(List<Square> squares) {
+        Map<Position, Piece> pieces = squares.stream()
+                .collect(Collectors.toMap(
+                        square -> Position.of(square.position),
+                        square -> Piece.of(square.color, square.symbol)));
+        return new ChessBoard(pieces);
+    }
+
     public String getPosition() {
         return position;
     }

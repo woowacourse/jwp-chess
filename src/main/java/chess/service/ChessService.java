@@ -52,8 +52,7 @@ public class ChessService {
     }
 
     public String selectWinner(int gameId) {
-        BoardDto boardDto = BoardDto.of(boardDao.findById(gameId));
-        ChessBoard chessBoard = boardDto.toBoard();
+        ChessBoard chessBoard = Square.toBoard((boardDao.findById(gameId)));
 
         if (chessBoard.isEnd()) {
             return chessBoard.getWinner().name();
@@ -66,8 +65,7 @@ public class ChessService {
     }
 
     public StatusDto selectStatus(int gameId) {
-        BoardDto boardDto = BoardDto.of(boardDao.findById(gameId));
-        ChessBoard chessBoard = boardDto.toBoard();
+        ChessBoard chessBoard = Square.toBoard((boardDao.findById(gameId)));
 
         ChessGame chessGame = new ChessGame(gameDao.findState(gameId), chessBoard);
         Map<Color, Double> scores = chessGame.calculateScore();
@@ -77,9 +75,7 @@ public class ChessService {
 
     @Transactional
     public void movePiece(int gameId, String from, String to) {
-        BoardDto boardDto = BoardDto.of(boardDao.findById(gameId));
-        ChessBoard chessBoard = boardDto.toBoard();
-
+        ChessBoard chessBoard = Square.toBoard((boardDao.findById(gameId)));
         ChessGame chessGame = new ChessGame(gameDao.findState(gameId), chessBoard);
         playChessGame(from, to, chessGame);
 
@@ -100,10 +96,10 @@ public class ChessService {
 
     @Transactional
     public void deleteGame(int gameId, String password) {
-        String value = gameDao.findById(gameId).getPassword();
+        Game game = gameDao.findById(gameId);
         State state = gameDao.findState(gameId);
         validateState(state);
-        if (value.equals(password)) {
+        if (game.isSamePassword(password)) {
             gameDao.delete(gameId);
             return;
         }

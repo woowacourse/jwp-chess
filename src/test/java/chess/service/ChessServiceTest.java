@@ -19,6 +19,7 @@ import chess.dto.GameDto;
 import chess.dto.PieceDto;
 import chess.dto.RoomDto;
 import chess.dto.StatusDto;
+import chess.entity.Square;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,8 +113,8 @@ public class ChessServiceTest {
     @DisplayName("보드에서 말을 움직일 수 있다.")
     void movePiece() {
         chessService.movePiece(id, "a2", "a3");
-        BoardDto boardDto = BoardDto.of(boardDao.findById(id));
-        ChessBoard chessBoard = boardDto.toBoard();
+        ChessBoard chessBoard = Square.toBoard(boardDao.findById(id));
+
         Piece piece = chessBoard.selectPiece(Position.of("a3"));
 
         assertThat(piece).isEqualTo(Piece.of(Color.WHITE, Symbol.PAWN));

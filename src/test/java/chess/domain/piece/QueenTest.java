@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.piece.role.Queen;
 import chess.domain.piece.role.Role;
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
+
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,7 +40,7 @@ class QueenTest {
     void targetNotOn_VerticalHorizontalDiagonal_throwException(Position source, Position target) {
         Role queen = new Queen();
         assertThatThrownBy(() -> queen.checkMovable(source, target))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessageContaining("퀸");
     }
 

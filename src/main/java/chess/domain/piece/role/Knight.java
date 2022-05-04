@@ -1,6 +1,7 @@
 package chess.domain.piece.role;
 
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
 
 public final class Knight implements Role {
 
@@ -19,7 +20,7 @@ public final class Knight implements Role {
         int columnGap = source.columnGap(target);
         int rowGap = source.rowGap(target);
         if (!(moveVerticalFirstThenDiagonal(columnGap, rowGap) || moveHorizontalFirstThenDiagonal(columnGap, rowGap))) {
-            throw new IllegalArgumentException(RULE);
+            throw new IllegalChessRuleException(RULE);
         }
     }
 

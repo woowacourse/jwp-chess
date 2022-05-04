@@ -1,40 +1,41 @@
 package chess.web;
 
-import chess.service.GameService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import chess.service.ChessGameService;
 import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
 import chess.web.dto.ResultDto;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
+@RestController
 @RequestMapping("/boards")
 public class BoardController {
 
-    private final GameService gameService;
+    private final ChessGameService chessGameService;
 
-    public BoardController(GameService gameService) {
-        this.gameService = gameService;
+    public BoardController(ChessGameService chessGameService) {
+        this.chessGameService = chessGameService;
     }
 
-    @PostMapping(value = "/{boardId}", params = "command=move")
+    @PutMapping("/{boardId}")
     public ResponseEntity<BoardDto> movePiece(@PathVariable int boardId, @RequestBody CommendDto commendDto) {
-        gameService.move(boardId, commendDto);
-        return ResponseEntity.ok(gameService.gameStateAndPieces(boardId));
+        chessGameService.move(boardId, commendDto);
+        return ResponseEntity.ok(chessGameService.getBoardDtoByBoardId(boardId));
     }
 
-    @GetMapping(value = "/{boardId}", params = "command=result")
+    @GetMapping("/{boardId}/result")
     public ResponseEntity<ResultDto> result(@PathVariable int boardId) {
-        return ResponseEntity.ok(gameService.gameResult(boardId));
+        return ResponseEntity.ok(chessGameService.getResult(boardId));
     }
 
-    @GetMapping(value = "/{boardId}", params = "command=end")
+    @PutMapping("/{boardId}/end")
     public ResponseEntity<ResultDto> end(@PathVariable int boardId) {
-        return ResponseEntity.ok(gameService.gameFinalResult(boardId));
+        return ResponseEntity.ok(chessGameService.getFinalResult(boardId));
     }
 }

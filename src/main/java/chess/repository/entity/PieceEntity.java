@@ -1,23 +1,23 @@
-package chess.web.dto;
+package chess.repository.entity;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
 import java.util.Objects;
 
-public class PieceDto {
+public class PieceEntity {
 
     private final String position;
     private final String color;
     private final String role;
 
-    public PieceDto(String position, String color, String symbol) {
+    public PieceEntity(String position, String color, String symbol) {
         this.position = position.toLowerCase();
         this.color = color.toLowerCase();
         this.role = symbol.toLowerCase();
     }
 
-    public static PieceDto from(Position position, Piece piece) {
-        return new PieceDto(position.name(), piece.getColor().name(), piece.symbol());
+    public static PieceEntity from(Position position, Piece piece) {
+        return new PieceEntity(position.name(), piece.getColor().name(), piece.symbol());
     }
 
     public String getPosition() {
@@ -40,8 +40,8 @@ public class PieceDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PieceDto pieceDto = (PieceDto) o;
-        return Objects.equals(color, pieceDto.color) && Objects.equals(role, pieceDto.role);
+        PieceEntity pieceEntity = (PieceEntity) o;
+        return Objects.equals(color, pieceEntity.color) && Objects.equals(role, pieceEntity.role);
     }
 
     @Override

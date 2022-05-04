@@ -58,5 +58,10 @@ button {
 }
 
 .input-button {
-    width: 15%;
+    width: 30%;
+}
+
+.room-names a {
+    color: white;
+    text-decoration: none;
 }

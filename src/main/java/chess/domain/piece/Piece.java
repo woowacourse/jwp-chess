@@ -3,6 +3,8 @@ package chess.domain.piece;
 import chess.domain.Color;
 import chess.domain.piece.role.Role;
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
+
 import java.util.Objects;
 
 public final class Piece {
@@ -53,7 +55,7 @@ public final class Piece {
 
     private void checkPawnDirection(Position source, Position target) {
         if (!(isRightBlackDirection(source, target) || isRightWhiteDirection(source, target))) {
-            throw new IllegalArgumentException(PAWN_WRONG_DIRECTION);
+            throw new IllegalChessRuleException(PAWN_WRONG_DIRECTION);
         }
     }
 

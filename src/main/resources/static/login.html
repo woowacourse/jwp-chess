@@ -6,20 +6,26 @@
     <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-title-wrap">
-            <img src="images/white_q.png" class="icon-image">
-            <img src="images/white_n.png" class="icon-image">
-            <img src="images/white_p.png" class="icon-image">
-            <h2 class="login-title">Welcome Chess</h2>
-            <img src="images/black_k.png" class="icon-image">
-        </div>
-        <form action="http://localhost:8080/rooms" onsubmit="return checkNameNotEmpty();" method="post">
-            <input type="text" id="name" name="name" placeholder="방 이름" class="input-name">
-            <button type="submit" class="input-button">입장</button>
-        </form>
-        <span id="error-message"></span>
+<div class="login-container">
+    <div class="login-title-wrap">
+        <img src="images/white_q.png" class="icon-image">
+        <img src="images/white_n.png" class="icon-image">
+        <img src="images/white_p.png" class="icon-image">
+        <h2 class="login-title">Welcome Chess</h2>
+        <img src="images/black_k.png" class="icon-image">
     </div>
+    <form action="http://localhost:8080/rooms" onsubmit="return checkNameNotEmpty();" method="post">
+        <input type="text" id="name" name="name" placeholder="방 이름" class="input-name" required>
+        <input type="password" id="password" name="password" placeholder="비밀번호" class="input-name" required>
+        <br>
+        <button type="submit" class="input-button">생성</button>
+    </form>
+    <span id="error-message"></span>
+
+    <br>
+    <button onclick="fetchRoomNames()">방 목록</button>
+    <div id="roomNames" class="room-names"></div>
+</div>
 </body>
 <script type="text/javascript">
     function checkNameNotEmpty() {
@@ -29,6 +35,70 @@
             return false;
         }
         return true;
+    }
+
+    function fetchRoomNames() {
+        fetch("http://localhost:8080/api/rooms", {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then(res => res.json())
+            .then(json => {
+                let roomContainer = document.getElementById("roomNames");
+                roomContainer.innerHTML = "";
+                for (let i = 0; i < json.length; i++) {
+                    let nameWrap = document.createElement("p");
+                    roomContainer.appendChild(nameWrap);
+
+                    let roomName = document.createElement("a");
+                    roomName.innerText = json[i].name;
+
+                    if (json[i].end === true) {
+                        roomName.innerText += ' (종료된 게임)';
+                    }
+
+                    roomName.href = "http://localhost:8080/rooms/" + json[i].id;
+                    nameWrap.appendChild(roomName);
+
+                    let passwordInput = document.createElement("input");
+                    passwordInput.type = 'password';
+                    passwordInput.id = 'password' + json[i].id;
+                    passwordInput.placeholder = '비밀번호';
+                    roomContainer.appendChild(passwordInput);
+
+                    let deleteBtn = document.createElement("button");
+                    deleteBtn.innerHTML = '삭제';
+                    deleteBtn.onclick = function () {
+                        fetchDeleteRoom(json[i].id, passwordInput.value)
+                    };
+                    roomContainer.appendChild(deleteBtn);
+                }
+            });
+
+        function fetchDeleteRoom(roomId, password) {
+            fetch("http://localhost:8080/api/rooms/" + roomId, {
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                },
+                body: 'password=' + password
+            })
+                .then(res => {
+                        let errorMessage = document.getElementById('error-message');
+                        errorMessage.innerHTML = "";
+
+                        if (!res.ok) {
+                            res.json().then(function (err) {
+                                    errorMessage.innerHTML = err.message;
+                                }
+                            );
+                        }
+                        fetchRoomNames();
+                    }
+                )
+        }
     }
 </script>
 

@@ -1,7 +1,8 @@
 create table room
 (
     id   int not null auto_increment primary key,
-    name varchar(16) not null
+    name varchar(16) not null,
+    password varchar(16) not null
 );
 
 create table board
@@ -9,7 +10,7 @@ create table board
     id        int not null auto_increment primary key,
     room_id int not null,
     turn      varchar(5) not null,
-    foreign key (room_id) references room(id)
+    foreign key (room_id) references room(id) on delete cascade
 );
 
 create table piece

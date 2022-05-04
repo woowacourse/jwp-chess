@@ -1,71 +1,82 @@
 package chess.web;
 
-import org.junit.jupiter.api.BeforeEach;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.Map;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
-import chess.configuration.RepositoryConfiguration;
-import chess.service.GameService;
-import chess.service.RoomService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import chess.domain.Color;
+import chess.domain.Result;
+import chess.domain.board.Board;
+import chess.domain.piece.Piece;
+import chess.domain.piece.role.Pawn;
+import chess.domain.position.Position;
+import chess.service.ChessGameService;
+import chess.web.dto.BoardDto;
 import chess.web.dto.CommendDto;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
+import chess.web.dto.ResultDto;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(RepositoryConfiguration.class)
-class BoardControllerTest {
+@WebMvcTest(BoardController.class)
+public class BoardControllerTest {
 
-	@LocalServerPort
-	int port;
-
+	@MockBean
+	private ChessGameService chessGameService;
 	@Autowired
-	ApplicationContext context;
-
+	private MockMvc mockMvc;
 	@Autowired
-	private RoomService roomService;
-	@Autowired
-	private GameService gameService;
-	private int boardId;
-
-	@BeforeEach
-	void setUp() {
-		RestAssured.port = port;
-		int roomId = (int) roomService.create("summer").getId();
-		boardId = gameService.startNewGame(roomId).getBoardId();
-	}
+	private ObjectMapper objectMapper;
 
 	@Test
 	@DisplayName("체스 말을 움직이면 200응답을 받는다.")
-	void move() {
-		RestAssured.given().log().all()
-			.contentType(ContentType.JSON)
-			.body(new CommendDto("a2", "a3"))
-			.when().post("/boards/" + boardId + "/?command=move")
-			.then().log().all()
-			.statusCode(HttpStatus.OK.value());
+	void move() throws Exception {
+		String command = objectMapper.writeValueAsString(
+			new CommendDto("a2", "a3"));
+		BoardDto boardDto = new BoardDto(1, new Board(
+			() -> Map.of(Position.of("a1"), new Piece(Color.WHITE, new Pawn()))));
+		String board = objectMapper.writeValueAsString(boardDto);
+
+		given(chessGameService.getBoardDtoByBoardId(1))
+			.willReturn(boardDto);
+
+		mockMvc.perform(put("/boards/" + 1)
+				.content(command)
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(content().json(board));
 	}
 
 	@Test
 	@DisplayName("점수 갱신 요청이 누르면 200응답을 받는다.")
-	void result() {
-		RestAssured.given().log().all()
-			.when().get("/boards/" + boardId + "/?command=result")
-			.then().log().all()
-			.statusCode(HttpStatus.OK.value());
+	void result() throws Exception {
+		ResultDto resultDto = new ResultDto(38, 37, Map.of(Result.WIN, Color.WHITE));
+		given(chessGameService.getResult(1))
+			.willReturn(resultDto);
+
+		mockMvc.perform(get("/boards/" + 1 + "/result"))
+			.andExpect(status().isOk())
+			.andExpect(content().json(objectMapper.writeValueAsString(resultDto)));
 	}
 
 	@Test
 	@DisplayName("게임 종료 요청이 오면 200응답을 받는다.")
-	void end() {
-		RestAssured.given().log().all()
-			.when().get("/boards/" + boardId + "/?command=end")
-			.then().log().all()
-			.statusCode(HttpStatus.OK.value());
+	void end() throws Exception {
+		ResultDto resultDto = new ResultDto(38, 37, Map.of(Result.WIN, Color.WHITE));
+		given(chessGameService.getFinalResult(1))
+			.willReturn(resultDto);
+
+		mockMvc.perform(put("/boards/" + 1 + "/end"))
+			.andExpect(status().isOk())
+			.andExpect(content().json(objectMapper.writeValueAsString(resultDto)));
 	}
 }

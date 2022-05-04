@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.piece.role.Knight;
 import chess.domain.piece.role.Role;
 import chess.domain.position.Position;
+import chess.exception.IllegalChessRuleException;
+
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,7 +38,7 @@ class KnightTest {
     void targetNotCrossOneStepThenDiagonal_throwException(Position source, Position target) {
         Role knight = new Knight();
         assertThatThrownBy(() -> knight.checkMovable(source, target))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalChessRuleException.class)
                 .hasMessageContaining("나이트");
     }
 

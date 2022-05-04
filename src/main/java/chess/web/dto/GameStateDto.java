@@ -1,27 +1,19 @@
 package chess.web.dto;
 
-import chess.domain.Color;
-import chess.domain.board.Board;
-
 public class GameStateDto {
+	private final String end;
+	private final String turn;
 
-    private final String end;
-    private final String turn;
+	public GameStateDto(String end, String turn) {
+		this.end = end;
+		this.turn = turn;
+	}
 
-    private GameStateDto(boolean end, Color turn) {
-        this.end = String.valueOf(end);
-        this.turn = turn.name().toLowerCase();
-    }
+	public String getEnd() {
+		return end;
+	}
 
-    public static GameStateDto from(Board board) {
-        return new GameStateDto(board.isEnd(), board.getTurn());
-    }
-
-    public String getEnd() {
-        return end;
-    }
-
-    public String getTurn() {
-        return turn;
-    }
+	public String getTurn() {
+		return turn;
+	}
 }

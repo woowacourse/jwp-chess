@@ -5,6 +5,8 @@ import chess.domain.board.PiecesSetup;
 import chess.domain.position.Column;
 import chess.domain.position.Position;
 import chess.domain.position.Row;
+import chess.exception.IllegalChessRuleException;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +50,7 @@ public final class Pieces {
                 .stream()
                 .filter(Piece::isKing)
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new IllegalChessRuleException("킹이 존재하지 않습니다."));
     }
 
     public double calculateBasicScore(Color color) {

@@ -79,6 +79,6 @@ public final class OutputView {
 
     public static void printFinalResult(Board board) {
         printScore(board);
-        System.out.println(board.winnersColor().text() + "이 승리했습니다.");
+        System.out.println(board.getWinnerColor().text() + "이 승리했습니다.");
     }
 }

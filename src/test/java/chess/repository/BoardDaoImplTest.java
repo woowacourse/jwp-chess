@@ -6,7 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.RegularRuleSetup;
-import chess.web.dto.GameStateDto;
+import chess.domain.GameState;
+import chess.repository.entity.RoomEntity;
+
 import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,28 +18,28 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @JdbcTest
-public class BoardRepositoryImplTest {
+public class BoardDaoImplTest {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
     @Autowired
     private DataSource dataSource;
 
-    private BoardRepository boardRepository;
+    private BoardDao boardDao;
     int roomId;
 
     @BeforeEach
     void init() {
-        boardRepository = new BoardRepositoryImpl(dataSource, jdbcTemplate);
-        RoomRepository roomRepository = new RoomRepositoryImpl(dataSource, jdbcTemplate);
-        roomId = roomRepository.save("summer");
+        boardDao = new BoardDaoImpl(dataSource, jdbcTemplate);
+        RoomDao roomDao = new RoomDaoImpl(dataSource, jdbcTemplate);
+        roomId = roomDao.save(new RoomEntity("summer", "summer"));
     }
 
     @DisplayName("체스판 저장")
     @Test
     void save() {
         Board board = new Board(new RegularRuleSetup());
-        int id = boardRepository.save(roomId, GameStateDto.from(board));
+        int id = boardDao.save(roomId, GameState.from(board));
         assertThat(id).isGreaterThan(0);
     }
 
@@ -45,8 +47,8 @@ public class BoardRepositoryImplTest {
     @DisplayName("boardIdfh 차례를 조회한다.")
     void getTurn() {
         Board board = new Board(new RegularRuleSetup());
-        int boardId = boardRepository.save(roomId, GameStateDto.from(board));
-        Color findTurn = boardRepository.getTurn(boardId);
+        int boardId = boardDao.save(roomId, GameState.from(board));
+        Color findTurn = boardDao.getTurn(boardId);
         assertThat(findTurn).isEqualTo(board.getTurn());
     }
 
@@ -54,36 +56,36 @@ public class BoardRepositoryImplTest {
     @DisplayName("roomId로 board 조회")
     void getBoardByRoomId() {
         Board board = new Board(new RegularRuleSetup());
-        int boardId = boardRepository.save(roomId, GameStateDto.from(board));
-        int findBoardId = boardRepository.getBoardIdByRoom(roomId);
+        int boardId = boardDao.save(roomId, GameState.from(board));
+        int findBoardId = boardDao.getBoardIdByRoom(roomId);
         assertThat(boardId).isEqualTo(findBoardId);
     }
 
     @Test
     @DisplayName("없는 roomId로 조회시 예외 발생")
     void getBoardByRoomIdException() {
-        assertThatThrownBy(() -> boardRepository.getBoardIdByRoom(roomId))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> boardDao.getBoardIdByRoom(roomId))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("새로운 turn을 업데이트")
     void updateTurn() {
         Board board = new Board(new RegularRuleSetup());
-        int boardId = boardRepository.save(roomId, GameStateDto.from(board));
+        int boardId = boardDao.save(roomId, GameState.from(board));
         board.loadTurn(Color.BLACK);
-        boardRepository.updateTurn(boardId, GameStateDto.from(board));
-        assertThat(board.getTurn()).isEqualTo(boardRepository.getTurn(boardId));
+        boardDao.updateTurn(boardId, GameState.from(board));
+        assertThat(board.getTurn()).isEqualTo(boardDao.getTurn(boardId));
     }
 
     @Test
     @DisplayName("roomId로 체스판을 삭제한다.")
     void deleteByRoomId() {
         Board board = new Board(new RegularRuleSetup());
-        boardRepository.save(roomId, GameStateDto.from(board));
-        boardRepository.deleteByRoom(roomId);
+        boardDao.save(roomId, GameState.from(board));
+        boardDao.deleteByRoom(roomId);
 
-        assertThatThrownBy(() -> boardRepository.getBoardIdByRoom(roomId))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> boardDao.getBoardIdByRoom(roomId))
+            .isInstanceOf(IllegalArgumentException.class);
     }
 }

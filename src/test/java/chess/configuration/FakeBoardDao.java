@@ -1,21 +1,21 @@
 package chess.configuration;
 
 import chess.domain.Color;
-import chess.repository.BoardRepository;
-import chess.web.dto.GameStateDto;
+import chess.repository.BoardDao;
+import chess.domain.GameState;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class FakeBoardRepository implements BoardRepository {
+public class FakeBoardDao implements BoardDao {
 
     private final Map<Integer, BoardData> database = new HashMap<>();
     private int autoIncrementId = 0;
 
     @Override
-    public int save(int roomId, GameStateDto gameStateDto) {
+    public int save(int roomId, GameState gameState) {
         autoIncrementId++;
-        database.put(autoIncrementId, new BoardData(roomId, gameStateDto.getTurn()));
+        database.put(autoIncrementId, new BoardData(roomId, gameState.getTurn()));
         return autoIncrementId;
     }
 
@@ -27,19 +27,19 @@ public class FakeBoardRepository implements BoardRepository {
     @Override
     public int getBoardIdByRoom(int roomId) {
         return findBoardId(roomId)
-                .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(IllegalArgumentException::new);
     }
 
     private Optional<Integer> findBoardId(int roomId) {
         return database.keySet().stream()
-                .filter(key -> database.get(key).getRoomId() == roomId)
-                .findAny();
+            .filter(key -> database.get(key).getRoomId() == roomId)
+            .findAny();
     }
 
     @Override
-    public void updateTurn(int boardId, GameStateDto gameStateDto) {
+    public void updateTurn(int boardId, GameState gameState) {
         BoardData board = database.get(boardId);
-        database.put(boardId, new BoardData(board.getRoomId(), gameStateDto.getTurn()));
+        database.put(boardId, new BoardData(board.getRoomId(), gameState.getTurn()));
     }
 
     @Override

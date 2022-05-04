@@ -12,16 +12,17 @@ import chess.model.piece.Piece;
 import chess.model.piece.PieceType;
 import chess.service.dto.BoardDto;
 import chess.service.dto.ChessGameDto;
-import chess.service.dto.GameRequest;
 import chess.service.dto.GameResultDto;
 import chess.service.dto.GamesDto;
 import chess.service.dto.PieceWithSquareDto;
 import chess.service.dto.StatusDto;
+import chess.web.controller.dto.MoveRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
+
     private final BoardDao boardDao;
     private final GameDao gameDao;
     private final PasswordEncoder passwordEncoder;
@@ -41,8 +42,7 @@ public class ChessService {
     }
 
     private ChessGameDto updateGame(ChessGame chessGame, Long id) {
-        ChessGameDto chessGameDto = new ChessGameDto(id, chessGame.getStatus().name(),
-            chessGame.getTurn().name());
+        ChessGameDto chessGameDto = ChessGameDto.of(chessGame, id);
         gameDao.update(chessGameDto);
         return chessGameDto;
     }
@@ -51,21 +51,14 @@ public class ChessService {
         return boardDao.getBoardByGameId(id);
     }
 
-    public ChessGameDto move(Long id, String from, String to) {
+    public ChessGameDto move(Long id, MoveRequest moveRequest) {
         ChessGame chessGame = getGameFromDao(id);
-        Square fromSquare = Square.of(from);
-        Square toSquare = Square.of(to);
+        Square fromSquare = Square.of(moveRequest.getFrom());
+        Square toSquare = Square.of(moveRequest.getTo());
         chessGame.move(fromSquare, toSquare);
-        boardDao.update(toPieceDto(toSquare, chessGame.findPieceBySquare(toSquare)), id);
-        boardDao.update(toPieceDto(fromSquare, chessGame.findPieceBySquare(fromSquare)), id);
-
+        boardDao.update(PieceWithSquareDto.of(toSquare, chessGame.findPieceBySquare(toSquare)), id);
+        boardDao.update(PieceWithSquareDto.of(fromSquare, chessGame.findPieceBySquare(fromSquare)), id);
         return updateGame(chessGame, id);
-    }
-
-    private PieceWithSquareDto toPieceDto(Square square, Piece piece) {
-        String squareName = square.getName();
-        String pieceName = PieceType.getName(piece);
-        return new PieceWithSquareDto(squareName, pieceName, piece.getColor().name());
     }
 
     public boolean isRunning(Long id) {
@@ -75,7 +68,8 @@ public class ChessService {
     private ChessGame getGameFromDao(Long id) {
         ChessGameDto game = gameDao.findById(id);
         BoardDto boardDto = getBoard(id);
-        return new ChessGame(new Board(boardDto), Color.valueOf(game.getTurn()), Status.valueOf(game.getStatus()));
+        return new ChessGame(new Board(boardDto), Color.valueOf(game.getTurn()),
+            Status.valueOf(game.getStatus()));
     }
 
     public boolean isGameEmpty(Long id) {
@@ -94,7 +88,9 @@ public class ChessService {
     public Long createGame(String name, String password) {
         String encodedPassword = passwordEncoder.encode(password);
         Long gameId = gameDao.createGame(name, encodedPassword);
-        initGame(gameId);
+        ChessGame chessGame = new ChessGame(new ChessInitializer(), Status.PLAYING);
+        boardDao.initBoard(gameId);
+        updateGame(chessGame, gameId);
         return gameId;
     }
 
@@ -102,11 +98,11 @@ public class ChessService {
         return getGameFromDao(id).getResult();
     }
 
-    public void deleteGame(GameRequest gameRequest) {
-        ChessGameDto chessGameDto = gameDao.findById(gameRequest.getId());
-        validatePassword(gameRequest.getPassword(), chessGameDto.getPassword());
-        validateRunningGame(gameRequest.getId());
-        gameDao.deleteGame(gameRequest.getId());
+    public void deleteGame(Long id, String password) {
+        ChessGameDto chessGameDto = gameDao.findById(id);
+        validatePassword(password, chessGameDto.getPassword());
+        validateRunningGame(id);
+        gameDao.deleteGame(id);
     }
 
     private void validateRunningGame(Long id) {

@@ -15,14 +15,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SpringGameDao implements GameDao {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ChessGameDto> chessGameDtoRowMapper = (resultSet, rowNum) -> new ChessGameDto(
+    private static final RowMapper<ChessGameDto> chessGameDtoRowMapper = (resultSet, rowNum) -> new ChessGameDto(
         resultSet.getLong("id"),
         resultSet.getString("name"),
         resultSet.getString("status"),
         resultSet.getString("turn"),
         resultSet.getString("password")
-        );
+    );
+
+    private final JdbcTemplate jdbcTemplate;
 
     public SpringGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -73,9 +74,9 @@ public class SpringGameDao implements GameDao {
     }
 
     @Override
-    public boolean existsById(Long gameId) {
+    public boolean existsById(Long id) {
         String sql = "SELECT COUNT(*) FROM game where id = ?";
-        return jdbcTemplate.queryForObject(sql, Long.class, gameId) == 1;
+        return jdbcTemplate.queryForObject(sql, Long.class, id) != 0;
     }
 
     @Override

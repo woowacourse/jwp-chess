@@ -1,6 +1,9 @@
 package chess.service.dto;
 
+import chess.model.ChessGame;
+
 public class ChessGameDto {
+
     private final String status;
     private final String turn;
     private Long id;
@@ -19,6 +22,10 @@ public class ChessGameDto {
         this.id = id;
         this.name = name;
         this.password = password;
+    }
+
+    public static ChessGameDto of(ChessGame chessGame, Long id) {
+        return new ChessGameDto(id, chessGame.getStatus().name(), chessGame.getTurn().name());
     }
 
     public String getName() {

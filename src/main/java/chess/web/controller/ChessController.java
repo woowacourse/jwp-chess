@@ -36,6 +36,7 @@ public class ChessController {
     @PostMapping("/game")
     public RedirectView createGame(@RequestParam String name, @RequestParam String password) {
         Long gameId = chessService.createGame(name.trim(), password);
+        chessService.initGame(gameId);
         return new RedirectView("/game/" + gameId);
     }
 }

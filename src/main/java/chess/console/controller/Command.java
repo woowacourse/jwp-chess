@@ -3,6 +3,7 @@ package chess.console.controller;
 import chess.console.view.OutputView;
 import chess.domain.ChessGame;
 import chess.domain.Color;
+import chess.domain.position.Position;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -19,7 +20,7 @@ public enum Command {
     }),
 
     MOVE("move", (chessGame, arguments) -> {
-        chessGame.move(arguments.get(0), arguments.get(1));
+        chessGame.move(new Position(arguments.get(0)), new Position(arguments.get(1)));
         OutputView.printChessBoard(chessGame.board().getBoard());
     }),
 

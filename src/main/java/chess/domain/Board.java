@@ -98,4 +98,8 @@ public class Board {
     public List<List<Piece>> getBoard() {
         return Collections.unmodifiableList(board);
     }
+
+    public Piece getPiece(Position position) {
+        return board.get(position.getRankIndex()).get(position.getFileIndex());
+    }
 }

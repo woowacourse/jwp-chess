@@ -2,6 +2,7 @@ package chess.domain.state;
 
 import chess.domain.ChessBoard;
 import chess.domain.Result;
+import chess.domain.position.Position;
 
 public interface State {
 
@@ -9,7 +10,7 @@ public interface State {
 
     State end();
 
-    State move(String source, String target);
+    State move(Position source, Position target);
 
     boolean isRunning();
 

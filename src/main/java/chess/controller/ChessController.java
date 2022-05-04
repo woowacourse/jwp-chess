@@ -1,26 +1,28 @@
 package chess.controller;
 
 import chess.domain.Score;
-import chess.dto.ChessPieceDto;
-import chess.dto.CurrentTurnDto;
-import chess.dto.ErrorResponseDto;
-import chess.dto.MoveRequestDto;
-import chess.result.EndResult;
-import chess.result.MoveResult;
+import chess.domain.result.EndResult;
+import chess.dto.request.MoveRequestDto;
+import chess.dto.request.RoomCreationRequestDto;
+import chess.dto.request.RoomDeletionRequestDto;
+import chess.dto.response.ChessPieceDto;
+import chess.dto.response.CurrentTurnDto;
+import chess.dto.response.RoomPageDto;
 import chess.service.ChessService;
 import chess.service.RoomService;
+import java.net.URI;
 import java.util.List;
-import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.InvalidResultSetAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,55 +37,58 @@ public class ChessController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/{roomName}")
-    public void createRoom(@PathVariable("roomName") final String roomName) {
-        roomService.createRoom(roomName);
+    @GetMapping
+    public ResponseEntity<RoomPageDto> findAllRoom(@RequestParam(defaultValue = "1") final Integer page,
+                                                   @RequestParam(defaultValue = "10") final Integer size) {
+        return ResponseEntity.ok(roomService.findAll(page, size));
     }
 
-    @DeleteMapping("/{roomName}")
-    public void deleteRoom(@PathVariable("roomName") final String roomName) {
-        roomService.deleteRoom(roomName);
+    @PostMapping
+    public ResponseEntity<Object> createRoom(@RequestBody final RoomCreationRequestDto dto) {
+        final int roomId = roomService.createRoom(dto);
+        return ResponseEntity.created(URI.create("/rooms/" + roomId)).build();
     }
 
-    @GetMapping("/{roomName}/pieces")
-    public ResponseEntity<List<ChessPieceDto>> findPieces(@PathVariable("roomName") final String roomName) {
-        final List<ChessPieceDto> chessPieces = chessService.findAllPiece(roomName);
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRoom(@RequestBody RoomDeletionRequestDto dto) {
+        roomService.deleteRoom(dto);
+    }
+
+    @PatchMapping("/{roomId}/status")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void startGame(@PathVariable final int roomId) {
+        roomService.startGame(roomId);
+    }
+
+    @GetMapping("/{roomId}/pieces")
+    public ResponseEntity<List<ChessPieceDto>> findPieces(@PathVariable final int roomId) {
+        final List<ChessPieceDto> chessPieces = chessService.findAllPiece(roomId);
         return ResponseEntity.ok(chessPieces);
     }
 
-    @PostMapping("/{roomName}/pieces")
-    public void createPieces(@PathVariable("roomName") final String roomName) {
-        chessService.initPiece(roomName);
+    @PatchMapping("/{roomId}/pieces")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void movePiece(@PathVariable final int roomId,
+                          @RequestBody final MoveRequestDto moveRequestDto) {
+        chessService.move(roomId, moveRequestDto);
     }
 
-    @PutMapping("/{roomName}/pieces")
-    public ResponseEntity<MoveResult> movePiece(@PathVariable("roomName") final String roomName,
-                                                @RequestBody final MoveRequestDto moveRequestDto) {
-        final MoveResult moveResult = chessService.move(roomName, moveRequestDto);
-        return ResponseEntity.ok(moveResult);
-    }
-
-    @GetMapping("/{roomName}/scores")
-    public ResponseEntity<Score> findScore(@PathVariable("roomName") final String roomName) {
-        final Score score = chessService.findScore(roomName);
+    @GetMapping("/{roomId}/scores")
+    public ResponseEntity<Score> findScore(@PathVariable final int roomId) {
+        final Score score = chessService.findScore(roomId);
         return ResponseEntity.ok(score);
     }
 
-    @GetMapping("/{roomName}/turn")
-    public ResponseEntity<CurrentTurnDto> findTurn(@PathVariable("roomName") final String roomName) {
-        final CurrentTurnDto currentTurn = roomService.findCurrentTurn(roomName);
+    @GetMapping("/{roomId}/turn")
+    public ResponseEntity<CurrentTurnDto> findTurn(@PathVariable final int roomId) {
+        final CurrentTurnDto currentTurn = roomService.findCurrentTurn(roomId);
         return ResponseEntity.ok(currentTurn);
     }
 
-    @GetMapping("/{roomName}/result")
-    public ResponseEntity<EndResult> findResult(@PathVariable("roomName") final String roomName) {
-        final EndResult endResult = chessService.result(roomName);
+    @GetMapping("/{roomId}/result")
+    public ResponseEntity<EndResult> findResult(@PathVariable final int roomId) {
+        final EndResult endResult = chessService.result(roomId);
         return ResponseEntity.ok(endResult);
-    }
-
-    @ExceptionHandler({IllegalArgumentException.class, DataAccessException.class,
-            InvalidResultSetAccessException.class})
-    public ResponseEntity<ErrorResponseDto> handle(final Exception e) {
-        return ResponseEntity.badRequest().body(new ErrorResponseDto(e.getMessage()));
     }
 }

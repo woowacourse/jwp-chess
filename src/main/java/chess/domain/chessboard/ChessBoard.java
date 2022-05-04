@@ -1,11 +1,9 @@
 package chess.domain.chessboard;
 
-import chess.domain.GameStatus;
 import chess.domain.Score;
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
-import chess.result.MoveResult;
 import java.util.Map;
 import java.util.Objects;
 
@@ -28,7 +26,7 @@ public class ChessBoard {
         return pieceByPosition.get(position);
     }
 
-    public MoveResult move(final Position from, final Position to) {
+    public void move(final Position from, final Position to) {
         final ChessPiece movablePiece = findPiece(from);
         if (Objects.isNull(movablePiece)) {
             throw new IllegalArgumentException("해당 위치에 기물이 존재하지 않습니다.");
@@ -39,7 +37,6 @@ public class ChessBoard {
 
         checkCanMove(from, to, movablePiece);
         movePiece(from, to);
-        return new MoveResult(pieceByPosition, GameStatus.PLAYING, currentTurnColor);
     }
 
     private void checkCanMove(final Position from, final Position to, final ChessPiece movablePiece) {
@@ -77,5 +74,9 @@ public class ChessBoard {
 
     public Score calculateScore() {
         return new Score(pieceByPosition);
+    }
+
+    public Color getCurrentTurnColor() {
+        return currentTurnColor;
     }
 }

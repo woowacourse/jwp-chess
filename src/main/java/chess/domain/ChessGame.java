@@ -2,10 +2,9 @@ package chess.domain;
 
 import chess.domain.chessboard.ChessBoard;
 import chess.domain.chessboard.ChessBoardFactory;
+import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
-import chess.result.EndResult;
-import chess.result.MoveResult;
-import chess.result.StartResult;
+import chess.domain.result.EndResult;
 
 public class ChessGame {
 
@@ -22,15 +21,13 @@ public class ChessGame {
         this.gameStatus = gameStatus;
     }
 
-    public MoveResult move(final Position from, final Position to) {
+    public void move(final Position from, final Position to) {
         gameStatus.checkPlaying();
 
-        final MoveResult result = chessBoard.move(from, to);
+        chessBoard.move(from, to);
         if (chessBoard.isKingDie()) {
             gameStatus = GameStatus.KING_DIE;
-            result.changeStatusToKingDie();
         }
-        return result;
     }
 
     public Score calculateScore() {
@@ -38,13 +35,12 @@ public class ChessGame {
         return chessBoard.calculateScore();
     }
 
-    public StartResult start() {
+    public void start() {
         gameStatus.checkReady();
-        if (gameStatus.isEnd()) {
+        if (chessBoard.findAllPiece().isEmpty()) {
             chessBoard = ChessBoardFactory.createChessBoard();
         }
         gameStatus = GameStatus.PLAYING;
-        return new StartResult(chessBoard.findAllPiece());
     }
 
     public EndResult end() {
@@ -53,7 +49,19 @@ public class ChessGame {
         return new EndResult(score);
     }
 
-    public boolean canPlay() {
-        return !gameStatus.isEnd();
+    public boolean isPlaying() {
+        return gameStatus.equals(GameStatus.PLAYING);
+    }
+
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
+
+    public Color getCurrentTurn() {
+        return chessBoard.getCurrentTurnColor();
+    }
+
+    public ChessBoard getChessBoard() {
+        return chessBoard;
     }
 }

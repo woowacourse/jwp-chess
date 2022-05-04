@@ -1,46 +1,50 @@
 package chess.service;
 
-import chess.dao.RoomDao;
-import chess.domain.GameStatus;
-import chess.domain.chesspiece.Color;
-import chess.dto.CurrentTurnDto;
-import chess.dto.RoomStatusDto;
+import chess.domain.room.Room;
+import chess.dto.request.RoomCreationRequestDto;
+import chess.dto.request.RoomDeletionRequestDto;
+import chess.dto.response.CurrentTurnDto;
+import chess.dto.response.RoomPageDto;
+import chess.repository.ChessGameRepository;
+import chess.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RoomService {
 
-    private final RoomDao roomDao;
+    private final RoomRepository roomRepository;
+    private final ChessGameRepository chessGameRepository;
 
-    public RoomService(final RoomDao roomDao) {
-        this.roomDao = roomDao;
+    public RoomService(final RoomRepository roomRepository, final ChessGameRepository chessGameRepository) {
+        this.roomRepository = roomRepository;
+        this.chessGameRepository = chessGameRepository;
     }
 
-    public boolean isExistRoom(final String roomName) {
-        return roomDao.isExistName(roomName);
+    public RoomPageDto findAll(final int page, final int size) {
+        return roomRepository.getAll(page, size);
     }
 
-    public void createRoom(final String roomName) {
-        roomDao.save(roomName, GameStatus.READY, Color.WHITE);
+    public int createRoom(final RoomCreationRequestDto dto) {
+        final Room room = new Room(dto.getRoomName(), dto.getPassword());
+        return roomRepository.add(room);
     }
 
-    public void deleteRoom(final String roomName) {
-        checkRoomExist(roomName);
+    public void startGame(final int roomId) {
+        final Room room = roomRepository.get(roomId);
+        room.startGame();
+        roomRepository.update(roomId, room);
+        chessGameRepository.add(roomId, room.getChessGame());
+    }
 
-        final RoomStatusDto dto = roomDao.findStatusByName(roomName);
-        if (dto.getGameStatus().isEnd()) {
-            roomDao.delete(roomName);
+    public void deleteRoom(final RoomDeletionRequestDto dto) {
+        final Room room = roomRepository.get(dto.getRoomId());
+        if (room.canRemove(dto.getPassword())) {
+            roomRepository.remove(dto.getRoomId());
         }
     }
 
-    public CurrentTurnDto findCurrentTurn(final String roomName) {
-        checkRoomExist(roomName);
-        return roomDao.findCurrentTurnByName(roomName);
-    }
-
-    private void checkRoomExist(final String roomName) {
-        if (!roomDao.isExistName(roomName)) {
-            throw new IllegalArgumentException("존재하지 않는 방 입니다.");
-        }
+    public CurrentTurnDto findCurrentTurn(final int roomId) {
+        final Room room = roomRepository.get(roomId);
+        return CurrentTurnDto.of(room.getName(), room.getCurrentTurn());
     }
 }

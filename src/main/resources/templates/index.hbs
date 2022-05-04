@@ -3,64 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>체스</title>
+    <link rel="stylesheet" href="/css/index.css"/>
 </head>
 <body style="background: dimgray">
-
-<style>
-    .mainContainer {
-        margin: 100px auto;
-        float: top;
-        text-align: center;
-    }
-
-    .input {
-        width: 300px;
-        height: 40px;
-        font-size: xx-large;
-        margin: 0 auto 30px;
-    }
-
-    .ui-button {
-        width: 100px;
-        height: 40px;
-        font-size: xx-large;
-        margin: 0 auto;
-    }
-
-    .error {
-        font-size: x-large;
-        font-weight: bold;
-        text-align: center;
-        color: darkred;
-    }
-</style>
-
-<div class="mainContainer">
-    <div>
-        <input type="text" class="input" id="roomNameInput" placeholder="방 이름" autofocus maxlength="10"/>
+    <div class="mainContainer">
+        <div>
+            <input type="text" class="input" id="roomNameInput" placeholder="방 이름" autofocus maxlength="10"/>
+            <input type="password" class="input" id="passwordInput" placeholder="비밀번호" />
+        </div>
+        <button class="ui-button" id="start" onclick="createRoom()">방 생성</button>
     </div>
-    <button class="ui-button" id="start" onclick="start()">입장</button>
+    <div class="error" id="error"></div>
+    <div class="room_list", id="room_list"></div>
+    <div class="page_buttons">
+        <button class="arrow", onclick="previousPage()">👈</button>
+        <div class="current_page", id="current_page">1</div>
+        <button class="arrow", onclick="nextPage()">👉</button>
+    </div>
 </div>
-<div class="error" id="error"></div>
+<script src="/js/index.js"></script>
 
 </body>
-
-<script>
-    async function start() {
-        roomName = document.getElementById("roomNameInput").value;
-        if (/^\s*$/.test(roomName)) {
-            const error = document.getElementById("error");
-            error.innerText = "방 이름을 입력하세요!";
-
-            document.getElementById("roomNameInput").value = "";
-            return;
-        }
-
-        await fetch(`/rooms/${roomName}`, {method: "POST"});
-        await fetch(`/rooms/${roomName}/pieces`, {method: "POST"});
-
-        window.location.href = `/rooms/${roomName}`;
-    }
-</script>
-
 </html>

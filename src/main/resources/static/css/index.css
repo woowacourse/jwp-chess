@@ -1,0 +1,96 @@
+.mainContainer {
+    margin-top: 100px;
+    float: top;
+    text-align: center;
+}
+
+.input {
+    width: 300px;
+    height: 40px;
+    font-size: xx-large;
+    margin: 0 auto 30px;
+}
+
+.ui-button {
+    width: 200px;
+    height: 40px;
+    font-size: xx-large;
+    margin: 0 auto;
+}
+
+.error {
+    font-size: x-large;
+    font-weight: bold;
+    text-align: center;
+    color: darkred;
+    height: 40px;
+    padding-top: 20px;
+}
+
+.room_list {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.room_data {
+    height: 50px;
+    width: auto;
+    padding-bottom: 10px;
+    margin: 0 auto;
+
+}
+
+.roomName {
+    font-size: xx-large;
+    display: inline-block;
+    width: 300px;
+    text-align: left;
+    color: black;
+    text-decoration: none;
+}
+
+.roomStatus {
+    font-size: xx-large;
+    display: inline-block;
+    width: 150px;
+    text-align: left;
+}
+
+.deleteButton {
+    font-size: x-large;
+    display: inline-block;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.page_buttons {
+    height: 50px;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.arrow {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: xx-large;
+    display: inline-block;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+arrow:hover {
+    cursor: pointer;
+}
+
+.current_page {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: xx-large;
+    display: inline-block;
+    background: darkgray;
+}

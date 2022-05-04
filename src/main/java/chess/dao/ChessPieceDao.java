@@ -2,15 +2,17 @@ package chess.dao;
 
 import chess.domain.chesspiece.ChessPiece;
 import chess.domain.position.Position;
-import chess.dto.ChessPieceDto;
 import chess.dto.ChessPieceMapper;
-import java.util.ArrayList;
+import chess.entity.ChessPieceEntity;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ChessPieceDao {
@@ -21,46 +23,48 @@ public class ChessPieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ChessPieceDto> findAllByRoomName(final String roomName) {
-        final String sql = "SELECT * FROM chess_piece WHERE room_name = ?";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> ChessPieceDto.from(resultSet), roomName);
+    public List<ChessPieceEntity> findAllEntityByRoomId(final int roomId) {
+        final String sql = "SELECT * FROM chess_piece WHERE room_id = ?";
+        final RowMapper<ChessPieceEntity> rowMapper = (resultSet, rowNum) -> new ChessPieceEntity(
+                Integer.parseInt(resultSet.getString("chess_piece_id")),
+                roomId,
+                resultSet.getString("position"),
+                resultSet.getString("chess_piece"),
+                resultSet.getString("color"));
+        return jdbcTemplate.query(sql, rowMapper, roomId);
     }
 
-    public int deleteByPosition(final String roomName, final Position position) {
-        final String sql = "DELETE FROM chess_piece WHERE room_name = ? AND position = ?";
-        return jdbcTemplate.update(sql, roomName, position.getValue());
+    public int deleteByRoomIdAndPosition(final int roomId, final Position position) {
+        final String sql = "DELETE FROM chess_piece WHERE room_id = ? AND position = ?";
+        return jdbcTemplate.update(sql, roomId, position.getValue());
     }
 
-    public int deleteAllByRoomName(final String roomName) {
-        final String sql = "DELETE FROM chess_piece WHERE room_name = ?";
-        return jdbcTemplate.update(sql, roomName);
-    }
-
-    public int saveAll(final String roomName, final Map<Position, ChessPiece> pieceByPosition) {
-        String sql = "INSERT INTO chess_piece (room_name, position, chess_piece, color) VALUES (?, ?, ?, ?)";
-        final List<Object[]> list = setAllParameter(roomName, pieceByPosition);
-        final int[] result = jdbcTemplate.batchUpdate(sql, list);
+    @Transactional
+    public int saveAll(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {
+        String sql = "INSERT INTO chess_piece (room_id, position, chess_piece, color) VALUES (?, ?, ?, ?)";
+        final List<Object[]> batchArguments = toBatchArguments(roomId, pieceByPosition);
+        final int[] result = jdbcTemplate.batchUpdate(sql, batchArguments);
         return Arrays.stream(result).sum();
     }
 
-    private List<Object[]> setAllParameter(final String roomName, final Map<Position, ChessPiece> pieceByPosition) {
-        final List<Object[]> list = new ArrayList<>();
-        for (final Entry<Position, ChessPiece> entry : pieceByPosition.entrySet()) {
-            final Position position = entry.getKey();
-            final ChessPiece chessPiece = entry.getValue();
-            Object[] array = {
-                    roomName,
-                    position.getValue(),
-                    ChessPieceMapper.toPieceType(chessPiece),
-                    chessPiece.color().getValue()
-            };
-            list.add(array);
-        }
-        return list;
+    private List<Object[]> toBatchArguments(final int roomId, final Map<Position, ChessPiece> pieceByPosition) {
+        return pieceByPosition.entrySet()
+                .stream()
+                .map(entry -> toBatchArgument(roomId, entry))
+                .collect(Collectors.toList());
     }
 
-    public int update(final String roomName, final Position from, final Position to) {
-        final String sql = "UPDATE chess_piece SET position = ? WHERE room_name = ? AND position = ?";
-        return jdbcTemplate.update(sql, to.getValue(), roomName, from.getValue());
+    private Object[] toBatchArgument(final int roomId, final Entry<Position, ChessPiece> entry) {
+        return new Object[]{
+                roomId,
+                entry.getKey().getValue(),
+                ChessPieceMapper.toPieceType(entry.getValue()),
+                entry.getValue().color().getValue()
+        };
+    }
+
+    public int updateByRoomIdAndPosition(final int roomId, final Position from, final Position to) {
+        final String sql = "UPDATE chess_piece SET position = ? WHERE room_id = ? AND position = ?";
+        return jdbcTemplate.update(sql, to.getValue(), roomId, from.getValue());
     }
 }

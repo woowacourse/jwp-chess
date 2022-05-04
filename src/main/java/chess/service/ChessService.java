@@ -1,143 +1,76 @@
 package chess.service;
 
-import chess.dao.ChessPieceDao;
-import chess.dao.RoomDao;
 import chess.domain.ChessGame;
-import chess.domain.GameStatus;
 import chess.domain.Score;
 import chess.domain.chessboard.ChessBoard;
-import chess.domain.chessboard.ChessBoardFactory;
 import chess.domain.chesspiece.ChessPiece;
-import chess.domain.chesspiece.Color;
 import chess.domain.position.Position;
-import chess.dto.ChessPieceDto;
+import chess.domain.result.EndResult;
+import chess.domain.room.Room;
 import chess.dto.ChessPieceMapper;
-import chess.dto.CurrentTurnDto;
-import chess.dto.MoveRequestDto;
-import chess.dto.RoomStatusDto;
-import chess.result.EndResult;
-import chess.result.MoveResult;
-import chess.result.StartResult;
+import chess.dto.request.MoveRequestDto;
+import chess.dto.response.ChessPieceDto;
+import chess.exception.NotFoundException;
+import chess.repository.ChessGameRepository;
+import chess.repository.RoomRepository;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChessService {
 
-    private final ChessPieceDao chessPieceDao;
-    private final RoomDao roomDao;
+    private final ChessGameRepository chessGameRepository;
+    private final RoomRepository roomRepository;
 
-    public ChessService(final ChessPieceDao chessPieceDao, final RoomDao roomDao) {
-        this.chessPieceDao = chessPieceDao;
-        this.roomDao = roomDao;
+    public ChessService(final ChessGameRepository chessGameRepository, final RoomRepository roomRepository) {
+        this.chessGameRepository = chessGameRepository;
+        this.roomRepository = roomRepository;
     }
 
-    public List<ChessPieceDto> findAllPiece(final String roomName) {
-        checkRoomExist(roomName);
-        return chessPieceDao.findAllByRoomName(roomName);
+    public List<ChessPieceDto> findAllPiece(final int roomId) {
+        final ChessGame chessGame = chessGameRepository.get(roomId);
+        final ChessBoard chessBoard = chessGame.getChessBoard();
+        final Map<Position, ChessPiece> pieceByPosition = chessBoard.findAllPiece();
+        if (pieceByPosition.isEmpty()) {
+            throw new NotFoundException("기물이 존재하지 않습니다.");
+        }
+        return pieceByPosition
+                .entrySet()
+                .stream()
+                .map(it -> ChessPieceDto.of(
+                        it.getKey(),
+                        ChessPieceMapper.toPieceType(it.getValue()),
+                        it.getValue().color()))
+                .collect(Collectors.toList());
     }
 
-    public void initPiece(final String roomName) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
+    public void move(final int roomId, MoveRequestDto requestDto) {
+        final Room room = roomRepository.get(roomId);
+        final ChessGame chessGame = room.getChessGame();
+        final Position from = Position.from(requestDto.getFrom());
+        final Position to = Position.from(requestDto.getTo());
 
-        final StartResult startResult = chessGame.start();
-        updateChessPiece(roomName, startResult.getPieceByPosition());
-        updateRoomStatusTo(roomName, GameStatus.PLAYING);
+        chessGame.move(from, to);
+
+        roomRepository.update(roomId, room);
+        chessGameRepository.update(roomId, from, to);
     }
 
-    public MoveResult move(final String roomName, MoveRequestDto requestDto) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
-        final Position from = requestDto.getFrom();
-        final Position to = requestDto.getTo();
-
-        final MoveResult moveResult = chessGame.move(from, to);
-        updatePosition(roomName, from, to);
-        updateRoom(roomName, moveResult.getGameStatus(), moveResult.getCurrentTurn());
-
-        return moveResult;
-    }
-
-    private void updatePosition(final String roomName, final Position from, final Position to) {
-        chessPieceDao.deleteByPosition(roomName, to);
-        chessPieceDao.update(roomName, from, to);
-    }
-
-    public Score findScore(final String roomName) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
+    public Score findScore(final int roomId) {
+        final ChessGame chessGame = chessGameRepository.get(roomId);
 
         return chessGame.calculateScore();
     }
 
-    public EndResult result(final String roomName) {
-        checkRoomExist(roomName);
-        final ChessGame chessGame = findGameByRoomName(roomName);
+    public EndResult result(final int roomId) {
+        final Room room = roomRepository.get(roomId);
+        final ChessGame chessGame = room.getChessGame();
 
         final EndResult result = chessGame.end();
-        updateRoomStatusTo(roomName, GameStatus.END);
+        roomRepository.update(roomId, room);
 
         return result;
-    }
-
-    private void checkRoomExist(final String roomName) {
-        if (!roomDao.isExistName(roomName)) {
-            throw new IllegalArgumentException("존재하지 않는 방 입니다.");
-        }
-    }
-
-    private ChessGame findGameByRoomName(final String roomName) {
-        Map<Position, ChessPiece> pieceByPosition = initAllPiece(roomName);
-        Color currentTurn = initCurrentTurn(roomName);
-        GameStatus gameStatus = initGameStatus(roomName);
-
-        return new ChessGame(new ChessBoard(pieceByPosition, currentTurn), gameStatus);
-    }
-
-    private Map<Position, ChessPiece> initAllPiece(final String roomName) {
-        final List<ChessPieceDto> dtos = chessPieceDao.findAllByRoomName(roomName);
-        if (dtos.isEmpty()) {
-            return ChessBoardFactory.createInitPieceByPosition();
-        }
-
-        return dtos.stream()
-                .collect(Collectors.toMap(
-                        chessPieceDto -> Position.from(chessPieceDto.getPosition()),
-                        chessPieceDto -> ChessPieceMapper.toChessPiece(chessPieceDto.getPieceType(),
-                                chessPieceDto.getColor())
-                ));
-    }
-
-    private Color initCurrentTurn(final String roomName) {
-        final CurrentTurnDto dto = roomDao.findCurrentTurnByName(roomName);
-        if (Objects.isNull(dto)) {
-            return Color.WHITE;
-        }
-        return dto.getCurrentTurn();
-    }
-
-    private GameStatus initGameStatus(final String roomName) {
-        final RoomStatusDto dto = roomDao.findStatusByName(roomName);
-        if (Objects.isNull(dto)) {
-            return GameStatus.READY;
-        }
-        return dto.getGameStatus();
-    }
-
-    private void updateChessPiece(final String roomName, final Map<Position, ChessPiece> pieceByPosition) {
-        chessPieceDao.deleteAllByRoomName(roomName);
-        chessPieceDao.saveAll(roomName, pieceByPosition);
-    }
-
-    private void updateRoom(final String roomName, final GameStatus gameStatus, final Color currentTurn) {
-        roomDao.update(roomName, gameStatus, currentTurn);
-    }
-
-    private void updateRoomStatusTo(final String roomName, final GameStatus gameStatus) {
-        roomDao.updateStatusTo(roomName, gameStatus);
     }
 }

@@ -1,6 +1,6 @@
 package chess.db;
 
-import chess.domain.state.State;
+import chess.domain.state.StateSwitch;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -30,11 +30,11 @@ public class RoomDAO {
     }
 
     public List<String> findAllSavedName() {
-        return jdbcTemplate.query(FIND_ALL_NAME_SQL, nameRowMapper, State.ON.name());
+        return jdbcTemplate.query(FIND_ALL_NAME_SQL, nameRowMapper, StateSwitch.ON.name());
     }
 
     public List<String> findAllEndedName() {
-        return jdbcTemplate.query(FIND_ALL_NAME_SQL, nameRowMapper, State.OFF.name());
+        return jdbcTemplate.query(FIND_ALL_NAME_SQL, nameRowMapper, StateSwitch.OFF.name());
     }
 
     public boolean doesMatchWithPassword(String password, String name) {

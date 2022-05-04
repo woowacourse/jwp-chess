@@ -1,7 +1,7 @@
 package chess.db;
 
 import chess.domain.piece.Color;
-import chess.domain.state.State;
+import chess.domain.state.StateSwitch;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -57,11 +57,11 @@ public class StateDAO {
     }
 
     public void initializeColor(String roomId) {
-        jdbcTemplate.update(INITIALIZE_COLOR_SQL, roomId, State.ON.name(), Color.WHITE.name());
+        jdbcTemplate.update(INITIALIZE_COLOR_SQL, roomId, StateSwitch.ON.name(), Color.WHITE.name());
     }
 
     public void terminateState(String roomId) {
-        jdbcTemplate.update(TERMINATE_STATE_SQL, State.OFF.name(), roomId);
+        jdbcTemplate.update(TERMINATE_STATE_SQL, StateSwitch.OFF.name(), roomId);
     }
 
     public String findAllUsers() {
@@ -70,7 +70,7 @@ public class StateDAO {
     }
 
     public boolean isEndedGame(String id) {
-        int count = jdbcTemplate.queryForObject(CHECK_END_SQL, Integer.class, id, State.OFF.name());
+        int count = jdbcTemplate.queryForObject(CHECK_END_SQL, Integer.class, id, StateSwitch.OFF.name());
         return count > 0;
     }
 }

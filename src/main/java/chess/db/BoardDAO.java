@@ -3,7 +3,6 @@ package chess.db;
 import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.domain.state.State;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

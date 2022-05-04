@@ -105,7 +105,7 @@ public class WebChessController {
             webChessGame.executeOneTurn(chessForm, moveForm, boardDTO);
             updateDTO(model);
             model.addAttribute("color", webChessGame.getColor(chessForm.getRoomName()));
-            if (webChessGame.isKingDead(chessForm)) {
+            if (webChessGame.isKingDead()) {
                 return REDIRECT_GAME_END + "?roomName=" + chessForm.getRoomName();
             }
             return GAME_RUN_URL;

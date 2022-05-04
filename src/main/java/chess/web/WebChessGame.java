@@ -7,9 +7,9 @@ import chess.domain.board.Board;
 import chess.domain.piece.Color;
 import chess.domain.position.Position;
 import chess.domain.score.ChessScore;
-import chess.domain.score.ScoreCalculator;
+import chess.domain.state.State;
+import chess.domain.state.StateSwitch;
 import java.util.List;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class WebChessGame {
 
     private static final String DUPLICATED_ROOM_NAME = "이미 만들어진 방 이름입니다.";
-    private static final String CANNOT_MOVE_OPPONENT_PIECE = "상대 말을 움직이게 할 수 없습니다.";
 
     @Autowired
     private BoardDAO boardDAO;
@@ -28,11 +27,12 @@ public class WebChessGame {
     @Autowired
     private RoomDAO roomDAO;
 
-    private Board board = new Board();
+    private State state;
 
     public void initializeGame(BoardDTO boardDTO, ChessForm chessForm) {
         String roomName = chessForm.getRoomName();
-        boardDTO.generateUpdatedDTO(board.getPieces());
+        state = new State(Color.WHITE, StateSwitch.ON);
+        boardDTO.generateUpdatedDTO(state.getBoard().getPieces());
         stateDAO.initializeRoom(roomName, chessForm.getPassword());
         String roomId = roomDAO.findIdByName(roomName);
         stateDAO.initializeColor(roomId);
@@ -44,23 +44,14 @@ public class WebChessGame {
         }
     }
 
-    private void validateMoveOpponentPiece(ChessForm chessForm, MoveForm moveForm) {
-        String roomName = chessForm.getRoomName();
-        String roomId = roomDAO.findIdByName(roomName);
-        Color nowColor = stateDAO.findColor(roomId);
-        if (board.findPiece(new Position(moveForm.getSource())).isSameColor(nowColor.invert())) {
-            throw new IllegalArgumentException(CANNOT_MOVE_OPPONENT_PIECE);
-        }
-    }
-
     public void executeOneTurn(ChessForm chessForm, MoveForm moveForm, BoardDTO boardDTO) {
         String roomName = chessForm.getRoomName();
         String roomId = roomDAO.findIdByName(roomName);
         Color nowColor = stateDAO.findColor(roomId);
         Color nextColor = nowColor.invert();
-        validateMoveOpponentPiece(chessForm, moveForm);
-        board.movePiece(new Position(moveForm.getSource()), new Position(moveForm.getDest()));
-        boardDTO.generateUpdatedDTO(board.getPieces());
+        state.movePiece(new Position(moveForm.getSource()), new Position(moveForm.getDest()), nowColor);
+        state.changeColor();
+        boardDTO.generateUpdatedDTO(state.getBoard().getPieces());
         stateDAO.convertColor(nextColor, roomId);
     }
 
@@ -73,17 +64,17 @@ public class WebChessGame {
     }
 
     public ChessScore calculateScore() {
-        return ScoreCalculator.calculateChessScore(board.getPieces());
+        return state.calculateScore();
     }
 
-    public boolean isKingDead(ChessForm chessForm) {
-        String roomId = roomDAO.findIdByName(chessForm.getRoomName());
-        return board.isKingNotExist(stateDAO.findColor(roomId));
+    public boolean isKingDead() {
+        return state.isKingDead();
     }
 
     public void terminateState(String name) {
         String roomId = roomDAO.findIdByName(name);
         stateDAO.terminateState(roomId);
+        state.changeSwitch();
     }
 
     public List<String> findAllSavedGame() {
@@ -121,11 +112,14 @@ public class WebChessGame {
     public void saveBoard(String name) {
         String roomId = roomDAO.findIdByName(name);
         boardDAO.deleteBoard(roomId);
-        boardDAO.insertBoard(board, roomId);
+        boardDAO.insertBoard(state.getBoard(), roomId);
     }
 
     public void loadBoard(String name, BoardDTO boardDTO) {
-        this.board = new Board(boardDAO.findAllPieces(roomDAO.findIdByName(name)));
-        boardDTO.generateUpdatedDTO(board.getPieces());
+        String roomId = roomDAO.findIdByName(name);
+        Board nowBoard = new Board(boardDAO.findAllPieces(roomId));
+        Color nowColor = stateDAO.findColor(roomId);
+        this.state = new State(nowColor, StateSwitch.ON, nowBoard);
+        boardDTO.generateUpdatedDTO(state.getBoard().getPieces());
     }
 }

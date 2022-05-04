@@ -64,6 +64,7 @@ public class RunningState implements GameState {
         return true;
     }
 
+    @Override
     public boolean isPromotable() {
         return players.isPlayerAbleToPromotePawn(color);
     }

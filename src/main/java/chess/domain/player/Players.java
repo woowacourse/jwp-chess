@@ -125,7 +125,7 @@ public class Players {
 
     public Map<Color, Double> calculatePlayerScores(final ScoreCalculator scoreCalculator) {
         return players.stream()
-                .collect(Collectors.toMap(
+                .collect(Collectors.toUnmodifiableMap(
                         Player::getColor,
                         player -> player.calculateScore(scoreCalculator)
                 ));

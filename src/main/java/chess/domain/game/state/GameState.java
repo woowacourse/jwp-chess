@@ -10,6 +10,8 @@ public interface GameState {
 
     boolean isRunning();
 
+    boolean isPromotable();
+
     GameState end();
 
     Map<Color, Double> getPlayerScores(final ScoreCalculator scoreCalculator);

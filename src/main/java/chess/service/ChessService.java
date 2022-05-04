@@ -1,5 +1,6 @@
 package chess.service;
 
+import chess.model.MoveResult;
 import chess.model.entity.GameEntity;
 import chess.model.entity.PieceEntity;
 import chess.model.ChessGame;
@@ -49,9 +50,9 @@ public class ChessService {
     public BoardResponse move(MoveRequest moveRequest, Long id) {
         ChessGame chessGame = findChessGameById(id);
         Turn turn = Turn.from(gameDao.findTurnById(id));
-        chessGame.move(Position.from(moveRequest.getSource()), Position.from(moveRequest.getTarget()), turn);
+        MoveResult moveResult = chessGame.move(Position.from(moveRequest.getSource()), Position.from(moveRequest.getTarget()), turn);
 
-        updateGame(moveRequest, id, turn);
+        updateGame(moveResult, id, turn);
 
         if (chessGame.isKingDead()) {
             gameDao.update(turn.finish(), id);
@@ -99,10 +100,11 @@ public class ChessService {
         pieceDao.init(BoardFactory.create(), gameId);
     }
 
-    private void updateGame(MoveRequest moveRequest, Long id, Turn turn) {
-        Piece sourcePiece = PieceFactory.create(pieceDao.findPieceNameByPositionAndGameId(moveRequest.getSource(), id));
-        pieceDao.updateByPositionAndGameId(moveRequest.getTarget(), PieceDao.getPieceName(sourcePiece), id);
-        pieceDao.updateByPositionAndGameId(moveRequest.getSource(), PIECE_NONE, id);
+    private void updateGame(MoveResult moveResult, Long id, Turn turn) {
+        Piece sourcePiece = moveResult.getSourcePiece();
+        Piece targetPiece = moveResult.getTargetPiece();
+        pieceDao.updateByPositionAndGameId(moveResult.getSourcePosition(), PieceDao.getPieceName(sourcePiece), id);
+        pieceDao.updateByPositionAndGameId(moveResult.getTargetPosition(), PieceDao.getPieceName(targetPiece), id);
         gameDao.update(turn.change().getThisTurn(), id);
     }
 

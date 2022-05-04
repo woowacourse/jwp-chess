@@ -1,5 +1,6 @@
 package chess.model.board;
 
+import chess.model.MoveResult;
 import chess.model.Team;
 import chess.model.piece.Empty;
 import chess.model.piece.Piece;

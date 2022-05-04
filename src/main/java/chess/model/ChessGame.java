@@ -31,7 +31,7 @@ public class ChessGame {
         return GameResult.from(board);
     }
 
-    public void move(Position source, Position target, Turn thisTurn) {
+    public MoveResult move(Position source, Position target, Turn thisTurn) {
         Piece sourcePiece = board.get(source);
         Piece targetPiece = board.get(target);
         validateCurrentTurn(thisTurn, sourcePiece);
@@ -40,6 +40,8 @@ public class ChessGame {
             throw new IllegalArgumentException("움직일 수 없는 위치입니다.");
         }
         board.move(sourcePiece, source, target);
+
+        return new MoveResult(source, target, sourcePiece, thisTurn);
     }
 
     private boolean canMove(Position sourcePosition, Position targetPosition, Piece sourcePiece, MoveType moveType) {

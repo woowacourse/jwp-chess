@@ -17,7 +17,7 @@ public interface GameDao {
 
     void deleteGame(Long id);
 
-    boolean existsById(Long gameId);
+    boolean existsById(Long id);
 
     void removeAll();
 }

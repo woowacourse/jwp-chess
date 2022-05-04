@@ -30,9 +30,9 @@ public class SpringBoardDao implements BoardDao {
     }
 
     @Override
-    public BoardDto getBoardByGameId(Long id) {
+    public BoardDto getBoardByGameId(Long gameId) {
         String sql = "SELECT piece_type, piece_color, square FROM board WHERE game_id = ?";
-        return new BoardDto(jdbcTemplate.query(sql, pieceRowMapper, id));
+        return new BoardDto(jdbcTemplate.query(sql, pieceRowMapper, gameId));
     }
 
     @Override

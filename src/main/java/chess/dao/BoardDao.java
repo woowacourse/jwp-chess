@@ -6,9 +6,9 @@ import chess.service.dto.PieceWithSquareDto;
 public interface BoardDao {
     void initBoard(Long gameId);
 
-    BoardDto getBoardByGameId(Long id);
+    BoardDto getBoardByGameId(Long gameId);
 
-    void remove(Long id);
+    void remove(Long gameId);
 
     void update(PieceWithSquareDto piece, Long gameId);
 }

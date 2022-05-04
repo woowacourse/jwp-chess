@@ -9,7 +9,7 @@ const clickStartButton = () => {
         return;
     }
     const roomInfo = {roomName: roomName, password: password};
-    const response = fetch(`/new`, {
+    const response = fetch(`/games`, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(roomInfo),

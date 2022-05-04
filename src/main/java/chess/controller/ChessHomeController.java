@@ -20,10 +20,10 @@ public class ChessHomeController {
         this.chessService = chessService;
     }
 
-    @PostMapping("/new")
+    @PostMapping("/games")
     public ResponseEntity<Void> startNewGame(@RequestBody RoomRequest roomRequest) {
-        chessService.start(roomRequest);
-        return ResponseEntity.created(URI.create("/")).build();
+        Long gameId = chessService.start(roomRequest);
+        return ResponseEntity.created(URI.create("/games/" + gameId)).build();
     }
 
     @GetMapping("/games")

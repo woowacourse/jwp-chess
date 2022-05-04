@@ -1,21 +1,22 @@
 drop table chess_game if exists;
 drop table piece if exists;
 
-create table chess_game
+create table room
 (
-    id   int         not null auto_increment primary key,
-    name varchar(10) not null,
-    turn varchar(5)  not null
+    id       bigint      not null auto_increment primary key,
+    name     varchar(10) not null,
+    password varchar(20) not null,
+    turn     varchar(5)  not null
 );
 
 create table piece
 (
-    id            int        not null auto_increment primary key,
-    position      varchar(2) not null,
-    name          varchar(6) not null,
-    team          varchar(5) not null,
-    chess_game_id int        not null,
-    foreign key (chess_game_id) references chess_game (id)
+    position varchar(2) not null,
+    name     varchar(6) not null,
+    team     varchar(5) not null,
+    room_id  bigint     not null,
+    foreign key (room_id) references room (id) on delete cascade
 );
 
-insert into chess_game (name, turn) values ('rex_game', '화이트');
+insert into room (name, password, turn) values ('rex_game', '111','화이트');
+insert into room (name, password, turn) values ('rex_game2', '111','화이트');

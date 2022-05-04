@@ -1,5 +1,6 @@
 package chess.domain.position;
 
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 public enum Rank {
@@ -42,5 +43,13 @@ public enum Rank {
 
     public int getValue() {
         return value;
+    }
+
+    public String convertedValue() {
+        return String.valueOf(value);
+    }
+
+    public int subtract(Rank rank) {
+        return rank.getValue() - this.value;
     }
 }

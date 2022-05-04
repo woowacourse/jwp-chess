@@ -1,5 +1,8 @@
 package chess.domain.position;
 
+import chess.exception.IllegalRequestDataException;
+
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 public enum File {
@@ -32,5 +35,13 @@ public enum File {
 
     public char getValue() {
         return value;
+    }
+
+    public String convertedValue() {
+        return String.valueOf(value);
+    }
+
+    public int subtract(File file) {
+        return file.getValue() - this.value;
     }
 }

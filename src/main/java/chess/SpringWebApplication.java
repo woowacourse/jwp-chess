@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 
 @SpringBootApplication
-@Controller
 public class SpringWebApplication {
 
     public static void main(String[] args) {

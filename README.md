@@ -9,20 +9,18 @@
 아래의 DDL을 사용하여 DB에 테이블을 생성한다.
 ### 테이블을 만들 때 사용한 DDL
 ```sql
-create table chess_game
-(
-    id   int         not null auto_increment primary key,
+create table room (
+    id bigint not null auto_increment primary key,
     name varchar(10) not null,
+    password varchar(20) not null,
     turn varchar(5)  not null
 );
 
-create table piece
-(
-    id            int        not null auto_increment primary key,
-    position      varchar(2) not null,
-    name          varchar(6) not null,
-    team          varchar(5) not null,
-    chess_game_id int        not null,
-    foreign key (chess_game_id) references chess_game (id)
+create table piece(
+    position varchar(2) not null,
+    name varchar(6) not null,
+    team varchar(5) not null,
+    room_id bigint not null,
+    foreign key (room_id) references room (id) on delete cascade
 );
 ```

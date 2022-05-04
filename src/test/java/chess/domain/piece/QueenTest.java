@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.player.Team;
 import chess.domain.position.Position;
+import chess.exception.IllegalRequestDataException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,7 +47,7 @@ class QueenTest {
         final Position nextDiagonalPosition = new Position(5, 'b');
 
         assertThatThrownBy(() -> queen.move(currentPosition, nextDiagonalPosition, Team.WHITE))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("퀸은 상하좌우, 대각선 중 한 방향으로 이동해야 합니다.");
     }
 

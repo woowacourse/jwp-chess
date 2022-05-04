@@ -10,19 +10,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+@JdbcTest
 class PieceDaoTest {
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
     private PieceDao pieceDao;
 
     private final Player whitePlayer = new Player(new WhiteGenerator(), Team.WHITE);
@@ -32,7 +32,8 @@ class PieceDaoTest {
 
     @BeforeEach
     void beforeEach() {
-        pieceDao.savePieces(whitePlayer, gameId);
+        pieceDao = new PieceDao(jdbcTemplate);
+        pieceDao.insertAllPieces(whitePlayer, gameId);
     }
 
     @Test
@@ -46,7 +47,7 @@ class PieceDaoTest {
     @Test
     @DisplayName("말들을 올바르게 저장한다.")
     void savePieces() {
-        pieceDao.savePieces(blackPlayer, gameId);
+        pieceDao.insertAllPieces(blackPlayer, gameId);
         List<PieceDto> blackPieces = pieceDao.findAllPieceByIdAndTeam(gameId, Team.BLACK.getName());
 
         assertThat(blackPieces.size()).isEqualTo(16);
@@ -55,7 +56,7 @@ class PieceDaoTest {
     @Test
     @DisplayName("말들을 올바르게 삭제한다.")
     void deletePieces() {
-        pieceDao.deletePieces(gameId);
+        pieceDao.deleteAllPiecesByRoomId(gameId);
         List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(gameId, teamWhite);
 
         assertThat(whitePieces.size()).isEqualTo(0);
@@ -65,7 +66,7 @@ class PieceDaoTest {
     @DisplayName("특정 위치의 말을 삭제한다.")
     void deletePieceByGameIdAndPositionAndTeam() {
         String deletePosition = "a2";
-        pieceDao.deletePieceByGameIdAndPositionAndTeam(gameId, deletePosition, teamWhite);
+        pieceDao.deletePieceByRoomIdAndPositionAndTeam(gameId, deletePosition, teamWhite);
         List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(gameId, teamWhite);
 
         Optional<PieceDto> result = whitePieces.stream()
@@ -80,7 +81,7 @@ class PieceDaoTest {
     void updatePiecePositionByGameId() {
         String currentPosition = "a2";
         String destinationPosition = "a4";
-        pieceDao.updatePiecePositionByGameId(gameId, currentPosition, destinationPosition, teamWhite);
+        pieceDao.updatePiecePositionByRoomIdAndTeam(gameId, currentPosition, destinationPosition, teamWhite);
         List<PieceDto> whitePieces = pieceDao.findAllPieceByIdAndTeam(gameId, teamWhite);
 
         Optional<PieceDto> result = whitePieces.stream()
@@ -92,6 +93,6 @@ class PieceDaoTest {
 
     @AfterEach
     void afterEach() {
-        pieceDao.deletePieces(gameId);
+        pieceDao.deleteAllPiecesByRoomId(gameId);
     }
 }

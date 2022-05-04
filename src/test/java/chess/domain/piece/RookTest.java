@@ -2,6 +2,7 @@ package chess.domain.piece;
 
 import chess.domain.player.Team;
 import chess.domain.position.Position;
+import chess.exception.IllegalRequestDataException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -32,7 +33,7 @@ public class RookTest {
         final Position nextDiagonalPosition = new Position(6, 'f');
 
         assertThatThrownBy(() -> rook.move(currentPosition, nextDiagonalPosition, Team.WHITE))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(IllegalRequestDataException.class)
                 .hasMessage("룩은 상하좌우 중 한 방향으로만 이동해야 합니다.");
     }
 

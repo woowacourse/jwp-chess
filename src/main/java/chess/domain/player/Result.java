@@ -1,5 +1,7 @@
 package chess.domain.player;
 
+import java.util.NoSuchElementException;
+
 public enum Result {
 
     WIN("승"),
@@ -23,7 +25,7 @@ public enum Result {
         if (hasKingOpponentPlayer) {
             return LOSE;
         }
-        throw new IllegalArgumentException("올바르지 않은 결과입니다.");
+        throw new NoSuchElementException("올바르지 않은 결과입니다.");
     }
 
     private static Result calculateScore(final double currentPlayerScore, final double opponentPlayerScore) {

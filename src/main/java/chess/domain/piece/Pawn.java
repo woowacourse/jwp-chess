@@ -3,6 +3,7 @@ package chess.domain.piece;
 import chess.domain.player.Team;
 import chess.domain.position.MoveChecker;
 import chess.domain.position.Position;
+import chess.exception.IllegalRequestDataException;
 
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class Pawn extends Piece {
     public Position move(final Position currentPosition, final Position destinationPosition, final Team team) {
         boolean isMoveForward = MoveChecker.isForward(currentPosition, destinationPosition, team);
         if (!isMoveForward) {
-            throw new IllegalArgumentException("이동 방향이 앞이 아닙니다.");
+            throw new IllegalRequestDataException("이동 방향이 앞이 아닙니다.");
         }
         if (position.isFirstTurnOfPawn()) {
             return moveFirstTurn(currentPosition, destinationPosition);
@@ -43,13 +44,13 @@ public class Pawn extends Piece {
     private void validateFirstTurnMove(final int distance) {
         final boolean isMovable = FIRST_MOVE_DISTANCE.contains(distance);
         if (!isMovable) {
-            throw new IllegalArgumentException("폰은 첫번째 턴에는 1칸 또는 2칸만 이동할 수 있습니다.");
+            throw new IllegalRequestDataException("폰은 첫번째 턴에는 1칸 또는 2칸만 이동할 수 있습니다.");
         }
     }
 
     private void validateDefaultMoveDistance(final int distance) {
         if (distance != DEFAULT_MOVE_DISTANCE) {
-            throw new IllegalArgumentException("폰은 앞으로 1칸만 이동할 수 있습니다.");
+            throw new IllegalRequestDataException("폰은 앞으로 1칸만 이동할 수 있습니다.");
         }
     }
 
@@ -59,10 +60,10 @@ public class Pawn extends Piece {
                 team);
         final int moveDistance = currentPosition.calculateDistance(destinationPosition);
         if (!isMoveForwardDiagonal) {
-            throw new IllegalArgumentException("이동 방향이 대각선이 아닙니다.");
+            throw new IllegalRequestDataException("이동 방향이 대각선이 아닙니다.");
         }
         if (moveDistance != DIAGONAL_MOVE_DISTANCE) {
-            throw new IllegalArgumentException("대각선으로 이동하는 거리가 1칸이 아닙니다.");
+            throw new IllegalRequestDataException("대각선으로 이동하는 거리가 1칸이 아닙니다.");
         }
         return position = destinationPosition;
     }

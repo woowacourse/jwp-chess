@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>♟️ 체스 게임 </title>
+    <link rel="stylesheet" href="/src/index.css">
+</head>
+<body>
+<div class="horizontal-vertical-center text-center">
+    <h1>♟️ 방 생성하기</h1>
+
+    <div align="right">방 이름
+        <input type="text" class="input-box" id="newRoomName" placeholder="방 이름을 입력해주세요">
+    </div>
+
+    <div align="right">비밀번호
+        <input type="password" class="input-box" id="password" placeholder="비밀번호를 입력해주세요.">
+    </div>
+    <div align="right">
+        비밀번호 확인
+        <input type="password" class="input-box" id="confirmPassword" placeholder="비밀번호를 재입력해주세요.">
+    </div>
+    <div align="right">
+        <button type="button" class="w-btn-outline2 w-btn-gray-outline" id="createGame">방 생성하기</button>
+    </div>
+</div>
+<script>
+const createGame = document.getElementById("createGame");
+
+createGame.addEventListener("click", async function () {
+    const input_name = document.getElementById("newRoomName").value;
+    const input_password = document.getElementById("password").value;
+    const input_confirmPassword = document.getElementById("confirmPassword").value;
+
+    let response = await fetch("/game", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            name: input_name,
+            password: input_password,
+            confirmPassword: input_confirmPassword,
+        }),
+    }).then(handleErrors)
+        .catch(function (error) {
+            alert(error.message);
+        })
+    response = await response.json();
+    location.href = "/game/"+ response.id;
+})
+
+async function handleErrors(response) {
+    if (!response.ok) {
+        let errorMessage = await response.json();
+        throw Error(errorMessage.message);
+    }
+    return response;
+}
+</script>
+</body>
+</html>

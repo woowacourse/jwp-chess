@@ -4,32 +4,47 @@ import chess.domain.ChessGame;
 import chess.domain.ChessMap;
 import chess.domain.player.Team;
 
+import java.util.Map;
+
 public class ChessGameDto {
 
-    private final String gameName;
-    private final char[][] chessMap;
+    private final long roomId;
+    private final String roomName;
+    private final Map<String, Character> chessMap;
     private final String turn;
     private final boolean isRunning;
 
-    private ChessGameDto(String gameName, char[][] chessMap, String turn, boolean isRunning) {
-        this.gameName = gameName;
+    public ChessGameDto(long roomId, String roomName, Map<String, Character> chessMap, String turn, boolean isRunning) {
+        this.roomId = roomId;
+        this.roomName = roomName;
         this.chessMap = chessMap;
         this.turn = turn;
         this.isRunning = isRunning;
     }
 
-    public static ChessGameDto of(final ChessGame chessGame, final String gameName) {
+    public static ChessGameDto of(final long roomId, final ChessGame chessGame, final String roomName) {
         final ChessMap chessMap = chessGame.createMap();
         final Team turn = chessGame.getTurn();
         final boolean isRunning = chessGame.isRunning();
-        return new ChessGameDto(gameName, chessMap.getChessMap(), turn.getName(), isRunning);
+        return new ChessGameDto(roomId, roomName, chessMap.getChessMap(), turn.getName(), isRunning);
     }
 
-    public String getGameName() {
-        return gameName;
+    public static ChessGameDto of(final long roomId, final ChessGame chessGame) {
+        final ChessMap chessMap = chessGame.createMap();
+        final Team turn = chessGame.getTurn();
+        final boolean isRunning = chessGame.isRunning();
+        return new ChessGameDto(roomId, null, chessMap.getChessMap(), turn.getName(), isRunning);
     }
 
-    public char[][] getChessMap() {
+    public long getRoomId() {
+        return roomId;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public Map<String, Character> getChessMap() {
         return chessMap;
     }
 

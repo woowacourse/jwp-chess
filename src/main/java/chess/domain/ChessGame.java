@@ -5,6 +5,7 @@ import chess.domain.player.Result;
 import chess.domain.player.Score;
 import chess.domain.player.Team;
 import chess.domain.position.Position;
+import chess.exception.IllegalRequestDataException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +57,13 @@ public class ChessGame {
     private void validateMovable(final Player currentPlayer, final Position currentPosition,
                                  final Position destinationPosition) {
         if (!currentPlayer.hasPiece(currentPosition)) {
-            throw new IllegalArgumentException("선택한 출발 위치에 체스말이 존재하지 않습니다.");
+            throw new IllegalRequestDataException("선택한 출발 위치에 현재 유저의 체스말이 존재하지 않습니다.");
         }
         if (currentPlayer.hasPiece(destinationPosition)) {
-            throw new IllegalArgumentException("선택한 도착 위치에 이미 체스말이 존재합니다.");
+            throw new IllegalRequestDataException("선택한 도착 위치에 이미 체스말이 존재합니다.");
         }
         if (hasPieceBetweenPosition(currentPosition, destinationPosition)) {
-            throw new IllegalArgumentException("이동 경로에 체스말이 존재합니다.");
+            throw new IllegalRequestDataException("이동 경로에 체스말이 존재합니다.");
         }
     }
 

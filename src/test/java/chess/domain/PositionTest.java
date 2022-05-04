@@ -140,7 +140,7 @@ public class PositionTest {
                         List.of(new Position(2, 'd'), new Position(3, 'd')),
                         "상하좌우"),
                 Arguments.of(new Position(1, 'a'),
-                        List.of(new Position(2, 'b'), new Position(3, 'c')),
+                        List.of(new Position(3, 'c'), new Position(2, 'b')),
                         "대각선")
         );
     }

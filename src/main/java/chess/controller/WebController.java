@@ -40,14 +40,13 @@ public class WebController {
         return "room";
     }
 
-    @GetMapping("/start/{id}")
+    @GetMapping("/reset/{id}")
     public ResponseEntity<ChessGameDto> startGame(@PathVariable int id) {
         return ResponseEntity.ok().body(chessService.newGame(id));
     }
 
     @GetMapping("/load/{id}")
     public ResponseEntity<ChessGameDto> restart(@PathVariable("id") int id) {
-        System.out.println("@@@@@@@@@@@@@@load@@@@@@@@@@@@@@@@@@@@@@");
         return ResponseEntity.ok().body(chessService.loadGame(id));
     }
 

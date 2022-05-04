@@ -1,11 +1,11 @@
-const startButton = document.querySelector("#start-button");
+const resetButton = document.querySelector("#reset-button");
 const loadButton = document.querySelector("#load-button");
 const endButton = document.querySelector("#end-button");
 const chessBoard = document.querySelector("table");
 const whiteScore = document.querySelector("#white-score");
 const blackScore = document.querySelector("#black-score");
 
-startButton.addEventListener("click", onClickStartButton);
+resetButton.addEventListener("click", onClickResetButton);
 loadButton.addEventListener("click", onClickLoadButton);
 endButton.addEventListener("click", onClickEndButton);
 chessBoard.addEventListener("click", onClickBoard);
@@ -20,8 +20,8 @@ async function onClickEndButton () {
     }
 }
 
-async function onClickStartButton () {
-    const response = await fetch(`/start/${gameId}`);
+async function onClickResetButton () {
+    const response = await fetch(`/reset/${gameId}`);
     const data = await response.json();
 
     if (response.ok) {

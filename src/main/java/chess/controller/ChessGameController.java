@@ -1,15 +1,17 @@
 package chess.controller;
 
-import chess.dao.ChessGame;
-import chess.domain.piece.property.Team;
-import chess.dto.BoardDTO;
-import chess.dto.ChessGameRoomInfoDTO;
+import chess.dto.BoardResponse;
+import chess.dto.GameCreationRequest;
+import chess.dto.GameRoomResponse;
+import chess.dto.MoveRequest;
 import chess.service.ChessService;
-import java.sql.SQLException;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,33 +32,36 @@ public class ChessGameController {
         return "lobby";
     }
 
-    @PostMapping("/chess/new")
-    public String createGame(@RequestParam String gameName) {
-        String gameId = chessService.addChessGame(gameName);
-        return "redirect:/chess/game/" + gameId;
+    @PostMapping(value = "/chess/new", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String createGame(@ModelAttribute GameCreationRequest gameCreationRequest) {
+        chessService.addChessGame(gameCreationRequest);
+        return "redirect:/";
     }
 
-    @GetMapping("/chess/game/{id}")
-    public String showChessGameRoom(@PathVariable String id, Model model) {
-        ChessGameRoomInfoDTO chessGameRoomInfoDTO = chessService.findGameById(id);
-        model.addAttribute("chessGameRoom", chessGameRoomInfoDTO);
+    @PostMapping("/chess/game/{id}")
+    public String showChessGameRoom(@PathVariable long id, @RequestParam String password, Model model) {
+        GameRoomResponse chessGameRoomResponse = chessService.findRoomToEnter(id, password);
+        model.addAttribute("chessGameRoom", chessGameRoomResponse);
         return "game";
     }
 
     @GetMapping("/chess/game/{id}/board")
     @ResponseBody
-    public ResponseEntity<BoardDTO> createBoard(@PathVariable String id) {
-        ChessGame chessGame = chessService.getChessGamePlayed(id);
-        return ResponseEntity.ok(new BoardDTO(chessGame));
+    public ResponseEntity<BoardResponse> loadSavedGame(@PathVariable long id) {
+        BoardResponse boardResponse = chessService.loadSavedBoard(id);
+        return ResponseEntity.ok(boardResponse);
     }
 
     @PostMapping("/chess/game/{id}/move")
     @ResponseBody
-    public ResponseEntity<BoardDTO> movePiece(@RequestParam String source,
-                                              @RequestParam String target,
-                                              @RequestParam String team,
-                                              @PathVariable String id) throws SQLException {
-        ChessGame chessGame = chessService.movePiece(id, source, target, Team.valueOf(team));
-        return ResponseEntity.ok(new BoardDTO(chessGame));
+    public ResponseEntity<BoardResponse> movePiece(@ModelAttribute MoveRequest moveRequest, @PathVariable long id) {
+        BoardResponse boardResponse = chessService.movePiece(id, moveRequest);
+        return ResponseEntity.ok(boardResponse);
+    }
+
+    @DeleteMapping(value = "/chess/{id}")
+    public ResponseEntity<Object> deleteGame(@PathVariable long id, String password) {
+        chessService.deleteGame(id, password);
+        return ResponseEntity.noContent().build();
     }
 }

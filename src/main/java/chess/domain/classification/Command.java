@@ -1,6 +1,10 @@
 package chess.domain.classification;
 
-import static chess.domain.classification.CommandCase.*;
+import static chess.domain.classification.CommandCase.ELSE;
+import static chess.domain.classification.CommandCase.END;
+import static chess.domain.classification.CommandCase.MOVE;
+import static chess.domain.classification.CommandCase.START;
+import static chess.domain.classification.CommandCase.STATUS;
 
 import chess.domain.position.Position;
 import chess.domain.position.XPosition;

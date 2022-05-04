@@ -1,7 +1,6 @@
-package chess.dao;
+package chess.domain.position;
 
 import chess.domain.piece.property.Team;
-import chess.domain.position.Position;
 
 public final class Movement {
 
@@ -15,12 +14,15 @@ public final class Movement {
         this.target = target;
     }
 
-    public String getGameId() {
-        return gameId;
+    public Movement(final Position source, final Position target, final String gameId, final Team team) {
+        this.source = source;
+        this.target = target;
+        this.gameId = gameId;
+        this.team = team;
     }
 
-    public void setGameId(final String gameId) {
-        this.gameId = gameId;
+    public String getGameId() {
+        return gameId;
     }
 
     public String getSource() {
@@ -35,7 +37,4 @@ public final class Movement {
         return team;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
-    }
 }

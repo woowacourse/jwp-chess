@@ -1,6 +1,9 @@
 package chess.dao;
 
-import chess.dto.ChessGameRoomInfoDTO;
+import chess.domain.board.ChessBoard;
+import chess.domain.board.ChessBoardGenerator;
+import chess.domain.board.ChessGame;
+import chess.dto.GameCreationRequest;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,41 +15,61 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ChessGameDAO {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ChessGameRoomInfoDTO> chessGameRoomInfoDTORowMapper = (rs, rowNum) ->
-            new ChessGameRoomInfoDTO(
-                    rs.getString("id"),
-                    rs.getString("name")
+    private static final RowMapper<ChessGame> CHESS_GAME_ROW_MAPPER = (resultSet, rowNumber) ->
+            new ChessGame(
+                    resultSet.getString("id"),
+                    resultSet.getString("name"),
+                    resultSet.getString("password"),
+                    resultSet.getBoolean("is_end"),
+                    new ChessBoard(new ChessBoardGenerator())
             );
+
+    private final JdbcTemplate jdbcTemplate;
 
     public ChessGameDAO(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public String addGame(final ChessGame chessGame) {
-        String sql = "INSERT INTO CHESS_GAME (name) VALUES (?)";
+    public long addGame(final GameCreationRequest gameCreationRequest) {
+        String sql = "INSERT INTO CHESS_GAME (name, password) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
-            statement.setString(1, chessGame.getName());
+            statement.setString(1, gameCreationRequest.getName());
+            statement.setString(2, gameCreationRequest.getPassword());
             return statement;
         }, keyHolder);
-        return String.valueOf(keyHolder.getKey().longValue());
+        return keyHolder.getKey().longValue();
     }
 
-    public List<ChessGameRoomInfoDTO> findActiveGames() {
-        String sql = "SELECT id, name FROM CHESS_GAME WHERE IS_END = false";
-        return jdbcTemplate.query(sql, chessGameRoomInfoDTORowMapper);
+    public List<ChessGame> findAllGames() {
+        String sql = "SELECT id, name, password, is_end FROM CHESS_GAME";
+        return jdbcTemplate.query(sql, CHESS_GAME_ROW_MAPPER);
     }
 
-    public ChessGameRoomInfoDTO findGameById(final String gameId) {
-        String sql = "SELECT id, name FROM CHESS_GAME WHERE ID = ? AND IS_END = FALSE ORDER BY created_at";
-        return jdbcTemplate.queryForObject(sql, chessGameRoomInfoDTORowMapper, gameId);
+    public ChessGame findGameById(final long gameId) {
+        String sql = "SELECT id, name, password, is_end FROM CHESS_GAME WHERE ID = ?";
+        return jdbcTemplate.queryForObject(sql, CHESS_GAME_ROW_MAPPER, gameId);
     }
 
-    public void updateGameEnd(final String gameId) {
+    public long updateGameEnd(final long gameId) {
         String sql = "UPDATE chess_game SET is_end = true WHERE id = ?";
-        jdbcTemplate.update(sql, gameId);
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(sql, new String[]{"id"});
+            statement.setLong(1, gameId);
+            return statement;
+        });
+        return gameId;
+    }
+
+    public void deleteGame(final long gameId) {
+        String sql = "DELETE FROM CHESS_GAME WHERE ID = ?";
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setLong(1, gameId);
+            return statement;
+        });
     }
 }

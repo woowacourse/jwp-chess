@@ -1,13 +1,19 @@
 package chess.dto;
 
-public final class ChessGameRoomInfoDTO {
+import chess.domain.board.ChessGame;
+
+public final class GameRoomResponse {
 
     private final String id;
     private final String name;
 
-    public ChessGameRoomInfoDTO(final String id, final String name) {
+    public GameRoomResponse(final String id, final String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public static GameRoomResponse from(final ChessGame chessGame) {
+        return new GameRoomResponse(chessGame.getId(), chessGame.getName());
     }
 
     public String getId() {

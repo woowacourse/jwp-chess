@@ -1,15 +1,17 @@
 package chess.domain;
 
-import static chess.domain.piece.property.Team.*;
+import static chess.domain.piece.property.Team.BLACK;
+import static chess.domain.piece.property.Team.WHITE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import chess.domain.board.ChessBoardGenerator;
-import chess.domain.piece.unit.Piece;
 import chess.domain.piece.unit.Bishop;
 import chess.domain.piece.unit.King;
 import chess.domain.piece.unit.Knight;
 import chess.domain.piece.unit.Pawn;
+import chess.domain.piece.unit.Piece;
 import chess.domain.piece.unit.Queen;
 import chess.domain.piece.unit.Rook;
 import chess.domain.position.Position;

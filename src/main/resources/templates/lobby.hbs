@@ -9,18 +9,53 @@
 <h1>ZERO Chess</h1>
 <br><br>
 <form action="/chess/new" method="post">
-    <input type="text" name="gameName" placeholder="NEW GAME">
+    <input type="text" name="name" placeholder="NEW GAME">
+    <input type="password" name="password" placeholder="PASSWORD"/>
     <input type="submit" value="NEW GAME START">
 </form>
 
 <br>
-<h2>CLICK ON THE ROOM</h2>
+<h2>CHESS ROOMS</h2>
 <table border="2" width ="500" height="300" align = "center" class="game-list">
     {{#games}}
     <tr>
-       <td><a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a></td>
+       <td>
+           <a href="/chess/game/{{id}}" class="game-item">{{id}} {{name}}</a>
+           <form action="/chess/game/{{id}}" method="post">
+               <label for="password">방 비밀번호</label>
+               <input type="password" id="password" name="password">
+               <button type="submit">입장</button>
+           </form>
+           <button id="deleteBtn" onclick="deleteBtnHandler({{id}})">삭제</button>
+       </td>
     </tr>
     {{/games}}
 </table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    function deleteBtnHandler(id) {
+        let password = prompt("비밀번호를 입력하세요", "");
+        $.ajax({
+            type: "DELETE",
+            url: "/chess/" + id,
+            data: {
+                "password": password,
+            },
+            dataType: "json",
+            success: redirectHome,
+            error: alertError
+        })
+    }
+
+    function redirectHome() {
+        window.location.href = "/";
+    }
+
+    function alertError(response) {
+        alert(response.responseText);
+    }
+
+</script>
 </body>
 </html>

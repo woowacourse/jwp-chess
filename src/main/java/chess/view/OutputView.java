@@ -1,12 +1,12 @@
 package chess.view;
 
-import chess.dto.GameStatus;
 import chess.domain.board.ChessBoard;
-import chess.dto.StatusDTO;
 import chess.domain.piece.property.Team;
-import chess.domain.position.XPosition;
 import chess.domain.position.Position;
+import chess.domain.position.XPosition;
 import chess.domain.position.YPosition;
+import chess.dto.GameStatus;
+import chess.dto.StatusDTO;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;

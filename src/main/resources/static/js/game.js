@@ -59,15 +59,14 @@ function update(response) {
     turn = response.currentTurn;
     $currentBlackScore.innerHTML = response.blackScore;
     $currentWhiteScore.innerHTML = response.whiteScore;
-    console.log(response);
     if (response.gameSet) {
         showResult(response)
     }
 }
 
 function showResult(response) {
+    console.log(response);
     $winner.innerHTML = response.winner
-
     $gameSetResult.classList.remove("none")
     $board.removeEventListener('click', onClickSquare)
 }

@@ -1,13 +1,13 @@
 package chess.dto;
 
-import chess.dao.ChessGame;
+import chess.domain.board.ChessGame;
 import chess.domain.piece.property.Team;
 import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class BoardDTO {
+public final class BoardResponse {
 
     private Map<String, Object> board = new HashMap<>();
     private Team currentTurn;
@@ -16,7 +16,7 @@ public final class BoardDTO {
     private boolean isGameSet = Boolean.FALSE;
     private String winner = "";
 
-    public BoardDTO(final ChessGame chessGame) {
+    public BoardResponse(final ChessGame chessGame) {
         Map<Position, Piece> board = chessGame.getChessBoard().getBoard();
         for (Position position : board.keySet()) {
             Piece piece = board.get(position);
@@ -26,7 +26,7 @@ public final class BoardDTO {
         this.currentTurn = chessGame.getChessBoard().getCurrentTurn();
         this.blackScore = GameStatus.calculateTeamScore(chessGame.getChessBoard().getBoard(), Team.BLACK);
         this.whiteScore = GameStatus.calculateTeamScore(chessGame.getChessBoard().getBoard(), Team.WHITE);
-        if (chessGame.isGameSet()){
+        if (chessGame.isKingDied()){
             isGameSet = Boolean.TRUE;
             this.winner = chessGame.getChessBoard().calculateWhoWinner().toString();
         }

@@ -1,8 +1,8 @@
 package chess.domain.board;
 
 import chess.domain.piece.property.PieceFeature;
-import chess.domain.piece.unit.Piece;
 import chess.domain.piece.property.Team;
+import chess.domain.piece.unit.Piece;
 import chess.domain.position.Position;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +21,16 @@ public final class ChessBoard {
     }
 
     public void move(final Position source, final Position target) {
+        validateCanMove(source, target);
+        movePiece(source, target);
+    }
+
+    private void validateCanMove(final Position source, final Position target) {
         validateSource(source);
         validateTarget(target);
         validateCurrentTurn(source, target);
         validateRoute(source, target);
         validateMove(source, target);
-        movePiece(source, target);
     }
 
     private void validateSource(final Position source) {

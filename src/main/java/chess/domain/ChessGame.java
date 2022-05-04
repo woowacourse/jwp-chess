@@ -11,20 +11,18 @@ public class ChessGame {
 
     private Board board;
     private boolean whiteTurn;
-    private boolean running;
 
-    public ChessGame(Board board, boolean whiteTurn, boolean running) {
+    public ChessGame(Board board, boolean whiteTurn) {
         this.board = board;
         this.whiteTurn = whiteTurn;
-        this.running = running;
     }
 
     public static ChessGame create() {
-        return new ChessGame(BoardInitializer.get(), true, true);
+        return new ChessGame(BoardInitializer.get(), true);
     }
 
-    public static ChessGame load(Map<Position, Piece> board, boolean whiteTurn, boolean running) {
-        return new ChessGame(new Board(board), whiteTurn, running);
+    public static ChessGame load(Map<Position, Piece> board, boolean whiteTurn) {
+        return new ChessGame(new Board(board), whiteTurn);
     }
 
     public void move(Position sourcePosition, Position targetPosition) {
@@ -35,12 +33,8 @@ public class ChessGame {
         whiteTurn = !whiteTurn;
     }
 
-    public void end() {
-        this.running = false;
-    }
-
     public boolean isRunning() {
-        return !this.board.hasKingCaptured() && this.running;
+        return !this.board.hasKingCaptured();
     }
 
     public Map<Position, Piece> getBoardSquares() {

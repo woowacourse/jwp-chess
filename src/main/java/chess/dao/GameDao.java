@@ -16,14 +16,13 @@ public class GameDao {
     }
 
     public long insert(ChessGame game, long roomNo) {
-        final String sql = "insert into game (room_no, running, white_turn) values (?,?,?)";
+        final String sql = "insert into game (room_no, white_turn) values (?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"no"});
             ps.setLong(1, roomNo);
-            ps.setBoolean(2, game.isRunning());
-            ps.setBoolean(3, game.isWhiteTurn());
+            ps.setBoolean(2, game.isWhiteTurn());
             return ps;
         }, keyHolder);
 
@@ -35,11 +34,6 @@ public class GameDao {
         return jdbcTemplate.queryForObject(sql, Long.class, roomNo);
     }
 
-    public boolean isRunning(long roomNo) {
-        final String sql = "select running from game where room_no = ?";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, roomNo);
-    }
-
     public void update(long roomNo, boolean whiteTurn) {
         final String sql = "update game set white_turn = ? where room_no = ?";
         jdbcTemplate.update(sql, whiteTurn, roomNo);
@@ -47,13 +41,7 @@ public class GameDao {
 
     public boolean isWhiteTurn(long roomNo) {
         final String sql = "select white_turn from game where room_no = ?";
-
         return jdbcTemplate.queryForObject(sql, Boolean.class, roomNo);
-    }
-
-    public void end(long roomNo) {
-        final String sql = "update game set running = ? where room_no = ?";
-        jdbcTemplate.update(sql, false, roomNo);
     }
 
     public void delete(long roomNo) {

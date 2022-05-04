@@ -23,18 +23,10 @@ public class RoomDaoTest {
         roomDao.delete(roomNo);
     }
 
-    @DisplayName("저장한 비밀번호를 조회할 수 있다.")
-    @Test
-    void loadPassword() {
-        long roomNo = roomDao.insert(Room.create("title", "멋들어진비밀번호"));
-        assertThat(roomDao.loadPassword(roomNo)).isEqualTo("멋들어진비밀번호");
-        roomDao.delete(roomNo);
-    }
-
     @DisplayName("저장한 제목를 조회할 수 있다.")
     @Test
     void loadTitle() {
-        long roomNo = roomDao.insert(Room.create("끝내주는제목", "password"));
+        long roomNo = roomDao.insert(Room.create("끝내주는제목", "멋들어지는비밀번호"));
         assertThat(roomDao.loadTitle(roomNo)).isEqualTo("끝내주는제목");
         roomDao.delete(roomNo);
     }

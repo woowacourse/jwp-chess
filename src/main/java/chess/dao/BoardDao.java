@@ -40,8 +40,7 @@ public class BoardDao {
         boolean isWhite = piece.isCamp(Camp.WHITE);
         String position = entry.getKey().toString();
 
-        int result = jdbcTemplate.update(sql, type, isWhite, position, gameNo);
-        System.out.println("쿼리 실행 결과: " + result);
+        jdbcTemplate.update(sql, type, isWhite, position, gameNo);
     }
 
     public List<PieceDto> load(long gameNo) {

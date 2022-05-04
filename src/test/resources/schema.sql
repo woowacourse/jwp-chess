@@ -7,6 +7,7 @@ create table room
     no          int         not null auto_increment,
     title       varchar(50) not null,
     password    varchar(20) not null,
+    running     boolean     not null,
     primary key (no)
 );
 
@@ -14,7 +15,6 @@ create table game
 (
     no          int         not null auto_increment,
     room_no     int         not null,
-    running     boolean     not null,
     white_turn  boolean     not null,
     primary key (no),
     foreign key (room_no) references room (no)

@@ -36,11 +36,10 @@ public class ChessGame {
         Piece targetPiece = board.get(target);
         validateCurrentTurn(thisTurn, sourcePiece);
         MoveType moveType = MoveType.of(sourcePiece, targetPiece);
-        if (canMove(source, target, sourcePiece, moveType)) {
-            board.move(sourcePiece, source, target);
-            return;
+        if (!canMove(source, target, sourcePiece, moveType)) {
+            throw new IllegalArgumentException("움직일 수 없는 위치입니다.");
         }
-        throw new IllegalArgumentException("움직일 수 없는 위치입니다.");
+        board.move(sourcePiece, source, target);
     }
 
     private boolean canMove(Position sourcePosition, Position targetPosition, Piece sourcePiece, MoveType moveType) {

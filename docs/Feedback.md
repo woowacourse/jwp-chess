@@ -22,7 +22,7 @@
         - Exception으로 발생한 에러까지 포함될 수 있게 Exception을 인자로 받도록 수정
 - [x] EOL 경고 해결
 
-## 2단계
+## 2단계 - 1차 피드백
 
 - [x] `ObjectMapper`를 통해 Gson 라이브러리 의존성 제거
 - [x] Controller - status 메서드에서 Body를 Map으로 전달한 이유, DTO로 전달하는 것은 어떤지
@@ -60,3 +60,13 @@
 - [x] RoomDao
     - 반환값을 null 사용 x -> 검증하기 위한 코드로 복잡도가 올라감.
     - `Optional` 사용
+
+## 2단계 - 2차 피드백
+
+- [ ] `Contoller`
+    - [x] 메서드 인자로 `body`라는 모호한 변수명은 사용하지 않는다.
+        - `요청`의 의미를 담아 `request`와 데이터 타입을 결합하여 사용
+    - [x] RequestBody가 String이 아닌 객체가 들어왔을 때 왜 정상 동작하는지 알아보자.
+        - RequestBody 사용 시 MessageConverter를 통해 Http request 본문 <-> Java Object의 변환이 가능하다.
+    - [x] JsonProcessingException이 필요한가?
+        - ObjectMapper.readValue()의 사용을 통해 필요한 Exception이었으나 해당 메서드를 사용하지 않게 되어 제거

@@ -7,8 +7,6 @@ import chess.domain.game.GameState;
 import chess.dto.GameStateResponse;
 import chess.dto.PathResponse;
 import chess.service.ChessRoomService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,11 +34,8 @@ public class WebChessController {
 
     @PostMapping("/rooms")
     @ResponseBody
-    public ResponseEntity<PathResponse> createRoom(@RequestBody String body) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        RoomDto bodyRoomDto = mapper.readValue(body, RoomDto.class);
-        RoomDto roomDto = chessRoomService.createNewRoom(bodyRoomDto.getName(),
-            bodyRoomDto.getPassword());
+    public ResponseEntity<PathResponse> createRoom(@RequestBody RoomDto requestRoomDto) {
+        RoomDto roomDto = chessRoomService.createNewRoom(requestRoomDto.getName(), requestRoomDto.getPassword());
         return respondPath("/rooms/" + roomDto.getId());
     }
 
@@ -57,10 +52,8 @@ public class WebChessController {
     }
 
     @DeleteMapping("/rooms/{roomId}")
-    public ResponseEntity<PathResponse> removeRoom(@PathVariable("roomId") int roomId, @RequestBody String body) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        RoomDto inputRoomDto = mapper.readValue(body, RoomDto.class);
-        chessRoomService.removeRoom(inputRoomDto);
+    public ResponseEntity<PathResponse> removeRoom(@RequestBody RoomDto requestRoomDto) {
+        chessRoomService.removeRoom(requestRoomDto);
         return respondPath("/");
     }
 
@@ -77,10 +70,8 @@ public class WebChessController {
     }
 
     @PostMapping(path = "/rooms/{roomId}/move")
-    public ResponseEntity<GameStateResponse> move(@PathVariable("roomId") int roomId, @RequestBody String body) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        RouteDto routeDto = mapper.readValue(body, RouteDto.class);
-        GameState state = chessRoomService.moveBoard(roomId, routeDto);
+    public ResponseEntity<GameStateResponse> move(@PathVariable("roomId") int roomId, @RequestBody RouteDto requestRouteDto) {
+        GameState state = chessRoomService.moveBoard(roomId, requestRouteDto);
         return ResponseEntity.ok().body(GameStateResponse.of(state));
     }
 

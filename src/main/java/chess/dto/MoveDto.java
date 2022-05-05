@@ -11,6 +11,7 @@ public final class MoveDto {
         this.from = from;
         this.to = to;
     }
+
     public MoveDto() {
     }
 

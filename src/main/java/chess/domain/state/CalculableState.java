@@ -4,7 +4,6 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Notation;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-
 import java.util.Map;
 
 public abstract class CalculableState extends Started {

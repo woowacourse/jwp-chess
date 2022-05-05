@@ -2,7 +2,6 @@ package chess.domain.piece;
 
 import chess.domain.board.MoveOrder;
 import chess.domain.piece.movestrategy.MoveStrategy;
-
 import java.util.Objects;
 
 public abstract class Piece {
@@ -38,8 +37,12 @@ public abstract class Piece {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Piece piece = (Piece) o;
         return notation == piece.notation && color == piece.color;
     }

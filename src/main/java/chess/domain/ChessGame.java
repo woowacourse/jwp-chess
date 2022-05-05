@@ -6,7 +6,6 @@ import chess.domain.position.Position;
 import chess.domain.state.Ready;
 import chess.domain.state.State;
 import chess.domain.state.Status;
-
 import java.util.Map;
 
 public final class ChessGame {

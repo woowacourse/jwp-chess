@@ -3,7 +3,6 @@ package chess.dto;
 import chess.domain.piece.Color;
 import chess.domain.state.Result;
 import chess.domain.state.Status;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -18,7 +17,8 @@ public final class ChessGameDto {
 
     public ChessGameDto(final List<PieceAndPositionDto> boardDatas, final Status status) {
         this.positionsAndPieces = boardDatas.stream()
-                .collect(Collectors.toMap(PieceAndPositionDto::getPosition, it -> new PieceDto(it.getPieceName(), it.getPieceColor())));
+                .collect(Collectors.toMap(PieceAndPositionDto::getPosition,
+                        it -> new PieceDto(it.getPieceName(), it.getPieceColor())));
         whiteScore = status.getWhiteScore();
         blackScore = status.getBlackScore();
         result = status.getResult();
@@ -42,10 +42,15 @@ public final class ChessGameDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ChessGameDto that = (ChessGameDto) o;
-        return Objects.equals(positionsAndPieces, that.positionsAndPieces) && Objects.equals(whiteScore, that.whiteScore) && Objects.equals(blackScore, that.blackScore) && result == that.result;
+        return Objects.equals(positionsAndPieces, that.positionsAndPieces) && Objects.equals(whiteScore,
+                that.whiteScore) && Objects.equals(blackScore, that.blackScore) && result == that.result;
     }
 
     @Override

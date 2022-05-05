@@ -2,15 +2,14 @@ package chess.dao;
 
 import chess.dto.GameRoomDto;
 import chess.dto.PieceAndPositionDto;
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class ChessDaoImpl implements ChessDao {
@@ -42,7 +41,8 @@ public class ChessDaoImpl implements ChessDao {
 
     public void savePiece(final int gameId, final PieceAndPositionDto pieceAndPositionDto) {
         final var sql = "INSERT INTO piece (game_id, piece_name, piece_color, position) VALUES(?,?,?,?)";
-        jdbcTemplate.update(sql, gameId, pieceAndPositionDto.getPieceName(), pieceAndPositionDto.getPieceColor(), pieceAndPositionDto.getPosition());
+        jdbcTemplate.update(sql, gameId, pieceAndPositionDto.getPieceName(), pieceAndPositionDto.getPieceColor(),
+                pieceAndPositionDto.getPosition());
     }
 
     public List<PieceAndPositionDto> findAllPiece(final int gameId) {

@@ -2,7 +2,6 @@ package chess.dao;
 
 import chess.dto.GameRoomDto;
 import chess.dto.PieceAndPositionDto;
-
 import java.util.List;
 
 public interface ChessDao {

@@ -7,7 +7,6 @@ import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
 import chess.domain.state.Status;
-
 import java.util.Locale;
 
 public final class Output {

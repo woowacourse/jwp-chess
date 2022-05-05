@@ -4,7 +4,6 @@ import chess.domain.board.Direction;
 import chess.domain.board.MoveOrder;
 import chess.domain.piece.Color;
 import chess.domain.position.Position;
-
 import java.util.List;
 
 public final class PawnMoveStrategy extends MoveStrategy {

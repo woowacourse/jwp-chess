@@ -2,7 +2,6 @@ package chess.controller;
 
 import chess.domain.ChessGame;
 import chess.view.Output;
-
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 

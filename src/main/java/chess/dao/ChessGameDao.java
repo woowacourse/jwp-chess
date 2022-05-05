@@ -30,14 +30,14 @@ public class ChessGameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int save(String gameName, String password) {
+    public int save(ChessGame chessGame) {
         String sql = "insert into chess_game (game_name, password, turn) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
-            ps.setString(1, gameName);
-            ps.setString(2, password);
-            ps.setString(3, "ready");
+            ps.setString(1, chessGame.getGameName());
+            ps.setString(2, chessGame.getPassword());
+            ps.setString(3, chessGame.getTurn());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().intValue();

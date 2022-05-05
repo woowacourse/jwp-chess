@@ -24,7 +24,7 @@ public abstract class Piece {
     }
 
     public String getSymbolByTeam() {
-        return symbol.getSymbol(team);
+        return symbol.getSymbolBy(team);
     }
 
     public abstract double getScore();
@@ -32,4 +32,8 @@ public abstract class Piece {
     public abstract boolean isPawn();
 
     public abstract boolean isKing();
+
+    public String getSymbol() {
+        return symbol.getSymbol();
+    }
 }

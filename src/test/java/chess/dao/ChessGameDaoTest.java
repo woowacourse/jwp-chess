@@ -33,26 +33,25 @@ class ChessGameDaoTest {
         pieceDao = new PieceDao(jdbcTemplate);
 
         String gameName = "test_game1";
-        savedId = chessGameDao.save(gameName, "1234");
-        savePieces(gameName, savedId);
+        savedId = chessGameDao.save(new ChessGame(gameName, "1234"));
+        savePieces(savedId);
 
-        chessGameDao.save("test_game2", "1234");
-        chessGameDao.save("test_game3", "1234");
+        chessGameDao.save(new ChessGame("test_game2", "1234"));
+        chessGameDao.save(new ChessGame("test_game3", "1234"));
     }
 
-    private void savePieces(String gameName, int gameId) {
-        ChessGame chessGame = new ChessGame(gameName);
+    private void savePieces(int gameId) {
+        ChessGame chessGame = new ChessGame();
         chessGame.progress(Command.from("start"));
-        ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
-        pieceDao.save(chessGameDto, gameId);
+        pieceDao.save(chessGame, gameId);
     }
 
     @Test
     @DisplayName("게임을 DB에 저장해야 합니다.")
     void save() {
         String gameName = "test_game4";
-        int savedId = chessGameDao.save(gameName, "1234");
-        savePieces(gameName, savedId);
+        int savedId = chessGameDao.save(new ChessGame(gameName, "1234"));
+        savePieces(savedId);
         String savedName = chessGameDao.findById(savedId).getGameName();
         assertThat(savedName).isEqualTo(gameName);
     }

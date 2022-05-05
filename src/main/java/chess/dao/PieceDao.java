@@ -7,10 +7,10 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import chess.dto.ChessBoardDto;
-import chess.dto.ChessGameDto;
-import chess.dto.PieceDto;
-import chess.dto.PositionDto;
+import chess.domain.ChessBoard;
+import chess.domain.ChessGame;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 
 @Repository
 public class PieceDao {
@@ -20,10 +20,10 @@ public class PieceDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(ChessGameDto chessGameDto, int chessGameId) {
-        ChessBoardDto chessBoard = chessGameDto.getChessBoard();
+    public void save(ChessGame chessGame, int chessGameId) {
+        ChessBoard chessBoard = chessGame.getChessBoard();
         deleteByChessGameId(chessGameId);
-        Map<PositionDto, PieceDto> cells = chessBoard.getCells();
+        Map<Position, Piece> cells = chessBoard.getCells();
         saveCells(cells, chessGameId);
     }
 
@@ -33,16 +33,16 @@ public class PieceDao {
         jdbcTemplate.update(sql, chessGameId);
     }
 
-    private void saveCells(Map<PositionDto, PieceDto> cells, int chessGameId) {
+    private void saveCells(Map<Position, Piece> cells, int chessGameId) {
         String sql = "insert into piece (type, team, `rank`, file, chess_game_id) values (?, ?, ?, ?, ?)";
 
         List<Object[]> parameters = new ArrayList<>();
-        for (PositionDto positionDto : cells.keySet()) {
+        for (Position position : cells.keySet()) {
             parameters.add(new Object[]{
-                    cells.get(positionDto).getSymbol(),
-                    cells.get(positionDto).getTeam(),
-                    positionDto.getRank(),
-                    positionDto.getFile(),
+                    cells.get(position).getSymbol(),
+                    cells.get(position).getTeam().getTeam(),
+                    position.getRank().getRank(),
+                    String.valueOf(position.getFile().getFile()),
                     chessGameId});
         }
 

@@ -47,8 +47,8 @@ public class ChessService {
     }
 
     public int save(String gameName, String password) {
-        int savedId = chessGameDao.save(gameName, password);
-        ChessGame chessGame = new ChessGame(gameName);
+        ChessGame chessGame = new ChessGame(gameName, password);
+        int savedId = chessGameDao.save(chessGame);
         createChessBoard(chessGame, savedId);
         return savedId;
     }
@@ -61,8 +61,7 @@ public class ChessService {
 
     private void createChessBoard(ChessGame chessGame, int chessGameId) {
         chessGame.progress(Command.from("start"));
-        ChessGameDto chessGameDto = ChessGameDto.from(chessGame);
-        pieceDao.save(chessGameDto, chessGameId);
+        pieceDao.save(chessGame, chessGameId);
     }
 
     public void move(String from, String to, int chessGameId) {

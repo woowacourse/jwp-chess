@@ -38,8 +38,9 @@ public class ChessGame {
         Collections.sort(positions);
     }
 
-    public ChessGame(String gameName) {
+    public ChessGame(String gameName, String password) {
         this.gameName = gameName;
+        this.password = password;
         state = new Ready();
         chessBoard = new ChessBoard();
         Collections.sort(positions);
@@ -167,5 +168,13 @@ public class ChessGame {
 
     public boolean isProgress() {
         return state.isProgress();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getTurn() {
+        return state.getTurn();
     }
 }

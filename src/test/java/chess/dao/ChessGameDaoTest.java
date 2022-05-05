@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import chess.domain.ChessGame;
 import chess.domain.Command;
-import chess.dto.ChessGameDto;
 
 @SpringBootTest
 @Transactional
@@ -66,9 +65,9 @@ class ChessGameDaoTest {
     @Test
     @DisplayName("저장된 게임들을 조회해와야 합니다.")
     void findAllChessGames() {
-        List<ChessGameDto> chessGames = chessGameDao.findAllChessGames();
+        List<ChessGame> chessGames = chessGameDao.findAllChessGames();
         List<String> chessGameNames = chessGames.stream()
-            .map(ChessGameDto::getGameName)
+            .map(ChessGame::getGameName)
             .collect(Collectors.toList());
 
         assertThat(chessGameNames).hasSize(3)
@@ -90,9 +89,9 @@ class ChessGameDaoTest {
     @DisplayName("저장된 게임을 삭제할 수 있어야 합니다.")
     void delete() {
         chessGameDao.delete(savedId);
-        List<ChessGameDto> chessGames = chessGameDao.findAllChessGames();
+        List<ChessGame> chessGames = chessGameDao.findAllChessGames();
         List<String> chessGameNames = chessGames.stream()
-            .map(ChessGameDto::getGameName)
+            .map(ChessGame::getGameName)
             .collect(Collectors.toList());
 
         assertThat(chessGameNames).hasSize(2)

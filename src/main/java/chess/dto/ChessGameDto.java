@@ -10,18 +10,8 @@ public class ChessGameDto {
     private String gameName;
     private String turn;
 
-    public ChessGameDto(int chessGameId, String gameName) {
+    private ChessGameDto(int chessGameId, ChessBoardDto chessBoardDto, String gameName, String turn) {
         this.chessGameId = chessGameId;
-        this.gameName = gameName;
-    }
-
-    public ChessGameDto(int chessGameId, String gameName, String turn) {
-        this.chessGameId = chessGameId;
-        this.gameName = gameName;
-        this.turn = turn;
-    }
-
-    private ChessGameDto(ChessBoardDto chessBoardDto, String gameName, String turn) {
         this.chessBoard = chessBoardDto;
         this.gameName = gameName;
         this.turn = turn;
@@ -36,7 +26,7 @@ public class ChessGameDto {
         State state = chessGame.getState();
         String turn = state.getTurn();
 
-        return new ChessGameDto(chessBoardDto, gameName, turn);
+        return new ChessGameDto(chessGame.getId(), chessBoardDto, gameName, turn);
     }
 
     public int getChessGameId() {

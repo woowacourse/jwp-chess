@@ -26,6 +26,7 @@ public class ChessGame {
                     .map(file -> Position.of(file, rank)))
             .collect(toList());
 
+    private int id;
     private final ChessBoard chessBoard;
     private final String gameName;
     private State state;
@@ -42,6 +43,15 @@ public class ChessGame {
         this.gameName = gameName;
         this.password = password;
         state = new Ready();
+        chessBoard = new ChessBoard();
+        Collections.sort(positions);
+    }
+
+    public ChessGame(int id, String gameName, String password, String turn) {
+        this.id = id;
+        this.gameName = gameName;
+        this.password = password;
+        state = State.getState(turn);
         chessBoard = new ChessBoard();
         Collections.sort(positions);
     }
@@ -176,5 +186,9 @@ public class ChessGame {
 
     public String getTurn() {
         return state.getTurn();
+    }
+
+    public int getId() {
+        return id;
     }
 }

@@ -2,6 +2,7 @@ package chess.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,10 @@ public class ChessService {
     }
 
     public List<ChessGameDto> findAllChessGames() {
-        return chessGameDao.findAllChessGames();
+        List<ChessGame> chessGames = chessGameDao.findAllChessGames();
+        return chessGames.stream()
+            .map(ChessGameDto::from)
+            .collect(Collectors.toList());
     }
 
     public void delete(String password, int chessGameId) {

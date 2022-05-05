@@ -19,7 +19,6 @@ import chess.domain.piece.Piece;
 import chess.domain.position.File;
 import chess.domain.position.Position;
 import chess.domain.position.Rank;
-import chess.dto.ChessGameDto;
 
 @Repository
 public class ChessGameDao {
@@ -43,9 +42,9 @@ public class ChessGameDao {
         return keyHolder.getKey().intValue();
     }
 
-    public List<ChessGameDto> findAllChessGames() {
-        String sql = "select id, game_name, turn from chess_game limit 100";
-        return jdbcTemplate.query(sql, chessGameDtoMapper());
+    public List<ChessGame> findAllChessGames() {
+        String sql = "select id, game_name, password, turn from chess_game limit 100";
+        return jdbcTemplate.query(sql, chessGameMapper());
     }
 
     public void update(String turn, int chessGameId) {
@@ -53,11 +52,12 @@ public class ChessGameDao {
         jdbcTemplate.update(sql, turn, chessGameId);
     }
 
-    private RowMapper<ChessGameDto> chessGameDtoMapper() {
+    private RowMapper<ChessGame> chessGameMapper() {
         return (resultSet, rowNum) -> {
-            return new ChessGameDto(
+            return new ChessGame(
                 resultSet.getInt("id"),
                 resultSet.getString("game_name"),
+                resultSet.getString("password"),
                 resultSet.getString("turn")
             );
         };

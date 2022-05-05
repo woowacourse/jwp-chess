@@ -11,17 +11,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
+import chess.domain.ChessGame;
 import chess.domain.Command;
 import chess.dto.ChessGameDto;
 import chess.exception.DeleteProgressGameException;
 import chess.exception.PasswordNotMatchedException;
 
 @SpringBootTest
-@Transactional
 class ChessServiceTest {
     private ChessService chessService;
     private int savedId;
@@ -34,6 +33,21 @@ class ChessServiceTest {
     @BeforeEach
     void setUp() {
         chessService = new ChessService(chessGameDao, pieceDao);
+        deleteData();
+        saveInitData();
+    }
+
+    private void deleteData() {
+        List<ChessGame> chessGames = chessGameDao.findAllChessGames();
+        List<Integer> chessGamesIds = chessGames.stream()
+            .map(ChessGame::getId)
+            .collect(Collectors.toList());
+        for (Integer chessGamesId : chessGamesIds) {
+            chessGameDao.delete(chessGamesId);
+        }
+    }
+
+    private void saveInitData() {
         savedId = chessService.save("test_game1", "1234");
         chessService.save("test_game2", "1234");
         chessService.save("test_game3", "1234");

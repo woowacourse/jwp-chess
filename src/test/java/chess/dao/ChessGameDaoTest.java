@@ -9,15 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 import chess.domain.ChessGame;
 import chess.domain.Command;
 
-@SpringBootTest
-@Transactional
+@JdbcTest
 class ChessGameDaoTest {
     private ChessGameDao chessGameDao;
     private PieceDao pieceDao;
@@ -31,6 +29,21 @@ class ChessGameDaoTest {
         chessGameDao = new ChessGameDao(jdbcTemplate);
         pieceDao = new PieceDao(jdbcTemplate);
 
+        deleteData();
+        saveInitData();
+    }
+
+    private void deleteData() {
+        List<ChessGame> chessGames = chessGameDao.findAllChessGames();
+        List<Integer> chessGamesIds = chessGames.stream()
+            .map(ChessGame::getId)
+            .collect(Collectors.toList());
+        for (Integer chessGamesId : chessGamesIds) {
+            chessGameDao.delete(chessGamesId);
+        }
+    }
+
+    private void saveInitData() {
         String gameName = "test_game1";
         savedId = chessGameDao.save(new ChessGame(gameName, "1234"));
         savePieces(savedId);

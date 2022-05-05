@@ -70,12 +70,8 @@ public class SpringController {
     }
 
     @GetMapping("/game/{chessGameId}/start")
-    public String start(@PathVariable int chessGameId, Model model, RedirectAttributes redirectAttributes) {
-        try {
-            chessService.start(chessGameId);
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addAttribute("error", e.getMessage());
-        }
+    public String start(@PathVariable int chessGameId, Model model) {
+        chessService.start(chessGameId);
         model.addAttribute("chessGameId", chessGameId);
         return "redirect:/game/" + chessGameId;
     }
@@ -85,15 +81,10 @@ public class SpringController {
         @PathVariable int chessGameId,
         @RequestParam("from") String from,
         @RequestParam("to") String to,
-        Model model,
-        RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
-        try {
-            chessService.move(from, to, chessGameId);
-            if (chessService.isEnd(chessGameId)) {
-                return "redirect:/game/" + chessGameId + "/end";
-            }
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addAttribute("error", e.getMessage());
+        Model model) throws UnsupportedEncodingException {
+        chessService.move(from, to, chessGameId);
+        if (chessService.isEnd(chessGameId)) {
+            return "redirect:/game/" + chessGameId + "/end";
         }
 
         model.addAttribute("chessGameId", chessGameId);
@@ -101,13 +92,10 @@ public class SpringController {
     }
 
     @GetMapping("/game/{chessGameId}/end")
-    public String end(@PathVariable int chessGameId, Model model, RedirectAttributes redirectAttributes) {
-        try {
-            String winTeamName = chessService.finish(Command.from("end"), chessGameId);;
-            model.addAttribute("winTeam", winTeamName);
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addAttribute("error", e.getMessage());
-        }
+    public String end(@PathVariable int chessGameId, Model model) {
+        String winTeamName = chessService.finish(Command.from("end"), chessGameId);
+        model.addAttribute("winTeam", winTeamName);
+
         List<PieceDto> pieceDtos = chessService.getPieces(chessGameId);
         model.addAttribute("chessGameId", chessGameId);
         model.addAttribute("pieces", pieceDtos);

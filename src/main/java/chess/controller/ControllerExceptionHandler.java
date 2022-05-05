@@ -1,5 +1,9 @@
 package chess.controller;
 
+import java.net.URI;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -14,7 +18,7 @@ public class ControllerExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @ExceptionHandler({DeleteChessGameException.class})
+    @ExceptionHandler(DeleteChessGameException.class)
     public String handleDeleteException(RedirectAttributes redirectAttributes,
         DeleteChessGameException exception) {
         logger.error(exception.getMessage());
@@ -22,7 +26,17 @@ public class ControllerExceptionHandler {
         return "redirect:/";
     }
 
-    @ExceptionHandler({DataAccessException.class})
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handleIllegalArgumentException(RedirectAttributes redirectAttributes,
+        HttpServletRequest request, IllegalArgumentException exception) {
+        redirectAttributes.addAttribute("error", exception.getMessage());
+
+        String referer = request.getHeader("Referer");
+        String path = URI.create(referer).getPath();
+        return "redirect:" + path;
+    }
+
+    @ExceptionHandler(DataAccessException.class)
     public String handleDataAccessException(DataAccessException exception) {
         logger.error(exception.getMessage());
         return "error";

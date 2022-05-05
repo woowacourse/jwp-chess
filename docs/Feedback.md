@@ -71,3 +71,10 @@
     - [x] JsonProcessingException이 필요한가?
         - ObjectMapper.readValue()의 사용을 통해 필요한 Exception이었으나 해당 메서드를 사용하지 않게 되어 제거
 - [x] `Field Injection`에 대한 학습
+- [ ] `BoardDao` 인터페이스의 필요성
+    - [ ] 테스트를 위한 Interface -> 다른 테스트 방법 확인 필요
+    - `BoardDao 인터페이스 제거`
+- [x] `DAO`에서 불필요한 `DTO`의 사용
+    - `BoardDao`에서 `BoardDto`, `PieceDto`, `PointDto`의 사용 제거 및 클래스 제거
+
+

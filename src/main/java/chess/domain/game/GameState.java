@@ -34,6 +34,10 @@ public abstract class GameState {
         return board.getPointPieces();
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public State getState() {
         return state;
     }

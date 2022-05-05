@@ -29,6 +29,10 @@ public class Board {
         }
     }
 
+    public static Board of(Map<Point, Piece> pointPieces) {
+        return new Board(pointPieces);
+    }
+
     public static Board of(BoardGenerator generator) {
         return new Board(generator.generate());
     }

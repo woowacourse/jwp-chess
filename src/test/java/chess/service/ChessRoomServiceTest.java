@@ -6,24 +6,20 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.database.dao.BoardDao;
 import chess.database.dao.GameDao;
-import chess.database.dao.spring.RoomDao;
-import chess.database.dto.BoardDto;
-import chess.database.dto.GameStateDto;
+import chess.database.dao.RoomDao;
 import chess.database.dto.RoomDto;
 import chess.database.dto.RouteDto;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
-import chess.domain.game.State;
-import chess.dto.Arguments;
 import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,28 +33,36 @@ class ChessRoomServiceTest {
     private static final String TEST_CREATION_ROOM_PASSWORD = "4321";
 
     @Autowired
+    private final JdbcTemplate jdbcTemplate;
+
+    ChessRoomServiceTest(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     private RoomDao roomDao;
-    @Autowired
     private GameDao gameDao;
-    @Autowired
     private BoardDao boardDao;
 
     @Autowired
     private ChessRoomService chessRoomService;
 
-    private RoomDto firstRoomDto;
     private RoomDto secondRoomDto;
+    private RoomDto firstRoomDto;
 
     @BeforeEach
     void beforeEach() {
+        roomDao = new RoomDao(jdbcTemplate);
+        gameDao = new GameDao(jdbcTemplate);
+        boardDao = new BoardDao(jdbcTemplate);
+
         firstRoomDto = new RoomDto(TEST_ROOM_NAME, TEST_ROOM_PASSWORD);
         secondRoomDto = new RoomDto(TEST_ROOM_NAME, TEST_ROOM_PASSWORD);
         GameState state = new Ready();
         Board board = Board.of(new InitialBoardGenerator());
 
         firstRoomDto = roomDao.create(firstRoomDto);
-        gameDao.create(GameStateDto.of(state), firstRoomDto.getId());
-        boardDao.saveBoard(BoardDto.of(board.getPointPieces()), firstRoomDto.getId());
+        gameDao.create(firstRoomDto.getId(), state);
+        boardDao.saveBoard(firstRoomDto.getId(), board);
     }
 
     @Sql("/sql/chess-test.sql")

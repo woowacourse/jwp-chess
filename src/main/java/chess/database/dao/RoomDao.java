@@ -1,4 +1,4 @@
-package chess.database.dao.spring;
+package chess.database.dao;
 
 import chess.database.dto.RoomDto;
 import java.util.List;

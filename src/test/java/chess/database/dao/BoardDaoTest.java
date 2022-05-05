@@ -3,14 +3,7 @@ package chess.database.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import chess.database.dao.spring.RoomDao;
-import chess.database.dao.spring.SpringBoardDao;
-import chess.database.dao.spring.SpringGameDao;
-import chess.database.dto.BoardDto;
-import chess.database.dto.GameStateDto;
-import chess.database.dto.PointDto;
 import chess.database.dto.RoomDto;
-import chess.database.dto.RouteDto;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
 import chess.domain.board.Point;
@@ -18,7 +11,6 @@ import chess.domain.board.Route;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +39,8 @@ class BoardDaoTest {
     @BeforeEach
     void setUp() {
         roomDao = new RoomDao(jdbcTemplate);
-        gameDao = new SpringGameDao(jdbcTemplate);
+        gameDao = new GameDao(jdbcTemplate);
+        boardDao = new BoardDao(jdbcTemplate);
         state = new Ready();
 
         RoomDto testRoomDto = new RoomDto(TEST_ROOM_NAME, TEST_ROOM_PASSWORD);
@@ -56,13 +49,13 @@ class BoardDaoTest {
         testRoomDto = roomDao.create(testRoomDto);
         testRoomDto2 = roomDao.create(testRoomDto2);
 
-        gameDao.create(GameStateDto.of(state), testRoomDto.getId());
-        gameDao.create(GameStateDto.of(state), testRoomDto2.getId());
+        gameDao.create(testRoomDto.getId(), state);
+        gameDao.create(testRoomDto2.getId(), state);
 
-        boardDao = new SpringBoardDao(jdbcTemplate);
+        boardDao = new BoardDao(jdbcTemplate);
         Board board = Board.of(new InitialBoardGenerator());
 
-        boardDao.saveBoard(BoardDto.of(board.getPointPieces()), testRoomDto.getId());
+        boardDao.saveBoard(testRoomDto.getId(), board);
     }
 
     @Sql("/sql/chess-test.sql")
@@ -74,7 +67,7 @@ class BoardDaoTest {
         RoomDto roomDto = roomDao.findByName(TEST_CREATION_ROOM_NAME);
 
         assertThatCode(
-            () -> boardDao.saveBoard(BoardDto.of(board.getPointPieces()), roomDto.getId()))
+            () -> boardDao.saveBoard(roomDto.getId(), board))
             .doesNotThrowAnyException();
         boardDao.removeBoard(roomDao.findByName(TEST_CREATION_ROOM_NAME).getId());
     }
@@ -86,9 +79,7 @@ class BoardDaoTest {
 
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
 
-        BoardDto boardDto = boardDao.readBoard(roomDto.getId());
-
-        assertThat(boardDto.getPointPieces().size()).isEqualTo(32);
+        assertThat(boardDao.readBoard(roomDto.getId()).getPointPieces().size()).isEqualTo(32);
     }
 
     @Sql("/sql/chess-test.sql")
@@ -99,7 +90,7 @@ class BoardDaoTest {
         Route route = Route.of(List.of("a2", "a4"));
 
         assertThatCode(
-            () -> boardDao.updatePiece(route.getSource(), route.getDestination(), roomDto.getId()))
+            () -> boardDao.updatePiece(roomDto.getId(), route.getSource(), route.getDestination()))
             .doesNotThrowAnyException();
     }
 
@@ -110,7 +101,7 @@ class BoardDaoTest {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         Point point = Point.of("b2");
 
-        assertThatCode(() -> boardDao.deletePiece(point, roomDto.getId()))
+        assertThatCode(() -> boardDao.deletePiece(roomDto.getId(), point))
             .doesNotThrowAnyException();
     }
 }

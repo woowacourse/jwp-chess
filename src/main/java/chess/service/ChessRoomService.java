@@ -3,14 +3,12 @@ package chess.service;
 import chess.database.GameStateGenerator;
 import chess.database.dao.BoardDao;
 import chess.database.dao.GameDao;
-import chess.database.dao.spring.RoomDao;
-import chess.database.dto.BoardDto;
+import chess.database.dao.RoomDao;
 import chess.database.dto.GameStateDto;
 import chess.database.dto.RoomDto;
 import chess.database.dto.RouteDto;
 import chess.domain.Room;
 import chess.domain.board.Board;
-import chess.domain.board.CustomBoardGenerator;
 import chess.domain.board.Route;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
@@ -39,34 +37,34 @@ public class ChessRoomService {
         validateDuplicateRoom(roomName);
         roomDto = roomDao.create(roomDto);
         GameState state = new Ready();
-        gameDao.create(GameStateDto.of(state), roomDto.getId());
-        boardDao.saveBoard(BoardDto.of(state.getPointPieces()), roomDto.getId());
+        gameDao.create(roomDto.getId(), state);
+
+        boardDao.saveBoard(roomDto.getId(), state.getBoard());
         return roomDto;
     }
 
     public void startGame(int roomId) {
         GameState state = readGameState(roomId).start();
-        gameDao.updateState(GameStateDto.of(state), roomId);
+        gameDao.updateState(roomId, GameStateDto.of(state));
     }
 
     public void finishGame(int roomId) {
         GameState state = readGameState(roomId).finish();
-        gameDao.updateState(GameStateDto.of(state), roomId);
+        gameDao.updateState(roomId, GameStateDto.of(state));
     }
 
     public GameState readGameState(int roomId) {
         GameStateDto gameStateDto = gameDao.readStateAndColor(roomId);
-        BoardDto boardDto = boardDao.readBoard(roomId);
-        Board board = Board.of(new CustomBoardGenerator(boardDto));
+        Board board = boardDao.readBoard(roomId);
         return GameStateGenerator.generate(board, gameStateDto);
     }
 
     public GameState moveBoard(int roomId, RouteDto routeDto) {
         GameState movedState = readGameState(roomId).move(routeDto);
-        gameDao.updateState(GameStateDto.of(movedState), roomId);
+        gameDao.updateState(roomId, GameStateDto.of(movedState));
         Route route = Route.of(routeDto);
-        boardDao.deletePiece(route.getDestination(), roomId);
-        boardDao.updatePiece(route.getSource(), route.getDestination(), roomId);
+        boardDao.deletePiece(roomId, route.getDestination());
+        boardDao.updatePiece(roomId, route.getSource(), route.getDestination());
         return movedState;
     }
 

@@ -3,13 +3,10 @@ package chess.database.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import chess.database.dao.spring.RoomDao;
-import chess.database.dao.spring.SpringGameDao;
 import chess.database.dto.GameStateDto;
 import chess.database.dto.RoomDto;
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,16 +26,17 @@ class GameDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     private GameDao gameDao;
     private RoomDao roomDao;
 
     @BeforeEach
     void setUp() {
-        gameDao = new SpringGameDao(jdbcTemplate);
+        gameDao = new GameDao(jdbcTemplate);
         roomDao = new RoomDao(jdbcTemplate);
         GameState state = new Ready();
         RoomDto roomDto = roomDao.create(new RoomDto(TEST_ROOM_NAME, TEST_ROOM_PASSWORD));
-        gameDao.create(GameStateDto.of(state), roomDto.getId());
+        gameDao.create(roomDto.getId(), state);
     }
 
     @Sql("/sql/chess-test.sql")
@@ -48,7 +46,7 @@ class GameDaoTest {
         GameState state = new Ready();
         RoomDto roomDto = roomDao.create(
             new RoomDto(TEST_CREATION_ROOM_NAME, TEST_CREATION_ROOM_PASSWORD));
-        assertThatCode(() -> gameDao.create(GameStateDto.of(state), roomDto.getId()))
+        assertThatCode(() -> gameDao.create(roomDto.getId(), state))
             .doesNotThrowAnyException();
         int findId = roomDao.findByName(TEST_CREATION_ROOM_NAME).getId();
         gameDao.removeGame(findId);
@@ -80,7 +78,7 @@ class GameDaoTest {
         GameState started = state.start();
 
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
-        gameDao.updateState(GameStateDto.of(started), roomDto.getId());
+        gameDao.updateState(roomDto.getId(), GameStateDto.of(started));
 
         GameStateDto stateAndColor = gameDao.readStateAndColor(roomDto.getId());
 

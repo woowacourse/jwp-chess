@@ -69,7 +69,6 @@ public class ChessRoomService {
     }
 
     public void removeRoom(RoomDto roomDto) {
-        validateExistRoom(roomDto.getId());
         RoomDto findRoomDto = roomDao.findById(roomDto.getId());
         Room room = new Room(findRoomDto.getName(), findRoomDto.getPassword());
         room.validatePassword(roomDto.getPassword());
@@ -99,12 +98,6 @@ public class ChessRoomService {
     private void validateDuplicateRoom(String roomName) {
         if (roomDao.existRoomName(roomName)) {
             throw new IllegalArgumentException("[ERROR] 이름의 방이 이미 존재합니다.");
-        }
-    }
-
-    private void validateExistRoom(int roomId) {
-        if (!roomDao.existRoomId(roomId)) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다.");
         }
     }
 

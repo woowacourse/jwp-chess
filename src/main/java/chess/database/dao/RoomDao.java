@@ -42,11 +42,6 @@ public class RoomDao {
             .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 방입니다."));
     }
 
-    public void delete(int roomId) {
-        final String sql = "DELETE FROM room WHERE id = ?";
-        jdbcTemplate.update(sql, roomId);
-    }
-
     public List<RoomDto> findAll() {
         String sql = "select id, name from room";
         return jdbcTemplate.query(sql, (resultSet, rowNum) ->
@@ -56,13 +51,11 @@ public class RoomDao {
 
     public boolean existRoomName(String roomName) {
         String sql = "select count(*) from room where name = ?";
-        Optional<Integer> count = Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class, roomName));
-        return count.isPresent() && count.get() >= 1;
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class, roomName)).isPresent();
     }
 
-    public boolean existRoomId(int roomId) {
-        String sql = "select count(*) from room where id = ?";
-        Optional<Integer> count = Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class, roomId));
-        return count.isPresent() && count.get() >= 1;
+    public void delete(int roomId) {
+        final String sql = "DELETE FROM room WHERE id = ?";
+        jdbcTemplate.update(sql, roomId);
     }
 }

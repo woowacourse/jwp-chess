@@ -76,5 +76,5 @@
     - `BoardDao 인터페이스 제거`
 - [x] `DAO`에서 불필요한 `DTO`의 사용
     - `BoardDao`에서 `BoardDto`, `PieceDto`, `PointDto`의 사용 제거 및 클래스 제거
-
-
+- [x] `RoomDAO` - 중복 검증 메서드 코드 수정
+    - Optional 활용하여 코드 간소화

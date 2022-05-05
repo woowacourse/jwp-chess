@@ -29,6 +29,7 @@ public class ChessGame {
     private final ChessBoard chessBoard;
     private final String gameName;
     private State state;
+    private String password;
 
     public ChessGame() {
         gameName = "";
@@ -44,9 +45,10 @@ public class ChessGame {
         Collections.sort(positions);
     }
 
-    public ChessGame(String turn, String gameName, Map<Position, Piece> cells) {
-        this.gameName = gameName;
+    public ChessGame(String turn, String gameName, String password, Map<Position, Piece> cells) {
         this.state = State.getState(turn);
+        this.gameName = gameName;
+        this.password = password;
         this.chessBoard = new ChessBoard(cells);
         Collections.sort(positions);
     }
@@ -89,6 +91,10 @@ public class ChessGame {
 
     private double calculateScore(Team team) {
         return chessBoard.calculateScoreByTeam(team);
+    }
+
+    public boolean matchPassword(String password) {
+        return this.password.equals(password);
     }
 
     public List<String> getSymbols() {

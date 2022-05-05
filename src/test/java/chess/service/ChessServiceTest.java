@@ -17,6 +17,8 @@ import chess.dao.ChessGameDao;
 import chess.dao.PieceDao;
 import chess.domain.Command;
 import chess.dto.ChessGameDto;
+import chess.exception.DeleteProgressGameException;
+import chess.exception.PasswordNotMatchedException;
 
 @SpringBootTest
 @Transactional
@@ -67,17 +69,17 @@ class ChessServiceTest {
     @Test
     @DisplayName("진행중인 게임을 삭제하면 예외를 반환해야 합니다.")
     void deleteNotEndGame() {
+        chessService.start(savedId);
         assertThatThrownBy(() -> chessService.delete("1234", savedId))
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(DeleteProgressGameException.class);
     }
 
     @Test
-    @DisplayName("게임을 삭제할 때 비밀번호가 틀리면 삭제하지 않아야 합니다.")
+    @DisplayName("게임을 삭제할 때 비밀번호가 틀리면 예외를 발생해야 합니다.")
     void deleteWrongPassword() {
         chessService.finish(Command.from("end"), savedId);
-        chessService.delete("123", savedId);
-        List<String> chessBoard = chessService.findChessBoardById(savedId);
-        assertThat(chessBoard).isNotNull();
+        assertThatThrownBy(() -> chessService.delete("123", savedId))
+            .isInstanceOf(PasswordNotMatchedException.class);
     }
 
     @Test

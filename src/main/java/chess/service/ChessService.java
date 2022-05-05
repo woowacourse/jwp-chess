@@ -14,6 +14,8 @@ import chess.domain.piece.Team;
 import chess.domain.position.Position;
 import chess.dto.ChessGameDto;
 import chess.dto.PieceDto;
+import chess.exception.DeleteProgressGameException;
+import chess.exception.PasswordNotMatchedException;
 
 @Service
 public class ChessService {
@@ -31,16 +33,17 @@ public class ChessService {
     }
 
     public void delete(String password, int chessGameId) {
-        if (!isProgress(chessGameId)) {
-            chessGameDao.delete(password, chessGameId);
-            return;
-        }
-        throw new IllegalArgumentException("게임이 진행중 입니다.");
-    }
-
-    private boolean isProgress(int chessGameId) {
         ChessGame chessGame = chessGameDao.findById(chessGameId);
-        return chessGame.isProgress();
+
+        if (chessGame.isProgress()) {
+            throw new DeleteProgressGameException("게임이 진행중 입니다.");
+        }
+
+        if (!chessGame.matchPassword(password)) {
+            throw new PasswordNotMatchedException("패스워드가 틀립니다.");
+        }
+
+        chessGameDao.delete(chessGameId);
     }
 
     public int save(String gameName, String password) {

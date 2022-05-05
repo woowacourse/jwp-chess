@@ -90,7 +90,7 @@ class ChessGameDaoTest {
     @Test
     @DisplayName("저장된 게임을 삭제할 수 있어야 합니다.")
     void delete() {
-        chessGameDao.delete("1234", savedId);
+        chessGameDao.delete(savedId);
         List<ChessGameDto> chessGames = chessGameDao.findAllChessGames();
         List<String> chessGameNames = chessGames.stream()
             .map(ChessGameDto::getGameName)

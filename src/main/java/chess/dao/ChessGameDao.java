@@ -65,7 +65,7 @@ public class ChessGameDao {
 
     public ChessGame findById(int chessGameId) {
         String sql =
-            "select chess_game.turn, chess_game.game_name, piece.type, piece.team, piece.`rank`, piece.file "
+            "select chess_game.turn, chess_game.game_name, chess_game.password, piece.type, piece.team, piece.`rank`, piece.file "
                 + "from chess_game, piece "
                 + "where chess_game.id = piece.chess_game_id AND chess_game.id = ?";
         return jdbcTemplate.queryForObject(sql, chessGameRowMapper, chessGameId);
@@ -78,13 +78,14 @@ public class ChessGameDao {
         cells.put(makePosition(resultSet), makePiece(resultSet));
         String turn = resultSet.getString("turn");
         String gameName = resultSet.getString("game_name");
+        String password = resultSet.getString("password");
         while (resultSet.next()) {
             Position position = makePosition(resultSet);
             Piece piece = makePiece(resultSet);
             cells.put(position, piece);
         }
 
-        return new ChessGame(turn, gameName, cells);
+        return new ChessGame(turn, gameName, password, cells);
     }
 
     private Position makePosition(ResultSet resultSet) throws SQLException {
@@ -101,8 +102,8 @@ public class ChessGameDao {
         return PieceConverter.from(type, team);
     }
 
-    public void delete(String password, int chessGameId) {
-        String sql = "delete from chess_game where password = ? and id = ?";
-        jdbcTemplate.update(sql, password, chessGameId);
+    public void delete(int chessGameId) {
+        String sql = "delete from chess_game where id = ?";
+        jdbcTemplate.update(sql, chessGameId);
     }
 }

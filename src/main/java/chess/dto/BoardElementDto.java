@@ -2,6 +2,7 @@ package chess.dto;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
+import java.util.Objects;
 
 public final class BoardElementDto {
 
@@ -31,5 +32,23 @@ public final class BoardElementDto {
 
     public String getPosition() {
         return position;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        BoardElementDto that = (BoardElementDto) o;
+        return Objects.equals(pieceName, that.pieceName) && Objects.equals(pieceColor, that.pieceColor)
+                && Objects.equals(position, that.position);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceName, pieceColor, position);
     }
 }

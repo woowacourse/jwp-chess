@@ -1,17 +1,19 @@
 package chess.controller;
 
+import chess.dto.ChessGameDto;
+import chess.dto.DeleteRequestDto;
+import chess.dto.DeleteResponseDto;
 import chess.dto.MoveDto;
+import chess.dto.RoomDto;
 import chess.service.ChessService;
-import com.google.gson.Gson;
+import chess.view.WebInputValicator;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-
 @Controller
 public class WebController {
-
-    private final Gson gson = new Gson();
     private final ChessService chessService;
 
     public WebController(ChessService chessService) {
@@ -20,30 +22,56 @@ public class WebController {
 
     @GetMapping("/")
     public String showFirstPage() {
-        return "index";
+        return "roomlist";
     }
 
-    @GetMapping("/start")
-    @ResponseBody
-    public String startGame() {
-        return gson.toJson(chessService.newGame());
+    @GetMapping("/games")
+    public ResponseEntity<List<RoomDto>> showChessRoomListPage() {
+        return ResponseEntity.ok().body(chessService.loadRooms());
     }
 
-    @GetMapping("/restart")
-    @ResponseBody
-    public String restart() {
-        return gson.toJson(chessService.loadGame());
+    @DeleteMapping("/games")
+    public ResponseEntity<DeleteResponseDto> delete(@RequestBody DeleteRequestDto deleteRequestDto) {
+        return ResponseEntity.ok().body(chessService.deleteGame(deleteRequestDto));
     }
 
-    @PutMapping("/move")
-    @ResponseBody
-    public String move(@RequestBody MoveDto moveDto) {
-        return gson.toJson(chessService.move(moveDto.getFrom(), moveDto.getTo()));
+    @GetMapping("/game/{id}")
+    public String showBoard() {
+        return "room";
     }
 
-    @ExceptionHandler({RuntimeException.class})
-    private ResponseEntity<String> handleException(final RuntimeException exception) {
-        ResponseEntity.status(500);
-        return ResponseEntity.badRequest().body(gson.toJson(exception.getMessage()));
+    @GetMapping("/reset/{id}")
+    public ResponseEntity<ChessGameDto> startGame(@PathVariable int id) {
+        return ResponseEntity.ok().body(chessService.newGame(id));
+    }
+
+    @GetMapping("/load/{id}")
+    public ResponseEntity<ChessGameDto> restart(@PathVariable("id") int id) {
+        return ResponseEntity.ok().body(chessService.loadGame(id));
+    }
+
+    @PutMapping("/move/{id}")
+    public ResponseEntity<ChessGameDto> move(@PathVariable("id") int id, @RequestBody MoveDto moveDto) {
+        return ResponseEntity.ok().body(chessService.move(id, moveDto.getFrom(), moveDto.getTo()));
+    }
+
+    @GetMapping("/endGame/{id}")
+    public ResponseEntity<ChessGameDto> endGame(@PathVariable("id") int id) {
+        chessService.endGame(id);
+        return ResponseEntity.ok().body(chessService.loadGame(id));
+    }
+
+    @GetMapping("/join")
+    public String showJoinPage() {
+        return "join";
+    }
+
+    @PostMapping("/roomInformation")
+    public String createRoom(@RequestParam(value="name") String name,
+                             @RequestParam(value="password") String password) {
+        WebInputValicator.checkRoomName(name);
+        WebInputValicator.checkRoomPassword(password);
+        chessService.createRoom(name, password);
+        return "redirect:/";
     }
 }

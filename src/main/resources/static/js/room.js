@@ -1,15 +1,27 @@
-const startButton = document.querySelector("#start-button");
-const restartButton = document.querySelector("#restart-button");
+const resetButton = document.querySelector("#reset-button");
+const loadButton = document.querySelector("#load-button");
+const endButton = document.querySelector("#end-button");
 const chessBoard = document.querySelector("table");
 const whiteScore = document.querySelector("#white-score");
 const blackScore = document.querySelector("#black-score");
 
-startButton.addEventListener("click", onClickStartButton);
-restartButton.addEventListener("click", onClickRestartButton);
+resetButton.addEventListener("click", onClickResetButton);
+loadButton.addEventListener("click", onClickLoadButton);
+endButton.addEventListener("click", onClickEndButton);
 chessBoard.addEventListener("click", onClickBoard);
 
-async function onClickStartButton () {
-    const response = await fetch("/start");
+const urls = location.href.split('/');
+const gameId = urls[urls.length - 1];
+
+async function onClickEndButton () {
+    const response = await fetch(`/endGame/${gameId}`);
+    if (response.ok) {
+        removeAllPiece();
+    }
+}
+
+async function onClickResetButton () {
+    const response = await fetch(`/reset/${gameId}`);
     const data = await response.json();
 
     if (response.ok) {
@@ -47,8 +59,8 @@ function createPieceImage ({color, name}) {
     return image;
 }
 
-async function onClickRestartButton () {
-    const response = await fetch("/restart");
+async function onClickLoadButton () {
+    const response = await fetch(`/load/${gameId}`);
     const data = await response.json();
 
     if (response.ok) {
@@ -60,7 +72,7 @@ async function onClickRestartButton () {
 }
 
 function onClickBoard ({target: {classList, id, parentNode}}) {
-    if (!hasFirstSelected()) {
+    if (!hasFirstSelected() && isPiece(id)) {
         classList.toggle("first-selected");
         return;
     }
@@ -70,6 +82,14 @@ function onClickBoard ({target: {classList, id, parentNode}}) {
         onClickPiece(id);
         return;
     }
+}
+
+function isPiece(id) {
+    if (id === "") {
+        return true;
+    }
+    alert("기물을 선택해 주세요.");
+    return false;
 }
 
 function hasFirstSelected () {
@@ -86,11 +106,11 @@ async function onClickPiece (id) {
 
     removeSelected();
 
-    const response = await fetch("/move", {
-                       method: "put",
-                       headers: {"Content-Type": "application/json"},
-                       body: JSON.stringify({from: from, to: to})
-                     });
+    const response = await fetch(`/move/${gameId}`, {
+        method: "put",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({from: from, to: to})
+    });
     const data = await response.json();
     if (response.ok) {
         movePiece(from, to);

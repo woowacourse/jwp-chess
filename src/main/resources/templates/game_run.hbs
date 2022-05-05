@@ -345,13 +345,25 @@
         </td>
     </tr>
 </table>
-<center> 저장한 게임을 불러왔습니다. 흑팀의 차례입니다. 현재 점수를 보려면 "status"를 입력하세요. </center>
-<br />
-<center> 말을 움직이고 싶다면 "move 목적지 도착지"의 형식으로 입력하세요 </center>
 <center>
-    <form action="move" method="post" >
-        <input type="hidden" name="roomId" value={{roomId}}>
-        입력 <input name="command" type="text">  <button type="submit"> 제출 </button>
+    <form action="gameRun" method="post">
+        <input type="hidden" name="roomName" value={{roomName}}>
+        현재 {{color}}의 차례입니다.
+        <input type="text" name="source" placeholder="출발 위치"> </input>
+        <input type="text" name="dest" placeholder="도착 위치"> </input>
+        <button type="submit"> 이동 </button>
+    </form>
+    <form action="gameScore" method="post">
+        <input type="hidden" name="roomName" value={{roomName}}>
+        <button type="submit"> 점수 보기 </button>
+    </form>
+    <form action="gameEnd" method="post">
+        <input type="hidden" name="roomName" value={{roomName}}>
+        <button type="submit"> 게임 끝내기 </button>
+    </form>
+    <form action="gameSave" method="post">
+        <input type="hidden" name="roomName" value={{roomName}}>
+        <button type="submit"> 게임 저장하기 </button>
     </form>
 </center>
 </body>

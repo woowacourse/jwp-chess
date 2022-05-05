@@ -1,8 +1,8 @@
 package chess.db;
 
+import chess.domain.board.Board;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-import chess.domain.state.State;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ public class BoardDAO {
 
     private static final String FIND_ALL_SQL = "select location, name, color from board where roomID = ?";
     private static final String INSERT_ONE_PIECE_SQL = "insert into board (location, name, color, roomID) values (?, ?, ?, ?)";
-    private static final String DELETE_ONE_PIECE_SQL = "delete from board where location = ? and roomID = ?";
+    private static final String DELETE_BOARD_SQL = "delete from board where roomID = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -30,13 +30,6 @@ public class BoardDAO {
                     resultSet.getString("name")
     );
 
-    public void initializePieces(State state, String roomId) {
-        Map<Position, Piece> pieces = state.getBoard().getPieces();
-        for (Position position : pieces.keySet()) {
-            insert(position, pieces.get(position), roomId);
-        }
-    }
-
     public Map<Position, Piece> findAllPieces(String roomId) {
         List<PiecesDTO> pieces = jdbcTemplate.query(FIND_ALL_SQL, pieceRowMapper, roomId);
         Map<Position, Piece> result = new HashMap<>();
@@ -46,11 +39,18 @@ public class BoardDAO {
         return result;
     }
 
-    public void insert(Position position, Piece piece, String roomId) {
-        jdbcTemplate.update(INSERT_ONE_PIECE_SQL, position.getPosition(), piece.getName(), piece.getColor(), roomId);
+    public void deleteBoard(String roomId) {
+        jdbcTemplate.update(DELETE_BOARD_SQL, roomId);
     }
 
-    public void delete(Position position, String roomId) {
-        jdbcTemplate.update(DELETE_ONE_PIECE_SQL, position.getPosition(), roomId);
+    public void insertBoard(Board board, String roomId) {
+        Map<Position, Piece> pieces = board.getPieces();
+        for (Position position : pieces.keySet()) {
+            insert(position, pieces.get(position), roomId);
+        }
+    }
+
+    private void insert(Position position, Piece piece, String roomId) {
+        jdbcTemplate.update(INSERT_ONE_PIECE_SQL, position.getPosition(), piece.getName(), piece.getColor(), roomId);
     }
 }

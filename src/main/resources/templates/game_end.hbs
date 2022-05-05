@@ -345,12 +345,11 @@
         </td>
     </tr>
 </table>
-    <form action="move" method="post" >
-        <input type="hidden" name="roomId" value={{roomId}}>
-        현재 백팀의 차례입니다. 말을 움직이고 싶다면 "move a1 b1"의 형식으로 입력하세요.
-        <br />
-        점수를 보고 싶다면 "status"의 형식으로 입력하세요. 턴은 유지됩니다.
-        입력 <input name="command" type="text"> <button type="submit"> 제출 </button>
+<center>
+    <form action="/" method="post">
+        <input type="hidden" name="roomName" value={{roomName}}> </input>
+        <button type="submit"> 게임이 종료되었습니다. </button>
     </form>
+</center>
 </body>
 </html>

@@ -2,7 +2,6 @@ package chess.domain.score;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import chess.domain.ChessScore;
 import chess.domain.piece.Bishop;
 import chess.domain.piece.King;
 import chess.domain.piece.Knight;

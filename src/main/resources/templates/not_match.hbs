@@ -153,13 +153,14 @@
         </td>
     </tr>
 </table>
-    <center> 체스게임을 시작하려면 start, 체스게임을 끝내려면 end를 입력하세요. </center>
-    <br />
-    <center>
-        <form action="ready" method="post">
-            <input type="hidden" name="roomId" value={{roomId}}>
-            입력 <input name="command" type="text">  <button type="submit"> 제출 </button>
-        </form>
-    </center>
+<center>
+<div>
+    <form action="redirectPassword" method="post">
+        <input type="hidden" name="roomName" value={{roomName}}> </input>
+        비밀번호가 맞지 않습니다.
+        <button type="submit"> 확인 </button>
+    </form>
+</div>
+</center>
 </body>
 </html>

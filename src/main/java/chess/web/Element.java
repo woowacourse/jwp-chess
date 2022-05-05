@@ -1,6 +1,6 @@
 package chess.web;
 
-import chess.domain.ChessScore;
+import chess.domain.score.ChessScore;
 import chess.domain.piece.Piece;
 
 public class Element {

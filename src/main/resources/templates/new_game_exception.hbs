@@ -153,18 +153,15 @@
         </td>
     </tr>
 </table>
-<center>
-<div>
-    <form action="newGame" method="get">
-        <button type="submit"> 새 게임 시작 </button>
-    </form>
-    <form action="searchSave" method="get">
-            <button type="submit"> 진행 중인 게임 조회 </button>
-    </form>
-    <form action="searchEnd" method="get">
-                <button type="submit"> 종료된 게임 조회 </button>
-    </form>
-</div>
-</center>
+    <center> [ERROR] {{exception}} </center>
+    <br />
+    <center>
+        <form action="newGame" method="get">
+             <button type="submit"> 새로운 게임 생성 </button>
+        </form>
+        <form action="searchSave" method="get">
+             <button type="submit"> 저장된 게임 조회 </button>
+        </form>
+    </center>
 </body>
 </html>

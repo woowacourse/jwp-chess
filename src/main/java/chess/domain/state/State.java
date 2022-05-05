@@ -1,57 +1,62 @@
 package chess.domain.state;
 
 import chess.domain.board.Board;
-import chess.domain.board.BoardInitializer;
-import chess.domain.command.Command;
 import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
-import java.util.Map;
-
-import chess.domain.ChessScore;
 import chess.domain.position.Position;
+import chess.domain.score.ChessScore;
+import chess.domain.score.ScoreCalculator;
 
-public abstract class State {
+public class State {
 
-    private static final String CANNOT_GENERATE_SCORE = "현재 상태에서는 점수를 불러올 수 없습니다.";
-    private static final String CANNOT_GET_COLOR = "현재 상태에서는 색을 확인할 수 없습니다.";
+    private static final String CANNOT_MOVE_OPPONENT_PIECE = "상대방의 말을 움직일 수 없습니다.";
+    private Color color;
+    private StateSwitch stateSwitch;
+    private final Board board;
 
-    protected Board board;
-
-    public static State create() {
-        return new Ready(BoardInitializer.generate());
+    public State(Color color, StateSwitch stateSwitch, Board board) {
+        this.color = color;
+        this.stateSwitch = stateSwitch;
+        this.board = board;
     }
 
-    public static State create(Map<Position, Piece> board, Color color) {
-        return new Running(board, color);
+    public State(Color color, StateSwitch stateSwitch) {
+        this.color = color;
+        this.stateSwitch = stateSwitch;
+        this.board = new Board();
     }
 
-    public static State create(Map<Position, Piece> board) {
-        return new Ready(board);
+    private void validateMoveOpponentPiece(Color color, Position fromPosition) {
+        if (board.findPiece(fromPosition).isSameColor(color.invert())) {
+            throw new IllegalArgumentException(CANNOT_MOVE_OPPONENT_PIECE);
+        }
     }
 
-    public abstract State proceed(Command command);
-
-    public boolean isFinished() {
-        return false;
+    public void movePiece(Position fromPosition, Position toPosition, Color color) {
+        validateMoveOpponentPiece(color, fromPosition);
+        board.movePiece(fromPosition, toPosition);
     }
 
-    public ChessScore generateScore() {
-        throw new IllegalStateException(CANNOT_GENERATE_SCORE);
+    public boolean isKingDead() {
+        return board.isKingNotExist(this.color.invert());
     }
 
-    public boolean isRunning() {
-        return false;
+    public ChessScore calculateScore() {
+        return ScoreCalculator.calculateChessScore(board.getPieces());
     }
 
-    public boolean isWhite() {
-        throw new IllegalStateException(CANNOT_GET_COLOR);
+    public void changeColor() {
+        this.color = this.color.invert();
+    }
+
+    public void changeSwitch() {
+        this.stateSwitch = StateSwitch.invert(this.stateSwitch);
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     public Board getBoard() {
         return board;
-    }
-
-    public Color getColor() {
-        throw new IllegalStateException(CANNOT_GET_COLOR);
     }
 }

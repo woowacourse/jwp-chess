@@ -345,6 +345,12 @@
         </td>
     </tr>
 </table>
-<center>게임이 종료되었습니다.</center>
+<form action="gameRun?roomName={{roomName}}" method="get" >
+    <input type="hidden" name="roomName" value={{roomName}}>
+    <center>[ERROR] {{exception}} </center>
+    <center>
+        <button type="submit"> 확인 </button>
+    </center>
+</form>
 </body>
 </html>

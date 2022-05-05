@@ -2,22 +2,24 @@ package chess.web;
 
 public class ChessForm {
 
-    private String roomId;
-    private String command;
+    private String roomName;
+    private String password;
 
-    public String getCommand() {
-        return command;
+    private ChessForm() {}
+
+    public String getRoomName() {
+        return roomName;
     }
 
-    public String getRoomId() {
-        return roomId;
+    public String getPassword() {
+        return password;
     }
 
-    public void setCommand(String command) {
-        this.command = command;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

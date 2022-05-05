@@ -8,7 +8,6 @@ import chess.dto.GameStateResponse;
 import chess.dto.PathResponse;
 import chess.service.ChessRoomService;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,8 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class WebChessController {
 
-    @Autowired
-    private ChessRoomService chessRoomService;
+    private final ChessRoomService chessRoomService;
+
+    public WebChessController(ChessRoomService chessRoomService) {
+        this.chessRoomService = chessRoomService;
+    }
 
     @GetMapping("/")
     public String showRooms(Model model) {

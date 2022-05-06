@@ -4,7 +4,6 @@ import chess.dto.GameRoomDto;
 import chess.dto.PieceAndPositionDto;
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -80,7 +79,15 @@ public class ChessDao {
             ps.setString(2, password);
             return ps;
         }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).intValue();
+        return getInt(keyHolder);
+    }
+
+    private int getInt(KeyHolder keyHolder) {
+        try {
+            return keyHolder.getKey().intValue();
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("게임 생성에 실패 했습니다.");
+        }
     }
 
     public String findPassword(final int gameId) {

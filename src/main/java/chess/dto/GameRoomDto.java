@@ -3,7 +3,6 @@ package chess.dto;
 public final class GameRoomDto {
 
     private int gameId;
-
     private String title;
     private String password;
 

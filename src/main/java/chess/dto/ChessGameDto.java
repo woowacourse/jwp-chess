@@ -1,5 +1,6 @@
 package chess.dto;
 
+import chess.domain.ChessGame;
 import chess.domain.piece.Color;
 import chess.domain.state.Result;
 import chess.domain.state.Status;
@@ -22,6 +23,17 @@ public final class ChessGameDto {
         whiteScore = status.getWhiteScore();
         blackScore = status.getBlackScore();
         result = status.getResult();
+    }
+
+    public static ChessGameDto from(ChessGame chessGame) {
+        List<PieceAndPositionDto> boardDatas = chessGame.getBoard()
+                .getValue()
+                .entrySet()
+                .stream()
+                .map(entry -> new PieceAndPositionDto(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        return new ChessGameDto(boardDatas, chessGame.status());
     }
 
     public Map<String, PieceDto> getPositionsAndPieces() {

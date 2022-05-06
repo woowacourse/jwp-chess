@@ -3,10 +3,14 @@ package chess.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import chess.dao.ChessDao;
+import chess.domain.board.Board;
+import chess.domain.board.BoardInitializer;
 import chess.domain.piece.Color;
 import chess.domain.state.Result;
+import chess.dto.ChessGameDto;
 import chess.dto.GameRoomDto;
 import chess.dto.MoveDto;
 import java.util.List;
@@ -15,7 +19,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @JdbcTest
@@ -31,12 +34,13 @@ public class ChessServiceTest {
     void setUp() {
         chessDao = new ChessDao(jdbcTemplate);
         gameId = chessDao.initGame("칙촉조시제이", "123");
+        chessDao.saveGame(gameId, new Board(new BoardInitializer()));
         chessService = new ChessService(chessDao);
     }
 
     @Test
     void newGame() {
-        var chessGameDto = chessService.newGame(gameId);
+        var chessGameDto = chessService.resetGame(gameId);
         assertAll(() -> {
             assertThat(chessGameDto.getPositionsAndPieces().keySet().size()).isEqualTo(32);
             assertThat(chessGameDto.getWhiteScore().get(Color.WHITE)).isEqualTo(38);
@@ -47,7 +51,6 @@ public class ChessServiceTest {
 
     @Test
     void move() {
-        chessService.newGame(gameId);
         var chessGameDto = chessService.move(new MoveDto(gameId, "A2", "A3"));
         assertAll(() -> {
             assertThat(chessGameDto.getPositionsAndPieces().containsKey("A2")).isFalse();
@@ -57,10 +60,9 @@ public class ChessServiceTest {
 
     @Test
     @DisplayName("이전 게임정보 가져오기")
-    void loadGame() {
-        chessService.newGame(gameId);
+    void findGame() {
         chessService.move(new MoveDto(gameId, "A2", "A3"));
-        var chessGameDto = chessService.loadGame(gameId);
+        var chessGameDto = ChessGameDto.from(chessService.findChessGameById(gameId));
         assertAll(() -> {
             assertThat(chessGameDto.getPositionsAndPieces().containsKey("A2")).isFalse();
             assertThat(chessGameDto.getPositionsAndPieces().containsKey("A3")).isTrue();
@@ -68,14 +70,6 @@ public class ChessServiceTest {
             assertThat(chessGameDto.getBlackScore().get(Color.BLACK)).isEqualTo(38);
             assertThat(chessGameDto.getResult()).isEqualTo(Result.EMPTY);
         });
-    }
-
-    @Test
-    @DisplayName("이전 게임정보가 없을 경우 예외발생")
-    void noData() {
-        assertThatThrownBy(() -> chessService.loadGame(gameId))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("게임을 시작해 주세요.");
     }
 
     @Test
@@ -92,21 +86,19 @@ public class ChessServiceTest {
     @Test
     @DisplayName("게임이 진행중일 경우 삭제요청시 예외발생")
     void runningGame() {
-        chessService.newGame(gameId);
+        chessService.resetGame(gameId);
         assertThatThrownBy(() ->
                 chessService.deleteGame(new GameRoomDto("칙촉조시제이", "123", gameId))
         )
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("게임이 종료되지 않아 삭제할 수 없습니다.");
+                .hasMessage("게임이 종료되지 않았습니다.");
     }
 
     @Test
     void deleteGame() {
-        chessService.newGame(gameId);
         whiteWinCommand();
-        chessService.deleteGame(new GameRoomDto("칙촉조시제이", "123", gameId));
-        assertThatThrownBy(() -> chessService.loadGame(gameId))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+
+        assertDoesNotThrow(() -> chessService.deleteGame(new GameRoomDto("칙촉조시제이", "123", gameId)));
     }
 
     private void whiteWinCommand() {

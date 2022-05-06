@@ -5,102 +5,65 @@ import static chess.view.Expressions.EXPRESSIONS_ROW;
 
 import chess.dao.BoardDao;
 import chess.dao.GameDao;
+import chess.dao.RoomDao;
 import chess.domain.Camp;
 import chess.domain.ChessGame;
+import chess.domain.Room;
 import chess.domain.board.Position;
-import chess.domain.gamestate.Score;
 import chess.domain.piece.Piece;
-import chess.domain.piece.Type;
 import chess.dto.PieceDto;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import spark.Request;
 
 @Service
 public class GameService {
-    private static final String KEY_READY = "ready";
-    private static final String KEY_STARTED = "started";
-    private static final String KEY_SOURCE = "source";
-    private static final String KEY_TARGET = "target";
     private static final String KEY_WINNER = "winner";
     private static final String KEY_TIE = "tie";
 
-    private static final String REGEX_VALUE = "=";
-    private static final String REGEX_DATA = "&";
-
-    private static final int INDEX_KEY = 0;
-    private static final int INDEX_VALUE = 1;
     private static final int INDEX_COLUMN = 0;
     private static final int INDEX_ROW = 1;
 
-    private final ChessGame chessGame;
     private final GameDao gameDao;
     private final BoardDao boardDao;
+    private final RoomDao roomDao;
 
-    public GameService(GameDao gameDao, BoardDao boardDao) {
-        this.chessGame = new ChessGame();
+    public GameService(GameDao gameDao, BoardDao boardDao, RoomDao roomDao) {
         this.gameDao = gameDao;
         this.boardDao = boardDao;
+        this.roomDao = roomDao;
     }
 
-    public Map<String, Object> modelReady() {
-        Map<String, Object> model = new HashMap<>();
-        model.put(KEY_READY, true);
-        return model;
+    public List<Room> list() {
+        return roomDao.selectAll();
     }
 
-    public void start() {
-        chessGame.start();
+    public void createRoom(String title, String password) {
+        long roomNo = roomDao.insert(Room.create(title, password));
+        ChessGame game = ChessGame.create();
+        long gameNo = gameDao.insert(game, roomNo);
+        boardDao.insert(gameNo, game.getBoardSquares());
     }
 
-    public Map<String, Object> modelPlayingBoard() {
-        Map<Position, Piece> board = chessGame.getBoardSquares();
-        Map<String, Object> model = board.entrySet().stream()
+    public String loadGameTitle(long roomNo) {
+        return roomDao.loadTitle(roomNo);
+    }
+
+    public Map<String, Object> modelPlayingBoard(long roomNo) {
+        Map<Position, Piece> board = loadGame(gameDao.findNoByRoom(roomNo)).getBoardSquares();
+        return board.entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> entry.getKey().toString(),
                         entry -> PieceDto.of(entry.getValue(), entry.getKey())
                 ));
-        model.put(KEY_STARTED, true);
-        model.put(KEY_READY, false);
-        return model;
     }
 
-    public void load() {
-        List<PieceDto> rawBoard = boardDao.load();
-        Map<Position, Piece> board = rawBoard.stream()
-                .collect(Collectors.toMap(
-                        pieceDto2 -> parsePosition(pieceDto2.getPosition()),
-                        this::parsePiece
-                ));
-        chessGame.load(board, gameDao.isWhiteTurn());
-    }
-
-    private Piece parsePiece(PieceDto piece) {
-        String rawType = piece.getType();
-        if (rawType.isBlank()) {
-            rawType = "none";
-        }
-        Type type = Type.valueOf(rawType.toUpperCase());
-        Camp camp = Camp.valueOf(piece.getCamp().toUpperCase());
-        return type.generatePiece(camp);
-    }
-
-    public void move(Request req) {
-        Map<String, String> positions = Arrays.stream(req.body().split(REGEX_DATA))
-                .map(data -> data.split(REGEX_VALUE))
-                .collect(Collectors.toMap(
-                        data -> data[INDEX_KEY],
-                        data -> data[INDEX_VALUE]
-                ));
-        chessGame.move(parsePosition(positions.get(KEY_SOURCE)), parsePosition(positions.get(KEY_TARGET)));
-    }
-
-    public void move(String source, String target) {
+    public void move(long roomNo, String source, String target) {
+        ChessGame chessGame = loadGame(roomNo);
         chessGame.move(parsePosition(source), parsePosition(target));
+        save(roomNo, chessGame);
     }
 
     private Position parsePosition(String rawPosition) {
@@ -108,43 +71,66 @@ public class GameService {
                 EXPRESSIONS_ROW.get(rawPosition.charAt(INDEX_ROW)));
     }
 
-    public Map<String, Object> modelStatus() {
-        Map<Camp, Score> scores = chessGame.getScores();
-        return scores.entrySet().stream()
+    private void save(long roomNo, ChessGame chessGame) {
+        gameDao.update(roomNo, chessGame.isWhiteTurn());
+        boardDao.update(gameDao.findNoByRoom(roomNo), chessGame.getBoardSquares());
+    }
+
+    public Map<String, Object> modelStatus(long roomNo) {
+        return loadGame(roomNo).getScores().entrySet().stream()
                 .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
     }
 
-    public Map<Camp, Score> status() {
-        return chessGame.getScores();
+    public Map<String, Object> end(long roomNo) {
+        Room room = roomDao.load(roomNo);
+        room.end();
+        roomDao.update(room);
+        return modelResult(loadGame(roomNo));
     }
 
-    public void save() {
-        gameDao.save();
-        boardDao.save(chessGame.getBoardSquares());
-    }
-
-    public Map<String, Object> end() {
-        chessGame.end();
-        return modelResult();
-    }
-
-    private Map<String, Object> modelResult() {
+    private Map<String, Object> modelResult(ChessGame chessGame) {
         Map<String, Object> model = new HashMap<>();
         Camp winner = chessGame.getWinner();
         model.put(KEY_WINNER, winner);
         if (winner == Camp.NONE) {
             model.put(KEY_TIE, true);
         }
-        model.put(KEY_STARTED, false);
-        model.put(KEY_READY, true);
         return model;
     }
 
-    public boolean isGameFinished() {
-        return this.chessGame.isFinished();
+    public boolean isGameRunning(long roomNo) {
+        Room room = roomDao.load(roomNo);
+        return room.isRunning() && loadGame(roomNo).isRunning();
     }
 
-    public Map<Position, Piece> getBoard() {
-        return chessGame.getBoardSquares();
+    private ChessGame loadGame(long roomNo) {
+        List<PieceDto> rawBoard = boardDao.load(gameDao.findNoByRoom(roomNo));
+        Map<Position, Piece> board = rawBoard.stream()
+                .collect(Collectors.toMap(
+                        pieceDto -> parsePosition(pieceDto.getPosition()),
+                        PieceDto::getPieceAsObject
+                ));
+        return ChessGame.load(board, gameDao.isWhiteTurn(roomNo));
+    }
+
+    public void delete(long roomNo, String password) {
+        Room room = roomDao.load(roomNo);
+        checkPassword(room, password);
+        checkStatus(room);
+        boardDao.delete(gameDao.findNoByRoom(roomNo));
+        gameDao.delete(roomNo);
+        roomDao.delete(roomNo);
+    }
+
+    private void checkPassword(Room room, String password) {
+        if (!room.isPassword(password)) {
+            throw new IllegalArgumentException("비밀번호를 확인하세요.");
+        }
+    }
+
+    private void checkStatus(Room room) {
+        if (room.isRunning()) {
+            throw new IllegalStateException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
     }
 }

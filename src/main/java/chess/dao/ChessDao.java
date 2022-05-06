@@ -2,29 +2,96 @@ package chess.dao;
 
 import chess.dto.GameRoomDto;
 import chess.dto.PieceAndPositionDto;
+import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Objects;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
-public interface ChessDao {
+@Repository
+public class ChessDao {
 
-    void updateTurn(final String color, final int gameId);
+    private static final String PIECE_NAME = "piece_name";
+    private static final String PIECE_COLOR = "piece_color";
+    private static final String POSITION = "position";
 
-    void deletePiece(final int gameId);
+    private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<PieceAndPositionDto> pieceAndPositionDtoRowMapper = (resultSet, rowNum) -> new PieceAndPositionDto(
+            resultSet.getString(PIECE_NAME),
+            resultSet.getString(PIECE_COLOR),
+            resultSet.getString(POSITION)
+    );
 
-    void savePiece(final int gameId, final PieceAndPositionDto pieceAndPositionDto);
+    public ChessDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-    List<PieceAndPositionDto> findAllPiece(final int gameId);
+    public void updateTurn(final String color, final int gameId) {
+        final var sql = "UPDATE game SET current_turn=? WHERE game_id=?";
+        jdbcTemplate.update(sql, color, gameId);
+    }
 
-    String findCurrentColor(final int gameId);
+    public void deleteAllPiece(final int gameId) {
+        final var sql = "DELETE FROM piece WHERE game_id=?";
+        jdbcTemplate.update(sql, gameId);
+    }
 
-    void deletePiece(final int gameId, final String to);
+    public void savePiece(final int gameId, final PieceAndPositionDto pieceAndPositionDto) {
+        final var sql = "INSERT INTO piece (game_id, piece_name, piece_color, position) VALUES(?,?,?,?)";
+        jdbcTemplate.update(sql, gameId, pieceAndPositionDto.getPieceName(), pieceAndPositionDto.getPieceColor(),
+                pieceAndPositionDto.getPosition());
+    }
 
-    void updatePiece(final String from, final String to, final int gameId);
+    public List<PieceAndPositionDto> findAllPiece(final int gameId) {
+        final var sql = "SELECT * FROM piece WHERE game_id=?";
+        return jdbcTemplate.query(sql, pieceAndPositionDtoRowMapper, gameId);
+    }
 
-    void deleteGame(final int gameId);
+    public String findCurrentColor(final int gameId) {
+        final var sql = "SELECT current_turn FROM game WHERE game_id=?";
+        return jdbcTemplate.queryForObject(sql, String.class, gameId);
+    }
 
-    int initGame(final String title, final String password);
+    public void deletePiece(final int gameId, final String to) {
+        final var sql = "DELETE FROM piece WHERE game_id=? AND position=?";
+        jdbcTemplate.update(sql, gameId, to);
+    }
 
-    String findPassword(final int gameId);
+    public void updatePiece(final String from, final String to, final int gameId) {
+        final var sql = "UPDATE piece SET position=? WHERE position=? AND game_id=?";
+        jdbcTemplate.update(sql, to, from, gameId);
+    }
 
-    List<GameRoomDto> findAllGame();
+    public void deleteGame(final int gameId) {
+        var sql = "DELETE FROM game WHERE game_id=?";
+        jdbcTemplate.update(sql, gameId);
+    }
+
+    public int initGame(String title, String password) {
+        String sql = "INSERT INTO game (game_title, game_password) VALUES(?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"game_id"});
+            ps.setString(1, title);
+            ps.setString(2, password);
+            return ps;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
+    }
+
+    public String findPassword(final int gameId) {
+        final var sql = "SELECT game_password FROM game WHERE game_id=?";
+        return jdbcTemplate.queryForObject(sql, String.class, gameId);
+    }
+
+    public List<GameRoomDto> findAllGame() {
+        final var sql = "SELECT game_title, game_id FROM game";
+        return jdbcTemplate.query(sql, ((rs, rowNum) ->
+                new GameRoomDto(rs.getString("game_title"), rs.getInt("game_id"))
+        ));
+    }
 }

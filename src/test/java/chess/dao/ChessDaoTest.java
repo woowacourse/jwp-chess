@@ -1,7 +1,9 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import chess.domain.Room;
 import chess.domain.piece.Color;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
@@ -149,7 +151,9 @@ public class ChessDaoTest {
 
     @Test
     void findPassword() {
-        assertThat(chessDao.findPassword(gameId)).isEqualTo(TEST_GAME_PASSWORD);
+        Room room = chessDao.findRoomById(gameId);
+
+        assertDoesNotThrow(() -> room.checkPassword(TEST_GAME_PASSWORD));
     }
 
     @Test

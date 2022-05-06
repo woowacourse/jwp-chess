@@ -1,9 +1,14 @@
 package chess.dao;
 
+import chess.domain.Room;
+import chess.domain.board.Board;
+import chess.domain.piece.Piece;
+import chess.domain.position.Position;
 import chess.dto.GameRoomDto;
 import chess.dto.PieceAndPositionDto;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map.Entry;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -90,9 +95,12 @@ public class ChessDao {
         }
     }
 
-    public String findPassword(final int gameId) {
-        final var sql = "SELECT game_password FROM game WHERE game_id=?";
-        return jdbcTemplate.queryForObject(sql, String.class, gameId);
+    public Room findRoomById(final int gameId) {
+        final var sql = "SELECT * FROM game WHERE game_id=?";
+
+        return jdbcTemplate.queryForObject(sql, ((rs, rowNum) ->
+                new Room(rs.getString("game_title"), rs.getString("game_password"))
+        ), gameId);
     }
 
     public List<GameRoomDto> findAllGame() {
@@ -100,5 +108,18 @@ public class ChessDao {
         return jdbcTemplate.query(sql, ((rs, rowNum) ->
                 new GameRoomDto(rs.getString("game_title"), rs.getInt("game_id"))
         ));
+    }
+
+    public void saveGame(int gameId, Board board) {
+        for (Entry<Position, Piece> entry : board.getValue().entrySet()) {
+            savePiece(gameId, new PieceAndPositionDto(entry.getKey(), entry.getValue()));
+        }
+    }
+
+    public void updateTurn(int gameId) {
+        final var sql = "UPDATE game SET current_turn = "
+                + "CASE WHEN current_turn = 'black' THEN 'white' WHEN current_turn = 'white' THEN 'black' END WHERE game_id = ?";
+
+        jdbcTemplate.update(sql, gameId);
     }
 }

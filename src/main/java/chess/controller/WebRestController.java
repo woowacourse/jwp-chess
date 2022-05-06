@@ -27,19 +27,18 @@ public class WebRestController {
 
     @PostMapping("/{gameId}/pieces")
     public ResponseEntity<ChessGameDto> startGame(@PathVariable int gameId) {
-        return new ResponseEntity<>(chessService.newGame(gameId), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(chessService.newGame(gameId));
     }
 
     @GetMapping("/{gameId}/pieces")
     public ResponseEntity<ChessGameDto> restart(@PathVariable int gameId) {
-        return new ResponseEntity<>(chessService.loadGame(gameId), HttpStatus.OK);
+        return ResponseEntity.ok().body(chessService.loadGame(gameId));
     }
 
     @PatchMapping(value = "/{gameId}/pieces", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChessGameDto> move(@PathVariable int gameId, @RequestBody MoveDto moveDto) {
-        //rest api 적용하면서 생긴 로직
         moveDto.setGameId(gameId);
-        return new ResponseEntity<>(chessService.move(moveDto), HttpStatus.OK);
+        return ResponseEntity.ok(chessService.move(moveDto));
     }
 
     @DeleteMapping("/{gameId}")

@@ -38,4 +38,8 @@ public final class Board {
     public Piece getPiece(final Position position) {
         return value.get(position);
     }
+
+    public boolean isEmpty() {
+        return value.isEmpty();
+    }
 }

@@ -27,12 +27,12 @@ public class WebRestController {
 
     @PostMapping("/{gameId}/pieces")
     public ResponseEntity<ChessGameDto> startGame(@PathVariable int gameId) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(chessService.newGame(gameId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(chessService.resetGame(gameId));
     }
 
     @GetMapping("/{gameId}/pieces")
     public ResponseEntity<ChessGameDto> restart(@PathVariable int gameId) {
-        return ResponseEntity.ok().body(chessService.loadGame(gameId));
+        return ResponseEntity.ok().body(ChessGameDto.from(chessService.findChessGameById(gameId)));
     }
 
     @PatchMapping(value = "/{gameId}/pieces", consumes = MediaType.APPLICATION_JSON_VALUE)

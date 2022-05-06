@@ -5,7 +5,7 @@ import chess.domain.piece.Color;
 
 public final class StateFactory {
     public static State of(final Color color, final Board board) {
-        if (board.getValue().size() == 0) {
+        if (board.isEmpty()) {
             return new Ready();
         }
         if (board.isRemovedKing()) {

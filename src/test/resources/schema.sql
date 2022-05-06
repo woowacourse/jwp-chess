@@ -1,4 +1,7 @@
-CREATE TABLE GAME
+DROP TABLE IF EXISTS PIECE;
+DROP TABLE IF EXISTS GAME;
+
+CREATE TABLE game
 (
     id       int         not null AUTO_INCREMENT,
     name     varchar(64) not null,
@@ -7,7 +10,7 @@ CREATE TABLE GAME
     primary key (id)
 );
 
-CREATE TABLE PIECE
+CREATE TABLE piece
 (
     id       int         not null AUTO_INCREMENT,
     position varchar(4)  not null,

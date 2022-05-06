@@ -26,10 +26,38 @@ td[class*='click'] {
     margin-bottom: 30px;
 }
 
+#delete-button {
+    width: 140px;
+    height: 40px;
+    font-size: 25px;
+}
+
+#room-name {
+    width: 150px;
+    height: 40px;
+    font-weight: bold;
+    font-size: 25px;
+    margin-right: 50px;
+    background-color: white;
+    border: 0;
+    outline: 0;
+}
+
+#new-room-button {
+    font-size:40px;
+}
+
 #game-info-section {
     display: block;
     height: 100%;
     margin: auto;
+}
+
+#section {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
 #turn-box {

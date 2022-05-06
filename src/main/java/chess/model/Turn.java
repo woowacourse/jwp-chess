@@ -44,4 +44,14 @@ public class Turn {
     public String finish() {
         return TURN_NONE.getThisTurn();
     }
+
+    public void validateEnd() {
+        if (isNotEnd()) {
+            throw new IllegalArgumentException("진행 중인 게임은 삭제할 수 없습니다.");
+        }
+    }
+
+    private boolean isNotEnd() {
+        return !TURN_NONE.equals(this);
+    }
 }

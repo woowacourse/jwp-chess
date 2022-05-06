@@ -16,14 +16,23 @@ public class GameResult {
     public static GameResult from(Board board) {
         double whiteScore = board.getTotalScore(Team.WHITE);
         double blackScore = board.getTotalScore(Team.BLACK);
+        if (board.countKing() == 1) {
+            return getGameResultWhenKingDead(board, whiteScore, blackScore);
+        }
         return new GameResult(whiteScore, blackScore, findWinningTeam(whiteScore, blackScore));
     }
 
-    private static Team findWinningTeam(double whiteScore, double blackScore) {
-        if (whiteScore > blackScore) {
+    private static GameResult getGameResultWhenKingDead(Board board, double whiteScore, double blackScore) {
+        long whiteKingCount = board.countKing(Team.WHITE);
+        long blackKingCount = board.countKing(Team.BLACK);
+        return new GameResult(whiteScore, blackScore, findWinningTeam(whiteKingCount, blackKingCount));
+    }
+
+    private static Team findWinningTeam(double white, double black) {
+        if (white > black) {
             return Team.WHITE;
         }
-        if (blackScore > whiteScore) {
+        if (black > white) {
             return Team.BLACK;
         }
         return Team.NONE;

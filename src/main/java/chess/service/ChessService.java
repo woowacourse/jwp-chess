@@ -32,7 +32,7 @@ public class ChessService {
     }
 
     public ChessGameDto newGame(final int gameId) {
-        chessDao.deletePiece(gameId);
+        chessDao.deleteAllPiece(gameId);
         chessDao.updateTurn(FIRST_COLOR, gameId);
         for (final Map.Entry<Position, Piece> entry : new BoardInitializer().init().entrySet()) {
             chessDao.savePiece(gameId, new PieceAndPositionDto(entry.getKey(), entry.getValue()));
@@ -85,7 +85,7 @@ public class ChessService {
         }
 
         if (chessGame.isEnd()) {
-            chessDao.deletePiece(gameRoomDto.getGameId());
+            chessDao.deleteAllPiece(gameRoomDto.getGameId());
         }
 
         deleteGame(gameRoomDto.getGameId());

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import chess.dao.ChessDao;
-import chess.dao.ChessDaoImpl;
 import chess.domain.piece.Color;
 import chess.domain.state.Result;
 import chess.dto.GameRoomDto;
@@ -30,7 +29,7 @@ public class ChessServiceTest {
 
     @BeforeEach
     void setUp() {
-        chessDao = new ChessDaoImpl(jdbcTemplate);
+        chessDao = new ChessDao(jdbcTemplate);
         gameId = chessDao.initGame("칙촉조시제이", "123");
         chessService = new ChessService(chessDao);
     }

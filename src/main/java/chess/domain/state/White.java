@@ -16,7 +16,16 @@ public class White implements State {
     }
 
     @Override
+    public boolean isProgress() {
+        return true;
+    }
+
+    @Override
     public State execute(Command command, ChessBoard chessBoard) {
+        if (command.isStart()) {
+            throw new IllegalArgumentException("게임이 진행중 입니다.");
+        }
+
         if (command.isMoveCommand()) {
             return move(command, chessBoard);
         }
@@ -51,7 +60,7 @@ public class White implements State {
 
         Team team = chessBoard.findTeam(source);
 
-        if (!(team == WHITE)) {
+        if (team != WHITE) {
             throw new IllegalArgumentException("검은팀 말은 흰색 팀이 옮길 수 없습니다.");
         }
     }

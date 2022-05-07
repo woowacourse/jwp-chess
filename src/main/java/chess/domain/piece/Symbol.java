@@ -16,10 +16,14 @@ public enum Symbol {
         this.symbol = symbol;
     }
 
-    public String getSymbol(Team team) {
+    public String getSymbolBy(Team team) {
         if (team.equals(BLACK)) {
             return symbol.toUpperCase();
         }
+        return symbol;
+    }
+
+    public String getSymbol() {
         return symbol;
     }
 }

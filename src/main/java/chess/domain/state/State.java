@@ -20,6 +20,8 @@ public interface State {
 
     boolean isEnd();
 
+    boolean isProgress();
+
     State execute(Command command, ChessBoard chessBoard);
 
     String getTurn();

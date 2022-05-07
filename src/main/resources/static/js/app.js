@@ -66,14 +66,11 @@ function restart() {
     }
 }
 
-function makeForm(gamename, command) {
-
-    console.log(gamename);
-    console.log(command);
+function makeForm(chessGameId, command) {
     const form = document.createElement("form");
 
     form.setAttribute("method", "get");
-    form.setAttribute("action", "/game/" + gamename + "/" + command);
+    form.setAttribute("action", "/game/" + chessGameId + "/" + command);
     document.body.appendChild(form);
     form.submit();
 }

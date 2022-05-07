@@ -1,9 +1,15 @@
 package chess.domain;
 
-import static chess.domain.piece.Team.BLACK;
-import static chess.domain.piece.Team.WHITE;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toList;
+import static chess.domain.piece.Team.*;
+import static java.util.Arrays.*;
+import static java.util.Collections.*;
+import static java.util.stream.Collectors.*;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import chess.domain.piece.Piece;
 import chess.domain.piece.Team;
@@ -12,11 +18,6 @@ import chess.domain.position.Position;
 import chess.domain.position.Rank;
 import chess.domain.state.Ready;
 import chess.domain.state.State;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class ChessGame {
 
@@ -25,9 +26,11 @@ public class ChessGame {
                     .map(file -> Position.of(file, rank)))
             .collect(toList());
 
+    private int id;
     private final ChessBoard chessBoard;
     private final String gameName;
     private State state;
+    private String password;
 
     public ChessGame() {
         gameName = "";
@@ -36,16 +39,27 @@ public class ChessGame {
         Collections.sort(positions);
     }
 
-    public ChessGame(String gameName) {
+    public ChessGame(String gameName, String password) {
         this.gameName = gameName;
+        this.password = password;
         state = new Ready();
         chessBoard = new ChessBoard();
         Collections.sort(positions);
     }
 
-    public ChessGame(String turn, String gameName, Map<Position, Piece> cells) {
+    public ChessGame(int id, String gameName, String password, String turn) {
+        this.id = id;
         this.gameName = gameName;
+        this.password = password;
+        state = State.getState(turn);
+        chessBoard = new ChessBoard();
+        Collections.sort(positions);
+    }
+
+    public ChessGame(String turn, String gameName, String password, Map<Position, Piece> cells) {
         this.state = State.getState(turn);
+        this.gameName = gameName;
+        this.password = password;
         this.chessBoard = new ChessBoard(cells);
         Collections.sort(positions);
     }
@@ -88,6 +102,10 @@ public class ChessGame {
 
     private double calculateScore(Team team) {
         return chessBoard.calculateScoreByTeam(team);
+    }
+
+    public boolean matchPassword(String password) {
+        return this.password.equals(password);
     }
 
     public List<String> getSymbols() {
@@ -152,5 +170,25 @@ public class ChessGame {
 
     public String getGameName() {
         return this.gameName;
+    }
+
+    public Map<Position, Piece> getCells() {
+        return unmodifiableMap(chessBoard.getCells());
+    }
+
+    public boolean isProgress() {
+        return state.isProgress();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getTurn() {
+        return state.getTurn();
+    }
+
+    public int getId() {
+        return id;
     }
 }

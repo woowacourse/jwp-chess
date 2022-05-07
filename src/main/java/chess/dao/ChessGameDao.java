@@ -1,83 +1,91 @@
 package chess.dao;
 
-import chess.converter.PieceConverter;
-import chess.domain.ChessGame;
-import chess.domain.piece.Piece;
-import chess.domain.position.File;
-import chess.domain.position.Position;
-import chess.domain.position.Rank;
-import chess.dto.ChessGameDto;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import chess.converter.PieceConverter;
+import chess.domain.ChessGame;
+import chess.domain.piece.Piece;
+import chess.domain.position.File;
+import chess.domain.position.Position;
+import chess.domain.position.Rank;
 
 @Repository
 public class ChessGameDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ChessGameDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(ChessGameDto chessGameDto) {
-        String sql = "insert into chessgame (game_name, turn) values (?, ?)";
-        jdbcTemplate.update(sql, chessGameDto.getGameName(), chessGameDto.getTurn());
+    public int save(ChessGame chessGame) {
+        String sql = "insert into chess_game (game_name, password, turn) values (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
+            ps.setString(1, chessGame.getGameName());
+            ps.setString(2, chessGame.getPassword());
+            ps.setString(3, chessGame.getTurn());
+            return ps;
+        }, keyHolder);
+        return keyHolder.getKey().intValue();
     }
 
-    public void update(ChessGameDto chessGameDto) {
-        String sql = "update chessgame set turn = ? where game_name = ?";
-        jdbcTemplate.update(sql, chessGameDto.getTurn(), chessGameDto.getGameName());
+    public List<ChessGame> findAllChessGames() {
+        String sql = "select id, game_name, password, turn from chess_game limit 100";
+        return jdbcTemplate.query(sql, chessGameMapper());
     }
 
-    public ChessGame findByName(String gameName) {
-        String sql = "select CHESSGAME.turn, CHESSGAME.game_name, PIECE.type, PIECE.team, PIECE.`rank`, PIECE.file from CHESSGAME, PIECE\n"
-                + "where CHESSGAME.game_name = PIECE.game_name AND CHESSGAME.game_name = ?;";
-
-        List<ChessGame> result = jdbcTemplate.query(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            preparedStatement.setString(1, gameName);
-            return preparedStatement;
-        }, chessGameRowMapper);
-
-        if(result.isEmpty()) {
-            return null;
-        }
-
-        return result.get(0);
+    public void update(String turn, int chessGameId) {
+        String sql = "update chess_game set turn = ? where id = ?";
+        jdbcTemplate.update(sql, turn, chessGameId);
     }
 
-    private final RowMapper<ChessGame> chessGameRowMapper = (resultSet, rowNum) -> new ChessGame(
-        getTurn(resultSet),
-        resultSet.getString("game_name"),
-        makeCells(resultSet)
-    );
-
-    private String getTurn(ResultSet resultSet) throws SQLException {
-        resultSet.beforeFirst();
-        resultSet.next();
-        return resultSet.getString("turn");
+    private RowMapper<ChessGame> chessGameMapper() {
+        return (resultSet, rowNum) -> {
+            return new ChessGame(
+                resultSet.getInt("id"),
+                resultSet.getString("game_name"),
+                resultSet.getString("password"),
+                resultSet.getString("turn")
+            );
+        };
     }
 
-    private Map<Position, Piece> makeCells(ResultSet resultSet) throws SQLException {
-        resultSet.beforeFirst();
+    public ChessGame findById(int chessGameId) {
+        String sql =
+            "select chess_game.turn, chess_game.game_name, chess_game.password, piece.type, piece.team, piece.`rank`, piece.file "
+                + "from chess_game, piece "
+                + "where chess_game.id = piece.chess_game_id AND chess_game.id = ?";
+        return jdbcTemplate.queryForObject(sql, chessGameRowMapper, chessGameId);
+    }
 
+    private final RowMapper<ChessGame> chessGameRowMapper = (resultSet, rowNum) -> initChessGame(resultSet);
+
+    private ChessGame initChessGame(ResultSet resultSet) throws SQLException {
         Map<Position, Piece> cells = new HashMap<>();
-
+        cells.put(makePosition(resultSet), makePiece(resultSet));
+        String turn = resultSet.getString("turn");
+        String gameName = resultSet.getString("game_name");
+        String password = resultSet.getString("password");
         while (resultSet.next()) {
             Position position = makePosition(resultSet);
             Piece piece = makePiece(resultSet);
             cells.put(position, piece);
         }
 
-        return cells;
+        return new ChessGame(turn, gameName, password, cells);
     }
 
     private Position makePosition(ResultSet resultSet) throws SQLException {
@@ -94,8 +102,8 @@ public class ChessGameDao {
         return PieceConverter.from(type, team);
     }
 
-    public void remove(String gameName) {
-        String sql = "delete from chessgame where game_name = ?";
-        jdbcTemplate.update(sql, gameName);
+    public void delete(int chessGameId) {
+        String sql = "delete from chess_game where id = ?";
+        jdbcTemplate.update(sql, chessGameId);
     }
 }

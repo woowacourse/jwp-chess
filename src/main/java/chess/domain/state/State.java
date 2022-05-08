@@ -8,8 +8,6 @@ public interface State {
 
     State start();
 
-    boolean isEnd();
-
     State move(final Position from, final Position to);
 
     double score(final Color color);
@@ -19,4 +17,8 @@ public interface State {
     State end();
 
     Board getBoard();
+
+    default boolean isRunning() {
+        return false;
+    }
 }

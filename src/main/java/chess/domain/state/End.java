@@ -21,11 +21,6 @@ public final class End extends CalculableState {
     }
 
     @Override
-    public boolean isEnd() {
-        return true;
-    }
-
-    @Override
     public State move(Position from, Position to) {
         throw new IllegalStateException(END_MESSAGE);
     }

@@ -14,11 +14,6 @@ public final class Running extends CalculableState {
     }
 
     @Override
-    public boolean isEnd() {
-        return false;
-    }
-
-    @Override
     public State start() {
         throw new IllegalStateException("게임이 이미 시작되었습니다.");
     }
@@ -64,5 +59,10 @@ public final class Running extends CalculableState {
         if (piece != null && piece.isSameColor(color)) {
             throw new IllegalArgumentException("도착지에 같은색의 기물이 존재합니다.");
         }
+    }
+
+    @Override
+    public boolean isRunning() {
+        return true;
     }
 }

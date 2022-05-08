@@ -79,15 +79,18 @@ public class ChessService {
 
     @Transactional
     public void deleteGame(final GameRoomDto gameRoomDto) {
-        final var chessGame = findChessGameById(gameRoomDto.getGameId());
-        final var room = chessDao.findRoomById(gameRoomDto.getGameId());
+        final var gameId = gameRoomDto.getGameId();
+        final var chessGame = findChessGameById(gameId);
+        final var room = chessDao.findRoomById(gameId);
 
         room.checkPassword(gameRoomDto.getPassword());
-        if (!chessGame.isEnd()) {
+
+        if (chessGame.isRunning()) {
             throw new IllegalArgumentException("게임이 종료되지 않았습니다.");
         }
 
-        chessDao.deleteAllPiece(gameRoomDto.getGameId());
-        chessDao.deleteGame(gameRoomDto.getGameId());
+        chessDao.deleteAllPiece(gameId);
+        chessDao.deleteGame(gameId);
+
     }
 }

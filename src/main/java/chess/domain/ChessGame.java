@@ -54,7 +54,7 @@ public final class ChessGame {
         );
     }
 
-    public boolean isEnd() {
-        return state.isEnd();
+    public boolean isRunning() {
+        return state.isRunning();
     }
 }

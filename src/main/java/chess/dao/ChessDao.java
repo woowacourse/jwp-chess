@@ -34,12 +34,12 @@ public class ChessDao {
     }
 
     public void updateTurn(final String color, final int gameId) {
-        final var sql = "UPDATE game SET current_turn=? WHERE game_id=?";
+        final var sql = "UPDATE game SET current_turn = ? WHERE game_id = ?";
         jdbcTemplate.update(sql, color, gameId);
     }
 
     public void deleteAllPiece(final int gameId) {
-        final var sql = "DELETE FROM piece WHERE game_id=?";
+        final var sql = "DELETE FROM piece WHERE game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }
 
@@ -50,27 +50,27 @@ public class ChessDao {
     }
 
     public List<PieceAndPositionDto> findAllPiece(final int gameId) {
-        final var sql = "SELECT * FROM piece WHERE game_id=?";
+        final var sql = "SELECT * FROM piece WHERE game_id = ?";
         return jdbcTemplate.query(sql, pieceAndPositionDtoRowMapper, gameId);
     }
 
     public String findCurrentColor(final int gameId) {
-        final var sql = "SELECT current_turn FROM game WHERE game_id=?";
+        final var sql = "SELECT current_turn FROM game WHERE game_id = ?";
         return jdbcTemplate.queryForObject(sql, String.class, gameId);
     }
 
     public void deletePiece(final int gameId, final String to) {
-        final var sql = "DELETE FROM piece WHERE game_id=? AND position=?";
+        final var sql = "DELETE FROM piece WHERE game_id = ? AND position = ?";
         jdbcTemplate.update(sql, gameId, to);
     }
 
     public void updatePiece(final String from, final String to, final int gameId) {
-        final var sql = "UPDATE piece SET position=? WHERE position=? AND game_id=?";
+        final var sql = "UPDATE piece SET position = ? WHERE position=? AND game_id = ?";
         jdbcTemplate.update(sql, to, from, gameId);
     }
 
     public void deleteGame(final int gameId) {
-        var sql = "DELETE FROM game WHERE game_id=?";
+        var sql = "DELETE FROM game WHERE game_id = ?";
         jdbcTemplate.update(sql, gameId);
     }
 
@@ -96,7 +96,7 @@ public class ChessDao {
     }
 
     public Room findRoomById(final int gameId) {
-        final var sql = "SELECT * FROM game WHERE game_id=?";
+        final var sql = "SELECT * FROM game WHERE game_id = ?";
 
         return jdbcTemplate.queryForObject(sql, ((rs, rowNum) ->
                 new Room(rs.getString("game_title"), rs.getString("game_password"))

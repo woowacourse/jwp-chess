@@ -36,11 +36,15 @@ public class ChessService {
 
     @Transactional
     public ChessGameDto resetGame(final int gameId) {
-        chessDao.deleteAllPiece(gameId);
+        savePieces(gameId, new Board(new BoardInitializer()));
         chessDao.updateTurn(FIRST_COLOR, gameId);
-        chessDao.saveGame(gameId, new Board(new BoardInitializer()));
 
         return ChessGameDto.from(findChessGameById(gameId));
+    }
+
+    private void savePieces(int gameId, Board board) {
+        chessDao.deleteAllPiece(gameId);
+        chessDao.saveGame(gameId, board);
     }
 
     public List<GameRoomDto> findAllGame() {
@@ -70,8 +74,7 @@ public class ChessService {
 
         chessGame.move(Position.from(moveDto.getFrom()), Position.from(moveDto.getTo()));
 
-        chessDao.deleteAllPiece(gameId);
-        chessDao.saveGame(gameId, chessGame.getBoard());
+        savePieces(gameId, chessGame.getBoard());
         chessDao.updateTurn(gameId);
 
         return ChessGameDto.from(findChessGameById(gameId));
@@ -91,6 +94,5 @@ public class ChessService {
 
         chessDao.deleteAllPiece(gameId);
         chessDao.deleteGame(gameId);
-
     }
 }

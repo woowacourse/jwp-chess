@@ -28,16 +28,16 @@
             target : <input type="text" name="target" id="target">
             <input type="button" id="move-button" value="이동"/>
         </div>
-        <div class="form status">
+        <div>
             <button id="status">점수 보기</button>
         </div>
-        <div class="form save">
-            <button id="save" onclick="save({{id}})">진행 상황 저장</button>
-        </div>
         <div class="form end">
-            <form action="./end/{{id}}">
+            <form action="./{{id}}/end">
                 <input type="submit" value="게임 종료">
             </form>
+        </div>
+        <div>
+            <button id="home" onclick="location.href='/';">목록으로</button>
         </div>
     {{/started}}
     <section class="chess-ui">
@@ -528,43 +528,34 @@
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
-    document.getElementById('status').addEventListener('click', statusOnClickHandler);
-    document.getElementById('save').addEventListener('click', saveOnClickHandler);
+    $("#status").click(function () {
+        $.ajax({
+            type: "GET",
+            url: "/games/status",
+            dataType : "json",
+            success: (response) => {
+                addScoreToDocument(response)
+            },
+            error: () => {
+                alert("실패하였습니다.")
+            }
+        });
+    });
 
-    function statusOnClickHandler() {
-        fetch('./status')
-                .then((response) => response.json())
-                .then((scores) => addScoreToDocument(scores));
-    }
-
-    function addScoreToDocument(scores) {
-        document.getElementById('player-score-black').innerText = scores.black.value;
-        document.getElementById('player-score-white').innerText = scores.white.value;
-    }
-
-    function saveOnClickHandler() {
-        fetch('./save/{{id}}')
-                .then((response) => response.status)
-                .then((status) => alertSaveResult(status));
-    }
-
-    function alertSaveResult(status) {
-        console.log(status);
-        if (status !== 201) {
-            window.alert("저장하지 못했습니다.");
-            return;
-        }
-        window.alert("저장에 성공하였습니다.");
+    function addScoreToDocument(response) {
+        document.getElementById('player-score-black').innerText = response.blackScore;
+        document.getElementById('player-score-white').innerText = response.whiteScore;
     }
 
     $("#move-button").click(function () {
         $.ajax({
-            type: "POST",
-            url: "/game/{{id}}/move",
-            data: {
+            type: "PUT",
+            url: "/games/{{id}}/move",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({
                 source: $("#source").val(),
                 target: $("#target").val()
-            },
+            }),
             success: () => {
                 window.location.href = "./{{id}}"
             },

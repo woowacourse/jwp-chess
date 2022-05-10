@@ -20,25 +20,25 @@ public class ViewController {
         return "games";
     }
 
-    @GetMapping("/create")
-    public String create() {
+    @GetMapping("/create-view")
+    public String createView() {
         return "create";
     }
 
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable int id, Model model) {
+    @GetMapping("/delete-view/{id}")
+    public String delete(@PathVariable Long id, Model model) {
         model.addAttribute("id", id);
         return "delete";
     }
 
-    @GetMapping("/game/{id}")
+    @GetMapping("/games/{id}")
     public String findGameById(@PathVariable Long id, Model model) {
         Map<String, Object> result = gameService.findBoardByGameId(id);
         model.addAllAttributes(result);
         return "game";
     }
 
-    @GetMapping("/game/end/{id}")
+    @GetMapping("/games/{id}/end")
     public String end(@PathVariable Long id, Model model) {
         model.addAllAttributes(gameService.end(id));
         return "result";

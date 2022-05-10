@@ -12,31 +12,26 @@ import chess.domain.gamestate.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Type;
 import chess.dto.GameDto;
+import chess.dto.GameRequest;
+import chess.dto.MoveRequest;
 import chess.dto.PieceDto;
-import java.util.Arrays;
+import chess.dto.StatusResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import spark.Request;
 
 @Service
 public class GameService {
     private static final String KEY_READY = "ready";
     private static final String KEY_STARTED = "started";
-    private static final String KEY_SOURCE = "source";
-    private static final String KEY_TARGET = "target";
     private static final String KEY_WINNER = "winner";
     private static final String KEY_TIE = "tie";
 
-    private static final String REGEX_VALUE = "=";
-    private static final String REGEX_DATA = "&";
     private static final String ERROR_PASSWORD = "비밀번호가 일치하지 않습니다.";
     private static final String ERROR_IS_RUNNING = "실행 중인 게임은 삭제할 수 없습니다.";
 
-    private static final int INDEX_KEY = 0;
-    private static final int INDEX_VALUE = 1;
     private static final int INDEX_COLUMN = 0;
     private static final int INDEX_ROW = 1;
 
@@ -66,8 +61,8 @@ public class GameService {
         return model;
     }
 
-    public Long create(String title, String password) {
-        ChessGame chessGame = new ChessGame(title, password);
+    public Long create(GameRequest gameRequest) {
+        ChessGame chessGame = gameRequest.toChessGame();
         chessGame.start();
         Long gameId = gameDao.save(chessGame);
         boardDao.saveAll(gameId, chessGame.getBoardSquares());
@@ -95,18 +90,8 @@ public class GameService {
         return type.generatePiece(camp);
     }
 
-    public void move(Request req) {
-        Map<String, String> positions = Arrays.stream(req.body().split(REGEX_DATA))
-                .map(data -> data.split(REGEX_VALUE))
-                .collect(Collectors.toMap(
-                        data -> data[INDEX_KEY],
-                        data -> data[INDEX_VALUE]
-                ));
-        chessGame.move(parsePosition(positions.get(KEY_SOURCE)), parsePosition(positions.get(KEY_TARGET)));
-    }
-
-    public void move(String source, String target) {
-        chessGame.move(parsePosition(source), parsePosition(target));
+    public void move(MoveRequest moveRequest) {
+        chessGame.move(parsePosition(moveRequest.getSource()), parsePosition(moveRequest.getTarget()));
     }
 
     private Position parsePosition(String rawPosition) {
@@ -114,10 +99,9 @@ public class GameService {
                 EXPRESSIONS_ROW.get(rawPosition.charAt(INDEX_ROW)));
     }
 
-    public Map<String, Object> modelStatus() {
+    public StatusResponse modelStatus() {
         Map<Camp, Score> scores = chessGame.getScores();
-        return scores.entrySet().stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
+        return new StatusResponse(scores.get(Camp.BLACK).getValue(), scores.get(Camp.WHITE).getValue());
     }
 
     public Map<Camp, Score> status() {
@@ -156,14 +140,13 @@ public class GameService {
         return chessGame.getBoardSquares();
     }
 
-    public void deleteGame(Long id, Map<String, String> request) {
-        String password = request.get("password");
+    public void deleteGame(Long id, String password) {
         ChessGame savedChessGame = gameDao.findById(id);
         if (savedChessGame.incorrectPassword(password)) {
             throw new IllegalArgumentException(ERROR_PASSWORD);
         }
         if (gameDao.findRunningById(id)) {
-            throw new IllegalArgumentException(ERROR_IS_RUNNING);
+            throw new IllegalStateException(ERROR_IS_RUNNING);
         }
         boardDao.deleteAllByGameId(id);
         gameDao.deleteById(id);

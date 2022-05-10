@@ -27,11 +27,12 @@
     $("#create").click(function () {
         $.ajax({
             type: "POST",
-            url: "/create",
-            data: {
+            url: "/games",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({
                 title: $("#title").val(),
                 password: $("#password").val()
-            },
+            }),
             success: () => {
                 window.location.href = "./"
             },

@@ -1,16 +1,22 @@
 package chess.application.web;
 
+import chess.dto.MoveRequest;
+import chess.dto.GameRequest;
+import chess.dto.StatusResponse;
 import java.net.URI;
 import java.util.Map;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/games")
 public class GameController {
     private final GameService gameService;
 
@@ -18,36 +24,28 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Void> createGame(@RequestParam Map<String, String> request) {
-        String title = request.get("title");
-        String password = request.get("password");
-        Long gameId = gameService.create(title, password);
+    @PostMapping
+    public ResponseEntity<Void> create(@RequestBody GameRequest gameRequest) {
+        Long gameId = gameService.create(gameRequest);
         return ResponseEntity.created(URI.create("/game/" + gameId)).build();
     }
 
-    @PostMapping("/game/{id}/move")
-    public ResponseEntity<Map<String, Object>> move(@RequestParam Map<String, String> request, @PathVariable Long id) {
-        gameService.move(request.get("source"), request.get("target"));
+    @GetMapping("/status")
+    public ResponseEntity<StatusResponse> status() {
+        StatusResponse statusResponse = gameService.modelStatus();
+        return ResponseEntity.ok(statusResponse);
+    }
+
+    @PutMapping("/{id}/move")
+    public ResponseEntity<Map<String, Object>> update(@RequestBody MoveRequest moveRequest, @PathVariable Long id) {
+        gameService.move(moveRequest);
         gameService.updateGame(id);
-        return ResponseEntity.ok().body(gameService.modelPlayingBoard());
+        return ResponseEntity.ok(gameService.modelPlayingBoard());
     }
 
-    @GetMapping("/game/status")
-    public ResponseEntity<Map<String, Object>> status() {
-        Map<String, Object> statusData = gameService.modelStatus();
-        return ResponseEntity.ok().body(statusData);
-    }
-
-    @GetMapping("game/save/{id}")
-    public ResponseEntity<Void> save(@PathVariable Long id) {
-        gameService.updateGame(id);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @PostMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteGame(@PathVariable Long id, @RequestParam Map<String, String> request) {
-        gameService.deleteGame(id, request);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGame(@PathVariable Long id, @RequestBody String password) {
+        gameService.deleteGame(id, password);
+        return ResponseEntity.noContent().build();
     }
 }

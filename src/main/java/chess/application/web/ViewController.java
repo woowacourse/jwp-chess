@@ -1,10 +1,13 @@
 package chess.application.web;
 
-import java.util.Map;
+import chess.dto.BoardResponse;
+import chess.dto.GameDto;
+import chess.dto.ResultResponse;
+import java.util.List;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ViewController {
@@ -15,9 +18,9 @@ public class ViewController {
     }
 
     @GetMapping("/")
-    public String games(Model model) {
-        model.addAttribute("games", gameService.findAllGames());
-        return "games";
+    public ModelAndView games() {
+        List<GameDto> games = gameService.findAllGames();
+        return new ModelAndView("games", "games", games);
     }
 
     @GetMapping("/create-view")
@@ -26,21 +29,19 @@ public class ViewController {
     }
 
     @GetMapping("/delete-view/{id}")
-    public String delete(@PathVariable Long id, Model model) {
-        model.addAttribute("id", id);
+    public String delete(@PathVariable String id) {
         return "delete";
     }
 
     @GetMapping("/games/{id}")
-    public String findGameById(@PathVariable Long id, Model model) {
-        Map<String, Object> result = gameService.findBoardByGameId(id);
-        model.addAllAttributes(result);
-        return "game";
+    public ModelAndView findGameById(@PathVariable Long id) {
+        BoardResponse boardResponse = gameService.findBoardByGameId(id);
+        return new ModelAndView("game", "boardResponse", boardResponse);
     }
 
     @GetMapping("/games/{id}/end")
-    public String end(@PathVariable Long id, Model model) {
-        model.addAllAttributes(gameService.end(id));
-        return "result";
+    public ModelAndView end(@PathVariable Long id) {
+        ResultResponse resultResponse = gameService.end(id);
+        return new ModelAndView("result", "result", resultResponse);
     }
 }

@@ -8,7 +8,9 @@
 </head>
 <body>
 게임이 종료되었습니다. <br/>
-우승자: {{winner}}{{#tie}}무승부{{/tie}}
+{{#result}}
+    우승자: {{winner}}{{#tie}}무승부{{/tie}}
+{{/result}}
 <div>
     <button id="home" onclick="location.href='/';">목록으로</button>
 </div>

@@ -10,37 +10,24 @@
 <body>
 <div id="app">
     <h1>♟️ 체스</h1>
-    {{#ready}}
-        <div class="form start">
-            <form action="/start">
-                <input type="submit" value="게임 시작">
-            </form>
-        </div>
-        <div class="form load">
-            <form action="/load">
-                <input type="submit" value="불러오기">
-            </form>
-        </div>
-    {{/ready}}
-    {{#started}}
-        <div id="move-form">
-            source : <input type="text" name="source" id="source">
-            target : <input type="text" name="target" id="target">
-            <input type="button" id="move-button" value="이동"/>
-        </div>
-        <div>
-            <button id="status">점수 보기</button>
-        </div>
-        <div class="form end">
-            <form action="./{{id}}/end">
-                <input type="submit" value="게임 종료">
-            </form>
-        </div>
-        <div>
-            <button id="home" onclick="location.href='/';">목록으로</button>
-        </div>
-    {{/started}}
+    <div id="move-form">
+        source : <input type="text" name="source" id="source">
+        target : <input type="text" name="target" id="target">
+        <input type="button" id="move-button" value="이동"/>
+    </div>
+    <div>
+        <button id="status">점수 보기</button>
+    </div>
+    <div class="form end">
+        <form action="./{{id}}/end">
+            <input type="submit" value="게임 종료">
+        </form>
+    </div>
+    <div>
+        <button id="home" onclick="location.href='/';">목록으로</button>
+    </div>
     <section class="chess-ui">
+        {{#boardResponse.board}}
         <!--      Row8      -->
         <div class="white-square">
             {{#a8}}
@@ -505,6 +492,7 @@
             {{/h1}}
         </div>
         <!--      //Row1      -->
+        {{/boardResponse.board}}
     </section>
     <section class="player-ui">
         <div class="player-square black">
@@ -532,7 +520,7 @@
         $.ajax({
             type: "GET",
             url: "/games/status",
-            dataType : "json",
+            dataType: "json",
             success: (response) => {
                 addScoreToDocument(response)
             },

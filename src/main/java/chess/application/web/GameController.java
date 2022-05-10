@@ -1,10 +1,10 @@
 package chess.application.web;
 
-import chess.dto.MoveRequest;
+import chess.dto.BoardResponse;
 import chess.dto.GameRequest;
+import chess.dto.MoveRequest;
 import chess.dto.StatusResponse;
 import java.net.URI;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,27 +25,26 @@ public class GameController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody GameRequest gameRequest) {
-        Long gameId = gameService.create(gameRequest);
+    public ResponseEntity<Void> save(@RequestBody GameRequest gameRequest) {
+        Long gameId = gameService.save(gameRequest);
         return ResponseEntity.created(URI.create("/game/" + gameId)).build();
     }
 
     @GetMapping("/status")
-    public ResponseEntity<StatusResponse> status() {
-        StatusResponse statusResponse = gameService.modelStatus();
+    public ResponseEntity<StatusResponse> findStatus() {
+        StatusResponse statusResponse = gameService.findStatus();
         return ResponseEntity.ok(statusResponse);
     }
 
     @PutMapping("/{id}/move")
-    public ResponseEntity<Map<String, Object>> update(@RequestBody MoveRequest moveRequest, @PathVariable Long id) {
-        gameService.move(moveRequest);
-        gameService.updateGame(id);
-        return ResponseEntity.ok(gameService.modelPlayingBoard());
+    public ResponseEntity<BoardResponse> update(@PathVariable Long id, @RequestBody MoveRequest moveRequest) {
+        BoardResponse boardResponse = gameService.update(id, moveRequest);
+        return ResponseEntity.ok(boardResponse);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGame(@PathVariable Long id, @RequestBody String password) {
-        gameService.deleteGame(id, password);
+        gameService.delete(id, password);
         return ResponseEntity.noContent().build();
     }
 }

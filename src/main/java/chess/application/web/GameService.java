@@ -66,15 +66,15 @@ public class GameService {
         return model;
     }
 
-    public int create(String title, String password) {
+    public Long create(String title, String password) {
         ChessGame chessGame = new ChessGame(title, password);
         chessGame.start();
-        int gameId = gameDao.save(chessGame);
+        Long gameId = gameDao.save(chessGame);
         boardDao.saveAll(gameId, chessGame.getBoardSquares());
         return gameId;
     }
 
-    public Map<String, Object> findBoardByGameId(int id) {
+    public Map<String, Object> findBoardByGameId(Long id) {
         List<PieceDto> rawBoard = boardDao.findAllByGameId(id);
         Map<Position, Piece> board = rawBoard.stream()
                 .collect(Collectors.toMap(
@@ -124,13 +124,13 @@ public class GameService {
         return chessGame.getScores();
     }
 
-    public void updateGame(int id) {
+    public void updateGame(Long id) {
         gameDao.updateTurnById(id);
         boardDao.deleteAllByGameId(id);
         boardDao.saveAll(id, chessGame.getBoardSquares());
     }
 
-    public Map<String, Object> end(int id) {
+    public Map<String, Object> end(Long id) {
         chessGame.end();
         gameDao.updateStateById(id);
         return modelResult();
@@ -156,7 +156,7 @@ public class GameService {
         return chessGame.getBoardSquares();
     }
 
-    public void deleteGame(int id, Map<String, String> request) {
+    public void deleteGame(Long id, Map<String, String> request) {
         String password = request.get("password");
         ChessGame savedChessGame = gameDao.findById(id);
         if (savedChessGame.incorrectPassword(password)) {

@@ -18,14 +18,14 @@ public class BoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void saveAll(int gameId, Map<Position, Piece> board) {
+    public void saveAll(Long gameId, Map<Position, Piece> board) {
         for (Entry<Position, Piece> entry : board.entrySet()) {
             savePiece(gameId, entry);
         }
     }
 
-    private void savePiece(int gameId, Entry<Position, Piece> entry) {
-        final String sql = "insert into piece (game_no, type, white, position) values (?, ?, ?, ?)";
+    private void savePiece(Long gameId, Entry<Position, Piece> entry) {
+        final String sql = "insert into piece (game_id, type, white, position) values (?, ?, ?, ?)";
         Piece piece = entry.getValue();
         String type = piece.getType().toString();
         boolean isWhite = piece.isCamp(Camp.WHITE);
@@ -34,8 +34,8 @@ public class BoardDao {
         jdbcTemplate.update(sql, gameId, type, isWhite, position);
     }
 
-    public List<PieceDto> findAllByGameId(int gameId) {
-        final String sql = "select type, white, position from piece where game_no = ?";
+    public List<PieceDto> findAllByGameId(Long gameId) {
+        final String sql = "select type, white, position from piece where game_id = ?";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceDto.of(
                 resultSet.getString("type"),
@@ -44,8 +44,8 @@ public class BoardDao {
         ), gameId);
     }
 
-    public void deleteAllByGameId(int gameId) {
-        final String sql = "delete from piece where game_no = ?";
+    public void deleteAllByGameId(Long gameId) {
+        final String sql = "delete from piece where game_id = ?";
 
         jdbcTemplate.update(sql, gameId);
     }

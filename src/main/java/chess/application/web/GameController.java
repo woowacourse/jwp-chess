@@ -22,12 +22,12 @@ public class GameController {
     public ResponseEntity<Void> createGame(@RequestParam Map<String, String> request) {
         String title = request.get("title");
         String password = request.get("password");
-        int gameId = gameService.create(title, password);
+        Long gameId = gameService.create(title, password);
         return ResponseEntity.created(URI.create("/game/" + gameId)).build();
     }
 
     @PostMapping("/game/{id}/move")
-    public ResponseEntity<Map<String, Object>> move(@RequestParam Map<String, String> request, @PathVariable int id) {
+    public ResponseEntity<Map<String, Object>> move(@RequestParam Map<String, String> request, @PathVariable Long id) {
         gameService.move(request.get("source"), request.get("target"));
         gameService.updateGame(id);
         return ResponseEntity.ok().body(gameService.modelPlayingBoard());
@@ -40,13 +40,13 @@ public class GameController {
     }
 
     @GetMapping("game/save/{id}")
-    public ResponseEntity<Void> save(@PathVariable int id) {
+    public ResponseEntity<Void> save(@PathVariable Long id) {
         gameService.updateGame(id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteGame(@PathVariable int id, @RequestParam Map<String, String> request) {
+    public ResponseEntity<Void> deleteGame(@PathVariable Long id, @RequestParam Map<String, String> request) {
         gameService.deleteGame(id, request);
         return ResponseEntity.ok().build();
     }

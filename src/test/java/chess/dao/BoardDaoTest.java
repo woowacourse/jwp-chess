@@ -22,7 +22,7 @@ class BoardDaoTest {
     BoardDao boardDao;
     @Autowired
     GameDao gameDao;
-    int gameId;
+    Long gameId;
 
     @BeforeEach
     void setUp() {

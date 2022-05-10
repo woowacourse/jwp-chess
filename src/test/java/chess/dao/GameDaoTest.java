@@ -20,7 +20,7 @@ class GameDaoTest {
     @Autowired
     private GameDao gameDao;
     private ChessGame chessGame;
-    private int id;
+    private Long id;
 
     @BeforeEach
     void setUp() {
@@ -37,7 +37,7 @@ class GameDaoTest {
     @Test
     void save() {
         ChessGame chessGame = new ChessGame("test2", "test2");
-        int id = gameDao.save(chessGame);
+        Long id = gameDao.save(chessGame);
         ChessGame expected = gameDao.findById(id);
 
         assertThat(chessGame).isEqualTo(expected);
@@ -72,7 +72,7 @@ class GameDaoTest {
     @DisplayName("id에 해당하는 게임을 삭제한다.")
     @Test
     void deleteById() {
-        int id = gameDao.save(new ChessGame("test", "test"));
+        Long id = gameDao.save(new ChessGame("test", "test"));
         gameDao.deleteById(id);
 
         assertThatThrownBy(() -> gameDao.findById(id))

@@ -32,14 +32,14 @@ public class ViewController {
     }
 
     @GetMapping("/game/{id}")
-    public String findGameById(@PathVariable int id, Model model) {
+    public String findGameById(@PathVariable Long id, Model model) {
         Map<String, Object> result = gameService.findBoardByGameId(id);
         model.addAllAttributes(result);
         return "game";
     }
 
     @GetMapping("/game/end/{id}")
-    public String end(@PathVariable int id, Model model) {
+    public String end(@PathVariable Long id, Model model) {
         model.addAllAttributes(gameService.end(id));
         return "result";
     }

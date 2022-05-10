@@ -19,30 +19,31 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int save(ChessGame chessGame) {
+    public Long save(ChessGame chessGame) {
         final String sql = "insert into game (title, password, finished, white_turn) values (?, ?, false, true)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"no"});
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, chessGame.getTitle());
             ps.setString(2, chessGame.getPassword());
             return ps;
         }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).intValue();
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public List<GameDto> findAll() {
-        final String sql = "select no, title from game";
+        final String sql = "select id, title from game";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> new GameDto(
-                resultSet.getInt("no"),
+                resultSet.getInt("id"),
                 resultSet.getString("title")
         ));
     }
 
-    public ChessGame findById(int id) {
-        final String sql = "select title, password, finished from game where no = ?";
+    public ChessGame findById(Long id) {
+        final String sql = "select title, password, finished from game where id = ?";
 
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new ChessGame(
                 resultSet.getString("title"),
@@ -50,32 +51,32 @@ public class GameDao {
         ), id);
     }
 
-    public void updateTurnById(int id) {
-        final String sql = "update game set white_turn = ? where no = ?";
+    public void updateTurnById(Long id) {
+        final String sql = "update game set white_turn = ? where id = ?";
 
         jdbcTemplate.update(sql, Camp.BLACK.isNotTurn(), id);
     }
 
-    public void updateStateById(int id) {
-        final String sql = "update game set finished = true where no = ?";
+    public void updateStateById(Long id) {
+        final String sql = "update game set finished = true where id = ?";
 
         jdbcTemplate.update(sql, id);
     }
 
-    public void deleteById(int id) {
-        final String sql = "delete from game where no = ?";
+    public void deleteById(Long id) {
+        final String sql = "delete from game where id = ?";
 
         jdbcTemplate.update(sql, id);
     }
 
-    public boolean isWhiteTurn(int id) {
-        final String sql = "select white_turn from game where no = ?";
+    public boolean isWhiteTurn(Long id) {
+        final String sql = "select white_turn from game where id = ?";
 
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 
-    public boolean findRunningById(int id) {
-        final String sql = "select finished from game where no = ?";
+    public boolean findRunningById(Long id) {
+        final String sql = "select finished from game where id = ?";
 
         return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }

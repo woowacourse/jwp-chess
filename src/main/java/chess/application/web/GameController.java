@@ -30,9 +30,9 @@ public class GameController {
         return ResponseEntity.created(URI.create("/game/" + gameId)).build();
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<StatusResponse> findStatus() {
-        StatusResponse statusResponse = gameService.findStatus();
+    @GetMapping("/{id}/status")
+    public ResponseEntity<StatusResponse> findStatus(@PathVariable Long id) {
+        StatusResponse statusResponse = gameService.findStatus(id);
         return ResponseEntity.ok(statusResponse);
     }
 

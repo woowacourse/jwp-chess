@@ -2,86 +2,139 @@ package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import chess.domain.Camp;
-import chess.domain.ChessGame;
-import chess.dto.GameDto;
+import chess.entity.GameEntity;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest
 class GameDaoTest {
     @Autowired
     private GameDao gameDao;
-    private ChessGame chessGame;
-    private Long id;
-
-    @BeforeEach
-    void setUp() {
-        chessGame = new ChessGame("test", "test");
-        id = gameDao.save(chessGame);
-    }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    private final GameEntity gameEntity = new GameEntity("test", "pwd");
 
     @AfterEach
-    void after() {
-        gameDao.deleteById(id);
+    void end() {
+        jdbcTemplate.update("delete from GAME");
     }
 
-    @DisplayName("새로운 게임이 저장되었는지 테스트한다.")
+    @DisplayName("새로운 게임을 저장한다.")
     @Test
     void save() {
-        ChessGame chessGame = new ChessGame("test2", "test2");
-        Long id = gameDao.save(chessGame);
-        ChessGame expected = gameDao.findById(id);
+        // given
 
-        assertThat(chessGame).isEqualTo(expected);
+        // when
+        Long id = gameDao.save(gameEntity);
+
+        // then
+        GameEntity result = gameDao.findById(id);
+        assertThat(result)
+                .extracting("title", "password", "whiteTurn", "finished")
+                .contains("test", "pwd", true, false);
     }
 
-    @DisplayName("저장된 모든 게임을 조회한다.")
+    @DisplayName("게임을 모두 조회한다.")
     @Test
     void findAll() {
-        List<GameDto> result = gameDao.findAll();
+        // given
+        gameDao.save(gameEntity);
+        gameDao.save(new GameEntity("test2", "pwd2"));
 
-        assertThat(result).isNotEmpty();
+        // when
+        List<GameEntity> result = gameDao.findAll();
+
+        // then
+        assertThat(result).hasSize(2)
+                .extracting("title", "password")
+                .containsExactly(
+                        tuple("test", "pwd"),
+                        tuple("test2", "pwd2")
+                );
+
     }
 
     @DisplayName("id에 해당하는 게임을 조회한다.")
     @Test
     void findById() {
-        ChessGame result = gameDao.findById(id);
+        // given
+        Long savedId = gameDao.save(gameEntity);
 
-        assertThat(result).isEqualTo(chessGame);
+        // when
+        GameEntity result = gameDao.findById(savedId);
+
+        // then
+        assertThat(result)
+                .extracting("title", "password")
+                .containsExactly("test", "pwd");
     }
 
-    @DisplayName("흑색 진영의 차례일 때 게임을 저장하고 불러오면 백색 진영의 차례가 아니다.")
+    @DisplayName("흑색 진영의 차례일 때 게임을 저장하고 조회하면 백색 진영의 차례가 아니다.")
     @Test
     void updateTurnById() {
+        // given
+        Long savedId = gameDao.save(gameEntity);
         Camp.initializeTurn();
         Camp.switchTurn();
-        gameDao.updateTurnById(id);
 
-        assertThat(gameDao.isWhiteTurn(id)).isFalse();
+        // when
+        gameDao.updateTurnById(savedId);
+
+        // then
+        assertFalse(gameDao.isWhiteTurn(savedId));
+    }
+
+    @DisplayName("게임을 종료 상태로 수정한다.")
+    @Test
+    void updateStateById() {
+        // given
+        Long savedId = gameDao.save(gameEntity);
+
+        // when
+        gameDao.updateStateById(savedId);
+
+        // then
+        GameEntity result = gameDao.findById(savedId);
+        assertThat(result)
+                .extracting("finished")
+                .isEqualTo(true);
     }
 
     @DisplayName("id에 해당하는 게임을 삭제한다.")
     @Test
     void deleteById() {
-        Long id = gameDao.save(new ChessGame("test", "test"));
-        gameDao.deleteById(id);
+        // given
+        Long savedId = gameDao.save(gameEntity);
 
-        assertThatThrownBy(() -> gameDao.findById(id))
+        // when
+        gameDao.deleteById(savedId);
+
+        // then
+        assertThatThrownBy(() -> gameDao.findById(savedId))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
-    @DisplayName("백색 진영의 차례를 확인한다.")
+    @DisplayName("백색 진영의 차례인 경우 true를 반환한다.")
     @Test
     void isWhiteTurn() {
-        assertThat(gameDao.isWhiteTurn(id)).isTrue();
+        // given
+        Long savedId = gameDao.save(gameEntity);
+
+        // when
+        boolean whiteTurn = gameDao.isWhiteTurn(savedId);
+
+        // then
+        assertTrue(whiteTurn);
     }
 }

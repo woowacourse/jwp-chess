@@ -1,7 +1,7 @@
 package chess.application.web;
 
 import chess.dto.BoardResponse;
-import chess.dto.GameDto;
+import chess.dto.GameResponse;
 import chess.dto.ResultResponse;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ public class ViewController {
 
     @GetMapping("/")
     public ModelAndView games() {
-        List<GameDto> games = gameService.findAllGames();
+        List<GameResponse> games = gameService.findAllGames();
         return new ModelAndView("games", "games", games);
     }
 

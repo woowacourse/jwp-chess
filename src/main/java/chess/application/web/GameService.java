@@ -7,17 +7,19 @@ import chess.dao.BoardDao;
 import chess.dao.GameDao;
 import chess.domain.Camp;
 import chess.domain.ChessGame;
+import chess.domain.board.BoardInitializer;
 import chess.domain.board.Position;
 import chess.domain.gamestate.Score;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Type;
 import chess.dto.BoardResponse;
-import chess.dto.GameDto;
 import chess.dto.GameRequest;
+import chess.dto.GameResponse;
 import chess.dto.MoveRequest;
-import chess.dto.PieceDto;
 import chess.dto.ResultResponse;
 import chess.dto.StatusResponse;
+import chess.entity.GameEntity;
+import chess.entity.PieceEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,38 +33,46 @@ public class GameService {
     private static final int INDEX_COLUMN = 0;
     private static final int INDEX_ROW = 1;
 
-    private final ChessGame chessGame;
     private final GameDao gameDao;
     private final BoardDao boardDao;
 
     public GameService(GameDao gameDao, BoardDao boardDao) {
-        this.chessGame = new ChessGame();
         this.gameDao = gameDao;
         this.boardDao = boardDao;
     }
 
     public Long save(GameRequest gameRequest) {
-        ChessGame newChessGame = gameRequest.toChessGame();
-        newChessGame.start();
-        Long gameId = gameDao.save(newChessGame);
-        boardDao.saveAll(gameId, newChessGame.getBoardSquares());
+        GameEntity gameEntity = gameRequest.toGameEntity();
+        Long gameId = gameDao.save(gameEntity);
+        boardDao.saveAll(gameId, BoardInitializer.get().getSquares());
         return gameId;
     }
 
-    public StatusResponse findStatus() {
+    public StatusResponse findStatus(Long id) {
+        ChessGame chessGame = findChessGameById(id);
         Map<Camp, Score> scores = chessGame.getScores();
         return new StatusResponse(scores.get(Camp.BLACK).getValue(), scores.get(Camp.WHITE).getValue());
     }
 
+    private ChessGame findChessGameById(Long id) {
+        List<PieceEntity> rawBoard = boardDao.findAllByGameId(id);
+        Map<Position, Piece> board = rawBoard.stream()
+                .collect(Collectors.toMap(pieceEntity -> parsePosition(pieceEntity.getPosition()),
+                        this::parsePiece));
+        return gameDao.findById(id).toChessGame(board);
+    }
+
     public BoardResponse update(Long id, MoveRequest moveRequest) {
-        move(moveRequest);
+        ChessGame chessGame = findChessGameById(id);
+        move(chessGame, moveRequest);
         gameDao.updateTurnById(id);
         boardDao.deleteAllByGameId(id);
         boardDao.saveAll(id, chessGame.getBoardSquares());
+
         return BoardResponse.of(chessGame.getBoardSquares());
     }
 
-    private void move(MoveRequest moveRequest) {
+    private void move(ChessGame chessGame, MoveRequest moveRequest) {
         chessGame.move(parsePosition(moveRequest.getSource()), parsePosition(moveRequest.getTarget()));
     }
 
@@ -72,43 +82,41 @@ public class GameService {
     }
 
     public void delete(Long id, String password) {
-        ChessGame savedChessGame = gameDao.findById(id);
-        if (savedChessGame.incorrectPassword(password)) {
+        GameEntity gameEntity = gameDao.findById(id);
+        if (gameEntity.incorrectPassword(password)) {
             throw new IllegalArgumentException(ERROR_PASSWORD);
         }
-        if (gameDao.findRunningById(id)) {
+        if (!gameEntity.isFinished()) {
             throw new IllegalStateException(ERROR_IS_RUNNING);
         }
         boardDao.deleteAllByGameId(id);
         gameDao.deleteById(id);
     }
 
-    public List<GameDto> findAllGames() {
-        return gameDao.findAll();
+    public List<GameResponse> findAllGames() {
+        return gameDao.findAll()
+                .stream()
+                .map(GameResponse::of)
+                .collect(Collectors.toList());
     }
 
     public BoardResponse findBoardByGameId(Long id) {
-        List<PieceDto> rawBoard = boardDao.findAllByGameId(id);
-        Map<Position, Piece> board = rawBoard.stream()
-                .collect(Collectors.toMap(
-                        pieceDto -> parsePosition(pieceDto.getPosition()),
-                        this::parsePiece
-                ));
-        chessGame.load(board, gameDao.isWhiteTurn(id));
+        ChessGame chessGame = findChessGameById(id);
         return BoardResponse.of(chessGame.getBoardSquares());
     }
 
-    private Piece parsePiece(PieceDto piece) {
+    private Piece parsePiece(PieceEntity piece) {
         String rawType = piece.getType();
         if (rawType.isBlank()) {
             rawType = "none";
         }
         Type type = Type.valueOf(rawType.toUpperCase());
-        Camp camp = Camp.valueOf(piece.getCamp().toUpperCase());
+        Camp camp = Camp.valueOf(piece.getCamp());
         return type.generatePiece(camp);
     }
 
     public ResultResponse end(Long id) {
+        ChessGame chessGame = findChessGameById(id);
         chessGame.end();
         gameDao.updateStateById(id);
         Camp winner = chessGame.getWinner();

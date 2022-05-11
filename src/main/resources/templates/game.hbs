@@ -519,7 +519,7 @@
     $("#status").click(function () {
         $.ajax({
             type: "GET",
-            url: "/games/status",
+            url: "/games/{{id}}/status",
             dataType: "json",
             success: (response) => {
                 addScoreToDocument(response)

@@ -1,6 +1,6 @@
 package chess.dto;
 
-import chess.domain.ChessGame;
+import chess.entity.GameEntity;
 
 public class GameRequest {
     private final String title;
@@ -11,8 +11,8 @@ public class GameRequest {
         this.password = password;
     }
 
-    public ChessGame toChessGame() {
-        return new ChessGame(title, password);
+    public GameEntity toGameEntity() {
+        return new GameEntity(title, password);
     }
 
     public String getTitle() {

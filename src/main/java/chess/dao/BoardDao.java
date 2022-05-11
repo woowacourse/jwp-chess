@@ -3,7 +3,7 @@ package chess.dao;
 import chess.domain.Camp;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
-import chess.dto.PieceDto;
+import chess.entity.PieceEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,13 +34,15 @@ public class BoardDao {
         jdbcTemplate.update(sql, gameId, type, isWhite, position);
     }
 
-    public List<PieceDto> findAllByGameId(Long gameId) {
-        final String sql = "select type, white, position from piece where game_id = ?";
+    public List<PieceEntity> findAllByGameId(Long gameId) {
+        final String sql = "select id, game_id, position, type, white from piece where game_id = ?";
 
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceDto.of(
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new PieceEntity(
+                resultSet.getLong("id"),
+                resultSet.getLong("game_id"),
+                resultSet.getString("position"),
                 resultSet.getString("type"),
-                resultSet.getBoolean("white"),
-                resultSet.getString("position")
+                resultSet.getBoolean("white")
         ), gameId);
     }
 

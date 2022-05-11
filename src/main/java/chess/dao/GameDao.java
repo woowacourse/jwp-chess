@@ -1,12 +1,12 @@
 package chess.dao;
 
 import chess.domain.Camp;
-import chess.domain.ChessGame;
-import chess.dto.GameDto;
+import chess.entity.GameEntity;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -19,36 +19,38 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(ChessGame chessGame) {
+    private final RowMapper<GameEntity> actorRowMapper = (resultSet, rowNum) -> new GameEntity(
+            resultSet.getLong("id"),
+            resultSet.getString("title"),
+            resultSet.getString("password"),
+            resultSet.getBoolean("white_turn"),
+            resultSet.getBoolean("finished")
+    );
+
+    public Long save(GameEntity gameEntity) {
         final String sql = "insert into game (title, password, finished, white_turn) values (?, ?, false, true)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, chessGame.getTitle());
-            ps.setString(2, chessGame.getPassword());
+            ps.setString(1, gameEntity.getTitle());
+            ps.setString(2, gameEntity.getPassword());
             return ps;
         }, keyHolder);
 
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public List<GameDto> findAll() {
-        final String sql = "select id, title from game";
+    public List<GameEntity> findAll() {
+        final String sql = "select id, title, password, white_turn, finished from game";
 
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new GameDto(
-                resultSet.getInt("id"),
-                resultSet.getString("title")
-        ));
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    public ChessGame findById(Long id) {
-        final String sql = "select title, password, finished from game where id = ?";
+    public GameEntity findById(Long id) {
+        final String sql = "select id, title, password, white_turn, finished from game where id = ?";
 
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new ChessGame(
-                resultSet.getString("title"),
-                resultSet.getString("password")
-        ), id);
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
     }
 
     public void updateTurnById(Long id) {
@@ -73,11 +75,5 @@ public class GameDao {
         final String sql = "select white_turn from game where id = ?";
 
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
-    }
-
-    public boolean findRunningById(Long id) {
-        final String sql = "select finished from game where id = ?";
-
-        return Boolean.FALSE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 }

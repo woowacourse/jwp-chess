@@ -73,10 +73,10 @@ class RunningTest {
     @Test
     @DisplayName("진행상태에서는 보드의 정보를 얻을 수 있다.")
     void gettingResponse() {
-        GameState state = new Running(BoardFixtures.EMPTY, Color.WHITE);
+        GameState state = new Running(BoardFixtures.INITIAL, Color.WHITE);
 
         Map<Point, Piece> pointPieces = state.getPointPieces();
 
-        assertThat(pointPieces).hasSize(64);
+        assertThat(pointPieces).hasSize(32);
     }
 }

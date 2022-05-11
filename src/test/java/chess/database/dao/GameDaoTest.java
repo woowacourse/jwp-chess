@@ -78,7 +78,7 @@ class GameDaoTest {
         GameState started = state.start();
 
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
-        gameDao.updateState(roomDto.getId(), GameStateDto.of(started));
+        gameDao.updateState(roomDto.getId(), started.getState(), state.getTurnColor());
 
         GameStateDto stateAndColor = gameDao.readStateAndColor(roomDto.getId());
 

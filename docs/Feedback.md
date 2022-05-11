@@ -78,3 +78,18 @@
     - `BoardDao`에서 `BoardDto`, `PieceDto`, `PointDto`의 사용 제거 및 클래스 제거
 - [x] `RoomDAO` - 중복 검증 메서드 코드 수정
     - Optional 활용하여 코드 간소화
+
+## 수정
+
+- [ ] DAO
+    - [ ] Room
+    - [ ] Game
+    - [ ] Board
+- [ ] Service
+    - [ ] Room
+    - [ ] Game
+    - [ ] Board
+- [ ] Controller
+    - [ ] Room
+    - [ ] Game
+    - [ ] Board

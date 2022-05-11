@@ -3,6 +3,7 @@ package chess.database.dao;
 import chess.database.dto.RoomDto;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -23,13 +24,16 @@ public class RoomDao {
 
     public RoomDto findByName(String roomName) {
         String sql = "select * from room where name = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+        try {
+            return jdbcTemplate.queryForObject(sql,
                 (resultSet, rowNum) -> {
                     int id = resultSet.getInt("id");
                     String password = resultSet.getString("password");
                     return new RoomDto(id, roomName, password);
-                }, roomName))
-            .orElseThrow(() -> new IllegalArgumentException("[ERROR] 해당하는 이름의 게임방이 없습니다."));
+                }, roomName);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new IllegalArgumentException("[ERROR] 해당하는 이름의 게임방이 없습니다.");
+        }
     }
 
     public RoomDto findById(int roomId) {
@@ -49,9 +53,14 @@ public class RoomDao {
         );
     }
 
-    public boolean existRoomName(String roomName) {
-        String sql = "select count(*) from room where name = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, Integer.class, roomName)).isPresent();
+    public boolean existRoomByName(String roomName) {
+        String sql = "select name from room where name = ?";
+        try {
+            jdbcTemplate.queryForObject(sql, String.class, roomName);
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
 
     public void delete(int roomId) {

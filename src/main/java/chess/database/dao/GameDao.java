@@ -31,9 +31,9 @@ public class GameDao {
             , roomId)).orElseThrow(() -> new IllegalArgumentException("[ERROR] 존자하지 않는 게임입니다."));
     }
 
-    public void updateState(int roomId, GameStateDto gameStateDto) {
+    public void updateState(int roomId, State gameState, Color color) {
         final String sql = "UPDATE game SET state = ?, turn_color = ? WHERE room_id = ?";
-        jdbcTemplate.update(sql, gameStateDto.getState().name(), gameStateDto.getTurnColor().name(), roomId);
+        jdbcTemplate.update(sql, gameState.name(), color.name(), roomId);
     }
 
     public void removeGame(int roomId) {

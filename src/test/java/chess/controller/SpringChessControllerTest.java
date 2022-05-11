@@ -3,6 +3,7 @@ package chess.controller;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
+import chess.database.dto.RoomDto;
 import chess.domain.game.GameState;
 import chess.service.ChessRoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 
+@Sql("/sql/chess-test.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SpringChessControllerTest {
 
@@ -39,7 +42,6 @@ public class SpringChessControllerTest {
         chessRoomService.createNewRoom(DEFAULT_ROOM_NAME, DEFAULT_ROOM_PASSWORD);
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임방 목록 페이지를 방문한다.")
     public void index() {
@@ -51,13 +53,13 @@ public class SpringChessControllerTest {
             .statusCode(HttpStatus.OK.value());
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임방을 생성한다.")
     public void createRoom() throws JsonProcessingException {
         String path = "/rooms";
         ObjectMapper mapper = new ObjectMapper();
 
+        RoomDto dto = new RoomDto(CREATE_ROOM_NAME, CREATE_ROOM_PASSWORD);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("name", CREATE_ROOM_NAME);
         map.put("password", CREATE_ROOM_PASSWORD);
@@ -65,14 +67,14 @@ public class SpringChessControllerTest {
         String body = mapper.writeValueAsString(map);
 
         RestAssured.given().log().all()
-            .when().body(body)
+            .when().body(dto)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .post(path)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("url", is("/rooms/2"));
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임방에 들어간다.")
     public void enterRoom() throws JsonProcessingException {
@@ -85,7 +87,6 @@ public class SpringChessControllerTest {
             .body("url", is("/rooms/1"));
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임방을 삭제한다.")
     public void deleteRoom() throws JsonProcessingException {
@@ -100,13 +101,13 @@ public class SpringChessControllerTest {
 
         RestAssured.given().log().all()
             .when().body(body)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .delete(path)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("url", is("/"));
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임을 시작한다.")
     public void startGame() throws JsonProcessingException {
@@ -119,7 +120,6 @@ public class SpringChessControllerTest {
             .body("url", is("/rooms/1"));
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임을 종료하면 첫 화면으로 이동한다.")
     public void endGame() throws JsonProcessingException {
@@ -132,7 +132,6 @@ public class SpringChessControllerTest {
             .body("url", is("/"));
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임을 결과를 반환한다.")
     public void checkGameStatus() throws JsonProcessingException {

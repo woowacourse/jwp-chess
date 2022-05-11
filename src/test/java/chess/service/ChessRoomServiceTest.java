@@ -23,6 +23,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
+@Sql("/sql/chess-test.sql")
 @SpringBootTest
 @Transactional
 class ChessRoomServiceTest {
@@ -33,14 +34,13 @@ class ChessRoomServiceTest {
     private static final String TEST_CREATION_ROOM_PASSWORD = "4321";
 
     @Autowired
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
-    ChessRoomServiceTest(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
+    @Autowired
     private RoomDao roomDao;
+    @Autowired
     private GameDao gameDao;
+    @Autowired
     private BoardDao boardDao;
 
     @Autowired

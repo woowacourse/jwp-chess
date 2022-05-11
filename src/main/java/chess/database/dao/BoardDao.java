@@ -2,6 +2,7 @@ package chess.database.dao;
 
 import chess.database.PieceCache;
 import chess.domain.board.Board;
+import chess.domain.board.CustomBoardGenerator;
 import chess.domain.board.Point;
 import chess.domain.piece.Piece;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class BoardDao {
             }, roomId);
         final Map<Point, Piece> pointPieces = entries.stream()
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        return Board.of(pointPieces);
+        return Board.of(new CustomBoardGenerator(pointPieces).generate());
     }
 
     public void updatePiece(int roomId, Point source, Point destination) {

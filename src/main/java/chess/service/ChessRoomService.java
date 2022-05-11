@@ -34,7 +34,7 @@ public class ChessRoomService {
     public RoomDto createNewRoom(String roomName, String password) {
         Room room = new Room(roomName, password);
         RoomDto roomDto = new RoomDto(roomName, password);
-        validateDuplicateRoom(roomName);
+        validateDuplicateName(roomName);
         roomDto = roomDao.create(roomDto);
         GameState state = new Ready();
         gameDao.create(roomDto.getId(), state);
@@ -45,12 +45,12 @@ public class ChessRoomService {
 
     public void startGame(int roomId) {
         GameState state = readGameState(roomId).start();
-        gameDao.updateState(roomId, GameStateDto.of(state));
+        gameDao.updateState(roomId, state.getState(), state.getTurnColor());
     }
 
     public void finishGame(int roomId) {
         GameState state = readGameState(roomId).finish();
-        gameDao.updateState(roomId, GameStateDto.of(state));
+        gameDao.updateState(roomId, state.getState(), state.getTurnColor());
     }
 
     public GameState readGameState(int roomId) {
@@ -61,7 +61,7 @@ public class ChessRoomService {
 
     public GameState moveBoard(int roomId, RouteDto routeDto) {
         GameState movedState = readGameState(roomId).move(routeDto);
-        gameDao.updateState(roomId, GameStateDto.of(movedState));
+        gameDao.updateState(roomId, movedState.getState(), movedState.getTurnColor());
         Route route = Route.of(routeDto);
         boardDao.deletePiece(roomId, route.getDestination());
         boardDao.updatePiece(roomId, route.getSource(), route.getDestination());
@@ -79,7 +79,6 @@ public class ChessRoomService {
         roomDao.delete(findRoomDto.getId());
     }
 
-
     public Map<RoomDto, String> findAllRoomState() {
         Map<RoomDto, String> roomStates = new HashMap<>();
         List<RoomDto> roomDtoList = roomDao.findAll();
@@ -95,9 +94,9 @@ public class ChessRoomService {
         return roomDao.findById(roomId);
     }
 
-    private void validateDuplicateRoom(String roomName) {
-        if (roomDao.existRoomName(roomName)) {
-            throw new IllegalArgumentException("[ERROR] 이름의 방이 이미 존재합니다.");
+    private void validateDuplicateName(String roomName) {
+        if (roomDao.existRoomByName(roomName)) {
+            throw new IllegalArgumentException("[ERROR] 이미 존재하는 이름의 방 이름입니다.");
         }
     }
 

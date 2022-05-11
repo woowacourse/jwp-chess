@@ -9,6 +9,7 @@ import chess.domain.piece.PieceType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Board {
@@ -19,6 +20,7 @@ public class Board {
     private final Map<Point, Piece> pointPieces;
 
     private Board(Map<Point, Piece> pointPieces) {
+        System.out.println("pointPieces size " + pointPieces.size());
         validateCounts(pointPieces);
         this.pointPieces = new HashMap<>(pointPieces);
     }
@@ -90,6 +92,13 @@ public class Board {
     }
 
     public Map<Point, Piece> getPointPieces() {
-        return Map.copyOf(pointPieces);
+        return ignoreEmpty(Map.copyOf(pointPieces));
+    }
+
+    private static Map<Point, Piece> ignoreEmpty(Map<Point, Piece> pointPieces) {
+        return pointPieces.entrySet()
+            .stream()
+            .filter(entry -> !entry.getValue().isEmpty())
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

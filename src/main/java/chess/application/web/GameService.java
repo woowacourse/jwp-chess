@@ -62,6 +62,16 @@ public class GameService {
         return gameDao.findById(id).toChessGame(board);
     }
 
+    private Piece parsePiece(PieceEntity piece) {
+        String rawType = piece.getType();
+        if (rawType.isBlank()) {
+            rawType = "none";
+        }
+        Type type = Type.valueOf(rawType.toUpperCase());
+        Camp camp = Camp.valueOf(piece.getCamp());
+        return type.generatePiece(camp);
+    }
+
     public BoardResponse update(Long id, MoveRequest moveRequest) {
         ChessGame chessGame = findChessGameById(id);
         move(chessGame, moveRequest);
@@ -105,17 +115,7 @@ public class GameService {
         return BoardResponse.of(chessGame.getBoardSquares());
     }
 
-    private Piece parsePiece(PieceEntity piece) {
-        String rawType = piece.getType();
-        if (rawType.isBlank()) {
-            rawType = "none";
-        }
-        Type type = Type.valueOf(rawType.toUpperCase());
-        Camp camp = Camp.valueOf(piece.getCamp());
-        return type.generatePiece(camp);
-    }
-
-    public ResultResponse end(Long id) {
+    public ResultResponse updateStateById(Long id) {
         ChessGame chessGame = findChessGameById(id);
         chessGame.end();
         gameDao.updateStateById(id);

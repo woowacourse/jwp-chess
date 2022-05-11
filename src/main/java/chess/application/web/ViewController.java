@@ -41,7 +41,7 @@ public class ViewController {
 
     @GetMapping("/games/{id}/end")
     public ModelAndView end(@PathVariable Long id) {
-        ResultResponse resultResponse = gameService.end(id);
+        ResultResponse resultResponse = gameService.updateStateById(id);
         return new ModelAndView("result", "result", resultResponse);
     }
 }

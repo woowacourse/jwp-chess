@@ -20,7 +20,6 @@ public class Board {
     private final Map<Point, Piece> pointPieces;
 
     private Board(Map<Point, Piece> pointPieces) {
-        System.out.println("pointPieces size " + pointPieces.size());
         validateCounts(pointPieces);
         this.pointPieces = new HashMap<>(pointPieces);
     }

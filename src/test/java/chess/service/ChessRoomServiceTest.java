@@ -65,7 +65,6 @@ class ChessRoomServiceTest {
         boardDao.saveBoard(firstRoomDto.getId(), board);
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("새로운 방을 만든다.")
     public void createNewGame() {
@@ -74,7 +73,6 @@ class ChessRoomServiceTest {
             .doesNotThrowAnyException();
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임 방 이름은 중복될 수 없다.")
     public void duplicateRoomException() {
@@ -83,7 +81,6 @@ class ChessRoomServiceTest {
             .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임 상태를 얻는다.")
     public void readGameState() {
@@ -92,7 +89,6 @@ class ChessRoomServiceTest {
         assertThat(gameState).isInstanceOf(Ready.class);
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임을 시작한다.")
     public void startGame() {
@@ -101,7 +97,6 @@ class ChessRoomServiceTest {
             .doesNotThrowAnyException();
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("말을 움직인다.")
     public void moveBoard() {
@@ -112,7 +107,6 @@ class ChessRoomServiceTest {
         assertThat(moved).isNotNull();
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임을 종료한다.")
     public void finishGame() {
@@ -121,7 +115,6 @@ class ChessRoomServiceTest {
             .doesNotThrowAnyException();
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("모든 게임 방을 조회한다.")
     public void findAllRoom() {
@@ -131,7 +124,6 @@ class ChessRoomServiceTest {
         assertThat(roomStates.size()).isEqualTo(2);
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("게임방을 삭제한다.")
     public void removeRoom() {
@@ -139,8 +131,7 @@ class ChessRoomServiceTest {
         assertThatCode(() -> chessRoomService.removeRoom(roomDto))
             .doesNotThrowAnyException();
     }
-
-    @Sql("/sql/chess-test.sql")
+    
     @Test
     @DisplayName("게임 삭제 시 틀린 비밀번호를 입력했다면 예외가 발생한다.")
     public void removeRoom_validate_password() {
@@ -149,7 +140,6 @@ class ChessRoomServiceTest {
             .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Sql("/sql/chess-test.sql")
     @Test
     @DisplayName("진행 중인 게임을 삭제하면 예외가 발생한다.")
     public void removeRoom_running_game() {

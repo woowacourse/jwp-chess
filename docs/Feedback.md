@@ -29,13 +29,14 @@
     - `StatusDto` - 필드로 board와 score를 Map의 value를 가지도록 구현
 - [x] Arguments - 컨트롤러에서 정해주는 것이 적절한가?
     - Command 관련 피드백
-- [ ] ExceptionHandler
+- [x] ExceptionHandler
     - RuntimeException -> Exception으로 바꾼 이유
+    - 이전 피드백에서 `Exception`이 발생했을 경우 사용자에게 미치는 영향을 파악하면서 `Exception`이 발생하면 핸들러가 처리하지 못하기 때문에 Exception.class로 수정
 - [x] DAO에서 Dto가 필요한지
     - [x] BoardDao
     - [x] RoomDao
         - 삭제 시 (게임명, 비밀번호)를 이용하는 것이 아닌 id로 지우도록 수정하고 비밀번호 검증은 service에서 하도록 수정
-- [ ] 클래스명에 Spring이라는 이름을 붙인 이유
+- [x] 클래스명에 Spring이라는 이름을 붙인 이유
 - [x] SpringBoardDao - `validateExist()`, DAO에서 유효성 검사를 하는 것이 적절한지
 - [x] SpringGameDao - `readStateAndColor()`
     - 응답값이 왜 문자열인지
@@ -71,25 +72,11 @@
     - [x] JsonProcessingException이 필요한가?
         - ObjectMapper.readValue()의 사용을 통해 필요한 Exception이었으나 해당 메서드를 사용하지 않게 되어 제거
 - [x] `Field Injection`에 대한 학습
-- [ ] `BoardDao` 인터페이스의 필요성
-    - [ ] 테스트를 위한 Interface -> 다른 테스트 방법 확인 필요
+- [x] `BoardDao` 인터페이스의 필요성
+    - [x] 테스트를 위한 Interface -> 다른 테스트 방법 확인 필요
     - `BoardDao 인터페이스 제거`
 - [x] `DAO`에서 불필요한 `DTO`의 사용
     - `BoardDao`에서 `BoardDto`, `PieceDto`, `PointDto`의 사용 제거 및 클래스 제거
 - [x] `RoomDAO` - 중복 검증 메서드 코드 수정
     - Optional 활용하여 코드 간소화
 
-## 수정
-
-- [ ] DAO
-    - [ ] Room
-    - [ ] Game
-    - [ ] Board
-- [ ] Service
-    - [ ] Room
-    - [ ] Game
-    - [ ] Board
-- [ ] Controller
-    - [ ] Room
-    - [ ] Game
-    - [ ] Board

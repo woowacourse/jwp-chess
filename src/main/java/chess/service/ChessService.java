@@ -36,15 +36,11 @@ public class ChessService {
 
     @Transactional
     public ChessGameDto resetGame(final int gameId) {
-        savePieces(gameId, new Board(new BoardInitializer()));
+        chessDao.deleteAllPiece(gameId);
+        chessDao.saveGame(gameId, new Board(new BoardInitializer()));
         chessDao.updateTurn(FIRST_COLOR, gameId);
 
         return ChessGameDto.from(findChessGameById(gameId));
-    }
-
-    private void savePieces(int gameId, Board board) {
-        chessDao.deleteAllPiece(gameId);
-        chessDao.saveGame(gameId, board);
     }
 
     public List<GameRoomDto> findAllGame() {
@@ -69,15 +65,25 @@ public class ChessService {
 
     @Transactional
     public ChessGameDto move(final MoveDto moveDto) {
-        var gameId = moveDto.getGameId();
+        final var gameId = moveDto.getGameId();
         final var chessGame = findChessGameById(gameId);
+        final var from = moveDto.getFrom();
+        final var to = moveDto.getTo();
 
-        chessGame.move(Position.from(moveDto.getFrom()), Position.from(moveDto.getTo()));
+        chessGame.move(Position.from(from), Position.from(to));
 
-        savePieces(gameId, chessGame.getBoard());
-        chessDao.updateTurn(gameId);
+        updatePieces(gameId, from, to);
+
+        var currentColor = chessDao.findCurrentColor(gameId);
+        var nextColor = Color.from(currentColor).next().toString();
+        chessDao.updateTurn(nextColor, gameId);
 
         return ChessGameDto.from(findChessGameById(gameId));
+    }
+
+    private void updatePieces(int gameId, String from, String to) {
+        chessDao.deletePiece(gameId, to);
+        chessDao.updatePiece(from, to, gameId);
     }
 
     @Transactional

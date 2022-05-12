@@ -1,11 +1,11 @@
 package chess.domain.game;
 
-import static org.assertj.core.api.Assertions.*;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import chess.controller.Command;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class CommandTest {
 
@@ -57,5 +57,4 @@ class CommandTest {
         assertThatExceptionOfType(IllegalArgumentException.class)
             .isThrownBy(() -> Command.find(input));
     }
-
 }

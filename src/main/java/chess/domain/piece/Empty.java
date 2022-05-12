@@ -7,6 +7,7 @@ import chess.domain.board.Route;
 public class Empty extends Piece {
 
     private static class EmptyHelper {
+
         public static final Piece INSTANCE = new Empty();
     }
 
@@ -21,5 +22,10 @@ public class Empty extends Piece {
     @Override
     public boolean move(Route route, EmptyPoints emptyPoints) {
         throw new UnsupportedOperationException("[ERROR] 빈 공간은 움직일 수 없습니다.");
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return true;
     }
 }

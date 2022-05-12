@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS board;
+DROP TABLE IF EXISTS game;
+DROP TABLE IF EXISTS room;
+
 CREATE TABLE room (
     id int auto_increment NOT NULL,
     name VARCHAR(10) UNIQUE NOT NULL,

@@ -1,8 +1,13 @@
 package chess.controller;
 
-import static org.hamcrest.core.Is.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
-import org.junit.jupiter.api.AfterEach;
+import chess.database.dto.RoomDto;
+import chess.domain.game.GameState;
+import chess.service.ChessRoomService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,18 +16,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
-import chess.service.GameService;
-import io.restassured.RestAssured;
-
+@Sql("/sql/chess-test.sql")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SpringChessControllerTest {
 
-    private static final String TEST_ROOM_NAME = "SPRING_T";
-    private static final String TEST_CREATION_ROOM_NAME = "SPRING_C";
-
-    @Autowired
-    private GameService service;
+    private static final String DEFAULT_ROOM_NAME = "test1";
+    private static final String DEFAULT_ROOM_PASSWORD = "1234";
+    private static final String CREATE_ROOM_NAME = "test2";
+    private static final String CREATE_ROOM_PASSWORD = "1234";
 
     @LocalServerPort
     int port;
@@ -30,11 +33,18 @@ public class SpringChessControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        service.createNewGame(TEST_ROOM_NAME);
+
+        String path = "/rooms";
+        RoomDto dto = new RoomDto(DEFAULT_ROOM_NAME, DEFAULT_ROOM_PASSWORD);
+
+        RestAssured.given().log().all()
+            .when().body(dto)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .post(path);
     }
 
     @Test
-    @DisplayName("인덱스 페이지를 방문한다.")
+    @DisplayName("게임방 목록 페이지를 방문한다.")
     public void index() {
         String path = "/";
 
@@ -45,111 +55,82 @@ public class SpringChessControllerTest {
     }
 
     @Test
-    @DisplayName("게임 화면을 보여준다")
-    public void main() {
-        String roomName = TEST_ROOM_NAME;
+    @DisplayName("게임방을 생성한다.")
+    public void createRoom() {
+        String path = "/rooms";
+        RoomDto dto = new RoomDto(CREATE_ROOM_NAME, CREATE_ROOM_PASSWORD);
 
         RestAssured.given().log().all()
-            .when().get("/main?room_name=" + roomName)
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value());
-    }
-
-    @Test
-    @DisplayName("게임명을 입력하고 게임을 시작한다.")
-    public void create() {
-        String path = "/create";
-        String roomName = TEST_CREATION_ROOM_NAME;
-        String params = String.format("?room_name=%s", roomName);
-
-        RestAssured.given().log().all()
-            .when().get(path + params)
+            .when().body(dto)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .post(path)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
-            .body("url", is("/main?room_name=" + roomName));
+            .body("url", is("/rooms/2"));
     }
 
     @Test
-    @DisplayName("기존 게임방에 입장한다.")
-    public void enter() {
-        String roomName = TEST_ROOM_NAME;
+    @DisplayName("게임방에 들어간다.")
+    public void enterRoom() {
+        String path = "/rooms/1/enter";
 
         RestAssured.given().log().all()
-            .when().get("/enter?room_name=" + roomName)
+            .when().get(path)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
-            .body("url", is("/main?room_name=" + roomName));
+            .body("url", is("/rooms/1"));
     }
 
     @Test
-    @DisplayName("게임을 시작한다.")
-    public void start() {
-        String roomName = TEST_ROOM_NAME;
+    @DisplayName("게임방을 삭제한다.")
+    public void deleteRoom() {
+        String path = "/rooms/1";
+
+        RoomDto roomDto = new RoomDto(1, null, CREATE_ROOM_PASSWORD);
 
         RestAssured.given().log().all()
-            .when().get("/start?room_name=" + roomName)
-            .then().log().all()
-            .statusCode(HttpStatus.OK.value())
-            .body("url", is("/main?room_name=" + roomName));
-    }
-
-    @Test
-    @DisplayName("게임을 종료한다.")
-    public void end() {
-        String roomName = TEST_ROOM_NAME;
-
-        service.startGame(roomName);
-
-        RestAssured.given().log().all()
-            .when().get("/end?room_name=" + roomName)
+            .when().body(roomDto)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .delete(path)
             .then().log().all()
             .statusCode(HttpStatus.OK.value())
             .body("url", is("/"));
     }
 
     @Test
-    @DisplayName("기물을 이동한다.")
-    public void move() {
-        String arguments = "{'source':'a2', 'destination':'a3'}";
-        String roomName = TEST_ROOM_NAME;
-
-        service.startGame(roomName);
+    @DisplayName("게임을 시작한다.")
+    public void startGame() {
+        String path = "/rooms/1/start";
 
         RestAssured.given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(arguments)
-            .when().post("/move?room_name=" + roomName)
+            .when().get(path)
             .then().log().all()
-            .statusCode(HttpStatus.OK.value());
+            .statusCode(HttpStatus.OK.value())
+            .body("url", is("/rooms/1"));
     }
 
     @Test
-    @DisplayName("점수를 확인한다.")
-    public void status() {
-        String roomName = TEST_ROOM_NAME;
-
-        service.startGame(roomName);
+    @DisplayName("게임을 종료하면 첫 화면으로 이동한다.")
+    public void endGame() {
+        String path = "/rooms/1/end";
 
         RestAssured.given().log().all()
-            .when().get("/status?room_name=" + roomName)
+            .when().get(path)
             .then().log().all()
-            .statusCode(HttpStatus.OK.value());
+            .statusCode(HttpStatus.OK.value())
+            .body("url", is("/"));
     }
 
     @Test
-    @DisplayName("예외를 잡는다.")
-    public void handleException() {
-        String roomName = TEST_ROOM_NAME;
+    @DisplayName("게임을 결과를 반환한다.")
+    public void checkGameStatus() {
+        String path = "/rooms/1/status";
 
         RestAssured.given().log().all()
-            .when().get("/create?room_name" + roomName)
+            .when().get(path)
             .then().log().all()
-            .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @AfterEach
-    void setDown() {
-        service.removeGameAndBoard(TEST_ROOM_NAME);
-        service.removeGameAndBoard(TEST_CREATION_ROOM_NAME);
+            .statusCode(HttpStatus.OK.value())
+            .body("score.size()", equalTo(2))
+            .body("score.WHITE", equalTo(38.0F));
     }
 }

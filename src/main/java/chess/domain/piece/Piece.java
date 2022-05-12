@@ -35,4 +35,8 @@ public abstract class Piece {
     }
 
     public abstract boolean move(Route route, EmptyPoints emptyPoints);
+
+    public boolean isEmpty() {
+        return false;
+    }
 }

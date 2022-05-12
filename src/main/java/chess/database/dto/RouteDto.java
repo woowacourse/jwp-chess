@@ -1,29 +1,25 @@
 package chess.database.dto;
 
-import chess.domain.board.Route;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RouteDto {
 
-    private final PointDto source;
-    private final PointDto destination;
+    private final String source;
+    private final String destination;
 
-    private RouteDto(PointDto source, PointDto destination) {
+    @JsonCreator
+    public RouteDto(@JsonProperty("source") String source, @JsonProperty("destination") String destination) {
         this.source = source;
         this.destination = destination;
     }
 
-    public static RouteDto of(Route route) {
-        return new RouteDto(
-            PointDto.of(route.getSource()),
-            PointDto.of(route.getDestination())
-        );
-    }
-
-    public PointDto getSource() {
+    public String getSource() {
         return source;
     }
 
-    public PointDto getDestination() {
+    public String getDestination() {
         return destination;
     }
+
 }

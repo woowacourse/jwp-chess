@@ -1,5 +1,6 @@
 package chess.domain.game;
 
+import chess.database.dto.RouteDto;
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.InitialBoardGenerator;
@@ -7,14 +8,12 @@ import chess.dto.Arguments;
 
 public class Ready extends GameState {
 
-    private static final String STATE = "READY";
-
     public Ready() {
-        super(Board.of(new InitialBoardGenerator()), Color.WHITE);
+        super(Board.of(new InitialBoardGenerator()), Color.WHITE, State.READY);
     }
 
     public Ready(Board board, Color color) {
-        super(board, color);
+        super(board, color, State.READY);
     }
 
     @Override
@@ -33,8 +32,8 @@ public class Ready extends GameState {
     }
 
     @Override
-    public String getState() {
-        return STATE;
+    public GameState move(RouteDto routeDto) {
+        throw new UnsupportedOperationException("[ERROR] 아직 게임이 시작되지 않았습니다..");
     }
 
     @Override

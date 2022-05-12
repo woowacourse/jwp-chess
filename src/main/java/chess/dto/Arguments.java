@@ -1,14 +1,11 @@
 package chess.dto;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import spark.Request;
 
 public class Arguments {
 
@@ -26,17 +23,6 @@ public class Arguments {
         return new Arguments(Arrays.stream(split)
             .skip(skipCount)
             .collect(Collectors.toList()));
-    }
-
-    public static Arguments ofRequest(Request request, List<String> parameters) {
-        if (parameters.isEmpty()) {
-            return new Arguments(parameters);
-        }
-        return new Arguments(readFromJson(request.body(), parameters));
-    }
-
-    public static Arguments ofJson(String jsonString, List<String> parameters) {
-        return new Arguments(readFromJson(jsonString, parameters));
     }
 
     public static List<String> readFromJson(String body, List<String> parameters) {

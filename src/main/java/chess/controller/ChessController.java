@@ -1,14 +1,13 @@
 package chess.controller;
 
-import java.util.Map;
-import java.util.function.BiFunction;
-
 import chess.domain.game.GameState;
 import chess.domain.game.Ready;
 import chess.dto.Arguments;
 import chess.dto.GameRequest;
 import chess.view.InputView;
 import chess.view.OutputView;
+import java.util.Map;
+import java.util.function.BiFunction;
 
 public class ChessController {
 
@@ -46,6 +45,7 @@ public class ChessController {
     }
 
     private static class Mapper {
+
         private static final Map<Command, BiFunction<GameState, Arguments, GameState>> MAPPER =
             Map.of(Command.START, Mapper::start,
                 Command.FINISH, Mapper::end,
@@ -53,7 +53,8 @@ public class ChessController {
                 Command.STATUS, Mapper::status);
 
         public static GameState findAndExecute(GameState state, GameRequest gameRequest) {
-            BiFunction<GameState, Arguments, GameState> executor = findExecutor(gameRequest.getCommand());
+            BiFunction<GameState, Arguments, GameState> executor = findExecutor(
+                gameRequest.getCommand());
             return executor.apply(state, gameRequest.getArguments());
         }
 

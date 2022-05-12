@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <title> 체스 게임 </title>
+  <link rel="stylesheet" href="/src/room.css">
+  <link rel="stylesheet" href="/src/index.css">
+  <script src="/src/rooms.js"></script>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 room-list-box">
+      <div class="room-list-title">
+        방 목록
+      </div>
+      <div class="row room-list">
+        {{#each roomStates}}
+          <div class="col-md-5 room-item">
+            <span class="game-info-name" id="gameName" onclick="enter(`{{@key.id}}`);">{{@key.name}}</span>
+            <button type="button" class="btn btn-danger" id="removeBtn" onclick="remove(`{{@key.id}}`);" {{this}} >삭제</button>
+          </div>
+        {{/each}}
+      </div>
+
+    </div>
+    <div class="col-md-4">
+      <div class="room-list-title">
+        방 생성
+      </div>
+      <div class="create-box">
+        <form action="/rooms" class="form-horizontal" method="post" id="create_room_form">
+          <div class="create-form form-group">
+            <input type="text" class="input-form form-control" name="room_name"  id="room_name" placeholder="게임명">
+            <input type="password" class="input-form form-control" name="room_password" id="room_password" placeholder="비밀번호">
+            <button type="submit" class="btn btn-info create-room-btn">방 생성</button>
+          </div>
+          <div class="create-form form-group">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script> setUpIndex(); </script>
+</body>
+</html>

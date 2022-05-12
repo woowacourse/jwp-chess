@@ -1,27 +1,5 @@
 
 // -------- init start ---------
-function setUpIndex() {
-    const createForm = document.getElementById("create_form");
-    createForm.addEventListener("submit", e => {
-        e.preventDefault();
-        let roomName = new FormData(createForm).get("room_name");
-        send("/create?room_name=" + roomName, {
-            method: 'get'
-        }, relocate);
-    })
-
-    const enterForm = document.getElementById("enter_form");
-    enterForm.addEventListener("submit", e => {
-        e.preventDefault();
-        let roomName = new FormData(enterForm).get("room_name");
-        send("/enter?room_name=" + roomName, {
-            method: 'get'
-        }, relocate);
-    })
-
-    console.log("setupIndex done")
-}
-
 function setUpState(state, forms) {
     const clickable = 'clickable';
     const nonClickable = 'non-clickable';
@@ -63,17 +41,17 @@ function setUpMain(state) {
     const statusForm = document.getElementById("status_form");
     statusForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = getCurrentParam("room_name");
-        send("/status?room_name=" + roomName, {
-            method: 'get'
-        }, showStatus);
+        let roomId = document.getElementById('roomId').value;
+        send("/rooms/"+roomId+"/status", {
+                    method: 'get'
+                }, showStatus);
     });
 
     const startForm = document.getElementById("start_form");
     startForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = getCurrentParam("room_name");
-        send("/start?room_name=" + roomName, {
+        let roomId = document.getElementById('roomId').value;
+        send("/rooms/"+roomId+"/start", {
             method: 'get'
         }, relocate);
     });
@@ -81,8 +59,8 @@ function setUpMain(state) {
     const endForm = document.getElementById("end_form");
     endForm.addEventListener("submit", e => {
         e.preventDefault();
-        let roomName = getCurrentParam("room_name");
-        send("/end?room_name=" + roomName, {
+        let roomId = document.getElementById('roomId').value;
+        send("/rooms/"+roomId+"/end", {
             method: 'get'
         }, relocate);
     });
@@ -90,15 +68,11 @@ function setUpMain(state) {
     setUpState(state, {'status': statusForm, 'start': startForm, 'end': endForm});
     console.log("setup done")
 }
-
 // -------- init end ---------
 
 
 
 // --------- draw start ---------
-
-
-
 let source = null;
 let destination = null;
 
@@ -121,8 +95,8 @@ function moveByClick(source, destination) {
     }
     console.log('move by click called', source, destination);
 
-    let roomName = getCurrentParam("room_name");
-    send("/move?room_name=" + roomName, {
+    let roomId = document.getElementById('roomId').value;
+    send("/rooms/"+roomId+"/move", {
         method: 'post',
         body: JSON.stringify({'source': source.id, 'destination': destination.id}),
         headers: new Headers({'Content-Type': 'application/json'})
@@ -172,16 +146,16 @@ function drawTurn(color) {
 }
 
 function drawBoardByResponse(responseJson) {
-    drawBoard(responseJson['board']);
-    drawTurn(responseJson['color']);
-    if (responseJson['state'] === "FINISHED") {
+    drawBoard(responseJson.board);
+    drawTurn(responseJson.color);
+    if (responseJson.state === "FINISHED") {
         alert("킹이 잡혔습니다.");
         relocate({'url': "/"})
     }
 }
 
-function drawBoard(board) {
-    const responses = board['pieceResponses']
+function drawBoard(response) {
+    const responses = response['pieceResponses']
     for (let index in responses) {
         const piece = responses[index]
         drawPiece(piece['horizontalIndex'], piece['verticalIndex'], piece['type'], piece['color']);
@@ -216,15 +190,10 @@ function toJSON(form) {
     return JSON.stringify(json);
 }
 
-function getCurrentParam(key) {
-    let params = (new URL(document.location)).searchParams;
-    return params.get(key);
-}
-
 function showStatus(responseJson) {
-    let string = 'WHITE SCORE = ' + responseJson['score']['WHITE'] +
+    let string = 'WHITE SCORE = ' + responseJson.score['WHITE'] +
         '\n' +
-        'BLACK SCORE = ' + responseJson['score']['BLACK'];
+        'BLACK SCORE = ' + responseJson.score['BLACK'];
     alert(string);
 }
 
@@ -237,7 +206,6 @@ async function send(path, fetchBody, handler) {
         }
         return responseJson;
     }
-
     let response = await fetch(path, fetchBody);
     let responseJson = await response.json();
     if (await alertIfException(responseJson)) {

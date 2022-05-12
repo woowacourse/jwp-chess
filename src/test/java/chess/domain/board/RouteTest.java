@@ -20,7 +20,6 @@ class RouteTest {
         // when
         Route route = new Route(from, to);
 
-        // then
         assertThat(route).isNotNull();
     }
 

@@ -1,9 +1,9 @@
 package chess.domain.board;
 
-import java.util.List;
-
+import chess.database.dto.RouteDto;
 import chess.domain.piece.move.Direction;
 import chess.dto.Arguments;
+import java.util.List;
 
 public class Route {
 
@@ -17,6 +17,11 @@ public class Route {
     public Route(Point source, Point destination) {
         this.source = source;
         this.destination = destination;
+    }
+
+    public static Route of(RouteDto routeDto) {
+        return new Route(Point.of(routeDto.getSource()),
+            Point.of(routeDto.getDestination()));
     }
 
     public static Route of(List<String> arguments) {

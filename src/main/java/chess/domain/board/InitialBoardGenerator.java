@@ -1,11 +1,6 @@
 package chess.domain.board;
 
-import static java.util.stream.Collectors.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.IntStream;
+import static java.util.stream.Collectors.toMap;
 
 import chess.domain.Color;
 import chess.domain.piece.Bishop;
@@ -16,6 +11,10 @@ import chess.domain.piece.Pawn;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
 public class InitialBoardGenerator implements BoardGenerator {
 

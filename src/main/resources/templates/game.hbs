@@ -5,11 +5,18 @@
     <title> 체스 게임 </title>
     <link rel="stylesheet" href="/src/index.css">
     <script src="/src/index.js"></script>
+  <style>
+    .room-title {
+      font-size: 30px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
 <div id="app">
     <div id="main-container">
         <h1> 체스 게임 </h1>
+        <h3 class="room-title"> 방 이름 : {{roomName}} </h3>
         <section id="chess-ui">
             <table id="chess-board">
                 <script>
@@ -26,15 +33,21 @@
                 <script> drawTurn('{{response.color}}'); </script>
             </h3>
             <form id="start_form" action="/start" method="get" class="main-form">
+                <input type="text" id="roomId" hidden value="{{roomId}}">
                 <input type="submit" value="start" class="button">
             </form>
 
             <form id="status_form" action="/status" method="get" class="main-form">
+                <input type="text" id="roomId" hidden value="{{roomId}}">
                 <input type="submit" value="status" class="button">
             </form>
 
             <form id="end_form" action="/end" method="get" class="main-form">
                 <input type="submit" value="end" class="button">
+            </form>
+
+            <form id="back_form" action="/" method="get" class="main-form">
+              <input type="submit" value="back" class="button">
             </form>
         </section>
 
@@ -45,7 +58,6 @@
             {{/each}}
         </section>
     </div>
-
 </div>
 <script>setUpMain('{{response.state}}');</script>
 </body>

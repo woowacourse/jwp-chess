@@ -1,11 +1,10 @@
 package chess.dto;
 
+import chess.domain.board.Point;
+import chess.domain.piece.Piece;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import chess.domain.board.Point;
-import chess.domain.piece.Piece;
 
 public class BoardResponse {
 

@@ -1,11 +1,7 @@
 package chess.domain.game;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.util.Map;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.Color;
 import chess.domain.board.BoardFixtures;
@@ -14,6 +10,9 @@ import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.dto.Arguments;
+import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class RunningTest {
 
@@ -38,7 +37,7 @@ class RunningTest {
     @Test
     @DisplayName("move 명령시 running 상태로 변한다.")
     void moveToRunningTest() {
-        Arguments arguments = Arguments.ofArray(new String[] {"a2", "a3"}, 0);
+        Arguments arguments = Arguments.ofArray(new String[]{"a2", "a3"}, 0);
         GameState gameState = new Running(BoardFixtures.INITIAL, Color.WHITE);
 
         GameState movedState = gameState.move(arguments);
@@ -49,7 +48,7 @@ class RunningTest {
     @Test
     @DisplayName("move 명령시 king이 죽으면 종료 상태로 변한다.")
     void moveToFinishTest() {
-        Arguments arguments = Arguments.ofArray(new String[] {"e1", "e8"}, 0);
+        Arguments arguments = Arguments.ofArray(new String[]{"e1", "e8"}, 0);
         GameState gameState = new Running(BoardFixtures.create(Map.of(
             Point.of("e8"), new King(Color.BLACK),
             Point.of("e1"), new Queen(Color.WHITE)
@@ -73,11 +72,10 @@ class RunningTest {
     @Test
     @DisplayName("진행상태에서는 보드의 정보를 얻을 수 있다.")
     void gettingResponse() {
-        GameState state = new Running(BoardFixtures.EMPTY, Color.WHITE);
+        GameState state = new Running(BoardFixtures.INITIAL, Color.WHITE);
 
         Map<Point, Piece> pointPieces = state.getPointPieces();
 
         assertThat(pointPieces).hasSize(64);
-
     }
 }

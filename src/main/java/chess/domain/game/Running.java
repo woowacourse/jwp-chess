@@ -1,5 +1,6 @@
 package chess.domain.game;
 
+import chess.database.dto.RouteDto;
 import chess.domain.Color;
 import chess.domain.board.Board;
 import chess.domain.board.Route;
@@ -7,10 +8,8 @@ import chess.dto.Arguments;
 
 public class Running extends GameState {
 
-    private static final String STATE = "RUNNING";
-
     public Running(Board board, Color turnColor) {
-        super(board, turnColor);
+        super(board, turnColor, State.RUNNING);
     }
 
     @Override
@@ -33,8 +32,12 @@ public class Running extends GameState {
     }
 
     @Override
-    public String getState() {
-        return STATE;
+    public GameState move(RouteDto routeDto) {
+        board = board.move(Route.of(routeDto), turnColor);
+        if (board.isKingDead()) {
+            return new Finished(board, turnColor);
+        }
+        return new Running(board, turnColor.toggle());
     }
 
     @Override

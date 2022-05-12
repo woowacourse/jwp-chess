@@ -1,29 +1,32 @@
 package chess.database.dto;
 
+import chess.domain.Color;
 import chess.domain.game.GameState;
+import chess.domain.game.State;
 
 public class GameStateDto {
 
-    private final String state;
-    private final String turnColor;
+    private final State state;
+    private final Color turnColor;
 
-    private GameStateDto(String state, String turnColor) {
+    private GameStateDto(State state, Color turnColor) {
         this.state = state;
         this.turnColor = turnColor;
     }
 
-    public static GameStateDto of(GameState state) {
-        return new GameStateDto(
-            state.getState(),
-            state.getColor()
-        );
+    public static GameStateDto of(GameState gameState) {
+        return new GameStateDto(gameState.getState(), gameState.getTurnColor());
     }
 
-    public String getState() {
+    public static GameStateDto of(State state, Color color) {
+        return new GameStateDto(state, color);
+    }
+
+    public State getState() {
         return state;
     }
 
-    public String getTurnColor() {
+    public Color getTurnColor() {
         return turnColor;
     }
 }

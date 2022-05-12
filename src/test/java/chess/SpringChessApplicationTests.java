@@ -9,5 +9,4 @@ class SpringChessApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

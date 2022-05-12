@@ -115,11 +115,4 @@ public class ChessDao {
             savePiece(gameId, new PieceAndPositionDto(entry.getKey(), entry.getValue()));
         }
     }
-
-    public void updateTurn(int gameId) {
-        final var sql = "UPDATE game SET current_turn = "
-                + "CASE WHEN current_turn = 'black' THEN 'white' WHEN current_turn = 'white' THEN 'black' END WHERE game_id = ?";
-
-        jdbcTemplate.update(sql, gameId);
-    }
 }

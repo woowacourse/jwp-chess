@@ -131,7 +131,7 @@ class ChessRoomServiceTest {
         assertThatCode(() -> chessRoomService.removeRoom(roomDto))
             .doesNotThrowAnyException();
     }
-    
+
     @Test
     @DisplayName("게임 삭제 시 틀린 비밀번호를 입력했다면 예외가 발생한다.")
     public void removeRoom_validate_password() {

@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChessRoomService {
 
+    public static final String DISABLED_OPTION = "disabled";
+    public static final String NO_DISABLED_OPTION = "";
     private final RoomDao roomDao;
     private final GameDao gameDao;
     private final BoardDao boardDao;
@@ -38,7 +40,6 @@ public class ChessRoomService {
         roomDto = roomDao.create(roomDto);
         GameState state = new Ready();
         gameDao.create(roomDto.getId(), state);
-
         boardDao.saveBoard(roomDto.getId(), state.getBoard());
         return roomDto;
     }
@@ -85,7 +86,7 @@ public class ChessRoomService {
         for (RoomDto roomDto : roomDtoList) {
             GameStateDto gameStateDto = gameDao.readStateAndColor(roomDto.getId());
             State state = gameStateDto.getState();
-            roomStates.put(roomDto, state.getDisableOption());
+            roomStates.put(roomDto, generateDisableOption(state.getDisableOption()));
         }
         return roomStates;
     }
@@ -98,6 +99,13 @@ public class ChessRoomService {
         if (roomDao.existRoomByName(roomName)) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 이름의 방 이름입니다.");
         }
+    }
+
+    private String generateDisableOption(boolean option) {
+        if (option) {
+            return DISABLED_OPTION;
+        }
+        return NO_DISABLED_OPTION;
     }
 
     private void validateRunningState(State state) {

@@ -1,11 +1,11 @@
 package chess.domain.game;
 
-import static org.assertj.core.api.Assertions.*;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import chess.dto.Arguments;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 class ReadyTest {
 
@@ -36,7 +36,7 @@ class ReadyTest {
     @Test
     @DisplayName("준비상태에서는 이동할 수 없다.")
     void throwsExceptionWithTryingToMove() {
-        Arguments ignored = Arguments.ofArray(new String[] {"a1", "a2"}, 0);
+        Arguments ignored = Arguments.ofArray(new String[]{"a1", "a2"}, 0);
         GameState state = new Ready();
 
         assertThatExceptionOfType(UnsupportedOperationException.class)

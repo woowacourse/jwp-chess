@@ -72,7 +72,8 @@ public class WebChessController {
     }
 
     @PostMapping(path = "/rooms/{roomId}/move")
-    public ResponseEntity<GameStateResponse> move(@PathVariable("roomId") int roomId, @RequestBody RouteDto requestRouteDto) {
+    public ResponseEntity<GameStateResponse> move(@PathVariable("roomId") int roomId,
+        @RequestBody RouteDto requestRouteDto) {
         GameState state = chessRoomService.moveBoard(roomId, requestRouteDto);
         return ResponseEntity.ok().body(GameStateResponse.of(state));
     }

@@ -23,9 +23,9 @@ public class BoardDao {
 
     public void saveBoard(int roomId, Board board) {
         String sql = "insert into board (horizontal_index, vertical_index, piece_type, piece_color, room_id) values (?, ?, ?, ?, ?)";
-        Map<Point, Piece> pointPieceDto = board.getPointPieces();
+        Map<Point, Piece> pointPiece = board.getPointPiecesForDao();
         List<Object[]> batch = new ArrayList<>();
-        for (Map.Entry<Point, Piece> entry : pointPieceDto.entrySet()) {
+        for (Map.Entry<Point, Piece> entry : pointPiece.entrySet()) {
             Point point = entry.getKey();
             Piece piece = entry.getValue();
             final Object[] objects = {point.getHorizontal(), point.getVertical(), piece.getType(), piece.getColor(), roomId};

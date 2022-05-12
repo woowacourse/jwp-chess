@@ -91,6 +91,10 @@ public class Board {
     }
 
     public Map<Point, Piece> getPointPieces() {
+        return Map.copyOf(pointPieces);
+    }
+
+    public Map<Point, Piece> getPointPiecesForDao() {
         return ignoreEmpty(Map.copyOf(pointPieces));
     }
 

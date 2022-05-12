@@ -77,7 +77,7 @@ class BoardDaoTest {
     public void select() {
         RoomDto roomDto = roomDao.findByName(TEST_ROOM_NAME);
         Board findBoard = boardDao.readBoard(roomDto.getId());
-        assertThat(findBoard.getPointPieces().size()).isEqualTo(32);
+        assertThat(findBoard.getPointPieces().size()).isEqualTo(64);
     }
 
     @Test

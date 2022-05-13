@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chess Games</title>
+</head>
+
+<body>
+<h3>체스방을 삭제하시겠습니까?</h3>
+<div>
+    <label for="password">Password: </label>
+    <input type="password" name="password" id="password" required>
+</div>
+<br>
+<div>
+    <input type="button" id="delete" value="삭제하기"/>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $("#delete").click(function () {
+        $.ajax({
+            type: "DELETE",
+            url: "/games/{{id}}",
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'application/json',
+            data: $("#password").val(),
+            success: () => {
+                window.location.href = "../"
+            },
+            error: (request) => {
+                alert("[" + request.status + "] " + JSON.parse(request.responseText).message)
+            }
+        });
+    });
+</script>
+</html>

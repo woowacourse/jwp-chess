@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class Running implements State {
     private static final String ERROR_ALREADY_STARTED = "이미 시작되었습니다.";
-    private static final String ERROR_CANT_LOAD = "게임 진행 중에는 게임을 불러올 수 없습니다.";
     private static final String ERROR_NO_WINNER = "게임 진행 중에는 승패를 판정할 수 없습니다.";
 
     private final Board board;
@@ -24,7 +23,11 @@ public class Running implements State {
 
     @Override
     public State load(Map<Position, Piece> board, boolean whiteTurn) {
-        throw new UnsupportedOperationException(ERROR_CANT_LOAD);
+        Camp.initializeTurn();
+        if (!whiteTurn) {
+            Camp.switchTurn();
+        }
+        return new Running(new Board(board));
     }
 
     @Override

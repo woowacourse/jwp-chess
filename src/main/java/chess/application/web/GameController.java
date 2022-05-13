@@ -1,81 +1,50 @@
 package chess.application.web;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.http.HttpStatus;
+import chess.dto.BoardResponse;
+import chess.dto.GameRequest;
+import chess.dto.MoveRequest;
+import chess.dto.StatusResponse;
+import java.net.URI;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@RequestMapping("/games")
 public class GameController {
     private final GameService gameService;
-    private final JsonTransformer jsonTransformer;
 
     public GameController(GameService gameService) {
-        this.jsonTransformer = new JsonTransformer();
         this.gameService = gameService;
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(GameController.class, args);
+    @PostMapping
+    public ResponseEntity<Void> save(@RequestBody GameRequest gameRequest) {
+        Long gameId = gameService.save(gameRequest);
+        return ResponseEntity.created(URI.create("/game/" + gameId)).build();
     }
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAllAttributes(gameService.modelReady());
-        return "index";
+    @GetMapping("/{id}/status")
+    public ResponseEntity<StatusResponse> findStatus(@PathVariable Long id) {
+        StatusResponse statusResponse = gameService.findStatus(id);
+        return ResponseEntity.ok(statusResponse);
     }
 
-    @GetMapping("/start")
-    public String start(Model model) {
-        gameService.start();
-        return play(model);
+    @PutMapping("/{id}/move")
+    public ResponseEntity<BoardResponse> update(@PathVariable Long id, @RequestBody MoveRequest moveRequest) {
+        BoardResponse boardResponse = gameService.update(id, moveRequest);
+        return ResponseEntity.ok(boardResponse);
     }
 
-    @GetMapping("/load")
-    public String load(Model model) {
-        gameService.load();
-        return play(model);
-    }
-
-    @PostMapping("/move")
-    public String move(Model model, @RequestParam String source, @RequestParam String target) {
-        gameService.move(source, target);
-        if (gameService.isGameFinished()) {
-            return end(model);
-        }
-        return play(model);
-    }
-
-    private String play(Model model) {
-        model.addAllAttributes(gameService.modelPlayingBoard());
-        return "index";
-    }
-
-    @GetMapping("/status")
-    public ResponseEntity<String> status() {
-        String statusData = jsonTransformer.render(gameService.modelStatus());
-        return ResponseEntity.ok().body(statusData);
-    }
-
-    @GetMapping("/save")
-    public ResponseEntity<Void> save() {
-        gameService.save();
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @GetMapping("/end")
-    public String end(Model model) {
-        model.addAllAttributes(gameService.end());
-        return "result";
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<String> handle(Exception exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("[ERROR] " + exception.getMessage());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGame(@PathVariable Long id, @RequestBody String password) {
+        gameService.delete(id, password);
+        return ResponseEntity.noContent().build();
     }
 }

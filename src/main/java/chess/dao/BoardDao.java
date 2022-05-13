@@ -3,8 +3,7 @@ package chess.dao;
 import chess.domain.Camp;
 import chess.domain.board.Position;
 import chess.domain.piece.Piece;
-import chess.dto.PieceDto;
-import java.sql.ResultSet;
+import chess.entity.PieceEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,44 +18,37 @@ public class BoardDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Map<Position, Piece> board) {
-        final String sql = chooseSaveSql();
-
+    public void saveAll(Long gameId, Map<Position, Piece> board) {
         for (Entry<Position, Piece> entry : board.entrySet()) {
-            savePiece(sql, entry);
+            savePiece(gameId, entry);
         }
     }
 
-    private void savePiece(String sql, Entry<Position, Piece> entry) {
+    private void savePiece(Long gameId, Entry<Position, Piece> entry) {
+        final String sql = "insert into piece (game_id, type, white, position) values (?, ?, ?, ?)";
         Piece piece = entry.getValue();
         String type = piece.getType().toString();
         boolean isWhite = piece.isCamp(Camp.WHITE);
         String position = entry.getKey().toString();
 
-        jdbcTemplate.update(sql, type, isWhite, position);
+        jdbcTemplate.update(sql, gameId, type, isWhite, position);
     }
 
-    private String chooseSaveSql() {
-        String sql = "insert into piece (game_no, type, white, position) values (1, ?, ?, ?)";
-        if (isBoardExistIn()) {
-            sql = "update piece set type = ?, white = ? where position = ?";
-        }
-        return sql;
+    public List<PieceEntity> findAllByGameId(Long gameId) {
+        final String sql = "select id, game_id, position, type, white from piece where game_id = ?";
+
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new PieceEntity(
+                resultSet.getLong("id"),
+                resultSet.getLong("game_id"),
+                resultSet.getString("position"),
+                resultSet.getString("type"),
+                resultSet.getBoolean("white")
+        ), gameId);
     }
 
-    private boolean isBoardExistIn() {
-        final String sql = "select no from piece";
+    public void deleteAllByGameId(Long gameId) {
+        final String sql = "delete from piece where game_id = ?";
 
-        return jdbcTemplate.query(sql, ResultSet::next);
-    }
-
-    public List<PieceDto> load() {
-        final String sql = "select type, white, position from piece";
-
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> PieceDto.of(
-                    resultSet.getString("type"),
-                    resultSet.getBoolean("white"),
-                    resultSet.getString("position"))
-        );
+        jdbcTemplate.update(sql, gameId);
     }
 }

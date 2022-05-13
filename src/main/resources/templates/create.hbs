@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chess Games</title>
+</head>
+
+<body>
+<h3>체스방 생성하기</h3>
+<div>
+    <label for="title">Title: </label>
+    <input type="text" name="title" id="title" required>
+</div>
+<br>
+<div>
+    <label for="password">Password: </label>
+    <input type="password" name="password" id="password" required>
+</div>
+<br>
+<div>
+    <input type="button" id="create" value="생성하기"/>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $("#create").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/games",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                title: $("#title").val(),
+                password: $("#password").val()
+            }),
+            success: () => {
+                window.location.href = "./"
+            },
+            error: () => {
+                alert("실패하였습니다.")
+            }
+        });
+    });
+</script>
+</html>

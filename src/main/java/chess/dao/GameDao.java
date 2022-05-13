@@ -1,8 +1,14 @@
 package chess.dao;
 
 import chess.domain.Camp;
-import java.sql.ResultSet;
+import chess.entity.GameEntity;
+import java.sql.PreparedStatement;
+import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -13,28 +19,61 @@ public class GameDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save() {
-        final String sql = chooseSaveSql();
-        jdbcTemplate.update(sql, Camp.BLACK.isNotTurn());
+    private final RowMapper<GameEntity> actorRowMapper = (resultSet, rowNum) -> new GameEntity(
+            resultSet.getLong("id"),
+            resultSet.getString("title"),
+            resultSet.getString("password"),
+            resultSet.getBoolean("white_turn"),
+            resultSet.getBoolean("finished")
+    );
+
+    public Long save(GameEntity gameEntity) {
+        final String sql = "insert into game (title, password, finished, white_turn) values (?, ?, false, true)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, gameEntity.getTitle());
+            ps.setString(2, gameEntity.getPassword());
+            return ps;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    private String chooseSaveSql() {
-        String sql = "insert into game (no, white_turn) values (1,?)";
-        if (isGameExistIn()) {
-            sql = "update game set white_turn = ?";
-        }
-        return sql;
+    public List<GameEntity> findAll() {
+        final String sql = "select id, title, password, white_turn, finished from game";
+
+        return jdbcTemplate.query(sql, actorRowMapper);
     }
 
-    private boolean isGameExistIn() {
-        final String sql = "select no from game";
+    public GameEntity findById(Long id) {
+        final String sql = "select id, title, password, white_turn, finished from game where id = ?";
 
-        return jdbcTemplate.query(sql, ResultSet::next);
+        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
     }
 
-    public boolean isWhiteTurn() {
-        final String sql = "select white_turn from game";
+    public void updateTurnById(Long id) {
+        final String sql = "update game set white_turn = ? where id = ?";
 
-        return jdbcTemplate.queryForObject(sql, Boolean.class);
+        jdbcTemplate.update(sql, Camp.BLACK.isNotTurn(), id);
+    }
+
+    public void updateStateById(Long id) {
+        final String sql = "update game set finished = true where id = ?";
+
+        jdbcTemplate.update(sql, id);
+    }
+
+    public void deleteById(Long id) {
+        final String sql = "delete from game where id = ?";
+
+        jdbcTemplate.update(sql, id);
+    }
+
+    public boolean isWhiteTurn(Long id) {
+        final String sql = "select white_turn from game where id = ?";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 }

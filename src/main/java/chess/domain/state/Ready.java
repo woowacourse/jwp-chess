@@ -15,11 +15,6 @@ public final class Ready implements State {
     }
 
     @Override
-    public boolean isEnd() {
-        return false;
-    }
-
-    @Override
     public State move(final Position from, final Position to) {
         throw new IllegalStateException(ERROR_MESSAGE);
     }

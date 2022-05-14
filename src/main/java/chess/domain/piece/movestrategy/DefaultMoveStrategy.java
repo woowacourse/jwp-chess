@@ -2,7 +2,6 @@ package chess.domain.piece.movestrategy;
 
 import chess.domain.board.Direction;
 import chess.domain.board.MoveOrder;
-
 import java.util.List;
 
 public final class DefaultMoveStrategy extends MoveStrategy {

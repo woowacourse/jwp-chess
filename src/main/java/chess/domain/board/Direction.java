@@ -1,7 +1,6 @@
 package chess.domain.board;
 
 import chess.domain.position.Position;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,9 +24,12 @@ public enum Direction {
     WEST_WEST_SOUTH(-2, -1);
 
     public static final List<Direction> LINEAR_DIRECTION = Arrays.asList(NORTH, EAST, SOUTH, WEST);
-    public static final List<Direction> DIAGONAL_DIRECTION = Arrays.asList(NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST);
-    public static final List<Direction> EVERY_DIRECTION = Arrays.asList(NORTH, EAST, SOUTH, WEST, NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST);
-    public static final List<Direction> KNIGHT_DIRECTION = Arrays.asList(NORTH_NORTH_EAST, NORTH_NORTH_WEST, SOUTH_SOUTH_EAST, SOUTH_SOUTH_WEST, EAST_EAST_NORTH, EAST_EAST_SOUTH, WEST_WEST_NORTH, WEST_WEST_SOUTH);
+    public static final List<Direction> DIAGONAL_DIRECTION = Arrays.asList(NORTH_EAST, SOUTH_EAST, SOUTH_WEST,
+            NORTH_WEST);
+    public static final List<Direction> EVERY_DIRECTION = Arrays.asList(NORTH, EAST, SOUTH, WEST, NORTH_EAST,
+            SOUTH_EAST, SOUTH_WEST, NORTH_WEST);
+    public static final List<Direction> KNIGHT_DIRECTION = Arrays.asList(NORTH_NORTH_EAST, NORTH_NORTH_WEST,
+            SOUTH_SOUTH_EAST, SOUTH_SOUTH_WEST, EAST_EAST_NORTH, EAST_EAST_SOUTH, WEST_WEST_NORTH, WEST_WEST_SOUTH);
     public static final List<Direction> WHITE_PAWN_DIRECTION = Arrays.asList(NORTH, NORTH_EAST, NORTH_WEST);
     public static final List<Direction> BLACK_PAWN_DIRECTION = Arrays.asList(SOUTH, SOUTH_EAST, SOUTH_WEST);
 
@@ -80,7 +82,8 @@ public enum Direction {
     }
 
     public boolean isDiagonal() {
-        return this == Direction.NORTH_EAST || this == Direction.SOUTH_EAST || this == Direction.SOUTH_WEST || this == Direction.NORTH_WEST;
+        return this == Direction.NORTH_EAST || this == Direction.SOUTH_EAST || this == Direction.SOUTH_WEST
+                || this == Direction.NORTH_WEST;
     }
 
     public int getX() {

@@ -2,7 +2,6 @@ package chess.dto;
 
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-
 import java.util.Objects;
 
 public final class PieceAndPositionDto {
@@ -37,10 +36,15 @@ public final class PieceAndPositionDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         PieceAndPositionDto that = (PieceAndPositionDto) o;
-        return Objects.equals(pieceName, that.pieceName) && Objects.equals(pieceColor, that.pieceColor) && Objects.equals(position, that.position);
+        return Objects.equals(pieceName, that.pieceName) && Objects.equals(pieceColor, that.pieceColor)
+                && Objects.equals(position, that.position);
     }
 
     @Override

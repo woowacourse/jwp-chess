@@ -1,7 +1,6 @@
 package chess.domain.state;
 
 import chess.domain.piece.Color;
-
 import java.util.Map;
 import java.util.Objects;
 
@@ -18,10 +17,15 @@ public final class Status {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Status status = (Status) o;
-        return Objects.equals(whiteScore, status.whiteScore) && Objects.equals(blackScore, status.blackScore) && result == status.result;
+        return Objects.equals(whiteScore, status.whiteScore) && Objects.equals(blackScore, status.blackScore)
+                && result == status.result;
     }
 
     @Override

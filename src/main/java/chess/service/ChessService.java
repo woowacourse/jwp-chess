@@ -8,18 +8,16 @@ import chess.domain.piece.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceFactory;
 import chess.domain.position.Position;
-import chess.domain.state.Ready;
-import chess.domain.state.Running;
 import chess.domain.state.StateFactory;
 import chess.dto.ChessGameDto;
+import chess.dto.GameRoomDto;
+import chess.dto.MoveDto;
 import chess.dto.PieceAndPositionDto;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static chess.dao.ChessDaoImpl.DEFAULT_GAME_ID;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChessService {
@@ -27,53 +25,80 @@ public class ChessService {
     private static final String FIRST_COLOR = "WHITE";
 
     private final ChessDao chessDao;
-    private ChessGame chessGame = new ChessGame(new Ready());
 
     public ChessService(final ChessDao chessDao) {
         this.chessDao = chessDao;
     }
 
-    public ChessGameDto newGame() {
-        deleteOldData(DEFAULT_GAME_ID);
-        initNewChessGame(DEFAULT_GAME_ID);
-        chessGame = new ChessGame(new Running(Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)), convertToBoard(chessDao.findAllPiece(DEFAULT_GAME_ID))));
-        return new ChessGameDto(chessDao.findAllPiece(DEFAULT_GAME_ID), chessGame.status());
+    public int createRoom(final GameRoomDto gameRoomDto) {
+        return chessDao.initGame(gameRoomDto.getTitle(), gameRoomDto.getPassword());
     }
 
-    private void deleteOldData(final int gameId) {
+    @Transactional
+    public ChessGameDto resetGame(final int gameId) {
         chessDao.deleteAllPiece(gameId);
-        chessDao.deleteGame(gameId);
+        chessDao.saveGame(gameId, new Board(new BoardInitializer()));
+        chessDao.updateTurn(FIRST_COLOR, gameId);
+
+        return ChessGameDto.from(findChessGameById(gameId));
     }
 
-    private void initNewChessGame(final int gameId) {
-        chessDao.initGame(gameId);
-        chessDao.updateTurn(FIRST_COLOR, gameId);
-        for (final Map.Entry<Position, Piece> entry : new BoardInitializer().init().entrySet()) {
-            chessDao.savePiece(gameId, new PieceAndPositionDto(entry.getKey(), entry.getValue()));
-        }
+    public List<GameRoomDto> findAllGame() {
+        return chessDao.findAllGame();
+    }
+
+    public ChessGame findChessGameById(int gameId) {
+        return new ChessGame(
+                StateFactory.of(Color.from(chessDao.findCurrentColor(gameId)),
+                        convertToBoard(chessDao.findAllPiece(gameId)))
+        );
     }
 
     private Board convertToBoard(final List<PieceAndPositionDto> pieceAndPositionDtos) {
         final Map<Position, Piece> board = pieceAndPositionDtos.stream()
-                .collect(Collectors.toMap(it -> Position.from(it.getPosition()), it -> PieceFactory.of(it.getPieceName(), it.getPieceColor())));
+                .collect(Collectors.toMap(
+                        it -> Position.from(it.getPosition()),
+                        it -> PieceFactory.of(it.getPieceName(), it.getPieceColor()))
+                );
         return new Board(() -> board);
     }
 
-    public ChessGameDto move(final String from, final String to) {
+    @Transactional
+    public ChessGameDto move(final MoveDto moveDto) {
+        final var gameId = moveDto.getGameId();
+        final var chessGame = findChessGameById(gameId);
+        final var from = moveDto.getFrom();
+        final var to = moveDto.getTo();
+
         chessGame.move(Position.from(from), Position.from(to));
-        final var nextColor = Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)).next();
-        updateBoard(from, to, DEFAULT_GAME_ID, nextColor.name());
-        return new ChessGameDto(chessDao.findAllPiece(DEFAULT_GAME_ID), chessGame.status());
+
+        updatePieces(gameId, from, to);
+
+        var currentColor = chessDao.findCurrentColor(gameId);
+        var nextColor = Color.from(currentColor).next().toString();
+        chessDao.updateTurn(nextColor, gameId);
+
+        return ChessGameDto.from(findChessGameById(gameId));
     }
 
-    private void updateBoard(final String from, final String to, final int gameId, final String color) {
+    private void updatePieces(int gameId, String from, String to) {
         chessDao.deletePiece(gameId, to);
         chessDao.updatePiece(from, to, gameId);
-        chessDao.updateTurn(color, gameId);
     }
 
-    public ChessGameDto loadGame() {
-        chessGame = new ChessGame(StateFactory.of(Color.from(chessDao.findCurrentColor(DEFAULT_GAME_ID)), convertToBoard(chessDao.findAllPiece(DEFAULT_GAME_ID))));
-        return new ChessGameDto(chessDao.findAllPiece(DEFAULT_GAME_ID), chessGame.status());
+    @Transactional
+    public void deleteGame(final GameRoomDto gameRoomDto) {
+        final var gameId = gameRoomDto.getGameId();
+        final var chessGame = findChessGameById(gameId);
+        final var room = chessDao.findRoomById(gameId);
+
+        room.checkPassword(gameRoomDto.getPassword());
+
+        if (chessGame.isRunning()) {
+            throw new IllegalArgumentException("게임이 종료되지 않았습니다.");
+        }
+
+        chessDao.deleteAllPiece(gameId);
+        chessDao.deleteGame(gameId);
     }
 }

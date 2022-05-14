@@ -3,7 +3,6 @@ package chess.domain.board;
 import chess.domain.piece.Notation;
 import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-
 import java.util.Collections;
 import java.util.Map;
 
@@ -38,5 +37,9 @@ public final class Board {
 
     public Piece getPiece(final Position position) {
         return value.get(position);
+    }
+
+    public boolean isEmpty() {
+        return value.isEmpty();
     }
 }

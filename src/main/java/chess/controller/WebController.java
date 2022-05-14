@@ -1,17 +1,18 @@
 package chess.controller;
 
-import chess.dto.MoveDto;
+import chess.dto.GameRoomDto;
 import chess.service.ChessService;
-import com.google.gson.Gson;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class WebController {
 
-    private final Gson gson = new Gson();
     private final ChessService chessService;
 
     public WebController(ChessService chessService) {
@@ -19,30 +20,20 @@ public class WebController {
     }
 
     @GetMapping("/")
-    public String indexPage() {
+    public String indexPage(Model model) {
+        model.addAttribute("games", chessService.findAllGame());
         return "index";
     }
 
-    @GetMapping("/start")
-    @ResponseBody
-    public String startGame() {
-        return gson.toJson(chessService.newGame());
+    @GetMapping("/games/{gameId}")
+    public String getGame(@PathVariable int gameId, Model model) {
+        model.addAttribute("gameId", gameId);
+        return "board";
     }
 
-    @GetMapping("/restart")
-    @ResponseBody
-    public String restart() {
-        return gson.toJson(chessService.loadGame());
-    }
-
-    @PutMapping("/move")
-    @ResponseBody
-    public String move(@RequestBody MoveDto moveDto) {
-        return gson.toJson(chessService.move(moveDto.getFrom(), moveDto.getTo()));
-    }
-
-    @ExceptionHandler({RuntimeException.class})
-    private ResponseEntity<String> handleException(final RuntimeException exception) {
-        return ResponseEntity.badRequest().body(gson.toJson(exception.getMessage()));
+    @PostMapping(value = "/games", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String createGame(@ModelAttribute GameRoomDto gameRoomDto) {
+        var gameId = chessService.createRoom(gameRoomDto);
+        return "redirect:/games/" + gameId;
     }
 }

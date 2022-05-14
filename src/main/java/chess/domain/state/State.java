@@ -2,16 +2,11 @@ package chess.domain.state;
 
 import chess.domain.board.Board;
 import chess.domain.piece.Color;
-import chess.domain.piece.Piece;
 import chess.domain.position.Position;
-
-import java.util.Map;
 
 public interface State {
 
     State start();
-
-    boolean isEnd();
 
     State move(final Position from, final Position to);
 
@@ -22,4 +17,8 @@ public interface State {
     State end();
 
     Board getBoard();
+
+    default boolean isRunning() {
+        return false;
+    }
 }

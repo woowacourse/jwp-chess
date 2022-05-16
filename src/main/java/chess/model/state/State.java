@@ -1,6 +1,6 @@
 package chess.model.state;
 
-import chess.dto.MoveDto;
+import chess.dto.request.MoveRequest;
 import chess.model.Team;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
@@ -8,13 +8,13 @@ import java.util.Map;
 
 public interface State {
 
-    State proceed(MoveDto moveDto);
+    State proceed(MoveRequest moveRequest);
 
     Map<Position, Piece> getBoard();
 
-    Map<Team, Double> getScores();
+    Map<String, Double> getScores();
 
-    Team getWinner();
+    String getWinner();
 
     String getSymbol();
 }

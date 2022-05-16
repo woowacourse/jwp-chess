@@ -15,12 +15,52 @@ function print(rooms) {
     }
     rooms.forEach(function (value) {
         const room = document.createElement('li');
+        room.id = value.id;
         room.className = "room";
         const roomRink = document.createElement('a');
         roomRink.innerText = value.name;
         roomRink.href = "/game/" + value.id;
         room.appendChild(roomRink);
+
+        const roomDeleteButton = document.createElement('input');
+        roomDeleteButton.className = 'roomDeleteButton'
+        roomDeleteButton.type = 'button';
+        roomDeleteButton.value = '❌';
+        roomDeleteButton.addEventListener('click', function () {
+            deleteRoom(room.id);
+        })
+        room.appendChild(roomDeleteButton);
         roomList.appendChild(room);
+    })
+}
+
+async function deleteRoom(roomId) {
+    var password = prompt("비밀번호를 입력해주세요");
+    const deleteUrl = "delete/" + roomId;
+    let rooms = await fetch(deleteUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(password)
+    });
+    if (rooms.status !== 200) {
+        const error = await rooms.json();
+        alert(error.message);
+        return;
+    }
+    rooms = await rooms.json();
+    print(rooms);
+    deleteGameDateAboutRoom(roomId);
+}
+
+async function deleteGameDateAboutRoom(roomId) {
+    const deleteUrl = "game/" + roomId + "/delete";
+    await fetch(deleteUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
     })
 }
 

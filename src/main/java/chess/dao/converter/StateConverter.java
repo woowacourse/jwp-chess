@@ -6,18 +6,21 @@ import chess.model.state.finished.End;
 import chess.model.state.running.BlackTurn;
 import chess.model.state.running.WhiteTurn;
 import java.util.Arrays;
+import java.util.function.Function;
 
 public enum StateConverter {
 
-    WHITE_TURN("WHITE_TURN"),
-    BLACK_TURN("BLACK_TURN"),
-    END("END"),
+    WHITE_TURN("WHITE_TURN", WhiteTurn::new),
+    BLACK_TURN("BLACK_TURN", BlackTurn::new),
+    END("END", End::new),
     ;
 
     private final String name;
+    private final Function<Board, State> stateGenerator;
 
-    StateConverter(final String name) {
+    StateConverter(final String name, final Function<Board, State> stateGenerator) {
         this.name = name;
+        this.stateGenerator = stateGenerator;
     }
 
     public static String convertToString(final State state) {
@@ -31,18 +34,8 @@ public enum StateConverter {
     public static State convertToState(final String stateName, final Board board) {
         return Arrays.stream(values())
                 .filter(value -> value.name.equals(stateName))
-                .map(value -> value.createState(stateName, board))
+                .map(value -> value.stateGenerator.apply(board))
                 .findAny()
                 .orElseThrow();
-    }
-
-    public State createState(final String stateName, final Board board) {
-        if (stateName.equals("WHITE_TURN")) {
-            return new WhiteTurn(board);
-        }
-        if (stateName.equals("BLACK_TURN")) {
-            return new BlackTurn(board);
-        }
-        return new End(board);
     }
 }

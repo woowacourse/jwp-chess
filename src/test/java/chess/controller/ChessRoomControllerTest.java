@@ -1,6 +1,6 @@
 package chess.controller;
 
-import chess.dto.RoomDto;
+import chess.dto.request.RoomRequest;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,11 +36,11 @@ class ChessRoomControllerTest {
     @DisplayName("새로운 체스방을 생성한다.")
     @Test
     void create() {
-        RoomDto roomDto = new RoomDto("하이체스", "1234");
+        RoomRequest roomRequest = new RoomRequest("하이체스", "1234");
 
         RestAssured.given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(roomDto)
+                .body(roomRequest)
                 .when().post("/create")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());

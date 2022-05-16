@@ -4,67 +4,59 @@ import static chess.model.Team.BLACK;
 import static chess.model.Team.WHITE;
 
 import chess.model.Team;
-import chess.model.piece.Piece;
+import chess.model.board.Board;
 import chess.model.position.Position;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 public class Score {
 
     private static final double PAWN_PENALTY_SCORE = -0.5;
     private static final int DUPLICATE_CHECK_PAWN_COUNT = 2;
+    private static final int NO_PENALTY_PAWN_COUNT_ON_RANK = 1;
 
-    private final Map<Position, Piece> board;
+    private final Board board;
 
-    public Score(final Map<Position, Piece> board) {
+    public Score(final Board board) {
         this.board = board;
     }
 
-    public Map<Team, Double> teams() {
-        Map<Team, Double> scores = new HashMap<>();
-        scores.put(BLACK, team(BLACK, board) + pawnPenalty(BLACK, board));
-        scores.put(WHITE, team(WHITE, board) + pawnPenalty(WHITE, board));
+    public Map<String, Double> teams() {
+        Map<String, Double> scores = new HashMap<>();
+        scores.put(BLACK.getName(), team(BLACK) + pawnPenalty(BLACK));
+        scores.put(WHITE.getName(), team(WHITE) + pawnPenalty(WHITE));
         return scores;
     }
 
     public Double white() {
-        return team(WHITE, board) + pawnPenalty(WHITE, board);
+        return team(WHITE) + pawnPenalty(WHITE);
     }
 
     public Double black() {
-        return team(BLACK, board) + pawnPenalty(BLACK, board);
+        return team(BLACK) + pawnPenalty(BLACK);
     }
 
-    private Double team(Team team, Map<Position, Piece> board) {
-        return board.values()
-                .stream()
-                .filter(piece -> piece.isSameTeam(team))
-                .mapToDouble(Piece::score)
-                .sum();
+    private Double team(final Team team) {
+        return board.calculateDefaultScoreFrom(team);
     }
 
-    private Double pawnPenalty(Team team, Map<Position, Piece> board) {
-        List<Position> positionOfPawns = searchPositionOfPawns(team, board);
+    private Double pawnPenalty(final Team team) {
+        List<Position> positionOfPawns = searchPositionOfPawns(team);
         return PAWN_PENALTY_SCORE * searchPenaltyPawns(positionOfPawns);
     }
 
-    private List<Position> searchPositionOfPawns(Team team, Map<Position, Piece> board) {
-        return board.keySet().stream()
-                .filter(position -> board.get(position)
-                        .isSameTeam(team))
-                .filter(position -> board.get(position)
-                        .isPawn())
-                .collect(Collectors.toList());
+    private List<Position> searchPositionOfPawns(final Team team) {
+        return board.searchPositionOfPawnsFrom(team);
     }
 
-    private long searchPenaltyPawns(List<Position> positionOfPawns) {
-        return positionOfPawns.stream()
+    private long searchPenaltyPawns(final List<Position> positionOfPawns) {
+        final long sameRankPawnCount = positionOfPawns.stream()
                 .flatMapToLong(positionOfPawn -> calculateSameRankCount(positionOfPawn, positionOfPawns))
-                .filter(count -> count > 1)
+                .filter(count -> count > NO_PENALTY_PAWN_COUNT_ON_RANK)
                 .sum() / DUPLICATE_CHECK_PAWN_COUNT;
+        return sameRankPawnCount;
     }
 
     private LongStream calculateSameRankCount(Position position, List<Position> positionOfPawns) {

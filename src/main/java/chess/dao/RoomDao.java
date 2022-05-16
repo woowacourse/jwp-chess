@@ -1,6 +1,6 @@
 package chess.dao;
 
-import chess.entity.RoomEntity;
+import chess.dto.response.RoomResponse;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,13 +15,13 @@ public class RoomDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<RoomEntity> actorRowMapper = (resultSet, rowNum) -> {
-        RoomEntity roomEntity = new RoomEntity(
+    private final RowMapper<RoomResponse> actorRowMapper = (resultSet, rowNum) -> {
+        RoomResponse roomResponse = new RoomResponse(
                 resultSet.getInt("id"),
                 resultSet.getString("name"),
                 resultSet.getString("password")
         );
-        return roomEntity;
+        return roomResponse;
     };
 
     public int insert(final String name, final String password) {
@@ -29,8 +29,18 @@ public class RoomDao {
         return jdbcTemplate.update(sql, name, password);
     }
 
-    public List<RoomEntity> findAll() {
+    public List<RoomResponse> findAll() {
         final String sql = "select id, name, password from room";
         return jdbcTemplate.query(sql, actorRowMapper);
+    }
+
+    public int deleteFrom(String id) {
+        final String sql = "delete from room where id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
+
+    public String findPasswordById(String id) {
+        final String sql = "select password from room where id = ?";
+        return jdbcTemplate.queryForObject(sql, String.class, id);
     }
 }

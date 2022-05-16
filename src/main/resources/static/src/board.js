@@ -86,8 +86,13 @@ async function movePiece(source, target) {
         body: JSON.stringify({
             source: source,
             target: target,
-        }),
-    })
+        })
+    });
+    if (board.status !== 200) {
+        const error = await board.json();
+        alert(error.message);
+        return;
+    }
     board = await board.json();
     putPieceInSquare(board);
 }

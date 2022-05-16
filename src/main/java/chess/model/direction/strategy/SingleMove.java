@@ -23,8 +23,11 @@ public class SingleMove implements MoveStrategy {
         return directions.stream()
                 .filter(source::movableTo)
                 .map(source::createPositionTo)
-                .filter(position -> !board.get(position)
-                        .isSameTeam(this.team))
+                .filter(position -> !piece(board, position).isSameTeam(this.team))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    private Piece piece(Map<Position, Piece> board, Position position) {
+        return board.get(position);
     }
 }

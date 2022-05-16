@@ -1,7 +1,7 @@
 package chess.repository;
 
 import chess.dao.SquareDao;
-import chess.dto.MoveDto;
+import chess.dto.request.MoveRequest;
 import chess.model.board.Board;
 import chess.model.piece.Piece;
 import chess.model.position.Position;
@@ -23,9 +23,9 @@ public class SquareRepository {
                 .forEach(position -> squareDao.insert(id, position, board.get(position)));
     }
 
-    public void updateSquareData(final String id, final Map<Position, Piece> board, final MoveDto moveDto) {
-        String source = moveDto.getSource();
-        String target = moveDto.getTarget();
+    public void updateSquareData(final String id, final Map<Position, Piece> board, final MoveRequest moveRequest) {
+        String source = moveRequest.getSource();
+        String target = moveRequest.getTarget();
         squareDao.update(id, Position.from(source), board.get(Position.from(source)));
         squareDao.update(id, Position.from(target), board.get(Position.from(target)));
     }

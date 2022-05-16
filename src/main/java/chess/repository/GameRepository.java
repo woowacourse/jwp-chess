@@ -1,6 +1,6 @@
 package chess.repository;
 
-import chess.dto.MoveDto;
+import chess.dto.request.MoveRequest;
 import chess.model.board.Board;
 import chess.model.state.State;
 import org.springframework.stereotype.Repository;
@@ -26,10 +26,10 @@ public class GameRepository {
         stateRepository.deleteStateDataFrom(id);
     }
 
-    public void saveGameData(final String id, final State nextState, final MoveDto moveDto) {
+    public void saveGameData(final String id, final State nextState, final MoveRequest moveRequest) {
         Board board = squareRepository.getBoardFrom(id);
         State nowState = stateRepository.getStateFrom(id, board);
-        squareRepository.updateSquareData(id, nextState.getBoard(), moveDto);
+        squareRepository.updateSquareData(id, nextState.getBoard(), moveRequest);
         stateRepository.updateStateData(id, nowState, nextState);
     }
 

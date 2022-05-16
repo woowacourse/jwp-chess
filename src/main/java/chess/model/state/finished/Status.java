@@ -11,16 +11,16 @@ public final class Status extends Finished {
 
     public Status(Board board) {
         super(board);
-        this.gameResult = new GameResult(board.getBoard());
+        this.gameResult = new GameResult(board);
     }
 
     @Override
-    public Map<Team, Double> getScores() {
+    public Map<String, Double> getScores() {
         return gameResult.getTeamScores();
     }
 
     @Override
-    public Team getWinner() {
+    public String getWinner() {
         return gameResult.pickWinnerTeam();
     }
 

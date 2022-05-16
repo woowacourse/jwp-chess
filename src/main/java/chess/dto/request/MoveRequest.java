@@ -1,11 +1,11 @@
-package chess.dto;
+package chess.dto.request;
 
-public class MoveDto {
+public class MoveRequest {
 
     private final String source;
     private final String target;
 
-    public MoveDto(String source, String target) {
+    public MoveRequest(String source, String target) {
         this.source = source;
         this.target = target;
     }
